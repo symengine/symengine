@@ -16,6 +16,7 @@ class GaloisFieldDict
 public:
     std::vector<integer_class> dict_;
     integer_class modulo_;
+
 public:
     GaloisFieldDict() SYMENGINE_NOEXCEPT
     {
@@ -24,7 +25,8 @@ public:
     {
     }
     GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
-        : dict_(std::move(other.dict_)), modulo_(std::move(other.modulo_))
+        : dict_(std::move(other.dict_)),
+          modulo_(std::move(other.modulo_))
     {
     }
     GaloisFieldDict(const int &i, const integer_class &mod) : modulo_(mod)
@@ -34,7 +36,8 @@ public:
         if (temp != integer_class(0))
             dict_.insert(dict_.begin(), temp);
     }
-    GaloisFieldDict(const map_uint_mpz &p, const integer_class &mod) : modulo_(mod)
+    GaloisFieldDict(const map_uint_mpz &p, const integer_class &mod)
+        : modulo_(mod)
     {
         if (p.size() != 0) {
             dict_.resize(p.rbegin()->first + 1, integer_class(0));
@@ -46,7 +49,8 @@ public:
             gf_istrip();
         }
     }
-    GaloisFieldDict(const integer_class &i, const integer_class &mod) : modulo_(mod)
+    GaloisFieldDict(const integer_class &i, const integer_class &mod)
+        : modulo_(mod)
     {
         integer_class temp;
         mp_fdiv_r(temp, i, modulo_);
@@ -54,7 +58,8 @@ public:
             dict_.insert(dict_.begin(), temp);
     }
 
-    static GaloisFieldDict from_vec(const std::vector<integer_class> &v, const integer_class &modulo)
+    static GaloisFieldDict from_vec(const std::vector<integer_class> &v,
+                                    const integer_class &modulo)
     {
         GaloisFieldDict x;
         x.modulo_ = modulo;
@@ -70,13 +75,11 @@ public:
 
     GaloisFieldDict(const GaloisFieldDict &) = default;
     GaloisFieldDict &operator=(const GaloisFieldDict &) = default;
-    void gf_div(const GaloisFieldDict &o,
-                const Ptr<GaloisFieldDict> &quo,
+    void gf_div(const GaloisFieldDict &o, const Ptr<GaloisFieldDict> &quo,
                 const Ptr<GaloisFieldDict> &rem) const;
 
     GaloisFieldDict gf_lshift(const integer_class n) const;
-    void gf_rshift(const integer_class n,
-                   const Ptr<GaloisFieldDict> &quo,
+    void gf_rshift(const integer_class n, const Ptr<GaloisFieldDict> &quo,
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
     GaloisFieldDict gf_pow(const integer_class n) const;
@@ -93,7 +96,8 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
-    friend GaloisFieldDict operator+(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    friend GaloisFieldDict operator+(const GaloisFieldDict &a,
+                                     const GaloisFieldDict &b)
     {
         GaloisFieldDict c = a;
         c += b;
@@ -121,7 +125,7 @@ public:
                 dict_[i] = temp;
             }
         } else {
-                for (unsigned int i = 0; i < dict_.size(); i++) {
+            for (unsigned int i = 0; i < dict_.size(); i++) {
                 integer_class temp;
                 temp += dict_[i];
                 temp += other.dict_[i];
@@ -133,7 +137,8 @@ public:
             if (other.dict_.size() == this->dict_.size())
                 gf_istrip();
             else
-                dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(), other.dict_.end());
+                dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(),
+                             other.dict_.end());
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -150,7 +155,8 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
-    friend GaloisFieldDict operator-(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    friend GaloisFieldDict operator-(const GaloisFieldDict &a,
+                                     const GaloisFieldDict &b)
     {
         GaloisFieldDict c = a;
         c -= b;
@@ -225,7 +231,8 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
-    static GaloisFieldDict mul(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    static GaloisFieldDict mul(const GaloisFieldDict &a,
+                               const GaloisFieldDict &b)
     {
         // TODO
         if (a.modulo_ != b.modulo_)
@@ -253,7 +260,8 @@ public:
         return p;
     }
 
-    friend GaloisFieldDict operator*(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    friend GaloisFieldDict operator*(const GaloisFieldDict &a,
+                                     const GaloisFieldDict &b)
     {
         return GaloisFieldDict::mul(a, b);
     }
@@ -303,8 +311,8 @@ public:
             return static_cast<GaloisFieldDict &>(*this);
         }
         // mul will return a stripped dict
-        GaloisFieldDict res = GaloisFieldDict::mul(static_cast<GaloisFieldDict &>(*this),
-                                                   other);
+        GaloisFieldDict res = GaloisFieldDict::mul(
+            static_cast<GaloisFieldDict &>(*this), other);
         res.dict_.swap(this->dict_);
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -372,11 +380,13 @@ public:
             coeff = dict_out[riter];
             if (coeff == integer_class(0))
                 continue;
-            auto lb = deg_divisor + riter > deg_dividend ?
-                      deg_divisor + riter - deg_dividend : 0;
+            auto lb = deg_divisor + riter > deg_dividend
+                          ? deg_divisor + riter - deg_dividend
+                          : 0;
             auto ub = std::min(riter + 1, deg_divisor);
             for (unsigned j = lb; j < ub; ++j) {
-                mp_addmul(coeff, dict_out[riter - j + deg_divisor], -dict_divisor[j]);
+                mp_addmul(coeff, dict_out[riter - j + deg_divisor],
+                          -dict_divisor[j]);
             }
             coeff *= inv;
             mp_fdiv_r(coeff, coeff, modulo_);
@@ -419,15 +429,14 @@ public:
 
     void gf_istrip()
     {
-        for (auto i = dict_.rbegin(); i != dict_.rend(); ++i) {
-            if (*i == integer_class(0))
+        for (auto i = dict_.size(); i-- != 0; ) {
+            if (dict_[i] == integer_class(0))
                 dict_.pop_back();
             else
                 break;
         }
     }
 };
-
 
 class GaloisField : public UPolyBase<GaloisFieldDict, GaloisField>
 {
@@ -446,10 +455,10 @@ public:
     // creates a GaloisField in cannonical form based on the
     // dictionary.
     static RCP<const GaloisField> from_dict(const RCP<const Symbol> &var,
-                                         GaloisFieldDict &&d);
+                                            GaloisFieldDict &&d);
     static RCP<const GaloisField> from_vec(const RCP<const Symbol> &var,
-                                        const std::vector<integer_class> &v,
-                                        const integer_class &modulo);
+                                           const std::vector<integer_class> &v,
+                                           const integer_class &modulo);
 
     virtual vec_basic get_args() const;
     inline const std::vector<integer_class> &get_dict() const
@@ -461,15 +470,16 @@ public:
     {
         return poly_.degree();
     }
-
 };
 
-inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i, GaloisFieldDict &&dict)
+inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i,
+                                      GaloisFieldDict &&dict)
 {
     return GaloisField::from_dict(i, std::move(dict));
 }
 
-inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i, map_uint_mpz &&dict, integer_class modulo_)
+inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i, map_uint_mpz &&dict,
+                                      integer_class modulo_)
 {
     GaloisFieldDict wrapper(dict, modulo_);
     return GaloisField::from_dict(i, std::move(wrapper));

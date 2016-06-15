@@ -24,10 +24,12 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     RCP<const GaloisField> P = gf_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}}, 2_z);
     REQUIRE(P->__str__() == "x**2 + 1");
 
-    RCP<const GaloisField> Q = GaloisField::from_vec(x, {1_z, 0_z, 2_z, 3_z}, 2_z);
+    RCP<const GaloisField> Q
+        = GaloisField::from_vec(x, {1_z, 0_z, 2_z, 3_z}, 2_z);
     REQUIRE(Q->__str__() == "x**3 + 1");
 
-    RCP<const GaloisField> R = GaloisField::from_vec(x, {17_z, 0_z, 7_z, 9_z, 7_z, 14_z}, 7_z);
+    RCP<const GaloisField> R
+        = GaloisField::from_vec(x, {17_z, 0_z, 7_z, 9_z, 7_z, 14_z}, 7_z);
     REQUIRE(R->__str__() == "2*x**3 + 3");
 
     RCP<const GaloisField> S = gf_poly(x, {{0, 2_z}}, 7_z);
@@ -40,7 +42,8 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     REQUIRE(U->__str__() == "2");
 }
 
-TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]")
+TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic",
+          "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
     std::vector<integer_class> mp, a = {2_z, 3_z, 4_z};
@@ -74,7 +77,7 @@ TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]"
     r2 = mul_upoly(*r1, *r3);
     mp = r2->get_dict();
     REQUIRE(mp.empty());
-    
+
     r3 = GaloisField::from_vec(x, {3_z}, 11_z);
     r2 = add_upoly(*r1, *r3);
     REQUIRE(r2->__str__() == "3");
@@ -172,7 +175,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[0] == 0);
     REQUIRE(mp[1] == 1);
     REQUIRE(mp[2] == 6);
-    REQUIRE(d3 == d1/d2);
+    REQUIRE(d3 == d1 / d2);
 
     d2 = d1;
     d2 *= 2_z;
@@ -204,7 +207,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     mp = d4.get_dict();
     REQUIRE(mp[0] == 3);
     REQUIRE(mp[1] == 3);
-    REQUIRE(d3 == d1/d2);
+    REQUIRE(d3 == d1 / d2);
 
     a = {1_z};
     b = {3_z, 2_z, 1_z};
@@ -214,7 +217,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(d3.get_dict().empty());
     mp = d4.get_dict();
     REQUIRE(mp[0] == 1);
-    REQUIRE(d3 == d1/d2);
+    REQUIRE(d3 == d1 / d2);
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
@@ -338,7 +341,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     a = {3_z, 2_z};
     d2 = GaloisFieldDict::from_vec(a, 11_z);
     d1.gf_div(d2, outArg(d3), outArg(d4));
-    REQUIRE(d3 == d1/d2);
+    REQUIRE(d3 == d1 / d2);
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);

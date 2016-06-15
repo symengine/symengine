@@ -311,7 +311,7 @@ void StrPrinter::bvisit(const GaloisField &x)
     if (x.get_dict().size() == 0)
         s << "0";
     else {
-        for (auto it = dict.size(); it-- != 0 ;) {
+        for (auto it = dict.size(); it-- != 0;) {
             if (dict[it] == 0)
                 continue;
             // if exponent is 0, then print only coefficient
@@ -353,7 +353,8 @@ void StrPrinter::bvisit(const GaloisField &x)
             if (it != 1) {
                 s << "**" << it;
             }
-            // corner cases of only first term handled successfully, switch the bool
+            // corner cases of only first term handled successfully, switch the
+            // bool
             first = false;
         }
     }

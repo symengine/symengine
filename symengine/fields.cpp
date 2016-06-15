@@ -55,18 +55,19 @@ int GaloisField::compare(const Basic &o) const
     return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
-
 RCP<const GaloisField> GaloisField::from_dict(const RCP<const Symbol> &var,
-                                        GaloisFieldDict &&d)
+                                              GaloisFieldDict &&d)
 {
     return make_rcp<const GaloisField>(var, std::move(d));
 }
 
-RCP<const GaloisField> GaloisField::from_vec(const RCP<const Symbol> &var,
-                                       const std::vector<integer_class> &v,
-                                       const integer_class &modulo)
+RCP<const GaloisField>
+GaloisField::from_vec(const RCP<const Symbol> &var,
+                      const std::vector<integer_class> &v,
+                      const integer_class &modulo)
 {
-    return make_rcp<const GaloisField>(var, GaloisFieldDict::from_vec(v, modulo));
+    return make_rcp<const GaloisField>(var,
+                                       GaloisFieldDict::from_vec(v, modulo));
 }
 
 vec_basic GaloisField::get_args() const
@@ -97,8 +98,8 @@ vec_basic GaloisField::get_args() const
 }
 
 void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
-                         const Ptr<GaloisFieldDict> &quo,
-                         const Ptr<GaloisFieldDict> &rem) const
+                             const Ptr<GaloisFieldDict> &quo,
+                             const Ptr<GaloisFieldDict> &rem) const
 {
     if (modulo_ != o.modulo_)
         throw std::runtime_error("Error: field must be same.");
@@ -121,15 +122,17 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         integer_class inv;
         mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
         integer_class coeff;
-        for (auto it = deg_dividend + 1; it-- != 0; ) {
+        for (auto it = deg_dividend + 1; it-- != 0;) {
             coeff = dict_out[it];
             if (coeff == integer_class(0) && it >= deg_divisor)
                 continue;
-            auto lb = deg_divisor + it > deg_dividend ? 
-                      deg_divisor + it - deg_dividend : 0;
+            auto lb = deg_divisor + it > deg_dividend
+                          ? deg_divisor + it - deg_dividend
+                          : 0;
             auto ub = std::min(it + 1, deg_divisor);
             for (long j = lb; j < ub; ++j) {
-                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
+                mp_addmul(coeff, dict_out[it - j + deg_divisor],
+                          -dict_divisor[j]);
             }
             if (it >= deg_divisor)
                 coeff *= inv;
@@ -162,15 +165,16 @@ GaloisFieldDict GaloisFieldDict::gf_lshift(const integer_class n) const
 }
 
 void GaloisFieldDict::gf_rshift(const integer_class n,
-                            const Ptr<GaloisFieldDict> &quo,
-                            const Ptr<GaloisFieldDict> &rem) const
+                                const Ptr<GaloisFieldDict> &quo,
+                                const Ptr<GaloisFieldDict> &rem) const
 {
     std::vector<integer_class> dict_quo;
     *quo = GaloisFieldDict::from_vec(dict_quo, modulo_);
     unsigned n_val = mp_get_si(n);
     if (n_val < dict_.size()) {
         quo->dict_.insert(quo->dict_.end(), dict_.begin() + n_val, dict_.end());
-        std::vector<integer_class> dict_rem(dict_.begin(), dict_.begin() + n_val);
+        std::vector<integer_class> dict_rem(dict_.begin(),
+                                            dict_.begin() + n_val);
         *rem = GaloisFieldDict::from_vec(dict_rem, modulo_);
     } else {
         *rem = static_cast<GaloisFieldDict>(*this);
@@ -206,7 +210,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
 }
 
 void GaloisFieldDict::gf_monic(integer_class &res,
-                           const Ptr<GaloisFieldDict> &monic) const
+                               const Ptr<GaloisFieldDict> &monic) const
 {
     *monic = static_cast<GaloisFieldDict>(*this);
     if (dict_.empty()) {
