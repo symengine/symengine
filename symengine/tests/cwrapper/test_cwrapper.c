@@ -798,6 +798,25 @@ void test_ntheory() {
     basic_free_stack(i5);
 }
 
+void test_eval(){
+    basic sin2;
+    basic_new_stack(sin2);
+    str *s;
+    
+    integer_set_si(sin2, 2);
+    basic_sin(sin2, sin2);
+    basic_eval(sin2, sin2, 53, 1);
+    basic_str(s, sin2);
+    SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_REAL_DOUBLE);
+    double d = 0.90929742682;
+    double d2 = real_double_get_d(sin2);
+    
+    SYMENGINE_C_ASSERT( fabs(d - d2) < 0.0000000001 );
+    
+    basic_free_stack(sin2);
+    basic_str_free(s);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -820,6 +839,7 @@ int main(int argc, char* argv[])
     test_functions();
     test_ntheory();
     test_real_double();
+    test_eval();
 
     return 0;
 }

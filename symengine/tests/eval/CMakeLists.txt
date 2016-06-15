@@ -18,6 +18,10 @@ if (HAVE_SYMENGINE_MPC)
     add_test(test_eval_mpc ${PROJECT_BINARY_DIR}/test_eval_mpc)
 endif()
 
+add_executable(test_eval test_eval.cpp)
+target_link_libraries(test_eval symengine catch)
+add_test(test_eval ${PROJECT_BINARY_DIR}/test_eval)
+
 add_executable(test_eval_double test_eval_double.cpp)
 target_link_libraries(test_eval_double symengine catch)
 add_test(test_eval_double ${PROJECT_BINARY_DIR}/test_eval_double)
