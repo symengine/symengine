@@ -143,6 +143,7 @@ public:
                                         const std::vector<integer_class> &v);
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
+    std::vector<integer_class> multieval(const std::vector<integer_class> &v) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
@@ -196,6 +197,8 @@ public:
     }
 
 }; // UIntPoly
+
+RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p);
 
 } // SymEngine
 

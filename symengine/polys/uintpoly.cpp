@@ -79,6 +79,15 @@ integer_class UIntPoly::eval(const integer_class &x) const
     return result;
 }
 
+std::vector<integer_class> UIntPoly::multieval(const std::vector<integer_class> &v) const
+{
+    // this is not the optimal algorithm
+    std::vector<integer_class> res(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        res[i] = eval(v[i]);
+    return res;
+}
+
 bool UIntPoly::is_zero() const
 {
     return poly_.empty();
@@ -128,6 +137,25 @@ bool UIntPoly::is_pow() const
         and poly_.dict_.begin()->first != 1 and poly_.dict_.begin()->first != 0)
         return true;
     return false;
+}
+
+RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
+{
+    auto tmp = a.get_poly();
+    UIntDict res(1);
+
+    while(p > 1) {
+        if (p % 2 == 0) {
+            tmp = tmp * tmp;
+            p = p/2;
+        } else {
+            res = res * tmp;
+            tmp = tmp * tmp;
+            p = (p-1)/2;
+        }
+    }
+
+    return make_rcp<const UIntPoly>(a.get_var(), std::move(res * tmp));
 }
 
 } // SymEngine

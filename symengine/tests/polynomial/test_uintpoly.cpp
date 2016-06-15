@@ -193,6 +193,11 @@ TEST_CASE("Evaluation of UIntPoly", "[UIntPoly]")
     REQUIRE(a->eval(10_z) == 121);
     REQUIRE(b->eval(-1_z) == 0);
     REQUIRE(b->eval(0_z) == 1);
+
+    std::vector<integer_class> resa = {9_z, 121_z, 0_z, 1_z};
+    std::vector<integer_class> resb = {-3_z, -99_z, 0_z, 1_z};
+    REQUIRE(a->multieval({2_z, 10_z, -1_z, 0_z}) == resa);
+    REQUIRE(b->multieval({2_z, 10_z, -1_z, 0_z}) == resb);
 }
 
 TEST_CASE("Derivative of UIntPoly", "[UIntPoly]")
@@ -266,4 +271,17 @@ TEST_CASE("UIntPoly expand", "[UIntPoly][expand]")
     REQUIRE(b->__str__() == "(x**3 + x**2 + x)**3");
     REQUIRE(c->__str__()
             == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
+}
+
+TEST_CASE("UIntPoly pow", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 3_z}, {2, 1_z}});
+
+    RCP<const UIntPoly> aaa = pow_upoly(*a, 3);   
+    RCP<const UIntPoly> bb = pow_upoly(*b, 2);
+
+    REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
+    REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
 }
