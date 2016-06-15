@@ -149,6 +149,8 @@ void real_mpfr_set(basic s, mpfr_srcptr m);
 void real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);
+//! Returns 1 if s has value zero; 0 otherwise
+int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
 //! Returns signed long value of s.

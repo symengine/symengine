@@ -252,6 +252,12 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_prec();
 }
 
+int real_mpfr_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    return (int)((rcp_static_cast<const RealMPFR>(s->m))->is_zero());
+}
+
 #endif // HAVE_SYMENGINE_MPFR
 
 signed long integer_get_si(const basic s)
