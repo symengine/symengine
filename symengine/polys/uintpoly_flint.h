@@ -28,17 +28,18 @@ public:
 
     static RCP<const UIntPolyFlint> from_dict(const RCP<const Symbol> &var,
                                               map_uint_mpz &&d);
-    static RCP<const UIntPolyFlint>
-    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+    static RCP<const UIntPolyFlint> from_vec(const RCP<const Symbol> &var,
+                                             const vec_integer_class &v);
 
     integer_class eval(const integer_class &x) const;
-    std::vector<integer_class> multieval(const std::vector<integer_class> &v) const;
+    vec_integer_class multieval(const vec_integer_class &v) const;
 
     integer_class get_coeff(unsigned int x) const;
     flint::fmpzxx_srcref get_coeff_ref(unsigned int x) const;
 
     typedef ContainerForIter<UIntPolyFlint, flint::fmpzxx_srcref> iterator;
-    typedef ContainerRevIter<UIntPolyFlint, flint::fmpzxx_srcref> reverse_iterator;
+    typedef ContainerRevIter<UIntPolyFlint, flint::fmpzxx_srcref>
+        reverse_iterator;
     iterator begin() const
     {
         return iterator(rcp_from_this_cast<UIntPolyFlint>(), 0);
@@ -49,7 +50,8 @@ public:
     }
     reverse_iterator obegin() const
     {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyFlint>(), (long)size() - 1);
+        return reverse_iterator(rcp_from_this_cast<UIntPolyFlint>(),
+                                (long)size() - 1);
     }
     reverse_iterator oend() const
     {
@@ -63,23 +65,32 @@ public:
 
 }; // UIntPolyFLint
 
-inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b)
-{   
+inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a,
+                                          const UIntPolyFlint &b)
+{
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(flint::gcd(a.get_poly(), b.get_poly()))));
+    return make_rcp<const UIntPolyFlint>(
+        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
+                         flint::gcd(a.get_poly(), b.get_poly()))));
 }
 
-inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b)
-{   
+inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
+                                          const UIntPolyFlint &b)
+{
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(flint::lcm(a.get_poly(), b.get_poly()))));
+    return make_rcp<const UIntPolyFlint>(
+        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
+                         flint::lcm(a.get_poly(), b.get_poly()))));
 }
 
-inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a, unsigned int p)
-{   
-    return make_rcp<const UIntPolyFlint>(a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(flint::pow(a.get_poly(), p))));
+inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
+                                          unsigned int p)
+{
+    return make_rcp<const UIntPolyFlint>(
+        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
+                         flint::pow(a.get_poly(), p))));
 }
 
 inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b)

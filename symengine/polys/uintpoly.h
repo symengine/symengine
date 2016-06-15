@@ -140,10 +140,10 @@ public:
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
                                          map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
-                                        const std::vector<integer_class> &v);
+                                        const vec_integer_class &v);
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
-    std::vector<integer_class> multieval(const std::vector<integer_class> &v) const;
+    vec_integer_class multieval(const vec_integer_class &v) const;
 
     //! \return `true` if `0`
     bool is_zero() const;

@@ -523,7 +523,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const UIntPoly> p1 = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p1
+        = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
     RCP<const UIntPoly> p2 = UIntPoly::from_dict(y, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1 = MultivariateIntPolynomial::create(
@@ -548,7 +549,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
           "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> p1 = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p1
+        = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
     RCP<const UIntPoly> p2 = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1

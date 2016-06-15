@@ -316,8 +316,7 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             if (first) {
                 s << m;
             } else {
-                s << " " << _print_sign(m) << " "
-                  << mp_abs(m);
+                s << " " << _print_sign(m) << " " << mp_abs(m);
             }
             first = false;
             continue;
@@ -331,8 +330,7 @@ void uintpoly_print(const T &x, std::ostringstream &s)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(m) << " "
-                  << x.get_var()->get_name();
+                s << " " << _print_sign(m) << " " << x.get_var()->get_name();
             }
         }
         // same logic is followed as above
@@ -342,8 +340,8 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             if (first) {
                 s << m << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(m) << " " << mp_abs(m)
-                  << "*" << x.get_var()->get_name();
+                s << " " << _print_sign(m) << " " << mp_abs(m) << "*"
+                  << x.get_var()->get_name();
             }
         }
         // if exponent is not 1, print the exponent;

@@ -22,7 +22,7 @@
 namespace SymEngine
 {
 // misc methods
-inline const integer_class& to_integer_class(const integer_class &i)
+inline const integer_class &to_integer_class(const integer_class &i)
 {
     return i;
 }
@@ -357,16 +357,15 @@ public:
                 if (m == 1) {
                     args.push_back(this->var_);
                 } else {
-                    args.push_back(Mul::from_dict(integer(m),
-                                                  {{this->var_, one}}));
+                    args.push_back(
+                        Mul::from_dict(integer(m), {{this->var_, one}}));
                 }
             } else {
                 if (m == 1) {
                     args.push_back(pow(this->var_, integer(it->first)));
                 } else {
-                    args.push_back(
-                        Mul::from_dict(integer(m),
-                                       {{this->var_, integer(it->first)}}));
+                    args.push_back(Mul::from_dict(
+                        integer(m), {{this->var_, integer(it->first)}}));
                 }
             }
         }
@@ -403,7 +402,8 @@ public:
 
     std::shared_ptr<std::pair<long, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(i_, ptr_->get_coeff_ref(i_));
+        return std::make_shared<std::pair<long, Int>>(i_,
+                                                      ptr_->get_coeff_ref(i_));
     }
 };
 
@@ -411,7 +411,8 @@ template <typename T, typename Int>
 class ContainerForIter : public ContainerBaseIter<T, Int>
 {
 public:
-    ContainerForIter(RCP<const T> ptr, long x) : ContainerBaseIter<T, Int>(ptr, x)
+    ContainerForIter(RCP<const T> ptr, long x)
+        : ContainerBaseIter<T, Int>(ptr, x)
     {
     }
 
@@ -431,7 +432,8 @@ template <typename T, typename Int>
 class ContainerRevIter : public ContainerBaseIter<T, Int>
 {
 public:
-    ContainerRevIter(RCP<const T> ptr, long x) : ContainerBaseIter<T, Int>(ptr, x)
+    ContainerRevIter(RCP<const T> ptr, long x)
+        : ContainerBaseIter<T, Int>(ptr, x)
     {
     }
 

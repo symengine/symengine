@@ -25,10 +25,10 @@ namespace piranha
 namespace math
 {
 template <typename T, typename U>
-struct pow_impl<T, U, SymEngine::enable_if_t
-                      <std::is_same<T, SymEngine::integer_class>::value 
-                      && std::is_integral<U>::value>> 
-{
+struct pow_impl<T, U,
+                SymEngine::
+                    enable_if_t<std::is_same<T, SymEngine::integer_class>::value
+                                && std::is_integral<U>::value>> {
     template <typename T2>
     SymEngine::integer_class operator()(const SymEngine::integer_class &r,
                                         const T2 &x) const
@@ -73,14 +73,14 @@ public:
         return *this;
     }
 
-    std::pair<unsigned int, const integer_class&> operator*()
+    std::pair<unsigned int, const integer_class &> operator*()
     {
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    std::shared_ptr<std::pair<unsigned int, const integer_class&>> operator->()
+    std::shared_ptr<std::pair<unsigned int, const integer_class &>> operator->()
     {
-        return std::make_shared<std::pair<unsigned int, const integer_class&>>(
+        return std::make_shared<std::pair<unsigned int, const integer_class &>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };
@@ -97,12 +97,12 @@ public:
 
     static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
                                                 map_uint_mpz &&d);
-    static RCP<const UIntPolyPiranha>
-    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+    static RCP<const UIntPolyPiranha> from_vec(const RCP<const Symbol> &var,
+                                               const vec_integer_class &v);
 
     integer_class eval(const integer_class &x) const;
     integer_class get_coeff(unsigned int x) const;
-    const integer_class& get_coeff_ref(unsigned int x) const;
+    const integer_class &get_coeff_ref(unsigned int x) const;
 
     inline unsigned int get_degree() const
     {
@@ -112,7 +112,8 @@ public:
     // begin() and end() are unordered
     // obegin() and oend() are ordered, from highest degree to lowest
     typedef PiranhaForIter iterator;
-    typedef ContainerRevIter<UIntPolyPiranha, const integer_class&> reverse_iterator;
+    typedef ContainerRevIter<UIntPolyPiranha, const integer_class &>
+        reverse_iterator;
     iterator begin() const
     {
         return iterator(poly_._container().begin());
@@ -123,7 +124,8 @@ public:
     }
     reverse_iterator obegin() const
     {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), (long)size() - 1);
+        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(),
+                                (long)size() - 1);
     }
     reverse_iterator oend() const
     {

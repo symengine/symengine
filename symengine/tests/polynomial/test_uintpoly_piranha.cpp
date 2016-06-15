@@ -167,17 +167,20 @@ TEST_CASE("Evaluation of UIntPolyPiranha", "[UIntPolyPiranha]")
 TEST_CASE("UIntPolyPiranha as_symbolic", "[UIntPolyPiranha]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPolyPiranha> a = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE(eq(*a->as_symbolic(),
                *add({one, mul(integer(2), x), pow(x, integer(2))})));
     REQUIRE(not eq(*a->as_symbolic(),
                    *add({one, mul(integer(3), x), pow(x, integer(2))})));
 
-    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
+    RCP<const UIntPolyPiranha> b
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
     REQUIRE(eq(*b->as_symbolic(),
                *add({one, x, mul(integer(2), pow(x, integer(2)))})));
 
-    RCP<const UIntPolyPiranha> c = UIntPolyPiranha::from_dict(x, map_uint_mpz{});
+    RCP<const UIntPolyPiranha> c
+        = UIntPolyPiranha::from_dict(x, map_uint_mpz{});
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }

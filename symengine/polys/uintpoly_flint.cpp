@@ -56,9 +56,8 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
 
-RCP<const UIntPolyFlint>
-UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
-                        const std::vector<integer_class> &v)
+RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
+                                                 const vec_integer_class &v)
 {
     // benchmark this against vec->str->fmpz_polyxx
     unsigned int deg = v.size() - 1;
@@ -83,7 +82,7 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
     return to_integer_class(static_cast<flint::fmpzxx>(poly_(r)));
 }
 
-std::vector<integer_class> UIntPolyFlint::multieval(const std::vector<integer_class> &v) const
+vec_integer_class UIntPolyFlint::multieval(const vec_integer_class &v) const
 {
     flint::fmpz_vecxx t(v.size());
     for (unsigned int i = 0; i < v.size(); ++i)
@@ -91,7 +90,7 @@ std::vector<integer_class> UIntPolyFlint::multieval(const std::vector<integer_cl
 
     flint::fmpz_vecxx nn(flint::evaluate(poly_, t));
 
-    std::vector<integer_class> res(v.size());
+    vec_integer_class res(v.size());
     for (unsigned int i = 0; i < v.size(); ++i)
         res[i] = to_integer_class(nn[i]);
 

@@ -24,13 +24,15 @@ using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
+using SymEngine::vec_integer_class;
 
 using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> P = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> P
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UIntPoly> Q = UIntPoly::from_vec(x, {1_z, 0_z, 2_z, 1_z});
@@ -45,7 +47,8 @@ TEST_CASE("Constructor of UIntPoly", "[UIntPoly]")
     RCP<const UIntPoly> T = UIntPoly::from_dict(x, map_uint_mpz{});
     REQUIRE(T->__str__() == "0");
 
-    RCP<const UIntPoly> U = UIntPoly::from_dict(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}});
+    RCP<const UIntPoly> U
+        = UIntPoly::from_dict(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}});
     REQUIRE(U->__str__() == "2");
 }
 
@@ -151,7 +154,8 @@ TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const UIntPoly> P = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}});
-    RCP<const UIntPoly> Q = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> Q
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE(P->compare(*Q) == -1);
 
@@ -168,14 +172,16 @@ TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")
 TEST_CASE("UIntPoly as_symbolic", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE(eq(*a->as_symbolic(),
                *add({one, mul(integer(2), x), pow(x, integer(2))})));
     REQUIRE(not eq(*a->as_symbolic(),
                    *add({one, mul(integer(3), x), pow(x, integer(2))})));
 
-    RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
+    RCP<const UIntPoly> b
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
     REQUIRE(eq(*b->as_symbolic(),
                *add({one, x, mul(integer(2), pow(x, integer(2)))})));
 
@@ -186,16 +192,18 @@ TEST_CASE("UIntPoly as_symbolic", "[UIntPoly]")
 TEST_CASE("Evaluation of UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 1_z}, {1, 0_z}, {2, -1_z}});
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> b
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 0_z}, {2, -1_z}});
 
     REQUIRE(a->eval(2_z) == 9);
     REQUIRE(a->eval(10_z) == 121);
     REQUIRE(b->eval(-1_z) == 0);
     REQUIRE(b->eval(0_z) == 1);
 
-    std::vector<integer_class> resa = {9_z, 121_z, 0_z, 1_z};
-    std::vector<integer_class> resb = {-3_z, -99_z, 0_z, 1_z};
+    vec_integer_class resa = {9_z, 121_z, 0_z, 1_z};
+    vec_integer_class resb = {-3_z, -99_z, 0_z, 1_z};
     REQUIRE(a->multieval({2_z, 10_z, -1_z, 0_z}) == resa);
     REQUIRE(b->multieval({2_z, 10_z, -1_z, 0_z}) == resb);
 }
@@ -205,7 +213,8 @@ TEST_CASE("Derivative of UIntPoly", "[UIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> none = symbol("");
-    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_dict(none, {{0, 1_z}});
 
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
@@ -229,7 +238,8 @@ TEST_CASE("Bool checks specific UIntPoly cases", "[UIntPoly]")
     RCP<const UIntPoly> m1 = UIntPoly::from_dict(x, {{1, 6_z}});
     RCP<const UIntPoly> m2 = UIntPoly::from_dict(x, {{3, 5_z}});
     RCP<const UIntPoly> po = UIntPoly::from_dict(x, {{5, 1_z}});
-    RCP<const UIntPoly> poly = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> poly
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one()
              and z->is_integer() and not z->is_symbol() and not z->is_mul()
@@ -264,7 +274,8 @@ TEST_CASE("Bool checks specific UIntPoly cases", "[UIntPoly]")
 TEST_CASE("UIntPoly expand", "[UIntPoly][expand]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{1, 1_z}, {2, 1_z}, {3, 1_z}});
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{1, 1_z}, {2, 1_z}, {3, 1_z}});
     RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 
@@ -279,7 +290,7 @@ TEST_CASE("UIntPoly pow", "[UIntPoly]")
     RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 3_z}, {2, 1_z}});
 
-    RCP<const UIntPoly> aaa = pow_upoly(*a, 3);   
+    RCP<const UIntPoly> aaa = pow_upoly(*a, 3);
     RCP<const UIntPoly> bb = pow_upoly(*b, 2);
 
     REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");

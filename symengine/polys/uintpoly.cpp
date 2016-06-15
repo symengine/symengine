@@ -57,7 +57,7 @@ RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
 }
 
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
-                                       const std::vector<integer_class> &v)
+                                       const vec_integer_class &v)
 {
     return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
 }
@@ -79,10 +79,10 @@ integer_class UIntPoly::eval(const integer_class &x) const
     return result;
 }
 
-std::vector<integer_class> UIntPoly::multieval(const std::vector<integer_class> &v) const
+vec_integer_class UIntPoly::multieval(const vec_integer_class &v) const
 {
     // this is not the optimal algorithm
-    std::vector<integer_class> res(v.size());
+    vec_integer_class res(v.size());
     for (unsigned int i = 0; i < v.size(); ++i)
         res[i] = eval(v[i]);
     return res;
@@ -144,14 +144,14 @@ RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
     auto tmp = a.get_poly();
     UIntDict res(1);
 
-    while(p > 1) {
+    while (p > 1) {
         if (p % 2 == 0) {
             tmp = tmp * tmp;
-            p = p/2;
+            p = p / 2;
         } else {
             res = res * tmp;
             tmp = tmp * tmp;
-            p = (p-1)/2;
+            p = (p - 1) / 2;
         }
     }
 

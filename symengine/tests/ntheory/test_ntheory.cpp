@@ -40,6 +40,7 @@ using SymEngine::carmichael;
 using SymEngine::mertens;
 using SymEngine::integer_class;
 using SymEngine::harmonic;
+using SymEngine::vec_integer_class;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -653,15 +654,15 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
 {
 
-    std::vector<integer_class> i1 = {integer_class(0)};
-    std::vector<integer_class> i2 = {integer_class(0), integer_class(1)};
-    std::vector<integer_class> i3 = {integer_class(0), integer_class(1)};
-    std::vector<integer_class> i4 = {integer_class(0), integer_class(1)};
-    std::vector<integer_class> i5
+    vec_integer_class i1 = {integer_class(0)};
+    vec_integer_class i2 = {integer_class(0), integer_class(1)};
+    vec_integer_class i3 = {integer_class(0), integer_class(1)};
+    vec_integer_class i4 = {integer_class(0), integer_class(1)};
+    vec_integer_class i5
         = {integer_class(0), integer_class(1), integer_class(4)};
-    std::vector<integer_class> i7 = {integer_class(0), integer_class(1),
-                                     integer_class(2), integer_class(4)};
-    std::vector<integer_class> i100
+    vec_integer_class i7 = {integer_class(0), integer_class(1),
+                            integer_class(2), integer_class(4)};
+    vec_integer_class i100
         = {integer_class(0),  integer_class(1),  integer_class(4),
            integer_class(9),  integer_class(16), integer_class(21),
            integer_class(24), integer_class(25), integer_class(29),
