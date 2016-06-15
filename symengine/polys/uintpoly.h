@@ -197,16 +197,6 @@ public:
 
 }; // UIntPoly
 
-inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
-{
-    return UIntPoly::from_container(i, std::move(dict));
-}
-
-inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
-{
-    return UIntPoly::from_dict(i, std::move(dict));
-}
-
 } // SymEngine
 
 #endif
