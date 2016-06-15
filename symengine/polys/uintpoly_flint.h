@@ -84,7 +84,7 @@ inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a, unsigned int p
 
 inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b)
 {
-    return flint::divides(a.get_poly(), b.get_poly()).get<0>();
+    return flint::divides(b.get_poly(), a.get_poly()).get<0>();
 }
 }
 

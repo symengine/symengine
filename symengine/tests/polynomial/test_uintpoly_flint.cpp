@@ -233,10 +233,9 @@ TEST_CASE("UIntPolyFlint divides", "[UIntPolyFlint]")
     RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{0, 4_z}});
     RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, {{0, 8_z}, {1, 8_z}});
 
-    // seems like a flint BUG
-    REQUIRE(divides_upoly(*c, *a));
-    REQUIRE(divides_upoly(*c, *b));
-    REQUIRE(!divides_upoly(*a, *b));
+    REQUIRE(divides_upoly(*a, *c));
+    REQUIRE(divides_upoly(*b, *c));
+    REQUIRE(!divides_upoly(*b, *a));
 }
 
 TEST_CASE("UIntPolyFlint pow", "[UIntPolyFlint]")
@@ -248,7 +247,6 @@ TEST_CASE("UIntPolyFlint pow", "[UIntPolyFlint]")
     RCP<const UIntPolyFlint> aaa = pow_upoly(*a, 3);   
     RCP<const UIntPolyFlint> bb = pow_upoly(*b, 2);
 
-    // seems like a flint BUG
     REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
     REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
 }
