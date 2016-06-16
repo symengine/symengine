@@ -17,9 +17,9 @@ bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
     // Check if dictionary contains terms with coeffienct 0
     if (dict.modulo_ <= integer_class(0))
         return false;
-    // for (auto iter : dict.dict_)
-    //     if (iter.second == 0)
-    //         return false;
+    if (not dict.empty())
+        if (dict.dict_[dict.dict_.size() - 1] == integer_class(0))
+            return false;
     return true;
 }
 
@@ -73,27 +73,31 @@ GaloisField::from_vec(const RCP<const Symbol> &var,
 vec_basic GaloisField::get_args() const
 {
     vec_basic args;
-    // for (const auto &p : poly_.dict_) {
-    //     if (p.first == 0) {
-    //         args.push_back(integer(p.second));
-    //     } else if (p.first == 1) {
-    //         if (p.second == 1) {
-    //             args.push_back(var_);
-    //         } else {
-    //             args.push_back(
-    //                 Mul::from_dict(integer(p.second), {{var_, one}}));
-    //         }
-    //     } else {
-    //         if (p.second == 1) {
-    //             args.push_back(pow(var_, integer(p.first)));
-    //         } else {
-    //             args.push_back(Mul::from_dict(integer(p.second),
-    //                                           {{var_, integer(p.first)}}));
-    //         }
-    //     }
-    // }
-    // if (poly_.dict_.empty())
-    //     args.push_back(zero);
+    if (poly_.dict_.empty())
+        args.push_back(zero);
+    else {
+        for (unsigned i = 0; i < poly_.dict_.size(); i++) {
+            if (poly_.dict_[i] == integer_class(0))
+                continue;
+            if (i == 0) {
+                args.push_back(integer(poly_.dict_[i]));
+            } else if (i == 1) {
+                if (poly_.dict_[i] == 1) {
+                    args.push_back(var_);
+                } else {
+                    args.push_back(
+                        Mul::from_dict(integer(poly_.dict_[i]), {{var_, one}}));
+                }
+            } else {
+                if (poly_.dict_[i] == 1) {
+                    args.push_back(pow(var_, integer(i)));
+                } else {
+                    args.push_back(Mul::from_dict(integer(poly_.dict_[i]),
+                                                  {{var_, integer(i)}}));
+                }
+            }
+        }
+    }
     return args;
 }
 
