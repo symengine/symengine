@@ -23,6 +23,7 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
+using SymEngine::vec_integer_class;
 
 using namespace SymEngine::literals;
 
@@ -162,6 +163,11 @@ TEST_CASE("Evaluation of UIntPolyPiranha", "[UIntPolyPiranha]")
     REQUIRE(a->eval(10_z) == 121);
     REQUIRE(b->eval(-1_z) == 0);
     REQUIRE(b->eval(0_z) == 1);
+
+    vec_integer_class resa = {9_z, 121_z, 0_z, 1_z};
+    vec_integer_class resb = {-3_z, -99_z, 0_z, 1_z};
+    REQUIRE(a->multieval({2_z, 10_z, -1_z, 0_z}) == resa);
+    REQUIRE(b->multieval({2_z, 10_z, -1_z, 0_z}) == resb);
 }
 
 TEST_CASE("UIntPolyPiranha as_symbolic", "[UIntPolyPiranha]")
@@ -236,4 +242,18 @@ TEST_CASE("UIntPolyPiranha pow", "[UIntPolyPiranha]")
 
     REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
     REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
+}
+
+TEST_CASE("UIntPolyPiranha divides", "[UIntPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(x, {{0, 4_z}});
+    RCP<const UIntPolyPiranha> c
+        = UIntPolyPiranha::from_dict(x, {{0, 8_z}, {1, 8_z}});
+
+    REQUIRE(divides_upoly(*a, *c));
+    REQUIRE(divides_upoly(*b, *c));
+    REQUIRE(!divides_upoly(*b, *a));
 }

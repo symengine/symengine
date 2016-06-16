@@ -53,11 +53,15 @@ struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class>
 template <>
 struct divexact_impl<SymEngine::integer_class>
 {
-    SymEngine::integer_class operator()(SymEngine::integer_class &r,
-                                        const SymEngine::integer_class &x, const SymEngine::integer_class &y) const
+    void operator()(SymEngine::integer_class &r,
+                    const SymEngine::integer_class &x, const SymEngine::integer_class &y) const
     {
-        mp_divexact(r, x, y);
-        return r;
+        SymEngine::integer_class rem;
+        mp_tdiv_qr(r, rem, x, y);
+        if (rem != SymEngine::integer_class(0))
+        {
+            piranha_throw(inexact_division);
+        }
     }
 };
 }
@@ -129,6 +133,8 @@ public:
                                                const vec_integer_class &v);
 
     integer_class eval(const integer_class &x) const;
+    vec_integer_class multieval(const vec_integer_class &x) const;
+
     integer_class get_coeff(unsigned int x) const;
     const integer_class &get_coeff_ref(unsigned int x) const;
 
@@ -189,6 +195,8 @@ inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
         throw std::runtime_error("Error: variables must agree.");
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
+    if(gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
+        gcdx = -gcdx;
     pintpoly mulx(a.get_poly() * b.get_poly());
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
 }
@@ -197,6 +205,17 @@ inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
                                           unsigned int p)
 {
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+}
+
+inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b)
+{
+    try {
+        pintpoly res;
+        piranha::math::divexact(res, b.get_poly(), a.get_poly());
+        return true;
+    } catch (const piranha::math::inexact_division &) {
+        return false;
+    }
 }
 
 }
