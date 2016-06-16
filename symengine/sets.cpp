@@ -1,5 +1,4 @@
 #include <symengine/sets.h>
-#include <algorithm>
 #include <iterator>
 
 namespace SymEngine

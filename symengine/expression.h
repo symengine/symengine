@@ -8,13 +8,7 @@
 #define SYMENGINE_EXPRESSION_H
 
 #include <symengine/add.h>
-#include <symengine/basic.h>
-#include <symengine/symengine_rcp.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/symbol.h>
-#include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
 namespace SymEngine

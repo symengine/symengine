@@ -1,18 +1,4 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
 #include <symengine/visitor.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/complex_double.h>
-#include <symengine/complex_mpc.h>
 
 #define ACCEPT(CLASS)                                                          \
     void CLASS::accept(Visitor &v) const                                       \

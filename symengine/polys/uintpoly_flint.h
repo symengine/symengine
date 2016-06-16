@@ -6,11 +6,8 @@
 #define SYMENGINE_UINTPOLY_FLINT_H
 
 #include <symengine/polys/upolybase.h>
-#include <symengine/dict.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
-
-#include <flint/flint.h>
 #include <flint/fmpz_polyxx.h>
 
 namespace SymEngine

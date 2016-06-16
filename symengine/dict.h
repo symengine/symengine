@@ -6,7 +6,6 @@
 
 #ifndef SYMENGINE_DICT_H
 #define SYMENGINE_DICT_H
-#include <symengine/symengine_config.h>
 #include <symengine/mp_class.h>
 #include <algorithm>
 

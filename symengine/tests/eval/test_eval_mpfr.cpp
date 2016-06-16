@@ -1,6 +1,4 @@
 #include "catch.hpp"
-#include <symengine/basic.h>
-#include <symengine/integer.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/eval_mpfr.h>

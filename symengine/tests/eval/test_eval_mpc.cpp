@@ -1,13 +1,8 @@
 #include "catch.hpp"
-#include <symengine/basic.h>
-#include <symengine/integer.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
-#include <symengine/constants.h>
-#include <symengine/functions.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

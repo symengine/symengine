@@ -1,22 +1,4 @@
-#include <symengine/add.h>
-#include <symengine/basic.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/constants.h>
-#include <symengine/functions.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uintpoly_flint.h>
-#include <symengine/polys/uintpoly_piranha.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/pow.h>
-#include <symengine/rational.h>
-#include <symengine/sets.h>
-#include <symengine/symbol.h>
 #include <symengine/visitor.h>
-#include <symengine/polynomial_multivariate.h>
 
 namespace SymEngine
 {

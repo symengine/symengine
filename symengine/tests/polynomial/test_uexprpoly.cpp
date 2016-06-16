@@ -1,11 +1,7 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
-#include <symengine/mul.h>
 #include <symengine/polys/uexprpoly.h>
-#include <symengine/pow.h>
-#include <symengine/dict.h>
 
 using SymEngine::Expression;
 using SymEngine::UExprPoly;

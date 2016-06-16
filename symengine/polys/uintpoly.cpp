@@ -1,4 +1,3 @@
-#include <symengine/symbol.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 

@@ -3,8 +3,6 @@
  *  Class for RealDouble built on top of Number class
  *
  **/
-#include <symengine/basic.h>
-#include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
 namespace SymEngine

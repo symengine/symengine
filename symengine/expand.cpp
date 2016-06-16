@@ -1,6 +1,4 @@
-#include <symengine/basic.h>
 #include <symengine/visitor.h>
-#include <symengine/pow.h>
 
 namespace SymEngine
 {

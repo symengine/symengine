@@ -1,21 +1,6 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
-#include <vector>
 #include <stack>
-#include <map>
-#include <set>
-#include <string>
-#include <functional>
 
 namespace SymEngine
 {

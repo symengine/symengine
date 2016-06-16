@@ -7,7 +7,6 @@
 #ifndef SYMENGINE_DIOPHANTINE_H
 #define SYMENGINE_DIOPHANTINE_H
 
-#include <symengine/basic.h>
 #include <symengine/matrix.h>
 
 namespace SymEngine

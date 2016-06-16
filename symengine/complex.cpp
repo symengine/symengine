@@ -1,5 +1,4 @@
 #include <symengine/complex.h>
-#include <symengine/constants.h>
 #include <symengine/ntheory.h>
 
 namespace SymEngine

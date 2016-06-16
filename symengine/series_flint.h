@@ -2,7 +2,6 @@
 #define SYMENGINE_SERIES_FLINT_H
 
 #include <symengine/series.h>
-#include <symengine/rational.h>
 #include <symengine/expression.h>
 
 #ifdef HAVE_SYMENGINE_FLINT

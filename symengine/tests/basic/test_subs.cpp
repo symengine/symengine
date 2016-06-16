@@ -1,17 +1,6 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
 
-#include <symengine/basic.h>
-#include <symengine/add.h>
-#include <symengine/symbol.h>
-#include <symengine/dict.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
-#include <symengine/real_double.h>
 #include <symengine/subs.h>
 
 using SymEngine::Basic;

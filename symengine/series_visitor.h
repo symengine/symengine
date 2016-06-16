@@ -1,7 +1,6 @@
 #ifndef SYMENGINE_SERIES_VISITOR_H
 #define SYMENGINE_SERIES_VISITOR_H
 
-#include <symengine/series.h>
 #include <symengine/visitor.h>
 
 namespace SymEngine

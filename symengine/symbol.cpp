@@ -1,5 +1,3 @@
-#include <symengine/symbol.h>
-#include <symengine/integer.h>
 #include <symengine/constants.h>
 
 namespace SymEngine

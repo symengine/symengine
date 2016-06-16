@@ -5,10 +5,8 @@
 #ifndef SYMENGINE_SETS_H
 #define SYMENGINE_SETS_H
 
-#include <symengine/basic.h>
 #include <symengine/functions.h>
 #include <symengine/complex.h>
-#include <symengine/dict.h>
 
 namespace SymEngine
 {

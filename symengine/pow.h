@@ -6,11 +6,8 @@
 #ifndef SYMENGINE_POW_H
 #define SYMENGINE_POW_H
 
-#include <symengine/basic.h>
 #include <symengine/functions.h>
-#include <symengine/dict.h>
 #include <symengine/mul.h>
-#include <symengine/integer.h>
 #include <symengine/ntheory.h>
 #include <symengine/constants.h>
 

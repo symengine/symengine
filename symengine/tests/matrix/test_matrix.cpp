@@ -2,12 +2,8 @@
 #include <chrono>
 
 #include <symengine/matrix.h>
-#include <symengine/integer.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/functions.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;

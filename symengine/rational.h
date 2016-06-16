@@ -6,9 +6,6 @@
 #ifndef SYMENGINE_RATIONAL_H
 #define SYMENGINE_RATIONAL_H
 
-#include <symengine/basic.h>
-#include <symengine/number.h>
-#include <symengine/integer.h>
 #include <symengine/constants.h>
 
 namespace SymEngine

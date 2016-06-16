@@ -1,6 +1,5 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
 #include <symengine/series_generic.h>
 

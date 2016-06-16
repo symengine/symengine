@@ -1,17 +1,5 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_arb.h>
-#include <symengine/real_mpfr.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 
