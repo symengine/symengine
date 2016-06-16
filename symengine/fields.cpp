@@ -128,8 +128,6 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         integer_class coeff;
         for (auto it = deg_dividend + 1; it-- != 0;) {
             coeff = dict_out[it];
-            if (coeff == integer_class(0) && it >= deg_divisor)
-                continue;
             auto lb = deg_divisor + it > deg_dividend
                           ? deg_divisor + it - deg_dividend
                           : 0;
@@ -261,5 +259,82 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     integer_class temp_LC;
     out.gf_monic(temp_LC, outArg(out));
     return out;
+}
+
+GaloisFieldDict GaloisFieldDict::gf_diff() const
+{
+    auto df = degree();
+    GaloisFieldDict out = GaloisFieldDict({}, modulo_);
+    out.dict_.resize(df, integer_class(0));
+    for (unsigned i = 1; i <= df; i++) {
+        if (dict_[i] != integer_class(0)) {
+            out.dict_[i-1] = i*dict_[i];
+            mp_fdiv_r(out.dict_[i-1], out.dict_[i-1], modulo_);
+        }
+    }
+    out.gf_istrip();
+    return out;
+}
+
+bool GaloisFieldDict::gf_is_sqf() const
+{
+    if (dict_.empty())
+        return true;
+    integer_class LC;
+    GaloisFieldDict monic;
+    gf_monic(LC, outArg(monic));
+    monic = monic.gf_gcd(monic.gf_diff());
+    return monic.is_one();
+}
+
+std::vector<std::pair<GaloisFieldDict, integer_class> > GaloisFieldDict::gf_sqf_list() const
+{
+    std::vector<std::pair<GaloisFieldDict, integer_class> > vec_out;
+    if (degree() < 1)
+        return vec_out;
+    integer_class n = integer_class(1);
+    unsigned r = mp_get_si(modulo_);
+    bool sqf = false;
+    integer_class LC;
+    GaloisFieldDict f;
+    gf_monic(LC, outArg(f));
+    while (true) {
+        GaloisFieldDict F = f.gf_diff();
+        if (not F.dict_.empty()) {
+            GaloisFieldDict g = f.gf_gcd(F);
+            GaloisFieldDict h = f / g;
+
+            integer_class i = 1;
+
+            while (not h.is_one()) {
+                GaloisFieldDict G = h.gf_gcd(g);
+                GaloisFieldDict H = h / G;
+
+                if (H.degree() > 0)
+                    vec_out.push_back({H, i*n});
+
+                i += 1;
+                g /= G;
+                h = G;
+            }
+            if (g.is_one())
+                sqf = true;
+            else
+                f = g;
+            }
+        if (not sqf){
+            unsigned int deg = f.degree();
+            unsigned int d = deg / r;
+            GaloisFieldDict temp = f;
+            for (unsigned int i = 0; i <= d; i++) {
+                f.dict_[d - i] = temp.dict_[deg - i*r];
+            }
+            n *= r;
+            f.dict_.resize(d+1);
+            f.gf_istrip();
+        } else
+            break;
+    }
+    return vec_out;
 }
 }
