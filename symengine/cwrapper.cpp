@@ -180,7 +180,7 @@ void integer_set_mpz(basic s, const mpz_t i)
     s->m = SymEngine::integer(integer_class(i));
 }
 
-void integer_set_str(basic s, char *c)
+void integer_set_str(basic s, const char *c)
 {
     s->m = SymEngine::integer(integer_class(c));
 }
@@ -205,7 +205,7 @@ void real_mpfr_set_d(basic s, double d, int prec)
     s->m = SymEngine::real_mpfr(std::move(mc));
 }
 
-void real_mpfr_set_str(basic s, char *c, int prec)
+void real_mpfr_set_str(basic s, const char *c, int prec)
 {
     s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
 }
@@ -302,25 +302,25 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
 }
 
-void complex_real_part(basic s, basic com)
+void complex_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
 }
 
-void complex_imaginary_part(basic s, basic com)
+void complex_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
-void complex_double_real_part(basic s, basic com)
+void complex_double_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
 }
 
-void complex_double_imaginary_part(basic s, basic com)
+void complex_double_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();

@@ -1,4 +1,5 @@
 #include <symengine/mp_wrapper.h>
+#include <stdlib.h>
 
 namespace SymEngine
 {

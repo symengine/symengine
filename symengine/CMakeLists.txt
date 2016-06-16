@@ -22,8 +22,6 @@ set(SRC
     functions.cpp
     monomials.cpp
     polys/uintpoly.cpp
-    polys/uintpoly_flint.cpp
-    polys/uintpoly_piranha.cpp
     polys/uexprpoly.cpp
     series.cpp
     series_generic.cpp
@@ -59,6 +57,7 @@ endif()
 
 if (WITH_FLINT)
     set(SRC ${SRC} series_flint.cpp)
+    set(SRC ${SRC} polys/uintpoly_flint.cpp)
 endif()
 
 if (WITH_ARB)
@@ -67,6 +66,7 @@ endif()
 
 if (WITH_PIRANHA)
     set(SRC series_piranha.cpp ${SRC})
+    set(SRC polys/uintpoly_piranha.cpp ${SRC})
 endif()
 
 # Needed for "make install"

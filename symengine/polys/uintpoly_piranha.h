@@ -7,6 +7,7 @@
 
 #include <symengine/polys/upolybase.h>
 #include <symengine/dict.h>
+#include <memory>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/monomial.hpp>
@@ -24,10 +25,10 @@ namespace piranha
 namespace math
 {
 template <typename T, typename U>
-struct pow_impl<T, U,
-                SymEngine::
-                    enable_if_t<std::is_same<T, SymEngine::integer_class>::value
-                                && std::is_integral<U>::value>> {
+struct pow_impl<T, U, SymEngine::enable_if_t
+                      <std::is_same<T, SymEngine::integer_class>::value 
+                      && std::is_integral<U>::value>> 
+{
     template <typename T2>
     SymEngine::integer_class operator()(const SymEngine::integer_class &r,
                                         const T2 &x) const
@@ -47,6 +48,43 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pterm = pintpoly::term_type;
 
+class PiranhaForIter
+{
+    pintpoly::container_type::const_iterator ptr_;
+
+public:
+    PiranhaForIter(pintpoly::container_type::const_iterator ptr) : ptr_{ptr}
+    {
+    }
+
+    bool operator==(const PiranhaForIter &rhs)
+    {
+        return (ptr_ == rhs.ptr_);
+    }
+
+    bool operator!=(const PiranhaForIter &rhs)
+    {
+        return (ptr_ != rhs.ptr_);
+    }
+
+    PiranhaForIter operator++()
+    {
+        ptr_++;
+        return *this;
+    }
+
+    std::pair<unsigned int, const integer_class&> operator*()
+    {
+        return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
+    }
+
+    std::shared_ptr<std::pair<unsigned int, const integer_class&>> operator->()
+    {
+        return std::make_shared<std::pair<unsigned int, const integer_class&>>(
+            *(ptr_->m_key.begin()), ptr_->m_cf);
+    }
+};
+
 class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
 {
 public:
@@ -64,10 +102,39 @@ public:
 
     integer_class eval(const integer_class &x) const;
     integer_class get_coeff(unsigned int x) const;
+    const integer_class& get_coeff_ref(unsigned int x) const;
 
     inline unsigned int get_degree() const
     {
         return poly_.degree();
+    }
+
+    // begin() and end() are unordered
+    // obegin() and oend() are ordered, from highest degree to lowest
+    typedef PiranhaForIter iterator;
+    typedef ContainerRevIter<UIntPolyPiranha, const integer_class&> reverse_iterator;
+    iterator begin() const
+    {
+        return iterator(poly_._container().begin());
+    }
+    iterator end() const
+    {
+        return iterator(poly_._container().end());
+    }
+    reverse_iterator obegin() const
+    {
+        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), (long)size() - 1);
+    }
+    reverse_iterator oend() const
+    {
+        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), -1);
+    }
+
+    unsigned int size() const
+    {
+        if (poly_.size() == 0)
+            return 0;
+        return get_degree() + 1;
     }
 
 }; // UIntPolyPiranha
