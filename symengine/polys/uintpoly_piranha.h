@@ -24,11 +24,10 @@ namespace piranha
 // overloading pow for pirahna::math::evaluate
 namespace math
 {
-template <typename T, typename U>
-struct pow_impl<T, U,
-                SymEngine::
-                    enable_if_t<std::is_same<T, SymEngine::integer_class>::value
-                                && std::is_integral<U>::value>> {
+template <typename U>
+struct pow_impl<SymEngine::integer_class, U, 
+                SymEngine::enable_if_t<std::is_integral<U>::value>>
+{
     template <typename T2>
     SymEngine::integer_class operator()(const SymEngine::integer_class &r,
                                         const T2 &x) const
@@ -38,7 +37,36 @@ struct pow_impl<T, U,
         return res;
     }
 };
+
+template <>
+struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class>
+{
+    SymEngine::integer_class operator()(const SymEngine::integer_class &r,
+                                        const SymEngine::integer_class &x) const
+    {
+        SymEngine::integer_class res;
+        mp_gcd(res, r, x);
+        return res;
+    }
+};
+
+template <>
+struct divexact_impl<SymEngine::integer_class>
+{
+    SymEngine::integer_class operator()(SymEngine::integer_class &r,
+                                        const SymEngine::integer_class &x, const SymEngine::integer_class &y) const
+    {
+        mp_divexact(r, x, y);
+        return r;
+    }
+};
 }
+
+template <>
+struct has_exact_ring_operations<SymEngine::integer_class>
+{
+    static const bool value = true;
+};
 }
 #endif
 
@@ -140,6 +168,37 @@ public:
     }
 
 }; // UIntPolyPiranha
+
+inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
+                                          const UIntPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
+    // following the convention, that leading coefficient should be positive
+    if(gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
+        gcdx = -gcdx;
+    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(gcdx));
+}
+
+inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
+                                          const UIntPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
+    pintpoly mulx(a.get_poly() * b.get_poly());
+    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
+}
+
+inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
+                                          unsigned int p)
+{
+    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+}
+
 }
 
 #endif // HAVE_SYMENGINE_PIRANHA

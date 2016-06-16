@@ -184,3 +184,56 @@ TEST_CASE("UIntPolyPiranha as_symbolic", "[UIntPolyPiranha]")
         = UIntPolyPiranha::from_dict(x, map_uint_mpz{});
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }
+
+TEST_CASE("UIntPolyPiranha gcd", "[UIntPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyPiranha> a = UIntPolyPiranha::from_dict(x, {{2, 2_z}});
+    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(x, {{1, 3_z}});
+    RCP<const UIntPolyPiranha> c
+        = UIntPolyPiranha::from_dict(x, {{0, 6_z}, {1, 8_z}, {2, 2_z}});
+    RCP<const UIntPolyPiranha> d
+        = UIntPolyPiranha::from_dict(x, {{1, 4_z}, {2, 4_z}});
+
+    RCP<const UIntPolyPiranha> ab = gcd_upoly(*a, *b);
+    RCP<const UIntPolyPiranha> cd = gcd_upoly(*c, *d);
+    RCP<const UIntPolyPiranha> ad = gcd_upoly(*a, *d);
+    RCP<const UIntPolyPiranha> bc = gcd_upoly(*b, *c);
+
+    REQUIRE(ab->__str__() == "x");
+    REQUIRE(cd->__str__() == "2*x + 2");
+    REQUIRE(ad->__str__() == "2*x");
+    REQUIRE(bc->__str__() == "1");
+}
+
+TEST_CASE("UIntPolyPiranha lcm", "[UIntPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyPiranha> a = UIntPolyPiranha::from_dict(x, {{2, 6_z}});
+    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(x, {{1, 8_z}});
+    RCP<const UIntPolyPiranha> c
+        = UIntPolyPiranha::from_dict(x, {{0, 8_z}, {1, 8_z}});
+
+    RCP<const UIntPolyPiranha> ab = lcm_upoly(*a, *b);
+    RCP<const UIntPolyPiranha> bc = lcm_upoly(*b, *c);
+    RCP<const UIntPolyPiranha> ac = lcm_upoly(*a, *c);
+
+    REQUIRE(ab->__str__() == "24*x**2");
+    REQUIRE(bc->__str__() == "8*x**2 + 8*x");
+    REQUIRE(ac->__str__() == "24*x**3 + 24*x**2");
+}
+
+TEST_CASE("UIntPolyPiranha pow", "[UIntPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPolyPiranha> b
+        = UIntPolyPiranha::from_dict(x, {{0, 3_z}, {2, 1_z}});
+
+    RCP<const UIntPolyPiranha> aaa = pow_upoly(*a, 3);
+    RCP<const UIntPolyPiranha> bb = pow_upoly(*b, 2);
+
+    REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
+    REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
+}
