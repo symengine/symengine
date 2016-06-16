@@ -413,7 +413,8 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[4] == 1);
 }
 
-TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic", "[basic]")
+TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
+          "[basic]")
 {
     std::vector<integer_class> a, mp;
     GaloisFieldDict d1, d2, d3, d4;
@@ -436,7 +437,7 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic", "[b
     mp = d2.dict_;
     REQUIRE(mp[0] == 3);
     REQUIRE(mp[1] == 3);
-    a = {1_z, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1_z};
+    a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d2 = d1.gf_diff();
     REQUIRE(d2.dict_.empty());

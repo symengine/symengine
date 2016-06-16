@@ -268,8 +268,8 @@ GaloisFieldDict GaloisFieldDict::gf_diff() const
     out.dict_.resize(df, integer_class(0));
     for (unsigned i = 1; i <= df; i++) {
         if (dict_[i] != integer_class(0)) {
-            out.dict_[i-1] = i*dict_[i];
-            mp_fdiv_r(out.dict_[i-1], out.dict_[i-1], modulo_);
+            out.dict_[i - 1] = i * dict_[i];
+            mp_fdiv_r(out.dict_[i - 1], out.dict_[i - 1], modulo_);
         }
     }
     out.gf_istrip();
@@ -287,9 +287,10 @@ bool GaloisFieldDict::gf_is_sqf() const
     return monic.is_one();
 }
 
-std::vector<std::pair<GaloisFieldDict, integer_class> > GaloisFieldDict::gf_sqf_list() const
+std::vector<std::pair<GaloisFieldDict, integer_class>>
+GaloisFieldDict::gf_sqf_list() const
 {
-    std::vector<std::pair<GaloisFieldDict, integer_class> > vec_out;
+    std::vector<std::pair<GaloisFieldDict, integer_class>> vec_out;
     if (degree() < 1)
         return vec_out;
     integer_class n = integer_class(1);
@@ -304,16 +305,16 @@ std::vector<std::pair<GaloisFieldDict, integer_class> > GaloisFieldDict::gf_sqf_
             GaloisFieldDict g = f.gf_gcd(F);
             GaloisFieldDict h = f / g;
 
-            integer_class i = 1;
+            integer_class i = integer_class(1);
 
             while (not h.is_one()) {
                 GaloisFieldDict G = h.gf_gcd(g);
                 GaloisFieldDict H = h / G;
 
                 if (H.degree() > 0)
-                    vec_out.push_back({H, i*n});
+                    vec_out.push_back({H, i * n});
 
-                i += 1;
+                i += integer_class(1);
                 g /= G;
                 h = G;
             }
@@ -321,16 +322,16 @@ std::vector<std::pair<GaloisFieldDict, integer_class> > GaloisFieldDict::gf_sqf_
                 sqf = true;
             else
                 f = g;
-            }
-        if (not sqf){
+        }
+        if (not sqf) {
             unsigned int deg = f.degree();
             unsigned int d = deg / r;
             GaloisFieldDict temp = f;
             for (unsigned int i = 0; i <= d; i++) {
-                f.dict_[d - i] = temp.dict_[deg - i*r];
+                f.dict_[d - i] = temp.dict_[deg - i * r];
             }
             n *= r;
-            f.dict_.resize(d+1);
+            f.dict_.resize(d + 1);
             f.gf_istrip();
         } else
             break;
