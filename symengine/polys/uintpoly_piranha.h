@@ -25,9 +25,8 @@ namespace piranha
 namespace math
 {
 template <typename U>
-struct pow_impl<SymEngine::integer_class, U, 
-                SymEngine::enable_if_t<std::is_integral<U>::value>>
-{
+struct pow_impl<SymEngine::integer_class, U,
+                SymEngine::enable_if_t<std::is_integral<U>::value>> {
     template <typename T2>
     SymEngine::integer_class operator()(const SymEngine::integer_class &r,
                                         const T2 &x) const
@@ -39,8 +38,7 @@ struct pow_impl<SymEngine::integer_class, U,
 };
 
 template <>
-struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class>
-{
+struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class> {
     SymEngine::integer_class operator()(const SymEngine::integer_class &r,
                                         const SymEngine::integer_class &x) const
     {
@@ -51,15 +49,14 @@ struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class>
 };
 
 template <>
-struct divexact_impl<SymEngine::integer_class>
-{
+struct divexact_impl<SymEngine::integer_class> {
     void operator()(SymEngine::integer_class &r,
-                    const SymEngine::integer_class &x, const SymEngine::integer_class &y) const
+                    const SymEngine::integer_class &x,
+                    const SymEngine::integer_class &y) const
     {
         SymEngine::integer_class rem;
         mp_tdiv_qr(r, rem, x, y);
-        if (rem != SymEngine::integer_class(0))
-        {
+        if (rem != SymEngine::integer_class(0)) {
             piranha_throw(inexact_division);
         }
     }
@@ -67,8 +64,7 @@ struct divexact_impl<SymEngine::integer_class>
 }
 
 template <>
-struct has_exact_ring_operations<SymEngine::integer_class>
-{
+struct has_exact_ring_operations<SymEngine::integer_class> {
     static const bool value = true;
 };
 }
@@ -176,38 +172,41 @@ public:
 }; // UIntPolyPiranha
 
 inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
-                                          const UIntPolyPiranha &b)
+                                            const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     // following the convention, that leading coefficient should be positive
-    if(gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
+    if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
         gcdx = -gcdx;
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(gcdx));
 }
 
 inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
-                                          const UIntPolyPiranha &b)
+                                            const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
-    if(gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
+    if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
         gcdx = -gcdx;
     pintpoly mulx(a.get_poly() * b.get_poly());
-    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
+    return make_rcp<const UIntPolyPiranha>(
+        a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
 }
 
 inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
-                                          unsigned int p)
+                                            unsigned int p)
 {
-    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+    return make_rcp<const UIntPolyPiranha>(
+        a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
 }
 
-inline std::pair<bool, RCP<const UIntPolyPiranha>> divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b)
+inline std::pair<bool, RCP<const UIntPolyPiranha>>
+divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
@@ -215,12 +214,13 @@ inline std::pair<bool, RCP<const UIntPolyPiranha>> divides_upoly(const UIntPolyP
     try {
         pintpoly res;
         piranha::math::divexact(res, b.get_poly(), a.get_poly());
-        return std::make_pair(true, UIntPolyPiranha::from_container(a.get_var(), std::move(res)));
+        return std::make_pair(
+            true, UIntPolyPiranha::from_container(a.get_var(), std::move(res)));
     } catch (const piranha::math::inexact_division &) {
-        return std::make_pair(false, UIntPolyPiranha::from_dict(a.get_var(), {{}}));
+        return std::make_pair(false,
+                              UIntPolyPiranha::from_dict(a.get_var(), {{}}));
     }
 }
-
 }
 
 #endif // HAVE_SYMENGINE_PIRANHA

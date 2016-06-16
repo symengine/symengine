@@ -343,6 +343,11 @@ public:
     // return `degree` + 1. `0` returned for zero poly.
     virtual unsigned int size() const = 0;
 
+    integer_class get_lc() const
+    {
+        return get_coeff(get_degree());
+    }
+
     RCP<const Basic> as_symbolic() const
     {
         auto it = (static_cast<const Poly &>(*this)).begin();

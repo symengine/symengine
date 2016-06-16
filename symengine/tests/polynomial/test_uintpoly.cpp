@@ -300,11 +300,9 @@ TEST_CASE("UIntPoly pow", "[UIntPoly]")
 TEST_CASE("UIntPoly divides", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> a
-        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 4_z}});
-    RCP<const UIntPoly> c
-        = UIntPoly::from_dict(x, {{0, 8_z}, {1, 8_z}});
+    RCP<const UIntPoly> c = UIntPoly::from_dict(x, {{0, 8_z}, {1, 8_z}});
 
     std::pair<bool, RCP<const UIntPoly>> ac = divides_upoly(*a, *c);
     std::pair<bool, RCP<const UIntPoly>> bc = divides_upoly(*b, *c);
