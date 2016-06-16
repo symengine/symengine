@@ -38,7 +38,7 @@ env:
   # Debug build (with BFD) with MPC
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPC="yes"
   # Debug build (with BFD) with MPC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmp"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
   # Debug build shared lib (with BFD)
   - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
   # Release build (with BFD)
