@@ -241,9 +241,15 @@ TEST_CASE("UIntPolyFlint divides", "[UIntPolyFlint]")
     RCP<const UIntPolyFlint> c
         = UIntPolyFlint::from_dict(x, {{0, 8_z}, {1, 8_z}});
 
-    REQUIRE(divides_upoly(*a, *c));
-    REQUIRE(divides_upoly(*b, *c));
-    REQUIRE(!divides_upoly(*b, *a));
+    std::pair<bool, RCP<const UIntPolyFlint>> ac = divides_upoly(*a, *c);
+    std::pair<bool, RCP<const UIntPolyFlint>> bc = divides_upoly(*b, *c);
+    std::pair<bool, RCP<const UIntPolyFlint>> ba = divides_upoly(*b, *a);
+
+    REQUIRE(ac.first);
+    REQUIRE(ac.second->__str__() == "8");
+    REQUIRE(bc.first);
+    REQUIRE(bc.second->__str__() == "2*x + 2");
+    REQUIRE(!ba.first);
 }
 
 TEST_CASE("UIntPolyFlint pow", "[UIntPolyFlint]")

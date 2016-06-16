@@ -207,14 +207,17 @@ inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
 }
 
-inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b)
+inline std::pair<bool, RCP<const UIntPolyPiranha>> divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b)
 {
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
     try {
         pintpoly res;
         piranha::math::divexact(res, b.get_poly(), a.get_poly());
-        return true;
+        return std::make_pair(true, UIntPolyPiranha::from_container(a.get_var(), std::move(res)));
     } catch (const piranha::math::inexact_division &) {
-        return false;
+        return std::make_pair(false, UIntPolyPiranha::from_dict(a.get_var(), {{}}));
     }
 }
 
