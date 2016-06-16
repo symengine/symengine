@@ -64,6 +64,13 @@ public:
         return result;
     }
 
+    integer_class get_lc()
+    {   
+        if (dict_.empty())
+            return integer_class(0);
+        return dict_.rbegin()->second;
+    }
+
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
         int mul = 1;
@@ -199,6 +206,8 @@ public:
 }; // UIntPoly
 
 RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p);
+// returns (true, b/a) if a exactly divides b otherwise (false, 0)
+std::pair<bool, RCP<const UIntPoly>> divides_upoly(const UIntPoly &a, const UIntPoly &b);
 
 } // SymEngine
 

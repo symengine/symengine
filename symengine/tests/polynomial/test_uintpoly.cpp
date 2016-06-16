@@ -296,3 +296,23 @@ TEST_CASE("UIntPoly pow", "[UIntPoly]")
     REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
     REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
 }
+
+TEST_CASE("UIntPoly divides", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 4_z}});
+    RCP<const UIntPoly> c
+        = UIntPoly::from_dict(x, {{0, 8_z}, {1, 8_z}});
+
+    std::pair<bool, RCP<const UIntPoly>> ac = divides_upoly(*a, *c);
+    std::pair<bool, RCP<const UIntPoly>> bc = divides_upoly(*b, *c);
+    std::pair<bool, RCP<const UIntPoly>> ba = divides_upoly(*b, *a);
+
+    REQUIRE(ac.first);
+    REQUIRE(ac.second->__str__() == "8");
+    REQUIRE(bc.first);
+    REQUIRE(bc.second->__str__() == "2*x + 2");
+    REQUIRE(!ba.first);
+}
