@@ -6,9 +6,6 @@
 #ifndef SYMENGINE_COMPLEX_H
 #define SYMENGINE_COMPLEX_H
 
-#include <symengine/basic.h>
-#include <symengine/number.h>
-#include <symengine/integer.h>
 #include <symengine/rational.h>
 
 namespace SymEngine

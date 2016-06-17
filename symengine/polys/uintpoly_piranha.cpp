@@ -64,6 +64,17 @@ integer_class UIntPolyPiranha::get_coeff(unsigned int x) const
     return poly_.find_cf(pmonomial{x});
 }
 
+const integer_class &UIntPolyPiranha::get_coeff_ref(unsigned int x) const
+{
+    static integer_class PZERO(0);
+
+    pterm temp = pterm{0, pmonomial{x}};
+    auto it = poly_._container().find(temp);
+    if (it == poly_._container().end())
+        return PZERO;
+    return it->m_cf;
+}
+
 integer_class UIntPolyPiranha::eval(const integer_class &x) const
 {
     return piranha::math::evaluate<integer_class>(poly_,

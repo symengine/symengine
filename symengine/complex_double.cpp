@@ -3,7 +3,6 @@
  *  Class for ComplexDouble built on top of Number class
  *
  **/
-#include <symengine/basic.h>
 #include <symengine/complex_double.h>
 
 namespace SymEngine

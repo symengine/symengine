@@ -7,9 +7,7 @@
 #ifndef SYMENGINE_INTEGER_H
 #define SYMENGINE_INTEGER_H
 
-#include <symengine/basic.h>
 #include <symengine/number.h>
-#include <symengine/mp_class.h>
 
 namespace SymEngine
 {

@@ -6,11 +6,8 @@
 #ifndef SYMENGINE_SERIES_H
 #define SYMENGINE_SERIES_H
 
-#include <string>
 #include <list>
 
-#include <symengine/number.h>
-#include <symengine/dict.h>
 #include <symengine/integer.h>
 
 namespace SymEngine

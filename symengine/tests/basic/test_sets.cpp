@@ -1,9 +1,6 @@
 #include "catch.hpp"
-#include <iostream>
 
-#include <symengine/basic.h>
 #include <symengine/sets.h>
-#include <symengine/symengine_rcp.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;

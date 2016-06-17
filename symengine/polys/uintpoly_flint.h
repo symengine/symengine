@@ -6,11 +6,8 @@
 #define SYMENGINE_UINTPOLY_FLINT_H
 
 #include <symengine/polys/upolybase.h>
-#include <symengine/dict.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
-
-#include <flint/flint.h>
 #include <flint/fmpz_polyxx.h>
 
 namespace SymEngine
@@ -33,6 +30,33 @@ public:
 
     integer_class eval(const integer_class &x) const;
     integer_class get_coeff(unsigned int x) const;
+    flint::fmpzxx_srcref get_coeff_ref(unsigned int x) const;
+
+    typedef ContainerForIter<UIntPolyFlint, flint::fmpzxx_srcref> iterator;
+    typedef ContainerRevIter<UIntPolyFlint, flint::fmpzxx_srcref>
+        reverse_iterator;
+    iterator begin() const
+    {
+        return iterator(rcp_from_this_cast<UIntPolyFlint>(), 0);
+    }
+    iterator end() const
+    {
+        return iterator(rcp_from_this_cast<UIntPolyFlint>(), size());
+    }
+    reverse_iterator obegin() const
+    {
+        return reverse_iterator(rcp_from_this_cast<UIntPolyFlint>(),
+                                (long)size() - 1);
+    }
+    reverse_iterator oend() const
+    {
+        return reverse_iterator(rcp_from_this_cast<UIntPolyFlint>(), -1);
+    }
+
+    unsigned int size() const
+    {
+        return poly_.length();
+    }
 
 }; // UIntPolyFLint
 }

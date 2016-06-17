@@ -1,11 +1,7 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
 
-#include <symengine/functions.h>
-#include <symengine/integer.h>
 #include <symengine/rational.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/series.h>

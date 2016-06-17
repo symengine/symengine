@@ -129,7 +129,7 @@ void integer_set_ui(basic s, unsigned long i);
 //! Assign to s, a mpz_t.
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
-void integer_set_str(basic s, char *c);
+void integer_set_str(basic s, const char *c);
 //! Assign to s, a real_double that has value of d.
 void real_double_set_d(basic s, double d);
 //! Returns double value of s.
@@ -140,7 +140,7 @@ double real_double_get_d(const basic s);
 void real_mpfr_set_d(basic s, double d, int prec);
 //! Assign to s, a real mpfr that has base 10 representation c with precision
 //! prec.
-void real_mpfr_set_str(basic s, char *c, int prec);
+void real_mpfr_set_str(basic s, const char *c, int prec);
 //! Returns double value of s.
 double real_mpfr_get_d(const basic s);
 //! Assign to s, a real mpfr that has value pointed by m.

@@ -1,24 +1,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/functions.h>
-#include <symengine/eval.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/add.h>
-#include <symengine/number.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
 #include <symengine/printer.h>
+#include <symengine/eval.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -195,7 +181,7 @@ void integer_set_mpz(basic s, const mpz_t i)
     s->m = SymEngine::integer(integer_class(i));
 }
 
-void integer_set_str(basic s, char *c)
+void integer_set_str(basic s, const char *c)
 {
     s->m = SymEngine::integer(integer_class(c));
 }
@@ -220,7 +206,7 @@ void real_mpfr_set_d(basic s, double d, int prec)
     s->m = SymEngine::real_mpfr(std::move(mc));
 }
 
-void real_mpfr_set_str(basic s, char *c, int prec)
+void real_mpfr_set_str(basic s, const char *c, int prec)
 {
     s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
 }

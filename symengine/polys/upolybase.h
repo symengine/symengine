@@ -6,6 +6,9 @@
 #define SYMENGINE_UINT_BASE_H
 
 #include <symengine/basic.h>
+#include <symengine/pow.h>
+#include <symengine/add.h>
+#include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <flint/flint.h>
@@ -18,6 +21,54 @@
 
 namespace SymEngine
 {
+// misc methods
+inline const integer_class &to_integer_class(const integer_class &i)
+{
+    return i;
+}
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+{
+    integer_class x;
+    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    return x;
+}
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &i)
+{
+    integer_class x;
+    mpz_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+{
+    integer_class x;
+    fmpz_get_mpz(get_mpz_t(x), i._data().inner);
+    return x;
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &x)
+{
+    return integer_class(x.get_mpz_view());
+}
+#endif
+
+inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+{
+    return integer_class(i._data().inner);
+}
+#endif
 
 // dict wrapper
 template <typename Key, typename Value, typename Wrapper>
@@ -258,7 +309,6 @@ public:
         return poly_;
     }
 
-    // TODO add as_symbolic()
     inline vec_basic get_args() const
     {
         return {};
@@ -280,13 +330,123 @@ public:
     {
     }
 
+    // returns degree of the poly
     inline unsigned int get_degree() const
     {
         return this->poly_.degree();
     }
-
+    // return coefficient of degree 'i'
     virtual integer_class get_coeff(unsigned int i) const = 0;
+    // return value of poly when ealudated at `x`
     virtual integer_class eval(const integer_class &x) const = 0;
+    // return `degree` + 1. `0` returned for zero poly.
+    virtual unsigned int size() const = 0;
+
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            integer_class m = to_integer_class(it->second);
+
+            if (it->first == 0) {
+                args.push_back(integer(m));
+            } else if (it->first == 1) {
+                if (m == 1) {
+                    args.push_back(this->var_);
+                } else {
+                    args.push_back(
+                        Mul::from_dict(integer(m), {{this->var_, one}}));
+                }
+            } else {
+                if (m == 1) {
+                    args.push_back(pow(this->var_, integer(it->first)));
+                } else {
+                    args.push_back(Mul::from_dict(
+                        integer(m), {{this->var_, integer(it->first)}}));
+                }
+            }
+        }
+        return SymEngine::add(args);
+    }
+};
+
+template <typename T, typename Int>
+class ContainerBaseIter
+{
+protected:
+    RCP<const T> ptr_;
+    long i_;
+
+public:
+    ContainerBaseIter(RCP<const T> ptr, long x) : ptr_{ptr}, i_{x}
+    {
+    }
+
+    bool operator==(const ContainerBaseIter &rhs)
+    {
+        return (ptr_ == rhs.ptr_) and (i_ == rhs.i_);
+    }
+
+    bool operator!=(const ContainerBaseIter &rhs)
+    {
+        return not(*this == rhs);
+    }
+
+    std::pair<long, Int> operator*()
+    {
+        return std::make_pair(i_, ptr_->get_coeff_ref(i_));
+    }
+
+    std::shared_ptr<std::pair<long, Int>> operator->()
+    {
+        return std::make_shared<std::pair<long, Int>>(i_,
+                                                      ptr_->get_coeff_ref(i_));
+    }
+};
+
+template <typename T, typename Int>
+class ContainerForIter : public ContainerBaseIter<T, Int>
+{
+public:
+    ContainerForIter(RCP<const T> ptr, long x)
+        : ContainerBaseIter<T, Int>(ptr, x)
+    {
+    }
+
+    ContainerForIter operator++()
+    {
+        this->i_++;
+        while (this->i_ < this->ptr_->size()) {
+            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+                break;
+            this->i_++;
+        }
+        return *this;
+    }
+};
+
+template <typename T, typename Int>
+class ContainerRevIter : public ContainerBaseIter<T, Int>
+{
+public:
+    ContainerRevIter(RCP<const T> ptr, long x)
+        : ContainerBaseIter<T, Int>(ptr, x)
+    {
+    }
+
+    ContainerRevIter operator++()
+    {
+        this->i_--;
+        while (this->i_ >= 0) {
+            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+                break;
+            this->i_--;
+        }
+        return *this;
+    }
 };
 
 template <typename Poly>
@@ -330,50 +490,16 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
     return Poly::from_container(a.get_var(), std::move(dict));
 }
 
-// misc methods
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
-    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-#ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const flint::fmpzxx &i)
+template <typename Poly>
+RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
 {
-    integer_class x;
-    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
-    return x;
-}
-#endif
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &i)
-{
-    integer_class x;
-    mpz_set(x.get_mpz_t(), i.get_mpz_view());
-    return x;
+    auto dict = a.get_poly();
+    dict /= b.get_poly();
+    return Poly::from_dict(a.get_var(), std::move(dict));
 }
-#endif
-
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
-#ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const flint::fmpzxx &i)
-{
-    integer_class x;
-    fmpz_get_mpz(get_mpz_t(x), i._data().inner);
-    return x;
-}
-#endif
-
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
-#ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &x)
-{
-    return integer_class(x.get_mpz_view());
-}
-#endif
-
-inline integer_class to_integer_class(const flint::fmpzxx &i)
-{
-    return integer_class(i._data().inner);
-}
-#endif
 }
 
 #endif // SYMENGINE_UINT_BASE_H

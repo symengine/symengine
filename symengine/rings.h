@@ -7,7 +7,6 @@
 #define SYMENGINE_RINGS_H
 
 #include <symengine/basic.h>
-#include <symengine/dict.h>
 
 namespace SymEngine
 {

@@ -6,12 +6,6 @@
 #ifndef SYMENGINE_REAL_MPFR_H
 #define SYMENGINE_REAL_MPFR_H
 
-#include <symengine/basic.h>
-#include <symengine/number.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
 #ifdef HAVE_SYMENGINE_MPFR

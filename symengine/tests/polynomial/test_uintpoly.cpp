@@ -1,11 +1,10 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
 #include <symengine/mul.h>
+#include <symengine/add.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
-#include <symengine/dict.h>
 
 using SymEngine::UIntPoly;
 using SymEngine::uint_poly;
@@ -23,6 +22,7 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::UIntDict;
+using SymEngine::add;
 
 using namespace SymEngine::literals;
 
@@ -164,22 +164,22 @@ TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")
     REQUIRE(P->compare(*Q) == 1);
 }
 
-TEST_CASE("UIntPoly get_args", "[UIntPoly]")
+TEST_CASE("UIntPoly as_symbolic", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UIntPoly> a = uint_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, mul(integer(2), x), pow(x, integer(2))}));
-    REQUIRE(not vec_basic_eq_perm(
-        a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+    REQUIRE(eq(*a->as_symbolic(),
+               *add({one, mul(integer(2), x), pow(x, integer(2))})));
+    REQUIRE(not eq(*a->as_symbolic(),
+                   *add({one, mul(integer(3), x), pow(x, integer(2))})));
 
     RCP<const UIntPoly> b = uint_poly(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
-    REQUIRE(vec_basic_eq_perm(b->get_args(),
-                              {one, x, mul(integer(2), pow(x, integer(2)))}));
+    REQUIRE(eq(*b->as_symbolic(),
+               *add({one, x, mul(integer(2), pow(x, integer(2)))})));
 
     RCP<const UIntPoly> c = uint_poly(x, map_uint_mpz{});
-    REQUIRE(vec_basic_eq_perm(c->get_args(), {zero}));
+    REQUIRE(eq(*c->as_symbolic(), *zero));
 }
 
 TEST_CASE("Evaluation of UIntPoly", "[UIntPoly]")

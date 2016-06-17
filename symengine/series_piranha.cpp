@@ -1,5 +1,3 @@
-
-#include <symengine/series_piranha.h>
 #include <symengine/series_visitor.h>
 
 namespace SymEngine

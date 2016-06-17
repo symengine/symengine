@@ -1,5 +1,3 @@
-#include <symengine/basic.h>
-#include <symengine/integer.h>
 #include <symengine/expression.h>
 
 namespace SymEngine

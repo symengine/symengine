@@ -1,7 +1,4 @@
-#include <symengine/constants.h>
 #include <symengine/complex.h>
-#include <symengine/functions.h>
-#include <symengine/mul.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
 

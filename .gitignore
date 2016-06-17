@@ -85,6 +85,7 @@ symengine/tests/polynomial/test_uexprpoly
 symengine/tests/polynomial/test_uintpoly
 symengine/tests/polynomial/test_uintpoly_flint
 symengine/tests/polynomial/test_uintpoly_piranha
+symengine/tests/basic/test_fields
 
 # Benchmarks executables
 benchmarks/add1

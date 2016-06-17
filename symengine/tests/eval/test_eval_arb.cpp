@@ -2,17 +2,11 @@
 #include <limits>
 #include <cstdlib>
 #include <ctime>
-#include <cmath>
 
-#include <symengine/basic.h>
-#include <symengine/integer.h>
 #include <symengine/rational.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/functions.h>
 #include <symengine/eval_arb.h>
-#include <symengine/constants.h>
 #include <symengine/eval_mpfr.h>
 
 using SymEngine::RCP;

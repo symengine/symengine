@@ -4,17 +4,7 @@
  *
  **/
 
-#include <symengine/symengine_config.h>
-#include <symengine/series.h>
 #include <symengine/series_visitor.h>
-
-#ifdef HAVE_SYMENGINE_PIRANHA
-#include <symengine/series_piranha.h>
-#endif
-
-#ifdef HAVE_SYMENGINE_FLINT
-#include <symengine/series_flint.h>
-#endif
 
 namespace SymEngine
 {

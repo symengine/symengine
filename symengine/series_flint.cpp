@@ -1,4 +1,3 @@
-#include <symengine/series_flint.h>
 #include <symengine/series_visitor.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
