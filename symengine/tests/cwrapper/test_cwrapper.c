@@ -6,6 +6,7 @@
 
 #include <symengine/cwrapper.h>
 #include <string.h>
+#include <math.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
@@ -241,6 +242,12 @@ void test_real_mpfr()
     SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
     
     SYMENGINE_C_ASSERT(real_mpfr_get_prec(d) == 200);
+    
+    real_mpfr_set_d(d, 0, 200);
+    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 1);
+
+    real_mpfr_set_d(d, 0.000001, 200);
+    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 0);
     
     basic_free_stack(d);
     basic_free_stack(e);
@@ -799,26 +806,109 @@ void test_ntheory() {
 }
 
 void test_eval(){
-    basic sin2;
+    basic sin2, eval;
     basic_new_stack(sin2);
-    str *s;
+    basic_new_stack(eval);
     
     integer_set_si(sin2, 2);
     basic_sin(sin2, sin2);
-    basic_eval(sin2, sin2, 53, 1);
-    basic_str(s, sin2);
-    SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_REAL_DOUBLE);
-    double d = 0.90929742682;
-    double d2 = real_double_get_d(sin2);
+    basic_eval(eval, sin2, 53, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_REAL_DOUBLE);
+    double d = 0.909297;
+    double d2 = real_double_get_d(eval);
+    d = fabs(d-d2);
+    d2 = 0.000001;
     
-    SYMENGINE_C_ASSERT( fabs(d - d2) < 0.0000000001 );
+    SYMENGINE_C_ASSERT( d < d2 );
     
     basic_free_stack(sin2);
-    basic_str_free(s);
+    
+    #ifdef HAVE_SYMENGINE_MPFR
+    basic s, t, r, eval2;
+    basic_new_stack(s);
+    basic_new_stack(t);
+    basic_new_stack(r);
+    basic_new_stack(eval2);
+    
+    basic_const_pi(s);
+    integer_set_str(t, "1963319607");
+    basic_mul(s, s, t);
+    integer_set_str(t, "6167950454");
+    basic_sub(r, s, t);
+    // value of `r` is approximately 0.000000000149734291
+
+    basic_eval(eval2, r, 53, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_DOUBLE);
+    // With 53 bit precision, `s` and `t` have the same value.
+    // Hence value of `r` was  rounded down to `0.000000000000000`
+    SYMENGINE_C_ASSERT( real_double_get_d(eval2) == 0.0 );
+
+    basic_eval(eval2, r, 100, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_MPFR);
+    // With 100 bit precision, `s` and `t` are not equal in value.
+    // Value of `r` is a positive quantity with value 0.000000000149734291.....
+    SYMENGINE_C_ASSERT( real_mpfr_is_zero(eval2) == 0 );
+    
+    basic_free_stack(s);
+    basic_free_stack(t);
+    basic_free_stack(r);
+    basic_free_stack(eval2);
+    #endif // HAVE_SYMENGINE_MPFR
+    
+    basic imag, n1, n2, temp;
+    basic_new_stack(imag);
+    basic_new_stack(n1);
+    basic_new_stack(n2);
+    basic_new_stack(temp);
+    
+    basic_const_I(imag);
+    integer_set_ui(n1, 4);
+    basic_sin(n1, n1);
+    integer_set_ui(temp, 3);
+    basic_sin(temp, temp);
+    basic_mul(temp, temp, imag);
+    basic_add(n1, n1, temp);
+    // n1 = sin(4) + sin(3)i
+    
+    integer_set_ui(n2, 2);
+    basic_sin(n2, n2);
+    integer_set_ui(temp, 7);
+    basic_sin(temp, temp);
+    basic_mul(temp, temp, imag);
+    basic_add(n2, n2, temp);
+    // n1 = sin(2) + sin(7)i
+    
+    basic_mul(n1, n1, n2);
+    // n1 = (sin(4) + sin(3)i) * (sin(2) + sin(7)i)
+    
+    basic_eval(eval, n1, 53, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_COMPLEX_DOUBLE);
+    d = -0.780872515;
+    complex_double_real_part(temp, eval);
+    d2 = real_double_get_d(temp);
+    complex_double_imaginary_part(temp, eval);
+    double d3 = real_double_get_d(temp);
+    double d4 = -0.3688890370;
+    d = fabs(d-d2);
+    d4 = fabs(d4 - d3);
+    
+    d2 = 0.000001;
+    
+    SYMENGINE_C_ASSERT( d < d2  && d4 < d2);
+    
+    basic_free_stack(eval);
+    basic_free_stack(n1);
+    basic_free_stack(n2);
+    basic_free_stack(temp);
+    basic_free_stack(imag);
+    
+
 }
 
 int main(int argc, char* argv[])
 {
+    printf("CWRAPPER TESTS");
+
     test_cwrapper();
     test_complex();
     test_complex_double();
