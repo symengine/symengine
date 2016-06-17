@@ -217,31 +217,25 @@ void test_real_double()
 #ifdef HAVE_SYMENGINE_MPFR
 void test_real_mpfr()
 {
-    basic d;
-    basic_new_stack(d);
-    real_mpfr_set_d(d, 123.456, 200);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
-    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 123.456);
-    basic_free_stack(d);
-
-    char *s2 = "456.123";
-
-    basic e;
+    basic d, e;
     basic_new_stack(e);
-    real_mpfr_set_str(e, s2, 200);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(e));
-    SYMENGINE_C_ASSERT(real_mpfr_get_d(e) == 456.123);
-    
-    
-    mpfr_ptr mp;
-    real_mpfr_get(mp, e);
-
     basic_new_stack(d);
-    real_mpfr_set(d, mp);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
-    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
     
-    SYMENGINE_C_ASSERT(real_mpfr_get_prec(d) == 200);
+    real_mpfr_set_d(d, 123.456, 200);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_MPFR);
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 123.456);
+
+    real_mpfr_set_str(e, "456.123", 200);
+    SYMENGINE_C_ASSERT(basic_get_type(e) == SYMENGINE_REAL_MPFR);
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(e) == 456.123);
+    SYMENGINE_C_ASSERT(real_mpfr_get_prec(e) == 200);
+    
+    mpfr_t mp;
+    mpfr_init2(mp, 200);
+    real_mpfr_get(mp, e);
+    real_mpfr_set(d, mp);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_MPFR);
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
     
     real_mpfr_set_d(d, 0, 200);
     SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 1);
@@ -251,9 +245,31 @@ void test_real_mpfr()
     
     basic_free_stack(d);
     basic_free_stack(e);
-    basic_str_free(s2);
 }
 #endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+void test_complex_mpc()
+{
+    basic d, d1, imag;
+    basic_new_stack(d);
+    basic_new_stack(d1);
+    basic_new_stack(imag);
+    
+    basic_const_I(imag);
+
+    real_mpfr_set_d(d, 0.000001, 200);
+    real_mpfr_set_d(d1, 000001, 200);
+    basic_mul(d1, d1, imag);
+    basic_add(d, d, d1);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_COMPLEX_MPC);
+    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d) == 0);
+    
+    basic_free_stack(d);
+    basic_free_stack(d1);
+    basic_free_stack(imag);
+}
+#endif // HAVE_SYMENGINE_MPC
 
 void test_CVectorInt1()
 {
@@ -970,6 +986,12 @@ int main(int argc, char* argv[])
     test_ntheory();
     test_real_double();
     test_eval();
+#ifdef HAVE_SYMENGINE_MPFR
+    test_real_mpfr();
+#endif //HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPC
+    test_complex_mpc();
+#endif //HAVE_SYMENGINE_MPC
 
     return 0;
 }
