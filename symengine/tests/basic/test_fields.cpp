@@ -487,6 +487,8 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
     REQUIRE(out[1].first == GaloisFieldDict::from_vec({2_z, 1_z}, 11_z));
     REQUIRE(out[1].second == 2_z);
     REQUIRE(out.size() == 2);
+    d2 = d1.gf_sqf_part();
+    REQUIRE(d2 == GaloisFieldDict::from_vec({2_z, 3_z, 1_z}, 11_z));
     a = {0_z, 1_z, 0_z, 0_z, 2_z, 0_z, 0_z, 2_z, 0_z, 0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 3_z);
     REQUIRE(d1.gf_is_sqf() == false);

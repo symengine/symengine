@@ -89,6 +89,7 @@ public:
     GaloisFieldDict gf_diff() const;
     bool gf_is_sqf() const;
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
+    GaloisFieldDict gf_sqf_part() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {

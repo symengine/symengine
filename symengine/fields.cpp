@@ -338,4 +338,15 @@ GaloisFieldDict::gf_sqf_list() const
     }
     return vec_out;
 }
+
+GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
+{
+    auto sqf = gf_sqf_list();
+    GaloisFieldDict g = GaloisFieldDict::from_vec({1_z}, modulo_);
+
+    for (auto &f : sqf)
+        g *= f.first;
+
+    return g;
+}
 }
