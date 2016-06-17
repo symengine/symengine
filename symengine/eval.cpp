@@ -19,7 +19,7 @@
 namespace SymEngine
 {
 
-RCP<const Number> eval(const Basic &b, unsigned long bits, bool real)
+RCP<const Number> evalf(const Basic &b, unsigned long bits, bool real)
 {
     if (bits <= 53 && real) { // double
         double d = eval_double(b);

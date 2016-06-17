@@ -259,7 +259,13 @@ int real_mpfr_is_zero(const basic s)
 }
 
 #endif // HAVE_SYMENGINE_MPFR
-
+#ifdef HAVE_SYMENGINE_MPC
+int complex_mpc_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
+    return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
+}
+#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -741,11 +747,11 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
 }
 
-//! Wrapper for eval
-void basic_eval(basic s, const basic b, unsigned long bits, int real)
+//! Wrapper for evalf
+void basic_evalf(basic s, const basic b, unsigned long bits, int real)
 {
 
-    s->m = SymEngine::eval(*(b->m), bits, (bool)real);
+    s->m = SymEngine::evalf(*(b->m), bits, (bool)real);
 }
 
 //! Print stacktrace on segfault

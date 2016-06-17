@@ -812,7 +812,7 @@ void test_eval(){
     
     integer_set_si(sin2, 2);
     basic_sin(sin2, sin2);
-    basic_eval(eval, sin2, 53, 1);
+    basic_evalf(eval, sin2, 53, 1);
     SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_REAL_DOUBLE);
     double d = 0.909297;
     double d2 = real_double_get_d(eval);
@@ -823,7 +823,7 @@ void test_eval(){
     
     basic_free_stack(sin2);
     
-    #ifdef HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPFR
     basic s, t, r, eval2;
     basic_new_stack(s);
     basic_new_stack(t);
@@ -837,13 +837,13 @@ void test_eval(){
     basic_sub(r, s, t);
     // value of `r` is approximately 0.000000000149734291
 
-    basic_eval(eval2, r, 53, 1);
+    basic_evalf(eval2, r, 53, 1);
     SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_DOUBLE);
     // With 53 bit precision, `s` and `t` have the same value.
     // Hence value of `r` was  rounded down to `0.000000000000000`
     SYMENGINE_C_ASSERT( real_double_get_d(eval2) == 0.0 );
 
-    basic_eval(eval2, r, 100, 1);
+    basic_evalf(eval2, r, 100, 1);
     SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_MPFR);
     // With 100 bit precision, `s` and `t` are not equal in value.
     // Value of `r` is a positive quantity with value 0.000000000149734291.....
@@ -853,7 +853,7 @@ void test_eval(){
     basic_free_stack(t);
     basic_free_stack(r);
     basic_free_stack(eval2);
-    #endif // HAVE_SYMENGINE_MPFR
+#endif // HAVE_SYMENGINE_MPFR
     
     basic imag, n1, n2, temp;
     basic_new_stack(imag);
@@ -881,7 +881,7 @@ void test_eval(){
     basic_mul(n1, n1, n2);
     // n1 = (sin(4) + sin(3)i) * (sin(2) + sin(7)i)
     
-    basic_eval(eval, n1, 53, 0);
+    basic_evalf(eval, n1, 53, 0);
     SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_COMPLEX_DOUBLE);
     d = -0.780872515;
     complex_double_real_part(temp, eval);
@@ -899,10 +899,50 @@ void test_eval(){
     basic_free_stack(eval);
     basic_free_stack(n1);
     basic_free_stack(n2);
+    
+#ifdef HAVE_SYMENGINE_MPC
+    basic s1, t1, r1, eval3, com1, com2;
+    basic_new_stack(s1);
+    basic_new_stack(t1);
+    basic_new_stack(r1);
+    basic_new_stack(eval2);
+    
+    basic_const_pi(s1);
+    integer_set_str(t1, "1963319607");
+    basic_mul(s1, s1, t1);
+    basic_mul(com1, s1, imag);
+    basic_add(com1, com1, s1);
+    integer_set_str(t1, "6167950454");
+    basic_mul(com2, t1, imag);
+    basic_add(com2, com2, t1);
+    
+    basic_sub(r1, com1, com2);
+    // value of `r1` is approximately 0.000000000149734291 + 0.000000000149734291i
+
+    basic_evalf(eval3, r1, 53, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval3) == SYMENGINE_COMPLEX_DOUBLE);
+    
+    // With 53 bit precision, `com1` and `com2` have the same value.
+    // Hence value of `r1` was  rounded down to `0.000000000000000`
+    complex_double_real_part(temp, eval3);
+    SYMENGINE_C_ASSERT( real_double_get_d(eval3) == 0.0 );
+    complex_double_imaginary_part(temp, eval3);
+    SYMENGINE_C_ASSERT( real_double_get_d(eval3) == 0.0 );
+    basic_evalf(eval3, r1, 100, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval3) == SYMENGINE_COMPLEX_MPC);
+    // With 100 bit precision, `com1` and `com2` are not equal in value.
+    // Value of `r1` is a positive quantity with value 0.000000000149734291.....
+  
+    SYMENGINE_C_ASSERT( complex_mpc_is_zero(eval3) == 0 );
+    
+    basic_free_stack(s1);
+    basic_free_stack(t1);
+    basic_free_stack(r1);
+    basic_free_stack(eval3);
+#endif // HAVE_SYMENGINE_MPC
+
     basic_free_stack(temp);
     basic_free_stack(imag);
-    
-
 }
 
 int main(int argc, char* argv[])

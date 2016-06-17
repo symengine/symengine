@@ -153,6 +153,11 @@ mpfr_prec_t real_mpfr_get_prec(const basic s);
 int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
+#ifdef HAVE_SYMENGINE_MPC
+//! Returns 1 if s has value zero; 0 otherwise
+int complex_mpc_is_zero(const basic s);
+#endif // HAVE_SYMENGINE_MPC
+
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
@@ -397,7 +402,7 @@ void ntheory_lucas(basic s, unsigned long a);
 //! Binomial Coefficient
 void ntheory_binomial(basic s, const basic a, unsigned long b);
 //! Evaluate b and assign the value to s
-void basic_eval(basic s, const basic b, unsigned long bits, int real);
+void basic_evalf(basic s, const basic b, unsigned long bits, int real);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
