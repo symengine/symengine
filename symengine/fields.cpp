@@ -349,4 +349,59 @@ GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
 
     return g;
 }
+
+GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f, const integer_class &n) const
+{
+    if (n == 0_z)
+        return GaloisFieldDict::from_vec({1_z}, modulo_);
+    GaloisFieldDict temp_out;
+    GaloisFieldDict in = f;
+    if (n == 1_z) {
+        f.gf_div(*this, outArg(in), outArg(temp_out));
+        return temp_out;
+    }
+    if (n == 2_z) {
+        f.gf_sqr().gf_div(*this, outArg(in), outArg(temp_out));
+        return temp_out;    
+    }
+    GaloisFieldDict h = GaloisFieldDict::from_vec({1_z}, modulo_);
+    unsigned mod = mp_get_si(n);
+    while (true) {
+        if (mod & 1) {
+            h *= in;
+            h.gf_div(*this, outArg(temp_out), outArg(h));
+        }
+        mod >>= 1;
+
+        if (mod == 0)
+            break;
+
+        in.gf_sqr().gf_div(*this, outArg(temp_out), outArg(in));
+    }
+    return h;
+}
+
+std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
+{
+    auto n = degree();
+    std::vector<GaloisFieldDict> b;
+    if (n == 0)
+        return b;
+    b.resize(n);
+    b[0] = GaloisFieldDict::from_vec({1_z}, modulo_);
+    GaloisFieldDict temp_out;
+    if (mp_get_si(modulo_) < n) {
+        for (unsigned i = 1; i < n; ++i) {
+            GaloisFieldDict temp = b[i-1].gf_lshift(modulo_);
+            temp.gf_div(*this, outArg(temp_out), outArg(b[i])); // b[i] = temp % g
+        }
+    } else if (n > 1) {
+        b[1] = gf_pow_mod({0_z, 1_z}, modulo_);
+        for (unsigned i = 2; i < n; ++i) {
+            b[i] = b[i-1] * b[1];
+            b[i].gf_div(*this, outArg(temp_out), outArg(b[i]));
+        }
+    }
+    return b;
+}
 }

@@ -501,3 +501,22 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
     REQUIRE(out[2].second == 6_z);
     REQUIRE(out.size() == 3);
 }
+
+TEST_CASE ("GaloisFieldDict pow_mod : Basic", "[basic]")
+{
+    std::vector<integer_class> a, mp;
+    GaloisFieldDict d1, d2, d3, d4;
+    d2 = GaloisFieldDict::from_vec({8_z, 1_z, 0_z, 0_z, 1_z}, 11_z);
+    d1 = GaloisFieldDict::from_vec({7_z, 0_z, 2_z}, 11_z);
+    REQUIRE(d1.gf_pow_mod(d2, 0_z).is_one());
+    d3 = d1.gf_pow_mod(d2, 1_z);
+    REQUIRE(d3 == GaloisFieldDict::from_vec({1_z, 1_z}, 11_z));
+    d3 = d1.gf_pow_mod(d2, 2_z);
+    REQUIRE(d3 == GaloisFieldDict::from_vec({3_z, 2_z}, 11_z));
+    d3 = d1.gf_pow_mod(d2, 5_z);
+    REQUIRE(d3 == GaloisFieldDict::from_vec({8_z, 7_z}, 11_z));
+    d3 = d1.gf_pow_mod(d2, 8_z);
+    REQUIRE(d3 == GaloisFieldDict::from_vec({5_z, 1_z}, 11_z));
+    d3 = d1.gf_pow_mod(d2, 45_z);
+    REQUIRE(d3 == GaloisFieldDict::from_vec({4_z, 5_z}, 11_z));
+}
