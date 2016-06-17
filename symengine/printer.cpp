@@ -299,6 +299,67 @@ char _print_sign(const integer_class &i)
     }
 }
 
+void StrPrinter::bvisit(const GaloisField &x)
+{
+    std::ostringstream s;
+    // bool variable needed to take care of cases like -5, -x, -3*x etc.
+    bool first = true;
+    // we iterate over the map in reverse order so that highest degree gets
+    // printed first
+    auto dict = x.get_dict();
+    if (x.get_dict().size() == 0)
+        s << "0";
+    else {
+        for (auto it = dict.size(); it-- != 0;) {
+            if (dict[it] == 0)
+                continue;
+            // if exponent is 0, then print only coefficient
+            if (it == 0) {
+                if (first) {
+                    s << dict[it];
+                } else {
+                    s << " " << _print_sign(dict[it]) << " "
+                      << mp_abs(dict[it]);
+                }
+                first = false;
+                break;
+            }
+            // if the coefficient of a term is +1 or -1
+            if (mp_abs(dict[it]) == 1) {
+                // in cases of -x, print -x
+                // in cases of x**2 - x, print - x
+                if (first) {
+                    if (dict[it] == -1)
+                        s << "-";
+                    s << x.get_var()->get_name();
+                } else {
+                    s << " " << _print_sign(dict[it]) << " "
+                      << x.get_var()->get_name();
+                }
+            }
+            // same logic is followed as above
+            else {
+                // in cases of -2*x, print -2*x
+                // in cases of x**2 - 2*x, print - 2*x
+                if (first) {
+                    s << dict[it] << "*" << x.get_var()->get_name();
+                } else {
+                    s << " " << _print_sign(dict[it]) << " " << mp_abs(dict[it])
+                      << "*" << x.get_var()->get_name();
+                }
+            }
+            // if exponent is not 1, print the exponent;
+            if (it != 1) {
+                s << "**" << it;
+            }
+            // corner cases of only first term handled successfully, switch the
+            // bool
+            first = false;
+        }
+    }
+    str_ = s.str();
+}
+
 // UIntPoly printing, tests taken from SymPy and printing ensures
 // that there is compatibility
 template <typename T>

@@ -30,6 +30,7 @@ public:
         return Derivative::create(self.rcp_from_this(), {x});                  \
     }
 
+    DIFF0(GaloisField)
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
