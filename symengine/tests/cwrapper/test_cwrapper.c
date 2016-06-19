@@ -892,7 +892,7 @@ void test_eval(){
     basic_sin(temp, temp);
     basic_mul(temp, temp, imag);
     basic_add(n2, n2, temp);
-    // n1 = sin(2) + sin(7)i
+    // n2 = sin(2) + sin(7)i
     
     basic_mul(n1, n1, n2);
     // n1 = (sin(4) + sin(3)i) * (sin(2) + sin(7)i)
