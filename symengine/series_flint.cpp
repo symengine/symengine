@@ -93,34 +93,10 @@ int URatPSeriesFlint::compare(const Basic &o) const
     return (p_ < s.p_) ? -1 : 1;
 }
 
-flint::fmpzxx URatPSeriesFlint::convert(const Integer &x)
-{
-    flint::fmpzxx r;
-    fmpz_set_mpz(r._data().inner, get_mpz_t(x.as_mpz()));
-    return r;
-}
-
-flint::fmpqxx URatPSeriesFlint::convert(const rational_class &x)
-{
-    flint::fmpqxx r;
-    flint::fmpzxx i1;
-    fmpz_set_mpz(i1._data().inner, get_mpz_t(get_num(x)));
-    flint::fmpzxx i2;
-    fmpz_set_mpz(i2._data().inner, get_mpz_t(get_den(x)));
-    r.num() = i1;
-    r.den() = i2;
-    return r;
-}
-
 fp_t URatPSeriesFlint::var(const std::string &s)
 {
     fp_t r("2  0 1");
     return r;
-}
-
-flint::fmpqxx URatPSeriesFlint::convert(const Rational &x)
-{
-    return convert(x.as_mpq());
 }
 
 flint::fmpqxx URatPSeriesFlint::convert(const Basic &x)
