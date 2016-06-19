@@ -87,8 +87,16 @@ public:
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_diff() const;
+
+    // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;
+
+    // Returns the square free decomposition of polynomial's monic representation in `modulo_`
+    // A vector of pair is returned where each element is a factor and each pair's first
+    // raised to power of second gives the factor.
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
+
+    // Returns the square free part of the polynomaial in `modulo_`
     GaloisFieldDict gf_sqf_part() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
