@@ -412,3 +412,92 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[3] == 8);
     REQUIRE(mp[4] == 1);
 }
+
+TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
+          "[basic]")
+{
+    std::vector<integer_class> a, mp;
+    GaloisFieldDict d1, d2, d3, d4;
+    a = {};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    d2 = d1.gf_diff();
+    REQUIRE(d2.dict_.empty());
+    a = {7_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    d2 = d1.gf_diff();
+    REQUIRE(d2.dict_.empty());
+    a = {3_z, 7_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    d2 = d1.gf_diff();
+    mp = d2.dict_;
+    REQUIRE(mp[0] == 7);
+    a = {1_z, 3_z, 7_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    d2 = d1.gf_diff();
+    mp = d2.dict_;
+    REQUIRE(mp[0] == 3);
+    REQUIRE(mp[1] == 3);
+    a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    d2 = d1.gf_diff();
+    REQUIRE(d2.dict_.empty());
+
+    a = {};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == true);
+    a = {1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == true);
+    a = {1_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == true);
+    a = {4_z, 8_z, 5_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == false);
+    a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == false);
+    a = {};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    auto out = d1.gf_sqf_list();
+    REQUIRE(out.empty());
+    a = {1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    out = d1.gf_sqf_list();
+    REQUIRE(out.empty());
+    a = {1_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    out = d1.gf_sqf_list();
+    REQUIRE(out[0].first == d1);
+    REQUIRE(out[0].second == 1_z);
+    REQUIRE(out.size() == 1);
+    a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
+    d2 = GaloisFieldDict::from_vec(a, 11_z);
+    out = d2.gf_sqf_list();
+    REQUIRE(out[0].first == d1);
+    REQUIRE(out[0].second == 11_z);
+    REQUIRE(out.size() == 1);
+
+    a = {4_z, 8_z, 5_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    REQUIRE(d1.gf_is_sqf() == false);
+    out = d1.gf_sqf_list();
+    REQUIRE(out[0].first == GaloisFieldDict::from_vec({1_z, 1_z}, 11_z));
+    REQUIRE(out[0].second == 1_z);
+    REQUIRE(out[1].first == GaloisFieldDict::from_vec({2_z, 1_z}, 11_z));
+    REQUIRE(out[1].second == 2_z);
+    REQUIRE(out.size() == 2);
+    d2 = d1.gf_sqf_part();
+    REQUIRE(d2 == GaloisFieldDict::from_vec({2_z, 3_z, 1_z}, 11_z));
+    a = {0_z, 1_z, 0_z, 0_z, 2_z, 0_z, 0_z, 2_z, 0_z, 0_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 3_z);
+    REQUIRE(d1.gf_is_sqf() == false);
+    out = d1.gf_sqf_list();
+    REQUIRE(out[0].first == GaloisFieldDict::from_vec({0_z, 1_z}, 3_z));
+    REQUIRE(out[0].second == 1_z);
+    REQUIRE(out[1].first == GaloisFieldDict::from_vec({1_z, 1_z}, 3_z));
+    REQUIRE(out[1].second == 3_z);
+    REQUIRE(out[2].first == GaloisFieldDict::from_vec({2_z, 1_z}, 3_z));
+    REQUIRE(out[2].second == 6_z);
+    REQUIRE(out.size() == 3);
+}
