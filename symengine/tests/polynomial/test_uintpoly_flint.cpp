@@ -263,3 +263,16 @@ TEST_CASE("UIntPolyFlint pow", "[UIntPolyFlint]")
     REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
     REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
 }
+
+TEST_CASE("Derivative of UIntPolyFlint", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const UIntPolyFlint> a
+        = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(y, {{2, 4_z}});
+
+    REQUIRE(a->diff(x)->__str__() == "2*x + 2");
+    REQUIRE(a->diff(y)->__str__() == "0");
+    REQUIRE(b->diff(y)->__str__() == "8*y");
+}

@@ -212,19 +212,13 @@ TEST_CASE("Derivative of UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const Symbol> none = symbol("");
     RCP<const UIntPoly> a
         = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UIntPoly> b = UIntPoly::from_dict(none, {{0, 1_z}});
+    RCP<const UIntPoly> b = UIntPoly::from_dict(y, {{2, 4_z}});
 
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
-    REQUIRE(b->diff(y)->__str__() == "0");
-
-    a = UIntPoly::from_dict(none, {{0, 1_z}});
-    REQUIRE(a->diff(y)->__str__() == "0");
-    a = UIntPoly::from_dict(none, map_uint_mpz{});
-    REQUIRE(a->diff(y)->__str__() == "0");
+    REQUIRE(b->diff(y)->__str__() == "8*y");
 }
 
 TEST_CASE("Bool checks specific UIntPoly cases", "[UIntPoly]")

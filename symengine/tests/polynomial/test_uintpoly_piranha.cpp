@@ -260,3 +260,17 @@ TEST_CASE("UIntPolyPiranha divides", "[UIntPolyPiranha]")
     REQUIRE(res->__str__() == "2*x + 2");
     REQUIRE(!divides_upoly(*b, *a, outArg(res)));
 }
+
+TEST_CASE("Derivative of UIntPolyPiranha", "[UIntPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(y, {{2, 4_z}});
+
+    REQUIRE(a->diff(x)->__str__() == "2*x + 2");
+    REQUIRE(a->diff(y)->__str__() == "0");
+    REQUIRE(b->diff(y)->__str__() == "8*y");
+}
