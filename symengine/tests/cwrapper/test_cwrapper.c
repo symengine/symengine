@@ -243,6 +243,7 @@ void test_real_mpfr()
     real_mpfr_set_d(d, 0.000001, 200);
     SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 0);
     
+    mpfr_clear(mp);
     basic_free_stack(d);
     basic_free_stack(e);
 }
@@ -921,7 +922,9 @@ void test_eval(){
     basic_new_stack(s1);
     basic_new_stack(t1);
     basic_new_stack(r1);
-    basic_new_stack(eval2);
+    basic_new_stack(eval3);
+    basic_new_stack(com1);
+    basic_new_stack(com2);
     
     basic_const_pi(s1);
     integer_set_str(t1, "1963319607");
@@ -941,9 +944,10 @@ void test_eval(){
     // With 53 bit precision, `com1` and `com2` have the same value.
     // Hence value of `r1` was  rounded down to `0.000000000000000`
     complex_double_real_part(temp, eval3);
-    SYMENGINE_C_ASSERT( real_double_get_d(eval3) == 0.0 );
+    SYMENGINE_C_ASSERT( real_double_get_d(temp) == 0.0 );
     complex_double_imaginary_part(temp, eval3);
-    SYMENGINE_C_ASSERT( real_double_get_d(eval3) == 0.0 );
+    SYMENGINE_C_ASSERT( real_double_get_d(temp) == 0.0 );
+    
     basic_evalf(eval3, r1, 100, 0);
     SYMENGINE_C_ASSERT(basic_get_type(eval3) == SYMENGINE_COMPLEX_MPC);
     // With 100 bit precision, `com1` and `com2` are not equal in value.
@@ -955,6 +959,8 @@ void test_eval(){
     basic_free_stack(t1);
     basic_free_stack(r1);
     basic_free_stack(eval3);
+    basic_free_stack(com1);
+    basic_free_stack(com2);
 #endif // HAVE_SYMENGINE_MPC
 
     basic_free_stack(temp);
@@ -963,8 +969,6 @@ void test_eval(){
 
 int main(int argc, char* argv[])
 {
-    printf("CWRAPPER TESTS");
-
     test_cwrapper();
     test_complex();
     test_complex_double();
