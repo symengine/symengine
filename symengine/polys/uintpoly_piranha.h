@@ -180,7 +180,7 @@ inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     // following the convention, that leading coefficient should be positive
     if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
-        gcdx = -gcdx;
+        piranha::math::negate(gcdx);
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(gcdx));
 }
 
@@ -192,7 +192,7 @@ inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
-        gcdx = -gcdx;
+        piranha::math::negate(gcdx);
     pintpoly mulx(a.get_poly() * b.get_poly());
     return make_rcp<const UIntPolyPiranha>(
         a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
