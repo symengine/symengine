@@ -176,6 +176,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[1] == 1);
     REQUIRE(mp[2] == 6);
     REQUIRE(d3 == d1 / d2);
+    REQUIRE(d4 == d1 % d2);
 
     d2 = d1;
     d2 *= 2_z;
@@ -193,6 +194,9 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     d2 = GaloisFieldDict::from_vec(b, 7_z);
     d2 /= d2;
     REQUIRE(d1 == d2);
+    d2 = GaloisFieldDict::from_vec(b, 7_z);
+    d2 %= d2;
+    REQUIRE(d2.dict_.empty());
 
     a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     b = {3_z, 2_z, 1_z};
@@ -208,6 +212,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[0] == 3);
     REQUIRE(mp[1] == 3);
     REQUIRE(d3 == d1 / d2);
+    REQUIRE(d4 == d1 % d2);
 
     a = {1_z};
     b = {3_z, 2_z, 1_z};
@@ -218,6 +223,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     mp = d4.get_dict();
     REQUIRE(mp[0] == 1);
     REQUIRE(d3 == d1 / d2);
+    REQUIRE(d4 == d1 % d2);
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
@@ -342,6 +348,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     d2 = GaloisFieldDict::from_vec(a, 11_z);
     d1.gf_div(d2, outArg(d3), outArg(d4));
     REQUIRE(d3 == d1 / d2);
+    REQUIRE(d4 == d1 % d2);
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
@@ -519,4 +526,24 @@ TEST_CASE ("GaloisFieldDict pow_mod : Basic", "[basic]")
     REQUIRE(d3 == GaloisFieldDict::from_vec({5_z, 1_z}, 11_z));
     d3 = d1.gf_pow_mod(d2, 45_z);
     REQUIRE(d3 == GaloisFieldDict::from_vec({4_z, 5_z}, 11_z));
+}
+
+TEST_CASE ("GaloisFieldDict  : Basic", "[basic]")
+{
+    std::vector<integer_class> a, mp;
+    GaloisFieldDict d1, d2, d3, d4;
+    d1 = GaloisFieldDict::from_vec({1_z, 2_z, 0_z, 1_z}, 5_z);
+    std::vector<GaloisFieldDict> out = d1.gf_frobenius_monomial_base();
+    REQUIRE(out.size() == 3);
+    REQUIRE(out[0] == GaloisFieldDict::from_vec({1_z}, 5_z));
+    REQUIRE(out[1] == GaloisFieldDict::from_vec({2_z, 4_z, 4_z}, 5_z));
+    REQUIRE(out[2] == GaloisFieldDict::from_vec({2_z, 1_z}, 5_z));
+
+    d1 = GaloisFieldDict::from_vec({2_z, 2_z, 2_z, 0_z, 2_z, 2_z, 0_z, 1_z, 0_z, 2_z}, 3_z);
+    d2 = GaloisFieldDict::from_vec({1_z, 0_z, 2_z, 0_z, 1_z, 0_z, 2_z, 0_z, 1_z, 1_z}, 3_z);
+    auto b = d2.gf_frobenius_monomial_base();
+    GaloisFieldDict h = d1.gf_frobenius_map(d2, b);
+    GaloisFieldDict h1 = d2.gf_pow_mod(d1, 3_z);
+    REQUIRE(h1 == GaloisFieldDict::from_vec({1_z, 1_z, 1_z, 2_z, 0_z, 0_z, 2_z, 2_z}, 3_z));
+    REQUIRE(h == h1);
 }
