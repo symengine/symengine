@@ -303,14 +303,11 @@ TEST_CASE("UIntPoly divides", "[UIntPoly]")
     RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 4_z}});
     RCP<const UIntPoly> c = UIntPoly::from_dict(x, {{0, 8_z}, {1, 8_z}});
+    RCP<const UIntPoly> res;
 
-    std::pair<bool, RCP<const UIntPoly>> ac = divides_upoly(*a, *c);
-    std::pair<bool, RCP<const UIntPoly>> bc = divides_upoly(*b, *c);
-    std::pair<bool, RCP<const UIntPoly>> ba = divides_upoly(*b, *a);
-
-    REQUIRE(ac.first);
-    REQUIRE(ac.second->__str__() == "8");
-    REQUIRE(bc.first);
-    REQUIRE(bc.second->__str__() == "2*x + 2");
-    REQUIRE(!ba.first);
+    REQUIRE(divides_upoly(*a, *c, outArg(res)));
+    REQUIRE(res->__str__() == "8");
+    REQUIRE(divides_upoly(*b, *c, outArg(res)));
+    REQUIRE(res->__str__() == "2*x + 2");
+    REQUIRE(!divides_upoly(*b, *a, outArg(res)));
 }

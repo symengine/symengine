@@ -144,10 +144,10 @@ RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
     auto tmp = a.get_poly();
     UIntDict res(1);
 
-    while (p > 1) {
+    while (p != 1) {
         if (p % 2 == 0) {
             tmp = tmp * tmp;
-            p = p / 2;
+            p >>= 1;
         } else {
             res = res * tmp;
             tmp = tmp * tmp;
@@ -158,8 +158,8 @@ RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
     return make_rcp<const UIntPoly>(a.get_var(), std::move(res * tmp));
 }
 
-std::pair<bool, RCP<const UIntPoly>> divides_upoly(const UIntPoly &a,
-                                                   const UIntPoly &b)
+bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
+                   const Ptr<RCP<const UIntPoly>> &out)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
@@ -167,7 +167,7 @@ std::pair<bool, RCP<const UIntPoly>> divides_upoly(const UIntPoly &a,
     auto a_poly = a.get_poly();
     auto b_poly = b.get_poly();
     if (a_poly.size() == 0)
-        return std::make_pair(false, UIntPoly::from_dict(a.get_var(), {{}}));
+        return false;
 
     map_uint_mpz res;
     UIntDict tmp;
@@ -180,19 +180,19 @@ std::pair<bool, RCP<const UIntPoly>> divides_upoly(const UIntPoly &a,
 
         mp_tdiv_qr(q, r, b_poly.get_lc(), a_poly.get_lc());
         if (r != 0)
-            return std::make_pair(false,
-                                  UIntPoly::from_dict(a.get_var(), {{}}));
+            return false;
 
         res[b_deg - a_deg] = q;
         UIntDict tmp = UIntDict({{b_deg - a_deg, q}});
         b_poly -= (a_poly * tmp);
     }
 
-    if (b_poly.empty())
-        return std::make_pair(true,
-                              UIntPoly::from_dict(a.get_var(), std::move(res)));
-    else
-        return std::make_pair(false, UIntPoly::from_dict(a.get_var(), {{}}));
+    if (b_poly.empty()) {
+        *out = UIntPoly::from_dict(a.get_var(), std::move(res));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 } // SymEngine

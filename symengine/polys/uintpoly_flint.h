@@ -93,21 +93,20 @@ inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
                          flint::pow(a.get_poly(), p))));
 }
 
-inline std::pair<bool, RCP<const UIntPolyFlint>>
-divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b)
+inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
+                          const Ptr<RCP<const UIntPolyFlint>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
     auto t = flint::divides(b.get_poly(), a.get_poly());
-    if (t.get<0>())
-        return std::make_pair(
-            true,
-            UIntPolyFlint::from_container(
-                a.get_var(), static_cast<flint::fmpz_polyxx>(t.get<1>())));
-    else
-        return std::make_pair(false,
-                              UIntPolyFlint::from_dict(a.get_var(), {{}}));
+    if (t.get<0>()) {
+        *res = UIntPolyFlint::from_container(
+            a.get_var(), static_cast<flint::fmpz_polyxx>(t.get<1>()));
+        return true;
+    } else {
+        return false;
+    }
 }
 }
 
