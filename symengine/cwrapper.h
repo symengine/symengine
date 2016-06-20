@@ -395,6 +395,10 @@ void ntheory_lucas(basic s, unsigned long a);
 //! Binomial Coefficient
 void ntheory_binomial(basic s, const basic a, unsigned long b);
 
+//! Wrappers for Matrices
+//! Assign to s an empty DenseMatrix
+void basic_dense_matrix(basic s);
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
 

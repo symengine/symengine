@@ -18,10 +18,12 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
+#include <symengine/matrix.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
 
+using SymEngine::DenseMatrix;
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
@@ -732,6 +734,12 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+}
+
+// Matrix Wrappers
+void basic_dense_matrix(basic s)
+{
+    s->m = SymEngine::dense_matrix();
 }
 
 //! Print stacktrace on segfault
