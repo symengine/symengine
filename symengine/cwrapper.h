@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <gmp.h>
 
+#include "symengine/matrix.h"
+
 #include "symengine/symengine_config.h"
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -397,7 +399,7 @@ void ntheory_binomial(basic s, const basic a, unsigned long b);
 
 //! Wrappers for Matrices
 //! Assign to s an empty DenseMatrix
-void basic_dense_matrix(basic s);
+SymEngine::DenseMatrix* matrix_dense_matrix();
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();

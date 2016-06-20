@@ -737,9 +737,9 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 }
 
 // Matrix Wrappers
-void basic_dense_matrix(basic s)
+SymEngine::DenseMatrix* matrix_dense_matrix()
 {
-    s->m = SymEngine::dense_matrix();
+    return new SymEngine::DenseMatrix();
 }
 
 //! Print stacktrace on segfault
