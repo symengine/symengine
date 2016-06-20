@@ -23,6 +23,10 @@ using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
 using SymEngine::vec_integer_class;
+using SymEngine::rcp_static_cast;
+using SymEngine::Add;
+using SymEngine::is_a;
+using SymEngine::Integer;
 
 using namespace SymEngine::literals;
 
@@ -303,3 +307,17 @@ TEST_CASE("UIntPoly divides", "[UIntPoly]")
     REQUIRE(res->__str__() == "2*x + 2");
     REQUIRE(!divides_upoly(*b, *a, outArg(res)));
 }
+
+TEST_CASE("random", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> ss = add(x, y);
+    REQUIRE(is_a<Add>(*ss));
+
+    RCP<const Add> s = rcp_static_cast<const Add>(add(x, add(x, add(x, add(y, y)))));
+
+    for (auto it : s->dict_)
+        std::cout<<it.first->__str__()<<" "<<rcp_static_cast<const Integer>(it.second)->i<<std::endl;
+}   

@@ -174,15 +174,15 @@ class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
     //! Constructor of UExprPoly class
-    UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict);
+    UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 
     bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
+    static RCP<const UExprPoly> from_dict(const RCP<const Basic> &var,
                                           map_int_Expr &&d);
-    static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
+    static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v);
 
     Expression max_coef() const;
@@ -240,12 +240,12 @@ public:
     }
 }; // UExprPoly
 
-inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, UExprDict &&dict)
 {
     return UExprPoly::from_container(i, std::move(dict));
 }
 
-inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, map_int_Expr &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, map_int_Expr &&dict)
 {
     return UExprPoly::from_dict(i, std::move(dict));
 }

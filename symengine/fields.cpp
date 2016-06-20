@@ -6,7 +6,7 @@
 
 namespace SymEngine
 {
-GaloisField::GaloisField(const RCP<const Symbol> &var, GaloisFieldDict &&dict)
+GaloisField::GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict)
     : UPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
@@ -28,7 +28,7 @@ std::size_t GaloisField::__hash__() const
     std::hash<std::string> hash_string;
     std::size_t seed = GALOISFIELD;
 
-    seed += hash_string(this->var_->get_name());
+    seed += hash_string(this->var_->__str__());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = GALOISFIELD;
         hash_combine<long long int>(temp, mp_get_si(it));
@@ -55,14 +55,14 @@ int GaloisField::compare(const Basic &o) const
     return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
-RCP<const GaloisField> GaloisField::from_dict(const RCP<const Symbol> &var,
+RCP<const GaloisField> GaloisField::from_dict(const RCP<const Basic> &var,
                                               GaloisFieldDict &&d)
 {
     return make_rcp<const GaloisField>(var, std::move(d));
 }
 
 RCP<const GaloisField>
-GaloisField::from_vec(const RCP<const Symbol> &var,
+GaloisField::from_vec(const RCP<const Basic> &var,
                       const std::vector<integer_class> &v,
                       const integer_class &modulo)
 {

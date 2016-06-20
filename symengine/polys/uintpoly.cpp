@@ -4,7 +4,7 @@
 namespace SymEngine
 {
 
-UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
+UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
@@ -21,10 +21,9 @@ bool UIntPoly::is_canonical(const UIntDict &dict) const
 
 std::size_t UIntPoly::__hash__() const
 {
-    std::hash<std::string> hash_string;
     std::size_t seed = UINTPOLY;
 
-    seed += hash_string(var_->get_name());
+    seed += var_->__hash__();
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
@@ -48,14 +47,14 @@ int UIntPoly::compare(const Basic &o) const
     return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
-RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
+RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Basic> &var,
                                         map_uint_mpz &&d)
 {
     UIntDict x(d);
     return make_rcp<const UIntPoly>(var, std::move(x));
 }
 
-RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
+RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
                                        const vec_integer_class &v)
 {
     return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));

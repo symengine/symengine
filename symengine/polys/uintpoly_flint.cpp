@@ -5,7 +5,7 @@
 namespace SymEngine
 {
 
-UIntPolyFlint::UIntPolyFlint(const RCP<const Symbol> &var,
+UIntPolyFlint::UIntPolyFlint(const RCP<const Basic> &var,
                              flint::fmpz_polyxx &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
@@ -16,7 +16,7 @@ std::size_t UIntPolyFlint::__hash__() const
     std::hash<std::string> str_hash;
     std::size_t seed = UINTPOLYFLINT;
 
-    seed += str_hash(var_->get_name());
+    seed += var_->__hash__();
     hash_combine(seed, str_hash(poly_.to_string()));
     return seed;
 }
@@ -39,7 +39,7 @@ int UIntPolyFlint::compare(const Basic &o) const
     return 0;
 }
 
-RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
+RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Basic> &var,
                                                   map_uint_mpz &&d)
 {
     // benchmark this against dict->str->fmpz_polyxx
@@ -56,7 +56,7 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
 
-RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
+RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Basic> &var,
                                                  const vec_integer_class &v)
 {
     // benchmark this against vec->str->fmpz_polyxx
