@@ -23,6 +23,7 @@ set(SRC
     monomials.cpp
     polys/uintpoly.cpp
     polys/uexprpoly.cpp
+    basic_to_upoly.cpp
     series.cpp
     series_generic.cpp
     rings.cpp
