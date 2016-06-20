@@ -46,7 +46,7 @@ UIntPolyPiranha::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 
 RCP<const UIntPolyPiranha>
 UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
-                          const std::vector<integer_class> &v)
+                          const vec_integer_class &v)
 {
     pintpoly p;
     piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
@@ -79,6 +79,15 @@ integer_class UIntPolyPiranha::eval(const integer_class &x) const
 {
     return piranha::math::evaluate<integer_class>(poly_,
                                                   {{var_->get_name(), x}});
+}
+
+vec_integer_class UIntPolyPiranha::multieval(const vec_integer_class &v) const
+{
+    vec_integer_class res(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        res[i] = piranha::math::evaluate<integer_class>(
+            poly_, {{var_->get_name(), v[i]}});
+    return res;
 }
 }
 #endif

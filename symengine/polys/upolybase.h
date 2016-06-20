@@ -339,8 +339,14 @@ public:
     virtual integer_class get_coeff(unsigned int i) const = 0;
     // return value of poly when ealudated at `x`
     virtual integer_class eval(const integer_class &x) const = 0;
+    virtual vec_integer_class multieval(const vec_integer_class &x) const = 0;
     // return `degree` + 1. `0` returned for zero poly.
     virtual unsigned int size() const = 0;
+
+    integer_class get_lc() const
+    {
+        return get_coeff(get_degree());
+    }
 
     RCP<const Basic> as_symbolic() const
     {
