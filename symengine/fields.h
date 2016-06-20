@@ -91,9 +91,11 @@ public:
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
     GaloisFieldDict gf_sqf_part() const;
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
-    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f, const integer_class &n) const;
-    GaloisFieldDict gf_frobenius_map(const GaloisFieldDict &g,
-                                     const std::vector<GaloisFieldDict> &b) const;
+    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
+                               const integer_class &n) const;
+    GaloisFieldDict
+    gf_frobenius_map(const GaloisFieldDict &g,
+                     const std::vector<GaloisFieldDict> &b) const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {

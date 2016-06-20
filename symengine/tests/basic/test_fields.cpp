@@ -509,7 +509,7 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
     REQUIRE(out.size() == 3);
 }
 
-TEST_CASE ("GaloisFieldDict pow_mod : Basic", "[basic]")
+TEST_CASE("GaloisFieldDict pow_mod : Basic", "[basic]")
 {
     std::vector<integer_class> a, mp;
     GaloisFieldDict d1, d2, d3, d4;
@@ -526,12 +526,7 @@ TEST_CASE ("GaloisFieldDict pow_mod : Basic", "[basic]")
     REQUIRE(d3 == GaloisFieldDict::from_vec({5_z, 1_z}, 11_z));
     d3 = d1.gf_pow_mod(d2, 45_z);
     REQUIRE(d3 == GaloisFieldDict::from_vec({4_z, 5_z}, 11_z));
-}
 
-TEST_CASE ("GaloisFieldDict  : Basic", "[basic]")
-{
-    std::vector<integer_class> a, mp;
-    GaloisFieldDict d1, d2, d3, d4;
     d1 = GaloisFieldDict::from_vec({1_z, 2_z, 0_z, 1_z}, 5_z);
     std::vector<GaloisFieldDict> out = d1.gf_frobenius_monomial_base();
     REQUIRE(out.size() == 3);
@@ -539,11 +534,14 @@ TEST_CASE ("GaloisFieldDict  : Basic", "[basic]")
     REQUIRE(out[1] == GaloisFieldDict::from_vec({2_z, 4_z, 4_z}, 5_z));
     REQUIRE(out[2] == GaloisFieldDict::from_vec({2_z, 1_z}, 5_z));
 
-    d1 = GaloisFieldDict::from_vec({2_z, 2_z, 2_z, 0_z, 2_z, 2_z, 0_z, 1_z, 0_z, 2_z}, 3_z);
-    d2 = GaloisFieldDict::from_vec({1_z, 0_z, 2_z, 0_z, 1_z, 0_z, 2_z, 0_z, 1_z, 1_z}, 3_z);
+    d1 = GaloisFieldDict::from_vec(
+        {2_z, 2_z, 2_z, 0_z, 2_z, 2_z, 0_z, 1_z, 0_z, 2_z}, 3_z);
+    d2 = GaloisFieldDict::from_vec(
+        {1_z, 0_z, 2_z, 0_z, 1_z, 0_z, 2_z, 0_z, 1_z, 1_z}, 3_z);
     auto b = d2.gf_frobenius_monomial_base();
     GaloisFieldDict h = d1.gf_frobenius_map(d2, b);
     GaloisFieldDict h1 = d2.gf_pow_mod(d1, 3_z);
-    REQUIRE(h1 == GaloisFieldDict::from_vec({1_z, 1_z, 1_z, 2_z, 0_z, 0_z, 2_z, 2_z}, 3_z));
+    REQUIRE(h1 == GaloisFieldDict::from_vec(
+                      {1_z, 1_z, 1_z, 2_z, 0_z, 0_z, 2_z, 2_z}, 3_z));
     REQUIRE(h == h1);
 }

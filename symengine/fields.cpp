@@ -351,7 +351,8 @@ GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
     return g;
 }
 
-GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f, const integer_class &n) const
+GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
+                                            const integer_class &n) const
 {
     if (n == 0_z)
         return GaloisFieldDict::from_vec({1_z}, modulo_);
@@ -360,7 +361,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f, const inte
         return f % (*this);
     }
     if (n == 2_z) {
-        return f.gf_sqr() % (*this);    
+        return f.gf_sqr() % (*this);
     }
     GaloisFieldDict h = GaloisFieldDict::from_vec({1_z}, modulo_);
     unsigned mod = mp_get_si(n);
@@ -374,7 +375,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f, const inte
         if (mod == 0)
             break;
 
-        in = in.gf_sqr() % *this;        
+        in = in.gf_sqr() % *this;
     }
     return h;
 }
@@ -390,20 +391,23 @@ std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
     GaloisFieldDict temp_out;
     if (mp_get_si(modulo_) < n) {
         for (unsigned i = 1; i < n; ++i) {
-            b[i] = b[i-1].gf_lshift(modulo_);
+            b[i] = b[i - 1].gf_lshift(modulo_);
             b[i] %= (*this);
         }
     } else if (n > 1) {
-        b[1] = gf_pow_mod(GaloisFieldDict::from_vec({0_z, 1_z}, modulo_), modulo_);
+        b[1] = gf_pow_mod(GaloisFieldDict::from_vec({0_z, 1_z}, modulo_),
+                          modulo_);
         for (unsigned i = 2; i < n; ++i) {
-            b[i] = b[i-1] * b[1];
+            b[i] = b[i - 1] * b[1];
             b[i] %= (*this);
         }
     }
     return b;
 }
 
-GaloisFieldDict GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g, const std::vector<GaloisFieldDict> &b) const
+GaloisFieldDict
+GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
+                                  const std::vector<GaloisFieldDict> &b) const
 {
     unsigned m = g.degree();
     GaloisFieldDict temp_out, out;
