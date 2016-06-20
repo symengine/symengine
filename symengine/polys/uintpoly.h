@@ -64,6 +64,13 @@ public:
         return result;
     }
 
+    integer_class get_lc()
+    {
+        if (dict_.empty())
+            return integer_class(0);
+        return dict_.rbegin()->second;
+    }
+
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
         int mul = 1;
@@ -140,9 +147,10 @@ public:
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
                                          map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
-                                        const std::vector<integer_class> &v);
+                                        const vec_integer_class &v);
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
+    vec_integer_class multieval(const vec_integer_class &v) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
@@ -197,15 +205,10 @@ public:
 
 }; // UIntPoly
 
-inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
-{
-    return UIntPoly::from_container(i, std::move(dict));
-}
-
-inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
-{
-    return UIntPoly::from_dict(i, std::move(dict));
-}
+RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p);
+// true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
+bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
+                   const Ptr<RCP<const UIntPoly>> &res);
 
 } // SymEngine
 

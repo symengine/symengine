@@ -56,9 +56,8 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
 
-RCP<const UIntPolyFlint>
-UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
-                        const std::vector<integer_class> &v)
+RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
+                                                 const vec_integer_class &v)
 {
     // benchmark this against vec->str->fmpz_polyxx
     unsigned int deg = v.size() - 1;
@@ -81,6 +80,21 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
     flint::fmpzxx r;
     fmpz_set_mpz(r._data().inner, get_mpz_t(x));
     return to_integer_class(static_cast<flint::fmpzxx>(poly_(r)));
+}
+
+vec_integer_class UIntPolyFlint::multieval(const vec_integer_class &v) const
+{
+    flint::fmpz_vecxx t(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        fmpz_set_mpz(t[i]._data().inner, get_mpz_t(v[i]));
+
+    flint::fmpz_vecxx nn(flint::evaluate(poly_, t));
+
+    vec_integer_class res(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        res[i] = to_integer_class(nn[i]);
+
+    return res;
 }
 
 integer_class UIntPolyFlint::get_coeff(unsigned int x) const
