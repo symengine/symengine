@@ -3,6 +3,30 @@
 namespace SymEngine
 {
 
+class UIntPolyGenaratorVisitor : public BaseVisitor<UIntPolyGenaratorVisitor>
+{
+private:
+    RCP<const Basic> res;
+
+public:
+    RCP<const Basic> apply(const Basic &b)
+    {
+        b.accept(*this);
+        return res;
+    }
+
+    void bvisit(const Symbol &x)
+    {
+        res = x.rcp_from_this();
+    }
+
+    void bvisit(const Basic &x)
+    {
+        throw std::runtime_error("Could not find a generator");
+    }
+};
+
+
 class BasicToUIntPolyVisitor : public BaseVisitor<BasicToUIntPolyVisitor>
 {
 private:

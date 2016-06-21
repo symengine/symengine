@@ -366,7 +366,20 @@ template <typename T>
 void uintpoly_print(const T &x, std::ostringstream &s)
 {
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
-    bool first = true;
+    bool first = true, ispow = is_a<Pow>(*x.get_var());
+    std::string base;
+    RCP<const Basic> powerx, basex;
+
+    if (ispow) {
+        basex = rcp_static_cast<const Pow>(x.get_var())->get_base();
+        base = basex->__str__();
+        if (is_a<const Rational>(*basex))
+            base = "(" + base + ")";
+    }
+    else {
+        base = x.get_var()->__str__();
+    }
+
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
@@ -390,7 +403,7 @@ void uintpoly_print(const T &x, std::ostringstream &s)
                     s << "-";
                 s << x.get_var()->__str__();
             } else {
-                s << " " << _print_sign(m) << " " << x.get_var()->__str__();
+                s << " " << _print_sign(m) << " " << base;
             }
         }
         // same logic is followed as above
@@ -398,16 +411,25 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << m << "*" << x.get_var()->__str__();
+                s << m << "*" << base;
             } else {
-                s << " " << _print_sign(m) << " " << mp_abs(m) << "*"
-                  << x.get_var()->__str__();
+                s << " " << _print_sign(m) << " " << mp_abs(m) << "*" << base;
             }
         }
         // if exponent is not 1, print the exponent;
-        if (it->first != 1) {
+        if (ispow) {
+            powerx = mul(rcp_static_cast<const Pow>(x.get_var())->get_exp(), integer(it->first));
+            if (!eq(*powerx, *one))
+            {
+                // does power need bracketssss
+                if (is_a<const Integer>(*powerx) or is_a<const Symbol>(*powerx))
+                    s << "**" << powerx->__str__();
+                else
+                    s << "**(" << powerx->__str__() << ")";
+            }
+        } else if (it->first != 1){
             s << "**" << it->first;
-        }
+        }     
         // corner cases of only first term handled successfully, switch the bool
         first = false;
     }

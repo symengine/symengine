@@ -3,6 +3,7 @@
 
 #include <symengine/mul.h>
 #include <symengine/add.h>
+#include <symengine/rational.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 
@@ -23,10 +24,12 @@ using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
 using SymEngine::vec_integer_class;
-using SymEngine::rcp_static_cast;
-using SymEngine::Add;
-using SymEngine::is_a;
-using SymEngine::Integer;
+using SymEngine::pow;
+using SymEngine::rational;
+using SymEngine::sqrt;
+using SymEngine::sin;
+using SymEngine::integer;
+using SymEngine::Function;
 
 using namespace SymEngine::literals;
 
@@ -308,16 +311,21 @@ TEST_CASE("UIntPoly divides", "[UIntPoly]")
     REQUIRE(!divides_upoly(*b, *a, outArg(res)));
 }
 
-TEST_CASE("random", "[UIntPoly]")
+TEST_CASE("Pow var printing", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> p = pow(integer(2), x);
+    RCP<const Basic> t = pow(x, rational(3,2));
+    RCP<const Basic> s = sqrt(x);
+    RCP<const Basic> sinx = sin(x);
 
-    RCP<const Basic> ss = add(x, y);
-    REQUIRE(is_a<Add>(*ss));
+    RCP<const UIntPoly> a = UIntPoly::from_vec(p, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> b = UIntPoly::from_vec(s, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> c = UIntPoly::from_vec(sinx, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> d = UIntPoly::from_vec(t, {1_z, 2_z, 2_z});
 
-    RCP<const Add> s = rcp_static_cast<const Add>(add(x, add(x, add(x, add(y, y)))));
-
-    for (auto it : s->dict_)
-        std::cout<<it.first->__str__()<<" "<<rcp_static_cast<const Integer>(it.second)->i<<std::endl;
+    REQUIRE(a->__str__() == "2*2**(2*x) + 2*2**x + 1");
+    REQUIRE(b->__str__() == "2*x + 2*x**(1/2) + 1");
+    REQUIRE(c->__str__() == "2*sin(x)**2 + 2*sin(x) + 1");
+    REQUIRE(d->__str__() == "2*x**3 + 2*x**(3/2) + 1");
 }   
