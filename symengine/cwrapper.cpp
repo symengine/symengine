@@ -534,6 +534,22 @@ int vectorint_get(CVectorInt *self, int n)
     return self->m[n];
 }
 
+// C wrapper for DenseMatrix
+
+struct CDenseMatrix {
+    SymEngine::DenseMatrix m;
+};
+
+CDenseMatrix *densematrix_new()
+{
+    return new CDenseMatrix;
+}
+
+void densematrix_free(CDenseMatrix *self)
+{
+    delete self;
+}
+
 // C wrapper for vec_basic
 
 struct CVecBasic {
