@@ -91,8 +91,7 @@ TEST_CASE("evalf: real_double", "[evalf]")
     RCP<const Basic> r1, r2;
     r1 = sin(integer(2));
     r2 = evalf(*r1, 53, true);
-    REQUIRE(static_cast<SymEngine::TypeID>(r2->get_type_code())
-            == SymEngine::REAL_DOUBLE);
+    REQUIRE(r2->get_type_code() == SymEngine::REAL_DOUBLE);
     double d1 = 0.909297;
     double d2 = (rcp_static_cast<const RealDouble>(r2))->as_double();
     d1 = fabs(d1 - d2);
@@ -109,13 +108,11 @@ TEST_CASE("evalf: real_mpfr", "[evalf]")
     r1 = sub(r1, r2);
 
     r2 = evalf(*r1, 100, true);
-    REQUIRE(static_cast<SymEngine::TypeID>(r2->get_type_code())
-            == SymEngine::REAL_MPFR);
+    REQUIRE(r2->get_type_code() == SymEngine::REAL_MPFR);
     REQUIRE(!(rcp_static_cast<const RealMPFR>(r2))->is_zero());
 
     r2 = evalf(*r1, 60, true);
-    REQUIRE(static_cast<SymEngine::TypeID>(r2->get_type_code())
-            == SymEngine::REAL_MPFR);
+    REQUIRE(r2->get_type_code() == SymEngine::REAL_MPFR);
     REQUIRE((rcp_static_cast<const RealMPFR>(r2))->is_zero());
 }
 #endif // HAVE_SYMENGINE_MPFR
@@ -132,8 +129,10 @@ TEST_CASE("evalf: complex_double", "[evalf]")
     // r1 = (sin(4) + sin(3)i) * (sin(2) + sin(7)i)
 
     r2 = evalf(*r1, 53, false);
-    REQUIRE(static_cast<SymEngine::TypeID>(r2->get_type_code())
-            == SymEngine::COMPLEX_DOUBLE);
+    REQUIRE(r2->get_type_code() == SymEngine::COMPLEX_DOUBLE);
+
+    r1 = (rcp_static_cast<const ComplexDouble>(r2))->real_part();
+    REQUIRE(r1->get_type_code() == SymEngine::REAL_DOUBLE);
 
     double d1 = (rcp_static_cast<const RealDouble>(
                      (rcp_static_cast<const ComplexDouble>(r2))->real_part()))
@@ -143,6 +142,8 @@ TEST_CASE("evalf: complex_double", "[evalf]")
     d1 = 0.000001;
     REQUIRE(d2 < d1);
 
+    r1 = (rcp_static_cast<const ComplexDouble>(r2))->imaginary_part();
+    REQUIRE(r1->get_type_code() == SymEngine::REAL_DOUBLE);
     d1 = (rcp_static_cast<const RealDouble>(
               (rcp_static_cast<const ComplexDouble>(r2))->imaginary_part()))
              ->as_double();
