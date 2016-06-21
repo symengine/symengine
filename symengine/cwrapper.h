@@ -318,11 +318,13 @@ int vectorint_get(CVectorInt *self, int n);
 
 //! Wrappers for Matrices
 
-typedef struct CDenseMatrix CDenseMatrix;
+typedef struct CMatrixBase CMatrixBase;
 
-CDenseMatrix *densematrix_new();
-void densematrix_free(CDenseMatrix *self);
+CMatrixBase *matrix_base_new();
+void matrix_base_free(CMatrixBase *self);
 
+//! Assign to s, a DenseMatrix
+void dense_matrix(CMatrixBase s);
 
 //! Wrapper for vec_basic
 
