@@ -62,6 +62,14 @@ endif()
 
 @SYMENGINE_PKG_FINDS@
 
+set(SYMENGINE_LLVM_COMPONENTS @SYMENGINE_LLVM_COMPONENTS@)
+
+if (SYMENGINE_LLVM_COMPONENTS)
+    find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
+    llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
+    set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} ${llvm_libs})
+endif()
+
 if (TARGET gmp)
     # Avoid defining targets again
     set(SYMENGINE_SKIP_DEPENDENCIES yes CACHE BOOL "Skip finding dependencies")

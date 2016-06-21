@@ -104,6 +104,7 @@ set(HEADERS
     infinity.h
     integer.h
     lambda_double.h
+    llvm_double.h
     logic.h
     matrix.h
     monomials.h
