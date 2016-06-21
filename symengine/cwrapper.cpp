@@ -536,21 +536,21 @@ int vectorint_get(CVectorInt *self, int n)
 
 // C wrapper for Matrix
 
-struct CMatrixBase {
-    SymEngine::MatrixBase m;
+struct CDenseMatrix {
+    SymEngine::DenseMatrix m;
 };
 
-CMatrixBase *matrix_base_new()
+CDenseMatrix *dense_matrix_new()
 {
-    return new CMatrixBase;
+    return new CDenseMatrix;
 }
 
-void matrix_base_free(CMatrixBase *self)
+void dense_matrix_free(CDenseMatrix *self)
 {
     delete self;
 }
 
-void dense_matrix(CMatrixBase s)
+void dense_matrix(CDenseMatrix *s)
 {
     s->m = SymEngine::DenseMatrix();
 }
