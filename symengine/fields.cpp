@@ -410,9 +410,9 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
                                   const std::vector<GaloisFieldDict> &b) const
 {
     unsigned m = g.degree();
-    GaloisFieldDict temp_out, out;
+    GaloisFieldDict temp_out(*this), out;
     if (this->degree() >= m) {
-        temp_out = (*this) % g;
+        temp_out %= g;
     }
     if (temp_out.empty()) {
         return temp_out;
@@ -425,5 +425,34 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
         out += v;
     }
     return out;
+}
+
+std::vector<std::pair<GaloisFieldDict, integer_class>>
+GaloisFieldDict::gf_ddf_zassenhaus() const
+{
+    unsigned i = 1;
+    GaloisFieldDict f(*this);
+    GaloisFieldDict g = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
+    GaloisFieldDict to_sub(g);
+    std::vector<std::pair<GaloisFieldDict, integer_class>> factors;
+
+    auto b = f.gf_frobenius_monomial_base();
+    while (2 * i <= f.degree()) {
+        g = g.gf_frobenius_map(f, b);
+
+        GaloisFieldDict h = f.gf_gcd(g - to_sub);
+
+        if (not h.is_one()) {
+            factors.push_back({h, integer_class(i)});
+            f /= h;
+            g %= f;
+            b = f.gf_frobenius_monomial_base();
+        }
+        i += 1;
+    }
+    if (not f.is_one()) {
+        factors.push_back({f, integer_class(f.degree())});
+    }
+    return factors;
 }
 }

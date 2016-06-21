@@ -96,6 +96,8 @@ public:
     GaloisFieldDict
     gf_frobenius_map(const GaloisFieldDict &g,
                      const std::vector<GaloisFieldDict> &b) const;
+    std::vector<std::pair<GaloisFieldDict, integer_class>>
+    gf_ddf_zassenhaus() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
