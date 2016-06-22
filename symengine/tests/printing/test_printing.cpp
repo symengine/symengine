@@ -9,7 +9,7 @@ using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::Expression;
 using SymEngine::pow;
-using SymEngine::uint_poly;
+using SymEngine::UIntPoly;
 using SymEngine::uexpr_poly;
 using SymEngine::mul;
 using SymEngine::integer;
@@ -236,48 +236,48 @@ TEST_CASE("test_matrix(): printing", "[printing]")
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
-TEST_CASE("test_uint_poly(): printing", "[printing]")
+TEST_CASE("test_UIntPoly::from_dict(): printing", "[printing]")
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = uint_poly(x, {{0, 0_z}});
+    p = UIntPoly::from_dict(x, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
 
-    p = uint_poly(x, {{0, 1_z}});
+    p = UIntPoly::from_dict(x, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
 
-    p = uint_poly(x, {{1, 1_z}});
+    p = UIntPoly::from_dict(x, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
 
-    p = uint_poly(x, {{0, 1_z}, {1, 2_z}});
+    p = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
 
-    p = uint_poly(x, {{0, -1_z}, {1, 2_z}});
+    p = UIntPoly::from_dict(x, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
 
-    p = uint_poly(x, {{0, -1_z}});
+    p = UIntPoly::from_dict(x, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
 
-    p = uint_poly(x, {{1, -1_z}});
+    p = UIntPoly::from_dict(x, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
 
-    p = uint_poly(x, {{0, -1_z}, {1, 1_z}});
+    p = UIntPoly::from_dict(x, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
 
-    p = uint_poly(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
+    p = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
 
-    p = uint_poly(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
+    p = UIntPoly::from_dict(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
 
-    p = uint_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    p = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
 
-    p = uint_poly(x, {{1, 2_z}, {2, 1_z}});
+    p = UIntPoly::from_dict(x, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
 
-    p = uint_poly(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    p = UIntPoly::from_dict(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
 
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }

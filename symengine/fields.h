@@ -86,6 +86,20 @@ public:
     void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
+    GaloisFieldDict gf_diff() const;
+
+    // Returns whether polynomial is squarefield in `modulo_`
+    bool gf_is_sqf() const;
+
+    // Returns the square free decomposition of polynomial's monic
+    // representation in `modulo_`
+    // A vector of pair is returned where each element is a factor and each
+    // pair's first
+    // raised to power of second gives the factor.
+    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
+
+    // Returns the square free part of the polynomaial in `modulo_`
+    GaloisFieldDict gf_sqf_part() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
@@ -378,8 +392,6 @@ public:
         integer_class coeff;
         for (auto riter = deg_dividend; riter >= deg_divisor; --riter) {
             coeff = dict_out[riter];
-            if (coeff == integer_class(0))
-                continue;
             auto lb = deg_divisor + riter > deg_dividend
                           ? deg_divisor + riter - deg_dividend
                           : 0;
@@ -429,12 +441,20 @@ public:
 
     void gf_istrip()
     {
-        for (auto i = dict_.size(); i-- != 0; ) {
+        for (auto i = dict_.size(); i-- != 0;) {
             if (dict_[i] == integer_class(0))
                 dict_.pop_back();
             else
                 break;
         }
+    }
+
+    bool is_one() const
+    {
+        if (dict_.size() == 1)
+            if (dict_[0] == integer_class(1))
+                return true;
+        return false;
     }
 };
 
