@@ -48,8 +48,34 @@ public:
             curr_gen = find_generator(it.first);
 
             if(min_gen != null) {
+                if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
+                   (is_a<const Symbol>(*min_gen) and is_a<const Symbol>(*curr_gen))) {
+
+                    if (not eq(*curr_gen, *min_gen))
+                        throw std::runtime_error("Could not extract generator");
+                
+                } else if (is_a_sub<const Function>(*curr_gen) or is_a<const Symbol>(*curr_gen)) {
+
+                    if (is_a<const Pow>(*min_gen)) {
+                        RCP<const Pow> powx = rcp_static_cast<const Pow>(min_gen);
+
+                        if (eq(*(powx->get_base()), *curr_gen)) {
+
+                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
+                            min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                        }
+                    }
+                    throw std::runtime_error("Could not extract generator");
+                }else if (is_a<const Pow>(*curr_gen)) {
+
+                    //
+                } else {
+                    throw std::runtime_error("Internal Error : Wrong generator type");
+                }
 
             } else {
+                SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen) or is_a<const Pow>(*curr_gen)
+                     or is_a_sub<const Function>(*curr_gen))
                 min_gen = curr_gen;
             }
         }
