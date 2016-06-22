@@ -8,6 +8,7 @@
 #define SYMENGINE_NTHEORY_H
 
 #include <symengine/integer.h>
+#include <symengine/rational.h>
 
 namespace SymEngine
 {
@@ -21,6 +22,7 @@ RCP<const Integer> nextprime(const Integer &a);
 // Basic Number-theoretic functions
 //! Greatest Common Divisor
 RCP<const Integer> gcd(const Integer &a, const Integer &b);
+RCP<const Number> gcd(const RCP<const Number> &a, const RCP<const Number> &b);
 //! Least Common Multiple
 RCP<const Integer> lcm(const Integer &a, const Integer &b);
 //! Extended GCD

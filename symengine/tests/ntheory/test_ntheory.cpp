@@ -69,6 +69,21 @@ TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
     REQUIRE(eq(*g, *add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
 }
 
+TEST_CASE("test gcd rational: ntheory", "[ntheory]")
+{
+    RCP<const Number> r2b3 = rational(2, 3);
+    RCP<const Number> r14b3 = rational(14, 3);
+    RCP<const Number> r1b2 = rational(1, 2);
+    RCP<const Number> r1b1 = rational(1, 1);
+    RCP<const Number> r3b2 = rational(3, 2);
+
+    REQUIRE(eq(*gcd(r2b3, r14b3), *rational(2, 3)));
+    REQUIRE(eq(*gcd(r1b2, r14b3), *rational(1, 6)));
+    REQUIRE(eq(*gcd(r3b2, r1b1), *rational(1, 2)));
+    REQUIRE(eq(*gcd(r1b2, r3b2), *rational(1, 2)));
+    REQUIRE(eq(*gcd(r2b3, r1b2), *rational(1, 6)));
+}
+
 TEST_CASE("test_nextprime(): ntheory", "[ntheory]")
 {
     RCP<const Integer> i1 = integer(1);

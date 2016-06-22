@@ -27,6 +27,36 @@ RCP<const Integer> gcd(const Integer &a, const Integer &b)
     return integer(std::move(g));
 }
 
+RCP<const Number> gcd(const RCP<const Number> &a, const RCP<const Number> &b)
+{   
+    integer_class n, d;
+
+    if (is_a<const Integer>(*a) and is_a<const Integer>(*b)) {
+        return gcd(*rcp_static_cast<const Integer>(a), *rcp_static_cast<const Integer>(b));
+    } else if (is_a<const Integer>(*a)) {
+        auto tmp = rcp_static_cast<const Rational>(b);
+        mp_gcd(n, rcp_static_cast<const Integer>(a)->i, tmp->i.get_num());
+        rational_class res(n, tmp->i.get_den());
+        return make_rcp<const Rational>(std::move(res));
+
+    } else if (is_a<const Integer>(*b)) {
+        auto tmp = rcp_static_cast<const Rational>(a);
+        mp_gcd(n, rcp_static_cast<const Integer>(b)->i, tmp->i.get_num());
+        rational_class res(n, tmp->i.get_den());
+        return make_rcp<const Rational>(std::move(res));
+
+    } else {
+        auto tmp = rcp_static_cast<const Rational>(a);
+        auto tmp2 = rcp_static_cast<const Rational>(b);
+
+        mp_gcd(n, tmp->i.get_num(), tmp2->i.get_num());
+        mp_lcm(d, tmp->i.get_den(), tmp2->i.get_den());
+        rational_class res(n, d);
+        canonicalize(res);
+        return make_rcp<const Rational>(std::move(res));
+    }
+}
+
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
              const Ptr<RCP<const Integer>> &t, const Integer &a,
              const Integer &b)
