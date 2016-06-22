@@ -3,8 +3,6 @@
 namespace SymEngine
 {
 
-RCP<const Basic> find_generator(const RCP<const Basic> &x);
-
 class UIntPolyGenaratorVisitor : public BaseVisitor<UIntPolyGenaratorVisitor>
 {
 private:
@@ -20,7 +18,7 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a_Number(*x.get_base())) {
-                res = pow(x.get_base(), find_generator(x.get_exp()));
+            res = pow(x.get_base(), find_generator(x.get_exp()));
         } else if (is_a_Number(*x.get_exp())) {
             if (is_a<const Integer>(*x.get_exp())) {
                 integer_class i = rcp_static_cast<const Integer>(x.get_exp())->i;
@@ -82,6 +80,11 @@ public:
 
         if (x.dict_.empty())
             throw std::runtime_error("Could not extract generator");
+    }
+
+    void bvisit(const Mul &x)
+    {
+        throw std::runtime_error("To be implemented");
     }
 
     void bvisit(const Function &x)

@@ -328,4 +328,13 @@ TEST_CASE("Pow var printing", "[UIntPoly]")
     REQUIRE(b->__str__() == "2*x + 2*x**(1/2) + 1");
     REQUIRE(c->__str__() == "2*sin(x)**2 + 2*sin(x) + 1");
     REQUIRE(d->__str__() == "2*x**3 + 2*x**(3/2) + 1");
-}   
+}
+
+TEST_CASE("generators", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> basic = pow(integer(2), x);
+    REQUIRE(true);
+}  
