@@ -544,6 +544,7 @@ TEST_CASE("GaloisFieldDict pow_mod : Basic", "[basic]")
     REQUIRE(h1 == GaloisFieldDict::from_vec(
                       {1_z, 1_z, 1_z, 2_z, 0_z, 0_z, 2_z, 2_z}, 3_z));
     REQUIRE(h == h1);
+    REQUIRE(h == (d1.gf_pow(d1.modulo_) % d2));
 }
 
 TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")

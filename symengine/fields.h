@@ -90,12 +90,20 @@ public:
     bool gf_is_sqf() const;
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
     GaloisFieldDict gf_sqf_part() const;
+    // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
+    // where n = this->degree()
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
+    // computes `f**n % (*this)` in modulo_
     GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
                                const integer_class &n) const;
+    // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
+    // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
     gf_frobenius_map(const GaloisFieldDict &g,
                      const std::vector<GaloisFieldDict> &b) const;
+    // For a monic square-free polynomial in modulo_, it returns its distinct
+    // degree factorization. Each element's first is a factor and second
+    // is used by equal degree factorization.
     std::vector<std::pair<GaloisFieldDict, integer_class>>
     gf_ddf_zassenhaus() const;
 
