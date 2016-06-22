@@ -534,6 +534,37 @@ int vectorint_get(CVectorInt *self, int n)
     return self->m[n];
 }
 
+// C wrapper for vec_basic
+
+struct CVecBasic {
+    SymEngine::vec_basic m;
+};
+
+CVecBasic *vecbasic_new()
+{
+    return new CVecBasic;
+}
+
+void vecbasic_free(CVecBasic *self)
+{
+    delete self;
+}
+
+void vecbasic_push_back(CVecBasic *self, const basic value)
+{
+    self->m.push_back(value->m);
+}
+
+void vecbasic_get(CVecBasic *self, int n, basic result)
+{
+    result->m = self->m[n];
+}
+
+size_t vecbasic_size(CVecBasic *self)
+{
+    return self->m.size();
+}
+
 // C wrapper for Matrix
 
 struct CDenseMatrix {
@@ -565,40 +596,9 @@ void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
     s->m = SymEngine::DenseMatrix(d->m);
 }
 
-void dense_matrix_set_vec(unsigned long int rows, unsigned long int cols, CVecBasic *l)
+void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l)
 {
     s->m = SymEngine::DenseMatrix(rows, cols, l->m);
-}
-
-// C wrapper for vec_basic
-
-struct CVecBasic {
-    SymEngine::vec_basic m;
-};
-
-CVecBasic *vecbasic_new()
-{
-    return new CVecBasic;
-}
-
-void vecbasic_free(CVecBasic *self)
-{
-    delete self;
-}
-
-void vecbasic_push_back(CVecBasic *self, const basic value)
-{
-    self->m.push_back(value->m);
-}
-
-void vecbasic_get(CVecBasic *self, int n, basic result)
-{
-    result->m = self->m[n];
-}
-
-size_t vecbasic_size(CVecBasic *self)
-{
-    return self->m.size();
 }
 
 // C Wrapper for set_basic

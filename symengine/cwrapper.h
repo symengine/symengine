@@ -316,6 +316,16 @@ void vectorint_free(CVectorInt *self);
 void vectorint_push_back(CVectorInt *self, int value);
 int vectorint_get(CVectorInt *self, int n);
 
+//! Wrapper for vec_basic
+
+typedef struct CVecBasic CVecBasic;
+
+CVecBasic *vecbasic_new();
+void vecbasic_free(CVecBasic *self);
+void vecbasic_push_back(CVecBasic *self, const basic value);
+void vecbasic_get(CVecBasic *self, int n, basic result);
+size_t vecbasic_size(CVecBasic *self);
+
 //! Wrappers for Matrices
 
 typedef struct CDenseMatrix CDenseMatrix;
@@ -329,17 +339,7 @@ void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r, unsigned long 
 //! Assign to s, a DenseMatrix with value d
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 //! Assign to s, a DenseMatrix with l's elements
-void dense_matrix_set_vec(unsigned long int rows, unsigned long int cols, CVecBasic *l);
-
-//! Wrapper for vec_basic
-
-typedef struct CVecBasic CVecBasic;
-
-CVecBasic *vecbasic_new();
-void vecbasic_free(CVecBasic *self);
-void vecbasic_push_back(CVecBasic *self, const basic value);
-void vecbasic_get(CVecBasic *self, int n, basic result);
-size_t vecbasic_size(CVecBasic *self);
+void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l);
 
 //! Wrapper for set_basic
 
