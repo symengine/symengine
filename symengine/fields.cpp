@@ -234,7 +234,8 @@ void GaloisFieldDict::gf_monic(integer_class &res,
 
 GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 {
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
+    if (modulo_ != o.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     GaloisFieldDict f = static_cast<GaloisFieldDict>(*this);
     GaloisFieldDict g = o;
     GaloisFieldDict temp_out;
@@ -249,7 +250,8 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
 {
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
+    if (modulo_ != o.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     if (dict_.empty())
         return static_cast<GaloisFieldDict>(*this);
     if (o.dict_.empty())
@@ -354,6 +356,8 @@ GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
 GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
                                             const integer_class &n) const
 {
+    if (modulo_ != f.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     if (n == 0_z)
         return GaloisFieldDict::from_vec({1_z}, modulo_);
     GaloisFieldDict in = f;
@@ -409,6 +413,8 @@ GaloisFieldDict
 GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
                                   const std::vector<GaloisFieldDict> &b) const
 {
+    if (modulo_ != g.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     unsigned m = g.degree();
     GaloisFieldDict temp_out(*this), out;
     if (this->degree() >= m) {
