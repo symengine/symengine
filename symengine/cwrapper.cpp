@@ -4,6 +4,7 @@
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
 #include <symengine/printer.h>
+#include <symengine/eval.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -237,8 +238,20 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_prec();
 }
 
-#endif // HAVE_SYMENGINE_MPFR
+int real_mpfr_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    return (int)((rcp_static_cast<const RealMPFR>(s->m))->is_zero());
+}
 
+#endif // HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPC
+int complex_mpc_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
+    return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
+}
+#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -718,6 +731,13 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+}
+
+//! Wrapper for evalf
+void basic_evalf(basic s, const basic b, unsigned long bits, int real)
+{
+
+    s->m = SymEngine::evalf(*(b->m), bits, (bool)real);
 }
 
 //! Print stacktrace on segfault

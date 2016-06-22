@@ -130,7 +130,7 @@ void integer_set_ui(basic s, unsigned long i);
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
 void integer_set_str(basic s, const char *c);
-//! Assign to s, a real_double that has base 10 representation c.
+//! Assign to s, a real_double that has value of d.
 void real_double_set_d(basic s, double d);
 //! Returns double value of s.
 double real_double_get_d(const basic s);
@@ -149,7 +149,14 @@ void real_mpfr_set(basic s, mpfr_srcptr m);
 void real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);
+//! Returns 1 if s has value zero; 0 otherwise
+int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+//! Returns 1 if s has value zero; 0 otherwise
+int complex_mpc_is_zero(const basic s);
+#endif // HAVE_SYMENGINE_MPC
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -394,6 +401,8 @@ void ntheory_fibonacci(basic s, unsigned long a);
 void ntheory_lucas(basic s, unsigned long a);
 //! Binomial Coefficient
 void ntheory_binomial(basic s, const basic a, unsigned long b);
+//! Evaluate b and assign the value to s
+void basic_evalf(basic s, const basic b, unsigned long bits, int real);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
