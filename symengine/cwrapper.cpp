@@ -555,6 +555,20 @@ void dense_matrix(CDenseMatrix *s)
     s->m = SymEngine::DenseMatrix();
 }
 
+void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int rows, unsigned long int cols)
+{
+    s->m = SymEngine::DenseMatrix(rows, cols);
+}
+
+void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
+{
+    s->m = SymEngine::DenseMatrix(d->m);
+}
+
+void dense_matrix_set_vec(unsigned long int rows, unsigned long int cols, CVecBasic *l)
+{
+    s->m = SymEngine::DenseMatrix(rows, cols, l->m);
+}
 
 // C wrapper for vec_basic
 

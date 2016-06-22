@@ -322,9 +322,14 @@ typedef struct CDenseMatrix CDenseMatrix;
 
 CDenseMatrix *dense_matrix_new();
 void dense_matrix_free(CDenseMatrix *self);
-
 //! Assign to s, a DenseMatrix
 void dense_matrix(CDenseMatrix *s);
+//! Assign to s, a DenseMatrix with r rows and c columns
+void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r, unsigned long int c);
+//! Assign to s, a DenseMatrix with value d
+void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
+//! Assign to s, a DenseMatrix with l's elements
+void dense_matrix_set_vec(unsigned long int rows, unsigned long int cols, CVecBasic *l);
 
 //! Wrapper for vec_basic
 
