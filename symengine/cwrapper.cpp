@@ -581,7 +581,7 @@ void dense_matrix_free(CDenseMatrix *self)
     delete self;
 }
 
-void dense_matrix(CDenseMatrix *s)
+void dense_matrix_init(CDenseMatrix *s)
 {
     s->m = SymEngine::DenseMatrix();
 }
@@ -778,12 +778,6 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
-}
-
-// Matrix Wrappers
-SymEngine::DenseMatrix* matrix_dense_matrix()
-{
-    return new SymEngine::DenseMatrix();
 }
 
 //! Print stacktrace on segfault

@@ -333,7 +333,7 @@ typedef struct CDenseMatrix CDenseMatrix;
 CDenseMatrix *dense_matrix_new();
 void dense_matrix_free(CDenseMatrix *self);
 //! Assign to s, a DenseMatrix
-void dense_matrix(CDenseMatrix *s);
+void dense_matrix_init(CDenseMatrix *s);
 //! Assign to s, a DenseMatrix with r rows and c columns
 void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r, unsigned long int c);
 //! Assign to s, a DenseMatrix with value d
