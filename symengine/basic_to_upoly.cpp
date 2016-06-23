@@ -17,6 +17,74 @@ public:
         return res;
     }
 
+    void _update(RCP<const Basic> &min_gen, RCP<const Basic> &curr_gen)
+    {
+        if(min_gen != null) {
+            if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
+               (is_a<const Symbol>(*min_gen) and is_a<const Symbol>(*curr_gen))) {
+
+                if (not eq(*curr_gen, *min_gen))
+                    throw std::runtime_error("Could not extract generator");
+            
+            } else if (is_a_sub<const Function>(*curr_gen) or is_a<const Symbol>(*curr_gen)) {
+
+                if (is_a<const Pow>(*min_gen)) {
+                    RCP<const Pow> powx = rcp_static_cast<const Pow>(min_gen);
+
+                    if (eq(*(powx->get_base()), *curr_gen)) {
+
+                        SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
+                        min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                        return;
+                    }
+                }
+                throw std::runtime_error("Could not extract generator");
+
+            } else if (is_a<const Pow>(*curr_gen)) {
+
+                RCP<const Pow> powx = rcp_static_cast<const Pow>(curr_gen);
+                if (is_a<const Symbol>(*min_gen) or is_a_sub<const Function>(*min_gen)) {
+                    if (eq(*(powx->get_base()), *min_gen)) {
+
+                        SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
+                        min_gen = pow(min_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                        return;
+                    }
+                } else if (is_a<const Pow>(*min_gen)) {
+                    // won't handle cases like 4**x + 2**x
+                    RCP<const Pow> powx2 = rcp_static_cast<const Pow>(min_gen);
+                    if (eq(*(powx->get_base()), *(powx2->get_base()))) {
+                        // won't handle things like 2**(3x/2) + 2**x, but will handle 2**(x/2) + 2**x
+                        RCP<const Basic> tmp = div(powx->get_exp(), powx2->get_exp());
+                        if(is_a<const Integer>(*tmp)) {
+                            integer_class i = rcp_static_cast<const Integer>(tmp)->i;
+                            if (i > 0)
+                                return;
+                        }
+
+                        tmp = div(powx2->get_exp(), powx->get_exp());
+                        if(is_a<const Integer>(*tmp)) {
+                            integer_class i = rcp_static_cast<const Integer>(tmp)->i;
+                            if (i > 0) {
+                                min_gen = curr_gen;
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                throw std::runtime_error("Could not extract generator");
+            } else {
+                throw std::runtime_error("Internal Error : Wrong generator type");
+            }
+
+        } else {
+            SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen) or is_a<const Pow>(*curr_gen)
+                 or is_a_sub<const Function>(*curr_gen))
+            min_gen = curr_gen;
+        }
+    }
+
     void bvisit(const Pow &x)
     {
         if (is_a_Number(*x.get_base())) {
@@ -48,77 +116,12 @@ public:
                 throw std::runtime_error("Non-integer coeff found");
 
         for (const auto &it : x.dict_) {
-
             if (not inpow)
                 if (not is_a<const Integer>(*it.second))
                     throw std::runtime_error("Non-integer coeff found");
 
             curr_gen = find_generator(it.first);
-
-            if(min_gen != null) {
-                if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
-                   (is_a<const Symbol>(*min_gen) and is_a<const Symbol>(*curr_gen))) {
-
-                    if (not eq(*curr_gen, *min_gen))
-                        throw std::runtime_error("Could not extract generator");
-                
-                } else if (is_a_sub<const Function>(*curr_gen) or is_a<const Symbol>(*curr_gen)) {
-
-                    if (is_a<const Pow>(*min_gen)) {
-                        RCP<const Pow> powx = rcp_static_cast<const Pow>(min_gen);
-
-                        if (eq(*(powx->get_base()), *curr_gen)) {
-
-                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                            min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
-                            continue;
-                        }
-                    }
-                    throw std::runtime_error("Could not extract generator");
-
-                } else if (is_a<const Pow>(*curr_gen)) {
-
-                    RCP<const Pow> powx = rcp_static_cast<const Pow>(curr_gen);
-                    if (is_a<const Symbol>(*min_gen) or is_a_sub<const Function>(*min_gen)) {
-                        if (eq(*(powx->get_base()), *min_gen)) {
-
-                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                            min_gen = pow(min_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
-                            continue;
-                        }
-                    } else if (is_a<const Pow>(*min_gen)) {
-                        // won't handle cases like 4**x + 2**x
-                        RCP<const Pow> powx2 = rcp_static_cast<const Pow>(min_gen);
-                        if (eq(*(powx->get_base()), *(powx2->get_base()))) {
-                            // won't handle things like 2**(3x/2) + 2**x, but will handle 2**(x/2) + 2**x
-                            RCP<const Basic> tmp = div(powx->get_exp(), powx2->get_exp());
-                            if(is_a<const Integer>(*tmp)) {
-                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
-                                if (i > 0)
-                                    continue;
-                            }
-
-                            tmp = div(powx2->get_exp(), powx->get_exp());
-                            if(is_a<const Integer>(*tmp)) {
-                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
-                                if (i > 0) {
-                                    min_gen = curr_gen;
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-
-                    throw std::runtime_error("Could not extract generator");
-                } else {
-                    throw std::runtime_error("Internal Error : Wrong generator type");
-                }
-
-            } else {
-                SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen) or is_a<const Pow>(*curr_gen)
-                     or is_a_sub<const Function>(*curr_gen))
-                min_gen = curr_gen;
-            }
+            _update(min_gen, curr_gen);
         }
 
         if (x.dict_.empty())
@@ -135,77 +138,8 @@ public:
                 throw std::runtime_error("Non-integer coeff found");
 
         for (const auto &it : x.dict_) {
-
-            if (not inpow)
-                if (not is_a<const Integer>(*it.second))
-                    throw std::runtime_error("Non-integer coeff found");
-
             curr_gen = find_generator(pow(it.first, it.second));
-
-            if(min_gen != null) {
-                if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
-                   (is_a<const Symbol>(*min_gen) and is_a<const Symbol>(*curr_gen))) {
-
-                    if (not eq(*curr_gen, *min_gen))
-                        throw std::runtime_error("Could not extract generator");
-                
-                } else if (is_a_sub<const Function>(*curr_gen) or is_a<const Symbol>(*curr_gen)) {
-
-                    if (is_a<const Pow>(*min_gen)) {
-                        RCP<const Pow> powx = rcp_static_cast<const Pow>(min_gen);
-
-                        if (eq(*(powx->get_base()), *curr_gen)) {
-
-                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                            min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
-                            continue;
-                        }
-                    }
-                    throw std::runtime_error("Could not extract generator");
-
-                } else if (is_a<const Pow>(*curr_gen)) {
-
-                    RCP<const Pow> powx = rcp_static_cast<const Pow>(curr_gen);
-                    if (is_a<const Symbol>(*min_gen) or is_a_sub<const Function>(*min_gen)) {
-                        if (eq(*(powx->get_base()), *min_gen)) {
-
-                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                            min_gen = pow(min_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
-                            continue;
-                        }
-                    } else if (is_a<const Pow>(*min_gen)) {
-                        // won't handle cases like 4**x + 2**x
-                        RCP<const Pow> powx2 = rcp_static_cast<const Pow>(min_gen);
-                        if (eq(*(powx->get_base()), *(powx2->get_base()))) {
-                            // won't handle things like 2**(3x/2) + 2**x, but will handle 2**(x/2) + 2**x
-                            RCP<const Basic> tmp = div(powx->get_exp(), powx2->get_exp());
-                            if(is_a<const Integer>(*tmp)) {
-                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
-                                if (i > 0)
-                                    continue;
-                            }
-
-                            tmp = div(powx2->get_exp(), powx->get_exp());
-                            if(is_a<const Integer>(*tmp)) {
-                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
-                                if (i > 0) {
-                                    min_gen = curr_gen;
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-
-                    throw std::runtime_error("Could not extract generator");
-                } else {
-                    throw std::runtime_error("Internal Error : Wrong generator type");
-                }
-
-            } else {
-                SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen) or is_a<const Pow>(*curr_gen)
-                     or is_a_sub<const Function>(*curr_gen))
-                min_gen = curr_gen;
-            }
+            _update(min_gen, curr_gen);
         }
 
         if (x.dict_.empty())

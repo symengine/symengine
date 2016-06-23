@@ -340,6 +340,8 @@ TEST_CASE("generators", "[UIntPoly]")
     RCP<const Basic> i5 = integer(5);
     RCP<const Basic> twopx = pow(i2, x);
     RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> r3b2 = div(integer(3), i2);
+    RCP<const Basic> half = div(one, i2);
 
     basic = twopx;
     gen = twopx;
@@ -359,6 +361,15 @@ TEST_CASE("generators", "[UIntPoly]")
 
     basic = add(twopx, pow(i2, xb2));
     gen = pow(i2, xb2);
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    // does this need change?
+    basic = add(pow(x, r3b2), one);
+    gen = pow(x, r3b2);
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = add(pow(x, r3b2), pow(x, one));
+    gen = pow(x, half);
     REQUIRE(eq(*find_generator(basic), *gen));
 
     basic = xb2;
