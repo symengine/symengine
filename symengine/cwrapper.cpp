@@ -642,6 +642,14 @@ char *sparse_matrix_str(const CSparseMatrix *s)
     return cc;
 }
 
+void dense_matrix_get_basic(basic s, CDenseMatrix *mat, unsigned long int r, unsigned long int c){
+    s->m = mat->m.get(r, c);
+}
+
+void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s){
+    mat->m.set(r, c, s->m);
+}
+
 // C Wrapper for set_basic
 
 struct CSetBasic {

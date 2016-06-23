@@ -347,6 +347,10 @@ void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l);
 //! Return a string representation of s
 char *dense_matrix_str(const CDenseMatrix *s);
+//! Assign to s, mat[r][c]
+void dense_matrix_get_basic(basic s, CDenseMatrix *mat, unsigned long int r, unsigned long int c);
+//! Assign s to mat[r][c]
+void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);
