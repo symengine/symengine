@@ -363,9 +363,16 @@ TEST_CASE("generators", "[UIntPoly]")
     gen = pow(i2, xb2);
     REQUIRE(eq(*find_generator(basic), *gen));
 
-    // does this need change?
     basic = add(pow(x, r3b2), one);
-    gen = pow(x, r3b2);
+    gen = pow(x, half);
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = add(pow(x, neg(r3b2)), one);
+    gen = pow(x, neg(half));
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = add(x, pow(x, r3b2));
+    gen = pow(x, half);
     REQUIRE(eq(*find_generator(basic), *gen));
 
     basic = add(pow(x, r3b2), pow(x, one));
@@ -373,5 +380,8 @@ TEST_CASE("generators", "[UIntPoly]")
     REQUIRE(eq(*find_generator(basic), *gen));
 
     basic = xb2;
+    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+
+    basic = add(x, div(one, x));
     CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
 }  

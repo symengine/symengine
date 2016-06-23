@@ -17,7 +17,7 @@ public:
         return res;
     }
 
-    void _update(RCP<const Basic> &min_gen, RCP<const Basic> &curr_gen)
+    void _update_min(RCP<const Basic> &min_gen, RCP<const Basic> &curr_gen)
     {
         if(min_gen != null) {
             if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
@@ -34,7 +34,8 @@ public:
                     if (eq(*(powx->get_base()), *curr_gen)) {
 
                         SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                        min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                        if (is_a<const Rational>(*powx->get_exp()))
+                            min_gen = pow(curr_gen, div(one, rcp_static_cast<const Rational>(powx->get_exp())->get_den()));
                         return;
                     }
                 }
@@ -47,7 +48,8 @@ public:
                     if (eq(*(powx->get_base()), *min_gen)) {
 
                         SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
-                        min_gen = pow(min_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                        if (is_a<const Rational>(*powx->get_exp()))
+                            min_gen = pow(min_gen, div(one, rcp_static_cast<const Rational>(powx->get_exp())->get_den()));
                         return;
                     }
                 } else if (is_a<const Pow>(*min_gen)) {
@@ -87,20 +89,29 @@ public:
 
     void bvisit(const Pow &x)
     {
-        if (is_a_Number(*x.get_base())) {
+        if (is_a<const Rational>(*x.get_base()) or is_a<const Integer>(*x.get_base())) {
             res = pow(x.get_base(), find_generator(x.get_exp(), true));
-        } else if (is_a_Number(*x.get_exp())) {
+        } else if (is_a<const Rational>(*x.get_exp()) or is_a<const Integer>(*x.get_exp())) {
             if (is_a<const Integer>(*x.get_exp())) {
+                // this case should not be encountered, if `expand` was called
                 integer_class i = rcp_static_cast<const Integer>(x.get_exp())->i;
                 if (i > 0) {
                     res = find_generator(x.get_base());
                     return;
+                } else {
+                    res = x.rcp_from_this();
                 }
             }
-            if (is_a<const Integer>(*x.get_exp()) or is_a<const Rational>(*x.get_exp()))
-                res = x.rcp_from_this();
-            else
+            if (is_a<const Rational>(*x.get_exp())) {
+                RCP<const Rational> rat = rcp_static_cast<const Rational>(x.get_exp());
+                if (rat->is_negative())
+                    res = pow(x.get_base(), div(neg(one), rat->get_den()));
+                else
+                    res = pow(x.get_base(), div(one, rat->get_den()));
+            }
+            else {
                 throw std::runtime_error("Could not extract generator");
+            }
         } else {
             // won't handle cases like genarator = x**x
             throw std::runtime_error("Could not extract generator");
@@ -121,7 +132,7 @@ public:
                     throw std::runtime_error("Non-integer coeff found");
 
             curr_gen = find_generator(it.first);
-            _update(min_gen, curr_gen);
+            _update_min(min_gen, curr_gen);
         }
 
         if (x.dict_.empty())
@@ -139,7 +150,7 @@ public:
 
         for (const auto &it : x.dict_) {
             curr_gen = find_generator(pow(it.first, it.second));
-            _update(min_gen, curr_gen);
+            _update_min(min_gen, curr_gen);
         }
 
         if (x.dict_.empty())
