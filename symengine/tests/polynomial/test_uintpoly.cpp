@@ -349,96 +349,101 @@ TEST_CASE("generators", "[UIntPoly]")
     // 2**x -> 2**x
     basic = twopx;
     gen = twopx;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // (x+1)**5 -> x
     basic = pow(add(x, i1), i5);
     gen = x;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // 2**x + (2**x)**2 -> 2**x
     basic = add(twopx, pow(twopx, i2));
     gen = twopx;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // 2**(x/2) -> 2**(x/2)
     basic = pow(i2, xb2);
     gen = pow(i2, xb2);
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // 2**x + 2**(x/2) -> 2**(x/2)
     basic = add(twopx, pow(i2, xb2));
     gen = pow(i2, xb2);
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x**(3/2) + 1 -> x**(1/2)
     basic = add(pow(x, r3b2), one);
     gen = pow(x, half);
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x**(-3/2) + 1 -> x**(-1/2)
     basic = add(pow(x, neg(r3b2)), one);
     gen = pow(x, neg(half));
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x + x**(3/2) -> x**(1/2)
     basic = add(x, pow(x, r3b2));
     gen = pow(x, half);
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x**(3/2) + x**2 -> x**(1/2)
     basic = add(pow(x, r3b2), pow(x, i2));
     gen = pow(x, half);
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x**2 + x**5 -> x
     basic = add(pow(x, i2), pow(x, i5));
     gen = x;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 2**(2+x) -> 2**x
+    basic = pow(i2, add(x, i2));
+    gen = twopx;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // (x+1)*(x+2) + (x+1)*(x+5) -> x
     basic = add(mul(xp1, add(x, i2)), mul(xp1, add(x, i5)));
     gen = x;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // sin(x+y) + sin(x+y)**2
     basic = add(sinxy, pow(sinxy, i2));
     gen = sinxy;
-    REQUIRE(eq(*find_generator(basic), *gen));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
     // x/2
     basic = xb2;
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x + (1/x)
     basic = add(x, div(one, x));
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x + y
     basic = add(x, y);
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x + (1/2)
     basic = add(x, half);
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x**2 + 2**x
     basic = add(twopx, pow(x, i2));
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x**2 + x/5
     basic = add(pow(x, i2), div(x, i5));
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // 2
     basic = i2;
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // (x+x**2)/2
     basic = div(add(x, pow(x, i2)), i2);
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 
     // x + sin(x)
     basic = add(x, sinx);
-    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
 }  
