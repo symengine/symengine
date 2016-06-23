@@ -24,6 +24,7 @@
 #define str(s) #s
 
 using SymEngine::DenseMatrix;
+using SymEngine::CSRMatrix;
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
@@ -571,12 +572,26 @@ struct CDenseMatrix {
     SymEngine::DenseMatrix m;
 };
 
+struct CSparseMatrix {
+    SymEngine::CSRMatrix m;
+};
+
 CDenseMatrix *dense_matrix_new()
 {
     return new CDenseMatrix;
 }
 
+CSparseMatrix *sparse_matrix_new()
+{
+    return new CSparseMatrix;
+}
+
 void dense_matrix_free(CDenseMatrix *self)
+{
+    delete self;
+}
+
+void sparse_matrix_free(CSparseMatrix *self)
 {
     delete self;
 }
@@ -586,9 +601,19 @@ void dense_matrix_init(CDenseMatrix *s)
     s->m = SymEngine::DenseMatrix();
 }
 
+void sparse_matrix_init(CSparseMatrix *s)
+{
+    s->m = SymEngine::CSRMatrix();
+}
+
 void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int rows, unsigned long int cols)
 {
     s->m = SymEngine::DenseMatrix(rows, cols);
+}
+
+void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows, unsigned long int cols)
+{
+    s->m = SymEngine::CSRMatrix(rows, cols);
 }
 
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
@@ -601,7 +626,15 @@ void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long
     s->m = SymEngine::DenseMatrix(rows, cols, l->m);
 }
 
-char *matrix_str(const CDenseMatrix *s)
+char *dense_matrix_str(const CDenseMatrix *s)
+{
+    std::string str = s->m.__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *sparse_matrix_str(const CSparseMatrix *s)
 {
     std::string str = s->m.__str__();
     auto cc = new char[str.length() + 1];

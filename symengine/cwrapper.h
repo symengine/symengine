@@ -329,9 +329,14 @@ size_t vecbasic_size(CVecBasic *self);
 //! Wrappers for Matrices
 
 typedef struct CDenseMatrix CDenseMatrix;
+typedef struct CSparseMatrix CSparseMatrix;
 
 CDenseMatrix *dense_matrix_new();
+CSparseMatrix *sparse_matrix_new();
+
 void dense_matrix_free(CDenseMatrix *self);
+void sparse_matrix_free(CSparseMatrix *self);
+
 //! Assign to s, a DenseMatrix
 void dense_matrix_init(CDenseMatrix *s);
 //! Assign to s, a DenseMatrix with r rows and c columns
@@ -341,7 +346,14 @@ void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 //! Assign to s, a DenseMatrix with l's elements
 void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l);
 //! Return a string representation of s
-char *matrix_str(const CDenseMatrix *s);
+char *dense_matrix_str(const CDenseMatrix *s);
+
+//! Assign to s, a CSRMatrix
+void sparse_matrix_init(CSparseMatrix *s);
+//! Assign to s, a CSRMatrix with r rows and c columns
+void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int r, unsigned long int c);
+//! Return a string representation of s
+char *sparse_matrix_str(const CSparseMatrix *s);
 
 //! Wrapper for set_basic
 
