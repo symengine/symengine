@@ -334,7 +334,33 @@ TEST_CASE("generators", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> basic, gen;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const Basic> xb2 = div(x, i2);
 
-    RCP<const Basic> basic = pow(integer(2), x);
-    REQUIRE(true);
+    basic = twopx;
+    gen = twopx;
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = pow(add(x, i1), i5);
+    gen = x;
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = add(twopx, pow(twopx, i2));
+    gen = twopx;
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = pow(i2, xb2);
+    gen = pow(i2, xb2);
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = add(twopx, pow(i2, xb2));
+    gen = pow(i2, xb2);
+    REQUIRE(eq(*find_generator(basic), *gen));
+
+    basic = xb2;
+    CHECK_THROWS_AS(find_generator(basic), std::runtime_error);
 }  
