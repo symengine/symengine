@@ -351,6 +351,14 @@ char *dense_matrix_str(const CDenseMatrix *s);
 void dense_matrix_get_basic(basic s, CDenseMatrix *mat, unsigned long int r, unsigned long int c);
 //! Assign s to mat[r][c]
 void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
+//! Assign to s, determinent of mat
+void dense_matrix_det(basic s, CDenseMatrix *mat);
+//! Assign to s, a DenseMatrix which is the inverse of mat
+void dense_matrix_inv(CDenseMatrix *s, CDenseMatrix *mat);
+//! Assign to s, a DenseMatrix which is the transpose of mat
+void dense_matrix_transpose(CDenseMatrix *s, CDenseMatrix *mat);
+//! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with step sizes [r, c]
+void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);

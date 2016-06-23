@@ -650,6 +650,26 @@ void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned lon
     mat->m.set(r, c, s->m);
 }
 
+void dense_matrix_det(basic s, CDenseMatrix *mat)
+{
+    s->m = mat->m.det();
+}
+void dense_matrix_inv(CDenseMatrix *s, CDenseMatrix *mat)
+{
+    s->m = SymEngine::DenseMatrix();
+    mat->m.inv(s->m);
+}
+void dense_matrix_transpose(CDenseMatrix *s, CDenseMatrix *mat)
+{
+    s->m = SymEngine::DenseMatrix();
+    mat->m.transpose(s->m);
+}
+void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c)
+{
+    s->m = SymEngine::DenseMatrix();
+    mat->m.submatrix(s->m, r1, c1, r2, c2, r, c);
+}
+
 // C Wrapper for set_basic
 
 struct CSetBasic {
