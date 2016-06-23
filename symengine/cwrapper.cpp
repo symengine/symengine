@@ -601,6 +601,14 @@ void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long
     s->m = SymEngine::DenseMatrix(rows, cols, l->m);
 }
 
+char *matrix_str(const CDenseMatrix *s)
+{
+    std::string str = s->m.__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
 // C Wrapper for set_basic
 
 struct CSetBasic {

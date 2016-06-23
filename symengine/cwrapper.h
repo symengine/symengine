@@ -340,6 +340,8 @@ void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r, unsigned long 
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 //! Assign to s, a DenseMatrix with l's elements
 void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l);
+//! Return a string representation of s
+char *matrix_str(const CDenseMatrix *s);
 
 //! Wrapper for set_basic
 
