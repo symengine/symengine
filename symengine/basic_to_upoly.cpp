@@ -32,7 +32,7 @@ public:
             else
                 throw std::runtime_error("Could not extract generator");
         } else {
-            // there are more cases not handled like genarator = x**x
+            // won't handle cases like genarator = x**x
             throw std::runtime_error("Could not extract generator");
         }
     }
@@ -61,12 +61,47 @@ public:
 
                             SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
                             min_gen = pow(curr_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                            continue;
                         }
                     }
                     throw std::runtime_error("Could not extract generator");
-                }else if (is_a<const Pow>(*curr_gen)) {
+                    
+                } else if (is_a<const Pow>(*curr_gen)) {
 
-                    //
+                    RCP<const Pow> powx = rcp_static_cast<const Pow>(curr_gen);
+                    if (is_a<const Symbol>(*min_gen) or is_a_sub<const Function>(*min_gen)) {
+                        if (eq(*(powx->get_base()), *min_gen)) {
+
+                            SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
+                            min_gen = pow(min_gen, gcd(one, rcp_static_cast<const Number>(powx->get_exp())));
+                            continue;
+                        }
+                    } else if (is_a<const Pow>(*min_gen)) {
+                        // won't handle cases like 4**x + 2**x
+                        RCP<const Pow> powx2 = rcp_static_cast<const Pow>(min_gen);
+                        if (eq(*(powx->get_base()), *(powx2->get_base()))) {
+                            // won't handle things like 2**(3x/2) + 2**x, but will handle 2**(x/2) + 2**x
+                            RCP<const Basic> tmp = div(powx->get_exp(), powx2->get_exp());
+                            if(is_a<const Integer>(*tmp)) {
+                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
+                                if (i > 0) {
+                                    res = min_gen;
+                                    continue;
+                                }
+                            }
+
+                            tmp = div(powx2->get_exp(), powx->get_exp());
+                            if(is_a<const Integer>(*tmp)) {
+                                integer_class i = rcp_static_cast<const Integer>(tmp)->i;
+                                if (i > 0) {
+                                    res = curr_gen;
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    throw std::runtime_error("Could not extract generator");
                 } else {
                     throw std::runtime_error("Internal Error : Wrong generator type");
                 }
