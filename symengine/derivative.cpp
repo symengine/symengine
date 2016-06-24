@@ -497,10 +497,7 @@ public:
                                  const RCP<const Symbol> &x)
     {
         if (self.get_var()->__eq__(*x)) {
-            flint::fmpz_polyxx d;
-            d = static_cast<flint::fmpz_polyxx>(
-                flint::derivative(self.get_poly()));
-            return UIntPolyFlint::from_container(self.get_var(), std::move(d));
+            return UIntPolyFlint::from_container(self.get_var(), self.get_poly().derivative());
         } else {
             return UIntPolyFlint::from_dict(self.get_var(), {{}});
         }

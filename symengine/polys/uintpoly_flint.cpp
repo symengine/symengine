@@ -5,8 +5,7 @@
 namespace SymEngine
 {
 
-UIntPolyFlint::UIntPolyFlint(const RCP<const Symbol> &var,
-                             flint::fmpz_polyxx &&dict)
+UIntPolyFlint::UIntPolyFlint(const RCP<const Symbol> &var, fp_t &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
 }
@@ -47,10 +46,9 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
     if (not d.empty())
         deg = d.rbegin()->first;
 
-    flint::fmpz_polyxx f(deg + 1);
-    flint::fmpzxx r;
+    fp_t f(deg + 1);
     for (auto const &p : d) {
-        fmpz_set_mpz(r._data().inner, get_mpz_t(p.second));
+        fz_t r(get_mpz_t(p.second));
         f.set_coeff(p.first, r);
     }
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
@@ -64,11 +62,10 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
     while (v[deg] == integer_class(0))
         deg--;
 
-    flint::fmpz_polyxx f(deg + 1);
-    flint::fmpzxx r;
+    fp_t f(deg + 1);
     for (unsigned int i = 0; i <= deg; i++) {
         if (v[i] != integer_class(0)) {
-            fmpz_set_mpz(r._data().inner, get_mpz_t(v[i]));
+            fz_t r(get_mpz_t(v[i]));
             f.set_coeff(i, r);
         }
     }
@@ -77,23 +74,15 @@ RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
 
 integer_class UIntPolyFlint::eval(const integer_class &x) const
 {
-    flint::fmpzxx r;
-    fmpz_set_mpz(r._data().inner, get_mpz_t(x));
-    return to_integer_class(static_cast<flint::fmpzxx>(poly_(r)));
+    fz_t r(get_mpz_t(x));
+    return to_integer_class(poly_.eval(r));
 }
 
 vec_integer_class UIntPolyFlint::multieval(const vec_integer_class &v) const
 {
-    flint::fmpz_vecxx t(v.size());
-    for (unsigned int i = 0; i < v.size(); ++i)
-        fmpz_set_mpz(t[i]._data().inner, get_mpz_t(v[i]));
-
-    flint::fmpz_vecxx nn(flint::evaluate(poly_, t));
-
     vec_integer_class res(v.size());
     for (unsigned int i = 0; i < v.size(); ++i)
-        res[i] = to_integer_class(nn[i]);
-
+        res[i] = eval(v[i]);
     return res;
 }
 
@@ -102,11 +91,12 @@ integer_class UIntPolyFlint::get_coeff(unsigned int x) const
     return to_integer_class(poly_.coeff(x));
 }
 
-flint::fmpzxx_srcref UIntPolyFlint::get_coeff_ref(unsigned int x) const
+static fz_t zero_poly(0);
+
+fz_t UIntPolyFlint::get_coeff_ref(unsigned int x) const
 {
-    static flint::fmpzxx FZERO(0);
     if (x > poly_.degree())
-        return FZERO;
+        return zero_poly;
     return poly_.coeff(x);
 }
 }
