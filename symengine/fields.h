@@ -8,6 +8,7 @@
 #include <symengine/basic.h>
 #include <symengine/dict.h>
 #include <symengine/polys/upolybase.h>
+#include <random>
 namespace SymEngine
 {
 
@@ -106,6 +107,12 @@ public:
     // is used by equal degree factorization.
     std::vector<std::pair<GaloisFieldDict, integer_class>>
     gf_ddf_zassenhaus() const;
+    GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f,
+                                   const integer_class &n,
+                                   const std::vector<GaloisFieldDict> &b) const;
+    GaloisFieldDict gf_random(integer_class n) const;
+    std::vector<GaloisFieldDict>
+    gf_edf_zassenhaus(const integer_class &n) const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
@@ -116,8 +123,9 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    template <typename T>
     friend GaloisFieldDict operator+(const GaloisFieldDict &a,
-                                     const GaloisFieldDict &b)
+                                     const T &b)
     {
         GaloisFieldDict c = a;
         c += b;
@@ -175,8 +183,8 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
-    friend GaloisFieldDict operator-(const GaloisFieldDict &a,
-                                     const GaloisFieldDict &b)
+    template <typename T>
+    friend GaloisFieldDict operator-(const GaloisFieldDict &a, const T &b)
     {
         GaloisFieldDict c = a;
         c -= b;

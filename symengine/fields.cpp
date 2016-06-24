@@ -462,4 +462,83 @@ GaloisFieldDict::gf_ddf_zassenhaus() const
     }
     return factors;
 }
+
+GaloisFieldDict
+GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f,
+                                const integer_class &n,
+                                const std::vector<GaloisFieldDict> &b) const
+{
+    GaloisFieldDict f_in(f);
+    f_in %= *this;
+    GaloisFieldDict h, r;
+    h = r = f_in;
+    for (unsigned i = 1; i < n; ++i) {
+        h = h.gf_frobenius_map(*this, b);
+        r *= h;
+        r %= *this;
+    }
+    auto res = gf_pow_mod(r, (modulo_ - 1_z) / 2_z);
+    return res;
+}
+
+GaloisFieldDict GaloisFieldDict::gf_random(integer_class n) const
+{
+    int n_val = mp_get_si(n);
+    int mod_val = mp_get_si(modulo_);
+    std::vector<integer_class> v(n_val + 1);
+    for (int i = 0; i < n; ++i) {
+        v[i] = integer_class(std::rand() % mod_val);
+    }
+    v[n_val] = 1_z;
+    return GaloisFieldDict::from_vec(v, modulo_);
+}
+
+std::vector<GaloisFieldDict>
+GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
+{
+    std::vector<GaloisFieldDict> factors;
+    factors.push_back(*this);
+    unsigned n_val = mp_get_si(n);
+    if (this->degree() <= n_val)
+        return factors;
+
+    unsigned N = this->degree() / n_val;
+
+    std::vector<GaloisFieldDict> b;
+    if (modulo_ != 2_z)
+        b = this->gf_frobenius_monomial_base();
+
+    while (factors.size() < N) {
+        auto r = gf_random(integer_class(2 * n_val - 1));
+        GaloisFieldDict g;
+        if (modulo_ == 2_z) {
+            GaloisFieldDict h = r;
+            unsigned ub = 1 << (n_val * N - 1);
+            for (unsigned i = 0; i < ub; ++i) {
+                r = gf_pow_mod(r, 2_z);
+                h += r;
+            }
+            g = this->gf_gcd(h);
+        } else {
+            GaloisFieldDict h = _gf_pow_pnm1d2(r, n, b);
+            h -= 1_z;
+            g = this->gf_gcd(h);
+        }
+
+        if (!g.is_one() and g != (*this)) {
+            factors = g.gf_edf_zassenhaus(n);
+            auto to_add = ((*this) / g).gf_edf_zassenhaus(n);
+            if (not to_add.empty())
+                factors.insert(factors.end(), to_add.begin(), to_add.end());
+        }
+    }
+    sort(factors.begin(), factors.end(),
+         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
+             if (a.degree() == b.degree())
+                 return a.dict_ < b.dict_;
+             else
+                 return a.degree() < b.degree();
+         });
+    return factors;
+}
 }
