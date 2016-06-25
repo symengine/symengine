@@ -376,8 +376,8 @@ TEST_CASE("generators", "[UIntPoly]")
     gen = pow(x, half);
     REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
-    // x**(-3/2) + 1 -> x**(-1/2)
-    basic = add(pow(x, neg(r3b2)), one);
+    // x**(-3/2) + x**(-1) + 1 -> x**(-1/2)
+    basic = add(one, add(pow(x, neg(r3b2)), pow(x, neg(one))));
     gen = pow(x, neg(half));
     REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 

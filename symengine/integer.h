@@ -208,6 +208,20 @@ inline Integer::Integer(integer_class i_) : i{std::move(i_)}
 {
 }
 
+// returns the integer if `x` is a positive integer else
+// returns `-1` if negative integer, `0` if not an integer 
+inline int positive_integer(const RCP<const Basic> &x)
+{
+    if (is_a<const Integer>(*x)) {
+        int tmp = rcp_static_cast<const Integer>(x)->as_int();
+        if (tmp > 0)
+            return tmp;
+        else
+            return -1;
+    }
+    return 0;
+}
+
 } // SymEngine
 
 #endif

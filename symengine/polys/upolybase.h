@@ -507,7 +507,6 @@ RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
     return Poly::from_dict(a.get_var(), std::move(dict));
 }
 
-RCP<const Basic> _find_gen_uintpoly(const RCP<const Basic> &x, bool inpow_ = false);
 }
 
 #endif // SYMENGINE_UINT_BASE_H
