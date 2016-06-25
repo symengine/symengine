@@ -96,7 +96,7 @@ inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
         throw std::runtime_error("Error: variables must agree.");
 
     fp_t divres;
-    bool div_f = b.get_poly().divides(a.get_poly(), divres);
+    bool div_f = a.get_poly().divides(b.get_poly(), divres);
     if (div_f) {
         *res = make_rcp<UIntPolyFlint>(a.get_var(), std::move(divres));
         return true;

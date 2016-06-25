@@ -240,6 +240,9 @@ TEST_CASE("UIntPolyFlint divides", "[UIntPolyFlint]")
         = UIntPolyFlint::from_dict(x, {{0, 8_z}, {1, 8_z}});
     RCP<const UIntPolyFlint> res;
 
+    REQUIRE(a->__str__() == "x + 1");
+    REQUIRE(b->__str__() == "4");
+    REQUIRE(c->__str__() == "8*x + 8");
     REQUIRE(divides_upoly(*a, *c, outArg(res)));
     REQUIRE(res->__str__() == "8");
     REQUIRE(divides_upoly(*b, *c, outArg(res)));

@@ -38,15 +38,16 @@ int UIntPolyFlint::compare(const Basic &o) const
     return 0;
 }
 
+static const fz_t zero_poly(0);
+
 RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
                                                   map_uint_mpz &&d)
 {
     // benchmark this against dict->str->fmpz_polyxx
-    unsigned int deg = 0;
-    if (not d.empty())
-        deg = d.rbegin()->first;
+    if (d.empty())
+        return make_rcp<const UIntPolyFlint>(var, zero_poly);
 
-    fp_t f(deg + 1);
+    fp_t f;
     for (auto const &p : d) {
         fz_t r(get_mpz_t(p.second));
         f.set_coeff(p.first, r);
@@ -90,8 +91,6 @@ integer_class UIntPolyFlint::get_coeff(unsigned int x) const
 {
     return to_integer_class(poly_.coeff(x));
 }
-
-static fz_t zero_poly(0);
 
 fz_t UIntPolyFlint::get_coeff_ref(unsigned int x) const
 {
