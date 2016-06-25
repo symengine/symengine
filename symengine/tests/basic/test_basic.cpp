@@ -1,17 +1,4 @@
 #include "catch.hpp"
-#include <cmath>
-#include <iostream>
-
-#include <symengine/basic.h>
-#include <symengine/add.h>
-#include <symengine/symbol.h>
-#include <symengine/dict.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/derivative.h>

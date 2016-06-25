@@ -1,9 +1,7 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
 
 #include <symengine/expression.h>
-#include <symengine/functions.h>
 
 using SymEngine::Expression;
 using SymEngine::symbol;

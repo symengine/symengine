@@ -6,13 +6,15 @@
 
 #include <symengine/cwrapper.h>
 #include <string.h>
+#include <math.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
 
-void test_cwrapper() {
-    char* s;
+void test_cwrapper()
+{
+    char *s;
     basic x, y, z;
     basic f;
     basic_new_stack(x);
@@ -86,7 +88,8 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
-void test_basic() {
+void test_basic()
+{
     basic x;
     basic_new_stack(x);
     symbol_set(x, "x");
@@ -100,10 +103,11 @@ void test_basic() {
     basic_free_stack(x);
 }
 
-void test_complex() {
+void test_complex()
+{
     basic e;
     basic f;
-    char* s;
+    char *s;
     basic_new_stack(e);
     basic_new_stack(f);
     rational_set_ui(e, 100, 47);
@@ -138,20 +142,21 @@ void test_complex() {
     SYMENGINE_C_ASSERT(is_a_Rational(f));
     SYMENGINE_C_ASSERT(!is_a_Integer(f));
     SYMENGINE_C_ASSERT(!is_a_Complex(f));
-        
+
     basic_str_free(s);
 
     basic_free_stack(e);
     basic_free_stack(f);
 }
 
-void test_complex_double() {
+void test_complex_double()
+{
     basic e;
     basic f;
-    char* s;
+    char *s;
     basic_new_stack(e);
     basic_new_stack(f);
-    
+
     basic_const_I(e);
     real_double_set_d(f, 76.59);
     basic_mul(f, f, e);
@@ -189,7 +194,7 @@ void test_complex_double() {
     SYMENGINE_C_ASSERT(!is_a_Integer(f));
     SYMENGINE_C_ASSERT(!is_a_Complex(f));
     SYMENGINE_C_ASSERT(is_a_RealDouble(f));
-        
+
     basic_str_free(s);
 
     basic_free_stack(e);
@@ -209,44 +214,67 @@ void test_real_double()
     SYMENGINE_C_ASSERT(is_a_RealDouble(d));
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
     basic_str_free(s2);
-    
+
     basic_free_stack(d);
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
 void test_real_mpfr()
 {
-    basic d;
-    basic_new_stack(d);
-    real_mpfr_set_d(d, 123.456, 200);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
-    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 123.456);
-    basic_free_stack(d);
-
-    char *s2 = "456.123";
-
-    basic e;
+    basic d, e;
     basic_new_stack(e);
-    real_mpfr_set_str(e, s2, 200);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(e));
-    SYMENGINE_C_ASSERT(real_mpfr_get_d(e) == 456.123);
-    
-    
-    mpfr_ptr mp;
-    real_mpfr_get(mp, e);
-
     basic_new_stack(d);
+
+    real_mpfr_set_d(d, 123.456, 200);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_MPFR);
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 123.456);
+
+    real_mpfr_set_str(e, "456.123", 200);
+    SYMENGINE_C_ASSERT(basic_get_type(e) == SYMENGINE_REAL_MPFR);
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(e) == 456.123);
+    SYMENGINE_C_ASSERT(real_mpfr_get_prec(e) == 200);
+
+    mpfr_t mp;
+    mpfr_init2(mp, 200);
+    real_mpfr_get(mp, e);
     real_mpfr_set(d, mp);
-    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_MPFR);
     SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
-    
-    SYMENGINE_C_ASSERT(real_mpfr_get_prec(d) == 200);
-    
+
+    real_mpfr_set_d(d, 0, 200);
+    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 1);
+
+    real_mpfr_set_d(d, 0.000001, 200);
+    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 0);
+
+    mpfr_clear(mp);
     basic_free_stack(d);
     basic_free_stack(e);
-    basic_str_free(s2);
 }
 #endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+void test_complex_mpc()
+{
+    basic d, d1, imag;
+    basic_new_stack(d);
+    basic_new_stack(d1);
+    basic_new_stack(imag);
+
+    basic_const_I(imag);
+
+    real_mpfr_set_d(d, 0.000001, 200);
+    real_mpfr_set_d(d1, 000001, 200);
+    basic_mul(d1, d1, imag);
+    basic_add(d, d, d1);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_COMPLEX_MPC);
+    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d) == 0);
+
+    basic_free_stack(d);
+    basic_free_stack(d1);
+    basic_free_stack(imag);
+}
+#endif // HAVE_SYMENGINE_MPC
 
 void test_CVectorInt1()
 {
@@ -267,16 +295,20 @@ void test_CVectorInt2()
     // Allocate on stack
     CVectorInt *vec;
 
-    char data1[1];  // Not aligned properly
-    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data1, sizeof(data1)) ==1);
+    char data1[1]; // Not aligned properly
+    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data1, sizeof(data1))
+                       == 1);
 
-    struct X data2[1];  // Aligned properly but small
-    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data2, sizeof(data2)) ==1);
+    struct X data2[1]; // Aligned properly but small
+    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data2, sizeof(data2))
+                       == 1);
 
-    struct X data3[50]; // Aligned properly and enough size to fit std::vector<int>
+    struct X
+        data3[50]; // Aligned properly and enough size to fit std::vector<int>
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 1) == 1);
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 2) == 1);
-    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, sizeof(data3)) == 0);
+    SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, sizeof(data3))
+                       == 0);
     vec = vectorint_placement_new(data3);
     vectorint_push_back(vec, 5);
     SYMENGINE_C_ASSERT(vectorint_get(vec, 0) == 5);
@@ -428,7 +460,8 @@ void test_free_symbols()
     basic_free_stack(z);
 }
 
-void test_get_type() {
+void test_get_type()
+{
     basic x, y;
     basic_new_stack(x);
     basic_new_stack(y);
@@ -441,7 +474,7 @@ void test_get_type() {
     SYMENGINE_C_ASSERT(basic_get_class_id("Integer") == SYMENGINE_INTEGER);
     SYMENGINE_C_ASSERT(basic_get_class_id("Add") == SYMENGINE_ADD);
 
-    char* s;
+    char *s;
     s = basic_get_class_from_id(SYMENGINE_INTEGER);
     SYMENGINE_C_ASSERT(strcmp(s, "Integer") == 0);
     basic_str_free(s);
@@ -450,7 +483,8 @@ void test_get_type() {
     basic_free_stack(y);
 }
 
-void test_hash() {
+void test_hash()
+{
     basic x1, x2, y;
     basic_new_stack(x1);
     basic_new_stack(x2);
@@ -460,14 +494,16 @@ void test_hash() {
     symbol_set(y, "y");
 
     SYMENGINE_C_ASSERT(basic_hash(x1) == basic_hash(x2));
-    if (basic_hash(x1) != basic_hash(y)) SYMENGINE_C_ASSERT(basic_neq(x1,y));
+    if (basic_hash(x1) != basic_hash(y))
+        SYMENGINE_C_ASSERT(basic_neq(x1, y));
 
     basic_free_stack(x1);
     basic_free_stack(x2);
     basic_free_stack(y);
 }
 
-void test_subs2() {
+void test_subs2()
+{
     basic s, e, x, y, z;
     basic_new_stack(s);
     basic_new_stack(e);
@@ -480,15 +516,15 @@ void test_subs2() {
     symbol_set(z, "z");
     basic_mul(e, x, y);
     basic_mul(e, e, z);
-    //e should be x*y*z
+    // e should be x*y*z
 
     basic_subs2(s, e, y, x);
     basic_subs2(s, s, z, x);
-    //s should be x**3
+    // s should be x**3
 
     integer_set_si(z, 3);
     basic_pow(e, x, z);
-    //e should be x**3
+    // e should be x**3
 
     SYMENGINE_C_ASSERT(basic_eq(s, e));
 
@@ -499,7 +535,8 @@ void test_subs2() {
     basic_free_stack(z);
 }
 
-void test_subs() {
+void test_subs()
+{
     basic s, e, x, y, z;
     basic_new_stack(s);
     basic_new_stack(e);
@@ -512,17 +549,17 @@ void test_subs() {
     symbol_set(z, "z");
     basic_mul(e, x, y);
     basic_mul(e, e, z);
-    //e should be x*y*z
+    // e should be x*y*z
 
     CMapBasicBasic *map = mapbasicbasic_new();
     mapbasicbasic_insert(map, y, x);
     mapbasicbasic_insert(map, z, x);
     basic_subs(s, e, map);
-    //s should be x**3
+    // s should be x**3
 
     integer_set_si(z, 3);
     basic_pow(e, x, z);
-    //e should be x**3
+    // e should be x**3
 
     SYMENGINE_C_ASSERT(basic_eq(s, e));
 
@@ -534,7 +571,8 @@ void test_subs() {
     basic_free_stack(z);
 }
 
-void test_constants() {
+void test_constants()
+{
     basic z, o, mo, i;
     basic_new_stack(z);
     basic_new_stack(o);
@@ -582,7 +620,7 @@ void test_constants() {
     basic_const_E(e);
     basic_const_EulerGamma(euler_gamma);
 
-    char* s;
+    char *s;
     s = basic_str(custom);
     SYMENGINE_C_ASSERT(strcmp(s, "custom") == 0);
     basic_str_free(s);
@@ -600,19 +638,20 @@ void test_constants() {
     basic_free_stack(pi);
     basic_free_stack(e);
     basic_free_stack(euler_gamma);
-
 }
 
-void test_ascii_art() {
-    char* s = ascii_art_str();
+void test_ascii_art()
+{
+    char *s = ascii_art_str();
     SYMENGINE_C_ASSERT(strlen(s) > 0);
     basic_str_free(s);
 }
 
-void test_functions() {
+void test_functions()
+{
     basic pi, e;
     basic minus_one, minus_half, zero, one, two, four;
-    basic pi_div_two,pi_div_four;
+    basic pi_div_two, pi_div_four;
     basic e_minus_one;
     basic ans;
 
@@ -636,14 +675,14 @@ void test_functions() {
     integer_set_si(one, 1);
     integer_set_si(minus_one, -1);
     integer_set_si(zero, 0);
-    
+
     basic_div(pi_div_two, pi, two);
     basic_div(pi_div_four, pi, four);
     basic_pow(e_minus_one, e, minus_one);
     basic_mul(e_minus_one, e_minus_one, minus_one);
     basic_div(minus_half, minus_one, two);
 
-    char* s;
+    char *s;
 
     basic_sin(ans, pi);
     SYMENGINE_C_ASSERT(basic_eq(ans, zero));
@@ -739,12 +778,12 @@ void test_functions() {
 
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
-    
+
     basic_free_stack(ans);
     basic_free_stack(pi);
     basic_free_stack(two);
     basic_free_stack(pi_div_two);
-    basic_free_stack(four); 
+    basic_free_stack(four);
     basic_free_stack(pi_div_four);
     basic_free_stack(one);
     basic_free_stack(minus_one);
@@ -754,7 +793,8 @@ void test_functions() {
     basic_free_stack(minus_half);
 }
 
-void test_ntheory() {
+void test_ntheory()
+{
     basic x, i1, i2, i4, i5;
     basic_new_stack(x);
     basic_new_stack(i1);
@@ -769,7 +809,7 @@ void test_ntheory() {
 
     ntheory_gcd(x, i2, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i2));
-    
+
     ntheory_lcm(x, i2, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i4));
 
@@ -787,7 +827,7 @@ void test_ntheory() {
 
     ntheory_lucas(x, 1);
     SYMENGINE_C_ASSERT(basic_eq(x, i1));
-    
+
     ntheory_binomial(x, i5, 1);
     SYMENGINE_C_ASSERT(basic_eq(x, i5));
 
@@ -798,7 +838,154 @@ void test_ntheory() {
     basic_free_stack(i5);
 }
 
-int main(int argc, char* argv[])
+void test_eval()
+{
+    basic sin2, eval;
+    basic_new_stack(sin2);
+    basic_new_stack(eval);
+
+    integer_set_si(sin2, 2);
+    basic_sin(sin2, sin2);
+    basic_evalf(eval, sin2, 53, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_REAL_DOUBLE);
+    double d = 0.909297;
+    double d2 = real_double_get_d(eval);
+    d = fabs(d - d2);
+    d2 = 0.000001;
+
+    SYMENGINE_C_ASSERT(d < d2);
+
+    basic_free_stack(sin2);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    basic s, t, r, eval2;
+    basic_new_stack(s);
+    basic_new_stack(t);
+    basic_new_stack(r);
+    basic_new_stack(eval2);
+
+    basic_const_pi(s);
+    integer_set_str(t, "1963319607");
+    basic_mul(s, s, t);
+    integer_set_str(t, "6167950454");
+    basic_sub(r, s, t);
+    // value of `r` is approximately 0.000000000149734291
+
+    basic_evalf(eval2, r, 53, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_DOUBLE);
+    // With 53 bit precision, `s` and `t` have the same value.
+    // Hence value of `r` was  rounded down to `0.000000000000000`
+    SYMENGINE_C_ASSERT(real_double_get_d(eval2) == 0.0);
+
+    basic_evalf(eval2, r, 100, 1);
+    SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_MPFR);
+    // With 100 bit precision, `s` and `t` are not equal in value.
+    // Value of `r` is a positive quantity with value 0.000000000149734291.....
+    SYMENGINE_C_ASSERT(real_mpfr_is_zero(eval2) == 0);
+
+    basic_free_stack(s);
+    basic_free_stack(t);
+    basic_free_stack(r);
+    basic_free_stack(eval2);
+#endif // HAVE_SYMENGINE_MPFR
+
+    basic imag, n1, n2, temp;
+    basic_new_stack(imag);
+    basic_new_stack(n1);
+    basic_new_stack(n2);
+    basic_new_stack(temp);
+
+    basic_const_I(imag);
+    integer_set_ui(n1, 4);
+    basic_sin(n1, n1);
+    integer_set_ui(temp, 3);
+    basic_sin(temp, temp);
+    basic_mul(temp, temp, imag);
+    basic_add(n1, n1, temp);
+    // n1 = sin(4) + sin(3)i
+
+    integer_set_ui(n2, 2);
+    basic_sin(n2, n2);
+    integer_set_ui(temp, 7);
+    basic_sin(temp, temp);
+    basic_mul(temp, temp, imag);
+    basic_add(n2, n2, temp);
+    // n2 = sin(2) + sin(7)i
+
+    basic_mul(n1, n1, n2);
+    // n1 = (sin(4) + sin(3)i) * (sin(2) + sin(7)i)
+
+    basic_evalf(eval, n1, 53, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_COMPLEX_DOUBLE);
+    d = -0.780872515;
+    complex_double_real_part(temp, eval);
+    d2 = real_double_get_d(temp);
+    complex_double_imaginary_part(temp, eval);
+    double d3 = real_double_get_d(temp);
+    double d4 = -0.3688890370;
+    d = fabs(d - d2);
+    d4 = fabs(d4 - d3);
+
+    d2 = 0.000001;
+
+    SYMENGINE_C_ASSERT(d < d2 && d4 < d2);
+
+    basic_free_stack(eval);
+    basic_free_stack(n1);
+    basic_free_stack(n2);
+
+#ifdef HAVE_SYMENGINE_MPC
+    basic s1, t1, r1, eval3, com1, com2;
+    basic_new_stack(s1);
+    basic_new_stack(t1);
+    basic_new_stack(r1);
+    basic_new_stack(eval3);
+    basic_new_stack(com1);
+    basic_new_stack(com2);
+
+    basic_const_pi(s1);
+    integer_set_str(t1, "1963319607");
+    basic_mul(s1, s1, t1);
+    basic_mul(com1, s1, imag);
+    basic_add(com1, com1, s1);
+    integer_set_str(t1, "6167950454");
+    basic_mul(com2, t1, imag);
+    basic_add(com2, com2, t1);
+
+    basic_sub(r1, com1, com2);
+    // value of `r1` is approximately 0.000000000149734291 +
+    // 0.000000000149734291i
+
+    basic_evalf(eval3, r1, 53, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval3) == SYMENGINE_COMPLEX_DOUBLE);
+
+    // With 53 bit precision, `com1` and `com2` have the same value.
+    // Hence value of `r1` was  rounded down to `0.000000000000000`
+    complex_double_real_part(temp, eval3);
+    SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
+    complex_double_imaginary_part(temp, eval3);
+    SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
+
+    basic_evalf(eval3, r1, 100, 0);
+    SYMENGINE_C_ASSERT(basic_get_type(eval3) == SYMENGINE_COMPLEX_MPC);
+    // With 100 bit precision, `com1` and `com2` are not equal in value.
+    // Value of `r1` is a positive quantity with value 0.000000000149734291.....
+
+    SYMENGINE_C_ASSERT(complex_mpc_is_zero(eval3) == 0);
+
+    basic_free_stack(s1);
+    basic_free_stack(t1);
+    basic_free_stack(r1);
+    basic_free_stack(eval3);
+    basic_free_stack(com1);
+    basic_free_stack(com2);
+#endif // HAVE_SYMENGINE_MPC
+
+    basic_free_stack(temp);
+    basic_free_stack(imag);
+}
+
+int main(int argc, char *argv[])
 {
     test_cwrapper();
     test_complex();
@@ -820,6 +1007,13 @@ int main(int argc, char* argv[])
     test_functions();
     test_ntheory();
     test_real_double();
+    test_eval();
+#ifdef HAVE_SYMENGINE_MPFR
+    test_real_mpfr();
+#endif // HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPC
+    test_complex_mpc();
+#endif // HAVE_SYMENGINE_MPC
 
     return 0;
 }

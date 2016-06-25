@@ -1,22 +1,4 @@
-#include <symengine/add.h>
-#include <symengine/basic.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/constants.h>
-#include <symengine/functions.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uintpoly_flint.h>
-#include <symengine/polys/uintpoly_piranha.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/pow.h>
-#include <symengine/rational.h>
-#include <symengine/sets.h>
-#include <symengine/symbol.h>
 #include <symengine/visitor.h>
-#include <symengine/polynomial_multivariate.h>
 
 namespace SymEngine
 {
@@ -48,6 +30,7 @@ public:
         return Derivative::create(self.rcp_from_this(), {x});                  \
     }
 
+    DIFF0(GaloisField)
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
@@ -55,17 +38,6 @@ public:
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
-
-#ifdef HAVE_SYMENGINE_FLINT
-    // will implement soon
-    DIFF0(UIntPolyFlint)
-#endif
-
-#ifdef HAVE_SYMENGINE_PIRANHA
-    // will implement soon
-    DIFF0(UIntPolyPiranha)
-#endif
-
 #endif
 
     static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)
@@ -496,14 +468,13 @@ public:
     {
         if (self.get_var()->__eq__(*x)) {
             Dict d;
-            for (const auto &p : self.get_dict()) {
-                if (p.first != 0)
-                    d[p.first - 1] = p.second * p.first;
+            for (auto it = self.begin(); it != self.end(); ++it) {
+                if (it->first != 0)
+                    d[it->first - 1] = it->second * it->first;
             }
-            return make_rcp<const Poly>(self.get_var(), std::move(d));
+            return Poly::from_dict(self.get_var(), std::move(d));
         } else {
-            Dict d;
-            return make_rcp<const Poly>(self.get_var(), std::move(d));
+            return Poly::from_dict(self.get_var(), {{}});
         }
     }
 
@@ -512,6 +483,29 @@ public:
     {
         return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    static RCP<const Basic> diff(const UIntPolyPiranha &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<UIntPolyPiranha, map_uint_mpz>(self, x);
+    }
+#endif
+
+#ifdef HAVE_SYMENGINE_FLINT
+    static RCP<const Basic> diff(const UIntPolyFlint &self,
+                                 const RCP<const Symbol> &x)
+    {
+        if (self.get_var()->__eq__(*x)) {
+            flint::fmpz_polyxx d;
+            d = static_cast<flint::fmpz_polyxx>(
+                flint::derivative(self.get_poly()));
+            return UIntPolyFlint::from_container(self.get_var(), std::move(d));
+        } else {
+            return UIntPolyFlint::from_dict(self.get_var(), {{}});
+        }
+    }
+#endif
 
     static RCP<const Basic> diff(const UExprPoly &self,
                                  const RCP<const Symbol> &x)

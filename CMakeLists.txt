@@ -92,8 +92,8 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
 endif()
 
 
-set(INTEGER_CLASS "gmpxx"
-    CACHE STRING "Integer class for symengine. Either gmpxx or piranha")
+set(INTEGER_CLASS "gmp"
+    CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
 
 # Piranha
 set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")

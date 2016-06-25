@@ -1,6 +1,3 @@
-#include <cstddef>
-#include <stdexcept>
-
 #include <symengine/symengine_rcp.h>
 
 #ifdef WITH_SYMENGINE_TEUCHOS

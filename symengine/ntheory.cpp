@@ -1,7 +1,6 @@
 #include <valarray>
 #include <iterator>
 
-#include <symengine/basic.h>
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>
 #include <symengine/mul.h>
@@ -16,7 +15,6 @@
 #include "bernoulli.h"
 #include "rational.h"
 #endif // HAVE_SYMENGINE_ARB
-#include <symengine/dict.h>
 
 namespace SymEngine
 {
@@ -1612,7 +1610,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows,
     }
 }
 
-std::vector<integer_class> quadratic_residues(const Integer &a)
+vec_integer_class quadratic_residues(const Integer &a)
 {
     /*
         Returns the list of quadratic residues.
@@ -1626,7 +1624,7 @@ std::vector<integer_class> quadratic_residues(const Integer &a)
         throw std::runtime_error("quadratic_residues: Input must be > 0");
     }
 
-    std::vector<integer_class> residue;
+    vec_integer_class residue;
     for (integer_class i = integer_class(0); i <= a.as_int() / 2; i++) {
         residue.push_back((i * i) % a.as_int());
     }

@@ -1,16 +1,6 @@
-#include <symengine/symengine_config.h>
-
+#include <symengine/series_piranha.h>
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
-
-#include <symengine/symengine_rcp.h>
-#include <symengine/functions.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/pow.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -30,7 +20,6 @@ using SymEngine::cos;
 using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-#include <symengine/series_piranha.h>
 
 using SymEngine::URatPSeriesPiranha;
 using SymEngine::pp_t;

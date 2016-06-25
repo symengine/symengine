@@ -73,6 +73,7 @@ symengine/tests/eval/test_eval_double
 symengine/tests/eval/test_eval_arb
 symengine/tests/eval/test_eval_mpfr
 symengine/tests/eval/test_eval_mpc
+symengine/tests/eval/test_evalf
 symengine/tests/eval/test_lambda_double
 symengine/tests/expression/test_expression
 symengine/tests/basic/test_series_expansion_UP
@@ -85,6 +86,7 @@ symengine/tests/polynomial/test_uexprpoly
 symengine/tests/polynomial/test_uintpoly
 symengine/tests/polynomial/test_uintpoly_flint
 symengine/tests/polynomial/test_uintpoly_piranha
+symengine/tests/basic/test_fields
 
 # Benchmarks executables
 benchmarks/add1

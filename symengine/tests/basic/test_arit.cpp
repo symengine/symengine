@@ -1,18 +1,8 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
 
-#include <symengine/basic.h>
 #include <symengine/add.h>
-#include <symengine/symbol.h>
-#include <symengine/dict.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/complex.h>
-#include <symengine/constants.h>
-#include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
 using SymEngine::Basic;

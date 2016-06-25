@@ -1,24 +1,15 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
-#include <symengine/symengine_config.h>
 #include <symengine/mp_wrapper.h>
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
-
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
-#include <flint/fmpz.h>
-#include <flint/fmpq.h>
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-#include <gmp.h>
-#else
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 #define __GMPXX_USE_CXX11 1
 #include <gmpxx.h>
 #endif
-
-#include <gmp.h>
 
 namespace SymEngine
 {

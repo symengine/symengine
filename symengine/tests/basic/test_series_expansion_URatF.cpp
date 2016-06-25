@@ -1,16 +1,6 @@
-#include <symengine/symengine_config.h>
-
+#include <symengine/series_flint.h>
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
-
-#include <symengine/symengine_rcp.h>
-#include <symengine/functions.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/pow.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -30,19 +20,18 @@ using SymEngine::cos;
 using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include <symengine/series_flint.h>
-
 using SymEngine::URatPSeriesFlint;
 using SymEngine::fp_t;
+using SymEngine::fmpq_wrapper;
 #define series_coeff(EX, SYM, PREC, COEFF)                                     \
     SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)             \
         ->get_coeff(COEFF)
 
-static RCP<const Number> fmpqxx2sym(flint::fmpqxx fc)
+static RCP<const Number> fmpqxx2sym(const fmpq_wrapper& fc)
 {
     mpq_t gc;
     mpq_init(gc);
-    fmpq_get_mpq(gc, fc._data().inner);
+    fmpq_get_mpq(gc, fc.get_fmpq_t());
     rational_class r(gc);
     mpq_clear(gc);
     return Rational::from_mpq(std::move(r));
@@ -55,7 +44,7 @@ static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex,
     auto ser = URatPSeriesFlint::series(ex, sym->get_name(), prec);
     auto serrev = URatPSeriesFlint::series_reverse(
         ser->get_poly(), fp_t(sym->get_name().c_str()), prec);
-    return fmpqxx2sym(flint::fmpqxx(serrev.get_coeff(n)));
+    return fmpqxx2sym(serrev.get_coeff(n));
 }
 
 static bool expand_check_pairs(const RCP<const Basic> &ex,

@@ -122,7 +122,8 @@ double R3()
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> f = add(x, add(y, z));
-    std::vector<bool> vec(10);
+    std::vector<bool> vec;
+    vec.reserve(10);
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 10; i++) {
         vec.push_back(eq(*f, *f));

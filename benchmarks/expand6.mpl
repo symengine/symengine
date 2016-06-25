@@ -2,7 +2,7 @@
 # Use `maple -q expand6.mpl -D n=100` to run
 
 e := a0 + a1:
-f := 0
+f := 0:
 
 for i from 2 to (n - 1)
 do

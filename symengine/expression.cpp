@@ -1,4 +1,3 @@
-#include <symengine/basic.h>
 #include <symengine/printer.h>
 
 namespace SymEngine

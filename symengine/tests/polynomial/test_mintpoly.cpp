@@ -1,17 +1,10 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
-#include <symengine/mul.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/polynomial_multivariate.h>
-#include <symengine/pow.h>
 #include <symengine/printer.h>
 
 using SymEngine::Expression;
 using SymEngine::UIntPoly;
-using SymEngine::uint_poly;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Pow;
@@ -414,8 +407,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                                         {{0, 0, 0}, 3_z},
                                                         {{2, 0, 0}, 2_z},
                                                         {{1, 0, 0}, 1_z}});
-    RCP<const UIntPoly> p2 = uint_poly(x, {{1, 1_z}, {2, 1_z}});
-    RCP<const UIntPoly> p3 = uint_poly(y, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = UIntPoly::from_dict(x, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p3 = UIntPoly::from_dict(y, {{1, 1_z}, {2, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x, y, z}, {{{1, 2, 3}, 1_z},
@@ -478,7 +471,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> z = symbol("z");
     RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::create(
         {x, y}, {{{1, 2}, 1_z}, {{2, 1}, -2_z}, {{0, 1}, 1_z}, {{0, 0}, 3_z}});
-    RCP<const UIntPoly> p2 = uint_poly(z, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = UIntPoly::from_dict(z, {{1, 1_z}, {2, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x, y, z}, {{{1, 2, 0}, 1_z},
@@ -524,8 +517,9 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPoly> p2 = uint_poly(y, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1
+        = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = UIntPoly::from_dict(y, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1 = MultivariateIntPolynomial::create(
         {x, y}, {{{1, 0}, -1_z}, {{2, 0}, 3_z}, {{0, 0}, 1_z}, {{0, 1}, 1_z}});
@@ -549,8 +543,9 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
           "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPoly> p2 = uint_poly(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1
+        = UIntPoly::from_dict(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x}, {{{0}, 1_z}, {{2}, 3_z}});

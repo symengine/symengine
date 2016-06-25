@@ -1,6 +1,4 @@
-#include <symengine/basic.h>
 #include <symengine/visitor.h>
-#include <symengine/pow.h>
 
 namespace SymEngine
 {
@@ -298,7 +296,7 @@ public:
     void pow_expand(RCP<const UIntPoly> &x, unsigned long &i)
     {
         RCP<const UIntPoly> r
-            = uint_poly(x->get_var(), UIntDict({{0, integer_class(1)}}));
+            = UIntPoly::from_dict(x->get_var(), {{0, integer_class(1)}});
         while (i != 0) {
             if (i % 2 == 1) {
                 r = mul_upoly(*r, *x);

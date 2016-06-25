@@ -6,7 +6,6 @@
 
 #ifndef SYMENGINE_DICT_H
 #define SYMENGINE_DICT_H
-#include <symengine/symengine_config.h>
 #include <symengine/mp_class.h>
 #include <algorithm>
 
@@ -48,6 +47,7 @@ typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
     map_integer_uint;
 typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<int, Expression> map_int_Expr;
+typedef std::vector<integer_class> vec_integer_class;
 //! Part of umap_vec_mpz:
 typedef struct {
     inline std::size_t operator()(const vec_int &k) const

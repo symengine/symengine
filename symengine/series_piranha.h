@@ -2,15 +2,11 @@
 #define SYMENGINE_SERIES_PIRANHA_H
 
 #include <symengine/series.h>
-#include <symengine/rational.h>
 #include <symengine/expression.h>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/monomial.hpp>
 #include <piranha/polynomial.hpp>
-#include <piranha/mp_rational.hpp>
-#include <piranha/mp_integer.hpp>
-#include <piranha/math.hpp>
 
 namespace SymEngine
 {

@@ -219,6 +219,25 @@ public:
     {
         return poly_.get_coeff(x);
     }
+
+    typedef map_int_Expr::const_iterator iterator;
+    typedef map_int_Expr::const_reverse_iterator reverse_iterator;
+    iterator begin() const
+    {
+        return poly_.dict_.begin();
+    }
+    iterator end() const
+    {
+        return poly_.dict_.end();
+    }
+    reverse_iterator obegin() const
+    {
+        return poly_.dict_.rbegin();
+    }
+    reverse_iterator oend() const
+    {
+        return poly_.dict_.rend();
+    }
 }; // UExprPoly
 
 inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)

@@ -1,24 +1,11 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/functions.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/add.h>
-#include <symengine/number.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
 #include <symengine/printer.h>
 #include <symengine/matrix.h>
+#include <symengine/eval.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -197,7 +184,7 @@ void integer_set_mpz(basic s, const mpz_t i)
     s->m = SymEngine::integer(integer_class(i));
 }
 
-void integer_set_str(basic s, char *c)
+void integer_set_str(basic s, const char *c)
 {
     s->m = SymEngine::integer(integer_class(c));
 }
@@ -222,7 +209,7 @@ void real_mpfr_set_d(basic s, double d, int prec)
     s->m = SymEngine::real_mpfr(std::move(mc));
 }
 
-void real_mpfr_set_str(basic s, char *c, int prec)
+void real_mpfr_set_str(basic s, const char *c, int prec)
 {
     s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
 }
@@ -254,8 +241,20 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_prec();
 }
 
-#endif // HAVE_SYMENGINE_MPFR
+int real_mpfr_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    return (int)((rcp_static_cast<const RealMPFR>(s->m))->is_zero());
+}
 
+#endif // HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPC
+int complex_mpc_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
+    return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
+}
+#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -319,25 +318,25 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
 }
 
-void complex_real_part(basic s, basic com)
+void complex_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
 }
 
-void complex_imaginary_part(basic s, basic com)
+void complex_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
-void complex_double_real_part(basic s, basic com)
+void complex_double_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
 }
 
-void complex_double_imaginary_part(basic s, basic com)
+void complex_double_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
@@ -839,6 +838,13 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+}
+
+//! Wrapper for evalf
+void basic_evalf(basic s, const basic b, unsigned long bits, int real)
+{
+
+    s->m = SymEngine::evalf(*(b->m), bits, (bool)real);
 }
 
 //! Print stacktrace on segfault
