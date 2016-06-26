@@ -370,6 +370,14 @@ void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long in
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
 unsigned long int dense_matrix_rows(const CDenseMatrix *s);
+//! Assign to s, the addition of matA and matB
+void dense_matrix_add_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB);
+//! Assign to s, the matrix multiplication of matA and matB
+void dense_matrix_mul_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB);
+//! Assign to s, the addition of scalar b to matrix matA
+void dense_matrix_add_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b);
+//! Assign to s, the multiplication of scalar b to matrix matA
+void dense_matrix_mul_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b);
 
 
 //! Assign to s, a CSRMatrix

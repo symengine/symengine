@@ -682,6 +682,34 @@ unsigned long int dense_matrix_cols(const CDenseMatrix *s)
     return s->m.ncols();
 }
 
+void dense_matrix_add_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.add_matrix(matB->m, s->m);
+}
+
+void dense_matrix_mul_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, matA->m.nrows(), matB->m.ncols());
+    matA->m.mul_matrix(matB->m, s->m);
+}
+
+void dense_matrix_add_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.add_scalar(b->m, s->m);
+}
+
+void dense_matrix_mul_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.mul_scalar(b->m, s->m);
+}
+
 // C Wrapper for set_basic
 
 struct CSetBasic {
