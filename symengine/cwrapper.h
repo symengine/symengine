@@ -366,6 +366,11 @@ void dense_matrix_inv(CDenseMatrix *s, CDenseMatrix *mat);
 void dense_matrix_transpose(CDenseMatrix *s, CDenseMatrix *mat);
 //! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with step sizes [r, c]
 void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c);
+//! Return the number of columns of s
+unsigned long int dense_matrix_cols(const CDenseMatrix *s);
+//! Return the number of rows of s
+unsigned long int dense_matrix_rows(const CDenseMatrix *s);
+
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);

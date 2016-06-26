@@ -672,6 +672,16 @@ void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long in
     mat->m.submatrix(s->m, r1, c1, r2, c2, r, c);
 }
 
+unsigned long int dense_matrix_rows(const CDenseMatrix *s)
+{
+    return s->m.nrows();
+}
+
+unsigned long int dense_matrix_cols(const CDenseMatrix *s)
+{
+    return s->m.ncols();
+}
+
 // C Wrapper for set_basic
 
 struct CSetBasic {
