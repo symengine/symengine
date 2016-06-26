@@ -14,8 +14,8 @@ UIntPolyPiranha::UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict)
 std::size_t UIntPolyPiranha::__hash__() const
 {
     std::size_t seed = UINTPOLYPIRANHA;
-    seed += poly_.hash();
-    seed += var_->__hash__();
+    seed += poly_->hash();
+    seed += var_.hash();
     return seed;
 }
 

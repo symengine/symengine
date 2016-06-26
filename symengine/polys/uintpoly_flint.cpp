@@ -16,7 +16,7 @@ std::size_t UIntPolyFlint::__hash__() const
     std::hash<std::string> str_hash;
     std::size_t seed = UINTPOLYFLINT;
 
-    seed += var_->__hash__();
+    seed += var_->hash();
     hash_combine(seed, str_hash(poly_.to_string()));
     return seed;
 }

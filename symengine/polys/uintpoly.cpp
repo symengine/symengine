@@ -23,7 +23,7 @@ std::size_t UIntPoly::__hash__() const
 {
     std::size_t seed = UINTPOLY;
 
-    seed += var_->__hash__();
+    seed += var_->hash();
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
@@ -63,7 +63,7 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &x)
 {   
     RCP<const Basic> tmp = expand(x);
-    RCP<const Basic> gen = _find_gen_uintpoly(x, false, false);
+    RCP<const Basic> gen = _find_gen_uintpoly(tmp, false, false);
     return _basic_to_uintpoly(tmp, gen);
 }
 
