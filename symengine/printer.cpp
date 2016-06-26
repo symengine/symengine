@@ -390,7 +390,8 @@ void uintpoly_print(const T &x, std::ostringstream &s)
                     s << "-";
                 s << detail::poly_print(x.get_var());
             } else {
-                s << " " << _print_sign(m) << " " << detail::poly_print(x.get_var());
+                s << " " << _print_sign(m) << " "
+                  << detail::poly_print(x.get_var());
             }
         }
         // same logic is followed as above

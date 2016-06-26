@@ -3,6 +3,20 @@
 namespace SymEngine
 {
 
+// returns the integer if `x` is a positive integer else
+// returns `-1` if negative integer, `0` if not an integer
+inline int positive_integer(const RCP<const Basic> &x)
+{
+    if (is_a<const Integer>(*x)) {
+        int tmp = rcp_static_cast<const Integer>(x)->as_int();
+        if (tmp > 0)
+            return tmp;
+        else
+            return -1;
+    }
+    return 0;
+}
+
 class UIntPolyGenaratorVisitor : public BaseVisitor<UIntPolyGenaratorVisitor>
 {
 private:
@@ -19,9 +33,11 @@ public:
 
     void bvisit(const Pow &x)
     {
-        if (is_a<const Rational>(*x.get_base()) or is_a<const Integer>(*x.get_base())) {
+        if (is_a<const Rational>(*x.get_base())
+            or is_a<const Integer>(*x.get_base())) {
             res = pow(x.get_base(), _find_gen_uintpoly(x.get_exp(), true));
-        } else if (is_a<const Rational>(*x.get_exp()) or is_a<const Integer>(*x.get_exp())) {
+        } else if (is_a<const Rational>(*x.get_exp())
+                   or is_a<const Integer>(*x.get_exp())) {
 
             int tmp = positive_integer(x.get_exp());
             if (tmp != 0) {
@@ -31,15 +47,15 @@ public:
                     res = x.rcp_from_this();
                 return;
             }
-            
+
             if (is_a<const Rational>(*x.get_exp())) {
-                RCP<const Rational> rat = rcp_static_cast<const Rational>(x.get_exp());
+                RCP<const Rational> rat
+                    = rcp_static_cast<const Rational>(x.get_exp());
                 if (rat->is_negative())
                     res = pow(x.get_base(), div(neg(one), rat->get_den()));
                 else
                     res = pow(x.get_base(), div(one, rat->get_den()));
-            }
-            else {
+            } else {
                 throw std::runtime_error("Could not extract generator");
             }
         } else {
@@ -50,7 +66,8 @@ public:
 
     void bvisit(const Add &x)
     {
-        RCP<const Basic> min_gen = null, curr_gen;
+        RCP<const Basic> min_gen, curr_gen;
+        bool min_gen_set = false;
 
         if (not inpow)
             if (not is_a<const Integer>(*x.coef_))
@@ -63,23 +80,31 @@ public:
 
             curr_gen = _find_gen_uintpoly(it.first);
 
-            if(min_gen != null) {
-                if ((is_a_sub<const Function>(*min_gen) and is_a_sub<const Function>(*curr_gen)) or
-                   (is_a<const Symbol>(*min_gen) and is_a<const Symbol>(*curr_gen))) {
+            if (min_gen_set) {
+                if ((is_a_sub<const Function>(*min_gen)
+                     and is_a_sub<const Function>(*curr_gen))
+                    or (is_a<const Symbol>(*min_gen)
+                        and is_a<const Symbol>(*curr_gen))) {
 
                     if (not eq(*curr_gen, *min_gen))
                         throw std::runtime_error("Could not extract generator");
-                
-                } else if (is_a_sub<const Function>(*curr_gen) or is_a<const Symbol>(*curr_gen)) {
+
+                } else if (is_a_sub<const Function>(*curr_gen)
+                           or is_a<const Symbol>(*curr_gen)) {
 
                     if (is_a<const Pow>(*min_gen)) {
-                        RCP<const Pow> powx = rcp_static_cast<const Pow>(min_gen);
+                        RCP<const Pow> powx
+                            = rcp_static_cast<const Pow>(min_gen);
 
                         if (eq(*(powx->get_base()), *curr_gen)) {
 
                             SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
                             if (is_a<const Rational>(*powx->get_exp()))
-                                min_gen = pow(curr_gen, div(one, rcp_static_cast<const Rational>(powx->get_exp())->get_den()));
+                                min_gen = pow(
+                                    curr_gen,
+                                    div(one, rcp_static_cast<const Rational>(
+                                                 powx->get_exp())
+                                                 ->get_den()));
                             continue;
                         }
                     }
@@ -88,31 +113,42 @@ public:
                 } else if (is_a<const Pow>(*curr_gen)) {
 
                     RCP<const Pow> powx = rcp_static_cast<const Pow>(curr_gen);
-                    if (is_a<const Symbol>(*min_gen) or is_a_sub<const Function>(*min_gen)) {
+                    if (is_a<const Symbol>(*min_gen)
+                        or is_a_sub<const Function>(*min_gen)) {
                         if (eq(*(powx->get_base()), *min_gen)) {
 
                             SYMENGINE_ASSERT(is_a_Number(*powx->get_exp()))
                             int i = positive_integer(powx->get_exp());
                             if (i < 0)
-                                throw std::runtime_error("Could not extract generator");
+                                throw std::runtime_error(
+                                    "Could not extract generator");
                             else if (i == 0)
-                                min_gen = pow(min_gen, div(one, rcp_static_cast<const Rational>(powx->get_exp())->get_den()));
+                                min_gen = pow(
+                                    min_gen,
+                                    div(one, rcp_static_cast<const Rational>(
+                                                 powx->get_exp())
+                                                 ->get_den()));
                             // else was a positive integer, nothing to be done
                             continue;
                         }
                     } else if (is_a<const Pow>(*min_gen)) {
                         // won't handle cases like 4**x + 2**x
-                        RCP<const Pow> powx2 = rcp_static_cast<const Pow>(min_gen);
+                        RCP<const Pow> powx2
+                            = rcp_static_cast<const Pow>(min_gen);
                         if (eq(*(powx->get_base()), *(powx2->get_base()))) {
-                            // won't handle things like 2**(3x/2) + 2**x, but will handle 2**(x/2) + 2**x
-                            // TODO : can be modified to handle, will need some work 
+                            // won't handle things like 2**(3x/2) + 2**x, but
+                            // will handle 2**(x/2) + 2**x
+                            // TODO : can be modified to handle, will 
+                            // need some work
                             // expand should not be needed here
-                            RCP<const Basic> tmp = expand(div(powx->get_exp(), powx2->get_exp()));
+                            RCP<const Basic> tmp = expand(
+                                div(powx->get_exp(), powx2->get_exp()));
                             int i = positive_integer(tmp);
                             if (i > 0)
                                 continue;
 
-                            tmp = expand(div(powx2->get_exp(), powx->get_exp()));
+                            tmp = expand(
+                                div(powx2->get_exp(), powx->get_exp()));
                             i = positive_integer(tmp);
                             if (i > 0) {
                                 min_gen = curr_gen;
@@ -123,13 +159,16 @@ public:
 
                     throw std::runtime_error("Could not extract generator");
                 } else {
-                    throw std::runtime_error("Internal Error : Wrong generator type");
+                    throw std::runtime_error(
+                        "Internal Error : Wrong generator type");
                 }
 
             } else {
-                SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen) or is_a<const Pow>(*curr_gen)
-                     or is_a_sub<const Function>(*curr_gen))
+                SYMENGINE_ASSERT(is_a<const Symbol>(*curr_gen)
+                                 or is_a<const Pow>(*curr_gen)
+                                 or is_a_sub<const Function>(*curr_gen))
                 min_gen = curr_gen;
+                min_gen_set = true;
             }
         }
 
@@ -147,12 +186,15 @@ public:
         if (x.dict_.size() > 1)
             // this case should not be encountered, if `expand` was called
             // apart from cases having more than one viable generator
-            throw std::runtime_error("Expand Error / Could not extract generator");
+            throw std::runtime_error(
+                "Expand Error / Could not extract generator");
 
-        gen = _find_gen_uintpoly(pow(x.dict_.begin()->first, x.dict_.begin()->second));
+        gen = _find_gen_uintpoly(
+            pow(x.dict_.begin()->first, x.dict_.begin()->second));
 
         if (is_a<const Rational>(*x.coef_))
-            gen = mul(gen, div(one, rcp_static_cast<const Rational>(x.coef_)->get_den()));
+            gen = mul(gen, div(one, rcp_static_cast<const Rational>(x.coef_)
+                                        ->get_den()));
         res = gen;
     }
 
@@ -184,18 +226,18 @@ private:
     RCP<const Basic> gen;
 
 public:
-
     RCP<const UIntPoly> apply(const Basic &b, const Basic &gen_)
-    {   
+    {
         gen = gen_.rcp_from_this();
         b.accept(*this);
         return UIntPoly::from_dict(gen, std::move(res));
     }
 
-    void _update_dict_pow(const RCP<const Basic> &base, const RCP<const Basic> &exp,
+    void _update_dict_pow(const RCP<const Basic> &base,
+                          const RCP<const Basic> &exp,
                           integer_class multi = integer_class(1))
     {
-        if(is_a_sub<const Function>(*gen) or is_a<const Symbol>(*gen)){
+        if (is_a_sub<const Function>(*gen) or is_a<const Symbol>(*gen)) {
             if (eq(*base, *gen)) {
                 int i = positive_integer(exp);
                 if (i > 0) {
@@ -210,7 +252,7 @@ public:
         } else if (is_a<const Pow>(*gen)) {
             RCP<const Pow> powx = rcp_static_cast<const Pow>(gen);
             // won't handle cases like (4**x + 2**x, 2**x)
-            if(eq(*base, *powx->get_base())) {
+            if (eq(*base, *powx->get_base())) {
                 // `expand` should not really be necessary here
                 RCP<const Basic> tmp = expand(div(exp, powx->get_exp()));
                 int i = positive_integer(tmp);
@@ -227,7 +269,8 @@ public:
         throw std::runtime_error("Unsupported generator type");
     }
 
-    void _update_dict_mul(const RCP<const Mul> &x, integer_class multi = integer_class(1))
+    void _update_dict_mul(const RCP<const Mul> &x,
+                          integer_class multi = integer_class(1))
     {
         if (not is_a<const Integer>(*x->coef_))
             throw std::runtime_error("Non-integer coeff found");
@@ -235,7 +278,8 @@ public:
         if (x->dict_.size() > 1)
             // this case should not be encountered, if `expand` was called
             // apart from cases having more than one viable generator
-            throw std::runtime_error("Expand Error / Could not extract generator");
+            throw std::runtime_error(
+                "Expand Error / Could not extract generator");
 
         _update_dict_pow(x->dict_.begin()->first, x->dict_.begin()->second,
                          rcp_static_cast<const Integer>(x->coef_)->i * multi);
@@ -264,7 +308,8 @@ public:
                 throw std::runtime_error("Non-integer coeff found");
             multi = rcp_static_cast<const Integer>(it.second)->i;
 
-            if (is_a_sub<const Function>(*it.first) or is_a<const Symbol>(*it.first)) {
+            if (is_a_sub<const Function>(*it.first)
+                or is_a<const Symbol>(*it.first)) {
                 if (eq(*it.first, *gen)) {
                     SYMENGINE_ASSERT(res.find(1) == res.end())
                     res[1] = multi;
@@ -272,7 +317,7 @@ public:
                 }
                 throw std::runtime_error("Could not extract generator");
 
-            } else if (is_a<const Mul>(*it.first))  {
+            } else if (is_a<const Mul>(*it.first)) {
                 _update_dict_mul(rcp_static_cast<const Mul>(it.first), multi);
             } else if (is_a<const Pow>(*it.first)) {
                 RCP<const Pow> powx = rcp_static_cast<const Pow>(it.first);
@@ -284,7 +329,7 @@ public:
     }
 
     void bvisit(const UIntPoly &x)
-    {   
+    {
         if (not eq(*gen, *x.get_var()))
             throw std::runtime_error("Generator doesn't match");
         res = x.get_dict();
@@ -296,19 +341,20 @@ public:
     }
 };
 
-//should be fed in after an `expand` call
-RCP<const Basic> _find_gen_uintpoly(const RCP<const Basic> &x, bool inpow_, bool exp)
+// should be fed in after an `expand` call
+RCP<const Basic> _find_gen_uintpoly(const RCP<const Basic> &x, bool inpow_,
+                                    bool exp)
 {
     UIntPolyGenaratorVisitor v;
-    if (exp)
-    {
+    if (exp) {
         RCP<const Basic> tmp = expand(x);
         return v.apply(*tmp, inpow_);
     }
     return v.apply(*x, inpow_);
 }
-//should be fed in after an `expand` call
-RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &x, const RCP<const Basic> &gen)
+// should be fed in after an `expand` call
+RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &x,
+                                       const RCP<const Basic> &gen)
 {
     BasicToUIntPolyVisitor v;
     return v.apply(*x, *gen);

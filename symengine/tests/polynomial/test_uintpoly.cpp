@@ -315,7 +315,7 @@ TEST_CASE("Pow var printing", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Basic> p = pow(integer(2), x);
-    RCP<const Basic> t = pow(x, rational(3,2));
+    RCP<const Basic> t = pow(x, rational(3, 2));
     RCP<const Basic> s = sqrt(x);
     RCP<const Basic> sinx = sin(x);
 
@@ -446,4 +446,4 @@ TEST_CASE("generators", "[UIntPoly]")
     // x + sin(x)
     basic = add(x, sinx);
     CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
-}  
+}
