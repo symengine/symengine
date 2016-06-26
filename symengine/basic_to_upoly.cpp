@@ -236,99 +236,66 @@ public:
         return UIntPoly::from_dict(gen, std::move(res));
     }
 
-    void _update_dict_pow(const RCP<const Basic> &base,
-                          const RCP<const Basic> &exp,
-                          integer_class multi = integer_class(1))
-    {
-        if (is_a_sub<const Function>(*gen) or is_a<const Symbol>(*gen)) {
-            if (eq(*base, *gen)) {
-                int i = positive_integer(exp);
-                if (i > 0) {
-                    // this degree has not been encountered before
-                    SYMENGINE_ASSERT(res.find(i) == res.end());
-                    res[i] = multi;
-                    return;
-                }
-            }
-            throw std::runtime_error("Could not convert to UIntPoly");
-
-        } else if (is_a<const Pow>(*gen)) {
-            RCP<const Pow> powx = rcp_static_cast<const Pow>(gen);
-            // won't handle cases like (4**x + 2**x, 2**x)
-            if (eq(*base, *powx->get_base())) {
-                // `expand` should not really be necessary here
-                RCP<const Basic> tmp = expand(div(exp, powx->get_exp()));
-                int i = positive_integer(tmp);
-                if (i > 0) {
-                    // this degree has not been encountered before
-                    SYMENGINE_ASSERT(res.find(i) == res.end());
-                    res[i] = multi;
-                    return;
-                }
-            }
-            throw std::runtime_error("Could not convert to UIntPoly");
-        }
-        // change this? Poly((x+y)**2 + 1, (x+y))
-        throw std::runtime_error("Unsupported generator type");
-    }
-
-    void _update_dict_mul(const RCP<const Mul> &x,
-                          integer_class multi = integer_class(1))
-    {
-        if (not is_a<const Integer>(*x->coef_))
-            throw std::runtime_error("Non-integer coeff found");
-
-        if (x->dict_.size() > 1)
-            // this case should not be encountered, if `expand` was called
-            // apart from cases having more than one viable generator
-            throw std::runtime_error(
-                "Expand Error / Could not extract generator");
-
-        _update_dict_pow(x->dict_.begin()->first, x->dict_.begin()->second,
-                         rcp_static_cast<const Integer>(x->coef_)->i * multi);
-    }
-
     void bvisit(const Pow &x)
     {
-        _update_dict_pow(x.get_base(), x.get_exp());
+        int i = positive_integer(x.get_exp());
+        if (i > 0) {
+            RCP<const UIntPoly> poly = _basic_to_uintpoly(x.get_base(), gen);
+            res = (pow_upoly(*poly, i))->get_dict();
+            return;
+        } else {
+            
+            if (is_a<const Pow>(*gen)) {
+                RCP<const Pow> powx = rcp_static_cast<const Pow>(gen);
+                // won't handle cases like (4**x + 2**x, 2**x)
+                if (eq(*x.get_base(), *powx->get_base())) {
+                    // `expand` should not really be necessary here
+                    RCP<const Basic> tmp = expand(div(x.get_exp(), powx->get_exp()));
+                    int i = positive_integer(tmp);
+                    if (i > 0) {
+                        res[i] = integer_class(1);
+                        return;
+                    }
+                }
+            }
+        }
+
+        throw std::runtime_error("Could not convert to UIntPoly");
     }
 
     void bvisit(const Mul &x)
     {
-        _update_dict_mul(rcp_static_cast<const Mul>(x.rcp_from_this()));
+        if (not is_a<const Integer>(*x.coef_))
+            throw std::runtime_error("Non-integer coeff found");
+        res[0] = rcp_static_cast<const Integer>(x.coef_)->i;
+
+        UIntDict dict(res);
+        for (const auto &it : x.dict_) {
+            dict *= _basic_to_uintpoly(pow(it.first, it.second), gen)->get_poly();
+        }
+        res = dict.get_dict();
     }
 
     void bvisit(const Add &x)
     {
-        if (not is_a<const Integer>(*x.coef_))
+        if (not is_a<const Integer>(*x.coef_)) {
             throw std::runtime_error("Non-integer coeff found");
-        else
-            res[0] = rcp_static_cast<const Integer>(x.coef_)->i;
+        } else {
+            integer_class tmp = rcp_static_cast<const Integer>(x.coef_)->i;
+            if (tmp != 0)
+                res[0] = tmp;
+        }
 
+        UIntDict dict(res);
         integer_class multi;
         for (const auto &it : x.dict_) {
             if (not is_a<const Integer>(*it.second))
                 throw std::runtime_error("Non-integer coeff found");
+
             multi = rcp_static_cast<const Integer>(it.second)->i;
-
-            if (is_a_sub<const Function>(*it.first)
-                or is_a<const Symbol>(*it.first)) {
-                if (eq(*it.first, *gen)) {
-                    SYMENGINE_ASSERT(res.find(1) == res.end())
-                    res[1] = multi;
-                    continue;
-                }
-                throw std::runtime_error("Could not extract generator");
-
-            } else if (is_a<const Mul>(*it.first)) {
-                _update_dict_mul(rcp_static_cast<const Mul>(it.first), multi);
-            } else if (is_a<const Pow>(*it.first)) {
-                RCP<const Pow> powx = rcp_static_cast<const Pow>(it.first);
-                _update_dict_pow(powx->get_base(), powx->get_exp(), multi);
-            } else {
-                throw std::runtime_error("Unexpected type encountered");
-            }
+            dict += (UIntDict(multi) * _basic_to_uintpoly(it.first, gen)->get_poly());
         }
+        res = dict.get_dict();
     }
 
     void bvisit(const UIntPoly &x)

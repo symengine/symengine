@@ -62,16 +62,14 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
 
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &x)
 {
-    RCP<const Basic> tmp = expand(x);
-    RCP<const Basic> gen = _find_gen_uintpoly(tmp);
-    return _basic_to_uintpoly(tmp, gen);
+    RCP<const Basic> gen = _find_gen_uintpoly(x);
+    return _basic_to_uintpoly(x, gen);
 }
 
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &x,
                                          const RCP<const Basic> &gen)
 {
-    RCP<const Basic> tmp = expand(x);
-    return _basic_to_uintpoly(tmp, gen);
+    return _basic_to_uintpoly(x, gen);
 }
 
 integer_class UIntPoly::eval(const integer_class &x) const

@@ -406,6 +406,11 @@ TEST_CASE("generators", "[UIntPoly]")
     gen = x;
     REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
+    // (x**2+1)*(x+1)**10 -> x
+    basic = mul(pow(xp1, integer(10)), add(pow(x, i2), one));
+    gen = x;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
     // sin(x+y) + sin(x+y)**2
     basic = add(sinxy, pow(sinxy, i2));
     gen = sinxy;
@@ -451,4 +456,29 @@ TEST_CASE("generators", "[UIntPoly]")
     // x + sin(x)
     basic = add(x, sinx);
     CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+}
+
+TEST_CASE("from_basic, w/o genarator", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> basic, gen;
+    RCP<const UIntPoly> poly1, poly2;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> r3b2 = div(integer(3), i2);
+    RCP<const Basic> half = div(one, i2);
+    RCP<const Basic> xp1 = add(x, one);
+    RCP<const Basic> sinxy = sin(add(x, y));
+    RCP<const Basic> sinx = sin(x);
+
+    // 2**x -> 2**x
+    basic = twopx;
+    gen = twopx;
+    poly1 = UIntPoly::from_dict(gen, {{1, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
 }
