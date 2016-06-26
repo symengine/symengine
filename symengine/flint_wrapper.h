@@ -565,7 +565,10 @@ public:
         fmpz_poly_evaluate_fmpz(r.get_fmpz_t(), poly, z.get_fmpz_t());
         return r;
     }
-
+    void eval_vec(fmpz* ovec, fmpz *ivec, unsigned int n) const
+    {
+        fmpz_poly_evaluate_fmpz_vec(ovec, *get_fmpz_poly_t(), ivec, n);
+    }
     fmpz_poly_wrapper operator-() const
     {
         fmpz_poly_wrapper r;

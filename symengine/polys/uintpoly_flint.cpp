@@ -38,14 +38,12 @@ int UIntPolyFlint::compare(const Basic &o) const
     return 0;
 }
 
-static const fz_t zero_poly(0);
-
 RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
                                                   map_uint_mpz &&d)
 {
     // benchmark this against dict->str->fmpz_polyxx
     if (d.empty())
-        return make_rcp<const UIntPolyFlint>(var, zero_poly);
+        return UIntPolyFlint::from_dict(var, {{}});
 
     fp_t f;
     for (auto const &p : d) {
@@ -81,9 +79,16 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
 
 vec_integer_class UIntPolyFlint::multieval(const vec_integer_class &v) const
 {
-    vec_integer_class res(v.size());
-    for (unsigned int i = 0; i < v.size(); ++i)
-        res[i] = eval(v[i]);
+    const unsigned int n = v.size();
+    fmpz *fvp = _fmpz_vec_init(n);
+    for (unsigned int i = 0; i < n; ++i)
+        fmpz_set_mpz(fvp+i, get_mpz_t(v[i]));
+
+    poly_.eval_vec(fvp, fvp, n);
+    vec_integer_class res(n);
+    for (unsigned int i = 0; i < n; ++i)
+        res[i] = to_integer_class(fvp+i);
+    _fmpz_vec_clear(fvp, n);
     return res;
 }
 
@@ -95,7 +100,7 @@ integer_class UIntPolyFlint::get_coeff(unsigned int x) const
 fz_t UIntPolyFlint::get_coeff_ref(unsigned int x) const
 {
     if (x > poly_.degree())
-        return zero_poly;
+        return fz_t(0);
     return poly_.coeff(x);
 }
 }

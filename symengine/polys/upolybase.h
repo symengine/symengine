@@ -23,6 +23,12 @@ using fz_t = SymEngine::fmpz_wrapper;
 namespace SymEngine
 {
 // misc methods
+
+inline integer_class to_integer_class(const integer_class &i)
+{
+    return i;
+}
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
@@ -61,16 +67,6 @@ inline integer_class to_integer_class(const piranha::integer &x)
 }
 #endif
 
-inline integer_class to_integer_class(const fz_t& i)
-{
-    return integer_class(i.get_fmpz_t());
-}
-
-#else
-inline integer_class to_integer_class(const integer_class &i)
-{
-    return i;
-}
 #endif
 
 // dict wrapper
