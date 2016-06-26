@@ -641,6 +641,11 @@ public:
         fmpq_poly_init(poly);
         fmpq_poly_set_str(poly, cp);
     }
+    fmpq_poly_wrapper(const mpq_t q)
+    {
+        fmpq_poly_init(poly);
+        fmpq_poly_set_mpq(poly, q);
+    }
     fmpq_poly_wrapper(const fmpq_wrapper& q)
     {
         fmpq_poly_init(poly);
