@@ -244,17 +244,24 @@ public:
             res = (pow_upoly(*poly, i))->get_dict();
             return;
         } else {
-            
             if (is_a<const Pow>(*gen)) {
                 RCP<const Pow> powx = rcp_static_cast<const Pow>(gen);
                 // won't handle cases like (4**x + 2**x, 2**x)
                 if (eq(*x.get_base(), *powx->get_base())) {
-                    // `expand` should not really be necessary here
-                    RCP<const Basic> tmp = expand(div(x.get_exp(), powx->get_exp()));
-                    int i = positive_integer(tmp);
-                    if (i > 0) {
-                        res[i] = integer_class(1);
-                        return;
+
+                    // handling cases like (x**(3/2), x**(1/2))
+                    if (is_a<const Rational>(*x.get_exp()) or
+                        is_a<const Integer>(*x.get_exp())) {
+
+                        RCP<const Basic> tmp = div(x.get_exp(), powx->get_exp());
+                        int i = positive_integer(tmp);
+                        if (i > 0) {
+                            res[i] = integer_class(1);
+                            return;
+                        }
+                    // handling cases like (2**(a*x+b), 2**x)
+                    } else {
+                        // not able to
                     }
                 }
             }
@@ -264,7 +271,7 @@ public:
     }
 
     void bvisit(const Mul &x)
-    {
+    {   
         if (not is_a<const Integer>(*x.coef_))
             throw std::runtime_error("Non-integer coeff found");
         res[0] = rcp_static_cast<const Integer>(x.coef_)->i;
@@ -306,8 +313,24 @@ public:
     }
 
     void bvisit(const Basic &x)
-    {
-        throw std::runtime_error("Cannot convert to UIntPoly");
+    {   
+        if (is_a<const Pow>(*gen)) {
+            RCP<const Pow> powx = rcp_static_cast<const Pow>(gen);
+            if (eq(*powx->get_base(), x)) {
+                RCP<const Basic> tmp = expand(div(one, powx->get_exp()));
+                int i = positive_integer(tmp);
+                if (i > 0) {
+                    res[i] = integer_class(1);
+                    return;
+                }
+            }
+        } else {
+            if (eq(*gen, x)) {
+                res[1] = integer_class(1);
+                return;
+            }            
+        }
+        throw std::runtime_error("Generator doesn't match");
     }
 };
 
