@@ -331,10 +331,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 if (first) {
                     if (dict[it] == -1)
                         s << "-";
-                    s << x.get_var()->get_name();
+                    s << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " "
-                      << x.get_var()->get_name();
+                      << detail::poly_print(x.get_var());
                 }
             }
             // same logic is followed as above
@@ -342,10 +342,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 // in cases of -2*x, print -2*x
                 // in cases of x**2 - 2*x, print - 2*x
                 if (first) {
-                    s << dict[it] << "*" << x.get_var()->get_name();
+                    s << dict[it] << "*" << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " " << mp_abs(dict[it])
-                      << "*" << x.get_var()->get_name();
+                      << "*" << detail::poly_print(x.get_var());
                 }
             }
             // if exponent is not 1, print the exponent;
@@ -388,9 +388,10 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             if (first) {
                 if (m == -1)
                     s << "-";
-                s << x.get_var()->get_name();
+                s << detail::poly_print(x.get_var());
             } else {
-                s << " " << _print_sign(m) << " " << x.get_var()->get_name();
+                s << " " << _print_sign(m) << " "
+                  << detail::poly_print(x.get_var());
             }
         }
         // same logic is followed as above
@@ -398,10 +399,10 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << m << "*" << x.get_var()->get_name();
+                s << m << "*" << detail::poly_print(x.get_var());
             } else {
                 s << " " << _print_sign(m) << " " << mp_abs(m) << "*"
-                  << x.get_var()->get_name();
+                  << detail::poly_print(x.get_var());
             }
         }
         // if exponent is not 1, print the exponent;
@@ -448,7 +449,7 @@ void StrPrinter::bvisit(const UExprPoly &x)
     if (x.get_dict().size() == 0)
         s << "0";
     else
-        s << x.get_poly().__str__(x.get_var()->get_name());
+        s << x.get_poly().__str__(x.get_var()->__str__());
     str_ = s.str();
 }
 

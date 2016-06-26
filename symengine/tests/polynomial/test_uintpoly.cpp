@@ -3,6 +3,7 @@
 
 #include <symengine/mul.h>
 #include <symengine/add.h>
+#include <symengine/rational.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 
@@ -23,6 +24,12 @@ using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
 using SymEngine::vec_integer_class;
+using SymEngine::pow;
+using SymEngine::rational;
+using SymEngine::sqrt;
+using SymEngine::sin;
+using SymEngine::integer;
+using SymEngine::Function;
 
 using namespace SymEngine::literals;
 
@@ -302,4 +309,266 @@ TEST_CASE("UIntPoly divides", "[UIntPoly]")
     REQUIRE(divides_upoly(*b, *c, outArg(res)));
     REQUIRE(res->__str__() == "2*x + 2");
     REQUIRE(!divides_upoly(*b, *a, outArg(res)));
+}
+
+TEST_CASE("Pow var printing", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> p = pow(integer(2), x);
+    RCP<const Basic> t = pow(x, rational(3, 2));
+    RCP<const Basic> s = sqrt(x);
+    RCP<const Basic> sinx = sin(x);
+
+    RCP<const UIntPoly> a = UIntPoly::from_vec(p, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> b = UIntPoly::from_vec(s, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> c = UIntPoly::from_vec(sinx, {1_z, 2_z, 2_z});
+    RCP<const UIntPoly> d = UIntPoly::from_vec(t, {1_z, 2_z, 2_z});
+
+    REQUIRE(a->__str__() == "2*2**x**2 + 2*2**x + 1");
+    REQUIRE(b->__str__() == "2*x**(1/2)**2 + 2*x**(1/2) + 1");
+    REQUIRE(c->__str__() == "2*sin(x)**2 + 2*sin(x) + 1");
+    REQUIRE(d->__str__() == "2*x**(3/2)**2 + 2*x**(3/2) + 1");
+}
+
+TEST_CASE("generators", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> basic, gen;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> r3b2 = div(integer(3), i2);
+    RCP<const Basic> half = div(one, i2);
+    RCP<const Basic> xp1 = add(x, one);
+    RCP<const Basic> sinxy = sin(add(x, y));
+    RCP<const Basic> sinx = sin(x);
+
+    // 2**x -> 2**x
+    basic = twopx;
+    gen = twopx;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // (x+1)**5 -> x
+    basic = pow(add(x, one), i5);
+    gen = x;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 2**x + (2**x)**2 -> 2**x
+    basic = add(twopx, pow(twopx, i2));
+    gen = twopx;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 2**(x/2) -> 2**(x/2)
+    basic = pow(i2, xb2);
+    gen = pow(i2, xb2);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 2**x + 2**(x/2) -> 2**(x/2)
+    basic = add(twopx, pow(i2, xb2));
+    gen = pow(i2, xb2);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x**(3/2) + 1 -> x**(1/2)
+    basic = add(pow(x, r3b2), one);
+    gen = pow(x, half);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x**(-3/2) + x**(-1) + 1 -> x**(-1/2)
+    basic = add(one, add(pow(x, neg(r3b2)), pow(x, neg(one))));
+    gen = pow(x, neg(half));
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x + x**(3/2) -> x**(1/2)
+    basic = add(x, pow(x, r3b2));
+    gen = pow(x, half);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x**(3/2) + x**2 -> x**(1/2)
+    basic = add(pow(x, r3b2), pow(x, i2));
+    gen = pow(x, half);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x**2 + x**5 -> x
+    basic = add(pow(x, i2), pow(x, i5));
+    gen = x;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 2**(2+x) -> 2**x
+    basic = pow(i2, add(x, i2));
+    gen = twopx;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // (x+1)*(x+2) + (x+1)*(x+5) -> x
+    basic = add(mul(xp1, add(x, i2)), mul(xp1, add(x, i5)));
+    gen = x;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // (x**2+1)*(x+1)**10 -> x
+    basic = mul(pow(xp1, integer(10)), add(pow(x, i2), one));
+    gen = x;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // sin(x+y) + sin(x+y)**2 -> sin(x+y)
+    basic = add(sinxy, pow(sinxy, i2));
+    gen = sinxy;
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // 1/x**3 + 1/x**2 -> 1/x
+    basic = add(div(one, pow(x, integer(3))), div(one, pow(x, i2)));
+    gen = div(one, x);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
+    // x/2
+    basic = xb2;
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x + (1/x)
+    basic = add(x, div(one, x));
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x + y
+    basic = add(x, y);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x + (1/2)
+    basic = add(x, half);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x**2 + 2**x
+    basic = add(twopx, pow(x, i2));
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x**2 + x/5
+    basic = add(pow(x, i2), div(x, i5));
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // 2
+    basic = i2;
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // (x+x**2)/2
+    basic = div(add(x, pow(x, i2)), i2);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+
+    // x + sin(x)
+    basic = add(x, sinx);
+    CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);
+}
+
+TEST_CASE("from_basic, w/o genarator", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> basic, gen;
+    RCP<const UIntPoly> poly1, poly2;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> r3b2 = div(integer(3), i2);
+    RCP<const Basic> half = div(one, i2);
+    RCP<const Basic> xp1 = add(x, one);
+    RCP<const Basic> sinxy = sin(add(x, y));
+    RCP<const Basic> sinx = sin(x);
+
+    // x + 1
+    basic = xp1;
+    gen = x;
+    poly1 = UIntPoly::from_vec(gen, {{1_z, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**x
+    // basic = twopx;
+    // gen = twopx;
+    // poly1 = UIntPoly::from_vec(gen, {{0_z, 1_z}});
+    // poly2 = UIntPoly::from_basic(basic);
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // (x+1)**4
+    basic = pow(add(x, one), i4);
+    gen = x;
+    poly1 = pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 1_z}}), 4);
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**x + 2*(2**x)**2
+    // basic = add(twopx, mul(i2, pow(twopx, i2)));
+    // gen = twopx;
+    // poly1 = UIntPoly::from_vec(gen, {{0_z, 1_z, 2_z}});
+    // poly2 = UIntPoly::from_basic(basic);
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**x + 2**(x/2)
+    // basic = add(twopx, pow(i2, xb2));
+    // gen = pow(i2, xb2);
+    // poly1 = UIntPoly::from_vec(gen, {{0_z, 1_z, 1_z}});
+    // poly2 = UIntPoly::from_basic(basic);
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // 3*x**(3/2) + 1
+    basic = add(mul(integer(3), pow(x, r3b2)), one);
+    gen = pow(x, half);
+    poly1 = UIntPoly::from_vec(gen, {{1_z, 0_z, 0_z, 3_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // x**(-3/2) + x**(-1) + 1
+    basic = add(one, add(pow(x, neg(r3b2)), pow(x, neg(one))));
+    gen = pow(x, neg(half));
+    poly1 = UIntPoly::from_vec(gen, {{1_z, 0_z, 1_z, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 2*x + x**(3/2)
+    basic = add(mul(i2, x), pow(x, r3b2));
+    gen = pow(x, half);
+    poly1 = UIntPoly::from_vec(gen, {{0_z, 0_z, 2_z, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // x**2 + x**4
+    basic = add(pow(x, i2), pow(x, i4));
+    gen = x;
+    poly1 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**(2+x)
+    // basic = pow(i2, add(x, i2));
+    // gen = twopx;
+    // poly1 = UIntPoly::from_vec(gen, {{0_z, 4_z}});
+    // poly2 = UIntPoly::from_basic(basic);
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // (x+1)*(x+2) + (x+1)*(x+4)
+    basic = add(mul(xp1, add(x, i2)), mul(xp1, add(x, i4)));
+    gen = x;
+    poly1 = UIntPoly::from_vec(gen, {{6_z, 8_z, 2_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // (x**2+1)**4*(x+1)**4
+    basic = mul(pow(xp1, i4), pow(add(pow(x, i2), one), i4));
+    gen = x;
+    poly1 = mul_upoly(*pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 1_z}}), 4),
+                *pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 0_z, 1_z}}), 4));
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // sin(x+y) + 2*sin(x+y)**2
+    basic = add(sinxy, mul(i2, pow(sinxy, i2)));
+    gen = sinxy;
+    poly1 = UIntPoly::from_vec(gen, {{0_z, 1_z, 2_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 1/x**3 + 1/x**2
+    basic = add(div(one, pow(x, integer(3))), div(one, pow(x, i2)));
+    gen = div(one, x);
+    poly1 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 1_z}});
+    poly2 = UIntPoly::from_basic(basic);
+    REQUIRE(eq(*poly1, *poly2));
 }

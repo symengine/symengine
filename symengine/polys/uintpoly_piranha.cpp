@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-UIntPolyPiranha::UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict)
+UIntPolyPiranha::UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
 }
@@ -14,9 +14,8 @@ UIntPolyPiranha::UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict)
 std::size_t UIntPolyPiranha::__hash__() const
 {
     std::size_t seed = UINTPOLYPIRANHA;
-    std::hash<std::string> hash_string;
     seed += poly_.hash();
-    hash_string(var_->get_name());
+    seed += var_->hash();
     return seed;
 }
 
@@ -33,10 +32,10 @@ int UIntPolyPiranha::compare(const Basic &o) const
 }
 
 RCP<const UIntPolyPiranha>
-UIntPolyPiranha::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
+UIntPolyPiranha::from_dict(const RCP<const Basic> &var, map_uint_mpz &&d)
 {
     pintpoly p;
-    piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
+    piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
     p.set_symbol_set(ss);
     for (auto &it : d)
         p.insert(pterm{it.second, pmonomial{it.first}});
@@ -45,11 +44,11 @@ UIntPolyPiranha::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 }
 
 RCP<const UIntPolyPiranha>
-UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
+UIntPolyPiranha::from_vec(const RCP<const Basic> &var,
                           const vec_integer_class &v)
 {
     pintpoly p;
-    piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
+    piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
     p.set_symbol_set(ss);
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {
@@ -78,7 +77,7 @@ const integer_class &UIntPolyPiranha::get_coeff_ref(unsigned int x) const
 integer_class UIntPolyPiranha::eval(const integer_class &x) const
 {
     return piranha::math::evaluate<integer_class>(poly_,
-                                                  {{var_->get_name(), x}});
+                                                  {{var_->__str__(), x}});
 }
 
 vec_integer_class UIntPolyPiranha::multieval(const vec_integer_class &v) const
@@ -86,7 +85,7 @@ vec_integer_class UIntPolyPiranha::multieval(const vec_integer_class &v) const
     vec_integer_class res(v.size());
     for (unsigned int i = 0; i < v.size(); ++i)
         res[i] = piranha::math::evaluate<integer_class>(
-            poly_, {{var_->get_name(), v[i]}});
+            poly_, {{var_->__str__(), v[i]}});
     return res;
 }
 }
