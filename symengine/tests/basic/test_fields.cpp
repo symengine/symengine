@@ -621,4 +621,11 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
                                                      95022_z, 15347_z, 1_z},
                                                     102953_z));
     REQUIRE(b[2].second == 5_z);
+
+    d1 = GaloisFieldDict::from_vec({}, 11_z);
+    b = d1.gf_ddf_zassenhaus();
+    REQUIRE(b.size() == 0);
+    d1 = GaloisFieldDict::from_vec({1_z}, 11_z);
+    b = d1.gf_ddf_zassenhaus();
+    REQUIRE(b.size() == 0);
 }

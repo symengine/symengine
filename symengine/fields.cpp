@@ -430,6 +430,7 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
         v *= temp_out.dict_[i];
         out += v;
     }
+    out.gf_istrip();
     return out;
 }
 
@@ -456,7 +457,7 @@ GaloisFieldDict::gf_ddf_zassenhaus() const
         }
         i += 1;
     }
-    if (not f.is_one()) {
+    if (not(f.is_one() || f.empty())) {
         factors.push_back({f, integer_class(f.degree())});
     }
     return factors;
