@@ -324,10 +324,10 @@ TEST_CASE("Pow var printing", "[UIntPoly]")
     RCP<const UIntPoly> c = UIntPoly::from_vec(sinx, {1_z, 2_z, 2_z});
     RCP<const UIntPoly> d = UIntPoly::from_vec(t, {1_z, 2_z, 2_z});
 
-    REQUIRE(a->__str__() == "2*2**(2*x) + 2*2**x + 1");
-    REQUIRE(b->__str__() == "2*x + 2*x**(1/2) + 1");
+    REQUIRE(a->__str__() == "2*2**x**2 + 2*2**x + 1");
+    REQUIRE(b->__str__() == "2*x**(1/2)**2 + 2*x**(1/2) + 1");
     REQUIRE(c->__str__() == "2*sin(x)**2 + 2*sin(x) + 1");
-    REQUIRE(d->__str__() == "2*x**3 + 2*x**(3/2) + 1");
+    REQUIRE(d->__str__() == "2*x**(3/2)**2 + 2*x**(3/2) + 1");
 }
 
 TEST_CASE("generators", "[UIntPoly]")

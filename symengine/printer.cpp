@@ -331,10 +331,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 if (first) {
                     if (dict[it] == -1)
                         s << "-";
-                    s << x.get_var()->__str__();
+                    s << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " "
-                      << x.get_var()->__str__();
+                      << detail::poly_print(x.get_var());
                 }
             }
             // same logic is followed as above
@@ -342,10 +342,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 // in cases of -2*x, print -2*x
                 // in cases of x**2 - 2*x, print - 2*x
                 if (first) {
-                    s << dict[it] << "*" << x.get_var()->__str__();
+                    s << dict[it] << "*" << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " " << mp_abs(dict[it])
-                      << "*" << x.get_var()->__str__();
+                      << "*" << detail::poly_print(x.get_var());
                 }
             }
             // if exponent is not 1, print the exponent;
@@ -366,20 +366,7 @@ template <typename T>
 void uintpoly_print(const T &x, std::ostringstream &s)
 {
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
-    bool first = true, ispow = is_a<Pow>(*x.get_var());
-    std::string base;
-    RCP<const Basic> powerx, basex;
-
-    if (ispow) {
-        basex = rcp_static_cast<const Pow>(x.get_var())->get_base();
-        base = basex->__str__();
-        if (is_a<const Rational>(*basex))
-            base = "(" + base + ")";
-    }
-    else {
-        base = x.get_var()->__str__();
-    }
-
+    bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
@@ -401,9 +388,9 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             if (first) {
                 if (m == -1)
                     s << "-";
-                s << x.get_var()->__str__();
+                s << detail::poly_print(x.get_var());
             } else {
-                s << " " << _print_sign(m) << " " << base;
+                s << " " << _print_sign(m) << " " << detail::poly_print(x.get_var());
             }
         }
         // same logic is followed as above
@@ -411,25 +398,16 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << m << "*" << base;
+                s << m << "*" << detail::poly_print(x.get_var());
             } else {
-                s << " " << _print_sign(m) << " " << mp_abs(m) << "*" << base;
+                s << " " << _print_sign(m) << " " << mp_abs(m) << "*"
+                  << detail::poly_print(x.get_var());
             }
         }
         // if exponent is not 1, print the exponent;
-        if (ispow) {
-            powerx = mul(rcp_static_cast<const Pow>(x.get_var())->get_exp(), integer(it->first));
-            if (!eq(*powerx, *one))
-            {
-                // does power need bracketssss
-                if (is_a<const Integer>(*powerx) or is_a<const Symbol>(*powerx))
-                    s << "**" << powerx->__str__();
-                else
-                    s << "**(" << powerx->__str__() << ")";
-            }
-        } else if (it->first != 1){
+        if (it->first != 1) {
             s << "**" << it->first;
-        }     
+        }
         // corner cases of only first term handled successfully, switch the bool
         first = false;
     }
