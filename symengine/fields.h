@@ -113,6 +113,7 @@ public:
     GaloisFieldDict gf_random(integer_class n) const;
     std::vector<GaloisFieldDict>
     gf_edf_zassenhaus(const integer_class &n) const;
+    std::vector<GaloisFieldDict> gf_zassenhaus() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
@@ -124,8 +125,7 @@ public:
     }
 
     template <typename T>
-    friend GaloisFieldDict operator+(const GaloisFieldDict &a,
-                                     const T &b)
+    friend GaloisFieldDict operator+(const GaloisFieldDict &a, const T &b)
     {
         GaloisFieldDict c = a;
         c += b;
