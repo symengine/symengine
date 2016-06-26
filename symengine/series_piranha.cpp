@@ -60,7 +60,7 @@ pp_t URatPSeriesPiranha::var(const std::string &s)
 
 piranha::rational URatPSeriesPiranha::convert(const Rational &x)
 {
-    return convert(x.as_mpq());
+    return convert(x.as_rational_class());
 }
 
 piranha::rational URatPSeriesPiranha::convert(const Basic &x)

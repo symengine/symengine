@@ -404,7 +404,7 @@ TEST_CASE("Rational: Basic", "[basic]")
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
     a = rational_class(3, 5);
-    b = r->as_mpq();
+    b = r->as_rational_class();
     REQUIRE(a == b);
 }
 
