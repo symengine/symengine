@@ -14,8 +14,8 @@ UIntPolyPiranha::UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict)
 std::size_t UIntPolyPiranha::__hash__() const
 {
     std::size_t seed = UINTPOLYPIRANHA;
-    seed += poly_->hash();
-    seed += var_.hash();
+    seed += poly_.hash();
+    seed += var_->hash();
     return seed;
 }
 
@@ -35,7 +35,7 @@ RCP<const UIntPolyPiranha>
 UIntPolyPiranha::from_dict(const RCP<const Basic> &var, map_uint_mpz &&d)
 {
     pintpoly p;
-    piranha::symbol_set ss({{piranha::symbol(var->__str__())}});
+    piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
     p.set_symbol_set(ss);
     for (auto &it : d)
         p.insert(pterm{it.second, pmonomial{it.first}});
@@ -48,7 +48,7 @@ UIntPolyPiranha::from_vec(const RCP<const Basic> &var,
                           const vec_integer_class &v)
 {
     pintpoly p;
-    piranha::symbol_set ss({{piranha::symbol(var->__str__())}});
+    piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
     p.set_symbol_set(ss);
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {

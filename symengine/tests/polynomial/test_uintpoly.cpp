@@ -411,6 +411,11 @@ TEST_CASE("generators", "[UIntPoly]")
     gen = sinxy;
     REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
 
+    // 1/x**3 + 1/x**2 -> 1/x
+    basic = add(div(one, pow(x, integer(3))), div(one, pow(x, i2)));
+    gen = div(one, x);
+    REQUIRE(eq(*_find_gen_uintpoly(basic), *gen));
+
     // x/2
     basic = xb2;
     CHECK_THROWS_AS(_find_gen_uintpoly(basic), std::runtime_error);

@@ -214,8 +214,7 @@ RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p);
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
 
-RCP<const Basic> _find_gen_uintpoly(const RCP<const Basic> &x,
-                                    bool inpow_ = false, bool exp = true);
+RCP<const Basic> _find_gen_uintpoly(const RCP<const Basic> &x, bool inpow_ = false);
 RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &x,
                                        const RCP<const Basic> &gen);
 
