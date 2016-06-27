@@ -748,6 +748,8 @@ void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u, const
 
 void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A, const CDenseMatrix *b)
 {
+    x->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(x, A->m.ncols(), 1);
     A->m.LU_solve(b->m, x->m);
 }
 
