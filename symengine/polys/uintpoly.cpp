@@ -154,7 +154,7 @@ RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
         }
     }
 
-    return make_rcp<const UIntPoly>(a.get_var(), std::move(res * tmp));
+    return make_rcp<const UIntPoly>(a.get_var(), res * tmp);
 }
 
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,

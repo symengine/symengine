@@ -57,12 +57,12 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
 
 RCP<const Integer> mod(const Integer &n, const Integer &d)
 {
-    return integer(std::move(n.as_mpz() % d.as_mpz()));
+    return integer(n.as_mpz() % d.as_mpz());
 }
 
 RCP<const Integer> quotient(const Integer &n, const Integer &d)
 {
-    return integer(std::move(n.as_mpz() / d.as_mpz()));
+    return integer(n.as_mpz() / d.as_mpz());
 }
 
 void quotient_mod(const Ptr<RCP<const Integer>> &q,
@@ -1300,7 +1300,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
                 if (c > 0 and a % 4 == 3) {
                     return false;
                 }
-                roots.push_back(integer(std::move(a % 4)));
+                roots.push_back(integer(a % 4));
                 if (all_roots and c > 0)
                     roots.push_back(integer(3));
                 return true;

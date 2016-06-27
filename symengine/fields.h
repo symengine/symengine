@@ -94,8 +94,7 @@ public:
     // Returns the square free decomposition of polynomial's monic
     // representation in `modulo_`
     // A vector of pair is returned where each element is a factor and each
-    // pair's first
-    // raised to power of second gives the factor.
+    // pair's first raised to power of second gives the factor.
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
 
     // Returns the square free part of the polynomaial in `modulo_`
