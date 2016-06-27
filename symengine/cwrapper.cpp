@@ -662,7 +662,7 @@ void dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
 void dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat)
 {
     s->m = SymEngine::DenseMatrix();
-    dense_matrix_rows_cols(s, mat->m.nrows(), mat->m.ncols());
+    dense_matrix_rows_cols(s, mat->m.ncols(), mat->m.nrows());
     mat->m.transpose(s->m);
 }
 void dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c)
