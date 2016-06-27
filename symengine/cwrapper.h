@@ -355,29 +355,39 @@ void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long
 //! Return a string representation of s
 char *dense_matrix_str(const CDenseMatrix *s);
 //! Assign to s, mat[r][c]
-void dense_matrix_get_basic(basic s, CDenseMatrix *mat, unsigned long int r, unsigned long int c);
+void dense_matrix_get_basic(basic s, const CDenseMatrix *mat, unsigned long int r, unsigned long int c);
 //! Assign s to mat[r][c]
 void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
 //! Assign to s, determinent of mat
-void dense_matrix_det(basic s, CDenseMatrix *mat);
+void dense_matrix_det(basic s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the inverse of mat
-void dense_matrix_inv(CDenseMatrix *s, CDenseMatrix *mat);
+void dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the transpose of mat
-void dense_matrix_transpose(CDenseMatrix *s, CDenseMatrix *mat);
+void dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat);
 //! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with step sizes [r, c]
-void dense_matrix_submatrix(CDenseMatrix *s, CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c);
+void dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c);
 //! Return the number of columns of s
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
 unsigned long int dense_matrix_rows(const CDenseMatrix *s);
 //! Assign to s, the addition of matA and matB
-void dense_matrix_add_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB);
+void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA, const CDenseMatrix *matB);
 //! Assign to s, the matrix multiplication of matA and matB
-void dense_matrix_mul_matrix(CDenseMatrix *s, CDenseMatrix *matA, CDenseMatrix *matB);
+void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA, const CDenseMatrix *matB);
 //! Assign to s, the addition of scalar b to matrix matA
-void dense_matrix_add_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b);
+void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA, const basic b);
 //! Assign to s, the multiplication of scalar b to matrix matA
-void dense_matrix_mul_scalar(CDenseMatrix *s, CDenseMatrix *matA, basic b);
+void dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA, const basic b);
+//! Assign to l and u, LU factorization of mat
+void dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat);
+//! Assign to l and d, LDL factorization of mat
+void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat);
+//! Assign to lu, fraction free LU factorization of mat
+void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat);
+//! Assign to l, d and u, FFLDU factorization of mat
+void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u, const CDenseMatrix *mat);
+//! Assign to x, solution to A x = b
+void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A, const CDenseMatrix *b);
 
 
 //! Assign to s, a CSRMatrix
