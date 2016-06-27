@@ -99,6 +99,11 @@ fp_t URatPSeriesFlint::var(const std::string &s)
     return r;
 }
 
+fp_t URatPSeriesFlint::convert(const integer_class &x)
+{
+    return fp_t(get_mpz_t(x));
+}
+
 fp_t URatPSeriesFlint::convert(const rational_class &x)
 {
     return fp_t(get_mpq_t(x));
