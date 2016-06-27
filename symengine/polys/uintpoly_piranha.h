@@ -24,6 +24,7 @@ namespace piranha
 // overloading pow for pirahna::math::evaluate
 namespace math
 {
+
 template <typename U>
 struct pow_impl<SymEngine::integer_class, U,
                 SymEngine::enable_if_t<std::is_integral<U>::value>> {

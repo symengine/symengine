@@ -6,8 +6,8 @@ f := 0:
 
 for i from 2 to (n - 1)
 do
-    f := f + cat(a, convert(i, string)):
-    e := e + cat(a, convert(i, string)):
+    f := f + sin(cat(a, convert(i, string))):
+    e := e + sin(cat(a, convert(i, string))):
 end do:
 
 f := -f:
