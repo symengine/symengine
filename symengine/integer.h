@@ -35,7 +35,7 @@ public:
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
     //! Convert to `integer_class`.
-    inline integer_class as_integer_class() const
+    inline const integer_class& as_integer_class() const
     {
         return this->i;
     }

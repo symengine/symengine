@@ -34,12 +34,12 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const Basic &base, const Basic &exp) const;
     //! \return `base` of `base**exp`
-    inline RCP<const Basic> get_base() const
+    inline const RCP<const Basic>& get_base() const
     {
         return base_;
     }
     //! \return `exp` of `base**exp`
-    inline RCP<const Basic> get_exp() const
+    inline const RCP<const Basic>& get_exp() const
     {
         return exp_;
     }

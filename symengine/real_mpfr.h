@@ -87,7 +87,7 @@ public:
     IMPLEMENT_TYPEID(REAL_MPFR)
     //! Constructor of RealMPFR class
     RealMPFR(mpfr_class i);
-    inline mpfr_class as_mpfr() const
+    inline const mpfr_class& as_mpfr() const
     {
         return i;
     }

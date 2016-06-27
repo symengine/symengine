@@ -398,12 +398,12 @@ public:
     bool is_canonical(const RCP<const Basic> &num,
                       const RCP<const Basic> &den) const;
     //! \return `y` in `atan2(y, x)`
-    inline RCP<const Basic> get_num() const
+    inline const RCP<const Basic>& get_num() const
     {
         return get_arg1();
     }
     //! \return `x` in `atan2(y, x)`
-    inline RCP<const Basic> get_den() const
+    inline const RCP<const Basic>& get_den() const
     {
         return get_arg2();
     }
@@ -456,12 +456,12 @@ public:
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s);
     //! \return `s_`
-    inline RCP<const Basic> get_s() const
+    inline const RCP<const Basic>& get_s() const
     {
         return get_arg1();
     }
     //! \return `a_`
-    inline RCP<const Basic> get_a() const
+    inline const RCP<const Basic>& get_a() const
     {
         return get_arg2();
     }
@@ -485,7 +485,7 @@ public:
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
     //! \return `s`
-    inline RCP<const Basic> get_s() const
+    inline const RCP<const Basic>& get_s() const
     {
         return get_arg();
     }
@@ -520,7 +520,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `name_`
-    inline std::string get_name() const
+    inline const std::string& get_name() const
     {
         return name_;
     }
@@ -587,11 +587,11 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const
+    inline const RCP<const Basic>& get_arg() const
     {
         return arg_;
     }
-    inline multiset_basic get_symbols() const
+    inline const multiset_basic& get_symbols() const
     {
         return x_;
     }
@@ -628,7 +628,7 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const
+    inline const RCP<const Basic>& get_arg() const
     {
         return arg_;
     }

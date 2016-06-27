@@ -87,7 +87,7 @@ public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)
     //! Constructor of ComplexMPC class
     ComplexMPC(mpc_class i);
-    inline mpc_class as_mpc() const
+    inline const mpc_class& as_mpc() const
     {
         return i;
     }
