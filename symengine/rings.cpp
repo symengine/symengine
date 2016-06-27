@@ -16,7 +16,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
         for (const auto &p : d) {
             if (not is_a<Integer>(*p.second))
                 throw std::runtime_error("Not implemented.");
-            coef = rcp_static_cast<const Integer>(p.second)->as_mpz();
+            coef = rcp_static_cast<const Integer>(p.second)->as_integer_class();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
                 const map_basic_basic &term

@@ -593,7 +593,7 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     REQUIRE(eq(*nthroot, *i5));
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
-    rem = integer(nthroot->as_mpz() * nthroot->as_mpz() - im1->as_mpz());
+    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class() - im1->as_integer_class());
     REQUIRE(divides(*rem, *i41));
 
     REQUIRE(nthroot_mod(outArg(nthroot), i31, i4, i41) == true);
@@ -601,12 +601,12 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     nthroot_mod_list(roots, i1, i10, i100);
 
     REQUIRE(nthroot_mod(outArg(nthroot), i4, i2, i64) == true);
-    rem = integer(nthroot->as_mpz() * nthroot->as_mpz() - i4->as_mpz());
+    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class() - i4->as_integer_class());
     REQUIRE(divides(*rem, *i64));
 
     REQUIRE(nthroot_mod(outArg(nthroot), i32, i10, i41) == true);
     rem = rcp_static_cast<const Integer>(nthroot->powint(*i10));
-    rem = integer(rem->as_mpz() - i32->as_mpz());
+    rem = integer(rem->as_integer_class() - i32->as_integer_class());
     REQUIRE(divides(*rem, *i41));
 
     roots.clear();

@@ -74,17 +74,17 @@ TEST_CASE("fix#461: integer", "[integer]")
 
     long lmax = std::numeric_limits<long>::max();
     ir = integer(lmax);
-    REQUIRE(integer_class(lmax) == ir->as_mpz());
+    REQUIRE(integer_class(lmax) == ir->as_integer_class());
 
     unsigned long ulmax = std::numeric_limits<unsigned long>::max();
     ir = integer(ulmax);
-    REQUIRE(integer_class(ulmax) == ir->as_mpz());
+    REQUIRE(integer_class(ulmax) == ir->as_integer_class());
 
     int imax = std::numeric_limits<int>::max();
     ir = integer(imax);
-    REQUIRE(integer_class(imax) == ir->as_mpz());
+    REQUIRE(integer_class(imax) == ir->as_integer_class());
 
     integer_class val(12345);
     ir = integer(val);
-    REQUIRE(val == ir->as_mpz());
+    REQUIRE(val == ir->as_integer_class());
 }

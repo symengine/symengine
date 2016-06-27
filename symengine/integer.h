@@ -35,7 +35,7 @@ public:
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
     //! Convert to `integer_class`.
-    inline integer_class as_mpz() const
+    inline integer_class as_integer_class() const
     {
         return this->i;
     }
@@ -174,7 +174,7 @@ struct RCPIntegerKeyLess {
     bool operator()(const RCP<const Integer> &a,
                     const RCP<const Integer> &b) const
     {
-        return a->as_mpz() < b->as_mpz();
+        return a->as_integer_class() < b->as_integer_class();
     }
 };
 //! \return RCP<const Integer> from integral values

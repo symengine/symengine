@@ -255,19 +255,19 @@ int complex_mpc_is_zero(const basic s)
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_si((rcp_static_cast<const Integer>(s->m))->as_mpz());
+    return mp_get_si((rcp_static_cast<const Integer>(s->m))->as_integer_class());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz());
+    return mp_get_ui((rcp_static_cast<const Integer>(s->m))->as_integer_class());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    mpz_set(a, get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
+    mpz_set(a, get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_integer_class()));
 }
 
 void rational_set_si(basic s, long a, long b)

@@ -90,7 +90,7 @@ public:
                         o << "-";
                 } else {
                     if (static_cast<const Integer &>(*it->second.get_basic())
-                            .as_mpz()
+                            .as_integer_class()
                         < 0) {
                         o << " "
                           << "-"
