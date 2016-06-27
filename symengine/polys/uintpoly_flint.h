@@ -8,17 +8,19 @@
 #include <symengine/polys/upolybase.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include <flint/fmpz_polyxx.h>
+#include <symengine/flint_wrapper.h>
+using fp_t = SymEngine::fmpz_poly_wrapper;
+using fz_t = SymEngine::fmpz_wrapper;
 
 namespace SymEngine
 {
 
-class UIntPolyFlint : public UIntPolyBase<flint::fmpz_polyxx, UIntPolyFlint>
+class UIntPolyFlint : public UIntPolyBase<fp_t, UIntPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYFLINT)
     //! Constructor of UIntPolyFlint class
-    UIntPolyFlint(const RCP<const Symbol> &var, flint::fmpz_polyxx &&dict);
+    UIntPolyFlint(const RCP<const Symbol> &var, fp_t &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
@@ -32,10 +34,10 @@ public:
     vec_integer_class multieval(const vec_integer_class &v) const;
 
     integer_class get_coeff(unsigned int x) const;
-    flint::fmpzxx_srcref get_coeff_ref(unsigned int x) const;
+    fz_t get_coeff_ref(unsigned int x) const;
 
-    typedef ContainerForIter<UIntPolyFlint, flint::fmpzxx_srcref> iterator;
-    typedef ContainerRevIter<UIntPolyFlint, flint::fmpzxx_srcref>
+    typedef ContainerForIter<UIntPolyFlint, fz_t> iterator;
+    typedef ContainerRevIter<UIntPolyFlint, fz_t>
         reverse_iterator;
     iterator begin() const
     {
@@ -68,8 +70,7 @@ inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a,
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
     return make_rcp<const UIntPolyFlint>(
-        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
-                         flint::gcd(a.get_poly(), b.get_poly()))));
+        a.get_var(), a.get_poly().gcd(b.get_poly()));
 }
 
 inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
@@ -78,16 +79,14 @@ inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
     return make_rcp<const UIntPolyFlint>(
-        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
-                         flint::lcm(a.get_poly(), b.get_poly()))));
+        a.get_var(), a.get_poly().lcm(b.get_poly()));
 }
 
 inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
                                           unsigned int p)
 {
     return make_rcp<const UIntPolyFlint>(
-        a.get_var(), std::move(static_cast<flint::fmpz_polyxx>(
-                         flint::pow(a.get_poly(), p))));
+        a.get_var(), a.get_poly().pow(p));
 }
 
 inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
@@ -96,10 +95,10 @@ inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
-    auto t = flint::divides(b.get_poly(), a.get_poly());
-    if (t.get<0>()) {
-        *res = UIntPolyFlint::from_container(
-            a.get_var(), static_cast<flint::fmpz_polyxx>(t.get<1>()));
+    fp_t divres;
+    bool div_f = a.get_poly().divides(b.get_poly(), divres);
+    if (div_f) {
+        *res = make_rcp<UIntPolyFlint>(a.get_var(), std::move(divres));
         return true;
     } else {
         return false;

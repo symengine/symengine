@@ -42,7 +42,7 @@ public:
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
-    inline rational_class as_mpq() const
+    inline rational_class as_rational_class() const
     {
         return this->i;
     }
