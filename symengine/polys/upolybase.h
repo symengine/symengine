@@ -527,6 +527,15 @@ RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
 
     return make_rcp<const Poly>(a.get_var(), std::move(res * tmp));
 }
+
+inline bool is_a_UPoly(const Basic &b)
+{
+    // `UINTPOLY` is the last UPoly in TypeID
+    // An enum should be before `UINTPOLY` iff it is a UPoly
+    // and after the `NUMBER_WRAPPER`
+    return (b.get_type_code() > NUMBER_WRAPPER) and (b.get_type_code() <= UINTPOLY);
+}
+
 }
 
 #endif // SYMENGINE_UINT_BASE_H

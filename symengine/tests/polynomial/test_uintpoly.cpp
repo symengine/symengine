@@ -48,6 +48,9 @@ TEST_CASE("Constructor of UIntPoly", "[UIntPoly]")
     RCP<const UIntPoly> U
         = UIntPoly::from_dict(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}});
     REQUIRE(U->__str__() == "2");
+
+    REQUIRE(is_a_UPoly(*U));
+    REQUIRE(not is_a_UPoly(*x));
 }
 
 TEST_CASE("Adding two UIntPoly", "[UIntPoly]")

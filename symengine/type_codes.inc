@@ -12,16 +12,25 @@ SYMENGINE_ENUM(REAL_DOUBLE, RealDouble)
 #if defined(HAVE_SYMENGINE_PIRANHA) || defined(SYMENGINE_INCLUDE_ALL)
 SYMENGINE_ENUM(URATPSERIESPIRANHA, URatPSeriesPiranha)
 SYMENGINE_ENUM(UPSERIESPIRANHA, UPSeriesPiranha)
-SYMENGINE_ENUM(UINTPOLYPIRANHA, UIntPolyPiranha)
 #endif
 #if defined(HAVE_SYMENGINE_FLINT) || defined(SYMENGINE_INCLUDE_ALL)
 SYMENGINE_ENUM(URATPSERIESFLINT, URatPSeriesFlint)
-SYMENGINE_ENUM(UINTPOLYFLINT, UIntPolyFlint)
 #endif
 SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 // 'NUMBER_WRAPPER' returns the number of subclasses of Number.
 // All subclasses of Number must be added before it. Do not assign
 // non subclasses of Number before it.
+#if defined(HAVE_SYMENGINE_FLINT) || defined(SYMENGINE_INCLUDE_ALL)
+SYMENGINE_ENUM(UINTPOLYFLINT, UIntPolyFlint)
+#endif
+#if defined(HAVE_SYMENGINE_PIRANHA) || defined(SYMENGINE_INCLUDE_ALL)
+SYMENGINE_ENUM(UINTPOLYPIRANHA, UIntPolyPiranha)
+#endif
+SYMENGINE_ENUM(UEXPRPOLY, UExprPoly)
+SYMENGINE_ENUM(UINTPOLY, UIntPoly)
+// 'UINTPOLY' returns the number of Univariate Polys.
+// All UPolys must be added before it. Do not assign
+// non UPolys of Number before it.
 SYMENGINE_ENUM(SYMBOL, Symbol)
 SYMENGINE_ENUM(EMPTYSET, EmptySet)
 SYMENGINE_ENUM(FINITESET, FiniteSet)
@@ -30,8 +39,6 @@ SYMENGINE_ENUM(UNIVERSALSET, UniversalSet)
 SYMENGINE_ENUM(MUL, Mul)
 SYMENGINE_ENUM(ADD, Add)
 SYMENGINE_ENUM(POW, Pow)
-SYMENGINE_ENUM(UINTPOLY, UIntPoly)
-SYMENGINE_ENUM(UEXPRPOLY, UExprPoly)
 SYMENGINE_ENUM(GALOISFIELD, GaloisField)
 SYMENGINE_ENUM(MULTIVARIATEINTPOLYNOMIAL, MultivariateIntPolynomial)
 SYMENGINE_ENUM(MULTIVARIATEPOLYNOMIAL, MultivariatePolynomial)

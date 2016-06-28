@@ -53,6 +53,9 @@ TEST_CASE("Constructor of UIntPolyFlint", "[UIntPolyFlint]")
     RCP<const UIntPolyFlint> U
         = UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}});
     REQUIRE(U->__str__() == "2");
+
+    REQUIRE(is_a_UPoly(*U));
+    REQUIRE(not is_a_UPoly(*x));
 }
 
 TEST_CASE("Adding two UIntPolyFlint", "[UIntPolyFlint]")
