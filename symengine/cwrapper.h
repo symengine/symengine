@@ -388,7 +388,14 @@ void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat);
 void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u, const CDenseMatrix *mat);
 //! Assign to x, solution to A x = b
 void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A, const CDenseMatrix *b);
-
+//! Assign to s, a matrix of ones of size rxc
+void dense_matrix_ones(CDenseMatrix *s, unsigned long int r, unsigned long int c);
+//! Assign to s, a matrix of zeros of size rxc
+void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r, unsigned long int c);
+//! Assign to s, a diagonal matrix with a diagonal at offset k, with elements in d
+void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k);
+//! Assign to s, a matrix of size NxM, with diagonal of 1s at offset k
+void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M, int k);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);

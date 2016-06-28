@@ -39,6 +39,10 @@ using SymEngine::set_basic;
 using SymEngine::get_mpz_t;
 using SymEngine::mp_get_ui;
 using SymEngine::mp_get_si;
+using SymEngine::eye;
+using SymEngine::diag;
+using SymEngine::ones;
+using SymEngine::zeros;
 
 namespace SymEngine
 {
@@ -751,6 +755,29 @@ void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A, const CDenseM
     x->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(x, A->m.ncols(), 1);
     A->m.LU_solve(b->m, x->m);
+}
+
+void dense_matrix_ones(CDenseMatrix *s, unsigned long int r, unsigned long int c)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, r, c);
+    ones(s->m, r, c);
+}
+
+void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r, unsigned long int c)
+{
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, r, c);
+    zeros(s->m, r, c);
+}
+void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
+{
+    diag(s->m, d->m, k);
+}
+
+void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M, int k)
+{
+    eye(s->m, N, M, k);
 }
 
 // C Wrapper for set_basic
