@@ -94,12 +94,27 @@ public:
     // Returns the square free decomposition of polynomial's monic
     // representation in `modulo_`
     // A vector of pair is returned where each element is a factor and each
-    // pair's first
-    // raised to power of second gives the factor.
+    // pair's first raised to power of second gives the factor.
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
 
     // Returns the square free part of the polynomaial in `modulo_`
     GaloisFieldDict gf_sqf_part() const;
+    // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
+    // where n = this->degree()
+    std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
+    // computes `f**n % (*this)` in modulo_
+    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
+                               const integer_class &n) const;
+    // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
+    // i.e. `(*this)**modulo_ % g`
+    GaloisFieldDict
+    gf_frobenius_map(const GaloisFieldDict &g,
+                     const std::vector<GaloisFieldDict> &b) const;
+    // For a monic square-free polynomial in modulo_, it returns its distinct
+    // degree factorization. Each element's first is a factor and second
+    // is used by equal degree factorization.
+    std::vector<std::pair<GaloisFieldDict, integer_class>>
+    gf_ddf_zassenhaus() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
@@ -354,6 +369,7 @@ public:
                 mp_fdiv_r(arg, arg, modulo_);
             }
         }
+        gf_istrip();
         return static_cast<GaloisFieldDict &>(*this);
     }
 
@@ -404,6 +420,76 @@ public:
             mp_fdiv_r(coeff, coeff, modulo_);
             dict_out[riter] = dict_[riter - deg_divisor] = coeff;
         }
+        gf_istrip();
+        return static_cast<GaloisFieldDict &>(*this);
+    }
+
+    template <class T>
+    friend GaloisFieldDict operator%(const GaloisFieldDict &a, const T &b)
+    {
+        GaloisFieldDict c = a;
+        c %= b;
+        return c;
+    }
+
+    GaloisFieldDict &operator%=(const integer_class &other)
+    {
+        if (other == integer_class(0)) {
+            throw std::runtime_error("ZeroDivisionError");
+        }
+        if (dict_.empty())
+            return static_cast<GaloisFieldDict &>(*this);
+        dict_.clear();
+        return static_cast<GaloisFieldDict &>(*this);
+    }
+
+    GaloisFieldDict &operator%=(const GaloisFieldDict &other)
+    {
+        if (modulo_ != other.modulo_)
+            throw std::runtime_error("Error: field must be same.");
+        auto dict_divisor = other.dict_;
+        if (dict_divisor.empty()) {
+            throw std::runtime_error("ZeroDivisionError");
+        }
+        if (dict_.empty())
+            return static_cast<GaloisFieldDict &>(*this);
+        integer_class inv;
+        mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
+
+        // ! other is a just constant term
+        if (dict_divisor.size() == 1) {
+            dict_.clear();
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+        std::vector<integer_class> dict_out;
+        size_t deg_dividend = this->degree();
+        size_t deg_divisor = other.degree();
+        if (deg_dividend < deg_divisor) {
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+        dict_out.swap(dict_);
+        dict_.resize(deg_divisor);
+        integer_class coeff;
+        for (auto it = deg_dividend + 1; it-- != 0;) {
+            coeff = dict_out[it];
+            auto lb = deg_divisor + it > deg_dividend
+                          ? deg_divisor + it - deg_dividend
+                          : 0;
+            auto ub = std::min(it + 1, deg_divisor);
+            for (size_t j = lb; j < ub; ++j) {
+                mp_addmul(coeff, dict_out[it - j + deg_divisor],
+                          -dict_divisor[j]);
+            }
+            if (it >= deg_divisor) {
+                coeff *= inv;
+                mp_fdiv_r(coeff, coeff, modulo_);
+                dict_out[it] = coeff;
+            } else {
+                mp_fdiv_r(coeff, coeff, modulo_);
+                dict_out[it] = dict_[it] = coeff;
+            }
+        }
+        gf_istrip();
         return static_cast<GaloisFieldDict &>(*this);
     }
 

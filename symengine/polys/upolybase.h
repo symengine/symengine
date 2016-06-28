@@ -11,8 +11,9 @@
 #include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include <flint/flint.h>
-#include <flint/fmpzxx.h>
+#include <symengine/flint_wrapper.h>
+using fp_t = SymEngine::fmpz_poly_wrapper;
+using fz_t = SymEngine::fmpz_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
@@ -22,17 +23,19 @@
 namespace SymEngine
 {
 // misc methods
-inline const integer_class &to_integer_class(const integer_class &i)
+
+inline integer_class to_integer_class(const integer_class &i)
 {
     return i;
 }
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
-    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    fmpz_get_mpz(x.get_mpz_t(), i.get_fmpz_t());
     return x;
 }
 #endif
@@ -48,10 +51,10 @@ inline integer_class to_integer_class(const piranha::integer &i)
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
-    fmpz_get_mpz(get_mpz_t(x), i._data().inner);
+    fmpz_get_mpz(get_mpz_t(x), i.get_fmpz_t());
     return x;
 }
 #endif
@@ -64,10 +67,6 @@ inline integer_class to_integer_class(const piranha::integer &x)
 }
 #endif
 
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
-{
-    return integer_class(i._data().inner);
-}
 #endif
 
 // dict wrapper
@@ -533,9 +532,9 @@ inline bool is_a_UPoly(const Basic &b)
     // `UINTPOLY` is the last UPoly in TypeID
     // An enum should be before `UINTPOLY` iff it is a UPoly
     // and after the `NUMBER_WRAPPER`
-    return (b.get_type_code() > NUMBER_WRAPPER) and (b.get_type_code() <= UINTPOLY);
+    return (b.get_type_code() > NUMBER_WRAPPER)
+           and (b.get_type_code() <= UINTPOLY);
 }
-
 }
 
 #endif // SYMENGINE_UINT_BASE_H

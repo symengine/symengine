@@ -99,19 +99,24 @@ fp_t URatPSeriesFlint::var(const std::string &s)
     return r;
 }
 
+fp_t URatPSeriesFlint::convert(const integer_class &x)
+{
+    return fp_t(get_mpz_t(x));
+}
+
 fp_t URatPSeriesFlint::convert(const rational_class &x)
 {
-    return fp_t(x);
+    return fp_t(get_mpq_t(x));
 }
 
 fp_t URatPSeriesFlint::convert(const Integer &x)
 {
-    return fmpq_wrapper(x.as_mpz());
+    return convert(x.as_mpz());
 }
 
 fp_t URatPSeriesFlint::convert(const Rational &x)
 {
-    return fmpq_wrapper(x.as_mpq());
+    return convert(x.as_rational_class());
 }
 
 fp_t URatPSeriesFlint::convert(const Basic &x)

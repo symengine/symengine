@@ -54,6 +54,9 @@ fi
 if [[ "${WITH_PIRANHA}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PIRANHA=${WITH_PIRANHA}"
 fi
+if [[ "${WITH_FLINT}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_FLINT=${WITH_FLINT}"
+fi
 if [[ "${WITH_BENCHMARKS_NONIUS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_BENCHMARKS_NONIUS=${WITH_BENCHMARKS_NONIUS}"
 fi
