@@ -92,6 +92,7 @@ class PolyGeneratorVisitorPow : public BaseVisitor<PolyGeneratorVisitorPow>
 private:
     // the generators are mul(it.first, it.second) not Pow
     // the_base is the base of the Pow (whose exp we are currently dealing)
+    // numbers must always be positive
     umap_basic_num gen_set;
     RCP<const Basic> the_base;
 
@@ -103,13 +104,44 @@ public:
         return gen_set;
     }
 
+    void bvisit(const Pow &x)
+    {   
+        umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
+        for (auto it : pow_pairs)
+            gen_set[pow(x.get_base(), it.first)] = it.second;
+    }
+
+    void bvisit(const Add &x)
+    {   
+        if (not x.coef_->is_zero())
+            bvisit(*x.coef_);
+
+        for (auto it : x.dict_) {
+            RCP<const Basic> mulx = one;
+            RCP<const Basic> divx = one;
+
+            if (it.second->is_negative())
+                mulx = minus_one;
+
+            if (is_a<const Rational>(*it.second))
+                divx = rcp_static_cast<const Rational>(it.second)->get_den();
+
+            gen_set[mul(mulx, it.first)] = rcp_static_cast<const Number>(mul(mulx, divx));
+        }
+    }
+
+    void bvisit(const Mul &x)
+    {   
+        throw std::runtime_error("Not implemented!");
+    }
+
     void bvisit(const Number &x)
     {
         if (not is_a_Number(*pow(the_base, x.rcp_from_this()))) {
             if (x.is_positive())
                 gen_set[one] = x.rcp_from_this_cast<const Number>();
             else
-                gen_set[minus_one] = x.rcp_from_this_cast<const Number>();
+                gen_set[minus_one] = rcp_static_cast<const Number>(neg(x.rcp_from_this()));
         }
     }
 
