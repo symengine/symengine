@@ -119,14 +119,14 @@ class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
 public:
     IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
     //! Constructor of UIntPolyPiranha class
-    UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict);
+    UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
+    static RCP<const UIntPolyPiranha> from_dict(const RCP<const Basic> &var,
                                                 map_uint_mpz &&d);
-    static RCP<const UIntPolyPiranha> from_vec(const RCP<const Symbol> &var,
+    static RCP<const UIntPolyPiranha> from_vec(const RCP<const Basic> &var,
                                                const vec_integer_class &v);
 
     integer_class eval(const integer_class &x) const;

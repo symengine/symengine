@@ -550,7 +550,7 @@ public:
     IMPLEMENT_TYPEID(GALOISFIELD)
 
     //! Constructor of GaloisField class
-    GaloisField(const RCP<const Symbol> &var, GaloisFieldDict &&dict);
+    GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict);
 
     //! \return true if canonical
     bool is_canonical(const GaloisFieldDict &dict) const;
@@ -560,9 +560,9 @@ public:
 
     // creates a GaloisField in cannonical form based on the
     // dictionary.
-    static RCP<const GaloisField> from_dict(const RCP<const Symbol> &var,
+    static RCP<const GaloisField> from_dict(const RCP<const Basic> &var,
                                             GaloisFieldDict &&d);
-    static RCP<const GaloisField> from_vec(const RCP<const Symbol> &var,
+    static RCP<const GaloisField> from_vec(const RCP<const Basic> &var,
                                            const std::vector<integer_class> &v,
                                            const integer_class &modulo);
 
@@ -578,13 +578,13 @@ public:
     }
 };
 
-inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i,
+inline RCP<const GaloisField> gf_poly(RCP<const Basic> i,
                                       GaloisFieldDict &&dict)
 {
     return GaloisField::from_dict(i, std::move(dict));
 }
 
-inline RCP<const GaloisField> gf_poly(RCP<const Symbol> i, map_uint_mpz &&dict,
+inline RCP<const GaloisField> gf_poly(RCP<const Basic> i, map_uint_mpz &&dict,
                                       integer_class modulo_)
 {
     GaloisFieldDict wrapper(dict, modulo_);

@@ -20,14 +20,14 @@ class UIntPolyFlint : public UIntPolyBase<fp_t, UIntPolyFlint>
 public:
     IMPLEMENT_TYPEID(UINTPOLYFLINT)
     //! Constructor of UIntPolyFlint class
-    UIntPolyFlint(const RCP<const Symbol> &var, fp_t &&dict);
+    UIntPolyFlint(const RCP<const Basic> &var, fp_t &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    static RCP<const UIntPolyFlint> from_dict(const RCP<const Symbol> &var,
+    static RCP<const UIntPolyFlint> from_dict(const RCP<const Basic> &var,
                                               map_uint_mpz &&d);
-    static RCP<const UIntPolyFlint> from_vec(const RCP<const Symbol> &var,
+    static RCP<const UIntPolyFlint> from_vec(const RCP<const Basic> &var,
                                              const vec_integer_class &v);
 
     integer_class eval(const integer_class &x) const;

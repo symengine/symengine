@@ -134,7 +134,7 @@ class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
     //! Constructor of UIntPoly class
-    UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict);
+    UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 
     //! \return true if canonical
     bool is_canonical(const UIntDict &dict) const;
@@ -144,9 +144,9 @@ public:
 
     // creates a UIntPoly in cannonical form based on the
     // dictionary.
-    static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
+    static RCP<const UIntPoly> from_dict(const RCP<const Basic> &var,
                                          map_uint_mpz &&d);
-    static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
+    static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;

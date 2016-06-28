@@ -295,11 +295,11 @@ template <typename Container, typename Poly>
 class UPolyBase : public Basic
 {
 protected:
-    RCP<const Symbol> var_;
+    RCP<const Basic> var_;
     Container poly_;
 
 public:
-    UPolyBase(const RCP<const Symbol> &var, Container &&container)
+    UPolyBase(const RCP<const Basic> &var, Container &&container)
         : var_{var}, poly_{container}
     {
     }
@@ -317,7 +317,7 @@ public:
                and poly_ == static_cast<const Poly &>(o).poly_;
     }
 
-    inline const RCP<const Symbol> &get_var() const
+    inline const RCP<const Basic> &get_var() const
     {
         return var_;
     }
@@ -332,7 +332,7 @@ public:
         return {};
     }
 
-    static RCP<const Poly> from_container(const RCP<const Symbol> &var,
+    static RCP<const Poly> from_container(const RCP<const Basic> &var,
                                           Container &&d)
     {
         return make_rcp<const Poly>(var, std::move(d));
@@ -343,7 +343,7 @@ template <typename Container, typename Poly>
 class UIntPolyBase : public UPolyBase<Container, Poly>
 {
 public:
-    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
+    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
         : UPolyBase<Container, Poly>(var, std::move(container))
     {
     }
