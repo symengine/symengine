@@ -27,7 +27,7 @@ using SymEngine::fmpq_wrapper;
     SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)             \
         ->get_coeff(COEFF)
 
-static RCP<const Number> fmpqxx2sym(const fmpq_wrapper& fc)
+static RCP<const Number> fmpqxx2sym(const fmpq_wrapper &fc)
 {
     mpq_t gc;
     mpq_init(gc);
