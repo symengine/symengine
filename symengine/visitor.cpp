@@ -55,14 +55,13 @@ bool has_symbol(const Basic &b, const Symbol& x)
     return v.apply(b, x);
 }
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
-                       const RCP<const Basic> &n)
+RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)
 {
-    if (!is_a<Symbol>(*x)) {
+    if (!is_a<Symbol>(x)) {
         throw std::runtime_error("Not implemented for non Symbols.");
     }
     CoeffVisitor v;
-    return v.apply(b, rcp_static_cast<const Symbol>(x), n);
+    return v.apply(b, static_cast<const Symbol&>(x), n);
 }
 
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor>

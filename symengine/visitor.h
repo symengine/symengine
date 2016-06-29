@@ -101,8 +101,8 @@ bool has_symbol(const Basic &b, const Symbol& x);
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
 protected:
-    RCP<const Symbol> x_;
-    RCP<const Basic> n_;
+    const Symbol* x_;
+    const Basic* n_;
     RCP<const Basic> coeff_;
 
 public:
@@ -153,19 +153,17 @@ public:
         coeff_ = zero;
     }
 
-    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
-                           const RCP<const Basic> &n)
+    RCP<const Basic> apply(const Basic &b, const Symbol &x, const Basic &n)
     {
-        x_ = x;
-        n_ = n;
+        x_ = &x;
+        n_ = &n;
         coeff_ = zero;
         b.accept(*this);
         return coeff_;
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
-                       const RCP<const Basic> &n);
+RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
 
