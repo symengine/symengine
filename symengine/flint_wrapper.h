@@ -490,12 +490,12 @@ public:
         fmpz_poly_init(poly);
         fmpz_poly_set_si(poly, i);
     }
-    fmpz_poly_wrapper(const char* cp)
+    fmpz_poly_wrapper(const char *cp)
     {
         fmpz_poly_init(poly);
         fmpz_poly_set_str(poly, cp);
     }
-    fmpz_poly_wrapper(const fmpz_wrapper& z)
+    fmpz_poly_wrapper(const fmpz_wrapper &z)
     {
         fmpz_poly_init(poly);
         fmpz_poly_set_fmpz(poly, z.get_fmpz_t());
@@ -533,7 +533,7 @@ public:
     {
         return &poly;
     }
-    bool operator==(const fmpz_poly_wrapper& other) const
+    bool operator==(const fmpz_poly_wrapper &other) const
     {
         return fmpz_poly_equal(poly, *other.get_fmpz_poly_t()) == 1;
     }
@@ -555,17 +555,17 @@ public:
         fmpz_poly_get_coeff_fmpz(z.get_fmpz_t(), poly, n);
         return z;
     }
-    void set_coeff(unsigned int n, const fmpz_wrapper& z)
+    void set_coeff(unsigned int n, const fmpz_wrapper &z)
     {
         fmpz_poly_set_coeff_fmpz(poly, n, z.get_fmpz_t());
     }
-    fmpz_wrapper eval(const fmpz_wrapper& z) const
+    fmpz_wrapper eval(const fmpz_wrapper &z) const
     {
         fmpz_wrapper r;
         fmpz_poly_evaluate_fmpz(r.get_fmpz_t(), poly, z.get_fmpz_t());
         return r;
     }
-    void eval_vec(fmpz* ovec, fmpz *ivec, unsigned int n) const
+    void eval_vec(fmpz *ovec, fmpz *ivec, unsigned int n) const
     {
         fmpz_poly_evaluate_fmpz_vec(ovec, *get_fmpz_poly_t(), ivec, n);
     }
@@ -575,29 +575,29 @@ public:
         fmpz_poly_neg(*r.get_fmpz_poly_t(), *get_fmpz_poly_t());
         return r;
     }
-    void operator+=(const fmpz_poly_wrapper& other)
+    void operator+=(const fmpz_poly_wrapper &other)
     {
         fmpz_poly_add(*get_fmpz_poly_t(), *get_fmpz_poly_t(),
-                *other.get_fmpz_poly_t());
+                      *other.get_fmpz_poly_t());
     }
-    void operator-=(const fmpz_poly_wrapper& other)
+    void operator-=(const fmpz_poly_wrapper &other)
     {
         fmpz_poly_sub(*get_fmpz_poly_t(), *get_fmpz_poly_t(),
-                *other.get_fmpz_poly_t());
+                      *other.get_fmpz_poly_t());
     }
-    void operator*=(const fmpz_poly_wrapper& other)
+    void operator*=(const fmpz_poly_wrapper &other)
     {
         fmpz_poly_mul(*get_fmpz_poly_t(), *get_fmpz_poly_t(),
-                *other.get_fmpz_poly_t());
+                      *other.get_fmpz_poly_t());
     }
 
-    fmpz_poly_wrapper gcd(const fmpz_poly_wrapper& other) const
+    fmpz_poly_wrapper gcd(const fmpz_poly_wrapper &other) const
     {
         fmpz_poly_wrapper r;
         fmpz_poly_gcd(*r.get_fmpz_poly_t(), poly, *other.get_fmpz_poly_t());
         return r;
     }
-    fmpz_poly_wrapper lcm(const fmpz_poly_wrapper& other) const
+    fmpz_poly_wrapper lcm(const fmpz_poly_wrapper &other) const
     {
         fmpz_poly_wrapper r;
         fmpz_poly_lcm(*r.get_fmpz_poly_t(), poly, *other.get_fmpz_poly_t());
@@ -609,9 +609,11 @@ public:
         fmpz_poly_pow(*r.get_fmpz_poly_t(), poly, n);
         return r;
     }
-    bool divides(const fmpz_poly_wrapper& other, fmpz_poly_wrapper& r) const
+    bool divides(const fmpz_poly_wrapper &other, fmpz_poly_wrapper &r) const
     {
-        return fmpz_poly_divides(*r.get_fmpz_poly_t(), *other.get_fmpz_poly_t(), poly) == 1;
+        return fmpz_poly_divides(*r.get_fmpz_poly_t(), *other.get_fmpz_poly_t(),
+                                 poly)
+               == 1;
     }
     fmpz_poly_wrapper derivative() const
     {
@@ -636,7 +638,7 @@ public:
         fmpq_poly_init(poly);
         fmpq_poly_set_si(poly, i);
     }
-    fmpq_poly_wrapper(const char* cp)
+    fmpq_poly_wrapper(const char *cp)
     {
         fmpq_poly_init(poly);
         fmpq_poly_set_str(poly, cp);
@@ -651,7 +653,7 @@ public:
         fmpq_poly_init(poly);
         fmpq_poly_set_mpq(poly, q);
     }
-    fmpq_poly_wrapper(const fmpq_wrapper& q)
+    fmpq_poly_wrapper(const fmpq_wrapper &q)
     {
         fmpq_poly_init(poly);
         fmpq_poly_set_fmpq(poly, q.get_fmpq_t());
@@ -704,11 +706,12 @@ public:
         return q;
     }
 
-    fmpq_poly_wrapper mullow(const fmpq_poly_wrapper& o, unsigned int prec) const
+    fmpq_poly_wrapper mullow(const fmpq_poly_wrapper &o,
+                             unsigned int prec) const
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_mullow(*r.get_fmpq_poly_t(), poly,
-                *o.get_fmpq_poly_t(), prec);
+        fmpq_poly_mullow(*r.get_fmpq_poly_t(), poly, *o.get_fmpq_poly_t(),
+                         prec);
         return r;
     }
     fmpq_poly_wrapper pow(unsigned int n) const
@@ -814,11 +817,11 @@ public:
         fmpq_poly_atanh_series(*r.get_fmpq_poly_t(), poly, prec);
         return r;
     }
-    fmpq_poly_wrapper subs(const fmpq_poly_wrapper& o, unsigned int prec) const
+    fmpq_poly_wrapper subs(const fmpq_poly_wrapper &o, unsigned int prec) const
     {
         fmpq_poly_wrapper r;
         fmpq_poly_compose_series(*r.get_fmpq_poly_t(), poly,
-                *o.get_fmpq_poly_t(), prec);
+                                 *o.get_fmpq_poly_t(), prec);
         return r;
     }
     void set_zero()
@@ -830,55 +833,65 @@ public:
         fmpq_poly_one(poly);
     }
 
-    bool operator==(const fmpq_poly_wrapper& o) const
+    bool operator==(const fmpq_poly_wrapper &o) const
     {
         return fmpq_poly_equal(poly, *o.get_fmpq_poly_t()) != 0;
     }
-    bool operator<(const fmpq_poly_wrapper& o) const
+    bool operator<(const fmpq_poly_wrapper &o) const
     {
         return fmpq_poly_cmp(poly, *o.get_fmpq_poly_t()) == -1;
     }
 
-    friend fmpq_poly_wrapper operator+(const fmpq_poly_wrapper& a, const fmpq_poly_wrapper& o)
+    friend fmpq_poly_wrapper operator+(const fmpq_poly_wrapper &a,
+                                       const fmpq_poly_wrapper &o)
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_add(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(), *o.get_fmpq_poly_t());
+        fmpq_poly_add(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(),
+                      *o.get_fmpq_poly_t());
         return r;
     }
-    friend fmpq_poly_wrapper operator-(const fmpq_poly_wrapper& a, const fmpq_poly_wrapper& o)
+    friend fmpq_poly_wrapper operator-(const fmpq_poly_wrapper &a,
+                                       const fmpq_poly_wrapper &o)
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_sub(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(), *o.get_fmpq_poly_t());
+        fmpq_poly_sub(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(),
+                      *o.get_fmpq_poly_t());
         return r;
     }
-    friend fmpq_poly_wrapper operator*(const fmpq_poly_wrapper& a, const fmpq_wrapper& q)
+    friend fmpq_poly_wrapper operator*(const fmpq_poly_wrapper &a,
+                                       const fmpq_wrapper &q)
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_scalar_mul_fmpq(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(), q.get_fmpq_t());
+        fmpq_poly_scalar_mul_fmpq(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(),
+                                  q.get_fmpq_t());
         return r;
     }
-    friend fmpq_poly_wrapper operator*(const fmpq_poly_wrapper& a, const fmpq_poly_wrapper& o)
+    friend fmpq_poly_wrapper operator*(const fmpq_poly_wrapper &a,
+                                       const fmpq_poly_wrapper &o)
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_mul(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(), *o.get_fmpq_poly_t());
+        fmpq_poly_mul(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(),
+                      *o.get_fmpq_poly_t());
         return r;
     }
-    friend fmpq_poly_wrapper operator/(const fmpq_poly_wrapper& a, const fmpq_wrapper& q)
+    friend fmpq_poly_wrapper operator/(const fmpq_poly_wrapper &a,
+                                       const fmpq_wrapper &q)
     {
         fmpq_poly_wrapper r;
-        fmpq_poly_scalar_div_fmpq(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(), q.get_fmpq_t());
+        fmpq_poly_scalar_div_fmpq(*r.get_fmpq_poly_t(), *a.get_fmpq_poly_t(),
+                                  q.get_fmpq_t());
         return r;
     }
 
-    void operator+=(const fmpq_poly_wrapper& o)
+    void operator+=(const fmpq_poly_wrapper &o)
     {
         fmpq_poly_add(poly, poly, *o.get_fmpq_poly_t());
     }
-    void operator-=(const fmpq_poly_wrapper& o)
+    void operator-=(const fmpq_poly_wrapper &o)
     {
         fmpq_poly_sub(poly, poly, *o.get_fmpq_poly_t());
     }
-    void operator*=(const fmpq_poly_wrapper& o)
+    void operator*=(const fmpq_poly_wrapper &o)
     {
         fmpq_poly_mul(poly, poly, *o.get_fmpq_poly_t());
     }

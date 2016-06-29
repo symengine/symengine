@@ -32,7 +32,7 @@ inline integer_class to_integer_class(const integer_class &i)
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t& i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(x.get_mpz_t(), i.get_fmpz_t());
@@ -51,7 +51,7 @@ inline integer_class to_integer_class(const piranha::integer &i)
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t& i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(get_mpz_t(x), i.get_fmpz_t());
