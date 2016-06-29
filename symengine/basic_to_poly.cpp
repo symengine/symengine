@@ -3,7 +3,6 @@
 namespace SymEngine
 {
 // all throughout Number refers to either a Rational or an Integer only
-umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
 umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x, 
                                    const RCP<const Basic> &base);
 
@@ -23,10 +22,8 @@ public:
     }
 
     // adds curr to gen_set, or updates already existing gen
-    void update_gens(const RCP<const Basic> &base, const RCP<const Number> &exp)
+    void add_to_gen_set(const RCP<const Basic> &base, const RCP<const Number> &exp)
     {
-        RCP<const Basic> map_exp;
-
         auto it = gen_set.find(base);
         if (it == gen_set.end()) {
             gen_set[base] = exp;
@@ -49,31 +46,25 @@ public:
             if (rcp_static_cast<const Integer>(x.get_exp())->i > 0) {
                 gen_set = _find_gens_poly(x.get_base());
             } else {
-                gen_set[pow(x.get_base(), minus_one)] = one;
+                add_to_gen_set(pow(x.get_base(), minus_one), one);
             }
         } else {
             umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
             for (auto it : pow_pairs)
-                gen_set[pow(x.get_base(), it.first)] = it.second;
+                add_to_gen_set(pow(x.get_base(), it.first), it.second);
         }
     }
 
     void bvisit(const Add &x)
     {
-        for (auto it : x.dict_) {
-            umap_basic_num curr_set = _find_gens_poly(it.first);
-            for (auto init : curr_set)
-                update_gens(init.first, init.second);
-        }
+        for (auto it : x.dict_)
+            it.first->accept(*this);
     }
 
     void bvisit(const Mul &x)
     {
-        for (auto it : x.dict_) {
-            umap_basic_num curr_set = _find_gens_poly(it.first);
-            for (auto init : curr_set)
-                update_gens(init.first, init.second);
-        }
+        for (auto it : x.dict_)
+            it.first->accept(*this);
     }
 
     void bvisit(const Number &x)
@@ -82,8 +73,8 @@ public:
     }
 
     void bvisit(const Basic &x)
-    {
-        gen_set[x.rcp_from_this()] = one;
+    {   
+        add_to_gen_set(x.rcp_from_this(), one);
     }
 };
 
@@ -114,7 +105,7 @@ public:
     void bvisit(const Add &x)
     {   
         if (not x.coef_->is_zero())
-            bvisit(*x.coef_);
+            x.coef_->accept(*this);
 
         for (auto it : x.dict_) {
             RCP<const Basic> mulx = one;
@@ -131,7 +122,7 @@ public:
     }
 
     void bvisit(const Mul &x)
-    {   
+    {
         throw std::runtime_error("Not implemented!");
     }
 

@@ -531,6 +531,8 @@ RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
     dict /= b.get_poly();
     return Poly::from_dict(a.get_var(), std::move(dict));
 }
+
+umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
 }
 
 #endif // SYMENGINE_UINT_BASE_H

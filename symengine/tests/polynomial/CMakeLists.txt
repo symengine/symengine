@@ -16,6 +16,10 @@ add_executable(test_mexprpoly test_mexprpoly.cpp)
 target_link_libraries(test_mexprpoly symengine catch)
 add_test(test_mexprpoly ${PROJECT_BINARY_DIR}/test_mexprpoly)
 
+add_executable(test_basic_to_poly test_basic_to_poly.cpp)
+target_link_libraries(test_basic_to_poly symengine catch)
+add_test(test_basic_to_poly ${PROJECT_BINARY_DIR}/test_basic_to_poly)
+
 if (WITH_FLINT)
     add_executable(test_uintpoly_flint test_uintpoly_flint.cpp)
     target_link_libraries(test_uintpoly_flint symengine catch)
