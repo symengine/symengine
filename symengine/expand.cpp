@@ -278,54 +278,62 @@ public:
         }
     }
 
-    void pow_expand(RCP<const UExprPoly> &x, unsigned long &i)
-    {
-        UExprDict e({{0, Expression(1)}});
-        RCP<const UExprPoly> r = uexpr_poly(x->get_var(), std::move(e));
-        while (i != 0) {
-            if (i % 2 == 1) {
-                r = mul_upoly(*r, *x);
-                i--;
-            }
-            x = mul_upoly(*x, *x);
-            i /= 2;
-        }
-        _coef_dict_add_term(multiply, r);
-    }
-
-    void pow_expand(RCP<const UIntPoly> &x, unsigned long &i)
-    {
-        RCP<const UIntPoly> r
-            = UIntPoly::from_dict(x->get_var(), {{0, integer_class(1)}});
-        while (i != 0) {
-            if (i % 2 == 1) {
-                r = mul_upoly(*r, *x);
-                i--;
-            }
-            x = mul_upoly(*x, *x);
-            i /= 2;
-        }
-        _coef_dict_add_term(multiply, r);
-    }
-
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand(self.get_base());
-        if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
-            unsigned long q
-                = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
-            pow_expand(p, q);
-            return;
-        }
-        if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
-            unsigned long q
-                = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
-            pow_expand(p, q);
-            return;
+
+        // 4 repetitions, there might be a better way
+        if (is_a<Integer>(*self.get_exp()) and is_a<const UIntPoly>(*_base)) {
+
+            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            if (q > 0) {
+                RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
+                auto r = pow_upoly(*p, q);
+                _coef_dict_add_term(multiply, r);
+                return;
+            }
         }
 
+        if (is_a<Integer>(*self.get_exp()) and is_a<const UExprPoly>(*_base)) {
+
+            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            if (q > 0) {
+                RCP<const UExprPoly> p
+                    = rcp_static_cast<const UExprPoly>(_base);
+                auto r = pow_upoly(*p, q);
+                _coef_dict_add_term(multiply, r);
+                return;
+            }
+        }
+
+#ifdef HAVE_SYMENGINE_FLINT
+        if (is_a<Integer>(*self.get_exp())
+            and is_a<const UIntPolyFlint>(*_base)) {
+
+            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            if (q > 0) {
+                RCP<const UIntPolyFlint> p
+                    = rcp_static_cast<const UIntPolyFlint>(_base);
+                auto r = pow_upoly(*p, q);
+                _coef_dict_add_term(multiply, r);
+                return;
+            }
+        }
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+        if (is_a<Integer>(*self.get_exp())
+            and is_a<const UIntPolyPiranha>(*_base)) {
+
+            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            if (q > 0) {
+                RCP<const UIntPolyPiranha> p
+                    = rcp_static_cast<const UIntPolyPiranha>(_base);
+                auto r = pow_upoly(*p, q);
+                _coef_dict_add_term(multiply, r);
+                return;
+            }
+        }
+#endif
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));

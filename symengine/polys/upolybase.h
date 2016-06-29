@@ -287,6 +287,7 @@ public:
     {
     }
 
+    typedef Container container_type;
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
     virtual std::size_t __hash__() const = 0;
@@ -504,6 +505,35 @@ RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
     auto dict = a.get_poly();
     dict /= b.get_poly();
     return Poly::from_dict(a.get_var(), std::move(dict));
+}
+
+template <typename Poly>
+RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
+{
+    auto tmp = a.get_poly();
+    typename Poly::container_type res(1);
+
+    while (p != 1) {
+        if (p % 2 == 0) {
+            tmp = tmp * tmp;
+            p >>= 1;
+        } else {
+            res = res * tmp;
+            tmp = tmp * tmp;
+            p = (p - 1) / 2;
+        }
+    }
+
+    return make_rcp<const Poly>(a.get_var(), std::move(res * tmp));
+}
+
+inline bool is_a_UPoly(const Basic &b)
+{
+    // `UINTPOLY` is the last UPoly in TypeID
+    // An enum should be before `UINTPOLY` iff it is a UPoly
+    // and after the `NUMBER_WRAPPER`
+    return (b.get_type_code() > NUMBER_WRAPPER)
+           and (b.get_type_code() <= UINTPOLY);
 }
 }
 

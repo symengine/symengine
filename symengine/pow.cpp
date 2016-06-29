@@ -147,6 +147,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             ->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
         return Mul::from_dict(coef, std::move(d));
     }
+    if (is_a<const Log>(*b) and eq(*a, *E))
+        return rcp_static_cast<const Log>(b)->get_arg();
+
     if (is_a<Pow>(*a) and is_a<Integer>(*b)) {
         // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
