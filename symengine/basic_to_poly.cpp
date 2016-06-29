@@ -11,7 +11,7 @@ class PolyGeneratorVisitor : public BaseVisitor<PolyGeneratorVisitor>
 private:
     // the generators are pow(it.first, it.second)
     // those which are not Pow are stored as (x, one)
-    // numbers must always be positive
+    // numbers must always be positive and of the form (1/d, d belongs to N)
     umap_basic_num gen_set;
 
 public:
@@ -44,7 +44,7 @@ public:
     {
         if (is_a<const Integer>(*x.get_exp())) {
             if (rcp_static_cast<const Integer>(x.get_exp())->i > 0) {
-                gen_set = _find_gens_poly(x.get_base());
+                x.get_base()->accept(*this);
             } else {
                 add_to_gen_set(pow(x.get_base(), minus_one), one);
             }
@@ -73,7 +73,7 @@ public:
     }
 
     void bvisit(const Basic &x)
-    {   
+    {
         add_to_gen_set(x.rcp_from_this(), one);
     }
 };
@@ -83,7 +83,7 @@ class PolyGeneratorVisitorPow : public BaseVisitor<PolyGeneratorVisitorPow>
 private:
     // the generators are mul(it.first, it.second) not Pow
     // the_base is the base of the Pow (whose exp we are currently dealing)
-    // numbers must always be positive
+    // numbers must always be positive and of the form (1/d, d belongs to N)
     umap_basic_num gen_set;
     RCP<const Basic> the_base;
 
@@ -108,8 +108,7 @@ public:
             x.coef_->accept(*this);
 
         for (auto it : x.dict_) {
-            RCP<const Basic> mulx = one;
-            RCP<const Basic> divx = one;
+            RCP<const Basic> mulx = one, divx = one;
 
             if (it.second->is_negative())
                 mulx = minus_one;
@@ -117,13 +116,24 @@ public:
             if (is_a<const Rational>(*it.second))
                 divx = rcp_static_cast<const Rational>(it.second)->get_den();
 
-            gen_set[mul(mulx, it.first)] = rcp_static_cast<const Number>(mul(mulx, divx));
+            gen_set[mul(mulx, it.first)] = rcp_static_cast<const Number>(div(one, divx));
         }
     }
 
     void bvisit(const Mul &x)
-    {
-        throw std::runtime_error("Not implemented!");
+    {   
+        // won't handle cases like 2**((x+1)(x+2))
+        // needs `expand` to have been called
+        RCP<const Basic> mulx = one, divx = one;
+
+        if (x.coef_->is_negative())
+            mulx = minus_one;
+
+        if (is_a<const Rational>(*x.coef_))
+            divx = rcp_static_cast<const Rational>(x.coef_)->get_den();
+
+        auto dict = x.dict_;
+        gen_set[Mul::from_dict(one, std::move(dict))] = rcp_static_cast<const Number>(div(one, divx));
     }
 
     void bvisit(const Number &x)
