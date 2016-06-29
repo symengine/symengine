@@ -37,8 +37,7 @@ public:
     fz_t get_coeff_ref(unsigned int x) const;
 
     typedef ContainerForIter<UIntPolyFlint, fz_t> iterator;
-    typedef ContainerRevIter<UIntPolyFlint, fz_t>
-        reverse_iterator;
+    typedef ContainerRevIter<UIntPolyFlint, fz_t> reverse_iterator;
     iterator begin() const
     {
         return iterator(rcp_from_this_cast<UIntPolyFlint>(), 0);
@@ -69,8 +68,8 @@ inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a,
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(
-        a.get_var(), a.get_poly().gcd(b.get_poly()));
+    return make_rcp<const UIntPolyFlint>(a.get_var(),
+                                         a.get_poly().gcd(b.get_poly()));
 }
 
 inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
@@ -78,15 +77,14 @@ inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(
-        a.get_var(), a.get_poly().lcm(b.get_poly()));
+    return make_rcp<const UIntPolyFlint>(a.get_var(),
+                                         a.get_poly().lcm(b.get_poly()));
 }
 
 inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
                                           unsigned int p)
 {
-    return make_rcp<const UIntPolyFlint>(
-        a.get_var(), a.get_poly().pow(p));
+    return make_rcp<const UIntPolyFlint>(a.get_var(), a.get_poly().pow(p));
 }
 
 inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,

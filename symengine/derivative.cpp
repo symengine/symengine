@@ -497,7 +497,8 @@ public:
                                  const RCP<const Symbol> &x)
     {
         if (self.get_var()->__eq__(*x)) {
-            return UIntPolyFlint::from_container(self.get_var(), self.get_poly().derivative());
+            return UIntPolyFlint::from_container(self.get_var(),
+                                                 self.get_poly().derivative());
         } else {
             return UIntPolyFlint::from_dict(self.get_var(), {{}});
         }
