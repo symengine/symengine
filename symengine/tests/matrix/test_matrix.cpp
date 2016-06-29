@@ -821,6 +821,47 @@ TEST_CASE("test_LU(): matrices", "[matrices]")
     REQUIRE(A == B);
 }
 
+TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+                                       integer(2), integer(6), integer(6),
+                                       integer(8), integer(3), integer(1)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+    permutelist pl;
+    pivoted_LU(A, L, U, pl);
+    REQUIRE(pl == permutelist({{2, 1}}));
+
+    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+                                    integer(8), integer(1), integer(0),
+                                    integer(2), integer(0), integer(1)}));
+    REQUIRE(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+                                    integer(0), integer(-21), integer(-39),
+                                    integer(0), integer(0), integer(-4)}));
+
+    pl.clear();
+
+    A = DenseMatrix(3, 3,
+                    {integer(0), integer(0), integer(5), integer(2), integer(6),
+                     integer(6), integer(8), integer(3), integer(1)});
+
+    pivoted_LU(A, L, U, pl);
+
+    REQUIRE(pl == permutelist({{1, 0}, {2, 1}}));
+
+    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+                                    integer(4), integer(1), integer(0),
+                                    integer(0), integer(0), integer(1)}));
+    REQUIRE(U == DenseMatrix(3, 3, {integer(2), integer(6), integer(6),
+                                    integer(0), integer(-21), integer(-23),
+                                    integer(0), integer(0), integer(5)}));
+
+    A = DenseMatrix(3, 3,
+                    {integer(0), integer(0), integer(0), integer(0), integer(0),
+                     integer(0), integer(8), integer(3), integer(1)});
+    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), std::runtime_error);
+}
+
 TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3);
