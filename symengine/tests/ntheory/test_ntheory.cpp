@@ -627,12 +627,12 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     roots.clear();
     nthroot_mod_list(roots, im4, i4, i65);
     REQUIRE(roots.size() == 16);
-    v = {integer(4),  integer(6),  integer(7), integer(9),
-         integer(17),  integer(19),  integer(22), integer(32),
-         integer(33),  integer(43),  integer(46), integer(48),
+    v = {integer(4),  integer(6),  integer(7),  integer(9),
+         integer(17), integer(19), integer(22), integer(32),
+         integer(33), integer(43), integer(46), integer(48),
          integer(56), integer(58), integer(59), integer(61)};
     same = std::equal(v.begin(), v.end(), roots.begin(),
-                           SymEngine::RCPBasicKeyEq());
+                      SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
 }
 

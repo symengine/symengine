@@ -511,10 +511,12 @@ inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,
                     const fmpz_wrapper &b, const fmpz_wrapper &m)
 {
     if (b >= 0) {
-        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t(), m.get_fmpz_t());
+        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t(),
+                  m.get_fmpz_t());
     } else {
         fmpz_neg(res.get_fmpz_t(), b.get_fmpz_t());
-        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), res.get_fmpz_t(), m.get_fmpz_t());
+        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), res.get_fmpz_t(),
+                  m.get_fmpz_t());
         fmpz_invmod(res.get_fmpz_t(), res.get_fmpz_t(), m.get_fmpz_t());
     }
 }
