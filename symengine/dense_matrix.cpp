@@ -1,6 +1,7 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -216,10 +217,8 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("x_");
-                result.m_[i * result.col_ + j] = A.m_[i]
-                                                     ->subs({{x.m_[j], x_}})
-                                                     ->diff(x_)
-                                                     ->subs({{x_, x.m_[j]}});
+                result.m_[i * result.col_ + j] = ssubs(
+                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_), {{x_, x.m_[j]}});
             }
         }
     }
@@ -251,10 +250,9 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("_x");
-                result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]
-                                                     ->subs({{x, x_}})
-                                                     ->diff(x_)
-                                                     ->subs({{x_, x}});
+                result.m_[i * result.col_ + j] = ssubs(
+                    ssubs(A.m_[i * result.col_ + j], {{x, x_}})->diff(x_),
+                    {{x_, x}});
             }
         }
     }
