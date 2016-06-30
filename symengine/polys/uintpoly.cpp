@@ -60,6 +60,23 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
     return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
 }
 
+RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic,
+                                         const RCP<const Basic> &gen)
+{
+    return _basic_to_uintpoly(basic, gen);
+}
+
+RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic)
+{   
+    RCP<const Basic> gen;
+    umap_basic_num tmp = _find_gens_poly(basic);
+
+    if (tmp.size() == 1)
+        gen = pow(tmp.begin()->first, tmp.begin()->second);
+
+    return _basic_to_uintpoly(basic, gen);
+}
+
 integer_class UIntPoly::eval(const integer_class &x) const
 {
     unsigned int last_deg = poly_.dict_.rbegin()->first;

@@ -148,6 +148,10 @@ public:
                                          map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
+    static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic,
+                                         const RCP<const Basic> &gen);
+    static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic);
+
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
     vec_integer_class multieval(const vec_integer_class &v) const;
@@ -209,6 +213,8 @@ public:
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
 
+RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &basic, 
+                                       const RCP<const Basic> &gen);
 } // SymEngine
 
 #endif

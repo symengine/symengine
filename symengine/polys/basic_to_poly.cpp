@@ -152,7 +152,6 @@ public:
     }
 };
 
-
 umap_basic_num _find_gens_poly(const RCP<const Basic> &x)
 {
     PolyGeneratorVisitor v;
@@ -166,5 +165,29 @@ umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x,
     return v.apply(*x, base);
 }
 
+class BasicToUIntPoly : public BaseVisitor<BasicToUIntPoly>
+{
+private:
+    RCP<const Basic> gen;
+    UIntDict poly;
 
+public:
+    RCP<const UIntPoly> apply(const Basic &b, const RCP<const Basic> &gen_)
+    {   
+        gen = gen_;
+        b.accept(*this);
+        return UIntPoly::from_container(gen, std::move(poly));
+    }
+
+    void bvisit(const Basic &x)
+    {
+    }
+};
+
+RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &basic, 
+                                       const RCP<const Basic> &gen)
+{
+    BasicToUIntPoly v;
+    return v.apply(*basic, gen);
+}
 } // SymEngine
