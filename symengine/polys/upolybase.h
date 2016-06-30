@@ -204,6 +204,23 @@ public:
         return p;
     }
 
+    static Wrapper pow(const Wrapper &a, unsigned int p)
+    {
+        Wrapper tmp = a, res(1);
+
+        while (p != 1) {
+            if (p % 2 == 0) {
+                tmp = tmp * tmp;
+            } else {
+                res = res * tmp;
+                tmp = tmp * tmp;
+            }
+            p >>= 1;
+        }
+
+        return (res * tmp);
+    }
+
     friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
     {
         return Wrapper::mul(a, b);
@@ -500,21 +517,8 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 template <typename Poly>
 RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
 {
-    auto tmp = a.get_poly();
-    typename Poly::container_type res(1);
-
-    while (p != 1) {
-        if (p % 2 == 0) {
-            tmp = tmp * tmp;
-            p >>= 1;
-        } else {
-            res = res * tmp;
-            tmp = tmp * tmp;
-            p = (p - 1) / 2;
-        }
-    }
-
-    return make_rcp<const Poly>(a.get_var(), res * tmp);
+    auto dict = Poly::container_type::pow(a.get_poly(), p);
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
