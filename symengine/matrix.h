@@ -72,6 +72,8 @@ public:
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 };
 
+typedef std::vector<std::pair<int, int>> permutelist;
+
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase
 {
@@ -175,22 +177,23 @@ public:
                                      RCP<const Basic> &c);
     friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
                                   RCP<const Basic> &c);
+    friend void permuteFwd(DenseMatrix &A, permutelist &pl);
 
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A,
                                              DenseMatrix &B,
-                                             std::vector<unsigned> &pivotlist);
+                                             permutelist &pivotlist);
     friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
                                                    DenseMatrix &B);
     friend void pivoted_fraction_free_gaussian_elimination(
-        const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
-    friend void
-    pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
-                                     std::vector<unsigned> &pivotlist);
+        const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
+    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A,
+                                                 DenseMatrix &B,
+                                                 permutelist &pivotlist);
     friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
                                                        DenseMatrix &B);
     friend void pivoted_fraction_free_gauss_jordan_elimination(
-        const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
+        const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
@@ -210,6 +213,10 @@ public:
     // Matrix Decomposition
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
     friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+    friend void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU,
+                           permutelist &pl);
+    friend void pivoted_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U,
+                           permutelist &pl);
     friend void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L,
                                   DenseMatrix &D, DenseMatrix &U);
     friend void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
@@ -230,10 +237,10 @@ public:
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
     // NumPy-like functions
-    friend void eye(DenseMatrix &A, unsigned N, unsigned M, int k);
+    friend void eye(DenseMatrix &A, int k);
     friend void diag(DenseMatrix &A, vec_basic &v, int k);
-    friend void ones(DenseMatrix &A, unsigned rows, unsigned cols);
-    friend void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
+    friend void ones(DenseMatrix &A);
+    friend void zeros(DenseMatrix &A);
 
 private:
     // Matrix elements are stored in row-major order
@@ -392,6 +399,8 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                                       const DenseMatrix &b, DenseMatrix &x);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+                      DenseMatrix &x);
 
 void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
@@ -404,16 +413,16 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
 // Mimic `eye` function in NumPy
-void eye(DenseMatrix &A, unsigned N, unsigned M = 0, int k = 0);
+void eye(DenseMatrix &A, int k = 0);
 
 // Create diagonal matrices directly
 void diag(DenseMatrix &A, vec_basic &v, int k = 0);
 
 // Create a matrix filled with ones
-void ones(DenseMatrix &A, unsigned rows, unsigned cols);
+void ones(DenseMatrix &A);
 
 // Create a matrix filled with zeros
-void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
+void zeros(DenseMatrix &A);
 
 // Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.
