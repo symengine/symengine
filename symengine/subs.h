@@ -2,9 +2,14 @@
 #define SYMENGINE_SUBS_H
 
 #include <symengine/visitor.h>
+#include <symengine/derivative.h>
 
 namespace SymEngine
 {
+RCP<const Basic> msubs(const RCP<const Basic> &x,
+                       const map_basic_basic &subs_dict);
+RCP<const Basic> ssubs(const RCP<const Basic> &x,
+                       const map_basic_basic &subs_dict);
 
 class SubsVisitor : public BaseVisitor<SubsVisitor>
 {
@@ -178,15 +183,18 @@ public:
                 insert(m, p.first, p.second);
             }
         }
-        multiset_basic sym;
+        auto t = x.get_arg()->subs(n);
         for (auto &p : x.get_symbols()) {
-            sym.insert(p->subs(n));
+            auto t2 = p->subs(n);
+            if (not is_a<Symbol>(*t2)) {
+                throw std::runtime_error("Error, expected a Symbol.");
+            }
+            t = t->diff(rcp_static_cast<const Symbol>(t2));
         }
         if (m.empty()) {
-            result_ = Derivative::create(x.get_arg()->subs(n), sym);
+            result_ = t;
         } else {
-            result_ = make_rcp<const Subs>(
-                Derivative::create(x.get_arg()->subs(n), sym), m);
+            result_ = make_rcp<const Subs>(t, m);
         }
     }
 
@@ -215,10 +223,9 @@ public:
             for (auto &q : static_cast<const Subs &>(*presub).get_dict()) {
                 insert(m, q.first, q.second);
             }
-            result_ = make_rcp<const Subs>(
-                static_cast<const Subs &>(*presub).get_arg(), m);
+            result_ = static_cast<const Subs &>(*presub).get_arg()->subs(m);
         } else {
-            result_ = make_rcp<const Subs>(presub, m);
+            result_ = presub->subs(m);
         }
     }
 
@@ -253,6 +260,47 @@ public:
     {
         result_ = x.rcp_from_this();
     }
+
+    void bvisit(const Subs &x)
+    {
+        map_basic_basic m = x.get_dict();
+        for (const auto &p : subs_dict_) {
+            m[p.first] = p.second;
+        }
+        result_ = msubs(x.get_arg(), m);
+    }
+};
+
+class SSubsVisitor : public BaseVisitor<SSubsVisitor, SubsVisitor>
+{
+public:
+    using SubsVisitor::bvisit;
+
+    SSubsVisitor(const map_basic_basic &d)
+        : BaseVisitor<SSubsVisitor, SubsVisitor>(d)
+    {
+    }
+
+    void bvisit(const Derivative &x)
+    {
+        apply(x.get_arg());
+        auto t = result_;
+        multiset_basic m;
+        for (auto &p : x.get_symbols()) {
+            apply(p);
+            m.insert(result_);
+        }
+        result_ = Derivative::create(t, m);
+    }
+
+    void bvisit(const Subs &x)
+    {
+        map_basic_basic m = x.get_dict();
+        for (const auto &p : subs_dict_) {
+            m[p.first] = p.second;
+        }
+        result_ = ssubs(x.get_arg(), m);
+    }
 };
 
 //! Mappings in the `subs_dict` are applied to the expression tree of `x`
@@ -268,6 +316,14 @@ inline RCP<const Basic> msubs(const RCP<const Basic> &x,
                               const map_basic_basic &subs_dict)
 {
     MSubsVisitor s(subs_dict);
+    return s.apply(x);
+}
+
+//! SymPy compatible subs
+inline RCP<const Basic> ssubs(const RCP<const Basic> &x,
+                              const map_basic_basic &subs_dict)
+{
+    SSubsVisitor s(subs_dict);
     return s.apply(x);
 }
 

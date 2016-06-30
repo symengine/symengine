@@ -442,3 +442,13 @@ TEST_CASE("MSubs: subs", "[subs]")
     t = msubs(f->diff(x), {{f->diff(x), y}});
     REQUIRE(eq(*t, *y));
 }
+
+TEST_CASE("SSubs: subs", "[ssubs]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> f = function_symbol("f", x);
+    RCP<const Basic> g = function_symbol("g", x);
+
+    auto t = ssubs(f->diff(x), {{f, g}});
+    REQUIRE(eq(*t, *g->diff(x)));
+}

@@ -82,12 +82,12 @@ vec_integer_class UIntPolyFlint::multieval(const vec_integer_class &v) const
     const unsigned int n = v.size();
     fmpz *fvp = _fmpz_vec_init(n);
     for (unsigned int i = 0; i < n; ++i)
-        fmpz_set_mpz(fvp+i, get_mpz_t(v[i]));
+        fmpz_set_mpz(fvp + i, get_mpz_t(v[i]));
 
     poly_.eval_vec(fvp, fvp, n);
     vec_integer_class res(n);
     for (unsigned int i = 0; i < n; ++i)
-        res[i] = to_integer_class(fvp+i);
+        res[i] = to_integer_class(fvp + i);
     _fmpz_vec_clear(fvp, n);
     return res;
 }
