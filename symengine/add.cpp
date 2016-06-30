@@ -331,4 +331,19 @@ vec_basic Add::get_args() const
     return args;
 }
 
+RCP<const Number> Add::get_coef() const
+{
+    return coef_;
+}
+
+umap_basic_num::const_iterator Add::cbegin() const
+{
+    return dict_.cbegin();
+}
+
+umap_basic_num::const_iterator Add::cend() const
+{
+    return dict_.cend();
+}
+
 } // SymEngine

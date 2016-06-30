@@ -240,6 +240,22 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Add> ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *zero));
+    umap_basic_num::const_iterator it = ar->cbegin();
+    const Basic &br1 = *(it->first);
+    const Number &nr1 = *(it->second);
+    bool ok = ((eq(br1, *x) and eq(nr1, *integer(2)))
+            or (eq(br1, *y) and eq(nr1, *integer(1))));
+    REQUIRE(ok);
+    ++it;
+    const Basic& br2 = *(it->first);
+    const Number& nr2 = *(it->second);
+    ok = ((eq(br2, *x) and eq(nr2, *integer(2)))
+            or (eq(br2, *y) and eq(nr2, *integer(1))));
+    REQUIRE(ok);
+    REQUIRE(++it == ar->cend());
+
     RCP<const Basic> term1, term2;
     RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
     a1->as_two_terms(outArg(term1), outArg(term2));
@@ -247,6 +263,8 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(eq(*a1, *a2));
 
     r = add(mul(integer(5), x), integer(5));
+    ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *integer(5)));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
