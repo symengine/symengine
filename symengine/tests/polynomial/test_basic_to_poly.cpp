@@ -13,7 +13,9 @@ using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Basic;
 using SymEngine::one;
-using SymEngine::zero;
+using SymEngine::minus_one;
+using SymEngine::E;
+using SymEngine::pi;
 using SymEngine::integer;
 using SymEngine::add;
 using SymEngine::umap_basic_num;
@@ -120,5 +122,17 @@ TEST_CASE("find_gen_poly", "[find_gen]")
     basic = add(pow(i2, mul(x, i3)), add(div(y, i2), pow(z, neg(i2))));
     gens = _find_gens_poly(basic);
     rgens = {{pow(i2, x), one}, {y, one}, {pow(z, minus_one), one}};
+    REQUIRE(unified_eq(gens, rgens));
+
+    // E**2 + E*pi -> (E, pi)
+    basic = add(pow(E, i2), mul(E, pi));
+    gens = _find_gens_poly(basic);
+    rgens = {{E, one}, {pi, one}};
+    REQUIRE(unified_eq(gens, rgens));
+
+    // 3 +(1/2) -> ()
+    basic = add(i3, div(one, i2));
+    gens = _find_gens_poly(basic);
+    rgens = {};
     REQUIRE(unified_eq(gens, rgens));
 }

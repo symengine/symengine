@@ -63,7 +63,7 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic,
                                          const RCP<const Basic> &gen)
 {
-    return _basic_to_uintpoly(basic, gen);
+    return UIntPoly::from_container(gen, _basic_to_uintpoly(basic, gen));
 }
 
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic)
@@ -73,8 +73,10 @@ RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic)
 
     if (tmp.size() == 1)
         gen = pow(tmp.begin()->first, tmp.begin()->second);
+    else
+        throw std::runtime_error("Did not find exactly 1 generator");
 
-    return _basic_to_uintpoly(basic, gen);
+    return UIntPoly::from_container(gen, _basic_to_uintpoly(basic, gen));
 }
 
 integer_class UIntPoly::eval(const integer_class &x) const

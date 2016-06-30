@@ -169,14 +169,14 @@ class BasicToUIntPoly : public BaseVisitor<BasicToUIntPoly>
 {
 private:
     RCP<const Basic> gen;
-    UIntDict poly;
+    UIntDict dict;
 
 public:
-    RCP<const UIntPoly> apply(const Basic &b, const RCP<const Basic> &gen_)
+    UIntDict apply(const Basic &b, const RCP<const Basic> &gen_)
     {   
         gen = gen_;
         b.accept(*this);
-        return UIntPoly::from_container(gen, std::move(poly));
+        return dict;
     }
 
     void bvisit(const Basic &x)
@@ -184,8 +184,7 @@ public:
     }
 };
 
-RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &basic, 
-                                       const RCP<const Basic> &gen)
+UIntDict _basic_to_uintpoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUIntPoly v;
     return v.apply(*basic, gen);

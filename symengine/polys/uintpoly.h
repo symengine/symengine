@@ -213,7 +213,7 @@ public:
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
 
-RCP<const UIntPoly> _basic_to_uintpoly(const RCP<const Basic> &basic, 
+UIntDict _basic_to_uintpoly(const RCP<const Basic> &basic, 
                                        const RCP<const Basic> &gen);
 } // SymEngine
 
