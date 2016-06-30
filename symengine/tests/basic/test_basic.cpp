@@ -242,19 +242,13 @@ TEST_CASE("Add: basic", "[basic]")
 
     RCP<const Add> ar = rcp_static_cast<const Add>(r);
     REQUIRE(eq(*ar->get_coef(), *zero));
-    umap_basic_num::const_iterator it = ar->cbegin();
-    const Basic &br1 = *(it->first);
-    const Number &nr1 = *(it->second);
-    bool ok = ((eq(br1, *x) and eq(nr1, *integer(2)))
-            or (eq(br1, *y) and eq(nr1, *integer(1))));
-    REQUIRE(ok);
-    ++it;
-    const Basic& br2 = *(it->first);
-    const Number& nr2 = *(it->second);
-    ok = ((eq(br2, *x) and eq(nr2, *integer(2)))
-            or (eq(br2, *y) and eq(nr2, *integer(1))));
-    REQUIRE(ok);
-    REQUIRE(++it == ar->cend());
+    const umap_basic_num& addmap = ar->get_dict();
+    auto search = addmap.find(x);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = addmap.find(y);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
 
     RCP<const Basic> term1, term2;
     RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));

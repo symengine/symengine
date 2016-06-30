@@ -68,9 +68,15 @@ public:
                       const umap_basic_num &dict) const;
 
     virtual vec_basic get_args() const;
-    RCP<const Number> get_coef() const;
-    umap_basic_num::const_iterator cbegin() const;
-    umap_basic_num::const_iterator cend() const;
+
+    RCP<const Number> get_coef() const
+    {
+        return coef_;
+    }
+    const umap_basic_num& get_dict() const
+    {
+        return dict_;
+    }
 };
 
 //! \return Add made from `a + b`
