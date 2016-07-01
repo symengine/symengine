@@ -793,14 +793,14 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     y = symbol("y");
     z = symbol("z");
     r1 = add(x, pow(y, integer(2)));
-    REQUIRE(has_symbol(*r1, x));
-    REQUIRE(has_symbol(*r1, y));
-    REQUIRE(not has_symbol(*r1, z));
+    REQUIRE(has_symbol(*r1, *x));
+    REQUIRE(has_symbol(*r1, *y));
+    REQUIRE(not has_symbol(*r1, *z));
 
     r1 = sin(add(x, pow(y, integer(2))));
-    REQUIRE(has_symbol(*r1, x));
-    REQUIRE(has_symbol(*r1, y));
-    REQUIRE(not has_symbol(*r1, z));
+    REQUIRE(has_symbol(*r1, *x));
+    REQUIRE(has_symbol(*r1, *y));
+    REQUIRE(not has_symbol(*r1, *z));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")

@@ -25,7 +25,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex,
     if (prec == 0)
         return make_rcp<const UPSeriesPiranha>(p_expr{Expression()},
                                                var->get_name(), prec);
-    if (not has_symbol(*ex, var))
+    if (not has_symbol(*ex, *var))
         return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)},
                                                var->get_name(), prec);
     if (is_a<Symbol>(*ex))

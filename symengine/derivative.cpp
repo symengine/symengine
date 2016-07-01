@@ -213,7 +213,7 @@ public:
         do {
             name = "_" + name;
             s = symbol(name);
-        } while (has_symbol(b, s));
+        } while (has_symbol(b, *s));
         return s;
     }
 

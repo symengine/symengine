@@ -280,7 +280,7 @@ public:
     }
     void bvisit(const Basic &x)
     {
-        if (!has_symbol(x, symbol(varname))) {
+        if (!has_symbol(x, *symbol(varname))) {
             p = Series::convert(x);
         } else {
             throw std::runtime_error("Not Implemented");
