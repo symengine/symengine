@@ -138,25 +138,6 @@ bool UIntPoly::is_pow() const
     return false;
 }
 
-RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p)
-{
-    auto tmp = a.get_poly();
-    UIntDict res(1);
-
-    while (p != 1) {
-        if (p % 2 == 0) {
-            tmp = tmp * tmp;
-            p >>= 1;
-        } else {
-            res = res * tmp;
-            tmp = tmp * tmp;
-            p = (p - 1) / 2;
-        }
-    }
-
-    return make_rcp<const UIntPoly>(a.get_var(), res * tmp);
-}
-
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &out)
 {
