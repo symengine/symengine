@@ -242,7 +242,7 @@ TEST_CASE("Add: basic", "[basic]")
 
     RCP<const Add> ar = rcp_static_cast<const Add>(r);
     REQUIRE(eq(*ar->get_coef(), *zero));
-    const umap_basic_num& addmap = ar->get_dict();
+    const umap_basic_num &addmap = ar->get_dict();
     auto search = addmap.find(x);
     REQUIRE(search != addmap.end());
     REQUIRE(eq(*search->second, *integer(2)));

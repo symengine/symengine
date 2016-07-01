@@ -73,7 +73,7 @@ public:
     {
         return coef_;
     }
-    const umap_basic_num& get_dict() const
+    const umap_basic_num &get_dict() const
     {
         return dict_;
     }
