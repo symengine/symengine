@@ -3,6 +3,7 @@
 #include <symengine/mul.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/rational.h>
 #include <symengine/polys/upolybase.h>
 
 using SymEngine::symbol;
@@ -10,6 +11,7 @@ using SymEngine::Symbol;
 using SymEngine::Integer;
 using SymEngine::Pow;
 using SymEngine::RCP;
+using SymEngine::Rational;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Basic;
 using SymEngine::one;
@@ -134,5 +136,11 @@ TEST_CASE("find_gen_poly", "[find_gen]")
     basic = add(i3, div(one, i2));
     gens = _find_gens_poly(basic);
     rgens = {};
+    REQUIRE(unified_eq(gens, rgens));
+
+    // x**(3/2) -> (x**(1/2))
+    basic = pow(x, div(i3, i2));
+    gens = _find_gens_poly(basic);
+    rgens = {{x, hf}};
     REQUIRE(unified_eq(gens, rgens));
 }

@@ -43,11 +43,20 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            if (rcp_static_cast<const Integer>(x.get_exp())->i > 0) {
+            if (rcp_static_cast<const Integer>(x.get_exp())->is_positive()) {
                 x.get_base()->accept(*this);
             } else {
                 add_to_gen_set(pow(x.get_base(), minus_one), one);
             }
+
+        } else if (is_a<const Rational>(*x.get_exp())) {
+
+            RCP<const Basic> mulx = one;
+            if (rcp_static_cast<const Rational>(x.get_exp())->is_negative())
+                mulx = minus_one;
+            RCP<const Rational> den = rcp_static_cast<const Rational>(div(one, rcp_static_cast<const Rational>(x.get_exp())->get_den()));
+            add_to_gen_set(pow(x.get_base(), mulx), den);
+
         } else {
             umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
             for (auto it : pow_pairs)
@@ -168,25 +177,86 @@ umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x,
 class BasicToUIntPoly : public BaseVisitor<BasicToUIntPoly>
 {
 private:
-    RCP<const Basic> gen;
+    RCP<const Basic> gen_base;
+    RCP<const Number> gen_pow;
     UIntDict dict;
 
 public:
-    UIntDict apply(const Basic &b, const RCP<const Basic> &gen_)
+    UIntDict apply(const Basic &b, const RCP<const Basic> &gen_base_,
+                                   const RCP<const Number> &gen_pow_)
     {   
-        gen = gen_;
+        gen_base = gen_base_;
+        gen_pow = gen_pow_;
         b.accept(*this);
         return dict;
     }
 
+    void bvisit(const Pow &x) {
+
+        if (is_a<const Integer>(*x.get_exp())) {
+            int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+            if (i > 0) {
+                dict = pow_upoly(*UIntPoly::from_container(pow(gen_base, gen_pow), 
+                      _basic_to_uintpoly(x.get_base(), gen_base, gen_pow)), i)->get_poly();
+            } else {
+                // add_to_gen_set(pow(x.get_base(), minus_one), one);
+            }
+        } else {
+            // umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
+            // for (auto it : pow_pairs)
+            //     add_to_gen_set(pow(x.get_base(), it.first), it.second);
+        }
+    }
+
+    void bvisit(const Mul &x)
+    {   
+        if (not is_a<const Integer>(*x.coef_))
+            throw std::runtime_error("Non-integer coeff found");
+
+        dict = UIntDict(rcp_static_cast<const Integer>(x.coef_)->i);
+        for (const auto &it : x.dict_)
+            dict *= _basic_to_uintpoly(pow(it.first, it.second), gen_base, gen_pow);
+    }
+
+    void bvisit(const Add &x)
+    {   
+        x.coef_->accept(*this);
+
+        integer_class multi;
+        for (const auto &it : x.dict_) {
+            if (not is_a<const Integer>(*it.second))
+                throw std::runtime_error("Non-integer coeff found");
+
+            multi = rcp_static_cast<const Integer>(it.second)->i;
+            dict += UIntDict(multi) * _basic_to_uintpoly(it.first, gen_base, gen_pow);
+        }
+    }
+
+    void bvisit(const Number &x)
+    {
+        if (not is_a<const Integer>(x))
+            throw std::runtime_error("Non-integer coeff found");
+        integer_class tmp = static_cast<const Integer&>(x).i;
+        if (tmp != 0)
+            dict = UIntDict(tmp);
+    }
+
     void bvisit(const Basic &x)
     {
+        if (not eq(x, *gen_base))
+            throw std::runtime_error("Generator doesn't match");
+
+        map_uint_mpz tmp;
+        tmp[rcp_static_cast<const Integer>(div(one, gen_pow))->as_int()] = integer_class(1);
+        dict = UIntDict(std::move(tmp));
     }
 };
 
-UIntDict _basic_to_uintpoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
+UIntDict _basic_to_uintpoly(const RCP<const Basic> &basic, 
+                            const RCP<const Basic> &gen_base, 
+                            const RCP<const Number> &gen_pow)
 {
     BasicToUIntPoly v;
-    return v.apply(*basic, gen);
+    return v.apply(*basic, gen_base, gen_pow);
 }
 } // SymEngine
