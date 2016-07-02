@@ -101,11 +101,13 @@ bool has_symbol(const Basic &b, const Symbol& x);
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
 protected:
-    const Symbol* x_;
-    const Basic* n_;
+    Ptr<const Symbol> x_;
+    Ptr<const Basic> n_;
     RCP<const Basic> coeff_;
 
 public:
+    CoeffVisitor(const Symbol &x, const Basic &n) : x_(&x), n_(&n) {}
+
     void bvisit(const Add &x)
     {
         umap_basic_num dict;
@@ -153,10 +155,8 @@ public:
         coeff_ = zero;
     }
 
-    RCP<const Basic> apply(const Basic &b, const Symbol &x, const Basic &n)
+    RCP<const Basic> apply(const Basic &b)
     {
-        x_ = &x;
-        n_ = &n;
         coeff_ = zero;
         b.accept(*this);
         return coeff_;

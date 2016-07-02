@@ -60,8 +60,8 @@ RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)
     if (!is_a<Symbol>(x)) {
         throw std::runtime_error("Not implemented for non Symbols.");
     }
-    CoeffVisitor v;
-    return v.apply(b, static_cast<const Symbol&>(x), n);
+    CoeffVisitor v(static_cast<const Symbol&>(x), n);
+    return v.apply(b);
 }
 
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor>
