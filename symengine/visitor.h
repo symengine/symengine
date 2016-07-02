@@ -72,10 +72,11 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
 protected:
-    const Symbol* x_;
+    Ptr<const Symbol> x_;
     bool has_;
 
 public:
+    HasSymbolVisitor(const Symbol &x) : x_(&x) {}
     void bvisit(const Symbol &x)
     {
         if (x_->__eq__(x)) {
@@ -86,9 +87,12 @@ public:
 
     void bvisit(const Basic &x){};
 
-    bool apply(const Basic &b, const Symbol& x)
+    bool apply(const Basic &b)
     {
-        x_ = &x;
+        // We are breaking a rule and assigning to a Ptr from a raw pointer
+        // directly. But since HasSymbolVisitor is only instantiated inside the
+        // has_symbol() function, the `x` can never go out of scope, so this is
+        // safe.
         has_ = false;
         stop_ = false;
         preorder_traversal_stop(b, *this);

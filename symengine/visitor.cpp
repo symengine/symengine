@@ -51,8 +51,8 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v)
 
 bool has_symbol(const Basic &b, const Symbol& x)
 {
-    HasSymbolVisitor v;
-    return v.apply(b, x);
+    HasSymbolVisitor v(x);
+    return v.apply(b);
 }
 
 RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)
