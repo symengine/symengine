@@ -133,7 +133,7 @@ public:
     {   
         // won't handle cases like 2**((x+1)(x+2))
         // needs `expand` to have been called
-        RCP<const Basic> mulx = one, divx = one;
+        RCP<const Number> mulx = one, divx = one;
 
         if (x.coef_->is_negative())
             mulx = minus_one;
@@ -142,7 +142,7 @@ public:
             divx = rcp_static_cast<const Rational>(x.coef_)->get_den();
 
         auto dict = x.dict_;
-        gen_set[Mul::from_dict(one, std::move(dict))] = rcp_static_cast<const Number>(div(one, divx));
+        gen_set[Mul::from_dict(mulx, std::move(dict))] = rcp_static_cast<const Number>(div(one, divx));
     }
 
     void bvisit(const Number &x)
@@ -174,38 +174,68 @@ umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x,
     return v.apply(*x, base);
 }
 
-class BasicToUIntPoly : public BaseVisitor<BasicToUIntPoly>
+class BasicToUPoly : public BaseVisitor<BasicToUPoly>
 {
 private:
-    RCP<const Basic> gen_base;
-    RCP<const Number> gen_pow;
+    RCP<const Basic> gen;
     UIntDict dict;
 
 public:
-    UIntDict apply(const Basic &b, const RCP<const Basic> &gen_base_,
-                                   const RCP<const Number> &gen_pow_)
+    UIntDict apply(const Basic &b, const RCP<const Basic> &gen_)
     {   
-        gen_base = gen_base_;
-        gen_pow = gen_pow_;
+        gen = gen_;
         b.accept(*this);
         return dict;
     }
 
     void bvisit(const Pow &x) {
 
+        // if positive integer power
         if (is_a<const Integer>(*x.get_exp())) {
             int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
             if (i > 0) {
-                dict = pow_upoly(*UIntPoly::from_container(pow(gen_base, gen_pow), 
-                      _basic_to_uintpoly(x.get_base(), gen_base, gen_pow)), i)->get_poly();
-            } else {
-                // add_to_gen_set(pow(x.get_base(), minus_one), one);
+                dict = UIntDict::pow(_basic_to_upoly(x.get_base(), gen), i);
+                return;
             }
-        } else {
-            // umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
-            // for (auto it : pow_pairs)
-            //     add_to_gen_set(pow(x.get_base(), it.first), it.second);
         }
+
+        RCP<const Basic> base = gen, exp = one, coef = one, tmp;
+        if(is_a<const Pow>(*gen)) {
+            base = rcp_static_cast<const Pow>(gen)->get_base();
+            exp = rcp_static_cast<const Pow>(gen)->get_exp();
+        }
+
+        // if not positive integer, the bases must match
+        if (not eq(*base, *x.get_base()))
+            throw std::runtime_error("Generator bases don't match");
+
+        umap_basic_num add_dict, coef_dict;
+        if (is_a<const Add>(*x.get_exp())) {
+            RCP<const Add> adder = rcp_static_cast<const Add>(x.get_exp());
+            add_dict = adder->dict_;
+            if (not adder->coef_->is_zero())
+                add_dict[adder->coef_] = one;
+        } else {
+            add_dict[x.get_exp()] = one;
+        }
+
+        unsigned int powr = 0;
+        for (auto it : add_dict) {
+            tmp = div(mul(it.first, it.second), exp);
+            if (is_a<const Integer>(*tmp)) {
+                RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
+                if (i->is_positive()) {
+                    powr = i->as_int();
+                    continue;
+                }
+            }
+            coef = mul(coef, pow(base, mul(it.first, it.second)));
+        }
+        if (is_a<const Integer>(*coef))
+            dict = UIntDict({{powr, rcp_static_cast<const Integer>(coef)->i}});
+        else
+            throw std::runtime_error("Non-integer coeffienct found");
+
     }
 
     void bvisit(const Mul &x)
@@ -215,7 +245,7 @@ public:
 
         dict = UIntDict(rcp_static_cast<const Integer>(x.coef_)->i);
         for (const auto &it : x.dict_)
-            dict *= _basic_to_uintpoly(pow(it.first, it.second), gen_base, gen_pow);
+            dict *= _basic_to_upoly(pow(it.first, it.second), gen);
     }
 
     void bvisit(const Add &x)
@@ -228,7 +258,7 @@ public:
                 throw std::runtime_error("Non-integer coeff found");
 
             multi = rcp_static_cast<const Integer>(it.second)->i;
-            dict += UIntDict(multi) * _basic_to_uintpoly(it.first, gen_base, gen_pow);
+            dict += UIntDict(multi) * _basic_to_upoly(it.first, gen);
         }
     }
 
@@ -242,21 +272,28 @@ public:
     }
 
     void bvisit(const Basic &x)
-    {
-        if (not eq(x, *gen_base))
-            throw std::runtime_error("Generator doesn't match");
+    {   
+        RCP<const Basic> divx = one;
+        if (is_a<const Pow>(*gen))
+            divx = rcp_static_cast<const Pow>(gen)->get_exp();
+        RCP<const Basic> powx = div(one, divx);
 
-        map_uint_mpz tmp;
-        tmp[rcp_static_cast<const Integer>(div(one, gen_pow))->as_int()] = integer_class(1);
-        dict = UIntDict(std::move(tmp));
+        if (is_a<const Integer>(*powx)) {
+            RCP<const Integer> tmp = rcp_static_cast<const Integer>(powx);            
+            if (tmp->is_positive()) {
+                dict = UIntDict({{tmp->as_int(), integer_class(1)}});
+                return;
+            }
+        }
+        throw std::runtime_error("Could not extract polynomial");
     }
 };
 
-UIntDict _basic_to_uintpoly(const RCP<const Basic> &basic, 
-                            const RCP<const Basic> &gen_base, 
-                            const RCP<const Number> &gen_pow)
+UIntDict _basic_to_upoly(const RCP<const Basic> &basic,
+                         const RCP<const Basic> &gen)
 {
-    BasicToUIntPoly v;
-    return v.apply(*basic, gen_base, gen_pow);
+    BasicToUPoly v;
+    return v.apply(*basic, gen);
 }
+
 } // SymEngine
