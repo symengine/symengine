@@ -76,7 +76,10 @@ protected:
     bool has_;
 
 public:
-    HasSymbolVisitor(const Symbol &x) : x_(&x) {}
+    HasSymbolVisitor(const Symbol &x) : x_(&x)
+    {
+    }
+
     void bvisit(const Symbol &x)
     {
         if (x_->__eq__(x)) {
@@ -100,7 +103,7 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const Symbol& x);
+bool has_symbol(const Basic &b, const Symbol &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {

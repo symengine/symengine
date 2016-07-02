@@ -49,7 +49,7 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v)
     b.accept(v);
 }
 
-bool has_symbol(const Basic &b, const Symbol& x)
+bool has_symbol(const Basic &b, const Symbol &x)
 {
     HasSymbolVisitor v(x);
     return v.apply(b);
