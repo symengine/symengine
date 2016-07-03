@@ -72,7 +72,7 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
 protected:
-    Ptr<const Symbol> x_;
+    Ptr<const Symbol> x_ = Ptr<const Symbol>(nullptr);
     bool has_;
 
 public:
