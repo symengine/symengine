@@ -157,7 +157,7 @@ public:
 
     void d_add_term(unsigned int pow, const Basic &x)
     {
-        dict = UExprDict(x.rcp_from_this());
+        dict = UExprDict({{pow, x.rcp_from_this()}});
     }
 };
 

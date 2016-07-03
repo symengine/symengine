@@ -3,6 +3,7 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/parser.h>
+#include <symengine/polys/uintpoly.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -32,6 +33,9 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::loggamma;
 using SymEngine::gamma;
+using SymEngine::UIntPoly;
+
+using namespace SymEngine::literals;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -286,6 +290,39 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(is_a<RealDouble>(*res));
     d = static_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
+}
+
+TEST_CASE("Parsing: polys", "[parser]")
+{
+    std::string s;
+    RCP<const UIntPoly> poly1, poly2, poly3, poly4;
+    RCP<const Basic> x = symbol("x");
+
+    s = "x + 2*x**2 + 1";
+    poly1 = UIntPoly::from_basic(parse(s));
+    poly2 = UIntPoly::from_vec(x, {{1_z, 1_z, 2_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    s = "2*(x+1)**10 + 3*(x+2)**5";
+    poly1 = UIntPoly::from_basic(parse(s));
+    poly2 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 1_z}}), 10);
+    poly3 = UIntPoly::from_vec(x, {{2_z}});
+    poly2 = mul_upoly(*poly2, *poly3);
+    poly3 = pow_upoly(*UIntPoly::from_vec(x, {{2_z, 1_z}}), 5);
+    poly4 = UIntPoly::from_vec(x, {{3_z}});
+    poly3 = mul_upoly(*poly4, *poly3);
+    poly2 = add_upoly(*poly2, *poly3);
+    REQUIRE(eq(*poly1, *poly2));
+
+    s = "((x+1)**5)*(x+2)*(2*x + 1)**3";
+    poly1 = UIntPoly::from_basic(parse(s));
+
+    poly2 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 1_z}}), 5);
+    poly3 = UIntPoly::from_vec(x, {{2_z, 1_z}});
+    poly2 = mul_upoly(*poly2, *poly3);
+    poly3 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 2_z}}), 3);
+    poly2 = mul_upoly(*poly2, *poly3);
+    REQUIRE(eq(*poly1, *poly2));
 }
 
 TEST_CASE("Parsing: errors", "[parser]")
