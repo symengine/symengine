@@ -11,8 +11,9 @@
 #include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include <flint/flint.h>
-#include <flint/fmpzxx.h>
+#include <symengine/flint_wrapper.h>
+using fp_t = SymEngine::fmpz_poly_wrapper;
+using fz_t = SymEngine::fmpz_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
@@ -22,17 +23,19 @@
 namespace SymEngine
 {
 // misc methods
-inline const integer_class &to_integer_class(const integer_class &i)
+
+inline integer_class to_integer_class(const integer_class &i)
 {
     return i;
 }
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
-    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    fmpz_get_mpz(x.get_mpz_t(), i.get_fmpz_t());
     return x;
 }
 #endif
@@ -48,10 +51,10 @@ inline integer_class to_integer_class(const piranha::integer &i)
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
+inline integer_class to_integer_class(const fz_t &i)
 {
     integer_class x;
-    fmpz_get_mpz(get_mpz_t(x), i._data().inner);
+    fmpz_get_mpz(get_mpz_t(x), i.get_fmpz_t());
     return x;
 }
 #endif
@@ -64,10 +67,6 @@ inline integer_class to_integer_class(const piranha::integer &x)
 }
 #endif
 
-inline integer_class to_integer_class(flint::fmpzxx_srcref i)
-{
-    return integer_class(i._data().inner);
-}
 #endif
 
 // dict wrapper
@@ -205,6 +204,23 @@ public:
         return p;
     }
 
+    static Wrapper pow(const Wrapper &a, unsigned int p)
+    {
+        Wrapper tmp = a, res(1);
+
+        while (p != 1) {
+            if (p % 2 == 0) {
+                tmp = tmp * tmp;
+            } else {
+                res = res * tmp;
+                tmp = tmp * tmp;
+            }
+            p >>= 1;
+        }
+
+        return (res * tmp);
+    }
+
     friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
     {
         return Wrapper::mul(a, b);
@@ -287,6 +303,8 @@ public:
         : var_{var}, poly_{container}
     {
     }
+
+    typedef Container container_type;
 
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
@@ -493,6 +511,13 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
+    return Poly::from_container(a.get_var(), std::move(dict));
+}
+
+template <typename Poly>
+RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
+{
+    auto dict = Poly::container_type::pow(a.get_poly(), p);
     return Poly::from_container(a.get_var(), std::move(dict));
 }
 

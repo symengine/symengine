@@ -1,6 +1,7 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -216,10 +217,8 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("x_");
-                result.m_[i * result.col_ + j] = A.m_[i]
-                                                     ->subs({{x.m_[j], x_}})
-                                                     ->diff(x_)
-                                                     ->subs({{x_, x.m_[j]}});
+                result.m_[i * result.col_ + j] = ssubs(
+                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_), {{x_, x.m_[j]}});
             }
         }
     }
@@ -251,10 +250,9 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("_x");
-                result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]
-                                                     ->subs({{x, x_}})
-                                                     ->diff(x_)
-                                                     ->subs({{x_, x}});
+                result.m_[i * result.col_ + j] = ssubs(
+                    ssubs(A.m_[i * result.col_ + j], {{x, x_}})->diff(x_),
+                    {{x_, x}});
             }
         }
     }
@@ -382,19 +380,22 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
         A.m_[i * col + k] = add(A.m_[i * col + k], mul(c, A.m_[j * col + k]));
 }
 
+void permuteFwd(DenseMatrix &A, permutelist &pl)
+{
+    for (auto &p : pl) {
+        row_exchange_dense(A, p.first, p.second);
+    }
+}
+
 // ------------------------------ Gaussian Elimination -----------------------//
 void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
-                                  std::vector<unsigned> &pivotlist)
+                                  permutelist &pl)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
-    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
     B.m_ = A.m_;
-
-    for (i = 0; i < row; i++)
-        pivotlist[i] = i;
 
     RCP<const Basic> scale;
 
@@ -407,7 +408,7 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
             continue;
         if (k != index) {
             row_exchange_dense(B, k, index);
-            std::swap(pivotlist[k], pivotlist[index]);
+            pl.push_back({k, index});
         }
 
         scale = div(one, B.m_[index * col + i]);
@@ -450,18 +451,14 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 }
 
 // Pivoted version of `fraction_free_gaussian_elimination`
-void pivoted_fraction_free_gaussian_elimination(
-    const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist)
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+                                                DenseMatrix &B, permutelist &pl)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
-    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned col = A.col_, row = A.row_;
     unsigned index = 0, i, k, j;
     B.m_ = A.m_;
-
-    for (i = 0; i < row; i++)
-        pivotlist[i] = i;
 
     for (i = 0; i < col - 1; i++) {
         if (index == row)
@@ -472,7 +469,7 @@ void pivoted_fraction_free_gaussian_elimination(
             continue;
         if (k != index) {
             row_exchange_dense(B, k, index);
-            std::swap(pivotlist[k], pivotlist[index]);
+            pl.push_back({k, index});
         }
 
         for (j = i + 1; j < row; j++) {
@@ -492,18 +489,14 @@ void pivoted_fraction_free_gaussian_elimination(
 }
 
 void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
-                                      std::vector<unsigned> &pivotlist)
+                                      permutelist &pl)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
-    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
     RCP<const Basic> scale;
     B.m_ = A.m_;
-
-    for (i = 0; i < row; i++)
-        pivotlist[i] = i;
 
     for (i = 0; i < col; i++) {
         if (index == row)
@@ -514,7 +507,7 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
             continue;
         if (k != index) {
             row_exchange_dense(B, k, index);
-            std::swap(pivotlist[k], pivotlist[index]);
+            pl.push_back({k, index});
         }
 
         scale = div(one, B.m_[index * col + i]);
@@ -566,20 +559,17 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
     }
 }
 
-void pivoted_fraction_free_gauss_jordan_elimination(
-    const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist)
+void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+                                                    DenseMatrix &B,
+                                                    permutelist &pl)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
-    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, k, j;
     RCP<const Basic> d;
 
     B.m_ = A.m_;
-
-    for (i = 0; i < row; i++)
-        pivotlist[i] = i;
 
     for (i = 0; i < col; i++) {
         if (index == row)
@@ -590,7 +580,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(
             continue;
         if (k != index) {
             row_exchange_dense(B, k, index);
-            std::swap(pivotlist[k], pivotlist[index]);
+            pl.push_back({k, index});
         }
 
         if (i > 0)
@@ -632,28 +622,37 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
-    SYMENGINE_ASSERT(b.row_ == A.row_ and b.col_ == 1);
-    SYMENGINE_ASSERT(x.row_ == A.col_ and x.col_ == 1);
+    SYMENGINE_ASSERT(x.row_ == A.col_ and x.col_ == b.col_);
+
+    const unsigned sys = b.col_;
 
     // No checks are done to see if the diagonal entries are zero
-    for (unsigned i = 0; i < A.col_; i++)
-        x.m_[i] = div(b.m_[i], A.m_[i * A.col_ + i]);
+    for (unsigned k = 0; k < sys; k++) {
+        for (unsigned i = 0; i < A.col_; i++) {
+            x.m_[i * sys + k] = div(b.m_[i * sys + k], A.m_[i * A.col_ + i]);
+        }
+    }
 }
 
 void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
                        DenseMatrix &x)
 {
     SYMENGINE_ASSERT(U.row_ == U.col_);
-    SYMENGINE_ASSERT(b.row_ == U.row_ and b.col_ == 1);
-    SYMENGINE_ASSERT(x.row_ == U.col_ and x.col_ == 1);
+    SYMENGINE_ASSERT(b.row_ == U.row_);
+    SYMENGINE_ASSERT(x.row_ == U.col_ and x.col_ == b.col_);
 
-    unsigned col = U.col_;
+    const unsigned col = U.col_;
+    const unsigned sys = b.col_;
     x.m_ = b.m_;
 
-    for (int i = col - 1; i >= 0; i--) {
-        for (unsigned j = i + 1; j < col; j++)
-            x.m_[i] = sub(x.m_[i], mul(U.m_[i * col + j], x.m_[j]));
-        x.m_[i] = div(x.m_[i], U.m_[i * col + i]);
+    for (unsigned k = 0; k < sys; k++) {
+        for (int i = col - 1; i >= 0; i--) {
+            for (unsigned j = i + 1; j < col; j++)
+                x.m_[i * sys + k]
+                    = sub(x.m_[i * sys + k],
+                          mul(U.m_[i * col + j], x.m_[j * sys + k]));
+            x.m_[i * sys + k] = div(x.m_[i * sys + k], U.m_[i * col + i]);
+        }
     }
 }
 
@@ -661,19 +660,25 @@ void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
                           DenseMatrix &x)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
-    SYMENGINE_ASSERT(b.row_ == A.row_ and b.col_ == 1);
-    SYMENGINE_ASSERT(x.row_ == A.col_ and x.col_ == 1);
+    SYMENGINE_ASSERT(b.row_ == A.row_);
+    SYMENGINE_ASSERT(x.row_ == A.col_ and x.col_ == b.col_);
 
     unsigned col = A.col_;
+    const unsigned sys = b.col_;
     x.m_ = b.m_;
 
-    for (unsigned i = 0; i < col - 1; i++)
-        for (unsigned j = i + 1; j < col; j++) {
-            x.m_[j] = sub(mul(A.m_[i * col + i], x.m_[j]),
-                          mul(A.m_[j * col + i], x.m_[i]));
-            if (i > 0)
-                x.m_[j] = div(x.m_[j], A.m_[i * col - col + i - 1]);
+    for (unsigned k = 0; k < b.col_; k++) {
+        for (unsigned i = 0; i < col - 1; i++) {
+            for (unsigned j = i + 1; j < col; j++) {
+                x.m_[j * sys + k]
+                    = sub(mul(A.m_[i * col + i], x.m_[j * sys + k]),
+                          mul(A.m_[j * col + i], x.m_[i * sys + k]));
+                if (i > 0)
+                    x.m_[j * sys + k]
+                        = div(x.m_[j * sys + k], A.m_[(i - 1) * col + i - 1]);
+            }
         }
+    }
 }
 
 void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
@@ -775,7 +780,7 @@ void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x)
 {
     DenseMatrix LU = DenseMatrix(A.nrows(), A.ncols());
-    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+    DenseMatrix x_ = DenseMatrix(b.nrows(), b.ncols());
 
     fraction_free_LU(A, LU);
     forward_substitution(LU, b, x_);
@@ -786,10 +791,24 @@ void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
     DenseMatrix L = DenseMatrix(A.nrows(), A.ncols());
     DenseMatrix U = DenseMatrix(A.nrows(), A.ncols());
-    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+    DenseMatrix x_ = DenseMatrix(b.nrows(), b.ncols());
 
     LU(A, L, U);
     forward_substitution(L, b, x_);
+    back_substitution(U, x_, x);
+}
+
+void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+                      DenseMatrix &x)
+{
+    DenseMatrix L = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix U = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix x_ = DenseMatrix(b);
+    permutelist pl;
+
+    pivoted_LU(A, L, U, pl);
+    permuteFwd(x_, pl);
+    forward_substitution(L, x_, x_);
     back_substitution(U, x_, x);
 }
 
@@ -797,7 +816,7 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
     DenseMatrix L = DenseMatrix(A.nrows(), A.ncols());
     DenseMatrix D = DenseMatrix(A.nrows(), A.ncols());
-    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+    DenseMatrix x_ = DenseMatrix(b.nrows(), b.ncols());
 
     if (not is_symmetric_dense(A))
         throw std::runtime_error("Matrix must be symmetric");
@@ -878,6 +897,71 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
         }
         L.m_[i * n + i] = one; // Integer one
         for (j = i + 1; j < n; j++)
+            L.m_[i * n + j] = zero; // Integer zero
+    }
+}
+
+// SymPy LUDecomposition_Simple algorithm, in
+// sympy.matrices.matrices.Matrix.LUdecomposition_Simple with pivoting.
+// P must be an initialized matrix and will be permuted.
+void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
+{
+    SYMENGINE_ASSERT(A.row_ == A.col_ and LU.row_ == LU.col_);
+    SYMENGINE_ASSERT(A.row_ == LU.row_);
+
+    unsigned n = A.row_;
+    unsigned i, j, k;
+    RCP<const Basic> scale;
+    int pivot;
+
+    LU.m_ = A.m_;
+
+    for (j = 0; j < n; j++) {
+        for (i = 0; i < j; i++)
+            for (k = 0; k < i; k++)
+                LU.m_[i * n + j] = sub(LU.m_[i * n + j],
+                                       mul(LU.m_[i * n + k], LU.m_[k * n + j]));
+        pivot = -1;
+        for (i = j; i < n; i++) {
+            for (k = 0; k < j; k++) {
+                LU.m_[i * n + j] = sub(LU.m_[i * n + j],
+                                       mul(LU.m_[i * n + k], LU.m_[k * n + j]));
+            }
+            if (pivot == -1 and neq(*LU.m_[i * n + j], *zero))
+                pivot = i;
+        }
+        if (pivot == -1)
+            throw std::runtime_error("Matrix is rank deficient");
+        if (pivot - j != 0) { // row must be swapped
+            row_exchange_dense(LU, pivot, j);
+            pl.push_back({pivot, j});
+        }
+        scale = div(one, LU.m_[j * n + j]);
+
+        for (i = j + 1; i < n; i++)
+            LU.m_[i * n + j] = mul(LU.m_[i * n + j], scale);
+    }
+}
+
+// SymPy LUDecomposition algorithm, in
+// sympy.matrices.matrices.Matrix.LUdecomposition_Simple with pivoting.
+// P must be an initialized matrix and will be permuted.
+void pivoted_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U,
+                permutelist &pl)
+{
+    SYMENGINE_ASSERT(A.row_ == A.col_ and L.row_ == L.col_
+                     and U.row_ == U.col_);
+    SYMENGINE_ASSERT(A.row_ == L.row_ and A.row_ == U.row_);
+
+    pivoted_LU(A, U, pl);
+    unsigned n = A.col_;
+    for (unsigned i = 0; i < n; i++) {
+        for (unsigned j = 0; j < i; j++) {
+            L.m_[i * n + j] = U.m_[i * n + j];
+            U.m_[i * n + j] = zero; // Integer zero
+        }
+        L.m_[i * n + i] = one; // Integer one
+        for (unsigned j = i + 1; j < n; j++)
             L.m_[i * n + j] = zero; // Integer zero
     }
 }
@@ -1339,15 +1423,13 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
 // ------------------------- NumPy-like functions ----------------------------//
 
 // Mimic `eye` function in NumPy
-void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
+void eye(DenseMatrix &A, int k)
 {
-    if (M == 0) {
-        M = N;
+    if ((k >= 0 and (unsigned)k >= A.col_) or k + A.row_ <= 0) {
+        zeros(A);
     }
 
-    SYMENGINE_ASSERT((int)-N < k and k < (int)M);
-
-    vec_basic v = vec_basic(k > 0 ? M - k : N + k, one);
+    vec_basic v = vec_basic(k > 0 ? A.col_ - k : A.row_ + k, one);
 
     diag(A, v, k);
 }
@@ -1358,9 +1440,6 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
     SYMENGINE_ASSERT(v.size() > 0);
 
     unsigned k_ = std::abs(k);
-    unsigned n = v.size() + k_;
-
-    A = DenseMatrix(n, n);
 
     if (k >= 0) {
         for (unsigned i = 0; i < A.row_; i++) {
@@ -1390,26 +1469,18 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
 }
 
 // Create a matrix filled with ones
-void ones(DenseMatrix &A, unsigned rows, unsigned cols)
+void ones(DenseMatrix &A)
 {
-    A = DenseMatrix(rows, cols);
-
-    for (unsigned i = 0; i < rows; i++) {
-        for (unsigned j = 0; j < cols; j++) {
-            A.m_[i * cols + j] = one;
-        }
+    for (unsigned i = 0; i < A.row_ * A.col_; i++) {
+        A.m_[i] = one;
     }
 }
 
 // Create a matrix filled with zeros
-void zeros(DenseMatrix &A, unsigned rows, unsigned cols)
+void zeros(DenseMatrix &A)
 {
-    A = DenseMatrix(rows, cols);
-
-    for (unsigned i = 0; i < rows; i++) {
-        for (unsigned j = 0; j < cols; j++) {
-            A.m_[i * cols + j] = zero;
-        }
+    for (unsigned i = 0; i < A.row_ * A.col_; i++) {
+        A.m_[i] = zero;
     }
 }
 

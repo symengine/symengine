@@ -1,4 +1,5 @@
 #include <symengine/visitor.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -497,10 +498,8 @@ public:
                                  const RCP<const Symbol> &x)
     {
         if (self.get_var()->__eq__(*x)) {
-            flint::fmpz_polyxx d;
-            d = static_cast<flint::fmpz_polyxx>(
-                flint::derivative(self.get_poly()));
-            return UIntPolyFlint::from_container(self.get_var(), std::move(d));
+            return UIntPolyFlint::from_container(self.get_var(),
+                                                 self.get_poly().derivative());
         } else {
             return UIntPolyFlint::from_dict(self.get_var(), {{}});
         }
@@ -638,7 +637,7 @@ RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
         return arg->diff(rcp_static_cast<const Symbol>(x));
     } else {
         RCP<const Symbol> d = DiffImplementation::get_dummy(*arg, "x");
-        return arg->subs({{x, d}})->diff(d)->subs({{d, x}});
+        return ssubs(ssubs(arg, {{x, d}})->diff(d), {{d, x}});
     }
 }
 

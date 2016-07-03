@@ -205,7 +205,6 @@ public:
 
 }; // UIntPoly
 
-RCP<const UIntPoly> pow_upoly(const UIntPoly &a, unsigned int p);
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);

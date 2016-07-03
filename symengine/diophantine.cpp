@@ -56,11 +56,11 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
     SYMENGINE_ASSERT(p > 0 and q > 1);
 
-    DenseMatrix row_zero;
-    zeros(row_zero, 1, q);
+    DenseMatrix row_zero(1, q);
+    zeros(row_zero);
 
-    DenseMatrix col_zero;
-    zeros(col_zero, p, 1);
+    DenseMatrix col_zero(p, 1);
+    zeros(col_zero);
 
     std::vector<DenseMatrix> P;
     P.push_back(row_zero);

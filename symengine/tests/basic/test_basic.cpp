@@ -240,6 +240,16 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Add> ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *zero));
+    const umap_basic_num &addmap = ar->get_dict();
+    auto search = addmap.find(x);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = addmap.find(y);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
+
     RCP<const Basic> term1, term2;
     RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
     a1->as_two_terms(outArg(term1), outArg(term2));
@@ -247,6 +257,8 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(eq(*a1, *a2));
 
     r = add(mul(integer(5), x), integer(5));
+    ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *integer(5)));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
@@ -404,7 +416,7 @@ TEST_CASE("Rational: Basic", "[basic]")
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
     a = rational_class(3, 5);
-    b = r->as_mpq();
+    b = r->as_rational_class();
     REQUIRE(a == b);
 }
 
