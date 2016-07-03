@@ -76,7 +76,7 @@ protected:
     bool has_;
 
 public:
-    HasSymbolVisitor(const Symbol &x) : x_(&x)
+    HasSymbolVisitor(Ptr<const Symbol> x) : x_(x)
     {
     }
 
@@ -92,10 +92,6 @@ public:
 
     bool apply(const Basic &b)
     {
-        // We are breaking a rule and assigning to a Ptr from a raw pointer
-        // directly. But since HasSymbolVisitor is only instantiated inside the
-        // has_symbol() function, the `x` can never go out of scope, so this is
-        // safe.
         has_ = false;
         stop_ = false;
         preorder_traversal_stop(b, *this);

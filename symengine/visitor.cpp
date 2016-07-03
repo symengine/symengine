@@ -51,7 +51,10 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v)
 
 bool has_symbol(const Basic &b, const Symbol &x)
 {
-    HasSymbolVisitor v(x);
+    // We are breaking a rule when using ptrFromRef() here, but since
+    // HasSymbolVisitor is only instantiated and freed from here, the `x` can
+    // never go out of scope, so this is safe.
+    HasSymbolVisitor v(ptrFromRef(x));
     return v.apply(b);
 }
 
