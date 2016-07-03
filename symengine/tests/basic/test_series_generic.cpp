@@ -53,7 +53,8 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
 
     // check if unknown types are handled by visitor
-    RCP<const UnivariateSeries> S = UnivariateSeries::series(emptyset(), "x", 2);
+    RCP<const UnivariateSeries> S
+        = UnivariateSeries::series(emptyset(), "x", 2);
     REQUIRE(S->__str__() == "EmptySet + O(x**2)");
 }
 
