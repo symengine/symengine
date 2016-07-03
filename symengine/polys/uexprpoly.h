@@ -184,6 +184,9 @@ public:
                                           map_int_Expr &&d);
     static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v);
+    static RCP<const UExprPoly> from_basic(const RCP<const Basic> &basic,
+                                           const RCP<const Basic> &gen);
+    static RCP<const UExprPoly> from_basic(const RCP<const Basic> &basic);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x

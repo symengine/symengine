@@ -212,8 +212,6 @@ public:
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
-
-UIntDict _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 } // SymEngine
 
 #endif

@@ -77,6 +77,9 @@ public:
     std::map<Key, Value> dict_;
 
 public:
+
+    typedef Value value_type;
+
     ODictWrapper() SYMENGINE_NOEXCEPT
     {
     }
