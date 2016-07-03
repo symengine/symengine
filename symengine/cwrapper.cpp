@@ -653,6 +653,14 @@ void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned lon
     mat->m.set(r, c, s->m);
 }
 
+void sparse_matrix_get_basic(basic s, const CSparseMatrix *mat, unsigned long int r, unsigned long int c){
+    s->m = mat->m.get(r, c);
+}
+
+void sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r, unsigned long int c, basic s){
+    mat->m.set(r, c, s->m);
+}
+
 void dense_matrix_det(basic s, const CDenseMatrix *mat)
 {
     s->m = mat->m.det();

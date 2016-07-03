@@ -358,6 +358,10 @@ char *dense_matrix_str(const CDenseMatrix *s);
 void dense_matrix_get_basic(basic s, const CDenseMatrix *mat, unsigned long int r, unsigned long int c);
 //! Assign s to mat[r][c]
 void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
+//! Assign to s, mat[r][c]
+void sparse_matrix_get_basic(basic s, const CSparseMatrix *mat, unsigned long int r, unsigned long int c);
+//! Assign s to mat[r][c]
+void sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
 //! Assign to s, determinent of mat
 void dense_matrix_det(basic s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the inverse of mat
