@@ -30,6 +30,7 @@ using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Complex;
 using SymEngine::has_symbol;
+using SymEngine::coeff;
 using SymEngine::is_a;
 using SymEngine::rcp_static_cast;
 using SymEngine::set_basic;
@@ -789,6 +790,22 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     REQUIRE(has_symbol(*r1, *x));
     REQUIRE(has_symbol(*r1, *y));
     REQUIRE(not has_symbol(*r1, *z));
+}
+
+TEST_CASE("coeff: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, pow(y, integer(2)));
+    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, y, integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, y, integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, y, integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, z, integer(2)), *integer(0)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
