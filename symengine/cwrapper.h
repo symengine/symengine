@@ -293,13 +293,13 @@ int is_a_Rational(const basic s);
 int is_a_Symbol(const basic s);
 //! Return 1 if s is a Complex, 0 if not.
 int is_a_Complex(const basic s);
-//! Return 1 if s is a RealDouble, 0 if not.
+//! Return 1 if c is a RealDouble, 0 if not.
 int is_a_RealDouble(const basic c);
-//! Return 1 if s is a ComplexDouble, 0 if not.
+//! Return 1 if c is a ComplexDouble, 0 if not.
 int is_a_ComplexDouble(const basic c);
-//! Return 1 if s is a RealMPFR, 0 if not.
+//! Return 1 if c is a RealMPFR, 0 if not.
 int is_a_RealMPFR(const basic c);
-//! Return 1 if s is a ComplexMPC, 0 if not.
+//! Return 1 if c is a ComplexMPC, 0 if not.
 int is_a_ComplexMPC(const basic c);
 
 //! Wrapper for std::vector<int>
@@ -347,66 +347,93 @@ void sparse_matrix_free(CSparseMatrix *self);
 //! Assign to s, a DenseMatrix
 void dense_matrix_init(CDenseMatrix *s);
 //! Assign to s, a DenseMatrix with r rows and c columns
-void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r, unsigned long int c);
+void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r,
+                            unsigned long int c);
 //! Assign to s, a DenseMatrix with value d
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 //! Assign to s, a DenseMatrix with l's elements
-void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows, unsigned long int cols, CVecBasic *l);
+void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows,
+                          unsigned long int cols, CVecBasic *l);
 //! Return a string representation of s
 char *dense_matrix_str(const CDenseMatrix *s);
 //! Assign to s, mat[r][c]
-void dense_matrix_get_basic(basic s, const CDenseMatrix *mat, unsigned long int r, unsigned long int c);
+void dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
+                            unsigned long int r, unsigned long int c);
 //! Assign s to mat[r][c]
-void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
+void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
+                            unsigned long int c, basic s);
 //! Assign to s, mat[r][c]
-void sparse_matrix_get_basic(basic s, const CSparseMatrix *mat, unsigned long int r, unsigned long int c);
+void sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
+                             unsigned long int r, unsigned long int c);
 //! Assign s to mat[r][c]
-void sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r, unsigned long int c, basic s);
+void sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
+                             unsigned long int c, basic s);
 //! Assign to s, determinent of mat
 void dense_matrix_det(basic s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the inverse of mat
 void dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the transpose of mat
 void dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat);
-//! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with step sizes [r, c]
-void dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat, unsigned long int r1, unsigned long int c1, unsigned long int r2, unsigned long int c2, unsigned long int r, unsigned long int c);
+//! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with
+//! step sizes [r, c]
+void dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
+                            unsigned long int r1, unsigned long int c1,
+                            unsigned long int r2, unsigned long int c2,
+                            unsigned long int r, unsigned long int c);
 //! Return the number of columns of s
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
 unsigned long int dense_matrix_rows(const CDenseMatrix *s);
 //! Assign to s, the addition of matA and matB
-void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA, const CDenseMatrix *matB);
+void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const CDenseMatrix *matB);
 //! Assign to s, the matrix multiplication of matA and matB
-void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA, const CDenseMatrix *matB);
+void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const CDenseMatrix *matB);
 //! Assign to s, the addition of scalar b to matrix matA
-void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA, const basic b);
+void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const basic b);
 //! Assign to s, the multiplication of scalar b to matrix matA
-void dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA, const basic b);
+void dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const basic b);
 //! Assign to l and u, LU factorization of mat
 void dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat);
 //! Assign to l and d, LDL factorization of mat
-void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat);
+void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d,
+                      const CDenseMatrix *mat);
 //! Assign to lu, fraction free LU factorization of mat
 void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat);
 //! Assign to l, d and u, FFLDU factorization of mat
-void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u, const CDenseMatrix *mat);
+void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
+                        const CDenseMatrix *mat);
 //! Assign to x, solution to A x = b
-void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A, const CDenseMatrix *b);
+void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
+                           const CDenseMatrix *b);
 //! Assign to s, a matrix of ones of size rxc
-void dense_matrix_ones(CDenseMatrix *s, unsigned long int r, unsigned long int c);
+void dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
+                       unsigned long int c);
 //! Assign to s, a matrix of zeros of size rxc
-void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r, unsigned long int c);
-//! Assign to s, a diagonal matrix with a diagonal at offset k, with elements in d
+void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
+                        unsigned long int c);
+//! Assign to s, a diagonal matrix with a diagonal at offset k, with elements in
+//! d
 void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k);
 //! Assign to s, a matrix of size NxM, with diagonal of 1s at offset k
-void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M, int k);
+void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
+                      int k);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);
 //! Assign to s, a CSRMatrix with r rows and c columns
-void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int r, unsigned long int c);
+void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int r,
+                             unsigned long int c);
 //! Return a string representation of s
 char *sparse_matrix_str(const CSparseMatrix *s);
+
+//! Return 1 if c is a DenseMatrix, 0 if not.
+int is_a_DenseMatrix(const CDenseMatrix *c);
+//! Return 1 if c is a SparseMatrix, 0 if not.
+int is_a_SparseMatrix(const CSparseMatrix *c);
 
 //! Wrapper for set_basic
 

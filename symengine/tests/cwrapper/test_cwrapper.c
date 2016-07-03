@@ -985,6 +985,13 @@ void test_eval()
     basic_free_stack(imag);
 }
 
+test_matrix()
+{
+    CDenseMatrix *A = dense_matrix_new();
+    SYMENGINE_C_ASSERT(is_a_DenseMatrix(A));
+    dense_matrix_free(A);
+}
+
 int main(int argc, char *argv[])
 {
     test_cwrapper();
@@ -1014,6 +1021,6 @@ int main(int argc, char *argv[])
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
 #endif // HAVE_SYMENGINE_MPC
-
+    test_matrix();
     return 0;
 }
