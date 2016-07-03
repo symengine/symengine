@@ -60,7 +60,7 @@ RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Basic> &var,
 }
 
 RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic,
-                                         const RCP<const Basic> &gen)
+                                           const RCP<const Basic> &gen)
 {
     return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(basic, gen));
 }

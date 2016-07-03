@@ -3,7 +3,7 @@
 namespace SymEngine
 {
 // all throughout Number refers to either a Rational or an Integer only
-umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x, 
+umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x,
                                    const RCP<const Basic> &base);
 
 class PolyGeneratorVisitor : public BaseVisitor<PolyGeneratorVisitor>
@@ -22,7 +22,8 @@ public:
     }
 
     // adds curr to gen_set, or updates already existing gen
-    void add_to_gen_set(const RCP<const Basic> &base, const RCP<const Number> &exp)
+    void add_to_gen_set(const RCP<const Basic> &base,
+                        const RCP<const Number> &exp)
     {
         auto it = gen_set.find(base);
         if (it == gen_set.end()) {
@@ -31,12 +32,13 @@ public:
         }
 
         if (is_a<const Rational>(*exp) and is_a<const Rational>(*it->second)) {
-            gen_set[base] = rcp_static_cast<const Rational>(div(one, 
-                            lcm(*rcp_static_cast<const Rational>(exp)->get_den(),
-                                *rcp_static_cast<const Rational>(it->second)->get_den())));
+            gen_set[base] = rcp_static_cast<const Rational>(div(
+                one,
+                lcm(*rcp_static_cast<const Rational>(exp)->get_den(),
+                    *rcp_static_cast<const Rational>(it->second)->get_den())));
         } else if (is_a<const Rational>(*exp)) {
-            gen_set[base] = rcp_static_cast<const Rational>(div(one, 
-                            rcp_static_cast<const Rational>(exp)->get_den()));
+            gen_set[base] = rcp_static_cast<const Rational>(
+                div(one, rcp_static_cast<const Rational>(exp)->get_den()));
         }
     }
 
@@ -54,11 +56,13 @@ public:
             RCP<const Basic> mulx = one;
             if (rcp_static_cast<const Rational>(x.get_exp())->is_negative())
                 mulx = minus_one;
-            RCP<const Rational> den = rcp_static_cast<const Rational>(div(one, rcp_static_cast<const Rational>(x.get_exp())->get_den()));
+            RCP<const Rational> den = rcp_static_cast<const Rational>(div(
+                one, rcp_static_cast<const Rational>(x.get_exp())->get_den()));
             add_to_gen_set(pow(x.get_base(), mulx), den);
 
         } else {
-            umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
+            umap_basic_num pow_pairs
+                = _find_gens_poly_pow(x.get_exp(), x.get_base());
             for (auto it : pow_pairs)
                 add_to_gen_set(pow(x.get_base(), it.first), it.second);
         }
@@ -105,14 +109,15 @@ public:
     }
 
     void bvisit(const Pow &x)
-    {   
-        umap_basic_num pow_pairs = _find_gens_poly_pow(x.get_exp(), x.get_base());
+    {
+        umap_basic_num pow_pairs
+            = _find_gens_poly_pow(x.get_exp(), x.get_base());
         for (auto it : pow_pairs)
             gen_set[pow(x.get_base(), it.first)] = it.second;
     }
 
     void bvisit(const Add &x)
-    {   
+    {
         if (not x.coef_->is_zero())
             x.coef_->accept(*this);
 
@@ -125,12 +130,13 @@ public:
             if (is_a<const Rational>(*it.second))
                 divx = rcp_static_cast<const Rational>(it.second)->get_den();
 
-            gen_set[mul(mulx, it.first)] = rcp_static_cast<const Number>(div(one, divx));
+            gen_set[mul(mulx, it.first)]
+                = rcp_static_cast<const Number>(div(one, divx));
         }
     }
 
     void bvisit(const Mul &x)
-    {   
+    {
         // won't handle cases like 2**((x+1)(x+2))
         // needs `expand` to have been called
         RCP<const Number> mulx = one, divx = one;
@@ -142,7 +148,8 @@ public:
             divx = rcp_static_cast<const Rational>(x.coef_)->get_den();
 
         auto dict = x.dict_;
-        gen_set[Mul::from_dict(mulx, std::move(dict))] = rcp_static_cast<const Number>(div(one, divx));
+        gen_set[Mul::from_dict(mulx, std::move(dict))]
+            = rcp_static_cast<const Number>(div(one, divx));
     }
 
     void bvisit(const Number &x)
@@ -151,7 +158,8 @@ public:
             if (x.is_positive())
                 gen_set[one] = x.rcp_from_this_cast<const Number>();
             else
-                gen_set[minus_one] = rcp_static_cast<const Number>(neg(x.rcp_from_this()));
+                gen_set[minus_one]
+                    = rcp_static_cast<const Number>(neg(x.rcp_from_this()));
         }
     }
 
@@ -167,7 +175,7 @@ umap_basic_num _find_gens_poly(const RCP<const Basic> &x)
     return v.apply(*x);
 }
 
-umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x, 
+umap_basic_num _find_gens_poly_pow(const RCP<const Basic> &x,
                                    const RCP<const Basic> &base)
 {
     PolyGeneratorVisitorPow v;

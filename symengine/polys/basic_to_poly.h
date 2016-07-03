@@ -2,40 +2,90 @@
 #include <symengine/polys/uintpoly.h>
 #include <symengine/polys/uexprpoly.h>
 
-namespace SymEngine 
+namespace SymEngine
 {
 
-template<typename T>
-enable_if_t<std::is_same<T, UExprDict>::value, UExprDict> 
+template <typename T>
+enable_if_t<std::is_same<T, UExprDict>::value, UExprDict>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
-template<typename T>
-enable_if_t<std::is_same<T, UIntDict>::value, UIntDict> 
+template <typename T>
+enable_if_t<std::is_same<T, UIntDict>::value, UIntDict>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
-template<typename D, typename V>
-class BasicToUPolyBase: public BaseVisitor<V>
+template <typename D, typename V>
+class BasicToUPolyBase : public BaseVisitor<V>
 {
 public:
     RCP<const Basic> gen;
     D dict;
 
     D apply(const Basic &b, const RCP<const Basic> &gen_)
-    {   
+    {
         gen = gen_;
         b.accept(*this);
         return dict;
     }
 
-    // virtual void dict_add_term(unsigned int pow, const RCP<const Basic> &x) = 0;
+    virtual void d_add_term(unsigned int pow, const Basic &x) = 0;
+
+    void bvisit(const Pow &x)
+    {
+        if (is_a<const Integer>(*x.get_exp())) {
+            int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+            if (i > 0) {
+                dict = D::pow(_b_to_upoly<D>(x.get_base(), gen), i);
+                return;
+            }
+        }
+
+        RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
+        if (is_a<const Pow>(*gen)) {
+            genbase = rcp_static_cast<const Pow>(gen)->get_base();
+            genpow = rcp_static_cast<const Pow>(gen)->get_exp();
+        }
+
+        if (eq(*genbase, *x.get_base())) {
+
+            set_basic expos;
+
+            if (is_a<const Add>(*x.get_exp())) {
+                RCP<const Add> addx = rcp_static_cast<const Add>(x.get_exp());
+                for (auto const &it : addx->dict_)
+                    expos.insert(mul(it.first, it.second));
+                if (not addx->coef_->is_zero())
+                    expos.insert(addx->coef_);
+            } else {
+                expos.insert(x.get_exp());
+            }
+
+            int powr = 0;
+            for (auto const &it : expos) {
+                tmp = div(it, genpow);
+                if (is_a<const Integer>(*tmp)) {
+                    RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
+                    if (i->is_positive()) {
+                        powr = i->as_int();
+                        continue;
+                    }
+                }
+                coef = mul(coef, pow(genbase, it));
+            }
+            d_add_term(powr, *coef);
+
+        } else {
+            d_add_term(0, x);
+        }
+    }
 
     void bvisit(const Add &x)
     {
         dict = _b_to_upoly<D>(x.coef_, gen);
         for (auto const &it : x.dict_)
-            dict += (_b_to_upoly<D>(it.first, gen) * _b_to_upoly<D>(it.second, gen));
+            dict += (_b_to_upoly<D>(it.first, gen)
+                     * _b_to_upoly<D>(it.second, gen));
     }
-    
+
     void bvisit(const Mul &x)
     {
         dict = _b_to_upoly<D>(x.coef_, gen);
@@ -69,11 +119,11 @@ public:
             }
         }
 
-        // dict_add_term(0, x);
+        d_add_term(0, x);
     }
 };
 
-class BasicToUIntPoly: public BasicToUPolyBase<UIntDict, BasicToUIntPoly>
+class BasicToUIntPoly : public BasicToUPolyBase<UIntDict, BasicToUIntPoly>
 {
 public:
     using BasicToUPolyBase<UIntDict, BasicToUIntPoly>::bvisit;
@@ -84,11 +134,17 @@ public:
         throw std::runtime_error("Non-integer found");
     }
 
-    // void dict_add_term(unsigned int pow, )
+    void d_add_term(unsigned int pow, const Basic &x)
+    {
+        if (is_a<const Integer>(x))
+            dict = UIntDict({{pow, static_cast<const Integer &>(x).i}});
+        else
+            throw std::runtime_error("Non-integer found");
+    }
 };
 
-class BasicToUExprPoly: public BasicToUPolyBase<UExprDict, BasicToUExprPoly>
-{   
+class BasicToUExprPoly : public BasicToUPolyBase<UExprDict, BasicToUExprPoly>
+{
 public:
     using BasicToUPolyBase<UExprDict, BasicToUExprPoly>::bvisit;
     using BasicToUPolyBase<UExprDict, BasicToUExprPoly>::apply;
@@ -98,22 +154,26 @@ public:
         if (not x.is_zero())
             dict = UExprDict(x.rcp_from_this());
     }
+
+    void d_add_term(unsigned int pow, const Basic &x)
+    {
+        dict = UExprDict(x.rcp_from_this());
+    }
 };
 
-template<typename T>
-enable_if_t<std::is_same<T, UExprDict>::value, UExprDict> 
+template <typename T>
+enable_if_t<std::is_same<T, UExprDict>::value, UExprDict>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUExprPoly v;
     return v.apply(*basic, gen);
 }
 
-template<typename T>
-enable_if_t<std::is_same<T, UIntDict>::value, UIntDict> 
+template <typename T>
+enable_if_t<std::is_same<T, UIntDict>::value, UIntDict>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUIntPoly v;
     return v.apply(*basic, gen);
 }
-
 }

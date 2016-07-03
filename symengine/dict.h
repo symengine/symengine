@@ -132,9 +132,10 @@ inline bool unified_eq(const RCP<const Basic> &a, const RCP<const Basic> &b)
 }
 
 template <typename T,
-          typename = enable_if_t<std::is_arithmetic<T>::value
-                            or std::is_same<T, integer_class>::value
-                            or std::is_same<T, SymEngine::Expression>::value>>
+          typename
+          = enable_if_t<std::is_arithmetic<T>::value
+                        or std::is_same<T, integer_class>::value
+                        or std::is_same<T, SymEngine::Expression>::value>>
 inline bool unified_eq(const T &a, const T &b)
 {
     return a == b;
