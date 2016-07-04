@@ -1,6 +1,4 @@
 #include <symengine/visitor.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
 
 namespace SymEngine
 {

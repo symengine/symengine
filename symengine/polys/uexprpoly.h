@@ -185,8 +185,10 @@ public:
     static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v);
     static RCP<const UExprPoly> from_basic(const RCP<const Basic> &basic,
-                                           const RCP<const Basic> &gen);
-    static RCP<const UExprPoly> from_basic(const RCP<const Basic> &basic);
+                                           const RCP<const Basic> &gen,
+                                           bool expand = false);
+    static RCP<const UExprPoly> from_basic(const RCP<const Basic> &basic,
+                                           bool expand = false);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x

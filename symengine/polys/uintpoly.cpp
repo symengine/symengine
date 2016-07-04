@@ -61,20 +61,27 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
 }
 
 RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic,
-                                         const RCP<const Basic> &gen)
+                                         const RCP<const Basic> &gen, bool e)
 {
-    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(basic, gen));
+    RCP<const Basic> exp = basic;
+    if (e)
+        exp = expand(basic);
+    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(exp, gen));
 }
 
-RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic)
+RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic, bool e)
 {
-    umap_basic_num tmp = _find_gens_poly(basic);
+    RCP<const Basic> exp = basic;
+    if (e)
+        exp = expand(basic);
+
+    umap_basic_num tmp = _find_gens_poly(exp);
 
     if (tmp.size() != 1)
         throw std::runtime_error("Did not find exactly 1 generator");
 
     RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
-    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(basic, gen));
+    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(exp, gen));
 }
 
 integer_class UIntPoly::eval(const integer_class &x) const

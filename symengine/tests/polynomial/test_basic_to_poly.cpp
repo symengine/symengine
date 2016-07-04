@@ -78,10 +78,10 @@ TEST_CASE("find_gen_poly", "[b2poly]")
     rgens = {{twopx, one}};
     REQUIRE(unified_eq(gens, rgens));
 
-    // 2**(2**x) + 2**(2**(x+1)) -> (2**(2**x))
-    basic = add(pow(i2, twopx), pow(i2, pow(i2, add(x, one))));
+    // 2**(x**(x+1))-> (2**(x**(x+1)))
+    basic = pow(i2, pow(x, add(x, one)));
     gens = _find_gens_poly(basic);
-    rgens = {{pow(i2, twopx), one}};
+    rgens = {{basic, one}};
     REQUIRE(unified_eq(gens, rgens));
 
     // sin(x)*sin(y) + sin(x)**2 + sin(y) -> (sin(x), sin(y))

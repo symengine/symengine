@@ -60,20 +60,28 @@ RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Basic> &var,
 }
 
 RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic,
-                                           const RCP<const Basic> &gen)
+                                           const RCP<const Basic> &gen, bool e)
 {
-    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(basic, gen));
+    RCP<const Basic> exp = basic;
+    if (e)
+        exp = expand(basic);
+    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(exp, gen));
 }
 
-RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic)
+RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic,
+                                           bool e)
 {
-    umap_basic_num tmp = _find_gens_poly(basic);
+    RCP<const Basic> exp = basic;
+    if (e)
+        exp = expand(basic);
+
+    umap_basic_num tmp = _find_gens_poly(exp);
 
     if (tmp.size() != 1)
         throw std::runtime_error("Did not find exactly 1 generator");
 
     RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
-    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(basic, gen));
+    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(exp, gen));
 }
 
 vec_basic UExprPoly::get_args() const

@@ -149,8 +149,10 @@ public:
     static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
     static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic,
-                                          const RCP<const Basic> &gen);
-    static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic);
+                                          const RCP<const Basic> &gen,
+                                          bool expand = false);
+    static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic,
+                                          bool expand = false);
 
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;

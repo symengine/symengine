@@ -108,13 +108,13 @@ public:
         return gen_set;
     }
 
-    void bvisit(const Pow &x)
-    {
-        umap_basic_num pow_pairs
-            = _find_gens_poly_pow(x.get_exp(), x.get_base());
-        for (auto it : pow_pairs)
-            gen_set[pow(x.get_base(), it.first)] = it.second;
-    }
+    // void bvisit(const Pow &x)
+    // {
+    //     umap_basic_num pow_pairs
+    //         = _find_gens_poly_pow(x.get_exp(), x.get_base());
+    //     for (auto it : pow_pairs)
+    //         gen_set[pow(x.get_base(), it.first)] = it.second;
+    // }
 
     void bvisit(const Add &x)
     {
