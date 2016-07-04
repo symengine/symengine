@@ -790,7 +790,7 @@ void dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
 {
     s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, r, c);
-    ones(s->m, r, c);
+    ones(s->m);
 }
 
 void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
@@ -798,7 +798,7 @@ void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
 {
     s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, r, c);
-    zeros(s->m, r, c);
+    zeros(s->m);
 }
 void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
 {
@@ -808,7 +808,9 @@ void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
 void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
                       int k)
 {
-    eye(s->m, N, M, k);
+    s->m = SymEngine::DenseMatrix();
+    dense_matrix_rows_cols(s, N, M);
+    eye(s->m, k);
 }
 
 int is_a_DenseMatrix(const CDenseMatrix *c)
@@ -819,6 +821,16 @@ int is_a_DenseMatrix(const CDenseMatrix *c)
 int is_a_SparseMatrix(const CSparseMatrix *c)
 {
     return is_a<CSRMatrix>(c->m);
+}
+
+int dense_matrix_eq(CDenseMatrix *lhs, CDenseMatrix *rhs)
+{
+    return (lhs->m) == (rhs->m);
+}
+
+int sparse_matrix_eq(CSparseMatrix *lhs, CSparseMatrix *rhs)
+{
+    return (lhs->m) == (rhs->m);
 }
 
 // C Wrapper for set_basic

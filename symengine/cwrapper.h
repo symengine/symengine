@@ -435,6 +435,11 @@ int is_a_DenseMatrix(const CDenseMatrix *c);
 //! Return 1 if c is a SparseMatrix, 0 if not.
 int is_a_SparseMatrix(const CSparseMatrix *c);
 
+//! Return 1 if lhs == rhs, 0 if not
+int dense_matrix_eq(CDenseMatrix *lhs, CDenseMatrix *rhs);
+//! Return 1 if lhs == rhs, 0 if not
+int sparse_matrix_eq(CSparseMatrix *lhs, CSparseMatrix *rhs);
+
 //! Wrapper for set_basic
 
 typedef struct CSetBasic CSetBasic;
