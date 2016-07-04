@@ -990,11 +990,64 @@ test_matrix()
     CDenseMatrix *A = dense_matrix_new();
     SYMENGINE_C_ASSERT(is_a_DenseMatrix(A));
     dense_matrix_free(A);
+    
+    basic i1, i2, i3, i4;
+    basic_new_stack(i1);
+    basic_new_stack(i2);
+    basic_new_stack(i3);
+    basic_new_stack(i4);
+    
+    integer_set_ui(i1, 1);
+    integer_set_ui(i2, 2);
+    integer_set_ui(i3, 3);
+    integer_set_ui(i4, 4);
+    
+    CVecBasic *vec = vecbasic_new();
+    vecbasic_push_back(vec, i1);
+    vecbasic_push_back(vec, i2);
+    vecbasic_push_back(vec, i3);
+    vecbasic_push_back(vec, i4);
+    
+    CDenseMatrix *B = dense_matrix_new();
+    dense_matrix_set_vec(B, 2, 2, vec);
+    
+    vecbasic_free(vec);
+    
+    dense_matrix_get_basic(i4, B, 0, 0);
+    SYMENGINE_C_ASSERT(is_a_Integer(i4));
+    SYMENGINE_C_ASSERT(integer_get_ui(i4) == 1);
+    
+    dense_matrix_get_basic(i3, B, 0, 1);
+    SYMENGINE_C_ASSERT(is_a_Integer(i3));
+    SYMENGINE_C_ASSERT(integer_get_ui(i3) == 2);
+    
+    dense_matrix_get_basic(i2, B, 1, 0);
+    SYMENGINE_C_ASSERT(is_a_Integer(i2));
+    SYMENGINE_C_ASSERT(integer_get_ui(i2) == 3);
+    
+    dense_matrix_get_basic(i1, B, 1, 1);
+    SYMENGINE_C_ASSERT(is_a_Integer(i1));
+    SYMENGINE_C_ASSERT(integer_get_ui(i1) == 4);
+    
+    integer_set_ui(i1, 5);
+    
+    dense_matrix_set_basic(B, 0, 0, i1);
+    
+    dense_matrix_get_basic(i4, B, 0, 0);
+    SYMENGINE_C_ASSERT(is_a_Integer(i4));
+    SYMENGINE_C_ASSERT(integer_get_ui(i4) == 5);
+    
+    dense_matrix_free(B);
+    
+    basic_free_stack(i1);
+    basic_free_stack(i2);
+    basic_free_stack(i3);
+    basic_free_stack(i4);
 }
 
 int main(int argc, char *argv[])
 {
-    test_cwrapper();
+    /*test_cwrapper();
     test_complex();
     test_complex_double();
     test_basic();
@@ -1020,7 +1073,8 @@ int main(int argc, char *argv[])
 #endif // HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
-#endif // HAVE_SYMENGINE_MPC
+#endif // HAVE_SYMENGINE_MPC*/
+    symengine_print_stack_on_segfault();
     test_matrix();
     return 0;
 }
