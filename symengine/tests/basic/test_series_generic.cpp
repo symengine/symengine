@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include <chrono>
 
+#include <symengine/sets.h>
 #include <symengine/series_generic.h>
 
 using SymEngine::UExprDict;
@@ -20,6 +21,7 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::rational;
+using SymEngine::emptyset;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::Expression;
 using SymEngine::umap_short_basic;
@@ -49,6 +51,11 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     UExprDict cpoly_(cdict_);
     RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
     REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
+
+    // check if unknown types are handled by visitor
+    RCP<const UnivariateSeries> S
+        = UnivariateSeries::series(emptyset(), "x", 2);
+    REQUIRE(S->__str__() == "EmptySet + O(x**2)");
 }
 
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
