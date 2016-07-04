@@ -302,6 +302,20 @@ public:
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
             } else {
+                if (is_a<Add>(*self.get_exp())) {
+                    RCP<const Add> addx
+                        = rcp_static_cast<const Add>(self.get_exp());
+                    if (not addx->coef_->is_zero()) {
+                        if (is_a_Number(*pow(_base, addx->coef_))) {
+                            Add::dict_add_term(
+                                d_, rcp_static_cast<const Number>(
+                                        mul(multiply, pow(_base, addx->coef_))),
+                                pow(_base,
+                                    add(self.get_exp(), neg(addx->coef_))));
+                            return;
+                        }
+                    }
+                }
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
             return;
