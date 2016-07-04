@@ -649,6 +649,7 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
+    CHECK_THROWS_AS(csc(integer(0)), std::runtime_error);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -689,6 +690,10 @@ TEST_CASE("Sec: functions", "[functions]")
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
+
+    // sec(0) = zero
+    r1 = sec(zero);
+    REQUIRE(eq(*r1, *i1));
 
     // sec(-y) = sec(y)
     r1 = sec(mul(im1, y));
