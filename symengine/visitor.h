@@ -109,7 +109,7 @@ protected:
     RCP<const Basic> coeff_;
 
 public:
-    CoeffVisitor(const Symbol &x, const Basic &n) : x_(&x), n_(&n)
+    CoeffVisitor(Ptr<const Symbol> x, Ptr<const Basic> n) : x_(x), n_(n)
     {
     }
 

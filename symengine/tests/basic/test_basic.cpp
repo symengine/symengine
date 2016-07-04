@@ -812,12 +812,12 @@ TEST_CASE("coeff: Basic", "[basic]")
     y = symbol("y");
     z = symbol("z");
     r1 = add(x, pow(y, integer(2)));
-    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
-    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
-    REQUIRE(eq(*coeff(*r1, y, integer(0)), *integer(0)));
-    REQUIRE(eq(*coeff(*r1, y, integer(1)), *integer(0)));
-    REQUIRE(eq(*coeff(*r1, y, integer(2)), *integer(1)));
-    REQUIRE(eq(*coeff(*r1, z, integer(2)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *z, *integer(2)), *integer(0)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
