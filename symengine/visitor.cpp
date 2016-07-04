@@ -49,10 +49,13 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v)
     b.accept(v);
 }
 
-bool has_symbol(const Basic &b, const Symbol& x)
+bool has_symbol(const Basic &b, const Symbol &x)
 {
-    HasSymbolVisitor v;
-    return v.apply(b, x);
+    // We are breaking a rule when using ptrFromRef() here, but since
+    // HasSymbolVisitor is only instantiated and freed from here, the `x` can
+    // never go out of scope, so this is safe.
+    HasSymbolVisitor v(ptrFromRef(x));
+    return v.apply(b);
 }
 
 RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)

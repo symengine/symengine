@@ -12,8 +12,7 @@ namespace SymEngine
 
 using fp_t = fmpq_poly_wrapper;
 // Univariate Rational Coefficient Power SeriesBase using Flint
-class URatPSeriesFlint
-    : public SeriesBase<fp_t, fmpq_wrapper, URatPSeriesFlint>
+class URatPSeriesFlint : public SeriesBase<fp_t, fmpq_wrapper, URatPSeriesFlint>
 {
 public:
     URatPSeriesFlint(const fp_t p, const std::string varname,
@@ -40,7 +39,7 @@ public:
     static fp_t pow(const fp_t &s, int n, unsigned prec);
     static unsigned ldegree(const fp_t &s);
     static inline fmpq_wrapper find_cf(const fp_t &s, const fp_t &var,
-                                        unsigned deg)
+                                       unsigned deg)
     {
         return s.get_coeff(deg);
     }

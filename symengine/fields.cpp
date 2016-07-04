@@ -132,13 +132,14 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                           ? deg_divisor + it - deg_dividend
                           : 0;
             auto ub = std::min(it + 1, deg_divisor);
-            for (long j = lb; j < ub; ++j) {
+            for (size_t j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[it - j + deg_divisor],
                           -dict_divisor[j]);
             }
             if (it >= deg_divisor)
                 coeff *= inv;
-            dict_out[it] = coeff % modulo_;
+            mp_fdiv_r(coeff, coeff, modulo_);
+            dict_out[it] = coeff;
         }
         std::vector<integer_class> dict_rem, dict_quo;
         dict_rem.resize(deg_divisor);
@@ -233,7 +234,8 @@ void GaloisFieldDict::gf_monic(integer_class &res,
 
 GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 {
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
+    if (modulo_ != o.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     GaloisFieldDict f = static_cast<GaloisFieldDict>(*this);
     GaloisFieldDict g = o;
     GaloisFieldDict temp_out;
@@ -248,7 +250,8 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
 {
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
+    if (modulo_ != o.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     if (dict_.empty())
         return static_cast<GaloisFieldDict>(*this);
     if (o.dict_.empty())
@@ -348,5 +351,115 @@ GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
         g *= f.first;
 
     return g;
+}
+
+GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
+                                            const integer_class &n) const
+{
+    if (modulo_ != f.modulo_)
+        throw std::runtime_error("Error: field must be same.");
+    if (n == 0_z)
+        return GaloisFieldDict::from_vec({1_z}, modulo_);
+    GaloisFieldDict in = f;
+    if (n == 1_z) {
+        return f % (*this);
+    }
+    if (n == 2_z) {
+        return f.gf_sqr() % (*this);
+    }
+    GaloisFieldDict h = GaloisFieldDict::from_vec({1_z}, modulo_);
+    unsigned mod = mp_get_si(n);
+    while (true) {
+        if (mod & 1) {
+            h *= in;
+            h %= *this;
+        }
+        mod >>= 1;
+
+        if (mod == 0)
+            break;
+
+        in = in.gf_sqr() % *this;
+    }
+    return h;
+}
+
+std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
+{
+    auto n = degree();
+    std::vector<GaloisFieldDict> b;
+    if (n == 0)
+        return b;
+    b.resize(n);
+    b[0] = GaloisFieldDict::from_vec({1_z}, modulo_);
+    GaloisFieldDict temp_out;
+    if (mp_get_si(modulo_) < n) {
+        for (unsigned i = 1; i < n; ++i) {
+            b[i] = b[i - 1].gf_lshift(modulo_);
+            b[i] %= (*this);
+        }
+    } else if (n > 1) {
+        b[1] = gf_pow_mod(GaloisFieldDict::from_vec({0_z, 1_z}, modulo_),
+                          modulo_);
+        for (unsigned i = 2; i < n; ++i) {
+            b[i] = b[i - 1] * b[1];
+            b[i] %= (*this);
+        }
+    }
+    return b;
+}
+
+GaloisFieldDict
+GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
+                                  const std::vector<GaloisFieldDict> &b) const
+{
+    if (modulo_ != g.modulo_)
+        throw std::runtime_error("Error: field must be same.");
+    unsigned m = g.degree();
+    GaloisFieldDict temp_out(*this), out;
+    if (this->degree() >= m) {
+        temp_out %= g;
+    }
+    if (temp_out.empty()) {
+        return temp_out;
+    }
+    m = temp_out.degree();
+    out = GaloisFieldDict::from_vec({temp_out.dict_[0]}, modulo_);
+    for (unsigned i = 1; i <= m; ++i) {
+        auto v = b[i];
+        v *= temp_out.dict_[i];
+        out += v;
+    }
+    out.gf_istrip();
+    return out;
+}
+
+std::vector<std::pair<GaloisFieldDict, integer_class>>
+GaloisFieldDict::gf_ddf_zassenhaus() const
+{
+    unsigned i = 1;
+    GaloisFieldDict f(*this);
+    GaloisFieldDict g = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
+    GaloisFieldDict to_sub(g);
+    std::vector<std::pair<GaloisFieldDict, integer_class>> factors;
+
+    auto b = f.gf_frobenius_monomial_base();
+    while (2 * i <= f.degree()) {
+        g = g.gf_frobenius_map(f, b);
+
+        GaloisFieldDict h = f.gf_gcd(g - to_sub);
+
+        if (not h.is_one()) {
+            factors.push_back({h, integer_class(i)});
+            f /= h;
+            g %= f;
+            b = f.gf_frobenius_monomial_base();
+        }
+        i += 1;
+    }
+    if (not(f.is_one() || f.empty())) {
+        factors.push_back({f, integer_class(f.degree())});
+    }
+    return factors;
 }
 }

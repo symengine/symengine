@@ -72,10 +72,14 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
 protected:
-    const Symbol* x_;
+    Ptr<const Symbol> x_;
     bool has_;
 
 public:
+    HasSymbolVisitor(Ptr<const Symbol> x) : x_(x)
+    {
+    }
+
     void bvisit(const Symbol &x)
     {
         if (x_->__eq__(x)) {
@@ -86,9 +90,8 @@ public:
 
     void bvisit(const Basic &x){};
 
-    bool apply(const Basic &b, const Symbol& x)
+    bool apply(const Basic &b)
     {
-        x_ = &x;
         has_ = false;
         stop_ = false;
         preorder_traversal_stop(b, *this);
@@ -96,7 +99,7 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const Symbol& x);
+bool has_symbol(const Basic &b, const Symbol &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {

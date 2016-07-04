@@ -30,6 +30,7 @@ using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Complex;
 using SymEngine::has_symbol;
+using SymEngine::coeff;
 using SymEngine::is_a;
 using SymEngine::rcp_static_cast;
 using SymEngine::set_basic;
@@ -240,6 +241,16 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Add> ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *zero));
+    const umap_basic_num &addmap = ar->get_dict();
+    auto search = addmap.find(x);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = addmap.find(y);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
+
     RCP<const Basic> term1, term2;
     RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
     a1->as_two_terms(outArg(term1), outArg(term2));
@@ -247,6 +258,8 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(eq(*a1, *a2));
 
     r = add(mul(integer(5), x), integer(5));
+    ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *integer(5)));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
@@ -789,6 +802,22 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     REQUIRE(has_symbol(*r1, *x));
     REQUIRE(has_symbol(*r1, *y));
     REQUIRE(not has_symbol(*r1, *z));
+}
+
+TEST_CASE("coeff: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, pow(y, integer(2)));
+    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, x, integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, y, integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, y, integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, y, integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, z, integer(2)), *integer(0)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
