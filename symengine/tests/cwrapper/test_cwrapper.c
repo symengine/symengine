@@ -1037,12 +1037,57 @@ test_matrix()
     SYMENGINE_C_ASSERT(is_a_Integer(i4));
     SYMENGINE_C_ASSERT(integer_get_ui(i4) == 5);
     
+    // Equality
+    SYMENGINE_C_ASSERT(dense_matrix_eq(B, B) == 1);
+    
     dense_matrix_free(B);
+    
+    // Inverse
+    
+    CDenseMatrix *C = dense_matrix_new();
+    vec = vecbasic_new();
+    
+    integer_set_ui(i4, 4);
+    integer_set_ui(i3, 3);
+    integer_set_ui(i2, 2);
+    
+    vecbasic_push_back(vec, i4);
+    vecbasic_push_back(vec, i3);
+    vecbasic_push_back(vec, i3);
+    vecbasic_push_back(vec, i2);
+    
+     dense_matrix_set_vec(C, 2, 2, vec);
+     vecbasic_free(vec);
+     
+     CDenseMatrix *D = dense_matrix_new();
+     vec = vecbasic_new();
+     
+     integer_set_si(i4, -4);
+     integer_set_si(i2, -2);
+     
+    vecbasic_push_back(vec, i2);
+    vecbasic_push_back(vec, i3);
+    vecbasic_push_back(vec, i3);
+    vecbasic_push_back(vec, i4);
+    
+    dense_matrix_set_vec(D, 2, 2, vec);
+    
+    CDenseMatrix *E = dense_matrix_new();
+    dense_matrix_inv(E, C);
+ 
+    SYMENGINE_C_ASSERT(dense_matrix_eq(E, D) == 1);
+    
+    vecbasic_free(vec);
+    
+    dense_matrix_free(C);
+    dense_matrix_free(D);
+    dense_matrix_free(E);
     
     basic_free_stack(i1);
     basic_free_stack(i2);
     basic_free_stack(i3);
     basic_free_stack(i4);
+    
 }
 
 int main(int argc, char *argv[])
