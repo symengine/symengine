@@ -148,6 +148,8 @@ public:
                                          map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
+    static UIntDict container_from_dict(const RCP<const Basic> &var,
+                                        map_uint_mpz &&d);
     static RCP<const UIntPoly> from_basic(const RCP<const Basic> &basic,
                                           const RCP<const Basic> &gen,
                                           bool expand = false);

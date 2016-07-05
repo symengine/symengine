@@ -54,6 +54,12 @@ RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Basic> &var,
     return make_rcp<const UIntPoly>(var, std::move(x));
 }
 
+UIntDict UIntPoly::container_from_dict(const RCP<const Basic> &var,
+                                       map_uint_mpz &&d)
+{
+    return UIntDict(d);
+}
+
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
                                        const vec_integer_class &v)
 {
