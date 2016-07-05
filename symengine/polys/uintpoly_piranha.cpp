@@ -32,10 +32,12 @@ int UIntPolyPiranha::compare(const Basic &o) const
     return (poly_.hash() < s.poly_.hash()) ? -1 : 1;
 }
 
-pintpoly UIntPolyPiranha::container_from_dict(const RCP<const Basic> &var, map_uint_mpz &&d)
+pintpoly UIntPolyPiranha::container_from_dict(const RCP<const Basic> &var,
+                                              map_uint_mpz &&d)
 {
     pintpoly p;
-    piranha::symbol_set ss({{piranha::symbol(SymEngine::detail::poly_print(var))}});
+    piranha::symbol_set ss(
+        {{piranha::symbol(SymEngine::detail::poly_print(var))}});
     p.set_symbol_set(ss);
     for (auto &it : d)
         p.insert(pterm{it.second, pmonomial{it.first}});

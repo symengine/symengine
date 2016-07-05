@@ -21,7 +21,7 @@ using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::URatPSeriesFlint;
-using SymEngine::fp_t;
+using SymEngine::fqp_t;
 using SymEngine::fmpq_wrapper;
 #define series_coeff(EX, SYM, PREC, COEFF)                                     \
     SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)             \
@@ -43,7 +43,7 @@ static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex,
 {
     auto ser = URatPSeriesFlint::series(ex, sym->get_name(), prec);
     auto serrev = URatPSeriesFlint::series_reverse(
-        ser->get_poly(), fp_t(sym->get_name().c_str()), prec);
+        ser->get_poly(), fqp_t(sym->get_name().c_str()), prec);
     return fmpqxx2sym(serrev.get_coeff(n));
 }
 

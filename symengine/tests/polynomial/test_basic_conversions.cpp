@@ -4,8 +4,6 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/rational.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
 #include <symengine/polys/basic_conversions.h>
 
 using SymEngine::symbol;
@@ -373,3 +371,89 @@ TEST_CASE("basic_to_poly UExpr", "[b2poly]")
     poly2 = UExprPoly::from_vec(gen, {{zero, E, one}});
     REQUIRE(eq(*poly1, *poly2));
 }
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+
+using SymEngine::UIntPolyPiranha;
+TEST_CASE("basic_to_poly UIntPiranha", "[b2poly]")
+{
+    RCP<const Basic> basic, gen;
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> minus_one = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> hf = div(one, integer(2));
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const UIntPolyPiranha> poly1, poly2, poly3;
+
+    // x**2 + x**(1/2)
+    basic = add(pow(x, i2), pow(x, hf));
+    gen = pow(x, hf);
+    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 1_z, 0_z, 0_z, 1_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 2**(2x + 1)
+    basic = pow(i2, add(mul(i2, x), one));
+    gen = pow(i2, x);
+    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 0_z, 2_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 2**(-x + 3) + 2**(-2x) -> (2**(-x))
+    basic = add(pow(i2, add(i3, neg(x))), pow(i2, mul(neg(i2), x)));
+    gen = pow(i2, neg(x));
+    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 8_z, 1_z}});
+    REQUIRE(eq(*poly1, *poly2));
+}
+#endif
+
+#ifdef HAVE_SYMENGINE_FLINT
+
+using SymEngine::UIntPolyFlint;
+TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
+{
+    RCP<const Basic> basic, gen;
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> minus_one = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> hf = div(one, integer(2));
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const UIntPolyFlint> poly1, poly2, poly3;
+
+    // x**x + x**(x/2) + x**(x/3)
+    basic = add(pow(x, x), add(pow(x, div(x, i2)), pow(x, div(x, i3))));
+    gen = pow(x, div(x, i6));
+    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 1_z, 0_z, 0_z, 1_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // (x**(1/2)+1)**3 + (x+2)**6
+    basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
+    gen = pow(x, hf);
+    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly2 = pow_upoly(*UIntPolyFlint::from_vec(gen, {{1_z, 1_z}}), 3);
+    poly3 = pow_upoly(*UIntPolyFlint::from_vec(gen, {{2_z, 0_z, 1_z}}), 6);
+    poly2 = add_upoly(*poly2, *poly3);
+    REQUIRE(eq(*poly1, *poly2));
+
+    // (2**x)**2 * (2**(3x + 2) + 1)
+    basic = mul(pow(twopx, i2), add(one, pow(i2, add(i2, mul(x, i3)))));
+    gen = twopx;
+    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 0_z, 4_z}});
+    REQUIRE(eq(*poly1, *poly2));
+}
+#endif

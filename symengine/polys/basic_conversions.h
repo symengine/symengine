@@ -8,7 +8,15 @@ enable_if_t<std::is_same<T, UExprDict>::value, T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
 template <typename T, typename P>
-enable_if_t<std::is_same<T, UIntDict>::value, T>
+enable_if_t<std::is_same<T, UIntDict>::value
+#ifdef HAVE_SYMENGINE_PIRANHA
+                or std::is_same<T, pintpoly>::value
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+                or std::is_same<T, fzp_t>::value
+#endif
+            ,
+            T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
 template <typename P, typename V>
@@ -33,7 +41,10 @@ public:
         if (is_a<const Integer>(*x.get_exp())) {
             int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
             if (i > 0) {
-                dict = D::pow(_b_to_upoly<D, P>(x.get_base(), gen), i);
+                dict = pow_upoly(*P::from_container(
+                                     gen, _b_to_upoly<D, P>(x.get_base(), gen)),
+                                 i)
+                           ->get_poly();
                 return;
             }
         }
@@ -96,8 +107,7 @@ public:
     {
         integer_class i = x.i;
         if (i != 0)
-            dict
-                = P::container_from_dict(gen, {{0, typename D::value_type(i)}});
+            dict = P::container_from_dict(gen, {{0, i}});
     }
 
     void bvisit(const Basic &x)
@@ -113,8 +123,7 @@ public:
             if (is_a<const Integer>(*powr)) {
                 int i = rcp_static_cast<const Integer>(powr)->as_int();
                 if (i > 0) {
-                    dict = P::container_from_dict(
-                        gen, {{i, typename D::value_type(1)}});
+                    dict = P::container_from_dict(gen, {{i, 1}});
                     return;
                 }
             }
@@ -124,12 +133,12 @@ public:
     }
 };
 
-template<typename IntPoly>
-class BasicToUIntPoly : public BasicToUPolyBase<IntPoly, BasicToUIntPoly<IntPoly>>
+template <typename Poly>
+class BasicToUIntPoly : public BasicToUPolyBase<Poly, BasicToUIntPoly<Poly>>
 {
 public:
-    using BasicToUPolyBase<IntPoly, BasicToUIntPoly>::bvisit;
-    using BasicToUPolyBase<IntPoly, BasicToUIntPoly>::apply;
+    using BasicToUPolyBase<Poly, BasicToUIntPoly>::bvisit;
+    using BasicToUPolyBase<Poly, BasicToUIntPoly>::apply;
 
     void bvisit(const Rational &x)
     {
@@ -139,7 +148,8 @@ public:
     void d_add_term(unsigned int pow, const Basic &x)
     {
         if (is_a<const Integer>(x))
-            this->dict = IntPoly::container_from_dict(this->gen, {{pow, static_cast<const Integer &>(x).i}});
+            this->dict = Poly::container_from_dict(
+                this->gen, {{pow, static_cast<const Integer &>(x).i}});
         else
             throw std::runtime_error("Non-integer found");
     }
@@ -172,7 +182,15 @@ _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 }
 
 template <typename T, typename P>
-enable_if_t<std::is_same<T, UIntDict>::value, T>
+enable_if_t<std::is_same<T, UIntDict>::value
+#ifdef HAVE_SYMENGINE_PIRANHA
+                or std::is_same<T, pintpoly>::value
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+                or std::is_same<T, fzp_t>::value
+#endif
+            ,
+            T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUIntPoly<P> v;
@@ -181,13 +199,13 @@ _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 
 template <typename P>
 RCP<const P> from_basic(const RCP<const Basic> &basic,
-                                          const RCP<const Basic> &gen,
-                                          bool ex = false)
+                        const RCP<const Basic> &gen, bool ex = false)
 {
     RCP<const Basic> exp = basic;
     if (ex)
         exp = expand(basic);
-    return P::from_container(gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
+    return P::from_container(
+        gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
 }
 
 template <typename P>
@@ -203,6 +221,7 @@ RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex = false)
         throw std::runtime_error("Did not find exactly 1 generator");
 
     RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
-    return P::from_container(gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
+    return P::from_container(
+        gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
 }
 }

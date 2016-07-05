@@ -12,7 +12,6 @@
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
-using fp_t = SymEngine::fmpz_poly_wrapper;
 using fz_t = SymEngine::fmpz_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -371,9 +370,10 @@ public:
     }
 
     static RCP<const Poly> from_dict(const RCP<const Basic> &var,
-                                                map_uint_mpz &&d)
+                                     map_uint_mpz &&d)
     {
-        return Poly::from_container(var, Poly::container_from_dict(var, std::move(d)));
+        return Poly::from_container(
+            var, Poly::container_from_dict(var, std::move(d)));
     }
 
     RCP<const Basic> as_symbolic() const
@@ -541,7 +541,6 @@ RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
     dict /= b.get_poly();
     return Poly::from_dict(a.get_var(), std::move(dict));
 }
-
 }
 
 #endif // SYMENGINE_UINT_BASE_H

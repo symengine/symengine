@@ -9,26 +9,26 @@
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
-using fp_t = SymEngine::fmpz_poly_wrapper;
+using fzp_t = SymEngine::fmpz_poly_wrapper;
 using fz_t = SymEngine::fmpz_wrapper;
 
 namespace SymEngine
 {
 
-class UIntPolyFlint : public UIntPolyBase<fp_t, UIntPolyFlint>
+class UIntPolyFlint : public UIntPolyBase<fzp_t, UIntPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYFLINT)
     //! Constructor of UIntPolyFlint class
-    UIntPolyFlint(const RCP<const Basic> &var, fp_t &&dict);
+    UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
     static RCP<const UIntPolyFlint> from_vec(const RCP<const Basic> &var,
                                              const vec_integer_class &v);
-    static fp_t container_from_dict(const RCP<const Basic> &var,
-                                                      map_uint_mpz &&d);
+    static fzp_t container_from_dict(const RCP<const Basic> &var,
+                                     map_uint_mpz &&d);
 
     integer_class eval(const integer_class &x) const;
     vec_integer_class multieval(const vec_integer_class &v) const;
@@ -93,7 +93,7 @@ inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
-    fp_t divres;
+    fzp_t divres;
     bool div_f = a.get_poly().divides(b.get_poly(), divres);
     if (div_f) {
         *res = make_rcp<UIntPolyFlint>(a.get_var(), std::move(divres));
