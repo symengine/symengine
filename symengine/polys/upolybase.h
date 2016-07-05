@@ -76,8 +76,6 @@ public:
     std::map<Key, Value> dict_;
 
 public:
-    typedef Value value_type;
-
     ODictWrapper() SYMENGINE_NOEXCEPT
     {
     }
@@ -350,6 +348,8 @@ public:
         : UPolyBase<Container, Poly>(var, std::move(container))
     {
     }
+
+    typedef integer_class coef_type;
 
     // returns degree of the poly
     inline unsigned int get_degree() const

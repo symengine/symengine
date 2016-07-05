@@ -34,7 +34,7 @@ public:
 
     void d_add_term(unsigned int pow, const Basic &x)
     {
-        static_cast<V*>(this)->d_add_term(pow, x);
+        static_cast<V *>(this)->d_add_term(pow, x);
     }
 
     void bvisit(const Pow &x)
@@ -42,10 +42,11 @@ public:
         if (is_a<const Integer>(*x.get_exp())) {
             int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
             if (i > 0) {
-                dict = pow_upoly(*P::from_container(
-                                     gen, _basic_to_upoly<D, P>(x.get_base(), gen)),
-                                 i)
-                           ->get_poly();
+                dict
+                    = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
+                                                            x.get_base(), gen)),
+                                i)
+                          ->get_poly();
                 return;
             }
         }
@@ -124,7 +125,8 @@ public:
             if (is_a<const Integer>(*powr)) {
                 int i = rcp_static_cast<const Integer>(powr)->as_int();
                 if (i > 0) {
-                    dict = P::container_from_dict(gen, {{i, 1}});
+                    dict = P::container_from_dict(
+                        gen, {{i, typename P::coef_type(1)}});
                     return;
                 }
             }

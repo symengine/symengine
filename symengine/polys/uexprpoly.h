@@ -180,6 +180,8 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
+    typedef Expression coef_type;
+
     static RCP<const UExprPoly> from_dict(const RCP<const Basic> &var,
                                           map_int_Expr &&d);
     static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
