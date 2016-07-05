@@ -38,19 +38,16 @@ int UIntPolyFlint::compare(const Basic &o) const
     return 0;
 }
 
-RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Basic> &var,
+fp_t UIntPolyFlint::container_from_dict(const RCP<const Basic> &var,
                                                   map_uint_mpz &&d)
 {
     // benchmark this against dict->str->fmpz_polyxx
-    if (d.empty())
-        return UIntPolyFlint::from_dict(var, {{}});
-
     fp_t f;
     for (auto const &p : d) {
         fz_t r(get_mpz_t(p.second));
         f.set_coeff(p.first, r);
     }
-    return make_rcp<const UIntPolyFlint>(var, std::move(f));
+    return f;
 }
 
 RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Basic> &var,

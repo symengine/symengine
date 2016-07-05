@@ -142,10 +142,6 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UIntPoly in cannonical form based on the
-    // dictionary.
-    static RCP<const UIntPoly> from_dict(const RCP<const Basic> &var,
-                                         map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
     static UIntDict container_from_dict(const RCP<const Basic> &var,

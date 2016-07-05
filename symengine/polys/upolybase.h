@@ -368,6 +368,12 @@ public:
         return get_coeff(get_degree());
     }
 
+    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
+                                                map_uint_mpz &&d)
+    {
+        return Poly::from_container(var, Poly::container_from_dict(var, std::move(d)));
+    }
+
     RCP<const Basic> as_symbolic() const
     {
         auto it = (static_cast<const Poly &>(*this)).begin();
