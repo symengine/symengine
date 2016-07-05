@@ -985,7 +985,7 @@ void test_eval()
     basic_free_stack(imag);
 }
 
-test_matrix()
+void test_matrix()
 {
     CDenseMatrix *A = dense_matrix_new();
     SYMENGINE_C_ASSERT(is_a_DenseMatrix(A));
@@ -1040,7 +1040,6 @@ test_matrix()
     // Equality
     SYMENGINE_C_ASSERT(dense_matrix_eq(B, B) == 1);
     
-    dense_matrix_free(B);
     
     // Inverse
     
@@ -1077,8 +1076,132 @@ test_matrix()
  
     SYMENGINE_C_ASSERT(dense_matrix_eq(E, D) == 1);
     
+    int r = dense_matrix_rows(E);
+    int c = dense_matrix_cols(E);
+    
+    SYMENGINE_C_ASSERT(r == 2);
+    SYMENGINE_C_ASSERT(c == 2);
+    
+    //matrix addition
+    dense_matrix_add_matrix(C, E, D);
+    
+    char *result = dense_matrix_str(C);
+    char *expected = "[-4, 6]\n[6, -8]\n";
+    
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    dense_matrix_transpose(C, B);
+    result = dense_matrix_str(C);
+    expected = "[5, 3]\n[2, 4]\n";
+    // Transpose of [[5, 2],[3, 4]]
+    
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    integer_set_ui(i1, 4);
+    integer_set_ui(i2, 3);
+    integer_set_ui(i3, 6);
+    
+    dense_matrix_set_basic(B, 0, 0, i1);
+    dense_matrix_set_basic(B, 0, 1, i2);
+    dense_matrix_set_basic(B, 1, 0, i3);
+    dense_matrix_set_basic(B, 1, 1, i2);
+    
+    // LU decomposition
+    dense_matrix_LU(C, D, B);
+    
+    result = dense_matrix_str(C);
+    expected = "[1, 0]\n[3/2, 1]\n";
+    
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    result = dense_matrix_str(D);
+    expected = "[4, 3]\n[0, -3/2]\n";
+    
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    //matrix multiplication
+    dense_matrix_mul_matrix(E, C, D);
+    SYMENGINE_C_ASSERT(dense_matrix_eq(E, B) == 1);
+    
+    //scalar multiplication
+    dense_matrix_mul_scalar(E, D, i2);
+    //"[[4, 3],[0, -3/2]] * 3
+    
+    result = dense_matrix_str(E);
+    expected = "[12, 9]\n[0, -9/2]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    //scalar addition
+    dense_matrix_add_scalar(E, D, i2);
+    //"[[4, 3],[0, -3/2]] + 3
+    
+    result = dense_matrix_str(E);
+    expected = "[7, 6]\n[3, 3/2]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    //LDL
+    integer_set_ui(i1, 4);
+    integer_set_ui(i2, 3);
+    integer_set_ui(i3, 2);
+    
+    dense_matrix_set_basic(B, 0, 0, i1);
+    dense_matrix_set_basic(B, 0, 1, i2);
+    dense_matrix_set_basic(B, 1, 0, i2);
+    dense_matrix_set_basic(B, 1, 1, i3);
+    // B = [[4, 3],[3, 2]]
+    
+    // LDL decomposition
+    // [[4, 3],[3, 2]] = [[1, 0],[3/4, 1]] * [[4, 0],[0, -1/4]] * [[1, 3/4],[0, 1]]
+    dense_matrix_LDL(C, D, B);
+    //L : C, U : D
+    
+    
+    result = dense_matrix_str(C);
+    expected = "[1, 0]\n[3/4, 1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    result = dense_matrix_str(D);
+    expected = "[4, 0]\n[0, -1/4]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    
+    // submatrix
+    dense_matrix_submatrix(C, B, 0, 0, 1, 0, 1, 1);
+    result = dense_matrix_str(C);
+    expected = "[4]\n[3]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    // LU_solve
+    dense_matrix_set_basic(C, 1, 0, i1);
+    dense_matrix_LU_solve(D, B, C);
+    result = dense_matrix_str(D);
+    expected = "[4]\n[-4]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);  
+    
+    
+    // Fractionfree LU
+    dense_matrix_FFLU(C, B);
+    result = dense_matrix_str(C);
+    expected = "[4, 3]\n[3, -1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    // FractionFree LDU
+    dense_matrix_FFLDU(C, D, E, B);
+    result = dense_matrix_str(C);
+    expected = "[4, 0]\n[3, 1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    result = dense_matrix_str(D);
+    expected = "[4, 0]\n[0, 4]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
+    result = dense_matrix_str(E);
+    expected = "[4, 3]\n[0, -1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    
     vecbasic_free(vec);
     
+    dense_matrix_free(B);
     dense_matrix_free(C);
     dense_matrix_free(D);
     dense_matrix_free(E);
@@ -1092,7 +1215,7 @@ test_matrix()
 
 int main(int argc, char *argv[])
 {
-    /*test_cwrapper();
+    test_cwrapper();
     test_complex();
     test_complex_double();
     test_basic();
@@ -1118,7 +1241,7 @@ int main(int argc, char *argv[])
 #endif // HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
-#endif // HAVE_SYMENGINE_MPC*/
+#endif // HAVE_SYMENGINE_MPC
     symengine_print_stack_on_segfault();
     test_matrix();
     return 0;
