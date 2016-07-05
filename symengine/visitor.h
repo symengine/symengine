@@ -9,7 +9,6 @@
 #include <symengine/polys/uintpoly_flint.h>
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
-#include <symengine/polys/uintpoly.h>
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>

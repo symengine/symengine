@@ -1,4 +1,4 @@
-#include <symengine/polys/basic_to_poly.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -63,31 +63,6 @@ RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v)
 {
     return make_rcp<const UExprPoly>(var, UExprDict::from_vec(v));
-}
-
-RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic,
-                                           const RCP<const Basic> &gen, bool e)
-{
-    RCP<const Basic> exp = basic;
-    if (e)
-        exp = expand(basic);
-    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(exp, gen));
-}
-
-RCP<const UExprPoly> UExprPoly::from_basic(const RCP<const Basic> &basic,
-                                           bool e)
-{
-    RCP<const Basic> exp = basic;
-    if (e)
-        exp = expand(basic);
-
-    umap_basic_num tmp = _find_gens_poly(exp);
-
-    if (tmp.size() != 1)
-        throw std::runtime_error("Did not find exactly 1 generator");
-
-    RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
-    return UExprPoly::from_container(gen, _b_to_upoly<UExprDict>(exp, gen));
 }
 
 vec_basic UExprPoly::get_args() const

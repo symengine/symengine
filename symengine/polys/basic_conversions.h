@@ -3,12 +3,12 @@
 namespace SymEngine
 {
 
-template <typename T>
-enable_if_t<std::is_same<T, UExprDict>::value, UExprDict>
+template <typename T, typename P>
+enable_if_t<std::is_same<T, UExprDict>::value, T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
-template <typename T>
-enable_if_t<std::is_same<T, UIntDict>::value, UIntDict>
+template <typename T, typename P>
+enable_if_t<std::is_same<T, UIntDict>::value, T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
 template <typename P, typename V>
@@ -33,7 +33,7 @@ public:
         if (is_a<const Integer>(*x.get_exp())) {
             int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
             if (i > 0) {
-                dict = D::pow(_b_to_upoly<D>(x.get_base(), gen), i);
+                dict = D::pow(_b_to_upoly<D, P>(x.get_base(), gen), i);
                 return;
             }
         }
@@ -79,17 +79,17 @@ public:
 
     void bvisit(const Add &x)
     {
-        dict = _b_to_upoly<D>(x.coef_, gen);
+        dict = _b_to_upoly<D, P>(x.coef_, gen);
         for (auto const &it : x.dict_)
-            dict += (_b_to_upoly<D>(it.first, gen)
-                     * _b_to_upoly<D>(it.second, gen));
+            dict += (_b_to_upoly<D, P>(it.first, gen)
+                     * _b_to_upoly<D, P>(it.second, gen));
     }
 
     void bvisit(const Mul &x)
     {
-        dict = _b_to_upoly<D>(x.coef_, gen);
+        dict = _b_to_upoly<D, P>(x.coef_, gen);
         for (auto const &it : x.dict_)
-            dict *= _b_to_upoly<D>(pow(it.first, it.second), gen);
+            dict *= _b_to_upoly<D, P>(pow(it.first, it.second), gen);
     }
 
     void bvisit(const Integer &x)
@@ -124,11 +124,12 @@ public:
     }
 };
 
-class BasicToUIntPoly : public BasicToUPolyBase<UIntPoly, BasicToUIntPoly>
+template<typename IntPoly>
+class BasicToUIntPoly : public BasicToUPolyBase<IntPoly, BasicToUIntPoly<IntPoly>>
 {
 public:
-    using BasicToUPolyBase<UIntPoly, BasicToUIntPoly>::bvisit;
-    using BasicToUPolyBase<UIntPoly, BasicToUIntPoly>::apply;
+    using BasicToUPolyBase<IntPoly, BasicToUIntPoly>::bvisit;
+    using BasicToUPolyBase<IntPoly, BasicToUIntPoly>::apply;
 
     void bvisit(const Rational &x)
     {
@@ -138,7 +139,7 @@ public:
     void d_add_term(unsigned int pow, const Basic &x)
     {
         if (is_a<const Integer>(x))
-            dict = UIntDict({{pow, static_cast<const Integer &>(x).i}});
+            this->dict = IntPoly::container_from_dict(this->gen, {{pow, static_cast<const Integer &>(x).i}});
         else
             throw std::runtime_error("Non-integer found");
     }
@@ -162,19 +163,46 @@ public:
     }
 };
 
-template <typename T>
-enable_if_t<std::is_same<T, UExprDict>::value, UExprDict>
+template <typename T, typename P>
+enable_if_t<std::is_same<T, UExprDict>::value, T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUExprPoly v;
     return v.apply(*basic, gen);
 }
 
-template <typename T>
-enable_if_t<std::is_same<T, UIntDict>::value, UIntDict>
+template <typename T, typename P>
+enable_if_t<std::is_same<T, UIntDict>::value, T>
 _b_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
-    BasicToUIntPoly v;
+    BasicToUIntPoly<P> v;
     return v.apply(*basic, gen);
+}
+
+template <typename P>
+RCP<const P> from_basic(const RCP<const Basic> &basic,
+                                          const RCP<const Basic> &gen,
+                                          bool ex = false)
+{
+    RCP<const Basic> exp = basic;
+    if (ex)
+        exp = expand(basic);
+    return P::from_container(gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
+}
+
+template <typename P>
+RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex = false)
+{
+    RCP<const Basic> exp = basic;
+    if (ex)
+        exp = expand(basic);
+
+    umap_basic_num tmp = _find_gens_poly(exp);
+
+    if (tmp.size() != 1)
+        throw std::runtime_error("Did not find exactly 1 generator");
+
+    RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
+    return P::from_container(gen, _b_to_upoly<typename P::container_type, P>(exp, gen));
 }
 }

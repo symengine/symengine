@@ -1,4 +1,4 @@
-#include <symengine/polys/basic_to_poly.h>
+#include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 
 namespace SymEngine
@@ -57,30 +57,6 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
                                        const vec_integer_class &v)
 {
     return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
-}
-
-RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic,
-                                         const RCP<const Basic> &gen, bool e)
-{
-    RCP<const Basic> exp = basic;
-    if (e)
-        exp = expand(basic);
-    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(exp, gen));
-}
-
-RCP<const UIntPoly> UIntPoly::from_basic(const RCP<const Basic> &basic, bool e)
-{
-    RCP<const Basic> exp = basic;
-    if (e)
-        exp = expand(basic);
-
-    umap_basic_num tmp = _find_gens_poly(exp);
-
-    if (tmp.size() != 1)
-        throw std::runtime_error("Did not find exactly 1 generator");
-
-    RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
-    return UIntPoly::from_container(gen, _b_to_upoly<UIntDict>(exp, gen));
 }
 
 integer_class UIntPoly::eval(const integer_class &x) const
