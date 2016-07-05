@@ -113,6 +113,10 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
         *n = integer(12);
         *x = zero;
         return true;
+    } else if (eq(*arg, *zero)) {
+        *n = integer(0);
+        *x = zero;
+        return true;
     } else {
         return false;
     }
