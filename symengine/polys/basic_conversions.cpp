@@ -32,9 +32,12 @@ public:
         }
 
         if (is_a<const Rational>(*exp)) {
-            RCP<const Integer> den = rcp_static_cast<const Rational>(exp)->get_den();
+            RCP<const Integer> den
+                = rcp_static_cast<const Rational>(exp)->get_den();
             if (is_a<const Rational>(*it->second))
-                gen_set[base] = divnum(one, lcm(*den, *rcp_static_cast<const Rational>(it->second)->get_den()));
+                gen_set[base] = divnum(
+                    one, lcm(*den, *rcp_static_cast<const Rational>(it->second)
+                                        ->get_den()));
             else
                 gen_set[base] = divnum(one, den);
         }
@@ -52,9 +55,10 @@ public:
         } else if (is_a<const Rational>(*x.get_exp())) {
 
             RCP<const Basic> base = x.get_base();
-            RCP<const Rational> r = rcp_static_cast<const Rational>(x.get_exp());
+            RCP<const Rational> r
+                = rcp_static_cast<const Rational>(x.get_exp());
             if (r->is_negative())
-                 base = pow(base, minus_one);
+                base = pow(base, minus_one);
             add_to_gen_set(base, divnum(one, r->get_den()));
 
         } else {
@@ -145,7 +149,8 @@ public:
             if (x.is_positive())
                 gen_set[one] = x.rcp_from_this_cast<const Number>();
             else
-                gen_set[minus_one] = mulnum(x.rcp_from_this_cast<const Number>(), minus_one);
+                gen_set[minus_one]
+                    = mulnum(x.rcp_from_this_cast<const Number>(), minus_one);
         }
     }
 

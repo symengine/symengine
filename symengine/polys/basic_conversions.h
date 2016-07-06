@@ -63,8 +63,8 @@ public:
 
         RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
         if (is_a<const Pow>(*gen)) {
-            genbase = static_cast<const Pow&>(*gen).get_base();
-            genpow = static_cast<const Pow&>(*gen).get_exp();
+            genbase = static_cast<const Pow &>(*gen).get_base();
+            genpow = static_cast<const Pow &>(*gen).get_exp();
         }
 
         if (eq(*genbase, *x.get_base())) {
@@ -102,7 +102,7 @@ public:
 
     void bvisit(const Add &x)
     {
-        dict = _basic_to_upoly<D, P>(x.coef_, gen);
+        x.coef_->accept(*this);
         for (auto const &it : x.dict_)
             dict += (_basic_to_upoly<D, P>(it.first, gen)
                      * _basic_to_upoly<D, P>(it.second, gen));
@@ -110,7 +110,7 @@ public:
 
     void bvisit(const Mul &x)
     {
-        dict = _basic_to_upoly<D, P>(x.coef_, gen);
+        x.coef_->accept(*this);
         for (auto const &it : x.dict_)
             dict *= _basic_to_upoly<D, P>(pow(it.first, it.second), gen);
     }
