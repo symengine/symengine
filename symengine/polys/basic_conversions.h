@@ -39,7 +39,7 @@ public:
     {
         gen = gen_;
         b.accept(*this);
-        return dict;
+        return std::move(dict);
     }
 
     void dict_set(unsigned int pow, const Basic &x)
@@ -102,17 +102,18 @@ public:
 
     void bvisit(const Add &x)
     {
-        x.coef_->accept(*this);
+        D res = apply(*x.coef_, gen);
         for (auto const &it : x.dict_)
-            dict += (_basic_to_upoly<D, P>(it.first, gen)
-                     * _basic_to_upoly<D, P>(it.second, gen));
+            res += apply(*it.first, gen) * apply(*it.second, gen);
+        dict = std::move(res);
     }
 
     void bvisit(const Mul &x)
     {
-        x.coef_->accept(*this);
+        D res = apply(*x.coef_, gen);
         for (auto const &it : x.dict_)
-            dict *= _basic_to_upoly<D, P>(pow(it.first, it.second), gen);
+            res *= apply(*pow(it.first, it.second), gen);
+        dict = std::move(res);
     }
 
     void bvisit(const Integer &x)

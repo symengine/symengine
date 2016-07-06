@@ -18,7 +18,7 @@ public:
     umap_basic_num apply(const Basic &b)
     {
         b.accept(*this);
-        return gen_set;
+        return std::move(gen_set);
     }
 
     // adds curr to gen_set, or updates already existing gen
@@ -106,7 +106,7 @@ public:
     {
         the_base = base;
         b.accept(*this);
-        return gen_set;
+        return std::move(gen_set);
     }
 
     void bvisit(const Add &x)
