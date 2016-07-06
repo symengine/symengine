@@ -83,12 +83,11 @@ public:
     DenseMatrix(const DenseMatrix &);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
+    // Resize
+    void resize(unsigned i, unsigned j);
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
-
-    // Resize
-    virtual void resize(unsigned i, unsigned j);
 
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
