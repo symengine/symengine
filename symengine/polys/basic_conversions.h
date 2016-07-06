@@ -8,14 +8,14 @@ namespace SymEngine
 
 // convert a `basic`, to a UPoly `P` (eg. UIntPoly, UExprPoly, UIntPolyFlint)
 // using `gen` as the genarator. Throws, if poly constructions not possible.
-// `ex` is the optional parameter for epanding the given `basic` or not.
+// `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
 RCP<const P> from_basic(const RCP<const Basic> &basic,
                         const RCP<const Basic> &gen, bool ex = false);
 // convert a `basic`, to a UPoly `P` (eg. UIntPoly, UExprPoly, UIntPolyFlint)
 // after finding out the generator automatically. Throws, if number
 // of generators found != 1, or poly construction not possible.
-// `ex` is the optional parameter for epanding the given `basic` or not.
+// `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
 RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex = false);
 
