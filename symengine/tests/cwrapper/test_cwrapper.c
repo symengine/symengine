@@ -1008,9 +1008,8 @@ void test_matrix()
     vecbasic_push_back(vec, i3);
     vecbasic_push_back(vec, i4);
     
-    CDenseMatrix *B = dense_matrix_new();
-    dense_matrix_set_vec(B, 2, 2, vec);
-    
+    CDenseMatrix *B = dense_matrix_new_vec(2, 2, vec);
+    SYMENGINE_C_ASSERT(is_a_DenseMatrix(B));
     vecbasic_free(vec);
     
     dense_matrix_get_basic(i4, B, 0, 0);
@@ -1043,7 +1042,7 @@ void test_matrix()
     
     // Inverse
     
-    CDenseMatrix *C = dense_matrix_new();
+    
     vec = vecbasic_new();
     
     integer_set_ui(i4, 4);
@@ -1055,21 +1054,20 @@ void test_matrix()
     vecbasic_push_back(vec, i3);
     vecbasic_push_back(vec, i2);
     
-     dense_matrix_set_vec(C, 2, 2, vec);
-     vecbasic_free(vec);
+    CDenseMatrix *C = dense_matrix_new_vec(2, 2, vec);
+    vecbasic_free(vec);
      
-     CDenseMatrix *D = dense_matrix_new();
-     vec = vecbasic_new();
+    vec = vecbasic_new();
      
-     integer_set_si(i4, -4);
-     integer_set_si(i2, -2);
+    integer_set_si(i4, -4);
+    integer_set_si(i2, -2);
      
     vecbasic_push_back(vec, i2);
     vecbasic_push_back(vec, i3);
     vecbasic_push_back(vec, i3);
     vecbasic_push_back(vec, i4);
     
-    dense_matrix_set_vec(D, 2, 2, vec);
+    CDenseMatrix *D = dense_matrix_new_vec(2, 2, vec);
     
     CDenseMatrix *E = dense_matrix_new();
     dense_matrix_inv(E, C);

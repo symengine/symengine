@@ -342,20 +342,23 @@ CDenseMatrix *dense_matrix_new();
 CSparseMatrix *sparse_matrix_new();
 
 void dense_matrix_free(CDenseMatrix *self);
+//! Return a DenseMatrix with l's elements
+CDenseMatrix *dense_matrix_new_vec(unsigned rows, unsigned cols, CVecBasic *l);
+//! Return a DenseMatrix with r rows and c columns
+CDenseMatrix *dense_matrix_new_rows_cols(unsigned r, unsigned c);
+
 void sparse_matrix_free(CSparseMatrix *self);
 
 //! Assign to s, a DenseMatrix
 void dense_matrix_init(CDenseMatrix *s);
-//! Assign to s, a DenseMatrix with r rows and c columns
-void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int r,
-                            unsigned long int c);
+
 //! Assign to s, a DenseMatrix with value d
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
-//! Assign to s, a DenseMatrix with l's elements
-void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows,
-                          unsigned long int cols, CVecBasic *l);
+
 //! Return a string representation of s
 char *dense_matrix_str(const CDenseMatrix *s);
+//! Resize mat to rxc
+void dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c);
 //! Assign to s, mat[r][c]
 void dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
                             unsigned long int r, unsigned long int c);

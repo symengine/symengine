@@ -581,7 +581,17 @@ struct CSparseMatrix {
 
 CDenseMatrix *dense_matrix_new()
 {
-    return new CDenseMatrix;
+    return new CDenseMatrix();
+}
+
+CDenseMatrix *dense_matrix_new_vec(unsigned rows, unsigned cols, CVecBasic *l)
+{
+    return new CDenseMatrix({{rows, cols, l->m}});
+}
+
+CDenseMatrix *dense_matrix_new_rows_cols(unsigned rows, unsigned cols)
+{
+    return new CDenseMatrix({{rows, cols}});
 }
 
 CSparseMatrix *sparse_matrix_new()
@@ -609,12 +619,6 @@ void sparse_matrix_init(CSparseMatrix *s)
     s->m = SymEngine::CSRMatrix();
 }
 
-void dense_matrix_rows_cols(CDenseMatrix *s, unsigned long int rows,
-                            unsigned long int cols)
-{
-    s->m = SymEngine::DenseMatrix(rows, cols);
-}
-
 void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
                              unsigned long int cols)
 {
@@ -623,13 +627,7 @@ void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
 
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
 {
-    s->m = SymEngine::DenseMatrix(d->m);
-}
-
-void dense_matrix_set_vec(CDenseMatrix *s, unsigned long int rows,
-                          unsigned long int cols, CVecBasic *l)
-{
-    s->m = SymEngine::DenseMatrix(rows, cols, l->m);
+    s->m = d->m;
 }
 
 char *dense_matrix_str(const CDenseMatrix *s)
@@ -646,6 +644,11 @@ char *sparse_matrix_str(const CSparseMatrix *s)
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
+}
+
+void dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c)
+{
+    mat->m.resize(r, c);
 }
 
 void dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
@@ -708,7 +711,6 @@ unsigned long int dense_matrix_cols(const CDenseMatrix *s)
 void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
                              const CDenseMatrix *matB)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
     matA->m.add_matrix(matB->m, s->m);
 }
@@ -716,7 +718,6 @@ void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
 void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
                              const CDenseMatrix *matB)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, matA->m.nrows(), matB->m.ncols());
     matA->m.mul_matrix(matB->m, s->m);
 }
@@ -724,7 +725,6 @@ void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
 void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
                              const basic b)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
     matA->m.add_scalar(b->m, s->m);
 }
@@ -732,15 +732,12 @@ void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
 void dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
                              const basic b)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
     matA->m.mul_scalar(b->m, s->m);
 }
 
 void dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
 {
-    l->m = SymEngine::DenseMatrix();
-    u->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
     dense_matrix_rows_cols(u, mat->m.nrows(), mat->m.ncols());
     mat->m.LU(l->m, u->m);
@@ -748,8 +745,6 @@ void dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
 
 void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
 {
-    l->m = SymEngine::DenseMatrix();
-    d->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
     dense_matrix_rows_cols(d, mat->m.nrows(), mat->m.ncols());
     mat->m.LDL(l->m, d->m);
@@ -757,7 +752,6 @@ void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
 
 void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
 {
-    lu->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(lu, mat->m.nrows(), mat->m.ncols());
     mat->m.FFLU(lu->m);
 }
@@ -765,9 +759,6 @@ void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
 void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
                         const CDenseMatrix *mat)
 {
-    l->m = SymEngine::DenseMatrix();
-    d->m = SymEngine::DenseMatrix();
-    u->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
     dense_matrix_rows_cols(d, mat->m.nrows(), mat->m.ncols());
     dense_matrix_rows_cols(u, mat->m.nrows(), mat->m.ncols());
@@ -777,7 +768,6 @@ void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
 void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
                            const CDenseMatrix *b)
 {
-    x->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(x, A->m.ncols(), 1);
     A->m.LU_solve(b->m, x->m);
 }
@@ -785,7 +775,6 @@ void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
 void dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
                        unsigned long int c)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, r, c);
     ones(s->m);
 }
@@ -793,7 +782,6 @@ void dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
 void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
                         unsigned long int c)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, r, c);
     zeros(s->m);
 }
@@ -805,7 +793,6 @@ void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
 void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
                       int k)
 {
-    s->m = SymEngine::DenseMatrix();
     dense_matrix_rows_cols(s, N, M);
     eye(s->m, k);
 }

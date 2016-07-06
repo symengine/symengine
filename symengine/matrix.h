@@ -87,6 +87,9 @@ public:
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
 
+    // Resize
+    virtual void resize(unsigned i, unsigned j);
+
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
