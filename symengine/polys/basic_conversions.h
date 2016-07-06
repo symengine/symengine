@@ -42,9 +42,9 @@ public:
         return dict;
     }
 
-    void d_add_term(unsigned int pow, const Basic &x)
+    void dict_set(unsigned int pow, const Basic &x)
     {
-        static_cast<V *>(this)->d_add_term(pow, x);
+        static_cast<V *>(this)->dict_set(pow, x);
     }
 
     void bvisit(const Pow &x)
@@ -63,8 +63,8 @@ public:
 
         RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
         if (is_a<const Pow>(*gen)) {
-            genbase = rcp_static_cast<const Pow>(gen)->get_base();
-            genpow = rcp_static_cast<const Pow>(gen)->get_exp();
+            genbase = static_cast<const Pow&>(*gen).get_base();
+            genpow = static_cast<const Pow&>(*gen).get_exp();
         }
 
         if (eq(*genbase, *x.get_base())) {
@@ -93,10 +93,10 @@ public:
                 }
                 coef = mul(coef, pow(genbase, it));
             }
-            d_add_term(powr, *coef);
+            dict_set(powr, *coef);
 
         } else {
-            d_add_term(0, x);
+            dict_set(0, x);
         }
     }
 
@@ -142,7 +142,7 @@ public:
             }
         }
 
-        d_add_term(0, x);
+        dict_set(0, x);
     }
 };
 
@@ -158,7 +158,7 @@ public:
         throw std::runtime_error("Non-integer found");
     }
 
-    void d_add_term(unsigned int pow, const Basic &x)
+    void dict_set(unsigned int pow, const Basic &x)
     {
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
@@ -179,7 +179,7 @@ public:
         dict = UExprDict(x.rcp_from_this());
     }
 
-    void d_add_term(unsigned int pow, const Basic &x)
+    void dict_set(unsigned int pow, const Basic &x)
     {
         dict = UExprDict({{pow, x.rcp_from_this()}});
     }

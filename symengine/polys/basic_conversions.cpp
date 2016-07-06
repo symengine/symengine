@@ -31,14 +31,12 @@ public:
             return;
         }
 
-        if (is_a<const Rational>(*exp) and is_a<const Rational>(*it->second)) {
-            gen_set[base] = rcp_static_cast<const Rational>(div(
-                one,
-                lcm(*rcp_static_cast<const Rational>(exp)->get_den(),
-                    *rcp_static_cast<const Rational>(it->second)->get_den())));
-        } else if (is_a<const Rational>(*exp)) {
-            gen_set[base] = rcp_static_cast<const Rational>(
-                div(one, rcp_static_cast<const Rational>(exp)->get_den()));
+        if (is_a<const Rational>(*exp)) {
+            RCP<const Integer> den = rcp_static_cast<const Rational>(exp)->get_den();
+            if (is_a<const Rational>(*it->second))
+                gen_set[base] = divnum(one, lcm(*den, *rcp_static_cast<const Rational>(it->second)->get_den()));
+            else
+                gen_set[base] = divnum(one, den);
         }
     }
 
@@ -53,12 +51,11 @@ public:
 
         } else if (is_a<const Rational>(*x.get_exp())) {
 
-            RCP<const Basic> mulx = one;
-            if (rcp_static_cast<const Rational>(x.get_exp())->is_negative())
-                mulx = minus_one;
-            RCP<const Rational> den = rcp_static_cast<const Rational>(div(
-                one, rcp_static_cast<const Rational>(x.get_exp())->get_den()));
-            add_to_gen_set(pow(x.get_base(), mulx), den);
+            RCP<const Basic> base = x.get_base();
+            RCP<const Rational> r = rcp_static_cast<const Rational>(x.get_exp());
+            if (r->is_negative())
+                 base = pow(base, minus_one);
+            add_to_gen_set(base, divnum(one, r->get_den()));
 
         } else {
             umap_basic_num pow_pairs
@@ -114,7 +111,7 @@ public:
             x.coef_->accept(*this);
 
         for (auto it : x.dict_) {
-            RCP<const Basic> mulx = one, divx = one;
+            RCP<const Number> mulx = one, divx = one;
 
             if (it.second->is_negative())
                 mulx = minus_one;
@@ -122,8 +119,7 @@ public:
             if (is_a<const Rational>(*it.second))
                 divx = rcp_static_cast<const Rational>(it.second)->get_den();
 
-            gen_set[mul(mulx, it.first)]
-                = rcp_static_cast<const Number>(div(one, divx));
+            gen_set[mul(mulx, it.first)] = divnum(one, divx);
         }
     }
 
@@ -140,8 +136,7 @@ public:
             divx = rcp_static_cast<const Rational>(x.coef_)->get_den();
 
         auto dict = x.dict_;
-        gen_set[Mul::from_dict(mulx, std::move(dict))]
-            = rcp_static_cast<const Number>(div(one, divx));
+        gen_set[Mul::from_dict(mulx, std::move(dict))] = divnum(one, divx);
     }
 
     void bvisit(const Number &x)
@@ -150,8 +145,7 @@ public:
             if (x.is_positive())
                 gen_set[one] = x.rcp_from_this_cast<const Number>();
             else
-                gen_set[minus_one]
-                    = rcp_static_cast<const Number>(neg(x.rcp_from_this()));
+                gen_set[minus_one] = mulnum(x.rcp_from_this_cast<const Number>(), minus_one);
         }
     }
 

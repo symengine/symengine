@@ -237,6 +237,13 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     poly2 = UIntPoly::from_vec(gen, {{3_z, 1_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
+    // 0
+    basic = zero;
+    gen = x;
+    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly2 = UIntPoly::from_vec(gen, {{0_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
     // x + y
     basic = add(x, y);
     gen = x;
