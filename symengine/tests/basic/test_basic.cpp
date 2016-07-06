@@ -459,6 +459,17 @@ TEST_CASE("Mul: Basic", "[basic]")
     REQUIRE(unified_eq(r->get_args(), {}));
 
     CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
+
+    r = mul(mul(mul(x, y), mul(x, integer(2))), integer(3));
+    RCP<const Mul> mr = rcp_static_cast<const Mul>(r);
+    REQUIRE(eq(*mr->get_coef(), *integer(6)));
+    const map_basic_basic &mulmap = mr->get_dict();
+    auto search = mulmap.find(x);
+    REQUIRE(search != mulmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = mulmap.find(y);
+    REQUIRE(search != mulmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
 }
 
 TEST_CASE("Diff: Basic", "[basic]")

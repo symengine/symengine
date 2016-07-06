@@ -62,6 +62,15 @@ public:
                       const map_basic_basic &dict) const;
 
     virtual vec_basic get_args() const;
+
+    RCP<const Number> get_coef() const
+    {
+        return coef_;
+    }
+    const map_basic_basic &get_dict() const
+    {
+        return dict_;
+    }
 };
 //! Multiplication
 RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b);
