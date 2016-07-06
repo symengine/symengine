@@ -609,11 +609,6 @@ void sparse_matrix_free(CSparseMatrix *self)
     delete self;
 }
 
-void dense_matrix_init(CDenseMatrix *s)
-{
-    s->m = SymEngine::DenseMatrix();
-}
-
 void sparse_matrix_init(CSparseMatrix *s)
 {
     s->m = SymEngine::CSRMatrix();
@@ -787,6 +782,9 @@ void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
 }
 void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
 {
+    int vec_size = vecbasic_size(d);
+    dense_matrix_rows_cols(s, vec_size + (k >= 0 ? k : -k),
+                           vec_size + (k >= 0 ? k : -k));
     diag(s->m, d->m, k);
 }
 

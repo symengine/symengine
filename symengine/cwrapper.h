@@ -349,9 +349,6 @@ CDenseMatrix *dense_matrix_new_rows_cols(unsigned r, unsigned c);
 
 void sparse_matrix_free(CSparseMatrix *self);
 
-//! Assign to s, a DenseMatrix
-void dense_matrix_init(CDenseMatrix *s);
-
 //! Assign to s, a DenseMatrix with value d
 void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 
