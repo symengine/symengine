@@ -173,6 +173,11 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
+inline bool unified_eq(const Expression &a, const Expression &b)
+{
+    return a == b;
+}
+
 inline int unified_compare(const Expression &a, const Expression &b)
 {
     return unified_compare(a.get_basic(), b.get_basic());

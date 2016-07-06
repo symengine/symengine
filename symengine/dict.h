@@ -126,16 +126,17 @@ inline bool unified_eq(const std::unordered_map<K, V, H, E> &a,
     return unordered_eq(a, b);
 }
 
-inline bool unified_eq(const RCP<const Basic> &a, const RCP<const Basic> &b)
+template <typename T, typename U,
+          typename = enable_if_t<std::is_base_of<Basic, T>::value
+                                 and std::is_base_of<Basic, U>::value>>
+inline bool unified_eq(const RCP<const T> &a, const RCP<const U> &b)
 {
     return eq(*a, *b);
 }
 
 template <typename T,
-          typename
-          = enable_if_t<std::is_arithmetic<T>::value
-                        or std::is_same<T, integer_class>::value
-                        or std::is_same<T, SymEngine::Expression>::value>>
+          typename = enable_if_t<std::is_arithmetic<T>::value
+                                 or std::is_same<T, integer_class>::value>>
 inline bool unified_eq(const T &a, const T &b)
 {
     return a == b;
