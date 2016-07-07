@@ -288,6 +288,13 @@ public:
             return ite->second;
         return Value(0);
     }
+
+    Value get_lc() const
+    {
+        if (dict_.empty())
+            return Value(0);
+        return dict_.rbegin()->second;
+    }
 };
 
 umap_basic_num _find_gens_poly(const RCP<const Basic> &x);

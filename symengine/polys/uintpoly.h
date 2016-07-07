@@ -64,13 +64,6 @@ public:
         return result;
     }
 
-    integer_class get_lc()
-    {
-        if (dict_.empty())
-            return integer_class(0);
-        return dict_.rbegin()->second;
-    }
-
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
         int mul = 1;
