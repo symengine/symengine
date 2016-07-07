@@ -110,6 +110,9 @@ void basic_const_EulerGamma(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 
+//! Parse str and assign value to b
+void basic_parse(basic b, const char *str);
+
 //! Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
 //! Returns the typeID of the class with the name c

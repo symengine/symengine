@@ -78,6 +78,13 @@ void test_cwrapper()
 
     integer_get_mpz(test, e);
     SYMENGINE_C_ASSERT(mpz_get_ui(test) == 123);
+    
+    char *str = "123 + 321";
+    basic p;
+    basic_new_stack(p);
+    basic_parse(p, str);
+    SYMENGINE_C_ASSERT(is_a_Integer(p));
+    SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
 
     mpz_clear(test);
     basic_free_stack(f);
@@ -85,6 +92,7 @@ void test_cwrapper()
     basic_free_stack(x);
     basic_free_stack(y);
     basic_free_stack(z);
+    basic_free_stack(p);
     basic_str_free(s);
 }
 
