@@ -1249,6 +1249,40 @@ void test_matrix()
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
     basic_str_free(result);
     
+    // Num-py like functions
+    
+    // Ones
+    dense_matrix_ones(D, 2, 3);
+    result = dense_matrix_str(D);
+    expected = "[1, 1, 1]\n[1, 1, 1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
+    // Zeros
+    dense_matrix_zeros(D, 3, 2);
+    result = dense_matrix_str(D);
+    expected = "[0, 0]\n[0, 0]\n[0, 0]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
+    // Diag
+    dense_matrix_diag(D, vec, 0);
+    result = dense_matrix_str(D);
+    expected = "[-2, 0, 0, 0]\n[0, 3, 0, 0]\n[0, 0, 3, 0]\n[0, 0, 0, -4]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
+    //det
+    dense_matrix_det(i1, D);
+    SYMENGINE_C_ASSERT(integer_get_ui(i1) == 72);
+    
+    // eye
+    dense_matrix_eye(D, 3, 4, 1);
+    result = dense_matrix_str(D);
+    expected = "[0, 1, 0, 0]\n[0, 0, 1, 0]\n[0, 0, 0, 1]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
     vecbasic_free(vec);
     
     dense_matrix_free(B);
