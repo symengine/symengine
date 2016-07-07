@@ -5,7 +5,7 @@
 namespace SymEngine
 {
 
-UIntPolyFlint::UIntPolyFlint(const RCP<const Symbol> &var, fp_t &&dict)
+UIntPolyFlint::UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
 }
@@ -15,7 +15,7 @@ std::size_t UIntPolyFlint::__hash__() const
     std::hash<std::string> str_hash;
     std::size_t seed = UINTPOLYFLINT;
 
-    seed += str_hash(var_->get_name());
+    seed += var_->hash();
     hash_combine(seed, str_hash(poly_.to_string()));
     return seed;
 }
@@ -38,31 +38,26 @@ int UIntPolyFlint::compare(const Basic &o) const
     return 0;
 }
 
-RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
-                                                  map_uint_mpz &&d)
+fzp_t UIntPolyFlint::container_from_dict(const RCP<const Basic> &var,
+                                         map_uint_mpz &&d)
 {
-    // benchmark this against dict->str->fmpz_polyxx
-    if (d.empty())
-        return UIntPolyFlint::from_dict(var, {{}});
-
-    fp_t f;
+    fzp_t f;
     for (auto const &p : d) {
         fz_t r(get_mpz_t(p.second));
         f.set_coeff(p.first, r);
     }
-    return make_rcp<const UIntPolyFlint>(var, std::move(f));
+    return f;
 }
 
-RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
+RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Basic> &var,
                                                  const vec_integer_class &v)
 {
-    // benchmark this against vec->str->fmpz_polyxx
-    unsigned int deg = v.size() - 1;
-    while (v[deg] == integer_class(0))
-        deg--;
+    // unsigned int deg = v.size() - 1;
+    // while (v[deg] == integer_class(0))
+    //     deg--;
 
-    fp_t f(deg + 1);
-    for (unsigned int i = 0; i <= deg; i++) {
+    fzp_t f;
+    for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {
             fz_t r(get_mpz_t(v[i]));
             f.set_coeff(i, r);

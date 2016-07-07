@@ -134,7 +134,7 @@ class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
     //! Constructor of UIntPoly class
-    UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict);
+    UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 
     //! \return true if canonical
     bool is_canonical(const UIntDict &dict) const;
@@ -142,12 +142,11 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UIntPoly in cannonical form based on the
-    // dictionary.
-    static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
-                                         map_uint_mpz &&d);
-    static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
+    static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
+    static UIntDict container_from_dict(const RCP<const Basic> &var,
+                                        map_uint_mpz &&d);
+
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
     vec_integer_class multieval(const vec_integer_class &v) const;
@@ -208,7 +207,6 @@ public:
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
-
 } // SymEngine
 
 #endif

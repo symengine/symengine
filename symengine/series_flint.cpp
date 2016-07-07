@@ -4,7 +4,7 @@
 namespace SymEngine
 {
 
-URatPSeriesFlint::URatPSeriesFlint(fp_t p, const std::string varname,
+URatPSeriesFlint::URatPSeriesFlint(fqp_t p, const std::string varname,
                                    const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
@@ -13,8 +13,8 @@ RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
                                                      const std::string &x,
                                                      unsigned int prec)
 {
-    fp_t p("2  0 1");
-    SeriesVisitor<fp_t, fmpq_wrapper, URatPSeriesFlint> visitor(p, x, prec);
+    fqp_t p("2  0 1");
+    SeriesVisitor<fqp_t, fmpq_wrapper, URatPSeriesFlint> visitor(p, x, prec);
     return visitor.series(t);
 }
 
@@ -93,47 +93,47 @@ int URatPSeriesFlint::compare(const Basic &o) const
     return (p_ < s.p_) ? -1 : 1;
 }
 
-fp_t URatPSeriesFlint::var(const std::string &s)
+fqp_t URatPSeriesFlint::var(const std::string &s)
 {
-    fp_t r("2  0 1");
+    fqp_t r("2  0 1");
     return r;
 }
 
-fp_t URatPSeriesFlint::convert(const integer_class &x)
+fqp_t URatPSeriesFlint::convert(const integer_class &x)
 {
-    return fp_t(get_mpz_t(x));
+    return fqp_t(get_mpz_t(x));
 }
 
-fp_t URatPSeriesFlint::convert(const rational_class &x)
+fqp_t URatPSeriesFlint::convert(const rational_class &x)
 {
-    return fp_t(get_mpq_t(x));
+    return fqp_t(get_mpq_t(x));
 }
 
-fp_t URatPSeriesFlint::convert(const Integer &x)
+fqp_t URatPSeriesFlint::convert(const Integer &x)
 {
     return convert(x.as_mpz());
 }
 
-fp_t URatPSeriesFlint::convert(const Rational &x)
+fqp_t URatPSeriesFlint::convert(const Rational &x)
 {
     return convert(x.as_rational_class());
 }
 
-fp_t URatPSeriesFlint::convert(const Basic &x)
+fqp_t URatPSeriesFlint::convert(const Basic &x)
 {
     throw std::runtime_error("SeriesFlint::convert not Implemented");
 }
 
-fp_t URatPSeriesFlint::pow(const fp_t &s, int n, unsigned prec)
+fqp_t URatPSeriesFlint::pow(const fqp_t &s, int n, unsigned prec)
 {
     if (n > 0)
-        return fp_t(s.pow(unsigned(n)));
+        return fqp_t(s.pow(unsigned(n)));
     else if (n < 0)
-        return fp_t(s.inv_series(prec).pow(unsigned(-n)));
-    return fp_t("1 1");
+        return fqp_t(s.inv_series(prec).pow(unsigned(-n)));
+    return fqp_t("1 1");
 }
 
-unsigned URatPSeriesFlint::ldegree(const fp_t &s)
+unsigned URatPSeriesFlint::ldegree(const fqp_t &s)
 {
     long i = 0;
     while (i <= s.degree())
@@ -154,18 +154,18 @@ fmpq_wrapper URatPSeriesFlint::root(fmpq_wrapper &c, unsigned n)
     return cl_root;
 }
 
-fp_t URatPSeriesFlint::diff(const fp_t &s, const fp_t &var)
+fqp_t URatPSeriesFlint::diff(const fqp_t &s, const fqp_t &var)
 {
     return s.derivative();
 }
 
-fp_t URatPSeriesFlint::integrate(const fp_t &s, const fp_t &var)
+fqp_t URatPSeriesFlint::integrate(const fqp_t &s, const fqp_t &var)
 {
     return s.integral();
 }
 
-fp_t URatPSeriesFlint::subs(const fp_t &s, const fp_t &var, const fp_t &r,
-                            unsigned prec)
+fqp_t URatPSeriesFlint::subs(const fqp_t &s, const fqp_t &var, const fqp_t &r,
+                             unsigned prec)
 {
     return s.subs(r, prec);
 }

@@ -591,6 +591,15 @@ public:
                       *other.get_fmpz_poly_t());
     }
 
+    friend fmpz_poly_wrapper operator*(const fmpz_poly_wrapper &a,
+                                       const fmpz_poly_wrapper &b)
+    {
+        fmpz_poly_wrapper res;
+        fmpz_poly_mul(*res.get_fmpz_poly_t(), *a.get_fmpz_poly_t(),
+                      *b.get_fmpz_poly_t());
+        return res;
+    }
+
     fmpz_poly_wrapper gcd(const fmpz_poly_wrapper &other) const
     {
         fmpz_poly_wrapper r;

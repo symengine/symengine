@@ -1,9 +1,9 @@
-#include <symengine/polys/uexprpoly.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
 
-UExprPoly::UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict)
+UExprPoly::UExprPoly(const RCP<const Basic> &var, UExprDict &&dict)
     : UPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
@@ -20,10 +20,9 @@ bool UExprPoly::is_canonical(const UExprDict &dict) const
 
 std::size_t UExprPoly::__hash__() const
 {
-    std::hash<std::string> hash_string;
     std::size_t seed = UEXPRPOLY;
 
-    seed += hash_string(var_->get_name());
+    seed += var_->hash();
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
@@ -47,14 +46,20 @@ int UExprPoly::compare(const Basic &o) const
     return unified_compare(poly_.get_dict(), s.poly_.get_dict());
 }
 
-RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
+RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Basic> &var,
                                           map_int_Expr &&d)
 {
     UExprDict x(d);
     return make_rcp<const UExprPoly>(var, std::move(x));
 }
 
-RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
+UExprDict UExprPoly::container_from_dict(const RCP<const Basic> &var,
+                                         map_int_Expr &&d)
+{
+    return UExprDict(d);
+}
+
+RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v)
 {
     return make_rcp<const UExprPoly>(var, UExprDict::from_vec(v));

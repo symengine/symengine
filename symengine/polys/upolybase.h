@@ -12,7 +12,6 @@
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
-using fp_t = SymEngine::fmpz_poly_wrapper;
 using fz_t = SymEngine::fmpz_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -291,15 +290,17 @@ public:
     }
 };
 
+umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
+
 template <typename Container, typename Poly>
 class UPolyBase : public Basic
 {
 protected:
-    RCP<const Symbol> var_;
+    RCP<const Basic> var_;
     Container poly_;
 
 public:
-    UPolyBase(const RCP<const Symbol> &var, Container &&container)
+    UPolyBase(const RCP<const Basic> &var, Container &&container)
         : var_{var}, poly_{container}
     {
     }
@@ -317,7 +318,7 @@ public:
                and poly_ == static_cast<const Poly &>(o).poly_;
     }
 
-    inline const RCP<const Symbol> &get_var() const
+    inline const RCP<const Basic> &get_var() const
     {
         return var_;
     }
@@ -332,7 +333,7 @@ public:
         return {};
     }
 
-    static RCP<const Poly> from_container(const RCP<const Symbol> &var,
+    static RCP<const Poly> from_container(const RCP<const Basic> &var,
                                           Container &&d)
     {
         return make_rcp<const Poly>(var, std::move(d));
@@ -343,10 +344,12 @@ template <typename Container, typename Poly>
 class UIntPolyBase : public UPolyBase<Container, Poly>
 {
 public:
-    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
+    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
         : UPolyBase<Container, Poly>(var, std::move(container))
     {
     }
+
+    typedef integer_class coef_type;
 
     // returns degree of the poly
     inline unsigned int get_degree() const
@@ -364,6 +367,13 @@ public:
     integer_class get_lc() const
     {
         return get_coeff(get_degree());
+    }
+
+    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
+                                     map_uint_mpz &&d)
+    {
+        return Poly::from_container(
+            var, Poly::container_from_dict(var, std::move(d)));
     }
 
     RCP<const Basic> as_symbolic() const
