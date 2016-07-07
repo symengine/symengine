@@ -1085,8 +1085,9 @@ void test_matrix()
     
     char *result = dense_matrix_str(C);
     char *expected = "[-4, 6]\n[6, -8]\n";
-    
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
     
     dense_matrix_transpose(C, B);
     result = dense_matrix_str(C);
@@ -1094,6 +1095,7 @@ void test_matrix()
     // Transpose of [[5, 2],[3, 4]]
     
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     integer_set_ui(i1, 4);
     integer_set_ui(i2, 3);
@@ -1111,11 +1113,13 @@ void test_matrix()
     expected = "[1, 0]\n[3/2, 1]\n";
     
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     result = dense_matrix_str(D);
     expected = "[4, 3]\n[0, -3/2]\n";
     
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     //matrix multiplication
     dense_matrix_mul_matrix(E, C, D);
@@ -1128,6 +1132,7 @@ void test_matrix()
     result = dense_matrix_str(E);
     expected = "[12, 9]\n[0, -9/2]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     //scalar addition
     dense_matrix_add_scalar(E, D, i2);
@@ -1136,6 +1141,7 @@ void test_matrix()
     result = dense_matrix_str(E);
     expected = "[7, 6]\n[3, 3/2]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     //LDL
     integer_set_ui(i1, 4);
@@ -1157,10 +1163,16 @@ void test_matrix()
     result = dense_matrix_str(C);
     expected = "[1, 0]\n[3/4, 1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     result = dense_matrix_str(D);
     expected = "[4, 0]\n[0, -1/4]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+    
+    // set matrix
+    dense_matrix_set(C, D);
+    SYMENGINE_C_ASSERT(dense_matrix_eq(D, C) == 1);
     
     
     // submatrix
@@ -1168,6 +1180,7 @@ void test_matrix()
     result = dense_matrix_str(C);
     expected = "[4]\n[3]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     // LU_solve
     dense_matrix_set_basic(C, 1, 0, i1);
@@ -1175,6 +1188,7 @@ void test_matrix()
     result = dense_matrix_str(D);
     expected = "[4]\n[-4]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);  
+    basic_str_free(result);
     
     
     // Fractionfree LU
@@ -1182,20 +1196,24 @@ void test_matrix()
     result = dense_matrix_str(C);
     expected = "[4, 3]\n[3, -1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     // FractionFree LDU
     dense_matrix_FFLDU(C, D, E, B);
     result = dense_matrix_str(C);
     expected = "[4, 0]\n[3, 1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     result = dense_matrix_str(D);
     expected = "[4, 0]\n[0, 4]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     result = dense_matrix_str(E);
     expected = "[4, 3]\n[0, -1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     // Num-py like functions
     
@@ -1204,18 +1222,21 @@ void test_matrix()
     result = dense_matrix_str(D);
     expected = "[1, 1, 1]\n[1, 1, 1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     // Zeros
     dense_matrix_zeros(D, 3, 2);
     result = dense_matrix_str(D);
     expected = "[0, 0]\n[0, 0]\n[0, 0]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     // Diag
     dense_matrix_diag(D, vec, 0);
     result = dense_matrix_str(D);
     expected = "[-2, 0, 0, 0]\n[0, 3, 0, 0]\n[0, 0, 3, 0]\n[0, 0, 0, -4]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     //det
     dense_matrix_det(i1, D);
@@ -1226,6 +1247,7 @@ void test_matrix()
     result = dense_matrix_str(D);
     expected = "[0, 1, 0, 0]\n[0, 0, 1, 0]\n[0, 0, 0, 1]\n";
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
     
     vecbasic_free(vec);
     
