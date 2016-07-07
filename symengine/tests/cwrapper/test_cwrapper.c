@@ -1174,6 +1174,11 @@ void test_matrix()
     dense_matrix_set(C, D);
     SYMENGINE_C_ASSERT(dense_matrix_eq(D, C) == 1);
     
+    dense_matrix_LDL(D, E, B);
+    
+    // now C should be equal to E, but different to D
+    SYMENGINE_C_ASSERT(dense_matrix_eq(C, E) == 1);
+    SYMENGINE_C_ASSERT(dense_matrix_eq(D, C) == 0);
     
     // submatrix
     dense_matrix_submatrix(C, B, 0, 0, 1, 0, 1, 1);
