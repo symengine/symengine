@@ -47,10 +47,9 @@ int UIntPoly::compare(const Basic &o) const
     return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
-UIntDict UIntPoly::container_from_dict(const RCP<const Basic> &var,
-                                       map_uint_mpz &&d)
+UIntDict UIntPoly::cont_from_dict(const RCP<const Basic> &var, map_uint_mpz &&d)
 {
-    return UIntDict(d);
+    return std::move(UIntDict(d));
 }
 
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,

@@ -137,8 +137,8 @@ public:
 
     static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
                                         const vec_integer_class &v);
-    static UIntDict container_from_dict(const RCP<const Basic> &var,
-                                        map_uint_mpz &&d);
+    static UIntDict cont_from_dict(const RCP<const Basic> &var,
+                                   map_uint_mpz &&d);
 
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;

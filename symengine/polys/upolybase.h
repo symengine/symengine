@@ -381,8 +381,7 @@ public:
     static RCP<const P> from_dict(const RCP<const Basic> &var,
                                   std::map<unsigned, C> &&d)
     {
-        return P::from_container(var,
-                                 P::container_from_dict(var, std::move(d)));
+        return P::from_container(var, P::cont_from_dict(var, std::move(d)));
     }
 };
 

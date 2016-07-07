@@ -53,8 +53,8 @@ RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Basic> &var,
     return make_rcp<const UExprPoly>(var, std::move(x));
 }
 
-UExprDict UExprPoly::container_from_dict(const RCP<const Basic> &var,
-                                         map_int_Expr &&d)
+UExprDict UExprPoly::cont_from_dict(const RCP<const Basic> &var,
+                                    map_int_Expr &&d)
 {
     return UExprDict(d);
 }

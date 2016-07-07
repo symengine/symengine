@@ -27,8 +27,7 @@ public:
 
     static RCP<const UIntPolyFlint> from_vec(const RCP<const Basic> &var,
                                              const vec_integer_class &v);
-    static fzp_t container_from_dict(const RCP<const Basic> &var,
-                                     map_uint_mpz &&d);
+    static fzp_t cont_from_dict(const RCP<const Basic> &var, map_uint_mpz &&d);
 
     integer_class eval(const integer_class &x) const;
     vec_integer_class multieval(const vec_integer_class &v) const;
