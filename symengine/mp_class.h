@@ -129,6 +129,16 @@ inline void mp_pow_ui(integer_class &res, const integer_class &i,
     mpz_pow_ui(res.get_mpz_t(), i.get_mpz_t(), n);
 }
 
+inline void mp_pow_ui(rational_class &res, const rational_class &i,
+                      unsigned long n)
+{
+    integer_class tmp;
+    mpz_pow_ui(tmp.get_mpz_t(), i.get_num().get_mpz_t(), n);
+    mpq_set_num(res.get_mpq_t(), tmp.get_mpz_t());
+    mpz_pow_ui(tmp.get_mpz_t(), i.get_den().get_mpz_t(), n);
+    mpq_set_den(res.get_mpq_t(), tmp.get_mpz_t());
+}
+
 inline void mp_powm(integer_class &res, const integer_class &a,
                     const integer_class &b, const integer_class &m)
 {

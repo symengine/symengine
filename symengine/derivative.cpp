@@ -485,6 +485,12 @@ public:
         return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
 
+    static RCP<const Basic> diff(const URatPoly &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<URatPoly, map_uint_mpq>(self, x);
+    }
+
 #ifdef HAVE_SYMENGINE_PIRANHA
     static RCP<const Basic> diff(const UIntPolyPiranha &self,
                                  const RCP<const Symbol> &x)

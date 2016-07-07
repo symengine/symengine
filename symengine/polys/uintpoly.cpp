@@ -1,5 +1,4 @@
 #include <symengine/polys/uintpoly.h>
-#include <symengine/pow.h>
 
 namespace SymEngine
 {

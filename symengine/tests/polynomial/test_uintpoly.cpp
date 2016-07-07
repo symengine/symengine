@@ -219,50 +219,6 @@ TEST_CASE("Derivative of UIntPoly", "[UIntPoly]")
     REQUIRE(b->diff(y)->__str__() == "8*y");
 }
 
-TEST_CASE("Bool checks specific UIntPoly cases", "[UIntPoly]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> z = UIntPoly::from_dict(x, {{0, 0_z}});
-    RCP<const UIntPoly> o = UIntPoly::from_dict(x, {{0, 1_z}});
-    RCP<const UIntPoly> mo = UIntPoly::from_dict(x, {{0, -1_z}});
-    RCP<const UIntPoly> i = UIntPoly::from_dict(x, {{0, 6_z}});
-    RCP<const UIntPoly> s = UIntPoly::from_dict(x, {{1, 1_z}});
-    RCP<const UIntPoly> m1 = UIntPoly::from_dict(x, {{1, 6_z}});
-    RCP<const UIntPoly> m2 = UIntPoly::from_dict(x, {{3, 5_z}});
-    RCP<const UIntPoly> po = UIntPoly::from_dict(x, {{5, 1_z}});
-    RCP<const UIntPoly> poly
-        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-
-    REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one()
-             and z->is_integer() and not z->is_symbol() and not z->is_mul()
-             and not z->is_pow()));
-    REQUIRE((not o->is_zero() and o->is_one() and not o->is_minus_one()
-             and o->is_integer() and not o->is_symbol() and not o->is_mul()
-             and not o->is_pow()));
-    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one()
-             and mo->is_integer() and not mo->is_symbol() and not mo->is_mul()
-             and not mo->is_pow()));
-    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one()
-             and i->is_integer() and not i->is_symbol() and not i->is_mul()
-             and not i->is_pow()));
-    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one()
-             and not s->is_integer() and s->is_symbol() and not s->is_mul()
-             and not s->is_pow()));
-    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one()
-             and not m1->is_integer() and not m1->is_symbol() and m1->is_mul()
-             and not m1->is_pow()));
-    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one()
-             and not m2->is_integer() and not m2->is_symbol() and m2->is_mul()
-             and not m2->is_pow()));
-    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one()
-             and not po->is_integer() and not po->is_symbol()
-             and not po->is_mul() and po->is_pow()));
-    REQUIRE((not poly->is_zero() and not poly->is_one()
-             and not poly->is_minus_one() and not poly->is_integer()
-             and not poly->is_symbol() and not poly->is_mul()
-             and not poly->is_pow()));
-}
-
 TEST_CASE("UIntPoly expand", "[UIntPoly][expand]")
 {
     RCP<const Symbol> x = symbol("x");

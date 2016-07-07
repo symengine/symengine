@@ -425,6 +425,18 @@ public:
     }
 };
 
+template <typename D, typename P>
+class URatPolyBase : public UNonExprPoly<D, P, rational_class>
+{
+public:
+    URatPolyBase(const RCP<const Basic> &var, D &&container)
+        : UNonExprPoly<D, P, rational_class>(var, std::move(container))
+    {
+    }
+
+    // TODO: RCP<const Basic> as_symbolic() const
+};
+
 template <typename T, typename Int>
 class ContainerBaseIter
 {
