@@ -347,46 +347,58 @@ public:
     }
 };
 
-template <typename Container, typename Poly>
-class UIntPolyBase : public UPolyBase<Container, Poly>
+// super class for all non-expr polys, all methods which are
+// common for all non-expr polys go here eg. degree, eval etc.
+template <typename Cont, typename P, typename C>
+class UNonExprPoly : public UPolyBase<Cont, P>
 {
 public:
-    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
-        : UPolyBase<Container, Poly>(var, std::move(container))
+    typedef C coef_type;
+
+    UNonExprPoly(const RCP<const Basic> &var, Cont &&container)
+        : UPolyBase<Cont, P>(var, std::move(container))
     {
     }
 
-    typedef integer_class coef_type;
+    // return coefficient of degree 'i'
+    virtual C get_coeff(unsigned int i) const = 0;
+    // return value of poly when ealudated at `x`
+    virtual C eval(const C &x) const = 0;
+    virtual std::vector<C> multieval(const std::vector<C> &x) const = 0;
+    // return `degree` + 1. `0` returned for zero poly.
+    virtual unsigned int size() const = 0;
 
-    // returns degree of the poly
     inline unsigned int get_degree() const
     {
         return this->poly_.degree();
     }
-    // return coefficient of degree 'i'
-    virtual integer_class get_coeff(unsigned int i) const = 0;
-    // return value of poly when ealudated at `x`
-    virtual integer_class eval(const integer_class &x) const = 0;
-    virtual vec_integer_class multieval(const vec_integer_class &x) const = 0;
-    // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
 
-    integer_class get_lc() const
+    C get_lc() const
     {
         return get_coeff(get_degree());
     }
 
-    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
-                                     map_uint_mpz &&d)
+    static RCP<const P> from_dict(const RCP<const Basic> &var,
+                                  std::map<unsigned, C> &&d)
     {
-        return Poly::from_container(
-            var, Poly::container_from_dict(var, std::move(d)));
+        return P::from_container(var,
+                                 P::container_from_dict(var, std::move(d)));
+    }
+};
+
+template <typename C, typename P>
+class UIntPolyBase : public UNonExprPoly<C, P, integer_class>
+{
+public:
+    UIntPolyBase(const RCP<const Basic> &var, C &&container)
+        : UNonExprPoly<C, P, integer_class>(var, std::move(container))
+    {
     }
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const Poly &>(*this)).begin();
-        auto end = (static_cast<const Poly &>(*this)).end();
+        auto it = (static_cast<const P &>(*this)).begin();
+        auto end = (static_cast<const P &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {
