@@ -27,6 +27,14 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
     SYMENGINE_ASSERT(m_.size() == row * col)
 }
 
+// Resize the Matrix
+void DenseMatrix::resize(unsigned row, unsigned col)
+{
+    row_ = row;
+    col_ = col;
+    m_.resize(row * col);
+}
+
 // Get and set elements
 RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {

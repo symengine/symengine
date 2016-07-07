@@ -4,11 +4,14 @@
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
 #include <symengine/printer.h>
+#include <symengine/matrix.h>
 #include <symengine/eval.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
 
+using SymEngine::DenseMatrix;
+using SymEngine::CSRMatrix;
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
@@ -36,6 +39,10 @@ using SymEngine::set_basic;
 using SymEngine::get_mpz_t;
 using SymEngine::mp_get_ui;
 using SymEngine::mp_get_si;
+using SymEngine::eye;
+using SymEngine::diag;
+using SymEngine::ones;
+using SymEngine::zeros;
 
 namespace SymEngine
 {
@@ -560,6 +567,252 @@ void vecbasic_get(CVecBasic *self, int n, basic result)
 size_t vecbasic_size(CVecBasic *self)
 {
     return self->m.size();
+}
+
+// C wrapper for Matrix
+
+struct CDenseMatrix {
+    SymEngine::DenseMatrix m;
+};
+
+struct CSparseMatrix {
+    SymEngine::CSRMatrix m;
+};
+
+CDenseMatrix *dense_matrix_new()
+{
+    return new CDenseMatrix();
+}
+
+CDenseMatrix *dense_matrix_new_vec(unsigned rows, unsigned cols, CVecBasic *l)
+{
+    return new CDenseMatrix({{rows, cols, l->m}});
+}
+
+CDenseMatrix *dense_matrix_new_rows_cols(unsigned rows, unsigned cols)
+{
+    return new CDenseMatrix({{rows, cols}});
+}
+
+CSparseMatrix *sparse_matrix_new()
+{
+    return new CSparseMatrix;
+}
+
+void dense_matrix_free(CDenseMatrix *self)
+{
+    delete self;
+}
+
+void sparse_matrix_free(CSparseMatrix *self)
+{
+    delete self;
+}
+
+void sparse_matrix_init(CSparseMatrix *s)
+{
+    s->m = SymEngine::CSRMatrix();
+}
+
+void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
+                             unsigned long int cols)
+{
+    s->m = SymEngine::CSRMatrix(rows, cols);
+}
+
+void dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
+{
+    s->m = d->m;
+}
+
+char *dense_matrix_str(const CDenseMatrix *s)
+{
+    std::string str = s->m.__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *sparse_matrix_str(const CSparseMatrix *s)
+{
+    std::string str = s->m.__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+void dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c)
+{
+    mat->m.resize(r, c);
+}
+
+void dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
+                            unsigned long int r, unsigned long int c)
+{
+    s->m = mat->m.get(r, c);
+}
+
+void dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
+                            unsigned long int c, basic s)
+{
+    mat->m.set(r, c, s->m);
+}
+
+void sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
+                             unsigned long int r, unsigned long int c)
+{
+    s->m = mat->m.get(r, c);
+}
+
+void sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
+                             unsigned long int c, basic s)
+{
+    mat->m.set(r, c, s->m);
+}
+
+void dense_matrix_det(basic s, const CDenseMatrix *mat)
+{
+    s->m = mat->m.det();
+}
+void dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(s, mat->m.nrows(), mat->m.ncols());
+    mat->m.inv(s->m);
+}
+void dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(s, mat->m.ncols(), mat->m.nrows());
+    mat->m.transpose(s->m);
+}
+void dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
+                            unsigned long int r1, unsigned long int c1,
+                            unsigned long int r2, unsigned long int c2,
+                            unsigned long int r, unsigned long int c)
+{
+    dense_matrix_rows_cols(s, r2 - r1 + 1, c2 - c1 + 1);
+    mat->m.submatrix(s->m, r1, c1, r2, c2, r, c);
+}
+
+unsigned long int dense_matrix_rows(const CDenseMatrix *s)
+{
+    return s->m.nrows();
+}
+
+unsigned long int dense_matrix_cols(const CDenseMatrix *s)
+{
+    return s->m.ncols();
+}
+
+void dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const CDenseMatrix *matB)
+{
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.add_matrix(matB->m, s->m);
+}
+
+void dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const CDenseMatrix *matB)
+{
+    dense_matrix_rows_cols(s, matA->m.nrows(), matB->m.ncols());
+    matA->m.mul_matrix(matB->m, s->m);
+}
+
+void dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const basic b)
+{
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.add_scalar(b->m, s->m);
+}
+
+void dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+                             const basic b)
+{
+    dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
+    matA->m.mul_scalar(b->m, s->m);
+}
+
+void dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
+    dense_matrix_rows_cols(u, mat->m.nrows(), mat->m.ncols());
+    mat->m.LU(l->m, u->m);
+}
+
+void dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
+    dense_matrix_rows_cols(d, mat->m.nrows(), mat->m.ncols());
+    mat->m.LDL(l->m, d->m);
+}
+
+void dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(lu, mat->m.nrows(), mat->m.ncols());
+    mat->m.FFLU(lu->m);
+}
+
+void dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
+                        const CDenseMatrix *mat)
+{
+    dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
+    dense_matrix_rows_cols(d, mat->m.nrows(), mat->m.ncols());
+    dense_matrix_rows_cols(u, mat->m.nrows(), mat->m.ncols());
+    mat->m.FFLDU(l->m, d->m, u->m);
+}
+
+void dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
+                           const CDenseMatrix *b)
+{
+    dense_matrix_rows_cols(x, A->m.ncols(), 1);
+    A->m.LU_solve(b->m, x->m);
+}
+
+void dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
+                       unsigned long int c)
+{
+    dense_matrix_rows_cols(s, r, c);
+    ones(s->m);
+}
+
+void dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
+                        unsigned long int c)
+{
+    dense_matrix_rows_cols(s, r, c);
+    zeros(s->m);
+}
+void dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
+{
+    int vec_size = vecbasic_size(d);
+    dense_matrix_rows_cols(s, vec_size + (k >= 0 ? k : -k),
+                           vec_size + (k >= 0 ? k : -k));
+    diag(s->m, d->m, k);
+}
+
+void dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
+                      int k)
+{
+    dense_matrix_rows_cols(s, N, M);
+    eye(s->m, k);
+}
+
+int is_a_DenseMatrix(const CDenseMatrix *c)
+{
+    return is_a<DenseMatrix>(c->m);
+}
+
+int is_a_SparseMatrix(const CSparseMatrix *c)
+{
+    return is_a<CSRMatrix>(c->m);
+}
+
+int dense_matrix_eq(CDenseMatrix *lhs, CDenseMatrix *rhs)
+{
+    return (lhs->m) == (rhs->m);
+}
+
+int sparse_matrix_eq(CSparseMatrix *lhs, CSparseMatrix *rhs)
+{
+    return (lhs->m) == (rhs->m);
 }
 
 // C Wrapper for set_basic
