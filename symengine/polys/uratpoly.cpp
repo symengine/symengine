@@ -17,8 +17,8 @@ std::size_t URatPoly::__hash__() const
     for (const auto &it : poly_.dict_) {
         std::size_t temp = URATPOLY;
         hash_combine<unsigned int>(temp, it.first);
-        hash_combine<long long int>(temp, mp_get_si(it.second.get_num()));
-        hash_combine<long long int>(temp, mp_get_si(it.second.get_den()));
+        hash_combine<long long int>(temp, mp_get_si(get_num(it.second)));
+        hash_combine<long long int>(temp, mp_get_si(get_den(it.second)));
         seed += temp;
     }
     return seed;

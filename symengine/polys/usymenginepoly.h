@@ -115,7 +115,6 @@ public:
         return this->get_degree() + 1;
     }
 };
-
 }
 
 #endif

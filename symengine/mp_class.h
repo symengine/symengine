@@ -286,8 +286,8 @@ inline auto get_mpz_t(const piranha::integer &i) -> decltype(i.get_mpz_view())
     return i.get_mpz_view();
 }
 
-inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i,
-                      unsigned long n)
+template <typename T>
+inline void mp_pow_ui(T &res, const T &i, unsigned long n)
 {
     res = i.pow(n);
 }
@@ -515,6 +515,12 @@ inline fmpz_wrapper mp_sqrt(const fmpz_wrapper &i)
 inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
 {
     fmpz_pow_ui(res.get_fmpz_t(), i.get_fmpz_t(), n);
+}
+
+inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, unsigned long n)
+{
+    // TODO needs to be changed https://github.com/wbhart/flint2/issues/271
+    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), n);
 }
 
 inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,

@@ -46,16 +46,13 @@ fzp_t UIntPolyFlint::cont_from_dict(const RCP<const Basic> &var,
         fz_t r(get_mpz_t(p.second));
         f.set_coeff(p.first, r);
     }
-    std::move(f);
+    return std::move(f);
 }
 
 RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Basic> &var,
                                                  const vec_integer_class &v)
 {
-    // unsigned int deg = v.size() - 1;
-    // while (v[deg] == integer_class(0))
-    //     deg--;
-
+    // TODO improve this (we already know the degree)
     fzp_t f;
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {
