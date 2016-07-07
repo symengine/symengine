@@ -5,18 +5,9 @@ namespace SymEngine
 {
 
 UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)
-    : UIntPolyBase(var, std::move(dict))
+    : USymEnginePoly(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
-}
-
-bool UIntPoly::is_canonical(const UIntDict &dict) const
-{
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.dict_)
-        if (iter.second == 0)
-            return false;
-    return true;
 }
 
 std::size_t UIntPoly::__hash__() const
@@ -31,108 +22,6 @@ std::size_t UIntPoly::__hash__() const
         seed += temp;
     }
     return seed;
-}
-
-int UIntPoly::compare(const Basic &o) const
-{
-    const UIntPoly &s = static_cast<const UIntPoly &>(o);
-
-    if (poly_.size() != s.poly_.size())
-        return (poly_.size() < s.poly_.size()) ? -1 : 1;
-
-    int cmp = unified_compare(var_, s.var_);
-    if (cmp != 0)
-        return cmp;
-
-    return unified_compare(poly_.dict_, s.poly_.dict_);
-}
-
-UIntDict UIntPoly::cont_from_dict(const RCP<const Basic> &var, map_uint_mpz &&d)
-{
-    return std::move(UIntDict(d));
-}
-
-RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Basic> &var,
-                                       const vec_integer_class &v)
-{
-    return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
-}
-
-integer_class UIntPoly::eval(const integer_class &x) const
-{
-    unsigned int last_deg = poly_.dict_.rbegin()->first;
-    integer_class result(0), x_pow;
-
-    for (auto it = poly_.dict_.rbegin(); it != poly_.dict_.rend(); ++it) {
-
-        mp_pow_ui(x_pow, x, last_deg - (*it).first);
-        last_deg = (*it).first;
-        result = (*it).second + x_pow * result;
-    }
-    mp_pow_ui(x_pow, x, last_deg);
-    result *= x_pow;
-
-    return result;
-}
-
-vec_integer_class UIntPoly::multieval(const vec_integer_class &v) const
-{
-    // this is not the optimal algorithm
-    vec_integer_class res(v.size());
-    for (unsigned int i = 0; i < v.size(); ++i)
-        res[i] = eval(v[i]);
-    return res;
-}
-
-bool UIntPoly::is_zero() const
-{
-    return poly_.empty();
-}
-
-bool UIntPoly::is_one() const
-{
-    return poly_.size() == 1 and poly_.dict_.begin()->second == 1
-           and poly_.dict_.begin()->first == 0;
-}
-
-bool UIntPoly::is_minus_one() const
-{
-    return poly_.size() == 1 and poly_.dict_.begin()->second == -1
-           and poly_.dict_.begin()->first == 0;
-}
-
-bool UIntPoly::is_integer() const
-{
-    if (poly_.empty())
-        return true;
-    if (poly_.size() == 1 and poly_.dict_.begin()->first == 0)
-        return true;
-    return false;
-}
-
-bool UIntPoly::is_symbol() const
-{
-    if (poly_.size() == 1 and poly_.dict_.begin()->first == 1
-        and poly_.dict_.begin()->second == 1)
-        return true;
-    return false;
-}
-
-bool UIntPoly::is_mul() const
-{
-    if (poly_.size() == 1 and poly_.dict_.begin()->first != 0
-        and poly_.dict_.begin()->second != 1
-        and poly_.dict_.begin()->second != 0)
-        return true;
-    return false;
-}
-
-bool UIntPoly::is_pow() const
-{
-    if (poly_.size() == 1 and poly_.dict_.begin()->second == 1
-        and poly_.dict_.begin()->first != 1 and poly_.dict_.begin()->first != 0)
-        return true;
-    return false;
 }
 
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,

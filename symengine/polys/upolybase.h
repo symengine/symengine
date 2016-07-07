@@ -385,12 +385,12 @@ public:
     }
 };
 
-template <typename C, typename P>
-class UIntPolyBase : public UNonExprPoly<C, P, integer_class>
+template <typename D, typename P>
+class UIntPolyBase : public UNonExprPoly<D, P, integer_class>
 {
 public:
-    UIntPolyBase(const RCP<const Basic> &var, C &&container)
-        : UNonExprPoly<C, P, integer_class>(var, std::move(container))
+    UIntPolyBase(const RCP<const Basic> &var, D &&container)
+        : UNonExprPoly<D, P, integer_class>(var, std::move(container))
     {
     }
 

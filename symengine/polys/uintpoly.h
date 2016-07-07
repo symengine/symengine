@@ -122,79 +122,125 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
+template <typename D, template <typename X, typename Y> class BaseType,
+          typename P>
+class USymEnginePoly : public BaseType<D, P>
+{
+public:
+    using C = typename BaseType<D, P>::coef_type;
+
+    USymEnginePoly(const RCP<const Basic> &var, UIntDict &&dict)
+        : UIntPolyBase<D, P>(var, std::move(dict))
+    {
+    }
+
+    int compare(const Basic &o) const
+    {
+        const P &s = static_cast<const P &>(o);
+
+        if (this->poly_.size() != s.poly_.size())
+            return (this->poly_.size() < s.poly_.size()) ? -1 : 1;
+
+        int cmp = unified_compare(this->var_, s.var_);
+        if (cmp != 0)
+            return cmp;
+
+        return unified_compare(this->poly_.dict_, s.poly_.dict_);
+    }
+
+    bool is_canonical(const D &dict) const
+    {
+        // Check if dictionary contains terms with coeffienct 0
+        for (auto iter : dict.dict_)
+            if (iter.second == 0)
+                return false;
+        return true;
+    }
+
+    static RCP<const P> from_vec(const RCP<const Basic> &var,
+                                 const std::vector<C> &v)
+    {
+        return make_rcp<const P>(var, D::from_vec(v));
+    }
+
+    static D cont_from_dict(const RCP<const Basic> &var,
+                            std::map<unsigned, C> &&d)
+    {
+        return std::move(D(d));
+    }
+
+    C eval(const C &x) const
+    {
+        unsigned int last_deg = this->poly_.dict_.rbegin()->first;
+        C result(0), x_pow;
+
+        for (auto it = this->poly_.dict_.rbegin();
+             it != this->poly_.dict_.rend(); ++it) {
+            mp_pow_ui(x_pow, x, last_deg - (*it).first);
+            last_deg = (*it).first;
+            result = (*it).second + x_pow * result;
+        }
+        mp_pow_ui(x_pow, x, last_deg);
+        result *= x_pow;
+
+        return result;
+    }
+
+    std::vector<C> multieval(const std::vector<C> &v) const
+    {
+        // this is not the optimal algorithm
+        std::vector<C> res(v.size());
+        for (unsigned int i = 0; i < v.size(); ++i)
+            res[i] = eval(v[i]);
+        return res;
+    }
+
+    inline const std::map<unsigned, C> &get_dict() const
+    {
+        return this->poly_.dict_;
+    }
+
+    inline C get_coeff(unsigned int x) const
+    {
+        return this->poly_.get_coeff(x);
+    }
+
+    typedef typename std::map<unsigned, C>::const_iterator iterator;
+    typedef typename std::map<unsigned, C>::const_reverse_iterator r_iterator;
+    iterator begin() const
+    {
+        return this->poly_.dict_.begin();
+    }
+    iterator end() const
+    {
+        return this->poly_.dict_.end();
+    }
+    r_iterator obegin() const
+    {
+        return this->poly_.dict_.rbegin();
+    }
+    r_iterator oend() const
+    {
+        return this->poly_.dict_.rend();
+    }
+
+    unsigned int size() const
+    {
+        if (this->poly_.dict_.empty())
+            return 0;
+        return this->get_degree() + 1;
+    }
+};
+
+class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
     //! Constructor of UIntPoly class
     UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 
-    //! \return true if canonical
-    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
-
-    static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
-                                        const vec_integer_class &v);
-    static UIntDict cont_from_dict(const RCP<const Basic> &var,
-                                   map_uint_mpz &&d);
-
-    //! Evaluates the UIntPoly at value x
-    integer_class eval(const integer_class &x) const;
-    vec_integer_class multieval(const vec_integer_class &v) const;
-
-    //! \return `true` if `0`
-    bool is_zero() const;
-    //! \return `true` if `1`
-    bool is_one() const;
-    //! \return `true` if `-1`
-    bool is_minus_one() const;
-    //! \return `true` if integer
-    bool is_integer() const;
-    //! \return `true` if symbol
-    bool is_symbol() const;
-    //! \return `true` if mul
-    bool is_mul() const;
-    //! \return `true` if pow
-    bool is_pow() const;
-
-    inline const map_uint_mpz &get_dict() const
-    {
-        return poly_.dict_;
-    }
-
-    inline integer_class get_coeff(unsigned int x) const
-    {
-        return poly_.get_coeff(x);
-    }
-
-    typedef map_uint_mpz::const_iterator iterator;
-    typedef map_uint_mpz::const_reverse_iterator reverse_iterator;
-    iterator begin() const
-    {
-        return poly_.dict_.begin();
-    }
-    iterator end() const
-    {
-        return poly_.dict_.end();
-    }
-    reverse_iterator obegin() const
-    {
-        return poly_.dict_.rbegin();
-    }
-    reverse_iterator oend() const
-    {
-        return poly_.dict_.rend();
-    }
-
-    unsigned int size() const
-    {
-        if (is_zero())
-            return 0;
-        return get_degree() + 1;
-    }
-
 }; // UIntPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
