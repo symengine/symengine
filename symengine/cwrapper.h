@@ -206,6 +206,8 @@ int basic_diff(basic s, const basic expr, const basic sym);
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
+//! Returns +1 if s is positive, 0 if 0, -1 if negative
+int basic_number_sign(const basic s);
 
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);

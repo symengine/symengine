@@ -394,6 +394,17 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
+int basic_number_sign(const basic s)
+{
+    if ((rcp_static_cast<const Number>(s->m))->is_positive()) {
+        return 1;
+    } else if ((rcp_static_cast<const Number>(s->m))->is_zero()) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
     void basic_##func(basic s, const basic a)                                  \
     {                                                                          \

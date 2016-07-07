@@ -66,12 +66,20 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    
+    
+    integer_set_si(e, 0);
+    SYMENGINE_C_ASSERT(integer_get_si(e) == 0);
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == 0);
 
     integer_set_ui(e, 123);
     SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == 1);
 
     integer_set_si(e, -123);
     SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == -1);
+    
 
     mpz_t test;
     mpz_init(test);
