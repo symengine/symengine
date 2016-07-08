@@ -6,6 +6,7 @@
 #define SYMENGINE_UINTPOLY_PIRANHA_H
 
 #include <symengine/polys/upolybase.h>
+#include <symengine/expression.h>
 #include <symengine/dict.h>
 #include <memory>
 
@@ -114,7 +115,119 @@ public:
     }
 };
 
-class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
+template <typename D, template <typename X, typename Y> class BaseType,
+          typename P>
+class UPiranhaPoly : public BaseType<D, P>
+{
+public:
+    using C = typename BaseType<D, P>::coef_type;
+    using term = typename D::term_type;
+
+    UPiranhaPoly(const RCP<const Basic> &var, D &&dict)
+        : BaseType<D, P>(var, std::move(dict))
+    {
+    }
+
+    int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_a<P>(o))
+        const P &s = static_cast<const P &>(o);
+        int cmp = this->var_->compare(*s.var_);
+        if (cmp != 0)
+            return cmp;
+        if (this->poly_ == s.poly_)
+            return 0;
+        return (this->poly_.hash() < s.poly_.hash()) ? -1 : 1;
+    }
+
+    static D cont_from_dict(const RCP<const Basic> &var,
+                            std::map<unsigned, C> &&d)
+    {
+        D p;
+        piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
+        p.set_symbol_set(ss);
+        for (auto &it : d)
+            p.insert(term(it.second, pmonomial{it.first}));
+
+        return std::move(p);
+    }
+
+    static RCP<const P> from_vec(const RCP<const Basic> &var,
+                                 const std::vector<C> &v)
+    {
+        D p;
+        piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
+        p.set_symbol_set(ss);
+        for (unsigned int i = 0; i < v.size(); i++) {
+            if (v[i] != 0) {
+                p.insert(term(v[i], pmonomial{i}));
+            }
+        }
+        return make_rcp<const P>(var, std::move(p));
+    }
+
+    C eval(const C &x) const
+    {
+        return piranha::math::evaluate<C>(
+            this->poly_, {{detail::poly_print(this->var_), x}});
+    }
+
+    std::vector<C> multieval(const std::vector<C> &v) const
+    {
+        std::vector<C> res(v.size());
+        for (unsigned int i = 0; i < v.size(); ++i)
+            res[i] = eval(v[i]);
+        return res;
+    }
+
+    C get_coeff(unsigned int x) const
+    {
+        return this->poly_.find_cf(pmonomial{x});
+    }
+
+    const C &get_coeff_ref(unsigned int x) const
+    {
+        static C PZERO(0);
+
+        term temp = term(0, pmonomial{x});
+        auto it = this->poly_._container().find(temp);
+        if (it == this->poly_._container().end())
+            return PZERO;
+        return it->m_cf;
+    }
+
+    unsigned int size() const
+    {
+        if (this->poly_.size() == 0)
+            return 0;
+        return this->get_degree() + 1;
+    }
+
+    // begin() and end() are unordered
+    // obegin() and oend() are ordered, from highest degree to lowest
+    typedef PiranhaForIter iterator;
+    typedef ContainerRevIter<P, const C &> r_iterator;
+    iterator begin() const
+    {
+        return iterator(this->poly_._container().begin());
+    }
+    iterator end() const
+    {
+        return iterator(this->poly_._container().end());
+    }
+    r_iterator obegin() const
+    {
+        return r_iterator(this->template rcp_from_this_cast<P>(),
+                          (long)size() - 1);
+    }
+    r_iterator oend() const
+    {
+        return r_iterator(this->template rcp_from_this_cast<P>(), -1);
+    }
+};
+
+class UIntPolyPiranha
+    : public UPiranhaPoly<pintpoly, UIntPolyBase, UIntPolyPiranha>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
@@ -122,53 +235,6 @@ public:
     UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
-
-    static RCP<const UIntPolyPiranha> from_vec(const RCP<const Basic> &var,
-                                               const vec_integer_class &v);
-    static pintpoly cont_from_dict(const RCP<const Basic> &var,
-                                   map_uint_mpz &&d);
-
-    integer_class eval(const integer_class &x) const;
-    vec_integer_class multieval(const vec_integer_class &x) const;
-
-    integer_class get_coeff(unsigned int x) const;
-    const integer_class &get_coeff_ref(unsigned int x) const;
-
-    inline unsigned int get_degree() const
-    {
-        return poly_.degree();
-    }
-
-    // begin() and end() are unordered
-    // obegin() and oend() are ordered, from highest degree to lowest
-    typedef PiranhaForIter iterator;
-    typedef ContainerRevIter<UIntPolyPiranha, const integer_class &>
-        reverse_iterator;
-    iterator begin() const
-    {
-        return iterator(poly_._container().begin());
-    }
-    iterator end() const
-    {
-        return iterator(poly_._container().end());
-    }
-    reverse_iterator obegin() const
-    {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(),
-                                (long)size() - 1);
-    }
-    reverse_iterator oend() const
-    {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), -1);
-    }
-
-    unsigned int size() const
-    {
-        if (poly_.size() == 0)
-            return 0;
-        return get_degree() + 1;
-    }
 
 }; // UIntPolyPiranha
 

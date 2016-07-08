@@ -52,7 +52,7 @@ fzp_t UIntPolyFlint::cont_from_dict(const RCP<const Basic> &var,
 RCP<const UIntPolyFlint> UIntPolyFlint::from_vec(const RCP<const Basic> &var,
                                                  const vec_integer_class &v)
 {
-    // TODO improve this (we already know the degree)
+    // TODODO improve this (we already know the degree)
     fzp_t f;
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {

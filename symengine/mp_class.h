@@ -519,7 +519,6 @@ inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
 
 inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, unsigned long n)
 {
-    // TODO needs to be changed https://github.com/wbhart/flint2/issues/271
     fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), n);
 }
 

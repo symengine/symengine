@@ -20,6 +20,7 @@ public:
 
     int compare(const Basic &o) const
     {
+        SYMENGINE_ASSERT(is_a<P>(o))
         const P &s = static_cast<const P &>(o);
 
         if (this->poly_.size() != s.poly_.size())
