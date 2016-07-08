@@ -396,6 +396,9 @@ int basic_neq(const basic a, const basic b)
 
 int basic_number_sign(const basic s)
 {
+
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+
     if ((rcp_static_cast<const Number>(s->m))->is_positive()) {
         return 1;
     } else if ((rcp_static_cast<const Number>(s->m))->is_zero()) {
