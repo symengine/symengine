@@ -260,6 +260,19 @@ int complex_mpc_is_zero(const basic s)
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
     return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
 }
+
+void complex_mpc_real_part(basic s, const basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexMPC>(com->m))->real_part();
+}
+
+void complex_mpc_imaginary_part(basic s, const basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexMPC>(com->m))->imaginary_part();
+}
+
 #endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
@@ -401,6 +414,20 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
+int basic_number_sign(const basic s)
+{
+
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+
+    if ((rcp_static_cast<const Number>(s->m))->is_positive()) {
+        return 1;
+    } else if ((rcp_static_cast<const Number>(s->m))->is_zero()) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
     void basic_##func(basic s, const basic a)                                  \
     {                                                                          \
@@ -452,6 +479,10 @@ void basic_str_free(char *s)
     delete[] s;
 }
 
+int is_a_Number(const basic s)
+{
+    return (int)is_a_Number(*(s->m));
+}
 int is_a_Integer(const basic c)
 {
     return is_a<Integer>(*(c->m));

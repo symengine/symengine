@@ -23,7 +23,11 @@ void test_cwrapper()
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
-
+    
+    SYMENGINE_C_ASSERT(is_a_Number(x) == 0);
+    SYMENGINE_C_ASSERT(is_a_Number(y) == 0);
+    SYMENGINE_C_ASSERT(is_a_Number(z) == 0);
+    
     s = basic_str(x);
     SYMENGINE_C_ASSERT(strcmp(s, "x") == 0);
     basic_str_free(s);
@@ -66,13 +70,20 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    
+    integer_set_si(e, 0);
+    SYMENGINE_C_ASSERT(integer_get_si(e) == 0);
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == 0);
 
     integer_set_ui(e, 123);
     SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == 1);
 
     integer_set_si(e, -123);
     SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
-
+    SYMENGINE_C_ASSERT(basic_number_sign(e) == -1);
+    SYMENGINE_C_ASSERT(is_a_Number(e) == 1);
+    
     mpz_t test;
     mpz_init(test);
 
@@ -264,23 +275,34 @@ void test_real_mpfr()
 #ifdef HAVE_SYMENGINE_MPC
 void test_complex_mpc()
 {
-    basic d, d1, imag;
+    basic d, d1, d2;
     basic_new_stack(d);
     basic_new_stack(d1);
-    basic_new_stack(imag);
+    basic_new_stack(d2);
 
-    basic_const_I(imag);
+    basic_const_I(d2);
 
     real_mpfr_set_d(d, 0.000001, 200);
-    real_mpfr_set_d(d1, 000001, 200);
-    basic_mul(d1, d1, imag);
-    basic_add(d, d, d1);
-    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_COMPLEX_MPC);
-    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d) == 0);
+    real_mpfr_set_d(d1, 0.000001, 200);
+    basic_mul(d2, d1, d2);
+    basic_add(d2, d, d2);
+    SYMENGINE_C_ASSERT(basic_get_type(d2) == SYMENGINE_COMPLEX_MPC);
+    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d2) == 0);
+    
+    basic r1;
+    basic_new_stack(r1);
+    
+    complex_mpc_real_part(r1, d2);
+    SYMENGINE_C_ASSERT(basic_eq(r1, d));
+    
+    complex_mpc_imaginary_part(r1, d2);
+    SYMENGINE_C_ASSERT(basic_eq(r1, d1));
+    
 
     basic_free_stack(d);
     basic_free_stack(d1);
-    basic_free_stack(imag);
+    basic_free_stack(d2);
+    basic_free_stack(r1);
 }
 #endif // HAVE_SYMENGINE_MPC
 
