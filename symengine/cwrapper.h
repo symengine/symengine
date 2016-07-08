@@ -156,6 +156,10 @@ int real_mpfr_is_zero(const basic s);
 #ifdef HAVE_SYMENGINE_MPC
 //! Returns 1 if s has value zero; 0 otherwise
 int complex_mpc_is_zero(const basic s);
+//! Assign to s, the real part of com
+void complex_mpc_real_part(basic s, const basic com);
+//! Assign to s, the imaginary part of com
+void complex_mpc_imaginary_part(basic s, const basic com);
 #endif // HAVE_SYMENGINE_MPC
 
 //! Returns signed long value of s.
@@ -208,8 +212,6 @@ int basic_eq(const basic a, const basic b);
 int basic_neq(const basic a, const basic b);
 //! Returns +1 if s (Number) is positive, 0 if 0, -1 if negative
 int basic_number_sign(const basic s);
-//! Return 1 if s is a Number, 0 otherwise
-int is_a_Number(const basic s);
 
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
@@ -289,6 +291,8 @@ char *basic_str(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
+//! Return 1 if s is a Number, 0 if not.
+int is_a_Number(const basic s);
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
 //! Return 1 if s is a Rational, 0 if not.
