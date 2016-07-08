@@ -6,6 +6,7 @@
 #include <symengine/printer.h>
 #include <symengine/matrix.h>
 #include <symengine/eval.h>
+#include <symengine/parser.h>
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -43,6 +44,7 @@ using SymEngine::eye;
 using SymEngine::diag;
 using SymEngine::ones;
 using SymEngine::zeros;
+using SymEngine::parse;
 
 namespace SymEngine
 {
@@ -357,6 +359,11 @@ int basic_diff(basic s, const basic expr, basic const symbol)
 void basic_assign(basic a, const basic b)
 {
     a->m = b->m;
+}
+
+void basic_parse(basic b, const char *str)
+{
+    b->m = SymEngine::parse(str);
 }
 
 void basic_add(basic s, const basic a, const basic b)
