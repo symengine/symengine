@@ -408,6 +408,11 @@ int basic_number_sign(const basic s)
     }
 }
 
+int is_a_Number(const basic s)
+{
+    return (int)is_a_Number(*(s->m));
+}
+
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
     void basic_##func(basic s, const basic a)                                  \
     {                                                                          \

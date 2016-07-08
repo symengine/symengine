@@ -208,6 +208,8 @@ int basic_eq(const basic a, const basic b);
 int basic_neq(const basic a, const basic b);
 //! Returns +1 if s (Number) is positive, 0 if 0, -1 if negative
 int basic_number_sign(const basic s);
+//! Return 1 if s is a Number, 0 otherwise
+int is_a_Number(const basic s);
 
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);

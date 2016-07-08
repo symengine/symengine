@@ -23,7 +23,11 @@ void test_cwrapper()
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
-
+    
+    SYMENGINE_C_ASSERT(is_a_Number(x) == 0);
+    SYMENGINE_C_ASSERT(is_a_Number(y) == 0);
+    SYMENGINE_C_ASSERT(is_a_Number(z) == 0);
+    
     s = basic_str(x);
     SYMENGINE_C_ASSERT(strcmp(s, "x") == 0);
     basic_str_free(s);
@@ -79,6 +83,8 @@ void test_cwrapper()
     integer_set_si(e, -123);
     SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
     SYMENGINE_C_ASSERT(basic_number_sign(e) == -1);
+    
+    SYMENGINE_C_ASSERT(is_a_Number(e) == 1);
     
 
     mpz_t test;
