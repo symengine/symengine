@@ -1,6 +1,5 @@
 #include <symengine/symbol.h>
 #include <symengine/polys/uintpoly_flint.h>
-#ifdef HAVE_SYMENGINE_FLINT
 
 namespace SymEngine
 {
@@ -96,4 +95,3 @@ fz_t UIntPolyFlint::get_coeff_ref(unsigned int x) const
     return poly_.coeff(x);
 }
 }
-#endif

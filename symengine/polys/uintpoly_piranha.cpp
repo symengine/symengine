@@ -2,8 +2,6 @@
 #include <symengine/expression.h>
 #include <symengine/polys/uintpoly_piranha.h>
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-
 namespace SymEngine
 {
 
@@ -19,5 +17,17 @@ std::size_t UIntPolyPiranha::__hash__() const
     seed += var_->hash();
     return seed;
 }
+
+URatPolyPiranha::URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict)
+    : UPiranhaPoly(var, std::move(dict))
+{
 }
-#endif
+
+std::size_t URatPolyPiranha::__hash__() const
+{
+    std::size_t seed = URATPOLYPIRANHA;
+    seed += poly_.hash();
+    seed += var_->hash();
+    return seed;
+}
+}

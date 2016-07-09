@@ -76,8 +76,9 @@ namespace SymEngine
 {
 using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
-using pterm = pintpoly::term_type;
+using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 
+template<typename C>
 class PiranhaForIter
 {
     pintpoly::container_type::const_iterator ptr_;
@@ -103,14 +104,14 @@ public:
         return *this;
     }
 
-    std::pair<unsigned int, const integer_class &> operator*()
+    std::pair<unsigned int, const C &> operator*()
     {
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    std::shared_ptr<std::pair<unsigned int, const integer_class &>> operator->()
+    std::shared_ptr<std::pair<unsigned int, const C &>> operator->()
     {
-        return std::make_shared<std::pair<unsigned int, const integer_class &>>(
+        return std::make_shared<std::pair<unsigned int, const C &>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };
@@ -168,8 +169,8 @@ public:
 
     C eval(const C &x) const
     {
-        return piranha::math::evaluate<C>(
-            this->poly_, {{detail::poly_print(this->var_), x}});
+        const std::unordered_map<std::string, C> t = {{detail::poly_print(this->var_), x}};
+        return piranha::math::evaluate<C, D>(this->poly_, t);
     }
 
     std::vector<C> multieval(const std::vector<C> &v) const
@@ -205,7 +206,7 @@ public:
 
     // begin() and end() are unordered
     // obegin() and oend() are ordered, from highest degree to lowest
-    typedef PiranhaForIter iterator;
+    typedef PiranhaForIter<C> iterator;
     typedef ContainerRevIter<P, const C &> r_iterator;
     iterator begin() const
     {
@@ -237,6 +238,17 @@ public:
     std::size_t __hash__() const;
 
 }; // UIntPolyPiranha
+
+class URatPolyPiranha : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
+{    
+public:
+    IMPLEMENT_TYPEID(URATPOLYPIRANHA)
+    //! Constructor of UIntPolyPiranha class
+    URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict);
+    //! \return size of the hash
+    std::size_t __hash__() const;
+
+};
 
 inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
