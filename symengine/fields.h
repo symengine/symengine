@@ -107,12 +107,22 @@ public:
     // is used by equal degree factorization.
     std::vector<std::pair<GaloisFieldDict, integer_class>>
     gf_ddf_zassenhaus() const;
+    // Computes `f**((modulo_**n - 1) // 2) % *this`
     GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f,
                                    const integer_class &n,
                                    const std::vector<GaloisFieldDict> &b) const;
-    GaloisFieldDict gf_random(integer_class n) const;
+    // Generates a random polynomial in `modulo_` of degree `n`.
+    GaloisFieldDict gf_random(const integer_class &n, const size_t &seed) const;
+    // Given a monic square-free polynomial and an integer `n`, such that `n`
+    // divides `this->degree()`,
+    // returns all irreducible factors, each of degree `n`.
     std::vector<GaloisFieldDict>
     gf_edf_zassenhaus(const integer_class &n) const;
+    // Factors a square free polynomial in field of modulo_.
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
+    //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
+    //     Algebra, 1992
     std::vector<GaloisFieldDict> gf_zassenhaus() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT

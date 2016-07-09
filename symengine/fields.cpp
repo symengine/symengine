@@ -481,13 +481,18 @@ GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f,
     return res;
 }
 
-GaloisFieldDict GaloisFieldDict::gf_random(integer_class n) const
+GaloisFieldDict GaloisFieldDict::gf_random(const integer_class &n,
+                                           const size_t &seed) const
 {
     int n_val = mp_get_si(n);
-    int mod_val = mp_get_si(modulo_);
     std::vector<integer_class> v(n_val + 1);
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, seed);
     for (int i = 0; i < n; ++i) {
-        v[i] = integer_class(std::rand() % mod_val);
+        integer_class temp;
+        mp_urandomm(temp, state, modulo_);
+        v[i] = temp;
     }
     v[n_val] = 1_z;
     return GaloisFieldDict::from_vec(v, modulo_);
@@ -507,9 +512,9 @@ GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
     std::vector<GaloisFieldDict> b;
     if (modulo_ != 2_z)
         b = this->gf_frobenius_monomial_base();
-
+    size_t seed = 123456;
     while (factors.size() < N) {
-        auto r = gf_random(integer_class(2 * n_val - 1));
+        auto r = gf_random(integer_class(2 * n_val - 1), ++seed);
         GaloisFieldDict g;
         if (modulo_ == 2_z) {
             GaloisFieldDict h = r;
