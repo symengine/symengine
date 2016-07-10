@@ -430,7 +430,7 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            integer_class m = to_mp_class(it->second);
+            integer_class m = it->second;
 
             if (it->first == 0) {
                 args.push_back(integer(m));
@@ -470,7 +470,7 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            rational_class m = to_mp_class(it->second);
+            rational_class m = it->second;
 
             if (it->first == 0) {
                 args.push_back(Rational::from_mpq(m));

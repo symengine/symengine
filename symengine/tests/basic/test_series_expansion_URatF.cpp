@@ -44,7 +44,7 @@ static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex,
     auto ser = URatPSeriesFlint::series(ex, sym->get_name(), prec);
     auto serrev = URatPSeriesFlint::series_reverse(
         ser->get_poly(), fqp_t(sym->get_name().c_str()), prec);
-    return fmpqxx2sym(serrev.get_coeff(n));
+    return fmpqxx2sym(serrev.coeff(n));
 }
 
 static bool expand_check_pairs(const RCP<const Basic> &ex,

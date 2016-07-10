@@ -10,7 +10,7 @@
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
 using fzp_t = SymEngine::fmpz_poly_wrapper;
-using fz_t = SymEngine::fmpz_wrapper;
+using fqp_t = SymEngine::fmpq_poly_wrapper;
 
 namespace SymEngine
 {
@@ -92,17 +92,14 @@ public:
         return to_mp_class(this->poly_.coeff(x));
     }
 
-    // TODODO chage this to reference
-    typename D::internal_coef_type get_coeff_ref(unsigned int x) const
+    // can't return by reference
+    C get_coeff_ref(unsigned int x) const
     {
-        static typename D::internal_coef_type FZERO(0);
-        if (x > this->poly_.degree())
-            return FZERO;
-        return this->poly_.coeff(x);
+        return to_mp_class(this->poly_.coeff(x));
     }
 
-    typedef ContainerForIter<P, typename D::internal_coef_type> iterator;
-    typedef ContainerRevIter<P, typename D::internal_coef_type> r_iterator;
+    typedef ContainerForIter<P, C> iterator;
+    typedef ContainerRevIter<P, C> r_iterator;
     iterator begin() const
     {
         return iterator(this->template rcp_from_this_cast<P>(), 0);
@@ -135,7 +132,17 @@ public:
     UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
-}; // UIntPolyFLint
+}; // UIntPolyFlint
+
+class URatPolyFlint : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
+{
+public:
+    IMPLEMENT_TYPEID(URATPOLYFLINT)
+    //! Constructor of URatPolyFlint class
+    URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict);
+    //! \return size of the hash
+    std::size_t __hash__() const;
+}; // URatPolyFlint
 
 inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a,
                                           const UIntPolyFlint &b)

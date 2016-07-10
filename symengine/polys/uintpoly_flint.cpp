@@ -18,4 +18,19 @@ std::size_t UIntPolyFlint::__hash__() const
     hash_combine(seed, str_hash(poly_.to_string()));
     return seed;
 }
+
+URatPolyFlint::URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict)
+    : UFlintPoly(var, std::move(dict))
+{
+}
+
+std::size_t URatPolyFlint::__hash__() const
+{
+    std::hash<std::string> str_hash;
+    std::size_t seed = URATPOLYFLINT;
+
+    seed += var_->hash();
+    hash_combine(seed, str_hash(poly_.to_string()));
+    return seed;
+}
 }

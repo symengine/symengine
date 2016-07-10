@@ -713,7 +713,21 @@ public:
     {
         return fmpq_poly_degree(poly);
     }
-    fmpq_wrapper get_coeff(unsigned int deg) const
+    long length() const
+    {
+        return fmpq_poly_length(poly);
+    }
+    void set_coeff(unsigned int n, const fmpq_wrapper &z)
+    {
+        fmpq_poly_set_coeff_fmpq(poly, n, z.get_fmpq_t());
+    }
+    fmpq_wrapper eval(const fmpq_wrapper &z) const
+    {
+        fmpq_wrapper r;
+        fmpq_poly_evaluate_fmpq(r.get_fmpq_t(), poly, z.get_fmpq_t());
+        return r;
+    }
+    fmpq_wrapper coeff(unsigned int deg) const
     {
         fmpq_wrapper q;
         fmpq_poly_get_coeff_fmpq(q.get_fmpq_t(), poly, deg);
