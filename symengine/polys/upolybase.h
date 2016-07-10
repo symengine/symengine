@@ -8,11 +8,13 @@
 #include <symengine/basic.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
+#include <symengine/rational.h>
 #include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
 using fz_t = SymEngine::fmpz_wrapper;
+using fq_t = SymEngine::fmpq_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
@@ -23,50 +25,77 @@ namespace SymEngine
 {
 // misc methods
 
-inline integer_class to_integer_class(const integer_class &i)
-{
-    return i;
-}
-
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t &i)
+inline integer_class to_mp_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(x.get_mpz_t(), i.get_fmpz_t());
     return x;
 }
+inline rational_class to_mp_class(const fq_t &i)
+{
+    rational_class x;
+    fmpq_get_mpq(x.get_mpq_t(), i.get_fmpq_t());
+    return x;
+}
 #endif
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &i)
+inline integer_class to_mp_class(const piranha::integer &i)
 {
     integer_class x;
     mpz_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+inline rational_class to_mp_class(const piranha::rational &i)
+{
+    rational_class x;
+    mpz_set(x.get_mpq_t(), i.get_mpq_view());
     return x;
 }
 #endif
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t &i)
+inline integer_class to_mp_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(get_mpz_t(x), i.get_fmpz_t());
+    return x;
+}
+inline rational_class to_mp_class(const fq_t &i)
+{
+    rational_class x;
+    fmpq_get_mpq(get_mpq_t(x), i.get_fmpq_t());
     return x;
 }
 #endif
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 #ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &x)
+inline integer_class to_mp_class(const piranha::integer &x)
 {
     return integer_class(x.get_mpz_view());
+}
+inline rational_class to_mp_class(const piranha::rational &x)
+{
+    return rational_class(x.get_mpq_view());
 }
 #endif
 
 #endif
+
+inline integer_class to_mp_class(const integer_class &i)
+{
+    return i;
+}
+
+inline rational_class to_mp_class(const rational_class &i)
+{
+    return i;
+}
 
 // dict wrapper
 template <typename Key, typename Value, typename Wrapper>
@@ -401,7 +430,7 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            integer_class m = to_integer_class(it->second);
+            integer_class m = to_mp_class(it->second);
 
             if (it->first == 0) {
                 args.push_back(integer(m));
@@ -434,7 +463,36 @@ public:
     {
     }
 
-    // TODODO RCP<const Basic> as_symbolic() const
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const P &>(*this)).begin();
+        auto end = (static_cast<const P &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            rational_class m = to_mp_class(it->second);
+
+            if (it->first == 0) {
+                args.push_back(Rational::from_mpq(m));
+            } else if (it->first == 1) {
+                if (m == 1) {
+                    args.push_back(this->var_);
+                } else {
+                    args.push_back(Mul::from_dict(Rational::from_mpq(m),
+                                                  {{this->var_, one}}));
+                }
+            } else {
+                if (m == 1) {
+                    args.push_back(pow(this->var_, integer(it->first)));
+                } else {
+                    args.push_back(
+                        Mul::from_dict(Rational::from_mpq(m),
+                                       {{this->var_, integer(it->first)}}));
+                }
+            }
+        }
+        return SymEngine::add(args);
+    }
 };
 
 template <typename T, typename Int>

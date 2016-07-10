@@ -76,7 +76,7 @@ public:
     C eval(const C &x) const
     {
         typename D::internal_coef_type r(get_mp_t(x));
-        return to_integer_class(this->poly_.eval(r));
+        return to_mp_class(this->poly_.eval(r));
     }
 
     std::vector<C> multieval(const std::vector<C> &v) const
@@ -89,7 +89,7 @@ public:
 
     C get_coeff(unsigned int x) const
     {
-        return to_integer_class(this->poly_.coeff(x));
+        return to_mp_class(this->poly_.coeff(x));
     }
 
     // TODODO chage this to reference
