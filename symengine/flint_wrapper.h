@@ -482,6 +482,8 @@ private:
     fmpz_poly_t poly;
 
 public:
+    typedef fmpz_wrapper internal_coef_type;
+
     fmpz_poly_wrapper()
     {
         fmpz_poly_init(poly);
@@ -639,6 +641,8 @@ private:
     fmpq_poly_t poly;
 
 public:
+    typedef fmpq_wrapper internal_coef_type;
+
     fmpq_poly_wrapper()
     {
         fmpq_poly_init(poly);

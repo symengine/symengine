@@ -60,8 +60,8 @@ if (WITH_MPC)
 endif()
 
 if (WITH_FLINT)
-    set(SRC ${SRC} series_flint.cpp)
-    set(SRC ${SRC} polys/uintpoly_flint.cpp)
+    set(SRC series_flint.cpp ${SRC})
+    set(SRC polys/uintpoly_flint.cpp ${SRC})
 endif()
 
 if (WITH_ARB)

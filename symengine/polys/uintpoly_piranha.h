@@ -78,7 +78,7 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 
-template<typename C>
+template <typename C>
 class PiranhaForIter
 {
     pintpoly::container_type::const_iterator ptr_;
@@ -169,7 +169,8 @@ public:
 
     C eval(const C &x) const
     {
-        const std::unordered_map<std::string, C> t = {{detail::poly_print(this->var_), x}};
+        const std::unordered_map<std::string, C> t
+            = {{detail::poly_print(this->var_), x}};
         return piranha::math::evaluate<C, D>(this->poly_, t);
     }
 
@@ -239,15 +240,15 @@ public:
 
 }; // UIntPolyPiranha
 
-class URatPolyPiranha : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
-{    
+class URatPolyPiranha
+    : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
+{
 public:
     IMPLEMENT_TYPEID(URATPOLYPIRANHA)
     //! Constructor of UIntPolyPiranha class
     URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict);
     //! \return size of the hash
     std::size_t __hash__() const;
-
 };
 
 inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,

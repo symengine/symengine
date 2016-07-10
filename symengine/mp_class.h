@@ -777,6 +777,16 @@ inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
     mp_demote(a);
 }
 
+inline auto get_mp_t(const integer_class &x) -> decltype(get_mpz_t(x))
+{
+    return get_mpz_t(x);
+}
+
+inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
+{
+    return get_mpq_t(x);
+}
+
 } // SymEngine namespace
 
 #endif // SYMENGINE_INTEGER_CLASS_H
