@@ -324,6 +324,7 @@ public:
         fmpq_init(mp);
         fmpz_set(fmpq_numref(mp), n.get_fmpz_t());
         fmpz_set(fmpq_denref(mp), d.get_fmpz_t());
+        fmpq_canonicalise(mp);
     }
     fmpq_wrapper(const fmpq_wrapper &other)
     {
