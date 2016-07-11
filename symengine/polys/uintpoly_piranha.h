@@ -25,15 +25,16 @@ namespace piranha
 // overloading pow for pirahna::math::evaluate
 namespace math
 {
-
-template <typename U>
-struct pow_impl<SymEngine::integer_class, U,
-                SymEngine::enable_if_t<std::is_integral<U>::value>> {
+using namespace SymEngine;
+template <typename U, typename V>
+struct pow_impl<V, U,
+                enable_if_t<std::is_integral<U>::value
+                            and (std::is_same<V, integer_class>::value
+                                 or std::is_same<V, rational_class>::value)>> {
     template <typename T2>
-    SymEngine::integer_class operator()(const SymEngine::integer_class &r,
-                                        const T2 &x) const
+    V operator()(const V &r, const T2 &x) const
     {
-        SymEngine::integer_class res;
+        V res;
         mp_pow_ui(res, r, x);
         return res;
     }
@@ -78,13 +79,13 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 
-template <typename C>
+template <typename C, typename D>
 class PiranhaForIter
 {
-    pintpoly::container_type::const_iterator ptr_;
+    typename D::container_type::const_iterator ptr_;
 
 public:
-    PiranhaForIter(pintpoly::container_type::const_iterator ptr) : ptr_{ptr}
+    PiranhaForIter(typename D::container_type::const_iterator ptr) : ptr_{ptr}
     {
     }
 
@@ -207,7 +208,7 @@ public:
 
     // begin() and end() are unordered
     // obegin() and oend() are ordered, from highest degree to lowest
-    typedef PiranhaForIter<C> iterator;
+    typedef PiranhaForIter<C, D> iterator;
     typedef ContainerRevIter<P, const C &> r_iterator;
     iterator begin() const
     {

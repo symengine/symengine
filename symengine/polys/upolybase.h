@@ -52,7 +52,7 @@ inline integer_class to_mp_class(const piranha::integer &i)
 inline rational_class to_mp_class(const piranha::rational &i)
 {
     rational_class x;
-    mpz_set(x.get_mpq_t(), i.get_mpq_view());
+    mpq_set(x.get_mpq_t(), i.get_mpq_view());
     return x;
 }
 #endif
