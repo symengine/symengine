@@ -134,8 +134,10 @@ public:
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
-
-    std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>> gf_factor() const;
+    // Factors a polynomial in field of modulo_
+    std::pair<integer_class,
+              std::vector<std::pair<GaloisFieldDict, integer_class>>>
+    gf_factor() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {

@@ -551,7 +551,8 @@ GaloisFieldDict::gf_zassenhaus() const
     return factors;
 }
 
-std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>> GaloisFieldDict::gf_factor() const
+std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>>
+GaloisFieldDict::gf_factor() const
 {
     integer_class lc;
     std::vector<std::pair<GaloisFieldDict, integer_class>> factors;
@@ -559,14 +560,16 @@ std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>>
     gf_monic(lc, outArg(monic));
     if (monic.degree() < 1)
         return std::make_pair(lc, factors);
-    std::vector<std::pair<GaloisFieldDict, integer_class>> sqf_list = monic.gf_sqf_list();
+    std::vector<std::pair<GaloisFieldDict, integer_class>> sqf_list
+        = monic.gf_sqf_list();
     for (auto a : sqf_list) {
         auto temp = (a.first).gf_zassenhaus();
         for (auto f : temp)
             factors.push_back({f, a.second});
     }
     sort(factors.begin(), factors.end(),
-         [](const std::pair<GaloisFieldDict, integer_class> &a, const std::pair<GaloisFieldDict, integer_class> &b) {
+         [](const std::pair<GaloisFieldDict, integer_class> &a,
+            const std::pair<GaloisFieldDict, integer_class> &b) {
              if (a.first.degree() == b.first.degree())
                  return a.first.dict_ < b.first.dict_;
              else
