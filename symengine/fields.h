@@ -135,6 +135,8 @@ public:
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
 
+    std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>> gf_factor() const;
+
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other) {
