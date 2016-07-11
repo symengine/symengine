@@ -360,6 +360,7 @@ public:
         mpq_init(mp);
         mpz_set(mpq_numref(mp), n.get_mpz_t());
         mpz_set(mpq_denref(mp), d.get_mpz_t());
+        mpq_canonicalize(mp);
     }
     mpq_wrapper(const mpq_wrapper &other)
     {
