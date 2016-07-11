@@ -80,7 +80,7 @@ void StrPrinter::bvisit(const RealDouble &x)
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i;
     str_ = s.str();
-    if (str_.find(".") == std::string::npos) {
+    if (str_.find(".") == std::string::npos and str_.find("e") == std::string::npos) {
         s << ".0";
         str_ = s.str();
     }
