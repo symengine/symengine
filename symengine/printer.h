@@ -251,6 +251,9 @@ public:
 #endif
     void bvisit(const NumberWrapper &x);
 
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
+
     std::string parenthesizeLT(const RCP<const Basic> &x,
                                PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x,

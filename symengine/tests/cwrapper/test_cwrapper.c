@@ -784,7 +784,7 @@ void test_functions()
 
     basic_acsch(ans, one);
     s = basic_str(ans);
-    SYMENGINE_C_ASSERT(strcmp(s, "log(1 + 2**(1/2))") == 0);
+    SYMENGINE_C_ASSERT(strcmp(s, "log(1 + sqrt(2))") == 0);
     basic_str_free(s);
 
     basic_asech(ans, one);
