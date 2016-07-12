@@ -11,7 +11,6 @@
 #include <random>
 namespace SymEngine
 {
-
 class GaloisFieldDict
 {
 public:
@@ -19,6 +18,16 @@ public:
     integer_class modulo_;
 
 public:
+    struct DictLess {
+        bool operator()(const GaloisFieldDict &a,
+                        const GaloisFieldDict &b) const
+        {
+            if (a.degree() == b.degree())
+                return a.dict_ < b.dict_;
+            else
+                return a.degree() < b.degree();
+        }
+    };
     GaloisFieldDict() SYMENGINE_NOEXCEPT
     {
     }
@@ -116,14 +125,14 @@ public:
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
-    std::vector<GaloisFieldDict>
+    std::set<GaloisFieldDict, DictLess>
     gf_edf_zassenhaus(const integer_class &n) const;
     // Factors a square free polynomial in field of modulo_.
     // References :
     //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
-    std::vector<GaloisFieldDict> gf_zassenhaus() const;
+    std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {

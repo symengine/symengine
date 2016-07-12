@@ -498,11 +498,11 @@ GaloisFieldDict GaloisFieldDict::gf_random(const integer_class &n,
     return GaloisFieldDict::from_vec(v, modulo_);
 }
 
-std::vector<GaloisFieldDict>
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
 GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
 {
-    std::vector<GaloisFieldDict> factors;
-    factors.push_back(*this);
+    std::set<GaloisFieldDict, DictLess> factors;
+    factors.insert(*this);
     unsigned n_val = mp_get_si(n);
     if (this->degree() <= n_val)
         return factors;
@@ -534,35 +534,21 @@ GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
             factors = g.gf_edf_zassenhaus(n);
             auto to_add = ((*this) / g).gf_edf_zassenhaus(n);
             if (not to_add.empty())
-                factors.insert(factors.end(), to_add.begin(), to_add.end());
+                factors.insert(to_add.begin(), to_add.end());
         }
     }
-    sort(factors.begin(), factors.end(),
-         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
-             if (a.degree() == b.degree())
-                 return a.dict_ < b.dict_;
-             else
-                 return a.degree() < b.degree();
-         });
     return factors;
 }
 
-std::vector<GaloisFieldDict> GaloisFieldDict::gf_zassenhaus() const
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_zassenhaus() const
 {
-    std::vector<GaloisFieldDict> factors;
+    std::set<GaloisFieldDict, DictLess> factors;
     auto temp1 = gf_ddf_zassenhaus();
     for (auto &f : temp1) {
-        std::vector<GaloisFieldDict> temp2
-            = f.first.gf_edf_zassenhaus(f.second);
-        factors.insert(factors.end(), temp2.begin(), temp2.end());
+        auto temp2 = f.first.gf_edf_zassenhaus(f.second);
+        factors.insert(temp2.begin(), temp2.end());
     }
-    sort(factors.begin(), factors.end(),
-         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
-             if (a.degree() == b.degree())
-                 return a.dict_ < b.dict_;
-             else
-                 return a.degree() < b.degree();
-         });
     return factors;
 }
 }

@@ -638,8 +638,8 @@ TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
     d1 = GaloisFieldDict::from_vec({2_z, 1_z, 0_z, 1_z, 1_z}, 3_z);
     auto f = d1.gf_edf_zassenhaus(2_z);
     REQUIRE(f.size() == 2);
-    REQUIRE(f[0] == GaloisFieldDict::from_vec({1_z, 0_z, 1_z}, 3_z));
-    REQUIRE(f[1] == GaloisFieldDict::from_vec({2_z, 1_z, 1_z}, 3_z));
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 0_z, 1_z}, 3_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({2_z, 1_z, 1_z}, 3_z)) != f.end());
 
     d1 = GaloisFieldDict::from_vec({}, 11_z);
     f = d1.gf_zassenhaus();
@@ -652,20 +652,22 @@ TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
     d1 = GaloisFieldDict::from_vec({1_z, 1_z}, 11_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 1);
-    REQUIRE(f[0] == GaloisFieldDict::from_vec({1_z, 1_z}, 11_z));
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 11_z)) != f.end());
 
     d1 = GaloisFieldDict::from_vec({0_z, 1_z, 0_z, 0_z, 1_z}, 2_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 3);
-    REQUIRE(f[0] == GaloisFieldDict::from_vec({0_z, 1_z}, 2_z));
-    REQUIRE(f[1] == GaloisFieldDict::from_vec({1_z, 1_z}, 2_z));
-    REQUIRE(f[2] == GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 2_z));
+    REQUIRE(f.find(GaloisFieldDict::from_vec({0_z, 1_z}, 2_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 2_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 2_z)) != f.end());
 
     d1 = GaloisFieldDict::from_vec({1_z, -3_z, -1_z, -3_z, 1_z, -3_z, 1_z},
                                    11_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 3);
-    REQUIRE(f[0] == GaloisFieldDict::from_vec({1_z, 1_z}, 11_z));
-    REQUIRE(f[1] == GaloisFieldDict::from_vec({3_z, 5_z, 1_z}, 11_z));
-    REQUIRE(f[2] == GaloisFieldDict::from_vec({4_z, 3_z, 2_z, 1_z}, 11_z));
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 11_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({3_z, 5_z, 1_z}, 11_z))
+            != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({4_z, 3_z, 2_z, 1_z}, 11_z))
+            != f.end());
 }
