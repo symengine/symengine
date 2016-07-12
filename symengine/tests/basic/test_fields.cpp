@@ -562,6 +562,8 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
         == GaloisFieldDict::from_vec(
                {1_z, 0_z, 0_z, 0_z, 0_z, 1_z, 0_z, 0_z, 0_z, 0_z, 1_z}, 11_z));
     REQUIRE(b[1].second == 2_z);
+    auto c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 
     d1 = GaloisFieldDict({{63, 1_z}, {0, 1_z}}, 2_z);
     b = d1.gf_ddf_zassenhaus();
@@ -582,6 +584,8 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
                     1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 1_z},
                    2_z));
     REQUIRE(b[3].second == 6_z);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 
     d1 = GaloisFieldDict({{6, 1_z}, {5, -1_z}, {4, 1_z}, {3, 1_z}, {1, -1_z}},
                          3_z);
@@ -592,6 +596,8 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
     REQUIRE(b[1].first
             == GaloisFieldDict::from_vec({2_z, 1_z, 0_z, 1_z, 1_z}, 3_z));
     REQUIRE(b[1].second == 2_z);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 
     d1 = GaloisFieldDict::from_vec(
         {577_z, 24_z, 456_z, 325_z, 791_z, 436_z, 677_z, 26_z, 5_z, 2_z, 1_z},
@@ -605,6 +611,8 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
                                           694_z, 532_z, 559_z, 110_z, 1_z},
                                          809_z));
     REQUIRE(b[1].second == 9_z);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 
     d1 = GaloisFieldDict({{15, 1_z}, {1, 1_z}, {0, 1_z}}, 102953_z);
     b = d1.gf_ddf_zassenhaus();
@@ -621,13 +629,20 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
                                                      95022_z, 15347_z, 1_z},
                                                     102953_z));
     REQUIRE(b[2].second == 5_z);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 
     d1 = GaloisFieldDict::from_vec({}, 11_z);
     b = d1.gf_ddf_zassenhaus();
     REQUIRE(b.size() == 0);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
+
     d1 = GaloisFieldDict::from_vec({1_z}, 11_z);
     b = d1.gf_ddf_zassenhaus();
     REQUIRE(b.size() == 0);
+    c = d1.gf_ddf_shoup();
+    REQUIRE(b == c);
 }
 
 TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
@@ -879,4 +894,18 @@ TEST_CASE("GaloisFieldDict factorization : Basic", "[basic]")
                 {GaloisFieldDict::from_vec({30_z, 18_z, 25_z, 11_z, 1_z}, 53_z),
                  1_z})
             != f.second.end());
+}
+
+TEST_CASE("GaloisFieldDict gf_compose_mod : Basic", "[basic]")
+{
+    GaloisFieldDict d1, d2, d3;
+
+    d1 = GaloisFieldDict::from_vec({1_z, 9_z, 4_z, 1_z, 1_z}, 11_z);
+    d2 = GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z);
+    d3 = GaloisFieldDict::from_vec({2_z, 0_z, 0_z, 1_z}, 11_z);
+    REQUIRE(d1.gf_compose_mod(d2, d3)
+            == GaloisFieldDict::from_vec({10_z, 6_z, 9_z, 3_z}, 11_z));
+
+    d2.dict_.clear();
+    REQUIRE(d1.gf_compose_mod(d2, d3) == GaloisFieldDict::from_vec({}, 11_z));
 }

@@ -118,6 +118,9 @@ public:
 
     // Returns the square free part of the polynomaial in `modulo_`
     GaloisFieldDict gf_sqf_part() const;
+    // composition of polynomial g(h) mod (*this)
+    GaloisFieldDict gf_compose_mod(const GaloisFieldDict &g,
+                                   const GaloisFieldDict &h) const;
     // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
     // where n = this->degree()
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
@@ -131,7 +134,7 @@ public:
                      const std::vector<GaloisFieldDict> &b) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
-    // is used by equal degree factorization.
+    // is used by equal degree factorization. (Zassenhaus's algorithm [1, 2])
     std::vector<std::pair<GaloisFieldDict, integer_class>>
     gf_ddf_zassenhaus() const;
     // Computes `f**((modulo_**n - 1) // 2) % *this`
@@ -152,6 +155,10 @@ public:
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
+    // For a monic square-free polynomial in modulo_, it returns its distinct
+    // degree factorization. Each element's first is a factor and second
+    // is used by equal degree factorization. (Shoup's algorithm)
+    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_ddf_shoup() const;
     // Factors a polynomial in field of modulo_
     std::pair<integer_class,
               std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
@@ -238,7 +245,8 @@ public:
         GaloisFieldDict o(*this);
         for (auto &a : o.dict_) {
             a *= -1;
-            a += modulo_;
+            if (a != 0_z)
+                a += modulo_;
         }
         return o;
     }
@@ -247,7 +255,8 @@ public:
     {
         for (auto &a : dict_) {
             a *= -1;
-            a += modulo_;
+            if (a != 0_z)
+                a += modulo_;
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -294,7 +303,8 @@ public:
                 dict_.resize(other.dict_.size());
                 for (unsigned int i = orig_size; i < other.dict_.size(); i++) {
                     dict_[i] = -other.dict_[i];
-                    dict_[i] += modulo_;
+                    if (dict_[i] != 0_z)
+                        dict_[i] += modulo_;
                 }
             }
         }

@@ -352,6 +352,27 @@ GaloisFieldDict GaloisFieldDict::gf_sqf_part() const
     return g;
 }
 
+GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
+                                                const GaloisFieldDict &h) const
+{
+    if (g.modulo_ != h.modulo_)
+        throw std::runtime_error("Error: field must be same.");
+    if (g.modulo_ != modulo_)
+        throw std::runtime_error("Error: field must be same.");
+    if (g.dict_.size() == 0)
+        return g;
+    GaloisFieldDict out
+        = GaloisFieldDict::from_vec({*(g.dict_.rbegin())}, modulo_);
+    for (unsigned i = g.dict_.size() - 2;; --i) {
+        out *= h;
+        out += g.dict_[i];
+        out %= (*this);
+        if (i == 0)
+            break;
+    }
+    return out;
+}
+
 GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
                                             const integer_class &n) const
 {
@@ -552,6 +573,59 @@ GaloisFieldDict::gf_zassenhaus() const
 
 std::pair<integer_class, std::set<std::pair<GaloisFieldDict, integer_class>,
                                   GaloisFieldDict::DictLess>>
+GaloisFieldDict::gf_ddf_shoup() const
+{
+    std::vector<std::pair<GaloisFieldDict, integer_class>> factors;
+    if (dict_.empty())
+        return factors;
+    GaloisFieldDict f(*this);
+    unsigned n = this->degree();
+    auto k = std::ceil(std::sqrt(n / 2));
+    auto b = gf_frobenius_monomial_base();
+    auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
+    auto h = x.gf_frobenius_map(f, b);
+
+    std::vector<GaloisFieldDict> U;
+    U.push_back(x);
+    U.push_back(h);
+    U.resize(k + 1);
+    for (unsigned i = 2; i <= k; ++i)
+        U[i] = U[i - 1].gf_frobenius_map(*this, b);
+    h = U[k];
+    U.resize(k);
+    std::vector<GaloisFieldDict> V;
+    V.push_back(h);
+    V.resize(k);
+    for (unsigned i = 1; i <= k - 1; ++i)
+        V[i] = this->gf_compose_mod(V[i - 1], h);
+    for (unsigned i = 0; i < V.size(); i++) {
+        h = GaloisFieldDict::from_vec({1_z}, modulo_);
+        unsigned j = k - 1;
+        GaloisFieldDict g;
+        for (auto &u : U) {
+            g = V[i] - u;
+            h *= g;
+            h %= f;
+        }
+        g = f.gf_gcd(h);
+        f /= g;
+        for (auto rit = U.rbegin(); rit != U.rend(); ++rit) {
+            h = V[i] - (*rit);
+            auto F = g.gf_gcd(h);
+            if (not F.is_one()) {
+                int temp = k * (i + 1) - j;
+                factors.push_back({F, integer_class(temp)});
+            }
+            g /= F;
+            --j;
+        }
+    }
+    if (not f.is_one())
+        factors.push_back({f, integer_class(f.degree())});
+    return factors;
+}
+
+std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>>
 GaloisFieldDict::gf_factor() const
 {
     integer_class lc;
