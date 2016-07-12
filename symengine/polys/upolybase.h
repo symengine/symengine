@@ -314,8 +314,10 @@ public:
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
     {
-        return eq(*var_, *(static_cast<const Poly &>(o).var_))
-               and poly_ == static_cast<const Poly &>(o).poly_;
+        if (is_a<Poly>(o))
+            return eq(*var_, *(static_cast<const Poly &>(o).var_))
+                   and poly_ == static_cast<const Poly &>(o).poly_;
+        return false;
     }
 
     inline const RCP<const Basic> &get_var() const
