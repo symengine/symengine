@@ -80,7 +80,8 @@ void StrPrinter::bvisit(const RealDouble &x)
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i;
     str_ = s.str();
-    if (str_.find(".") == std::string::npos and str_.find("e") == std::string::npos) {
+    if (str_.find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
         s << ".0";
         str_ = s.str();
     }
@@ -219,7 +220,8 @@ void StrPrinter::bvisit(const Add &x)
     str_ = o.str();
 }
 
-void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a, const RCP<const Basic> &b)
+void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b)
 {
     if (eq(*b, *rational(1, 2))) {
         o << "sqrt(" << apply(a) << ")";

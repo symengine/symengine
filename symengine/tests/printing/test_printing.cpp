@@ -338,11 +338,12 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(0.00001);
     p = pow(p, x);
-    REQUIRE(p->__str__() == "1e-05**x");
+    bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";
+    REQUIRE(pr == true);
 
     p = real_double(0.00000011);
     p = mul(p, x);
-    bool pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
+    pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
     REQUIRE(pr == true);
 
     p = complex_double(std::complex<double>(0.1, 0.2));
