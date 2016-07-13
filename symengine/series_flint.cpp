@@ -36,7 +36,7 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
     mpq_t gc;
     mpq_init(gc);
     for (int n = 0; n < degree_; n++) {
-        const fmpq_wrapper fc(p_.coeff(n));
+        const fmpq_wrapper fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc.get_fmpq_t());
             RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
@@ -58,7 +58,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
     mpq_t gc;
     mpq_init(gc);
     for (int n = 0; n < degree_; n++) {
-        const fmpq_wrapper fc(p_.coeff(n));
+        const fmpq_wrapper fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc.get_fmpq_t());
             RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
@@ -71,7 +71,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
 
 RCP<const Basic> URatPSeriesFlint::get_coeff(int n) const
 {
-    const fmpq_wrapper fc(p_.coeff(n));
+    const fmpq_wrapper fc(p_.get_coeff(n));
     mpq_t gc;
     mpq_init(gc);
     fmpq_get_mpq(gc, fc.get_fmpq_t());
@@ -137,7 +137,7 @@ unsigned URatPSeriesFlint::ldegree(const fqp_t &s)
 {
     long i = 0;
     while (i <= s.degree())
-        if (not s.coeff(i++).is_zero())
+        if (not s.get_coeff(i++).is_zero())
             return i - 1;
     return 0;
 }

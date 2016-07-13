@@ -42,7 +42,7 @@ public:
     static inline fmpq_wrapper find_cf(const fqp_t &s, const fqp_t &var,
                                        unsigned deg)
     {
-        return s.coeff(deg);
+        return s.get_coeff(deg);
     }
     static fmpq_wrapper root(fmpq_wrapper &c, unsigned n);
     static fqp_t diff(const fqp_t &s, const fqp_t &var);
@@ -53,69 +53,69 @@ public:
     static inline fqp_t series_invert(const fqp_t &s, const fqp_t &var,
                                       unsigned int prec)
     {
-        SYMENGINE_ASSERT(not s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(not s.get_coeff(0).is_zero());
         return s.inv_series(prec);
     }
     static inline fqp_t series_reverse(const fqp_t &s, const fqp_t &var,
                                        unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero() and not s.coeff(1).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero() and not s.get_coeff(1).is_zero());
         return s.revert_series(prec);
     }
     static inline fqp_t series_log(const fqp_t &s, const fqp_t &var,
                                    unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_one());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_one());
         return s.log_series(prec);
     }
     static inline fqp_t series_exp(const fqp_t &s, const fqp_t &var,
                                    unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.exp_series(prec);
     }
     static inline fqp_t series_sin(const fqp_t &s, const fqp_t &var,
                                    unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.sin_series(prec);
     }
 
     static inline fqp_t series_cos(const fqp_t &s, const fqp_t &var,
                                    unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.cos_series(prec);
     }
 
     static inline fqp_t series_tan(const fqp_t &s, const fqp_t &var,
                                    unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.tan_series(prec);
     }
     static inline fqp_t series_atan(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.atan_series(prec);
     }
     static inline fqp_t series_atanh(const fqp_t &s, const fqp_t &var,
                                      unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.atanh_series(prec);
     }
     static inline fqp_t series_asin(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.asin_series(prec);
     }
     static inline fqp_t series_asinh(const fqp_t &s, const fqp_t &var,
                                      unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.asinh_series(prec);
     }
     static inline fqp_t series_acos(const fqp_t &s, const fqp_t &var,
@@ -126,25 +126,25 @@ public:
     static inline fqp_t series_sinh(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.sinh_series(prec);
     }
     static inline fqp_t series_cosh(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.cosh_series(prec);
     }
     static inline fqp_t series_tanh(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return s.tanh_series(prec);
     }
     static inline fqp_t series_lambertw(const fqp_t &s, const fqp_t &var,
                                         unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.coeff(0).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
 
         fqp_t p1;
         p1.set_zero();

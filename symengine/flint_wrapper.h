@@ -552,7 +552,7 @@ public:
     {
         return fmpz_poly_get_str(poly);
     }
-    fmpz_wrapper coeff(unsigned int n) const
+    fmpz_wrapper get_coeff(unsigned int n) const
     {
         fmpz_wrapper z;
         fmpz_poly_get_coeff_fmpz(z.get_fmpz_t(), poly, n);
@@ -727,7 +727,7 @@ public:
         fmpq_poly_evaluate_fmpq(r.get_fmpq_t(), poly, z.get_fmpq_t());
         return r;
     }
-    fmpq_wrapper coeff(unsigned int deg) const
+    fmpq_wrapper get_coeff(unsigned int deg) const
     {
         fmpq_wrapper q;
         fmpq_poly_get_coeff_fmpq(q.get_fmpq_t(), poly, deg);

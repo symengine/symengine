@@ -4,6 +4,10 @@ add_executable(test_uintpoly test_uintpoly.cpp)
 target_link_libraries(test_uintpoly symengine catch)
 add_test(test_uintpoly ${PROJECT_BINARY_DIR}/test_uintpoly)
 
+add_executable(test_uratpoly test_uratpoly.cpp)
+target_link_libraries(test_uratpoly symengine catch)
+add_test(test_uratpoly ${PROJECT_BINARY_DIR}/test_uratpoly)
+
 add_executable(test_mintpoly test_mintpoly.cpp)
 target_link_libraries(test_mintpoly symengine catch)
 add_test(test_mintpoly ${PROJECT_BINARY_DIR}/test_mintpoly)
