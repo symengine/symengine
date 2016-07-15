@@ -121,7 +121,8 @@ public:
                                    const integer_class &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
-    GaloisFieldDict gf_random(const integer_class &n, const size_t &seed) const;
+    GaloisFieldDict gf_random(const unsigned long &n_val,
+                              gmp_randstate_t &state) const;
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
