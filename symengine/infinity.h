@@ -15,25 +15,20 @@ namespace SymEngine
 /** This class holds "infinity"
  *  It includes a direction (like -infinity).
  **/
-class Infinit : public Number
+class Infty : public Number
 {
     RCP<const Number> _direction;
 
 public:
-    IMPLEMENT_TYPEID(INFINIT)
-    //! Constructors
-
-    //! Default Constructor gives +infinity(direction = +1)
-    Infinit();
-    //! Constructs Infinit using the sign of `_direction`
-    Infinit(const RCP<const Number> &direction);
-    Infinit(const int val);
+    IMPLEMENT_TYPEID(INFTY)
+    //! Constructs Infty using the sign of `_direction`
+    Infty(const RCP<const Number> &direction);
     //! Copy Constructor
-    Infinit(const Infinit &inf);
-    static RCP<const Infinit>
+    Infty(const Infty &inf);
+    static RCP<const Infty>
     from_direction(const RCP<const Number> &direction);
-    //! Constructs Infinit using sign of `val`
-    static RCP<const Infinit> from_int(const int val);
+    //! Constructs Infty using sign of `val`
+    static RCP<const Infty> from_int(const int val);
 
     //! \return true if canonical
     bool is_canonical(const RCP<const Number> &num) const;
@@ -96,15 +91,12 @@ public:
     RCP<const Number> rpow(const Number &other) const; // TODO
 };
 
-inline RCP<const Infinit> infinit(const int &n = 1)
+inline RCP<const Infty> infty(int n = 1)
 {
-    return make_rcp<Infinit>(n);
+    return make_rcp<Infty>(integer(n));
 }
 
-inline RCP<const Infinit> infinit(const RCP<const Number> &direction)
-{
-    return make_rcp<Infinit>(direction);
-}
+RCP<const Infty> infty(const RCP<const Number> &direction);
 
 } // SymEngine
 #endif

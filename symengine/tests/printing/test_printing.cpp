@@ -35,8 +35,8 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
-using SymEngine::Infinit;
-using SymEngine::infinit;
+using SymEngine::Infty;
+using SymEngine::infty;
 
 using namespace SymEngine::literals;
 
@@ -332,11 +332,11 @@ TEST_CASE("test_infinity(): printing", "[printing]")
 {
     RCP<const Basic> a;
 
-    a = infinit(1);
+    a = infty(1);
     REQUIRE(a->__str__() == "+oo");
-    a = infinit(-1);
+    a = infty(-1);
     REQUIRE(a->__str__() == "-oo");
-    a = infinit(0);
+    a = infty(0);
     REQUIRE(a->__str__() == "zoo");
 }
 

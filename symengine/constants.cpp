@@ -42,9 +42,9 @@ RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
 RCP<const Constant> EulerGamma = constant("EulerGamma");
 
-RCP<const Infinit> Inf = Infinit::from_int(1);
-RCP<const Infinit> NegInf = Infinit::from_int(-1);
-RCP<const Infinit> ComplexInf = Infinit::from_int(0);
+RCP<const Infty> Inf = Infty::from_int(1);
+RCP<const Infty> NegInf = Infty::from_int(-1);
+RCP<const Infty> ComplexInf = Infty::from_int(0);
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272

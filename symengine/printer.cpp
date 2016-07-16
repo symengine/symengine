@@ -27,7 +27,7 @@ void StrPrinter::bvisit(const Symbol &x)
     str_ = x.get_name();
 }
 
-void StrPrinter::bvisit(const Infinit &x)
+void StrPrinter::bvisit(const Infty &x)
 {
     std::ostringstream s;
     if (x.is_negative_infinity())
