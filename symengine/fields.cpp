@@ -485,6 +485,21 @@ std::pair<GaloisFieldDict, GaloisFieldDict> GaloisFieldDict::gf_trace_map(
     return std::make_pair(gf_compose_mod(a, V), U);
 }
 
+GaloisFieldDict
+GaloisFieldDict::_gf_trace_map(const GaloisFieldDict &f, const unsigned long &n,
+                               const std::vector<GaloisFieldDict> &b) const
+{
+    GaloisFieldDict x = f % (*this);
+    auto h = f;
+    auto r = f;
+    for (unsigned i = 1; i < n; ++i) {
+        h = gf_frobenius_map(h, b);
+        r += h;
+        r %= (*this);
+    }
+    return r;
+}
+
 std::vector<std::pair<GaloisFieldDict, integer_class>>
 GaloisFieldDict::gf_ddf_zassenhaus() const
 {
@@ -514,6 +529,50 @@ GaloisFieldDict::gf_ddf_zassenhaus() const
     return factors;
 }
 
+std::vector<GaloisFieldDict>
+GaloisFieldDict::gf_edf_shoup(const integer_class &n) const
+{
+    auto N = this->degree();
+    auto n_val = mp_get_si(n);
+    std::vector<GaloisFieldDict> factors;
+    if (N <= n_val) {
+        if (N != 0)
+            factors.push_back(*this);
+        return factors;
+    }
+    auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
+    size_t seed = std::rand();
+    auto r = gf_random(integer_class(N - 1), ++seed);
+    if (modulo_ == 2_z) {
+        auto h = gf_pow_mod(x, modulo_);
+        auto H = gf_trace_map(r, h, x, n - 1).second;
+        auto h1 = gf_gcd(H);
+        auto h2 = (*this) / h1;
+        factors = h1.gf_edf_shoup(n);
+        auto temp = h2.gf_edf_shoup(n);
+        factors.insert(factors.end(), temp.begin(), temp.end());
+    } else {
+        auto b = gf_frobenius_monomial_base();
+        auto H = _gf_trace_map(r, mp_get_si(n), b);
+        auto h = gf_pow_mod(H, (modulo_ - 1_z) / 2_z);
+        auto h1 = gf_gcd(h);
+        auto h2 = gf_gcd(h - 1_z);
+        auto h3 = (*this) / (h1 * h2);
+        factors = h1.gf_edf_shoup(n);
+        auto temp = h2.gf_edf_shoup(n);
+        factors.insert(factors.end(), temp.begin(), temp.end());
+        temp = h3.gf_edf_shoup(n);
+        factors.insert(factors.end(), temp.begin(), temp.end());
+    }
+    sort(factors.begin(), factors.end(),
+         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
+             if (a.degree() == b.degree())
+                 return a.dict_ < b.dict_;
+             else
+                 return a.degree() < b.degree();
+         });
+    return factors;
+}
 GaloisFieldDict
 GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f,
                                 const integer_class &n,

@@ -135,6 +135,9 @@ public:
     std::pair<GaloisFieldDict, GaloisFieldDict>
     gf_trace_map(const GaloisFieldDict &a, const GaloisFieldDict &b,
                  const GaloisFieldDict &c, const integer_class &n) const;
+    GaloisFieldDict _gf_trace_map(const GaloisFieldDict &f,
+                                  const unsigned long &n,
+                                  const std::vector<GaloisFieldDict> &b) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
     // is used by equal degree factorization. (Zassenhaus's algorithm [1, 2])
@@ -162,6 +165,7 @@ public:
     // degree factorization. Each element's first is a factor and second
     // is used by equal degree factorization. (Shoup's algorithm)
     std::vector<std::pair<GaloisFieldDict, integer_class>> gf_ddf_shoup() const;
+    std::vector<GaloisFieldDict> gf_edf_shoup(const integer_class &n) const;
     // Factors a polynomial in field of modulo_
     std::pair<integer_class,
               std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
