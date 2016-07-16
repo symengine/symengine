@@ -363,12 +363,14 @@ GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
         return g;
     GaloisFieldDict out
         = GaloisFieldDict::from_vec({*(g.dict_.rbegin())}, modulo_);
-    for (unsigned i = g.dict_.size() - 2;; --i) {
-        out *= h;
-        out += g.dict_[i];
-        out %= (*this);
-        if (i == 0)
-            break;
+    if (g.dict_.size() >= 2) {
+        for (unsigned i = g.dict_.size() - 2;; --i) {
+            out *= h;
+            out += g.dict_[i];
+            out %= (*this);
+            if (i == 0)
+                break;
+        }
     }
     return out;
 }
@@ -452,6 +454,35 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
     }
     out.gf_istrip();
     return out;
+}
+
+std::pair<GaloisFieldDict, GaloisFieldDict> GaloisFieldDict::gf_trace_map(
+    const GaloisFieldDict &a, const GaloisFieldDict &b,
+    const GaloisFieldDict &c, const integer_class &n) const
+{
+    auto n_val = mp_get_si(n);
+    auto u = this->gf_compose_mod(a, b);
+    GaloisFieldDict v(b), U, V;
+    if (n_val & 1) {
+        U = a + u;
+        V = b;
+    } else {
+        U = a;
+        V = c;
+    }
+    n_val >>= 1;
+    while (n_val) {
+        u += this->gf_compose_mod(u, v);
+        v = gf_compose_mod(v, v);
+
+        if (n_val & 1) {
+            auto temp = gf_compose_mod(u, V);
+            U += temp;
+            V = gf_compose_mod(v, V);
+        }
+        n_val >>= 1;
+    }
+    return std::make_pair(gf_compose_mod(a, V), U);
 }
 
 std::vector<std::pair<GaloisFieldDict, integer_class>>

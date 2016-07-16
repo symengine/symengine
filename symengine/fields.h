@@ -132,6 +132,9 @@ public:
     GaloisFieldDict
     gf_frobenius_map(const GaloisFieldDict &g,
                      const std::vector<GaloisFieldDict> &b) const;
+    std::pair<GaloisFieldDict, GaloisFieldDict>
+    gf_trace_map(const GaloisFieldDict &a, const GaloisFieldDict &b,
+                 const GaloisFieldDict &c, const integer_class &n) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
     // is used by equal degree factorization. (Zassenhaus's algorithm [1, 2])

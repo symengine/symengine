@@ -896,7 +896,7 @@ TEST_CASE("GaloisFieldDict factorization : Basic", "[basic]")
             != f.second.end());
 }
 
-TEST_CASE("GaloisFieldDict gf_compose_mod : Basic", "[basic]")
+TEST_CASE("GaloisFieldDict gf_compose_mod, gf_trace_map : Basic", "[basic]")
 {
     GaloisFieldDict d1, d2, d3;
 
@@ -908,4 +908,36 @@ TEST_CASE("GaloisFieldDict gf_compose_mod : Basic", "[basic]")
 
     d2.dict_.clear();
     REQUIRE(d1.gf_compose_mod(d2, d3) == GaloisFieldDict::from_vec({}, 11_z));
+
+    d2 = GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z);
+    auto d4 = GaloisFieldDict::from_vec({0_z, 1_z}, 11_z);
+    d3 = d1.gf_pow_mod(d4, 11_z);
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 0_z).first
+            == GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 0_z).second
+            == GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 1_z).first
+            == GaloisFieldDict::from_vec({3_z, 10_z, 2_z, 5_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 1_z).second
+            == GaloisFieldDict::from_vec({4_z, 0_z, 3_z, 5_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 2_z).first
+            == GaloisFieldDict::from_vec({3_z, 5_z, 9_z, 5_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 2_z).second
+            == GaloisFieldDict::from_vec({7_z, 5_z, 1_z, 10_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 3_z).first
+            == GaloisFieldDict::from_vec({0_z, 6_z, 10_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 3_z).second
+            == GaloisFieldDict::from_vec({7_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 4_z).first
+            == GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 4_z).second
+            == GaloisFieldDict::from_vec({8_z, 1_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 5_z).first
+            == GaloisFieldDict::from_vec({3_z, 10_z, 2_z, 5_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 5_z).second
+            == GaloisFieldDict::from_vec({0_z, 0_z, 3_z, 5_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 11_z).first
+            == GaloisFieldDict::from_vec({0_z, 6_z, 10_z, 1_z}, 11_z));
+    REQUIRE(d1.gf_trace_map(d2, d3, d4, 11_z).second
+            == GaloisFieldDict::from_vec({10}, 11_z));
 }
