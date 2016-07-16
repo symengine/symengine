@@ -88,6 +88,7 @@ symengine/tests/polynomial/test_uintpoly_flint
 symengine/tests/polynomial/test_uintpoly_piranha
 symengine/tests/polynomial/test_basic_conversions
 symengine/tests/basic/test_fields
+symengine/tests/basic/test_infinity
 
 # Benchmarks executables
 benchmarks/add1

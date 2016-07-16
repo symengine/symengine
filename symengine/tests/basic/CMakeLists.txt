@@ -71,3 +71,7 @@ add_test(test_sets ${PROJECT_BINARY_DIR}/test_sets)
 add_executable(test_fields test_fields.cpp)
 target_link_libraries(test_fields symengine catch)
 add_test(test_fields ${PROJECT_BINARY_DIR}/test_fields)
+
+add_executable(test_infinity test_infinity.cpp)
+target_link_libraries(test_infinity symengine catch)
+add_test(test_infinity ${PROJECT_BINARY_DIR}/test_infinity)
