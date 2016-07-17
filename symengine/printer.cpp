@@ -33,7 +33,7 @@ void StrPrinter::bvisit(const Infty &x)
     if (x.is_negative_infinity())
         s << "-oo";
     else if (x.is_positive_infinity())
-        s << "+oo";
+        s << "oo";
     else
         s << "zoo";
     str_ = s.str();

@@ -42,7 +42,7 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     RCP<const Infty> b = Infty::from_direction(rm1);
     RCP<const Infty> c = Infty::from_direction(r0);
 
-    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(a->__str__() == "oo");
     REQUIRE(b->__str__() == "-oo");
     REQUIRE(c->__str__() == "zoo");
 
@@ -50,21 +50,14 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     b = infty(-1);
     c = infty(0);
 
-    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(a->__str__() == "oo");
     REQUIRE(b->__str__() == "-oo");
     REQUIRE(c->__str__() == "zoo");
 
     a = Infty::from_int(1);
     b = Infty::from_direction(im1);
-    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(a->__str__() == "oo");
     REQUIRE(b->__str__() == "-oo");
-
-    Infty inf = Infty();
-    REQUIRE(inf.__str__() == "+oo");
-
-    //! Checking copy constructor
-    Infty inf2 = Infty(*NegInf);
-    REQUIRE(inf2.__str__() == "-oo");
 
     //RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     //CHECK_THROWS_AS(Infty::from_direction(cx), std::runtime_error);
@@ -87,7 +80,7 @@ TEST_CASE("Infinity Constants", "[Infinity]")
     RCP<const Infty> b = NegInf;
     RCP<const Infty> c = ComplexInf;
 
-    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(a->__str__() == "oo");
     REQUIRE(b->__str__() == "-oo");
     REQUIRE(c->__str__() == "zoo");
 }
@@ -155,7 +148,7 @@ TEST_CASE("Adding to Infinity", "[Infinity]")
     RCP<const Infty> c = ComplexInf;
 
     RCP<const Number> n1 = a->add(*one);
-    REQUIRE(n1->__str__() == "+oo");
+    REQUIRE(n1->__str__() == "oo");
     n1 = b->add(*b);
     REQUIRE(n1->__str__() == "-oo");
     n1 = c->add(*minus_one);
@@ -177,20 +170,20 @@ TEST_CASE("Multiplication with Infinity", "[Infinity]")
     RCP<const Infty> c = ComplexInf;
 
     RCP<const Number> n1 = b->mul(*integer(-10));
-    REQUIRE(n1->__str__() == "+oo");
+    REQUIRE(n1->__str__() == "oo");
     n1 = c->mul(*integer(5));
     REQUIRE(n1->__str__() == "zoo");
     n1 = c->mul(*integer(-5));
     REQUIRE(n1->__str__() == "zoo");
 
     RCP<const Number> n2 = a->mul(*a);
-    REQUIRE(n2->__str__() == "+oo");
+    REQUIRE(n2->__str__() == "oo");
     n2 = b->mul(*a);
     REQUIRE(n2->__str__() == "-oo");
     n2 = b->mul(*c);
     REQUIRE(n2->__str__() == "zoo");
     n2 = b->mul(*b);
-    REQUIRE(n2->__str__() == "+oo");
+    REQUIRE(n2->__str__() == "oo");
     n2 = c->mul(*c);
     REQUIRE(n2->__str__() == "zoo");
 

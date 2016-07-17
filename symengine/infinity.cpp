@@ -8,20 +8,9 @@
 namespace SymEngine
 {
 
-Infty::Infty()
-{
-    _direction = integer(1);
-}
-
 Infty::Infty(const RCP<const Number> &direction)
 {
     _direction = direction;
-    SYMENGINE_ASSERT(is_canonical(_direction));
-}
-
-Infty::Infty(const int val)
-{
-    _direction = integer(val);
     SYMENGINE_ASSERT(is_canonical(_direction));
 }
 
@@ -39,7 +28,7 @@ RCP<const Infty> Infty::from_direction(const RCP<const Number> &direction)
 RCP<const Infty> Infty::from_int(const int val)
 {
     SYMENGINE_ASSERT(val >= -1 && val <= 1)
-    return make_rcp<Infty>(val);
+    return make_rcp<Infty>(integer(val));
 }
 
 //! Canonical when the direction is -1, 0 or 1.

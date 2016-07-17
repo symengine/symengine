@@ -333,7 +333,7 @@ TEST_CASE("test_infinity(): printing", "[printing]")
     RCP<const Basic> a;
 
     a = infty(1);
-    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(a->__str__() == "oo");
     a = infty(-1);
     REQUIRE(a->__str__() == "-oo");
     a = infty(0);
