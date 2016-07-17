@@ -20,6 +20,10 @@ environment:
       COMPILER: MSVC15
       PLATFORM: Win32
       LIB_TYPE: dll
+    - BUILD_TYPE: Release
+      COMPILER: MinGW
+      PLATFORM: Win32
+      WITH_MPFR: yes
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: Win32
