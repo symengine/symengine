@@ -660,23 +660,33 @@ TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
     d1 = GaloisFieldDict::from_vec({}, 11_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 0);
+    REQUIRE(f == d1.gf_shoup());
 
     d1 = GaloisFieldDict::from_vec({1_z}, 11_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 0);
+    REQUIRE(f == d1.gf_shoup());
 
     d1 = GaloisFieldDict::from_vec({1_z, 1_z}, 11_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 1);
     REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 11_z)) != f.end());
+    REQUIRE(f == d1.gf_shoup());
 
     d1 = GaloisFieldDict::from_vec({0_z, 1_z, 0_z, 0_z, 1_z}, 2_z);
     f = d1.gf_zassenhaus();
     REQUIRE(f.size() == 3);
+<<<<<<< 5e4ff5e2440fa76797233903073561bc3f731b9a
     it = f.find(GaloisFieldDict::from_vec({0_z, 1_z}, 2_z));
     REQUIRE(it == f.begin());
     REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 2_z)) == ++it);
     REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 2_z)) == ++it);
+=======
+    REQUIRE(f.find(GaloisFieldDict::from_vec({0_z, 1_z}, 2_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z}, 2_z)) != f.end());
+    REQUIRE(f.find(GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 2_z)) != f.end());
+    REQUIRE(f == d1.gf_shoup());
+>>>>>>> Added Shoup's Factorization Algorithm
 
     d1 = GaloisFieldDict::from_vec({1_z, -3_z, -1_z, -3_z, 1_z, -3_z, 1_z},
                                    11_z);
@@ -686,7 +696,12 @@ TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
     REQUIRE(it == f.begin());
     REQUIRE(f.find(GaloisFieldDict::from_vec({3_z, 5_z, 1_z}, 11_z)) == ++it);
     REQUIRE(f.find(GaloisFieldDict::from_vec({4_z, 3_z, 2_z, 1_z}, 11_z))
+<<<<<<< 5e4ff5e2440fa76797233903073561bc3f731b9a
             == ++it);
+=======
+            != f.end());
+    REQUIRE(f == d1.gf_shoup());
+>>>>>>> Added Shoup's Factorization Algorithm
 }
 
 TEST_CASE("GaloisFieldDict factorization : Basic", "[basic]")

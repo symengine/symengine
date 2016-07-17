@@ -541,8 +541,10 @@ GaloisFieldDict::gf_edf_shoup(const integer_class &n) const
         return factors;
     }
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
-    size_t seed = std::rand();
-    auto r = gf_random(integer_class(N - 1), ++seed);
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, std::rand());
+    auto r = gf_random(N - 1, state);
     if (modulo_ == 2_z) {
         auto h = gf_pow_mod(x, modulo_);
         auto H = gf_trace_map(r, h, x, n - 1).second;
@@ -571,6 +573,7 @@ GaloisFieldDict::gf_edf_shoup(const integer_class &n) const
              else
                  return a.degree() < b.degree();
          });
+    gmp_randclear(state);
     return factors;
 }
 GaloisFieldDict
@@ -661,8 +664,25 @@ GaloisFieldDict::gf_zassenhaus() const
     return factors;
 }
 
-std::pair<integer_class, std::set<std::pair<GaloisFieldDict, integer_class>,
-                                  GaloisFieldDict::DictLess>>
+std::vector<GaloisFieldDict> GaloisFieldDict::gf_shoup() const
+{
+    std::vector<GaloisFieldDict> factors;
+    auto temp1 = gf_ddf_shoup();
+    for (auto &f : temp1) {
+        std::vector<GaloisFieldDict> temp2 = f.first.gf_edf_shoup(f.second);
+        factors.insert(factors.end(), temp2.begin(), temp2.end());
+    }
+    sort(factors.begin(), factors.end(),
+         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
+             if (a.degree() == b.degree())
+                 return a.dict_ < b.dict_;
+             else
+                 return a.degree() < b.degree();
+         });
+    return factors;
+}
+
+std::vector<std::pair<GaloisFieldDict, integer_class>>
 GaloisFieldDict::gf_ddf_shoup() const
 {
     std::vector<std::pair<GaloisFieldDict, integer_class>> factors;
@@ -715,7 +735,8 @@ GaloisFieldDict::gf_ddf_shoup() const
     return factors;
 }
 
-std::pair<integer_class, std::vector<std::pair<GaloisFieldDict, integer_class>>>
+std::pair<integer_class,
+              std::set<std::pair<GaloisFieldDict, integer_class>, GaloisFieldDict::DictLess>>
 GaloisFieldDict::gf_factor() const
 {
     integer_class lc;
