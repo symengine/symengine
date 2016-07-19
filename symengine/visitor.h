@@ -144,6 +144,8 @@ public:
     {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
+        } else {
+            coeff_ = zero;
         }
     }
 

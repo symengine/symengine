@@ -89,13 +89,13 @@ public:
 
     C get_coeff(unsigned int x) const
     {
-        return to_mp_class(this->poly_.coeff(x));
+        return to_mp_class(this->poly_.get_coeff(x));
     }
 
     // can't return by reference
     C get_coeff_ref(unsigned int x) const
     {
-        return to_mp_class(this->poly_.coeff(x));
+        return to_mp_class(this->poly_.get_coeff(x));
     }
 
     typedef ContainerForIter<P, C> iterator;
