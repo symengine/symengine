@@ -817,18 +817,28 @@ TEST_CASE("has_symbol: Basic", "[basic]")
 
 TEST_CASE("coeff: Basic", "[basic]")
 {
-    RCP<const Basic> r1;
+    RCP<const Basic> r1, r2;
     RCP<const Symbol> x, y, z;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
     r1 = add(x, pow(y, integer(2)));
+    r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(1)), *integer(0)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(2)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *z, *integer(2)), *integer(0)));
+
+    REQUIRE(eq(*coeff(*r2, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(1)), *integer(2)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
