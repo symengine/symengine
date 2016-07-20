@@ -94,6 +94,10 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+if (WITH_COTIRE)
+    include(cotire)
+    cotire(symengine)
+endif()
 
 include(GenerateExportHeader)
 generate_export_header(symengine)

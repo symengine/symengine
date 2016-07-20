@@ -10,6 +10,10 @@ SymEngineConfig.cmake
 SymEngineConfigVersion.cmake
 SymEngineTargets.cmake
 
+# cotire
+symengine/cotire
+symengine/symengine_CXX_cotire.cmake
+
 # Compiled Object Files, Static/Dynamic Libraries
 *.so
 *.a
