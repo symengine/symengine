@@ -80,7 +80,8 @@ void StrPrinter::bvisit(const RealDouble &x)
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i;
     str_ = s.str();
-    if (str_.find(".") == std::string::npos) {
+    if (str_.find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
         s << ".0";
         str_ = s.str();
     }
@@ -219,6 +220,18 @@ void StrPrinter::bvisit(const Add &x)
     str_ = o.str();
 }
 
+void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b)
+{
+    if (eq(*b, *rational(1, 2))) {
+        o << "sqrt(" << apply(a) << ")";
+    } else {
+        o << parenthesizeLE(a, PrecedenceEnum::Pow);
+        o << "**";
+        o << parenthesizeLE(b, PrecedenceEnum::Pow);
+    }
+}
+
 void StrPrinter::bvisit(const Mul &x)
 {
     std::ostringstream o, o2;
@@ -242,9 +255,7 @@ void StrPrinter::bvisit(const Mul &x)
             if (eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-                o2 << "**";
-                o2 << parenthesizeLE(neg(p.second), PrecedenceEnum::Pow);
+                _print_pow(o2, p.first, neg(p.second));
             }
             o2 << "*";
             den++;
@@ -252,9 +263,7 @@ void StrPrinter::bvisit(const Mul &x)
             if (eq(*(p.second), *one)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-                o << "**";
-                o << parenthesizeLE(p.second, PrecedenceEnum::Pow);
+                _print_pow(o, p.first, p.second);
             }
             o << "*";
             num = true;
@@ -284,9 +293,7 @@ void StrPrinter::bvisit(const Mul &x)
 void StrPrinter::bvisit(const Pow &x)
 {
     std::ostringstream o;
-    o << parenthesizeLE(x.get_base(), PrecedenceEnum::Pow);
-    o << "**";
-    o << parenthesizeLE(x.get_exp(), PrecedenceEnum::Pow);
+    _print_pow(o, x.get_base(), x.get_exp());
     str_ = o.str();
 }
 

@@ -61,14 +61,14 @@ TEST_CASE("test_printing(): printing", "[printing]")
     RCP<const Symbol> z = symbol("z");
 
     r = div(integer(12), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "(4/65)*195**(1/2)");
+    REQUIRE(r->__str__() == "(4/65)*sqrt(195)");
 
     r = mul(integer(12), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "12*195**(1/2)");
+    REQUIRE(r->__str__() == "12*sqrt(195)");
 
     r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
                              pow(integer(7), div(integer(1), integer(2)))));
-    REQUIRE(r->__str__() == "23*5**(1/2)*7**(1/2)");
+    REQUIRE(r->__str__() == "23*sqrt(5)*sqrt(7)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     REQUIRE(r->__str__() == "2*x**2");
@@ -76,13 +76,13 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r = mul(integer(23),
             mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
                 pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
-    REQUIRE(r->__str__() == "(23/6)*2**(1/2)*3**(1/2)*5**(1/2)*7**(1/2)");
+    REQUIRE(r->__str__() == "(23/6)*sqrt(2)*sqrt(3)*sqrt(5)*sqrt(7)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*x**(1/2)");
+    REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(x)");
 
     r = pow(div(integer(3), integer(2)), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*3**(1/2)");
+    REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(3)");
 
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
@@ -96,10 +96,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r2->__str__() == "-x*y");
     REQUIRE(r2->__str__() != "-1x*y");
 
-    r = mul(integer(-1), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "-195**(1/2)");
+    r = mul(integer(-1), pow(integer(195), div(integer(1), integer(3))));
+    REQUIRE(r->__str__() == "-195**(1/3)");
     r = pow(integer(-6), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "I*6**(1/2)");
+    REQUIRE(r->__str__() == "I*sqrt(6)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
     rn1 = Rational::from_two_ints(*integer(2), *integer(4));
@@ -336,9 +336,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = pow(p, x);
     REQUIRE(p->__str__() == "11111.11**x");
 
+    p = real_double(0.00001);
+    p = pow(p, x);
+    bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";
+    REQUIRE(pr == true);
+
     p = real_double(0.00000011);
     p = mul(p, x);
-    bool pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
+    pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
     REQUIRE(pr == true);
 
     p = complex_double(std::complex<double>(0.1, 0.2));
