@@ -41,7 +41,8 @@ public:
 
         for (unsigned int i = 0; i < this->poly_.length(); ++i) {
             if (this->poly_.get_coeff(i) != s.poly_.get_coeff(i))
-                return (this->poly_.get_coeff(i) < s.poly_.get_coeff(i)) ? -1 : 1;
+                return (this->poly_.get_coeff(i) < s.poly_.get_coeff(i)) ? -1
+                                                                         : 1;
         }
         return 0;
     }

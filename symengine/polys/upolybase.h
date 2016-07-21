@@ -347,6 +347,9 @@ public:
     virtual int compare(const Basic &o) const = 0;
     virtual std::size_t __hash__() const = 0;
 
+    // return `degree` + 1. `0` returned for zero poly.
+    virtual unsigned int size() const = 0;
+
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
     {
@@ -396,8 +399,6 @@ public:
     // return value of poly when ealudated at `x`
     virtual C eval(const C &x) const = 0;
     virtual std::vector<C> multieval(const std::vector<C> &x) const = 0;
-    // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
 
     inline unsigned int get_degree() const
     {

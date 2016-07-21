@@ -59,7 +59,8 @@ public:
     static inline fqp_t series_reverse(const fqp_t &s, const fqp_t &var,
                                        unsigned int prec)
     {
-        SYMENGINE_ASSERT(s.get_coeff(0).is_zero() and not s.get_coeff(1).is_zero());
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero()
+                         and not s.get_coeff(1).is_zero());
         return s.revert_series(prec);
     }
     static inline fqp_t series_log(const fqp_t &s, const fqp_t &var,

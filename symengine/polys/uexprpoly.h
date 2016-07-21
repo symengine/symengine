@@ -214,6 +214,13 @@ public:
     {
         return poly_.degree();
     }
+
+    inline unsigned int size() const
+    {
+        if (poly_.dict_.empty())
+            return 0;
+        return get_degree() + 1;
+    }
     inline const map_int_Expr &get_dict() const
     {
         return poly_.get_dict();

@@ -297,6 +297,14 @@ public:
             _coef_dict_add_term(multiply, r);
             return;
         }
+        if (is_a<Integer>(*self.get_exp()) && is_a<URatPoly>(*_base)) {
+            unsigned long q
+                = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            RCP<const URatPoly> p = rcp_static_cast<const URatPoly>(_base);
+            RCP<const URatPoly> r = pow_upoly(*p, q);
+            _coef_dict_add_term(multiply, r);
+            return;
+        }
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {

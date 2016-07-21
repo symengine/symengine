@@ -33,8 +33,12 @@ public:
     template <typename Poly>
     void bvisit_upoly(const Poly &x)
     {
-        if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
+        auto begin = x.begin();
+        auto it = x.begin();
+        auto end = x.end();
+
+        if (end == ++begin) {
+
             precedence = PrecedenceEnum::Atom;
             if (it->second == 1) {
                 if (it->first == 0 or it->first == 1) {
@@ -49,7 +53,7 @@ public:
                     precedence = PrecedenceEnum::Mul;
                 }
             }
-        } else if (x.get_dict().size() == 0) {
+        } else if (x.size() == 0) {
             precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
@@ -57,6 +61,11 @@ public:
     }
 
     void bvisit(const UIntPoly &x)
+    {
+        bvisit_upoly(x);
+    }
+
+    void bvisit(const URatPoly &x)
     {
         bvisit_upoly(x);
     }

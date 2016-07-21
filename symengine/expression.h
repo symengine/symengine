@@ -53,6 +53,10 @@ public:
     {
     }
 
+    Expression(const rational_class &n) : m_basic(Rational::from_mpq(n))
+    {
+    }
+
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <
         typename T,
