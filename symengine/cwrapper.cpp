@@ -399,9 +399,17 @@ void basic_pow(basic s, const basic a, const basic b)
     s->m = SymEngine::pow(a->m, b->m);
 }
 
-void basic_div(basic s, const basic a, const basic b)
+int basic_div(basic s, const basic a, const basic b)
 {
-    s->m = SymEngine::div(a->m, b->m);
+    try
+    {
+        s->m = SymEngine::div(a->m, b->m);
+        return 0;
+    }
+    catch ( ... )
+    {
+        return -1;
+    }
 }
 
 int basic_eq(const basic a, const basic b)
@@ -1036,4 +1044,6 @@ void symengine_print_stack_on_segfault()
 {
     SymEngine::print_stack_on_segfault();
 }
+
+
 }
