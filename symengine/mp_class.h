@@ -60,6 +60,11 @@ inline integer_class operator"" _z(const char *str)
 {
     return integer_class(str);
 }
+
+inline rational_class operator"" _q(const char *str)
+{
+    return rational_class(integer_class(str));
+}
 }
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \

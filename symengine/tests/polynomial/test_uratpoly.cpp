@@ -32,13 +32,13 @@ TEST_CASE("Constructor of URatPoly", "[URatPoly]")
     REQUIRE(P->__str__() == "3/2*x**2 + 1/2");
 
     RCP<const URatPoly> Q
-        = URatPoly::from_vec(x, {rc(0_z), rc(1_z, 2_z), rc(3_z, 6_z)});
+        = URatPoly::from_vec(x, {0_q, rc(1_z, 2_z), rc(1_z, 2_z)});
     REQUIRE(Q->__str__() == "1/2*x**2 + 1/2*x");
 
-    RCP<const URatPoly> S = URatPoly::from_dict(x, {{0, rc(2_z, 1_z)}});
+    RCP<const URatPoly> S = URatPoly::from_dict(x, {{0, 2_q}});
     REQUIRE(S->__str__() == "2");
 
-    RCP<const URatPoly> T = URatPoly::from_dict(x, {});
+    RCP<const URatPoly> T = URatPoly::from_dict(x, map_uint_mpq{});
     REQUIRE(T->__str__() == "0");
 }
 
@@ -46,9 +46,9 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, rc(1_z)}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, rc(3_z)}, {2, rc(4_z, 2_z)}});
-    URatDict gdict_({{0, rc(2_z)}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    URatDict gdict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
     const URatPoly a(x, std::move(adict_));
     const URatPoly b(x, std::move(bdict_));
 
@@ -68,7 +68,7 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
 TEST_CASE("Negative of a URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    URatDict adict_({{0, rc(-1_z, 2_z)}, {1, rc(2_z, 1_z)}, {2, rc(3_z)}});
+    URatDict adict_({{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
     const URatPoly a(x, std::move(adict_));
 
     RCP<const URatPoly> b = neg_upoly(a);
@@ -79,10 +79,10 @@ TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, rc(1_z)}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, rc(3_z)}, {2, rc(4_z, 2_z)}});
-    URatDict cdict_({{0, rc(2_z)}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    URatDict fdict_({{0, rc(2_z)}});
+    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    URatDict cdict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    URatDict fdict_({{0, 2_q}});
 
     const URatPoly a(x, std::move(adict_));
     const URatPoly b(x, std::move(bdict_));
@@ -103,10 +103,10 @@ TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, rc(1_z)}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, rc(3_z)}, {2, rc(4_z, 2_z)}});
-    URatDict edict_({{0, rc(2_z)}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    URatDict fdict_({{0, rc(1_z)}, {1, rc(1_z, 2_z)}});
+    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    URatDict edict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    URatDict fdict_({{0, 1_q}, {1, rc(1_z, 2_z)}});
 
     const URatPoly a(x, std::move(adict_));
     const URatPoly b(x, std::move(bdict_));
@@ -138,19 +138,19 @@ TEST_CASE("Comparing two URatPoly", "[URatPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const URatPoly> P
-        = URatPoly::from_dict(x, {{0, rc(1_z)}, {1, rc(2_z, 3_z)}});
+        = URatPoly::from_dict(x, {{0, 1_q}, {1, rc(2_z, 3_z)}});
     RCP<const URatPoly> Q
-        = URatPoly::from_dict(x, {{0, rc(1_z)}, {1, rc(2_z)}, {2, rc(1_z)}});
+        = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 1_q}});
 
     REQUIRE(P->compare(*Q) == -1);
 
-    P = URatPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 3_z}, {3, 2_z}});
+    P = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 3_q}, {3, 2_q}});
     REQUIRE(P->compare(*Q) == 1);
 
-    P = URatPoly::from_dict(x, {{0, rc(1_z)}, {1, rc(2_z)}, {2, rc(1_z)}});
+    P = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 1_q}});
     REQUIRE(P->compare(*Q) == 0);
 
-    P = URatPoly::from_dict(y, {{0, rc(1_z)}, {1, rc(2_z, 3_z)}});
+    P = URatPoly::from_dict(y, {{0, 1_q}, {1, rc(2_z, 3_z)}});
     REQUIRE(P->compare(*Q) == -1);
 }
 
@@ -158,18 +158,18 @@ TEST_CASE("URatPoly as_symbolic", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const URatPoly> a
-        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {1, 2_z}, {2, 1_z}});
+        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {1, 2_q}, {2, 1_q}});
 
     REQUIRE(eq(
         *a->as_symbolic(),
         *add({div(one, integer(2)), mul(integer(2), x), pow(x, integer(2))})));
 
     RCP<const URatPoly> b
-        = URatPoly::from_dict(x, {{1, rc(3_z, 2_z)}, {2, 2_z}});
+        = URatPoly::from_dict(x, {{1, rc(3_z, 2_z)}, {2, 2_q}});
     REQUIRE(eq(*b->as_symbolic(), *add(mul(x, div(integer(3), integer(2))),
                                        mul(integer(2), pow(x, integer(2))))));
 
-    RCP<const URatPoly> c = URatPoly::from_dict(x, {});
+    RCP<const URatPoly> c = URatPoly::from_dict(x, map_uint_mpq{});
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }
 
@@ -177,7 +177,7 @@ TEST_CASE("URatPoly expand", "[URatPoly][expand]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const URatPoly> a = URatPoly::from_dict(
-        x, {{1, rc(1_z, 3_z)}, {2, rc(-1_z, 2_z)}, {3, rc(1_z)}});
+        x, {{1, rc(1_z, 3_z)}, {2, rc(-1_z, 2_z)}, {3, 1_q}});
     RCP<const Basic> b = pow(a, integer(3));
     RCP<const Basic> c = expand(b);
 
@@ -190,20 +190,20 @@ TEST_CASE("Evaluation of URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const URatPoly> a
-        = URatPoly::from_dict(x, {{0, rc(1_z)}, {1, rc(2_z, 3_z)}});
+        = URatPoly::from_dict(x, {{0, 1_q}, {1, rc(2_z, 3_z)}});
     RCP<const URatPoly> b = URatPoly::from_dict(
-        x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 5_z)}, {2, 1_z}});
+        x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 5_z)}, {2, 1_q}});
 
-    REQUIRE(a->eval(2_z) == rc(7_z, 3_z));
-    REQUIRE(a->eval(10_z) == rc(23_z, 3_z));
-    REQUIRE(b->eval(-1_z) == rc(11_z, 10_z));
-    REQUIRE(b->eval(0_z) == rc(1_z, 2_z));
+    REQUIRE(a->eval(2_q) == rc(7_z, 3_z));
+    REQUIRE(a->eval(10_q) == rc(23_z, 3_z));
+    REQUIRE(b->eval(-1_q) == rc(11_z, 10_z));
+    REQUIRE(b->eval(0_q) == rc(1_z, 2_z));
 
-    std::vector<rational_class> resa = {rc(7_z, 3_z), rc(5_z, 3_z), 1_z};
+    std::vector<rational_class> resa = {rc(7_z, 3_z), rc(5_z, 3_z), 1_q};
     std::vector<rational_class> resb
         = {rc(53_z, 10_z), rc(19_z, 10_z), rc(1_z, 2_z)};
-    REQUIRE(a->multieval({2_z, 1_z, 0_z}) == resa);
-    REQUIRE(b->multieval({2_z, 1_z, 0_z}) == resb);
+    REQUIRE(a->multieval({2_q, 1_q, 0_q}) == resa);
+    REQUIRE(b->multieval({2_q, 1_q, 0_q}) == resb);
 }
 
 TEST_CASE("Derivative of URatPoly", "[URatPoly]")
@@ -211,7 +211,7 @@ TEST_CASE("Derivative of URatPoly", "[URatPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const URatPoly> a = URatPoly::from_dict(
-        x, {{0, 1_z}, {1, rc(2_z, 3_z)}, {2, rc(1_z, 2_z)}});
+        x, {{0, 1_q}, {1, rc(2_z, 3_z)}, {2, rc(1_z, 2_z)}});
     RCP<const URatPoly> b = URatPoly::from_dict(y, {{2, rc(4_z, 3_z)}});
 
     REQUIRE(a->diff(x)->__str__() == "x + 2/3");
