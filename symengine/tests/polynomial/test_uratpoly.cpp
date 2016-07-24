@@ -82,7 +82,7 @@ TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
     URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
     URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
     URatDict cdict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    URatDict fdict_({{0, 2_q}});
+    URatDict fdict_(map_uint_mpq{{0, 2_q}});
 
     const URatPoly a(x, std::move(adict_));
     const URatPoly b(x, std::move(bdict_));
@@ -217,4 +217,36 @@ TEST_CASE("Derivative of URatPoly", "[URatPoly]")
     REQUIRE(a->diff(x)->__str__() == "x + 2/3");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "8/3*y");
+}
+
+TEST_CASE("URatPoly pow", "[URatPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const URatPoly> a
+        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {1, 1_q}});
+    RCP<const URatPoly> b
+        = URatPoly::from_dict(x, {{0, 3_q}, {2, rc(3_z, 2_z)}});
+
+    RCP<const URatPoly> aaa = pow_upoly(*a, 3);
+    RCP<const URatPoly> bb = pow_upoly(*b, 2);
+
+    REQUIRE(aaa->__str__() == "x**3 + 3/2*x**2 + 3/4*x + 1/8");
+    REQUIRE(bb->__str__() == "9/4*x**4 + 9*x**2 + 9");
+}
+
+TEST_CASE("URatPoly divides", "[URatPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const URatPoly> a = URatPoly::from_dict(x, {{0, 1_q}, {1, 1_q}});
+    RCP<const URatPoly> b = URatPoly::from_dict(x, {{0, 4_q}});
+    RCP<const URatPoly> c = URatPoly::from_dict(x, {{0, 8_q}, {1, 8_q}});
+    RCP<const URatPoly> res;
+
+    REQUIRE(divides_upoly(*a, *c, outArg(res)));
+    REQUIRE(res->__str__() == "8");
+    REQUIRE(divides_upoly(*b, *c, outArg(res)));
+    REQUIRE(res->__str__() == "2*x + 2");
+    REQUIRE(divides_upoly(*b, *a, outArg(res)));
+    REQUIRE(res->__str__() == "1/4*x + 1/4");
+    REQUIRE(!divides_upoly(*a, *b, outArg(res)));
 }

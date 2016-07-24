@@ -67,6 +67,13 @@ inline rational_class operator"" _q(const char *str)
 }
 }
 
+inline void mp_tdiv_qr(rational_class &q, rational_class &r,
+                       const rational_class &a, const rational_class &b)
+{
+    q = a / b;
+    r = 0;
+}
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
