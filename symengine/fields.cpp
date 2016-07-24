@@ -549,4 +549,24 @@ GaloisFieldDict::gf_zassenhaus() const
     }
     return factors;
 }
+
+std::pair<integer_class, std::set<std::pair<GaloisFieldDict, integer_class>,
+                                  GaloisFieldDict::DictLess>>
+GaloisFieldDict::gf_factor() const
+{
+    integer_class lc;
+    std::set<std::pair<GaloisFieldDict, integer_class>, DictLess> factors;
+    GaloisFieldDict monic;
+    gf_monic(lc, outArg(monic));
+    if (monic.degree() < 1)
+        return std::make_pair(lc, factors);
+    std::vector<std::pair<GaloisFieldDict, integer_class>> sqf_list
+        = monic.gf_sqf_list();
+    for (auto a : sqf_list) {
+        auto temp = (a.first).gf_zassenhaus();
+        for (auto f : temp)
+            factors.insert({f, a.second});
+    }
+    return std::make_pair(lc, factors);
+}
 }

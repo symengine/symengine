@@ -27,6 +27,15 @@ public:
             else
                 return a.degree() < b.degree();
         }
+        bool
+        operator()(const std::pair<GaloisFieldDict, integer_class> &a,
+                   const std::pair<GaloisFieldDict, integer_class> &b) const
+        {
+            if (a.first.degree() == b.first.degree())
+                return a.first.dict_ < b.first.dict_;
+            else
+                return a.first.degree() < b.first.degree();
+        }
     };
     GaloisFieldDict() SYMENGINE_NOEXCEPT
     {
@@ -143,6 +152,10 @@ public:
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
+    // Factors a polynomial in field of modulo_
+    std::pair<integer_class,
+              std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
+    gf_factor() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
