@@ -121,12 +121,12 @@ public:
     // composition of polynomial g(h) mod (*this)
     GaloisFieldDict gf_compose_mod(const GaloisFieldDict &g,
                                    const GaloisFieldDict &h) const;
-    // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
-    // where n = this->degree()
-    std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
     // computes `f**n % (*this)` in modulo_
     GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
                                const integer_class &n) const;
+    // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
+    // where n = this->degree()
+    std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
     // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
     // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
@@ -140,7 +140,7 @@ public:
                                   const std::vector<GaloisFieldDict> &b) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
-    // is used by equal degree factorization. (Zassenhaus's algorithm [1, 2])
+    // is used by equal degree factorization. (Zassenhaus's algorithm)
     std::vector<std::pair<GaloisFieldDict, integer_class>>
     gf_ddf_zassenhaus() const;
     // Computes `f**((modulo_**n - 1) // 2) % *this`
@@ -155,19 +155,33 @@ public:
     // returns all irreducible factors, each of degree `n`.
     std::set<GaloisFieldDict, DictLess>
     gf_edf_zassenhaus(const integer_class &n) const;
-    // Factors a square free polynomial in field of modulo_.
+    // For a monic square-free polynomial in modulo_, it returns its distinct
+    // degree factorization. Each element's first is a factor and second
+    // is used by equal degree factorization. (Shoup's algorithm)
+    // Factors a polynomial in field of modulo_
+    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_ddf_shoup() const;
+    // Equal degree factorization using Shoup's algorithm.
+    std::set<GaloisFieldDict, DictLess>
+    gf_edf_shoup(const integer_class &n) const;
+    // Factors a square free polynomial in field of modulo_ using Zassenhaus's
+    // algorithm.
     // References :
     //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
-    std::vector<GaloisFieldDict> gf_shoup() const;
-    // For a monic square-free polynomial in modulo_, it returns its distinct
-    // degree factorization. Each element's first is a factor and second
-    // is used by equal degree factorization. (Shoup's algorithm)
-    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_ddf_shoup() const;
-    std::vector<GaloisFieldDict> gf_edf_shoup(const integer_class &n) const;
-    // Factors a polynomial in field of modulo_
+    // Factors a square free polynomial in field of modulo_ using Shoup's
+    // algorithm.
+    // References :
+    //     1.) V. Shoup, A New Polynomial Factorization Algorithm and its
+    //     Implementation,1995
+    //     2.) E. Kaltofen, V. Shoup, Subquadratic-time Factoring of Polynomials
+    //     over Finite Fields, 1998
+    //     3.) J. von zur Gathen, V. Shoup, Computing Frobenius Maps and
+    //     Factoring Polynomials, 1992
+    //     4.) V. Shoup, A Fast Deterministic Algorithm for Factoring
+    //     Polynomials over Finite Fields of Small Characteristic, 1991
+    std::set<GaloisFieldDict, DictLess> gf_shoup() const;
     std::pair<integer_class,
               std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
     gf_factor() const;

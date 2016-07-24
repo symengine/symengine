@@ -529,53 +529,6 @@ GaloisFieldDict::gf_ddf_zassenhaus() const
     return factors;
 }
 
-std::vector<GaloisFieldDict>
-GaloisFieldDict::gf_edf_shoup(const integer_class &n) const
-{
-    auto N = this->degree();
-    auto n_val = mp_get_si(n);
-    std::vector<GaloisFieldDict> factors;
-    if (N <= n_val) {
-        if (N != 0)
-            factors.push_back(*this);
-        return factors;
-    }
-    auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
-    gmp_randstate_t state;
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, std::rand());
-    auto r = gf_random(N - 1, state);
-    if (modulo_ == 2_z) {
-        auto h = gf_pow_mod(x, modulo_);
-        auto H = gf_trace_map(r, h, x, n - 1).second;
-        auto h1 = gf_gcd(H);
-        auto h2 = (*this) / h1;
-        factors = h1.gf_edf_shoup(n);
-        auto temp = h2.gf_edf_shoup(n);
-        factors.insert(factors.end(), temp.begin(), temp.end());
-    } else {
-        auto b = gf_frobenius_monomial_base();
-        auto H = _gf_trace_map(r, mp_get_si(n), b);
-        auto h = gf_pow_mod(H, (modulo_ - 1_z) / 2_z);
-        auto h1 = gf_gcd(h);
-        auto h2 = gf_gcd(h - 1_z);
-        auto h3 = (*this) / (h1 * h2);
-        factors = h1.gf_edf_shoup(n);
-        auto temp = h2.gf_edf_shoup(n);
-        factors.insert(factors.end(), temp.begin(), temp.end());
-        temp = h3.gf_edf_shoup(n);
-        factors.insert(factors.end(), temp.begin(), temp.end());
-    }
-    sort(factors.begin(), factors.end(),
-         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
-             if (a.degree() == b.degree())
-                 return a.dict_ < b.dict_;
-             else
-                 return a.degree() < b.degree();
-         });
-    gmp_randclear(state);
-    return factors;
-}
 GaloisFieldDict
 GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f,
                                 const integer_class &n,
@@ -652,36 +605,6 @@ GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
     return factors;
 }
 
-std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
-GaloisFieldDict::gf_zassenhaus() const
-{
-    std::set<GaloisFieldDict, DictLess> factors;
-    auto temp1 = gf_ddf_zassenhaus();
-    for (auto &f : temp1) {
-        auto temp2 = f.first.gf_edf_zassenhaus(f.second);
-        factors.insert(temp2.begin(), temp2.end());
-    }
-    return factors;
-}
-
-std::vector<GaloisFieldDict> GaloisFieldDict::gf_shoup() const
-{
-    std::vector<GaloisFieldDict> factors;
-    auto temp1 = gf_ddf_shoup();
-    for (auto &f : temp1) {
-        std::vector<GaloisFieldDict> temp2 = f.first.gf_edf_shoup(f.second);
-        factors.insert(factors.end(), temp2.begin(), temp2.end());
-    }
-    sort(factors.begin(), factors.end(),
-         [](const GaloisFieldDict &a, const GaloisFieldDict &b) {
-             if (a.degree() == b.degree())
-                 return a.dict_ < b.dict_;
-             else
-                 return a.degree() < b.degree();
-         });
-    return factors;
-}
-
 std::vector<std::pair<GaloisFieldDict, integer_class>>
 GaloisFieldDict::gf_ddf_shoup() const
 {
@@ -735,8 +658,73 @@ GaloisFieldDict::gf_ddf_shoup() const
     return factors;
 }
 
-std::pair<integer_class,
-              std::set<std::pair<GaloisFieldDict, integer_class>, GaloisFieldDict::DictLess>>
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_edf_shoup(const integer_class &n) const
+{
+    auto N = this->degree();
+    auto n_val = mp_get_si(n);
+    std::set<GaloisFieldDict, DictLess> factors;
+    if (N <= n_val) {
+        if (N != 0)
+            factors.insert(*this);
+        return factors;
+    }
+    auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, std::rand());
+    auto r = gf_random(N - 1, state);
+    if (modulo_ == 2_z) {
+        auto h = gf_pow_mod(x, modulo_);
+        auto H = gf_trace_map(r, h, x, n - 1).second;
+        auto h1 = gf_gcd(H);
+        auto h2 = (*this) / h1;
+        factors = h1.gf_edf_shoup(n);
+        auto temp = h2.gf_edf_shoup(n);
+        factors.insert(temp.begin(), temp.end());
+    } else {
+        auto b = gf_frobenius_monomial_base();
+        auto H = _gf_trace_map(r, mp_get_si(n), b);
+        auto h = gf_pow_mod(H, (modulo_ - 1_z) / 2_z);
+        auto h1 = gf_gcd(h);
+        auto h2 = gf_gcd(h - 1_z);
+        auto h3 = (*this) / (h1 * h2);
+        factors = h1.gf_edf_shoup(n);
+        auto temp = h2.gf_edf_shoup(n);
+        factors.insert(temp.begin(), temp.end());
+        temp = h3.gf_edf_shoup(n);
+        factors.insert(temp.begin(), temp.end());
+    }
+    gmp_randclear(state);
+    return factors;
+}
+
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_zassenhaus() const
+{
+    std::set<GaloisFieldDict, DictLess> factors;
+    auto temp1 = gf_ddf_zassenhaus();
+    for (auto &f : temp1) {
+        auto temp2 = f.first.gf_edf_zassenhaus(f.second);
+        factors.insert(temp2.begin(), temp2.end());
+    }
+    return factors;
+}
+
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_shoup() const
+{
+    std::set<GaloisFieldDict, DictLess> factors;
+    auto temp1 = gf_ddf_shoup();
+    for (auto &f : temp1) {
+        auto temp2 = f.first.gf_edf_shoup(f.second);
+        factors.insert(temp2.begin(), temp2.end());
+    }
+    return factors;
+}
+
+std::pair<integer_class, std::set<std::pair<GaloisFieldDict, integer_class>,
+                                  GaloisFieldDict::DictLess>>
 GaloisFieldDict::gf_factor() const
 {
     integer_class lc;
