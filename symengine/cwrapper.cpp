@@ -58,6 +58,25 @@ inline bool is_aligned(T *p, size_t n = alignof(T))
 
 extern "C" {
 
+
+#define CWRAPPER_BEGIN()                                                       \
+    try                                                                        \
+    {
+
+#define CWRAPPER_END(error, code)                                              \
+        return 0;                                                              \
+    }                                                                          \
+    catch ( error )                                                            \
+    {                                                                          \
+        return code;                                                           \
+    }
+
+#define CWRAPPER_END_EXTRA(error, code)                                        \
+    catch ( error )                                                            \
+    {                                                                          \
+        return code;                                                           \
+    }
+
 struct CRCPBasic {
     SymEngine::RCP<const SymEngine::Basic> m;
 };
@@ -401,15 +420,9 @@ void basic_pow(basic s, const basic a, const basic b)
 
 int basic_div(basic s, const basic a, const basic b)
 {
-    try
-    {
+    CWRAPPER_BEGIN();
         s->m = SymEngine::div(a->m, b->m);
-        return 0;
-    }
-    catch ( ... )
-    {
-        return -1;
-    }
+    CWRAPPER_END(...,-1);
 }
 
 int basic_eq(const basic a, const basic b)
