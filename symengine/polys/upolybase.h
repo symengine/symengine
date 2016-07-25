@@ -381,6 +381,22 @@ public:
     }
 };
 
+template <typename Cont, typename P>
+class UExprPolyBase : public UPolyBase<Cont, P>
+{
+public:
+    typedef Expression coef_type;
+
+    UExprPolyBase(const RCP<const Basic> &var, Cont &&container)
+        : UPolyBase<Cont, P>(var, std::move(container))
+    {
+    }
+
+    inline int get_degree() const
+    {
+        return this->poly_.degree();
+    }
+};
 // super class for all non-expr polys, all methods which are
 // common for all non-expr polys go here eg. degree, eval etc.
 template <typename Cont, typename P, typename C>

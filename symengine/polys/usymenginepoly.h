@@ -7,7 +7,7 @@ namespace SymEngine
 {
 
 template <typename D, template <typename X, typename Y> class BaseType,
-          typename P>
+          typename P, typename INT>
 class USymEnginePoly : public BaseType<D, P>
 {
 public:
@@ -48,15 +48,14 @@ public:
         return make_rcp<const P>(var, D::from_vec(v));
     }
 
-    static D cont_from_dict(const RCP<const Basic> &var,
-                            std::map<unsigned, C> &&d)
+    static D cont_from_dict(const RCP<const Basic> &var, std::map<INT, C> &&d)
     {
         return std::move(D(d));
     }
 
     C eval(const C &x) const
     {
-        unsigned int last_deg = this->poly_.dict_.rbegin()->first;
+        INT last_deg = this->poly_.dict_.rbegin()->first;
         C result(0), x_pow;
 
         for (auto it = this->poly_.dict_.rbegin();
@@ -75,23 +74,23 @@ public:
     {
         // this is not the optimal algorithm
         std::vector<C> res(v.size());
-        for (unsigned int i = 0; i < v.size(); ++i)
+        for (INT i = 0; i < v.size(); ++i)
             res[i] = eval(v[i]);
         return res;
     }
 
-    inline const std::map<unsigned, C> &get_dict() const
+    inline const std::map<INT, C> &get_dict() const
     {
         return this->poly_.dict_;
     }
 
-    inline C get_coeff(unsigned int x) const
+    inline C get_coeff(INT x) const
     {
         return this->poly_.get_coeff(x);
     }
 
-    typedef typename std::map<unsigned, C>::const_iterator iterator;
-    typedef typename std::map<unsigned, C>::const_reverse_iterator r_iterator;
+    typedef typename std::map<INT, C>::const_iterator iterator;
+    typedef typename std::map<INT, C>::const_reverse_iterator r_iterator;
     iterator begin() const
     {
         return this->poly_.dict_.begin();

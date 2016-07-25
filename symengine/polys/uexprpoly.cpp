@@ -4,7 +4,7 @@ namespace SymEngine
 {
 
 UExprPoly::UExprPoly(const RCP<const Basic> &var, UExprDict &&dict)
-    : UPolyBase(var, std::move(dict))
+    : USymEnginePoly(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
