@@ -1,5 +1,6 @@
 #include <symengine/rational.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -44,7 +45,7 @@ signed long int Integer::as_int() const
 RCP<const Number> Integer::divint(const Integer &other) const
 {
     if (other.i == 0)
-        throw std::runtime_error("Rational: Division by zero.");
+        throw DivisionByZero();
     rational_class q(this->i, other.i);
 
     // This is potentially slow, but has to be done, since q might not

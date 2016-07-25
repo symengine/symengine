@@ -1,6 +1,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -422,7 +423,7 @@ RCP<const Basic> mul(const vec_basic &a)
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero())
-        throw std::runtime_error("div: Division by zero");
+        throw DivisionByZero();
     return mul(a, pow(b, minus_one));
 }
 
