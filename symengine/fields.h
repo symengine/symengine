@@ -27,9 +27,8 @@ public:
             else
                 return a.degree() < b.degree();
         }
-        bool
-        operator()(const std::pair<GaloisFieldDict, integer_class> &a,
-                   const std::pair<GaloisFieldDict, integer_class> &b) const
+        bool operator()(const std::pair<GaloisFieldDict, unsigned> &a,
+                        const std::pair<GaloisFieldDict, unsigned> &b) const
         {
             if (a.first.degree() == b.first.degree())
                 return a.first.dict_ < b.first.dict_;
@@ -109,12 +108,11 @@ public:
 
     // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;
-
     // Returns the square free decomposition of polynomial's monic
     // representation in `modulo_`
     // A vector of pair is returned where each element is a factor and each
     // pair's first raised to power of second gives the factor.
-    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_sqf_list() const;
 
     // Returns the square free part of the polynomaial in `modulo_`
     GaloisFieldDict gf_sqf_part() const;
@@ -134,35 +132,31 @@ public:
                      const std::vector<GaloisFieldDict> &b) const;
     std::pair<GaloisFieldDict, GaloisFieldDict>
     gf_trace_map(const GaloisFieldDict &a, const GaloisFieldDict &b,
-                 const GaloisFieldDict &c, const integer_class &n) const;
+                 const GaloisFieldDict &c, const unsigned long &n) const;
     GaloisFieldDict _gf_trace_map(const GaloisFieldDict &f,
                                   const unsigned long &n,
                                   const std::vector<GaloisFieldDict> &b) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
     // is used by equal degree factorization. (Zassenhaus's algorithm)
-    std::vector<std::pair<GaloisFieldDict, integer_class>>
-    gf_ddf_zassenhaus() const;
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_ddf_zassenhaus() const;
     // Computes `f**((modulo_**n - 1) // 2) % *this`
-    GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f,
-                                   const integer_class &n,
+    GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
-    GaloisFieldDict gf_random(const unsigned long &n_val,
-                              gmp_randstate_t &state) const;
+    GaloisFieldDict gf_random(unsigned n_val, gmp_randstate_t &state) const;
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
     std::set<GaloisFieldDict, DictLess>
-    gf_edf_zassenhaus(const integer_class &n) const;
+    gf_edf_zassenhaus(const unsigned &n) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
     // is used by equal degree factorization. (Shoup's algorithm)
     // Factors a polynomial in field of modulo_
-    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_ddf_shoup() const;
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_ddf_shoup() const;
     // Equal degree factorization using Shoup's algorithm.
-    std::set<GaloisFieldDict, DictLess>
-    gf_edf_shoup(const integer_class &n) const;
+    std::set<GaloisFieldDict, DictLess> gf_edf_shoup(const unsigned &n) const;
     // Factors a square free polynomial in field of modulo_ using Zassenhaus's
     // algorithm.
     // References :
@@ -183,7 +177,7 @@ public:
     //     Polynomials over Finite Fields of Small Characteristic, 1991
     std::set<GaloisFieldDict, DictLess> gf_shoup() const;
     std::pair<integer_class,
-              std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
+              std::set<std::pair<GaloisFieldDict, unsigned>, DictLess>>
     gf_factor() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
