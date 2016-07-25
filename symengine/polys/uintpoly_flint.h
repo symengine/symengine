@@ -15,22 +15,22 @@ using fqp_t = SymEngine::fmpq_poly_wrapper;
 namespace SymEngine
 {
 
-template <typename D, template <typename X, typename Y> class BaseType,
-          typename P>
-class UFlintPoly : public BaseType<D, P>
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+class UFlintPoly : public BaseType<Container, Poly>
 {
 public:
-    using C = typename BaseType<D, P>::coef_type;
+    using Cf = typename BaseType<Container, Poly>::coef_type;
 
-    UFlintPoly(const RCP<const Basic> &var, D &&dict)
-        : BaseType<D, P>(var, std::move(dict))
+    UFlintPoly(const RCP<const Basic> &var, Container &&dict)
+        : BaseType<Container, Poly>(var, std::move(dict))
     {
     }
 
     int compare(const Basic &o) const
     {
-        SYMENGINE_ASSERT(is_a<P>(o))
-        const P &s = static_cast<const P &>(o);
+        SYMENGINE_ASSERT(is_a<Poly>(o))
+        const Poly &s = static_cast<const Poly &>(o);
 
         if (this->poly_.degree() != s.poly_.degree())
             return (this->poly_.degree() < s.poly_.degree()) ? -1 : 1;
@@ -47,76 +47,76 @@ public:
         return 0;
     }
 
-    static D cont_from_dict(const RCP<const Basic> &var,
-                            std::map<unsigned, C> &&d)
+    static Container cont_from_dict(const RCP<const Basic> &var,
+                                    std::map<unsigned, Cf> &&d)
     {
-        D f;
+        Container f;
         for (auto const &p : d) {
             if (p.second != 0) {
-                typename D::internal_coef_type r(get_mp_t(p.second));
+                typename Container::internal_coef_type r(get_mp_t(p.second));
                 f.set_coeff(p.first, r);
             }
         }
         return std::move(f);
     }
 
-    static RCP<const P> from_vec(const RCP<const Basic> &var,
-                                 const std::vector<C> &v)
+    static RCP<const Poly> from_vec(const RCP<const Basic> &var,
+                                    const std::vector<Cf> &v)
     {
-        // TODODO improve this (we already know the degree)
-        D f;
+        // TODO improve this (we already know the degree)
+        Container f;
         for (unsigned int i = 0; i < v.size(); i++) {
             if (v[i] != 0) {
-                typename D::internal_coef_type r(get_mp_t(v[i]));
+                typename Container::internal_coef_type r(get_mp_t(v[i]));
                 f.set_coeff(i, r);
             }
         }
-        return make_rcp<const P>(var, std::move(f));
+        return make_rcp<const Poly>(var, std::move(f));
     }
 
-    C eval(const C &x) const
+    Cf eval(const Cf &x) const
     {
-        typename D::internal_coef_type r(get_mp_t(x));
+        typename Container::internal_coef_type r(get_mp_t(x));
         return to_mp_class(this->poly_.eval(r));
     }
 
-    std::vector<C> multieval(const std::vector<C> &v) const
+    std::vector<Cf> multieval(const std::vector<Cf> &v) const
     {
-        std::vector<C> res(v.size());
+        std::vector<Cf> res(v.size());
         for (unsigned int i = 0; i < v.size(); ++i)
             res[i] = eval(v[i]);
         return res;
     }
 
-    C get_coeff(unsigned int x) const
+    Cf get_coeff(unsigned int x) const
     {
         return to_mp_class(this->poly_.get_coeff(x));
     }
 
     // can't return by reference
-    C get_coeff_ref(unsigned int x) const
+    Cf get_coeff_ref(unsigned int x) const
     {
         return to_mp_class(this->poly_.get_coeff(x));
     }
 
-    typedef ContainerForIter<P, C> iterator;
-    typedef ContainerRevIter<P, C> r_iterator;
+    typedef ContainerForIter<Poly, Cf> iterator;
+    typedef ContainerRevIter<Poly, Cf> r_iterator;
     iterator begin() const
     {
-        return iterator(this->template rcp_from_this_cast<P>(), 0);
+        return iterator(this->template rcp_from_this_cast<Poly>(), 0);
     }
     iterator end() const
     {
-        return iterator(this->template rcp_from_this_cast<P>(), size());
+        return iterator(this->template rcp_from_this_cast<Poly>(), size());
     }
     r_iterator obegin() const
     {
-        return r_iterator(this->template rcp_from_this_cast<P>(),
+        return r_iterator(this->template rcp_from_this_cast<Poly>(),
                           (long)size() - 1);
     }
     r_iterator oend() const
     {
-        return r_iterator(this->template rcp_from_this_cast<P>(), -1);
+        return r_iterator(this->template rcp_from_this_cast<Poly>(), -1);
     }
 
     unsigned int size() const
@@ -173,20 +173,12 @@ inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
     return make_rcp<const UIntPolyFlint>(a.get_var(), a.get_poly().pow(p));
 }
 
-// temporary
+// temporary, needs to be common ^
 inline RCP<const URatPolyFlint> pow_upoly(const URatPolyFlint &a,
                                           unsigned int p)
 {
     return make_rcp<const URatPolyFlint>(a.get_var(), a.get_poly().pow(p));
 }
-
-// template <typename T>
-// enable_if_t<std::is_same<UIntPolyFlint, T>::value
-//          or std::is_same<URatPolyFlint, T>::value, RCP<const T>>
-//          pow_upoly(const T &a, unsigned int p)
-// {
-//     return make_rcp<const T>(a.get_var(), a.get_poly().pow(p));
-// }
 
 template <typename T>
 enable_if_t<std::is_same<UIntPolyFlint, T>::value

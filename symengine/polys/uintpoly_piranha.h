@@ -79,13 +79,14 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 
-template <typename C, typename D>
+template <typename Cf, typename Container>
 class PiranhaForIter
 {
-    typename D::container_type::const_iterator ptr_;
+    typename Container::container_type::const_iterator ptr_;
 
 public:
-    PiranhaForIter(typename D::container_type::const_iterator ptr) : ptr_{ptr}
+    PiranhaForIter(typename Container::container_type::const_iterator ptr)
+        : ptr_{ptr}
     {
     }
 
@@ -105,35 +106,35 @@ public:
         return *this;
     }
 
-    std::pair<unsigned int, const C &> operator*()
+    std::pair<unsigned int, const Cf &> operator*()
     {
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    std::shared_ptr<std::pair<unsigned int, const C &>> operator->()
+    std::shared_ptr<std::pair<unsigned int, const Cf &>> operator->()
     {
-        return std::make_shared<std::pair<unsigned int, const C &>>(
+        return std::make_shared<std::pair<unsigned int, const Cf &>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };
 
-template <typename D, template <typename X, typename Y> class BaseType,
-          typename P>
-class UPiranhaPoly : public BaseType<D, P>
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+class UPiranhaPoly : public BaseType<Container, Poly>
 {
 public:
-    using C = typename BaseType<D, P>::coef_type;
-    using term = typename D::term_type;
+    using Cf = typename BaseType<Container, Poly>::coef_type;
+    using term = typename Container::term_type;
 
-    UPiranhaPoly(const RCP<const Basic> &var, D &&dict)
-        : BaseType<D, P>(var, std::move(dict))
+    UPiranhaPoly(const RCP<const Basic> &var, Container &&dict)
+        : BaseType<Container, Poly>(var, std::move(dict))
     {
     }
 
     int compare(const Basic &o) const
     {
-        SYMENGINE_ASSERT(is_a<P>(o))
-        const P &s = static_cast<const P &>(o);
+        SYMENGINE_ASSERT(is_a<Poly>(o))
+        const Poly &s = static_cast<const Poly &>(o);
         int cmp = this->var_->compare(*s.var_);
         if (cmp != 0)
             return cmp;
@@ -142,10 +143,10 @@ public:
         return (this->poly_.hash() < s.poly_.hash()) ? -1 : 1;
     }
 
-    static D cont_from_dict(const RCP<const Basic> &var,
-                            std::map<unsigned, C> &&d)
+    static Container cont_from_dict(const RCP<const Basic> &var,
+                                    std::map<unsigned, Cf> &&d)
     {
-        D p;
+        Container p;
         piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
         p.set_symbol_set(ss);
         for (auto &it : d)
@@ -154,10 +155,10 @@ public:
         return std::move(p);
     }
 
-    static RCP<const P> from_vec(const RCP<const Basic> &var,
-                                 const std::vector<C> &v)
+    static RCP<const Poly> from_vec(const RCP<const Basic> &var,
+                                    const std::vector<Cf> &v)
     {
-        D p;
+        Container p;
         piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
         p.set_symbol_set(ss);
         for (unsigned int i = 0; i < v.size(); i++) {
@@ -165,32 +166,32 @@ public:
                 p.insert(term(v[i], pmonomial{i}));
             }
         }
-        return make_rcp<const P>(var, std::move(p));
+        return make_rcp<const Poly>(var, std::move(p));
     }
 
-    C eval(const C &x) const
+    Cf eval(const Cf &x) const
     {
-        const std::unordered_map<std::string, C> t
+        const std::unordered_map<std::string, Cf> t
             = {{detail::poly_print(this->var_), x}};
-        return piranha::math::evaluate<C, D>(this->poly_, t);
+        return piranha::math::evaluate<Cf, Container>(this->poly_, t);
     }
 
-    std::vector<C> multieval(const std::vector<C> &v) const
+    std::vector<Cf> multieval(const std::vector<Cf> &v) const
     {
-        std::vector<C> res(v.size());
+        std::vector<Cf> res(v.size());
         for (unsigned int i = 0; i < v.size(); ++i)
             res[i] = eval(v[i]);
         return res;
     }
 
-    C get_coeff(unsigned int x) const
+    Cf get_coeff(unsigned int x) const
     {
         return this->poly_.find_cf(pmonomial{x});
     }
 
-    const C &get_coeff_ref(unsigned int x) const
+    const Cf &get_coeff_ref(unsigned int x) const
     {
-        static C PZERO(0);
+        static Cf PZERO(0);
 
         term temp = term(0, pmonomial{x});
         auto it = this->poly_._container().find(temp);
@@ -208,8 +209,8 @@ public:
 
     // begin() and end() are unordered
     // obegin() and oend() are ordered, from highest degree to lowest
-    typedef PiranhaForIter<C, D> iterator;
-    typedef ContainerRevIter<P, const C &> r_iterator;
+    typedef PiranhaForIter<Cf, Container> iterator;
+    typedef ContainerRevIter<Poly, const Cf &> r_iterator;
     iterator begin() const
     {
         return iterator(this->poly_._container().begin());
@@ -220,12 +221,12 @@ public:
     }
     r_iterator obegin() const
     {
-        return r_iterator(this->template rcp_from_this_cast<P>(),
+        return r_iterator(this->template rcp_from_this_cast<Poly>(),
                           (long)size() - 1);
     }
     r_iterator oend() const
     {
-        return r_iterator(this->template rcp_from_this_cast<P>(), -1);
+        return r_iterator(this->template rcp_from_this_cast<Poly>(), -1);
     }
 };
 

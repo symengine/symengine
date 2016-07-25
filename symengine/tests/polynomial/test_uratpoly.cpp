@@ -54,8 +54,7 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
     RCP<const Basic> c = add_upoly(*a, *b);
     REQUIRE(c->__str__() == "3*x**2 + 11/3*x + 7/6");
 
-    RCP<const URatPoly> d
-        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}});
+    RCP<const URatPoly> d = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}});
     RCP<const Basic> e = add_upoly(*a, *d);
     RCP<const Basic> f = add_upoly(*d, *a);
     REQUIRE(e->__str__() == "x**2 + 2/3*x + 1");

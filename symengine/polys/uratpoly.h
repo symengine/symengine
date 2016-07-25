@@ -43,7 +43,6 @@ public:
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
         return unified_compare(dict_, other.dict_);
     }
-
 }; // URatDict
 
 class URatPoly

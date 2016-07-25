@@ -6,22 +6,22 @@
 namespace SymEngine
 {
 
-template <typename D, template <typename X, typename Y> class BaseType,
-          typename P, typename INT>
-class USymEnginePoly : public BaseType<D, P>
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly, typename Key>
+class USymEnginePoly : public BaseType<Container, Poly>
 {
 public:
-    using C = typename BaseType<D, P>::coef_type;
+    using Cf = typename BaseType<Container, Poly>::coef_type;
 
-    USymEnginePoly(const RCP<const Basic> &var, D &&dict)
-        : BaseType<D, P>(var, std::move(dict))
+    USymEnginePoly(const RCP<const Basic> &var, Container &&dict)
+        : BaseType<Container, Poly>(var, std::move(dict))
     {
     }
 
     int compare(const Basic &o) const
     {
-        SYMENGINE_ASSERT(is_a<P>(o))
-        const P &s = static_cast<const P &>(o);
+        SYMENGINE_ASSERT(is_a<Poly>(o))
+        const Poly &s = static_cast<const Poly &>(o);
 
         if (this->poly_.size() != s.poly_.size())
             return (this->poly_.size() < s.poly_.size()) ? -1 : 1;
@@ -33,7 +33,7 @@ public:
         return unified_compare(this->poly_.dict_, s.poly_.dict_);
     }
 
-    bool is_canonical(const D &dict) const
+    bool is_canonical(const Container &dict) const
     {
         // Check if dictionary contains terms with coeffienct 0
         for (auto iter : dict.dict_)
@@ -42,21 +42,22 @@ public:
         return true;
     }
 
-    static RCP<const P> from_vec(const RCP<const Basic> &var,
-                                 const std::vector<C> &v)
+    static RCP<const Poly> from_vec(const RCP<const Basic> &var,
+                                    const std::vector<Cf> &v)
     {
-        return make_rcp<const P>(var, D::from_vec(v));
+        return make_rcp<const Poly>(var, Container::from_vec(v));
     }
 
-    static D cont_from_dict(const RCP<const Basic> &var, std::map<INT, C> &&d)
+    static Container cont_from_dict(const RCP<const Basic> &var,
+                                    std::map<Key, Cf> &&d)
     {
-        return std::move(D(d));
+        return std::move(Container(d));
     }
 
-    C eval(const C &x) const
+    Cf eval(const Cf &x) const
     {
-        INT last_deg = this->poly_.dict_.rbegin()->first;
-        C result(0), x_pow;
+        Key last_deg = this->poly_.dict_.rbegin()->first;
+        Cf result(0), x_pow;
 
         for (auto it = this->poly_.dict_.rbegin();
              it != this->poly_.dict_.rend(); ++it) {
@@ -70,27 +71,27 @@ public:
         return result;
     }
 
-    std::vector<C> multieval(const std::vector<C> &v) const
+    std::vector<Cf> multieval(const std::vector<Cf> &v) const
     {
         // this is not the optimal algorithm
-        std::vector<C> res(v.size());
-        for (INT i = 0; i < v.size(); ++i)
+        std::vector<Cf> res(v.size());
+        for (Key i = 0; i < v.size(); ++i)
             res[i] = eval(v[i]);
         return res;
     }
 
-    inline const std::map<INT, C> &get_dict() const
+    inline const std::map<Key, Cf> &get_dict() const
     {
         return this->poly_.dict_;
     }
 
-    inline C get_coeff(INT x) const
+    inline Cf get_coeff(Key x) const
     {
         return this->poly_.get_coeff(x);
     }
 
-    typedef typename std::map<INT, C>::const_iterator iterator;
-    typedef typename std::map<INT, C>::const_reverse_iterator r_iterator;
+    typedef typename std::map<Key, Cf>::const_iterator iterator;
+    typedef typename std::map<Key, Cf>::const_reverse_iterator r_iterator;
     iterator begin() const
     {
         return this->poly_.dict_.begin();
@@ -117,8 +118,9 @@ public:
 };
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
-template <typename T>
-bool divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &out)
+template <typename Poly>
+bool divides_upoly(const Poly &a, const Poly &b,
+                   const Ptr<RCP<const Poly>> &out)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
@@ -128,8 +130,8 @@ bool divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &out)
     if (a_poly.size() == 0)
         return false;
 
-    using C = typename T::container_type;
-    using Coef = typename T::coef_type;
+    using C = typename Poly::container_type;
+    using Coef = typename Poly::coef_type;
 
     std::map<unsigned int, Coef> res;
     C tmp;
@@ -150,7 +152,7 @@ bool divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &out)
     }
 
     if (b_poly.empty()) {
-        *out = T::from_dict(a.get_var(), std::move(res));
+        *out = Poly::from_dict(a.get_var(), std::move(res));
         return true;
     } else {
         return false;

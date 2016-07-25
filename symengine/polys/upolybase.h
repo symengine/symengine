@@ -381,14 +381,14 @@ public:
     }
 };
 
-template <typename Cont, typename P>
-class UExprPolyBase : public UPolyBase<Cont, P>
+template <typename Cont, typename Poly>
+class UExprPolyBase : public UPolyBase<Cont, Poly>
 {
 public:
     typedef Expression coef_type;
 
     UExprPolyBase(const RCP<const Basic> &var, Cont &&container)
-        : UPolyBase<Cont, P>(var, std::move(container))
+        : UPolyBase<Cont, Poly>(var, std::move(container))
     {
     }
 
@@ -399,53 +399,55 @@ public:
 };
 // super class for all non-expr polys, all methods which are
 // common for all non-expr polys go here eg. degree, eval etc.
-template <typename Cont, typename P, typename C>
-class UNonExprPoly : public UPolyBase<Cont, P>
+template <typename Container, typename Poly, typename Cf>
+class UNonExprPoly : public UPolyBase<Container, Poly>
 {
 public:
-    typedef C coef_type;
+    typedef Cf coef_type;
 
-    UNonExprPoly(const RCP<const Basic> &var, Cont &&container)
-        : UPolyBase<Cont, P>(var, std::move(container))
+    UNonExprPoly(const RCP<const Basic> &var, Container &&container)
+        : UPolyBase<Container, Poly>(var, std::move(container))
     {
     }
 
     // return coefficient of degree 'i'
-    virtual C get_coeff(unsigned int i) const = 0;
+    virtual Cf get_coeff(unsigned int i) const = 0;
     // return value of poly when ealudated at `x`
-    virtual C eval(const C &x) const = 0;
-    virtual std::vector<C> multieval(const std::vector<C> &x) const = 0;
+    virtual Cf eval(const Cf &x) const = 0;
+    virtual std::vector<Cf> multieval(const std::vector<Cf> &x) const = 0;
 
     inline unsigned int get_degree() const
     {
         return this->poly_.degree();
     }
 
-    C get_lc() const
+    Cf get_lc() const
     {
         return get_coeff(get_degree());
     }
 
-    static RCP<const P> from_dict(const RCP<const Basic> &var,
-                                  std::map<unsigned, C> &&d)
+    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
+                                     std::map<unsigned, Cf> &&d)
     {
-        return P::from_container(var, P::cont_from_dict(var, std::move(d)));
+        return Poly::from_container(var,
+                                    Poly::cont_from_dict(var, std::move(d)));
     }
 };
 
-template <typename D, typename P>
-class UIntPolyBase : public UNonExprPoly<D, P, integer_class>
+template <typename Container, typename Poly>
+class UIntPolyBase : public UNonExprPoly<Container, Poly, integer_class>
 {
 public:
-    UIntPolyBase(const RCP<const Basic> &var, D &&container)
-        : UNonExprPoly<D, P, integer_class>(var, std::move(container))
+    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
+        : UNonExprPoly<Container, Poly, integer_class>(var,
+                                                       std::move(container))
     {
     }
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const P &>(*this)).begin();
-        auto end = (static_cast<const P &>(*this)).end();
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {
@@ -473,19 +475,20 @@ public:
     }
 };
 
-template <typename D, typename P>
-class URatPolyBase : public UNonExprPoly<D, P, rational_class>
+template <typename Container, typename Poly>
+class URatPolyBase : public UNonExprPoly<Container, Poly, rational_class>
 {
 public:
-    URatPolyBase(const RCP<const Basic> &var, D &&container)
-        : UNonExprPoly<D, P, rational_class>(var, std::move(container))
+    URatPolyBase(const RCP<const Basic> &var, Container &&container)
+        : UNonExprPoly<Container, Poly, rational_class>(var,
+                                                        std::move(container))
     {
     }
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const P &>(*this)).begin();
-        auto end = (static_cast<const P &>(*this)).end();
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {
