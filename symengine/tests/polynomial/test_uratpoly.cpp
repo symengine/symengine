@@ -46,32 +46,33 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
-    URatDict gdict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    const URatPoly a(x, std::move(adict_));
-    const URatPoly b(x, std::move(bdict_));
+    RCP<const URatPoly> a = URatPoly::from_dict(
+        x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    RCP<const URatPoly> b
+        = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
 
-    RCP<const Basic> c = add_upoly(a, b);
+    RCP<const Basic> c = add_upoly(*a, *b);
     REQUIRE(c->__str__() == "3*x**2 + 11/3*x + 7/6");
 
-    RCP<const URatPoly> d = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}});
-    RCP<const Basic> e = add_upoly(a, *d);
-    RCP<const Basic> f = add_upoly(*d, a);
+    RCP<const URatPoly> d
+        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}});
+    RCP<const Basic> e = add_upoly(*a, *d);
+    RCP<const Basic> f = add_upoly(*d, *a);
     REQUIRE(e->__str__() == "x**2 + 2/3*x + 1");
     REQUIRE(f->__str__() == "x**2 + 2/3*x + 1");
 
-    const URatPoly g(y, std::move(gdict_));
-    CHECK_THROWS_AS(add_upoly(a, g), std::runtime_error);
+    RCP<const URatPoly> g = URatPoly::from_dict(
+        y, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    CHECK_THROWS_AS(add_upoly(*a, *g), std::runtime_error);
 }
 
 TEST_CASE("Negative of a URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    URatDict adict_({{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
-    const URatPoly a(x, std::move(adict_));
+    RCP<const URatPoly> a
+        = URatPoly::from_dict(x, {{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
 
-    RCP<const URatPoly> b = neg_upoly(a);
+    RCP<const URatPoly> b = neg_upoly(*a);
     REQUIRE(b->__str__() == "-3*x**2 - 2*x + 1/2");
 }
 
@@ -79,23 +80,22 @@ TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
-    URatDict cdict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    URatDict fdict_(map_uint_mpq{{0, 2_q}});
 
-    const URatPoly a(x, std::move(adict_));
-    const URatPoly b(x, std::move(bdict_));
-    const URatPoly c(x, std::move(cdict_));
-    const URatPoly f(y, std::move(fdict_));
+    RCP<const URatPoly> a = URatPoly::from_dict(
+        x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    RCP<const URatPoly> b
+        = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    RCP<const URatPoly> c = URatPoly::from_dict(
+        x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    RCP<const URatPoly> f = URatPoly::from_dict(y, {{0, 2_q}});
 
-    RCP<const Basic> d = sub_upoly(b, a);
+    RCP<const Basic> d = sub_upoly(*b, *a);
     REQUIRE(d->__str__() == "x**2 + 7/3*x + 1/6");
-    d = sub_upoly(c, a);
+    d = sub_upoly(*c, *a);
     REQUIRE(d->__str__() == "-3/4*x**2 - 13/6*x + 3/2");
-    d = sub_upoly(a, c);
+    d = sub_upoly(*a, *c);
     REQUIRE(d->__str__() == "3/4*x**2 + 13/6*x - 3/2");
-    CHECK_THROWS_AS(sub_upoly(a, f), std::runtime_error);
+    CHECK_THROWS_AS(sub_upoly(*a, *f), std::runtime_error);
 }
 
 TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
@@ -103,21 +103,20 @@ TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    URatDict adict_({{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    URatDict bdict_({{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
-    URatDict edict_({{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    URatDict fdict_({{0, 1_q}, {1, rc(1_z, 2_z)}});
+    RCP<const URatPoly> a = URatPoly::from_dict(
+        x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
+    RCP<const URatPoly> b
+        = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    RCP<const URatPoly> e = URatPoly::from_dict(
+        x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+    RCP<const URatPoly> f
+        = URatPoly::from_dict(x, {{0, 1_q}, {1, rc(1_z, 2_z)}});
 
-    const URatPoly a(x, std::move(adict_));
-    const URatPoly b(x, std::move(bdict_));
-    const URatPoly e(x, std::move(edict_));
-    const URatPoly f(x, std::move(fdict_));
-
-    RCP<const URatPoly> c = mul_upoly(a, a);
-    RCP<const URatPoly> d = mul_upoly(a, b);
-    RCP<const URatPoly> g = mul_upoly(e, e);
-    RCP<const URatPoly> h = mul_upoly(e, f);
-    RCP<const URatPoly> i = mul_upoly(f, f);
+    RCP<const URatPoly> c = mul_upoly(*a, *a);
+    RCP<const URatPoly> d = mul_upoly(*a, *b);
+    RCP<const URatPoly> g = mul_upoly(*e, *e);
+    RCP<const URatPoly> h = mul_upoly(*e, *f);
+    RCP<const URatPoly> i = mul_upoly(*f, *f);
 
     REQUIRE(c->__str__() == "x**4 + 4/3*x**3 + 13/9*x**2 + 2/3*x + 1/4");
     REQUIRE(d->__str__() == "2*x**4 + 13/3*x**3 + 11/3*x**2 + 35/18*x + 1/3");
@@ -126,11 +125,11 @@ TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
     REQUIRE(i->__str__() == "1/4*x**2 + x + 1");
 
     c = URatPoly::from_dict(x, {{0, rc(-1_z)}});
-    REQUIRE(mul_upoly(a, *c)->__str__() == "-x**2 - 2/3*x - 1/2");
-    REQUIRE(mul_upoly(*c, a)->__str__() == "-x**2 - 2/3*x - 1/2");
+    REQUIRE(mul_upoly(*a, *c)->__str__() == "-x**2 - 2/3*x - 1/2");
+    REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2/3*x - 1/2");
 
     c = URatPoly::from_dict(y, {{0, rc(-1_z)}});
-    CHECK_THROWS_AS(mul_upoly(a, *c), std::runtime_error);
+    CHECK_THROWS_AS(mul_upoly(*a, *c), std::runtime_error);
 }
 
 TEST_CASE("Comparing two URatPoly", "[URatPoly]")
