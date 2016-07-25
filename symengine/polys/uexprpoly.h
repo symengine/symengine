@@ -7,7 +7,6 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
-// #include <symengine/polys/upolybase.h>
 #include <symengine/polys/usymenginepoly.h>
 
 namespace SymEngine
@@ -188,7 +187,7 @@ public:
                                           map_int_Expr &&d);
     static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v);
-    static UExprDict cont_from_dict(const RCP<const Basic> &var,
+    static UExprDict container_from_dict(const RCP<const Basic> &var,
                                     map_int_Expr &&d);
 
     Expression max_coef() const;

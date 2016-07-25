@@ -143,7 +143,7 @@ public:
         return (this->poly_.hash() < s.poly_.hash()) ? -1 : 1;
     }
 
-    static Container cont_from_dict(const RCP<const Basic> &var,
+    static Container container_from_dict(const RCP<const Basic> &var,
                                     std::map<unsigned, Cf> &&d)
     {
         Container p;

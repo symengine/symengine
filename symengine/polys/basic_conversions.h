@@ -120,7 +120,7 @@ public:
     {
         integer_class i = x.i;
         if (i != 0)
-            dict = P::cont_from_dict(gen, {{0, i}});
+            dict = P::container_from_dict(gen, {{0, i}});
     }
 
     void bvisit(const Basic &x)
@@ -136,7 +136,7 @@ public:
             if (is_a<const Integer>(*powr)) {
                 int i = rcp_static_cast<const Integer>(powr)->as_int();
                 if (i > 0) {
-                    dict = P::cont_from_dict(gen,
+                    dict = P::container_from_dict(gen,
                                              {{i, typename P::coef_type(1)}});
                     return;
                 }
@@ -162,7 +162,7 @@ public:
     void dict_set(unsigned int pow, const Basic &x)
     {
         if (is_a<const Integer>(x))
-            this->dict = Poly::cont_from_dict(
+            this->dict = Poly::container_from_dict(
                 this->gen, {{pow, static_cast<const Integer &>(x).i}});
         else
             throw std::runtime_error("Non-integer found");

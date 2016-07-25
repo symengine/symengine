@@ -430,7 +430,7 @@ public:
                                      std::map<unsigned, Cf> &&d)
     {
         return Poly::from_container(var,
-                                    Poly::cont_from_dict(var, std::move(d)));
+                                    Poly::container_from_dict(var, std::move(d)));
     }
 };
 

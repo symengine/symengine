@@ -48,7 +48,7 @@ public:
         return make_rcp<const Poly>(var, Container::from_vec(v));
     }
 
-    static Container cont_from_dict(const RCP<const Basic> &var,
+    static Container container_from_dict(const RCP<const Basic> &var,
                                     std::map<Key, Cf> &&d)
     {
         return std::move(Container(d));

@@ -60,31 +60,17 @@ public:
         }
     }
 
-    void bvisit(const UIntPoly &x)
+    template <typename Container, typename Poly>
+    void bvisit(const UPolyBase<Container, Poly> &x)
     {
-        bvisit_upoly(x);
+        bvisit_upoly(static_cast<const Poly &>(x));
     }
 
-    void bvisit(const URatPoly &x)
-    {
-        bvisit_upoly(x);
+    void bvisit(const GaloisField &x)
+    {   
+        // iterators need to be implemented
+        // bvisit_upoly(x);
     }
-
-    void bvisit(const UExprPoly &x)
-    {
-        bvisit_upoly(x);
-    }
-
-#ifdef HAVE_SYMENGINE_FLINT
-    void bvisit(const UIntPolyFlint &x)
-    {
-        bvisit_upoly(x);
-    }
-    void bvisit(const URatPolyFlint &x)
-    {
-        bvisit_upoly(x);
-    }
-#endif
 
     void bvisit(const MultivariateIntPolynomial &x)
     {

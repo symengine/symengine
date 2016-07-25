@@ -171,19 +171,6 @@ TEST_CASE("URatPoly as_symbolic", "[URatPoly]")
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }
 
-TEST_CASE("URatPoly expand", "[URatPoly][expand]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const URatPoly> a = URatPoly::from_dict(
-        x, {{1, rc(1_z, 3_z)}, {2, rc(-1_z, 2_z)}, {3, 1_q}});
-    RCP<const Basic> b = pow(a, integer(3));
-    RCP<const Basic> c = expand(b);
-
-    REQUIRE(b->__str__() == "(x**3 - 1/2*x**2 + 1/3*x)**3");
-    REQUIRE(c->__str__() == "x**9 - 3/2*x**8 + 7/4*x**7 - 9/8*x**6 + 7/12*x**5 "
-                            "- 1/6*x**4 + 1/27*x**3");
-}
-
 TEST_CASE("Evaluation of URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");

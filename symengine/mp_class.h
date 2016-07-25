@@ -144,11 +144,8 @@ inline void mp_pow_ui(integer_class &res, const integer_class &i,
 inline void mp_pow_ui(rational_class &res, const rational_class &i,
                       unsigned long n)
 {
-    integer_class tmp;
-    mpz_pow_ui(tmp.get_mpz_t(), i.get_num().get_mpz_t(), n);
-    mpq_set_num(res.get_mpq_t(), tmp.get_mpz_t());
-    mpz_pow_ui(tmp.get_mpz_t(), i.get_den().get_mpz_t(), n);
-    mpq_set_den(res.get_mpq_t(), tmp.get_mpz_t());
+    mpz_pow_ui(res.get_num().get_mpz_t(), i.get_num().get_mpz_t(), n);
+    mpz_pow_ui(res.get_den().get_mpz_t(), i.get_den().get_mpz_t(), n);
 }
 
 inline void mp_powm(integer_class &res, const integer_class &a,
@@ -298,8 +295,14 @@ inline auto get_mpz_t(const piranha::integer &i) -> decltype(i.get_mpz_view())
     return i.get_mpz_view();
 }
 
-template <typename T>
-inline void mp_pow_ui(T &res, const T &i, unsigned long n)
+inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i,
+                      unsigned long n)
+{
+    res = i.pow(n);
+}
+
+inline void mp_pow_ui(piranha::rational &res, const piranha::rational &i,
+                      unsigned long n)
 {
     res = i.pow(n);
 }
