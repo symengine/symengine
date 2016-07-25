@@ -75,6 +75,17 @@ public:
         bvisit_upoly(x);
     }
 
+#ifdef HAVE_SYMENGINE_FLINT
+    void bvisit(const UIntPolyFlint &x)
+    {
+        bvisit_upoly(x);
+    }
+    void bvisit(const URatPolyFlint &x)
+    {
+        bvisit_upoly(x);
+    }
+#endif
+
     void bvisit(const MultivariateIntPolynomial &x)
     {
         if (0 == x.dict_.size()) {

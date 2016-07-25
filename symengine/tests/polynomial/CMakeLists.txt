@@ -28,6 +28,10 @@ if (WITH_FLINT)
     add_executable(test_uintpoly_flint test_uintpoly_flint.cpp)
     target_link_libraries(test_uintpoly_flint symengine catch)
     add_test(test_uintpoly_flint ${PROJECT_BINARY_DIR}/test_uintpoly_flint)
+
+    add_executable(test_uratpoly_flint test_uratpoly_flint.cpp)
+    target_link_libraries(test_uratpoly_flint symengine catch)
+    add_test(test_uratpoly_flint ${PROJECT_BINARY_DIR}/test_uratpoly_flint)
 endif()
 
 if (WITH_PIRANHA)

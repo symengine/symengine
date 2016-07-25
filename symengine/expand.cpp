@@ -281,6 +281,7 @@ public:
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand(self.get_base());
+        // TODODO is_a_Poly
         if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();
@@ -305,6 +306,18 @@ public:
             _coef_dict_add_term(multiply, r);
             return;
         }
+
+#ifdef HAVE_SYMENGINE_FLINT
+        if (is_a<Integer>(*self.get_exp()) && is_a<URatPolyFlint>(*_base)) {
+            unsigned long q
+                = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            RCP<const URatPolyFlint> p
+                = rcp_static_cast<const URatPolyFlint>(_base);
+            RCP<const URatPolyFlint> r = pow_upoly(*p, q);
+            _coef_dict_add_term(multiply, r);
+            return;
+        }
+#endif
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {

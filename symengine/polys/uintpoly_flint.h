@@ -145,22 +145,26 @@ public:
     std::size_t __hash__() const;
 }; // URatPolyFlint
 
-inline RCP<const UIntPolyFlint> gcd_upoly(const UIntPolyFlint &a,
-                                          const UIntPolyFlint &b)
+template <typename T>
+enable_if_t<std::is_same<UIntPolyFlint, T>::value
+                or std::is_same<URatPolyFlint, T>::value,
+            RCP<const T>>
+gcd_upoly(const T &a, const T &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(a.get_var(),
-                                         a.get_poly().gcd(b.get_poly()));
+    return make_rcp<const T>(a.get_var(), a.get_poly().gcd(b.get_poly()));
 }
 
-inline RCP<const UIntPolyFlint> lcm_upoly(const UIntPolyFlint &a,
-                                          const UIntPolyFlint &b)
+template <typename T>
+enable_if_t<std::is_same<UIntPolyFlint, T>::value
+                or std::is_same<URatPolyFlint, T>::value,
+            RCP<const T>>
+lcm_upoly(const T &a, const T &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    return make_rcp<const UIntPolyFlint>(a.get_var(),
-                                         a.get_poly().lcm(b.get_poly()));
+    return make_rcp<const T>(a.get_var(), a.get_poly().lcm(b.get_poly()));
 }
 
 inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
@@ -169,16 +173,35 @@ inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
     return make_rcp<const UIntPolyFlint>(a.get_var(), a.get_poly().pow(p));
 }
 
-inline bool divides_upoly(const UIntPolyFlint &a, const UIntPolyFlint &b,
-                          const Ptr<RCP<const UIntPolyFlint>> &res)
+// temporary
+inline RCP<const URatPolyFlint> pow_upoly(const URatPolyFlint &a,
+                                          unsigned int p)
+{
+    return make_rcp<const URatPolyFlint>(a.get_var(), a.get_poly().pow(p));
+}
+
+// template <typename T>
+// enable_if_t<std::is_same<UIntPolyFlint, T>::value
+//          or std::is_same<URatPolyFlint, T>::value, RCP<const T>>
+//          pow_upoly(const T &a, unsigned int p)
+// {
+//     return make_rcp<const T>(a.get_var(), a.get_poly().pow(p));
+// }
+
+template <typename T>
+enable_if_t<std::is_same<UIntPolyFlint, T>::value
+                or std::is_same<URatPolyFlint, T>::value,
+            bool>
+divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
-    fzp_t divres;
-    bool div_f = a.get_poly().divides(b.get_poly(), divres);
-    if (div_f) {
-        *res = make_rcp<UIntPolyFlint>(a.get_var(), std::move(divres));
+    typename T::container_type q, r;
+
+    b.get_poly().divrem(q, r, a.get_poly());
+    if (r == 0) {
+        *res = make_rcp<T>(a.get_var(), std::move(q));
         return true;
     } else {
         return false;
