@@ -447,7 +447,15 @@ public:
     virtual Cf get_coeff(unsigned int i) const = 0;
     // return value of poly when ealudated at `x`
     virtual Cf eval(const Cf &x) const = 0;
-    virtual std::vector<Cf> multieval(const std::vector<Cf> &x) const = 0;
+
+    std::vector<Cf> multieval(const std::vector<Cf> &v) const
+    {
+        // this is not the optimal algorithm
+        std::vector<Cf> res(v.size());
+        for (unsigned int i = 0; i < v.size(); ++i)
+            res[i] = eval(v[i]);
+        return res;
+    }
 
     inline unsigned int get_degree() const
     {

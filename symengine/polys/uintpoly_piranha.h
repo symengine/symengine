@@ -175,7 +175,8 @@ public:
         piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
         p.set_symbol_set(ss);
         for (auto &it : d)
-            p.insert(term(it.second, pmonomial{it.first}));
+            if (it.second != 0)
+                p.insert(term(it.second, pmonomial{it.first}));
 
         return std::move(p);
     }
@@ -199,14 +200,6 @@ public:
         const std::unordered_map<std::string, Cf> t
             = {{detail::poly_print(this->var_), x}};
         return piranha::math::evaluate<Cf, Container>(this->poly_, t);
-    }
-
-    std::vector<Cf> multieval(const std::vector<Cf> &v) const
-    {
-        std::vector<Cf> res(v.size());
-        for (unsigned int i = 0; i < v.size(); ++i)
-            res[i] = eval(v[i]);
-        return res;
     }
 
     Cf get_coeff(unsigned int x) const

@@ -72,15 +72,6 @@ public:
         return result;
     }
 
-    std::vector<Cf> multieval(const std::vector<Cf> &v) const
-    {
-        // this is not the optimal algorithm
-        std::vector<Cf> res(v.size());
-        for (Key i = 0; i < v.size(); ++i)
-            res[i] = eval(v[i]);
-        return res;
-    }
-
     inline const std::map<Key, Cf> &get_dict() const
     {
         return this->poly_.dict_;

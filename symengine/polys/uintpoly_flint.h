@@ -80,14 +80,6 @@ public:
         return to_mp_class(this->poly_.eval(r));
     }
 
-    std::vector<Cf> multieval(const std::vector<Cf> &v) const
-    {
-        std::vector<Cf> res(v.size());
-        for (unsigned int i = 0; i < v.size(); ++i)
-            res[i] = eval(v[i]);
-        return res;
-    }
-
     Cf get_coeff(unsigned int x) const
     {
         return to_mp_class(this->poly_.get_coeff(x));
