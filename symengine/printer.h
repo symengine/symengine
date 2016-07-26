@@ -238,6 +238,7 @@ public:
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
     void bvisit(const UIntPolyPiranha &x);
+    void bvisit(const URatPolyPiranha &x);
 #endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);

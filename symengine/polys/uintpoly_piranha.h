@@ -52,6 +52,17 @@ struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class> {
 };
 
 template <>
+struct gcd_impl<SymEngine::rational_class, SymEngine::rational_class> {
+    SymEngine::rational_class
+    operator()(const SymEngine::rational_class &r,
+               const SymEngine::rational_class &x) const
+    {
+        SymEngine::rational_class res(1);
+        return res;
+    }
+};
+
+template <>
 struct divexact_impl<SymEngine::integer_class> {
     void operator()(SymEngine::integer_class &r,
                     const SymEngine::integer_class &x,
@@ -64,10 +75,24 @@ struct divexact_impl<SymEngine::integer_class> {
         }
     }
 };
+
+template <>
+struct divexact_impl<SymEngine::rational_class> {
+    void operator()(SymEngine::rational_class &r,
+                    const SymEngine::rational_class &x,
+                    const SymEngine::rational_class &y) const
+    {
+        r = x / y;
+    }
+};
 }
 
 template <>
 struct has_exact_ring_operations<SymEngine::integer_class> {
+    static const bool value = true;
+};
+template <>
+struct has_exact_ring_operations<SymEngine::rational_class> {
     static const bool value = true;
 };
 }
@@ -266,24 +291,54 @@ inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(gcdx));
 }
 
+inline RCP<const URatPolyPiranha> gcd_upoly(const URatPolyPiranha &a,
+                                            const URatPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    pratpoly gcdx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
+    // following the convention, that polynomial should be monic
+    gcdx *= (1 / gcdx.find_cf(pmonomial{gcdx.degree()}));
+    return make_rcp<const URatPolyPiranha>(a.get_var(), std::move(gcdx));
+}
+
 inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
 
-    pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
-    if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
-        piranha::math::negate(gcdx);
-    pintpoly mulx(a.get_poly() * b.get_poly());
-    return make_rcp<const UIntPolyPiranha>(
-        a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
+    pintpoly lcmx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
+    lcmx = (a.get_poly() * b.get_poly()) / lcmx;
+    if (lcmx.find_cf(pmonomial{lcmx.degree()}) < 0)
+        piranha::math::negate(lcmx);
+    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(lcmx));
+}
+
+inline RCP<const URatPolyPiranha> lcm_upoly(const URatPolyPiranha &a,
+                                            const URatPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    pratpoly lcmx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
+    lcmx = (a.get_poly() * b.get_poly()) / lcmx;
+    lcmx *= (1 / lcmx.find_cf(pmonomial{lcmx.degree()}));
+    return make_rcp<const URatPolyPiranha>(a.get_var(), std::move(lcmx));
 }
 
 inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
                                             unsigned int p)
 {
     return make_rcp<const UIntPolyPiranha>(
+        a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+}
+
+inline RCP<const URatPolyPiranha> pow_upoly(const URatPolyPiranha &a,
+                                            unsigned int p)
+{
+    return make_rcp<const URatPolyPiranha>(
         a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
 }
 
@@ -297,6 +352,22 @@ inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b,
         pintpoly z;
         piranha::math::divexact(z, b.get_poly(), a.get_poly());
         *res = UIntPolyPiranha::from_container(a.get_var(), std::move(z));
+        return true;
+    } catch (const piranha::math::inexact_division &) {
+        return false;
+    }
+}
+
+inline bool divides_upoly(const URatPolyPiranha &a, const URatPolyPiranha &b,
+                          const Ptr<RCP<const URatPolyPiranha>> &res)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    try {
+        pratpoly z;
+        piranha::math::divexact(z, b.get_poly(), a.get_poly());
+        *res = URatPolyPiranha::from_container(a.get_var(), std::move(z));
         return true;
     } catch (const piranha::math::inexact_division &) {
         return false;

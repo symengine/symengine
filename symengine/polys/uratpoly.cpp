@@ -45,7 +45,7 @@ bool divides_upoly(const URatPoly &a, const URatPoly &b,
         b_deg = b_poly.degree();
         q = b_poly.get_lc() / a_poly.get_lc();
         res[b_deg - a_deg] = q;
-        URatDict tmp = URatDict({{b_deg - a_deg, q}});
+        URatDict tmp = URatDict(map_uint_mpq{{b_deg - a_deg, q}});
         b_poly -= (a_poly * tmp);
     }
 

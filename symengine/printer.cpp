@@ -445,6 +445,10 @@ void StrPrinter::bvisit(const UIntPolyPiranha &x)
 {
     str_ = upoly_print<UIntPolyPiranha>(x);
 }
+void StrPrinter::bvisit(const URatPolyPiranha &x)
+{
+    str_ = upoly_print<URatPolyPiranha>(x);
+}
 #endif
 
 // UExprPoly printing, tests taken from SymPy and printing ensures
