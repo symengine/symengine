@@ -169,8 +169,7 @@ public:
     }
 }; // UExprDict
 
-class UExprPoly
-    : public USymEnginePoly<UExprDict, UExprPolyBase, UExprPoly, int>
+class UExprPoly : public USymEnginePoly<UExprDict, UExprPolyBase, UExprPoly>
 {
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)

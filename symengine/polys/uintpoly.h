@@ -122,8 +122,7 @@ public:
 
 }; // UIntDict
 
-class UIntPoly
-    : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly, unsigned int>
+class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)

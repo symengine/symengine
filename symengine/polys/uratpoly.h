@@ -45,8 +45,7 @@ public:
     }
 }; // URatDict
 
-class URatPoly
-    : public USymEnginePoly<URatDict, URatPolyBase, URatPoly, unsigned int>
+class URatPoly : public USymEnginePoly<URatDict, URatPolyBase, URatPoly>
 {
 public:
     IMPLEMENT_TYPEID(URATPOLY)

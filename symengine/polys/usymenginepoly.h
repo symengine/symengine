@@ -7,11 +7,12 @@ namespace SymEngine
 {
 
 template <typename Container, template <typename X, typename Y> class BaseType,
-          typename Poly, typename Key>
+          typename Poly>
 class USymEnginePoly : public BaseType<Container, Poly>
 {
 public:
     using Cf = typename BaseType<Container, Poly>::coef_type;
+    using Key = typename Container::key_type;
 
     USymEnginePoly(const RCP<const Basic> &var, Container &&dict)
         : BaseType<Container, Poly>(var, std::move(dict))

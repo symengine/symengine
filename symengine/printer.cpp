@@ -361,8 +361,8 @@ void StrPrinter::bvisit(const GaloisField &x)
     str_ = s.str();
 }
 
-// UIntPoly printing, tests taken from SymPy and printing ensures
-// that there is compatibility
+// Printing of Integer and Rational Polynomials, tests taken
+// from SymPy and printing ensures that there is compatibility
 template <typename P>
 std::string upoly_print(const P &x)
 {
@@ -372,7 +372,7 @@ std::string upoly_print(const P &x)
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
-        typename P::coef_type m = it->second;
+        auto m = it->second;
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {

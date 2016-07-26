@@ -103,6 +103,7 @@ class ODictWrapper
 {
 public:
     std::map<Key, Value> dict_;
+    typedef Key key_type;
 
 public:
     ODictWrapper() SYMENGINE_NOEXCEPT
