@@ -49,7 +49,7 @@ public:
     }
 
     static Container container_from_dict(const RCP<const Basic> &var,
-                                    std::map<Key, Cf> &&d)
+                                         std::map<Key, Cf> &&d)
     {
         return std::move(Container(d));
     }
@@ -116,48 +116,6 @@ public:
         return this->get_degree() + 1;
     }
 };
-
-// true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
-template <typename Poly>
-bool divides_upoly(const Poly &a, const Poly &b,
-                   const Ptr<RCP<const Poly>> &out)
-{
-    if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
-
-    auto a_poly = a.get_poly();
-    auto b_poly = b.get_poly();
-    if (a_poly.size() == 0)
-        return false;
-
-    using C = typename Poly::container_type;
-    using Coef = typename Poly::coef_type;
-
-    std::map<unsigned int, Coef> res;
-    C tmp;
-    Coef q, r;
-    unsigned int a_deg, b_deg;
-
-    while (b_poly.size() >= a_poly.size()) {
-        a_deg = a_poly.degree();
-        b_deg = b_poly.degree();
-
-        mp_tdiv_qr(q, r, b_poly.get_lc(), a_poly.get_lc());
-        if (r != 0)
-            return false;
-
-        res[b_deg - a_deg] = q;
-        C tmp = C({{b_deg - a_deg, q}});
-        b_poly -= (a_poly * tmp);
-    }
-
-    if (b_poly.empty()) {
-        *out = Poly::from_dict(a.get_var(), std::move(res));
-        return true;
-    } else {
-        return false;
-    }
-}
 }
 
 #endif

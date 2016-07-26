@@ -23,4 +23,41 @@ std::size_t UIntPoly::__hash__() const
     return seed;
 }
 
+bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
+                   const Ptr<RCP<const UIntPoly>> &out)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    auto a_poly = a.get_poly();
+    auto b_poly = b.get_poly();
+    if (a_poly.size() == 0)
+        return false;
+
+    map_uint_mpz res;
+    UIntDict tmp;
+    integer_class q, r;
+    unsigned int a_deg, b_deg;
+
+    while (b_poly.size() >= a_poly.size()) {
+        a_deg = a_poly.degree();
+        b_deg = b_poly.degree();
+
+        mp_tdiv_qr(q, r, b_poly.get_lc(), a_poly.get_lc());
+        if (r != 0)
+            return false;
+
+        res[b_deg - a_deg] = q;
+        UIntDict tmp = UIntDict({{b_deg - a_deg, q}});
+        b_poly -= (a_poly * tmp);
+    }
+
+    if (b_poly.empty()) {
+        *out = UIntPoly::from_dict(a.get_var(), std::move(res));
+        return true;
+    } else {
+        return false;
+    }
+}
+
 } // SymEngine

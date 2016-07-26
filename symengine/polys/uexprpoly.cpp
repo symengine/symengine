@@ -54,7 +54,7 @@ RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Basic> &var,
 }
 
 UExprDict UExprPoly::container_from_dict(const RCP<const Basic> &var,
-                                    map_int_Expr &&d)
+                                         map_int_Expr &&d)
 {
     return UExprDict(d);
 }

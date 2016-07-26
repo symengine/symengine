@@ -57,6 +57,10 @@ public:
     std::size_t __hash__() const;
 }; // URatPoly
 
+// true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
+bool divides_upoly(const URatPoly &a, const URatPoly &b,
+                   const Ptr<RCP<const URatPoly>> &res);
+
 } // SymEngine
 
 #endif

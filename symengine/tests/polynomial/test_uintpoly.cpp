@@ -79,7 +79,7 @@ TEST_CASE("Negative of a UIntPoly", "[UIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const UIntPoly> a
         = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UIntPoly> b = UIntPoly::from_dict(x, {});
+    RCP<const UIntPoly> b = UIntPoly::from_dict(x, map_uint_mpz{});
 
     RCP<const UIntPoly> c = neg_upoly(*a);
     RCP<const UIntPoly> d = neg_upoly(*b);

@@ -48,7 +48,7 @@ public:
     }
 
     static Container container_from_dict(const RCP<const Basic> &var,
-                                    std::map<unsigned, Cf> &&d)
+                                         std::map<unsigned, Cf> &&d)
     {
         Container f;
         for (auto const &p : d) {

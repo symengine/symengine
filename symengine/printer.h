@@ -67,7 +67,7 @@ public:
     }
 
     void bvisit(const GaloisField &x)
-    {   
+    {
         // iterators need to be implemented
         // bvisit_upoly(x);
     }

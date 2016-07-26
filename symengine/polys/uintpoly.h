@@ -134,6 +134,10 @@ public:
     std::size_t __hash__() const;
 }; // UIntPoly
 
+// true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
+bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
+                   const Ptr<RCP<const UIntPoly>> &res);
+
 } // SymEngine
 
 #endif

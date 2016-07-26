@@ -429,8 +429,8 @@ public:
     static RCP<const Poly> from_dict(const RCP<const Basic> &var,
                                      std::map<unsigned, Cf> &&d)
     {
-        return Poly::from_container(var,
-                                    Poly::container_from_dict(var, std::move(d)));
+        return Poly::from_container(
+            var, Poly::container_from_dict(var, std::move(d)));
     }
 };
 

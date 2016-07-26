@@ -136,8 +136,8 @@ public:
             if (is_a<const Integer>(*powr)) {
                 int i = rcp_static_cast<const Integer>(powr)->as_int();
                 if (i > 0) {
-                    dict = P::container_from_dict(gen,
-                                             {{i, typename P::coef_type(1)}});
+                    dict = P::container_from_dict(
+                        gen, {{i, typename P::coef_type(1)}});
                     return;
                 }
             }

@@ -188,7 +188,7 @@ public:
     static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
                                          const std::vector<Expression> &v);
     static UExprDict container_from_dict(const RCP<const Basic> &var,
-                                    map_int_Expr &&d);
+                                         map_int_Expr &&d);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x
