@@ -52,17 +52,6 @@ struct gcd_impl<SymEngine::integer_class, SymEngine::integer_class> {
 };
 
 template <>
-struct gcd_impl<SymEngine::rational_class, SymEngine::rational_class> {
-    SymEngine::rational_class
-    operator()(const SymEngine::rational_class &r,
-               const SymEngine::rational_class &x) const
-    {
-        SymEngine::rational_class res(1);
-        return res;
-    }
-};
-
-template <>
 struct divexact_impl<SymEngine::integer_class> {
     void operator()(SymEngine::integer_class &r,
                     const SymEngine::integer_class &x,
@@ -75,7 +64,6 @@ struct divexact_impl<SymEngine::integer_class> {
         }
     }
 };
-
 template <>
 struct divexact_impl<SymEngine::rational_class> {
     void operator()(SymEngine::rational_class &r,
@@ -97,6 +85,23 @@ struct has_exact_ring_operations<SymEngine::rational_class> {
 };
 }
 #endif
+
+// need definition for piranha::rational too
+namespace piranha
+{
+namespace math
+{
+template <>
+struct gcd_impl<SymEngine::rational_class, SymEngine::rational_class> {
+    SymEngine::rational_class
+    operator()(const SymEngine::rational_class &r,
+               const SymEngine::rational_class &x) const
+    {
+        return SymEngine::rational_class(1);
+    }
+};
+}
+}
 
 namespace SymEngine
 {

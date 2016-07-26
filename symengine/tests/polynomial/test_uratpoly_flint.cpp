@@ -268,7 +268,7 @@ TEST_CASE("URatPolyFlint lcm", "[URatPolyFlint]")
     RCP<const URatPolyFlint> a = URatPolyFlint::from_dict(x, {{2, 6_q}});
     RCP<const URatPolyFlint> b = URatPolyFlint::from_dict(x, {{1, 8_q}});
     RCP<const URatPolyFlint> c
-        = URatPolyFlint::from_dict(x, {{0, 8_q}, {1, 8_z}});
+        = URatPolyFlint::from_dict(x, {{0, 8_q}, {1, 8_q}});
 
     RCP<const URatPolyFlint> ab = lcm_upoly(*a, *b);
     RCP<const URatPolyFlint> bc = lcm_upoly(*b, *c);

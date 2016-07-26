@@ -9,6 +9,7 @@
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/rational.h>
+#include <symengine/expression.h>
 #include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
@@ -67,9 +68,10 @@ inline integer_class to_mp_class(const fz_t &i)
 }
 inline rational_class to_mp_class(const fq_t &i)
 {
-    rational_class x;
-    fmpq_get_mpq(get_mpq_t(x), i.get_fmpq_t());
-    return x;
+    rational_class s;
+    fmpz_get_mpz(get_mpz_t(s._num()), i.get_num().get_fmpz_t());
+    fmpz_get_mpz(get_mpz_t(s._den()), i.get_den().get_fmpz_t());
+    return s;
 }
 #endif
 

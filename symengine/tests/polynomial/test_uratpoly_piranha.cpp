@@ -37,7 +37,8 @@ TEST_CASE("Constructor of URatPolyPiranha", "[URatPolyPiranha]")
     RCP<const URatPolyPiranha> S = URatPolyPiranha::from_dict(x, {{0, 2_q}});
     REQUIRE(S->__str__() == "2");
 
-    RCP<const URatPolyPiranha> T = URatPolyPiranha::from_dict(x, map_uint_mpq{});
+    RCP<const URatPolyPiranha> T
+        = URatPolyPiranha::from_dict(x, map_uint_mpq{});
     REQUIRE(T->__str__() == "0");
 }
 
@@ -47,13 +48,14 @@ TEST_CASE("Adding two URatPolyPiranha", "[URatPolyPiranha]")
     RCP<const Symbol> y = symbol("y");
     RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
         x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    RCP<const URatPolyPiranha> b
-        = URatPolyPiranha::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_dict(
+        x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
 
     RCP<const Basic> c = add_upoly(*a, *b);
     REQUIRE(c->__str__() == "3*x**2 + 11/3*x + 7/6");
 
-    RCP<const URatPolyPiranha> d = URatPolyPiranha::from_dict(x, {{0, rc(1_z, 2_z)}});
+    RCP<const URatPolyPiranha> d
+        = URatPolyPiranha::from_dict(x, {{0, rc(1_z, 2_z)}});
     RCP<const Basic> e = add_upoly(*a, *d);
     RCP<const Basic> f = add_upoly(*d, *a);
     REQUIRE(e->__str__() == "x**2 + 2/3*x + 1");
@@ -67,8 +69,8 @@ TEST_CASE("Adding two URatPolyPiranha", "[URatPolyPiranha]")
 TEST_CASE("Negative of a URatPolyPiranha", "[URatPolyPiranha]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const URatPolyPiranha> a
-        = URatPolyPiranha::from_dict(x, {{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
+    RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
+        x, {{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
 
     RCP<const URatPolyPiranha> b = neg_upoly(*a);
     REQUIRE(b->__str__() == "-3*x**2 - 2*x + 1/2");
@@ -81,8 +83,8 @@ TEST_CASE("Subtracting two URatPolyPiranha", "[URatPolyPiranha]")
 
     RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
         x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    RCP<const URatPolyPiranha> b
-        = URatPolyPiranha::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_dict(
+        x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
     RCP<const URatPolyPiranha> c = URatPolyPiranha::from_dict(
         x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
     RCP<const URatPolyPiranha> f = URatPolyPiranha::from_dict(y, {{0, 2_q}});
@@ -103,8 +105,8 @@ TEST_CASE("Multiplication of two URatPolyPiranha", "[URatPolyPiranha]")
 
     RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
         x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 3_z)}, {2, 1_q}});
-    RCP<const URatPolyPiranha> b
-        = URatPolyPiranha::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
+    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_dict(
+        x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
     RCP<const URatPolyPiranha> e = URatPolyPiranha::from_dict(
         x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
     RCP<const URatPolyPiranha> f
@@ -151,8 +153,8 @@ TEST_CASE("Comparing two URatPolyPiranha", "[URatPolyPiranha]")
 TEST_CASE("URatPolyPiranha as_symbolic", "[URatPolyPiranha]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const URatPolyPiranha> a
-        = URatPolyPiranha::from_dict(x, {{0, rc(1_z, 2_z)}, {1, 2_q}, {2, 1_q}});
+    RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
+        x, {{0, rc(1_z, 2_z)}, {1, 2_q}, {2, 1_q}});
 
     REQUIRE(eq(
         *a->as_symbolic(),
@@ -163,7 +165,8 @@ TEST_CASE("URatPolyPiranha as_symbolic", "[URatPolyPiranha]")
     REQUIRE(eq(*b->as_symbolic(), *add(mul(x, div(integer(3), integer(2))),
                                        mul(integer(2), pow(x, integer(2))))));
 
-    RCP<const URatPolyPiranha> c = URatPolyPiranha::from_dict(x, map_uint_mpq{});
+    RCP<const URatPolyPiranha> c
+        = URatPolyPiranha::from_dict(x, map_uint_mpq{});
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }
 
@@ -193,7 +196,8 @@ TEST_CASE("Derivative of URatPolyPiranha", "[URatPolyPiranha]")
     RCP<const Symbol> y = symbol("y");
     RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(
         x, {{0, 1_q}, {1, rc(2_z, 3_z)}, {2, rc(1_z, 2_z)}});
-    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_dict(y, {{2, rc(4_z, 3_z)}});
+    RCP<const URatPolyPiranha> b
+        = URatPolyPiranha::from_dict(y, {{2, rc(4_z, 3_z)}});
 
     REQUIRE(a->diff(x)->__str__() == "x + 2/3");
     REQUIRE(a->diff(y)->__str__() == "0");
@@ -242,7 +246,7 @@ TEST_CASE("URatPolyPiranha lcm", "[URatPolyPiranha]")
     RCP<const URatPolyPiranha> a = URatPolyPiranha::from_dict(x, {{2, 6_q}});
     RCP<const URatPolyPiranha> b = URatPolyPiranha::from_dict(x, {{1, 8_q}});
     RCP<const URatPolyPiranha> c
-        = URatPolyPiranha::from_dict(x, {{0, 8_q}, {1, 8_z}});
+        = URatPolyPiranha::from_dict(x, {{0, 8_q}, {1, 8_q}});
 
     RCP<const URatPolyPiranha> ab = lcm_upoly(*a, *b);
     RCP<const URatPolyPiranha> bc = lcm_upoly(*b, *c);
