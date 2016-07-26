@@ -278,6 +278,26 @@ GaloisFieldDict GaloisFieldDict::gf_diff() const
     return out;
 }
 
+integer_class GaloisFieldDict::gf_eval(const integer_class &a) const
+{
+    integer_class res = 0_z;
+    for (auto rit = dict_.rbegin(); rit != dict_.rend(); ++rit) {
+        res *= a;
+        res += (*rit);
+        res %= modulo_;
+    }
+    return res;
+}
+
+vec_integer_class
+GaloisFieldDict::gf_multi_eval(const vec_integer_class &v) const
+{
+    vec_integer_class res(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        res[i] = gf_eval(v[i]);
+    return res;
+}
+
 bool GaloisFieldDict::gf_is_sqf() const
 {
     if (dict_.empty())

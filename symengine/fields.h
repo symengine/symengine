@@ -106,6 +106,8 @@ public:
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_diff() const;
+    integer_class gf_eval(const integer_class &a) const;
+    vec_integer_class gf_multi_eval(const vec_integer_class &v) const;
 
     // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;

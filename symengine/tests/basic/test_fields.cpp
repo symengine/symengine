@@ -880,3 +880,42 @@ TEST_CASE("GaloisFieldDict factorization : Basic", "[basic]")
                  1_z})
             != f.second.end());
 }
+
+TEST_CASE("GaloisFieldDict equal degree factorization : Basic", "[basic]")
+{
+    GaloisFieldDict d1;
+    d1 = GaloisFieldDict::from_vec({}, 11_z);
+    REQUIRE(d1.gf_eval(4_z) == 0_z);
+
+    d1 = GaloisFieldDict::from_vec({7_z}, 11_z);
+    REQUIRE(d1.gf_eval(4_z) == 7_z);
+    REQUIRE(d1.gf_eval(15_z) == 7_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {0_z, 2_z, 1_z, 3_z, 4_z, 2_z, 3_z, 0_z, 1_z}, 11_z);
+    REQUIRE(d1.gf_eval(0_z) == 0_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {0_z, 2_z, 1_z, 3_z, 4_z, 2_z, 3_z, 0_z, 1_z}, 11_z);
+    REQUIRE(d1.gf_eval(4_z) == 9_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {0_z, 2_z, 1_z, 3_z, 4_z, 2_z, 3_z, 0_z, 1_z}, 11_z);
+    REQUIRE(d1.gf_eval(27_z) == 5_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {5_z, 3_z, 1_z, 0_z, 6_z, 4_z, 0_z, 0_z, 4_z}, 11_z);
+    REQUIRE(d1.gf_eval(0_z) == 5_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {5_z, 3_z, 1_z, 0_z, 6_z, 4_z, 0_z, 0_z, 4_z}, 11_z);
+    REQUIRE(d1.gf_eval(4_z) == 3_z);
+
+    d1 = GaloisFieldDict::from_vec(
+        {5_z, 3_z, 1_z, 0_z, 6_z, 4_z, 0_z, 0_z, 4_z}, 11_z);
+    REQUIRE(d1.gf_eval(27_z) == 9_z);
+
+    d1 = GaloisFieldDict::from_vec({1_z, 2_z, 3_z}, 11_z);
+    std::vector<integer_class> resa = {1_z, 6_z, 6_z, 1_z};
+    REQUIRE(d1.gf_multi_eval({0_z, 1_z, 2_z, 3_z}) == resa);
+}
