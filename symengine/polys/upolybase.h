@@ -397,6 +397,38 @@ public:
     {
         return this->poly_.degree();
     }
+
+    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
+                                     std::map<int, Expression> &&d)
+    {
+        return Poly::from_container(
+            var, Poly::container_from_dict(var, std::move(d)));
+    }
+
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            if (it->first == 0)
+                args.push_back(it->second.get_basic());
+            else if (it->first == 1) {
+                if (it->second == Expression(1))
+                    args.push_back(this->var_);
+                else
+                    args.push_back(mul(it->second.get_basic(), this->var_));
+            } else if (it->second == 1)
+                args.push_back(pow(this->var_, integer(it->first)));
+            else
+                args.push_back(mul(it->second.get_basic(),
+                                   pow(this->var_, integer(it->first))));
+        }
+        if (this->poly_.empty())
+            args.push_back(zero);
+        return SymEngine::add(args);
+    }
 };
 // super class for all non-expr polys, all methods which are
 // common for all non-expr polys go here eg. degree, eval etc.

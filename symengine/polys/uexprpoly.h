@@ -176,18 +176,9 @@ public:
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 
-    bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
 
     typedef Expression coef_type;
-
-    static RCP<const UExprPoly> from_dict(const RCP<const Basic> &var,
-                                          map_int_Expr &&d);
-    static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
-                                         const std::vector<Expression> &v);
-    static UExprDict container_from_dict(const RCP<const Basic> &var,
-                                         map_int_Expr &&d);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x
@@ -207,29 +198,6 @@ public:
     bool is_mul() const;
     //! \return `true` if pow
     bool is_pow() const;
-
-    virtual vec_basic get_args() const;
-
-    inline int get_degree() const
-    {
-        return poly_.degree();
-    }
-
-    inline unsigned int size() const
-    {
-        if (poly_.dict_.empty())
-            return 0;
-        return get_degree() + 1;
-    }
-    inline const map_int_Expr &get_dict() const
-    {
-        return poly_.get_dict();
-    }
-
-    inline Expression get_coeff(int x) const
-    {
-        return poly_.get_coeff(x);
-    }
 
 }; // UExprPoly
 
