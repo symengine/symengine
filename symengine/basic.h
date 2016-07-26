@@ -207,6 +207,16 @@ struct RCPBasicKeyLessCmp {
     }
 };
 
+struct RCPBasicStrCmp {
+    // true if x->__str__() < y->__str__(), false otherwise
+    // used to provide platform-independent printing of multivariable
+    // polynomials
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        return x->__str__() < y->__str__();
+    }
+};
+
 // Convenience functions
 //! Checks equality for `a` and `b`
 bool eq(const Basic &a, const Basic &b);
