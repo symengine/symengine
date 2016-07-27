@@ -1,7 +1,7 @@
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
 #include <stack>
-#include <regex>
+#include <cctype>
 
 namespace SymEngine
 {
@@ -253,32 +253,36 @@ class ExpressionParser
         if (expr == "")
             return zero;
 
-        const std::string float_regex
-            = "^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$";
-        const std::string integer_regex = "^[-+]?([1-9][0-9]*|0)$";
-        const std::string symbol_regex = "^[a-zA-Z_$][a-zA-Z_$0-9]*$";
+        char *endptr = 0;
+        double d = std::strtod(expr.c_str(), &endptr);
 
-        // if the expr wasn't numeric, it's either a constant, or a user
-        // declared symbol
-        // otherwise it's an integer (yet to add float/double support)
-        if (std::regex_match(expr, std::regex(float_regex))) {
-            if (std::regex_match(expr, std::regex(integer_regex))) {
+        if (*endptr == '\0' and endptr != expr) {
+            // if the expr is numeric, it's either a float or an integer
+            std::strtol(expr.c_str(), &endptr, 0);
+            if (*endptr == '\0' and endptr != expr) {
+                // TODO: use output of strtol if no overflow by checking errno
                 return integer(std::atoi(expr.c_str()));
             } else {
                 // TODO: Use real_mpfr if precision is lost when using
                 // real_double
-                return real_double(std::atof(expr.c_str()));
+                return real_double(d);
             }
         } else {
+            // if the expr is not numeric, it's either a constant, or a user
+            // declared symbol
             if (constants.find(expr) != constants.end())
                 return constants[expr];
 
-            if (std::regex_match(expr, std::regex(symbol_regex))) {
+            if (isalpha(expr[0]) or expr[0] == '_') {
+                for (unsigned i = 1; i < expr.length(); ++i) {
+                    if (not isalnum(expr[i]) and expr[i] != '_') {
+                        throw std::runtime_error(
+                            expr + " is not a symbol or numeric");
+                    }
+                }
                 return symbol(expr);
-            } else {
-                throw std::runtime_error("Parsing " + expr
-                                         + ": Not a symbol or numeric");
             }
+            throw std::runtime_error(expr + " is not a symbol or numeric");
         }
     }
 
