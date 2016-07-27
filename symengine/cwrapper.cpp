@@ -62,19 +62,19 @@ extern "C" {
 
 
 #define CWRAPPER_BEGIN                                                       \
-    try                                                                        \
+    try                                                                      \
     {
 
-#define CWRAPPER_END                                             \
-        return 0;                                                              \
-    }                                                                          \
-    catch ( DivisionByZero )                                                            \
-    {                                                                          \
-        return 1;                                                           \
-    } \
-    catch ( ... ) \
-    { \
-        return -1; \
+#define CWRAPPER_END                                                         \
+        return 0;                                                            \
+    }                                                                        \
+    catch ( DivisionByZero )                                                 \
+    {                                                                        \
+        return 1;                                                            \
+    }                                                                        \
+    catch ( ... )                                                            \
+    {                                                                        \
+        return -1;                                                           \
     }
 
 struct CRCPBasic {
@@ -189,42 +189,42 @@ TypeID basic_get_type(const basic s)
     return static_cast<TypeID>(s->m->get_type_code());
 }
 
-int symbol_set(basic s, const char *c)
+CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::symbol(std::string(c));
     CWRAPPER_END
 }
 
-int integer_set_si(basic s, long i)
+CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 
-int integer_set_ui(basic s, unsigned long i)
+CWRAPPER_OUTPUT_TYPE integer_set_ui(basic s, unsigned long i)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 
-int integer_set_mpz(basic s, const mpz_t i)
+CWRAPPER_OUTPUT_TYPE integer_set_mpz(basic s, const mpz_t i)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 
-int integer_set_str(basic s, const char *c)
+CWRAPPER_OUTPUT_TYPE integer_set_str(basic s, const char *c)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::integer(integer_class(c));
     CWRAPPER_END
 }
 
-int real_double_set_d(basic s, double d)
+CWRAPPER_OUTPUT_TYPE real_double_set_d(basic s, double d)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::real_double(d);
@@ -239,7 +239,7 @@ double real_double_get_d(const basic s)
 
 #ifdef HAVE_SYMENGINE_MPFR
 
-int real_mpfr_set_d(basic s, double d, int prec)
+CWRAPPER_OUTPUT_TYPE real_mpfr_set_d(basic s, double d, int prec)
 {
     CWRAPPER_BEGIN
     mpfr_class mc = mpfr_class(prec);
@@ -248,7 +248,7 @@ int real_mpfr_set_d(basic s, double d, int prec)
     CWRAPPER_END
 }
 
-int real_mpfr_set_str(basic s, const char *c, int prec)
+CWRAPPER_OUTPUT_TYPE real_mpfr_set_str(basic s, const char *c, int prec)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
@@ -263,14 +263,14 @@ double real_mpfr_get_d(const basic s)
         MPFR_RNDN);
 }
 
-int real_mpfr_set(basic s, mpfr_srcptr m)
+CWRAPPER_OUTPUT_TYPE real_mpfr_set(basic s, mpfr_srcptr m)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::real_mpfr(mpfr_class(m));
     CWRAPPER_END
 }
 
-int real_mpfr_get(mpfr_ptr m, const basic s)
+CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
@@ -300,7 +300,7 @@ int complex_mpc_is_zero(const basic s)
     return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
 }
 
-int complex_mpc_real_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
@@ -308,7 +308,7 @@ int complex_mpc_real_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-int complex_mpc_imaginary_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
@@ -329,7 +329,7 @@ unsigned long integer_get_ui(const basic s)
     return mp_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz());
 }
 
-int integer_get_mpz(mpz_t a, const basic s)
+CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -337,14 +337,14 @@ int integer_get_mpz(mpz_t a, const basic s)
     CWRAPPER_END
 }
 
-int rational_set_si(basic s, long a, long b)
+CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long a, long b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
     CWRAPPER_END
 }
 
-int rational_set_ui(basic s, unsigned long a, unsigned long b)
+CWRAPPER_OUTPUT_TYPE rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
@@ -362,14 +362,14 @@ int rational_set(basic s, const basic a, const basic b)
     return 1;
 }
 
-int rational_set_mpq(basic s, const mpq_t i)
+CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Rational::from_mpq(rational_class(i));
     CWRAPPER_END
 }
 
-int complex_set(basic s, const basic re, const basic im)
+CWRAPPER_OUTPUT_TYPE complex_set(basic s, const basic re, const basic im)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Complex::from_two_nums(
@@ -378,7 +378,7 @@ int complex_set(basic s, const basic re, const basic im)
     CWRAPPER_END
 }
 
-int complex_set_rat(basic s, const basic re, const basic im)
+CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Complex::from_two_rats(
@@ -387,14 +387,14 @@ int complex_set_rat(basic s, const basic re, const basic im)
     CWRAPPER_END
 }
 
-int complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
+CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
     CWRAPPER_END
 }
 
-int complex_real_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
@@ -402,7 +402,7 @@ int complex_real_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-int complex_imaginary_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
@@ -410,7 +410,7 @@ int complex_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-int complex_double_real_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
@@ -418,7 +418,7 @@ int complex_double_real_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-int complex_double_imaginary_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
@@ -434,49 +434,49 @@ int basic_diff(basic s, const basic expr, basic const symbol)
     return 1;
 }
 
-int basic_assign(basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b)
 {
     CWRAPPER_BEGIN
     a->m = b->m;
     CWRAPPER_END
 }
 
-int basic_parse(basic b, const char *str)
+CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str)
 {
     CWRAPPER_BEGIN
     b->m = SymEngine::parse(str);
     CWRAPPER_END
 }
 
-int basic_add(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_add(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::add(a->m, b->m);
     CWRAPPER_END
 }
 
-int basic_sub(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_sub(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::sub(a->m, b->m);
     CWRAPPER_END
 }
 
-int basic_mul(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_mul(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::mul(a->m, b->m);
     CWRAPPER_END
 }
 
-int basic_pow(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::pow(a->m, b->m);
     CWRAPPER_END
 }
 
-int basic_div(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_div(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::div(a->m, b->m);
@@ -508,7 +508,7 @@ int basic_number_sign(const basic s)
 }
 
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
-    int basic_##func(basic s, const basic a)                                  \
+    CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a)                                  \
     {                                                                          \
         CWRAPPER_BEGIN                                                      \
         s->m = SymEngine::func(a->m);                                          \
@@ -739,7 +739,7 @@ void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
     s->m = SymEngine::CSRMatrix(rows, cols);
 }
 
-int dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
+CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
 {
     CWRAPPER_BEGIN
     s->m = d->m;
@@ -762,14 +762,14 @@ char *sparse_matrix_str(const CSparseMatrix *s)
     return cc;
 }
 
-int dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c)
+CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c)
 {
     CWRAPPER_BEGIN
     mat->m.resize(r, c);
     CWRAPPER_END
 }
 
-int dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
+CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
                             unsigned long int r, unsigned long int c)
 {
     CWRAPPER_BEGIN
@@ -777,7 +777,7 @@ int dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
     CWRAPPER_END
 }
 
-int dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
+CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
                             unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
@@ -785,7 +785,7 @@ int dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
     CWRAPPER_END
 }
 
-int sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
+CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
                              unsigned long int r, unsigned long int c)
 {
     CWRAPPER_BEGIN
@@ -793,7 +793,7 @@ int sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
     CWRAPPER_END
 }
 
-int sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
+CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
                              unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
@@ -801,27 +801,27 @@ int sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
     CWRAPPER_END
 }
 
-int dense_matrix_det(basic s, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_det(basic s, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     s->m = mat->m.det();
     CWRAPPER_END
 }
-int dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, mat->m.nrows(), mat->m.ncols());
     mat->m.inv(s->m);
     CWRAPPER_END
 }
-int dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, mat->m.ncols(), mat->m.nrows());
     mat->m.transpose(s->m);
     CWRAPPER_END
 }
-int dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
+CWRAPPER_OUTPUT_TYPE dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
                             unsigned long int r1, unsigned long int c1,
                             unsigned long int r2, unsigned long int c2,
                             unsigned long int r, unsigned long int c)
@@ -842,7 +842,7 @@ unsigned long int dense_matrix_cols(const CDenseMatrix *s)
     return s->m.ncols();
 }
 
-int dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
                              const CDenseMatrix *matB)
 {
     CWRAPPER_BEGIN
@@ -851,7 +851,7 @@ int dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
     CWRAPPER_END
 }
 
-int dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
                              const CDenseMatrix *matB)
 {
     CWRAPPER_BEGIN
@@ -860,7 +860,7 @@ int dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
     CWRAPPER_END
 }
 
-int dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
                              const basic b)
 {
     CWRAPPER_BEGIN
@@ -869,7 +869,7 @@ int dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
     CWRAPPER_END
 }
 
-int dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
                              const basic b)
 {
     CWRAPPER_BEGIN
@@ -878,7 +878,7 @@ int dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
     CWRAPPER_END
 }
 
-int dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
@@ -887,7 +887,7 @@ int dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
     CWRAPPER_END
 }
 
-int dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
@@ -896,7 +896,7 @@ int dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
     CWRAPPER_END
 }
 
-int dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(lu, mat->m.nrows(), mat->m.ncols());
@@ -904,7 +904,7 @@ int dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
     CWRAPPER_END
 }
 
-int dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
                         const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
@@ -915,7 +915,7 @@ int dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
     CWRAPPER_END
 }
 
-int dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
                            const CDenseMatrix *b)
 {
     CWRAPPER_BEGIN
@@ -924,7 +924,7 @@ int dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
     CWRAPPER_END
 }
 
-int dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
+CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
                        unsigned long int c)
 {
     CWRAPPER_BEGIN
@@ -933,7 +933,7 @@ int dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
     CWRAPPER_END
 }
 
-int dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
+CWRAPPER_OUTPUT_TYPE dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
                         unsigned long int c)
 {
     CWRAPPER_BEGIN
@@ -941,7 +941,7 @@ int dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
     zeros(s->m);
     CWRAPPER_END
 }
-int dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
+CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
 {
     CWRAPPER_BEGIN
     int vec_size = vecbasic_size(d);
@@ -951,7 +951,7 @@ int dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
     CWRAPPER_END
 }
 
-int dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
+CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
                       int k)
 {
     CWRAPPER_BEGIN
@@ -1055,14 +1055,14 @@ size_t mapbasicbasic_size(CMapBasicBasic *self)
 
 // ----------------------
 
-int basic_get_args(const basic self, CVecBasic *args)
+CWRAPPER_OUTPUT_TYPE basic_get_args(const basic self, CVecBasic *args)
 {
     CWRAPPER_BEGIN
     args->m = self->m->get_args();
     CWRAPPER_END
 }
 
-int basic_free_symbols(const basic self, CSetBasic *symbols)
+CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols)
 {
     CWRAPPER_BEGIN
     symbols->m = SymEngine::free_symbols(*(self->m));
@@ -1074,21 +1074,21 @@ size_t basic_hash(const basic self)
     return self->m->hash();
 }
 
-int basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
+CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
 {
     CWRAPPER_BEGIN
     s->m = e->m->subs(mapbb->m);
     CWRAPPER_END
 }
 
-int basic_subs2(basic s, const basic e, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     s->m = e->m->subs({{a->m, b->m}});
     CWRAPPER_END
 }
 
-int function_symbol_set(basic s, const char *c, const CVecBasic *arg)
+CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c, const CVecBasic *arg)
 {
     CWRAPPER_BEGIN
     s->m = function_symbol(c, arg->m);
@@ -1107,7 +1107,7 @@ char *ascii_art_str()
 
 // Cwrapper for ntheory
 
-int ntheory_gcd(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE ntheory_gcd(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
@@ -1117,7 +1117,7 @@ int ntheory_gcd(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
-int ntheory_lcm(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
@@ -1127,7 +1127,7 @@ int ntheory_lcm(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
-int ntheory_nextprime(basic s, const basic a)
+CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
@@ -1135,7 +1135,7 @@ int ntheory_nextprime(basic s, const basic a)
     CWRAPPER_END
 }
 
-int ntheory_mod(basic s, const basic n, const basic d)
+CWRAPPER_OUTPUT_TYPE ntheory_mod(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
@@ -1145,7 +1145,7 @@ int ntheory_mod(basic s, const basic n, const basic d)
     CWRAPPER_END
 }
 
-int ntheory_quotient(basic s, const basic n, const basic d)
+CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
@@ -1155,21 +1155,21 @@ int ntheory_quotient(basic s, const basic n, const basic d)
     CWRAPPER_END
 }
 
-int ntheory_fibonacci(basic s, unsigned long a)
+CWRAPPER_OUTPUT_TYPE ntheory_fibonacci(basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::fibonacci(a);
     CWRAPPER_END
 }
 
-int ntheory_lucas(basic s, unsigned long a)
+CWRAPPER_OUTPUT_TYPE ntheory_lucas(basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::lucas(a);
     CWRAPPER_END
 }
 
-int ntheory_binomial(basic s, const basic a, unsigned long b)
+CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
@@ -1178,7 +1178,7 @@ int ntheory_binomial(basic s, const basic a, unsigned long b)
 }
 
 //! Wrapper for evalf
-int basic_evalf(basic s, const basic b, unsigned long bits, int real)
+CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits, int real)
 {
 
     CWRAPPER_BEGIN
