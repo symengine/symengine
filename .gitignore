@@ -84,8 +84,11 @@ symengine/tests/polynomial/test_mexprpoly
 symengine/tests/polynomial/test_mintpoly
 symengine/tests/polynomial/test_uexprpoly
 symengine/tests/polynomial/test_uintpoly
+symengine/tests/polynomial/test_uratpoly
 symengine/tests/polynomial/test_uintpoly_flint
+symengine/tests/polynomial/test_uratpoly_flint
 symengine/tests/polynomial/test_uintpoly_piranha
+symengine/tests/polynomial/test_uratpoly_piranha
 symengine/tests/polynomial/test_basic_conversions
 symengine/tests/basic/test_fields
 

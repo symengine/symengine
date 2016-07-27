@@ -33,8 +33,8 @@ public:
     template <typename Poly>
     void bvisit_upoly(const Poly &x)
     {
-        if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
+        if (x.end() == ++x.begin()) {
+            auto it = x.begin();
             precedence = PrecedenceEnum::Atom;
             if (it->second == 1) {
                 if (it->first == 0 or it->first == 1) {
@@ -49,21 +49,23 @@ public:
                     precedence = PrecedenceEnum::Mul;
                 }
             }
-        } else if (x.get_dict().size() == 0) {
+        } else if (x.begin() == x.end()) {
             precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
         }
     }
 
-    void bvisit(const UIntPoly &x)
+    template <typename Container, typename Poly>
+    void bvisit(const UPolyBase<Container, Poly> &x)
     {
-        bvisit_upoly(x);
+        bvisit_upoly(static_cast<const Poly &>(x));
     }
 
-    void bvisit(const UExprPoly &x)
+    void bvisit(const GaloisField &x)
     {
-        bvisit_upoly(x);
+        // iterators need to be implemented
+        // bvisit_upoly(x);
     }
 
     void bvisit(const MultivariateIntPolynomial &x)
@@ -222,8 +224,10 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
+    void bvisit(const URatPoly &x);
 #ifdef HAVE_SYMENGINE_FLINT
     void bvisit(const UIntPolyFlint &x);
+    void bvisit(const URatPolyFlint &x);
 #endif
     void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const MultivariatePolynomial &x);
@@ -234,6 +238,7 @@ public:
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
     void bvisit(const UIntPolyPiranha &x);
+    void bvisit(const URatPolyPiranha &x);
 #endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
@@ -250,6 +255,9 @@ public:
     void bvisit(const ComplexMPC &x);
 #endif
     void bvisit(const NumberWrapper &x);
+
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
 
     std::string parenthesizeLT(const RCP<const Basic> &x,
                                PrecedenceEnum precedenceEnum);

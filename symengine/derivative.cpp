@@ -485,24 +485,48 @@ public:
         return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
 
+    static RCP<const Basic> diff(const URatPoly &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<URatPoly, map_uint_mpq>(self, x);
+    }
+
 #ifdef HAVE_SYMENGINE_PIRANHA
     static RCP<const Basic> diff(const UIntPolyPiranha &self,
                                  const RCP<const Symbol> &x)
     {
         return diff_upoly<UIntPolyPiranha, map_uint_mpz>(self, x);
     }
+    static RCP<const Basic> diff(const URatPolyPiranha &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<URatPolyPiranha, map_uint_mpq>(self, x);
+    }
 #endif
 
 #ifdef HAVE_SYMENGINE_FLINT
+    template <typename P>
+    static RCP<const Basic> diff_upolyflint(const P &self,
+                                            const RCP<const Symbol> &x)
+    {
+        if (self.get_var()->__eq__(*x)) {
+            return P::from_container(self.get_var(),
+                                     self.get_poly().derivative());
+        } else {
+            return P::from_dict(self.get_var(), {{}});
+        }
+    }
+
     static RCP<const Basic> diff(const UIntPolyFlint &self,
                                  const RCP<const Symbol> &x)
     {
-        if (self.get_var()->__eq__(*x)) {
-            return UIntPolyFlint::from_container(self.get_var(),
-                                                 self.get_poly().derivative());
-        } else {
-            return UIntPolyFlint::from_dict(self.get_var(), {{}});
-        }
+        return diff_upolyflint(self, x);
+    }
+
+    static RCP<const Basic> diff(const URatPolyFlint &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upolyflint(self, x);
     }
 #endif
 

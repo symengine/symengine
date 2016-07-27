@@ -18,7 +18,7 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;
+using SymEngine::add;
 
 using namespace SymEngine::literals;
 
@@ -183,17 +183,17 @@ TEST_CASE("UExprPoly get_args", "[UExprPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, 1}});
 
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, mul(integer(2), x), pow(x, integer(2))}));
-    REQUIRE(not vec_basic_eq_perm(
-        a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+    REQUIRE(eq(*a->as_symbolic(),
+               *add({one, mul(integer(2), x), pow(x, integer(2))})));
+    REQUIRE(not eq(*a->as_symbolic(),
+                   *add({one, mul(integer(3), x), pow(x, integer(2))})));
 
     a = uexpr_poly(x, {{0, 1}, {1, 1}, {2, 2}});
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, x, mul(integer(2), pow(x, integer(2)))}));
+    REQUIRE(eq(*a->as_symbolic(),
+               *add({one, x, mul(integer(2), pow(x, integer(2)))})));
 
     a = uexpr_poly(x, map_int_Expr{});
-    REQUIRE(vec_basic_eq_perm(a->get_args(), {zero}));
+    REQUIRE(eq(*a->as_symbolic(), *add({zero})));
 }
 
 TEST_CASE("UExprPoly max_coef", "[UExprPoly]")

@@ -46,6 +46,7 @@ typedef std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLess>
 typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
     map_integer_uint;
 typedef std::map<unsigned, integer_class> map_uint_mpz;
+typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::vector<integer_class> vec_integer_class;
 //! Part of umap_vec_mpz:
@@ -186,7 +187,8 @@ bool ordered_eq(const T &A, const T &B)
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template <typename T,
           typename = enable_if_t<std::is_arithmetic<T>::value
-                                 or std::is_same<T, integer_class>::value>>
+                                 or std::is_same<T, integer_class>::value
+                                 or std::is_same<T, rational_class>::value>>
 inline int unified_compare(const T &a, const T &b)
 {
     if (a == b)

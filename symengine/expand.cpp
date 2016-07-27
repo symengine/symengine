@@ -281,6 +281,7 @@ public:
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand(self.get_base());
+        // TODO add all types of polys
         if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();

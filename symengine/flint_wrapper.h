@@ -324,13 +324,14 @@ public:
         fmpq_init(mp);
         fmpz_set(fmpq_numref(mp), n.get_fmpz_t());
         fmpz_set(fmpq_denref(mp), d.get_fmpz_t());
+        fmpq_canonicalise(mp);
     }
     fmpq_wrapper(const fmpq_wrapper &other)
     {
         fmpq_init(mp);
         fmpq_set(mp, other.get_fmpq_t());
     }
-    fmpq_wrapper(fmpq_wrapper &&other)
+    fmpq_wrapper(fmpq_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpq_init(mp);
         fmpq_swap(mp, other.get_fmpq_t());
@@ -340,12 +341,12 @@ public:
         fmpq_set(mp, other.get_fmpq_t());
         return *this;
     }
-    fmpq_wrapper &operator=(fmpq_wrapper &&other)
+    fmpq_wrapper &operator=(fmpq_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpq_swap(mp, other.get_fmpq_t());
         return *this;
     }
-    ~fmpq_wrapper()
+    ~fmpq_wrapper() SYMENGINE_NOEXCEPT
     {
         fmpq_clear(mp);
     }
@@ -481,6 +482,8 @@ private:
     fmpz_poly_t poly;
 
 public:
+    typedef fmpz_wrapper internal_coef_type;
+
     fmpz_poly_wrapper()
     {
         fmpz_poly_init(poly);
@@ -549,7 +552,7 @@ public:
     {
         return fmpz_poly_get_str(poly);
     }
-    fmpz_wrapper coeff(unsigned int n) const
+    fmpz_wrapper get_coeff(unsigned int n) const
     {
         fmpz_wrapper z;
         fmpz_poly_get_coeff_fmpz(z.get_fmpz_t(), poly, n);
@@ -618,11 +621,11 @@ public:
         fmpz_poly_pow(*r.get_fmpz_poly_t(), poly, n);
         return r;
     }
-    bool divides(const fmpz_poly_wrapper &other, fmpz_poly_wrapper &r) const
+    void divrem(fmpz_poly_wrapper &q, fmpz_poly_wrapper &r,
+                const fmpz_poly_wrapper &b) const
     {
-        return fmpz_poly_divides(*r.get_fmpz_poly_t(), *other.get_fmpz_poly_t(),
-                                 poly)
-               == 1;
+        return fmpz_poly_divrem(*q.get_fmpz_poly_t(), *r.get_fmpz_poly_t(),
+                                *get_fmpz_poly_t(), *b.get_fmpz_poly_t());
     }
     fmpz_poly_wrapper derivative() const
     {
@@ -638,6 +641,8 @@ private:
     fmpq_poly_t poly;
 
 public:
+    typedef fmpq_wrapper internal_coef_type;
+
     fmpq_poly_wrapper()
     {
         fmpq_poly_init(poly);
@@ -707,6 +712,20 @@ public:
     long degree() const
     {
         return fmpq_poly_degree(poly);
+    }
+    long length() const
+    {
+        return fmpq_poly_length(poly);
+    }
+    void set_coeff(unsigned int n, const fmpq_wrapper &z)
+    {
+        fmpq_poly_set_coeff_fmpq(poly, n, z.get_fmpq_t());
+    }
+    fmpq_wrapper eval(const fmpq_wrapper &z) const
+    {
+        fmpq_wrapper r;
+        fmpq_poly_evaluate_fmpq(r.get_fmpq_t(), poly, z.get_fmpq_t());
+        return r;
     }
     fmpq_wrapper get_coeff(unsigned int deg) const
     {
@@ -867,6 +886,12 @@ public:
                       *o.get_fmpq_poly_t());
         return r;
     }
+    fmpq_poly_wrapper operator-() const
+    {
+        fmpq_poly_wrapper r;
+        fmpq_poly_neg(*r.get_fmpq_poly_t(), *get_fmpq_poly_t());
+        return r;
+    }
     friend fmpq_poly_wrapper operator*(const fmpq_poly_wrapper &a,
                                        const fmpq_wrapper &q)
     {
@@ -891,7 +916,25 @@ public:
                                   q.get_fmpq_t());
         return r;
     }
+    void divrem(fmpq_poly_wrapper &q, fmpq_poly_wrapper &r,
+                const fmpq_poly_wrapper &b) const
+    {
+        return fmpq_poly_divrem(*q.get_fmpq_poly_t(), *r.get_fmpq_poly_t(),
+                                *get_fmpq_poly_t(), *b.get_fmpq_poly_t());
+    }
 
+    fmpq_poly_wrapper gcd(const fmpq_poly_wrapper &other) const
+    {
+        fmpq_poly_wrapper r;
+        fmpq_poly_gcd(*r.get_fmpq_poly_t(), poly, *other.get_fmpq_poly_t());
+        return r;
+    }
+    fmpq_poly_wrapper lcm(const fmpq_poly_wrapper &other) const
+    {
+        fmpq_poly_wrapper r;
+        fmpq_poly_lcm(*r.get_fmpq_poly_t(), poly, *other.get_fmpq_poly_t());
+        return r;
+    }
     void operator+=(const fmpq_poly_wrapper &o)
     {
         fmpq_poly_add(poly, poly, *o.get_fmpq_poly_t());
