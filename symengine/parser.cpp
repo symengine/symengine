@@ -261,7 +261,7 @@ class ExpressionParser
             std::strtol(expr.c_str(), &endptr, 0);
             if (*endptr == '\0' and endptr != expr) {
                 // TODO: use output of strtol if no overflow by checking errno
-                return integer(std::atoi(expr.c_str()));
+                return integer(integer_class(expr.c_str()));
             } else {
                 // TODO: Use real_mpfr if precision is lost when using
                 // real_double

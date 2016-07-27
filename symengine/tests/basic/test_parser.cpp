@@ -94,6 +94,10 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "2 + -3";
     res = parse(s);
     REQUIRE(eq(*res, *integer(-1)));
+
+    s = "10000000000000000000000000";
+    res = parse(s);
+    REQUIRE(eq(*res, *pow(integer(10), integer(25))));
 }
 
 TEST_CASE("Parsing: symbols", "[parser]")
