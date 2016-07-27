@@ -643,6 +643,13 @@ public:
     {
         return poly_.degree();
     }
+
+    inline unsigned int size() const
+    {
+        if (get_degree() == 0 and poly_.dict_[0] == 0)
+            return 0;
+        return get_degree() + 1;
+    }
 };
 
 inline RCP<const GaloisField> gf_poly(RCP<const Basic> i,

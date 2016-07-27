@@ -8,11 +8,14 @@
 #include <symengine/basic.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
+#include <symengine/rational.h>
+#include <symengine/expression.h>
 #include <memory>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
 using fz_t = SymEngine::fmpz_wrapper;
+using fq_t = SymEngine::fmpq_wrapper;
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
@@ -23,50 +26,78 @@ namespace SymEngine
 {
 // misc methods
 
-inline integer_class to_integer_class(const integer_class &i)
-{
-    return i;
-}
-
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t &i)
+inline integer_class to_mp_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(x.get_mpz_t(), i.get_fmpz_t());
     return x;
 }
+inline rational_class to_mp_class(const fq_t &i)
+{
+    rational_class x;
+    fmpq_get_mpq(x.get_mpq_t(), i.get_fmpq_t());
+    return x;
+}
 #endif
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &i)
+inline integer_class to_mp_class(const piranha::integer &i)
 {
     integer_class x;
     mpz_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+inline rational_class to_mp_class(const piranha::rational &i)
+{
+    rational_class x;
+    mpq_set(x.get_mpq_t(), i.get_mpq_view());
     return x;
 }
 #endif
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #ifdef HAVE_SYMENGINE_FLINT
-inline integer_class to_integer_class(const fz_t &i)
+inline integer_class to_mp_class(const fz_t &i)
 {
     integer_class x;
     fmpz_get_mpz(get_mpz_t(x), i.get_fmpz_t());
     return x;
 }
+inline rational_class to_mp_class(const fq_t &i)
+{
+    rational_class s;
+    fmpz_get_mpz(get_mpz_t(s._num()), i.get_num().get_fmpz_t());
+    fmpz_get_mpz(get_mpz_t(s._den()), i.get_den().get_fmpz_t());
+    return s;
+}
 #endif
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 #ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(const piranha::integer &x)
+inline integer_class to_mp_class(const piranha::integer &x)
 {
     return integer_class(x.get_mpz_view());
+}
+inline rational_class to_mp_class(const piranha::rational &x)
+{
+    return rational_class(x.get_mpq_view());
 }
 #endif
 
 #endif
+
+inline integer_class to_mp_class(const integer_class &i)
+{
+    return i;
+}
+
+inline rational_class to_mp_class(const rational_class &i)
+{
+    return i;
+}
 
 // dict wrapper
 template <typename Key, typename Value, typename Wrapper>
@@ -74,6 +105,7 @@ class ODictWrapper
 {
 public:
     std::map<Key, Value> dict_;
+    typedef Key key_type;
 
 public:
     ODictWrapper() SYMENGINE_NOEXCEPT
@@ -288,6 +320,13 @@ public:
             return ite->second;
         return Value(0);
     }
+
+    Value get_lc() const
+    {
+        if (dict_.empty())
+            return Value(0);
+        return dict_.rbegin()->second;
+    }
 };
 
 umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
@@ -310,6 +349,9 @@ public:
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
     virtual std::size_t __hash__() const = 0;
+
+    // return `degree` + 1. `0` returned for zero poly.
+    virtual unsigned int size() const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
@@ -342,37 +384,24 @@ public:
     }
 };
 
-template <typename Container, typename Poly>
-class UIntPolyBase : public UPolyBase<Container, Poly>
+template <typename Cont, typename Poly>
+class UExprPolyBase : public UPolyBase<Cont, Poly>
 {
 public:
-    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
-        : UPolyBase<Container, Poly>(var, std::move(container))
+    typedef Expression coef_type;
+
+    UExprPolyBase(const RCP<const Basic> &var, Cont &&container)
+        : UPolyBase<Cont, Poly>(var, std::move(container))
     {
     }
 
-    typedef integer_class coef_type;
-
-    // returns degree of the poly
-    inline unsigned int get_degree() const
+    inline int get_degree() const
     {
         return this->poly_.degree();
     }
-    // return coefficient of degree 'i'
-    virtual integer_class get_coeff(unsigned int i) const = 0;
-    // return value of poly when ealudated at `x`
-    virtual integer_class eval(const integer_class &x) const = 0;
-    virtual vec_integer_class multieval(const vec_integer_class &x) const = 0;
-    // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
-
-    integer_class get_lc() const
-    {
-        return get_coeff(get_degree());
-    }
 
     static RCP<const Poly> from_dict(const RCP<const Basic> &var,
-                                     map_uint_mpz &&d)
+                                     std::map<int, Expression> &&d)
     {
         return Poly::from_container(
             var, Poly::container_from_dict(var, std::move(d)));
@@ -385,7 +414,87 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            integer_class m = to_integer_class(it->second);
+            if (it->first == 0)
+                args.push_back(it->second.get_basic());
+            else if (it->first == 1) {
+                if (it->second == Expression(1))
+                    args.push_back(this->var_);
+                else
+                    args.push_back(mul(it->second.get_basic(), this->var_));
+            } else if (it->second == 1)
+                args.push_back(pow(this->var_, integer(it->first)));
+            else
+                args.push_back(mul(it->second.get_basic(),
+                                   pow(this->var_, integer(it->first))));
+        }
+        if (this->poly_.empty())
+            args.push_back(zero);
+        return SymEngine::add(args);
+    }
+};
+// super class for all non-expr polys, all methods which are
+// common for all non-expr polys go here eg. degree, eval etc.
+template <typename Container, typename Poly, typename Cf>
+class UNonExprPoly : public UPolyBase<Container, Poly>
+{
+public:
+    typedef Cf coef_type;
+
+    UNonExprPoly(const RCP<const Basic> &var, Container &&container)
+        : UPolyBase<Container, Poly>(var, std::move(container))
+    {
+    }
+
+    // return coefficient of degree 'i'
+    virtual Cf get_coeff(unsigned int i) const = 0;
+    // return value of poly when ealudated at `x`
+    virtual Cf eval(const Cf &x) const = 0;
+
+    std::vector<Cf> multieval(const std::vector<Cf> &v) const
+    {
+        // this is not the optimal algorithm
+        std::vector<Cf> res(v.size());
+        for (unsigned int i = 0; i < v.size(); ++i)
+            res[i] = eval(v[i]);
+        return res;
+    }
+
+    inline unsigned int get_degree() const
+    {
+        return this->poly_.degree();
+    }
+
+    Cf get_lc() const
+    {
+        return get_coeff(get_degree());
+    }
+
+    static RCP<const Poly> from_dict(const RCP<const Basic> &var,
+                                     std::map<unsigned, Cf> &&d)
+    {
+        return Poly::from_container(
+            var, Poly::container_from_dict(var, std::move(d)));
+    }
+};
+
+template <typename Container, typename Poly>
+class UIntPolyBase : public UNonExprPoly<Container, Poly, integer_class>
+{
+public:
+    UIntPolyBase(const RCP<const Basic> &var, Container &&container)
+        : UNonExprPoly<Container, Poly, integer_class>(var,
+                                                       std::move(container))
+    {
+    }
+
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            integer_class m = it->second;
 
             if (it->first == 0) {
                 args.push_back(integer(m));
@@ -402,6 +511,48 @@ public:
                 } else {
                     args.push_back(Mul::from_dict(
                         integer(m), {{this->var_, integer(it->first)}}));
+                }
+            }
+        }
+        return SymEngine::add(args);
+    }
+};
+
+template <typename Container, typename Poly>
+class URatPolyBase : public UNonExprPoly<Container, Poly, rational_class>
+{
+public:
+    URatPolyBase(const RCP<const Basic> &var, Container &&container)
+        : UNonExprPoly<Container, Poly, rational_class>(var,
+                                                        std::move(container))
+    {
+    }
+
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            rational_class m = it->second;
+
+            if (it->first == 0) {
+                args.push_back(Rational::from_mpq(m));
+            } else if (it->first == 1) {
+                if (m == 1) {
+                    args.push_back(this->var_);
+                } else {
+                    args.push_back(Mul::from_dict(Rational::from_mpq(m),
+                                                  {{this->var_, one}}));
+                }
+            } else {
+                if (m == 1) {
+                    args.push_back(pow(this->var_, integer(it->first)));
+                } else {
+                    args.push_back(
+                        Mul::from_dict(Rational::from_mpq(m),
+                                       {{this->var_, integer(it->first)}}));
                 }
             }
         }

@@ -297,7 +297,8 @@ void StrPrinter::bvisit(const Pow &x)
     str_ = o.str();
 }
 
-char _print_sign(const integer_class &i)
+template <typename T>
+char _print_sign(const T &i)
 {
     if (i < 0) {
         return '-';
@@ -367,17 +368,18 @@ void StrPrinter::bvisit(const GaloisField &x)
     str_ = s.str();
 }
 
-// UIntPoly printing, tests taken from SymPy and printing ensures
-// that there is compatibility
-template <typename T>
-void uintpoly_print(const T &x, std::ostringstream &s)
+// Printing of Integer and Rational Polynomials, tests taken
+// from SymPy and printing ensures that there is compatibility
+template <typename P>
+std::string upoly_print(const P &x)
 {
+    std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
-        integer_class m = to_integer_class(it->second);
+        auto m = it->second;
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
@@ -421,30 +423,38 @@ void uintpoly_print(const T &x, std::ostringstream &s)
     }
     if (x.size() == 0)
         s << "0";
+    return s.str();
 }
 
 void StrPrinter::bvisit(const UIntPoly &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPoly>(x);
+}
+
+void StrPrinter::bvisit(const URatPoly &x)
+{
+    str_ = upoly_print<URatPoly>(x);
 }
 
 #ifdef HAVE_SYMENGINE_FLINT
 void StrPrinter::bvisit(const UIntPolyFlint &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyFlint>(x);
+}
+void StrPrinter::bvisit(const URatPolyFlint &x)
+{
+    str_ = upoly_print<URatPolyFlint>(x);
 }
 #endif
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const UIntPolyPiranha &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyPiranha>(x);
+}
+void StrPrinter::bvisit(const URatPolyPiranha &x)
+{
+    str_ = upoly_print<URatPolyPiranha>(x);
 }
 #endif
 
