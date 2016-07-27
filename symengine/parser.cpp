@@ -256,10 +256,10 @@ class ExpressionParser
         char *endptr = 0;
         double d = std::strtod(expr.c_str(), &endptr);
 
-        if (*endptr == '\0' and endptr != expr) {
+        if (*endptr == '\0') {
             // if the expr is numeric, it's either a float or an integer
             std::strtol(expr.c_str(), &endptr, 0);
-            if (*endptr == '\0' and endptr != expr) {
+            if (*endptr == '\0') {
                 // TODO: use output of strtol if no overflow by checking errno
                 return integer(integer_class(expr.c_str()));
             } else {
@@ -273,9 +273,9 @@ class ExpressionParser
             if (constants.find(expr) != constants.end())
                 return constants[expr];
 
-            if (isalpha(expr[0]) or expr[0] == '_') {
+            if (std::isalpha(expr[0]) or expr[0] == '_') {
                 for (unsigned i = 1; i < expr.length(); ++i) {
-                    if (not isalnum(expr[i]) and expr[i] != '_') {
+                    if (not std::isalnum(expr[i]) and expr[i] != '_') {
                         throw std::runtime_error(
                             expr + " is not a symbol or numeric");
                     }
