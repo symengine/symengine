@@ -98,6 +98,21 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "10000000000000000000000000";
     res = parse(s);
     REQUIRE(eq(*res, *pow(integer(10), integer(25))));
+
+    // Make sure that parsing and printing works correctly
+    s = "1.23123123e-10";
+    res = parse(s);
+    REQUIRE(s == res->__str__());
+
+    s = "123123123123123.";
+    res = parse(s);
+    REQUIRE(s == res->__str__());
+
+#ifdef HAVE_SYMENGINE_MPFR
+    s = "1.231231232123123123123123123123e8";
+    res = parse(s);
+    REQUIRE(s == res->__str__());
+#endif
 }
 
 TEST_CASE("Parsing: symbols", "[parser]")

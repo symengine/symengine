@@ -2,6 +2,7 @@
 #include <symengine/parser.h>
 #include <stack>
 #include <cctype>
+#include <cerrno>
 
 namespace SymEngine
 {
@@ -258,14 +259,39 @@ class ExpressionParser
 
         if (*endptr == '\0') {
             // if the expr is numeric, it's either a float or an integer
-            std::strtol(expr.c_str(), &endptr, 0);
+            errno = 0;
+            long l = std::strtol(expr.c_str(), &endptr, 0);
             if (*endptr == '\0') {
-                // TODO: use output of strtol if no overflow by checking errno
-                return integer(integer_class(expr.c_str()));
+                if (errno != ERANGE) {
+                    // No overflow in l
+                    return integer(l);
+                } else {
+                    return integer(integer_class(expr.c_str()));
+                }
             } else {
-                // TODO: Use real_mpfr if precision is lost when using
-                // real_double
+#ifdef HAVE_SYMENGINE_MPFR
+                unsigned digits = 0;
+                for (unsigned i = 0; i < expr.length(); ++i) {
+                    if (expr[i] == '.' or expr[i] == '-')
+                        continue;
+                    if (expr[i] == 'E' or expr[i] == 'e')
+                        break;
+                    if (digits != 0 or expr[i] != '0') {
+                        ++digits;
+                    }
+                }
+                if (digits <= 15) {
+                    return real_double(d);
+                } else {
+                    // mpmath.libmp.libmpf.dps_to_prec
+                    long prec
+                        = std::max(long(1), std::lround((digits + 1)
+                                                        * 3.3219280948873626));
+                    return real_mpfr(mpfr_class(expr, prec));
+                }
+#else
                 return real_double(d);
+#endif
             }
         } else {
             // if the expr is not numeric, it's either a constant, or a user
@@ -313,22 +339,18 @@ public:
 
         bool last_char_was_op = false;
         char last_char = 'x';
-        s = "";
-
-        std::ostringstream o;
+        s.clear();
+        s.reserve(in.length());
 
         // Replacing ** with ^
-        // TODO: Fix this code so that it is readable.
         for (unsigned int i = 0; i < in.length(); ++i) {
             if (in[i] == '*' and i + 1 < in.length() and in[i + 1] == '*') {
-                o << '^';
+                s += '^';
                 i++;
             } else {
-                o << in[i];
+                s += in[i];
             }
         }
-        s = o.str();
-        o.clear();
         s_len = s.length();
         operator_end.clear();
         operator_end.resize(s_len, -1);
