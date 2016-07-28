@@ -60,21 +60,18 @@ inline bool is_aligned(T *p, size_t n = alignof(T))
 
 extern "C" {
 
+#define CWRAPPER_BEGIN try {
 
-#define CWRAPPER_BEGIN                                                       \
-    try                                                                      \
-    {
-
-#define CWRAPPER_END                                                         \
-        return 0;                                                            \
-    }                                                                        \
-    catch ( DivisionByZero )                                                 \
-    {                                                                        \
-        return 1;                                                            \
-    }                                                                        \
-    catch ( ... )                                                            \
-    {                                                                        \
-        return -1;                                                           \
+#define CWRAPPER_END                                                           \
+    return 0;                                                                  \
+    }                                                                          \
+    catch (DivisionByZero)                                                     \
+    {                                                                          \
+        return 1;                                                              \
+    }                                                                          \
+    catch (...)                                                                \
+    {                                                                          \
+        return -1;                                                             \
     }
 
 struct CRCPBasic {
@@ -508,11 +505,11 @@ int basic_number_sign(const basic s)
 }
 
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
-    CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a)                                  \
+    CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a)                  \
     {                                                                          \
-        CWRAPPER_BEGIN                                                      \
+        CWRAPPER_BEGIN                                                         \
         s->m = SymEngine::func(a->m);                                          \
-        CWRAPPER_END                                                  \
+        CWRAPPER_END                                                           \
     }
 
 IMPLEMENT_ONE_ARG_FUNC(expand);
@@ -762,7 +759,8 @@ char *sparse_matrix_str(const CSparseMatrix *s)
     return cc;
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c)
+CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r,
+                                            unsigned c)
 {
     CWRAPPER_BEGIN
     mat->m.resize(r, c);
@@ -770,15 +768,17 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsig
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
-                            unsigned long int r, unsigned long int c)
+                                            unsigned long int r,
+                                            unsigned long int c)
 {
     CWRAPPER_BEGIN
     s->m = mat->m.get(r, c);
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
-                            unsigned long int c, basic s)
+CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat,
+                                            unsigned long int r,
+                                            unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
     mat->m.set(r, c, s->m);
@@ -786,15 +786,17 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int
 }
 
 CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
-                             unsigned long int r, unsigned long int c)
+                                             unsigned long int r,
+                                             unsigned long int c)
 {
     CWRAPPER_BEGIN
     s->m = mat->m.get(r, c);
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
-                             unsigned long int c, basic s)
+CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat,
+                                             unsigned long int r,
+                                             unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
     mat->m.set(r, c, s->m);
@@ -814,17 +816,19 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
     mat->m.inv(s->m);
     CWRAPPER_END
 }
-CWRAPPER_OUTPUT_TYPE dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_transpose(CDenseMatrix *s,
+                                            const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, mat->m.ncols(), mat->m.nrows());
     mat->m.transpose(s->m);
     CWRAPPER_END
 }
-CWRAPPER_OUTPUT_TYPE dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
-                            unsigned long int r1, unsigned long int c1,
-                            unsigned long int r2, unsigned long int c2,
-                            unsigned long int r, unsigned long int c)
+CWRAPPER_OUTPUT_TYPE
+dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
+                       unsigned long int r1, unsigned long int c1,
+                       unsigned long int r2, unsigned long int c2,
+                       unsigned long int r, unsigned long int c)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, r2 - r1 + 1, c2 - c1 + 1);
@@ -842,8 +846,9 @@ unsigned long int dense_matrix_cols(const CDenseMatrix *s)
     return s->m.ncols();
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const CDenseMatrix *matB)
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const CDenseMatrix *matB)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
@@ -851,8 +856,9 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const CDenseMatrix *matB)
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const CDenseMatrix *matB)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matB->m.ncols());
@@ -860,8 +866,9 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const basic b)
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const basic b)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
@@ -869,8 +876,9 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const basic b)
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const basic b)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
@@ -878,7 +886,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u,
+                                     const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
@@ -887,7 +896,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDe
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d,
+                                      const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
@@ -896,7 +906,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d, const CD
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu,
+                                       const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(lu, mat->m.nrows(), mat->m.ncols());
@@ -904,8 +915,9 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
-                        const CDenseMatrix *mat)
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d,
+                                        CDenseMatrix *u,
+                                        const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(l, mat->m.nrows(), mat->m.ncols());
@@ -915,8 +927,9 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDense
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
-                           const CDenseMatrix *b)
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *b)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(x, A->m.ncols(), 1);
@@ -925,7 +938,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
-                       unsigned long int c)
+                                       unsigned long int c)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, r, c);
@@ -934,14 +947,15 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
-                        unsigned long int c)
+                                        unsigned long int c)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, r, c);
     zeros(s->m);
     CWRAPPER_END
 }
-CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k)
+CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
+                                       long int k)
 {
     CWRAPPER_BEGIN
     int vec_size = vecbasic_size(d);
@@ -951,8 +965,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
-                      int k)
+CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
+                                      unsigned long int M, int k)
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, N, M);
@@ -1074,21 +1088,24 @@ size_t basic_hash(const basic self)
     return self->m->hash();
 }
 
-CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
+CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e,
+                                const CMapBasicBasic *mapbb)
 {
     CWRAPPER_BEGIN
     s->m = e->m->subs(mapbb->m);
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
+                                 const basic b)
 {
     CWRAPPER_BEGIN
     s->m = e->m->subs({{a->m, b->m}});
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c, const CVecBasic *arg)
+CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
+                                         const CVecBasic *arg)
 {
     CWRAPPER_BEGIN
     s->m = function_symbol(c, arg->m);
@@ -1178,7 +1195,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b)
 }
 
 //! Wrapper for evalf
-CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits, int real)
+CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
+                                 int real)
 {
 
     CWRAPPER_BEGIN
@@ -1191,6 +1209,4 @@ void symengine_print_stack_on_segfault()
 {
     SymEngine::print_stack_on_segfault();
 }
-
-
 }

@@ -4,13 +4,12 @@
 namespace SymEngine
 {
 
-class DivisionByZero: public std::exception
+class DivisionByZero : public std::exception
 {
-    virtual const char* what() const throw()
+    virtual const char *what() const throw()
     {
-    return "Division By Zero";
+        return "Division By Zero";
     }
 };
-
 }
-#endif //SYMENGINE_EXCEPTION_H
+#endif // SYMENGINE_EXCEPTION_H

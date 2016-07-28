@@ -25,7 +25,7 @@ extern "C" {
             abort();                                                           \
         }                                                                      \
     }
-    
+
 typedef int CWRAPPER_OUTPUT_TYPE;
 
 typedef enum {
@@ -172,7 +172,7 @@ signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
 unsigned long integer_get_ui(const basic s);
 //! Returns s as a mpz_t.
-int integer_get_mpz(mpz_t a, const basic s);
+CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s);
 
 //! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
 CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
@@ -368,72 +368,88 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 //! Return a string representation of s
 char *dense_matrix_str(const CDenseMatrix *s);
 //! Resize mat to rxc
-CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r, unsigned c);
+CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r,
+                                            unsigned c);
 //! Assign to s, mat[r][c]
 CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
-                            unsigned long int r, unsigned long int c);
+                                            unsigned long int r,
+                                            unsigned long int c);
 //! Assign s to mat[r][c]
-CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat, unsigned long int r,
-                            unsigned long int c, basic s);
+CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat,
+                                            unsigned long int r,
+                                            unsigned long int c, basic s);
 //! Assign to s, mat[r][c]
 CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
-                             unsigned long int r, unsigned long int c);
+                                             unsigned long int r,
+                                             unsigned long int c);
 //! Assign s to mat[r][c]
-CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat, unsigned long int r,
-                             unsigned long int c, basic s);
+CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat,
+                                             unsigned long int r,
+                                             unsigned long int c, basic s);
 //! Assign to s, determinent of mat
 CWRAPPER_OUTPUT_TYPE dense_matrix_det(basic s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the inverse of mat
 CWRAPPER_OUTPUT_TYPE dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat);
 //! Assign to s, a DenseMatrix which is the transpose of mat
-CWRAPPER_OUTPUT_TYPE dense_matrix_transpose(CDenseMatrix *s, const CDenseMatrix *mat);
+CWRAPPER_OUTPUT_TYPE dense_matrix_transpose(CDenseMatrix *s,
+                                            const CDenseMatrix *mat);
 //! Assign to s, a SubMatrix of mat, starting with [r1, r2] until [r2, c2], with
 //! step sizes [r, c]
-CWRAPPER_OUTPUT_TYPE dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
-                            unsigned long int r1, unsigned long int c1,
-                            unsigned long int r2, unsigned long int c2,
-                            unsigned long int r, unsigned long int c);
+CWRAPPER_OUTPUT_TYPE
+dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
+                       unsigned long int r1, unsigned long int c1,
+                       unsigned long int r2, unsigned long int c2,
+                       unsigned long int r, unsigned long int c);
 //! Return the number of columns of s
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
 unsigned long int dense_matrix_rows(const CDenseMatrix *s);
 //! Assign to s, the addition of matA and matB
-CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const CDenseMatrix *matB);
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_matrix(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const CDenseMatrix *matB);
 //! Assign to s, the matrix multiplication of matA and matB
-CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const CDenseMatrix *matB);
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_matrix(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const CDenseMatrix *matB);
 //! Assign to s, the addition of scalar b to matrix matA
-CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const basic b);
+CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const basic b);
 //! Assign to s, the multiplication of scalar b to matrix matA
-CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s, const CDenseMatrix *matA,
-                             const basic b);
+CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s,
+                                             const CDenseMatrix *matA,
+                                             const basic b);
 //! Assign to l and u, LU factorization of mat
-CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u, const CDenseMatrix *mat);
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU(CDenseMatrix *l, CDenseMatrix *u,
+                                     const CDenseMatrix *mat);
 //! Assign to l and d, LDL factorization of mat
 CWRAPPER_OUTPUT_TYPE dense_matrix_LDL(CDenseMatrix *l, CDenseMatrix *d,
-                      const CDenseMatrix *mat);
+                                      const CDenseMatrix *mat);
 //! Assign to lu, fraction free LU factorization of mat
-CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu, const CDenseMatrix *mat);
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLU(CDenseMatrix *lu,
+                                       const CDenseMatrix *mat);
 //! Assign to l, d and u, FFLDU factorization of mat
-CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d, CDenseMatrix *u,
-                        const CDenseMatrix *mat);
+CWRAPPER_OUTPUT_TYPE dense_matrix_FFLDU(CDenseMatrix *l, CDenseMatrix *d,
+                                        CDenseMatrix *u,
+                                        const CDenseMatrix *mat);
 //! Assign to x, solution to A x = b
-CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x, const CDenseMatrix *A,
-                           const CDenseMatrix *b);
+CWRAPPER_OUTPUT_TYPE dense_matrix_LU_solve(CDenseMatrix *x,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *b);
 //! Assign to s, a matrix of ones of size rxc
 CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
-                       unsigned long int c);
+                                       unsigned long int c);
 //! Assign to s, a matrix of zeros of size rxc
 CWRAPPER_OUTPUT_TYPE dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
-                        unsigned long int c);
+                                        unsigned long int c);
 //! Assign to s, a diagonal matrix with a diagonal at offset k, with elements in
 //! d
-CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d, long int k);
+CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
+                                       long int k);
 //! Assign to s, a matrix of size NxM, with diagonal of 1s at offset k
-CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N, unsigned long int M,
-                      int k);
+CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
+                                      unsigned long int M, int k);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);
@@ -489,14 +505,17 @@ CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols);
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
 //! in the given basic `e` and returns it through basic 's'
-CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb);
+CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e,
+                                const CMapBasicBasic *mapbb);
 //! substitutes a basic 'a' with another basic 'b',
 //! in the given basic 'e' and returns it through basic 's'
-CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a, const basic b);
+CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
+                                 const basic b);
 
 //! Assigns to s a FunctionSymbol with name described by c, with dependent
 //! symbols arg
-CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c, const CVecBasic *arg);
+CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
+                                         const CVecBasic *arg);
 
 //! Wrapper for ascii_art()
 
@@ -522,7 +541,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_lucas(basic s, unsigned long a);
 //! Binomial Coefficient
 CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b);
 //! Evaluate b and assign the value to s
-CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits, int real);
+CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
+                                 int real);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();

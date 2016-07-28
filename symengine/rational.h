@@ -7,6 +7,7 @@
 #define SYMENGINE_RATIONAL_H
 
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -140,7 +141,7 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZero();
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -151,7 +152,7 @@ public:
     inline RCP<const Number> divrat(const Integer &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZero();
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -159,7 +160,7 @@ public:
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZero();
         } else {
             return from_mpq(other.i / this->i);
         }

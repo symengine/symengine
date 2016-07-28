@@ -9,6 +9,7 @@
 #include <list>
 
 #include <symengine/integer.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -187,7 +188,7 @@ public:
                                      unsigned int prec)
     {
         if (s == 0)
-            throw std::runtime_error("Series::series_invert: division by zero");
+            throw DivisionByZero();
         if (s == 1)
             return Poly(1);
         const short ldeg = Series::ldegree(s);

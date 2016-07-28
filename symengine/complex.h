@@ -7,6 +7,7 @@
 #define SYMENGINE_COMPLEX_H
 
 #include <symengine/rational.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -203,7 +204,7 @@ public:
     inline RCP<const Number> divcomp(const Rational &other) const
     {
         if (other.is_zero()) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZero();
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -214,7 +215,7 @@ public:
     inline RCP<const Number> divcomp(const Integer &other) const
     {
         if (other.is_zero()) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZero();
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -227,7 +228,7 @@ public:
         rational_class conjugate
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
         if (get_num(conjugate) == 0) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZero();
         } else {
             return from_mpq((this->real_ * other.i) / conjugate,
                             (this->imaginary_ * (-other.i)) / conjugate);

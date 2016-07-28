@@ -5,6 +5,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -93,6 +94,7 @@ using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::get_mpz_t;
+using SymEngine::DivisionByZero;
 
 using namespace SymEngine::literals;
 
@@ -448,7 +450,7 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
+    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), DivisionByZero);
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -548,7 +550,7 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
+    CHECK_THROWS_AS(cot(mul(integer(7), pi)), DivisionByZero);
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -648,8 +650,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
-    CHECK_THROWS_AS(csc(integer(0)), std::runtime_error);
+    CHECK_THROWS_AS(csc(mul(integer(7), pi)), DivisionByZero);
+    CHECK_THROWS_AS(csc(integer(0)), DivisionByZero);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -753,7 +755,7 @@ TEST_CASE("Sec: functions", "[functions]")
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);
+    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), DivisionByZero);
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")

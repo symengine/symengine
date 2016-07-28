@@ -1,5 +1,6 @@
 #include <symengine/rational.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -37,7 +38,7 @@ RCP<const Number> Rational::from_mpq(rational_class i)
 RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
     if (d.i == 0)
-        throw std::runtime_error("Rational: Division by zero.");
+        throw DivisionByZero();
     rational_class q(n.i, d.i);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
@@ -50,7 +51,7 @@ RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 RCP<const Number> Rational::from_two_ints(long n, long d)
 {
     if (d == 0)
-        throw std::runtime_error("Rational: Division by zero.");
+        throw DivisionByZero();
     rational_class q(n, d);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
