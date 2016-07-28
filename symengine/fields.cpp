@@ -461,4 +461,112 @@ GaloisFieldDict::gf_ddf_zassenhaus() const
     }
     return factors;
 }
+
+GaloisFieldDict
+GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f,
+                                const integer_class &n,
+                                const std::vector<GaloisFieldDict> &b) const
+{
+    GaloisFieldDict f_in(f);
+    f_in %= *this;
+    GaloisFieldDict h, r;
+    h = r = f_in;
+    for (unsigned i = 1; i < n; ++i) {
+        h = h.gf_frobenius_map(*this, b);
+        r *= h;
+        r %= *this;
+    }
+    auto res = gf_pow_mod(r, (modulo_ - 1_z) / 2_z);
+    return res;
+}
+
+GaloisFieldDict GaloisFieldDict::gf_random(const unsigned long &n_val,
+                                           gmp_randstate_t &state) const
+{
+    std::vector<integer_class> v(n_val + 1);
+    for (int i = 0; i < n_val; ++i) {
+        integer_class temp;
+        mp_urandomm(temp, state, modulo_);
+        v[i] = temp;
+    }
+    v[n_val] = 1_z;
+    return GaloisFieldDict::from_vec(v, modulo_);
+}
+
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_edf_zassenhaus(const integer_class &n) const
+{
+    std::set<GaloisFieldDict, DictLess> factors;
+    factors.insert(*this);
+    unsigned n_val = mp_get_si(n);
+    if (this->degree() <= n_val)
+        return factors;
+
+    unsigned N = this->degree() / n_val;
+
+    std::vector<GaloisFieldDict> b;
+    if (modulo_ != 2_z)
+        b = this->gf_frobenius_monomial_base();
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, std::rand());
+    while (factors.size() < N) {
+        auto r = gf_random(2 * n_val - 1, state);
+        GaloisFieldDict g;
+        if (modulo_ == 2_z) {
+            GaloisFieldDict h = r;
+            unsigned ub = 1 << (n_val * N - 1);
+            for (unsigned i = 0; i < ub; ++i) {
+                r = gf_pow_mod(r, 2_z);
+                h += r;
+            }
+            g = this->gf_gcd(h);
+        } else {
+            GaloisFieldDict h = _gf_pow_pnm1d2(r, n, b);
+            h -= 1_z;
+            g = this->gf_gcd(h);
+        }
+
+        if (!g.is_one() and g != (*this)) {
+            factors = g.gf_edf_zassenhaus(n);
+            auto to_add = ((*this) / g).gf_edf_zassenhaus(n);
+            if (not to_add.empty())
+                factors.insert(to_add.begin(), to_add.end());
+        }
+    }
+    gmp_randclear(state);
+    return factors;
+}
+
+std::set<GaloisFieldDict, GaloisFieldDict::DictLess>
+GaloisFieldDict::gf_zassenhaus() const
+{
+    std::set<GaloisFieldDict, DictLess> factors;
+    auto temp1 = gf_ddf_zassenhaus();
+    for (auto &f : temp1) {
+        auto temp2 = f.first.gf_edf_zassenhaus(f.second);
+        factors.insert(temp2.begin(), temp2.end());
+    }
+    return factors;
+}
+
+std::pair<integer_class, std::set<std::pair<GaloisFieldDict, integer_class>,
+                                  GaloisFieldDict::DictLess>>
+GaloisFieldDict::gf_factor() const
+{
+    integer_class lc;
+    std::set<std::pair<GaloisFieldDict, integer_class>, DictLess> factors;
+    GaloisFieldDict monic;
+    gf_monic(lc, outArg(monic));
+    if (monic.degree() < 1)
+        return std::make_pair(lc, factors);
+    std::vector<std::pair<GaloisFieldDict, integer_class>> sqf_list
+        = monic.gf_sqf_list();
+    for (auto a : sqf_list) {
+        auto temp = (a.first).gf_zassenhaus();
+        for (auto f : temp)
+            factors.insert({f, a.second});
+    }
+    return std::make_pair(lc, factors);
+}
 }
