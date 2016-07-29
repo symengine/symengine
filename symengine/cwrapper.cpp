@@ -46,7 +46,7 @@ using SymEngine::diag;
 using SymEngine::ones;
 using SymEngine::zeros;
 using SymEngine::parse;
-using SymEngine::DivisionByZero;
+using SymEngine::SymEngineException;
 
 namespace SymEngine
 {
@@ -65,9 +65,9 @@ extern "C" {
 #define CWRAPPER_END                                                           \
     return 0;                                                                  \
     }                                                                          \
-    catch (DivisionByZero)                                                     \
+    catch (SymEngineException & e)                                             \
     {                                                                          \
-        return 1;                                                              \
+        return e.error_code();                                                 \
     }                                                                          \
     catch (...)                                                                \
     {                                                                          \

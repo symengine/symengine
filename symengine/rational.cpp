@@ -38,7 +38,7 @@ RCP<const Number> Rational::from_mpq(rational_class i)
 RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
     if (d.i == 0)
-        throw DivisionByZero();
+        throw SymEngineException("Division By Zero", DIV_BY_ZERO);
     rational_class q(n.i, d.i);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
@@ -51,7 +51,7 @@ RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 RCP<const Number> Rational::from_two_ints(long n, long d)
 {
     if (d == 0)
-        throw DivisionByZero();
+        throw SymEngineException("Division By Zero", DIV_BY_ZERO);
     rational_class q(n, d);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be

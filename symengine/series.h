@@ -188,7 +188,8 @@ public:
                                      unsigned int prec)
     {
         if (s == 0)
-            throw DivisionByZero();
+            throw SymEngineException("Series::series_invert: Division By Zero",
+                                     DIV_BY_ZERO);
         if (s == 1)
             return Poly(1);
         const short ldeg = Series::ldegree(s);

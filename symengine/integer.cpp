@@ -45,7 +45,7 @@ signed long int Integer::as_int() const
 RCP<const Number> Integer::divint(const Integer &other) const
 {
     if (other.i == 0)
-        throw DivisionByZero();
+        throw SymEngineException("Division By Zero", DIV_BY_ZERO);
     rational_class q(this->i, other.i);
 
     // This is potentially slow, but has to be done, since q might not
@@ -59,7 +59,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 {
     if (is_a<Integer>(other)) {
         if (this->i == 0) {
-            throw DivisionByZero();
+            throw SymEngineException("Division By Zero", DIV_BY_ZERO);
         }
         rational_class q((static_cast<const Integer &>(other)).i, this->i);
 

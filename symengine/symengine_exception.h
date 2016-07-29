@@ -1,40 +1,34 @@
 #ifndef SYMENGINE_EXCEPTION_H
 #define SYMENGINE_EXCEPTION_H
 
+enum symengine_exceptions_t {
+    NO_EXCEPTION,
+    DIV_BY_ZERO,
+    NOT_IMPLEMENTED,
+    UNDEFINED
+};
+
 namespace SymEngine
 {
 
-class DivisionByZero : public std::exception
+class SymEngineException : public std::exception
 {
+    std::string m_msg;
+    symengine_exceptions_t ec;
+
+public:
+    SymEngineException(const std::string &msg, symengine_exceptions_t error)
+        : m_msg(msg), ec(error)
+    {
+    }
     virtual const char *what() const throw()
     {
-        return "Division By Zero";
+        return m_msg.c_str();
     }
-};
-
-class NotImplemented : public std::exception
-{
-    virtual const char *what() const throw()
+    symengine_exceptions_t error_code()
     {
-        return "Not Implemented";
+        return ec;
     }
 };
-
-class ResultIsComplex : public std::exception
-{
-    virtual const char *what() const throw()
-    {
-        return "Result is Complex. Recompile with MPC support";
-    }
-};
-
-class Undefined : public std::exception
-{
-    virtual const char *what() const throw()
-    {
-        return "Undefined";
-    }
-};
-
 }
 #endif // SYMENGINE_EXCEPTION_H

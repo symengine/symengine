@@ -423,7 +423,7 @@ RCP<const Basic> mul(const vec_basic &a)
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero())
-        throw DivisionByZero();
+        throw SymEngineException("Division By Zero", DIV_BY_ZERO);
     return mul(a, pow(b, minus_one));
 }
 
