@@ -38,24 +38,6 @@ std::size_t MultivariateIntPolynomial::__hash__() const
     return seed;
 }
 
-int MultivariateIntPolynomial::compare(const Basic &o) const
-{
-    // copied from UnivariateIntPolynomial::compare and then modified.
-    const MultivariateIntPolynomial &s
-        = static_cast<const MultivariateIntPolynomial &>(o);
-
-    if (vars_.size() != s.vars_.size())
-        return vars_.size() < s.vars_.size() ? -1 : 1;
-    if (dict_.size() != s.dict_.size())
-        return dict_.size() < s.dict_.size() ? -1 : 1;
-
-    int cmp = unified_compare(vars_, s.vars_);
-    if (cmp != 0)
-        return cmp;
-
-    return unified_compare(dict_, s.dict_);
-}
-
 integer_class MultivariateIntPolynomial::eval(
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
 {
@@ -166,24 +148,6 @@ std::size_t MultivariatePolynomial::__hash__() const
         seed ^= t;
     }
     return seed;
-}
-
-int MultivariatePolynomial::compare(const Basic &o) const
-{
-    // copied from UnivariateIntPolynomial::compare and then modified.
-    const MultivariatePolynomial &s
-        = static_cast<const MultivariatePolynomial &>(o);
-
-    if (vars_.size() != s.vars_.size())
-        return vars_.size() < s.vars_.size() ? -1 : 1;
-    if (dict_.size() != s.dict_.size())
-        return dict_.size() < s.dict_.size() ? -1 : 1;
-
-    int cmp = unified_compare(vars_, s.vars_);
-    if (cmp != 0)
-        return cmp;
-
-    return unified_compare(dict_, s.dict_);
 }
 
 Expression MultivariatePolynomial::eval(

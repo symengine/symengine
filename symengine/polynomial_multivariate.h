@@ -9,22 +9,24 @@
 namespace SymEngine
 {
 
-template<typename T>
+template <typename T>
 class vec_hash
 {
 public:
     std::size_t operator()(const T &v) const
     {
         std::size_t h = 0;
-        for (auto i: v) {
+        for (auto i : v) {
             h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
         }
         return h;
     }
 };
 
-typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>> umap_uvec_mpz;
-typedef std::unordered_map<vec_int, Expression, vec_hash<vec_int>> umap_vec_expr;
+typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>>
+    umap_uvec_mpz;
+typedef std::unordered_map<vec_int, Expression, vec_hash<vec_int>>
+    umap_vec_expr;
 
 // reconciles the positioning of the exponents in the vectors in the
 // Dict dict_ of the arguments
@@ -68,7 +70,7 @@ Vec translate_and_add(const Vec &v1, const Vec &v2, const vec_uint &translator1,
     return result;
 }
 
-template <typename MPoly, typename Coeff, typename Vec>
+template <typename Poly, typename Coeff, typename Vec>
 class MPolyBase : public Basic
 {
 public:
@@ -81,10 +83,15 @@ public:
     set_basic vars_;
     Dict dict_;
 
-protected:
-    // Creates a MPoly in cannonical form based on
-    // dictionary d.
-    inline static RCP<const MPoly> from_dict(const set_basic &s, Dict &&d)
+    // constructor from components
+    MPolyBase(const set_basic &vars, Dict &&dict)
+        : vars_{std::move(vars)}, dict_{std::move(dict)}
+    {
+        SYMENGINE_ASSERT(is_canonical(vars_, dict_))
+    }
+
+    // Creates a Poly in cannonical form based on dictionary d
+    inline static RCP<const Poly> from_dict(const set_basic &s, Dict &&d)
     {
         // Remove entries in d corresponding to terms with coefficient 0
         auto iter = d.begin();
@@ -97,24 +104,16 @@ protected:
                 iter++;
             }
         }
-        return make_rcp<const MPoly>(s, std::move(d));
+        return make_rcp<const Poly>(s, std::move(d));
     }
 
-public:
-    // constructor from components
-    MPolyBase(const set_basic &vars, Dict &&dict)
-        : vars_{std::move(vars)}, dict_{std::move(dict)}
-    {
-        SYMENGINE_ASSERT(is_canonical(vars_, dict_))
-    }
-
-    // Public function for creating MPoly:
+    // Public function for creating Poly:
     // vec_basic can contain symbols for the polynomial in any order, but the
     // symbols
     // will be sorted in the set_basic of the actual object.
     // The order of the exponenents in the vectors in the dictionary will also
     // be permuted accordingly.
-    static RCP<const MPoly> create(const vec_basic &v, Dict &&d)
+    static RCP<const Poly> create(const vec_basic &v, Dict &&d)
     {
         set_basic s;
         // Symbols in the vector are sorted by placeing them in an std::map.
@@ -142,7 +141,7 @@ public:
                 translate<Vec>(bucket.first, translator, s.size()),
                 bucket.second));
         }
-        return MPoly::from_dict(s, std::move(dict));
+        return Poly::from_dict(s, std::move(dict));
     }
 
     bool is_canonical(const set_basic &vars, const Dict &dict)
@@ -154,12 +153,30 @@ public:
         return true;
     }
 
+    int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_a<Poly>(o))
+
+        const Poly &s = static_cast<const Poly &>(o);
+
+        if (vars_.size() != s.vars_.size())
+            return vars_.size() < s.vars_.size() ? -1 : 1;
+        if (dict_.size() != s.dict_.size())
+            return dict_.size() < s.dict_.size() ? -1 : 1;
+
+        int cmp = unified_compare(vars_, s.vars_);
+        if (cmp != 0)
+            return cmp;
+
+        return unified_compare(dict_, s.dict_);
+    }
+
     bool __eq__(const Basic &o) const
     {
         // TODO : fix for when vars are different, but there is an intersection
-        if (not is_a<MPoly>(o))
+        if (not is_a<Poly>(o))
             return false;
-        const MPoly &o_ = static_cast<const MPoly &>(o);
+        const Poly &o_ = static_cast<const Poly &>(o);
         // compare constants without regards to vars
         if (1 == dict_.size() && 1 == o_.dict_.size()) {
             if (dict_.begin()->second != o_.dict_.begin()->second)
@@ -180,7 +197,7 @@ public:
         }
     }
 
-    RCP<const MPoly> add(const MPoly &b) const
+    RCP<const Poly> add(const Poly &b) const
     {
         vec_uint v1;
         vec_uint v2;
@@ -201,22 +218,22 @@ public:
                     translate<Vec>(bucket.first, v2, size), bucket.second));
             }
         }
-        return MPoly::from_dict(s, std::move(dict));
+        return Poly::from_dict(s, std::move(dict));
     }
-    RCP<const MPoly> neg() const
+    RCP<const Poly> neg() const
     {
         Dict dict;
         set_basic s = vars_;
         for (auto bucket : dict_) {
             dict.insert(std::pair<Vec, Coeff>(bucket.first, -bucket.second));
         }
-        return MPoly::from_dict(s, std::move(dict));
+        return Poly::from_dict(s, std::move(dict));
     }
-    RCP<const MPoly> sub(const MPoly &b) const
+    RCP<const Poly> sub(const Poly &b) const
     {
         return this->add(*b.neg());
     }
-    RCP<const MPoly> mul(const MPoly &b) const
+    RCP<const Poly> mul(const Poly &b) const
     {
         // Naive algorithm
         vec_uint v1;
@@ -237,14 +254,13 @@ public:
                 }
             }
         }
-        return MPoly::from_dict(s, std::move(dict));
+        return Poly::from_dict(s, std::move(dict));
     }
 };
 
 // MultivariateIntPolynomial
 class MultivariateIntPolynomial
-    : public MPolyBase<MultivariateIntPolynomial, integer_class,
-                       vec_uint>
+    : public MPolyBase<MultivariateIntPolynomial, integer_class, vec_uint>
 {
 public:
     MultivariateIntPolynomial(const set_basic &vars, umap_uvec_mpz &&dict)
@@ -254,7 +270,6 @@ public:
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
     integer_class eval(
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
     static inline RCP<const MultivariateIntPolynomial>
@@ -267,18 +282,16 @@ public:
 
 // MultivariatePolynomial
 class MultivariatePolynomial
-    : public MPolyBase<MultivariatePolynomial, Expression,
-                       vec_int>
+    : public MPolyBase<MultivariatePolynomial, Expression, vec_int>
 {
 public:
-    // MultivariatePolynomial(const set_basic &vars, umap_vec_expr &&dict)
-    //     : MPolyBase(std::move(vars), std::move(dict))
-    // {
-    // }
+    MultivariatePolynomial(const set_basic &vars, umap_vec_expr &&dict)
+        : MPolyBase(std::move(vars), std::move(dict))
+    {
+    }
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
     static inline RCP<const MultivariatePolynomial>
