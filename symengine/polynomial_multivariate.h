@@ -56,12 +56,10 @@ class MPolyBase : public Basic
 {
 public:
     // vars: set of variables for the polynomial
-    // degrees: max degrees of the symbols
-    // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
-    // * x**4 * y ** 5
+    // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 +
+    // 3 * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
     set_basic vars_;
-    umap_basic_uint degrees_;
     Dict dict_;
 
 protected:
@@ -80,30 +78,15 @@ protected:
                 iter++;
             }
         }
-
-        umap_basic_uint degs;
-        // Calculate the degrees of the polynomial
-        int whichvar = 0;
-        for (auto sym : s) {
-            degs.insert(std::pair<RCP<const Basic>, unsigned int>(sym, 0));
-            for (auto bucket : d) {
-                if (bucket.first[whichvar] > 0
-                    && static_cast<unsigned int>(bucket.first[whichvar])
-                           > degs.find(sym)->second)
-                    degs.find(sym)->second = bucket.first[whichvar];
-            }
-            whichvar++;
-        }
-        return make_rcp<const MPoly>(s, std::move(degs), std::move(d));
+        return make_rcp<const MPoly>(s, std::move(d));
     }
 
 public:
     // constructor from components
-    MPolyBase(const set_basic &vars, umap_basic_uint &&degrees, Dict &&dict)
-        : vars_{std::move(vars)}, degrees_{std::move(degrees)},
-          dict_{std::move(dict)}
+    MPolyBase(const set_basic &vars, Dict &&dict)
+        : vars_{std::move(vars)}, dict_{std::move(dict)}
     {
-        SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
+        SYMENGINE_ASSERT(is_canonical(vars_, dict_))
     }
 
     // Public function for creating MPoly:
@@ -143,32 +126,11 @@ public:
         return MPoly::from_dict(s, std::move(dict));
     }
 
-    bool is_canonical(const set_basic &vars, const umap_basic_uint &degrees,
-                      const Dict &dict)
+    bool is_canonical(const set_basic &vars, const Dict &dict)
     {
         for (auto bucket : dict) {
             if (bucket.second == 0)
                 return false;
-        }
-        // checks that the maximum degree of any variable is correct according
-        // to the dictionary keeps track of the index of the variable we are
-        // checking
-        unsigned int whichvar = 0;
-        for (auto var : vars) {
-            unsigned int maxdegree = 0;
-            for (auto bucket : dict) {
-                if (bucket.first[whichvar] > 0
-                    && static_cast<unsigned int>(bucket.first[whichvar])
-                           > degrees.find(var)->second)
-                    return false;
-                else if (bucket.first[whichvar] > 0
-                         && maxdegree < static_cast<unsigned int>(
-                                            bucket.first[whichvar]))
-                    maxdegree = bucket.first[whichvar];
-            }
-            if (maxdegree != degrees.find(var)->second)
-                return false;
-            whichvar++;
         }
         return true;
     }
@@ -266,9 +228,8 @@ class MultivariateIntPolynomial
                        vec_uint>
 {
 public:
-    MultivariateIntPolynomial(const set_basic &vars, umap_basic_uint &&degrees,
-                              umap_uvec_mpz &&dict)
-        : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
+    MultivariateIntPolynomial(const set_basic &vars, umap_uvec_mpz &&dict)
+        : MPolyBase(std::move(vars), std::move(dict))
     {
     }
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL);
@@ -291,9 +252,8 @@ class MultivariatePolynomial
                        vec_int>
 {
 public:
-    MultivariatePolynomial(const set_basic &vars, umap_basic_uint &&degrees,
-                           umap_vec_expr &&dict)
-        : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
+    MultivariatePolynomial(const set_basic &vars, umap_vec_expr &&dict)
+        : MPolyBase(std::move(vars), std::move(dict))
     {
     }
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
