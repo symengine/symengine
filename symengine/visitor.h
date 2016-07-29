@@ -17,6 +17,7 @@
 #include <symengine/series_flint.h>
 #include <symengine/sets.h>
 #include <symengine/fields.h>
+#include <symengine/logic.h>
 
 namespace SymEngine
 {
