@@ -49,19 +49,6 @@ typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::vector<integer_class> vec_integer_class;
-//! Part of umap_vec_mpz:
-typedef struct {
-    inline std::size_t operator()(const vec_int &k) const
-    {
-        std::size_t h = 0;
-        for (const auto &p : k) {
-            h = (h << 4) + p;
-        }
-        return h;
-    }
-} vec_int_hash;
-typedef std::unordered_map<vec_int, integer_class, vec_int_hash> umap_vec_mpz;
-typedef std::unordered_map<vec_int, Expression, vec_int_hash> umap_vec_expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just
 //! faster,
@@ -299,24 +286,8 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
 typedef std::vector<unsigned int> vec_uint;
 
-class vec_uint_hash
-{
-public:
-    std::size_t operator()(const vec_uint &v) const
-    {
-        std::size_t h = 0;
-        for (unsigned int i : v) {
-            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
-        }
-        return h;
-    }
-};
-
 typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_uint;
-typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
-    umap_uvec_mpz;
-typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
 
 //! print functions
 std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);

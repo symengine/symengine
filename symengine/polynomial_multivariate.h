@@ -9,6 +9,23 @@
 namespace SymEngine
 {
 
+template<typename T>
+class vec_hash
+{
+public:
+    std::size_t operator()(const T &v) const
+    {
+        std::size_t h = 0;
+        for (auto i: v) {
+            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
+        }
+        return h;
+    }
+};
+
+typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>> umap_uvec_mpz;
+typedef std::unordered_map<vec_int, Expression, vec_hash<vec_int>> umap_vec_expr;
+
 // reconciles the positioning of the exponents in the vectors in the
 // Dict dict_ of the arguments
 // with the positioning of the exponents in the correspondng vectors of the
@@ -51,7 +68,7 @@ Vec translate_and_add(const Vec &v1, const Vec &v2, const vec_uint &translator1,
     return result;
 }
 
-template <typename MPoly, typename Dict, typename Coeff, typename Vec>
+template <typename MPoly, typename Coeff, typename Vec>
 class MPolyBase : public Basic
 {
 public:
@@ -59,6 +76,8 @@ public:
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 +
     // 3 * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
+    using Dict = std::unordered_map<Vec, Coeff, vec_hash<Vec>>;
+
     set_basic vars_;
     Dict dict_;
 
@@ -224,7 +243,7 @@ public:
 
 // MultivariateIntPolynomial
 class MultivariateIntPolynomial
-    : public MPolyBase<MultivariateIntPolynomial, umap_uvec_mpz, integer_class,
+    : public MPolyBase<MultivariateIntPolynomial, integer_class,
                        vec_uint>
 {
 public:
@@ -248,14 +267,14 @@ public:
 
 // MultivariatePolynomial
 class MultivariatePolynomial
-    : public MPolyBase<MultivariatePolynomial, umap_vec_expr, Expression,
+    : public MPolyBase<MultivariatePolynomial, Expression,
                        vec_int>
 {
 public:
-    MultivariatePolynomial(const set_basic &vars, umap_vec_expr &&dict)
-        : MPolyBase(std::move(vars), std::move(dict))
-    {
-    }
+    // MultivariatePolynomial(const set_basic &vars, umap_vec_expr &&dict)
+    //     : MPolyBase(std::move(vars), std::move(dict))
+    // {
+    // }
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
     vec_basic get_args() const;
     std::size_t __hash__() const;
