@@ -54,56 +54,58 @@ TEST_CASE("Adding two UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    UIntDict bdict_({{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    UIntDict gdict_({{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    const UIntPoly a(x, std::move(adict_));
-    const UIntPoly b(x, std::move(bdict_));
 
-    RCP<const Basic> c = add_upoly(a, b);
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> b
+        = UIntPoly::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
+
+    RCP<const Basic> c = add_upoly(*a, *b);
     REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
 
     RCP<const UIntPoly> d = UIntPoly::from_dict(x, {{0, 1_z}});
-    RCP<const Basic> e = add_upoly(a, *d);
-    RCP<const Basic> f = add_upoly(*d, a);
+    RCP<const Basic> e = add_upoly(*a, *d);
+    RCP<const Basic> f = add_upoly(*d, *a);
     REQUIRE(e->__str__() == "x**2 + 2*x + 2");
     REQUIRE(f->__str__() == "x**2 + 2*x + 2");
 
-    const UIntPoly g(y, std::move(gdict_));
-    CHECK_THROWS_AS(add_upoly(a, g), std::runtime_error);
+    RCP<const UIntPoly> g
+        = UIntPoly::from_dict(y, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
+    CHECK_THROWS_AS(add_upoly(*a, *g), std::runtime_error);
 }
 
 TEST_CASE("Negative of a UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    const UIntPoly a(x, std::move(adict_));
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> b = UIntPoly::from_dict(x, map_uint_mpz{});
 
-    RCP<const UIntPoly> b = neg_upoly(a);
-    REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
+    RCP<const UIntPoly> c = neg_upoly(*a);
+    RCP<const UIntPoly> d = neg_upoly(*b);
+    REQUIRE(c->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(d->__str__() == "0");
 }
 
 TEST_CASE("Subtracting two UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    UIntDict bdict_({{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    UIntDict cdict_({{0, 2_z}});
-    UIntDict fdict_({{0, 2_z}});
 
-    const UIntPoly a(x, std::move(adict_));
-    const UIntPoly b(x, std::move(bdict_));
-    const UIntPoly c(x, std::move(cdict_));
-    const UIntPoly f(y, std::move(fdict_));
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> b
+        = UIntPoly::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
+    RCP<const UIntPoly> c = UIntPoly::from_dict(x, {{0, 2_z}});
+    RCP<const UIntPoly> f = UIntPoly::from_dict(y, {{0, 2_z}});
 
-    RCP<const Basic> d = sub_upoly(b, a);
+    RCP<const Basic> d = sub_upoly(*b, *a);
     REQUIRE(d->__str__() == "3*x**2 + x + 1");
-    d = sub_upoly(c, a);
+    d = sub_upoly(*c, *a);
     REQUIRE(d->__str__() == "-x**2 - 2*x + 1");
-    d = sub_upoly(a, c);
+    d = sub_upoly(*a, *c);
     REQUIRE(d->__str__() == "x**2 + 2*x - 1");
-    CHECK_THROWS_AS(sub_upoly(a, f), std::runtime_error);
+    CHECK_THROWS_AS(sub_upoly(*a, *f), std::runtime_error);
 }
 
 TEST_CASE("Multiplication of two UIntPoly", "[UIntPoly]")
@@ -111,25 +113,24 @@ TEST_CASE("Multiplication of two UIntPoly", "[UIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    UIntDict bdict_({{0, -1_z}, {1, -2_z}, {2, -1_z}});
-    UIntDict edict_({{0, 5_z}, {1, -2_z}, {2, -1_z}});
-    UIntDict fdict_({{0, 6_z}, {1, -2_z}, {2, 3_z}});
-    UIntDict kdict_({{0, -1_z}, {1, -2_z}, {2, -100_z}});
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPoly> b
+        = UIntPoly::from_dict(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    RCP<const UIntPoly> e
+        = UIntPoly::from_dict(x, {{0, 5_z}, {1, -2_z}, {2, -1_z}});
+    RCP<const UIntPoly> f
+        = UIntPoly::from_dict(x, {{0, 6_z}, {1, -2_z}, {2, 3_z}});
+    RCP<const UIntPoly> k
+        = UIntPoly::from_dict(x, {{0, -1_z}, {1, -2_z}, {2, -100_z}});
 
-    const UIntPoly a(x, std::move(adict_));
-    const UIntPoly b(x, std::move(bdict_));
-    const UIntPoly e(x, std::move(edict_));
-    const UIntPoly f(x, std::move(fdict_));
-    const UIntPoly k(x, std::move(kdict_));
-
-    RCP<const UIntPoly> c = mul_upoly(a, a);
-    RCP<const UIntPoly> d = mul_upoly(a, b);
-    RCP<const UIntPoly> g = mul_upoly(e, e);
-    RCP<const UIntPoly> h = mul_upoly(e, f);
-    RCP<const UIntPoly> i = mul_upoly(f, f);
-    RCP<const UIntPoly> l = mul_upoly(k, f);
-    RCP<const UIntPoly> m = mul_upoly(k, k);
+    RCP<const UIntPoly> c = mul_upoly(*a, *a);
+    RCP<const UIntPoly> d = mul_upoly(*a, *b);
+    RCP<const UIntPoly> g = mul_upoly(*e, *e);
+    RCP<const UIntPoly> h = mul_upoly(*e, *f);
+    RCP<const UIntPoly> i = mul_upoly(*f, *f);
+    RCP<const UIntPoly> l = mul_upoly(*k, *f);
+    RCP<const UIntPoly> m = mul_upoly(*k, *k);
 
     REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
     REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
@@ -140,11 +141,11 @@ TEST_CASE("Multiplication of two UIntPoly", "[UIntPoly]")
     REQUIRE(m->__str__() == "10000*x**4 + 400*x**3 + 204*x**2 + 4*x + 1");
 
     c = UIntPoly::from_dict(x, {{0, -1_z}});
-    REQUIRE(mul_upoly(a, *c)->__str__() == "-x**2 - 2*x - 1");
-    REQUIRE(mul_upoly(*c, a)->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(mul_upoly(*a, *c)->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2*x - 1");
 
     c = UIntPoly::from_dict(y, {{0, -1_z}});
-    CHECK_THROWS_AS(mul_upoly(a, *c), std::runtime_error);
+    CHECK_THROWS_AS(mul_upoly(*a, *c), std::runtime_error);
 }
 
 TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")
@@ -217,50 +218,6 @@ TEST_CASE("Derivative of UIntPoly", "[UIntPoly]")
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "8*y");
-}
-
-TEST_CASE("Bool checks specific UIntPoly cases", "[UIntPoly]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> z = UIntPoly::from_dict(x, {{0, 0_z}});
-    RCP<const UIntPoly> o = UIntPoly::from_dict(x, {{0, 1_z}});
-    RCP<const UIntPoly> mo = UIntPoly::from_dict(x, {{0, -1_z}});
-    RCP<const UIntPoly> i = UIntPoly::from_dict(x, {{0, 6_z}});
-    RCP<const UIntPoly> s = UIntPoly::from_dict(x, {{1, 1_z}});
-    RCP<const UIntPoly> m1 = UIntPoly::from_dict(x, {{1, 6_z}});
-    RCP<const UIntPoly> m2 = UIntPoly::from_dict(x, {{3, 5_z}});
-    RCP<const UIntPoly> po = UIntPoly::from_dict(x, {{5, 1_z}});
-    RCP<const UIntPoly> poly
-        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-
-    REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one()
-             and z->is_integer() and not z->is_symbol() and not z->is_mul()
-             and not z->is_pow()));
-    REQUIRE((not o->is_zero() and o->is_one() and not o->is_minus_one()
-             and o->is_integer() and not o->is_symbol() and not o->is_mul()
-             and not o->is_pow()));
-    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one()
-             and mo->is_integer() and not mo->is_symbol() and not mo->is_mul()
-             and not mo->is_pow()));
-    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one()
-             and i->is_integer() and not i->is_symbol() and not i->is_mul()
-             and not i->is_pow()));
-    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one()
-             and not s->is_integer() and s->is_symbol() and not s->is_mul()
-             and not s->is_pow()));
-    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one()
-             and not m1->is_integer() and not m1->is_symbol() and m1->is_mul()
-             and not m1->is_pow()));
-    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one()
-             and not m2->is_integer() and not m2->is_symbol() and m2->is_mul()
-             and not m2->is_pow()));
-    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one()
-             and not po->is_integer() and not po->is_symbol()
-             and not po->is_mul() and po->is_pow()));
-    REQUIRE((not poly->is_zero() and not poly->is_one()
-             and not poly->is_minus_one() and not poly->is_integer()
-             and not poly->is_symbol() and not poly->is_mul()
-             and not poly->is_pow()));
 }
 
 TEST_CASE("UIntPoly expand", "[UIntPoly][expand]")

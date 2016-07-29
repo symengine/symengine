@@ -7,7 +7,7 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/usymenginepoly.h>
 
 namespace SymEngine
 {
@@ -169,25 +169,16 @@ public:
     }
 }; // UExprDict
 
-class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
+class UExprPoly : public USymEnginePoly<UExprDict, UExprPolyBase, UExprPoly>
 {
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 
-    bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
 
     typedef Expression coef_type;
-
-    static RCP<const UExprPoly> from_dict(const RCP<const Basic> &var,
-                                          map_int_Expr &&d);
-    static RCP<const UExprPoly> from_vec(const RCP<const Basic> &var,
-                                         const std::vector<Expression> &v);
-    static UExprDict container_from_dict(const RCP<const Basic> &var,
-                                         map_int_Expr &&d);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x
@@ -208,40 +199,6 @@ public:
     //! \return `true` if pow
     bool is_pow() const;
 
-    virtual vec_basic get_args() const;
-
-    inline int get_degree() const
-    {
-        return poly_.degree();
-    }
-    inline const map_int_Expr &get_dict() const
-    {
-        return poly_.get_dict();
-    }
-
-    inline Expression get_coeff(int x) const
-    {
-        return poly_.get_coeff(x);
-    }
-
-    typedef map_int_Expr::const_iterator iterator;
-    typedef map_int_Expr::const_reverse_iterator reverse_iterator;
-    iterator begin() const
-    {
-        return poly_.dict_.begin();
-    }
-    iterator end() const
-    {
-        return poly_.dict_.end();
-    }
-    reverse_iterator obegin() const
-    {
-        return poly_.dict_.rbegin();
-    }
-    reverse_iterator oend() const
-    {
-        return poly_.dict_.rend();
-    }
 }; // UExprPoly
 
 inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, UExprDict &&dict)

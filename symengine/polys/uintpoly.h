@@ -5,7 +5,7 @@
 #ifndef SYMENGINE_UINTPOLY_H
 #define SYMENGINE_UINTPOLY_H
 
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/usymenginepoly.h>
 
 namespace SymEngine
 {
@@ -62,13 +62,6 @@ public:
         result <<= x * last_deg;
 
         return result;
-    }
-
-    integer_class get_lc()
-    {
-        if (dict_.empty())
-            return integer_class(0);
-        return dict_.rbegin()->second;
     }
 
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
@@ -129,84 +122,21 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
+class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
     //! Constructor of UIntPoly class
     UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 
-    //! \return true if canonical
-    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
-
-    static RCP<const UIntPoly> from_vec(const RCP<const Basic> &var,
-                                        const vec_integer_class &v);
-    static UIntDict container_from_dict(const RCP<const Basic> &var,
-                                        map_uint_mpz &&d);
-
-    //! Evaluates the UIntPoly at value x
-    integer_class eval(const integer_class &x) const;
-    vec_integer_class multieval(const vec_integer_class &v) const;
-
-    //! \return `true` if `0`
-    bool is_zero() const;
-    //! \return `true` if `1`
-    bool is_one() const;
-    //! \return `true` if `-1`
-    bool is_minus_one() const;
-    //! \return `true` if integer
-    bool is_integer() const;
-    //! \return `true` if symbol
-    bool is_symbol() const;
-    //! \return `true` if mul
-    bool is_mul() const;
-    //! \return `true` if pow
-    bool is_pow() const;
-
-    inline const map_uint_mpz &get_dict() const
-    {
-        return poly_.dict_;
-    }
-
-    inline integer_class get_coeff(unsigned int x) const
-    {
-        return poly_.get_coeff(x);
-    }
-
-    typedef map_uint_mpz::const_iterator iterator;
-    typedef map_uint_mpz::const_reverse_iterator reverse_iterator;
-    iterator begin() const
-    {
-        return poly_.dict_.begin();
-    }
-    iterator end() const
-    {
-        return poly_.dict_.end();
-    }
-    reverse_iterator obegin() const
-    {
-        return poly_.dict_.rbegin();
-    }
-    reverse_iterator oend() const
-    {
-        return poly_.dict_.rend();
-    }
-
-    unsigned int size() const
-    {
-        if (is_zero())
-            return 0;
-        return get_degree() + 1;
-    }
-
 }; // UIntPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
+
 } // SymEngine
 
 #endif

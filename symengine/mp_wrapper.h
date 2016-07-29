@@ -367,7 +367,7 @@ public:
         mpq_init(mp);
         mpq_set(mp, other.get_mpq_t());
     }
-    mpq_wrapper(mpq_wrapper &&other)
+    mpq_wrapper(mpq_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mpq_init(mp);
         mpq_swap(mp, other.get_mpq_t());
@@ -377,12 +377,12 @@ public:
         mpq_set(mp, other.get_mpq_t());
         return *this;
     }
-    mpq_wrapper &operator=(mpq_wrapper &&other)
+    mpq_wrapper &operator=(mpq_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mpq_swap(mp, other.get_mpq_t());
         return *this;
     }
-    ~mpq_wrapper()
+    ~mpq_wrapper() SYMENGINE_NOEXCEPT
     {
         mpq_clear(mp);
     }

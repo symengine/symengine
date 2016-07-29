@@ -22,6 +22,7 @@ set(SRC
     functions.cpp
     monomials.cpp
     polys/uintpoly.cpp
+    polys/uratpoly.cpp
     polys/uexprpoly.cpp
     polys/basic_conversions.cpp
     series.cpp
@@ -60,8 +61,8 @@ if (WITH_MPC)
 endif()
 
 if (WITH_FLINT)
-    set(SRC ${SRC} series_flint.cpp)
-    set(SRC ${SRC} polys/uintpoly_flint.cpp)
+    set(SRC series_flint.cpp ${SRC})
+    set(SRC polys/uintpoly_flint.cpp ${SRC})
 endif()
 
 if (WITH_ARB)
@@ -85,6 +86,7 @@ set(HEADERS
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
     basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
     polys/uintpoly_flint.h  polys/uintpoly_piranha.h eval.h flint_wrapper.h polys/basic_conversions.h
+    polys/usymenginepoly.h polys/uratpoly.h    
     infinity.h
 )
 

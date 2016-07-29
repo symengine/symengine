@@ -10,6 +10,7 @@
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
+#include <symengine/polys/uratpoly.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>
 #include <symengine/series_piranha.h>
@@ -146,6 +147,8 @@ public:
     {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
+        } else {
+            coeff_ = zero;
         }
     }
 
