@@ -69,7 +69,10 @@ TEST_CASE("Interval : Basic", "[basic]")
     r3 = interval(im5, i2, false, false); // [-5, 2]
     r4 = interval(integer(3), i20, false, false);
     REQUIRE(r3->compare(*r4) == -1);
-    CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
+    // CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
+    auto a = r3->set_union(r4);
+    std::cout << *a;
+    std::cout << *a->set_union(interval(integer(2), integer(3), false, false));
     CHECK_THROWS_AS(r4->set_union(r3), std::runtime_error);
     r3 = interval(zero, i2, true, true); // (0, 2)
     CHECK_THROWS_AS(r3->contains(sqrt(i2)), std::runtime_error);

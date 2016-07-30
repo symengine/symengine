@@ -163,6 +163,49 @@ public:
     virtual vec_basic get_args() const;
 };
 
+class Union : public Set
+{
+public:
+    set_basic container_;
+
+public:
+    IMPLEMENT_TYPEID(UNION)
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    Union(set_basic in);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const
+    {
+        return o;
+    }
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual bool contains(const RCP<const Basic> &a) const
+    {
+        return true;
+    }
+    virtual bool is_subset(const RCP<const Set> &o) const
+    {
+        return true;
+    }
+    virtual bool is_proper_subset(const RCP<const Set> &o) const
+    {
+        return true;
+    }
+    virtual bool is_superset(const RCP<const Set> &o) const
+    {
+        return true;
+    }
+    virtual bool is_proper_superset(const RCP<const Set> &o) const
+    {
+        return true;
+    }
+};
+
 //! \return RCP<const EmptySet>
 inline RCP<const EmptySet> emptyset()
 {
@@ -195,6 +238,42 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
     if (eq(*start, *end) and not(left_open or right_open))
         return finiteset({start});
     return emptyset();
+}
+
+// ! \return RCP<const Set>
+inline RCP<const Set> set_Union(set_basic in, bool solve = true)
+{
+    if (solve == false && in.size() > 1)
+        return make_rcp<const Union>(in);
+    set_basic combined_FiniteSet;
+    for (auto it = in.begin(); it != in.end(); ++it) {
+        if (is_a<FiniteSet>(**it)) {
+            set_basic container;
+            const FiniteSet &other = static_cast<const FiniteSet &>(**it);
+            std::set_union(combined_FiniteSet.begin(), combined_FiniteSet.end(),
+                           other.container_.begin(), other.container_.end(),
+                           std::inserter(container, container.begin()),
+                           RCPBasicKeyLess{});
+            combined_FiniteSet = container;
+            in.erase(it);
+        } else if (is_a<UniversalSet>(**it)) {
+            return universalset();
+        } else if (is_a<EmptySet>(**it)) {
+            in.erase(it);
+        }
+    }
+    if (in.empty()) {
+        return finiteset(combined_FiniteSet);
+    } else if (in.size() == 1 && combined_FiniteSet.empty()) {
+        return rcp_dynamic_cast<const Set>(*in.begin());
+    }
+    // Now we rely on respective containers' own rules
+    RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
+    for (auto it = in.begin(); it != in.end(); ++it) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(*it);
+        combined_Rest = combined_Rest->set_union(other);
+    }
+    return combined_Rest;
 }
 }
 #endif
