@@ -49,6 +49,7 @@ set(SRC
     polynomial_multivariate.cpp
     eval.cpp
     fields.cpp
+    logic.cpp
 )
 
 if (WITH_MPFR)
@@ -86,6 +87,7 @@ set(HEADERS
     basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
     polys/uintpoly_flint.h  polys/uintpoly_piranha.h eval.h flint_wrapper.h polys/basic_conversions.h
     polys/usymenginepoly.h polys/uratpoly.h
+    logic.h
 )
 
 # Configure SymEngine using our CMake options:

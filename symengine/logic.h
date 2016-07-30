@@ -12,67 +12,76 @@
 namespace SymEngine
 {
 
-typedef std::vector<std::pair<RCP<const Interval>, RCP<const Basic>>>
+class Boolean : public Basic
+{
+};
+
+class BooleanAtom : public Boolean
+{
+private:
+    bool b_;
+
+public:
+    IMPLEMENT_TYPEID(BOOLEAN_ATOM)
+    BooleanAtom(bool b);
+    //! \return the hash
+    std::size_t __hash__() const;
+    bool get_val() const;
+    virtual vec_basic get_args() const;
+    virtual bool __eq__(const Basic &o) const;
+    //! Structural equality comparator
+    virtual int compare(const Basic &o) const;
+};
+
+extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolTrue;
+extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolFalse;
+
+class Contains : public Boolean
+{
+private:
+    RCP<const Basic> expr_;
+    RCP<const Set> set_;
+
+public:
+    IMPLEMENT_TYPEID(PIECEWISE)
+    //! Constructor
+    Contains(const RCP<const Basic> &expr, const RCP<const Set> &set);
+    std::size_t __hash__() const;
+    RCP<const Basic> get_expr() const;
+    RCP<const Set> get_set() const;
+    virtual vec_basic get_args() const;
+    virtual bool __eq__(const Basic &o) const;
+    //! Structural equality comparator
+    virtual int compare(const Basic &o) const;
+};
+
+RCP<const Boolean> contains(const RCP<const Basic> &expr,
+                            const RCP<const Set> &set);
+
+typedef std::vector<std::pair<RCP<const Basic>, RCP<const Boolean>>>
     PiecewiseVec;
 
 class Piecewise : public Basic
 {
 private:
     PiecewiseVec vec_;
-    RCP<const Basic> s_;
 
 public:
     IMPLEMENT_TYPEID(PIECEWISE)
     //! Constructor
-    Piecewise(PiecewiseVec &&vec, RCP<const Basic> s) : vec_(vec), s_(s)
-    {
-    }
-    //! \return the hash
-    inline std::size_t __hash__() const
-    {
-        std::size_t seed = this->get_type_code();
-        for (auto &p : vec_) {
-            hash_combine<Basic>(seed, *p.first);
-            hash_combine<Basic>(seed, *p.second);
-        }
-        return seed;
-    }
-
-    const PiecewiseVec &get_vec() const
-    {
-        return vec_;
-    }
-
-    RCP<const Basic> get_symbol() const
-    {
-        return s_;
-    }
-
-    virtual inline vec_basic get_args() const
-    {
-        throw std::runtime_error("Not implemented");
-    }
-
-    virtual inline bool __eq__(const Basic &o) const
-    {
-        return is_a<Piecewise>(o)
-               and unified_eq(get_vec(),
-                              static_cast<const Piecewise &>(o).get_vec());
-    }
+    Piecewise(PiecewiseVec &&vec);
+    std::size_t __hash__() const;
+    const PiecewiseVec &get_vec() const;
+    virtual vec_basic get_args() const;
+    virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
-    virtual inline int compare(const Basic &o) const
-    {
-        SYMENGINE_ASSERT(is_same_type(*this, o))
-        RCP<const Piecewise> t = o.rcp_from_this_cast<Piecewise>();
-        return unified_compare(get_symbol(), t->get_symbol())
-               and unified_compare(get_vec(), t->get_vec());
-    }
+    virtual int compare(const Basic &o) const;
 };
 
 // Vec is a pair of RCP<const Basic>. (Relation, Expression)
-inline RCP<const Basic> piecewise(PiecewiseVec &&vec, RCP<const Basic> s)
+inline RCP<const Basic> piecewise(PiecewiseVec &&vec)
 {
-    return make_rcp<Piecewise>(std::move(vec), s);
+    return make_rcp<Piecewise>(std::move(vec));
 }
 
 } // SymEngine

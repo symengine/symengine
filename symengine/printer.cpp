@@ -124,28 +124,34 @@ void StrPrinter::bvisit(const Interval &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const BooleanAtom &x)
+{
+    if (x.get_val()) {
+        str_ = "True";
+    } else {
+        str_ = "False";
+    }
+}
+
+void StrPrinter::bvisit(const Contains &x)
+{
+    std::ostringstream s;
+    s << "Contains(" << apply(x.get_expr()) << ", " << apply(x.get_set())
+      << ")";
+    // s << apply(x.get_expr()) << " " << "∈" << " " << apply(x.get_set());
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Piecewise &x)
 {
     std::ostringstream s;
-    auto sym = x.get_symbol();
     auto vec = x.get_vec();
     auto it = vec.begin();
     s << "Piecewise(";
     while (true) {
         s << "(";
-        s << apply((*it).first->start_);
-        if ((*it).first->left_open_) {
-            s << " <= ";
-        } else {
-            s << " < ";
-        }
-        s << apply(sym);
-        if ((*it).first->right_open_) {
-            s << " <= ";
-        } else {
-            s << " < ";
-        }
-        s << apply((*it).first->end_) << ", ";
+        s << apply((*it).first);
+        s << ", ";
         s << apply((*it).second);
         s << ")";
         ++it;
