@@ -66,9 +66,9 @@ extern SYMENGINE_EXPORT RCP<const Constant> E;
 extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
 
 // Infinity
-extern RCP<const Infty> Inf;
-extern RCP<const Infty> NegInf;
-extern RCP<const Infty> ComplexInf;
+extern SYMENGINE_EXPORT RCP<const Infty> Inf;
+extern SYMENGINE_EXPORT RCP<const Infty> NegInf;
+extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
 } // SymEngine
 
 #endif

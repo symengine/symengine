@@ -25,8 +25,7 @@ public:
     Infty(const RCP<const Number> &direction);
     //! Copy Constructor
     Infty(const Infty &inf);
-    static RCP<const Infty>
-    from_direction(const RCP<const Number> &direction);
+    static RCP<const Infty> from_direction(const RCP<const Number> &direction);
     //! Constructs Infty using sign of `val`
     static RCP<const Infty> from_int(const int val);
 

@@ -4,7 +4,6 @@
 #include <symengine/infinity.h>
 #include <symengine/functions.h>
 
-
 namespace SymEngine
 {
 
