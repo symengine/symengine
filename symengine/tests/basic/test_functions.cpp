@@ -20,11 +20,17 @@ using SymEngine::multinomial_coefficients;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::sin;
+using SymEngine::Sin;
 using SymEngine::cos;
+using SymEngine::Cos;
 using SymEngine::tan;
+using SymEngine::Tan;
 using SymEngine::cot;
+using SymEngine::Cot;
 using SymEngine::csc;
+using SymEngine::Csc;
 using SymEngine::sec;
+using SymEngine::Sec;
 using SymEngine::asin;
 using SymEngine::acos;
 using SymEngine::asec;
@@ -42,6 +48,7 @@ using SymEngine::EulerGamma;
 using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
+using SymEngine::rcp_dynamic_cast;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::sqrt;
 using SymEngine::sinh;
@@ -231,6 +238,11 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Sin>(sin(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
+    REQUIRE(eq(*r1, *r2));
+
     r1 = sin(real_double(1.0));
     r2 = sin(sub(div(pi, i2), real_double(2.0)));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -337,6 +349,11 @@ TEST_CASE("Cos: functions", "[functions]")
     // cos(12*pi - y + pi/2) = sin(y)
     r1 = cos(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sin(y);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Cos>(cos(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
     r1 = cos(real_double(1.0));
@@ -448,6 +465,11 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
 
+    // tan(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Tan>(tan(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
+    REQUIRE(eq(*r1, *r2));
+
     CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
 }
 
@@ -548,6 +570,11 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
 
+    // cot(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Cot>(cot(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
+    REQUIRE(eq(*r1, *r2));
+
     CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
 }
 
@@ -646,6 +673,11 @@ TEST_CASE("Csc: functions", "[functions]")
     // csc(12*pi - y + pi/2) = sec(y)
     r1 = csc(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sec(y);
+    REQUIRE(eq(*r1, *r2));
+
+    // csc(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
@@ -751,6 +783,11 @@ TEST_CASE("Sec: functions", "[functions]")
     // sec(12*pi - y + pi/2) = csc(y)
     r1 = sec(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = csc(y);
+    REQUIRE(eq(*r1, *r2));
+
+    // sec(2*pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);

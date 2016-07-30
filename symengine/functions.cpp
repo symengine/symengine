@@ -122,6 +122,47 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
     }
 }
 
+// Return true if arg is of form a+b*pi, with b integer or rational
+// with denominator 2. The a may be zero or any expression.
+bool trig_has_basic_shift(const RCP<const Basic> &arg)
+{
+    if (is_a<Add>(*arg)) {
+        const Add &s = static_cast<const Add &>(*arg);
+        for (const auto &p : s.dict_) {
+            const auto& temp = mul(p.second, integer(2));
+            if (is_a<Constant>(*p.first)
+                and eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
+                and is_a<Integer>(*temp)) {
+                return true;
+            }
+        }
+        return false;
+    } else if (is_a<Mul>(*arg)) {
+        // is `arg` of the form `k*pi/2`?
+        // dict should contain symbol `pi` only
+        // and coeff should be a multiple of 2
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        coef = mul(coef, integer(2));
+        auto p = s.dict_.begin();
+        if (s.dict_.size() == 1 and is_a<Constant>(*p->first)
+            and eq(*(rcp_static_cast<const Constant>(p->first)), *pi)
+            and eq(*(rcp_static_cast<const Number>(p->second)), *one)
+            and is_a<Integer>(*coef)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else if (is_a<Constant>(*arg)
+               and eq(*(rcp_static_cast<const Constant>(arg)), *pi)) {
+        return true;
+    } else if (eq(*arg, *zero)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool could_extract_minus(const Basic &arg)
 {
     if (is_a_Number(arg)) {
@@ -181,8 +222,8 @@ bool handle_minus(const RCP<const Basic> &arg,
     return false;
 }
 
-// \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, unsigned period, bool odd,
+// \return true if conjugate has to be returned finally else false
+bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
           bool conj_odd,                                            // input
           const Ptr<RCP<const Basic>> &rarg, int &index, int &sign) // output
 {
@@ -223,7 +264,7 @@ bool eval(const RCP<const Basic> &arg, unsigned period, bool odd,
                 sign = -sign;
             return true;
         } else {
-            *rarg = r;
+            *rarg = arg;
             index = -1;
             return false;
         }
@@ -262,10 +303,8 @@ bool Sin::is_canonical(const RCP<const Basic> &arg) const
     // e.g. sin(0)
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // e.g sin(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g sin(7*pi/2+y)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -292,8 +331,8 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 1, 0,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 2, true, false,           // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // cos has to be returned
@@ -333,10 +372,8 @@ bool Cos::is_canonical(const RCP<const Basic> &arg) const
     // e.g. cos(0)
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // e.g cos(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g cos(k*pi/2)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -363,8 +400,8 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 0, 1,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 2, false, true,           // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // sin has to be returned
@@ -402,10 +439,8 @@ bool Tan::is_canonical(const RCP<const Basic> &arg) const
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // e.g tan(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g tan(k*pi/2)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -432,8 +467,8 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 1, 1, 1,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 1, true, true,            // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // cot has to be returned
@@ -472,10 +507,8 @@ bool Cot::is_canonical(const RCP<const Basic> &arg) const
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // e.g cot(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g cot(k*pi/2)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -500,8 +533,8 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 1, 1, 1,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 1, true, true,            // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // tan has to be returned
@@ -541,10 +574,8 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // Update for +inf/-inf constraints
-    // e.g csc(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g csc(k*pi/2)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -569,8 +600,8 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 1, 0,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 2, true, false,           // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // cos has to be returned
@@ -609,10 +640,8 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // TODO: Update for +inf/-inf constraints
-    // e.g sec(k*pi/12)
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    if (get_pi_shift(arg, outArg(n), outArg(r))) {
+    // e.g sec(k*pi/2)
+    if (trig_has_basic_shift(arg)) {
         return false;
     }
     if (is_a_Number(*arg)
@@ -637,8 +666,8 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 0, 1,                  // input
-                          outArg(ret_arg), index, sign); // output
+    bool conjugate = trig_simplify(arg, 2, false, true,           // input
+                                   outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
         // csc has to be returned
