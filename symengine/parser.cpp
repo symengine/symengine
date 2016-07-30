@@ -1,6 +1,7 @@
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
 #include <stack>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -126,7 +127,7 @@ class ExpressionParser
 
         // a parse_string is called empty in scenarios like "x+"
         if (l == h)
-            throw std::runtime_error("Expected token!");
+            throw ParseError("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
             if (is_operator(iter)) {
@@ -248,7 +249,7 @@ class ExpressionParser
 
         } else {
             if (num_dots > 1) {
-                throw std::runtime_error("Invalid symbol or number!");
+                throw ParseError("Invalid symbol or number!");
 
             } else if (num_dots == 1) {
                 return real_double(std::atof(expr.c_str()));
@@ -328,7 +329,7 @@ public:
                     // this should never happen, every '(' should have a
                     // matcihng ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
-                        throw std::runtime_error("Mismatching parantheses!");
+                        throw ParseError("Mismatching parantheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
@@ -353,7 +354,7 @@ public:
                 }
 
                 if (last_char_was_op and operator_error(last_char, x))
-                    throw std::runtime_error("Operator inconsistency!");
+                    throw ParseError("Operator inconsistency!");
                 last_char_was_op = true;
 
             } else {
@@ -364,7 +365,7 @@ public:
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
-            throw std::runtime_error("Mismatching parantheses!");
+            throw ParseError("Mismatching parantheses!");
 
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);

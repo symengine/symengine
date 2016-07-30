@@ -3,9 +3,10 @@
 
 typedef enum {
     SYMENGINE_NO_EXCEPTION = 0,
-    SYMENGINE_DIV_BY_ZERO,
-    SYMENGINE_NOT_IMPLEMENTED,
-    SYMENGINE_UNDEFINED
+    SYMENGINE_DIV_BY_ZERO = 1,
+    SYMENGINE_NOT_IMPLEMENTED = 2,
+    SYMENGINE_UNDEFINED = 3,
+    SYMENGINE_PARSE_ERROR = 4,
 } symengine_exceptions_t;
 
 #ifdef __cplusplus
@@ -44,8 +45,18 @@ public:
 
 class NotImplemented : public SymEngineException
 {
+public:
     NotImplemented(const std::string &msg)
         : SymEngineException(msg, SYMENGINE_NOT_IMPLEMENTED)
+    {
+    }
+};
+
+class ParseError : public SymEngineException
+{
+public:
+    ParseError(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_PARSE_ERROR)
     {
     }
 };
