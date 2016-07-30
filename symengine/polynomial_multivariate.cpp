@@ -31,7 +31,7 @@ std::size_t MultivariateIntPolynomial::__hash__() const
         hash_combine<std::string>(seed, var->__str__());
 
     for (auto &p : dict_) {
-        std::size_t t = vec_uint_hash()(p.first);
+        std::size_t t = vec_hash<vec_uint>()(p.first);
         hash_combine<std::size_t>(t, mp_get_si(p.second));
         seed ^= t;
     }
@@ -119,7 +119,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
 vec_basic MultivariatePolynomial::get_args() const
 {
     vec_basic args;
-    umap_uvec_expr d;
+    umap_vec_expr d;
     // To change the ordering in which the terms appear in the vector, use
     // a different comparator for order_umap
     std::vector<vec_int> v = sorted_keys(dict_);
@@ -143,7 +143,7 @@ std::size_t MultivariatePolynomial::__hash__() const
         hash_combine<std::string>(seed, var->__str__());
 
     for (auto &p : dict_) {
-        std::size_t t = vec_int_hash()(p.first);
+        std::size_t t = vec_hash<vec_int>()(p.first);
         hash_combine<Basic>(t, *(p.second.get_basic()));
         seed ^= t;
     }

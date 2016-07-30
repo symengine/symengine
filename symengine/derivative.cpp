@@ -536,10 +536,11 @@ public:
         return diff_upoly<UExprPoly, map_int_Expr>(self, x);
     }
 
-    template <typename MPoly, typename Dict, typename Coeff, typename Vec>
-    static RCP<const Basic> diff(const MPolyBase<MPoly, Dict, Coeff, Vec> &self,
+    template <typename MPoly, typename Coeff, typename Vec>
+    static RCP<const Basic> diff(const MPolyBase<MPoly, Coeff, Vec> &self,
                                  const RCP<const Symbol> &x)
     {
+        using Dict = std::unordered_map<Vec, Coeff, vec_hash<Vec>>;
         Dict dict;
         if (self.vars_.find(x) != self.vars_.end()) {
             auto i = self.vars_.begin();

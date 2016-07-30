@@ -8,26 +8,6 @@
 
 namespace SymEngine
 {
-
-template <typename T>
-class vec_hash
-{
-public:
-    std::size_t operator()(const T &v) const
-    {
-        std::size_t h = 0;
-        for (auto i : v) {
-            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
-        }
-        return h;
-    }
-};
-
-typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>>
-    umap_uvec_mpz;
-typedef std::unordered_map<vec_int, Expression, vec_hash<vec_int>>
-    umap_vec_expr;
-
 // reconciles the positioning of the exponents in the vectors in the
 // Dict dict_ of the arguments
 // with the positioning of the exponents in the correspondng vectors of the
