@@ -56,8 +56,7 @@ class MPolyBase : public Basic
 public:
     // vars: set of variables for the polynomial
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 +
-    // 3 * x**4 * y ** 5
-    // is represented as {(1,2):1,(4,5):3}
+    // 3 * x**4 * y ** 5 is represented as {(1,2):1,(4,5):3}
     using Dict = std::unordered_map<Vec, Coeff, vec_hash<Vec>>;
 
     set_basic vars_;
@@ -149,6 +148,11 @@ public:
             return cmp;
 
         return unified_compare(dict_, s.dict_);
+    }
+
+    inline vec_basic get_args() const
+    {
+        return {};
     }
 
     bool __eq__(const Basic &o) const
@@ -248,7 +252,6 @@ public:
     {
     }
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL);
-    vec_basic get_args() const;
     std::size_t __hash__() const;
     integer_class eval(
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
@@ -258,6 +261,7 @@ public:
         return o.rcp_from_this_cast<MultivariateIntPolynomial>();
     }
     static RCP<const MultivariateIntPolynomial> convert(const UIntPoly &o);
+    RCP<const Basic> as_symbolic() const;
 };
 
 // MultivariatePolynomial
@@ -270,7 +274,6 @@ public:
     {
     }
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
-    vec_basic get_args() const;
     std::size_t __hash__() const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
@@ -280,6 +283,7 @@ public:
         return o.rcp_from_this_cast<MultivariatePolynomial>();
     }
     static RCP<const MultivariatePolynomial> convert(const UExprPoly &o);
+    RCP<const Basic> as_symbolic() const;
 };
 
 template <class T>

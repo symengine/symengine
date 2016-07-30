@@ -3,25 +3,20 @@
 namespace SymEngine
 {
 
-vec_basic MultivariateIntPolynomial::get_args() const
+RCP<const Basic> MultivariateIntPolynomial::as_symbolic() const
 {
     vec_basic args;
-    umap_uvec_mpz d;
-    // To change the ordering in which the terms appear in the vector, use
-    // a different comparator for order_umap
-    auto v = sorted_keys(dict_);
-    for (const auto &p : v) {
-        map_basic_basic b;
+    for (const auto &p : dict_) {
+        RCP<const Basic> res = integer(p.second);
         int whichvar = 0;
         for (auto sym : vars_) {
-            if (integer_class(0) != p[whichvar])
-                insert(b, sym, integer(p[whichvar]));
+            if (0 != p.first[whichvar])
+                res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
             whichvar++;
         }
-        args.push_back(
-            Mul::from_dict(integer(dict_.find(p)->second), std::move(b)));
+        args.push_back(res);
     }
-    return args;
+    return SymEngine::add(args);
 }
 
 std::size_t MultivariateIntPolynomial::__hash__() const
@@ -116,24 +111,20 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
     return poscount; // return size of the new vectors
 }
 
-vec_basic MultivariatePolynomial::get_args() const
+RCP<const Basic> MultivariatePolynomial::as_symbolic() const
 {
     vec_basic args;
-    umap_vec_expr d;
-    // To change the ordering in which the terms appear in the vector, use
-    // a different comparator for order_umap
-    std::vector<vec_int> v = sorted_keys(dict_);
-    for (const auto &p : v) {
-        RCP<const Basic> res = ((dict_.find(p)->second).get_basic());
+    for (const auto &p : dict_) {
+        RCP<const Basic> res = (p.second.get_basic());
         int whichvar = 0;
         for (auto sym : vars_) {
-            if (0 != p[whichvar])
-                res = SymEngine::mul(res, pow(sym, integer(p[whichvar])));
+            if (0 != p.first[whichvar])
+                res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
             whichvar++;
         }
         args.push_back(res);
     }
-    return args;
+    return SymEngine::add(args);
 }
 
 std::size_t MultivariatePolynomial::__hash__() const

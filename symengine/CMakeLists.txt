@@ -8,6 +8,7 @@ endif()
 
 set(SRC
     symengine_rcp.cpp
+    polynomial_multivariate.cpp
     basic.cpp
     dict.cpp
     symbol.cpp
@@ -46,7 +47,6 @@ set(SRC
     parser.cpp
     mp_wrapper.cpp
     sets.cpp
-    polynomial_multivariate.cpp
     eval.cpp
     fields.cpp
     infinity.cpp

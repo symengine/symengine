@@ -19,7 +19,7 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::integer_class;
-using SymEngine::vec_basic_eq_perm;
+using SymEngine::add;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
 using SymEngine::Integer;
@@ -41,9 +41,8 @@ TEST_CASE("Testing MultivariateIntPolynomial::get_args()",
     RCP<const Symbol> z = symbol("z");
     RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::create(
         {x, y, z}, {{{0, 0, 0}, 1_z}, {{1, 1, 1}, 2_z}, {{0, 0, 2}, 1_z}});
-    REQUIRE(
-        vec_basic_eq_perm(p->get_args(), {mul(integer(2), mul(x, mul(y, z))),
-                                          pow(z, integer(2)), one}));
+    REQUIRE(eq(*p->as_symbolic(), *add({mul(integer(2), mul(x, mul(y, z))),
+                                        pow(z, integer(2)), one})));
 }
 
 TEST_CASE("Constructing MultivariatePolynomial", "[MultivariatePolynomial]")
@@ -82,30 +81,30 @@ TEST_CASE("Constructing MultivariatePolynomial", "[MultivariatePolynomial]")
                                                   {{-2, 2}, comp3},
                                                   {{-3, -3}, comp4}});
 
-    REQUIRE(vec_basic_eq_perm(
-        p1->get_args(), {mul(integer(2), mul(pow(x, integer(2)), y)),
-                         mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
-                         mul(symbol("a"), mul(x, y)), mul(integer(-3), y)}));
-    REQUIRE(
-        vec_basic_eq_perm(pprime->get_args(),
-                          {mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
-                           mul(integer(2), mul(x, pow(y, integer(2)))),
-                           mul(symbol("a"), mul(x, y)), mul(integer(-3), x)}));
-    REQUIRE(vec_basic_eq_perm(
-        p2->get_args(),
-        {mul(comp4.get_basic(), mul(pow(x, integer(3)), pow(y, integer(4)))),
-         mul(comp3.get_basic(), mul(pow(x, integer(2)), pow(y, integer(2)))),
-         mul(comp1.get_basic(), x), comp2.get_basic()}));
-    REQUIRE(vec_basic_eq_perm(p3->get_args(), s));
-    REQUIRE(vec_basic_eq_perm(p4->get_args(), s));
-    REQUIRE(vec_basic_eq_perm(p5->get_args(), {comp1.get_basic()}));
-    REQUIRE(vec_basic_eq_perm(
-        p6->get_args(),
-        {comp1.get_basic(),
-         mul(comp3.get_basic(), mul(pow(x, integer(-2)), pow(y, integer(2)))),
-         mul(comp2.get_basic(), pow(y, integer(-1))),
-         mul(comp4.get_basic(),
-             mul(pow(x, integer(-3)), pow(y, integer(-3))))}));
+    REQUIRE(eq(*p1->as_symbolic(),
+               *add({mul(integer(2), mul(pow(x, integer(2)), y)),
+                     mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
+                     mul(symbol("a"), mul(x, y)), mul(integer(-3), y)})));
+    REQUIRE(eq(*pprime->as_symbolic(),
+               *add({mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
+                     mul(integer(2), mul(x, pow(y, integer(2)))),
+                     mul(symbol("a"), mul(x, y)), mul(integer(-3), x)})));
+    REQUIRE(eq(*p2->as_symbolic(),
+               *add({mul(comp4.get_basic(),
+                         mul(pow(x, integer(3)), pow(y, integer(4)))),
+                     mul(comp3.get_basic(),
+                         mul(pow(x, integer(2)), pow(y, integer(2)))),
+                     mul(comp1.get_basic(), x), comp2.get_basic()})));
+    REQUIRE(eq(*p3->as_symbolic(), *zero));
+    REQUIRE(eq(*p4->as_symbolic(), *zero));
+    REQUIRE(eq(*p5->as_symbolic(), *comp1.get_basic()));
+    REQUIRE(eq(*p6->as_symbolic(),
+               *add({comp1.get_basic(),
+                     mul(comp3.get_basic(),
+                         mul(pow(x, integer(-2)), pow(y, integer(2)))),
+                     mul(comp2.get_basic(), pow(y, integer(-1))),
+                     mul(comp4.get_basic(),
+                         mul(pow(x, integer(-3)), pow(y, integer(-3))))})));
 }
 
 TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
@@ -279,19 +278,18 @@ TEST_CASE("Testing MultivariatePolynomial::get_args()",
                                                      {{-1, -1, -1}, expr2},
                                                      {{0, 0, -2}, expr3},
                                                      {{0, -2, 0}, expr4}});
+    REQUIRE(eq(*p1->as_symbolic(), *add({mul(integer(2), mul(x, mul(y, z))),
+                                         pow(z, integer(2)), one})));
     REQUIRE(
-        vec_basic_eq_perm(p1->get_args(), {mul(integer(2), mul(x, mul(y, z))),
-                                           pow(z, integer(2)), one}));
-    REQUIRE(vec_basic_eq_perm(
-        p2->get_args(),
-        {mul(expr2.get_basic(), mul(x, mul(y, z))),
-         mul(expr4.get_basic(), pow(y, integer(2))),
-         mul(expr3.get_basic(), pow(z, integer(2))), expr1.get_basic(),
-         mul(expr3.get_basic(), pow(z, integer(-2))),
-         mul(expr4.get_basic(), pow(y, integer(-2))),
-         mul(expr2.get_basic(),
-             mul(pow(x, integer(-1)),
-                 mul(pow(y, integer(-1)), pow(z, integer(-1)))))}));
+        eq(*p2->as_symbolic(),
+           *add({mul(expr2.get_basic(), mul(x, mul(y, z))),
+                 mul(expr4.get_basic(), pow(y, integer(2))),
+                 mul(expr3.get_basic(), pow(z, integer(2))), expr1.get_basic(),
+                 mul(expr3.get_basic(), pow(z, integer(-2))),
+                 mul(expr4.get_basic(), pow(y, integer(-2))),
+                 mul(expr2.get_basic(),
+                     mul(pow(x, integer(-1)),
+                         mul(pow(y, integer(-1)), pow(z, integer(-1)))))})));
 }
 
 TEST_CASE("Testing MultivariatePolynomial negation"

@@ -16,7 +16,7 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;
+using SymEngine::add;
 using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
@@ -44,9 +44,9 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
                                                      {{1, 0}, 3_z},
                                                      {{0, 0}, 0_z}});
 
-    REQUIRE(vec_basic_eq_perm(
-        P->get_args(), {mul(x, pow(y, integer(2))), mul(integer(2), mul(x, y)),
-                        mul(integer(3), x), mul(integer(2), y)}));
+    REQUIRE(eq(*P->as_symbolic(),
+               *add({mul(x, pow(y, integer(2))), mul(integer(2), mul(x, y)),
+                     mul(integer(3), x), mul(integer(2), y)})));
 
     RCP<const MultivariateIntPolynomial> Pprime
         = MultivariateIntPolynomial::create({y, x}, {{{1, 2}, 1_z},
@@ -55,10 +55,9 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
                                                      {{1, 0}, 3_z},
                                                      {{0, 0}, 0_z}});
 
-    REQUIRE(vec_basic_eq_perm(Pprime->get_args(),
-                              {mul(pow(x, integer(2)), y),
-                               mul(integer(2), mul(x, y)), mul(integer(2), x),
-                               mul(integer(3), y)}));
+    REQUIRE(eq(*Pprime->as_symbolic(),
+               *add({mul(pow(x, integer(2)), y), mul(integer(2), mul(x, y)),
+                     mul(integer(2), x), mul(integer(3), y)})));
 
     RCP<const MultivariateIntPolynomial> P2
         = MultivariateIntPolynomial::create({x, y}, {{{0, 0}, 0_z}});
@@ -68,12 +67,12 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
     RCP<const MultivariateIntPolynomial> P3
         = MultivariateIntPolynomial::create(s, {{v, 0_z}});
 
-    REQUIRE(vec_basic_eq_perm(P2->get_args(), s));
-    REQUIRE(vec_basic_eq_perm(P3->get_args(), s));
+    REQUIRE(eq(*P2->as_symbolic(), *zero));
+    REQUIRE(eq(*P3->as_symbolic(), *zero));
 
     RCP<const MultivariateIntPolynomial> P4
         = MultivariateIntPolynomial::create(s, {{v, 5_z}});
-    REQUIRE(vec_basic_eq_perm(P4->get_args(), {integer(5)}));
+    REQUIRE(eq(*P4->as_symbolic(), *integer(5)));
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::__hash__() and compare",
