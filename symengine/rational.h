@@ -141,7 +141,7 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw SymEngineException("Division By Zero", DIV_BY_ZERO);
+            throw DivisionByZero("Division By Zero");
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -152,7 +152,7 @@ public:
     inline RCP<const Number> divrat(const Integer &other) const
     {
         if (other.i == 0) {
-            throw SymEngineException("Division By Zero", DIV_BY_ZERO);
+            throw DivisionByZero("Division By Zero");
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -160,7 +160,7 @@ public:
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw SymEngineException("Division By Zero", DIV_BY_ZERO);
+            throw DivisionByZero("Division By Zero");
         } else {
             return from_mpq(other.i / this->i);
         }

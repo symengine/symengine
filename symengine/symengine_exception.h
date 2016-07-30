@@ -1,12 +1,14 @@
 #ifndef SYMENGINE_EXCEPTION_H
 #define SYMENGINE_EXCEPTION_H
 
-enum symengine_exceptions_t {
-    NO_EXCEPTION,
-    DIV_BY_ZERO,
-    NOT_IMPLEMENTED,
-    UNDEFINED
-};
+typedef enum {
+    SYMENGINE_NO_EXCEPTION = 0,
+    SYMENGINE_DIV_BY_ZERO,
+    SYMENGINE_NOT_IMPLEMENTED,
+    SYMENGINE_UNDEFINED
+} symengine_exceptions_t;
+
+#ifdef __cplusplus
 
 namespace SymEngine
 {
@@ -21,7 +23,7 @@ public:
         : m_msg(msg), ec(error)
     {
     }
-    virtual const char *what() const throw()
+    const char *what() const throw()
     {
         return m_msg.c_str();
     }
@@ -30,5 +32,23 @@ public:
         return ec;
     }
 };
+
+class DivisionByZero : public SymEngineException
+{
+public:
+    DivisionByZero(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_DIV_BY_ZERO)
+    {
+    }
+};
+
+class NotImplemented : public SymEngineException
+{
+    NotImplemented(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_NOT_IMPLEMENTED)
+    {
+    }
+};
 }
+#endif // __cplusplus
 #endif // SYMENGINE_EXCEPTION_H

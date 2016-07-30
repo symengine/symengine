@@ -7,8 +7,6 @@
 #include <symengine/matrix.h>
 #include <symengine/eval.h>
 #include <symengine/parser.h>
-#include <symengine/symengine_exception.h>
-
 #define xstr(s) str(s)
 #define str(s) #s
 

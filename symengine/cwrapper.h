@@ -28,6 +28,8 @@ extern "C" {
 
 typedef int CWRAPPER_OUTPUT_TYPE;
 
+#include "symengine/symengine_exception.h"
+
 typedef enum {
 #define SYMENGINE_INCLUDE_ALL
 #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
