@@ -239,7 +239,8 @@ TEST_CASE("Sin: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // sin(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Sin>(sin(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Sin>(sin(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -352,7 +353,8 @@ TEST_CASE("Cos: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // cos(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Cos>(cos(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Cos>(cos(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -466,7 +468,8 @@ TEST_CASE("Tan: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // tan(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Tan>(tan(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Tan>(tan(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -571,7 +574,8 @@ TEST_CASE("Cot: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // cot(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Cot>(cot(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Cot>(cot(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -676,7 +680,8 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // csc(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -786,7 +791,8 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // sec(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(mul(i2, pi), i3), y)))->get_arg();
+    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(mul(i2, pi), i3), y)))
+             ->get_arg();
     r2 = add(div(mul(i2, pi), i3), y);
     REQUIRE(eq(*r1, *r2));
 

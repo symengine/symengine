@@ -129,7 +129,7 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
     if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
         for (const auto &p : s.dict_) {
-            const auto& temp = mul(p.second, integer(2));
+            const auto &temp = mul(p.second, integer(2));
             if (is_a<Constant>(*p.first)
                 and eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
                 and is_a<Integer>(*temp)) {
@@ -224,8 +224,9 @@ bool handle_minus(const RCP<const Basic> &arg,
 
 // \return true if conjugate has to be returned finally else false
 bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
-          bool conj_odd,                                            // input
-          const Ptr<RCP<const Basic>> &rarg, int &index, int &sign) // output
+                   bool conj_odd, // input
+                   const Ptr<RCP<const Basic>> &rarg, int &index,
+                   int &sign) // output
 {
     bool check;
     RCP<const Integer> n;
