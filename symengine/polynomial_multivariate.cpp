@@ -69,46 +69,26 @@ MultivariateIntPolynomial::convert(const UIntPoly &o)
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2)
 {
-    auto a1 = s1.begin();
-    auto a2 = s2.begin();
-    unsigned int poscount = 0;
-    // Performs a merge sort of s1 and s2, and builds up v1 and v2 as
-    // translators:
-    // v[i] is the position of the ith symbol in the new set.
-    while (a1 != s1.end() && a2 != s2.end()) {
-        if ((*a1)->__eq__(**a2) && (a1 != s1.end() && a2 != s2.end())) {
-            v1.insert(v1.end(), poscount);
-            v2.insert(v2.end(), poscount);
-            s.insert(*a1);
-            a1++;
-            a2++;
-        } else if (RCPBasicKeyLess()(*a1, *a2)) {
-            v1.insert(v1.end(), poscount);
-            s.insert(*a1);
-            a1++;
-        } else {
-            v2.insert(v2.end(), poscount);
-            s.insert(*a2);
-            a2++;
+    auto i = s1.begin();
+    auto j = s2.begin();
+    unsigned int pos = 0;
+
+    // set union
+    s = s1;
+    s.insert(s2.begin(), s2.end());
+
+    for (auto &it : s) {
+        if (i != s1.end() and eq(*it, **i)) {
+            v1.push_back(pos);
+            i++;
         }
-        poscount++;
+        if (j != s2.end() and eq(*it, **j)) {
+            v2.push_back(pos);
+            j++;
+        }
+        pos++;
     }
-    if (a1 == s1.end()) {
-        while (a2 != s2.end()) {
-            v2.insert(v2.end(), poscount);
-            s.insert(*a2);
-            a2++;
-            poscount++;
-        }
-    } else if (a2 == s2.end()) {
-        while (a1 != s1.end()) {
-            v1.insert(v1.end(), poscount);
-            s.insert(*a1);
-            a1++;
-            poscount++;
-        }
-    }
-    return poscount; // return size of the new vectors
+    return pos; // return size of the new symbol set
 }
 
 RCP<const Basic> MultivariatePolynomial::as_symbolic() const
