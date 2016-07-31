@@ -1,4 +1,5 @@
 #include <symengine/sets.h>
+#include <symengine/logic.h>
 #include <iterator>
 
 namespace SymEngine
@@ -212,6 +213,11 @@ bool Interval::is_superset(const RCP<const Set> &o) const
 bool Interval::is_proper_superset(const RCP<const Set> &o) const
 {
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
+}
+
+vec_basic Interval::get_args() const
+{
+    return {start_, end_, boolean(left_open_), boolean(right_open_)};
 }
 
 RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const

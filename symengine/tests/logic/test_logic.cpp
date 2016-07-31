@@ -23,6 +23,7 @@ using SymEngine::unified_eq;
 using SymEngine::zero;
 using SymEngine::one;
 using SymEngine::eq;
+using SymEngine::boolean;
 
 TEST_CASE("BooleanAtom : Basic", "[basic]")
 {
@@ -37,6 +38,7 @@ TEST_CASE("BooleanAtom : Basic", "[basic]")
     CHECK_THROWS_AS(boolTrue->diff(x), std::runtime_error);
 
     REQUIRE(not eq(*boolTrue, *boolFalse));
+    REQUIRE(eq(*boolFalse, *boolean(false)));
 }
 
 TEST_CASE("Contains", "[logic]")

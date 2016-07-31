@@ -38,6 +38,11 @@ public:
 extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolTrue;
 extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolFalse;
 
+inline RCP<const BooleanAtom> boolean(bool b)
+{
+    return b ? boolTrue : boolFalse;
+}
+
 // Represents `expr_` is inside set `set_`
 // `set_` can be any `Set` including `Interval`, `FiniteSet`
 class Contains : public Boolean
@@ -47,7 +52,7 @@ private:
     RCP<const Set> set_;
 
 public:
-    IMPLEMENT_TYPEID(PIECEWISE)
+    IMPLEMENT_TYPEID(CONTAINS)
     //! Constructor
     Contains(const RCP<const Basic> &expr, const RCP<const Set> &set);
     std::size_t __hash__() const;
