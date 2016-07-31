@@ -167,7 +167,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
              and ((eq(*end_end, *this->end_) and this->right_open_)
                   or (eq(*end_end, *other.end_) and other.right_open_)))
             or (eq(*end_end, *m) and not eq(*end_end, *start_start))) {
-            return set_Union({rcp_from_this_cast<const Set>(), o}, false);
+            return sym_union({rcp_from_this_cast<const Set>(), o}, false);
         } else {
             if (eq(*min({this->start_, other.start_}), *this->start_))
                 start = this->start_;
@@ -187,7 +187,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
     if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<FiniteSet>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
-    return set_Union({rcp_from_this_cast<const Set>(), o}, false);
+    return sym_union({rcp_from_this_cast<const Set>(), o}, false);
 }
 
 bool Interval::is_subset(const RCP<const Set> &o) const
@@ -397,10 +397,10 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
         }
         if (not container.empty()) {
             if (left == other.left_open_ and right == other.right_open_)
-                return set_Union({rcp_from_this_cast<const Set>(), o}, false);
+                return sym_union({finiteset(container), o}, false);
             else
-                return set_Union(
-                    {rcp_from_this_cast<const Set>(),
+                return sym_union(
+                    {finiteset(container),
                      interval(other.start_, other.end_, left, right)},
                     false);
         } else {
@@ -413,7 +413,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
     if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
-    return set_Union({rcp_from_this_cast<const Set>(), o}, false);
+    return sym_union({rcp_from_this_cast<const Set>(), o}, false);
 }
 
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
@@ -484,6 +484,10 @@ bool FiniteSet::is_proper_superset(const RCP<const Set> &o) const
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
 }
 
+Union::Union(set_basic in) : container_(in)
+{
+}
+
 std::size_t Union::__hash__() const
 {
     std::size_t seed = UNION;
@@ -518,7 +522,53 @@ RCP<const Set> Union::set_union(const RCP<const Set> &o) const
     return output;
 }
 
-Union::Union(set_basic in) : container_(in)
+RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
 {
+    RCP<const Set> output = o;
+    for (auto &a : container_) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
+        output = output->set_intersection(other);
+    }
+    return output;
+}
+
+bool Union::contains(const RCP<const Basic> &a) const
+{
+    for (auto &a : container_) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
+        if (other->contains(a))
+            return true;
+    }
+    return false;
+}
+
+bool Union::is_subset(const RCP<const Set> &o) const
+{
+    for (auto &a : container_) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
+        if (not other->is_subset(o))
+            return false;
+    }
+    return true;
+}
+
+bool Union::is_proper_subset(const RCP<const Set> &o) const
+{
+    return is_subset(o) and not __eq__(*o);
+}
+
+bool Union::is_superset(const RCP<const Set> &o) const
+{
+    for (auto &a : container_) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
+        if (not other->is_superset(o))
+            return false;
+    }
+    return true;
+}
+
+bool Union::is_proper_superset(const RCP<const Set> &o) const
+{
+    return is_superset(o) and (not __eq__(*o));
 }
 } // SymEngine

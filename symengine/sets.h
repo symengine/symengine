@@ -7,6 +7,7 @@
 
 #include <symengine/functions.h>
 #include <symengine/complex.h>
+#include <iterator>
 
 namespace SymEngine
 {
@@ -179,31 +180,13 @@ public:
     }
     Union(set_basic in);
 
-    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const
-    {
-        return o;
-    }
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Basic> &a) const
-    {
-        return true;
-    }
-    virtual bool is_subset(const RCP<const Set> &o) const
-    {
-        return true;
-    }
-    virtual bool is_proper_subset(const RCP<const Set> &o) const
-    {
-        return true;
-    }
-    virtual bool is_superset(const RCP<const Set> &o) const
-    {
-        return true;
-    }
-    virtual bool is_proper_superset(const RCP<const Set> &o) const
-    {
-        return true;
-    }
+    virtual bool contains(const RCP<const Basic> &a) const;
+    virtual bool is_subset(const RCP<const Set> &o) const;
+    virtual bool is_proper_subset(const RCP<const Set> &o) const;
+    virtual bool is_superset(const RCP<const Set> &o) const;
+    virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
 //! \return RCP<const EmptySet>
@@ -241,8 +224,9 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 // ! \return RCP<const Set>
-inline RCP<const Set> set_Union(set_basic in, bool solve = true)
+inline RCP<const Set> sym_union(const set_basic &in, bool solve = true)
 {
+    set_basic input;
     if (solve == false && in.size() > 1)
         return make_rcp<const Union>(in);
     set_basic combined_FiniteSet;
@@ -255,21 +239,21 @@ inline RCP<const Set> set_Union(set_basic in, bool solve = true)
                            std::inserter(container, container.begin()),
                            RCPBasicKeyLess{});
             combined_FiniteSet = container;
-            in.erase(it);
         } else if (is_a<UniversalSet>(**it)) {
             return universalset();
-        } else if (is_a<EmptySet>(**it)) {
-            in.erase(it);
+        } else if (not is_a<EmptySet>(**it)) {
+            input.insert(*it);
         }
     }
-    if (in.empty()) {
+    if (input.empty()) {
         return finiteset(combined_FiniteSet);
-    } else if (in.size() == 1 && combined_FiniteSet.empty()) {
-        return rcp_dynamic_cast<const Set>(*in.begin());
+    } else if (input.size() == 1 && combined_FiniteSet.empty()) {
+        return rcp_dynamic_cast<const Set>(*input.begin());
     }
     // Now we rely on respective containers' own rules
+    // TODO: Improve it to O(log n)
     RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
-    for (auto it = in.begin(); it != in.end(); ++it) {
+    for (auto it = input.begin(); it != input.end(); ++it) {
         RCP<const Set> other = rcp_dynamic_cast<const Set>(*it);
         combined_Rest = combined_Rest->set_union(other);
     }
