@@ -92,6 +92,29 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "(1+2*(3+1)-5/(2+2))";
     res = parse(s);
     REQUIRE(eq(*res, *add(integer(9), div(integer(-5), integer(4)))));
+
+    s = "2 + -3";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-1)));
+
+    s = "10000000000000000000000000";
+    res = parse(s);
+    REQUIRE(eq(*res, *pow(integer(10), integer(25))));
+
+    // Make sure that parsing and printing works correctly
+    s = "0.123123123e-10";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "123123123123123.";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+#ifdef HAVE_SYMENGINE_MPFR
+    s = "1.231231232123123123123123123123e8";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
+#endif
 }
 
 TEST_CASE("Parsing: symbols", "[parser]")
@@ -134,6 +157,18 @@ TEST_CASE("Parsing: symbols", "[parser]")
     s = "y/x*x";
     res = parse(s);
     REQUIRE(eq(*res, *y));
+
+    s = "x * -y";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(x, mul(y, integer(-1)))));
+
+    s = "x ^ --y";
+    res = parse(s);
+    REQUIRE(eq(*res, *pow(x, y)));
+
+    s = "x**2e-1+3e+2-2e-2";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(real_double(299.98), pow(x, real_double(0.2)))));
 }
 
 TEST_CASE("Parsing: functions", "[parser]")
@@ -344,10 +379,10 @@ TEST_CASE("Parsing: errors", "[parser]")
     s = "2..33 + 2";
     CHECK_THROWS_AS(parse(s), ParseError);
 
-    s = "2 +- 3";
+    s = "(2)(3)";
     CHECK_THROWS_AS(parse(s), ParseError);
 
-    s = "(2)(3)";
+    s = "sin(x y)";
     CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "max(,3,2)";

@@ -27,6 +27,18 @@ void StrPrinter::bvisit(const Symbol &x)
     str_ = x.get_name();
 }
 
+void StrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-oo";
+    else if (x.is_positive_infinity())
+        s << "oo";
+    else
+        s << "zoo";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
@@ -82,7 +94,7 @@ void StrPrinter::bvisit(const RealDouble &x)
     str_ = s.str();
     if (str_.find(".") == std::string::npos
         and str_.find("e") == std::string::npos) {
-        s << ".0";
+        s << ".";
         str_ = s.str();
     }
 }
@@ -92,8 +104,9 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     std::ostringstream s;
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i.real();
-    if (s.str().find(".") == std::string::npos) {
-        s << ".0";
+    if (s.str().find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
+        s << ".";
     }
     if (x.i.imag() < 0) {
         s << " - " << -x.i.imag();
@@ -102,7 +115,7 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     }
     str_ = s.str();
     if (str_.find(".") == str_.find_last_of(".")) {
-        str_ += ".0*I";
+        str_ += ".*I";
     } else {
         str_ += "*I";
     }
@@ -144,7 +157,11 @@ void StrPrinter::bvisit(const FiniteSet &x)
 void StrPrinter::bvisit(const RealMPFR &x)
 {
     mpfr_exp_t ex;
-    char *c = mpfr_get_str(nullptr, &ex, 10, 0, x.i.get_mpfr_t(), MPFR_RNDN);
+    // mpmath.libmp.libmpf.prec_to_dps
+    long digits = std::max(
+        long(1), std::lround(x.i.get_prec() / 3.3219280948873626) - 1);
+    char *c
+        = mpfr_get_str(nullptr, &ex, 10, digits, x.i.get_mpfr_t(), MPFR_RNDN);
     std::ostringstream s;
     str_ = std::string(c);
     if (str_.at(0) == '-') {

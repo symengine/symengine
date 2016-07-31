@@ -9,6 +9,7 @@
 
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
+#include <symengine/infinity.h>
 
 namespace SymEngine
 {
@@ -64,6 +65,10 @@ extern SYMENGINE_EXPORT RCP<const Constant> pi;
 extern SYMENGINE_EXPORT RCP<const Constant> E;
 extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
 
+// Infinity
+extern SYMENGINE_EXPORT RCP<const Infty> Inf;
+extern SYMENGINE_EXPORT RCP<const Infty> NegInf;
+extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
 } // SymEngine
 
 #endif
