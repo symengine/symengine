@@ -34,19 +34,19 @@ public:
     }
 };
 
-class DivisionByZero : public SymEngineException
+class DivisionByZeroError : public SymEngineException
 {
 public:
-    DivisionByZero(const std::string &msg)
+    DivisionByZeroError(const std::string &msg)
         : SymEngineException(msg, SYMENGINE_DIV_BY_ZERO)
     {
     }
 };
 
-class NotImplemented : public SymEngineException
+class NotImplementedError : public SymEngineException
 {
 public:
-    NotImplemented(const std::string &msg)
+    NotImplementedError(const std::string &msg)
         : SymEngineException(msg, SYMENGINE_NOT_IMPLEMENTED)
     {
     }

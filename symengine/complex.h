@@ -204,7 +204,7 @@ public:
     inline RCP<const Number> divcomp(const Rational &other) const
     {
         if (other.is_zero()) {
-            throw DivisionByZero("Division By Zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -215,7 +215,7 @@ public:
     inline RCP<const Number> divcomp(const Integer &other) const
     {
         if (other.is_zero()) {
-            throw DivisionByZero("Division By Zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -228,7 +228,7 @@ public:
         rational_class conjugate
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
         if (get_num(conjugate) == 0) {
-            throw DivisionByZero("Division By Zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq((this->real_ * other.i) / conjugate,
                             (this->imaginary_ * (-other.i)) / conjugate);
