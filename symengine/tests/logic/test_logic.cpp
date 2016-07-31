@@ -74,7 +74,8 @@ TEST_CASE("Piecewise", "[logic]")
                         {y, contains(x, int2)},
                         {add(x, y), contains(x, int3)}});
 
-    std::string s = "Piecewise((x, Contains(x, (1, 2])), (y, Contains(x, (2, 5])), (x + y, Contains(x, (5, 10])))";
+    std::string s = "Piecewise((x, Contains(x, (1, 2])), (y, Contains(x, (2, "
+                    "5])), (x + y, Contains(x, (5, 10])))";
     REQUIRE(s == p->__str__());
 
     auto q = piecewise({{one, contains(x, int1)},
@@ -82,5 +83,4 @@ TEST_CASE("Piecewise", "[logic]")
                         {one, contains(x, int3)}});
 
     REQUIRE(eq(*p->diff(x), *q));
-    
 }

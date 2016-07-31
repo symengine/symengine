@@ -592,7 +592,8 @@ public:
         throw std::runtime_error("Derivative doesn't exist.");
     }
 
-    static RCP<const Basic> diff(const Boolean &self, const RCP<const Symbol> &x)
+    static RCP<const Basic> diff(const Boolean &self,
+                                 const RCP<const Symbol> &x)
     {
         throw std::runtime_error("Derivative doesn't exist.");
     }

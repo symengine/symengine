@@ -12,10 +12,12 @@
 namespace SymEngine
 {
 
+// Parent class for expressing boolean statements
 class Boolean : public Basic
 {
 };
 
+// Booleans True and False
 class BooleanAtom : public Boolean
 {
 private:
@@ -36,6 +38,8 @@ public:
 extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolTrue;
 extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolFalse;
 
+// Represents `expr_` is inside set `set_`
+// `set_` can be any `Set` including `Interval`, `FiniteSet`
 class Contains : public Boolean
 {
 private:
@@ -61,6 +65,8 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
 typedef std::vector<std::pair<RCP<const Basic>, RCP<const Boolean>>>
     PiecewiseVec;
 
+// Represents a piecewise function
+// Keeps a vector of (Expr, Condition) pairs
 class Piecewise : public Basic
 {
 private:
@@ -78,7 +84,8 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-// Vec is a pair of RCP<const Basic>. (Relation, Expression)
+// Vec is vector of pairs of RCP<const Basic> and RCP<const Boolean> to
+// represent (Expr, Condition) pairs
 inline RCP<const Basic> piecewise(PiecewiseVec &&vec)
 {
     return make_rcp<Piecewise>(std::move(vec));

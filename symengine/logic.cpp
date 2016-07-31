@@ -1,15 +1,17 @@
 #include <symengine/logic.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-BooleanAtom::BooleanAtom(bool b) : b_{b} {
-
+BooleanAtom::BooleanAtom(bool b) : b_{b}
+{
 }
 
 std::size_t BooleanAtom::__hash__() const
 {
     std::size_t seed = BOOLEAN_ATOM;
-    if (b_) ++seed;
+    if (b_)
+        ++seed;
     return seed;
 }
 bool BooleanAtom::get_val() const
@@ -42,8 +44,9 @@ int BooleanAtom::compare(const Basic &o) const
 RCP<const BooleanAtom> boolTrue = make_rcp<BooleanAtom>(true);
 RCP<const BooleanAtom> boolFalse = make_rcp<BooleanAtom>(false);
 
-Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set) : expr_{expr}, set_{set} {
-
+Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
+    : expr_{expr}, set_{set}
+{
 }
 
 std::size_t Contains::__hash__() const
@@ -75,22 +78,25 @@ vec_basic Contains::get_args() const
 bool Contains::__eq__(const Basic &o) const
 {
     return is_a<Contains>(o)
-           and unified_eq(get_expr(), static_cast<const Contains &>(o).get_expr())
-           and unified_eq(get_set(), static_cast<const Contains &>(o).get_set());
+           and unified_eq(get_expr(),
+                          static_cast<const Contains &>(o).get_expr())
+           and unified_eq(get_set(),
+                          static_cast<const Contains &>(o).get_set());
 }
 
 int Contains::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Contains>(o))
-    const Contains& c = static_cast<const Contains &>(o);
+    const Contains &c = static_cast<const Contains &>(o);
     int cmp = unified_compare(get_expr(), c.get_expr());
     if (cmp != 0)
         return cmp;
     return unified_compare(get_set(), c.get_set());
 }
 
-
-RCP<const Boolean> contains(const RCP<const Basic> &expr, const RCP<const Set> &set) {
+RCP<const Boolean> contains(const RCP<const Basic> &expr,
+                            const RCP<const Set> &set)
+{
     if (is_a_Number(*expr)) {
         return make_rcp<BooleanAtom>(set->contains(expr));
     } else {
@@ -120,7 +126,7 @@ const PiecewiseVec &Piecewise::get_vec() const
 vec_basic Piecewise::get_args() const
 {
     vec_basic v;
-    for (auto &p: vec_) {
+    for (auto &p : vec_) {
         v.push_back(p.first);
         v.push_back(p.second);
     }
@@ -140,6 +146,4 @@ int Piecewise::compare(const Basic &o) const
     RCP<const Piecewise> t = o.rcp_from_this_cast<Piecewise>();
     return unified_compare(get_vec(), t->get_vec());
 }
-
-
 }

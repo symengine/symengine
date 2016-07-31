@@ -138,7 +138,6 @@ void StrPrinter::bvisit(const Contains &x)
     std::ostringstream s;
     s << "Contains(" << apply(x.get_expr()) << ", " << apply(x.get_set())
       << ")";
-    // s << apply(x.get_expr()) << " " << "∈" << " " << apply(x.get_set());
     str_ = s.str();
 }
 
