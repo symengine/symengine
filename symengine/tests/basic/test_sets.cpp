@@ -22,7 +22,7 @@ using SymEngine::emptyset;
 using SymEngine::UniversalSet;
 using SymEngine::universalset;
 using SymEngine::Union;
-using SymEngine::sym_union;
+using SymEngine::set_union;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
@@ -61,11 +61,11 @@ TEST_CASE("Interval : Basic", "[basic]")
     r4 = r3->set_intersection(r2);
     REQUIRE(eq(*r3, *r4));
     r3 = r1->set_union(r2); // [-5, 20]
-    REQUIRE(eq(*r3, *sym_union({r1, r2})));
+    REQUIRE(eq(*r3, *set_union({r1, r2})));
     r4 = interval(im5, i20);
     REQUIRE(eq(*r3, *r4));
     r3 = r2->set_union(r1); // [-5, 20]
-    REQUIRE(eq(*r3, *sym_union({r1, r2})));
+    REQUIRE(eq(*r3, *set_union({r1, r2})));
     REQUIRE(eq(*r3, *r4));
     r3 = interval(integer(21), integer(22));
     r4 = r1->set_intersection(r3);
@@ -73,8 +73,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     r3 = interval(im5, i2, false, false); // [-5, 2]
     r4 = interval(integer(3), i20, false, false);
     REQUIRE(r3->compare(*r4) == -1);
-    REQUIRE(eq(*r3->set_union(r4), *sym_union({r3, r4})));
-    REQUIRE(eq(*r4->set_union(r3), *sym_union({r3, r4})));
+    REQUIRE(eq(*r3->set_union(r4), *set_union({r3, r4})));
+    REQUIRE(eq(*r4->set_union(r3), *set_union({r3, r4})));
 
     r3 = interval(zero, i2, true, true); // (0, 2)
     CHECK_THROWS_AS(r3->contains(sqrt(i2)), std::runtime_error);
@@ -99,7 +99,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r3, *r4));
     REQUIRE(eq(*emptyset(), *r1->set_intersection(emptyset())));
     REQUIRE(eq(*r1, *r1->set_union(emptyset())));
-    REQUIRE(eq(*r1, *sym_union({r1, emptyset()})));
+    REQUIRE(eq(*r1, *set_union({r1, emptyset()})));
 
     REQUIRE(r4->__str__() == "[5/6, 2]");
     REQUIRE(r4->compare(*r3) == 0);
@@ -161,7 +161,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->is_superset(r2));
     REQUIRE(eq(*r1, *r1->set_intersection(r2)));
     REQUIRE(eq(*r2, *r1->set_union(r2)));
-    REQUIRE(eq(*r2, *sym_union({r1, r2})));
+    REQUIRE(eq(*r2, *set_union({r1, r2})));
     REQUIRE(r1->__str__() == "EmptySet");
     REQUIRE(r1->__hash__() == emptyset()->__hash__());
     REQUIRE(not r1->is_proper_subset(r1));
@@ -194,8 +194,8 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_superset(r1));
     REQUIRE(eq(*r1, *r1->set_union(r2)));
     REQUIRE(eq(*r1, *r1->set_union(e)));
-    REQUIRE(eq(*r1, *sym_union({r1, r2})));
-    REQUIRE(eq(*r1, *sym_union({r1, e})));
+    REQUIRE(eq(*r1, *set_union({r1, r2})));
+    REQUIRE(eq(*r1, *set_union({r1, e})));
     REQUIRE(eq(*r2, *r1->set_intersection(r2)));
     REQUIRE(eq(*e, *r1->set_intersection(e)));
     REQUIRE(r1->contains(zero));
@@ -211,7 +211,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r2 = finiteset({zero, one, integer(2)});
     RCP<const Set> r3 = r1->set_union(r2); // {0, 1, 2, x}
-    REQUIRE(eq(*r3, *sym_union({r1, r2})));
+    REQUIRE(eq(*r3, *set_union({r1, r2})));
     r3 = r1->set_intersection(r2); // {0, 1}
     REQUIRE(eq(*r3, *finiteset({zero, one})));
     REQUIRE(r3->__hash__() == finiteset({zero, one})->__hash__());
@@ -229,7 +229,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(r3->contains(zero));
     r2 = finiteset({zero, one});
     r3 = r2->set_union(r4);
-    REQUIRE(eq(*r3, *sym_union({r2, r4})));
+    REQUIRE(eq(*r3, *set_union({r2, r4})));
     REQUIRE(r3->__str__() == "[0, 1]");
     REQUIRE(r1->is_subset(r4));
     REQUIRE(r1->is_proper_subset(r4));
@@ -244,20 +244,20 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     r3 = r1->set_union(r4);
     r2 = interval(zero, one); // [0, 1]
     REQUIRE(eq(*r2, *r3));
-    REQUIRE(eq(*r2, *sym_union({r1, r4})));
+    REQUIRE(eq(*r2, *set_union({r1, r4})));
     r1 = finiteset({zero, one, integer(2)});
     r3 = r1->set_union(r4);
-    REQUIRE(eq(*r3, *sym_union({r1, r4})));
+    REQUIRE(eq(*r3, *set_union({r1, r4})));
     r4 = interval(zero, one, false, true); // [0, 1)
     r3 = r1->set_union(r4);
-    REQUIRE(eq(*r3, *sym_union({r1, r4})));
+    REQUIRE(eq(*r3, *set_union({r1, r4})));
 
     r4 = emptyset();
     r3 = r2->set_intersection(r4);
     REQUIRE(eq(*r3, *emptyset()));
     r3 = r2->set_union(r4);
     REQUIRE(eq(*r3, *r2));
-    REQUIRE(eq(*r3, *sym_union({r2, r4})));
+    REQUIRE(eq(*r3, *set_union({r2, r4})));
     REQUIRE(r1->is_superset(r4));
     REQUIRE(not r1->is_proper_subset(r4));
 
@@ -265,7 +265,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     r3 = r2->set_intersection(r4);
     REQUIRE(eq(*r3, *r2));
     r3 = r2->set_union(r4);
-    REQUIRE(eq(*r3, *sym_union({r2, r4})));
+    REQUIRE(eq(*r3, *set_union({r2, r4})));
     REQUIRE(eq(*r3, *universalset()));
     REQUIRE(not r1->is_superset(r4));
     REQUIRE(r1->is_proper_subset(r4));
@@ -274,29 +274,32 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
 TEST_CASE("Union : Basic", "[basic]")
 {
     RCP<const Set> f1 = finiteset({zero, one, symbol("x")});
-    RCP<const Set> r1 = sym_union({f1, emptyset()});
+    RCP<const Set> r1 = set_union({f1, emptyset()});
     REQUIRE(eq(*r1, *f1));
-    r1 = sym_union({emptyset()});
+    r1 = set_union({emptyset()});
     REQUIRE(eq(*r1, *emptyset()));
-    r1 = sym_union({universalset()});
+    r1 = set_union({universalset()});
     REQUIRE(eq(*r1, *universalset()));
-    r1 = sym_union({f1});
+    r1 = set_union({f1});
     REQUIRE(eq(*r1, *f1));
-    r1 = sym_union({f1, emptyset(), universalset()});
+    r1 = set_union({f1, emptyset(), universalset()});
     REQUIRE(eq(*r1, *universalset()));
     RCP<const Set> i1 = interval(zero, integer(3));
     RCP<const Set> i2 = interval(integer(4), integer(5));
     RCP<const Set> i3 = interval(integer(3), integer(4));
-    r1 = sym_union({i1, i2, i3});
+    r1 = set_union({i1, i2, i3});
     REQUIRE(eq(*r1, *interval(integer(0), integer(5))));
 
     i1 = interval(zero, one);
     i2 = interval(integer(3), integer(4));
     i3 = interval(integer(2), integer(3));
-    r1 = sym_union({i1, i2, i3});
-    RCP<const Union> u = rcp_dynamic_cast<const Union>(r1);
+    RCP<const Set> r2 = set_union({i1, i2, i3});
+    RCP<const Union> u = rcp_dynamic_cast<const Union>(r2);
     REQUIRE(u->container_.size() == 2);
     REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
     REQUIRE(u->container_.find(interval(integer(2), integer(4)))
             != u->container_.end());
+
+    r2 = set_union({r1, r2});
+    REQUIRE(eq(*r1, *r2));
 }

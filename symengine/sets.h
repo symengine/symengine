@@ -224,7 +224,7 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 // ! \return RCP<const Set>
-inline RCP<const Set> sym_union(const set_basic &in, bool solve = true)
+inline RCP<const Set> set_union(const set_basic &in, bool solve = true)
 {
     set_basic input;
     if (solve == false && in.size() > 1)
@@ -234,11 +234,8 @@ inline RCP<const Set> sym_union(const set_basic &in, bool solve = true)
         if (is_a<FiniteSet>(**it)) {
             set_basic container;
             const FiniteSet &other = static_cast<const FiniteSet &>(**it);
-            std::set_union(combined_FiniteSet.begin(), combined_FiniteSet.end(),
-                           other.container_.begin(), other.container_.end(),
-                           std::inserter(container, container.begin()),
-                           RCPBasicKeyLess{});
-            combined_FiniteSet = container;
+            combined_FiniteSet.insert(other.container_.begin(),
+                                      other.container_.end());
         } else if (is_a<UniversalSet>(**it)) {
             return universalset();
         } else if (not is_a<EmptySet>(**it)) {
