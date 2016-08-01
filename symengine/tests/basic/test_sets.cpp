@@ -284,4 +284,19 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(eq(*r1, *f1));
     r1 = sym_union({f1, emptyset(), universalset()});
     REQUIRE(eq(*r1, *universalset()));
+    RCP<const Set> i1 = interval(zero, integer(3));
+    RCP<const Set> i2 = interval(integer(4), integer(5));
+    RCP<const Set> i3 = interval(integer(3), integer(4));
+    r1 = sym_union({i1, i2, i3});
+    REQUIRE(eq(*r1, *interval(integer(0), integer(5))));
+
+    i1 = interval(zero, one);
+    i2 = interval(integer(3), integer(4));
+    i3 = interval(integer(2), integer(3));
+    r1 = sym_union({i1, i2, i3});
+    RCP<const Union> u = rcp_dynamic_cast<const Union>(r1);
+    REQUIRE(u->container_.size() == 2);
+    REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
+    REQUIRE(u->container_.find(interval(integer(2), integer(4)))
+            != u->container_.end());
 }

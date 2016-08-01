@@ -184,7 +184,8 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
             return interval(start, end, left_open, right_open);
         }
     }
-    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<FiniteSet>(*o)) {
+    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<FiniteSet>(*o)
+        || is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return sym_union({rcp_from_this_cast<const Set>(), o}, false);
@@ -410,7 +411,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                 return interval(other.start_, other.end_, left, right);
         }
     }
-    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o)) {
+    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return sym_union({rcp_from_this_cast<const Set>(), o}, false);
@@ -514,21 +515,25 @@ int Union::compare(const Basic &o) const
 
 RCP<const Set> Union::set_union(const RCP<const Set> &o) const
 {
-    RCP<const Set> output = o;
-    for (auto &a : container_) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
-        output = output->set_union(other);
+    set_basic container(container_);
+    for (auto iter = container.begin(); iter != container.end(); ++iter) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(*iter);
+        auto temp = o->set_union(other);
+        // If we are able to do union we
+        if (not eq(*temp, *sym_union({o, other}, false))) {
+            iter = container.erase(iter);
+            container.insert(temp);
+            return sym_union(container);
+        }
     }
-    return output;
+    container.insert(o);
+    return sym_union(container, false);
 }
 
 RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
 {
     RCP<const Set> output = o;
-    for (auto &a : container_) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
-        output = output->set_intersection(other);
-    }
+    // TODO
     return output;
 }
 
