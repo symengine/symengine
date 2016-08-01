@@ -19,6 +19,7 @@
 #include <symengine/series_piranha.h>
 #include <symengine/sets.h>
 #include <symengine/fields.h>
+#include <symengine/logic.h>
 #include <symengine/infinity.h>
 
 namespace SymEngine
