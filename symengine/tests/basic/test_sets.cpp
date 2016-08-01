@@ -2,6 +2,7 @@
 
 #include <symengine/sets.h>
 #include <symengine/logic.h>
+#include <symengine/infinity.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -26,6 +27,8 @@ using SymEngine::symbol;
 using SymEngine::is_a;
 using SymEngine::symbol;
 using SymEngine::boolean;
+using SymEngine::Inf;
+using SymEngine::NegInf;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -113,6 +116,11 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->Ropen(), *r2));
     r2 = interval(zero, one, true, true);
     REQUIRE(eq(*r5->open(), *r2));
+
+    r1 = interval(zero, Inf, false, true);
+    r2 = interval(NegInf, one, true, true);
+    r3 = interval(zero, one, false, true);
+    REQUIRE(eq(*r3, *r1->set_intersection(r2)));
 
     REQUIRE(not r5->__eq__(*r2));
     REQUIRE(r5->__hash__() != emptyset()->__hash__());

@@ -2799,6 +2799,11 @@ RCP<const Basic> max(const vec_basic &arg)
                 max_number = rcp_static_cast<const Number>(p);
 
             } else {
+                if (eq(*p, *Inf)) {
+                    return Inf;
+                } else if (eq(*p, *NegInf)) {
+                    continue;
+                }
                 difference = rcp_static_cast<const Number>(p)->sub(*max_number);
 
                 if (difference->is_zero() and not difference->is_exact()) {
@@ -2897,6 +2902,11 @@ RCP<const Basic> min(const vec_basic &arg)
                 min_number = rcp_static_cast<const Number>(p);
 
             } else {
+                if (eq(*p, *Inf)) {
+                    continue;
+                } else if (eq(*p, *NegInf)) {
+                    return NegInf;
+                }
                 difference = min_number->sub(*rcp_static_cast<const Number>(p));
 
                 if (difference->is_zero() and not difference->is_exact()) {
