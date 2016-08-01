@@ -50,6 +50,7 @@ set(SRC
     eval.cpp
     fields.cpp
     infinity.cpp
+    logic.cpp
 )
 
 if (WITH_MPFR)
@@ -86,8 +87,8 @@ set(HEADERS
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
     basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
     polys/uintpoly_flint.h  polys/uintpoly_piranha.h eval.h flint_wrapper.h polys/basic_conversions.h
-    polys/usymenginepoly.h polys/uratpoly.h    
-    infinity.h
+    polys/usymenginepoly.h polys/uratpoly.h
+    infinity.h   logic.h
 )
 
 # Configure SymEngine using our CMake options:

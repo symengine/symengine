@@ -592,6 +592,22 @@ public:
         throw std::runtime_error("Derivative doesn't exist.");
     }
 
+    static RCP<const Basic> diff(const Boolean &self,
+                                 const RCP<const Symbol> &x)
+    {
+        throw std::runtime_error("Derivative doesn't exist.");
+    }
+
+    static RCP<const Basic> diff(const Piecewise &self,
+                                 const RCP<const Symbol> &x)
+    {
+        PiecewiseVec v = self.get_vec();
+        for (auto &p : v) {
+            p.first = p.first->diff(x);
+        }
+        return piecewise(std::move(v));
+    }
+
     static RCP<const Basic> diff(const KroneckerDelta &self,
                                  const RCP<const Symbol> &x)
     {
