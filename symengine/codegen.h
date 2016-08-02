@@ -13,13 +13,16 @@ public:
     using StrPrinter::str_;
     using StrPrinter::apply;
     using StrPrinter::bvisit;
-    void bvisit(const Basic &x)   {
+    void bvisit(const Basic &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const Complex &x) {
+    void bvisit(const Complex &x)
+    {
         throw std::runtime_error("Not implemented");
     }
-    void bvisit(const Interval &x) {
+    void bvisit(const Interval &x)
+    {
         std::string var = str_;
         std::ostringstream s;
         bool is_inf = eq(*x.start_, *NegInf);
@@ -46,17 +49,20 @@ public:
         }
         str_ = s.str();
     }
-    void bvisit(const Contains &x) {
+    void bvisit(const Contains &x)
+    {
         x.get_expr()->accept(*this);
         x.get_set()->accept(*this);
     }
-    void bvisit(const Piecewise &x) {
+    void bvisit(const Piecewise &x)
+    {
         std::ostringstream s;
         auto vec = x.get_vec();
         for (size_t i = 0;; ++i) {
             if (i == vec.size() - 1) {
                 if (neq(*vec[i].second, *boolTrue)) {
-                    throw std::runtime_error("Code generation requires a (Expr, True) at the end");
+                    throw std::runtime_error(
+                        "Code generation requires a (Expr, True) at the end");
                 }
                 s << "(\n   " << apply(vec[i].first) << "\n";
                 break;
@@ -73,24 +79,28 @@ public:
         }
         str_ = s.str();
     }
-    void bvisit(const Rational &x) {
+    void bvisit(const Rational &x)
+    {
         std::ostringstream o;
         double n = mp_get_d(get_num(x.i));
         double d = mp_get_d(get_den(x.i));
         o << n << "/" << d;
         str_ = o.str();
     }
-    void bvisit(const EmptySet &x) {
+    void bvisit(const EmptySet &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const FiniteSet &x) {
+    void bvisit(const FiniteSet &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const UniversalSet &x) {
+    void bvisit(const UniversalSet &x)
+    {
         throw std::runtime_error("Not supported");
     }
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                                const RCP<const Basic> &b)
+                    const RCP<const Basic> &b)
     {
         if (eq(*b, *rational(1, 2))) {
             o << "sqrt(" << apply(a) << ")";
@@ -98,7 +108,8 @@ public:
             o << "pow(" << apply(a) << ", " << apply(b) << ")";
         }
     }
-    void bvisit(const Constant &x) {
+    void bvisit(const Constant &x)
+    {
         if (eq(x, *E)) {
             str_ = "M_E";
         } else if (eq(x, *pi)) {
@@ -107,7 +118,8 @@ public:
             str_ = x.get_name();
         }
     }
-    void bvisit(const Infty &x) {
+    void bvisit(const Infty &x)
+    {
         std::ostringstream s;
         if (x.is_negative_infinity())
             s << "-HUGE_VAL";
@@ -117,28 +129,33 @@ public:
             throw std::runtime_error("Not supported");
         str_ = s.str();
     }
-    void bvisit(const UnivariateSeries &x) {
+    void bvisit(const UnivariateSeries &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const FunctionSymbol &x) {
+    void bvisit(const FunctionSymbol &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const Derivative &x)  {
+    void bvisit(const Derivative &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const Subs &x)  {
+    void bvisit(const Subs &x)
+    {
         throw std::runtime_error("Not supported");
     }
-    void bvisit(const GaloisField &x) {
+    void bvisit(const GaloisField &x)
+    {
         throw std::runtime_error("Not supported");
     }
 };
 
-std::string ccode(const Basic &x) {
+std::string ccode(const Basic &x)
+{
     CodePrinter c;
     return c.apply(x);
 }
-
 }
 
 #endif // SYMENGINE_CODEGEN_H

@@ -21,12 +21,12 @@ using SymEngine::boolTrue;
 using SymEngine::sin;
 using SymEngine::sqrt;
 
-
 TEST_CASE("Arithmetic", "[ccode]")
 {
     auto x = symbol("x");
     auto y = symbol("y");
-    auto p = add(add(add(add(x, mul(x, y)), pow(x, y)), mul(x, x)), sqrt(integer(2)));
+    auto p = add(add(add(add(x, mul(x, y)), pow(x, y)), mul(x, x)),
+                 sqrt(integer(2)));
     REQUIRE(ccode(*p) == "x + x*y + sqrt(2) + pow(x, 2) + pow(x, y)");
 }
 
@@ -43,7 +43,10 @@ TEST_CASE("Piecewise", "[ccode]")
     auto y = symbol("y");
     auto int1 = interval(NegInf, integer(2), true, false);
     auto int2 = interval(integer(2), integer(5), true, false);
-    auto p = piecewise({{x, contains(x, int1)}, {y, contains(x, int2)}, {add(x, y), boolTrue}});
+    auto p = piecewise({{x, contains(x, int1)},
+                        {y, contains(x, int2)},
+                        {add(x, y), boolTrue}});
 
-    REQUIRE(ccode(*p) == "((x <= 2) ? (\n   x\n)\n: ((x > 2 && x <= 5) ? (\n   y\n)\n: (\n   x + y\n)))");
+    REQUIRE(ccode(*p) == "((x <= 2) ? (\n   x\n)\n: ((x > 2 && x <= 5) ? (\n   "
+                         "y\n)\n: (\n   x + y\n)))");
 }
