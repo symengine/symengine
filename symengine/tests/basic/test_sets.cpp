@@ -31,6 +31,8 @@ using SymEngine::symbol;
 using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
+using SymEngine::boolTrue;
+using SymEngine::boolFalse;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -50,14 +52,14 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(not is_a<UniversalSet>(*r1));
 
     r3 = r1->set_intersection(r2); // [0, 2]
-    REQUIRE(r1->contains(one));
+    REQUIRE(eq(*r1->contains(one), *boolTrue));
     r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
     r3 = interval(im5, i2, true, true); // (-5, 2)
-    REQUIRE(not r3->contains(i2));
-    REQUIRE(not r3->contains(im5));
-    REQUIRE(not r3->contains(rat2));
-    REQUIRE(not r3->contains(integer(-7)));
+    REQUIRE(eq(*r3->contains(i2), *boolFalse));
+    REQUIRE(eq(*r3->contains(im5), *boolFalse));
+    REQUIRE(eq(*r3->contains(rat2), *boolFalse));
+    REQUIRE(eq(*r3->contains(integer(-7)), *boolFalse));
     r4 = r3->set_intersection(r2);
     REQUIRE(eq(*r3, *r4));
     r3 = r1->set_union(r2); // [-5, 20]
@@ -167,7 +169,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r1));
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
-    REQUIRE(not r1->contains(zero));
+    REQUIRE(eq(*r1->contains(zero), *boolFalse));
     CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
 }
 
@@ -198,7 +200,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(eq(*r1, *set_union({r1, e})));
     REQUIRE(eq(*r2, *r1->set_intersection(r2)));
     REQUIRE(eq(*e, *r1->set_intersection(e)));
-    REQUIRE(r1->contains(zero));
+    REQUIRE(eq(*r1->contains(zero), *boolTrue));
     REQUIRE(r1->__str__() == "UniversalSet");
     REQUIRE(r1->__hash__() == universalset()->__hash__());
     REQUIRE(not r1->__eq__(*r2));
@@ -216,17 +218,17 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(eq(*r3, *finiteset({zero, one})));
     REQUIRE(r3->__hash__() == finiteset({zero, one})->__hash__());
     REQUIRE(r3->compare(*r2) == -1);
-    REQUIRE(r3->contains(one));
-    REQUIRE(r3->contains(zero));
-    REQUIRE(not r3->contains(integer(3)));
+    REQUIRE(eq(*r3->contains(one), *boolTrue));
+    REQUIRE(eq(*r3->contains(zero), *boolTrue));
+    REQUIRE(eq(*r3->contains(integer(3)), *boolFalse));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
 
     r1 = finiteset({zero, one});
     RCP<const Set> r4 = interval(zero, one);
     r3 = r2->set_intersection(r4);
-    REQUIRE(r3->contains(one));
-    REQUIRE(r3->contains(zero));
+    REQUIRE(eq(*r3->contains(one), *boolTrue));
+    REQUIRE(eq(*r3->contains(zero), *boolTrue));
     r2 = finiteset({zero, one});
     r3 = r2->set_union(r4);
     REQUIRE(eq(*r3, *set_union({r2, r4})));
@@ -309,9 +311,9 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(u->container_.find(interval(integer(2), integer(4)))
             != u->container_.end());
     REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
-    REQUIRE(u->contains(one));
-    REQUIRE(u->contains(integer(2)));
-    REQUIRE(not u->contains(integer(7)));
+    REQUIRE(eq(*u->contains(one), *boolTrue));
+    REQUIRE(eq(*u->contains(integer(2)), *boolTrue));
+    REQUIRE(eq(*u->contains(integer(7)), *boolFalse));
     REQUIRE(u->is_superset(r1));
     REQUIRE(u->is_superset(r2));
     REQUIRE(u->is_superset(u));
