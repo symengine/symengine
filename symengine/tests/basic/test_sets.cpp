@@ -302,4 +302,26 @@ TEST_CASE("Union : Basic", "[basic]")
 
     r2 = set_union({r1, r2});
     REQUIRE(eq(*r1, *r2));
+
+    r2 = set_union({i1, i2, i3});
+    r1 = set_union({finiteset({zero}), i2});
+    u = rcp_dynamic_cast<const Union>(set_union({r1, r2}));
+    REQUIRE(u->container_.find(interval(integer(2), integer(4)))
+            != u->container_.end());
+    REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
+    REQUIRE(u->contains(one));
+    REQUIRE(u->contains(integer(2)));
+    REQUIRE(not u->contains(integer(7)));
+    REQUIRE(u->is_superset(r1));
+    REQUIRE(u->is_superset(r2));
+    REQUIRE(u->is_superset(u));
+    REQUIRE(r2->is_subset(u));
+    REQUIRE(r1->is_subset(u));
+    REQUIRE(u->is_subset(u));
+    REQUIRE(u->is_proper_superset(r1));
+    REQUIRE(not u->is_proper_superset(r2));
+    REQUIRE(not u->is_proper_superset(u));
+    REQUIRE(not r2->is_proper_subset(u));
+    REQUIRE(r1->is_proper_subset(u));
+    REQUIRE(not u->is_proper_subset(u));
 }

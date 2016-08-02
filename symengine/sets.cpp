@@ -538,11 +538,11 @@ RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
     return output;
 }
 
-bool Union::contains(const RCP<const Basic> &a) const
+bool Union::contains(const RCP<const Basic> &o) const
 {
     for (auto &a : container_) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
-        if (other->contains(a))
+        RCP<const Set> me = rcp_dynamic_cast<const Set>(a);
+        if (me->contains(o))
             return true;
     }
     return false;
@@ -550,9 +550,11 @@ bool Union::contains(const RCP<const Basic> &a) const
 
 bool Union::is_subset(const RCP<const Set> &o) const
 {
+    if (is_a<Union>(*o))
+        return (*o).is_superset(rcp_from_this_cast<const Set>());
     for (auto &a : container_) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
-        if (not other->is_subset(o))
+        RCP<const Set> me = rcp_dynamic_cast<const Set>(a);
+        if (not me->is_subset(o))
             return false;
     }
     return true;
@@ -565,12 +567,27 @@ bool Union::is_proper_subset(const RCP<const Set> &o) const
 
 bool Union::is_superset(const RCP<const Set> &o) const
 {
-    for (auto &a : container_) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(a);
-        if (not other->is_superset(o))
-            return false;
+    if (is_a<Union>(*o)) {
+        set_basic container(rcp_dynamic_cast<const Union>(o)->container_);
+        for (auto &a : container_) {
+            RCP<const Set> me = rcp_dynamic_cast<const Set>(a);
+            for (auto iter = container.begin(); iter != container.end();) {
+                RCP<const Set> other = rcp_dynamic_cast<const Set>(*iter);
+                if (me->is_superset(other)) {
+                    iter = container.erase(iter);
+                } else {
+                    ++iter;
+                }
+            }
+        }
+        return container.empty();
     }
-    return true;
+    for (auto &a : container_) {
+        RCP<const Set> me = rcp_dynamic_cast<const Set>(a);
+        if (me->is_superset(o))
+            return true;
+    }
+    return false;
 }
 
 bool Union::is_proper_superset(const RCP<const Set> &o) const
