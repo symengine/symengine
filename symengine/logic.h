@@ -56,16 +56,15 @@ class Contains : public Boolean
 {
 private:
     RCP<const Basic> expr_;
-    RCP<const SymEngine::Set> set_;
+    RCP<const Set> set_;
 
 public:
     IMPLEMENT_TYPEID(CONTAINS)
     //! Constructor
-    Contains(const RCP<const Basic> &expr,
-             const RCP<const SymEngine::Set> &set);
+    Contains(const RCP<const Basic> &expr, const RCP<const Set> &set);
     std::size_t __hash__() const;
     RCP<const Basic> get_expr() const;
-    RCP<const SymEngine::Set> get_set() const;
+    RCP<const Set> get_set() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator

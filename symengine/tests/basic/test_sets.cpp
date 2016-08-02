@@ -33,6 +33,8 @@ using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::boolTrue;
 using SymEngine::boolFalse;
+using SymEngine::Contains;
+using SymEngine::make_rcp;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -79,7 +81,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r4->set_union(r3), *set_union({r3, r4})));
 
     r3 = interval(zero, i2, true, true); // (0, 2)
-    CHECK_THROWS_AS(r3->contains(sqrt(i2)), std::runtime_error);
+    REQUIRE(eq(*r3->contains(sqrt(i2)), *make_rcp<Contains>(sqrt(i2), r3)));
 
     r3 = interval(im5, i2, false, false); // [-5, 2]
     REQUIRE(r3->is_subset(r2));
