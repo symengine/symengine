@@ -21,14 +21,13 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 // translates vectors from one polynomial into vectors for another.
 template <typename Vec>
-Vec translate(Vec original, vec_uint translator, unsigned int size)
+void translate(const Vec &original, Vec &changed, vec_uint translator,
+               unsigned int size)
 {
-    Vec changed;
     changed.resize(size, 0);
     for (unsigned int i = 0; i < original.size(); i++) {
         changed[translator[i]] = original[i];
     }
-    return changed;
 }
 
 // translates two vec_uints to the desired format and adds them together
@@ -116,9 +115,9 @@ public:
         Dict dict;
         // Permute the exponents
         for (auto &bucket : d) {
-            dict.insert(std::pair<Vec, Coeff>(
-                translate<Vec>(bucket.first, translator, s.size()),
-                bucket.second));
+            Vec changed;
+            translate<Vec>(bucket.first, changed, translator, s.size());
+            dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
         }
         return Poly::from_dict(s, std::move(dict));
     }
@@ -190,16 +189,18 @@ public:
         umap_basic_uint degs;
         unsigned int size = reconcile(v1, v2, s, vars_, b.vars_);
         for (auto bucket : dict_) {
-            dict.insert(std::pair<Vec, Coeff>(
-                translate<Vec>(bucket.first, v1, size), bucket.second));
+            Vec changed;
+            translate<Vec>(bucket.first, changed, v1, size);
+            dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
         }
         for (auto bucket : b.dict_) {
-            auto target = dict.find(translate<Vec>(bucket.first, v2, size));
+            Vec changed;
+            translate<Vec>(bucket.first, changed, v2, size);
+            auto target = dict.find(changed);
             if (target != dict.end()) {
                 target->second += bucket.second;
             } else {
-                dict.insert(std::pair<Vec, Coeff>(
-                    translate<Vec>(bucket.first, v2, size), bucket.second));
+                dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
             }
         }
         return Poly::from_dict(s, std::move(dict));
