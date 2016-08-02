@@ -18,10 +18,22 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
     virtual bool contains(const RCP<const Basic> &a) const = 0;
-    virtual bool is_subset(const RCP<const Set> &o) const = 0;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const = 0;
-    virtual bool is_superset(const RCP<const Set> &o) const = 0;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const = 0;
+    bool is_subset(const RCP<const Set> &o) const
+    {
+        return eq(*this->set_intersection(o), *this);
+    }
+    bool is_proper_subset(const RCP<const Set> &o) const
+    {
+        return eq(*this->set_intersection(o), *this) and not eq(*this, *o);
+    }
+    bool is_superset(const RCP<const Set> &o) const
+    {
+        return o->is_subset(rcp_from_this_cast<const Set>());
+    }
+    bool is_proper_superset(const RCP<const Set> &o) const
+    {
+        return this->is_superset(o) and not eq(*this, *o);
+    }
 };
 
 class EmptySet : public Set
@@ -48,16 +60,6 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual bool contains(const RCP<const Basic> &a) const
-    {
-        return false;
-    };
-    virtual bool is_subset(const RCP<const Set> &o) const
-    {
-        return true;
-    };
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const
     {
         return false;
     };
@@ -90,16 +92,6 @@ public:
     {
         return true;
     };
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const
-    {
-        return false;
-    };
-    virtual bool is_superset(const RCP<const Set> &o) const
-    {
-        return true;
-    };
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
 class FiniteSet : public Set
@@ -123,10 +115,6 @@ public:
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual bool contains(const RCP<const Basic> &a) const;
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
 class Interval : public Set
@@ -157,10 +145,6 @@ public:
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual bool contains(const RCP<const Basic> &a) const;
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
     virtual vec_basic get_args() const;
 };
 
@@ -183,10 +167,6 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual bool contains(const RCP<const Basic> &a) const;
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
 //! \return RCP<const EmptySet>
