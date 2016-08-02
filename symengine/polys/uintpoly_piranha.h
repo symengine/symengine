@@ -342,46 +342,27 @@ inline RCP<const URatPolyPiranha> lcm_upoly(const URatPolyPiranha &a,
     return make_rcp<const URatPolyPiranha>(a.get_var(), std::move(lcmx));
 }
 
-inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
-                                            unsigned int p)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+RCP<const Poly> pow_upoly(const UPiranhaPoly<Container, BaseType, Poly> &a,
+                          unsigned int p)
 {
-    return make_rcp<const UIntPolyPiranha>(
-        a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+    return make_rcp<const Poly>(a.get_var(),
+                                std::move(piranha::math::pow(a.get_poly(), p)));
 }
 
-inline RCP<const URatPolyPiranha> pow_upoly(const URatPolyPiranha &a,
-                                            unsigned int p)
-{
-    return make_rcp<const URatPolyPiranha>(
-        a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
-}
-
-inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b,
-                          const Ptr<RCP<const UIntPolyPiranha>> &res)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+bool divides_upoly(const UPiranhaPoly<Container, BaseType, Poly> &a,
+                   const Poly &b, const Ptr<RCP<const Poly>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw SymEngineException("Error: variables must agree.");
 
     try {
-        pintpoly z;
+        Container z;
         piranha::math::divexact(z, b.get_poly(), a.get_poly());
-        *res = UIntPolyPiranha::from_container(a.get_var(), std::move(z));
-        return true;
-    } catch (const piranha::math::inexact_division &) {
-        return false;
-    }
-}
-
-inline bool divides_upoly(const URatPolyPiranha &a, const URatPolyPiranha &b,
-                          const Ptr<RCP<const URatPolyPiranha>> &res)
-{
-    if (!(a.get_var()->__eq__(*b.get_var())))
-        throw SymEngineException("Error: variables must agree.");
-
-    try {
-        pratpoly z;
-        piranha::math::divexact(z, b.get_poly(), a.get_poly());
-        *res = URatPolyPiranha::from_container(a.get_var(), std::move(z));
+        *res = Poly::from_container(a.get_var(), std::move(z));
         return true;
     } catch (const piranha::math::inexact_division &) {
         return false;

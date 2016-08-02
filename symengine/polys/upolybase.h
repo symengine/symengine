@@ -694,13 +694,6 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 }
 
 template <typename Poly>
-RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
-{
-    auto dict = Poly::container_type::pow(a.get_poly(), p);
-    return Poly::from_container(a.get_var(), std::move(dict));
-}
-
-template <typename Poly>
 RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
