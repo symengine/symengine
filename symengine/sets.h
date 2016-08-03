@@ -140,10 +140,6 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual vec_basic get_args() const
-    {
-        return {start_, end_};
-    }
 
     Interval(const RCP<const Number> &start, const RCP<const Number> &end,
              const bool left_open = false, const bool right_open = false);
@@ -164,6 +160,7 @@ public:
     virtual bool is_proper_subset(const RCP<const Set> &o) const;
     virtual bool is_superset(const RCP<const Set> &o) const;
     virtual bool is_proper_superset(const RCP<const Set> &o) const;
+    virtual vec_basic get_args() const;
 };
 
 //! \return RCP<const EmptySet>
