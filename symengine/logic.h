@@ -7,13 +7,6 @@
 #define SYMENGINE_LOGIC_H
 
 #include <symengine/basic.h>
-namespace SymEngine
-{
-class Set;
-class BooleanAtom;
-class Boolean;
-inline RCP<const BooleanAtom> boolean(bool b);
-}
 #include <symengine/sets.h>
 
 namespace SymEngine

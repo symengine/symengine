@@ -8,6 +8,13 @@
 #include <symengine/functions.h>
 #include <symengine/complex.h>
 #include <iterator>
+namespace SymEngine
+{
+class Set;
+class BooleanAtom;
+class Boolean;
+RCP<const BooleanAtom> boolean(bool b);
+}
 #include <symengine/logic.h>
 
 namespace SymEngine
