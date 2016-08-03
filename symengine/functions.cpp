@@ -1050,7 +1050,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return zero;
             // else it is NAN, yet to be implemented
             else {
-                throw std::runtime_error("Not implemented.");
+                throw NotImplementedError("Not Implemented");
             }
         }
     } else if (eq(*den, *zero)) {
@@ -1062,7 +1062,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return div(pi, im2);
             // else it is NAN, yet to be implemented
             else {
-                throw std::runtime_error("Not implemented.");
+                throw NotImplementedError("Not Implemented");
             }
         }
     }
@@ -1515,7 +1515,7 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
         // Answer is infinity. Yet to be implemented in SymEngine
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -1703,7 +1703,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
         // Answer is infinity. Yet to be implemented in SymEngine
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);

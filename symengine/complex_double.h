@@ -242,7 +242,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rsubcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -413,7 +413,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rdivcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -530,7 +530,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rpowcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

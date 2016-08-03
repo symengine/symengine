@@ -50,7 +50,7 @@ void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
 unsigned DenseMatrix::rank() const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 RCP<const Basic> DenseMatrix::det() const

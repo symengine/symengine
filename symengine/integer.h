@@ -128,7 +128,7 @@ public:
 
     virtual RCP<const Number> rsub(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     //! Slower Multiplication
@@ -164,7 +164,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

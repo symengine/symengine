@@ -303,7 +303,7 @@ public:
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

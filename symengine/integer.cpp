@@ -69,7 +69,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 
         return Rational::from_mpq(std::move(q));
     } else {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 };
 

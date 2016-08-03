@@ -253,7 +253,7 @@ public:
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const NumberWrapper &x)
@@ -389,7 +389,7 @@ std::vector<fn> init_eval_double()
 {
     std::vector<fn> table;
     table.assign(TypeID_Count, [](const Basic &x) -> double {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     });
     table[INTEGER] = [](const Basic &x) {
         double tmp = mp_get_d((static_cast<const Integer &>(x)).i);

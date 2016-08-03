@@ -206,7 +206,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return rsubreal(static_cast<const Complex &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -344,7 +344,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return rdivreal(static_cast<const Complex &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -446,7 +446,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return rpowreal(static_cast<const Complex &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

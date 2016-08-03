@@ -229,7 +229,7 @@ public:
         } else if (is_a<RealMPFR>(other)) {
             return rsub(static_cast<const RealMPFR &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -316,7 +316,7 @@ public:
         } else if (is_a<RealMPFR>(other)) {
             return rdiv(static_cast<const RealMPFR &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -373,7 +373,7 @@ public:
         } else if (is_a<RealMPFR>(other)) {
             return rpow(static_cast<const RealMPFR &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

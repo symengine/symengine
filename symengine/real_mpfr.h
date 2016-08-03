@@ -216,7 +216,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rsubreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -294,7 +294,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rdivreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -345,7 +345,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rpowreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

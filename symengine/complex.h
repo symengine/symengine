@@ -273,7 +273,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return rsubcomp(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulcomp`
@@ -308,7 +308,7 @@ public:
         if (is_a<Integer>(other)) {
             return rdivcomp(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `powcomp`
@@ -335,7 +335,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

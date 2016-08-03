@@ -226,7 +226,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -257,7 +257,7 @@ public:
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `powrat`
@@ -272,7 +272,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     RCP<const Integer> get_num() const

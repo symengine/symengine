@@ -155,7 +155,7 @@ public:
     //! expands the special function in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     //! Returns the list of arguments
