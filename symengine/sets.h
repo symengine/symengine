@@ -12,7 +12,7 @@
 
 namespace SymEngine
 {
-
+typedef std::set<RCP<const Set>, RCPBasicKeyLess> set_set;
 class Set : public Basic
 {
 public:
@@ -25,7 +25,7 @@ public:
     }
     bool is_proper_subset(const RCP<const Set> &o) const
     {
-        return eq(*this->set_intersection(o), *this) and not eq(*this, *o);
+        return not eq(*this, *o) and this->is_subset(o);
     }
     bool is_superset(const RCP<const Set> &o) const
     {
@@ -33,7 +33,7 @@ public:
     }
     bool is_proper_superset(const RCP<const Set> &o) const
     {
-        return this->is_superset(o) and not eq(*this, *o);
+        return not eq(*this, *o) and this->is_superset(o);
     }
 };
 
@@ -152,7 +152,7 @@ public:
 class Union : public Set
 {
 public:
-    set_basic container_;
+    set_set container_;
 
 public:
     IMPLEMENT_TYPEID(UNION)
@@ -163,7 +163,7 @@ public:
     {
         return {};
     }
-    Union(set_basic in);
+    Union(set_set in);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -205,15 +205,14 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 // ! \return RCP<const Set>
-inline RCP<const Set> set_union(const set_basic &in, bool solve = true)
+inline RCP<const Set> set_union(const set_set &in, bool solve = true)
 {
-    set_basic input;
+    set_set input;
     if (solve == false && in.size() > 1)
         return make_rcp<const Union>(in);
     set_basic combined_FiniteSet;
     for (auto it = in.begin(); it != in.end(); ++it) {
         if (is_a<FiniteSet>(**it)) {
-            set_basic container;
             const FiniteSet &other = static_cast<const FiniteSet &>(**it);
             combined_FiniteSet.insert(other.container_.begin(),
                                       other.container_.end());

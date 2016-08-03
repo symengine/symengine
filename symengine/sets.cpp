@@ -392,7 +392,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
     throw std::runtime_error("Not implemented");
 }
 
-Union::Union(set_basic in) : container_(in)
+Union::Union(set_set in) : container_(in)
 {
 }
 
@@ -422,12 +422,12 @@ int Union::compare(const Basic &o) const
 
 RCP<const Set> Union::set_union(const RCP<const Set> &o) const
 {
-    set_basic container(container_);
+    set_set container(container_);
     for (auto iter = container.begin(); iter != container.end(); ++iter) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(*iter);
-        auto temp = o->set_union(other);
-        // If we are able to do union we
-        if (not eq(*temp, *SymEngine::set_union({o, other}, false))) {
+        auto temp = o->set_union(*iter);
+        // If we are able to do union with `*iter`, we replace `*iter` with
+        // the result of union.
+        if (not eq(*temp, *SymEngine::set_union({o, *iter}, false))) {
             iter = container.erase(iter);
             container.insert(temp);
             return SymEngine::set_union(container);
@@ -439,11 +439,9 @@ RCP<const Set> Union::set_union(const RCP<const Set> &o) const
 
 RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
 {
-    set_basic container;
-    for (auto iter = container_.begin(); iter != container_.end(); ++iter) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(*iter);
-        auto temp = o->set_intersection(other);
-        container.insert(temp);
+    set_set container;
+    for (auto &a : container_) {
+        container.insert(a->set_intersection(o));
     }
     return SymEngine::set_union(container);
 }
@@ -451,8 +449,7 @@ RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
 RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
 {
     for (auto &a : container_) {
-        RCP<const Set> me = rcp_dynamic_cast<const Set>(a);
-        auto contain = me->contains(o);
+        auto contain = a->contains(o);
         if (eq(*contain, *boolTrue)) {
             return boolean(true);
         }
