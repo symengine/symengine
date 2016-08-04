@@ -73,6 +73,9 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
     auto j = s2.begin();
     unsigned int pos = 0;
 
+    // Performs a merge of s1 and s2, and builds up v1 and v2 as translators
+    // v1[i] and v2[i] is the position of the ith symbol in the new set
+
     // set union
     s = s1;
     s.insert(s2.begin(), s2.end());

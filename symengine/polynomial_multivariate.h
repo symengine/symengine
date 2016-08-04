@@ -21,13 +21,14 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 // translates vectors from one polynomial into vectors for another.
 template <typename Vec>
-void translate(const Vec &original, Vec &changed, vec_uint translator,
-               unsigned int size)
+Vec translate(const Vec &original, vec_uint translator, unsigned int size)
 {
+    Vec changed;
     changed.resize(size, 0);
     for (unsigned int i = 0; i < original.size(); i++) {
         changed[translator[i]] = original[i];
     }
+    return changed;
 }
 
 // translates two vec_uints to the desired format and adds them together
@@ -37,9 +38,7 @@ Vec translate_and_add(const Vec &v1, const Vec &v2, const vec_uint &translator1,
                       const vec_uint &translator2, const unsigned int size)
 {
     Vec result;
-    for (unsigned int i = 0; i < size; i++) {
-        result.insert(result.end(), 0);
-    }
+    result.resize(size, 0);
     for (unsigned int i = 0; i < translator1.size(); i++) {
         result[translator1[i]] += v1[i];
     }
@@ -69,11 +68,12 @@ public:
     }
 
     // Creates a Poly in cannonical form based on dictionary d
-    inline static RCP<const Poly> from_dict(const set_basic &s, Dict &&d)
+    static RCP<const Poly> from_dict(const set_basic &s, Dict &&d)
     {
         // Remove entries in d corresponding to terms with coefficient 0
         auto iter = d.begin();
         while (iter != d.end()) {
+            SYMENGINE_ASSERT(iter->first.size() == s.size())
             if (iter->second == 0) {
                 auto toErase = iter;
                 iter++;
@@ -104,8 +104,7 @@ public:
         }
 
         // vec_uint translator represents the permutation of the exponents
-        vec_uint translator;
-        translator.resize(s.size());
+        vec_uint translator(s.size());
         auto mptr = m.begin();
         for (unsigned int i = 0; i < s.size(); i++) {
             translator[mptr->second] = i;
@@ -115,8 +114,7 @@ public:
         Dict dict;
         // Permute the exponents
         for (auto &bucket : d) {
-            Vec changed;
-            translate<Vec>(bucket.first, changed, translator, s.size());
+            Vec changed = translate<Vec>(bucket.first, translator, s.size());
             dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
         }
         return Poly::from_dict(s, std::move(dict));
@@ -194,8 +192,7 @@ public:
             dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
         }
         for (auto bucket : b.dict_) {
-            Vec changed;
-            translate<Vec>(bucket.first, changed, v2, size);
+            Vec changed = translate<Vec>(bucket.first, v2, size);
             auto target = dict.find(changed);
             if (target != dict.end()) {
                 target->second += bucket.second;
