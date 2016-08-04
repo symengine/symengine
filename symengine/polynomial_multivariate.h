@@ -371,14 +371,34 @@ public:
             vec_uint v1, v2;
             v1.resize(vars_.size(), 0);
             v2.resize(o_.vars_.size(), 0);
-            if (poly_.dict_.begin()->first == v1 || o_.poly_.dict_.begin()->first == v2)
+            if (poly_.dict_.begin()->first == v1
+                || o_.poly_.dict_.begin()->first == v2)
                 return true;
             return false;
         } else if (0 == poly_.dict_.size() && 0 == o_.poly_.dict_.size()) {
             return true;
         } else {
-            return (unified_eq(vars_, o_.vars_) && unified_eq(poly_.dict_, o_.poly_.dict_));
+            return (unified_eq(vars_, o_.vars_)
+                    && unified_eq(poly_.dict_, o_.poly_.dict_));
         }
+    }
+
+    integer_class
+    eval(std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
+    {
+        // TODO : handle missing values
+        integer_class ans(0), temp, term;
+        for (auto bucket : poly_.dict_) {
+            term = bucket.second;
+            unsigned int whichvar = 0;
+            for (auto sym : vars_) {
+                mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar]);
+                term *= temp;
+                whichvar++;
+            }
+            ans += term;
+        }
+        return ans;
     }
 };
 
