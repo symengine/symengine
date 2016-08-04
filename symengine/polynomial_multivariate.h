@@ -677,28 +677,6 @@ public:
     }
 };
 
-// MultivariateIntPolynomial
-class MultivariateIntPolynomial
-    : public MPolyBase<MultivariateIntPolynomial, integer_class, vec_uint>
-{
-public:
-    MultivariateIntPolynomial(const set_basic &vars, umap_uvec_mpz &&dict)
-        : MPolyBase(std::move(vars), std::move(dict))
-    {
-    }
-    IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL);
-    std::size_t __hash__() const;
-    integer_class eval(
-        std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
-    static inline RCP<const MultivariateIntPolynomial>
-    convert(const MultivariateIntPolynomial &o)
-    {
-        return o.rcp_from_this_cast<MultivariateIntPolynomial>();
-    }
-    static RCP<const MultivariateIntPolynomial> convert(const UIntPoly &o);
-    RCP<const Basic> as_symbolic() const;
-};
-
 // MultivariatePolynomial
 class MultivariatePolynomial
     : public MPolyBase<MultivariatePolynomial, Expression, vec_int>
@@ -758,45 +736,6 @@ RCP<const MultivariatePolynomial> sub_mult_poly(const T &a, const U &b)
 {
     return MultivariatePolynomial::convert(a)
         ->sub(*MultivariatePolynomial::convert(b));
-}
-
-template <class T>
-struct is_mpoly_int : std::false_type {
-};
-
-template <>
-struct is_mpoly_int<UIntPoly> : std::true_type {
-};
-
-template <>
-struct is_mpoly_int<MultivariateIntPolynomial> : std::true_type {
-};
-
-template <typename T, typename U,
-          typename
-          = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> add_mult_poly(const T &a, const U &b)
-{
-    return MultivariateIntPolynomial::convert(a)
-        ->add(*MultivariateIntPolynomial::convert(b));
-}
-
-template <typename T, typename U,
-          typename
-          = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const T &a, const U &b)
-{
-    return MultivariateIntPolynomial::convert(a)
-        ->mul(*MultivariateIntPolynomial::convert(b));
-}
-
-template <typename T, typename U,
-          typename
-          = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const T &a, const U &b)
-{
-    return MultivariateIntPolynomial::convert(a)
-        ->sub(*MultivariateIntPolynomial::convert(b));
 }
 
 } // SymEngine

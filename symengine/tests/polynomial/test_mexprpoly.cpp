@@ -20,7 +20,6 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::add;
-using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
 using SymEngine::Integer;
 using SymEngine::Precedence;
@@ -32,18 +31,6 @@ using SymEngine::vec_uint;
 using SymEngine::RCPBasicKeyLess;
 
 using namespace SymEngine::literals;
-
-TEST_CASE("Testing MultivariateIntPolynomial::get_args()",
-          "[MultivariateIntPolynomial]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
-    RCP<const Symbol> z = symbol("z");
-    RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::create(
-        {x, y, z}, {{{0, 0, 0}, 1_z}, {{1, 1, 1}, 2_z}, {{0, 0, 2}, 1_z}});
-    REQUIRE(eq(*p->as_symbolic(), *add({mul(integer(2), mul(x, mul(y, z))),
-                                        pow(z, integer(2)), one})));
-}
 
 TEST_CASE("Constructing MultivariatePolynomial", "[MultivariatePolynomial]")
 {

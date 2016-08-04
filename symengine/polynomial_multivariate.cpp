@@ -3,36 +3,6 @@
 namespace SymEngine
 {
 
-RCP<const Basic> MultivariateIntPolynomial::as_symbolic() const
-{
-    vec_basic args;
-    for (const auto &p : dict_) {
-        RCP<const Basic> res = integer(p.second);
-        int whichvar = 0;
-        for (auto sym : vars_) {
-            if (0 != p.first[whichvar])
-                res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
-            whichvar++;
-        }
-        args.push_back(res);
-    }
-    return SymEngine::add(args);
-}
-
-std::size_t MultivariateIntPolynomial::__hash__() const
-{
-    std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
-    for (auto var : vars_)
-        hash_combine<std::string>(seed, var->__str__());
-
-    for (auto &p : dict_) {
-        std::size_t t = vec_hash<vec_uint>()(p.first);
-        hash_combine<std::size_t>(t, mp_get_si(p.second));
-        seed ^= t;
-    }
-    return seed;
-}
-
 RCP<const Basic> MIntPoly::as_symbolic() const
 {
     vec_basic args;
@@ -51,7 +21,7 @@ RCP<const Basic> MIntPoly::as_symbolic() const
 
 std::size_t MIntPoly::__hash__() const
 {
-    std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
+    std::size_t seed = MINTPOLY;
     for (auto var : vars_)
         hash_combine<std::string>(seed, var->__str__());
 
@@ -61,39 +31,6 @@ std::size_t MIntPoly::__hash__() const
         seed ^= t;
     }
     return seed;
-}
-
-integer_class MultivariateIntPolynomial::eval(
-    std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
-{
-    integer_class ans(0);
-    for (auto bucket : dict_) {
-        integer_class term = bucket.second;
-        unsigned int whichvar = 0;
-        for (auto sym : vars_) {
-            integer_class temp;
-            mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar]);
-            term *= temp;
-            whichvar++;
-        }
-        ans += term;
-    }
-    return ans;
-}
-
-RCP<const MultivariateIntPolynomial>
-MultivariateIntPolynomial::convert(const UIntPoly &o)
-{
-    vec_basic s;
-    s.push_back(o.get_var());
-
-    umap_uvec_mpz d;
-    for (auto &p : o.get_dict()) {
-        vec_uint v;
-        v.push_back(p.first);
-        d[v] = p.second;
-    }
-    return MultivariateIntPolynomial::create(s, std::move(d));
 }
 
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
