@@ -68,6 +68,33 @@ public:
         // bvisit_upoly(x);
     }
 
+    void bvisit(const MIntPoly &x)
+    {
+        if (0 == x.poly_.dict_.size()) {
+            precedence = PrecedenceEnum::Atom;
+        } else if (1 == x.poly_.dict_.size()) {
+            auto iter = x.poly_.dict_.begin();
+            precedence = PrecedenceEnum::Atom;
+            bool first = true; // true if there are no nonzero exponents, false
+                               // otherwise
+            for (unsigned int exp : iter->first) {
+                if (exp > 0) {
+                    if (first && exp > 1)
+                        precedence = PrecedenceEnum::Pow;
+                    if (!first)
+                        precedence = PrecedenceEnum::Mul;
+                    first = false;
+                }
+            }
+            if (!first) {
+                if (iter->second != 1)
+                    precedence = PrecedenceEnum::Mul;
+            }
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
     void bvisit(const MultivariateIntPolynomial &x)
     {
         if (0 == x.dict_.size()) {
@@ -227,6 +254,7 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
+    void bvisit(const MIntPoly &x);
     void bvisit(const URatPoly &x);
 #ifdef HAVE_SYMENGINE_FLINT
     void bvisit(const UIntPolyFlint &x);

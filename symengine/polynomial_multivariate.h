@@ -8,6 +8,380 @@
 
 namespace SymEngine
 {
+
+template <typename Vec, typename Value, typename Wrapper>
+class UDictWrapper
+{
+public:
+    using Dict = std::unordered_map<Vec, Value, vec_hash<Vec>>;
+    Dict dict_;
+    unsigned int vec_size;
+
+    typedef Vec vec_type;
+    typedef Value value_type;
+
+    UDictWrapper(unsigned int s) SYMENGINE_NOEXCEPT
+    {
+        vec_size = s;
+    }
+
+    UDictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    ~UDictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    UDictWrapper(Dict &&p) : dict_{p}
+    {
+    }
+
+    UDictWrapper(const Dict &p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0))
+                dict_[iter.first] = iter.second;
+        }
+        if (not p.empty())
+            vec_size = p.begin()->first.size();
+        else
+            vec_size = 0;
+    }
+
+    Wrapper &operator=(Wrapper &&other)
+    {
+        if (this != &other)
+            dict_ = std::move(other.dict_);
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator+(const Wrapper &a, const Wrapper &b)
+    {
+        SYMENGINE_ASSERT(a.vec_size == b.vec_size)
+        Wrapper c = a;
+        c += b;
+        return c;
+    }
+
+    // both wrappers must have "aligned" vectors, ie same size
+    // and vector positions refer to the same generators
+    Wrapper &operator+=(const Wrapper &other)
+    {
+        SYMENGINE_ASSERT(vec_size == other.vec_size)
+
+        for (auto &iter : other.dict_) {
+            auto t = dict_.find(iter.first);
+            if (t != dict_.end()) {
+                t->second += iter.second;
+                if (t->second == 0)
+                    dict_.erase(t);
+            } else {
+                dict_.insert(t, {iter.first, iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator-(const Wrapper &a, const Wrapper &b)
+    {
+        SYMENGINE_ASSERT(a.vec_size == b.vec_size)
+
+        Wrapper c = a;
+        c -= b;
+        return c;
+    }
+
+    Wrapper operator-() const
+    {
+        auto c = *this;
+        for (auto &iter : c.dict_)
+            iter.second *= -1;
+        return static_cast<Wrapper &>(c);
+    }
+
+    // both wrappers must have "aligned" vectors, ie same size
+    // and vector positions refer to the same generators
+    Wrapper &operator-=(const Wrapper &other)
+    {
+        SYMENGINE_ASSERT(vec_size == other.vec_size)
+
+        for (auto &iter : other.dict_) {
+            auto t = dict_.find(iter.first);
+            if (t != dict_.end()) {
+                t->second -= iter.second;
+                if (t->second == 0)
+                    dict_.erase(t);
+            } else {
+                dict_.insert(t, {iter.first, -iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    static Wrapper mul(const Wrapper &a, const Wrapper &b)
+    {
+        if (a.get_dict().empty())
+            return a;
+        if (b.get_dict().empty())
+            return b;
+
+        Wrapper p;
+        for (auto a_ : a.dict_) {
+            for (auto b_ : b.dict_) {
+
+                Vec target(a.vec_size, 0);
+                for (unsigned int i = 0; i < a.vec_size; i++)
+                    target[i] = a_.first[i] + b_.first[i];
+
+                if (p.dict_.find(target) == p.dict_.end()) {
+                    p.dict_.insert({target, a_.second * b_.second});
+                } else {
+                    p.dict_.find(target)->second += a_.second * b_.second;
+                }
+            }
+        }
+
+        for (auto it = p.dict_.begin(); it != p.dict_.end();) {
+            if (it->second == 0) {
+                p.dict_.erase(it++);
+            } else {
+                ++it;
+            }
+        }
+        return p;
+    }
+
+    static Wrapper pow(const Wrapper &a, unsigned int p)
+    {
+        Wrapper tmp = a, res(a.vec_size);
+
+        Vec zero_v(a.vec_size, 0);
+        res.insert({zero_v, 1});
+
+        while (p != 1) {
+            if (p % 2 == 0) {
+                tmp = tmp * tmp;
+            } else {
+                res = res * tmp;
+                tmp = tmp * tmp;
+            }
+            p >>= 1;
+        }
+
+        return (res * tmp);
+    }
+
+    friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
+    {
+        SYMENGINE_ASSERT(a.vec_size == b.vec_size)
+        return Wrapper::mul(a, b);
+    }
+
+    Wrapper &operator*=(const Wrapper &other)
+    {
+        SYMENGINE_ASSERT(vec_size == other.vec_size)
+
+        if (dict_.empty())
+            return static_cast<Wrapper &>(*this);
+
+        if (other.dict_.empty()) {
+            dict_.clear();
+            return static_cast<Wrapper &>(*this);
+        }
+
+        Vec zero_v(vec_size, 0);
+        // ! other is a just constant term
+        if (other.dict_.size() == 1
+            and other.dict_.find(zero_v) != other.dict_.end()) {
+            auto t = other.dict_.begin();
+            for (auto &i1 : dict_)
+                i1.second *= t->second;
+            return static_cast<Wrapper &>(*this);
+        }
+
+        Wrapper res = Wrapper::mul(static_cast<Wrapper &>(*this), other);
+        res.dict_.swap(this->dict_);
+        return static_cast<Wrapper &>(*this);
+    }
+
+    bool operator==(const Wrapper &other) const
+    {
+        return dict_ == other.dict_;
+    }
+
+    bool operator!=(const Wrapper &other) const
+    {
+        return not(*this == other);
+    }
+
+    const Dict &get_dict() const
+    {
+        return dict_;
+    }
+
+    bool empty() const
+    {
+        return dict_.empty();
+    }
+
+    Value get_coeff(Vec &x) const
+    {
+        auto ite = dict_.find(x);
+        if (ite != dict_.end())
+            return ite->second;
+        return Value(0);
+    }
+
+    Wrapper translate(const vec_uint &translator, unsigned int size) const
+    {
+        SYMENGINE_ASSERT(translator.size() == vec_size)
+        SYMENGINE_ASSERT(size >= vec_size)
+
+        Dict d;
+
+        for (auto it : dict_) {
+            Vec changed;
+            changed.resize(size, 0);
+            for (unsigned int i = 0; i < vec_size; i++)
+                changed[translator[i]] = it.first[i];
+            d.insert({changed, it.second});
+        }
+
+        return Wrapper(std::move(d));
+    }
+};
+
+class MIntDict : public UDictWrapper<vec_uint, integer_class, MIntDict>
+{
+public:
+    MIntDict(unsigned int s) SYMENGINE_NOEXCEPT : UDictWrapper(s)
+    {
+    }
+
+    MIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    ~MIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    MIntDict(MIntDict &&other) SYMENGINE_NOEXCEPT
+        : UDictWrapper(std::move(other))
+    {
+    }
+
+    MIntDict(const umap_uvec_mpz &p) : UDictWrapper(p)
+    {
+    }
+
+    MIntDict(const MIntDict &) = default;
+
+    MIntDict &operator=(const MIntDict &) = default;
+};
+
+class MIntPoly : public Basic
+{
+public:
+    MIntDict poly_;
+    set_basic vars_;
+
+    MIntPoly(const set_basic &vars, MIntDict &&dict)
+    {
+        vars_ = vars;
+        poly_ = dict;
+    }
+
+    IMPLEMENT_TYPEID(MINTPOLY);
+    std::size_t __hash__() const;
+    RCP<const Basic> as_symbolic() const;
+
+    static RCP<const MIntPoly> from_container(const set_basic &vars,
+                                              MIntDict &&d)
+    {
+        return make_rcp<const MIntPoly>(vars, std::move(d));
+    }
+
+    int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_a<MIntPoly>(o))
+
+        const MIntPoly &s = static_cast<const MIntPoly &>(o);
+
+        if (vars_.size() != s.vars_.size())
+            return vars_.size() < s.vars_.size() ? -1 : 1;
+        if (poly_.dict_.size() != s.poly_.dict_.size())
+            return poly_.dict_.size() < s.poly_.dict_.size() ? -1 : 1;
+
+        int cmp = unified_compare(vars_, s.vars_);
+        if (cmp != 0)
+            return cmp;
+
+        return unified_compare(poly_.dict_, s.poly_.dict_);
+    }
+
+    static RCP<const MIntPoly> from_dict(const vec_basic &v, umap_uvec_mpz &&d)
+    {
+        set_basic s;
+        std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess> m;
+        // Symbols in the vector are sorted by placeing them in an std::map.
+        // The image of the symbols in the map is their original location in the
+        // vector.
+
+        for (unsigned int i = 0; i < v.size(); i++) {
+            m.insert({v[i], i});
+            s.insert(v[i]);
+        }
+
+        // vec_uint translator represents the permutation of the exponents
+        vec_uint trans;
+        trans.reserve(s.size());
+        for (auto mptr = m.begin(); mptr != m.end(); mptr++)
+            trans.push_back(mptr->second);
+
+        MIntDict x(std::move(d));
+        return MIntPoly::from_container(
+            s, std::move(x.translate(trans, s.size())));
+    }
+
+    inline vec_basic get_args() const
+    {
+        return {};
+    }
+
+    inline const MIntDict &get_poly() const
+    {
+        return poly_;
+    }
+
+    bool __eq__(const Basic &o) const
+    {
+        // TODO : fix for when vars are different, but there is an intersection
+        if (not is_a<MIntPoly>(o))
+            return false;
+        const MIntPoly &o_ = static_cast<const MIntPoly &>(o);
+        // compare constants without regards to vars
+        if (1 == poly_.dict_.size() && 1 == o_.poly_.dict_.size()) {
+            if (poly_.dict_.begin()->second != o_.poly_.dict_.begin()->second)
+                return false;
+            if (poly_.dict_.begin()->first == o_.poly_.dict_.begin()->first
+                && unified_eq(vars_, o_.vars_))
+                return true;
+            vec_uint v1, v2;
+            v1.resize(vars_.size(), 0);
+            v2.resize(o_.vars_.size(), 0);
+            if (poly_.dict_.begin()->first == v1 || o_.poly_.dict_.begin()->first == v2)
+                return true;
+            return false;
+        } else if (0 == poly_.dict_.size() && 0 == o_.poly_.dict_.size()) {
+            return true;
+        } else {
+            return (unified_eq(vars_, o_.vars_) && unified_eq(poly_.dict_, o_.poly_.dict_));
+        }
+    }
+};
+
 // reconciles the positioning of the exponents in the vectors in the
 // Dict dict_ of the arguments
 // with the positioning of the exponents in the correspondng vectors of the
@@ -19,6 +393,50 @@ namespace SymEngine
 // s1 and s2 are the sets of the symbols of the inputs.
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
+
+inline set_basic get_translated_container(MIntDict &x, MIntDict &y,
+                                          const MIntPoly &a, const MIntPoly &b)
+{
+    vec_uint v1, v2;
+    set_basic s;
+
+    unsigned int sz = reconcile(v1, v2, s, a.vars_, b.vars_);
+    x = a.poly_.translate(v1, sz);
+    y = b.poly_.translate(v2, sz);
+
+    return s;
+}
+
+inline RCP<const MIntPoly> add_mpoly(const MIntPoly &a, const MIntPoly &b)
+{
+    MIntDict x, y;
+    set_basic s = get_translated_container(x, y, a, b);
+    x += y;
+    return MIntPoly::from_container(s, std::move(x));
+}
+
+inline RCP<const MIntPoly> sub_mpoly(const MIntPoly &a, const MIntPoly &b)
+{
+    MIntDict x, y;
+    set_basic s = get_translated_container(x, y, a, b);
+    x -= y;
+    return MIntPoly::from_container(s, std::move(x));
+}
+
+inline RCP<const MIntPoly> mul_mpoly(const MIntPoly &a, const MIntPoly &b)
+{
+    MIntDict x, y;
+    set_basic s = get_translated_container(x, y, a, b);
+    x *= y;
+    return MIntPoly::from_container(s, std::move(x));
+}
+
+inline RCP<const MIntPoly> neg_mpoly(const MIntPoly &a)
+{
+    MIntDict x = a.poly_;
+    return MIntPoly::from_container(a.vars_, std::move(-x));
+}
+
 // translates vectors from one polynomial into vectors for another.
 template <typename Vec>
 Vec translate(const Vec &original, vec_uint translator, unsigned int size)
@@ -187,8 +605,7 @@ public:
         umap_basic_uint degs;
         unsigned int size = reconcile(v1, v2, s, vars_, b.vars_);
         for (auto bucket : dict_) {
-            Vec changed;
-            translate<Vec>(bucket.first, changed, v1, size);
+            Vec changed = translate<Vec>(bucket.first, v1, size);
             dict.insert(std::pair<Vec, Coeff>(changed, bucket.second));
         }
         for (auto bucket : b.dict_) {

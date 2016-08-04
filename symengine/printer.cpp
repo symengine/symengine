@@ -676,6 +676,54 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const MIntPoly &x)
+{
+    std::ostringstream s;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
+
+    for (vec_uint exps : v) {
+        integer_class c = x.poly_.dict_.find(exps)->second;
+        if (!first) {
+            s << " " << _print_sign(c) << " ";
+        } else if (c < 0) {
+            s << "-";
+        }
+
+        unsigned int i = 0;
+        std::ostringstream expr;
+        bool first_var = true;
+        for (auto it : x.vars_) {
+            if (exps[i] != 0) {
+                if (!first_var) {
+                    expr << "*";
+                }
+                expr << it->__str__();
+                if (exps[i] > 1)
+                    expr << "**" << exps[i];
+                first_var = false;
+            }
+            i++;
+        }
+        if (mp_abs(c) != 1) {
+            s << mp_abs(c);
+            if (!expr.str().empty()) {
+                s << "*";
+            }
+        } else if (expr.str().empty()) {
+            s << "1";
+        }
+        s << expr.str();
+        first = false;
+    }
+
+    if (s.str().empty())
+        s << "0";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const MultivariatePolynomial &x)
 {
     std::ostringstream s;

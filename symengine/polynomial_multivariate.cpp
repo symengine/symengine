@@ -33,6 +33,36 @@ std::size_t MultivariateIntPolynomial::__hash__() const
     return seed;
 }
 
+RCP<const Basic> MIntPoly::as_symbolic() const
+{
+    vec_basic args;
+    for (const auto &p : poly_.dict_) {
+        RCP<const Basic> res = integer(p.second);
+        int whichvar = 0;
+        for (auto sym : vars_) {
+            if (0 != p.first[whichvar])
+                res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
+            whichvar++;
+        }
+        args.push_back(res);
+    }
+    return SymEngine::add(args);
+}
+
+std::size_t MIntPoly::__hash__() const
+{
+    std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
+    for (auto var : vars_)
+        hash_combine<std::string>(seed, var->__str__());
+
+    for (auto &p : poly_.dict_) {
+        std::size_t t = vec_hash<vec_uint>()(p.first);
+        hash_combine<std::size_t>(t, mp_get_si(p.second));
+        seed ^= t;
+    }
+    return seed;
+}
+
 integer_class MultivariateIntPolynomial::eval(
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
 {
