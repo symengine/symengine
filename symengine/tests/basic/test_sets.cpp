@@ -35,6 +35,7 @@ using SymEngine::boolTrue;
 using SymEngine::boolFalse;
 using SymEngine::Contains;
 using SymEngine::make_rcp;
+using SymEngine::set_set;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -277,6 +278,15 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
 
 TEST_CASE("Union : Basic", "[basic]")
 {
+    auto check_union_str = [](std::string to_chk, set_set sets) {
+        if (std::count(to_chk.begin(), to_chk.end(), 'U') != sets.size() - 1)
+            return false;
+        for (auto &a : sets) {
+            if (to_chk.find(a->__str__()) == std::string::npos)
+                return false;
+        }
+        return true;
+    };
     RCP<const Set> f1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r1 = set_union({f1, emptyset()});
     REQUIRE(eq(*r1, *f1));
@@ -303,6 +313,8 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
     REQUIRE(u->container_.find(interval(integer(2), integer(4)))
             != u->container_.end());
+    REQUIRE(
+        check_union_str(u->__str__(), {i1, interval(integer(2), integer(4))}));
 
     r2 = set_union({r1, r2});
     REQUIRE(eq(*r1, *r2));
@@ -313,6 +325,8 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(u->container_.find(interval(integer(2), integer(4)))
             != u->container_.end());
     REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
+    REQUIRE(
+        check_union_str(u->__str__(), {i1, interval(integer(2), integer(4))}));
     REQUIRE(eq(*u->contains(one), *boolTrue));
     REQUIRE(eq(*u->contains(integer(2)), *boolTrue));
     REQUIRE(eq(*u->contains(integer(7)), *boolFalse));

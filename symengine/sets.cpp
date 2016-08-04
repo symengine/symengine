@@ -150,7 +150,7 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
-        || is_a<Union>(*o)) {
+        or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
     throw std::runtime_error("Not implemented");
@@ -189,7 +189,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
-        || is_a<Union>(*o)) {
+        or is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
@@ -358,7 +358,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                 return interval(other.start_, other.end_, left, right);
         }
     }
-    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<Union>(*o)) {
+    if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
@@ -386,7 +386,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
         }
         return finiteset(container);
     }
-    if (is_a<UniversalSet>(*o) || is_a<EmptySet>(*o) || is_a<Union>(*o)) {
+    if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
     throw std::runtime_error("Not implemented");
