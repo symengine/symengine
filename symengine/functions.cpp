@@ -1,4 +1,5 @@
 #include <symengine/visitor.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

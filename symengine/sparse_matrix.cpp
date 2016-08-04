@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

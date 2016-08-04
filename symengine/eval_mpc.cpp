@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_mpc.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPC
 

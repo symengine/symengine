@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 

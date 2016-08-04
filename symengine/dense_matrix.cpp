@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

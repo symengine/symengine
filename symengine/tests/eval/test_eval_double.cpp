@@ -4,6 +4,7 @@
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/eval_mpc.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::constant;
@@ -51,6 +52,7 @@ using SymEngine::rational_class;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
+using SymEngine::NotImplementedError;
 
 TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
@@ -126,17 +128,17 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     // Symbol must raise an exception
     CHECK_THROWS_AS(eval_double(*symbol("x")), std::runtime_error);
     CHECK_THROWS_AS(eval_double_single_dispatch(*symbol("x")),
-                    std::runtime_error);
+                    NotImplementedError);
 
     // TODO: this is not implemented yet, so we check that it raises an
     // exception for now
-    CHECK_THROWS_AS(eval_double(*levi_civita({r1})), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*levi_civita({r1})), NotImplementedError);
     CHECK_THROWS_AS(eval_double_single_dispatch(*levi_civita({r1})),
-                    std::runtime_error);
+                    NotImplementedError);
 
-    CHECK_THROWS_AS(eval_double(*zeta(r1, r2)), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*zeta(r1, r2)), NotImplementedError);
     CHECK_THROWS_AS(eval_double_single_dispatch(*zeta(r1, r2)),
-                    std::runtime_error);
+                    NotImplementedError);
 
     CHECK_THROWS_AS(eval_double(*constant("dummy")), std::runtime_error);
     CHECK_THROWS_AS(eval_double_single_dispatch(*constant("dummy")),

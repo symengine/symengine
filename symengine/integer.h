@@ -8,6 +8,7 @@
 #define SYMENGINE_INTEGER_H
 
 #include <symengine/number.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

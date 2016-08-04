@@ -7,6 +7,7 @@
 #define SYMENGINE_REAL_MPFR_H
 
 #include <symengine/complex_double.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>

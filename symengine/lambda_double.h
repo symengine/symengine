@@ -3,6 +3,7 @@
 
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

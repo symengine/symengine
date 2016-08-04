@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <symengine/symengine_config.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
 #include <atomic>

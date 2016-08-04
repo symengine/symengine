@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/lambda_double.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -19,6 +20,7 @@ using SymEngine::E;
 using SymEngine::gamma;
 using SymEngine::loggamma;
 using SymEngine::min;
+using SymEngine::NotImplementedError;
 
 TEST_CASE("Evaluate to double", "[lambda_double]")
 {
@@ -54,7 +56,7 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(
         v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)),
-        std::runtime_error);
+        NotImplementedError);
 
     // Undefined symbols raise an exception
     CHECK_THROWS_AS(v.init({x}, *r), std::runtime_error);

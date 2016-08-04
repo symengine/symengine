@@ -7,6 +7,7 @@
 #define SYMENGINE_COMPLEX_DOUBLE_H
 
 #include <symengine/real_double.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
