@@ -98,7 +98,7 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set)
 {
     if (is_a_Number(*expr)) {
-        return make_rcp<BooleanAtom>(set->contains(expr));
+        return set->contains(expr);
     } else {
         return make_rcp<Contains>(expr, set);
     }

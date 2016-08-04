@@ -181,6 +181,16 @@ void StrPrinter::bvisit(const EmptySet &x)
     str_ = "EmptySet";
 }
 
+void StrPrinter::bvisit(const Union &x)
+{
+    std::ostringstream s;
+    s << apply(*x.container_.begin());
+    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+        s << " U " << apply(*it);
+    }
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const UniversalSet &x)
 {
     str_ = "UniversalSet";
