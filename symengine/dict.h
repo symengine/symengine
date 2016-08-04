@@ -9,6 +9,29 @@
 #include <symengine/mp_class.h>
 #include <algorithm>
 
+/*! Standard `hash_combine()` function. Example of usage:
+
+        std::size_t seed1 = 0;
+        hash_combine<std::string>(seed1, "x");
+        hash_combine<std::string>(seed1, "y");
+
+     You can use it with any SymEngine class:
+
+
+        RCP<const Symbol> x = symbol("x");
+        RCP<const Symbol> y = symbol("y");
+        std::size_t seed2 = 0;
+        hash_combine<Basic>(seed2, *x);
+        hash_combine<Basic>(seed2, *y);
+*/
+//! Templatised version to combine hash
+template <class T>
+void hash_combine(std::size_t &seed, const T &v)
+{
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 namespace SymEngine
 {
 
@@ -60,9 +83,8 @@ public:
     std::size_t operator()(const T &v) const
     {
         std::size_t h = 0;
-        for (auto i : v) {
-            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
-        }
+        for (auto i : v)
+            hash_combine<typename T::value_type>(h, i);
         return h;
     }
 };
