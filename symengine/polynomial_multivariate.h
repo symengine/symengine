@@ -19,6 +19,7 @@ public:
 
     typedef Vec vec_type;
     typedef Value value_type;
+    typedef Dict dict_type;
 
     UDictWrapper(unsigned int s) SYMENGINE_NOEXCEPT
     {
@@ -281,33 +282,28 @@ public:
     MIntDict &operator=(const MIntDict &) = default;
 };
 
-class MIntPoly : public Basic
+template <typename Container, typename Poly>
+class MSymEnginePoly : public Basic
 {
 public:
-    MIntDict poly_;
+    Container poly_;
     set_basic vars_;
 
-    MIntPoly(const set_basic &vars, MIntDict &&dict)
+    MSymEnginePoly(const set_basic &vars, Container &&dict)
+        : poly_{dict}, vars_{vars}
     {
-        vars_ = vars;
-        poly_ = dict;
     }
 
-    IMPLEMENT_TYPEID(MINTPOLY);
-    std::size_t __hash__() const;
-    RCP<const Basic> as_symbolic() const;
-
-    static RCP<const MIntPoly> from_container(const set_basic &vars,
-                                              MIntDict &&d)
+    static RCP<const Poly> from_container(const set_basic &vars, Container &&d)
     {
-        return make_rcp<const MIntPoly>(vars, std::move(d));
+        return make_rcp<const Poly>(vars, std::move(d));
     }
 
     int compare(const Basic &o) const
     {
-        SYMENGINE_ASSERT(is_a<MIntPoly>(o))
+        SYMENGINE_ASSERT(is_a<Poly>(o))
 
-        const MIntPoly &s = static_cast<const MIntPoly &>(o);
+        const Poly &s = static_cast<const Poly &>(o);
 
         if (vars_.size() != s.vars_.size())
             return vars_.size() < s.vars_.size() ? -1 : 1;
@@ -321,7 +317,8 @@ public:
         return unified_compare(poly_.dict_, s.poly_.dict_);
     }
 
-    static RCP<const MIntPoly> from_dict(const vec_basic &v, umap_uvec_mpz &&d)
+    static RCP<const Poly> from_dict(const vec_basic &v,
+                                     typename Container::dict_type &&d)
     {
         set_basic s;
         std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess> m;
@@ -340,9 +337,8 @@ public:
         for (auto mptr = m.begin(); mptr != m.end(); mptr++)
             trans.push_back(mptr->second);
 
-        MIntDict x(std::move(d));
-        return MIntPoly::from_container(
-            s, std::move(x.translate(trans, s.size())));
+        Container x(std::move(d));
+        return Poly::from_container(s, std::move(x.translate(trans, s.size())));
     }
 
     inline vec_basic get_args() const
@@ -350,7 +346,7 @@ public:
         return {};
     }
 
-    inline const MIntDict &get_poly() const
+    inline const Container &get_poly() const
     {
         return poly_;
     }
@@ -358,9 +354,9 @@ public:
     bool __eq__(const Basic &o) const
     {
         // TODO : fix for when vars are different, but there is an intersection
-        if (not is_a<MIntPoly>(o))
+        if (not is_a<Poly>(o))
             return false;
-        const MIntPoly &o_ = static_cast<const MIntPoly &>(o);
+        const Poly &o_ = static_cast<const Poly &>(o);
         // compare constants without regards to vars
         if (1 == poly_.dict_.size() && 1 == o_.poly_.dict_.size()) {
             if (poly_.dict_.begin()->second != o_.poly_.dict_.begin()->second)
@@ -382,24 +378,22 @@ public:
                     && unified_eq(poly_.dict_, o_.poly_.dict_));
         }
     }
+};
 
-    integer_class
-    eval(std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
+class MIntPoly : public MSymEnginePoly<MIntDict, MIntPoly>
+{
+public:
+    MIntPoly(const set_basic &vars, MIntDict &&dict)
+        : MSymEnginePoly(vars, std::move(dict))
     {
-        // TODO : handle missing values
-        integer_class ans(0), temp, term;
-        for (auto bucket : poly_.dict_) {
-            term = bucket.second;
-            unsigned int whichvar = 0;
-            for (auto sym : vars_) {
-                mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar]);
-                term *= temp;
-                whichvar++;
-            }
-            ans += term;
-        }
-        return ans;
     }
+
+    IMPLEMENT_TYPEID(MINTPOLY);
+    std::size_t __hash__() const;
+    RCP<const Basic> as_symbolic() const;
+
+    integer_class eval(
+        std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
 };
 
 // reconciles the positioning of the exponents in the vectors in the

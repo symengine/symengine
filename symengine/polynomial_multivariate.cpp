@@ -33,6 +33,24 @@ std::size_t MIntPoly::__hash__() const
     return seed;
 }
 
+integer_class MIntPoly::eval(
+    std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
+{
+    // TODO : handle missing values
+    integer_class ans(0), temp, term;
+    for (auto bucket : poly_.dict_) {
+        term = bucket.second;
+        unsigned int whichvar = 0;
+        for (auto sym : vars_) {
+            mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar]);
+            term *= temp;
+            whichvar++;
+        }
+        ans += term;
+    }
+    return ans;
+}
+
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2)
 {
