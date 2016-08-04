@@ -188,7 +188,7 @@ public:
         rational_class conjugate
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
         if (get_num(conjugate) == 0) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZeroError("Divide by zero.");
         } else {
             return from_mpq((this->real_ * other.real_
                              + this->imaginary_ * other.imaginary_)

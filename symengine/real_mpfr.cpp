@@ -974,7 +974,7 @@ class EvaluateMPFR : public Evaluate
             mpfr_gamma(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         } else {
-            throw std::runtime_error("Not Implemented.");
+            throw NotImplementedError("Not Implemented.");
         }
     }
 };

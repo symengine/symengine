@@ -3,6 +3,7 @@
 #include <symengine/constants.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -107,7 +108,7 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
     if (modulo_ != o.modulo_)
         throw std::runtime_error("Error: field must be same.");
     if (o.dict_.empty())
-        throw std::runtime_error("ZeroDivisionError");
+        throw DivisionByZeroError("ZeroDivisionError");
     std::vector<integer_class> dict_out;
     if (dict_.empty()) {
         *quo = GaloisFieldDict::from_vec(dict_out, modulo_);

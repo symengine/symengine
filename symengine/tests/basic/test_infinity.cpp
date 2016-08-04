@@ -6,6 +6,7 @@
 #include <symengine/infinity.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Number;
@@ -28,6 +29,7 @@ using SymEngine::ComplexInf;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Complex;
+using SymEngine::NotImplementedError;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -192,5 +194,5 @@ TEST_CASE("Multiplication with Infinity", "[Infinity]")
     CHECK_THROWS_AS(c->mul(*zero), std::runtime_error);
 
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
-    CHECK_THROWS_AS(c->mul(*cx), std::runtime_error);
+    CHECK_THROWS_AS(c->mul(*cx), NotImplementedError);
 }

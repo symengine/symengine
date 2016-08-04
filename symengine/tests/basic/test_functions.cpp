@@ -95,6 +95,7 @@ using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::get_mpz_t;
 using SymEngine::DivisionByZeroError;
+using SymEngine::NotImplementedError;
 
 using namespace SymEngine::literals;
 
@@ -2214,7 +2215,7 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
-    CHECK_THROWS_AS(zeta(one, i2), std::runtime_error);
+    CHECK_THROWS_AS(zeta(one, i2), NotImplementedError);
 }
 
 TEST_CASE("Levi Civita: functions", "[functions]")

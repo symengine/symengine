@@ -18,7 +18,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
                             bool right_open)
 {
     if (is_a<Complex>(*s) or is_a<Complex>(*e))
-        throw std::runtime_error("Complex set not implemented");
+        throw NotImplementedError("Complex set not implemented");
     if (eq(*e, *s)) {
         return false;
     } else if (eq(*min({s, e}), *e)) {
@@ -94,7 +94,7 @@ RCP<const Set> Interval::close() const
 bool Interval::contains(const RCP<const Basic> &a) const
 {
     if (not is_a_Number(*a))
-        throw std::runtime_error("Not implemented");
+        throw NotImplementedError("Not implemented");
     if ((eq(*start_, *a) and left_open_) or (eq(*end_, *a) and right_open_))
         return false;
     if (eq(*start_, *a) or eq(*end_, *a))
@@ -167,7 +167,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
              and ((eq(*end_end, *this->end_) and this->right_open_)
                   or (eq(*end_end, *other.end_) and other.right_open_)))
             or (eq(*end_end, *m) and not eq(*end_end, *start_start))) {
-            throw std::runtime_error("not implemented");
+            throw NotImplementedError("not implemented");
         } else {
             if (eq(*min({this->start_, other.start_}), *this->start_))
                 start = this->start_;
@@ -393,7 +393,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
             }
         }
         if (not container.empty()) {
-            throw std::runtime_error("not implemented");
+            throw NotImplementedError("not implemented");
         } else {
             if (left == other.left_open_ and right == other.right_open_)
                 return o;

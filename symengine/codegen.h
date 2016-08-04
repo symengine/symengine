@@ -3,6 +3,7 @@
 
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -19,7 +20,7 @@ public:
     }
     void bvisit(const Complex &x)
     {
-        throw std::runtime_error("Not implemented");
+        throw NotImplementedError("Not implemented");
     }
     void bvisit(const Interval &x)
     {

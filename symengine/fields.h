@@ -424,7 +424,7 @@ public:
     GaloisFieldDict &operator/=(const integer_class &other)
     {
         if (other == integer_class(0)) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -446,7 +446,7 @@ public:
             throw std::runtime_error("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -502,7 +502,7 @@ public:
     GaloisFieldDict &operator%=(const integer_class &other)
     {
         if (other == integer_class(0)) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -516,7 +516,7 @@ public:
             throw std::runtime_error("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);

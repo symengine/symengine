@@ -3,6 +3,7 @@
 #include <symengine/sets.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -29,6 +30,7 @@ using SymEngine::symbol;
 using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
+using SymEngine::NotImplementedError;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -69,10 +71,10 @@ TEST_CASE("Interval : Basic", "[basic]")
     r3 = interval(im5, i2, false, false); // [-5, 2]
     r4 = interval(integer(3), i20, false, false);
     REQUIRE(r3->compare(*r4) == -1);
-    CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
-    CHECK_THROWS_AS(r4->set_union(r3), std::runtime_error);
+    CHECK_THROWS_AS(r3->set_union(r4), NotImplementedError);
+    CHECK_THROWS_AS(r4->set_union(r3), NotImplementedError);
     r3 = interval(zero, i2, true, true); // (0, 2)
-    CHECK_THROWS_AS(r3->contains(sqrt(i2)), std::runtime_error);
+    CHECK_THROWS_AS(r3->contains(sqrt(i2)), NotImplementedError);
 
     r3 = interval(im5, i2, false, false); // [-5, 2]
     REQUIRE(r3->is_subset(r2));
@@ -136,7 +138,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[2], *boolean(r5->left_open_)));
     REQUIRE(eq(*r5->get_args()[3], *boolean(r5->right_open_)));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
-    CHECK_THROWS_AS(interval(c1, one), std::runtime_error);
+    CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
     CHECK_THROWS_AS(r5->diff(symbol("x")), std::runtime_error);
 }
 

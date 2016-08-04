@@ -1,6 +1,7 @@
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/complex.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -294,7 +295,7 @@ RCP<const Basic> Log::create(const RCP<const Basic> &a) const
 RCP<const Basic> log(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
-        throw std::runtime_error(
+        throw NotImplementedError(
             "log(0) is complex infinity. Yet to be implemented");
     }
     if (eq(*arg, *one))
@@ -306,7 +307,8 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
         if (not _arg->is_exact()) {
             return _arg->get_eval().log(*_arg);
         } else if (_arg->is_negative()) {
-            throw std::runtime_error("Imaginary Result. Yet to be implemented");
+            throw NotImplementedError(
+                "Imaginary Result. Yet to be implemented");
         }
     }
     if (is_a<Rational>(*arg)) {

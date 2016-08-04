@@ -236,7 +236,7 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     }
     virtual RCP<const Basic> asin(const Basic &x) const override
     {

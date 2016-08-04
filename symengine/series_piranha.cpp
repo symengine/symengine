@@ -65,7 +65,7 @@ piranha::rational URatPSeriesPiranha::convert(const Rational &x)
 
 piranha::rational URatPSeriesPiranha::convert(const Basic &x)
 {
-    throw std::runtime_error("Not Implemented");
+    throw std::NotImplementedError("Not Implemented");
 }
 
 RCP<const Basic> URatPSeriesPiranha::as_basic() const

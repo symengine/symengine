@@ -3,10 +3,11 @@
 
 typedef enum {
     SYMENGINE_NO_EXCEPTION = 0,
-    SYMENGINE_DIV_BY_ZERO = 1,
-    SYMENGINE_NOT_IMPLEMENTED = 2,
-    SYMENGINE_UNDEFINED = 3,
-    SYMENGINE_PARSE_ERROR = 4,
+    SYMENGINE_RUNTIME_ERROR = 1,
+    SYMENGINE_DIV_BY_ZERO = 2,
+    SYMENGINE_NOT_IMPLEMENTED = 3,
+    SYMENGINE_UNDEFINED = 4,
+    SYMENGINE_PARSE_ERROR = 5,
 } symengine_exceptions_t;
 
 #ifdef __cplusplus
@@ -22,6 +23,10 @@ class SymEngineException : public std::exception
 public:
     SymEngineException(const std::string &msg, symengine_exceptions_t error)
         : m_msg(msg), ec(error)
+    {
+    }
+    SymEngineException(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_RUNTIME_ERROR)
     {
     }
     const char *what() const throw()
@@ -48,6 +53,15 @@ class NotImplementedError : public SymEngineException
 public:
     NotImplementedError(const std::string &msg)
         : SymEngineException(msg, SYMENGINE_NOT_IMPLEMENTED)
+    {
+    }
+};
+
+class UndefinedError : public SymEngineException
+{
+public:
+    UndefinedError(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_UNDEFINED)
     {
     }
 };

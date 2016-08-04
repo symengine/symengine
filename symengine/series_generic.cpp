@@ -1,6 +1,7 @@
 #include <exception>
 #include <iterator>
 #include <symengine/series_visitor.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -102,7 +103,7 @@ UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
     }
     if (exp == 0) {
         if (base == 0 or base.get_dict().size() == 0) {
-            throw std::runtime_error("Error: 0**0 is undefined.");
+            throw UndefinedError("Error: 0**0 is undefined.");
         } else {
             return UExprDict(1);
         }
@@ -159,7 +160,7 @@ UExprDict UnivariateSeries::integrate(const UExprDict &s, const UExprDict &var)
             dict.insert(std::pair<int, Expression>(it.first + 1,
                                                    it.second / (it.first + 1)));
         } else {
-            throw std::runtime_error("Not Implemented");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
