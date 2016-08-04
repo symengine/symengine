@@ -96,7 +96,7 @@ public:
 
     void bvisit(const Symbol &)
     {
-        throw std::runtime_error("Symbol cannot be evaluated.");
+        throw SymEngineException("Symbol cannot be evaluated.");
     };
 
     void bvisit(const Log &x)
@@ -241,7 +241,7 @@ public:
             result_ = 0.5772156649015328606065; // use until polygamma or
                                                 // digamma is implemented
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     };
@@ -586,7 +586,7 @@ std::vector<fn> init_eval_double()
             return 0.5772156649015328606065; // use until polygamma or digamma
                                              // is implemented
         } else {
-            throw std::runtime_error(
+            throw SymEngineException(
                 "Constant " + static_cast<const Constant &>(x).get_name()
                 + " is not implemented.");
         }

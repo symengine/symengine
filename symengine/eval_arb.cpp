@@ -128,7 +128,7 @@ public:
 
     void bvisit(const Symbol &x)
     {
-        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+        throw SymEngineException("Symbol cannot be evaluated as an arb type.");
     }
 
     void bvisit(const UIntPoly &x)
@@ -390,7 +390,7 @@ public:
         } else if (x.__eq__(*EulerGamma)) {
             arb_const_euler(result_, prec_);
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     }

@@ -175,7 +175,7 @@ public:
         if (neg)
             exp_ = -exp_;
         if (not mp_fits_ulong_p(exp_))
-            throw std::runtime_error("powrat: 'exp' does not fit ulong.");
+            throw SymEngineException("powrat: 'exp' does not fit ulong.");
         unsigned long exp = mp_get_ui(exp_);
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);

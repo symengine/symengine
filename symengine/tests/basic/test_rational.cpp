@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/rational.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -10,6 +11,7 @@ using SymEngine::Rational;
 using SymEngine::rational;
 using SymEngine::Number;
 using SymEngine::is_a;
+using SymEngine::SymEngineException;
 
 TEST_CASE("Rational", "[rational]")
 {
@@ -71,5 +73,5 @@ TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
     REQUIRE(res->__eq__(*qm1_3));
     REQUIRE(q9_25->nth_root(outArg(res), 2));
     REQUIRE(res->__eq__(*q3_5));
-    CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), std::runtime_error);
+    CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), SymEngineException);
 }

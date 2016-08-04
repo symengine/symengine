@@ -91,7 +91,7 @@ public:
     {
         if (not(mp_fits_ulong_p(other.i))) {
             if (other.i > 0u)
-                throw std::runtime_error(
+                throw SymEngineException(
                     "powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);

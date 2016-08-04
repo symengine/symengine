@@ -3,7 +3,9 @@
 #include <symengine/logic.h>
 #include <symengine/add.h>
 #include <symengine/real_double.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -35,7 +37,7 @@ TEST_CASE("BooleanAtom : Basic", "[basic]")
     REQUIRE(unified_eq(v, u));
 
     auto x = symbol("x");
-    CHECK_THROWS_AS(boolTrue->diff(x), std::runtime_error);
+    CHECK_THROWS_AS(boolTrue->diff(x), SymEngineException);
 
     REQUIRE(not eq(*boolTrue, *boolFalse));
     REQUIRE(eq(*boolFalse, *boolean(false)));
@@ -62,7 +64,7 @@ TEST_CASE("Contains", "[logic]")
     vec_basic u = {x, int1};
     REQUIRE(unified_eq(v, u));
 
-    CHECK_THROWS_AS(p->diff(x), std::runtime_error);
+    CHECK_THROWS_AS(p->diff(x), SymEngineException);
 }
 
 TEST_CASE("Piecewise", "[logic]")

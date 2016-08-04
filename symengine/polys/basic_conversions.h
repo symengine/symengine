@@ -156,7 +156,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        throw std::runtime_error("Non-integer found");
+        throw SymEngineException("Non-integer found");
     }
 
     void dict_set(unsigned int pow, const Basic &x)
@@ -165,7 +165,7 @@ public:
             this->dict = Poly::container_from_dict(
                 this->gen, {{pow, static_cast<const Integer &>(x).i}});
         else
-            throw std::runtime_error("Non-integer found");
+            throw SymEngineException("Non-integer found");
     }
 };
 
@@ -223,7 +223,7 @@ RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex)
     umap_basic_num tmp = _find_gens_poly(exp);
 
     if (tmp.size() != 1)
-        throw std::runtime_error("Did not find exactly 1 generator");
+        throw SymEngineException("Did not find exactly 1 generator");
 
     RCP<const Basic> gen = pow(tmp.begin()->first, tmp.begin()->second);
     return P::from_container(

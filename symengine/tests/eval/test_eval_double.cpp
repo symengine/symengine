@@ -53,6 +53,7 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
 using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
@@ -126,7 +127,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     }
 
     // Symbol must raise an exception
-    CHECK_THROWS_AS(eval_double(*symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException);
     CHECK_THROWS_AS(eval_double_single_dispatch(*symbol("x")),
                     NotImplementedError);
 
@@ -140,9 +141,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     CHECK_THROWS_AS(eval_double_single_dispatch(*zeta(r1, r2)),
                     NotImplementedError);
 
-    CHECK_THROWS_AS(eval_double(*constant("dummy")), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*constant("dummy")), SymEngineException);
     CHECK_THROWS_AS(eval_double_single_dispatch(*constant("dummy")),
-                    std::runtime_error);
+                    SymEngineException);
     // ... we don't test the rest of functions that are not implemented.
 }
 

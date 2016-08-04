@@ -31,6 +31,7 @@ using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -139,7 +140,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[3], *boolean(r5->right_open_)));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
-    CHECK_THROWS_AS(r5->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
@@ -163,7 +164,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
     REQUIRE(not r1->contains(zero));
-    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("UniversalSet : Basic", "[basic]")
@@ -196,7 +197,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(r1->__hash__() == universalset()->__hash__());
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*universalset()) == 0);
-    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("FiniteSet : Basic", "[basic]")

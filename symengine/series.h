@@ -163,7 +163,7 @@ public:
                 Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
         } else {
-            throw std::runtime_error("Unknown type");
+            throw SymEngineException("Unknown type");
         }
     }
 
@@ -217,10 +217,10 @@ public:
     {
         const Coeff co = Series::find_cf(s, var, 0);
         if (co != 0)
-            throw std::runtime_error("reversion of series with constant term");
+            throw SymEngineException("reversion of series with constant term");
         const Coeff a = Series::find_cf(s, var, 1);
         if (a == 0)
-            throw std::runtime_error(
+            throw SymEngineException(
                 "reversion of series with zero term of degree one");
         Poly r(var);
         r /= a;

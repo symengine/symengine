@@ -4,7 +4,9 @@
 #include <symengine/eval_mpfr.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;

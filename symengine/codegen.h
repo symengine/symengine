@@ -16,7 +16,7 @@ public:
     using StrPrinter::bvisit;
     void bvisit(const Basic &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const Complex &x)
     {
@@ -62,7 +62,7 @@ public:
         for (size_t i = 0;; ++i) {
             if (i == vec.size() - 1) {
                 if (neq(*vec[i].second, *boolTrue)) {
-                    throw std::runtime_error(
+                    throw SymEngineException(
                         "Code generation requires a (Expr, True) at the end");
                 }
                 s << "(\n   " << apply(vec[i].first) << "\n";
@@ -90,15 +90,15 @@ public:
     }
     void bvisit(const EmptySet &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const FiniteSet &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const UniversalSet &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b)
@@ -127,28 +127,28 @@ public:
         else if (x.is_positive_infinity())
             s << "HUGE_VAL";
         else
-            throw std::runtime_error("Not supported");
+            throw SymEngineException("Not supported");
         str_ = s.str();
     }
     void bvisit(const UnivariateSeries &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const FunctionSymbol &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const Derivative &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const Subs &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
     void bvisit(const GaloisField &x)
     {
-        throw std::runtime_error("Not supported");
+        throw SymEngineException("Not supported");
     }
 };
 

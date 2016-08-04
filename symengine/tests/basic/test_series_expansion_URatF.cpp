@@ -219,11 +219,11 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     //    auto ex8 = cot(sin(x));
     //    auto ex10 = csc(x);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex7, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex8, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex10, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
 }
 
 TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
@@ -261,8 +261,8 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     auto ex1 = lambertw(x);
     auto ex2 = lambertw(sin(x));
 
-    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10), std::runtime_error);
-    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex2, "x", 10), std::runtime_error);
+    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10), SymEngineException);
+    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex2, "x", 10), SymEngineException);
 }
 #endif
 
@@ -273,6 +273,6 @@ TEST_CASE("Check error when expansion called without Flint ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10),
-                      std::runtime_error);
+                      SymEngineException);
 }
 #endif

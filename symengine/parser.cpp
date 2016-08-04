@@ -412,7 +412,7 @@ public:
                 if (last_char_was_op and operator_error(last_char, x))
                     throw ParseError("Operator inconsistency!");
                 if (last_char_was_op and operator_error(last_char, x)) {
-                    throw std::runtime_error("Operator inconsistency!");
+                    throw SymEngineException("Operator inconsistency!");
                 }
                 last_char_was_op = true;
 

@@ -2794,7 +2794,7 @@ RCP<const Basic> max(const vec_basic &arg)
 
     for (const auto &p : arg) {
         if (is_a<Complex>(*p))
-            throw std::runtime_error("Complex can't be passed to max!");
+            throw SymEngineException("Complex can't be passed to max!");
 
         if (is_a_Number(*p)) {
             if (not number_set) {
@@ -2856,7 +2856,7 @@ RCP<const Basic> max(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to max!");
+        throw SymEngineException("Empty vec_basic passed to max!");
     }
 }
 
@@ -2897,7 +2897,7 @@ RCP<const Basic> min(const vec_basic &arg)
 
     for (const auto &p : arg) {
         if (is_a<Complex>(*p))
-            throw std::runtime_error("Complex can't be passed to min!");
+            throw SymEngineException("Complex can't be passed to min!");
 
         if (is_a_Number(*p)) {
             if (not number_set) {
@@ -2959,7 +2959,7 @@ RCP<const Basic> min(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to min!");
+        throw SymEngineException("Empty vec_basic passed to min!");
     }
 }
 

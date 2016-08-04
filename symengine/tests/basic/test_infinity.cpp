@@ -30,6 +30,7 @@ using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Complex;
 using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -62,7 +63,7 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     REQUIRE(b->__str__() == "-oo");
 
     // RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
-    // CHECK_THROWS_AS(Infty::from_direction(cx), std::runtime_error);
+    // CHECK_THROWS_AS(Infty::from_direction(cx), SymEngineException);
 }
 
 TEST_CASE("Hash Size for Infinity", "[Infinity]")
@@ -155,9 +156,9 @@ TEST_CASE("Adding to Infinity", "[Infinity]")
     REQUIRE(n1->__str__() == "-oo");
     n1 = c->add(*minus_one);
     REQUIRE(n1->__str__() == "zoo");
-    CHECK_THROWS_AS(c->add(*c), std::runtime_error);
-    CHECK_THROWS_AS(c->add(*a), std::runtime_error);
-    CHECK_THROWS_AS(b->add(*a), std::runtime_error);
+    CHECK_THROWS_AS(c->add(*c), SymEngineException);
+    CHECK_THROWS_AS(c->add(*a), SymEngineException);
+    CHECK_THROWS_AS(b->add(*a), SymEngineException);
 }
 
 TEST_CASE("Subtracting from Infinity", "[Infinity]")
@@ -189,9 +190,9 @@ TEST_CASE("Multiplication with Infinity", "[Infinity]")
     n2 = c->mul(*c);
     REQUIRE(n2->__str__() == "zoo");
 
-    CHECK_THROWS_AS(a->mul(*zero), std::runtime_error);
-    CHECK_THROWS_AS(b->mul(*zero), std::runtime_error);
-    CHECK_THROWS_AS(c->mul(*zero), std::runtime_error);
+    CHECK_THROWS_AS(a->mul(*zero), SymEngineException);
+    CHECK_THROWS_AS(b->mul(*zero), SymEngineException);
+    CHECK_THROWS_AS(c->mul(*zero), SymEngineException);
 
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(c->mul(*cx), NotImplementedError);

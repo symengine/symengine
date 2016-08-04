@@ -497,7 +497,7 @@ void csr_scale_rows(CSRMatrix &A, const DenseMatrix &X)
 
     for (unsigned i = 0; i < A.row_; i++) {
         if (eq(*(X.get(i, 0)), *zero))
-            throw std::runtime_error("Scaling factor can't be zero");
+            throw SymEngineException("Scaling factor can't be zero");
         for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
             A.x_[jj] = mul(A.x_[jj], X.get(i, 0));
     }
@@ -514,7 +514,7 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
 
     for (i = 0; i < A.col_; i++) {
         if (eq(*(X.get(i, 0)), *zero))
-            throw std::runtime_error("Scaling factor can't be zero");
+            throw SymEngineException("Scaling factor can't be zero");
     }
 
     for (i = 0; i < nnz; i++)

@@ -284,6 +284,6 @@ TEST_CASE("Check error when expansion called without Piranha ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(UPSeriesPiranha::series(ex1, "x", 10),
-                      std::runtime_error);
+                      SymEngineException);
 }
 #endif

@@ -166,9 +166,9 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
     int j, tj, start, k;
     long long int v;
     if (m < 2)
-        throw std::runtime_error("multinomial_coefficients: m >= 2 must hold.");
+        throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
     if (n < 0)
-        throw std::runtime_error("multinomial_coefficients: n >= 0 must hold.");
+        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
@@ -211,9 +211,9 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     int j, tj, start, k;
     integer_class v;
     if (m < 2)
-        throw std::runtime_error("multinomial_coefficients: m >= 2 must hold.");
+        throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
     if (n < 0)
-        throw std::runtime_error("multinomial_coefficients: n >= 0 must hold.");
+        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;

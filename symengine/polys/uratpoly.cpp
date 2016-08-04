@@ -28,7 +28,7 @@ bool divides_upoly(const URatPoly &a, const URatPoly &b,
                    const Ptr<RCP<const URatPoly>> &out)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto a_poly = a.get_poly();
     auto b_poly = b.get_poly();

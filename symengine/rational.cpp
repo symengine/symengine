@@ -92,7 +92,7 @@ int Rational::compare(const Basic &o) const
         const Integer &s = static_cast<const Integer &>(o);
         return i < s.i ? -1 : 1;
     }
-    throw std::runtime_error("unhandled comparison of Rational");
+    throw SymEngineException("unhandled comparison of Rational");
 }
 
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
@@ -127,7 +127,7 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat,
                         unsigned long n) const
 {
     if (n == 0)
-        throw std::runtime_error("i_nth_root: Can not find Zeroth root");
+        throw SymEngineException("i_nth_root: Can not find Zeroth root");
 
     rational_class r;
     int ret = mp_root(SymEngine::get_num(r), SymEngine::get_num(i), n);
@@ -150,7 +150,7 @@ RCP<const Basic> Rational::powrat(const Rational &other) const
 RCP<const Basic> Rational::rpowrat(const Integer &other) const
 {
     if (not(mp_fits_ulong_p(SymEngine::get_den(i))))
-        throw std::runtime_error("powrat: den of 'exp' does not fit ulong.");
+        throw SymEngineException("powrat: den of 'exp' does not fit ulong.");
     unsigned long exp = mp_get_ui(SymEngine::get_den(i));
     RCP<const Integer> res;
     if (other.is_negative()) {

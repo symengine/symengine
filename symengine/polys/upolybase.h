@@ -640,7 +640,7 @@ template <typename Poly>
 RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto dict = a.get_poly();
     dict += b.get_poly();
@@ -659,7 +659,7 @@ template <typename Poly>
 RCP<const Poly> sub_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto dict = a.get_poly();
     dict -= b.get_poly();
@@ -670,7 +670,7 @@ template <typename Poly>
 RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
@@ -688,7 +688,7 @@ template <typename Poly>
 RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto dict = a.get_poly();
     dict /= b.get_poly();

@@ -144,7 +144,7 @@ enable_if_t<std::is_same<UIntPolyFlint, T>::value
 gcd_upoly(const T &a, const T &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
     return make_rcp<const T>(a.get_var(), a.get_poly().gcd(b.get_poly()));
 }
 
@@ -155,7 +155,7 @@ enable_if_t<std::is_same<UIntPolyFlint, T>::value
 lcm_upoly(const T &a, const T &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
     return make_rcp<const T>(a.get_var(), a.get_poly().lcm(b.get_poly()));
 }
 
@@ -179,7 +179,7 @@ enable_if_t<std::is_same<UIntPolyFlint, T>::value
 divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     typename T::container_type q, r;
 

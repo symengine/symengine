@@ -37,7 +37,7 @@ signed long int Integer::as_int() const
     // "as_int()" and we leave it to the user to do any possible further integer
     // conversions.
     if (not(mp_fits_slong_p(this->i))) {
-        throw std::runtime_error("as_int: Integer larger than int");
+        throw SymEngineException("as_int: Integer larger than int");
     }
     return mp_get_si(this->i);
 }
@@ -81,7 +81,7 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
                          mp_abs(static_cast<const Integer &>(*tmp).i));
         return Rational::from_mpq(std::move(q));
     } else {
-        throw std::runtime_error("powint returned non-integer");
+        throw SymEngineException("powint returned non-integer");
     }
 }
 
@@ -99,7 +99,7 @@ int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
                unsigned long int n)
 {
     if (n == 0)
-        throw std::runtime_error("i_nth_root: Can not find Zeroth root");
+        throw SymEngineException("i_nth_root: Can not find Zeroth root");
 
     int ret_val;
     integer_class t;

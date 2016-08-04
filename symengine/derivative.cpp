@@ -589,13 +589,13 @@ public:
 
     static RCP<const Basic> diff(const Set &self, const RCP<const Symbol> &x)
     {
-        throw std::runtime_error("Derivative doesn't exist.");
+        throw SymEngineException("Derivative doesn't exist.");
     }
 
     static RCP<const Basic> diff(const Boolean &self,
                                  const RCP<const Symbol> &x)
     {
-        throw std::runtime_error("Derivative doesn't exist.");
+        throw SymEngineException("Derivative doesn't exist.");
     }
 
     static RCP<const Basic> diff(const Piecewise &self,

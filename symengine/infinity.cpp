@@ -91,15 +91,15 @@ RCP<const Number> Infty::add(const Number &other) const
 
     if (not eq(*s.get_direction(), *_direction)) {
         if (is_unsigned_infinity() or s.is_unsigned_infinity())
-            throw std::runtime_error("Indeterminate Expression: "
+            throw SymEngineException("Indeterminate Expression: "
                                      "`unsigned_Infty +- Infty` "
                                      "encountered");
         else
-            throw std::runtime_error("Indeterminate Expression: `Infty +- "
+            throw SymEngineException("Indeterminate Expression: `Infty +- "
                                      "Infty` encountered. Directions don't "
                                      "match");
     } else if (is_unsigned_infinity()) {
-        throw std::runtime_error("Indeterminate Expression: "
+        throw SymEngineException("Indeterminate Expression: "
                                  "`unsigned_Infty +- unsigned Infty` "
                                  "encountered");
     } else
@@ -121,7 +121,7 @@ RCP<const Number> Infty::mul(const Number &other) const
         else if (other.is_negative())
             return make_rcp<const Infty>(this->_direction->mul(*minus_one));
         else
-            throw std::runtime_error(
+            throw SymEngineException(
                 "Indeterminate Expression: `0 * Infty` encountered");
     }
 }

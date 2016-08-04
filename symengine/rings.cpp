@@ -32,7 +32,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                         exp[i] = rcp_static_cast<const Integer>(q.second)
                                      ->as_int();
                     } else {
-                        throw std::runtime_error(
+                        throw SymEngineException(
                             "Cannot convert symbolic exponents to sparse "
                             "polynomials with integer exponents.");
                     }

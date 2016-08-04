@@ -25,7 +25,9 @@
 #ifdef HAVE_SYMENGINE_MPC
 #include <symengine/complex_mpc.h>
 #endif // HAVE_SYMENGINE_MPC
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::constant;
 using SymEngine::Complex;

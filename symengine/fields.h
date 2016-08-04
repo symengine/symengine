@@ -200,7 +200,7 @@ public:
     GaloisFieldDict &operator+=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
             return static_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
@@ -285,7 +285,7 @@ public:
     GaloisFieldDict &operator-=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
             return static_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
@@ -332,7 +332,7 @@ public:
     {
         // TODO
         if (a.modulo_ != b.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (a.get_dict().empty())
             return a;
         if (b.get_dict().empty())
@@ -385,7 +385,7 @@ public:
     GaloisFieldDict &operator*=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
 
@@ -443,7 +443,7 @@ public:
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
             throw DivisionByZeroError("ZeroDivisionError");
@@ -513,7 +513,7 @@ public:
     GaloisFieldDict &operator%=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
             throw DivisionByZeroError("ZeroDivisionError");
