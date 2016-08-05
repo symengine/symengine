@@ -476,208 +476,207 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
-// TEST_CASE("Testing addition, subtraction, multiplication of "
-//           "UExprPolys with the same variable",
-//           "[MExprPoly][UExprPoly]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     RCP<const Symbol> a = symbol("a");
-//     RCP<const Symbol> b = symbol("b");
-//     RCP<const Symbol> c = symbol("c");
-//     RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
-//     Expression expr1(add(a, b));
-//     Expression expr2(sub(mul(two, a), b));
-//     Expression expr3(mul(a, c));
-//     Expression expr4(div(b, a));
-//     Expression expr5(add(b, c));
-//     Expression expr6(mul(a, b));
-//     Expression expr7(div(a, b));
-//     RCP<const UExprPoly> p1
-//         = uexpr_poly(x, UExprDict({{1, expr1}, {2, expr2}, {0, expr3}}));
-//     RCP<const UExprPoly> p2
-//         = uexpr_poly(x, UExprDict({{0, expr4}, {1, expr1}}));
+TEST_CASE("Testing addition, subtraction, multiplication of "
+          "MExprPolys with the same variable",
+          "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
+    Expression expr1(add(a, b));
+    Expression expr2(sub(mul(two, a), b));
+    Expression expr3(mul(a, c));
+    Expression expr4(div(b, a));
+    Expression expr5(add(b, c));
+    Expression expr6(mul(a, b));
+    Expression expr7(div(a, b));
+    RCP<const MExprPoly> p1
+        = MExprPoly::from_dict({x}, {{{1}, expr1}, {{2}, expr2}, {{0}, expr3}});
+    RCP<const MExprPoly> p2
+        = MExprPoly::from_dict({x}, {{{0}, expr4}, {{1}, expr1}});
 
-//     RCP<const MExprPoly> q1 = MExprPoly::from_dict(
-//         {x}, {{{1}, expr1 + expr1}, {{0}, expr4 + expr3}, {{2}, expr2}});
-//     RCP<const MExprPoly> q2 = MExprPoly::from_dict(
-//         {x}, {{{0}, expr3 - expr4}, {{1}, expr1 - expr1}, {{2}, expr2}});
-//     RCP<const MExprPoly> q3 = MExprPoly::from_dict(
-//         {x}, {{{0}, expr4 - expr3}, {{1}, expr1 - expr1}, {{2}, expr2 *
-//         -1}});
-//     RCP<const MExprPoly> q4 = MExprPoly::from_dict(
-//         {x}, {{{3}, expr2 * expr1},
-//               {{2}, expr2 * expr4 + expr1 * expr1},
-//               {{1}, expr1 * expr4 + expr1 * expr3},
-//               {{0}, expr3 * expr4}});
+    RCP<const MExprPoly> q1 = MExprPoly::from_dict(
+        {x}, {{{1}, expr1 + expr1}, {{0}, expr4 + expr3}, {{2}, expr2}});
+    RCP<const MExprPoly> q2 = MExprPoly::from_dict(
+        {x}, {{{0}, expr3 - expr4}, {{1}, expr1 - expr1}, {{2}, expr2}});
+    RCP<const MExprPoly> q3 = MExprPoly::from_dict(
+        {x}, {{{0}, expr4 - expr3}, {{1}, expr1 - expr1}, {{2}, expr2 * -1}});
+    RCP<const MExprPoly> q4
+        = MExprPoly::from_dict({x}, {{{3}, expr2 * expr1},
+                                     {{2}, expr2 * expr4 + expr1 * expr1},
+                                     {{1}, expr1 * expr4 + expr1 * expr3},
+                                     {{0}, expr3 * expr4}});
 
-//     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-//     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-//     REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-//     REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-//     REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-//     REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
-// }
+    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
+    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
+    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
+    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
+    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
+    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+}
 
-// TEST_CASE("Testing addition, subtraction, multiplication of "
-//           "UExprPolys with the different variables",
-//           "[MExprPoly][UExprPoly]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     RCP<const Symbol> y = symbol("y");
-//     RCP<const Symbol> a = symbol("a");
-//     RCP<const Symbol> b = symbol("b");
-//     RCP<const Symbol> c = symbol("c");
-//     RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
-//     Expression expr1(add(a, b));
-//     Expression expr2(sub(mul(two, a), b));
-//     Expression expr3(mul(a, c));
-//     Expression expr4(div(b, a));
-//     Expression expr5(add(b, c));
-//     RCP<const UExprPoly> p1
-//         = uexpr_poly(x, UExprDict({{1, expr1}, {2, expr2}, {0, expr3}}));
-//     RCP<const UExprPoly> p2
-//         = uexpr_poly(y, UExprDict({{0, expr4}, {1, expr5}}));
+TEST_CASE("Testing addition, subtraction, multiplication of "
+          "MExprPolys with the different variables",
+          "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
+    Expression expr1(add(a, b));
+    Expression expr2(sub(mul(two, a), b));
+    Expression expr3(mul(a, c));
+    Expression expr4(div(b, a));
+    Expression expr5(add(b, c));
+    RCP<const MExprPoly> p1
+        = MExprPoly::from_dict({x}, {{{1}, expr1}, {{2}, expr2}, {{0}, expr3}});
+    RCP<const MExprPoly> p2
+        = MExprPoly::from_dict({y}, {{{0}, expr4}, {{1}, expr5}});
 
-//     RCP<const MExprPoly> q1
-//         = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1},
-//                                                   {{2, 0}, expr2},
-//                                                   {{0, 0}, expr3 + expr4},
-//                                                   {{0, 0}, expr4},
-//                                                   {{0, 1}, expr5}});
-//     RCP<const MExprPoly> q2
-//         = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1},
-//                                                   {{2, 0}, expr2},
-//                                                   {{0, 0}, expr3 - expr4},
-//                                                   {{0, 1}, expr5 * -1}});
-//     RCP<const MExprPoly> q3
-//         = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1 * -1},
-//                                                   {{2, 0}, expr2 * -1},
-//                                                   {{0, 0}, expr4 - expr3},
-//                                                   {{0, 1}, expr5}});
-//     RCP<const MExprPoly> q4
-//         = MExprPoly::from_dict({x, y}, {{{2, 1}, expr2 * expr5},
-//                                                   {{2, 0}, expr2 * expr4},
-//                                                   {{1, 1}, expr1 * expr5},
-//                                                   {{1, 0}, expr1 * expr4},
-//                                                   {{0, 1}, expr3 * expr5},
-//                                                   {{0, 0}, expr3 * expr4}});
+    RCP<const MExprPoly> q1
+        = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1},
+                                        {{2, 0}, expr2},
+                                        {{0, 0}, expr3 + expr4},
+                                        {{0, 0}, expr4},
+                                        {{0, 1}, expr5}});
+    RCP<const MExprPoly> q2
+        = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1},
+                                        {{2, 0}, expr2},
+                                        {{0, 0}, expr3 - expr4},
+                                        {{0, 1}, expr5 * -1}});
+    RCP<const MExprPoly> q3
+        = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1 * -1},
+                                        {{2, 0}, expr2 * -1},
+                                        {{0, 0}, expr4 - expr3},
+                                        {{0, 1}, expr5}});
+    RCP<const MExprPoly> q4
+        = MExprPoly::from_dict({x, y}, {{{2, 1}, expr2 * expr5},
+                                        {{2, 0}, expr2 * expr4},
+                                        {{1, 1}, expr1 * expr5},
+                                        {{1, 0}, expr1 * expr4},
+                                        {{0, 1}, expr3 * expr5},
+                                        {{0, 0}, expr3 * expr4}});
 
-//     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-//     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-//     REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-//     REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-//     REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-//     REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
-// }
+    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
+    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
+    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
+    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
+    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
+    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+}
 
-// TEST_CASE("Testing addition, subtraction, multiplication of "
-//           "MExprPolys with a UExprPoly whose variable "
-//           "are in the variable set",
-//           "[MExprPoly][UExprPoly]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     RCP<const Symbol> y = symbol("y");
-//     Expression a(symbol("a"));                               // a
-//     Expression negB(-Expression(symbol("b")));               //-b
-//     Expression negNum(integer(-3));                          //-3
-//     Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-//     Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+TEST_CASE("Testing addition, subtraction, multiplication of "
+          "MExprPolys with a MExprPoly whose variable "
+          "are in the variable set",
+          "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    Expression a(symbol("a"));                               // a
+    Expression negB(-Expression(symbol("b")));               //-b
+    Expression negNum(integer(-3));                          //-3
+    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
+    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
 
-//     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
-//         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
-//     RCP<const UExprPoly> p2 = uexpr_poly(
-//         y, UExprDict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
+    RCP<const MExprPoly> p1 = MExprPoly::from_dict(
+        {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
+    RCP<const MExprPoly> p2 = MExprPoly::from_dict(
+        {y}, {{{0}, comp4}, {{1}, Expression(integer(2))}, {{2}, comp1}});
 
-//     RCP<const MExprPoly> q1
-//         = MExprPoly::from_dict({x, y}, {{{1, 1}, a},
-//                                                   {{0, 2}, comp1},
-//                                                   {{1, 0}, negB},
-//                                                   {{0, 1}, Expression(2)},
-//                                                   {{0, 0}, comp4 + negNum}});
-//     RCP<const MExprPoly> q2 = MExprPoly::from_dict(
-//         {x, y}, {{{1, 1}, a},
-//                  {{0, 2}, comp1 * -1},
-//                  {{1, 0}, negB},
-//                  {{0, 1}, Expression(-2)},
-//                  {{0, 0}, -1 * comp4 + negNum}});
-//     RCP<const MExprPoly> q3
-//         = MExprPoly::from_dict({x, y}, {{{1, 1}, a * -1},
-//                                                   {{0, 2}, comp1},
-//                                                   {{1, 0}, negB * -1},
-//                                                   {{0, 1}, Expression(2)},
-//                                                   {{0, 0}, comp4 - negNum}});
-//     RCP<const MExprPoly> q4 = MExprPoly::from_dict(
-//         {x, y}, {{{1, 3}, a * comp1},
-//                  {{1, 2}, 2 * a + negB * comp1},
-//                  {{1, 1}, a * comp4 + negB * 2},
-//                  {{0, 2}, negNum * comp1},
-//                  {{1, 0}, negB * comp4},
-//                  {{0, 1}, 2 * negNum},
-//                  {{0, 0}, negNum * comp4}});
+    RCP<const MExprPoly> q1
+        = MExprPoly::from_dict({x, y}, {{{1, 1}, a},
+                                        {{0, 2}, comp1},
+                                        {{1, 0}, negB},
+                                        {{0, 1}, Expression(2)},
+                                        {{0, 0}, comp4 + negNum}});
+    RCP<const MExprPoly> q2
+        = MExprPoly::from_dict({x, y}, {{{1, 1}, a},
+                                        {{0, 2}, comp1 * -1},
+                                        {{1, 0}, negB},
+                                        {{0, 1}, Expression(-2)},
+                                        {{0, 0}, -1 * comp4 + negNum}});
+    RCP<const MExprPoly> q3
+        = MExprPoly::from_dict({x, y}, {{{1, 1}, a * -1},
+                                        {{0, 2}, comp1},
+                                        {{1, 0}, negB * -1},
+                                        {{0, 1}, Expression(2)},
+                                        {{0, 0}, comp4 - negNum}});
+    RCP<const MExprPoly> q4
+        = MExprPoly::from_dict({x, y}, {{{1, 3}, a * comp1},
+                                        {{1, 2}, 2 * a + negB * comp1},
+                                        {{1, 1}, a * comp4 + negB * 2},
+                                        {{0, 2}, negNum * comp1},
+                                        {{1, 0}, negB * comp4},
+                                        {{0, 1}, 2 * negNum},
+                                        {{0, 0}, negNum * comp4}});
 
-//     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-//     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-//     REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-//     REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-//     REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-//     REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
-// }
+    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
+    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
+    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
+    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
+    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
+    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+}
 
-// TEST_CASE("Testing addition, subtraction, multiplication of "
-//           "MExprPolys with a UExprPoly whose variables "
-//           "are not in the variable set",
-//           "[MExprPoly][UExprPoly]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     RCP<const Symbol> y = symbol("y");
-//     RCP<const Symbol> z = symbol("z");
-//     Expression a(symbol("a"));                               // a
-//     Expression negB(-Expression(symbol("b")));               //-b
-//     Expression negNum(integer(-3));                          //-3
-//     Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-//     Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+TEST_CASE("Testing addition, subtraction, multiplication of "
+          "MExprPolys with a MExprPoly whose variables "
+          "are not in the variable set",
+          "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    Expression a(symbol("a"));                               // a
+    Expression negB(-Expression(symbol("b")));               //-b
+    Expression negNum(integer(-3));                          //-3
+    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
+    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
 
-//     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
-//         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
-//     RCP<const UExprPoly> p2 = uexpr_poly(
-//         z, UExprDict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
+    RCP<const MExprPoly> p1 = MExprPoly::from_dict(
+        {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
+    RCP<const MExprPoly> p2 = MExprPoly::from_dict(
+        {z}, {{{0}, comp4}, {{1}, Expression(integer(2))}, {{2}, comp1}});
 
-//     RCP<const MExprPoly> q1 = MExprPoly::from_dict(
-//         {x, y, z}, {{{1, 1, 0}, a},
-//                     {{0, 0, 2}, comp1},
-//                     {{1, 0, 0}, negB},
-//                     {{0, 0, 1}, Expression(2)},
-//                     {{0, 0, 0}, negNum + comp4}});
-//     RCP<const MExprPoly> q2 = MExprPoly::from_dict(
-//         {x, y, z}, {{{1, 1, 0}, a},
-//                     {{0, 0, 2}, comp1 * -1},
-//                     {{1, 0, 0}, negB},
-//                     {{0, 0, 1}, Expression(-2)},
-//                     {{0, 0, 0}, negNum - comp4}});
-//     RCP<const MExprPoly> q3 = MExprPoly::from_dict(
-//         {x, y, z}, {{{1, 1, 0}, a * -1},
-//                     {{0, 0, 2}, comp1},
-//                     {{1, 0, 0}, negB * -1},
-//                     {{0, 0, 1}, Expression(2)},
-//                     {{0, 0, 0}, -1 * negNum + comp4}});
-//     RCP<const MExprPoly> q4 = MExprPoly::from_dict(
-//         {x, y, z}, {{{1, 1, 2}, a * comp1},
-//                     {{1, 1, 1}, 2 * a},
-//                     {{1, 0, 2}, negB * comp1},
-//                     {{1, 1, 0}, a * comp4},
-//                     {{1, 0, 1}, 2 * negB},
-//                     {{0, 0, 2}, negNum * comp1},
-//                     {{1, 0, 0}, negB * comp4},
-//                     {{0, 0, 1}, 2 * negNum},
-//                     {{0, 0, 0}, negNum * comp4}});
+    RCP<const MExprPoly> q1
+        = MExprPoly::from_dict({x, y, z}, {{{1, 1, 0}, a},
+                                           {{0, 0, 2}, comp1},
+                                           {{1, 0, 0}, negB},
+                                           {{0, 0, 1}, Expression(2)},
+                                           {{0, 0, 0}, negNum + comp4}});
+    RCP<const MExprPoly> q2
+        = MExprPoly::from_dict({x, y, z}, {{{1, 1, 0}, a},
+                                           {{0, 0, 2}, comp1 * -1},
+                                           {{1, 0, 0}, negB},
+                                           {{0, 0, 1}, Expression(-2)},
+                                           {{0, 0, 0}, negNum - comp4}});
+    RCP<const MExprPoly> q3
+        = MExprPoly::from_dict({x, y, z}, {{{1, 1, 0}, a * -1},
+                                           {{0, 0, 2}, comp1},
+                                           {{1, 0, 0}, negB * -1},
+                                           {{0, 0, 1}, Expression(2)},
+                                           {{0, 0, 0}, -1 * negNum + comp4}});
+    RCP<const MExprPoly> q4
+        = MExprPoly::from_dict({x, y, z}, {{{1, 1, 2}, a * comp1},
+                                           {{1, 1, 1}, 2 * a},
+                                           {{1, 0, 2}, negB * comp1},
+                                           {{1, 1, 0}, a * comp4},
+                                           {{1, 0, 1}, 2 * negB},
+                                           {{0, 0, 2}, negNum * comp1},
+                                           {{1, 0, 0}, negB * comp4},
+                                           {{0, 0, 1}, 2 * negNum},
+                                           {{0, 0, 0}, negNum * comp4}});
 
-//     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-//     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-//     REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-//     REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-//     REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-//     REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
-// }
+    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
+    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
+    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
+    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
+    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
+    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+}
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
           "MExprPoly with empty set of variables ",
