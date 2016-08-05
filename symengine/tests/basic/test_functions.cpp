@@ -96,6 +96,7 @@ using SymEngine::integer_class;
 using SymEngine::get_mpz_t;
 using SymEngine::DivisionByZeroError;
 using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 using namespace SymEngine::literals;
 
