@@ -34,20 +34,30 @@ public:
     {
     }
 
-    UDictWrapper(Dict &&p) : dict_{p}
+    UDictWrapper(Dict &&p, unsigned int sz)
     {
+        auto iter = p.begin();
+        while (iter != p.end()) {
+            if (iter->second == 0) {
+                auto toErase = iter;
+                iter++;
+                p.erase(toErase);
+            } else {
+                iter++;
+            }
+        }
+
+        dict_ = p;
+        vec_size = sz;
     }
 
-    UDictWrapper(const Dict &p)
+    UDictWrapper(const Dict &p, unsigned int sz)
     {
         for (auto &iter : p) {
             if (iter.second != Value(0))
                 dict_[iter.first] = iter.second;
         }
-        if (not p.empty())
-            vec_size = p.begin()->first.size();
-        else
-            vec_size = 0;
+        vec_size = sz;
     }
 
     Wrapper &operator=(Wrapper &&other)
@@ -249,7 +259,7 @@ public:
             d.insert({changed, it.second});
         }
 
-        return Wrapper(std::move(d));
+        return Wrapper(std::move(d), size);
     }
 };
 
@@ -273,7 +283,12 @@ public:
     {
     }
 
-    MIntDict(const umap_uvec_mpz &p) : UDictWrapper(p)
+    MIntDict(umap_uvec_mpz &&p, unsigned int sz)
+        : UDictWrapper(std::move(p), sz)
+    {
+    }
+
+    MIntDict(const umap_uvec_mpz &p, unsigned int sz) : UDictWrapper(p, sz)
     {
     }
 
@@ -282,12 +297,48 @@ public:
     MIntDict &operator=(const MIntDict &) = default;
 };
 
+class MExprDict : public UDictWrapper<vec_int, Expression, MExprDict>
+{
+public:
+    MExprDict(unsigned int s) SYMENGINE_NOEXCEPT : UDictWrapper(s)
+    {
+    }
+
+    MExprDict() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    ~MExprDict() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    MExprDict(MExprDict &&other) SYMENGINE_NOEXCEPT
+        : UDictWrapper(std::move(other))
+    {
+    }
+
+    MExprDict(umap_vec_expr &&p, unsigned int sz)
+        : UDictWrapper(std::move(p), sz)
+    {
+    }
+
+    MExprDict(const umap_vec_expr &p, unsigned int sz) : UDictWrapper(p, sz)
+    {
+    }
+
+    MExprDict(const MExprDict &) = default;
+
+    MExprDict &operator=(const MExprDict &) = default;
+};
+
 template <typename Container, typename Poly>
 class MSymEnginePoly : public Basic
 {
 public:
     Container poly_;
     set_basic vars_;
+
+    typedef Container container_type;
 
     MSymEnginePoly(const set_basic &vars, Container &&dict)
         : poly_{dict}, vars_{vars}
@@ -332,12 +383,14 @@ public:
         }
 
         // vec_uint translator represents the permutation of the exponents
-        vec_uint trans;
-        trans.reserve(s.size());
-        for (auto mptr = m.begin(); mptr != m.end(); mptr++)
-            trans.push_back(mptr->second);
+        vec_uint trans(s.size());
+        auto mptr = m.begin();
+        for (unsigned int i = 0; i < s.size(); i++) {
+            trans[mptr->second] = i;
+            mptr++;
+        }
 
-        Container x(std::move(d));
+        Container x(std::move(d), s.size());
         return Poly::from_container(s, std::move(x.translate(trans, s.size())));
     }
 
@@ -364,7 +417,7 @@ public:
             if (poly_.dict_.begin()->first == o_.poly_.dict_.begin()->first
                 && unified_eq(vars_, o_.vars_))
                 return true;
-            vec_uint v1, v2;
+            typename Container::vec_type v1, v2;
             v1.resize(vars_.size(), 0);
             v2.resize(o_.vars_.size(), 0);
             if (poly_.dict_.begin()->first == v1
@@ -396,6 +449,21 @@ public:
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
 };
 
+class MExprPoly : public MSymEnginePoly<MExprDict, MExprPoly>
+{
+public:
+    MExprPoly(const set_basic &vars, MExprDict &&dict)
+        : MSymEnginePoly(vars, std::move(dict))
+    {
+    }
+
+    IMPLEMENT_TYPEID(MEXPRPOLY);
+    std::size_t __hash__() const;
+    RCP<const Basic> as_symbolic() const;
+    Expression
+    eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
+};
+
 // reconciles the positioning of the exponents in the vectors in the
 // Dict dict_ of the arguments
 // with the positioning of the exponents in the correspondng vectors of the
@@ -408,8 +476,9 @@ public:
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 
-inline set_basic get_translated_container(MIntDict &x, MIntDict &y,
-                                          const MIntPoly &a, const MIntPoly &b)
+template <typename Poly, typename Container>
+set_basic get_translated_container(Container &x, Container &y, const Poly &a,
+                                   const Poly &b)
 {
     vec_uint v1, v2;
     set_basic s;
@@ -421,34 +490,38 @@ inline set_basic get_translated_container(MIntDict &x, MIntDict &y,
     return s;
 }
 
-inline RCP<const MIntPoly> add_mpoly(const MIntPoly &a, const MIntPoly &b)
+template <typename Poly>
+RCP<const Poly> add_mpoly(const Poly &a, const Poly &b)
 {
-    MIntDict x, y;
+    typename Poly::container_type x, y;
     set_basic s = get_translated_container(x, y, a, b);
     x += y;
-    return MIntPoly::from_container(s, std::move(x));
+    return Poly::from_container(s, std::move(x));
 }
 
-inline RCP<const MIntPoly> sub_mpoly(const MIntPoly &a, const MIntPoly &b)
+template <typename Poly>
+RCP<const Poly> sub_mpoly(const Poly &a, const Poly &b)
 {
-    MIntDict x, y;
+    typename Poly::container_type x, y;
     set_basic s = get_translated_container(x, y, a, b);
     x -= y;
-    return MIntPoly::from_container(s, std::move(x));
+    return Poly::from_container(s, std::move(x));
 }
 
-inline RCP<const MIntPoly> mul_mpoly(const MIntPoly &a, const MIntPoly &b)
+template <typename Poly>
+RCP<const Poly> mul_mpoly(const Poly &a, const Poly &b)
 {
-    MIntDict x, y;
+    typename Poly::container_type x, y;
     set_basic s = get_translated_container(x, y, a, b);
     x *= y;
-    return MIntPoly::from_container(s, std::move(x));
+    return Poly::from_container(s, std::move(x));
 }
 
-inline RCP<const MIntPoly> neg_mpoly(const MIntPoly &a)
+template <typename Poly>
+RCP<const Poly> neg_mpoly(const Poly &a)
 {
-    MIntDict x = a.poly_;
-    return MIntPoly::from_container(a.vars_, std::move(-x));
+    typename Poly::container_type x = a.poly_;
+    return Poly::from_container(a.vars_, std::move(-x));
 }
 
 // translates vectors from one polynomial into vectors for another.

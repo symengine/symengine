@@ -51,6 +51,53 @@ integer_class MIntPoly::eval(
     return ans;
 }
 
+RCP<const Basic> MExprPoly::as_symbolic() const
+{
+    vec_basic args;
+    for (const auto &p : poly_.dict_) {
+        RCP<const Basic> res = (p.second.get_basic());
+        int whichvar = 0;
+        for (auto sym : vars_) {
+            if (0 != p.first[whichvar])
+                res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
+            whichvar++;
+        }
+        args.push_back(res);
+    }
+    return SymEngine::add(args);
+}
+
+std::size_t MExprPoly::__hash__() const
+{
+    std::size_t seed = MEXPRPOLY;
+    for (auto var : vars_)
+        hash_combine<std::string>(seed, var->__str__());
+
+    for (auto &p : poly_.dict_) {
+        std::size_t t = vec_hash<vec_int>()(p.first);
+        hash_combine<Basic>(t, *(p.second.get_basic()));
+        seed ^= t;
+    }
+    return seed;
+}
+
+Expression MExprPoly::eval(
+    std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const
+{
+    // TODO : handle missing values
+    Expression ans(0);
+    for (auto bucket : poly_.dict_) {
+        Expression term = bucket.second;
+        unsigned int whichvar = 0;
+        for (auto sym : vars_) {
+            term *= pow_ex(vals.find(sym)->second, bucket.first[whichvar]);
+            whichvar++;
+        }
+        ans += term;
+    }
+    return ans;
+}
+
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2)
 {

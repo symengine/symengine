@@ -68,7 +68,8 @@ public:
         // bvisit_upoly(x);
     }
 
-    void bvisit(const MIntPoly &x)
+    template <typename Container, typename Poly>
+    void bvisit(const MSymEnginePoly<Container, Poly> &x)
     {
         if (0 == x.poly_.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
@@ -235,6 +236,7 @@ public:
 #endif
     void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UExprPoly &x);
+    void bvisit(const MExprPoly &x);
     void bvisit(const GaloisField &x);
     void bvisit(const Infty &x);
     void bvisit(const UnivariateSeries &x);

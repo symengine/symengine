@@ -569,10 +569,13 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const MIntPoly &self,
+    template <typename Container, typename Poly>
+    static RCP<const Basic> diff(const MSymEnginePoly<Container, Poly> &self,
                                  const RCP<const Symbol> &x)
     {
-        umap_uvec_mpz dict;
+        typename Container::dict_type dict;
+        using Vec = typename Container::vec_type;
+
         if (self.vars_.find(x) != self.vars_.end()) {
             auto i = self.vars_.begin();
             unsigned int index = 0;
@@ -582,21 +585,20 @@ public:
             } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.poly_.dict_) {
                 if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
+                    Vec v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, integer_class>(
-                        v, bucket.second * bucket.first[index]));
+                    dict.insert({v, bucket.second * bucket.first[index]});
                 }
             }
             vec_basic v;
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MIntPoly::from_dict(v, std::move(dict));
+            return Poly::from_dict(v, std::move(dict));
         } else {
-            vec_uint v;
+            Vec v;
             v.resize(self.vars_.size(), 0);
             vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MIntPoly::from_dict(vs, {{v, integer_class(0)}});
+            return Poly::from_dict(vs, {{v, 0}});
         }
     }
 

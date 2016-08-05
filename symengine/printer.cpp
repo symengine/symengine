@@ -676,6 +676,55 @@ void StrPrinter::bvisit(const MIntPoly &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const MExprPoly &x)
+{
+    std::ostringstream s;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
+
+    for (vec_int exps : v) {
+        Expression c = x.poly_.dict_.find(exps)->second;
+        std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
+        if ('-' == t[0] && !first) {
+            s << " - ";
+            t = t.substr(1);
+        } else if (!first) {
+            s << " + ";
+        }
+        unsigned int i = 0;
+        std::ostringstream expr;
+        bool first_var = true;
+        for (auto it : x.vars_) {
+            if (exps[i] != 0) {
+                if (!first_var) {
+                    expr << "*";
+                }
+                expr << it->__str__();
+                if (exps[i] > 1 or exps[i] < 0)
+                    expr << "**" << exps[i];
+                first_var = false;
+            }
+            i++;
+        }
+        if (c != 1 && c != -1) {
+            s << t;
+            if (!expr.str().empty()) {
+                s << "*";
+            }
+        } else if (expr.str().empty()) {
+            s << "1";
+        }
+        s << expr.str();
+        first = false;
+    }
+
+    if (s.str().empty())
+        s << "0";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const MultivariatePolynomial &x)
 {
     std::ostringstream s;
