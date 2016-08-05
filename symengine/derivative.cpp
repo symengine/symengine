@@ -540,8 +540,9 @@ public:
     static RCP<const Basic> diff(const MSymEnginePoly<Container, Poly> &self,
                                  const RCP<const Symbol> &x)
     {
-        typename Container::dict_type dict;
+        using Dict = typename Container::dict_type;
         using Vec = typename Container::vec_type;
+        Dict dict;
 
         if (self.vars_.find(x) != self.vars_.end()) {
             auto i = self.vars_.begin();
@@ -565,7 +566,7 @@ public:
             v.resize(self.vars_.size(), 0);
             vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return Poly::from_dict(vs, {{v, 0}});
+            return Poly::from_dict(vs, Dict{{v, 0}});
         }
     }
 
