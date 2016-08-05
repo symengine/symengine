@@ -536,39 +536,6 @@ public:
         return diff_upoly<UExprPoly, map_int_Expr>(self, x);
     }
 
-    template <typename MPoly, typename Coeff, typename Vec>
-    static RCP<const Basic> diff(const MPolyBase<MPoly, Coeff, Vec> &self,
-                                 const RCP<const Symbol> &x)
-    {
-        using Dict = std::unordered_map<Vec, Coeff, vec_hash<Vec>>;
-        Dict dict;
-        if (self.vars_.find(x) != self.vars_.end()) {
-            auto i = self.vars_.begin();
-            unsigned int index = 0;
-            while (!(*i)->__eq__(*x)) {
-                i++;
-                index++;
-            } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.dict_) {
-                if (bucket.first[index] != 0) {
-                    Vec v = bucket.first;
-                    v[index]--;
-                    dict.insert(std::pair<Vec, Coeff>(
-                        v, bucket.second * bucket.first[index]));
-                }
-            }
-            vec_basic v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(v, std::move(dict));
-        } else {
-            Vec v;
-            v.resize(self.vars_.size(), 0);
-            vec_basic vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(vs, {{v, Coeff(0)}});
-        }
-    }
-
     template <typename Container, typename Poly>
     static RCP<const Basic> diff(const MSymEnginePoly<Container, Poly> &self,
                                  const RCP<const Symbol> &x)
