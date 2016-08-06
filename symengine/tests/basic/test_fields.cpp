@@ -915,7 +915,7 @@ TEST_CASE("GaloisFieldDict gf_compose_mod, gf_trace_map : Basic", "[basic]")
 
     d2 = GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z);
     auto d4 = GaloisFieldDict::from_vec({0_z, 1_z}, 11_z);
-    d3 = d1.gf_pow_mod(d4, 11_z);
+    d3 = d1.gf_pow_mod(d4, 11);
     REQUIRE(d1.gf_trace_map(d2, d3, d4, 0).first
             == GaloisFieldDict::from_vec({1_z, 1_z, 1_z}, 11_z));
     REQUIRE(d1.gf_trace_map(d2, d3, d4, 0).second
