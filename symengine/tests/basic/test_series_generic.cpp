@@ -77,12 +77,12 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
     RCP<const Basic> c = add(a, b);
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 4, dpoly_);
-    REQUIRE(c->__cmp__(*d));
+    REQUIRE(eq(*c, *d));
 
     RCP<const UnivariateSeries> e = UnivariateSeries::create(x, 2, bpoly_);
     RCP<const Basic> f = add(a, e);
     RCP<const Basic> g = UnivariateSeries::create(x, 2, dpoly_);
-    REQUIRE(f->__cmp__(*g));
+    REQUIRE(eq(*f, *g));
 }
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")

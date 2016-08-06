@@ -38,6 +38,7 @@ public:
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
+    DIFF0(Symbolic)
 #endif
 
     static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)

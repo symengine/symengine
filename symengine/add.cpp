@@ -1,6 +1,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -247,62 +248,23 @@ void Add::as_coef_term(const RCP<const Basic> &self,
     }
 }
 
-RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
-{
-    SymEngine::umap_basic_num d;
-    RCP<const Number> coef;
-    RCP<const Basic> t;
-    if (is_a<Add>(*a) and is_a<Add>(*b)) {
-        coef = (rcp_static_cast<const Add>(a))->coef_;
-        d = (rcp_static_cast<const Add>(a))->dict_;
-        for (const auto &p : (rcp_static_cast<const Add>(b))->dict_)
-            Add::dict_add_term(d, p.second, p.first);
-        iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
-    } else if (is_a<Add>(*a)) {
-        coef = (rcp_static_cast<const Add>(a))->coef_;
-        d = (rcp_static_cast<const Add>(a))->dict_;
-        if (is_a_Number(*b)) {
-            iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
-        } else {
-            RCP<const Number> coef2;
-            Add::as_coef_term(b, outArg(coef2), outArg(t));
-            Add::dict_add_term(d, coef2, t);
-        }
-    } else if (is_a<Add>(*b)) {
-        coef = (rcp_static_cast<const Add>(b))->coef_;
-        d = (rcp_static_cast<const Add>(b))->dict_;
-        if (is_a_Number(*a)) {
-            iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
-        } else {
-            RCP<const Number> coef2;
-            Add::as_coef_term(a, outArg(coef2), outArg(t));
-            Add::dict_add_term(d, coef2, t);
-        }
-    } else {
-        Add::as_coef_term(a, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
-        Add::as_coef_term(b, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
-        auto it = d.find(one);
-        if (it == d.end()) {
-            coef = zero;
-        } else {
-            coef = it->second;
-            d.erase(it);
-        }
-        return Add::from_dict(coef, std::move(d));
-    }
-    return Add::from_dict(coef, std::move(d));
-}
-
 RCP<const Basic> add(const vec_basic &a)
 {
     SymEngine::umap_basic_num d;
     RCP<const Number> coef = zero;
+    RCP<const Basic> others = zero;
     for (const auto &i : a) {
-        Add::coef_dict_add_term(outArg(coef), d, one, i);
+        if (is_a_Symbolic(*i)) {
+            Add::coef_dict_add_term(outArg(coef), d, one, i);
+        } else {
+            others = add(others, i);
+        }
     }
-    return Add::from_dict(coef, std::move(d));
+    if (eq(*others, *zero)) {
+        return Add::from_dict(coef, std::move(d));
+    } else {
+        return add(others, Add::from_dict(coef, std::move(d)));
+    }
 }
 
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
@@ -329,6 +291,166 @@ vec_basic Add::get_args() const
         args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
     }
     return args;
+}
+
+class AddVisitor1 : public Visitor
+{
+private:
+    const RCP<const Basic> &a_;
+    RCP<const Basic> result;
+
+public:
+    inline AddVisitor1(const RCP<const Basic> &a) : a_(a)
+    {
+    }
+    RCP<const Basic> apply(const RCP<const Basic> &b)
+    {
+        b->accept(*this);
+        return std::move(result);
+    }
+    template <typename T>
+    inline void visitall(const T &b);
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &b)                                         \
+    {                                                                          \
+        visitall(b);                                                           \
+    };
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+};
+
+template <typename T>
+class AddVisitor2 : public Visitor
+{
+protected:
+    const T &b_;
+    RCP<const Basic> result;
+
+public:
+    inline AddVisitor2(const T &b) : b_(b)
+    {
+    }
+    RCP<const Basic> apply(const RCP<const Basic> &a)
+    {
+        a->accept(*this);
+        return std::move(result);
+    }
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &a)                                         \
+    {                                                                          \
+        result = add_impl(a, b_);                                              \
+    };
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+};
+
+template <typename T>
+inline void AddVisitor1::visitall(const T &b)
+{
+    AddVisitor2<T> addvisitor(b);
+    result = addvisitor.apply(a_);
+}
+
+inline RCP<const Basic> add_impl(const Number &a, const Number &b)
+{
+    return a.add(b);
+}
+
+template <typename P>
+inline RCP<const Basic> add_impl(const P &a, const Add &b)
+{
+    return add_impl(b, a);
+}
+
+inline RCP<const Basic> add_impl(const Add &a, const Add &b)
+{
+    umap_basic_num d = a.dict_;
+    RCP<const Number> coef = a.coef_;
+    for (const auto &p : b.dict_)
+        Add::dict_add_term(d, p.second, p.first);
+    iaddnum(outArg(coef), b.coef_);
+    return Add::from_dict(coef, std::move(d));
+}
+
+inline RCP<const Basic> add_impl(const Add &a, const Number &b)
+{
+    umap_basic_num d = a.dict_;
+    return Add::from_dict(a.coef_->add(b), std::move(d));
+}
+
+inline RCP<const Basic> add_impl(const Add &a, const Mul &b)
+{
+    umap_basic_num d = a.dict_;
+    map_basic_basic mul_d = b.dict_;
+    Add::dict_add_term(d, b.coef_, Mul::from_dict(one, std::move(mul_d)));
+    return Add::from_dict(a.coef_, std::move(d));
+}
+
+inline RCP<const Basic> add_impl(const Add &a, const Basic &b)
+{
+    umap_basic_num d = a.dict_;
+    Add::dict_add_term(d, one, b.rcp_from_this());
+    return Add::from_dict(a.coef_, std::move(d));
+}
+
+inline RCP<const Basic> add_impl(const Basic &a, const Basic &b)
+{
+    umap_basic_num d;
+    RCP<const Number> coef;
+    RCP<const Basic> t;
+    Add::as_coef_term(a.rcp_from_this(), outArg(coef), outArg(t));
+    Add::dict_add_term(d, coef, t);
+    Add::as_coef_term(b.rcp_from_this(), outArg(coef), outArg(t));
+    Add::dict_add_term(d, coef, t);
+    auto it = d.find(one);
+    if (it == d.end()) {
+        coef = zero;
+    } else {
+        coef = it->second;
+        d.erase(it);
+    }
+    return Add::from_dict(coef, std::move(d));
+}
+
+template <typename P,
+          typename
+          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+inline RCP<const Basic> add_impl(const P &a, const Symbolic &b)
+{
+    return a.add(*P::series(b.rcp_from_this(), a.get_var(), a.get_degree()));
+}
+
+template <typename P, typename T,
+          typename = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value
+                                 and std::is_base_of<Symbolic, T>::value>>
+inline RCP<const Basic> add_impl(const T &a, const P &b)
+{
+    return add_impl(b, a);
+}
+
+template <typename P,
+          typename
+          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+inline RCP<const Basic> add_impl(const P &a, const P &b)
+{
+    return a.add(b);
+}
+
+// TODO: this should be fixed by adding a conversion model to choose which
+// series type to use from P and T
+template <typename P, typename Q,
+          typename
+          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value
+                        and std::is_base_of<SeriesCoeffInterface, Q>::value>>
+inline RCP<const Basic> add_impl(const P &a, const Q &b)
+{
+    return a.add(*P::series(b.as_basic(), a.get_var(), a.get_degree()));
+}
+
+RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    AddVisitor1 addvisitor(a);
+    return addvisitor.apply(b);
 }
 
 } // SymEngine
