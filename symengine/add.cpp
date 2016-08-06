@@ -437,12 +437,11 @@ inline RCP<const Basic> add_impl(const P &a, const P &b)
 }
 
 // TODO: this should be fixed by adding a conversion system to choose which
-// series type to use from P and T
-template <typename P, typename Q,
+// series type to use from a and b
+template <typename P,
           typename
-          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value
-                        and std::is_base_of<SeriesCoeffInterface, Q>::value>>
-inline RCP<const Basic> add_impl(const P &a, const Q &b)
+          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+inline RCP<const Basic> add_impl(const P &a, const SeriesCoeffInterface &b)
 {
     return a.add(*P::series(b.as_basic(), a.get_var(),
                             std::min(a.get_degree(), b.get_degree())));
