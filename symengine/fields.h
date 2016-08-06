@@ -27,9 +27,8 @@ public:
             else
                 return a.degree() < b.degree();
         }
-        bool
-        operator()(const std::pair<GaloisFieldDict, integer_class> &a,
-                   const std::pair<GaloisFieldDict, integer_class> &b) const
+        bool operator()(const std::pair<GaloisFieldDict, unsigned> &a,
+                        const std::pair<GaloisFieldDict, unsigned> &b) const
         {
             if (a.first.degree() == b.first.degree())
                 return a.first.dict_ < b.first.dict_;
@@ -111,15 +110,17 @@ public:
 
     // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;
-
     // Returns the square free decomposition of polynomial's monic
     // representation in `modulo_`
     // A vector of pair is returned where each element is a factor and each
     // pair's first raised to power of second gives the factor.
-    std::vector<std::pair<GaloisFieldDict, integer_class>> gf_sqf_list() const;
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_sqf_list() const;
 
     // Returns the square free part of the polynomaial in `modulo_`
     GaloisFieldDict gf_sqf_part() const;
+    // composition of polynomial g(h) mod (*this)
+    GaloisFieldDict gf_compose_mod(const GaloisFieldDict &g,
+                                   const GaloisFieldDict &h) const;
     // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
     // where n = this->degree()
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
@@ -131,14 +132,18 @@ public:
     GaloisFieldDict
     gf_frobenius_map(const GaloisFieldDict &g,
                      const std::vector<GaloisFieldDict> &b) const;
+    std::pair<GaloisFieldDict, GaloisFieldDict>
+    gf_trace_map(const GaloisFieldDict &a, const GaloisFieldDict &b,
+                 const GaloisFieldDict &c, const unsigned long &n) const;
+    GaloisFieldDict _gf_trace_map(const GaloisFieldDict &f,
+                                  const unsigned long &n,
+                                  const std::vector<GaloisFieldDict> &b) const;
     // For a monic square-free polynomial in modulo_, it returns its distinct
     // degree factorization. Each element's first is a factor and second
-    // is used by equal degree factorization.
-    std::vector<std::pair<GaloisFieldDict, integer_class>>
-    gf_ddf_zassenhaus() const;
+    // is used by equal degree factorization. (Zassenhaus's algorithm)
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_ddf_zassenhaus() const;
     // Computes `f**((modulo_**n - 1) // 2) % *this`
-    GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f,
-                                   const integer_class &n,
+    GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
     GaloisFieldDict gf_random(const unsigned int &n_val,
@@ -147,16 +152,35 @@ public:
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
     std::set<GaloisFieldDict, DictLess>
-    gf_edf_zassenhaus(const integer_class &n) const;
-    // Factors a square free polynomial in field of modulo_.
+    gf_edf_zassenhaus(const unsigned &n) const;
+    // For a monic square-free polynomial in modulo_, it returns its distinct
+    // degree factorization. Each element's first is a factor and second
+    // is used by equal degree factorization. (Shoup's algorithm)
+    // Factors a polynomial in field of modulo_
+    std::vector<std::pair<GaloisFieldDict, unsigned>> gf_ddf_shoup() const;
+    // Equal degree factorization using Shoup's algorithm.
+    std::set<GaloisFieldDict, DictLess> gf_edf_shoup(const unsigned &n) const;
+    // Factors a square free polynomial in field of modulo_ using Zassenhaus's
+    // algorithm.
     // References :
     //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
     //     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer
     //     Algebra, 1992
     std::set<GaloisFieldDict, DictLess> gf_zassenhaus() const;
-    // Factors a polynomial in field of modulo_
+    // Factors a square free polynomial in field of modulo_ using Shoup's
+    // algorithm.
+    // References :
+    //     1.) V. Shoup, A New Polynomial Factorization Algorithm and its
+    //     Implementation,1995
+    //     2.) E. Kaltofen, V. Shoup, Subquadratic-time Factoring of Polynomials
+    //     over Finite Fields, 1998
+    //     3.) J. von zur Gathen, V. Shoup, Computing Frobenius Maps and
+    //     Factoring Polynomials, 1992
+    //     4.) V. Shoup, A Fast Deterministic Algorithm for Factoring
+    //     Polynomials over Finite Fields of Small Characteristic, 1991
+    std::set<GaloisFieldDict, DictLess> gf_shoup() const;
     std::pair<integer_class,
-              std::set<std::pair<GaloisFieldDict, integer_class>, DictLess>>
+              std::set<std::pair<GaloisFieldDict, unsigned>, DictLess>>
     gf_factor() const;
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
@@ -240,7 +264,8 @@ public:
         GaloisFieldDict o(*this);
         for (auto &a : o.dict_) {
             a *= -1;
-            a += modulo_;
+            if (a != 0_z)
+                a += modulo_;
         }
         return o;
     }
@@ -249,7 +274,8 @@ public:
     {
         for (auto &a : dict_) {
             a *= -1;
-            a += modulo_;
+            if (a != 0_z)
+                a += modulo_;
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -296,7 +322,8 @@ public:
                 dict_.resize(other.dict_.size());
                 for (unsigned int i = orig_size; i < other.dict_.size(); i++) {
                     dict_[i] = -other.dict_[i];
-                    dict_[i] += modulo_;
+                    if (dict_[i] != 0_z)
+                        dict_[i] += modulo_;
                 }
             }
         }
@@ -661,7 +688,7 @@ public:
         return poly_.dict_;
     }
 
-    unsigned int size() const
+    inline unsigned int size() const
     {
         if (poly_.empty())
             return 0;

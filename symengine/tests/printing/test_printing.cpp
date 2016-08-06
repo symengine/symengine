@@ -35,6 +35,8 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
+using SymEngine::Infty;
+using SymEngine::infty;
 
 using namespace SymEngine::literals;
 
@@ -326,6 +328,18 @@ TEST_CASE("test_uexpr_poly(): printing", "[printing]")
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 
+TEST_CASE("test_infinity(): printing", "[printing]")
+{
+    RCP<const Basic> a;
+
+    a = infty(1);
+    REQUIRE(a->__str__() == "oo");
+    a = infty(-1);
+    REQUIRE(a->__str__() == "-oo");
+    a = infty(0);
+    REQUIRE(a->__str__() == "zoo");
+}
+
 TEST_CASE("test_floats(): printing", "[printing]")
 {
     RCP<const Basic> p;
@@ -352,25 +366,25 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(123);
     p = sub(p, x);
-    REQUIRE(p->__str__() == "123.0 - x");
+    REQUIRE(p->__str__() == "123. - x");
 
     p = complex_double(std::complex<double>(1, 2));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
+    REQUIRE(p->__str__() == "1. + 2.*I + x");
 
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
     mpfr_set_ui(m1.get_mpfr_t(), 123, MPFR_RNDN);
     p = SymEngine::real_mpfr(m1);
     p = add(p, x);
-    REQUIRE(p->__str__() == "123.000000000000000000000 + x");
+    REQUIRE(p->__str__() == "123.0000000000000000000 + x");
 #ifdef HAVE_SYMENGINE_MPC
     SymEngine::mpc_class m2(75);
     mpc_set_si_si(m2.get_mpc_t(), -10, 10, MPC_RNDNN);
     p = SymEngine::complex_mpc(m2);
     p = div(p, x);
     REQUIRE(p->__str__()
-            == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
+            == "(-10.00000000000000000000 + 10.00000000000000000000*I)/x");
 #endif
 #endif
 }

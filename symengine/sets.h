@@ -7,20 +7,41 @@
 
 #include <symengine/functions.h>
 #include <symengine/complex.h>
+#include <iterator>
+namespace SymEngine
+{
+class Set;
+class BooleanAtom;
+class Boolean;
+RCP<const BooleanAtom> boolean(bool b);
+}
+#include <symengine/logic.h>
 
 namespace SymEngine
 {
-
+typedef std::set<RCP<const Set>, RCPBasicKeyLess> set_set;
 class Set : public Basic
 {
 public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
-    virtual bool contains(const RCP<const Basic> &a) const = 0;
-    virtual bool is_subset(const RCP<const Set> &o) const = 0;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const = 0;
-    virtual bool is_superset(const RCP<const Set> &o) const = 0;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const = 0;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const = 0;
+    bool is_subset(const RCP<const Set> &o) const
+    {
+        return eq(*this->set_intersection(o), *this);
+    }
+    bool is_proper_subset(const RCP<const Set> &o) const
+    {
+        return not eq(*this, *o) and this->is_subset(o);
+    }
+    bool is_superset(const RCP<const Set> &o) const
+    {
+        return o->is_subset(rcp_from_this_cast<const Set>());
+    }
+    bool is_proper_superset(const RCP<const Set> &o) const
+    {
+        return not eq(*this, *o) and this->is_superset(o);
+    }
 };
 
 class EmptySet : public Set
@@ -46,19 +67,9 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Basic> &a) const
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
-        return false;
-    };
-    virtual bool is_subset(const RCP<const Set> &o) const
-    {
-        return true;
-    };
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const
-    {
-        return false;
+        return boolean(false);
     };
 };
 
@@ -85,20 +96,10 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Basic> &a) const
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
-        return true;
+        return boolean(true);
     };
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const
-    {
-        return false;
-    };
-    virtual bool is_superset(const RCP<const Set> &o) const
-    {
-        return true;
-    };
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
 class FiniteSet : public Set
@@ -121,11 +122,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Basic> &a) const;
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 };
 
 class Interval : public Set
@@ -140,10 +137,6 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual vec_basic get_args() const
-    {
-        return {start_, end_};
-    }
 
     Interval(const RCP<const Number> &start, const RCP<const Number> &end,
              const bool left_open = false, const bool right_open = false);
@@ -159,11 +152,29 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Basic> &a) const;
-    virtual bool is_subset(const RCP<const Set> &o) const;
-    virtual bool is_proper_subset(const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const;
-    virtual bool is_proper_superset(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+    virtual vec_basic get_args() const;
+};
+
+class Union : public Set
+{
+public:
+    set_set container_;
+
+public:
+    IMPLEMENT_TYPEID(UNION)
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    Union(set_set in);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 };
 
 //! \return RCP<const EmptySet>
@@ -198,6 +209,39 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
     if (eq(*start, *end) and not(left_open or right_open))
         return finiteset({start});
     return emptyset();
+}
+
+// ! \return RCP<const Set>
+inline RCP<const Set> set_union(const set_set &in, bool solve = true)
+{
+    set_set input;
+    if (solve == false && in.size() > 1)
+        return make_rcp<const Union>(in);
+    set_basic combined_FiniteSet;
+    for (auto it = in.begin(); it != in.end(); ++it) {
+        if (is_a<FiniteSet>(**it)) {
+            const FiniteSet &other = static_cast<const FiniteSet &>(**it);
+            combined_FiniteSet.insert(other.container_.begin(),
+                                      other.container_.end());
+        } else if (is_a<UniversalSet>(**it)) {
+            return universalset();
+        } else if (not is_a<EmptySet>(**it)) {
+            input.insert(*it);
+        }
+    }
+    if (input.empty()) {
+        return finiteset(combined_FiniteSet);
+    } else if (input.size() == 1 && combined_FiniteSet.empty()) {
+        return rcp_dynamic_cast<const Set>(*input.begin());
+    }
+    // Now we rely on respective containers' own rules
+    // TODO: Improve it to O(log n)
+    RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
+    for (auto it = input.begin(); it != input.end(); ++it) {
+        RCP<const Set> other = rcp_dynamic_cast<const Set>(*it);
+        combined_Rest = combined_Rest->set_union(other);
+    }
+    return combined_Rest;
 }
 }
 #endif

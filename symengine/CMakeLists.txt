@@ -22,6 +22,7 @@ set(SRC
     functions.cpp
     monomials.cpp
     polys/uintpoly.cpp
+    polys/uratpoly.cpp
     polys/uexprpoly.cpp
     polys/basic_conversions.cpp
     series.cpp
@@ -48,6 +49,8 @@ set(SRC
     polynomial_multivariate.cpp
     eval.cpp
     fields.cpp
+    infinity.cpp
+    logic.cpp
 )
 
 if (WITH_MPFR)
@@ -59,8 +62,8 @@ if (WITH_MPC)
 endif()
 
 if (WITH_FLINT)
-    set(SRC ${SRC} series_flint.cpp)
-    set(SRC ${SRC} polys/uintpoly_flint.cpp)
+    set(SRC series_flint.cpp ${SRC})
+    set(SRC polys/uintpoly_flint.cpp ${SRC})
 endif()
 
 if (WITH_ARB)
@@ -74,16 +77,67 @@ endif()
 
 # Needed for "make install"
 set(HEADERS
-    add.h        symengine_assert.h  functions.h  monomials.h  polys/uintpoly.h polys/uexprpoly.h 
-    polynomial_multivariate.h number.h    rings.h     subs.h    fields.h
-    basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
-    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
-    visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
-    eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
-    real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
-    polys/uintpoly_flint.h  polys/uintpoly_piranha.h eval.h flint_wrapper.h polys/basic_conversions.h
+    add.h
+    basic.h
+    basic-inl.h
+    basic-methods.inc
+    codegen.h
+    complex_double.h
+    complex.h
+    complex_mpc.h
+    constants.h
+    cwrapper.h
+    derivative.h
+    dict.h
+    diophantine.h
+    eval_arb.h
+    eval_double.h
+    eval.h
+    eval_mpc.h
+    eval_mpfr.h
+    expression.h
+    fields.h
+    flint_wrapper.h
+    functions.h
+    infinity.h
+    integer.h
+    lambda_double.h
+    logic.h
+    matrix.h
+    monomials.h
+    mp_class.h
+    mp_wrapper.h
+    mul.h
+    ntheory.h
+    number.h
+    parser.h
+    polynomial_multivariate.h
+    polys/basic_conversions.h
+    polys/uexprpoly.h
+    polys/uintpoly_flint.h
+    polys/uintpoly.h
+    polys/uintpoly_piranha.h
+    polys/upolybase.h
+    polys/uratpoly.h
+    polys/usymenginepoly.h
+    pow.h
+    printer.h
+    rational.h
+    real_double.h
+    real_mpfr.h
+    rings.h
+    series_flint.h
+    series_generic.h
+    series.h
+    series_piranha.h
+    series_visitor.h
+    sets.h
+    subs.h
+    symbol.h
+    symengine_assert.h
+    symengine_rcp.h
+    type_codes.inc
+    visitor.h
 )
 
 # Configure SymEngine using our CMake options:
@@ -94,6 +148,11 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+if (WITH_COTIRE)
+    # throws if CMAKE_VERSION < 2.8.12
+    include(cotire)
+    cotire(symengine)
+endif()
 
 include(GenerateExportHeader)
 generate_export_header(symengine)

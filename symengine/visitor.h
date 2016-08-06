@@ -10,12 +10,17 @@
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
+#include <symengine/polys/uratpoly.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>
 #include <symengine/series_piranha.h>
 #include <symengine/series_flint.h>
+#include <symengine/series_generic.h>
+#include <symengine/series_piranha.h>
 #include <symengine/sets.h>
 #include <symengine/fields.h>
+#include <symengine/logic.h>
+#include <symengine/infinity.h>
 
 namespace SymEngine
 {

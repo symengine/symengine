@@ -27,6 +27,18 @@ void StrPrinter::bvisit(const Symbol &x)
     str_ = x.get_name();
 }
 
+void StrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-oo";
+    else if (x.is_positive_infinity())
+        s << "oo";
+    else
+        s << "zoo";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
@@ -82,7 +94,7 @@ void StrPrinter::bvisit(const RealDouble &x)
     str_ = s.str();
     if (str_.find(".") == std::string::npos
         and str_.find("e") == std::string::npos) {
-        s << ".0";
+        s << ".";
         str_ = s.str();
     }
 }
@@ -92,8 +104,9 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     std::ostringstream s;
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i.real();
-    if (s.str().find(".") == std::string::npos) {
-        s << ".0";
+    if (s.str().find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
+        s << ".";
     }
     if (x.i.imag() < 0) {
         s << " - " << -x.i.imag();
@@ -102,7 +115,7 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     }
     str_ = s.str();
     if (str_.find(".") == str_.find_last_of(".")) {
-        str_ += ".0*I";
+        str_ += ".*I";
     } else {
         str_ += "*I";
     }
@@ -123,9 +136,59 @@ void StrPrinter::bvisit(const Interval &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const BooleanAtom &x)
+{
+    if (x.get_val()) {
+        str_ = "True";
+    } else {
+        str_ = "False";
+    }
+}
+
+void StrPrinter::bvisit(const Contains &x)
+{
+    std::ostringstream s;
+    s << "Contains(" << apply(x.get_expr()) << ", " << apply(x.get_set())
+      << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Piecewise &x)
+{
+    std::ostringstream s;
+    auto vec = x.get_vec();
+    auto it = vec.begin();
+    s << "Piecewise(";
+    while (true) {
+        s << "(";
+        s << apply((*it).first);
+        s << ", ";
+        s << apply((*it).second);
+        s << ")";
+        ++it;
+        if (it != vec.end()) {
+            s << ", ";
+        } else {
+            break;
+        }
+    }
+    s << ")";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const EmptySet &x)
 {
     str_ = "EmptySet";
+}
+
+void StrPrinter::bvisit(const Union &x)
+{
+    std::ostringstream s;
+    s << apply(*x.container_.begin());
+    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+        s << " U " << apply(*it);
+    }
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const UniversalSet &x)
@@ -144,7 +207,11 @@ void StrPrinter::bvisit(const FiniteSet &x)
 void StrPrinter::bvisit(const RealMPFR &x)
 {
     mpfr_exp_t ex;
-    char *c = mpfr_get_str(nullptr, &ex, 10, 0, x.i.get_mpfr_t(), MPFR_RNDN);
+    // mpmath.libmp.libmpf.prec_to_dps
+    long digits = std::max(
+        long(1), std::lround(x.i.get_prec() / 3.3219280948873626) - 1);
+    char *c
+        = mpfr_get_str(nullptr, &ex, 10, digits, x.i.get_mpfr_t(), MPFR_RNDN);
     std::ostringstream s;
     str_ = std::string(c);
     if (str_.at(0) == '-') {
@@ -297,7 +364,8 @@ void StrPrinter::bvisit(const Pow &x)
     str_ = o.str();
 }
 
-char _print_sign(const integer_class &i)
+template <typename T>
+char _print_sign(const T &i)
 {
     if (i < 0) {
         return '-';
@@ -367,17 +435,18 @@ void StrPrinter::bvisit(const GaloisField &x)
     str_ = s.str();
 }
 
-// UIntPoly printing, tests taken from SymPy and printing ensures
-// that there is compatibility
-template <typename T>
-void uintpoly_print(const T &x, std::ostringstream &s)
+// Printing of Integer and Rational Polynomials, tests taken
+// from SymPy and printing ensures that there is compatibility
+template <typename P>
+std::string upoly_print(const P &x)
 {
+    std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
-        integer_class m = to_integer_class(it->second);
+        auto m = it->second;
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
@@ -421,30 +490,38 @@ void uintpoly_print(const T &x, std::ostringstream &s)
     }
     if (x.size() == 0)
         s << "0";
+    return s.str();
 }
 
 void StrPrinter::bvisit(const UIntPoly &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPoly>(x);
+}
+
+void StrPrinter::bvisit(const URatPoly &x)
+{
+    str_ = upoly_print<URatPoly>(x);
 }
 
 #ifdef HAVE_SYMENGINE_FLINT
 void StrPrinter::bvisit(const UIntPolyFlint &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyFlint>(x);
+}
+void StrPrinter::bvisit(const URatPolyFlint &x)
+{
+    str_ = upoly_print<URatPolyFlint>(x);
 }
 #endif
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const UIntPolyPiranha &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyPiranha>(x);
+}
+void StrPrinter::bvisit(const URatPolyPiranha &x)
+{
+    str_ = upoly_print<URatPolyPiranha>(x);
 }
 #endif
 
