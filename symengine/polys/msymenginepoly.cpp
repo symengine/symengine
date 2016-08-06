@@ -1,4 +1,4 @@
-#include <symengine/polynomial_multivariate.h>
+#include <symengine/polys/msymenginepoly.h>
 
 namespace SymEngine
 {

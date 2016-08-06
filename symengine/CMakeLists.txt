@@ -8,7 +8,6 @@ endif()
 
 set(SRC
     symengine_rcp.cpp
-    polynomial_multivariate.cpp
     basic.cpp
     dict.cpp
     symbol.cpp
@@ -26,6 +25,7 @@ set(SRC
     polys/uratpoly.cpp
     polys/uexprpoly.cpp
     polys/basic_conversions.cpp
+    polys/msymenginepoly.cpp
     series.cpp
     series_generic.cpp
     rings.cpp
@@ -78,7 +78,7 @@ endif()
 # Needed for "make install"
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polys/uintpoly.h polys/uexprpoly.h 
-    polynomial_multivariate.h number.h    rings.h     subs.h    fields.h
+    number.h    rings.h     subs.h    fields.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
@@ -87,7 +87,7 @@ set(HEADERS
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
     basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
     polys/uintpoly_flint.h  polys/uintpoly_piranha.h eval.h flint_wrapper.h polys/basic_conversions.h
-    polys/usymenginepoly.h polys/uratpoly.h
+    polys/usymenginepoly.h polys/msymenginepoly.h polys/uratpoly.h
     infinity.h   logic.h
 )
 

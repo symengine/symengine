@@ -562,11 +562,9 @@ public:
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
             return Poly::from_dict(v, std::move(dict));
         } else {
-            Vec v;
-            v.resize(self.vars_.size(), 0);
             vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return Poly::from_dict(vs, Dict{{v, 0}});
+            return Poly::from_dict(vs, {{}});
         }
     }
 
