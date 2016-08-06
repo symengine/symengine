@@ -22,7 +22,8 @@ public:
     virtual RCP<const Basic> get_coeff(int) const = 0;
     virtual long get_degree() const = 0;
     virtual const std::string &get_var() const = 0;
-    vec_basic get_args() const {
+    vec_basic get_args() const
+    {
         return vec_basic();
     }
 };
@@ -121,14 +122,11 @@ public:
     {
         Poly p;
         if (o.is_negative()) {
-            p = Series::pow(
-                p_, o.neg()->as_int(),
-                degree_);
+            p = Series::pow(p_, o.neg()->as_int(), degree_);
             p = Series::series_invert(p, Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
         }
-        p = Series::pow(p_, o.as_int(),
-                        degree_);
+        p = Series::pow(p_, o.as_int(), degree_);
         return make_rcp<Series>(p, var_, degree_);
     }
 

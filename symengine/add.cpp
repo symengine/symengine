@@ -293,14 +293,14 @@ vec_basic Add::get_args() const
     return args;
 }
 
-class AddVisitor1 : public Visitor
+class AddVisitor : public Visitor
 {
 private:
     const RCP<const Basic> &a_;
     RCP<const Basic> result;
 
 public:
-    inline AddVisitor1(const RCP<const Basic> &a) : a_(a)
+    inline AddVisitor(const RCP<const Basic> &a) : a_(a)
     {
     }
     RCP<const Basic> apply(const RCP<const Basic> &b)
@@ -345,7 +345,7 @@ public:
 };
 
 template <typename T>
-inline void AddVisitor1::visitall(const T &b)
+inline void AddVisitor::visitall(const T &b)
 {
     AddVisitor2<T> addvisitor(b);
     result = addvisitor.apply(a_);
@@ -415,14 +415,15 @@ inline RCP<const Basic> add_impl(const Basic &a, const Basic &b)
 template <typename P,
           typename
           = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const P &a, const Basic &b)
+inline RCP<const Basic> add_impl(const P &a, const Symbolic &b)
 {
     return a.add(*P::series(b.rcp_from_this(), a.get_var(), a.get_degree()));
 }
 
 template <typename P, typename T,
-          typename = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const Basic &a, const P &b)
+          typename
+          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+inline RCP<const Basic> add_impl(const Symbolic &a, const P &b)
 {
     return add_impl(b, a);
 }
@@ -435,7 +436,7 @@ inline RCP<const Basic> add_impl(const P &a, const P &b)
     return a.add(b);
 }
 
-// TODO: this should be fixed by adding a conversion model to choose which
+// TODO: this should be fixed by adding a conversion system to choose which
 // series type to use from P and T
 template <typename P, typename Q,
           typename
@@ -443,12 +444,13 @@ template <typename P, typename Q,
                         and std::is_base_of<SeriesCoeffInterface, Q>::value>>
 inline RCP<const Basic> add_impl(const P &a, const Q &b)
 {
-    return a.add(*P::series(b.as_basic(), a.get_var(), a.get_degree()));
+    return a.add(*P::series(b.as_basic(), a.get_var(),
+                            std::min(a.get_degree(), b.get_degree())));
 }
 
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    AddVisitor1 addvisitor(a);
+    AddVisitor addvisitor(a);
     return addvisitor.apply(b);
 }
 

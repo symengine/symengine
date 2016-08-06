@@ -123,13 +123,14 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
     RCP<const Basic> c = sub(a, b);
     RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 4, fpoly_);
-    //REQUIRE(c->__cmp__(*f));
+    // TODO: enable this
+    // REQUIRE(eq(*c, *f));
 
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 2, bpoly_);
-    // TODO: enable this
-    //RCP<const Basic> e = sub(a, d);
+    RCP<const Basic> e = sub(a, d);
     RCP<const UnivariateSeries> g = UnivariateSeries::create(x, 2, gpoly_);
-    //REQUIRE(e->__cmp__(*f));
+    // TODO: enable this
+    // REQUIRE(eq(*e, *f));
 }
 
 TEST_CASE("Multiplication of two UExprDict with precision",
