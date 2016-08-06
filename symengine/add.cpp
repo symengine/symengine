@@ -415,15 +415,14 @@ inline RCP<const Basic> add_impl(const Basic &a, const Basic &b)
 template <typename P,
           typename
           = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const P &a, const Symbolic &b)
+inline RCP<const Basic> add_impl(const P &a, const Basic &b)
 {
     return a.add(*P::series(b.rcp_from_this(), a.get_var(), a.get_degree()));
 }
 
 template <typename P, typename T,
-          typename = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value
-                                 and std::is_base_of<Symbolic, T>::value>>
-inline RCP<const Basic> add_impl(const T &a, const P &b)
+          typename = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+inline RCP<const Basic> add_impl(const Basic &a, const P &b)
 {
     return add_impl(b, a);
 }

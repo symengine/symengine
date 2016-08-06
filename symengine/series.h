@@ -14,7 +14,7 @@
 namespace SymEngine
 {
 
-class SeriesCoeffInterface : public Number
+class SeriesCoeffInterface : public Basic
 {
 public:
     virtual RCP<const Basic> as_basic() const = 0;
@@ -22,6 +22,9 @@ public:
     virtual RCP<const Basic> get_coeff(int) const = 0;
     virtual long get_degree() const = 0;
     virtual const std::string &get_var() const = 0;
+    vec_basic get_args() const {
+        return vec_basic();
+    }
 };
 
 template <typename Poly, typename Coeff, typename Series>
@@ -84,87 +87,49 @@ public:
                 and degree_ == static_cast<const Series &>(o).degree_);
     }
 
-    virtual RCP<const Number> add(const Number &other) const
+    inline RCP<const Series> add(const Series &o) const
     {
-        if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
-            if (var_ != o.var_) {
-                throw NotImplementedError(
-                    "Multivariate Series not implemented");
-            }
-            return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
-        } else if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(Poly(p_ + p), var_, degree_);
-        } else {
-            return other.add(*this);
+        long deg = std::min(degree_, o.degree_);
+        if (var_ != o.var_) {
+            throw std::runtime_error("Multivariate Series not implemented");
         }
+        return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
     }
 
-    virtual RCP<const Number> mul(const Number &other) const
+    inline RCP<const Series> mul(const Series &o) const
     {
-        if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
-            if (var_ != o.var_) {
-                throw NotImplementedError(
-                    "Multivariate Series not implemented");
-            }
-            return make_rcp<Series>(Series::mul(p_, o.p_, deg), var_, deg);
-        } else if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(Series::mul(p_, p, degree_), var_, degree_);
-        } else {
-            return other.mul(*this);
+        long deg = std::min(degree_, o.degree_);
+        if (var_ != o.var_) {
+            throw std::runtime_error("Multivariate Series not implemented");
         }
+        return make_rcp<Series>(Series::mul(p_, o.p_, deg), var_, deg);
     }
 
-    virtual RCP<const Number> pow(const Number &other) const
+    inline RCP<const Number> pow(const Series &o) const
     {
-        long deg = degree_;
-        Poly p;
-        if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
-            deg = std::min(deg, o.degree_);
-            if (var_ != o.var_) {
-                throw NotImplementedError(
-                    "Multivariate Series not implemented");
-            }
-            p = o.p_;
-        } else if (is_a<Integer>(other)) {
-            if (other.is_negative()) {
-                p = Series::pow(
-                    p_, (static_cast<const Integer &>(other).neg()->as_int()),
-                    deg);
-                p = Series::series_invert(p, Series::var(var_), deg);
-                return make_rcp<Series>(p, var_, deg);
-            }
-            p = Series::pow(p_, (static_cast<const Integer &>(other).as_int()),
-                            deg);
-            return make_rcp<Series>(p, var_, deg);
-        } else if (other.get_type_code() < Series::type_code_id) {
-            p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-        } else {
-            return other.rpow(*this);
+        long deg = std::min(degree_, o.degree_);
+        if (var_ != o.var_) {
+            throw std::runtime_error("Multivariate Series not implemented");
         }
-        p = Series::series_exp(
-            Poly(p * Series::series_log(p_, Series::var(var_), deg)),
+        Poly p = Series::series_exp(
+            Poly(o.p * Series::series_log(p_, Series::var(var_), deg)),
             Series::var(var_), deg);
         return make_rcp<Series>(p, var_, deg);
     }
 
-    virtual RCP<const Number> rpow(const Number &other) const
+    inline RCP<const Series> pow(const Integer &o) const
     {
-        if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            p = Series::series_exp(
-                Poly(p_ * Series::series_log(p, Series::var(var_), degree_)),
-                Series::var(var_), degree_);
+        Poly p;
+        if (o.is_negative()) {
+            p = Series::pow(
+                p_, o.neg()->as_int(),
+                degree_);
+            p = Series::series_invert(p, Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
-        } else {
-            throw SymEngineException("Unknown type");
         }
+        p = Series::pow(p_, o.as_int(),
+                        degree_);
+        return make_rcp<Series>(p, var_, degree_);
     }
 
     static inline const std::list<unsigned int> &step_list(unsigned int prec)
