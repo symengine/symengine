@@ -129,7 +129,7 @@ public:
     void bvisit(const Integer &x)
     {
         integer_class i = x.as_integer_class();
-        dict = P::container_from_dict(gen, {{0, i}});
+        dict = P::container_from_dict(gen, {{0, typename P::coef_type(i)}});
     }
 
     void bvisit(const Basic &x)
@@ -221,7 +221,8 @@ public:
     {
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
-                this->gen, {{pow, rational_class(static_cast<const Integer &>(x).i)}});
+                this->gen,
+                {{pow, rational_class(static_cast<const Integer &>(x).i)}});
         else if (is_a<const Rational>(x))
             this->dict = Poly::container_from_dict(
                 this->gen, {{pow, static_cast<const Rational &>(x).i}});

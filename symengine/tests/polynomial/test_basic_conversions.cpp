@@ -333,7 +333,7 @@ TEST_CASE("basic_to_poly URat", "[b2poly]")
     basic = mul(div(i3, i2), pow(i2, x));
     gen = pow(i2, x);
     poly1 = from_basic<URatPoly>(basic, gen);
-    poly2 = URatPoly::from_vec(gen, {{0_z, rc(3_z, 2_z)}});
+    poly2 = URatPoly::from_vec(gen, {{0_q, rc(3_z, 2_z)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x + y
