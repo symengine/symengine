@@ -127,7 +127,8 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     // REQUIRE(eq(*c, *f));
 
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 2, bpoly_);
-    RCP<const Basic> e = sub(a, d);
+    // TODO: enable this
+    // RCP<const Basic> e = sub(a, d);
     RCP<const UnivariateSeries> g = UnivariateSeries::create(x, 2, gpoly_);
     // TODO: enable this
     // REQUIRE(eq(*e, *f));

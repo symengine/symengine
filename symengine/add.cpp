@@ -2,6 +2,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex.h>
 #include <symengine/visitor.h>
+#include <symengine/polys/basic_conversions.h>
 
 namespace SymEngine
 {
@@ -293,159 +294,131 @@ vec_basic Add::get_args() const
     return args;
 }
 
-class AddVisitor : public Visitor
+class AddVisitor : DoubleDispatchVisitor<AddVisitor>
 {
-private:
-    const RCP<const Basic> &a_;
-    RCP<const Basic> result;
-
 public:
-    inline AddVisitor(const RCP<const Basic> &a) : a_(a)
+    using DoubleDispatchVisitor::apply;
+    using DoubleDispatchVisitor::dispatch;
+    inline AddVisitor(const RCP<const Basic> &a) : DoubleDispatchVisitor(a){};
+
+    static inline RCP<const Basic> dispatch(const Number &a, const Number &b)
     {
+        return a.add(b);
     }
-    RCP<const Basic> apply(const RCP<const Basic> &b)
+
+    template <typename P>
+    static inline RCP<const Basic> dispatch(const P &a, const Add &b)
     {
-        b->accept(*this);
-        return std::move(result);
+        return dispatch(b, a);
     }
-    template <typename T>
-    inline void visitall(const T &b);
-#define SYMENGINE_ENUM(TypeID, Class)                                          \
-    virtual void visit(const Class &b)                                         \
-    {                                                                          \
-        visitall(b);                                                           \
-    };
-#include "symengine/type_codes.inc"
-#undef SYMENGINE_ENUM
+
+    static inline RCP<const Basic> dispatch(const Add &a, const Add &b)
+    {
+        umap_basic_num d = a.dict_;
+        RCP<const Number> coef = a.coef_;
+        for (const auto &p : b.dict_)
+            Add::dict_add_term(d, p.second, p.first);
+        iaddnum(outArg(coef), b.coef_);
+        return Add::from_dict(coef, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Add &a, const Number &b)
+    {
+        umap_basic_num d = a.dict_;
+        return Add::from_dict(a.coef_->add(b), std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Add &a, const Mul &b)
+    {
+        umap_basic_num d = a.dict_;
+        map_basic_basic mul_d = b.dict_;
+        Add::dict_add_term(d, b.coef_, Mul::from_dict(one, std::move(mul_d)));
+        return Add::from_dict(a.coef_, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Add &a, const Symbolic &b)
+    {
+        umap_basic_num d = a.dict_;
+        Add::dict_add_term(d, one, b.rcp_from_this());
+        return Add::from_dict(a.coef_, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Symbolic &a,
+                                            const Symbolic &b)
+    {
+        umap_basic_num d;
+        RCP<const Number> coef;
+        RCP<const Basic> t;
+        Add::as_coef_term(a.rcp_from_this(), outArg(coef), outArg(t));
+        Add::dict_add_term(d, coef, t);
+        Add::as_coef_term(b.rcp_from_this(), outArg(coef), outArg(t));
+        Add::dict_add_term(d, coef, t);
+        auto it = d.find(one);
+        if (it == d.end()) {
+            coef = zero;
+        } else {
+            coef = it->second;
+            d.erase(it);
+        }
+        return Add::from_dict(coef, std::move(d));
+    }
+
+    template <typename P,
+              typename
+              = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+    static inline RCP<const Basic> dispatch(const P &a, const P &b)
+    {
+        return a.add(b);
+    }
+
+    template <typename P, typename Q,
+              typename = enable_if_t<std::is_base_of<Set, P>::value
+                                     or std::is_base_of<Set, Q>::value
+                                     or std::is_base_of<Boolean, P>::value
+                                     or std::is_base_of<Boolean, Q>::value>>
+    static inline RCP<const Basic> dispatch(const P &a, const Q &b)
+    {
+        throw std::runtime_error("Addition is not supported");
+    }
+
+    template <typename Container, typename Poly>
+    static inline RCP<const Poly> dispatch(const UPolyBase<Container, Poly> &a,
+                                           const UPolyBase<Container, Poly> &b)
+    {
+        if (!(a.get_var()->__eq__(*b.get_var())))
+            throw std::runtime_error("Error: variables must agree.");
+        auto dict = a.get_poly();
+        dict += b.get_poly();
+        return Poly::from_container(a.get_var(), std::move(dict));
+    }
+
+    // TODO: Remove this once Poly operations and Series operations are added
+    static inline RCP<const Basic> dispatch(const MultivariatePolynomial &a, const Basic &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
+    static inline RCP<const Basic> dispatch(const Basic &a, const MultivariatePolynomial &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
+    static inline RCP<const Basic> dispatch(const MultivariatePolynomial &a, const MultivariatePolynomial &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
+    // TODO: Remove this once Poly operations and Series operations are added
+    static inline RCP<const Basic> dispatch(const MultivariateIntPolynomial &a, const Basic &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
+    static inline RCP<const Basic> dispatch(const Basic &a, const MultivariateIntPolynomial &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
+    static inline RCP<const Basic> dispatch(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b)
+    {
+        throw std::runtime_error("Not supported");
+    }
 };
-
-template <typename T>
-class AddVisitor2 : public Visitor
-{
-protected:
-    const T &b_;
-    RCP<const Basic> result;
-
-public:
-    inline AddVisitor2(const T &b) : b_(b)
-    {
-    }
-    RCP<const Basic> apply(const RCP<const Basic> &a)
-    {
-        a->accept(*this);
-        return std::move(result);
-    }
-#define SYMENGINE_ENUM(TypeID, Class)                                          \
-    virtual void visit(const Class &a)                                         \
-    {                                                                          \
-        result = add_impl(a, b_);                                              \
-    };
-#include "symengine/type_codes.inc"
-#undef SYMENGINE_ENUM
-};
-
-template <typename T>
-inline void AddVisitor::visitall(const T &b)
-{
-    AddVisitor2<T> addvisitor(b);
-    result = addvisitor.apply(a_);
-}
-
-inline RCP<const Basic> add_impl(const Number &a, const Number &b)
-{
-    return a.add(b);
-}
-
-template <typename P>
-inline RCP<const Basic> add_impl(const P &a, const Add &b)
-{
-    return add_impl(b, a);
-}
-
-inline RCP<const Basic> add_impl(const Add &a, const Add &b)
-{
-    umap_basic_num d = a.dict_;
-    RCP<const Number> coef = a.coef_;
-    for (const auto &p : b.dict_)
-        Add::dict_add_term(d, p.second, p.first);
-    iaddnum(outArg(coef), b.coef_);
-    return Add::from_dict(coef, std::move(d));
-}
-
-inline RCP<const Basic> add_impl(const Add &a, const Number &b)
-{
-    umap_basic_num d = a.dict_;
-    return Add::from_dict(a.coef_->add(b), std::move(d));
-}
-
-inline RCP<const Basic> add_impl(const Add &a, const Mul &b)
-{
-    umap_basic_num d = a.dict_;
-    map_basic_basic mul_d = b.dict_;
-    Add::dict_add_term(d, b.coef_, Mul::from_dict(one, std::move(mul_d)));
-    return Add::from_dict(a.coef_, std::move(d));
-}
-
-inline RCP<const Basic> add_impl(const Add &a, const Basic &b)
-{
-    umap_basic_num d = a.dict_;
-    Add::dict_add_term(d, one, b.rcp_from_this());
-    return Add::from_dict(a.coef_, std::move(d));
-}
-
-inline RCP<const Basic> add_impl(const Basic &a, const Basic &b)
-{
-    umap_basic_num d;
-    RCP<const Number> coef;
-    RCP<const Basic> t;
-    Add::as_coef_term(a.rcp_from_this(), outArg(coef), outArg(t));
-    Add::dict_add_term(d, coef, t);
-    Add::as_coef_term(b.rcp_from_this(), outArg(coef), outArg(t));
-    Add::dict_add_term(d, coef, t);
-    auto it = d.find(one);
-    if (it == d.end()) {
-        coef = zero;
-    } else {
-        coef = it->second;
-        d.erase(it);
-    }
-    return Add::from_dict(coef, std::move(d));
-}
-
-template <typename P,
-          typename
-          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const P &a, const Symbolic &b)
-{
-    return a.add(*P::series(b.rcp_from_this(), a.get_var(), a.get_degree()));
-}
-
-template <typename P, typename T,
-          typename
-          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const Symbolic &a, const P &b)
-{
-    return add_impl(b, a);
-}
-
-template <typename P,
-          typename
-          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const P &a, const P &b)
-{
-    return a.add(b);
-}
-
-// TODO: this should be fixed by adding a conversion system to choose which
-// series type to use from a and b
-template <typename P,
-          typename
-          = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
-inline RCP<const Basic> add_impl(const P &a, const SeriesCoeffInterface &b)
-{
-    return a.add(*P::series(b.as_basic(), a.get_var(),
-                            std::min(a.get_degree(), b.get_degree())));
-}
 
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
