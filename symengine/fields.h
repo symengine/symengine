@@ -100,11 +100,13 @@ public:
     void gf_rshift(const integer_class n, const Ptr<GaloisFieldDict> &quo,
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
-    GaloisFieldDict gf_pow(const integer_class n) const;
+    GaloisFieldDict gf_pow(const unsigned int n) const;
     void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_diff() const;
+    integer_class gf_eval(const integer_class &a) const;
+    vec_integer_class gf_multi_eval(const vec_integer_class &v) const;
 
     // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;
@@ -119,12 +121,12 @@ public:
     // composition of polynomial g(h) mod (*this)
     GaloisFieldDict gf_compose_mod(const GaloisFieldDict &g,
                                    const GaloisFieldDict &h) const;
-    // computes `f**n % (*this)` in modulo_
-    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
-                               const integer_class &n) const;
     // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
     // where n = this->degree()
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
+    // computes `f**n % (*this)` in modulo_
+    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
+                               const unsigned int &n) const;
     // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
     // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
@@ -144,7 +146,8 @@ public:
     GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
-    GaloisFieldDict gf_random(unsigned n_val, gmp_randstate_t &state) const;
+    GaloisFieldDict gf_random(const unsigned int &n_val,
+                              gmp_randstate_t &state) const;
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
@@ -560,6 +563,11 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    static GaloisFieldDict pow(const GaloisFieldDict &a, unsigned int p)
+    {
+        return a.gf_pow(p);
+    }
+
     bool operator==(const GaloisFieldDict &other) const
     {
         return dict_ == other.dict_ and modulo_ == other.modulo_;
@@ -609,9 +617,16 @@ public:
                 return true;
         return false;
     }
+
+    integer_class get_coeff(unsigned int x) const
+    {
+        if (x <= degree())
+            return dict_[x];
+        return 0_z;
+    }
 };
 
-class GaloisField : public UPolyBase<GaloisFieldDict, GaloisField>
+class GaloisField : public UIntPolyBase<GaloisFieldDict, GaloisField>
 {
 public:
     IMPLEMENT_TYPEID(GALOISFIELD)
@@ -633,20 +648,49 @@ public:
                                            const std::vector<integer_class> &v,
                                            const integer_class &modulo);
 
+    integer_class eval(const integer_class &x) const
+    {
+        return poly_.gf_eval(x);
+    }
+
+    vec_integer_class multieval(const vec_integer_class &v) const
+    {
+        return poly_.gf_multi_eval(v);
+    }
+
+    typedef vec_integer_class::const_iterator iterator;
+    typedef vec_integer_class::const_reverse_iterator reverse_iterator;
+    iterator begin() const
+    {
+        return poly_.dict_.begin();
+    }
+    iterator end() const
+    {
+        return poly_.dict_.end();
+    }
+    reverse_iterator obegin() const
+    {
+        return poly_.dict_.rbegin();
+    }
+    reverse_iterator oend() const
+    {
+        return poly_.dict_.rend();
+    }
+
+    inline integer_class get_coeff(unsigned int x) const
+    {
+        return poly_.get_coeff(x);
+    }
+
     virtual vec_basic get_args() const;
     inline const std::vector<integer_class> &get_dict() const
     {
         return poly_.dict_;
     }
 
-    inline unsigned int get_degree() const
-    {
-        return poly_.degree();
-    }
-
     inline unsigned int size() const
     {
-        if (get_degree() == 0 and poly_.dict_[0] == 0)
+        if (poly_.empty())
             return 0;
         return get_degree() + 1;
     }

@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 GaloisField::GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict)
-    : UPolyBase(var, std::move(dict))
+    : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
@@ -188,7 +188,7 @@ GaloisFieldDict GaloisFieldDict::gf_sqr() const
     return (*this * *this);
 }
 
-GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
+GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
 {
     if (n == 0) {
         return GaloisFieldDict({integer_class(1)}, modulo_);
@@ -197,7 +197,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
         return static_cast<GaloisFieldDict>(*this);
     if (n == 2)
         return gf_sqr();
-    long num = mp_get_si(n);
+    unsigned int num = n;
     GaloisFieldDict to_sq = static_cast<GaloisFieldDict>(*this);
     GaloisFieldDict to_ret = GaloisFieldDict({integer_class(1)}, modulo_);
     while (1) {
@@ -276,6 +276,26 @@ GaloisFieldDict GaloisFieldDict::gf_diff() const
     }
     out.gf_istrip();
     return out;
+}
+
+integer_class GaloisFieldDict::gf_eval(const integer_class &a) const
+{
+    integer_class res = 0_z;
+    for (auto rit = dict_.rbegin(); rit != dict_.rend(); ++rit) {
+        res *= a;
+        res += (*rit);
+        res %= modulo_;
+    }
+    return res;
+}
+
+vec_integer_class
+GaloisFieldDict::gf_multi_eval(const vec_integer_class &v) const
+{
+    vec_integer_class res(v.size());
+    for (unsigned int i = 0; i < v.size(); ++i)
+        res[i] = gf_eval(v[i]);
+    return res;
 }
 
 bool GaloisFieldDict::gf_is_sqf() const
@@ -376,21 +396,21 @@ GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
 }
 
 GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
-                                            const integer_class &n) const
+                                            const unsigned int &n) const
 {
     if (modulo_ != f.modulo_)
         throw std::runtime_error("Error: field must be same.");
-    if (n == 0_z)
+    if (n == 0)
         return GaloisFieldDict::from_vec({1_z}, modulo_);
     GaloisFieldDict in = f;
-    if (n == 1_z) {
+    if (n == 1) {
         return f % (*this);
     }
-    if (n == 2_z) {
+    if (n == 2) {
         return f.gf_sqr() % (*this);
     }
     GaloisFieldDict h = GaloisFieldDict::from_vec({1_z}, modulo_);
-    unsigned mod = mp_get_si(n);
+    unsigned int mod = n;
     while (true) {
         if (mod & 1) {
             h *= in;
@@ -422,7 +442,7 @@ std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
         }
     } else if (n > 1) {
         b[1] = gf_pow_mod(GaloisFieldDict::from_vec({0_z, 1_z}, modulo_),
-                          modulo_);
+                          mp_get_ui(modulo_));
         for (unsigned i = 2; i < n; ++i) {
             b[i] = b[i - 1] * b[1];
             b[i] %= (*this);
@@ -542,11 +562,11 @@ GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
         r *= h;
         r %= *this;
     }
-    auto res = gf_pow_mod(r, (modulo_ - 1_z) / 2_z);
+    auto res = gf_pow_mod(r, (mp_get_ui(modulo_) - 1) / 2);
     return res;
 }
 
-GaloisFieldDict GaloisFieldDict::gf_random(unsigned n_val,
+GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
                                            gmp_randstate_t &state) const
 {
     std::vector<integer_class> v(n_val + 1);
@@ -582,7 +602,7 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
             GaloisFieldDict h = r;
             unsigned ub = 1 << (n * N - 1);
             for (unsigned i = 0; i < ub; ++i) {
-                r = gf_pow_mod(r, 2_z);
+                r = gf_pow_mod(r, 2);
                 h += r;
             }
             g = this->gf_gcd(h);
@@ -672,7 +692,7 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
     gmp_randseed_ui(state, std::rand());
     auto r = gf_random(N - 1, state);
     if (modulo_ == 2_z) {
-        auto h = gf_pow_mod(x, modulo_);
+        auto h = gf_pow_mod(x, mp_get_ui(modulo_));
         auto H = gf_trace_map(r, h, x, n - 1).second;
         auto h1 = gf_gcd(H);
         auto h2 = (*this) / h1;
@@ -682,7 +702,7 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
     } else {
         auto b = gf_frobenius_monomial_base();
         auto H = _gf_trace_map(r, n, b);
-        auto h = gf_pow_mod(H, (modulo_ - 1_z) / 2_z);
+        auto h = gf_pow_mod(H, (mp_get_ui(modulo_) - 1) / 2);
         auto h1 = gf_gcd(h);
         auto h2 = gf_gcd(h - 1_z);
         auto h3 = (*this) / (h1 * h2);
