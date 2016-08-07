@@ -14,7 +14,7 @@
 namespace SymEngine
 {
 
-class Constant : public Basic
+class Constant : public Symbolic
 {
 private:
     //! name of Constant

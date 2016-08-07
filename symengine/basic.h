@@ -270,7 +270,6 @@ void hash_combine(hash_t &seed, const T &v);
 
 class Symbolic : public Basic
 {
-    IMPLEMENT_TYPEID(SYMBOLIC);
 };
 
 } // SymEngine

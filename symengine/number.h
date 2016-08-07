@@ -14,7 +14,7 @@ namespace SymEngine
 
 class Evaluate;
 
-class Number : public Basic
+class Number : public Symbolic
 {
 public:
     //! \return true if `0`
