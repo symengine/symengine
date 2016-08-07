@@ -15,6 +15,7 @@ using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
 using SymEngine::GaloisField;
 using SymEngine::GaloisFieldDict;
+using SymEngine::UIntPoly;
 
 using namespace SymEngine::literals;
 
@@ -40,6 +41,15 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     RCP<const GaloisField> U = gf_poly(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}}, 7_z);
     REQUIRE(U->__str__() == "2");
+
+    RCP<const UIntPoly> UP
+        = UIntPoly::from_dict(x, {{0, 3_z}, {1, 4_z}, {2, 5_z}});
+    U = GaloisField::from_uintpoly(*UP, 5_z);
+    REQUIRE(U->__str__() == "4*x + 3");
+
+    UP = UIntPoly::from_dict(x, {{0, 10_z}, {1, 7_z}, {2, 9_z}});
+    U = GaloisField::from_uintpoly(*UP, 7_z);
+    REQUIRE(U->__str__() == "2*x**2 + 3");
 }
 
 TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic",
