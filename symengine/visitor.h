@@ -69,6 +69,68 @@ public:
 #undef SYMENGINE_ENUM
 };
 
+
+template <typename CRTPVisitor>
+class DoubleDispatchVisitor : public Visitor
+{
+private:
+    const RCP<const Basic> &a_;
+    RCP<const Basic> result;
+
+public:
+    inline DoubleDispatchVisitor(const RCP<const Basic> &a) : a_(a)
+    {
+    }
+    RCP<const Basic> apply(const RCP<const Basic> &b)
+    {
+        b->accept(*this);
+        return std::move(result);
+    }
+    template <typename T>
+    inline void visitall(const T &b);
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &b)                                         \
+    {                                                                          \
+        visitall(b);                                                           \
+    };
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+};
+
+template <typename CRTPVisitor, typename T>
+class _DoubleDispatchVisitor : public Visitor
+{
+protected:
+    const T &b_;
+    RCP<const Basic> result;
+
+public:
+    inline _DoubleDispatchVisitor(const T &b) : b_(b)
+    {
+    }
+    RCP<const Basic> apply(const RCP<const Basic> &a)
+    {
+        a->accept(*this);
+        return std::move(result);
+    }
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    inline void visit(const Class &a)                                          \
+    {                                                                          \
+        result = CRTPVisitor::dispatch(a, b_);                                 \
+    };
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+};
+
+template <typename CRTPVisitor>
+template <typename T>
+inline void DoubleDispatchVisitor<CRTPVisitor>::visitall(const T &b)
+{
+    _DoubleDispatchVisitor<CRTPVisitor, T> visitor(b);
+    result = visitor.apply(a_);
+}
+
+
 class StopVisitor : public Visitor
 {
 public:
