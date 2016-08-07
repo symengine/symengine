@@ -29,13 +29,16 @@ using SymEngine::rcp_static_cast;
 using SymEngine::sin;
 using SymEngine::eq;
 using SymEngine::UIntPoly;
+using SymEngine::URatPoly;
 using SymEngine::UExprPoly;
 using SymEngine::from_basic;
 using SymEngine::set_basic;
 using SymEngine::MIntPoly;
 using SymEngine::MExprPoly;
+using SymEngine::rational_class;
 
 using namespace SymEngine::literals;
+using rc = rational_class;
 
 TEST_CASE("find_gen_poly", "[b2poly]")
 {
@@ -293,6 +296,53 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     basic = pow(i9, add(div(one, i3), x));
     gen = pow(i9, x);
     CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+}
+
+TEST_CASE("basic_to_poly URat", "[b2poly]")
+{
+    RCP<const Basic> basic, gen;
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> minus_one = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> hf = div(one, i2);
+    RCP<const Basic> i2bi3 = div(i2, i3);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> yb2 = div(x, i3);
+    RCP<const URatPoly> poly1, poly2, poly3;
+
+    // x/2
+    basic = xb2;
+    gen = x;
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {{0_q, rc(1_z, 2_z)}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 3x + 2
+    basic = add(mul(x, i3), i2);
+    gen = x;
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {{2_q, 3_q}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 3/2 * (2**x)
+    basic = mul(div(i3, i2), pow(i2, x));
+    gen = pow(i2, x);
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {{0_z, rc(3_z, 2_z)}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // x + y
+    basic = add(x, y);
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), std::runtime_error);
+
+    // x + 1/x
+    basic = add(x, div(one, x));
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), std::runtime_error);
 }
 
 TEST_CASE("basic_to_poly UExpr", "[b2poly]")

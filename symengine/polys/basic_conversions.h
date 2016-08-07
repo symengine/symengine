@@ -29,6 +29,10 @@ template <typename T, typename P>
 enable_if_t<std::is_base_of<UIntPolyBase<T, P>, P>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
+template <typename T, typename P>
+enable_if_t<std::is_base_of<URatPolyBase<T, P>, P>::value, T>
+_basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
+
 template <typename P, typename V>
 class BasicToUPolyBase : public BaseVisitor<V>
 {
@@ -201,6 +205,31 @@ public:
     }
 };
 
+template <typename Poly>
+class BasicToURatPoly : public BasicToUPolyBase<Poly, BasicToURatPoly<Poly>>
+{
+public:
+    using BasicToUPolyBase<Poly, BasicToURatPoly>::bvisit;
+    using BasicToUPolyBase<Poly, BasicToURatPoly>::apply;
+
+    void bvisit(const Rational &x)
+    {
+        this->dict = URatDict(x.i);
+    }
+
+    void dict_set(unsigned int pow, const Basic &x)
+    {
+        if (is_a<const Integer>(x))
+            this->dict = Poly::container_from_dict(
+                this->gen, {{pow, rational_class(static_cast<const Integer &>(x).i)}});
+        else if (is_a<const Rational>(x))
+            this->dict = Poly::container_from_dict(
+                this->gen, {{pow, static_cast<const Rational &>(x).i}});
+        else
+            throw std::runtime_error("Non-integer found");
+    }
+};
+
 template <typename T, typename P>
 enable_if_t<std::is_same<T, UExprDict>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
@@ -215,6 +244,14 @@ _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUIntPoly<P> v(gen);
     return v.apply(*basic);
+}
+
+template <typename T, typename P>
+enable_if_t<std::is_base_of<URatPolyBase<T, P>, P>::value, T>
+_basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
+{
+    BasicToURatPoly<P> v;
+    return v.apply(*basic, gen);
 }
 
 template <typename P>
