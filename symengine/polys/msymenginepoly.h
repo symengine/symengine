@@ -370,6 +370,15 @@ public:
 
     static RCP<const Poly> from_dict(const vec_basic &v,
                                      typename Container::dict_type &&d)
+    {   
+        set_basic s;
+        for (unsigned int i = 0; i < v.size(); ++i)
+            s.insert(v[i]);
+        return Poly::from_container(s, Poly::container_from_dict(v, std::move(d)));
+    }
+
+    static Container container_from_dict(const vec_basic &v,
+                                     typename Container::dict_type &&d)
     {
         set_basic s;
         std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess> m;
@@ -391,7 +400,7 @@ public:
         }
 
         Container x(std::move(d), s.size());
-        return Poly::from_container(s, std::move(x.translate(trans, s.size())));
+        return x.translate(trans, s.size());
     }
 
     inline vec_basic get_args() const
