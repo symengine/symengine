@@ -69,6 +69,13 @@ GaloisField::from_vec(const RCP<const Basic> &var,
                                        GaloisFieldDict::from_vec(v, modulo));
 }
 
+RCP<const GaloisField> GaloisField::from_uintpoly(const UIntPoly &a,
+                                                  const integer_class &modulo)
+{
+    GaloisFieldDict wrapper(a.get_poly().get_dict(), modulo);
+    return GaloisField::from_dict(a.get_var(), std::move(wrapper));
+}
+
 vec_basic GaloisField::get_args() const
 {
     vec_basic args;
