@@ -9,6 +9,10 @@
 namespace SymEngine
 {
 
+class MPoly : public Basic
+{
+};
+
 template <typename Vec, typename Value, typename Wrapper>
 class UDictWrapper
 {
@@ -329,7 +333,7 @@ public:
 };
 
 template <typename Container, typename Poly>
-class MSymEnginePoly : public Basic
+class MSymEnginePoly : public MPoly
 {
 public:
     Container poly_;

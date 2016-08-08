@@ -617,6 +617,12 @@ public:
             return 0;
         return get_degree() + 1;
     }
+
+    RCP<const Basic> as_symbolic() const
+    {
+        throw std::runtime_error(
+            "GaloisField cannot be represented as a symbolic");
+    }
 };
 
 inline RCP<const GaloisField> gf_poly(RCP<const Basic> i,

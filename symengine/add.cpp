@@ -375,7 +375,11 @@ public:
               typename = enable_if_t<std::is_base_of<Set, P>::value
                                      or std::is_base_of<Set, Q>::value
                                      or std::is_base_of<Boolean, P>::value
-                                     or std::is_base_of<Boolean, Q>::value>>
+                                     or std::is_base_of<Boolean, Q>::value
+                                     or std::is_base_of<MPoly, P>::value
+                                     or std::is_base_of<MPoly, Q>::value
+                                     or std::is_base_of<GaloisField, P>::value
+                                     or std::is_base_of<GaloisField, Q>::value>>
     static inline RCP<const Basic> dispatch(const P &a, const Q &b)
     {
         throw std::runtime_error("Addition is not supported");
@@ -390,33 +394,6 @@ public:
         auto dict = a.get_poly();
         dict += b.get_poly();
         return Poly::from_container(a.get_var(), std::move(dict));
-    }
-
-    // TODO: Remove this once Poly operations and Series operations are added
-    static inline RCP<const Basic> dispatch(const MultivariatePolynomial &a, const Basic &b)
-    {
-        throw std::runtime_error("Not supported");
-    }
-    static inline RCP<const Basic> dispatch(const Basic &a, const MultivariatePolynomial &b)
-    {
-        throw std::runtime_error("Not supported");
-    }
-    static inline RCP<const Basic> dispatch(const MultivariatePolynomial &a, const MultivariatePolynomial &b)
-    {
-        throw std::runtime_error("Not supported");
-    }
-    // TODO: Remove this once Poly operations and Series operations are added
-    static inline RCP<const Basic> dispatch(const MultivariateIntPolynomial &a, const Basic &b)
-    {
-        throw std::runtime_error("Not supported");
-    }
-    static inline RCP<const Basic> dispatch(const Basic &a, const MultivariateIntPolynomial &b)
-    {
-        throw std::runtime_error("Not supported");
-    }
-    static inline RCP<const Basic> dispatch(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b)
-    {
-        throw std::runtime_error("Not supported");
     }
 };
 

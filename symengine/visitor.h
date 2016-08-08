@@ -93,7 +93,7 @@ public:
         return std::move(result);
     }
 
-    // TODO: Series op Series: this should be fixed by adding a conversion 
+    // TODO: Series op Series: this should be fixed by adding a conversion
     // system to choose which series type to use from a and b
     template <typename P,
               typename
@@ -131,11 +131,12 @@ public:
     }
 
     // TODO: Poly op Poly: this should be fixed by adding a conversion system
-    template <typename Container, typename Poly, typename Container2, typename Poly2,
-              typename
-              = enable_if_t<not std::is_same<Poly, Poly2>::value>>
-    static inline RCP<const Basic> dispatch(const UPolyBase<Container, Poly> &a,
-                                            const UPolyBase<Container2, Poly2> &b)
+    template <typename Container, typename Poly, typename Container2,
+              typename Poly2,
+              typename = enable_if_t<not std::is_same<Poly, Poly2>::value>>
+    static inline RCP<const Basic>
+    dispatch(const UPolyBase<Container, Poly> &a,
+             const UPolyBase<Container2, Poly2> &b)
     {
         throw std::runtime_error("Not implemented");
     }
