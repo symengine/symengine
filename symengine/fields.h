@@ -632,6 +632,12 @@ inline RCP<const GaloisField> gf_poly(RCP<const Basic> i, map_uint_mpz &&dict,
     GaloisFieldDict wrapper(dict, modulo_);
     return GaloisField::from_dict(i, std::move(wrapper));
 }
+
+inline RCP<const GaloisField> pow_upoly(const GaloisField &a, unsigned int p)
+{
+    auto dict = GaloisField::container_type::pow(a.get_poly(), p);
+    return GaloisField::from_container(a.get_var(), std::move(dict));
+}
 }
 
 #endif

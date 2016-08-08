@@ -227,7 +227,7 @@ public:
             this->dict = Poly::container_from_dict(
                 this->gen, {{pow, static_cast<const Rational &>(x).i}});
         else
-            throw std::runtime_error("Non-integer found");
+            throw std::runtime_error("Non-rational found");
     }
 };
 
