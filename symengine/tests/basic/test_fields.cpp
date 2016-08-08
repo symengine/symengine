@@ -442,31 +442,36 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
 TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
           "[basic]")
 {
+    RCP<const Symbol> x = symbol("x");
     std::vector<integer_class> a, mp;
     GaloisFieldDict d1, d2, d3, d4;
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d2 = d1.gf_diff();
-    REQUIRE(d2.dict_.empty());
+
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    RCP<const GaloisField> U = gf_poly(x, std::move(d1));
+    auto b = U->diff(x);
+    REQUIRE(b->__str__() == "0");
     a = {7_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d2 = d1.gf_diff();
-    REQUIRE(d2.dict_.empty());
+    U = gf_poly(x, std::move(d1));
+    b = U->diff(x);
+    REQUIRE(b->__str__() == "0");
     a = {3_z, 7_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d2 = d1.gf_diff();
-    mp = d2.dict_;
-    REQUIRE(mp[0] == 7);
+    U = gf_poly(x, std::move(d1));
+    b = U->diff(x);
+    REQUIRE(b->__str__() == "7");
     a = {1_z, 3_z, 7_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d2 = d1.gf_diff();
-    mp = d2.dict_;
-    REQUIRE(mp[0] == 3);
-    REQUIRE(mp[1] == 3);
+    U = gf_poly(x, std::move(d1));
+    b = U->diff(x);
+    REQUIRE(b->__str__() == "3*x + 3");
     a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d2 = d1.gf_diff();
-    REQUIRE(d2.dict_.empty());
+    U = gf_poly(x, std::move(d1));
+    b = U->diff(x);
+    REQUIRE(b->__str__() == "0");
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);

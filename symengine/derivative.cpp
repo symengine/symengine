@@ -31,7 +31,6 @@ public:
         return Derivative::create(self.rcp_from_this(), {x});                  \
     }
 
-    DIFF0(GaloisField)
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
@@ -596,6 +595,18 @@ public:
                                  const RCP<const Symbol> &x)
     {
         throw std::runtime_error("Derivative doesn't exist.");
+    }
+
+    static RCP<const Basic> diff(const GaloisField &self,
+                                 const RCP<const Symbol> &x)
+    {
+        GaloisFieldDict d;
+        if (self.get_var()->__eq__(*x)) {
+            d = self.get_poly().gf_diff();
+            return GaloisField::from_dict(self.get_var(), std::move(d));
+        } else {
+            return GaloisField::from_dict(self.get_var(), std::move(d));
+        }
     }
 
     static RCP<const Basic> diff(const Piecewise &self,
