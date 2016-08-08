@@ -223,6 +223,9 @@ public:
     void bvisit(const UniversalSet &x);
     void bvisit(const Contains &x);
     void bvisit(const BooleanAtom &x);
+    void bvisit(const SymAnd &x);
+    void bvisit(const SymOr &x);
+    void bvisit(const SymNot &x);
     void bvisit(const Union &x);
     void bvisit(const Add &x);
     void bvisit(const Mul &x);

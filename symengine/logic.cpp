@@ -146,4 +146,121 @@ int Piecewise::compare(const Basic &o) const
     RCP<const Piecewise> t = o.rcp_from_this_cast<Piecewise>();
     return unified_compare(get_vec(), t->get_vec());
 }
+
+SymAnd::SymAnd(const set_boolean &s) : args{s}
+{
+}
+
+std::size_t SymAnd::__hash__() const
+{
+    std::size_t seed = SYMAND;
+    return seed;
+}
+
+vec_basic SymAnd::get_args() const
+{
+    vec_basic v;
+    // v.push_back(expr_);
+    // v.push_back(set_);
+    return v;
+}
+
+bool SymAnd::__eq__(const Basic &o) const
+{
+    // return is_a<SymAnd>(o)
+    //        and unified_eq(get_expr(),
+    //                       static_cast<const Contains &>(o).get_expr())
+    //        and unified_eq(get_set(),
+    //                       static_cast<const Contains &>(o).get_set());
+    return true;
+}
+
+int SymAnd::compare(const Basic &o) const
+{
+    // SYMENGINE_ASSERT(is_a<Contains>(o))
+    // const Contains &c = static_cast<const Contains &>(o);
+    // int cmp = unified_compare(get_expr(), c.get_expr());
+    // if (cmp != 0)
+    //     return cmp;
+    // return unified_compare(get_set(), c.get_set());
+    return 0;
+}
+
+SymOr::SymOr(const set_boolean &s) : args{s}
+{
+}
+
+std::size_t SymOr::__hash__() const
+{
+    std::size_t seed = SYMOR;
+    return seed;
+}
+
+vec_basic SymOr::get_args() const
+{
+    vec_basic v;
+    // v.push_back(expr_);
+    // v.push_back(set_);
+    return v;
+}
+
+bool SymOr::__eq__(const Basic &o) const
+{
+    // return is_a<SymAnd>(o)
+    //        and unified_eq(get_expr(),
+    //                       static_cast<const Contains &>(o).get_expr())
+    //        and unified_eq(get_set(),
+    //                       static_cast<const Contains &>(o).get_set());
+    return true;
+}
+
+int SymOr::compare(const Basic &o) const
+{
+    // SYMENGINE_ASSERT(is_a<Contains>(o))
+    // const Contains &c = static_cast<const Contains &>(o);
+    // int cmp = unified_compare(get_expr(), c.get_expr());
+    // if (cmp != 0)
+    //     return cmp;
+    // return unified_compare(get_set(), c.get_set());
+    return 0;
+}
+
+SymNot::SymNot(const RCP<const Boolean> &in) : arg{in}
+{
+}
+
+std::size_t SymNot::__hash__() const
+{
+    std::size_t seed = SYMNOT;
+    return seed;
+}
+
+vec_basic SymNot::get_args() const
+{
+    vec_basic v;
+    // v.push_back(expr_);
+    // v.push_back(set_);
+    return v;
+}
+
+bool SymNot::__eq__(const Basic &o) const
+{
+    // return is_a<SymAnd>(o)
+    //        and unified_eq(get_expr(),
+    //                       static_cast<const Contains &>(o).get_expr())
+    //        and unified_eq(get_set(),
+    //                       static_cast<const Contains &>(o).get_set());
+    return true;
+}
+
+int SymNot::compare(const Basic &o) const
+{
+    // SYMENGINE_ASSERT(is_a<Contains>(o))
+    // const Contains &c = static_cast<const Contains &>(o);
+    // int cmp = unified_compare(get_expr(), c.get_expr());
+    // if (cmp != 0)
+    //     return cmp;
+    // return unified_compare(get_set(), c.get_set());
+    return 0;
+}
 }

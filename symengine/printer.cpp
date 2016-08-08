@@ -145,6 +145,21 @@ void StrPrinter::bvisit(const BooleanAtom &x)
     }
 }
 
+void StrPrinter::bvisit(const SymAnd &x)
+{
+    str_ = "";
+}
+
+void StrPrinter::bvisit(const SymOr &x)
+{
+    str_ = "";
+}
+
+void StrPrinter::bvisit(const SymNot &x)
+{
+    str_ = "";
+}
+
 void StrPrinter::bvisit(const Contains &x)
 {
     std::ostringstream s;
