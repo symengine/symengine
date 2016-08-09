@@ -138,6 +138,7 @@ public:
 public:
     IMPLEMENT_TYPEID(NOT)
     Not(const RCP<const Boolean> &s);
+    bool is_canonical(const RCP<const Boolean> &s);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
@@ -146,41 +147,8 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
-
 template <typename caller>
-RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
-{
-    set_boolean args;
-    for (auto &a : s) {
-        if (is_a<BooleanAtom>(*a)) {
-            auto val = static_cast<const BooleanAtom &>(*a).get_val();
-            if (val == op_x_notx)
-                return boolean(op_x_notx);
-            else
-                continue;
-        }
-        args.insert(a);
-    }
-    set_boolean flattened_args;
-    for (auto &a : args) {
-        if (is_a<caller>(*a)) {
-            const caller &to_insert = static_cast<const caller &>(*a);
-            flattened_args.insert(to_insert.args.begin(), to_insert.args.end());
-        } else {
-            flattened_args.insert(a);
-        }
-    }
-    for (auto &a : flattened_args) {
-        if (flattened_args.find(logical_not(a)) != flattened_args.end())
-            return boolean(op_x_notx);
-    }
-    if (flattened_args.size() == 1)
-        return *(flattened_args.begin());
-    else if (flattened_args.size() == 0)
-        return boolean(not op_x_notx);
-    return make_rcp<const caller>(flattened_args);
-}
+RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx);
 
 inline RCP<const Boolean> logical_and(const set_boolean &s)
 {
@@ -192,32 +160,7 @@ inline RCP<const Boolean> logical_or(const set_boolean &s)
     return and_or<Or>(s, true);
 }
 
-inline RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
-{
-    if (is_a<BooleanAtom>(*s)) {
-        const BooleanAtom &a = static_cast<const BooleanAtom &>(*s);
-        return boolean(not a.get_val());
-    } else if (is_a<Not>(*s)) {
-        const Not &a = static_cast<const Not &>(*s);
-        return a.arg;
-    } else if (is_a<Or>(*s)) {
-        const Or &o = static_cast<const Or &>(*s);
-        set_boolean s;
-        for (auto &a : o.args) {
-            s.insert(logical_not(a));
-        }
-        return logical_and(s);
-    } else if (is_a<And>(*s)) {
-        const And &o = static_cast<const And &>(*s);
-        set_boolean s;
-        for (auto &a : o.args) {
-            s.insert(logical_not(a));
-        }
-        return logical_or(s);
-    } else {
-        return make_rcp<const Not>(s);
-    }
-}
+RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
 } // SymEngine
 
 #endif
