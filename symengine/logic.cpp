@@ -312,20 +312,30 @@ RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
         return a.arg;
     } else if (is_a<Or>(*s)) {
         const Or &o = static_cast<const Or &>(*s);
-        set_boolean s;
+        set_boolean cont;
         for (auto &a : o.args) {
-            s.insert(logical_not(a));
+            cont.insert(logical_not(a));
         }
-        return logical_and(s);
+        return make_rcp<const And>(cont);
     } else if (is_a<And>(*s)) {
         const And &o = static_cast<const And &>(*s);
-        set_boolean s;
+        set_boolean cont;
         for (auto &a : o.args) {
-            s.insert(logical_not(a));
+            cont.insert(logical_not(a));
         }
-        return logical_or(s);
+        return make_rcp<const Or>(cont);
     } else {
         return make_rcp<const Not>(s);
     }
+}
+
+RCP<const Boolean> logical_and(const set_boolean &s)
+{
+    return and_or<And>(s, false);
+}
+
+RCP<const Boolean> logical_or(const set_boolean &s)
+{
+    return and_or<Or>(s, true);
 }
 }
