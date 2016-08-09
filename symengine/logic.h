@@ -98,42 +98,44 @@ inline RCP<const Basic> piecewise(PiecewiseVec &&vec)
 
 class And : public Boolean
 {
-public:
-    set_boolean args;
+private:
+    set_boolean container_;
 
 public:
     IMPLEMENT_TYPEID(AND)
     And(const set_boolean &s);
-    bool is_canonical(const set_boolean &container);
+    bool is_canonical(const set_boolean &container_);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
+    const set_boolean &get_container() const;
 };
 
 class Or : public Boolean
 {
-public:
-    set_boolean args;
+private:
+    set_boolean container_;
 
 public:
     IMPLEMENT_TYPEID(OR)
     Or(const set_boolean &s);
-    bool is_canonical(const set_boolean &container);
+    bool is_canonical(const set_boolean &container_);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
+    const set_boolean &get_container() const;
 };
 
 class Not : public Boolean
 {
-public:
-    RCP<const Boolean> arg;
+private:
+    RCP<const Boolean> arg_;
 
 public:
     IMPLEMENT_TYPEID(NOT)
@@ -145,6 +147,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
+    RCP<const Boolean> get_arg() const;
 };
 
 RCP<const Boolean> logical_and(const set_boolean &s);
