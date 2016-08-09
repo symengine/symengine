@@ -147,92 +147,90 @@ int Piecewise::compare(const Basic &o) const
     return unified_compare(get_vec(), t->get_vec());
 }
 
-SymAnd::SymAnd(const set_boolean &s) : args{s}
+And::And(const set_boolean &s) : args{s}
 {
 }
 
-std::size_t SymAnd::__hash__() const
+std::size_t And::__hash__() const
 {
-    std::size_t seed = SYMAND;
+    std::size_t seed = AND;
     for (const auto &a : args)
         hash_combine<Basic>(seed, *a);
     return seed;
 }
 
-vec_basic SymAnd::get_args() const
+vec_basic And::get_args() const
 {
     vec_basic v(args.begin(), args.end());
     return v;
 }
 
-bool SymAnd::__eq__(const Basic &o) const
+bool And::__eq__(const Basic &o) const
 {
-    return is_a<SymAnd>(o)
-           and unified_eq(args, static_cast<const SymAnd &>(o).args);
+    return is_a<And>(o) and unified_eq(args, static_cast<const And &>(o).args);
 }
 
-int SymAnd::compare(const Basic &o) const
+int And::compare(const Basic &o) const
 {
-    SYMENGINE_ASSERT(is_a<SymAnd>(o))
-    return unified_compare(args, static_cast<const SymAnd &>(o).args);
+    SYMENGINE_ASSERT(is_a<And>(o))
+    return unified_compare(args, static_cast<const And &>(o).args);
 }
 
-SymOr::SymOr(const set_boolean &s) : args{s}
+Or::Or(const set_boolean &s) : args{s}
 {
 }
 
-std::size_t SymOr::__hash__() const
+std::size_t Or::__hash__() const
 {
-    std::size_t seed = SYMOR;
+    std::size_t seed = OR;
     for (const auto &a : args)
         hash_combine<Basic>(seed, *a);
     return seed;
 }
 
-vec_basic SymOr::get_args() const
+vec_basic Or::get_args() const
 {
     vec_basic v(args.begin(), args.end());
     return v;
 }
 
-bool SymOr::__eq__(const Basic &o) const
+bool Or::__eq__(const Basic &o) const
 {
-    return is_a<SymOr>(o)
-           and unified_eq(args, static_cast<const SymOr &>(o).args);
+    return is_a<Or>(o) and unified_eq(args, static_cast<const Or &>(o).args);
 }
 
-int SymOr::compare(const Basic &o) const
+int Or::compare(const Basic &o) const
 {
-    SYMENGINE_ASSERT(is_a<SymOr>(o))
-    return unified_compare(args, static_cast<const SymOr &>(o).args);
+    SYMENGINE_ASSERT(is_a<Or>(o))
+    return unified_compare(args, static_cast<const Or &>(o).args);
 }
 
-SymNot::SymNot(const RCP<const Boolean> &in) : arg{in}
+Not::Not(const RCP<const Boolean> &in) : arg{in}
 {
 }
 
-std::size_t SymNot::__hash__() const
+std::size_t Not::__hash__() const
 {
-    std::size_t seed = SYMNOT;
+    std::size_t seed = NOT;
     hash_combine<Basic>(seed, *arg);
     return seed;
 }
 
-vec_basic SymNot::get_args() const
+vec_basic Not::get_args() const
 {
     vec_basic v;
     v.push_back(arg);
     return v;
 }
 
-bool SymNot::__eq__(const Basic &o) const
+bool Not::__eq__(const Basic &o) const
 {
-    return is_a<SymNot>(o) and eq(*arg, *static_cast<const SymNot &>(o).arg);
+    return is_a<Not>(o) and eq(*arg, *static_cast<const Not &>(o).arg);
 }
 
-int SymNot::compare(const Basic &o) const
+int Not::compare(const Basic &o) const
 {
-    SYMENGINE_ASSERT(is_a<SymNot>(o))
-    return arg->__cmp__(*static_cast<const SymNot &>(o).arg);
+    SYMENGINE_ASSERT(is_a<Not>(o))
+    return arg->__cmp__(*static_cast<const Not &>(o).arg);
 }
 }

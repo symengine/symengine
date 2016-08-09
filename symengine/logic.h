@@ -96,14 +96,14 @@ inline RCP<const Basic> piecewise(PiecewiseVec &&vec)
     return make_rcp<Piecewise>(std::move(vec));
 }
 
-class SymAnd : public Boolean
+class And : public Boolean
 {
 public:
     set_boolean args;
 
 public:
-    IMPLEMENT_TYPEID(SYMAND)
-    SymAnd(const set_boolean &s);
+    IMPLEMENT_TYPEID(AND)
+    And(const set_boolean &s);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
@@ -112,14 +112,14 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-class SymOr : public Boolean
+class Or : public Boolean
 {
 public:
     set_boolean args;
 
 public:
-    IMPLEMENT_TYPEID(SYMOR)
-    SymOr(const set_boolean &s);
+    IMPLEMENT_TYPEID(OR)
+    Or(const set_boolean &s);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
@@ -128,14 +128,14 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-class SymNot : public Boolean
+class Not : public Boolean
 {
 public:
     RCP<const Boolean> arg;
 
 public:
-    IMPLEMENT_TYPEID(SYMNOT)
-    SymNot(const RCP<const Boolean> &s);
+    IMPLEMENT_TYPEID(NOT)
+    Not(const RCP<const Boolean> &s);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
@@ -144,7 +144,7 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-RCP<const Boolean> sym_not(const RCP<const Boolean> &s);
+RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
 
 template <typename caller>
 RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
@@ -177,7 +177,7 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
     };
     args = flatten(args);
     for (auto &a : args) {
-        if (args.find(sym_not(a)) != args.end())
+        if (args.find(logical_not(a)) != args.end())
             return boolean(op_x_notx);
     }
     if (args.size() == 1)
@@ -187,40 +187,40 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
     return make_rcp<const caller>(args);
 }
 
-inline RCP<const Boolean> sym_and(const set_boolean &s)
+inline RCP<const Boolean> logical_and(const set_boolean &s)
 {
-    return and_or<SymAnd>(s, false);
+    return and_or<And>(s, false);
 }
 
-inline RCP<const Boolean> sym_or(const set_boolean &s)
+inline RCP<const Boolean> logical_or(const set_boolean &s)
 {
-    return and_or<SymOr>(s, true);
+    return and_or<Or>(s, true);
 }
 
-inline RCP<const Boolean> sym_not(const RCP<const Boolean> &s)
+inline RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
 {
     if (is_a<BooleanAtom>(*s)) {
         const BooleanAtom &a = static_cast<const BooleanAtom &>(*s);
         return boolean(not a.get_val());
-    } else if (is_a<SymNot>(*s)) {
-        const SymNot &a = static_cast<const SymNot &>(*s);
+    } else if (is_a<Not>(*s)) {
+        const Not &a = static_cast<const Not &>(*s);
         return a.arg;
-    } else if (is_a<SymOr>(*s)) {
-        const SymOr &o = static_cast<const SymOr &>(*s);
+    } else if (is_a<Or>(*s)) {
+        const Or &o = static_cast<const Or &>(*s);
         set_boolean s;
         for (auto &a : o.args) {
-            s.insert(sym_not(a));
+            s.insert(logical_not(a));
         }
-        return sym_and(s);
-    } else if (is_a<SymAnd>(*s)) {
-        const SymAnd &o = static_cast<const SymAnd &>(*s);
+        return logical_and(s);
+    } else if (is_a<And>(*s)) {
+        const And &o = static_cast<const And &>(*s);
         set_boolean s;
         for (auto &a : o.args) {
-            s.insert(sym_not(a));
+            s.insert(logical_not(a));
         }
-        return sym_or(s);
+        return logical_or(s);
     } else {
-        return make_rcp<const SymNot>(s);
+        return make_rcp<const Not>(s);
     }
 }
 } // SymEngine

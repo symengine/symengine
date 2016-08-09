@@ -145,7 +145,7 @@ void StrPrinter::bvisit(const BooleanAtom &x)
     }
 }
 
-void StrPrinter::bvisit(const SymAnd &x)
+void StrPrinter::bvisit(const And &x)
 {
     std::ostringstream s;
     s << "And(";
@@ -157,7 +157,7 @@ void StrPrinter::bvisit(const SymAnd &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const SymOr &x)
+void StrPrinter::bvisit(const Or &x)
 {
     std::ostringstream s;
     s << "Or(";
@@ -169,9 +169,11 @@ void StrPrinter::bvisit(const SymOr &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const SymNot &x)
+void StrPrinter::bvisit(const Not &x)
 {
-    str_ = "";
+    std::ostringstream s;
+    s << "Not(" << *x.arg << ")";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Contains &x)
