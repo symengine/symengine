@@ -162,31 +162,24 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
         }
         args.insert(a);
     }
-    std::function<set_boolean(set_boolean)> flatten;
-    flatten = [&](const set_boolean &s_) {
-        set_boolean new_args;
-        for (auto &a : s_) {
-            if (is_a<caller>(*a)) {
-                const caller &to_insert = static_cast<const caller &>(*a);
-                set_boolean to_insert_flattened = flatten(to_insert.args);
-                new_args.insert(to_insert_flattened.begin(),
-                                to_insert_flattened.end());
-            } else {
-                new_args.insert(a);
-            }
-        }
-        return new_args;
-    };
-    args = flatten(args);
+    set_boolean flattened_args;
     for (auto &a : args) {
-        if (args.find(logical_not(a)) != args.end())
+        if (is_a<caller>(*a)) {
+            const caller &to_insert = static_cast<const caller &>(*a);
+            flattened_args.insert(to_insert.args.begin(), to_insert.args.end());
+        } else {
+            flattened_args.insert(a);
+        }
+    }
+    for (auto &a : flattened_args) {
+        if (flattened_args.find(logical_not(a)) != flattened_args.end())
             return boolean(op_x_notx);
     }
-    if (args.size() == 1)
-        return *(args.begin());
-    else if (args.size() == 0)
+    if (flattened_args.size() == 1)
+        return *(flattened_args.begin());
+    else if (flattened_args.size() == 0)
         return boolean(not op_x_notx);
-    return make_rcp<const caller>(args);
+    return make_rcp<const caller>(flattened_args);
 }
 
 inline RCP<const Boolean> logical_and(const set_boolean &s)

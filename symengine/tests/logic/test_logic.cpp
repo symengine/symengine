@@ -93,8 +93,9 @@ TEST_CASE("Piecewise", "[logic]")
 
 TEST_CASE("And, Or : Basic", "[basic]")
 {
-    REQUIRE(eq(*logical_and({}), *boolTrue));
-    REQUIRE(eq(*logical_or({}), *boolFalse));
+    set_boolean e;
+    REQUIRE(eq(*logical_and(e), *boolTrue));
+    REQUIRE(eq(*logical_or(e), *boolFalse));
 
     REQUIRE(eq(*logical_and({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
@@ -154,6 +155,10 @@ TEST_CASE("And, Or : Basic", "[basic]")
     REQUIRE(eq(*logical_and({c1, c1, c2}), *logical_and({c1, c2})));
     REQUIRE(eq(*logical_and({logical_and({c1, c2}), logical_and({c3, c4})}),
                *logical_and({c1, c2, c3, c4})));
+    REQUIRE(eq(
+        *logical_and(
+            {logical_and({c1, logical_and({c2, logical_and({c3, c4})})}), c2}),
+        *logical_and({c1, c2, c3, c4})));
     REQUIRE(eq(*logical_or({c2, c1, c2}), *logical_or({c1, c2})));
     REQUIRE(eq(*logical_or({logical_or({c1, c2}), logical_or({c3, c4})}),
                *logical_or({c1, c2, c3, c4})));
