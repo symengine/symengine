@@ -149,6 +149,7 @@ int Piecewise::compare(const Basic &o) const
 
 And::And(const set_boolean &s) : args{s}
 {
+    SYMENGINE_ASSERT(is_canonical(s));
 }
 
 std::size_t And::__hash__() const
@@ -176,8 +177,14 @@ int And::compare(const Basic &o) const
     return unified_compare(args, static_cast<const And &>(o).args);
 }
 
+bool And::is_canonical(const set_boolean &container)
+{
+    return container.size() >= 2;
+}
+
 Or::Or(const set_boolean &s) : args{s}
 {
+    SYMENGINE_ASSERT(is_canonical(s));
 }
 
 std::size_t Or::__hash__() const
@@ -203,6 +210,11 @@ int Or::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Or>(o))
     return unified_compare(args, static_cast<const Or &>(o).args);
+}
+
+bool Or::is_canonical(const set_boolean &container)
+{
+    return container.size() >= 2;
 }
 
 Not::Not(const RCP<const Boolean> &in) : arg{in}

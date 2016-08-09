@@ -104,6 +104,7 @@ public:
 public:
     IMPLEMENT_TYPEID(AND)
     And(const set_boolean &s);
+    bool is_canonical(const set_boolean &container);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
@@ -120,6 +121,7 @@ public:
 public:
     IMPLEMENT_TYPEID(OR)
     Or(const set_boolean &s);
+    bool is_canonical(const set_boolean &container);
     //! \return the hash
     std::size_t __hash__() const;
     virtual vec_basic get_args() const;
