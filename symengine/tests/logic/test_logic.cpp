@@ -153,3 +153,19 @@ TEST_CASE("SymAnd, SymOr : Basic", "[basic]")
                         sym_and({c2, c3, c4}), c1, sym_and({c2, c4})}),
                *sym_or({c1, sym_and({c2, c3, c4}), sym_and({c2, c4})})));
 }
+
+TEST_CASE("SymNot : Basic", "[basic]")
+{
+    auto x = symbol("x");
+    auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(5), false, false);
+    auto c1 = contains(x, int1);
+    auto c2 = contains(x, int1);
+
+    REQUIRE(eq(*sym_not(boolTrue), *boolFalse));
+    REQUIRE(eq(*sym_not(boolFalse), *boolTrue));
+    REQUIRE(
+        eq(*sym_not(sym_and({c1, c2})), *sym_or({sym_not(c1), sym_not(c2)})));
+    REQUIRE(
+        eq(*sym_not(sym_or({c1, c2})), *sym_and({sym_not(c1), sym_not(c2)})));
+}
