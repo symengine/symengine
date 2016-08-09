@@ -144,18 +144,7 @@ public:
     virtual int compare(const Basic &o) const;
 };
 
-inline RCP<const Boolean> sym_not(const RCP<const Boolean> &s)
-{
-    if (is_a<BooleanAtom>(*s)) {
-        const BooleanAtom &a = static_cast<const BooleanAtom &>(*s);
-        return boolean(not a.get_val());
-    } else if (is_a<SymNot>(*s)) {
-        const SymNot &a = static_cast<const SymNot &>(*s);
-        return a.arg;
-    } else {
-        return s; // TODO
-    }
-}
+RCP<const Boolean> sym_not(const RCP<const Boolean> &s);
 
 template <typename caller>
 RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
@@ -206,6 +195,33 @@ inline RCP<const Boolean> sym_and(const set_boolean &s)
 inline RCP<const Boolean> sym_or(const set_boolean &s)
 {
     return and_or<SymOr>(s, true);
+}
+
+inline RCP<const Boolean> sym_not(const RCP<const Boolean> &s)
+{
+    if (is_a<BooleanAtom>(*s)) {
+        const BooleanAtom &a = static_cast<const BooleanAtom &>(*s);
+        return boolean(not a.get_val());
+    } else if (is_a<SymNot>(*s)) {
+        const SymNot &a = static_cast<const SymNot &>(*s);
+        return a.arg;
+    } else if (is_a<SymOr>(*s)) {
+        const SymOr &o = static_cast<const SymOr &>(*s);
+        set_boolean s;
+        for (auto &a : o.args) {
+            s.insert(sym_not(a));
+        }
+        return sym_and(s);
+    } else if (is_a<SymAnd>(*s)) {
+        const SymAnd &o = static_cast<const SymAnd &>(*s);
+        set_boolean s;
+        for (auto &a : o.args) {
+            s.insert(sym_not(a));
+        }
+        return sym_or(s);
+    } else {
+        return make_rcp<const SymNot>(s);
+    }
 }
 } // SymEngine
 

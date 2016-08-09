@@ -147,12 +147,26 @@ void StrPrinter::bvisit(const BooleanAtom &x)
 
 void StrPrinter::bvisit(const SymAnd &x)
 {
-    str_ = "";
+    std::ostringstream s;
+    s << "And(";
+    s << apply(*x.args.begin());
+    for (auto it = ++(x.args.begin()); it != x.args.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const SymOr &x)
 {
-    str_ = "";
+    std::ostringstream s;
+    s << "Or(";
+    s << apply(*x.args.begin());
+    for (auto it = ++(x.args.begin()); it != x.args.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const SymNot &x)

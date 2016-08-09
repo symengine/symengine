@@ -24,6 +24,10 @@ using SymEngine::zero;
 using SymEngine::one;
 using SymEngine::eq;
 using SymEngine::boolean;
+using SymEngine::sym_and;
+using SymEngine::sym_or;
+using SymEngine::sym_not;
+using SymEngine::set_boolean;
 
 TEST_CASE("BooleanAtom : Basic", "[basic]")
 {
@@ -85,4 +89,35 @@ TEST_CASE("Piecewise", "[logic]")
                         {one, contains(x, int3)}});
 
     REQUIRE(eq(*p->diff(x), *q));
+}
+
+TEST_CASE("SymAnd, SymOr : Basic", "[basic]")
+{
+    REQUIRE(eq(*sym_and({}), *boolTrue));
+    REQUIRE(eq(*sym_or({}), *boolFalse));
+
+    REQUIRE(eq(*sym_and({boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_or({boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_and({boolFalse}), *boolFalse));
+    REQUIRE(eq(*sym_or({boolFalse}), *boolFalse));
+
+    REQUIRE(eq(*sym_and({boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_and({boolTrue, boolFalse}), *boolFalse));
+    REQUIRE(eq(*sym_and({boolFalse, boolTrue}), *boolFalse));
+    REQUIRE(eq(*sym_and({boolFalse, boolFalse}), *boolFalse));
+
+    REQUIRE(eq(*sym_or({boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_or({boolTrue, boolFalse}), *boolTrue));
+    REQUIRE(eq(*sym_or({boolFalse, boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_or({boolFalse, boolFalse}), *boolFalse));
+
+    auto x = symbol("x");
+    auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(5), false, false);
+    auto p = contains(x, int1);
+    auto q = contains(x, int1);
+    // REQUIRE(eq(*sym_and({boolTrue}), *boolTrue));
+    // REQUIRE(eq(*sym_or({boolTrue}), *boolTrue));
+    // REQUIRE(eq(*sym_and({boolFalse}), *boolFalse));
+    // REQUIRE(eq(*sym_or({boolFalse}), *boolFalse));
 }
