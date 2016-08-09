@@ -114,10 +114,42 @@ TEST_CASE("SymAnd, SymOr : Basic", "[basic]")
     auto x = symbol("x");
     auto int1 = interval(integer(1), integer(2), false, false);
     auto int2 = interval(integer(1), integer(5), false, false);
-    auto p = contains(x, int1);
-    auto q = contains(x, int1);
-    // REQUIRE(eq(*sym_and({boolTrue}), *boolTrue));
-    // REQUIRE(eq(*sym_or({boolTrue}), *boolTrue));
-    // REQUIRE(eq(*sym_and({boolFalse}), *boolFalse));
-    // REQUIRE(eq(*sym_or({boolFalse}), *boolFalse));
+    auto c1 = contains(x, int1);
+    auto c2 = contains(x, int1);
+
+    auto s1 = sym_and({c1, c2});
+    auto s2 = sym_and({c2, c1});
+    REQUIRE(s1->__hash__() == s2->__hash__());
+    REQUIRE(eq(*s1, *s2));
+    s1 = sym_or({c1, c2});
+    s2 = sym_or({c2, c1});
+    REQUIRE(s1->__hash__() == s2->__hash__());
+    REQUIRE(eq(*s1, *s2));
+
+    REQUIRE(eq(*sym_and({c1}), *c1));
+    REQUIRE(eq(*sym_or({c1}), *c1));
+
+    REQUIRE(eq(*sym_and({c1, sym_not(c1)}), *boolFalse));
+    REQUIRE(eq(*sym_or({c1, sym_not(c1)}), *boolTrue));
+
+    REQUIRE(eq(*sym_and({c1, boolTrue}), *c1));
+    REQUIRE(eq(*sym_and({c1, boolFalse}), *boolFalse));
+    REQUIRE(eq(*sym_or({c1, boolTrue}), *boolTrue));
+    REQUIRE(eq(*sym_or({c1, boolFalse}), *c1));
+
+    REQUIRE(eq(*sym_and({c1, c1, c2}), *sym_and({c1, c2})));
+    REQUIRE(eq(*sym_or({c1, c1, c2}), *sym_or({c1, c2})));
+
+    auto y = symbol("y");
+    auto c3 = contains(y, int1);
+    auto c4 = contains(y, int1);
+    REQUIRE(eq(*sym_and({c1, c1, c2}), *sym_and({c1, c2})));
+    REQUIRE(eq(*sym_and({sym_and({c1, c2}), sym_and({c3, c4})}),
+               *sym_and({c1, c2, c3, c4})));
+    REQUIRE(eq(*sym_or({c2, c1, c2}), *sym_or({c1, c2})));
+    REQUIRE(eq(*sym_or({sym_or({c1, c2}), sym_or({c3, c4})}),
+               *sym_or({c1, c2, c3, c4})));
+    REQUIRE(eq(*sym_or({c1, sym_and({c2, c3, c4}), sym_and({c2, c4}),
+                        sym_and({c2, c3, c4}), c1, sym_and({c2, c4})}),
+               *sym_or({c1, sym_and({c2, c3, c4}), sym_and({c2, c4})})));
 }
