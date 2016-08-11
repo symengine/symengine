@@ -129,6 +129,20 @@ public:
         }
     }
 
+    ODictWrapper(std::map<Key, Value> &&p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0)) {
+                auto erase = iter;
+                iter++;
+                p.erase(erase);
+            } else {
+                iter++;
+            }
+        }
+        dict_ = p;
+    }
+
     ODictWrapper(const Value &p)
     {
         if (p != Value(0))
