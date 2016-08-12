@@ -66,6 +66,10 @@ public:
 
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
+        if (a.empty())
+            return a;
+        if (b.empty())
+            return b;
         int mul = 1;
 
         unsigned int N = bit_length(std::min(a.degree() + 1, b.degree() + 1))
@@ -120,6 +124,19 @@ public:
         return curr;
     }
 
+    void itrunc(const integer_class &mod);
+    UIntDict primitive() const;
+    integer_class l1_norm() const;
+    static void zz_hensel_step(const integer_class &m, const UIntDict &f,
+                               const UIntDict &g, const UIntDict &h,
+                               const UIntDict &s, const UIntDict &t,
+                               const Ptr<UIntDict> &G, const Ptr<UIntDict> &H,
+                               const Ptr<UIntDict> &S, const Ptr<UIntDict> &T);
+    std::vector<UIntDict> zz_hensel_lift(const integer_class &p,
+                                         const std::vector<UIntDict> &f_list,
+                                         unsigned int l) const;
+    static void zz_divide(const UIntDict &a, const UIntDict &b,
+                          const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem);
 }; // UIntDict
 
 class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
@@ -131,7 +148,20 @@ public:
 
     //! \return size of the hash
     hash_t __hash__() const;
+    std::set<RCP<const UIntPoly>, RCPBasicKeyLess> zz_zassenhaus() const;
 }; // UIntPoly
+
+// Divides a polynomial in integer domain
+inline void divide_upoly_int(const UIntPoly &a, const UIntPoly &b,
+                      const Ptr<RCP<const UIntPoly>> &quo, const Ptr<RCP<const UIntPoly>> &rem)
+{
+     if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+    UIntDict q, r;
+    UIntDict::zz_divide(a.get_poly(), b.get_poly(), outArg(q), outArg(r));
+    *quo = UIntPoly::from_dict(a.get_var(), std::move(q.dict_));
+    *rem = UIntPoly::from_dict(a.get_var(), std::move(r.dict_));
+}
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
