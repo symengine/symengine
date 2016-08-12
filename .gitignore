@@ -96,6 +96,8 @@ symengine/tests/polynomial/test_uratpoly_piranha
 symengine/tests/polynomial/test_basic_conversions
 symengine/tests/basic/test_fields
 symengine/tests/basic/test_infinity
+symengine/tests/logic/test_logic
+symengine/tests/printing/test_ccode
 
 # Benchmarks executables
 benchmarks/add1

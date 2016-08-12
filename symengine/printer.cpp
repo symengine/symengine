@@ -145,6 +145,39 @@ void StrPrinter::bvisit(const BooleanAtom &x)
     }
 }
 
+void StrPrinter::bvisit(const And &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "And(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Or &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "Or(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Not &x)
+{
+    std::ostringstream s;
+    s << "Not(" << *x.get_arg() << ")";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Contains &x)
 {
     std::ostringstream s;

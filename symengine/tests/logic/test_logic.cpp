@@ -24,6 +24,10 @@ using SymEngine::zero;
 using SymEngine::one;
 using SymEngine::eq;
 using SymEngine::boolean;
+using SymEngine::logical_and;
+using SymEngine::logical_or;
+using SymEngine::logical_not;
+using SymEngine::set_boolean;
 
 TEST_CASE("BooleanAtom : Basic", "[basic]")
 {
@@ -85,4 +89,98 @@ TEST_CASE("Piecewise", "[logic]")
                         {one, contains(x, int3)}});
 
     REQUIRE(eq(*p->diff(x), *q));
+}
+
+TEST_CASE("And, Or : Basic", "[basic]")
+{
+    set_boolean e;
+    REQUIRE(eq(*logical_and(e), *boolTrue));
+    REQUIRE(eq(*logical_or(e), *boolFalse));
+
+    REQUIRE(eq(*logical_and({boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_and({boolFalse}), *boolFalse));
+    REQUIRE(eq(*logical_or({boolFalse}), *boolFalse));
+
+    REQUIRE(eq(*logical_and({boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_and({boolTrue, boolFalse}), *boolFalse));
+    REQUIRE(eq(*logical_and({boolFalse, boolTrue}), *boolFalse));
+    REQUIRE(eq(*logical_and({boolFalse, boolFalse}), *boolFalse));
+
+    REQUIRE(eq(*logical_or({boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_or({boolTrue, boolFalse}), *boolTrue));
+    REQUIRE(eq(*logical_or({boolFalse, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_or({boolFalse, boolFalse}), *boolFalse));
+
+    auto x = symbol("x");
+    auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(5), false, false);
+    auto c1 = contains(x, int1);
+    auto c2 = contains(x, int2);
+
+    auto s1 = logical_and({c1, c2});
+    std::string str = s1->__str__();
+    REQUIRE(str.find("And(") == 0);
+    REQUIRE(str.find(c1->__str__()) != std::string::npos);
+    REQUIRE(str.find(c2->__str__()) != std::string::npos);
+    auto s2 = logical_and({c2, c1});
+    REQUIRE(s1->__hash__() == s2->__hash__());
+    REQUIRE(eq(*s1, *s2));
+    s1 = logical_or({c1, c2});
+    str = s1->__str__();
+    REQUIRE(str.find("Or(") == 0);
+    REQUIRE(str.find(c1->__str__()) != std::string::npos);
+    REQUIRE(str.find(c2->__str__()) != std::string::npos);
+    s2 = logical_or({c2, c1});
+    REQUIRE(s1->__hash__() == s2->__hash__());
+    REQUIRE(eq(*s1, *s2));
+
+    REQUIRE(eq(*logical_and({c1}), *c1));
+    REQUIRE(eq(*logical_or({c1}), *c1));
+
+    REQUIRE(eq(*logical_and({c1, logical_not(c1)}), *boolFalse));
+    REQUIRE(eq(*logical_or({c1, logical_not(c1)}), *boolTrue));
+
+    REQUIRE(eq(*logical_and({c1, boolTrue}), *c1));
+    REQUIRE(eq(*logical_and({c1, boolFalse}), *boolFalse));
+    REQUIRE(eq(*logical_or({c1, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_or({c1, boolFalse}), *c1));
+
+    REQUIRE(eq(*logical_and({c1, c1, c2}), *logical_and({c1, c2})));
+    REQUIRE(eq(*logical_or({c1, c1, c2}), *logical_or({c1, c2})));
+
+    auto y = symbol("y");
+    auto c3 = contains(y, int1);
+    auto c4 = contains(y, int2);
+    REQUIRE(eq(*logical_and({c1, c1, c2}), *logical_and({c1, c2})));
+    REQUIRE(eq(*logical_and({logical_and({c1, c2}), logical_and({c3, c4})}),
+               *logical_and({c1, c2, c3, c4})));
+    REQUIRE(eq(
+        *logical_and(
+            {logical_and({c1, logical_and({c2, logical_and({c3, c4})})}), c2}),
+        *logical_and({c1, c2, c3, c4})));
+    REQUIRE(eq(*logical_or({c2, c1, c2}), *logical_or({c1, c2})));
+    REQUIRE(eq(*logical_or({logical_or({c1, c2}), logical_or({c3, c4})}),
+               *logical_or({c1, c2, c3, c4})));
+    REQUIRE(eq(
+        *logical_or({c1, logical_and({c2, c3, c4}), logical_and({c2, c4}),
+                     logical_and({c2, c3, c4}), c1, logical_and({c2, c4})}),
+        *logical_or({c1, logical_and({c2, c3, c4}), logical_and({c2, c4})})));
+}
+
+TEST_CASE("Not : Basic", "[basic]")
+{
+    auto x = symbol("x");
+    auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(5), false, false);
+    auto c1 = contains(x, int1);
+    auto c2 = contains(x, int2);
+
+    REQUIRE(eq(*logical_not(boolTrue), *boolFalse));
+    REQUIRE(eq(*logical_not(boolFalse), *boolTrue));
+    REQUIRE(logical_not(c1)->__str__() == "Not(Contains(x, [1, 2]))");
+    REQUIRE(eq(*logical_not(logical_and({c1, c2})),
+               *logical_or({logical_not(c1), logical_not(c2)})));
+    REQUIRE(eq(*logical_not(logical_or({c1, c2})),
+               *logical_and({logical_not(c1), logical_not(c2)})));
 }
