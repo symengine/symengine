@@ -201,6 +201,9 @@ struct RCPBasicKeyLessCmp {
     //! true if `x < y`, false otherwise
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
+        std::size_t xh = x->hash(), yh = y->hash();
+        if (xh != yh)
+            return xh < yh;
         if (x->__eq__(*y))
             return false;
         return x->__cmp__(*y) == -1;
@@ -246,15 +249,6 @@ void as_numer_denom(const RCP<const Basic> &x,
 */
 std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 
-} // SymEngine
-
-//! Specialise `std::hash` for Basic.
-namespace std
-{
-template <>
-struct hash<SymEngine::Basic>;
-}
-
 /*! Standard `hash_combine()` function. Example of usage:
 
         std::size_t seed1 = 0;
@@ -272,6 +266,17 @@ struct hash<SymEngine::Basic>;
 */
 template <class T>
 void hash_combine(std::size_t &seed, const T &v);
+
+size_t hash_string(const std::string &);
+
+} // SymEngine
+
+//! Specialise `std::hash` for Basic.
+namespace std
+{
+template <>
+struct hash<SymEngine::Basic>;
+}
 
 //! Inline members and functions
 #include "basic-inl.h"

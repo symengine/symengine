@@ -40,6 +40,7 @@ using SymEngine::rational_class;
 using SymEngine::pi;
 using SymEngine::diff;
 using SymEngine::sdiff;
+using SymEngine::hash_combine;
 
 using namespace SymEngine::literals;
 
@@ -57,20 +58,9 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
-    // Hashes of x and y can but don't have to be different:
-    if (hash_fn(*x) != hash_fn(*y))
-        REQUIRE(x->__neq__(*y));
 
-    std::size_t seed1 = 0;
-    hash_combine<std::string>(seed1, "x");
-    hash_combine<std::string>(seed1, "y");
-
-    std::size_t seed2 = 0;
-    hash_combine<Basic>(seed2, *x);
-    hash_combine<Basic>(seed2, *y);
-
-    // This checks that the Symbols are hashed by their strings:
-    REQUIRE(seed1 == seed2);
+    // This checks that the hash of the Symbols are ordered:
+    REQUIRE(hash_fn(*x) < hash_fn(*y));
 }
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
@@ -164,11 +154,11 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     buffer.str("");
     buffer << vb;
     bool check_vec_str;
-    check_vec_str = buffer.str() == "{x, 3}" or buffer.str() == "{3, x}";
+    check_vec_str = buffer.str() == "{x, 3}";
     REQUIRE(check_vec_str);
     buffer.str("");
     buffer << sb;
-    check_vec_str = buffer.str() == "{2, y}" or buffer.str() == "{y, 2}";
+    check_vec_str = buffer.str() == "{2, y}";
     REQUIRE(check_vec_str);
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};

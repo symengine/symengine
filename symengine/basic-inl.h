@@ -52,9 +52,7 @@ inline std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p)
     out << p.__str__();
     return out;
 }
-} // SymEngine
 
-// global namespace functions
 //! Templatised version to combine hash
 template <class T>
 inline void hash_combine(std::size_t &seed, const T &v)
@@ -62,6 +60,16 @@ inline void hash_combine(std::size_t &seed, const T &v)
     std::hash<T> hasher;
     seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
+
+inline size_t hash_string(const std::string &s)
+{
+    std::size_t seed = 0;
+    for (const char &c: s) {
+        hash_combine<char>(seed, c);
+    }
+    return seed;
+}
+} // SymEngine
 
 // std namespace functions
 namespace std

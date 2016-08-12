@@ -9,8 +9,7 @@ Symbol::Symbol(const std::string &name) : name_{name}
 
 std::size_t Symbol::__hash__() const
 {
-    std::hash<std::string> hash_fn;
-    return hash_fn(name_);
+    return hash_string(name_);
 }
 
 bool Symbol::__eq__(const Basic &o) const
