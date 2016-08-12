@@ -238,7 +238,7 @@ inline RCP<T2> rcp_dynamic_cast(const RCP<T1> &p1)
             return RCP<T2>(p);
         }
     }
-    throw SymEngineException("rcp_dynamic_cast: cannot convert.");
+    throw std::runtime_error("rcp_dynamic_cast: cannot convert.");
 }
 
 template <class T2, class T1>
