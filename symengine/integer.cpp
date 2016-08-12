@@ -6,10 +6,9 @@ namespace SymEngine
 
 std::size_t Integer::__hash__() const
 {
-    std::hash<long long int> hash_fn;
-    // only the least significant bits that fit into "signed long int" are
+    // only the least significant bits that fit into "long long int" are
     // hashed:
-    return hash_fn(((long long int)mp_get_ui(this->i)) * mp_sign(this->i));
+    return ((size_t)mp_get_ui(this->i)) * mp_sign(this->i);
 }
 
 bool Integer::__eq__(const Basic &o) const

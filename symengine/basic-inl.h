@@ -61,11 +61,17 @@ inline void hash_combine(std::size_t &seed, const T &v)
     seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
+template <>
+inline void hash_combine(std::size_t &seed, const size_t &v)
+{
+    seed ^= v + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 inline size_t hash_string(const std::string &s)
 {
     std::size_t seed = 0;
-    for (const char &c: s) {
-        hash_combine<char>(seed, c);
+    for (const char &c : s) {
+        hash_combine<size_t>(seed, c);
     }
     return seed;
 }

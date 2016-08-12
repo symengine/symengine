@@ -59,6 +59,10 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
 
+    std::hash<char> hash_fn2;
+    std::cout << hash_fn(*x) << std::endl;
+    std::cout << hash_fn2('x') << std::endl;
+
     // This checks that the hash of the Symbols are ordered:
     REQUIRE(hash_fn(*x) < hash_fn(*y));
 }

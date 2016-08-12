@@ -4,6 +4,17 @@
 namespace SymEngine
 {
 
+//! Less operator `(<)` using cmp:
+struct PrinterBasicCmp {
+    //! true if `x < y`, false otherwise
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        if (x->__eq__(*y))
+            return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
 std::string ascii_art()
 {
     std::string a = " _____           _____         _         \n"
@@ -288,7 +299,7 @@ void StrPrinter::bvisit(const Add &x)
 {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(
+    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
         x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
@@ -337,8 +348,6 @@ void StrPrinter::bvisit(const Mul &x)
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(
-        x.dict_.begin(), x.dict_.end());
 
     if (eq(*(x.coef_), *minus_one)) {
         o << "-";
@@ -347,7 +356,7 @@ void StrPrinter::bvisit(const Mul &x)
         num = true;
     }
 
-    for (const auto &p : dict) {
+    for (const auto &p : x.dict_) {
         if ((is_a<Integer>(*p.second)
              and rcp_static_cast<const Integer>(p.second)->is_negative())
             || (is_a<Rational>(*p.second)
@@ -640,10 +649,8 @@ void StrPrinter::bvisit(const Derivative &x)
 {
     std::ostringstream o;
     o << "Derivative(" << this->apply(x.get_arg());
-    multiset_basic m1 = x.get_symbols();
-    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(),
-                                                           m1.end());
-    for (const auto &elem : m2) {
+    auto m1 = x.get_symbols();
+    for (const auto &elem : m1) {
         o << ", " << this->apply(elem);
     }
     o << ")";

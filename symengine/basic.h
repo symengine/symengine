@@ -196,20 +196,6 @@ struct RCPBasicKeyLess {
     }
 };
 
-//! Less operator `(<)` using cmp:
-struct RCPBasicKeyLessCmp {
-    //! true if `x < y`, false otherwise
-    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
-    {
-        std::size_t xh = x->hash(), yh = y->hash();
-        if (xh != yh)
-            return xh < yh;
-        if (x->__eq__(*y))
-            return false;
-        return x->__cmp__(*y) == -1;
-    }
-};
-
 // Convenience functions
 //! Checks equality for `a` and `b`
 bool eq(const Basic &a, const Basic &b);

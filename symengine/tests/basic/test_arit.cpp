@@ -303,7 +303,7 @@ TEST_CASE("Mul: arit", "[arit]")
     r1 = mul({i2, pow(x, i2), y, pow(x, real_double(-2.0))});
     REQUIRE(eq(*r1, *r2));
 
-    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLessCmp> s;
+    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLess> s;
     rc1 = Complex::from_two_nums(*one, *one);
     s.insert(rc1);
     rc1 = Complex::from_two_nums(*i2, *one);
