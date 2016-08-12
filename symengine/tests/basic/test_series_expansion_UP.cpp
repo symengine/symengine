@@ -1,7 +1,9 @@
 #include <symengine/series_piranha.h>
 #include "catch.hpp"
 #include <chrono>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;

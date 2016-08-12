@@ -3,7 +3,9 @@
 #include <symengine/functions.h>
 #include <symengine/add.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::Integer;

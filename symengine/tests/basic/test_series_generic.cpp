@@ -33,6 +33,7 @@ using SymEngine::pi;
 using SymEngine::I;
 using SymEngine::UndefinedError;
 using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 using namespace SymEngine::literals;
 
