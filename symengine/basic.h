@@ -255,24 +255,6 @@ template <>
 struct hash<SymEngine::Basic>;
 }
 
-/*! Standard `hash_combine()` function. Example of usage:
-
-        std::size_t seed1 = 0;
-        hash_combine<std::string>(seed1, "x");
-        hash_combine<std::string>(seed1, "y");
-
-     You can use it with any SymEngine class:
-
-
-        RCP<const Symbol> x = symbol("x");
-        RCP<const Symbol> y = symbol("y");
-        std::size_t seed2 = 0;
-        hash_combine<Basic>(seed2, *x);
-        hash_combine<Basic>(seed2, *y);
-*/
-template <class T>
-void hash_combine(std::size_t &seed, const T &v);
-
 //! Inline members and functions
 #include "basic-inl.h"
 
