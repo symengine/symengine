@@ -352,6 +352,73 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
     return f;
 }
 
+void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
+                               const GaloisFieldDict &g,
+                               const Ptr<GaloisFieldDict> &s,
+                               const Ptr<GaloisFieldDict> &t,
+                               const Ptr<GaloisFieldDict> &h)
+{
+    if (f.modulo_ != g.modulo_)
+        throw std::runtime_error("Error: field must be same.");
+    s->dict_.clear();
+    t->dict_.clear();
+    h->dict_.clear();
+    s->modulo_ = t->modulo_ = h->modulo_ = f.modulo_;
+    if (f.dict_.empty() and g.dict_.empty()) {
+        s->dict_.push_back(1_z);
+        return;
+    }
+    integer_class p0, p1;
+    GaloisFieldDict r0, r1;
+    f.gf_monic(p0, outArg(r0));
+    g.gf_monic(p1, outArg(r1));
+    if (f.dict_.empty()) {
+        integer_class inv;
+        mp_invert(inv, p1, f.modulo_);
+        t->dict_.push_back(inv);
+        *h = r1;
+        return;
+    }
+    if (g.dict_.empty()) {
+        integer_class inv;
+        mp_invert(inv, p0, f.modulo_);
+        s->dict_.push_back(inv);
+        *h = r0;
+        return;
+    }
+    integer_class inv0, inv1;
+    mp_invert(inv0, p0, f.modulo_);
+    mp_invert(inv1, p1, f.modulo_);
+    GaloisFieldDict s0, s1, t0, t1;
+    s0.modulo_ = s1.modulo_ = t0.modulo_ = t1.modulo_ = f.modulo_;
+    s0.dict_.push_back(inv0);
+    t1.dict_.push_back(inv1);
+    while (1) {
+        GaloisFieldDict Q, R;
+        r0.gf_div(r1, outArg(Q), outArg(R));
+
+        if (R.dict_.empty())
+            break;
+        r0 = r1;
+        integer_class lc, inv;
+        R.gf_monic(lc, outArg(r1));
+        mp_invert(inv, lc, f.modulo_);
+
+        *s = s0 - s1 * Q;
+        *t = t0 - t1 * Q;
+
+        s0 = s1;
+        s1 = *s;
+        s1 *= inv;
+        t0 = t1;
+        t1 = *t;
+        t1 *= inv;
+    }
+    *s = s1;
+    *t = t1;
+    *h = r1;
+}
+
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
 {
     if (modulo_ != o.modulo_)
