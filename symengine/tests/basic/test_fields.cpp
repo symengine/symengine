@@ -1004,7 +1004,7 @@ TEST_CASE("GaloisFieldDict eval : Basic", "[basic]")
 
 TEST_CASE("GaloisFieldDict gcdex : Basic", "[basic]")
 {
-    GaloisFieldDict d1,d2,s,t,h;
+    GaloisFieldDict d1, d2, s, t, h;
     d1 = GaloisFieldDict::from_vec({}, 11_z);
     d2 = GaloisFieldDict::from_vec({}, 11_z);
     GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
@@ -1061,4 +1061,3 @@ TEST_CASE("GaloisFieldDict gcdex : Basic", "[basic]")
     REQUIRE(t == GaloisFieldDict::from_vec({6_z}, 11_z));
     REQUIRE(h == GaloisFieldDict::from_vec({7_z, 1_z}, 11_z));
 }
-
