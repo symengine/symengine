@@ -108,7 +108,7 @@ RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
         rational_class im_mpq = static_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
-        throw std::runtime_error(
+        throw SymEngineException(
             "Invalid Format: Expected Integer or Rational");
     }
 }

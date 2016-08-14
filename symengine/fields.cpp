@@ -3,6 +3,7 @@
 #include <symengine/constants.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -209,9 +210,9 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                              const Ptr<GaloisFieldDict> &rem) const
 {
     if (modulo_ != o.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     if (o.dict_.empty())
-        throw std::runtime_error("ZeroDivisionError");
+        throw DivisionByZeroError("ZeroDivisionError");
     std::vector<integer_class> dict_out;
     if (dict_.empty()) {
         *quo = GaloisFieldDict::from_vec(dict_out, modulo_);
@@ -338,7 +339,7 @@ void GaloisFieldDict::gf_monic(integer_class &res,
 GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 {
     if (modulo_ != o.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     GaloisFieldDict f = static_cast<GaloisFieldDict>(*this);
     GaloisFieldDict g = o;
     GaloisFieldDict temp_out;
@@ -354,7 +355,7 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
 {
     if (modulo_ != o.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     if (dict_.empty())
         return static_cast<GaloisFieldDict>(*this);
     if (o.dict_.empty())
@@ -480,9 +481,9 @@ GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
                                                 const GaloisFieldDict &h) const
 {
     if (g.modulo_ != h.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     if (g.modulo_ != modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     if (g.dict_.size() == 0)
         return g;
     GaloisFieldDict out
@@ -503,7 +504,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
                                             const unsigned int &n) const
 {
     if (modulo_ != f.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     if (n == 0)
         return GaloisFieldDict::from_vec({1_z}, modulo_);
     GaloisFieldDict in = f;
@@ -560,7 +561,7 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
                                   const std::vector<GaloisFieldDict> &b) const
 {
     if (modulo_ != g.modulo_)
-        throw std::runtime_error("Error: field must be same.");
+        throw SymEngineException("Error: field must be same.");
     unsigned m = g.degree();
     GaloisFieldDict temp_out(*this), out;
     if (this->degree() >= m) {

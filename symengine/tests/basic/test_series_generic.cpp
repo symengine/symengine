@@ -3,6 +3,7 @@
 
 #include <symengine/sets.h>
 #include <symengine/series_generic.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::UExprDict;
 using SymEngine::UnivariateSeries;
@@ -30,6 +31,9 @@ using SymEngine::Number;
 using SymEngine::umap_int_basic;
 using SymEngine::pi;
 using SymEngine::I;
+using SymEngine::UndefinedError;
+using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 using namespace SymEngine::literals;
 
@@ -159,7 +163,7 @@ TEST_CASE("Exponentiation of UExprDict with precision", "[UnivariateSeries]")
     REQUIRE(e == c);
     REQUIRE(f == d);
     REQUIRE(g == one);
-    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), std::runtime_error);
+    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), UndefinedError);
 }
 
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
@@ -178,7 +182,7 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
     UExprDict c({{1, 1}, {2, 1}, {3, 1}});
     REQUIRE_THROWS_AS(
         UnivariateSeries::integrate(a, UnivariateSeries::var("x")),
-        std::runtime_error);
+        NotImplementedError);
     REQUIRE(UnivariateSeries::integrate(b, UnivariateSeries::var("x")) == c);
 }
 

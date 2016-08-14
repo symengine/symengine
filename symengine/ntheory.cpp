@@ -176,7 +176,7 @@ int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
     integer_class sqrtN = mp_sqrt(N);
     unsigned long limit = mp_get_ui(sqrtN);
     if (limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
     while ((p = pi.next_prime()) <= limit) {
@@ -191,7 +191,7 @@ int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
 int _factor_lehman_method(integer_class &rop, const integer_class &n)
 {
     if (n < 21)
-        throw std::runtime_error("Require n >= 21 to use lehman method");
+        throw SymEngineException("Require n >= 21 to use lehman method");
 
     int ret_val = 0;
     integer_class u_bound;
@@ -259,7 +259,7 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
                                const integer_class &c, unsigned B)
 {
     if (n < 4 or B < 3)
-        throw std::runtime_error(
+        throw SymEngineException(
             "Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     integer_class m, _c;
@@ -316,7 +316,7 @@ int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
                                unsigned steps = 10000)
 {
     if (n < 5)
-        throw std::runtime_error("Require n > 4 to use pollard's-rho method");
+        throw SymEngineException("Require n > 4 to use pollard's-rho method");
 
     integer_class u, v, g, m;
     u = s;
@@ -404,7 +404,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
                 ret_val = ecm_factor(get_mpz_t(_f), get_mpz_t(_n), B1, nullptr);
             mp_demote(_f);
             if (not ret_val)
-                throw std::runtime_error(
+                throw SymEngineException(
                     "ECM failed to factor the given number");
         }
     }
@@ -441,7 +441,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list,
     auto limit = mp_get_ui(sqrtN);
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
 
@@ -471,7 +471,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     auto limit = mp_get_ui(sqrtN);
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
 
     unsigned p;
@@ -662,9 +662,9 @@ bool crt(const Ptr<RCP<const Integer>> &R,
          const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
-        throw std::runtime_error("Too few remainders");
+        throw SymEngineException("Too few remainders");
     if (mod.size() == 0)
-        throw std::runtime_error("Moduli vector cannot be empty");
+        throw SymEngineException("Moduli vector cannot be empty");
 
     integer_class m, r, g, s, t;
     m = mod[0]->as_mpz();
@@ -693,9 +693,9 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R,
                     const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
-        throw std::runtime_error("Too few remainders");
+        throw SymEngineException("Too few remainders");
     if (mod.size() == 0)
-        throw std::runtime_error("Moduli vector cannot be empty");
+        throw SymEngineException("Moduli vector cannot be empty");
     integer_class m, _m, r, s, t;
     m = mod[0]->as_mpz();
     R = rem[0];
@@ -1621,7 +1621,7 @@ vec_integer_class quadratic_residues(const Integer &a)
     */
 
     if (a.as_mpz() < 1) {
-        throw std::runtime_error("quadratic_residues: Input must be > 0");
+        throw SymEngineException("quadratic_residues: Input must be > 0");
     }
 
     vec_integer_class residue;
@@ -1645,7 +1645,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 
     integer_class p2 = p.as_mpz();
     if (p2 == 0)
-        throw std::runtime_error(
+        throw SymEngineException(
             "is_quad_residue: Second parameter must be non-zero");
     if (p2 < 0)
         p2 = -p2;
@@ -1713,7 +1713,7 @@ i.e a % mod in set([i**n % mod for i in range(mod)]).
 int mobius(const Integer &a)
 {
     if (a.as_int() <= 0) {
-        throw std::runtime_error("mobius: Integer <= 0");
+        throw SymEngineException("mobius: Integer <= 0");
     }
     map_integer_uint prime_mul;
     bool is_square_free = true;

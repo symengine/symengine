@@ -280,7 +280,7 @@ inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     // following the convention, that leading coefficient should be positive
@@ -293,7 +293,7 @@ inline RCP<const URatPolyPiranha> gcd_upoly(const URatPolyPiranha &a,
                                             const URatPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     pratpoly gcdx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
     // following the convention, that polynomial should be monic
@@ -305,7 +305,7 @@ inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     pintpoly lcmx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     lcmx = (a.get_poly() * b.get_poly()) / lcmx;
@@ -318,7 +318,7 @@ inline RCP<const URatPolyPiranha> lcm_upoly(const URatPolyPiranha &a,
                                             const URatPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     pratpoly lcmx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
     lcmx = (a.get_poly() * b.get_poly()) / lcmx;
@@ -344,7 +344,7 @@ inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b,
                           const Ptr<RCP<const UIntPolyPiranha>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     try {
         pintpoly z;
@@ -360,7 +360,7 @@ inline bool divides_upoly(const URatPolyPiranha &a, const URatPolyPiranha &b,
                           const Ptr<RCP<const URatPolyPiranha>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     try {
         pratpoly z;

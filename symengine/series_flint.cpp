@@ -121,7 +121,7 @@ fqp_t URatPSeriesFlint::convert(const Rational &x)
 
 fqp_t URatPSeriesFlint::convert(const Basic &x)
 {
-    throw std::runtime_error("SeriesFlint::convert not Implemented");
+    throw SymEngineException("SeriesFlint::convert not Implemented");
 }
 
 fqp_t URatPSeriesFlint::pow(const fqp_t &s, int n, unsigned prec)

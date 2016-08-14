@@ -3,6 +3,7 @@
 
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -135,7 +136,7 @@ public:
                 return;
             }
         }
-        throw std::runtime_error("Symbol not in the symbols vector.");
+        throw SymEngineException("Symbol not in the symbols vector.");
     };
 
     void bvisit(const Log &x)
@@ -290,7 +291,7 @@ public:
         } else if (eq(x, *E)) {
             result_ = [=](const std::vector<T> &x) { return std::exp(1); };
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     };
@@ -303,7 +304,7 @@ public:
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

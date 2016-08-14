@@ -7,6 +7,7 @@
 #define SYMENGINE_RATIONAL_H
 
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -140,7 +141,7 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -151,7 +152,7 @@ public:
     inline RCP<const Number> divrat(const Integer &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -159,7 +160,7 @@ public:
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(other.i / this->i);
         }
@@ -174,7 +175,7 @@ public:
         if (neg)
             exp_ = -exp_;
         if (not mp_fits_ulong_p(exp_))
-            throw std::runtime_error("powrat: 'exp' does not fit ulong.");
+            throw SymEngineException("powrat: 'exp' does not fit ulong.");
         unsigned long exp = mp_get_ui(exp_);
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
@@ -225,7 +226,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -256,7 +257,7 @@ public:
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `powrat`
@@ -271,7 +272,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     RCP<const Integer> get_num() const

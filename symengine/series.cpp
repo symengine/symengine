@@ -78,7 +78,7 @@ RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex,
         var->get_name(), prec);
 
 #else
-    throw std::runtime_error("Series reversion is supported only with Piranha");
+    throw SymEngineException("Series reversion is supported only with Piranha");
 #endif
 }
 

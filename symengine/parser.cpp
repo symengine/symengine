@@ -1,6 +1,7 @@
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
 #include <stack>
+#include <symengine/symengine_exception.h>
 #include <cctype>
 #include <cerrno>
 
@@ -136,7 +137,7 @@ class ExpressionParser
 
         // a parse_string is called empty in scenarios like "x+"
         if (l == h)
-            throw std::runtime_error("Expected token!");
+            throw ParseError("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
             if (is_operator(iter)) {
@@ -302,13 +303,12 @@ class ExpressionParser
             if (std::isalpha(expr[0]) or expr[0] == '_') {
                 for (unsigned i = 1; i < expr.length(); ++i) {
                     if (not std::isalnum(expr[i]) and expr[i] != '_') {
-                        throw std::runtime_error(
-                            expr + " is not a symbol or numeric");
+                        throw ParseError(expr + " is not a symbol or numeric");
                     }
                 }
                 return symbol(expr);
             }
-            throw std::runtime_error(expr + " is not a symbol or numeric");
+            throw ParseError(expr + " is not a symbol or numeric");
         }
     }
 
@@ -374,7 +374,7 @@ public:
                     // this should never happen, every '(' should have a
                     // matcihng ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
-                        throw std::runtime_error("Mismatching parantheses!");
+                        throw ParseError("Mismatching parantheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
@@ -409,9 +409,10 @@ public:
                     operator_end[i] = op_stack.top().second;
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
-
+                if (last_char_was_op and operator_error(last_char, x))
+                    throw ParseError("Operator inconsistency!");
                 if (last_char_was_op and operator_error(last_char, x)) {
-                    throw std::runtime_error("Operator inconsistency!");
+                    throw SymEngineException("Operator inconsistency!");
                 }
                 last_char_was_op = true;
 
@@ -425,7 +426,7 @@ public:
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
-            throw std::runtime_error("Mismatching parentheses!");
+            throw ParseError("Mismatching parantheses!");
 
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);

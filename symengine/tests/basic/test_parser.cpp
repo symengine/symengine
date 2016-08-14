@@ -4,6 +4,7 @@
 #include <symengine/eval_double.h>
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -35,6 +36,7 @@ using SymEngine::loggamma;
 using SymEngine::gamma;
 using SymEngine::UIntPoly;
 using SymEngine::from_basic;
+using SymEngine::ParseError;
 
 using namespace SymEngine::literals;
 
@@ -366,23 +368,23 @@ TEST_CASE("Parsing: errors", "[parser]")
     std::string s;
 
     s = "x+y+";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x + (y))";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x + max((3, 2+1)";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "2..33 + 2";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "(2)(3)";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "sin(x y)";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "max(,3,2)";
-    CHECK_THROWS_AS(parse(s), std::runtime_error);
+    CHECK_THROWS_AS(parse(s), ParseError);
 }

@@ -8,6 +8,7 @@
 #define SYMENGINE_INTEGER_H
 
 #include <symengine/number.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -90,7 +91,7 @@ public:
     {
         if (not(mp_fits_ulong_p(other.i))) {
             if (other.i > 0u)
-                throw std::runtime_error(
+                throw SymEngineException(
                     "powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
@@ -128,7 +129,7 @@ public:
 
     virtual RCP<const Number> rsub(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     //! Slower Multiplication
@@ -164,7 +165,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

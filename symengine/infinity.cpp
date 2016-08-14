@@ -3,6 +3,7 @@
 #include <symengine/constants.h>
 #include <symengine/infinity.h>
 #include <symengine/functions.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -34,7 +35,7 @@ RCP<const Infty> Infty::from_int(const int val)
 bool Infty::is_canonical(const RCP<const Number> &num) const
 {
     if (is_a<Complex>(*num) || is_a<ComplexDouble>(*num))
-        throw std::runtime_error("Not implemented for all directions");
+        throw NotImplementedError("Not implemented for all directions");
 
     if (num->is_one() || num->is_zero() || num->is_minus_one())
         return true;
@@ -90,15 +91,15 @@ RCP<const Number> Infty::add(const Number &other) const
 
     if (not eq(*s.get_direction(), *_direction)) {
         if (is_unsigned_infinity() or s.is_unsigned_infinity())
-            throw std::runtime_error("Indeterminate Expression: "
+            throw SymEngineException("Indeterminate Expression: "
                                      "`unsigned_Infty +- Infty` "
                                      "encountered");
         else
-            throw std::runtime_error("Indeterminate Expression: `Infty +- "
+            throw SymEngineException("Indeterminate Expression: `Infty +- "
                                      "Infty` encountered. Directions don't "
                                      "match");
     } else if (is_unsigned_infinity()) {
-        throw std::runtime_error("Indeterminate Expression: "
+        throw SymEngineException("Indeterminate Expression: "
                                  "`unsigned_Infty +- unsigned Infty` "
                                  "encountered");
     } else
@@ -108,7 +109,7 @@ RCP<const Number> Infty::add(const Number &other) const
 RCP<const Number> Infty::mul(const Number &other) const
 {
     if (is_a<Complex>(other))
-        throw std::runtime_error("Multiplation with Complex not implemented");
+        throw NotImplementedError("Multiplation with Complex not implemented");
 
     if (is_a<Infty>(other)) {
         const Infty &s = static_cast<const Infty &>(other);
@@ -120,7 +121,7 @@ RCP<const Number> Infty::mul(const Number &other) const
         else if (other.is_negative())
             return make_rcp<const Infty>(this->_direction->mul(*minus_one));
         else
-            throw std::runtime_error(
+            throw SymEngineException(
                 "Indeterminate Expression: `0 * Infty` encountered");
     }
 }

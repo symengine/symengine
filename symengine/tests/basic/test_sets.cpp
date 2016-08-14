@@ -3,6 +3,7 @@
 #include <symengine/sets.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -31,6 +32,8 @@ using SymEngine::symbol;
 using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
+using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 using SymEngine::boolTrue;
 using SymEngine::boolFalse;
 using SymEngine::Contains;
@@ -78,6 +81,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     r3 = interval(im5, i2, false, false); // [-5, 2]
     r4 = interval(integer(3), i20, false, false);
     REQUIRE(r3->compare(*r4) == -1);
+
     REQUIRE(eq(*r3->set_union(r4), *set_union({r3, r4})));
     REQUIRE(eq(*r4->set_union(r3), *set_union({r3, r4})));
 
@@ -147,8 +151,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[2], *boolean(r5->left_open_)));
     REQUIRE(eq(*r5->get_args()[3], *boolean(r5->right_open_)));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
-    CHECK_THROWS_AS(interval(c1, one), std::runtime_error);
-    CHECK_THROWS_AS(r5->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
+    CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
@@ -173,7 +177,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
     REQUIRE(eq(*r1->contains(zero), *boolFalse));
-    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("UniversalSet : Basic", "[basic]")
@@ -208,7 +212,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(r1->__hash__() == universalset()->__hash__());
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*universalset()) == 0);
-    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("FiniteSet : Basic", "[basic]")

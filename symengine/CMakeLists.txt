@@ -135,6 +135,7 @@ set(HEADERS
     subs.h
     symbol.h
     symengine_assert.h
+    symengine_exception.h
     symengine_rcp.h
     type_codes.inc
     visitor.h

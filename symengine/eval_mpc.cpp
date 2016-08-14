@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_mpc.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPC
 
@@ -293,14 +294,14 @@ public:
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     }
 
     void bvisit(const Gamma &x)
     {
-        throw std::runtime_error("Not implemented");
+        throw SymEngineException("Not implemented");
     }
 
     void bvisit(const Abs &x)
@@ -329,7 +330,7 @@ public:
     // Derivative, ATan2, Gamma
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 
