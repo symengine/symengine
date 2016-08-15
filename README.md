@@ -132,12 +132,15 @@ which is the default).
 
 ### External Libraries
 
-Use `CMAKE_PREFIX_PATH` to specify the prefixes of the external libraries. If the
-headers and libs are not in `<prefix>/include` and `<prefix>/lib` respectively, use 
-`CMAKE_LIBRARY_PATH` and `CMAKE_INCLUDE_PATH`.
+Use `CMAKE_PREFIX_PATH` to specify the prefixes of the external libraries.
 
-If CMake still cannot find the library you can specify the path to the library by
-doing `cmake -DPKG_LIBRARY=/path/libname.so .` where `PKG` should be replaced
+    cmake -DCMAKE_PREFIX_PATH=<prefix1>;<prefix2>
+
+If the headers and libs are not in `<prefix>/include` and `<prefix>/lib` respectively,
+use `CMAKE_LIBRARY_PATH` and `CMAKE_INCLUDE_PATH`.
+
+If CMake still cannot find the library, you can specify the path to the library by
+doing `cmake -DPKG_LIBRARY=/path/libname.so .`, where `PKG` should be replaced
 with the name of the external library (`GMP`, `ARB`, `BFD`, `FLINT`, `MPFR`, ...).
 
 ## Developer Documentation
