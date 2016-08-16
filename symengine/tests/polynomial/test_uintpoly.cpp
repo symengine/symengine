@@ -25,6 +25,7 @@ using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
 using SymEngine::vec_integer_class;
+using SymEngine::RCPBasicKeyLess;
 
 using namespace SymEngine::literals;
 
@@ -261,4 +262,69 @@ TEST_CASE("UIntPoly divides", "[UIntPoly]")
     REQUIRE(divides_upoly(*b, *c, outArg(res)));
     REQUIRE(res->__str__() == "2*x + 2");
     REQUIRE(!divides_upoly(*b, *a, outArg(res)));
+}
+
+TEST_CASE("UIntDict hensel_lift", "[UIntPoly]")
+{
+    UIntDict f = UIntDict::from_vec({-1_z, 0_z, 0_z, 0_z, 1_z});
+    UIntDict g = UIntDict::from_vec({-1_z, 1_z});
+    UIntDict h = UIntDict::from_vec({-2_z, 1_z});
+    UIntDict s = UIntDict::from_vec({2_z, 1_z});
+    UIntDict t = UIntDict::from_vec({1_z, 1_z});
+    std::vector<UIntDict> v = {g, h, s, t};
+    auto out = f.zz_hensel_lift(5_z, v, 4);
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({-1_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({1_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({-182_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({182_z, 1_z}))
+            != out.end());
+    REQUIRE(out.size() == 4);
+
+    UIntDict G, H, S, T;
+    f = UIntDict::from_vec({-1_z, 0_z, 0_z, 0_z, 1_z});
+    g = UIntDict::from_vec({-2_z, -1_z, 2_z, 1_z});
+    h = UIntDict::from_vec({-2_z, 1_z});
+    s = UIntDict::from_vec({-2_z});
+    t = UIntDict::from_vec({-1_z, -2_z, 2_z});
+    UIntDict::zz_hensel_step(5_z, f, g, h, s, t, outArg(G), outArg(H),
+                             outArg(S), outArg(T));
+    REQUIRE(G == UIntDict::from_vec({-7_z, -1_z, 7_z, 1_z}));
+    REQUIRE(H == UIntDict::from_vec({-7_z, 1_z}));
+    REQUIRE(S == UIntDict::from_vec({8_z}));
+    REQUIRE(T == UIntDict::from_vec({-1_z, -12_z, -8_z}));
+}
+TEST_CASE("UIntPoly zassenhaus", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto find_in_set
+        = [](RCP<const UIntPoly> to_find,
+             std::set<RCP<const UIntPoly>, RCPBasicKeyLess> in_set) {
+              for (auto &a : in_set) {
+                  if (eq(*a, *to_find))
+                      return true;
+              }
+              return false;
+          };
+
+    RCP<const UIntPoly> f = UIntPoly::from_vec(x, {1_z, 0_z, -9_z});
+    std::set<RCP<const UIntPoly>, RCPBasicKeyLess> out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {1_z, -3_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, -3_z}), out));
+    REQUIRE(out.size() == 2);
+
+    f = UIntPoly::from_vec(x, {-6_z, 11_z, -6_z, 1_z});
+    out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-2_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-3_z, 1_z}), out));
+    REQUIRE(out.size() == 3);
+
+    f = UIntPoly::from_vec(x, {10_z, 13_z, 10_z, 3_z});
+    out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {2_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {5_z, 4_z, 3_z}), out));
+    REQUIRE(out.size() == 2);
 }

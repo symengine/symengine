@@ -153,9 +153,10 @@ public:
 
 // Divides a polynomial in integer domain
 inline void divide_upoly_int(const UIntPoly &a, const UIntPoly &b,
-                      const Ptr<RCP<const UIntPoly>> &quo, const Ptr<RCP<const UIntPoly>> &rem)
+                             const Ptr<RCP<const UIntPoly>> &quo,
+                             const Ptr<RCP<const UIntPoly>> &rem)
 {
-     if (!(a.get_var()->__eq__(*b.get_var())))
+    if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
     UIntDict q, r;
     UIntDict::zz_divide(a.get_poly(), b.get_poly(), outArg(q), outArg(r));

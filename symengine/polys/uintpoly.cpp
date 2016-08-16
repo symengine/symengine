@@ -128,8 +128,8 @@ UIntDict::zz_hensel_lift(const integer_class &p,
     dt.itrunc(p);
 
     for (unsigned int i = 1; i <= d; ++i) {
-        UIntDict::zz_hensel_step(m, (*this), dg, dh, ds, dt, outArg(dg), outArg(dh),
-                                 outArg(ds), outArg(dt));
+        UIntDict::zz_hensel_step(m, (*this), dg, dh, ds, dt, outArg(dg),
+                                 outArg(dh), outArg(ds), outArg(dt));
         mp_pow_ui(m, m, 2);
     }
 
@@ -139,9 +139,8 @@ UIntDict::zz_hensel_lift(const integer_class &p,
     return res;
 }
 
-
 void UIntDict::zz_divide(const UIntDict &a, const UIntDict &b,
-                      const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem)
+                         const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem)
 {
     auto b_poly = b;
     if (a.size() == 0)
@@ -293,8 +292,8 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
                 T = T_S;
                 G = G.primitive();
                 f = H.primitive();
-                RCP<const UIntPoly> temp = UIntPoly::from_dict(get_var(), std::move(G.dict_));
-                factors.insert(temp);
+                factors.insert(
+                    UIntPoly::from_dict(get_var(), std::move(G.dict_)));
                 b = f.dict_.rbegin()->second;
                 break;
             }
@@ -302,7 +301,9 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         if (it == std::end(subsets))
             s += 1;
     }
-    factors.insert(UIntPoly::from_dict(get_var(), std::move(f.dict_)));
+    if (not f.empty()) {
+        factors.insert(UIntPoly::from_dict(get_var(), std::move(f.dict_)));
+    }
     return factors;
 }
 
