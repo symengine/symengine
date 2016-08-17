@@ -94,13 +94,11 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 {
     if (not is_a_Number(*a))
         return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
-    if ((eq(*start_, *a) and left_open_) or (eq(*end_, *a) and right_open_))
-        return boolean(false);
-    if (eq(*start_, *a) or eq(*end_, *a))
-        return boolean(true);
-    if (eq(*min({end_, a}), *end_))
-        return boolean(false);
-    if (eq(*max({start_, a}), *start_))
+    if (eq(*start_, *a))
+        return boolean(not left_open_);
+    if (eq(*end_, *a))
+        return boolean(not right_open_);
+    if (eq(*min({end_, a}), *end_) or eq(*max({start_, a}), *start_))
         return boolean(false);
     return boolean(true);
 }

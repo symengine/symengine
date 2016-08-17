@@ -52,8 +52,21 @@ TEST_CASE("Contains", "[logic]")
     auto x = symbol("x");
     auto y = symbol("y");
     auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(2), true, true);
 
-    auto p = contains(real_double(1.5), int1);
+    auto p = contains(integer(1), int2);
+    REQUIRE(eq(*p, *boolFalse));
+
+    p = contains(integer(2), int2);
+    REQUIRE(eq(*p, *boolFalse));
+
+    p = contains(integer(1), int1);
+    REQUIRE(eq(*p, *boolTrue));
+
+    p = contains(integer(2), int1);
+    REQUIRE(eq(*p, *boolTrue));
+
+    p = contains(real_double(1.5), int1);
     REQUIRE(eq(*p, *boolTrue));
 
     p = contains(integer(3), int1);
