@@ -52,8 +52,21 @@ TEST_CASE("Contains", "[logic]")
     auto x = symbol("x");
     auto y = symbol("y");
     auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(2), true, true);
 
-    auto p = contains(real_double(1.5), int1);
+    auto p = contains(integer(1), int2);
+    REQUIRE(eq(*p, *boolFalse));
+
+    p = contains(integer(2), int2);
+    REQUIRE(eq(*p, *boolFalse));
+
+    p = contains(integer(1), int1);
+    REQUIRE(eq(*p, *boolTrue));
+
+    p = contains(integer(2), int1);
+    REQUIRE(eq(*p, *boolTrue));
+
+    p = contains(real_double(1.5), int1);
     REQUIRE(eq(*p, *boolTrue));
 
     p = contains(integer(3), int1);
@@ -100,19 +113,12 @@ TEST_CASE("And, Or : Basic", "[basic]")
     REQUIRE(eq(*logical_or(e), *boolFalse));
 
     REQUIRE(eq(*logical_and({boolTrue}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_and({boolFalse}), *boolFalse));
+    REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_or({boolFalse}), *boolFalse));
 
-    REQUIRE(eq(*logical_and({boolTrue, boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_and({boolTrue, boolFalse}), *boolFalse));
-    REQUIRE(eq(*logical_and({boolFalse, boolTrue}), *boolFalse));
-    REQUIRE(eq(*logical_and({boolFalse, boolFalse}), *boolFalse));
-
-    REQUIRE(eq(*logical_or({boolTrue, boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_or({boolTrue, boolFalse}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolFalse, boolTrue}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolFalse, boolFalse}), *boolFalse));
 
     auto x = symbol("x");
     auto int1 = interval(integer(1), integer(2), false, false);
