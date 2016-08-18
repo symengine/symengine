@@ -229,6 +229,172 @@ RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex)
     return P::from_container(
         gen, _basic_to_upoly<typename P::container_type, P>(exp, gen));
 }
+
+template <typename P, typename V>
+class BasicToMPolyBase : public BaseVisitor<V>
+{
+public:
+    using Dict = typename P::container_type;
+    using Vec = typename Dict::vec_type;
+    Dict dict;
+    set_basic gens;
+    vec_basic gens_vec;
+    umap_basic_basic gens_pow;
+    umap_basic_uint gens_map;
+
+    Dict apply(const Basic &b, const set_basic &gens_)
+    {
+        gens = gens_;
+        gens_vec.insert(gens_vec.begin(), gens.begin(), gens.end());
+
+        RCP<const Basic> genpow, genbase;
+        unsigned int i = 0;
+
+        for (auto it : gens) {
+            genpow = one;
+            genbase = it;
+            if (is_a<const Pow>(*it)) {
+                genpow = rcp_static_cast<const Pow>(it)->get_exp();
+                genbase = rcp_static_cast<const Pow>(it)->get_base();
+            }
+            gens_pow[genbase] = genpow;
+            gens_map[it] = i++;
+        }
+
+        b.accept(*this);
+        return std::move(dict);
+    }
+
+    void dict_set(Vec pow, const Basic &x)
+    {
+        static_cast<V *>(this)->dict_set(pow, x);
+    }
+
+    // void bvisit(const Pow &x)
+    // {
+    //     if (is_a<const Integer>(*x.get_exp())) {
+    //         int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+    //         if (i > 0) {
+    //             dict
+    //                 = pow_upoly(*P::from_container(gen, _basic_to_upoly<D,
+    //                 P>(
+    //                                                         x.get_base(),
+    //                                                         gen)),
+    //                             i)
+    //                       ->get_poly();
+    //             return;
+    //         }
+    //     }
+
+    //     RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
+    //     if (is_a<const Pow>(*gen)) {
+    //         genbase = static_cast<const Pow &>(*gen).get_base();
+    //         genpow = static_cast<const Pow &>(*gen).get_exp();
+    //     }
+
+    //     if (eq(*genbase, *x.get_base())) {
+
+    //         set_basic expos;
+
+    //         if (is_a<const Add>(*x.get_exp())) {
+    //             RCP<const Add> addx = rcp_static_cast<const
+    //             Add>(x.get_exp());
+    //             for (auto const &it : addx->dict_)
+    //                 expos.insert(mul(it.first, it.second));
+    //             if (not addx->coef_->is_zero())
+    //                 expos.insert(addx->coef_);
+    //         } else {
+    //             expos.insert(x.get_exp());
+    //         }
+
+    //         int powr = 0;
+    //         for (auto const &it : expos) {
+    //             tmp = div(it, genpow);
+    //             if (is_a<const Integer>(*tmp)) {
+    //                 RCP<const Integer> i = rcp_static_cast<const
+    //                 Integer>(tmp);
+    //                 if (i->is_positive()) {
+    //                     powr = i->as_int();
+    //                     continue;
+    //                 }
+    //             }
+    //             coef = mul(coef, pow(genbase, it));
+    //         }
+    //         dict_set(powr, *coef);
+
+    //     } else {
+    //         dict_set(0, x);
+    //     }
+    // }
+
+    void bvisit(const Add &x)
+    {
+        Dict res = apply(*x.coef_, gens);
+        for (auto const &it : x.dict_)
+            res += apply(*it.first, gens) * apply(*it.second, gens);
+        dict = std::move(res);
+    }
+
+    void bvisit(const Mul &x)
+    {
+        Dict res = apply(*x.coef_, gens);
+        for (auto const &it : x.dict_)
+            res *= apply(*pow(it.first, it.second), gens);
+        dict = std::move(res);
+    }
+
+    void bvisit(const Integer &x)
+    {
+        integer_class i = x.i;
+        Vec v(gens.size(), 0);
+        if (i != 0)
+            dict = P::container_from_dict(gens_vec, {{v, i}});
+    }
+
+    void bvisit(const Basic &x)
+    {
+        RCP<const Basic> powr;
+        Vec v(gens.size(), 0);
+
+        auto it = gens_pow.find(x.rcp_from_this());
+        if (it != gens_pow.end()) {
+            powr = div(one, it->second);
+            if (is_a<const Integer>(*powr)) {
+                int i = rcp_static_cast<const Integer>(powr)->as_int();
+                if (i > 0) {
+                    // can be optimized
+                    v[gens_map[pow(it->first, it->second)]] = i;
+                    dict = P::container_from_dict(
+                        gens_vec, {{v, typename P::coef_type(1)}});
+                    return;
+                }
+            }
+        }
+
+        dict_set(v, x);
+    }
+};
+
+class BasicToMIntPoly : public BasicToMPolyBase<MIntPoly, BasicToMIntPoly>
+{
+public:
+    using BasicToMPolyBase<MIntPoly, BasicToMIntPoly>::bvisit;
+    using BasicToMPolyBase<MIntPoly, BasicToMIntPoly>::apply;
+
+    void bvisit(const Rational &x)
+    {
+        throw std::runtime_error("Non-integer found");
+    }
+
+    void dict_set(vec_uint pow, const Basic &x)
+    {
+        if (is_a<const Integer>(x))
+            dict = MIntPoly::container_from_dict(
+                gens_vec, {{pow, static_cast<const Integer &>(x).i}});
+        else
+            throw std::runtime_error("Non-integer found");
+    }
+};
 }
 
 #endif
