@@ -1,5 +1,6 @@
 #include <symengine/polys/uintpoly.h>
 #include <symengine/fields.h>
+#include <numeric>
 
 namespace SymEngine
 {
@@ -17,45 +18,6 @@ void UIntDict::itrunc(const integer_class &mod)
     }
 }
 
-void UIntDict::zz_hensel_step(const integer_class &m, const UIntDict &f,
-                              const UIntDict &g, const UIntDict &h,
-                              const UIntDict &s, const UIntDict &t,
-                              const Ptr<UIntDict> &G, const Ptr<UIntDict> &H,
-                              const Ptr<UIntDict> &S, const Ptr<UIntDict> &T)
-{
-    UIntDict q, r;
-    integer_class M;
-    mp_pow_ui(M, m, 2);
-
-    auto e = f - g * h;
-    e.itrunc(M);
-
-    zz_divide(h, s * e, outArg(q), outArg(r));
-
-    q.itrunc(M);
-    r.itrunc(M);
-
-    UIntDict u = t * e + q * g;
-    *G = (g + u);
-    (*G).itrunc(M);
-    *H = (h + r);
-    (*H).itrunc(M);
-
-    u = s * (*G) + t * (*H);
-    auto b = (u - 1);
-    b.itrunc(M);
-
-    zz_divide(*H, s * b, outArg(q), outArg(r));
-    q.itrunc(M);
-    r.itrunc(M);
-
-    u = t * b + q * (*G);
-    *S = (s - r);
-    (*S).itrunc(M);
-    *T = (t - u);
-    (*T).itrunc(M);
-}
-
 integer_class UIntDict::l1_norm() const
 {
     integer_class out(0_z);
@@ -70,73 +32,12 @@ UIntDict UIntDict::primitive() const
     integer_class gcd(0_z);
     UIntDict out(dict_);
     for (auto &a : dict_) {
-        mp_gcd(gcd, gcd, mp_abs(a.second));
+        mp_gcd(gcd, gcd, a.second);
     }
     for (auto &a : out.dict_) {
         a.second /= gcd;
     }
     return out;
-}
-
-std::vector<UIntDict>
-UIntDict::zz_hensel_lift(const integer_class &p,
-                         const std::vector<UIntDict> &f_list,
-                         unsigned int l) const
-{
-    std::vector<UIntDict> res;
-    size_t r = f_list.size();
-    auto lc = get_lc();
-
-    if (r == 1) {
-        integer_class g, r, s, pl;
-        mp_pow_ui(pl, p, l);
-        mp_gcdext(g, r, s, lc, pl);
-        UIntDict F((*this) * r);
-        F.itrunc(pl);
-        res.push_back(F);
-        return res;
-    }
-
-    std::vector<UIntDict> sub1, sub2;
-    integer_class m(p);
-    size_t k(r / 2);
-    auto d = std::ceil(std::log2(l)); // TODO
-    auto g = GaloisFieldDict::from_vec({lc}, p);
-
-    for (unsigned i = 0; i < k; ++i) {
-        g *= GaloisFieldDict(f_list[i].dict_, p);
-        sub1.push_back(f_list[i]);
-    }
-
-    sub2.push_back(f_list[k]);
-    auto h = GaloisFieldDict(f_list[k].dict_, p);
-    for (unsigned i = k + 1; i < f_list.size(); ++i) {
-        h *= GaloisFieldDict(f_list[i].dict_, p);
-        sub2.push_back(f_list[i]);
-    }
-
-    GaloisFieldDict temp2, s, t;
-    GaloisFieldDict::gf_gcdex(g, h, outArg(s), outArg(t), outArg(temp2));
-
-    UIntDict dg = UIntDict::from_vec(g.dict_);
-    dg.itrunc(p);
-    UIntDict dh = UIntDict::from_vec(h.dict_);
-    dh.itrunc(p);
-    UIntDict ds = UIntDict::from_vec(s.dict_);
-    ds.itrunc(p);
-    UIntDict dt = UIntDict::from_vec(t.dict_);
-    dt.itrunc(p);
-
-    for (unsigned int i = 1; i <= d; ++i) {
-        UIntDict::zz_hensel_step(m, (*this), dg, dh, ds, dt, outArg(dg),
-                                 outArg(dh), outArg(ds), outArg(dt));
-        mp_pow_ui(m, m, 2);
-    }
-
-    res = dg.zz_hensel_lift(p, sub1, l);
-    auto temp = dh.zz_hensel_lift(p, sub2, l);
-    res.insert(res.end(), temp.begin(), temp.end());
-    return res;
 }
 
 void UIntDict::zz_divide(const UIntDict &a, const UIntDict &b,
@@ -179,9 +80,9 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     auto C = std::pow(n + 1, 2 * n) * std::pow(A, 2 * n - 1);
     auto gamma = std::ceil(2 * std::log2(C));
     auto bound = integer_class(int(2 * gamma * std::log(gamma)));
-    std::vector<std::pair<integer_class,
-                          std::set<GaloisFieldDict, GaloisFieldDict::DictLess>>>
-        a;
+    std::pair<integer_class,
+              std::set<GaloisFieldDict, GaloisFieldDict::DictLess>> fsqf;
+    size_t counter = 0;
     for (integer_class i = 3_z; i <= bound; mp_nextprime(i, i)) {
         if (b % i == 0)
             continue;
@@ -191,32 +92,25 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         integer_class temp;
         F.gf_monic(temp, outArg(F));
         auto fsqfx = F.gf_zassenhaus();
-        a.push_back({i, fsqfx});
-        if (fsqfx.size() < 15 or a.size() > 4)
+        if (fsqfx.size() < fsqf.second.size() or fsqf.second.empty()) {
+            fsqf.first = i;
+            fsqf.second = fsqfx;
+            ++counter;
+        }
+        if (fsqfx.size() < 15 or counter > 4)
             break;
     }
-    auto fsqf = *(std::min_element(
-        a.begin(), a.end(),
-        [](const std::pair<integer_class,
-                           std::set<GaloisFieldDict, GaloisFieldDict::DictLess>>
-               &lhs,
-           const std::pair<integer_class,
-                           std::set<GaloisFieldDict, GaloisFieldDict::DictLess>>
-               &rhs) { return lhs.second.size() < rhs.second.size(); }));
     auto l = std::ceil(std::log(2 * B + 1) / std::log(mp_get_ui(fsqf.first)));
-    std::vector<UIntDict> modular;
-    for (auto &f : fsqf.second) {
-        UIntDict temp = UIntDict::from_vec(f.dict_);
-        temp.itrunc(fsqf.first);
-        modular.push_back(temp);
-    }
+
+    integer_class pl;
+    mp_pow_ui(pl, fsqf.first, l);
+    GaloisFieldDict gf(this->poly_.dict_, pl);
     std::vector<UIntDict> g
-        = this->get_poly().zz_hensel_lift(fsqf.first, modular, l);
+        = GaloisFieldDict::zz_hensel_lift(gf, fsqf.first, fsqf.second, l);
+
     std::vector<unsigned int> T(g.size());
     std::iota(std::begin(T), std::end(T), 0);
     unsigned int s = 1;
-    integer_class pl;
-    mp_pow_ui(pl, fsqf.first, l);
 
     auto _subsets = [](std::vector<unsigned int> in_set, unsigned int size) {
         std::vector<std::vector<unsigned int>> out;

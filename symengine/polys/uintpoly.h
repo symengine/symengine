@@ -127,14 +127,6 @@ public:
     void itrunc(const integer_class &mod);
     UIntDict primitive() const;
     integer_class l1_norm() const;
-    static void zz_hensel_step(const integer_class &m, const UIntDict &f,
-                               const UIntDict &g, const UIntDict &h,
-                               const UIntDict &s, const UIntDict &t,
-                               const Ptr<UIntDict> &G, const Ptr<UIntDict> &H,
-                               const Ptr<UIntDict> &S, const Ptr<UIntDict> &T);
-    std::vector<UIntDict> zz_hensel_lift(const integer_class &p,
-                                         const std::vector<UIntDict> &f_list,
-                                         unsigned int l) const;
     static void zz_divide(const UIntDict &a, const UIntDict &b,
                           const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem);
 }; // UIntDict

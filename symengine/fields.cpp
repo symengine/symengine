@@ -408,11 +408,9 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
         *t = t0 - t1 * Q;
 
         s0 = s1;
-        s1 = *s;
-        s1 *= inv;
+        s1 = (*s) * inv;
         t0 = t1;
-        t1 = *t;
-        t1 *= inv;
+        t1 = (*t) * inv;
     }
     *s = s1;
     *t = t1;
@@ -930,5 +928,124 @@ GaloisFieldDict::gf_factor() const
             factors.insert({f, a.second});
     }
     return std::make_pair(lc, factors);
+}
+
+void GaloisFieldDict::zz_hensel_step(
+    const integer_class &m, const GaloisFieldDict &ff, GaloisFieldDict &g,
+    GaloisFieldDict &h, GaloisFieldDict &s, GaloisFieldDict &t,
+    const Ptr<GaloisFieldDict> &G, const Ptr<GaloisFieldDict> &H,
+    const Ptr<GaloisFieldDict> &S, const Ptr<GaloisFieldDict> &T)
+{
+    GaloisFieldDict q, r;
+    integer_class M;
+
+    mp_pow_ui(M, m, 2);
+    auto f = GaloisFieldDict::from_vec(ff.dict_, M);
+    g.modulo_ = M;
+    h.modulo_ = M;
+    s.modulo_ = M;
+    t.modulo_ = M;
+
+    auto e = f - (g * h);
+
+    (s * e).gf_div(h, outArg(q), outArg(r));
+    auto u = (t * e) + (q * g);
+    *G = (g + u);
+    *H = (h + r);
+
+    u = s * (*G) + t * (*H);
+    GaloisFieldDict b(u);
+    b.dict_[0] -= 1_z;
+    (s * b).gf_div(*H, outArg(q), outArg(r));
+    u = t * b + q * (*G);
+    *S = (s - r);
+    *T = (t - u);
+}
+
+integer_class GaloisFieldDict::get_lc() const
+{
+    if (dict_.empty())
+        return 0_z;
+    return *(dict_.rbegin());
+}
+
+void GaloisFieldDict::itrunc()
+{
+    for (auto it = dict_.begin(); it != dict_.end(); ++it) {
+        if (*it > modulo_ / 2)
+            *it -= modulo_;
+    }
+}
+
+std::vector<UIntDict>
+GaloisFieldDict::zz_hensel_lift(const UIntDict &f, const integer_class &p,
+                                const std::vector<UIntDict> &f_list,
+                                unsigned int l)
+{
+    integer_class pl;
+    mp_pow_ui(pl, p, l);
+    GaloisFieldDict ff(f.dict_, pl);
+    std::set<GaloisFieldDict, DictLess> s;
+    for (auto &a : f_list) {
+        s.insert(GaloisFieldDict(a.dict_, p));
+    }
+    return GaloisFieldDict::zz_hensel_lift(ff, p, s, l);
+}
+
+std::vector<UIntDict> GaloisFieldDict::zz_hensel_lift(
+    const GaloisFieldDict &f, const integer_class &p,
+    const std::set<GaloisFieldDict, GaloisFieldDict::DictLess> &f_list,
+    unsigned int l)
+{
+    std::vector<UIntDict> res;
+    size_t r = f_list.size();
+    auto lc = f.get_lc();
+
+    if (r == 1) {
+        integer_class g, r, s, pl;
+        mp_pow_ui(pl, p, l);
+        mp_gcdext(g, r, s, lc, pl);
+        UIntDict F = UIntDict::from_vec(f.dict_);
+        F *= r;
+        F.itrunc(pl);
+        res.push_back(F);
+        return res;
+    }
+
+    integer_class m(p);
+    size_t k(r / 2);
+    auto d = std::ceil(std::log2(l));
+    auto g = GaloisFieldDict::from_vec({lc}, p);
+    auto it_k = std::next(f_list.begin(), k);
+
+    for (auto iter = f_list.begin(); iter != it_k; ++iter) {
+        g *= (*iter);
+    }
+
+    auto h = GaloisFieldDict::from_vec({1_z}, p);
+
+    for (auto iter = it_k; iter != f_list.end(); ++iter) {
+        h *= (*iter);
+    }
+
+    std::set<GaloisFieldDict, GaloisFieldDict::DictLess> sub1(f_list.begin(),
+                                                              it_k),
+        sub2(it_k, f_list.end());
+
+    GaloisFieldDict temp2, s, t;
+    GaloisFieldDict::gf_gcdex(g, h, outArg(s), outArg(t), outArg(temp2));
+    g.itrunc();
+    h.itrunc();
+    s.itrunc();
+    t.itrunc();
+    for (unsigned int i = 1; i <= d; ++i) {
+        GaloisFieldDict::zz_hensel_step(m, f, g, h, s, t, outArg(g), outArg(h),
+                                        outArg(s), outArg(t));
+        mp_pow_ui(m, m, 2);
+    }
+    res = zz_hensel_lift(g, p, sub1, l);
+    auto temp = zz_hensel_lift(h, p, sub2, l);
+    res.insert(res.end(), temp.begin(), temp.end());
+    return res;
 }
 }

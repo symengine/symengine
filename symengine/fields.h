@@ -150,6 +150,22 @@ public:
     std::pair<integer_class,
               std::set<std::pair<GaloisFieldDict, unsigned>, DictLess>>
     gf_factor() const;
+    static void
+    zz_hensel_step(const integer_class &m, const GaloisFieldDict &ff,
+                   GaloisFieldDict &g, GaloisFieldDict &h, GaloisFieldDict &s,
+                   GaloisFieldDict &t, const Ptr<GaloisFieldDict> &G,
+                   const Ptr<GaloisFieldDict> &H, const Ptr<GaloisFieldDict> &S,
+                   const Ptr<GaloisFieldDict> &T);
+    static std::vector<UIntDict> zz_hensel_lift(
+        const GaloisFieldDict &f, const integer_class &p,
+        const std::set<GaloisFieldDict, GaloisFieldDict::DictLess> &f_list,
+        unsigned int l);
+    std::vector<UIntDict> zz_hensel_lift(const UIntDict &f,
+                                         const integer_class &p,
+                                         const std::vector<UIntDict> &f_list,
+                                         unsigned int l);
+    integer_class get_lc() const;
+    void itrunc();
 
     GaloisFieldDict &operator=(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
     {
@@ -292,10 +308,12 @@ public:
     static GaloisFieldDict mul(const GaloisFieldDict &a,
                                const GaloisFieldDict &b);
 
-    friend GaloisFieldDict operator*(const GaloisFieldDict &a,
-                                     const GaloisFieldDict &b)
+    template <class T>
+    friend GaloisFieldDict operator*(const GaloisFieldDict &a, const T &b)
     {
-        return GaloisFieldDict::mul(a, b);
+        GaloisFieldDict c = a;
+        c *= b;
+        return c;
     }
 
     GaloisFieldDict &operator*=(const integer_class &other)
