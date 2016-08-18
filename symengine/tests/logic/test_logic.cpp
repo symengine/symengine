@@ -113,19 +113,12 @@ TEST_CASE("And, Or : Basic", "[basic]")
     REQUIRE(eq(*logical_or(e), *boolFalse));
 
     REQUIRE(eq(*logical_and({boolTrue}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_and({boolFalse}), *boolFalse));
+    REQUIRE(eq(*logical_or({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_or({boolFalse}), *boolFalse));
 
-    REQUIRE(eq(*logical_and({boolTrue, boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_and({boolTrue, boolFalse}), *boolFalse));
-    REQUIRE(eq(*logical_and({boolFalse, boolTrue}), *boolFalse));
-    REQUIRE(eq(*logical_and({boolFalse, boolFalse}), *boolFalse));
-
-    REQUIRE(eq(*logical_or({boolTrue, boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_or({boolTrue, boolFalse}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolFalse, boolTrue}), *boolTrue));
-    REQUIRE(eq(*logical_or({boolFalse, boolFalse}), *boolFalse));
 
     auto x = symbol("x");
     auto int1 = interval(integer(1), integer(2), false, false);
