@@ -1,5 +1,6 @@
 #include <symengine/polys/uintpoly.h>
 #include <symengine/fields.h>
+#include <symengine/ntheory.h>
 #include <numeric>
 
 namespace SymEngine
@@ -79,11 +80,14 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         = std::abs(int(std::sqrt(n + 1)) * std::pow(2, n) * A * mp_get_si(b));
     auto C = std::pow(n + 1, 2 * n) * std::pow(A, 2 * n - 1);
     auto gamma = std::ceil(2 * std::log2(C));
-    auto bound = integer_class(int(2 * gamma * std::log(gamma)));
+    unsigned int bound = 2 * gamma * std::log(gamma);
     std::pair<integer_class,
               std::set<GaloisFieldDict, GaloisFieldDict::DictLess>> fsqf;
     size_t counter = 0;
-    for (integer_class i = 3_z; i <= bound; mp_nextprime(i, i)) {
+    Sieve::iterator pi(bound);
+    pi.next_prime(); // To avoid 2
+    unsigned i;
+    while ((i = pi.next_prime()) <= bound) {
         if (b % i == 0)
             continue;
         auto F = GaloisFieldDict(this->poly_.dict_, i);
