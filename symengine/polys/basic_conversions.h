@@ -11,7 +11,7 @@ namespace SymEngine
 // `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
 RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
-                        const RCP<const Basic> &gen, bool ex = false);
+                              const RCP<const Basic> &gen, bool ex = false);
 // convert a `basic`, to a UPoly `P` (eg. UIntPoly, UExprPoly, UIntPolyFlint)
 // after finding out the generator automatically. Throws, if number
 // of generators found != 1, or poly construction not possible.
@@ -204,7 +204,7 @@ _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 
 template <typename P>
 RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
-                        const RCP<const Basic> &gen, bool ex)
+                              const RCP<const Basic> &gen, bool ex)
 {
     RCP<const Basic> exp = basic;
     if (ex)
@@ -229,6 +229,10 @@ RCP<const P> upoly_from_basic(const RCP<const Basic> &basic, bool ex)
     return P::from_container(
         gen, _basic_to_upoly<typename P::container_type, P>(exp, gen));
 }
+
+template <typename P>
+enable_if_t<std::is_same<MIntPoly, P>::value, typename P::container_type>
+_basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens);
 
 template <typename P, typename V>
 class BasicToMPolyBase : public BaseVisitor<V>
@@ -269,62 +273,54 @@ public:
         static_cast<V *>(this)->dict_set(pow, x);
     }
 
-    // void bvisit(const Pow &x)
-    // {
-    //     if (is_a<const Integer>(*x.get_exp())) {
-    //         int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
-    //         if (i > 0) {
-    //             dict
-    //                 = pow_upoly(*P::from_container(gen, _basic_to_upoly<D,
-    //                 P>(
-    //                                                         x.get_base(),
-    //                                                         gen)),
-    //                             i)
-    //                       ->get_poly();
-    //             return;
-    //         }
-    //     }
+    void bvisit(const Pow &x)
+    {
+        if (is_a<const Integer>(*x.get_exp())) {
+            int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+            if (i > 0) {
+                dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
+                return;
+            }
+        }
 
-    //     RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
-    //     if (is_a<const Pow>(*gen)) {
-    //         genbase = static_cast<const Pow &>(*gen).get_base();
-    //         genpow = static_cast<const Pow &>(*gen).get_exp();
-    //     }
+        Vec zero_v(gens.size(), 0);
+        RCP<const Basic> coef = one, tmp;
+        auto ite = gens_pow.find(x.rcp_from_this());
 
-    //     if (eq(*genbase, *x.get_base())) {
+        if (ite != gens_pow.end()) {
 
-    //         set_basic expos;
+            set_basic expos;
 
-    //         if (is_a<const Add>(*x.get_exp())) {
-    //             RCP<const Add> addx = rcp_static_cast<const
-    //             Add>(x.get_exp());
-    //             for (auto const &it : addx->dict_)
-    //                 expos.insert(mul(it.first, it.second));
-    //             if (not addx->coef_->is_zero())
-    //                 expos.insert(addx->coef_);
-    //         } else {
-    //             expos.insert(x.get_exp());
-    //         }
+            if (is_a<const Add>(*x.get_exp())) {
+                RCP<const Add> addx = rcp_static_cast<const Add>(x.get_exp());
+                for (auto const &it : addx->dict_)
+                    expos.insert(mul(it.first, it.second));
+                if (not addx->coef_->is_zero())
+                    expos.insert(addx->coef_);
+            } else {
+                expos.insert(x.get_exp());
+            }
 
-    //         int powr = 0;
-    //         for (auto const &it : expos) {
-    //             tmp = div(it, genpow);
-    //             if (is_a<const Integer>(*tmp)) {
-    //                 RCP<const Integer> i = rcp_static_cast<const
-    //                 Integer>(tmp);
-    //                 if (i->is_positive()) {
-    //                     powr = i->as_int();
-    //                     continue;
-    //                 }
-    //             }
-    //             coef = mul(coef, pow(genbase, it));
-    //         }
-    //         dict_set(powr, *coef);
+            int powr = 0;
+            for (auto const &it : expos) {
+                tmp = div(it, ite->second);
+                if (is_a<const Integer>(*tmp)) {
+                    RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
+                    if (i->is_positive()) {
+                        powr = i->as_int();
+                        continue;
+                    }
+                }
+                coef = mul(coef, pow(ite->first, it));
+            }
 
-    //     } else {
-    //         dict_set(0, x);
-    //     }
-    // }
+            zero_v[gens_map[pow(ite->first, ite->second)]] = powr;
+            dict_set(zero_v, *coef);
+
+        } else {
+            dict_set(zero_v, x);
+        }
+    }
 
     void bvisit(const Add &x)
     {
@@ -353,7 +349,7 @@ public:
     void bvisit(const Basic &x)
     {
         RCP<const Basic> powr;
-        Vec v(gens.size(), 0);
+        Vec zero_v(gens.size(), 0);
 
         auto it = gens_pow.find(x.rcp_from_this());
         if (it != gens_pow.end()) {
@@ -362,15 +358,15 @@ public:
                 int i = rcp_static_cast<const Integer>(powr)->as_int();
                 if (i > 0) {
                     // can be optimized
-                    v[gens_map[pow(it->first, it->second)]] = i;
+                    zero_v[gens_map[pow(it->first, it->second)]] = i;
                     dict = P::container_from_dict(
-                        gens, {{v, typename P::coef_type(1)}});
+                        gens, {{zero_v, typename P::coef_type(1)}});
                     return;
                 }
             }
         }
 
-        dict_set(v, x);
+        dict_set(zero_v, x);
     }
 };
 
@@ -404,7 +400,8 @@ _basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
 }
 
 template <typename P>
-RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, set_basic &gens, bool ex = false)
+RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, set_basic &gens,
+                              bool ex = false)
 {
     RCP<const Basic> exp = basic;
     if (ex)

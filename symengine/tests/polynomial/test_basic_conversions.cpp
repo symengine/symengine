@@ -563,47 +563,56 @@ TEST_CASE("basic_to_poly MInt", "[b2poly]")
     // // x + y
     // basic = add(x, y);
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // x + 1/2
     // basic = add(x, hf);
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // x/2 + 1
     // basic = add(div(x, i2), one);
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // x + 1/x
     // basic = add(x, div(one, x));
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // xy + 1
     // basic = add(mul(x, y), one);
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // x**(1/2) + 1
     // basic = add(pow(x, hf), one);
     // gen = x;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // 3**x + 2**x
     // basic = add(pow(i3, x), pow(i2, x));
     // gen = twopx;
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // 2**(2**(2x + 1)) + 2**(2**x)
     // basic = add(pow(i2, twopx), pow(i2, pow(i2, add(mul(i2, x), one))));
     // gen = pow(i2, twopx);
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // 9**(x + (1/3))
     // basic = pow(i9, add(div(one, i3), x));
     // gen = pow(i9, x);
-    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen),
+    // SymEngineException);
 
     // // x + y
     // basic = add(x, y);

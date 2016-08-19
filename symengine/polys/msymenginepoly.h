@@ -131,7 +131,7 @@ public:
     }
 
     static Wrapper mul(const Wrapper &a, const Wrapper &b)
-    {   
+    {
         SYMENGINE_ASSERT(a.vec_size == b.vec_size)
 
         Wrapper p(a.vec_size);
@@ -165,7 +165,7 @@ public:
         Wrapper tmp = a, res(a.vec_size);
 
         Vec zero_v(a.vec_size, 0);
-        res.insert({zero_v, 1});
+        res.dict_.insert({zero_v, 1});
 
         while (p != 1) {
             if (p % 2 == 0) {
@@ -468,14 +468,11 @@ public:
 };
 
 // reconciles the positioning of the exponents in the vectors in the
-// Dict dict_ of the arguments
-// with the positioning of the exponents in the correspondng vectors of the
-// output of the function.
-// f1 and f2 are vectors whose indices are the positions in the arguments and
-// whose values are the
-// positions in the output.  set_basic s is the set of symbols of the output,
-// and
-// s1 and s2 are the sets of the symbols of the inputs.
+// Dict dict_ of the arguments with the positioning of the exponents in
+// the correspondng vectors of the output of the function. f1 and f2 are
+// vectors whose indices are the positions in the arguments and whose values
+// are the positions in the output.  set_basic s is the set of symbols of
+// the output, and s1 and s2 are the sets of the symbols of the inputs.
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 
