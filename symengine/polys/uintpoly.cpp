@@ -28,17 +28,17 @@ integer_class UIntDict::l1_norm() const
     return out;
 }
 
-UIntDict UIntDict::primitive() const
+integer_class UIntDict::primitive(const Ptr<UIntDict> &res) const
 {
     integer_class gcd(0_z);
-    UIntDict out(dict_);
+    *res = dict_;
     for (auto &a : dict_) {
         mp_gcd(gcd, gcd, a.second);
     }
-    for (auto &a : out.dict_) {
+    for (auto &a : (*res).dict_) {
         a.second /= gcd;
     }
-    return out;
+    return gcd;
 }
 
 void UIntDict::zz_divide(const UIntDict &a, const UIntDict &b,
@@ -163,7 +163,7 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
                     G *= g[i];
                 }
                 G.itrunc(pl);
-                G = G.primitive();
+                G.primitive(outArg(G));
                 auto q = G.dict_.begin()->second;
                 if (q != 0 and fc % q != 0)
                     continue;
@@ -188,8 +188,8 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
             integer_class H_norm = H.l1_norm();
             if (double(mp_get_si(G_norm) * mp_get_si(H_norm)) <= B) {
                 T = T_S;
-                G = G.primitive();
-                f = H.primitive();
+                G.primitive(outArg(G));
+                H.primitive(outArg(f));
                 factors.insert(
                     UIntPoly::from_dict(get_var(), std::move(G.dict_)));
                 b = f.dict_.rbegin()->second;
@@ -203,6 +203,29 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         factors.insert(UIntPoly::from_dict(get_var(), std::move(f.dict_)));
     }
     return factors;
+}
+
+std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>> UIntPoly::zz_factor_sqf() const
+{
+    std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>> out;
+    auto n = this->get_degree();
+    UIntDict this_dict = this->poly_;
+    integer_class cont = this_dict.primitive(outArg(this_dict));
+    if (this_dict.get_lc() < 0_z) {
+        cont *= -1;
+        this_dict *= -1;
+    }
+    out.first = cont;
+    if (n == 0) {
+        return out;
+    }
+    auto g = UIntPoly::from_dict(get_var(), std::move(this_dict.dict_));
+    if (n == 1) {
+        out.second.insert(g);
+        return out;
+    }
+    out.second = g->zz_zassenhaus();
+    return out;
 }
 
 UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)

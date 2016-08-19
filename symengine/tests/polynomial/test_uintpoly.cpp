@@ -282,6 +282,11 @@ TEST_CASE("UIntPoly zassenhaus", "[UIntPoly]")
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {1_z, -3_z}), out));
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, -3_z}), out));
     REQUIRE(out.size() == 2);
+    auto out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {1_z, 3_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 3_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 2);
+    REQUIRE(out_f.first == -1_z);
 
     f = UIntPoly::from_vec(x, {-6_z, 11_z, -6_z, 1_z});
     out = f->zz_zassenhaus();
@@ -289,10 +294,36 @@ TEST_CASE("UIntPoly zassenhaus", "[UIntPoly]")
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {-2_z, 1_z}), out));
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {-3_z, 1_z}), out));
     REQUIRE(out.size() == 3);
+    out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-2_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-3_z, 1_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 3);
+    REQUIRE(out_f.first == 1_z);
 
     f = UIntPoly::from_vec(x, {10_z, 13_z, 10_z, 3_z});
     out = f->zz_zassenhaus();
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {2_z, 1_z}), out));
     REQUIRE(find_in_set(UIntPoly::from_vec(x, {5_z, 4_z, 3_z}), out));
     REQUIRE(out.size() == 2);
+    out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {2_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {5_z, 4_z, 3_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 2);
+    REQUIRE(out_f.first == 1_z);
+
+    f = UIntPoly::from_vec(x, {0_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == 0_z);
+
+    f = UIntPoly::from_vec(x, {7_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == 7_z);
+
+    f = UIntPoly::from_vec(x, {-7_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == -7_z);
 }

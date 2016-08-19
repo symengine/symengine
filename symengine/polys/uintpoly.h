@@ -20,7 +20,6 @@ unsigned int bit_length(T t)
     }
     return count;
 }
-
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
 
@@ -125,7 +124,7 @@ public:
     }
 
     void itrunc(const integer_class &mod);
-    UIntDict primitive() const;
+    integer_class primitive(const Ptr<UIntDict> &res) const;
     integer_class l1_norm() const;
     static void zz_divide(const UIntDict &a, const UIntDict &b,
                           const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem);
@@ -141,6 +140,7 @@ public:
     //! \return size of the hash
     hash_t __hash__() const;
     std::set<RCP<const UIntPoly>, RCPBasicKeyLess> zz_zassenhaus() const;
+    std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>> zz_factor_sqf() const;
 }; // UIntPoly
 
 // Divides a polynomial in integer domain
