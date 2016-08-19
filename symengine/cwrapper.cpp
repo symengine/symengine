@@ -61,7 +61,7 @@ extern "C" {
 #define CWRAPPER_BEGIN try {
 
 #define CWRAPPER_END                                                           \
-    return 0;                                                                  \
+    return SYMENGINE_NO_EXCEPTION;                                             \
     }                                                                          \
     catch (SymEngineException & e)                                             \
     {                                                                          \
@@ -69,7 +69,7 @@ extern "C" {
     }                                                                          \
     catch (...)                                                                \
     {                                                                          \
-        return -1;                                                             \
+        return SYMENGINE_RUNTIME_ERROR;                                        \
     }
 
 struct CRCPBasic {
