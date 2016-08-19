@@ -238,14 +238,12 @@ public:
     using Vec = typename Dict::vec_type;
     Dict dict;
     set_basic gens;
-    vec_basic gens_vec;
     umap_basic_basic gens_pow;
     umap_basic_uint gens_map;
 
     Dict apply(const Basic &b, const set_basic &gens_)
     {
         gens = gens_;
-        gens_vec.insert(gens_vec.begin(), gens.begin(), gens.end());
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -348,7 +346,7 @@ public:
         integer_class i = x.i;
         Vec v(gens.size(), 0);
         if (i != 0)
-            dict = P::container_from_dict(gens_vec, {{v, i}});
+            dict = P::container_from_dict(gens, {{v, i}});
     }
 
     void bvisit(const Basic &x)
@@ -365,7 +363,7 @@ public:
                     // can be optimized
                     v[gens_map[pow(it->first, it->second)]] = i;
                     dict = P::container_from_dict(
-                        gens_vec, {{v, typename P::coef_type(1)}});
+                        gens, {{v, typename P::coef_type(1)}});
                     return;
                 }
             }
@@ -390,7 +388,7 @@ public:
     {
         if (is_a<const Integer>(x))
             dict = MIntPoly::container_from_dict(
-                gens_vec, {{pow, static_cast<const Integer &>(x).i}});
+                gens, {{pow, static_cast<const Integer &>(x).i}});
         else
             throw std::runtime_error("Non-integer found");
     }
