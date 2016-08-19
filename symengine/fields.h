@@ -65,7 +65,7 @@ public:
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
     GaloisFieldDict gf_pow(const unsigned int n) const;
-    void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
+    integer_class gf_monic(const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     static void gf_gcdex(const GaloisFieldDict &f, const GaloisFieldDict &g,
                          const Ptr<GaloisFieldDict> &s,

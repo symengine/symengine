@@ -316,10 +316,10 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
     }
 }
 
-void GaloisFieldDict::gf_monic(integer_class &res,
-                               const Ptr<GaloisFieldDict> &monic) const
+integer_class GaloisFieldDict::gf_monic(const Ptr<GaloisFieldDict> &monic) const
 {
     *monic = static_cast<GaloisFieldDict>(*this);
+    integer_class res;
     if (dict_.empty()) {
         res = integer_class(0);
     } else {
@@ -334,6 +334,7 @@ void GaloisFieldDict::gf_monic(integer_class &res,
             }
         }
     }
+    return res;
 }
 
 GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
@@ -347,8 +348,7 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
         f %= g; // f, g = f % g, g
         f.dict_.swap(g.dict_);
     }
-    integer_class temp_LC;
-    f.gf_monic(temp_LC, outArg(f));
+    f.gf_monic(outArg(f));
     return f;
 }
 
@@ -370,8 +370,8 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
     }
     integer_class p0, p1;
     GaloisFieldDict r0, r1;
-    f.gf_monic(p0, outArg(r0));
-    g.gf_monic(p1, outArg(r1));
+    p0 = f.gf_monic(outArg(r0));
+    p1 = g.gf_monic(outArg(r1));
     if (f.dict_.empty()) {
         integer_class inv;
         mp_invert(inv, p1, f.modulo_);
@@ -401,7 +401,7 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
             break;
         r0 = r1;
         integer_class lc, inv;
-        R.gf_monic(lc, outArg(r1));
+        lc = R.gf_monic(outArg(r1));
         mp_invert(inv, lc, f.modulo_);
 
         s0 = (s0 - s1 * Q) * inv;
@@ -425,8 +425,7 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     GaloisFieldDict out, temp_out;
     out = o * (*this);
     out /= gf_gcd(o);
-    integer_class temp_LC;
-    out.gf_monic(temp_LC, outArg(out));
+    out.gf_monic(outArg(out));
     return out;
 }
 
@@ -469,9 +468,8 @@ bool GaloisFieldDict::gf_is_sqf() const
 {
     if (dict_.empty())
         return true;
-    integer_class LC;
     GaloisFieldDict monic;
-    gf_monic(LC, outArg(monic));
+    gf_monic(outArg(monic));
     monic = monic.gf_gcd(monic.gf_diff());
     return monic.is_one();
 }
@@ -485,9 +483,8 @@ GaloisFieldDict::gf_sqf_list() const
     unsigned n = 1;
     unsigned r = mp_get_ui(modulo_);
     bool sqf = false;
-    integer_class LC;
     GaloisFieldDict f;
-    gf_monic(LC, outArg(f));
+    gf_monic(outArg(f));
     while (true) {
         GaloisFieldDict F = f.gf_diff();
         if (not F.dict_.empty()) {
@@ -914,7 +911,7 @@ GaloisFieldDict::gf_factor() const
     integer_class lc;
     std::set<std::pair<GaloisFieldDict, unsigned>, DictLess> factors;
     GaloisFieldDict monic;
-    gf_monic(lc, outArg(monic));
+    lc = gf_monic(outArg(monic));
     if (monic.degree() < 1)
         return std::make_pair(lc, factors);
     std::vector<std::pair<GaloisFieldDict, unsigned>> sqf_list

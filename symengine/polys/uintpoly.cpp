@@ -93,8 +93,7 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         auto F = GaloisFieldDict(this->poly_.dict_, i);
         if (not F.gf_is_sqf())
             continue;
-        integer_class temp;
-        F.gf_monic(temp, outArg(F));
+        F.gf_monic(outArg(F));
         auto fsqfx = F.gf_zassenhaus();
         if (fsqfx.size() < fsqf.second.size() or fsqf.second.empty()) {
             fsqf.first = i;
