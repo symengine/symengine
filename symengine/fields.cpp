@@ -404,13 +404,10 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
         R.gf_monic(lc, outArg(r1));
         mp_invert(inv, lc, f.modulo_);
 
-        *s = s0 - s1 * Q;
-        *t = t0 - t1 * Q;
-
-        s0 = s1;
-        s1 = (*s) * inv;
-        t0 = t1;
-        t1 = (*t) * inv;
+        s0 = (s0 - s1 * Q) * inv;
+        std::swap(s0, s1);
+        t0 = (t0 - t1 * Q) * inv;
+        std::swap(t0, t1);
     }
     *s = s1;
     *t = t1;

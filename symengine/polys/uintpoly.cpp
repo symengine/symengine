@@ -205,9 +205,11 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     return factors;
 }
 
-std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>> UIntPoly::zz_factor_sqf() const
+std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>>
+UIntPoly::zz_factor_sqf() const
 {
-    std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>> out;
+    std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>>
+        out;
     auto n = this->get_degree();
     UIntDict this_dict = this->poly_;
     integer_class cont = this_dict.primitive(outArg(this_dict));
