@@ -369,49 +369,42 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
         return;
     }
     integer_class p0, p1;
-    GaloisFieldDict r0, r1;
+    GaloisFieldDict r0;
     p0 = f.gf_monic(outArg(r0));
-    p1 = g.gf_monic(outArg(r1));
+    p1 = g.gf_monic(outArg(*h));
     if (f.dict_.empty()) {
-        integer_class inv;
-        mp_invert(inv, p1, f.modulo_);
-        t->dict_.push_back(inv);
-        *h = r1;
+        mp_invert(p1, p1, f.modulo_);
+        t->dict_.push_back(p1);
         return;
     }
     if (g.dict_.empty()) {
-        integer_class inv;
-        mp_invert(inv, p0, f.modulo_);
-        s->dict_.push_back(inv);
+        mp_invert(p0, p0, f.modulo_);
+        s->dict_.push_back(p0);
         *h = r0;
         return;
     }
-    integer_class inv0, inv1;
-    mp_invert(inv0, p0, f.modulo_);
-    mp_invert(inv1, p1, f.modulo_);
-    GaloisFieldDict s0, s1, t0, t1;
-    s0.modulo_ = s1.modulo_ = t0.modulo_ = t1.modulo_ = f.modulo_;
-    s0.dict_.push_back(inv0);
-    t1.dict_.push_back(inv1);
+    mp_invert(p0, p0, f.modulo_);
+    mp_invert(p1, p1, f.modulo_);
+    GaloisFieldDict s0, t0;
+    s0.modulo_ = (*s).modulo_ = t0.modulo_ = (*t).modulo_ = f.modulo_;
+    s0.dict_.push_back(p0);
+    (*t).dict_.push_back(p1);
     while (1) {
         GaloisFieldDict Q, R;
-        r0.gf_div(r1, outArg(Q), outArg(R));
+        r0.gf_div((*h), outArg(Q), outArg(R));
 
         if (R.dict_.empty())
             break;
-        r0 = r1;
-        integer_class lc, inv;
-        lc = R.gf_monic(outArg(r1));
-        mp_invert(inv, lc, f.modulo_);
+        r0 = *h;
+        integer_class lc;
+        lc = R.gf_monic(outArg(*h));
+        mp_invert(lc, lc, f.modulo_);
 
-        s0 = (s0 - s1 * Q) * inv;
-        std::swap(s0, s1);
-        t0 = (t0 - t1 * Q) * inv;
-        std::swap(t0, t1);
+        s0 = (s0 - (*s) * Q) * lc;
+        std::swap(s0, (*s));
+        t0 = (t0 - (*t) * Q) * lc;
+        std::swap(t0, (*t));
     }
-    *s = s1;
-    *t = t1;
-    *h = r1;
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
@@ -948,10 +941,9 @@ void GaloisFieldDict::zz_hensel_step(
     *H = (h + r);
 
     u = s * (*G) + t * (*H);
-    GaloisFieldDict b(u);
-    b.dict_[0] -= 1_z;
-    (s * b).gf_div(*H, outArg(q), outArg(r));
-    u = t * b + q * (*G);
+    u.dict_[0] -= 1_z;
+    (s * u).gf_div(*H, outArg(q), outArg(r));
+    u = t * u + q * (*G);
     *S = (s - r);
     *T = (t - u);
 }
@@ -965,8 +957,9 @@ integer_class GaloisFieldDict::get_lc() const
 
 void GaloisFieldDict::itrunc()
 {
+    integer_class modulo_2 = modulo_ / 2_z;
     for (auto it = dict_.begin(); it != dict_.end(); ++it) {
-        if (*it > modulo_ / 2)
+        if (*it > modulo_2)
             *it -= modulo_;
     }
 }

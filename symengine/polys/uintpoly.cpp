@@ -7,9 +7,10 @@ namespace SymEngine
 {
 void UIntDict::itrunc(const integer_class &mod)
 {
+    integer_class mod_2 = mod / 2;
     for (auto it = dict_.begin(); it != dict_.end();) {
         mp_fdiv_r(it->second, it->second, mod);
-        if (it->second > mod / 2)
+        if (it->second > mod_2)
             it->second -= mod;
         if (it->second == 0_z) {
             it = dict_.erase(it);
@@ -90,13 +91,14 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     while ((i = pi.next_prime()) <= bound) {
         if (b % i == 0)
             continue;
-        auto F = GaloisFieldDict(this->poly_.dict_, i);
+        integer_class i_c = integer_class(i);
+        auto F = GaloisFieldDict(this->poly_.dict_, i_c);
         if (not F.gf_is_sqf())
             continue;
         F.gf_monic(outArg(F));
         auto fsqfx = F.gf_zassenhaus();
         if (fsqfx.size() < fsqf.second.size() or fsqf.second.empty()) {
-            fsqf.first = i;
+            fsqf.first = i_c;
             fsqf.second = fsqfx;
             ++counter;
         }
