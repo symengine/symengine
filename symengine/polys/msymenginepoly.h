@@ -18,7 +18,7 @@ public:
     unsigned int vec_size;
 
     typedef Vec vec_type;
-    typedef Value value_type;
+    typedef Value coef_type;
     typedef Dict dict_type;
 
     UDictWrapper(unsigned int s) SYMENGINE_NOEXCEPT
@@ -131,13 +131,10 @@ public:
     }
 
     static Wrapper mul(const Wrapper &a, const Wrapper &b)
-    {
-        if (a.get_dict().empty())
-            return a;
-        if (b.get_dict().empty())
-            return b;
+    {   
+        SYMENGINE_ASSERT(a.vec_size == b.vec_size)
 
-        Wrapper p;
+        Wrapper p(a.vec_size);
         for (auto a_ : a.dict_) {
             for (auto b_ : b.dict_) {
 
@@ -339,6 +336,7 @@ public:
     set_basic vars_;
 
     typedef Container container_type;
+    typedef typename Container::coef_type coef_type;
 
     MSymEnginePoly(const set_basic &vars, Container &&dict)
         : poly_{dict}, vars_{vars}
@@ -525,8 +523,15 @@ RCP<const Poly> mul_mpoly(const Poly &a, const Poly &b)
 template <typename Poly>
 RCP<const Poly> neg_mpoly(const Poly &a)
 {
-    typename Poly::container_type x = a.poly_;
+    auto x = a.poly_;
     return Poly::from_container(a.vars_, std::move(-x));
+}
+
+template <typename Poly>
+RCP<const Poly> pow_mpoly(const Poly &a, unsigned int n)
+{
+    auto x = a.poly_;
+    return Poly::from_container(a.vars_, Poly::container_type::pow(x, n));
 }
 } // SymEngine
 

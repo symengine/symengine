@@ -30,7 +30,10 @@ using SymEngine::sin;
 using SymEngine::eq;
 using SymEngine::UIntPoly;
 using SymEngine::UExprPoly;
-using SymEngine::from_basic;
+using SymEngine::upoly_from_basic;
+using SymEngine::mpoly_from_basic;
+using SymEngine::set_basic;
+using SymEngine::MIntPoly;
 
 using namespace SymEngine::literals;
 
@@ -177,42 +180,42 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     // x**2 + x**(1/2)
     basic = add(pow(x, i2), pow(x, hf));
     gen = pow(x, hf);
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 1_z, 0_z, 0_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 3x + 2
     basic = add(mul(x, i3), i2);
     gen = x;
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{2_z, 3_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(2x + 1)
     basic = pow(i2, add(mul(i2, x), one));
     gen = pow(i2, x);
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 2_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(-x + 3) + 2**(-2x) -> (2**(-x))
     basic = add(pow(i2, add(i3, neg(x))), pow(i2, mul(neg(i2), x)));
     gen = pow(i2, neg(x));
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 8_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x**x + x**(x/2) + x**(x/3)
     basic = add(pow(x, x), add(pow(x, div(x, i2)), pow(x, div(x, i3))));
     gen = pow(x, div(x, i6));
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 1_z, 0_z, 0_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (x**(1/2)+1)**3 + (x+2)**6
     basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
     gen = pow(x, hf);
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 1_z}}), 3);
     poly3 = pow_upoly(*UIntPoly::from_vec(gen, {{2_z, 0_z, 1_z}}), 6);
     poly2 = add_upoly(*poly2, *poly3);
@@ -221,83 +224,83 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     // (2**x)**2 * (2**(3x + 2) + 1)
     basic = mul(pow(twopx, i2), add(one, pow(i2, add(i2, mul(x, i3)))));
     gen = twopx;
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 0_z, 4_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 9**(x+(1/2)) + 9**(2x +(3/2))
     basic = add(pow(i9, add(x, hf)), pow(i9, add(mul(i2, x), div(i3, i2))));
     gen = pow(i9, x);
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z, 3_z, 27_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(2**x) + 2**(2**(x+1)) + 3
     basic = add(pow(i2, twopx), add(i3, pow(i2, pow(i2, add(x, one)))));
     gen = pow(i2, twopx);
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{3_z, 1_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 0
     basic = zero;
     gen = x;
-    poly1 = from_basic<UIntPoly>(basic, gen);
+    poly1 = upoly_from_basic<UIntPoly>(basic, gen);
     poly2 = UIntPoly::from_vec(gen, {{0_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x + y
     basic = add(x, y);
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // x + 1/2
     basic = add(x, hf);
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // x/2 + 1
     basic = add(div(x, i2), one);
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // x + 1/x
     basic = add(x, div(one, x));
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // xy + 1
     basic = add(mul(x, y), one);
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // x**(1/2) + 1
     basic = add(pow(x, hf), one);
     gen = x;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // 3**x + 2**x
     basic = add(pow(i3, x), pow(i2, x));
     gen = twopx;
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // 2**(2**(2x + 1)) + 2**(2**x)
     basic = add(pow(i2, twopx), pow(i2, pow(i2, add(mul(i2, x), one))));
     gen = pow(i2, twopx);
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // 9**(x + (1/3))
     basic = pow(i9, add(div(one, i3), x));
     gen = pow(i9, x);
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
 
     // x + y
     basic = add(x, y);
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic), SymEngineException);
 
     // x + 1/x
     basic = add(x, div(one, x));
-    CHECK_THROWS_AS(from_basic<UIntPoly>(basic), SymEngineException);
+    CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic), SymEngineException);
 }
 
 TEST_CASE("basic_to_poly UExpr", "[b2poly]")
@@ -320,63 +323,63 @@ TEST_CASE("basic_to_poly UExpr", "[b2poly]")
     // x + xy + (x**1/2)*z
     basic = add(x, add(mul(x, y), mul(z, pow(x, hf))));
     gen = pow(x, hf);
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, z, add(one, y)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 3*2**x + 2**(x+y)
     basic = add(mul(i3, twopx), pow(i2, add(x, y)));
     gen = twopx;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, add(i3, pow(i2, y))}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(-x + (1/2)) + 2**(-2x)
     basic = add(pow(i2, add(neg(x), hf)), pow(i2, mul(neg(i2), x)));
     gen = pow(i2, neg(x));
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, pow(i2, hf), one}});
     REQUIRE(eq(*poly1, *poly2));
 
     // xy + xz + yz
     basic = add(mul(x, y), add(mul(x, z), mul(y, z)));
     gen = x;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{mul(y, z), add(z, y)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (x+1)**2 + 2xy
     basic = add(mul(mul(i2, x), y), pow(add(x, one), i2));
     gen = x;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{one, add(mul(i2, y), i2), one}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x**x + x**(2x + y)
     basic = add(pow(x, x), pow(x, add(mul(i2, x), y)));
     gen = pow(x, x);
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, one, pow(x, y)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (1/2)*x**2 + 1/x
     basic = add(mul(hf, pow(x, i2)), div(one, x));
     gen = x;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{div(one, x), zero, hf}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (x/2)**2 + xz
     basic = add(pow(div(x, i2), i2), mul(z, x));
     gen = x;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, z, div(one, integer(4))}});
     REQUIRE(eq(*poly1, *poly2));
 
     // pi**2 + E*pi
     basic = add(pow(pi, i2), mul(pi, E));
     gen = pi;
-    poly1 = from_basic<UExprPoly>(basic, gen);
+    poly1 = upoly_from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, E, one}});
     REQUIRE(eq(*poly1, *poly2));
 }
@@ -403,21 +406,21 @@ TEST_CASE("basic_to_poly UIntPiranha", "[b2poly]")
     // x**2 + x**(1/2)
     basic = add(pow(x, i2), pow(x, hf));
     gen = pow(x, hf);
-    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyPiranha>(basic, gen);
     poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 1_z, 0_z, 0_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(2x + 1)
     basic = pow(i2, add(mul(i2, x), one));
     gen = pow(i2, x);
-    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyPiranha>(basic, gen);
     poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 0_z, 2_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(-x + 3) + 2**(-2x) -> (2**(-x))
     basic = add(pow(i2, add(i3, neg(x))), pow(i2, mul(neg(i2), x)));
     gen = pow(i2, neg(x));
-    poly1 = from_basic<UIntPolyPiranha>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyPiranha>(basic, gen);
     poly2 = UIntPolyPiranha::from_vec(gen, {{0_z, 8_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 }
@@ -445,14 +448,14 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
     // x**x + x**(x/2) + x**(x/3)
     basic = add(pow(x, x), add(pow(x, div(x, i2)), pow(x, div(x, i3))));
     gen = pow(x, div(x, i6));
-    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyFlint>(basic, gen);
     poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 1_z, 0_z, 0_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (x**(1/2)+1)**3 + (x+2)**6
     basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
     gen = pow(x, hf);
-    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyFlint>(basic, gen);
     poly2 = pow_upoly(*UIntPolyFlint::from_vec(gen, {{1_z, 1_z}}), 3);
     poly3 = pow_upoly(*UIntPolyFlint::from_vec(gen, {{2_z, 0_z, 1_z}}), 6);
     poly2 = add_upoly(*poly2, *poly3);
@@ -461,8 +464,152 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
     // (2**x)**2 * (2**(3x + 2) + 1)
     basic = mul(pow(twopx, i2), add(one, pow(i2, add(i2, mul(x, i3)))));
     gen = twopx;
-    poly1 = from_basic<UIntPolyFlint>(basic, gen);
+    poly1 = upoly_from_basic<UIntPolyFlint>(basic, gen);
     poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 0_z, 4_z}});
     REQUIRE(eq(*poly1, *poly2));
 }
 #endif
+
+TEST_CASE("basic_to_poly MInt", "[b2poly]")
+{
+    RCP<const Basic> basic;
+    set_basic gens;
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> minus_one = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> hf = div(one, integer(2));
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> twopx = pow(i2, x);
+    RCP<const MIntPoly> poly1, poly2, poly3;
+
+    // x + y
+    basic = add(x, y);
+    gens = {x, y};
+    poly1 = mpoly_from_basic<MIntPoly>(basic, gens);
+    poly2 = MIntPoly::from_dict({x, y}, {{{0, 1}, 1_z}, {{1, 0}, 1_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 3x + 2
+    basic = add(mul(x, i3), i2);
+    gens = {x};
+    poly1 = mpoly_from_basic<MIntPoly>(basic, gens);
+    poly2 = MIntPoly::from_dict({x}, {{{0}, 2_z}, {{1}, 3_z}});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**(2x + 1)
+    // basic = pow(i2, add(mul(i2, x), one));
+    // gen = pow(i2, x);
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 2_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**(-x + 3) + 2**(-2x) -> (2**(-x))
+    // basic = add(pow(i2, add(i3, neg(x))), pow(i2, mul(neg(i2), x)));
+    // gen = pow(i2, neg(x));
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z, 8_z, 1_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // x**x + x**(x/2) + x**(x/3)
+    // basic = add(pow(x, x), add(pow(x, div(x, i2)), pow(x, div(x, i3))));
+    // gen = pow(x, div(x, i6));
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 1_z, 0_z, 0_z, 1_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // (x**(1/2)+1)**3 + (x+2)**6
+    // basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
+    // gen = pow(x, hf);
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 1_z}}), 3);
+    // poly3 = pow_upoly(*UIntPoly::from_vec(gen, {{2_z, 0_z, 1_z}}), 6);
+    // poly2 = add_upoly(*poly2, *poly3);
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // (2**x)**2 * (2**(3x + 2) + 1)
+    // basic = mul(pow(twopx, i2), add(one, pow(i2, add(i2, mul(x, i3)))));
+    // gen = twopx;
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 0_z, 4_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // 9**(x+(1/2)) + 9**(2x +(3/2))
+    // basic = add(pow(i9, add(x, hf)), pow(i9, add(mul(i2, x), div(i3, i2))));
+    // gen = pow(i9, x);
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z, 3_z, 27_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // 2**(2**x) + 2**(2**(x+1)) + 3
+    // basic = add(pow(i2, twopx), add(i3, pow(i2, pow(i2, add(x, one)))));
+    // gen = pow(i2, twopx);
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{3_z, 1_z, 1_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // 0
+    // basic = zero;
+    // gen = x;
+    // poly1 = upoly_from_basic<UIntPoly>(basic, gen);
+    // poly2 = UIntPoly::from_vec(gen, {{0_z}});
+    // REQUIRE(eq(*poly1, *poly2));
+
+    // // x + y
+    // basic = add(x, y);
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // x + 1/2
+    // basic = add(x, hf);
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // x/2 + 1
+    // basic = add(div(x, i2), one);
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // x + 1/x
+    // basic = add(x, div(one, x));
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // xy + 1
+    // basic = add(mul(x, y), one);
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // x**(1/2) + 1
+    // basic = add(pow(x, hf), one);
+    // gen = x;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // 3**x + 2**x
+    // basic = add(pow(i3, x), pow(i2, x));
+    // gen = twopx;
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // 2**(2**(2x + 1)) + 2**(2**x)
+    // basic = add(pow(i2, twopx), pow(i2, pow(i2, add(mul(i2, x), one))));
+    // gen = pow(i2, twopx);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // 9**(x + (1/3))
+    // basic = pow(i9, add(div(one, i3), x));
+    // gen = pow(i9, x);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic, gen), SymEngineException);
+
+    // // x + y
+    // basic = add(x, y);
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic), SymEngineException);
+
+    // // x + 1/x
+    // basic = add(x, div(one, x));
+    // CHECK_THROWS_AS(upoly_from_basic<UIntPoly>(basic), SymEngineException);
+}

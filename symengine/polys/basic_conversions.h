@@ -10,14 +10,14 @@ namespace SymEngine
 // using `gen` as the genarator. Throws, if poly constructions not possible.
 // `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
-RCP<const P> from_basic(const RCP<const Basic> &basic,
+RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
                         const RCP<const Basic> &gen, bool ex = false);
 // convert a `basic`, to a UPoly `P` (eg. UIntPoly, UExprPoly, UIntPolyFlint)
 // after finding out the generator automatically. Throws, if number
 // of generators found != 1, or poly construction not possible.
 // `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
-RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex = false);
+RCP<const P> upoly_from_basic(const RCP<const Basic> &basic, bool ex = false);
 
 template <typename T, typename P>
 enable_if_t<std::is_same<T, UExprDict>::value, T>
@@ -203,7 +203,7 @@ _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 }
 
 template <typename P>
-RCP<const P> from_basic(const RCP<const Basic> &basic,
+RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
                         const RCP<const Basic> &gen, bool ex)
 {
     RCP<const Basic> exp = basic;
@@ -214,7 +214,7 @@ RCP<const P> from_basic(const RCP<const Basic> &basic,
 }
 
 template <typename P>
-RCP<const P> from_basic(const RCP<const Basic> &basic, bool ex)
+RCP<const P> upoly_from_basic(const RCP<const Basic> &basic, bool ex)
 {
     RCP<const Basic> exp = basic;
     if (ex)
@@ -244,6 +244,7 @@ public:
     Dict apply(const Basic &b, const set_basic &gens_)
     {
         gens = gens_;
+        dict.vec_size = gens.size();
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -393,6 +394,40 @@ public:
             throw std::runtime_error("Non-integer found");
     }
 };
+
+template <typename P>
+enable_if_t<std::is_same<MIntPoly, P>::value, typename P::container_type>
+_basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
+{
+    BasicToMIntPoly v;
+    return v.apply(*basic, gens);
+}
+
+template <typename P>
+RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, set_basic &gens, bool ex = false)
+{
+    RCP<const Basic> exp = basic;
+    if (ex)
+        exp = expand(basic);
+    // need to add a check to see if generators are valid
+    // for eg. we dont want x and x**2 as the gens
+    return P::from_container(gens, _basic_to_mpoly<P>(exp, gens));
+}
+
+template <typename P>
+RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, bool ex = false)
+{
+    RCP<const Basic> exp = basic;
+    if (ex)
+        exp = expand(basic);
+
+    umap_basic_num tmp = _find_gens_poly(exp);
+    set_basic gens;
+    for (auto it : tmp)
+        gens.insert(pow(it.first, it.second));
+
+    return P::from_container(gens, _basic_to_mpoly<P>(exp, gens));
+}
 }
 
 #endif
