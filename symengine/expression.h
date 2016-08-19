@@ -57,17 +57,18 @@ public:
     {
     }
 
-#if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
-    template <
-        typename T,
-        typename
-        = typename std::enable_if<std::is_constructible<RCP<const Basic>,
-                                                        T &&>::value>::type>
-#else
     template <typename T>
-#endif
-    Expression(T &&o)
-        : m_basic(std::forward<T>(o))
+    Expression(RCP<const T> &&o,
+               typename std::enable_if<std::is_base_of<Basic, T>::value>::type
+                   * = nullptr)
+        : m_basic(o)
+    {
+    }
+    template <typename T>
+    Expression(const RCP<const T> &o,
+               typename std::enable_if<std::is_base_of<Basic, T>::value>::type
+                   * = nullptr)
+        : m_basic(o)
     {
     }
     //! Construct Expression from Expression
