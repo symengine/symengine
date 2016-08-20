@@ -61,7 +61,7 @@ extern "C" {
 #define CWRAPPER_BEGIN try {
 
 #define CWRAPPER_END                                                           \
-    return 0;                                                                  \
+    return SYMENGINE_NO_EXCEPTION;                                             \
     }                                                                          \
     catch (SymEngineException & e)                                             \
     {                                                                          \
@@ -69,7 +69,7 @@ extern "C" {
     }                                                                          \
     catch (...)                                                                \
     {                                                                          \
-        return -1;                                                             \
+        return SYMENGINE_RUNTIME_ERROR;                                        \
     }
 
 struct CRCPBasic {
@@ -346,15 +346,15 @@ CWRAPPER_OUTPUT_TYPE rational_set_ui(basic s, unsigned long a, unsigned long b)
     CWRAPPER_END
 }
 
-int rational_set(basic s, const basic a, const basic b)
+CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic a, const basic b)
 {
     if (not is_a_Integer(a) or not is_a_Integer(b)) {
-        return 0;
+        return SYMENGINE_RUNTIME_ERROR;
     }
     s->m = SymEngine::Rational::from_two_ints(
         *(rcp_static_cast<const Integer>(a->m)),
         *(rcp_static_cast<const Integer>(b->m)));
-    return 1;
+    return SYMENGINE_NO_EXCEPTION;
 }
 
 CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
@@ -421,12 +421,12 @@ CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-int basic_diff(basic s, const basic expr, basic const symbol)
+CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
-        return 0;
+        return SYMENGINE_RUNTIME_ERROR;
     s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
-    return 1;
+    return SYMENGINE_NO_EXCEPTION;
 }
 
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b)
