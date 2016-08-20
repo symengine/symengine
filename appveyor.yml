@@ -41,13 +41,6 @@ environment:
       COMPILER: MinGW-w64
       PLATFORM: x64
 
-matrix:
-  allow_failures:
-    - BUILD_TYPE: Release
-      COMPILER: MinGW
-      PLATFORM: Win32
-      WITH_MPFR: yes
-
 install:
 # Download MPIR
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
@@ -66,6 +59,8 @@ install:
 
 - if [%COMPILER%]==[MinGW] set PATH=C:\MinGW\bin;%PATH%
 - if [%COMPILER%]==[MinGW] mingw-get update
+# workaround for https://github.com/appveyor/ci/issues/996
+- if [%COMPILER%]==[MinGW] mingw-get upgrade mingw32-libstdc++
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
 - if [%COMPILER%]==[MinGW] if [%WITH_MPFR%]==[yes] mingw-get install mingw32-mpfr
 - if [%COMPILER%]==[MinGW] if [%WITH_MPC%]==[yes] mingw-get install mingw32-mpc
