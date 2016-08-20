@@ -25,6 +25,7 @@ set(SRC
     polys/uratpoly.cpp
     polys/uexprpoly.cpp
     polys/basic_conversions.cpp
+    polys/msymenginepoly.cpp
     series.cpp
     series_generic.cpp
     rings.cpp
@@ -46,7 +47,6 @@ set(SRC
     parser.cpp
     mp_wrapper.cpp
     sets.cpp
-    polynomial_multivariate.cpp
     eval.cpp
     fields.cpp
     infinity.cpp
@@ -111,7 +111,6 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
-    polynomial_multivariate.h
     polys/basic_conversions.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h
@@ -120,6 +119,7 @@ set(HEADERS
     polys/upolybase.h
     polys/uratpoly.h
     polys/usymenginepoly.h
+    polys/msymenginepoly.h
     pow.h
     printer.h
     rational.h
@@ -135,6 +135,7 @@ set(HEADERS
     subs.h
     symbol.h
     symengine_assert.h
+    symengine_exception.h
     symengine_rcp.h
     type_codes.inc
     visitor.h

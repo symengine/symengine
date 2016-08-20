@@ -9,6 +9,7 @@
 #include <list>
 
 #include <symengine/integer.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -89,7 +90,8 @@ public:
             const Series &o = static_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
-                throw std::runtime_error("Multivariate Series not implemented");
+                throw NotImplementedError(
+                    "Multivariate Series not implemented");
             }
             return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
@@ -106,7 +108,8 @@ public:
             const Series &o = static_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
-                throw std::runtime_error("Multivariate Series not implemented");
+                throw NotImplementedError(
+                    "Multivariate Series not implemented");
             }
             return make_rcp<Series>(Series::mul(p_, o.p_, deg), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
@@ -125,7 +128,8 @@ public:
             const Series &o = static_cast<const Series &>(other);
             deg = std::min(deg, o.degree_);
             if (var_ != o.var_) {
-                throw std::runtime_error("Multivariate Series not implemented");
+                throw NotImplementedError(
+                    "Multivariate Series not implemented");
             }
             p = o.p_;
         } else if (is_a<Integer>(other)) {
@@ -159,7 +163,7 @@ public:
                 Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
         } else {
-            throw std::runtime_error("Unknown type");
+            throw SymEngineException("Unknown type");
         }
     }
 
@@ -187,7 +191,8 @@ public:
                                      unsigned int prec)
     {
         if (s == 0)
-            throw std::runtime_error("Series::series_invert: division by zero");
+            throw DivisionByZeroError(
+                "Series::series_invert: Division By Zero");
         if (s == 1)
             return Poly(1);
         const short ldeg = Series::ldegree(s);
@@ -212,10 +217,10 @@ public:
     {
         const Coeff co = Series::find_cf(s, var, 0);
         if (co != 0)
-            throw std::runtime_error("reversion of series with constant term");
+            throw SymEngineException("reversion of series with constant term");
         const Coeff a = Series::find_cf(s, var, 1);
         if (a == 0)
-            throw std::runtime_error(
+            throw SymEngineException(
                 "reversion of series with zero term of degree one");
         Poly r(var);
         r /= a;
@@ -238,7 +243,7 @@ public:
 
         const short ldeg = Series::ldegree(s);
         if (ldeg % n != 0) {
-            throw std::runtime_error("Puiseux series not implemented.");
+            throw NotImplementedError("Puiseux series not implemented.");
         }
         Poly ss = s;
         if (ldeg != 0) {
@@ -544,7 +549,7 @@ public:
                                        unsigned int prec)
     {
         if (Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("lambertw(const) not Implemented");
+            throw NotImplementedError("lambertw(const) not Implemented");
 
         Poly p1(0);
 
@@ -647,55 +652,55 @@ public:
 
     static inline Coeff sin(const Coeff &c)
     {
-        throw std::runtime_error("sin(const) not implemented");
+        throw NotImplementedError("sin(const) not implemented");
     }
     static inline Coeff cos(const Coeff &c)
     {
-        throw std::runtime_error("cos(const) not implemented");
+        throw NotImplementedError("cos(const) not implemented");
     }
     static inline Coeff tan(const Coeff &c)
     {
-        throw std::runtime_error("tan(const) not implemented");
+        throw NotImplementedError("tan(const) not implemented");
     }
     static inline Coeff asin(const Coeff &c)
     {
-        throw std::runtime_error("asin(const) not implemented");
+        throw NotImplementedError("asin(const) not implemented");
     }
     static inline Coeff acos(const Coeff &c)
     {
-        throw std::runtime_error("acos(const) not implemented");
+        throw NotImplementedError("acos(const) not implemented");
     }
     static inline Coeff atan(const Coeff &c)
     {
-        throw std::runtime_error("atan(const) not implemented");
+        throw NotImplementedError("atan(const) not implemented");
     }
     static inline Coeff sinh(const Coeff &c)
     {
-        throw std::runtime_error("sinh(const) not implemented");
+        throw NotImplementedError("sinh(const) not implemented");
     }
     static inline Coeff cosh(const Coeff &c)
     {
-        throw std::runtime_error("cosh(const) not implemented");
+        throw NotImplementedError("cosh(const) not implemented");
     }
     static inline Coeff tanh(const Coeff &c)
     {
-        throw std::runtime_error("tanh(const) not implemented");
+        throw NotImplementedError("tanh(const) not implemented");
     }
     static inline Coeff asinh(const Coeff &c)
     {
-        throw std::runtime_error("asinh(const) not implemented");
+        throw NotImplementedError("asinh(const) not implemented");
     }
     static inline Coeff atanh(const Coeff &c)
     {
-        throw std::runtime_error("atanh(const) not implemented");
+        throw NotImplementedError("atanh(const) not implemented");
     }
     static inline Coeff exp(const Coeff &c)
     {
-        throw std::runtime_error("exp(const) not implemented");
+        throw NotImplementedError("exp(const) not implemented");
     }
     static inline Coeff log(const Coeff &c)
     {
-        throw std::runtime_error("log(const) not implemented");
+        throw NotImplementedError("log(const) not implemented");
     }
 };
 

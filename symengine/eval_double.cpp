@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -95,7 +96,7 @@ public:
 
     void bvisit(const Symbol &)
     {
-        throw std::runtime_error("Symbol cannot be evaluated.");
+        throw SymEngineException("Symbol cannot be evaluated.");
     };
 
     void bvisit(const Log &x)
@@ -240,7 +241,7 @@ public:
             result_ = 0.5772156649015328606065; // use until polygamma or
                                                 // digamma is implemented
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     };
@@ -253,7 +254,7 @@ public:
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const NumberWrapper &x)
@@ -389,7 +390,7 @@ std::vector<fn> init_eval_double()
 {
     std::vector<fn> table;
     table.assign(TypeID_Count, [](const Basic &x) -> double {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     });
     table[INTEGER] = [](const Basic &x) {
         double tmp = mp_get_d((static_cast<const Integer &>(x)).i);
@@ -585,7 +586,7 @@ std::vector<fn> init_eval_double()
             return 0.5772156649015328606065; // use until polygamma or digamma
                                              // is implemented
         } else {
-            throw std::runtime_error(
+            throw SymEngineException(
                 "Constant " + static_cast<const Constant &>(x).get_name()
                 + " is not implemented.");
         }

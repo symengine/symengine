@@ -77,7 +77,7 @@ RCP<const Number> RealMPFR::addreal(const Complex &other) const
     mpc_add_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -102,7 +102,7 @@ RCP<const Number> RealMPFR::addreal(const ComplexDouble &other) const
     mpc_add_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -148,7 +148,7 @@ RCP<const Number> RealMPFR::subreal(const Complex &other) const
     mpc_sub_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -173,7 +173,7 @@ RCP<const Number> RealMPFR::subreal(const ComplexDouble &other) const
     mpc_sub_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -220,7 +220,7 @@ RCP<const Number> RealMPFR::rsubreal(const Complex &other) const
     mpc_fr_sub(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -245,7 +245,7 @@ RCP<const Number> RealMPFR::rsubreal(const ComplexDouble &other) const
     mpc_fr_sub(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -281,7 +281,7 @@ RCP<const Number> RealMPFR::mulreal(const Complex &other) const
     mpc_mul_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -306,7 +306,7 @@ RCP<const Number> RealMPFR::mulreal(const ComplexDouble &other) const
     mpc_mul_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -352,7 +352,7 @@ RCP<const Number> RealMPFR::divreal(const Complex &other) const
     mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -377,7 +377,7 @@ RCP<const Number> RealMPFR::divreal(const ComplexDouble &other) const
     mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -425,7 +425,7 @@ RCP<const Number> RealMPFR::rdivreal(const Complex &other) const
     mpc_fr_div(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -450,7 +450,7 @@ RCP<const Number> RealMPFR::rdivreal(const ComplexDouble &other) const
     mpc_fr_div(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -477,7 +477,7 @@ RCP<const Number> RealMPFR::powreal(const Rational &other) const
         mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -499,7 +499,7 @@ RCP<const Number> RealMPFR::powreal(const Complex &other) const
     mpc_pow_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -515,7 +515,7 @@ RCP<const Number> RealMPFR::powreal(const RealDouble &other) const
         mpc_pow_d(t.get_mpc_t(), t.get_mpc_t(), other.i, MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -537,7 +537,7 @@ RCP<const Number> RealMPFR::powreal(const ComplexDouble &other) const
     mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -554,7 +554,7 @@ RCP<const Number> RealMPFR::powreal(const RealMPFR &other) const
                    MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -576,7 +576,7 @@ RCP<const Number> RealMPFR::rpowreal(const Integer &other) const
         mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -599,7 +599,7 @@ RCP<const Number> RealMPFR::rpowreal(const Rational &other) const
         mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -622,7 +622,7 @@ RCP<const Number> RealMPFR::rpowreal(const Complex &other) const
     mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -639,7 +639,7 @@ RCP<const Number> RealMPFR::rpowreal(const RealDouble &other) const
         mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -661,7 +661,7 @@ RCP<const Number> RealMPFR::rpowreal(const ComplexDouble &other) const
     mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw std::runtime_error("Result is complex. Recompile with MPC support.");
+    throw SymEngineException("Result is complex. Recompile with MPC support.");
 #endif
 }
 
@@ -731,7 +731,7 @@ class EvaluateMPFR : public Evaluate
         mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -750,7 +750,7 @@ class EvaluateMPFR : public Evaluate
         mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -788,7 +788,7 @@ class EvaluateMPFR : public Evaluate
         mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -809,7 +809,7 @@ class EvaluateMPFR : public Evaluate
         mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -893,7 +893,7 @@ class EvaluateMPFR : public Evaluate
         mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -912,7 +912,7 @@ class EvaluateMPFR : public Evaluate
         mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -933,7 +933,7 @@ class EvaluateMPFR : public Evaluate
         mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -952,7 +952,7 @@ class EvaluateMPFR : public Evaluate
         mpc_log(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
-        throw std::runtime_error(
+        throw SymEngineException(
             "Result is complex. Recompile with MPC support.");
 #endif
     }
@@ -974,7 +974,7 @@ class EvaluateMPFR : public Evaluate
             mpfr_gamma(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         } else {
-            throw std::runtime_error("Not Implemented.");
+            throw NotImplementedError("Not Implemented.");
         }
     }
 };

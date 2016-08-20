@@ -1,7 +1,9 @@
 #include <symengine/series_piranha.h>
 #include "catch.hpp"
 #include <chrono>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -255,11 +257,11 @@ TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
     RCP<const Symbol> x = symbol("x");
     REQUIRE_THROWS_AS(
         URatPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10),
-        std::runtime_error);
+        SymEngineException);
     REQUIRE_THROWS_AS(
         URatPSeriesPiranha::series(
             mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10),
-        std::runtime_error);
+        SymEngineException);
 }
 
 TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
@@ -267,7 +269,7 @@ TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
     RCP<const Symbol> x = symbol("x");
     REQUIRE_THROWS_AS(
         URatPSeriesPiranha::series(log(add(x, integer(2))), "x", 10),
-        std::runtime_error);
+        SymEngineException);
 }
 
 #else
@@ -277,6 +279,6 @@ TEST_CASE("Check error when expansion called without Piranha ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(URatPSeriesPiranha::series(ex1, "x", 10),
-                      std::runtime_error);
+                      SymEngineException);
 }
 #endif

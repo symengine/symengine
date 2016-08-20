@@ -678,16 +678,16 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
+void StrPrinter::bvisit(const MIntPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = sorted_keys(x.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
 
     for (vec_uint exps : v) {
-        integer_class c = x.dict_.find(exps)->second;
+        integer_class c = x.poly_.dict_.find(exps)->second;
         if (!first) {
             s << " " << _print_sign(c) << " ";
         } else if (c < 0) {
@@ -726,16 +726,16 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x)
+void StrPrinter::bvisit(const MExprPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = sorted_keys(x.dict_);
+    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
 
     for (vec_int exps : v) {
-        Expression c = x.dict_.find(exps)->second;
+        Expression c = x.poly_.dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -752,7 +752,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
                     expr << "*";
                 }
                 expr << it->__str__();
-                if (exps[i] > 1)
+                if (exps[i] > 1 or exps[i] < 0)
                     expr << "**" << exps[i];
                 first_var = false;
             }

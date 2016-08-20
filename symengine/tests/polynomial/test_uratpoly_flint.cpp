@@ -3,7 +3,9 @@
 
 #include <symengine/polys/uintpoly_flint.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::URatPolyFlint;
 using SymEngine::Symbol;
 using SymEngine::symbol;
@@ -62,7 +64,7 @@ TEST_CASE("Adding two URatPolyFlint", "[URatPolyFlint]")
 
     RCP<const URatPolyFlint> g = URatPolyFlint::from_dict(
         y, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
-    CHECK_THROWS_AS(add_upoly(*a, *g), std::runtime_error);
+    CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException);
 }
 
 TEST_CASE("Negative of a URatPolyFlint", "[URatPolyFlint]")
@@ -94,7 +96,7 @@ TEST_CASE("Subtracting two URatPolyFlint", "[URatPolyFlint]")
     REQUIRE(d->__str__() == "-3/4*x**2 - 13/6*x + 3/2");
     d = sub_upoly(*a, *c);
     REQUIRE(d->__str__() == "3/4*x**2 + 13/6*x - 3/2");
-    CHECK_THROWS_AS(sub_upoly(*a, *f), std::runtime_error);
+    CHECK_THROWS_AS(sub_upoly(*a, *f), SymEngineException);
 }
 
 TEST_CASE("Multiplication of two URatPolyFlint", "[URatPolyFlint]")
@@ -128,7 +130,7 @@ TEST_CASE("Multiplication of two URatPolyFlint", "[URatPolyFlint]")
     REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2/3*x - 1/2");
 
     c = URatPolyFlint::from_dict(y, {{0, rc(-1_z)}});
-    CHECK_THROWS_AS(mul_upoly(*a, *c), std::runtime_error);
+    CHECK_THROWS_AS(mul_upoly(*a, *c), SymEngineException);
 }
 
 TEST_CASE("Comparing two URatPolyFlint", "[URatPolyFlint]")

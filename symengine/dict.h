@@ -9,6 +9,29 @@
 #include <symengine/mp_class.h>
 #include <algorithm>
 
+/*! Standard `hash_combine()` function. Example of usage:
+
+        std::size_t seed1 = 0;
+        hash_combine<std::string>(seed1, "x");
+        hash_combine<std::string>(seed1, "y");
+
+     You can use it with any SymEngine class:
+
+
+        RCP<const Symbol> x = symbol("x");
+        RCP<const Symbol> y = symbol("y");
+        std::size_t seed2 = 0;
+        hash_combine<Basic>(seed2, *x);
+        hash_combine<Basic>(seed2, *y);
+*/
+//! Templatised version to combine hash
+template <class T>
+void hash_combine(std::size_t &seed, const T &v)
+{
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
 namespace SymEngine
 {
 
@@ -49,20 +72,29 @@ typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::vector<integer_class> vec_integer_class;
-//! Part of umap_vec_mpz:
-typedef struct {
-    inline std::size_t operator()(const vec_int &k) const
+typedef std::vector<unsigned int> vec_uint;
+typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
+                           RCPBasicKeyEq> umap_basic_uint;
+
+template <typename T>
+class vec_hash
+{
+public:
+    std::size_t operator()(const T &v) const
     {
         std::size_t h = 0;
-        for (const auto &p : k) {
-            h = (h << 4) + p;
-        }
+        for (auto i : v)
+            hash_combine<typename T::value_type>(h, i);
         return h;
     }
-} vec_int_hash;
-typedef std::unordered_map<vec_int, integer_class, vec_int_hash> umap_vec_mpz;
-typedef std::unordered_map<vec_int, Expression, vec_int_hash> umap_vec_expr;
+};
 
+typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>>
+    umap_uvec_mpz;
+typedef std::unordered_map<vec_int, integer_class, vec_hash<vec_int>>
+    umap_vec_mpz;
+typedef std::unordered_map<vec_int, Expression, vec_hash<vec_int>>
+    umap_vec_expr;
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just
 //! faster,
 //! because no default constructor is called on the `second` type.
@@ -296,27 +328,6 @@ inline int unordered_compare(const M &a, const M &b)
 
 //! misc functions
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
-
-typedef std::vector<unsigned int> vec_uint;
-
-class vec_uint_hash
-{
-public:
-    std::size_t operator()(const vec_uint &v) const
-    {
-        std::size_t h = 0;
-        for (unsigned int i : v) {
-            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
-        }
-        return h;
-    }
-};
-
-typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_uint;
-typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
-    umap_uvec_mpz;
-typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
 
 //! print functions
 std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);

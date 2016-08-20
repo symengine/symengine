@@ -17,7 +17,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
                             bool right_open)
 {
     if (is_a<Complex>(*s) or is_a<Complex>(*e))
-        throw std::runtime_error("Complex set not implemented");
+        throw NotImplementedError("Complex set not implemented");
     if (eq(*e, *s)) {
         return false;
     } else if (eq(*min({s, e}), *e)) {
@@ -94,13 +94,11 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 {
     if (not is_a_Number(*a))
         return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
-    if ((eq(*start_, *a) and left_open_) or (eq(*end_, *a) and right_open_))
-        return boolean(false);
-    if (eq(*start_, *a) or eq(*end_, *a))
-        return boolean(true);
-    if (eq(*min({end_, a}), *end_))
-        return boolean(false);
-    if (eq(*max({start_, a}), *start_))
+    if (eq(*start_, *a))
+        return boolean(not left_open_);
+    if (eq(*end_, *a))
+        return boolean(not right_open_);
+    if (eq(*min({end_, a}), *end_) or eq(*max({start_, a}), *start_))
         return boolean(false);
     return boolean(true);
 }
@@ -454,7 +452,7 @@ RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
             return boolean(true);
         }
         if (is_a<Contains>(*contain))
-            throw std::runtime_error("Not implemented");
+            throw NotImplementedError("Not implemented");
     }
     return boolean(false);
 }

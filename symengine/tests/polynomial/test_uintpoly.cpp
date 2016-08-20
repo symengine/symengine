@@ -5,7 +5,9 @@
 #include <symengine/add.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::UIntPoly;
 using SymEngine::Symbol;
 using SymEngine::symbol;
@@ -71,7 +73,7 @@ TEST_CASE("Adding two UIntPoly", "[UIntPoly]")
 
     RCP<const UIntPoly> g
         = UIntPoly::from_dict(y, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    CHECK_THROWS_AS(add_upoly(*a, *g), std::runtime_error);
+    CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException);
 }
 
 TEST_CASE("Negative of a UIntPoly", "[UIntPoly]")
@@ -105,7 +107,7 @@ TEST_CASE("Subtracting two UIntPoly", "[UIntPoly]")
     REQUIRE(d->__str__() == "-x**2 - 2*x + 1");
     d = sub_upoly(*a, *c);
     REQUIRE(d->__str__() == "x**2 + 2*x - 1");
-    CHECK_THROWS_AS(sub_upoly(*a, *f), std::runtime_error);
+    CHECK_THROWS_AS(sub_upoly(*a, *f), SymEngineException);
 }
 
 TEST_CASE("Multiplication of two UIntPoly", "[UIntPoly]")
@@ -145,7 +147,7 @@ TEST_CASE("Multiplication of two UIntPoly", "[UIntPoly]")
     REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2*x - 1");
 
     c = UIntPoly::from_dict(y, {{0, -1_z}});
-    CHECK_THROWS_AS(mul_upoly(*a, *c), std::runtime_error);
+    CHECK_THROWS_AS(mul_upoly(*a, *c), SymEngineException);
 }
 
 TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")

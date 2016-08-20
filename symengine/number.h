@@ -41,7 +41,7 @@ public:
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     };
 
     //! Addition
@@ -65,11 +65,11 @@ public:
 
     virtual bool is_perfect_power(bool is_expected = false) const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     };
     virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     };
 };
 //! Add `self` and `other`
@@ -136,11 +136,11 @@ public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     };
     virtual RCP<const Number> eval(long bits) const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     };
 };
 

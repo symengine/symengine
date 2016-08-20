@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -133,45 +134,45 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
 unsigned CSRMatrix::rank() const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 RCP<const Basic> CSRMatrix::det() const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 void CSRMatrix::inv(MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 void CSRMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 void CSRMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Add a scalar
 void CSRMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Multiply by a scalar
 void CSRMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Matrix transpose
 void CSRMatrix::transpose(MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Extract out a submatrix
@@ -180,37 +181,37 @@ void CSRMatrix::submatrix(MatrixBase &result, unsigned row_start,
                           unsigned col_end, unsigned row_step,
                           unsigned col_step) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // LU factorization
 void CSRMatrix::LU(MatrixBase &L, MatrixBase &U) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // LDL factorization
 void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Solve Ax = b using LU factorization
 void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Fraction free LU factorization
 void CSRMatrix::FFLU(MatrixBase &LU) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 // Fraction free LDU factorization
 void CSRMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_,
@@ -496,7 +497,7 @@ void csr_scale_rows(CSRMatrix &A, const DenseMatrix &X)
 
     for (unsigned i = 0; i < A.row_; i++) {
         if (eq(*(X.get(i, 0)), *zero))
-            throw std::runtime_error("Scaling factor can't be zero");
+            throw SymEngineException("Scaling factor can't be zero");
         for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
             A.x_[jj] = mul(A.x_[jj], X.get(i, 0));
     }
@@ -513,7 +514,7 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
 
     for (i = 0; i < A.col_; i++) {
         if (eq(*(X.get(i, 0)), *zero))
-            throw std::runtime_error("Scaling factor can't be zero");
+            throw SymEngineException("Scaling factor can't be zero");
     }
 
     for (i = 0; i < nnz; i++)

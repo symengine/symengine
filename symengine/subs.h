@@ -187,7 +187,7 @@ public:
         for (auto &p : x.get_symbols()) {
             auto t2 = p->subs(n);
             if (not is_a<Symbol>(*t2)) {
-                throw std::runtime_error("Error, expected a Symbol.");
+                throw SymEngineException("Error, expected a Symbol.");
             }
             t = t->diff(rcp_static_cast<const Symbol>(t2));
         }

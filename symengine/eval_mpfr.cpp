@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 
@@ -278,7 +279,7 @@ public:
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     }
@@ -335,7 +336,7 @@ public:
     // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

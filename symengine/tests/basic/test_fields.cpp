@@ -6,7 +6,9 @@
 #include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
 #include <symengine/symbol.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::RCP;
 using SymEngine::Symbol;
 using SymEngine::symbol;
