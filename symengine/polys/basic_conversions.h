@@ -242,7 +242,8 @@ public:
     using Vec = typename Dict::vec_type;
     Dict dict;
     set_basic gens;
-    umap_basic_basic gens_pow;
+    std::unordered_map<RCP<const Basic>, vec_basic, RCPBasicHash, RCPBasicKeyEq>
+        gens_pow;
     umap_basic_uint gens_map;
 
     Dict apply(const Basic &b, const set_basic &gens_)
@@ -260,7 +261,11 @@ public:
                 genpow = rcp_static_cast<const Pow>(it)->get_exp();
                 genbase = rcp_static_cast<const Pow>(it)->get_base();
             }
-            gens_pow[genbase] = genpow;
+            auto ite = gens_pow.find(genbase);
+            if (ite == gens_pow.end())
+                gens_pow[genbase] = {genpow};
+            else
+                gens_pow[genbase].push_back(genpow);
             gens_map[it] = i++;
         }
 
@@ -285,7 +290,9 @@ public:
 
         Vec zero_v(gens.size(), 0);
         RCP<const Basic> coef = one, tmp;
-        auto ite = gens_pow.find(x.rcp_from_this());
+        RCP<const Integer> i;
+        bool found;
+        auto ite = gens_pow.find(x.get_base());
 
         if (ite != gens_pow.end()) {
 
@@ -301,20 +308,26 @@ public:
                 expos.insert(x.get_exp());
             }
 
-            int powr = 0;
             for (auto const &it : expos) {
-                tmp = div(it, ite->second);
-                if (is_a<const Integer>(*tmp)) {
-                    RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
-                    if (i->is_positive()) {
-                        powr = i->as_int();
-                        continue;
+
+                found = false;
+
+                for (auto powr : ite->second) {
+                    tmp = div(it, powr);
+                    if (is_a<const Integer>(*tmp)) {
+                        i = rcp_static_cast<const Integer>(tmp);
+                        if (i->is_positive()) {
+                            zero_v[gens_map[pow(ite->first, powr)]]
+                                = i->as_int();
+                            found = true;
+                            break;
+                        }
                     }
                 }
-                coef = mul(coef, pow(ite->first, it));
-            }
 
-            zero_v[gens_map[pow(ite->first, ite->second)]] = powr;
+                if (not found)
+                    coef = mul(coef, pow(ite->first, it));
+            }
             dict_set(zero_v, *coef);
 
         } else {
@@ -353,15 +366,18 @@ public:
 
         auto it = gens_pow.find(x.rcp_from_this());
         if (it != gens_pow.end()) {
-            powr = div(one, it->second);
-            if (is_a<const Integer>(*powr)) {
-                int i = rcp_static_cast<const Integer>(powr)->as_int();
-                if (i > 0) {
-                    // can be optimized
-                    zero_v[gens_map[pow(it->first, it->second)]] = i;
-                    dict = P::container_from_dict(
-                        gens, {{zero_v, typename P::coef_type(1)}});
-                    return;
+
+            for (auto pows : it->second) {
+                powr = div(one, pows);
+                if (is_a<const Integer>(*powr)) {
+                    int i = rcp_static_cast<const Integer>(powr)->as_int();
+                    if (i > 0) {
+                        // can be optimized
+                        zero_v[gens_map[pow(it->first, pows)]] = i;
+                        dict = P::container_from_dict(
+                            gens, {{zero_v, typename P::coef_type(1)}});
+                        return;
+                    }
                 }
             }
         }
