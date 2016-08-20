@@ -9,6 +9,11 @@ if [[ "${TRAVIS_PULL_REQUEST}" != "false" ]]; then
     echo "Testing a pull request, feedstock is not triggered.";
     exit 0;
 fi
+if [[ "${GH_TOKEN}" == "" ]]; then
+    echo "Testing a fork, feedstock is not triggered.";
+    exit 0;
+fi
+
 
 cd $SOURCE_DIR;
 export ver=`git describe --tags`

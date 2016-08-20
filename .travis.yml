@@ -144,6 +144,8 @@ matrix:
 install:
   - source bin/install_travis.sh
 script:
+  - bin/travis_clang.sh
+  - bin/test_travis.sh
   - bin/trigger_feedstock.sh
 notifications:
   email: false
