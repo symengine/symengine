@@ -10,9 +10,9 @@ Constant::Constant(const std::string &name) : name_{name}
 {
 }
 
-std::size_t Constant::__hash__() const
+hash_t Constant::__hash__() const
 {
-    std::size_t seed = CONSTANT;
+    hash_t seed = CONSTANT;
     hash_combine<std::string>(seed, name_);
     return seed;
 }

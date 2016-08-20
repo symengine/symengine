@@ -9,10 +9,10 @@ UIntPolyFlint::UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict)
 {
 }
 
-std::size_t UIntPolyFlint::__hash__() const
+hash_t UIntPolyFlint::__hash__() const
 {
     std::hash<std::string> str_hash;
-    std::size_t seed = UINTPOLYFLINT;
+    hash_t seed = UINTPOLYFLINT;
 
     seed += var_->hash();
     hash_combine(seed, str_hash(poly_.to_string()));
@@ -24,10 +24,10 @@ URatPolyFlint::URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict)
 {
 }
 
-std::size_t URatPolyFlint::__hash__() const
+hash_t URatPolyFlint::__hash__() const
 {
     std::hash<std::string> str_hash;
-    std::size_t seed = URATPOLYFLINT;
+    hash_t seed = URATPOLYFLINT;
 
     seed += var_->hash();
     hash_combine(seed, str_hash(poly_.to_string()));

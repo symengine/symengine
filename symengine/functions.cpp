@@ -1218,9 +1218,9 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg) const
     return true;
 }
 
-std::size_t FunctionSymbol::__hash__() const
+hash_t FunctionSymbol::__hash__() const
 {
-    std::size_t seed = FUNCTIONSYMBOL;
+    hash_t seed = FUNCTIONSYMBOL;
     for (const auto &a : arg_)
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
@@ -1339,9 +1339,9 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     return false;
 }
 
-std::size_t Derivative::__hash__() const
+hash_t Derivative::__hash__() const
 {
-    std::size_t seed = DERIVATIVE;
+    hash_t seed = DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
     for (auto &p : x_) {
         hash_combine<Basic>(seed, *p);
@@ -1385,9 +1385,9 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
     return false;
 }
 
-std::size_t Subs::__hash__() const
+hash_t Subs::__hash__() const
 {
-    std::size_t seed = SUBS;
+    hash_t seed = SUBS;
     hash_combine<Basic>(seed, *arg_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *p.first);

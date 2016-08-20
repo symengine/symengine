@@ -7,9 +7,9 @@ BooleanAtom::BooleanAtom(bool b) : b_{b}
 {
 }
 
-std::size_t BooleanAtom::__hash__() const
+hash_t BooleanAtom::__hash__() const
 {
-    std::size_t seed = BOOLEAN_ATOM;
+    hash_t seed = BOOLEAN_ATOM;
     if (b_)
         ++seed;
     return seed;
@@ -49,9 +49,9 @@ Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
 {
 }
 
-std::size_t Contains::__hash__() const
+hash_t Contains::__hash__() const
 {
-    std::size_t seed = CONTAINS;
+    hash_t seed = CONTAINS;
     hash_combine<Basic>(seed, *expr_);
     hash_combine<Basic>(seed, *set_);
     return seed;
@@ -108,9 +108,9 @@ Piecewise::Piecewise(PiecewiseVec &&vec) : vec_(vec)
 {
 }
 
-std::size_t Piecewise::__hash__() const
+hash_t Piecewise::__hash__() const
 {
-    std::size_t seed = this->get_type_code();
+    hash_t seed = this->get_type_code();
     for (auto &p : vec_) {
         hash_combine<Basic>(seed, *p.first);
         hash_combine<Basic>(seed, *p.second);
@@ -152,9 +152,9 @@ And::And(const set_boolean &s) : container_{s}
     SYMENGINE_ASSERT(is_canonical(s));
 }
 
-std::size_t And::__hash__() const
+hash_t And::__hash__() const
 {
-    std::size_t seed = AND;
+    hash_t seed = AND;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -203,9 +203,9 @@ Or::Or(const set_boolean &s) : container_{s}
     SYMENGINE_ASSERT(is_canonical(s));
 }
 
-std::size_t Or::__hash__() const
+hash_t Or::__hash__() const
 {
-    std::size_t seed = OR;
+    hash_t seed = OR;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -254,9 +254,9 @@ Not::Not(const RCP<const Boolean> &in) : arg_{in}
     SYMENGINE_ASSERT(is_canonical(in));
 }
 
-std::size_t Not::__hash__() const
+hash_t Not::__hash__() const
 {
-    std::size_t seed = NOT;
+    hash_t seed = NOT;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }

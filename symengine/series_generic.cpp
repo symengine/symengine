@@ -19,16 +19,17 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
     return visitor.series(t);
 }
 
-std::size_t UnivariateSeries::__hash__() const
+hash_t UnivariateSeries::__hash__() const
 {
-    std::size_t seed = UEXPRPOLY;
+    hash_t seed = UEXPRPOLY;
+    hash_combine(seed, get_degree());
     for (const auto &it : p_.dict_) {
-        std::size_t temp = UEXPRPOLY;
+        hash_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }
-    return seed + std::size_t(get_degree() * 84728863L);
+    return seed;
 }
 
 int UnivariateSeries::compare(const Basic &other) const

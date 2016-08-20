@@ -14,7 +14,7 @@ ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
 {
 }
 
-std::size_t ComplexMPC::__hash__() const
+hash_t ComplexMPC::__hash__() const
 {
     std::hash<mpc_srcptr> hash_fn;
     return hash_fn(i.get_mpc_t());

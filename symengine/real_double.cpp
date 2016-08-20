@@ -13,7 +13,7 @@ RealDouble::RealDouble(double i)
     this->i = i;
 }
 
-std::size_t RealDouble::__hash__() const
+hash_t RealDouble::__hash__() const
 {
     std::hash<double> hash_fn;
     return hash_fn(i);

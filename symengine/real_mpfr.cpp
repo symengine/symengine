@@ -14,7 +14,7 @@ RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)}
 {
 }
 
-std::size_t RealMPFR::__hash__() const
+hash_t RealMPFR::__hash__() const
 {
     std::hash<mpfr_srcptr> hash_fn;
     return hash_fn(i.get_mpfr_t());

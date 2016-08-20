@@ -21,7 +21,7 @@ public:
                        const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
@@ -54,7 +54,7 @@ public:
                     const unsigned degree);
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;

@@ -5,11 +5,11 @@
 namespace SymEngine
 {
 
-std::size_t Integer::__hash__() const
+hash_t Integer::__hash__() const
 {
     // only the least significant bits that fit into "long long int" are
     // hashed:
-    return ((size_t)mp_get_ui(this->i)) * mp_sign(this->i);
+    return ((hash_t)mp_get_ui(this->i)) * mp_sign(this->i);
 }
 
 bool Integer::__eq__(const Basic &o) const

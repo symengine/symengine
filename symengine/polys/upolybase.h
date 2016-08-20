@@ -348,7 +348,7 @@ public:
 
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
-    virtual std::size_t __hash__() const = 0;
+    virtual hash_t __hash__() const = 0;
 
     // return `degree` + 1. `0` returned for zero poly.
     virtual unsigned int size() const = 0;

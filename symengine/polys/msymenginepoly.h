@@ -442,7 +442,7 @@ public:
     }
 
     IMPLEMENT_TYPEID(MINTPOLY);
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;
 
     integer_class eval(
@@ -458,7 +458,7 @@ public:
     }
 
     IMPLEMENT_TYPEID(MEXPRPOLY);
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;

@@ -558,7 +558,7 @@ public:
     //! \return true if canonical
     bool is_canonical(const GaloisFieldDict &dict) const;
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     int compare(const Basic &o) const;
 
     // creates a GaloisField in cannonical form based on the

@@ -19,15 +19,15 @@ RCP<const Basic> MIntPoly::as_symbolic() const
     return SymEngine::add(args);
 }
 
-std::size_t MIntPoly::__hash__() const
+hash_t MIntPoly::__hash__() const
 {
-    std::size_t seed = MINTPOLY;
+    hash_t seed = MINTPOLY;
     for (auto var : vars_)
         hash_combine<std::string>(seed, var->__str__());
 
     for (auto &p : poly_.dict_) {
-        std::size_t t = vec_hash<vec_uint>()(p.first);
-        hash_combine<std::size_t>(t, mp_get_si(p.second));
+        hash_t t = vec_hash<vec_uint>()(p.first);
+        hash_combine<hash_t>(t, mp_get_si(p.second));
         seed ^= t;
     }
     return seed;
@@ -67,14 +67,14 @@ RCP<const Basic> MExprPoly::as_symbolic() const
     return SymEngine::add(args);
 }
 
-std::size_t MExprPoly::__hash__() const
+hash_t MExprPoly::__hash__() const
 {
-    std::size_t seed = MEXPRPOLY;
+    hash_t seed = MEXPRPOLY;
     for (auto var : vars_)
         hash_combine<std::string>(seed, var->__str__());
 
     for (auto &p : poly_.dict_) {
-        std::size_t t = vec_hash<vec_int>()(p.first);
+        hash_t t = vec_hash<vec_int>()(p.first);
         hash_combine<Basic>(t, *(p.second.get_basic()));
         seed ^= t;
     }

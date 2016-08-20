@@ -49,9 +49,9 @@ bool Add::is_canonical(const RCP<const Number> &coef,
     return true;
 }
 
-std::size_t Add::__hash__() const
+hash_t Add::__hash__() const
 {
-    std::size_t seed = ADD, temp;
+    hash_t seed = ADD, temp;
     hash_combine<Basic>(seed, *coef_);
     for (const auto &p : dict_) {
         temp = p.first->hash();
