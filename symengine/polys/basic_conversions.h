@@ -10,14 +10,17 @@ namespace SymEngine
 // using `gen` as the genarator. Throws, if poly constructions not possible.
 // `ex` is the optional parameter for expanding the given `basic` or not.
 template <typename P>
-RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
-                              const RCP<const Basic> &gen, bool ex = false);
+RCP<const P> from_basic(const RCP<const Basic> &basic,
+                        const RCP<const Basic> &gen, bool ex = false);
 // convert a `basic`, to a UPoly `P` (eg. UIntPoly, UExprPoly, UIntPolyFlint)
 // after finding out the generator automatically. Throws, if number
 // of generators found != 1, or poly construction not possible.
 // `ex` is the optional parameter for expanding the given `basic` or not.
+
 template <typename P>
-RCP<const P> upoly_from_basic(const RCP<const Basic> &basic, bool ex = false);
+enable_if_t<std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value,
+            RCP<const P>>
+from_basic(const RCP<const Basic> &basic, bool ex = false);
 
 template <typename T, typename P>
 enable_if_t<std::is_same<T, UExprDict>::value, T>
@@ -215,8 +218,8 @@ _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 }
 
 template <typename P>
-RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
-                              const RCP<const Basic> &gen, bool ex)
+RCP<const P> from_basic(const RCP<const Basic> &basic,
+                        const RCP<const Basic> &gen, bool ex)
 {
     RCP<const Basic> exp = basic;
     if (ex)
@@ -226,7 +229,9 @@ RCP<const P> upoly_from_basic(const RCP<const Basic> &basic,
 }
 
 template <typename P>
-RCP<const P> upoly_from_basic(const RCP<const Basic> &basic, bool ex)
+enable_if_t<std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value,
+            RCP<const P>>
+from_basic(const RCP<const Basic> &basic, bool ex)
 {
     RCP<const Basic> exp = basic;
     if (ex)
@@ -434,8 +439,8 @@ _basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
 }
 
 template <typename P>
-RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, set_basic &gens,
-                              bool ex = false)
+RCP<const P> from_basic(const RCP<const Basic> &basic, set_basic &gens,
+                        bool ex = false)
 {
     RCP<const Basic> exp = basic;
     if (ex)
@@ -446,7 +451,10 @@ RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, set_basic &gens,
 }
 
 template <typename P>
-RCP<const P> mpoly_from_basic(const RCP<const Basic> &basic, bool ex = false)
+enable_if_t<std::is_base_of<MSymEnginePoly<typename P::container_type, P>,
+                            P>::value,
+            RCP<const P>>
+from_basic(const RCP<const Basic> &basic, bool ex = false)
 {
     RCP<const Basic> exp = basic;
     if (ex)
