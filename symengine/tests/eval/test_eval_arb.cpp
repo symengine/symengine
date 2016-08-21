@@ -42,6 +42,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::min;
 using SymEngine::max;
 using SymEngine::loggamma;
+using SymEngine::gamma;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {

@@ -27,6 +27,7 @@ using SymEngine::kronecker_delta;
 using SymEngine::levi_civita;
 using SymEngine::msubs;
 using SymEngine::function_symbol;
+using SymEngine::gamma;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
