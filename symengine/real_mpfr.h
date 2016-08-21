@@ -76,6 +76,8 @@ public:
     }
 };
 
+void hash_combine_impl(hash_t &, mpfr_srcptr);
+
 RCP<const Number> number(mpfr_ptr x);
 
 //! RealMPFR Class to hold mpfr_t values

@@ -16,8 +16,10 @@ ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
 
 hash_t ComplexMPC::__hash__() const
 {
-    std::hash<mpc_srcptr> hash_fn;
-    return hash_fn(i.get_mpc_t());
+    hash_t seed = COMPLEX_MPC;
+    hash_combine_impl(seed, mpc_realref(i.get_mpc_t()));
+    hash_combine_impl(seed, mpc_imagref(i.get_mpc_t()));
+    return seed;
 }
 
 bool ComplexMPC::__eq__(const Basic &o) const
