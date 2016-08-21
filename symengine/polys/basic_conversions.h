@@ -119,8 +119,7 @@ public:
     void bvisit(const Integer &x)
     {
         integer_class i = x.i;
-        if (i != 0)
-            dict = P::container_from_dict(gen, {{0, i}});
+        dict = P::container_from_dict(gen, {{0, i}});
     }
 
     void bvisit(const Basic &x)
@@ -355,8 +354,7 @@ public:
     {
         integer_class i = x.i;
         Vec v(gens.size(), 0);
-        if (i != 0)
-            dict = P::container_from_dict(gens, {{v, i}});
+        dict = P::container_from_dict(gens, {{v, i}});
     }
 
     void bvisit(const Basic &x)
@@ -394,7 +392,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        throw std::runtime_error("Non-integer found");
+        throw SymEngineException("Non-integer found");
     }
 
     void dict_set(vec_uint pow, const Basic &x)
@@ -403,7 +401,7 @@ public:
             dict = MIntPoly::container_from_dict(
                 gens, {{pow, static_cast<const Integer &>(x).i}});
         else
-            throw std::runtime_error("Non-integer found");
+            throw SymEngineException("Non-integer found");
     }
 };
 

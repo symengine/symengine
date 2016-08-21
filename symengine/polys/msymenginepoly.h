@@ -135,8 +135,8 @@ public:
         SYMENGINE_ASSERT(a.vec_size == b.vec_size)
 
         Wrapper p(a.vec_size);
-        for (auto a_ : a.dict_) {
-            for (auto b_ : b.dict_) {
+        for (auto const &a_ : a.dict_) {
+            for (auto const &b_ : b.dict_) {
 
                 Vec target(a.vec_size, 0);
                 for (unsigned int i = 0; i < a.vec_size; i++)
@@ -165,7 +165,7 @@ public:
         Wrapper tmp = a, res(a.vec_size);
 
         Vec zero_v(a.vec_size, 0);
-        res.dict_.insert({zero_v, 1});
+        res.dict_[zero_v] = 1_z;
 
         while (p != 1) {
             if (p % 2 == 0) {
