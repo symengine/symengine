@@ -35,9 +35,13 @@ public:
     using D = typename P::container_type;
     D dict;
 
-    D apply(const Basic &b, const RCP<const Basic> &gen_)
+    BasicToUPolyBase(const RCP<const Basic> &gen_)
     {
         gen = gen_;
+    }
+
+    D apply(const Basic &b)
+    {
         b.accept(*this);
         return std::move(dict);
     }
@@ -102,17 +106,17 @@ public:
 
     void bvisit(const Add &x)
     {
-        D res = apply(*x.coef_, gen);
+        D res = apply(*x.coef_);
         for (auto const &it : x.dict_)
-            res += apply(*it.first, gen) * apply(*it.second, gen);
+            res += apply(*it.first) * apply(*it.second);
         dict = std::move(res);
     }
 
     void bvisit(const Mul &x)
     {
-        D res = apply(*x.coef_, gen);
+        D res = apply(*x.coef_);
         for (auto const &it : x.dict_)
-            res *= apply(*pow(it.first, it.second), gen);
+            res *= apply(*pow(it.first, it.second));
         dict = std::move(res);
     }
 
@@ -153,6 +157,11 @@ public:
     using BasicToUPolyBase<Poly, BasicToUIntPoly>::bvisit;
     using BasicToUPolyBase<Poly, BasicToUIntPoly>::apply;
 
+    BasicToUIntPoly(const RCP<const Basic> &gen)
+        : BasicToUPolyBase<Poly, BasicToUIntPoly<Poly>>(gen)
+    {
+    }
+
     void bvisit(const Rational &x)
     {
         throw SymEngineException("Non-integer found");
@@ -174,6 +183,10 @@ public:
     using BasicToUPolyBase<UExprPoly, BasicToUExprPoly>::bvisit;
     using BasicToUPolyBase<UExprPoly, BasicToUExprPoly>::apply;
 
+    BasicToUExprPoly(const RCP<const Basic> &gen) : BasicToUPolyBase(gen)
+    {
+    }
+
     void bvisit(const Rational &x)
     {
         dict = UExprDict(x.rcp_from_this());
@@ -189,16 +202,16 @@ template <typename T, typename P>
 enable_if_t<std::is_same<T, UExprDict>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
-    BasicToUExprPoly v;
-    return v.apply(*basic, gen);
+    BasicToUExprPoly v(gen);
+    return v.apply(*basic);
 }
 
 template <typename T, typename P>
 enable_if_t<std::is_base_of<UIntPolyBase<T, P>, P>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
-    BasicToUIntPoly<P> v;
-    return v.apply(*basic, gen);
+    BasicToUIntPoly<P> v(gen);
+    return v.apply(*basic);
 }
 
 template <typename P>
@@ -245,7 +258,7 @@ public:
         gens_pow;
     umap_basic_uint gens_map;
 
-    Dict apply(const Basic &b, const set_basic &gens_)
+    BasicToMPolyBase(const set_basic &gens_)
     {
         gens = gens_;
         dict.vec_size = gens.size();
@@ -267,7 +280,10 @@ public:
                 gens_pow[genbase].push_back(genpow);
             gens_map[it] = i++;
         }
+    }
 
+    Dict apply(const Basic &b)
+    {
         b.accept(*this);
         return std::move(dict);
     }
@@ -336,17 +352,17 @@ public:
 
     void bvisit(const Add &x)
     {
-        Dict res = apply(*x.coef_, gens);
+        Dict res = apply(*x.coef_);
         for (auto const &it : x.dict_)
-            res += apply(*it.first, gens) * apply(*it.second, gens);
+            res += apply(*it.first) * apply(*it.second);
         dict = std::move(res);
     }
 
     void bvisit(const Mul &x)
     {
-        Dict res = apply(*x.coef_, gens);
+        Dict res = apply(*x.coef_);
         for (auto const &it : x.dict_)
-            res *= apply(*pow(it.first, it.second), gens);
+            res *= apply(*pow(it.first, it.second));
         dict = std::move(res);
     }
 
@@ -390,6 +406,10 @@ public:
     using BasicToMPolyBase<MIntPoly, BasicToMIntPoly>::bvisit;
     using BasicToMPolyBase<MIntPoly, BasicToMIntPoly>::apply;
 
+    BasicToMIntPoly(const set_basic &gens) : BasicToMPolyBase(gens)
+    {
+    }
+
     void bvisit(const Rational &x)
     {
         throw SymEngineException("Non-integer found");
@@ -409,8 +429,8 @@ template <typename P>
 enable_if_t<std::is_same<MIntPoly, P>::value, typename P::container_type>
 _basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
 {
-    BasicToMIntPoly v;
-    return v.apply(*basic, gens);
+    BasicToMIntPoly v(gens);
+    return v.apply(*basic);
 }
 
 template <typename P>
