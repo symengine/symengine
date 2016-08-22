@@ -374,8 +374,8 @@ public:
     void bvisit(const Integer &x)
     {
         integer_class i = x.i;
-        Vec v(gens.size(), 0);
-        dict = P::container_from_dict(gens, {{v, i}});
+        Vec zero_v(gens.size(), 0);
+        dict = P::container_from_dict(gens, {{zero_v, i}});
     }
 
     void bvisit(const Basic &x)
@@ -430,11 +430,41 @@ public:
     }
 };
 
+class BasicToMExprPoly : public BasicToMPolyBase<MExprPoly, BasicToMExprPoly>
+{
+public:
+    using BasicToMPolyBase<MExprPoly, BasicToMExprPoly>::bvisit;
+    using BasicToMPolyBase<MExprPoly, BasicToMExprPoly>::apply;
+
+    BasicToMExprPoly(const set_basic &gens) : BasicToMPolyBase(gens)
+    {
+    }
+
+    void bvisit(const Rational &x)
+    {
+        Vec v(gens.size(), 0);
+        dict = MExprPoly::container_from_dict(gens, {{v, x.rcp_from_this()}});
+    }
+
+    void dict_set(vec_int pow, const Basic &x)
+    {
+        dict = MExprPoly::container_from_dict(gens, {{pow, x.rcp_from_this()}});
+    }
+};
+
 template <typename P>
 enable_if_t<std::is_same<MIntPoly, P>::value, typename P::container_type>
 _basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
 {
     BasicToMIntPoly v(gens);
+    return v.apply(*basic);
+}
+
+template <typename P>
+enable_if_t<std::is_same<MExprPoly, P>::value, typename P::container_type>
+_basic_to_mpoly(const RCP<const Basic> &basic, const set_basic &gens)
+{
+    BasicToMExprPoly v(gens);
     return v.apply(*basic);
 }
 
