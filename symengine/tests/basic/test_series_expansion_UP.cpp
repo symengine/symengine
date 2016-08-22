@@ -19,6 +19,7 @@ using SymEngine::cos;
 using SymEngine::umap_short_basic;
 using SymEngine::neg;
 using SymEngine::EulerGamma;
+using SymEngine::gamma;
 using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA

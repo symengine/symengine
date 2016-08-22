@@ -283,7 +283,8 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
 TEST_CASE("Union : Basic", "[basic]")
 {
     auto check_union_str = [](std::string to_chk, set_set sets) {
-        if (std::count(to_chk.begin(), to_chk.end(), 'U') != sets.size() - 1)
+        if ((size_t)std::count(to_chk.begin(), to_chk.end(), 'U')
+            != sets.size() - 1)
             return false;
         for (auto &a : sets) {
             if (to_chk.find(a->__str__()) == std::string::npos)

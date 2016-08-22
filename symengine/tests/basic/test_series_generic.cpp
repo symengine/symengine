@@ -34,6 +34,7 @@ using SymEngine::I;
 using SymEngine::UndefinedError;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
+using SymEngine::gamma;
 
 using namespace SymEngine::literals;
 
