@@ -123,7 +123,8 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
         }
         pos++;
     }
-    return pos; // return size of the new symbol set
+    // return size of the new symbol set
+    return pos;
 }
 
 } // SymEngine

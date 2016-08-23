@@ -18,7 +18,7 @@ public:
     unsigned int vec_size;
 
     typedef Vec vec_type;
-    typedef Value value_type;
+    typedef Value coef_type;
     typedef Dict dict_type;
 
     UDictWrapper(unsigned int s) SYMENGINE_NOEXCEPT
@@ -132,14 +132,11 @@ public:
 
     static Wrapper mul(const Wrapper &a, const Wrapper &b)
     {
-        if (a.get_dict().empty())
-            return a;
-        if (b.get_dict().empty())
-            return b;
+        SYMENGINE_ASSERT(a.vec_size == b.vec_size)
 
-        Wrapper p;
-        for (auto a_ : a.dict_) {
-            for (auto b_ : b.dict_) {
+        Wrapper p(a.vec_size);
+        for (auto const &a_ : a.dict_) {
+            for (auto const &b_ : b.dict_) {
 
                 Vec target(a.vec_size, 0);
                 for (unsigned int i = 0; i < a.vec_size; i++)
@@ -168,7 +165,7 @@ public:
         Wrapper tmp = a, res(a.vec_size);
 
         Vec zero_v(a.vec_size, 0);
-        res.insert({zero_v, 1});
+        res.dict_[zero_v] = 1_z;
 
         while (p != 1) {
             if (p % 2 == 0) {
@@ -339,6 +336,7 @@ public:
     set_basic vars_;
 
     typedef Container container_type;
+    typedef typename Container::coef_type coef_type;
 
     MSymEnginePoly(const set_basic &vars, Container &&dict)
         : poly_{dict}, vars_{vars}
@@ -373,9 +371,8 @@ public:
     {
         set_basic s;
         std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess> m;
-        // Symbols in the vector are sorted by placeing them in an std::map.
-        // The image of the symbols in the map is their original location in the
-        // vector.
+        // Symbols in the vector are sorted by placeing them in an map image
+        // of the symbols in the map is their original location in the vector
 
         for (unsigned int i = 0; i < v.size(); i++) {
             m.insert({v[i], i});
@@ -392,6 +389,12 @@ public:
 
         Container x(std::move(d), s.size());
         return Poly::from_container(s, std::move(x.translate(trans, s.size())));
+    }
+
+    static Container container_from_dict(const set_basic &s,
+                                         typename Container::dict_type &&d)
+    {
+        return Container(std::move(d), s.size());
     }
 
     inline vec_basic get_args() const
@@ -465,14 +468,11 @@ public:
 };
 
 // reconciles the positioning of the exponents in the vectors in the
-// Dict dict_ of the arguments
-// with the positioning of the exponents in the correspondng vectors of the
-// output of the function.
-// f1 and f2 are vectors whose indices are the positions in the arguments and
-// whose values are the
-// positions in the output.  set_basic s is the set of symbols of the output,
-// and
-// s1 and s2 are the sets of the symbols of the inputs.
+// Dict dict_ of the arguments with the positioning of the exponents in
+// the correspondng vectors of the output of the function. f1 and f2 are
+// vectors whose indices are the positions in the arguments and whose values
+// are the positions in the output.  set_basic s is the set of symbols of
+// the output, and s1 and s2 are the sets of the symbols of the inputs.
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 
@@ -520,8 +520,15 @@ RCP<const Poly> mul_mpoly(const Poly &a, const Poly &b)
 template <typename Poly>
 RCP<const Poly> neg_mpoly(const Poly &a)
 {
-    typename Poly::container_type x = a.poly_;
+    auto x = a.poly_;
     return Poly::from_container(a.vars_, std::move(-x));
+}
+
+template <typename Poly>
+RCP<const Poly> pow_mpoly(const Poly &a, unsigned int n)
+{
+    auto x = a.poly_;
+    return Poly::from_container(a.vars_, Poly::container_type::pow(x, n));
 }
 } // SymEngine
 
