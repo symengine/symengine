@@ -338,11 +338,11 @@ TEST_CASE("basic_to_poly URat", "[b2poly]")
 
     // x + y
     basic = add(x, y);
-    CHECK_THROWS_AS(from_basic<URatPoly>(basic), std::runtime_error);
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), SymEngineException);
 
     // x + 1/x
     basic = add(x, div(one, x));
-    CHECK_THROWS_AS(from_basic<URatPoly>(basic), std::runtime_error);
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), SymEngineException);
 }
 
 TEST_CASE("basic_to_poly UExpr", "[b2poly]")
