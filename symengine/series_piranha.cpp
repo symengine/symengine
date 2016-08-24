@@ -17,9 +17,9 @@ URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
     return visitor.series(t);
 }
 
-std::size_t URatPSeriesPiranha::__hash__() const
+hash_t URatPSeriesPiranha::__hash__() const
 {
-    std::size_t seed = URATPSERIESPIRANHA;
+    hash_t seed = URATPSERIESPIRANHA;
     hash_combine(seed, p_.hash());
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
@@ -202,9 +202,9 @@ RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t,
     return visitor.series(t);
 }
 
-std::size_t UPSeriesPiranha::__hash__() const
+hash_t UPSeriesPiranha::__hash__() const
 {
-    std::size_t seed = URATPSERIESPIRANHA;
+    hash_t seed = URATPSERIESPIRANHA;
     hash_combine(seed, p_.hash());
     hash_combine(seed, var_);
     hash_combine(seed, degree_);

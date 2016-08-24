@@ -124,7 +124,7 @@ public:
     //! Constructor of UIntPolyFlint class
     UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict);
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 }; // UIntPolyFlint
 
 class URatPolyFlint : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
@@ -134,7 +134,7 @@ public:
     //! Constructor of URatPolyFlint class
     URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict);
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 }; // URatPolyFlint
 
 template <typename T>

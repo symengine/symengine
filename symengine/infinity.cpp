@@ -43,9 +43,9 @@ bool Infty::is_canonical(const RCP<const Number> &num) const
     return false;
 }
 
-std::size_t Infty::__hash__() const
+hash_t Infty::__hash__() const
 {
-    std::size_t seed = INFTY;
+    hash_t seed = INFTY;
     hash_combine<Basic>(seed, *_direction);
     return seed;
 }

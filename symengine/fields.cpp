@@ -24,14 +24,14 @@ bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
     return true;
 }
 
-std::size_t GaloisField::__hash__() const
+hash_t GaloisField::__hash__() const
 {
-    std::size_t seed = GALOISFIELD;
+    hash_t seed = GALOISFIELD;
 
     seed += var_->hash();
     for (const auto &it : poly_.dict_) {
-        std::size_t temp = GALOISFIELD;
-        hash_combine<long long int>(temp, mp_get_si(it));
+        hash_t temp = GALOISFIELD;
+        hash_combine<hash_t>(temp, mp_get_si(it));
         seed += temp;
     }
     return seed;

@@ -8,29 +8,7 @@
 #define SYMENGINE_DICT_H
 #include <symengine/mp_class.h>
 #include <algorithm>
-
-/*! Standard `hash_combine()` function. Example of usage:
-
-        std::size_t seed1 = 0;
-        hash_combine<std::string>(seed1, "x");
-        hash_combine<std::string>(seed1, "y");
-
-     You can use it with any SymEngine class:
-
-
-        RCP<const Symbol> x = symbol("x");
-        RCP<const Symbol> y = symbol("y");
-        std::size_t seed2 = 0;
-        hash_combine<Basic>(seed2, *x);
-        hash_combine<Basic>(seed2, *y);
-*/
-//! Templatised version to combine hash
-template <class T>
-void hash_combine(std::size_t &seed, const T &v)
-{
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
+#include <cstdint>
 
 namespace SymEngine
 {
@@ -46,7 +24,7 @@ struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
 bool eq(const Basic &, const Basic &);
-
+typedef uint64_t hash_t;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
@@ -77,16 +55,8 @@ typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_uint;
 
 template <typename T>
-class vec_hash
-{
-public:
-    std::size_t operator()(const T &v) const
-    {
-        std::size_t h = 0;
-        for (auto i : v)
-            hash_combine<typename T::value_type>(h, i);
-        return h;
-    }
+struct vec_hash {
+    hash_t operator()(const T &v) const;
 };
 
 typedef std::unordered_map<vec_uint, integer_class, vec_hash<vec_uint>>

@@ -27,7 +27,7 @@ public:
     * */
     static RCP<const Number> from_mpq(rational_class i);
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal

@@ -14,10 +14,19 @@ RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)}
 {
 }
 
-std::size_t RealMPFR::__hash__() const
+hash_t RealMPFR::__hash__() const
 {
-    std::hash<mpfr_srcptr> hash_fn;
-    return hash_fn(i.get_mpfr_t());
+    hash_t seed = REAL_MPFR;
+    hash_combine_impl(seed, i.get_mpfr_t());
+    return seed;
+}
+
+void hash_combine_impl(hash_t &seed, mpfr_srcptr s)
+{
+    hash_combine(seed, mpfr_get_exp(s));
+    hash_combine(seed, mpfr_sgn(s));
+    hash_combine(seed, mpfr_get_prec(s));
+    hash_combine(seed, s->_mpfr_d[0]);
 }
 
 bool RealMPFR::__eq__(const Basic &o) const

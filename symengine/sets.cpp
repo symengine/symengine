@@ -26,9 +26,9 @@ bool Interval::is_canonical(const RCP<const Number> &s,
     return true;
 }
 
-std::size_t Interval::__hash__() const
+hash_t Interval::__hash__() const
 {
-    std::size_t seed = INTERVAL;
+    hash_t seed = INTERVAL;
     hash_combine<Basic>(seed, *start_);
     hash_combine<Basic>(seed, *end_);
     hash_combine<bool>(seed, left_open_);
@@ -208,9 +208,9 @@ RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const
     return o;
 }
 
-std::size_t EmptySet::__hash__() const
+hash_t EmptySet::__hash__() const
 {
-    std::size_t seed = EMPTYSET;
+    hash_t seed = EMPTYSET;
     return seed;
 }
 
@@ -243,9 +243,9 @@ RCP<const Set> UniversalSet::set_union(const RCP<const Set> &o) const
     return universalset();
 }
 
-std::size_t UniversalSet::__hash__() const
+hash_t UniversalSet::__hash__() const
 {
-    std::size_t seed = UNIVERSALSET;
+    hash_t seed = UNIVERSALSET;
     return seed;
 }
 
@@ -278,9 +278,9 @@ bool FiniteSet::is_canonical(const set_basic container)
     return container.size() != 0;
 }
 
-std::size_t FiniteSet::__hash__() const
+hash_t FiniteSet::__hash__() const
 {
-    std::size_t seed = FINITESET;
+    hash_t seed = FINITESET;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -394,9 +394,9 @@ Union::Union(set_set in) : container_(in)
 {
 }
 
-std::size_t Union::__hash__() const
+hash_t Union::__hash__() const
 {
-    std::size_t seed = UNION;
+    hash_t seed = UNION;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;

@@ -25,6 +25,7 @@ using SymEngine::add;
 using SymEngine::eval_double;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
+using SymEngine::hash_t;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::mpfr_class;
 using SymEngine::real_mpfr;
@@ -280,7 +281,7 @@ TEST_CASE("Test NumberWrapper", "[number]")
         {
             return i_ > 0;
         }
-        virtual std::size_t __hash__() const
+        virtual hash_t __hash__() const
         {
             return i_;
         };

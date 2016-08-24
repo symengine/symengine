@@ -54,9 +54,9 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     return true;
 }
 
-std::size_t Pow::__hash__() const
+hash_t Pow::__hash__() const
 {
-    std::size_t seed = POW;
+    hash_t seed = POW;
     hash_combine<Basic>(seed, *base_);
     hash_combine<Basic>(seed, *exp_);
     return seed;

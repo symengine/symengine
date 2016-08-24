@@ -10,9 +10,9 @@ UIntPolyPiranha::UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict)
 {
 }
 
-std::size_t UIntPolyPiranha::__hash__() const
+hash_t UIntPolyPiranha::__hash__() const
 {
-    std::size_t seed = UINTPOLYPIRANHA;
+    hash_t seed = UINTPOLYPIRANHA;
     seed += poly_.hash();
     seed += var_->hash();
     return seed;
@@ -23,9 +23,9 @@ URatPolyPiranha::URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict)
 {
 }
 
-std::size_t URatPolyPiranha::__hash__() const
+hash_t URatPolyPiranha::__hash__() const
 {
-    std::size_t seed = URATPOLYPIRANHA;
+    hash_t seed = URATPOLYPIRANHA;
     seed += poly_.hash();
     seed += var_->hash();
     return seed;

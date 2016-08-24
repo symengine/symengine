@@ -176,7 +176,7 @@ public:
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 
     typedef Expression coef_type;
 

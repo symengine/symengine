@@ -27,7 +27,7 @@ public:
     IMPLEMENT_TYPEID(BOOLEAN_ATOM)
     BooleanAtom(bool b);
     //! \return the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     bool get_val() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
@@ -55,7 +55,7 @@ public:
     IMPLEMENT_TYPEID(CONTAINS)
     //! Constructor
     Contains(const RCP<const Basic> &expr, const RCP<const Set> &set);
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     RCP<const Basic> get_expr() const;
     RCP<const Set> get_set() const;
     virtual vec_basic get_args() const;
@@ -81,7 +81,7 @@ public:
     IMPLEMENT_TYPEID(PIECEWISE)
     //! Constructor
     Piecewise(PiecewiseVec &&vec);
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     const PiecewiseVec &get_vec() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
@@ -106,7 +106,7 @@ public:
     And(const set_boolean &s);
     bool is_canonical(const set_boolean &container_);
     //! \return the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
@@ -124,7 +124,7 @@ public:
     Or(const set_boolean &s);
     bool is_canonical(const set_boolean &container_);
     //! \return the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
@@ -142,7 +142,7 @@ public:
     Not(const RCP<const Boolean> &s);
     bool is_canonical(const RCP<const Boolean> &s);
     //! \return the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator

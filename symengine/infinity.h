@@ -32,7 +32,7 @@ public:
     //! \return true if canonical
     bool is_canonical(const RCP<const Number> &num) const;
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 
     /*! Equality comparator
      * \param o - Object to be compared with

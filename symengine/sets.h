@@ -54,7 +54,7 @@ public:
     // EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const &) = delete;
     const static RCP<const EmptySet> &getInstance();
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
@@ -83,7 +83,7 @@ public:
     // UniversalSet(UniversalSet const&) = delete;
     void operator=(UniversalSet const &) = delete;
     const static RCP<const UniversalSet> &getInstance();
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
@@ -109,7 +109,7 @@ public:
 
 public:
     IMPLEMENT_TYPEID(FINITESET)
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
@@ -134,7 +134,7 @@ public:
 
 public:
     IMPLEMENT_TYPEID(INTERVAL)
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
 
@@ -163,7 +163,7 @@ public:
 
 public:
     IMPLEMENT_TYPEID(UNION)
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const

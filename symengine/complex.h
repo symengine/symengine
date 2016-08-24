@@ -36,7 +36,7 @@ public:
     bool is_canonical(const rational_class &real,
                       const rational_class &imaginary) const;
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal

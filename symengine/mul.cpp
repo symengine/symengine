@@ -73,9 +73,9 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
     return true;
 }
 
-std::size_t Mul::__hash__() const
+hash_t Mul::__hash__() const
 {
-    std::size_t seed = MUL;
+    hash_t seed = MUL;
     hash_combine<Basic>(seed, *coef_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *(p.first));

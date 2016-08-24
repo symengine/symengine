@@ -261,7 +261,7 @@ public:
     //! Constructor of UIntPolyPiranha class
     UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict);
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 
 }; // UIntPolyPiranha
 
@@ -273,7 +273,7 @@ public:
     //! Constructor of UIntPolyPiranha class
     URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict);
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
 };
 
 inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
