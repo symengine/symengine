@@ -173,10 +173,12 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
                     continue;
             }
             UIntDict H = UIntDict(b);
-            std::vector<unsigned int> T_S(T.size());
-            auto it = std::set_difference(T.begin(), T.end(), S.begin(),
-                                          S.end(), T_S.begin());
-            T_S.resize(it - T_S.begin());
+            std::vector<unsigned int> T_S;
+            for (unsigned int i = 0; i < T.size(); ++i) {
+                if (not bitmask[i]) {
+                    T_S.push_back(T[i]);
+                }
+            }
             if (b == 1_z) {
                 G = UIntDict(b);
                 for (auto &i : S) {
