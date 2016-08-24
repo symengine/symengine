@@ -75,12 +75,16 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         return factors;
     }
     integer_class fc(this->poly_.dict_.begin()->second);
-    auto A = mp_get_ui(this->poly_.max_abs_coef());
+    auto A = this->poly_.max_abs_coef();
     auto b = get_lc();
-    auto B
-        = std::abs(int(std::sqrt(n + 1)) * std::pow(2, n) * A * mp_get_si(b));
-    auto C = std::pow(n + 1, 2 * n) * std::pow(A, 2 * n - 1);
-    auto gamma = std::ceil(2 * std::log2(C));
+    integer_class temp;
+    mp_pow_ui(temp, integer_class(2), n);
+    integer_class B = integer_class(int(std::sqrt(n + 1))) * temp * A * b;
+    B = mp_abs(B);
+
+    auto log2_d_A = std::log2(mp_get_d(A));
+    unsigned int gamma
+        = std::ceil(2 * (2 * n * std::log2(n + 1) + (2 * n - 1) * log2_d_A));
     unsigned int bound = 2 * gamma * std::log(gamma);
     std::pair<integer_class,
               std::set<GaloisFieldDict, GaloisFieldDict::DictLess>> fsqf;
@@ -105,8 +109,17 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
         if (fsqfx.size() < 15 or counter > 4)
             break;
     }
-    auto l = std::ceil(std::log(2 * B + 1) / std::log(mp_get_ui(fsqf.first)));
-
+    unsigned l;
+    if (mp_fits_slong_p(B)) {
+        temp = 2 * B + 1;
+        l = std::ceil(std::log(mp_get_d(temp))
+                      / std::log(mp_get_ui(fsqf.first)));
+    } else {
+        auto b_d = mp_get_d(mp_abs(b));
+        l = std::ceil(
+            (1 + std::log2(n + 1) / 2.0 + n + log2_d_A + std::log2(b_d))
+            / (std::log2(mp_get_ui(fsqf.first))));
+    }
     integer_class pl;
     mp_pow_ui(pl, fsqf.first, l);
     GaloisFieldDict gf(this->poly_.dict_, pl);
@@ -187,7 +200,7 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
             H.itrunc(pl);
             integer_class G_norm = G.l1_norm();
             integer_class H_norm = H.l1_norm();
-            if (double(mp_get_si(G_norm) * mp_get_si(H_norm)) <= B) {
+            if (G_norm * H_norm <= B) {
                 T = T_S;
                 G.primitive(outArg(G));
                 H.primitive(outArg(f));
