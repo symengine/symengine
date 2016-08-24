@@ -130,22 +130,6 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     std::iota(std::begin(T), std::end(T), 0);
     unsigned int s = 1;
 
-    auto _subsets = [](std::vector<unsigned int> in_set, unsigned int size) {
-        std::vector<std::vector<unsigned int>> out;
-        std::string bitmask(size, 1);
-        bitmask.resize(in_set.size(), 0);
-        do {
-            std::vector<unsigned int> temp;
-            for (unsigned int i = 0; i < in_set.size(); ++i) {
-                if (bitmask[i])
-                    temp.push_back(in_set[i]);
-            }
-            if (not temp.empty())
-                out.push_back(temp);
-        } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
-        return out;
-    };
-
     auto _test_pl = [](const integer_class &fc, const integer_class &q,
                        const integer_class &pl) {
         integer_class q_copy(q);
@@ -157,10 +141,16 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     };
 
     while (2 * s <= T.size()) {
-        std::vector<std::vector<unsigned int>> subsets = _subsets(T, s);
-        auto it = std::begin(subsets);
-        for (; it != std::end(subsets); ++it) {
-            auto S = *it;
+        bool broken = false;
+        std::string bitmask(s, 1);
+        bitmask.resize(T.size(), 0);
+        do {
+            std::vector<unsigned int> S;
+            for (unsigned int i = 0; i < T.size(); ++i) {
+                if (bitmask[i]) {
+                    S.push_back(T[i]);
+                }
+            }
             UIntDict G;
 
             if (b == 1_z) {
@@ -207,11 +197,14 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
                 factors.insert(
                     UIntPoly::from_dict(get_var(), std::move(G.dict_)));
                 b = f.dict_.rbegin()->second;
+                broken = true;
                 break;
             }
+        } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
+        if (not std::next_permutation(bitmask.begin(), bitmask.end())) {
+            if (not broken)
+                s += 1;
         }
-        if (it == std::end(subsets))
-            s += 1;
     }
     if (not f.empty()) {
         factors.insert(UIntPoly::from_dict(get_var(), std::move(f.dict_)));
