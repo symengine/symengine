@@ -122,10 +122,15 @@ public:
         }
         return curr;
     }
-
+    // Reduces the polynomial modulo a constant `mod` in `Z[x]`
+    // All the coefficients are coerced to range `[-mod/2, mod/2]`
     void itrunc(const integer_class &mod);
+    // `res` is set to the primitive part of polynomial
+    // returns the content of polynomial
     integer_class primitive(const Ptr<UIntDict> &res) const;
+    //! \return l1 norm of the polynomial
     integer_class l1_norm() const;
+    // Divides a polynomial in integer domain
     static void zz_divide(const UIntDict &a, const UIntDict &b,
                           const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem);
 }; // UIntDict
@@ -139,7 +144,18 @@ public:
 
     //! \return size of the hash
     hash_t __hash__() const;
+    // Factors a primitive suare free polynomial in Z[x] using Zassenhaus's
+    // algorithm
+    // returns a set of factors
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999,
+    //     page no: 453-454
     std::set<RCP<const UIntPoly>, RCPBasicKeyLess> zz_zassenhaus() const;
+    // Factors a square free(non-primitive) polynomial in Z[x]
+    // returns a pair, where first is the content of polynomial and second is
+    // the set of factors
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
     std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>>
     zz_factor_sqf() const;
 }; // UIntPoly

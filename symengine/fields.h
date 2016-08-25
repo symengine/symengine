@@ -150,12 +150,20 @@ public:
     std::pair<integer_class,
               std::set<std::pair<GaloisFieldDict, unsigned>, DictLess>>
     gf_factor() const;
+    // One step in Hensel lifting in `Z[x]`.
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999,
+    //     page no: 445-446
     static void
     zz_hensel_step(const integer_class &m, const GaloisFieldDict &ff,
                    GaloisFieldDict &g, GaloisFieldDict &h, GaloisFieldDict &s,
                    GaloisFieldDict &t, const Ptr<GaloisFieldDict> &G,
                    const Ptr<GaloisFieldDict> &H, const Ptr<GaloisFieldDict> &S,
                    const Ptr<GaloisFieldDict> &T);
+    // Multifactor Hensel lifting in `Z[x]`.
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999,
+    //     page no: 450-451
     static std::vector<UIntDict> zz_hensel_lift(
         const GaloisFieldDict &f, const integer_class &p,
         const std::set<GaloisFieldDict, GaloisFieldDict::DictLess> &f_list,
