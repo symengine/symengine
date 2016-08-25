@@ -9,11 +9,12 @@
 
 #include <symengine/basic.h>
 
-
 namespace SymEngine
 {
 
-vec_basic generate_fdiff_weights_vector(const vec_basic& grid, const unsigned max_deriv, const RCP<const Basic> around);
+vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
+                                        const unsigned max_deriv,
+                                        const RCP<const Basic> around);
 }
 
 #endif
