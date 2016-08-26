@@ -30,7 +30,9 @@ cd feedstock
 if [[ "${TRAVIS_TAG}" != "" ]]; then
     git checkout tagged
 else
-    git checkout dev
+    echo "Testing merge. Not triggering feedstock"
+    exit 0
+    # git checkout dev
 fi
 
 sed -ie '1,2d' recipe/meta.yaml
