@@ -128,17 +128,13 @@ TEST_CASE("And, Or : Basic", "[basic]")
 
     auto s1 = logical_and({c1, c2});
     std::string str = s1->__str__();
-    REQUIRE(str.find("And(") == 0);
-    REQUIRE(str.find(c1->__str__()) != std::string::npos);
-    REQUIRE(str.find(c2->__str__()) != std::string::npos);
+    REQUIRE(str == "And(Contains(x, [1, 5]), Contains(x, [1, 2]))");
     auto s2 = logical_and({c2, c1});
     REQUIRE(s1->__hash__() == s2->__hash__());
     REQUIRE(eq(*s1, *s2));
     s1 = logical_or({c1, c2});
     str = s1->__str__();
-    REQUIRE(str.find("Or(") == 0);
-    REQUIRE(str.find(c1->__str__()) != std::string::npos);
-    REQUIRE(str.find(c2->__str__()) != std::string::npos);
+    REQUIRE(str == "Or(Contains(x, [1, 5]), Contains(x, [1, 2]))");
     s2 = logical_or({c2, c1});
     REQUIRE(s1->__hash__() == s2->__hash__());
     REQUIRE(eq(*s1, *s2));
