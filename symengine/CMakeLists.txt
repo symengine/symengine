@@ -51,6 +51,7 @@ set(SRC
     fields.cpp
     infinity.cpp
     logic.cpp
+    finitediff.cpp
 )
 
 if (WITH_MPFR)
@@ -97,6 +98,7 @@ set(HEADERS
     eval_mpfr.h
     expression.h
     fields.h
+    finitediff.h
     flint_wrapper.h
     functions.h
     infinity.h
