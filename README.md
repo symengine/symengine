@@ -28,6 +28,18 @@ SymEngine mailinglist: http://groups.google.com/group/symengine
 
 ## Installation
 
+### Ubuntu package manager
+
+    add-apt-repository ppa:symengine/ppa
+    apt-get update
+    apt-get install libsymengine-dev
+
+### Conda package manager
+
+    conda install symengine -c symengine -c conda-forge
+
+### Building from source
+
 Install prerequisites.
 For Debian based systems (Ubuntu etc.):
 
