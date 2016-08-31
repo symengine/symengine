@@ -17,6 +17,11 @@ fi
 
 cd $SOURCE_DIR;
 export ver=`git describe --tags`
+if [[ $ver == "v"* ]]
+then
+  ver=${ver:1};
+fi
+
 export commit=`git rev-parse HEAD`
 
 git config --global user.name "Isuru Fernando"
