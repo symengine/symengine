@@ -16,17 +16,21 @@ addons:
     - libmpc-dev
     - binutils-dev
     - g++-4.7
+
 env:
+  global:
+    - secure: "Xj8vvg++O4mhcUTQGtHqXHhn8o5LklI/GkGWO6fcRXlJQszvpSMQiYfJ1UAYlmmuvXRNjWWdhEr7inJdHe1ZtNSXVU/jEICUytFBG6T3uuhOsBPkjVTp2en5vwsSPohaHcAnhoDyK9L48SBcTKLTCkTMhOitj9jk2renem0dX84="
+
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
   ## so if they are not set, cmake will use a default value. For the rest, the
   ## bin/test_travis.sh script usually checks for either "yes" or "no" in an if
   ## statement, so if the variable is not set, the other if branch will get
   ## executed.
-
+  matrix:
   ## Out of tree builds (default):
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TRIGGER_FEEDSTOCK="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD) with ECM
@@ -142,5 +146,6 @@ install:
 script:
   - bin/travis_clang.sh
   - bin/test_travis.sh
+  - bin/trigger_feedstock.sh
 notifications:
   email: false
