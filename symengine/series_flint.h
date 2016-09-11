@@ -3,6 +3,7 @@
 
 #include <symengine/series.h>
 #include <symengine/expression.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
@@ -20,7 +21,7 @@ public:
                      const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESFLINT)
     virtual int compare(const Basic &o) const;
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
@@ -122,7 +123,7 @@ public:
     static inline fqp_t series_acos(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
     {
-        throw std::runtime_error("acos() not implemented");
+        throw NotImplementedError("acos() not implemented");
     }
     static inline fqp_t series_sinh(const fqp_t &s, const fqp_t &var,
                                     unsigned int prec)
@@ -175,7 +176,7 @@ public:
 
         const short ldeg = ldegree(s);
         if (ldeg % n != 0) {
-            throw std::runtime_error("Puiseux series not implemented.");
+            throw NotImplementedError("Puiseux series not implemented.");
         }
         fqp_t ss = s;
         if (ldeg != 0) {

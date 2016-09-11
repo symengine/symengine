@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <symengine/symengine_config.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
 #include <atomic>
@@ -91,9 +92,9 @@ private:
 // current hash (which is always the same for the given instance). The
 // state of the instance does not change, so we define hash_ as mutable.
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
-    mutable std::atomic<std::size_t> hash_; // This holds the hash value
+    mutable std::atomic<hash_t> hash_; // This holds the hash value
 #else
-    mutable std::size_t hash_; // This holds the hash value
+    mutable hash_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
 public:
     virtual TypeID get_type_code() const = 0;
@@ -123,10 +124,10 @@ public:
              std::hash<Basic> hash_fn;
              std::cout << hash_fn(*x);
     */
-    virtual std::size_t __hash__() const = 0;
+    virtual hash_t __hash__() const = 0;
 
     //! This caches the hash:
-    std::size_t hash() const;
+    hash_t hash() const;
 
     //! true if `this` is equal to `o`.
     virtual bool __eq__(const Basic &o) const = 0;
@@ -155,7 +156,7 @@ public:
     //! expands the special function in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     //! Returns the list of arguments
@@ -187,20 +188,9 @@ struct RCPBasicKeyLess {
     //! true if `x < y`, false otherwise
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
-        std::size_t xh = x->hash(), yh = y->hash();
+        hash_t xh = x->hash(), yh = y->hash();
         if (xh != yh)
             return xh < yh;
-        if (x->__eq__(*y))
-            return false;
-        return x->__cmp__(*y) == -1;
-    }
-};
-
-//! Less operator `(<)` using cmp:
-struct RCPBasicKeyLessCmp {
-    //! true if `x < y`, false otherwise
-    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
-    {
         if (x->__eq__(*y))
             return false;
         return x->__cmp__(*y) == -1;
@@ -246,18 +236,9 @@ void as_numer_denom(const RCP<const Basic> &x,
 */
 std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 
-} // SymEngine
-
-//! Specialise `std::hash` for Basic.
-namespace std
-{
-template <>
-struct hash<SymEngine::Basic>;
-}
-
 /*! Standard `hash_combine()` function. Example of usage:
 
-        std::size_t seed1 = 0;
+        hash_t seed1 = 0;
         hash_combine<std::string>(seed1, "x");
         hash_combine<std::string>(seed1, "y");
 
@@ -266,12 +247,21 @@ struct hash<SymEngine::Basic>;
 
         RCP<const Symbol> x = symbol("x");
         RCP<const Symbol> y = symbol("y");
-        std::size_t seed2 = 0;
+        hash_t seed2 = 0;
         hash_combine<Basic>(seed2, *x);
         hash_combine<Basic>(seed2, *y);
 */
 template <class T>
-void hash_combine(std::size_t &seed, const T &v);
+void hash_combine(hash_t &seed, const T &v);
+
+} // SymEngine
+
+//! Specialise `std::hash` for Basic.
+namespace std
+{
+template <>
+struct hash<SymEngine::Basic>;
+}
 
 //! Inline members and functions
 #include "basic-inl.h"

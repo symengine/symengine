@@ -1,7 +1,9 @@
 #include <symengine/series_piranha.h>
 #include "catch.hpp"
 #include <chrono>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -17,6 +19,7 @@ using SymEngine::cos;
 using SymEngine::umap_short_basic;
 using SymEngine::neg;
 using SymEngine::EulerGamma;
+using SymEngine::gamma;
 using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -284,6 +287,6 @@ TEST_CASE("Check error when expansion called without Piranha ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(UPSeriesPiranha::series(ex1, "x", 10),
-                      std::runtime_error);
+                      SymEngineException);
 }
 #endif

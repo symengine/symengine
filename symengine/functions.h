@@ -24,9 +24,9 @@ public:
     //! Constructor
     OneArgFunction(const RCP<const Basic> &arg) : arg_{arg} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *arg_);
         return seed;
     }
@@ -70,9 +70,9 @@ public:
     TwoArgFunction(const RCP<const Basic> &a, const RCP<const Basic> &b)
         : a_{a}, b_{b} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *a_);
         hash_combine<Basic>(seed, *b_);
         return seed;
@@ -130,9 +130,9 @@ public:
     //! Constructor
     MultiArgFunction(const vec_basic &arg) : arg_{arg} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         for (const auto &a : arg_)
             hash_combine<Basic>(seed, *a);
         return seed;
@@ -511,7 +511,7 @@ public:
     FunctionSymbol(std::string name, const vec_basic &arg);
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
     //! \return Size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o  Object to be compared with
      * \return whether the 2 objects are equal
@@ -583,7 +583,7 @@ public:
         return make_rcp<const Derivative>(arg, x);
     }
 
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     inline RCP<const Basic> get_arg() const
@@ -624,7 +624,7 @@ public:
         return make_rcp<const Subs>(arg, x);
     }
 
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     inline RCP<const Basic> get_arg() const

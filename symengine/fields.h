@@ -8,6 +8,7 @@
 #include <symengine/basic.h>
 #include <symengine/dict.h>
 #include <symengine/polys/upolybase.h>
+#include <symengine/polys/uintpoly.h>
 #include <random>
 namespace SymEngine
 {
@@ -47,49 +48,12 @@ public:
           modulo_(std::move(other.modulo_))
     {
     }
-    GaloisFieldDict(const int &i, const integer_class &mod) : modulo_(mod)
-    {
-        integer_class temp;
-        mp_fdiv_r(temp, integer_class(i), modulo_);
-        if (temp != integer_class(0))
-            dict_.insert(dict_.begin(), temp);
-    }
-    GaloisFieldDict(const map_uint_mpz &p, const integer_class &mod)
-        : modulo_(mod)
-    {
-        if (p.size() != 0) {
-            dict_.resize(p.rbegin()->first + 1, integer_class(0));
-            for (auto &iter : p) {
-                integer_class temp;
-                mp_fdiv_r(temp, iter.second, modulo_);
-                dict_[iter.first] = temp;
-            }
-            gf_istrip();
-        }
-    }
-    GaloisFieldDict(const integer_class &i, const integer_class &mod)
-        : modulo_(mod)
-    {
-        integer_class temp;
-        mp_fdiv_r(temp, i, modulo_);
-        if (temp != integer_class(0))
-            dict_.insert(dict_.begin(), temp);
-    }
+    GaloisFieldDict(const int &i, const integer_class &mod);
+    GaloisFieldDict(const map_uint_mpz &p, const integer_class &mod);
+    GaloisFieldDict(const integer_class &i, const integer_class &mod);
 
     static GaloisFieldDict from_vec(const std::vector<integer_class> &v,
-                                    const integer_class &modulo)
-    {
-        GaloisFieldDict x;
-        x.modulo_ = modulo;
-        x.dict_.resize(v.size());
-        for (unsigned int i = 0; i < v.size(); ++i) {
-            integer_class a;
-            mp_fdiv_r(a, v[i], modulo);
-            x.dict_[i] = a;
-        }
-        x.gf_istrip();
-        return x;
-    }
+                                    const integer_class &modulo);
 
     GaloisFieldDict(const GaloisFieldDict &) = default;
     GaloisFieldDict &operator=(const GaloisFieldDict &) = default;
@@ -100,11 +64,13 @@ public:
     void gf_rshift(const integer_class n, const Ptr<GaloisFieldDict> &quo,
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
-    GaloisFieldDict gf_pow(const integer_class n) const;
+    GaloisFieldDict gf_pow(const unsigned int n) const;
     void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_diff() const;
+    integer_class gf_eval(const integer_class &a) const;
+    vec_integer_class gf_multi_eval(const vec_integer_class &v) const;
 
     // Returns whether polynomial is squarefield in `modulo_`
     bool gf_is_sqf() const;
@@ -119,12 +85,12 @@ public:
     // composition of polynomial g(h) mod (*this)
     GaloisFieldDict gf_compose_mod(const GaloisFieldDict &g,
                                    const GaloisFieldDict &h) const;
-    // computes `f**n % (*this)` in modulo_
-    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
-                               const integer_class &n) const;
     // returns `x**(i * modullo_) % (*this)` for `i` in [0, n)
     // where n = this->degree()
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
+    // computes `f**n % (*this)` in modulo_
+    GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
+                               const unsigned int &n) const;
     // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
     // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
@@ -144,7 +110,8 @@ public:
     GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
-    GaloisFieldDict gf_random(unsigned n_val, gmp_randstate_t &state) const;
+    GaloisFieldDict gf_random(const unsigned int &n_val,
+                              gmp_randstate_t &state) const;
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.
@@ -200,7 +167,7 @@ public:
     GaloisFieldDict &operator+=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
             return static_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
@@ -255,7 +222,6 @@ public:
         c -= b;
         return c;
     }
-
     GaloisFieldDict operator-() const
     {
         GaloisFieldDict o(*this);
@@ -267,15 +233,7 @@ public:
         return o;
     }
 
-    GaloisFieldDict &negate()
-    {
-        for (auto &a : dict_) {
-            a *= -1;
-            if (a != 0_z)
-                a += modulo_;
-        }
-        return static_cast<GaloisFieldDict &>(*this);
-    }
+    GaloisFieldDict &negate();
 
     GaloisFieldDict &operator-=(const integer_class &other)
     {
@@ -285,7 +243,7 @@ public:
     GaloisFieldDict &operator-=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
             return static_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
@@ -328,33 +286,7 @@ public:
     }
 
     static GaloisFieldDict mul(const GaloisFieldDict &a,
-                               const GaloisFieldDict &b)
-    {
-        // TODO
-        if (a.modulo_ != b.modulo_)
-            throw std::runtime_error("Error: field must be same.");
-        if (a.get_dict().empty())
-            return a;
-        if (b.get_dict().empty())
-            return b;
-
-        GaloisFieldDict p;
-        p.dict_.resize(a.degree() + b.degree() + 1, integer_class(0));
-        p.modulo_ = a.modulo_;
-        for (unsigned int i = 0; i <= a.degree(); i++)
-            for (unsigned int j = 0; j <= b.degree(); j++) {
-                auto temp = a.dict_[i];
-                temp *= b.dict_[j];
-                if (temp != integer_class(0)) {
-                    auto t = p.dict_[i + j];
-                    t += temp;
-                    mp_fdiv_r(t, t, a.modulo_);
-                    p.dict_[i + j] = t;
-                }
-            }
-        p.gf_istrip();
-        return p;
-    }
+                               const GaloisFieldDict &b);
 
     friend GaloisFieldDict operator*(const GaloisFieldDict &a,
                                      const GaloisFieldDict &b)
@@ -385,7 +317,7 @@ public:
     GaloisFieldDict &operator*=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
 
@@ -424,7 +356,7 @@ public:
     GaloisFieldDict &operator/=(const integer_class &other)
     {
         if (other == integer_class(0)) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -443,10 +375,10 @@ public:
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -502,7 +434,7 @@ public:
     GaloisFieldDict &operator%=(const integer_class &other)
     {
         if (other == integer_class(0)) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -513,10 +445,10 @@ public:
     GaloisFieldDict &operator%=(const GaloisFieldDict &other)
     {
         if (modulo_ != other.modulo_)
-            throw std::runtime_error("Error: field must be same.");
+            throw SymEngineException("Error: field must be same.");
         auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
-            throw std::runtime_error("ZeroDivisionError");
+            throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
@@ -560,6 +492,11 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    static GaloisFieldDict pow(const GaloisFieldDict &a, unsigned int p)
+    {
+        return a.gf_pow(p);
+    }
+
     bool operator==(const GaloisFieldDict &other) const
     {
         return dict_ == other.dict_ and modulo_ == other.modulo_;
@@ -592,15 +529,7 @@ public:
         return dict_;
     }
 
-    void gf_istrip()
-    {
-        for (auto i = dict_.size(); i-- != 0;) {
-            if (dict_[i] == integer_class(0))
-                dict_.pop_back();
-            else
-                break;
-        }
-    }
+    void gf_istrip();
 
     bool is_one() const
     {
@@ -609,9 +538,16 @@ public:
                 return true;
         return false;
     }
+
+    integer_class get_coeff(unsigned int x) const
+    {
+        if (x <= degree())
+            return dict_[x];
+        return 0_z;
+    }
 };
 
-class GaloisField : public UPolyBase<GaloisFieldDict, GaloisField>
+class GaloisField : public UIntPolyBase<GaloisFieldDict, GaloisField>
 {
 public:
     IMPLEMENT_TYPEID(GALOISFIELD)
@@ -622,7 +558,7 @@ public:
     //! \return true if canonical
     bool is_canonical(const GaloisFieldDict &dict) const;
     //! \return size of the hash
-    std::size_t __hash__() const;
+    hash_t __hash__() const;
     int compare(const Basic &o) const;
 
     // creates a GaloisField in cannonical form based on the
@@ -632,6 +568,42 @@ public:
     static RCP<const GaloisField> from_vec(const RCP<const Basic> &var,
                                            const std::vector<integer_class> &v,
                                            const integer_class &modulo);
+    static RCP<const GaloisField> from_uintpoly(const UIntPoly &a,
+                                                const integer_class &modulo);
+
+    integer_class eval(const integer_class &x) const
+    {
+        return poly_.gf_eval(x);
+    }
+
+    vec_integer_class multieval(const vec_integer_class &v) const
+    {
+        return poly_.gf_multi_eval(v);
+    }
+
+    typedef vec_integer_class::const_iterator iterator;
+    typedef vec_integer_class::const_reverse_iterator reverse_iterator;
+    iterator begin() const
+    {
+        return poly_.dict_.begin();
+    }
+    iterator end() const
+    {
+        return poly_.dict_.end();
+    }
+    reverse_iterator obegin() const
+    {
+        return poly_.dict_.rbegin();
+    }
+    reverse_iterator oend() const
+    {
+        return poly_.dict_.rend();
+    }
+
+    inline integer_class get_coeff(unsigned int x) const
+    {
+        return poly_.get_coeff(x);
+    }
 
     virtual vec_basic get_args() const;
     inline const std::vector<integer_class> &get_dict() const
@@ -639,14 +611,9 @@ public:
         return poly_.dict_;
     }
 
-    inline unsigned int get_degree() const
-    {
-        return poly_.degree();
-    }
-
     inline unsigned int size() const
     {
-        if (get_degree() == 0 and poly_.dict_[0] == 0)
+        if (poly_.empty())
             return 0;
         return get_degree() + 1;
     }

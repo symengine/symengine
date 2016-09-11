@@ -1,4 +1,5 @@
 #include <symengine/visitor.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -1098,7 +1099,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return zero;
             // else it is NAN, yet to be implemented
             else {
-                throw std::runtime_error("Not implemented.");
+                throw NotImplementedError("Not Implemented");
             }
         }
     } else if (eq(*den, *zero)) {
@@ -1110,7 +1111,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return div(pi, im2);
             // else it is NAN, yet to be implemented
             else {
-                throw std::runtime_error("Not implemented.");
+                throw NotImplementedError("Not Implemented");
             }
         }
     }
@@ -1265,9 +1266,9 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg) const
     return true;
 }
 
-std::size_t FunctionSymbol::__hash__() const
+hash_t FunctionSymbol::__hash__() const
 {
-    std::size_t seed = FUNCTIONSYMBOL;
+    hash_t seed = FUNCTIONSYMBOL;
     for (const auto &a : arg_)
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
@@ -1386,9 +1387,9 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     return false;
 }
 
-std::size_t Derivative::__hash__() const
+hash_t Derivative::__hash__() const
 {
-    std::size_t seed = DERIVATIVE;
+    hash_t seed = DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
     for (auto &p : x_) {
         hash_combine<Basic>(seed, *p);
@@ -1432,9 +1433,9 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
     return false;
 }
 
-std::size_t Subs::__hash__() const
+hash_t Subs::__hash__() const
 {
-    std::size_t seed = SUBS;
+    hash_t seed = SUBS;
     hash_combine<Basic>(seed, *arg_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *p.first);
@@ -1563,7 +1564,7 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
         // Answer is infinity. Yet to be implemented in SymEngine
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -1751,7 +1752,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
         // Answer is infinity. Yet to be implemented in SymEngine
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -2197,7 +2198,8 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
         if (rcp_static_cast<const Number>(s)->is_zero()) {
             return sub(div(one, i2), a);
         } else if (rcp_static_cast<const Number>(s)->is_one()) {
-            throw std::runtime_error("Complex infinity is not yet implemented");
+            throw NotImplementedError(
+                "Complex infinity is not yet implemented");
         } else if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
             auto s_ = static_cast<const Integer &>(*s).as_int();
             auto a_ = static_cast<const Integer &>(*a).as_int();
@@ -2363,7 +2365,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         if (arg_->is_positive()) {
             return gamma_positive_int(arg);
         } else {
-            throw std::runtime_error("Complex Infinity not yet implemented");
+            throw NotImplementedError("Complex Infinity not yet implemented");
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
@@ -2524,7 +2526,7 @@ RCP<const Basic> loggamma(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
         if (not arg_int->is_positive()) {
-            throw std::runtime_error("Infinity not yet implemented");
+            throw NotImplementedError("Infinity not yet implemented");
         }
         if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
             return zero;
@@ -2577,7 +2579,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
     // Only special values are being evaluated
     if (eq(*add(x, y), *one)) {
-        throw std::runtime_error("Complex Infinity not yet implemented");
+        throw NotImplementedError("Complex Infinity not yet implemented");
     }
 
     if (is_a<Integer>(*x)) {
@@ -2590,7 +2592,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                         mul(gamma_positive_int(x), gamma_positive_int(y)),
                         gamma_positive_int(add(x, y)));
                 } else {
-                    throw std::runtime_error(
+                    throw NotImplementedError(
                         "Complex Infinity not yet implemented");
                 }
             } else if (is_a<Rational>(*y)) {
@@ -2603,7 +2605,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             }
         } else {
-            throw std::runtime_error("Complex Infinity not yet implemented");
+            throw NotImplementedError("Complex Infinity not yet implemented");
         }
     }
 
@@ -2620,7 +2622,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             }
         } else {
-            throw std::runtime_error("Complex Infinity not yet implemented");
+            throw NotImplementedError("Complex Infinity not yet implemented");
         }
     }
 
@@ -2632,7 +2634,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 return div(mul(gamma_multiple_2(x), gamma_positive_int(y)),
                            gamma_multiple_2(add(x, y)));
             } else {
-                throw std::runtime_error(
+                throw NotImplementedError(
                     "Complex Infinity not yet implemented");
             }
         }
@@ -2695,7 +2697,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
     // Only special values are being evaluated
     if (is_a_Number(*x_)
         and not(rcp_static_cast<const Number>(x_))->is_positive()) {
-        throw std::runtime_error("Complex Infinity not yet implemented");
+        throw NotImplementedError("Complex Infinity not yet implemented");
     }
     if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
         auto n = static_cast<const Integer &>(*n_).as_int();
@@ -2840,13 +2842,18 @@ RCP<const Basic> max(const vec_basic &arg)
 
     for (const auto &p : arg) {
         if (is_a<Complex>(*p))
-            throw std::runtime_error("Complex can't be passed to max!");
+            throw SymEngineException("Complex can't be passed to max!");
 
         if (is_a_Number(*p)) {
             if (not number_set) {
                 max_number = rcp_static_cast<const Number>(p);
 
             } else {
+                if (eq(*p, *Inf)) {
+                    return Inf;
+                } else if (eq(*p, *NegInf)) {
+                    continue;
+                }
                 difference = rcp_static_cast<const Number>(p)->sub(*max_number);
 
                 if (difference->is_zero() and not difference->is_exact()) {
@@ -2897,7 +2904,7 @@ RCP<const Basic> max(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to max!");
+        throw SymEngineException("Empty vec_basic passed to max!");
     }
 }
 
@@ -2938,13 +2945,18 @@ RCP<const Basic> min(const vec_basic &arg)
 
     for (const auto &p : arg) {
         if (is_a<Complex>(*p))
-            throw std::runtime_error("Complex can't be passed to min!");
+            throw SymEngineException("Complex can't be passed to min!");
 
         if (is_a_Number(*p)) {
             if (not number_set) {
                 min_number = rcp_static_cast<const Number>(p);
 
             } else {
+                if (eq(*p, *Inf)) {
+                    continue;
+                } else if (eq(*p, *NegInf)) {
+                    return NegInf;
+                }
                 difference = min_number->sub(*rcp_static_cast<const Number>(p));
 
                 if (difference->is_zero() and not difference->is_exact()) {
@@ -2995,7 +3007,7 @@ RCP<const Basic> min(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to min!");
+        throw SymEngineException("Empty vec_basic passed to min!");
     }
 }
 

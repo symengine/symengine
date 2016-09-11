@@ -4,6 +4,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -43,6 +44,7 @@ using SymEngine::complex_double;
 using SymEngine::rational_class;
 using SymEngine::is_a;
 using SymEngine::set_basic;
+using SymEngine::SymEngineException;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -303,7 +305,7 @@ TEST_CASE("Mul: arit", "[arit]")
     r1 = mul({i2, pow(x, i2), y, pow(x, real_double(-2.0))});
     REQUIRE(eq(*r1, *r2));
 
-    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLessCmp> s;
+    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLess> s;
     rc1 = Complex::from_two_nums(*one, *one);
     s.insert(rc1);
     rc1 = Complex::from_two_nums(*i2, *one);
@@ -313,7 +315,7 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(s.size() == 2);
 
     CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));
-                    , std::runtime_error);
+                    , SymEngineException);
 
     r1 = mul({});
     REQUIRE(eq(*r1, *one));

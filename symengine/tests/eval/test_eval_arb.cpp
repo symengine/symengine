@@ -8,7 +8,9 @@
 #include <symengine/pow.h>
 #include <symengine/eval_arb.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;
@@ -40,6 +42,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::min;
 using SymEngine::max;
 using SymEngine::loggamma;
+using SymEngine::gamma;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {

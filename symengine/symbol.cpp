@@ -7,10 +7,11 @@ Symbol::Symbol(const std::string &name) : name_{name}
 {
 }
 
-std::size_t Symbol::__hash__() const
+hash_t Symbol::__hash__() const
 {
-    std::hash<std::string> hash_fn;
-    return hash_fn(name_);
+    hash_t seed = 0;
+    hash_combine(seed, name_);
+    return seed;
 }
 
 bool Symbol::__eq__(const Basic &o) const

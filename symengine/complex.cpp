@@ -32,11 +32,11 @@ bool Complex::is_canonical(const rational_class &real,
     return true;
 }
 
-std::size_t Complex::__hash__() const
+hash_t Complex::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    std::size_t seed = COMPLEX;
+    hash_t seed = COMPLEX;
     hash_combine<long long int>(seed, mp_get_si(get_num(this->real_)));
     hash_combine<long long int>(seed, mp_get_si(get_den(this->real_)));
     hash_combine<long long int>(seed, mp_get_si(get_num(this->imaginary_)));
@@ -108,7 +108,7 @@ RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
         rational_class im_mpq = static_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
-        throw std::runtime_error(
+        throw SymEngineException(
             "Invalid Format: Expected Integer or Rational");
     }
 }

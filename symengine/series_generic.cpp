@@ -1,6 +1,7 @@
 #include <exception>
 #include <iterator>
 #include <symengine/series_visitor.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -18,16 +19,17 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
     return visitor.series(t);
 }
 
-std::size_t UnivariateSeries::__hash__() const
+hash_t UnivariateSeries::__hash__() const
 {
-    std::size_t seed = UEXPRPOLY;
+    hash_t seed = UEXPRPOLY;
+    hash_combine(seed, get_degree());
     for (const auto &it : p_.dict_) {
-        std::size_t temp = UEXPRPOLY;
+        hash_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }
-    return seed + std::size_t(get_degree() * 84728863L);
+    return seed;
 }
 
 int UnivariateSeries::compare(const Basic &other) const
@@ -102,7 +104,7 @@ UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
     }
     if (exp == 0) {
         if (base == 0 or base.get_dict().size() == 0) {
-            throw std::runtime_error("Error: 0**0 is undefined.");
+            throw UndefinedError("Error: 0**0 is undefined.");
         } else {
             return UExprDict(1);
         }
@@ -159,7 +161,7 @@ UExprDict UnivariateSeries::integrate(const UExprDict &s, const UExprDict &var)
             dict.insert(std::pair<int, Expression>(it.first + 1,
                                                    it.second / (it.first + 1)));
         } else {
-            throw std::runtime_error("Not Implemented");
+            throw NotImplementedError("Not Implemented");
         }
     }
 

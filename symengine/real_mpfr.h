@@ -7,6 +7,7 @@
 #define SYMENGINE_REAL_MPFR_H
 
 #include <symengine/complex_double.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
@@ -75,6 +76,8 @@ public:
     }
 };
 
+void hash_combine_impl(hash_t &, mpfr_srcptr);
+
 RCP<const Number> number(mpfr_ptr x);
 
 //! RealMPFR Class to hold mpfr_t values
@@ -96,7 +99,7 @@ public:
         return mpfr_get_prec(i.get_mpfr_t());
     }
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -216,7 +219,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rsubreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -294,7 +297,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rdivreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -345,7 +348,7 @@ public:
         } else if (is_a<ComplexDouble>(other)) {
             return rpowreal(static_cast<const ComplexDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

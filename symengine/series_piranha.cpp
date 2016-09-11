@@ -17,9 +17,9 @@ URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
     return visitor.series(t);
 }
 
-std::size_t URatPSeriesPiranha::__hash__() const
+hash_t URatPSeriesPiranha::__hash__() const
 {
-    std::size_t seed = URATPSERIESPIRANHA;
+    hash_t seed = URATPSERIESPIRANHA;
     hash_combine(seed, p_.hash());
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
@@ -65,7 +65,7 @@ piranha::rational URatPSeriesPiranha::convert(const Rational &x)
 
 piranha::rational URatPSeriesPiranha::convert(const Basic &x)
 {
-    throw std::runtime_error("Not Implemented");
+    throw NotImplementedError("Not Implemented");
 }
 
 RCP<const Basic> URatPSeriesPiranha::as_basic() const
@@ -164,7 +164,7 @@ piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n)
         cl_root = static_cast<const Rational &>(*cout).i;
     }
     if (not res)
-        throw std::runtime_error("constant term is not an nth power");
+        throw SymEngineException("constant term is not an nth power");
     return convert(cl_root);
 }
 
@@ -202,9 +202,9 @@ RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t,
     return visitor.series(t);
 }
 
-std::size_t UPSeriesPiranha::__hash__() const
+hash_t UPSeriesPiranha::__hash__() const
 {
-    std::size_t seed = URATPSERIESPIRANHA;
+    hash_t seed = URATPSERIESPIRANHA;
     hash_combine(seed, p_.hash());
     hash_combine(seed, var_);
     hash_combine(seed, degree_);

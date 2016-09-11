@@ -22,9 +22,9 @@ RCP<const Number> ComplexDouble::imaginary_part() const
 {
     return real_double(i.imag());
 }
-std::size_t ComplexDouble::__hash__() const
+hash_t ComplexDouble::__hash__() const
 {
-    std::size_t seed = COMPLEX_DOUBLE;
+    hash_t seed = COMPLEX_DOUBLE;
     hash_combine<double>(seed, i.real());
     hash_combine<double>(seed, i.imag());
     return seed;

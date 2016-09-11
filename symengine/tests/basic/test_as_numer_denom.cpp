@@ -2,7 +2,9 @@
 
 #include <symengine/eval_double.h>
 #include <symengine/numer_denom.cpp>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Add;
 using SymEngine::Mul;

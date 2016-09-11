@@ -8,6 +8,7 @@
 #define SYMENGINE_INTEGER_H
 
 #include <symengine/number.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -24,7 +25,7 @@ public:
     //! Constructor of Integer using `integer_class`
     explicit Integer(integer_class i);
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -90,7 +91,7 @@ public:
     {
         if (not(mp_fits_ulong_p(other.i))) {
             if (other.i > 0u)
-                throw std::runtime_error(
+                throw SymEngineException(
                     "powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
@@ -128,7 +129,7 @@ public:
 
     virtual RCP<const Number> rsub(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     //! Slower Multiplication
@@ -164,7 +165,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

@@ -2,6 +2,7 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/derivative.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -40,6 +41,7 @@ using SymEngine::rational_class;
 using SymEngine::pi;
 using SymEngine::diff;
 using SymEngine::sdiff;
+using SymEngine::DivisionByZeroError;
 
 using namespace SymEngine::literals;
 
@@ -57,20 +59,9 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
-    // Hashes of x and y can but don't have to be different:
-    if (hash_fn(*x) != hash_fn(*y))
-        REQUIRE(x->__neq__(*y));
 
-    std::size_t seed1 = 0;
-    hash_combine<std::string>(seed1, "x");
-    hash_combine<std::string>(seed1, "y");
-
-    std::size_t seed2 = 0;
-    hash_combine<Basic>(seed2, *x);
-    hash_combine<Basic>(seed2, *y);
-
-    // This checks that the Symbols are hashed by their strings:
-    REQUIRE(seed1 == seed2);
+    // This checks that the hash of the Symbols are ordered:
+    REQUIRE(hash_fn(*x) < hash_fn(*y));
 }
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
@@ -164,11 +155,11 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     buffer.str("");
     buffer << vb;
     bool check_vec_str;
-    check_vec_str = buffer.str() == "{x, 3}" or buffer.str() == "{3, x}";
+    check_vec_str = buffer.str() == "{x, 3}";
     REQUIRE(check_vec_str);
     buffer.str("");
     buffer << sb;
-    check_vec_str = buffer.str() == "{2, y}" or buffer.str() == "{y, 2}";
+    check_vec_str = buffer.str() == "{2, y}";
     REQUIRE(check_vec_str);
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
@@ -308,7 +299,7 @@ TEST_CASE("Integer: Basic", "[basic]")
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
 
-    CHECK_THROWS_AS(divnum(i, zero), std::runtime_error);
+    CHECK_THROWS_AS(divnum(i, zero), DivisionByZeroError);
 }
 
 TEST_CASE("Rational: Basic", "[basic]")
@@ -411,7 +402,7 @@ TEST_CASE("Rational: Basic", "[basic]")
 
     r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = zero;
-    CHECK_THROWS_AS(divnum(r1, r2), std::runtime_error);
+    CHECK_THROWS_AS(divnum(r1, r2), DivisionByZeroError);
 
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
@@ -458,7 +449,7 @@ TEST_CASE("Mul: Basic", "[basic]")
     r = div(x, x);
     REQUIRE(unified_eq(r->get_args(), {}));
 
-    CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
+    CHECK_THROWS_AS(div(integer(1), zero), DivisionByZeroError);
 
     r = mul(mul(mul(x, y), mul(x, integer(2))), integer(3));
     RCP<const Mul> mr = rcp_static_cast<const Mul>(r);
@@ -788,13 +779,13 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*c->imaginary_part(), *r2));
 
     // Explicit division by zero checks
-    CHECK_THROWS_AS(divnum(c1, integer(0)), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, integer(0)), DivisionByZeroError);
 
     r3 = Rational::from_two_ints(*integer(0), *integer(1));
-    CHECK_THROWS_AS(divnum(c1, r3), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, r3), DivisionByZeroError);
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    CHECK_THROWS_AS(divnum(c1, c2), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, c2), DivisionByZeroError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")

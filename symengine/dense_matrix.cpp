@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -50,7 +51,7 @@ void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
 unsigned DenseMatrix::rank() const
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError("Not Implemented");
 }
 
 RCP<const Basic> DenseMatrix::det() const
@@ -204,7 +205,7 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
         }
     }
     if (error) {
-        throw std::runtime_error(
+        throw SymEngineException(
             "'x' must contain Symbols only. "
             "Use sjacobian for SymPy style differentiation");
     }
@@ -827,7 +828,7 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
     DenseMatrix x_ = DenseMatrix(b.nrows(), b.ncols());
 
     if (not is_symmetric_dense(A))
-        throw std::runtime_error("Matrix must be symmetric");
+        throw SymEngineException("Matrix must be symmetric");
 
     LDL(A, L, D);
     forward_substitution(L, b, x);
@@ -939,7 +940,7 @@ void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
                 pivot = i;
         }
         if (pivot == -1)
-            throw std::runtime_error("Matrix is rank deficient");
+            throw SymEngineException("Matrix is rank deficient");
         if (pivot - j != 0) { // row must be swapped
             row_exchange_dense(LU, pivot, j);
             pl.push_back({pivot, j});

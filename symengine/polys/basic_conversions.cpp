@@ -1,4 +1,5 @@
 #include <symengine/visitor.h>
+#include <symengine/polys/basic_conversions.h>
 
 namespace SymEngine
 {

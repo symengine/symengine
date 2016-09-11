@@ -10,6 +10,10 @@ SymEngineConfig.cmake
 SymEngineConfigVersion.cmake
 SymEngineTargets.cmake
 
+# cotire
+symengine/cotire
+symengine/symengine_CXX_cotire.cmake
+
 # Compiled Object Files, Static/Dynamic Libraries
 *.so
 *.a
@@ -91,6 +95,10 @@ symengine/tests/polynomial/test_uintpoly_piranha
 symengine/tests/polynomial/test_uratpoly_piranha
 symengine/tests/polynomial/test_basic_conversions
 symengine/tests/basic/test_fields
+symengine/tests/basic/test_infinity
+symengine/tests/logic/test_logic
+symengine/tests/printing/test_ccode
+symengine/tests/finitediff/test_finitediff
 
 # Benchmarks executables
 benchmarks/add1

@@ -7,6 +7,7 @@
 #define SYMENGINE_COMPLEX_H
 
 #include <symengine/rational.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -35,7 +36,7 @@ public:
     bool is_canonical(const rational_class &real,
                       const rational_class &imaginary) const;
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -187,7 +188,7 @@ public:
         rational_class conjugate
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
         if (get_num(conjugate) == 0) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZeroError("Divide by zero.");
         } else {
             return from_mpq((this->real_ * other.real_
                              + this->imaginary_ * other.imaginary_)
@@ -203,7 +204,7 @@ public:
     inline RCP<const Number> divcomp(const Rational &other) const
     {
         if (other.is_zero()) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -214,7 +215,7 @@ public:
     inline RCP<const Number> divcomp(const Integer &other) const
     {
         if (other.is_zero()) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
@@ -227,7 +228,7 @@ public:
         rational_class conjugate
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
         if (get_num(conjugate) == 0) {
-            throw std::runtime_error("Divide by zero.");
+            throw DivisionByZeroError("Division By Zero");
         } else {
             return from_mpq((this->real_ * other.i) / conjugate,
                             (this->imaginary_ * (-other.i)) / conjugate);
@@ -272,7 +273,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return rsubcomp(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulcomp`
@@ -307,7 +308,7 @@ public:
         if (is_a<Integer>(other)) {
             return rdivcomp(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `powcomp`
@@ -334,7 +335,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 };
 

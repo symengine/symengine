@@ -4,6 +4,17 @@
 namespace SymEngine
 {
 
+//! Less operator `(<)` using cmp:
+struct PrinterBasicCmp {
+    //! true if `x < y`, false otherwise
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        if (x->__eq__(*y))
+            return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
 std::string ascii_art()
 {
     std::string a = " _____           _____         _         \n"
@@ -25,6 +36,18 @@ void StrPrinter::bvisit(const Basic &x)
 void StrPrinter::bvisit(const Symbol &x)
 {
     str_ = x.get_name();
+}
+
+void StrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-oo";
+    else if (x.is_positive_infinity())
+        s << "oo";
+    else
+        s << "zoo";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Integer &x)
@@ -124,9 +147,92 @@ void StrPrinter::bvisit(const Interval &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const BooleanAtom &x)
+{
+    if (x.get_val()) {
+        str_ = "True";
+    } else {
+        str_ = "False";
+    }
+}
+
+void StrPrinter::bvisit(const And &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "And(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Or &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "Or(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Not &x)
+{
+    std::ostringstream s;
+    s << "Not(" << *x.get_arg() << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Contains &x)
+{
+    std::ostringstream s;
+    s << "Contains(" << apply(x.get_expr()) << ", " << apply(x.get_set())
+      << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Piecewise &x)
+{
+    std::ostringstream s;
+    auto vec = x.get_vec();
+    auto it = vec.begin();
+    s << "Piecewise(";
+    while (true) {
+        s << "(";
+        s << apply((*it).first);
+        s << ", ";
+        s << apply((*it).second);
+        s << ")";
+        ++it;
+        if (it != vec.end()) {
+            s << ", ";
+        } else {
+            break;
+        }
+    }
+    s << ")";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const EmptySet &x)
 {
     str_ = "EmptySet";
+}
+
+void StrPrinter::bvisit(const Union &x)
+{
+    std::ostringstream s;
+    s << apply(*x.container_.begin());
+    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+        s << " U " << apply(*it);
+    }
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const UniversalSet &x)
@@ -193,7 +299,7 @@ void StrPrinter::bvisit(const Add &x)
 {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(
+    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
         x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
@@ -242,8 +348,6 @@ void StrPrinter::bvisit(const Mul &x)
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(
-        x.dict_.begin(), x.dict_.end());
 
     if (eq(*(x.coef_), *minus_one)) {
         o << "-";
@@ -252,7 +356,7 @@ void StrPrinter::bvisit(const Mul &x)
         num = true;
     }
 
-    for (const auto &p : dict) {
+    for (const auto &p : x.dict_) {
         if ((is_a<Integer>(*p.second)
              and rcp_static_cast<const Integer>(p.second)->is_negative())
             || (is_a<Rational>(*p.second)
@@ -545,10 +649,8 @@ void StrPrinter::bvisit(const Derivative &x)
 {
     std::ostringstream o;
     o << "Derivative(" << this->apply(x.get_arg());
-    multiset_basic m1 = x.get_symbols();
-    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(),
-                                                           m1.end());
-    for (const auto &elem : m2) {
+    auto m1 = x.get_symbols();
+    for (const auto &elem : m1) {
         o << ", " << this->apply(elem);
     }
     o << ")";
@@ -576,16 +678,16 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
+void StrPrinter::bvisit(const MIntPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = sorted_keys(x.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
 
     for (vec_uint exps : v) {
-        integer_class c = x.dict_.find(exps)->second;
+        integer_class c = x.poly_.dict_.find(exps)->second;
         if (!first) {
             s << " " << _print_sign(c) << " ";
         } else if (c < 0) {
@@ -624,16 +726,16 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x)
+void StrPrinter::bvisit(const MExprPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = sorted_keys(x.dict_);
+    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
 
     for (vec_int exps : v) {
-        Expression c = x.dict_.find(exps)->second;
+        Expression c = x.poly_.dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -650,7 +752,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
                     expr << "*";
                 }
                 expr << it->__str__();
-                if (exps[i] > 1)
+                if (exps[i] > 1 or exps[i] < 0)
                     expr << "**" << exps[i];
                 first_var = false;
             }

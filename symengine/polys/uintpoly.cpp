@@ -9,13 +9,13 @@ UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
-std::size_t UIntPoly::__hash__() const
+hash_t UIntPoly::__hash__() const
 {
-    std::size_t seed = UINTPOLY;
+    hash_t seed = UINTPOLY;
 
     seed += var_->hash();
     for (const auto &it : poly_.dict_) {
-        std::size_t temp = UINTPOLY;
+        hash_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
@@ -27,7 +27,7 @@ bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &out)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     auto a_poly = a.get_poly();
     auto b_poly = b.get_poly();

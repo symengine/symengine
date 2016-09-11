@@ -18,10 +18,10 @@ RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
     return visitor.series(t);
 }
 
-std::size_t URatPSeriesFlint::__hash__() const
+hash_t URatPSeriesFlint::__hash__() const
 {
     std::hash<std::string> str_hash;
-    std::size_t seed = URATPSERIESFLINT;
+    hash_t seed = URATPSERIESFLINT;
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
     hash_combine(seed, str_hash(p_.to_string()));
@@ -121,7 +121,7 @@ fqp_t URatPSeriesFlint::convert(const Rational &x)
 
 fqp_t URatPSeriesFlint::convert(const Basic &x)
 {
-    throw std::runtime_error("SeriesFlint::convert not Implemented");
+    throw SymEngineException("SeriesFlint::convert not Implemented");
 }
 
 fqp_t URatPSeriesFlint::pow(const fqp_t &s, int n, unsigned prec)

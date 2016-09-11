@@ -36,7 +36,7 @@ public:
 
     static RCP<const UnivariateSeries>
     series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual int compare(const Basic &o) const;
     bool operator==(const UnivariateSeries &u) const;
     virtual RCP<const Basic> as_basic() const;
