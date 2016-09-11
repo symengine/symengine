@@ -124,6 +124,7 @@ TEST_CASE("Sin: functions", "[functions]")
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
     RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
@@ -238,10 +239,9 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
 
-    // sin(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Sin>(sin(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // sin(2*pi/3 + y) = cos(pi/6 + y)
+    r1 = sin(add(div(mul(i2, pi), i3), y));
+    r2 = cos(add(div(pi, i6), y));
     REQUIRE(eq(*r1, *r2));
 
     r1 = sin(real_double(1.0));
@@ -262,6 +262,7 @@ TEST_CASE("Cos: functions", "[functions]")
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
     RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
@@ -352,10 +353,9 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = sin(y);
     REQUIRE(eq(*r1, *r2));
 
-    // cos(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Cos>(cos(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // cos(2*pi/3 + y) = -sin(pi/6 + y)
+    r1 = cos(add(div(mul(i2, pi), i3), y));
+    r2 = neg(sin(add(div(pi, i6), y)));
     REQUIRE(eq(*r1, *r2));
 
     r1 = cos(real_double(1.0));
@@ -377,7 +377,9 @@ TEST_CASE("Tan: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
     RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i23 = integer(23);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -467,10 +469,9 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
 
-    // tan(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Tan>(tan(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // tan(23*pi/3 + y) = -cot(pi/6 + y)
+    r1 = tan(add(div(mul(i23, pi), i3), y));
+    r2 = neg(cot(add(div(pi, i6), y)));
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
@@ -573,10 +574,9 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
 
-    // cot(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Cot>(cot(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // cot(100*pi/7 + y) = cot(2*pi/7 + y)
+    r1 = cot(add(div(mul(integer(100), pi), integer(7)), y));
+    r2 = cot(add(div(mul(i2, pi), integer(7)), y));
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
@@ -591,6 +591,7 @@ TEST_CASE("Csc: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
     RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
@@ -679,10 +680,9 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
 
-    // csc(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // csc(pi/5 + y) unchanged
+    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(pi, i5), y)))->get_arg();
+    r2 = add(div(pi, i5), y);
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
@@ -790,10 +790,9 @@ TEST_CASE("Sec: functions", "[functions]")
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
 
-    // sec(2*pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(mul(i2, pi), i3), y)))
-             ->get_arg();
-    r2 = add(div(mul(i2, pi), i3), y);
+    // sec(pi/3 + y) unchanged
+    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(pi, i3), y)))->get_arg();
+    r2 = add(div(pi, i3), y);
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);
@@ -1063,7 +1062,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
 {
     RCP<const Basic> r;
     RCP<const Basic> r1;
-    RCP<const Integer> n;
+    RCP<const Number> n;
     bool b;
 
     RCP<const Basic> i2 = integer(2);
@@ -1080,76 +1079,76 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = add(i3, mul(i2, pi));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
-    REQUIRE(eq(*n, *integer(24)));
+    REQUIRE(eq(*n, *integer(2)));
     REQUIRE(eq(*r1, *i3));
 
     // arg = n*pi/12
     r = mul(pi, div(one, integer(12)));
     get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(eq(*n, *one));
+    REQUIRE(eq(*n, *div(one, integer(12))));
     REQUIRE(eq(*r1, *zero));
 
-    // arg = n*pi/12
+    // arg = 2*pi/3
     r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE((eq(*n, *i8) and (b == true) and eq(*r1, *zero)));
+    REQUIRE((eq(*n, *div(i2, integer(3))) and (b == true) and eq(*r1, *zero)));
 
-    // arg neq n*pi/12 , n not an integer
+    // arg = 2 * pi / 5
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == false);
+    REQUIRE(((b == true) and eq(*n, *div(i2, integer(5)))));
 
-    // arg neq theta + n*pi/12 (no pi symbol, pi as pow)
+    // arg neq theta + n*pi (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
 
-    // arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    // arg neq theta + n*pi (no pi symbol, pi as mul form)
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
 
-    // arg = theta + n*pi/12 (theta is just another symbol)
+    // arg = theta + n*pi (theta is just another symbol)
     r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
-    REQUIRE(eq(*n, *i8));
+    REQUIRE(eq(*n, *div(i2, integer(3))));
     REQUIRE(eq(*r1, *mul(i2, x)));
 
-    // arg = theta + n*pi/12 (theta is constant plus a symbol)
+    // arg = theta + n*pi (theta is constant plus a symbol)
     r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
-    REQUIRE(eq(*n, *i8));
+    REQUIRE(eq(*n, *div(i2, integer(3))));
     REQUIRE(eq(*r1, *add(i2, x)));
 
-    // arg = theta + n*pi/12 (theta is an expression)
+    // arg = theta + n*pi (theta is an expression)
     r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
-    REQUIRE(eq(*n, *i8));
+    REQUIRE(eq(*n, *div(i2, integer(3))));
     REQUIRE(eq(*r1, *add(i2, mul(x, i2))));
 
-    // arg neq n*pi/12 (n is not integer)
-    r = mul(pi, div(i2, integer(5)));
+    // arg neq n*pi (n is not rational)
+    r = mul(pi, real_double(0.1));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
 
-    // arg neq n*pi/12 (pi is not in form of symbol)
+    // arg neq n*pi (pi is not in form of symbol)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
 
     // arg = pi (it is neither of form add nor mul, just a symbol)
     b = get_pi_shift(pi, outArg(n), outArg(r1));
-    REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
+    REQUIRE(((b == true) and eq(*n, *one) and eq(*r1, *zero)));
 
-    // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
+    // arg = theta + n*pi (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))),
             mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
-    REQUIRE(eq(*n, *i8));
+    REQUIRE(eq(*n, *div(i2, integer(3))));
     REQUIRE(eq(*r1, *add(mul(i2, x), mul(i2, symbol("y")))));
 }
 

@@ -41,7 +41,7 @@ extern umap_basic_basic inverse_cst;
 
 extern umap_basic_basic inverse_tct;
 
-bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
+bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
                   const Ptr<RCP<const Basic>> &x)
 {
     if (is_a<Add>(*arg)) {
@@ -49,19 +49,17 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
         RCP<const Basic> coef = s.coef_;
         int size = s.dict_.size();
         if (size > 1) {
-            // arg should be of form `theta + n*pi/12`
+            // arg should be of form `x + n*pi`
             // `n` is an integer
-            // `theta` is an `Expression`
+            // `x` is an `Expression`
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
             for (const auto &p : s.dict_) {
-                temp = mul(p.second, integer(12));
-                if (is_a<Constant>(*p.first)
-                    and eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
-                    and is_a<Integer>(*temp)) {
+                if (eq(*p.first, *pi) and (is_a<Integer>(*p.second)
+                                           or is_a<Rational>(*p.second))) {
                     check_pi = true;
-                    *n = rcp_dynamic_cast<const Integer>(temp);
+                    *n = p.second;
                 } else {
                     *x = add(mul(p.first, p.second), *x);
                 }
@@ -71,15 +69,12 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
             else // No term with `pi` found
                 return false;
         } else if (size == 1) {
-            // arg should be of form `a + n*pi/12`
+            // arg should be of form `a + n*pi`
             // where `a` is a `Number`.
             auto p = s.dict_.begin();
-            RCP<const Basic> temp = mul(p->second, integer(12));
-            if (is_a<Constant>(*p->first)
-                and eq(*(rcp_static_cast<const Constant>(p->first)), *pi)
-                and is_a<Integer>(*temp)) {
-
-                *n = rcp_dynamic_cast<const Integer>(temp);
+            if (eq(*p->first, *pi)
+                and (is_a<Integer>(*p->second) or is_a<Rational>(*p->second))) {
+                *n = p->second;
                 *x = coef;
                 return true;
             } else {
@@ -92,29 +87,22 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
     } else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = static_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        coef = mul(coef, integer(12));
         auto p = s.dict_.begin();
         // dict should contain symbol `pi` only
-        // and coeff should be a multiple of 12
-        if (s.dict_.size() == 1 and is_a<Constant>(*p->first)
-            and eq(*(rcp_static_cast<const Constant>(p->first)), *pi)
-            and eq(*(rcp_static_cast<const Number>(p->second)), *one)
-            and is_a<Integer>(*coef)) {
-
-            *n = rcp_dynamic_cast<const Integer>(coef);
+        if (s.dict_.size() == 1 and eq(*p->first, *pi) and eq(*p->second, *one)
+            and (is_a<Integer>(*s.coef_) or is_a<Rational>(*s.coef_))) {
+            *n = s.coef_;
             *x = zero;
             return true;
         } else {
             return false;
         }
-    } else if (is_a<Constant>(*arg)
-               and eq(*(rcp_static_cast<const Constant>(arg)), *pi)) {
-        *n = integer(12);
+    } else if (eq(*arg, *pi)) {
+        *n = one;
         *x = zero;
         return true;
     } else if (eq(*arg, *zero)) {
-        *n = integer(0);
+        *n = zero;
         *x = zero;
         return true;
     } else {
@@ -229,43 +217,72 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
                    int &sign) // output
 {
     bool check;
-    RCP<const Integer> n;
+    RCP<const Number> n;
     RCP<const Basic> r;
     RCP<const Basic> ret_arg;
     check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
-        int m = mod_f(*n, *integer(12 * period))->as_int();
+        RCP<const Number> t = mulnum(n, integer(12));
         sign = 1;
-        if (eq(*r, *zero)) {
-            index = m;
-            *rarg = zero;
-            return false;
-        } else if ((m % (12 * period)) == 0) {
-            index = 0;
-            bool b = handle_minus(r, outArg(ret_arg));
-            *rarg = ret_arg;
-            if (odd and b)
-                sign = -1;
-            return false;
-        } else if ((m % 12) == 0) {
+        if (is_a<Integer>(*t)) {
+            int m
+                = mod_f(static_cast<const Integer &>(*t), *integer(12 * period))
+                      ->as_int();
+            if (eq(*r, *zero)) {
+                index = m;
+                *rarg = zero;
+                return false;
+            } else if (m == 0) {
+                index = 0;
+                bool b = handle_minus(r, outArg(ret_arg));
+                *rarg = ret_arg;
+                if (odd and b)
+                    sign = -1;
+                return false;
+            }
+        }
+
+        std::cout << "n : " << n->__str__() << std::endl;
+        rational_class m;
+        if (is_a<Integer>(*n)) {
+            m = static_cast<const Integer &>(*n).i;
+            m /= period;
+        } else {
+            SYMENGINE_ASSERT(is_a<Rational>(*n));
+            m = static_cast<const Rational &>(*n).i / period;
+            integer_class t;
+            mp_fdiv_r(t, get_num(m), get_den(m));
+            get_num(m) = t;
+            // m = a / b => m = (a % b / b)
+        }
+        // Now, arg = r + 2 * pi * m  where 0 <= m < 1
+        m *= 2 * period;
+        // Now, arg = r + pi * m / 2  where 0 <= m < 4
+        if (m >= 2 and m < 3) {
             sign = -1;
+            r = add(r, mul(pi, Rational::from_mpq((m - 2) / 2)));
             bool b = handle_minus(r, outArg(ret_arg));
             *rarg = ret_arg;
             if (odd and b)
                 sign = -1 * sign;
             return false;
-        } else if ((m % 6) == 0) {
-            if (m == 6)
+        } else if (m >= 1) {
+            if (m < 2) {
+                // 1 <= m < 2
                 sign = 1;
-            else
+                r = add(r, mul(pi, Rational::from_mpq((m - 1) / 2)));
+            } else {
+                // 3 <= m < 4
                 sign = -1;
+                r = add(r, mul(pi, Rational::from_mpq((m - 3) / 2)));
+            }
             bool b = handle_minus(r, outArg(ret_arg));
             *rarg = ret_arg;
             if (not b and conj_odd)
                 sign = -sign;
             return true;
         } else {
-            *rarg = arg;
+            *rarg = add(r, mul(pi, Rational::from_mpq(m / 2)));
             index = -1;
             return false;
         }
@@ -370,6 +387,7 @@ Cos::Cos(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Cos::is_canonical(const RCP<const Basic> &arg) const
 {
+    std::cout << "cos : " << arg->__str__() << std::endl;
     // e.g. cos(0)
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
