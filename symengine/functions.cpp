@@ -243,7 +243,6 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
             }
         }
 
-        std::cout << "n : " << n->__str__() << std::endl;
         rational_class m;
         if (is_a<Integer>(*n)) {
             m = static_cast<const Integer &>(*n).i;
@@ -388,7 +387,6 @@ Cos::Cos(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Cos::is_canonical(const RCP<const Basic> &arg) const
 {
-    std::cout << "cos : " << arg->__str__() << std::endl;
     // e.g. cos(0)
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
