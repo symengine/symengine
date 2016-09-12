@@ -119,31 +119,39 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
         const Add &s = static_cast<const Add &>(*arg);
         for (const auto &p : s.dict_) {
             const auto &temp = mul(p.second, integer(2));
-            if (is_a<Constant>(*p.first)
-                and eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
-                and is_a<Integer>(*temp)) {
-                return true;
+            if (eq(*p.first, *pi)) {
+                if (is_a<Integer>(*temp)) {
+                    return true;
+                }
+                if (is_a<Rational>(*temp)) {
+                    auto m = static_cast<const Rational &>(*temp).i;
+                    return (m < 0) or (m > 1);
+                }
+                return false;
             }
         }
         return false;
     } else if (is_a<Mul>(*arg)) {
         // is `arg` of the form `k*pi/2`?
         // dict should contain symbol `pi` only
-        // and coeff should be a multiple of 2
+        // and `k` should be a rational s.t. 0 < k < 1
         const Mul &s = static_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        coef = mul(coef, integer(2));
+        RCP<const Basic> coef = mul(s.coef_, integer(2));
         auto p = s.dict_.begin();
-        if (s.dict_.size() == 1 and is_a<Constant>(*p->first)
-            and eq(*(rcp_static_cast<const Constant>(p->first)), *pi)
-            and eq(*(rcp_static_cast<const Number>(p->second)), *one)
-            and is_a<Integer>(*coef)) {
-            return true;
+        if (s.dict_.size() == 1 and eq(*p->first, *pi)
+            and eq(*p->second, *one)) {
+            if (is_a<Integer>(*coef)) {
+                return true;
+            }
+            if (is_a<Rational>(*coef)) {
+                auto m = static_cast<const Rational &>(*coef).i;
+                return (m < 0) or (m > 1);
+            }
+            return false;
         } else {
             return false;
         }
-    } else if (is_a<Constant>(*arg)
-               and eq(*(rcp_static_cast<const Constant>(arg)), *pi)) {
+    } else if (eq(*arg, *pi)) {
         return true;
     } else if (eq(*arg, *zero)) {
         return true;
