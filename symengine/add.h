@@ -25,7 +25,7 @@ public:
     */
     Add(const RCP<const Number> &coef, umap_basic_num &&dict);
     //! \return Size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -68,6 +68,15 @@ public:
                       const umap_basic_num &dict) const;
 
     virtual vec_basic get_args() const;
+
+    RCP<const Number> get_coef() const
+    {
+        return coef_;
+    }
+    const umap_basic_num &get_dict() const
+    {
+        return dict_;
+    }
 };
 
 //! \return Add made from `a + b`

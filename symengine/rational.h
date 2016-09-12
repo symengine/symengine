@@ -7,6 +7,7 @@
 #define SYMENGINE_RATIONAL_H
 
 #include <symengine/constants.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -26,7 +27,7 @@ public:
     * */
     static RCP<const Number> from_mpq(rational_class i);
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -93,46 +94,46 @@ public:
      * */
     inline RCP<const Number> addrat(const Rational &other) const
     {
-        return from_mpq(std::move(this->i + other.i));
+        return from_mpq(this->i + other.i);
     }
     /*! Add Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> addrat(const Integer &other) const
     {
-        return from_mpq(std::move(this->i + other.i));
+        return from_mpq(this->i + other.i);
     }
     /*! Subtract Rationals
      * \param other of type Rational
      * */
     inline RCP<const Number> subrat(const Rational &other) const
     {
-        return from_mpq(std::move(this->i - other.i));
+        return from_mpq(this->i - other.i);
     }
     /*! Subtract Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> subrat(const Integer &other) const
     {
-        return from_mpq(std::move(this->i - other.i));
+        return from_mpq(this->i - other.i);
     }
     inline RCP<const Number> rsubrat(const Integer &other) const
     {
-        return from_mpq(std::move(other.i - this->i));
+        return from_mpq(other.i - this->i);
     }
     /*! Multiply Rationals
      * \param other of type Rational
      * */
     inline RCP<const Number> mulrat(const Rational &other) const
     {
-        return from_mpq(std::move(this->i * other.i));
+        return from_mpq(this->i * other.i);
     }
     /*! Multiply Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> mulrat(const Integer &other) const
     {
-        return from_mpq(std::move(this->i * other.i));
+        return from_mpq(this->i * other.i);
     }
     /*! Divide Rationals
      * \param other of type Rational
@@ -140,9 +141,9 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(std::move(this->i / other.i));
+            return from_mpq(this->i / other.i);
         }
     }
     /*! Divide Rationals
@@ -151,17 +152,17 @@ public:
     inline RCP<const Number> divrat(const Integer &other) const
     {
         if (other.i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(std::move(this->i / other.i));
+            return from_mpq(this->i / other.i);
         }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw std::runtime_error("Division by zero");
+            throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(std::move(other.i / this->i));
+            return from_mpq(other.i / this->i);
         }
     }
     /*! Raise Rationals to power `other`
@@ -174,7 +175,7 @@ public:
         if (neg)
             exp_ = -exp_;
         if (not mp_fits_ulong_p(exp_))
-            throw std::runtime_error("powrat: 'exp' does not fit ulong.");
+            throw SymEngineException("powrat: 'exp' does not fit ulong.");
         unsigned long exp = mp_get_ui(exp_);
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
@@ -185,7 +186,7 @@ public:
         if (not neg) {
             return Rational::from_mpq(std::move(val));
         } else {
-            return Rational::from_mpq(std::move(1 / val));
+            return Rational::from_mpq(1 / val);
         }
     }
     /*! Raise Rationals to power `other`
@@ -225,7 +226,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -256,7 +257,7 @@ public:
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     };
     //! Converts the param `other` appropriately and then calls `powrat`
@@ -271,7 +272,7 @@ public:
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     RCP<const Integer> get_num() const

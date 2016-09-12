@@ -4,6 +4,7 @@
  *
  **/
 #include <symengine/complex_mpc.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPC
 namespace SymEngine
@@ -13,10 +14,12 @@ ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
 {
 }
 
-std::size_t ComplexMPC::__hash__() const
+hash_t ComplexMPC::__hash__() const
 {
-    std::hash<mpc_srcptr> hash_fn;
-    return hash_fn(i.get_mpc_t());
+    hash_t seed = COMPLEX_MPC;
+    hash_combine_impl(seed, mpc_realref(i.get_mpc_t()));
+    hash_combine_impl(seed, mpc_imagref(i.get_mpc_t()));
+    return seed;
 }
 
 bool ComplexMPC::__eq__(const Basic &o) const
@@ -853,7 +856,7 @@ class EvaluateMPC : public Evaluate
     }
     virtual RCP<const Basic> gamma(Basic const &aConst) const
     {
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     }
 };
 

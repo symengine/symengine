@@ -6,6 +6,7 @@
 #define SYMENGINE_UINTPOLY_PIRANHA_H
 
 #include <symengine/polys/upolybase.h>
+#include <symengine/expression.h>
 #include <symengine/dict.h>
 #include <memory>
 
@@ -24,15 +25,16 @@ namespace piranha
 // overloading pow for pirahna::math::evaluate
 namespace math
 {
-
-template <typename U>
-struct pow_impl<SymEngine::integer_class, U,
-                SymEngine::enable_if_t<std::is_integral<U>::value>> {
+using namespace SymEngine;
+template <typename U, typename V>
+struct pow_impl<V, U,
+                enable_if_t<std::is_integral<U>::value
+                            and (std::is_same<V, integer_class>::value
+                                 or std::is_same<V, rational_class>::value)>> {
     template <typename T2>
-    SymEngine::integer_class operator()(const SymEngine::integer_class &r,
-                                        const T2 &x) const
+    V operator()(const V &r, const T2 &x) const
     {
-        SymEngine::integer_class res;
+        V res;
         mp_pow_ui(res, r, x);
         return res;
     }
@@ -62,27 +64,59 @@ struct divexact_impl<SymEngine::integer_class> {
         }
     }
 };
+template <>
+struct divexact_impl<SymEngine::rational_class> {
+    void operator()(SymEngine::rational_class &r,
+                    const SymEngine::rational_class &x,
+                    const SymEngine::rational_class &y) const
+    {
+        r = x / y;
+    }
+};
 }
 
 template <>
 struct has_exact_ring_operations<SymEngine::integer_class> {
     static const bool value = true;
 };
+template <>
+struct has_exact_ring_operations<SymEngine::rational_class> {
+    static const bool value = true;
+};
 }
 #endif
+
+// need definition for piranha::rational too
+namespace piranha
+{
+namespace math
+{
+template <>
+struct gcd_impl<SymEngine::rational_class, SymEngine::rational_class> {
+    SymEngine::rational_class
+    operator()(const SymEngine::rational_class &r,
+               const SymEngine::rational_class &x) const
+    {
+        return SymEngine::rational_class(1);
+    }
+};
+}
+}
 
 namespace SymEngine
 {
 using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
-using pterm = pintpoly::term_type;
+using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 
+template <typename Cf, typename Container>
 class PiranhaForIter
 {
-    pintpoly::container_type::const_iterator ptr_;
+    typename Container::container_type::const_iterator ptr_;
 
 public:
-    PiranhaForIter(pintpoly::container_type::const_iterator ptr) : ptr_{ptr}
+    PiranhaForIter(typename Container::container_type::const_iterator ptr)
+        : ptr_{ptr}
     {
     }
 
@@ -102,81 +136,151 @@ public:
         return *this;
     }
 
-    std::pair<unsigned int, const integer_class &> operator*()
+    std::pair<unsigned int, const Cf &> operator*()
     {
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    std::shared_ptr<std::pair<unsigned int, const integer_class &>> operator->()
+    std::shared_ptr<std::pair<unsigned int, const Cf &>> operator->()
     {
-        return std::make_shared<std::pair<unsigned int, const integer_class &>>(
+        return std::make_shared<std::pair<unsigned int, const Cf &>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };
 
-class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+class UPiranhaPoly : public BaseType<Container, Poly>
 {
 public:
-    IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
-    //! Constructor of UIntPolyPiranha class
-    UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict);
-    //! \return size of the hash
-    std::size_t __hash__() const;
-    int compare(const Basic &o) const;
+    using Cf = typename BaseType<Container, Poly>::coef_type;
+    using term = typename Container::term_type;
 
-    static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
-                                                map_uint_mpz &&d);
-    static RCP<const UIntPolyPiranha> from_vec(const RCP<const Symbol> &var,
-                                               const vec_integer_class &v);
-
-    integer_class eval(const integer_class &x) const;
-    vec_integer_class multieval(const vec_integer_class &x) const;
-
-    integer_class get_coeff(unsigned int x) const;
-    const integer_class &get_coeff_ref(unsigned int x) const;
-
-    inline unsigned int get_degree() const
+    UPiranhaPoly(const RCP<const Basic> &var, Container &&dict)
+        : BaseType<Container, Poly>(var, std::move(dict))
     {
-        return poly_.degree();
     }
 
-    // begin() and end() are unordered
-    // obegin() and oend() are ordered, from highest degree to lowest
-    typedef PiranhaForIter iterator;
-    typedef ContainerRevIter<UIntPolyPiranha, const integer_class &>
-        reverse_iterator;
-    iterator begin() const
+    int compare(const Basic &o) const
     {
-        return iterator(poly_._container().begin());
+        SYMENGINE_ASSERT(is_a<Poly>(o))
+        const Poly &s = static_cast<const Poly &>(o);
+        int cmp = this->var_->compare(*s.var_);
+        if (cmp != 0)
+            return cmp;
+        if (this->poly_ == s.poly_)
+            return 0;
+        return (this->poly_.hash() < s.poly_.hash()) ? -1 : 1;
     }
-    iterator end() const
+
+    static Container container_from_dict(const RCP<const Basic> &var,
+                                         std::map<unsigned, Cf> &&d)
     {
-        return iterator(poly_._container().end());
+        Container p;
+        piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
+        p.set_symbol_set(ss);
+        for (auto &it : d)
+            if (it.second != 0)
+                p.insert(term(it.second, pmonomial{it.first}));
+
+        return std::move(p);
     }
-    reverse_iterator obegin() const
+
+    static RCP<const Poly> from_vec(const RCP<const Basic> &var,
+                                    const std::vector<Cf> &v)
     {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(),
-                                (long)size() - 1);
+        Container p;
+        piranha::symbol_set ss({{piranha::symbol(detail::poly_print(var))}});
+        p.set_symbol_set(ss);
+        for (unsigned int i = 0; i < v.size(); i++) {
+            if (v[i] != 0) {
+                p.insert(term(v[i], pmonomial{i}));
+            }
+        }
+        return make_rcp<const Poly>(var, std::move(p));
     }
-    reverse_iterator oend() const
+
+    Cf eval(const Cf &x) const
     {
-        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), -1);
+        const std::unordered_map<std::string, Cf> t
+            = {{detail::poly_print(this->var_), x}};
+        return piranha::math::evaluate<Cf, Container>(this->poly_, t);
+    }
+
+    Cf get_coeff(unsigned int x) const
+    {
+        return this->poly_.find_cf(pmonomial{x});
+    }
+
+    const Cf &get_coeff_ref(unsigned int x) const
+    {
+        static Cf PZERO(0);
+
+        term temp = term(0, pmonomial{x});
+        auto it = this->poly_._container().find(temp);
+        if (it == this->poly_._container().end())
+            return PZERO;
+        return it->m_cf;
     }
 
     unsigned int size() const
     {
-        if (poly_.size() == 0)
+        if (this->poly_.size() == 0)
             return 0;
-        return get_degree() + 1;
+        return this->get_degree() + 1;
     }
 
+    // begin() and end() are unordered
+    // obegin() and oend() are ordered, from highest degree to lowest
+    typedef PiranhaForIter<Cf, Container> iterator;
+    typedef ContainerRevIter<Poly, const Cf &> r_iterator;
+    iterator begin() const
+    {
+        return iterator(this->poly_._container().begin());
+    }
+    iterator end() const
+    {
+        return iterator(this->poly_._container().end());
+    }
+    r_iterator obegin() const
+    {
+        return r_iterator(this->template rcp_from_this_cast<Poly>(),
+                          (long)size() - 1);
+    }
+    r_iterator oend() const
+    {
+        return r_iterator(this->template rcp_from_this_cast<Poly>(), -1);
+    }
+};
+
+class UIntPolyPiranha
+    : public UPiranhaPoly<pintpoly, UIntPolyBase, UIntPolyPiranha>
+{
+public:
+    IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
+    //! Constructor of UIntPolyPiranha class
+    UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict);
+    //! \return size of the hash
+    hash_t __hash__() const;
+
 }; // UIntPolyPiranha
+
+class URatPolyPiranha
+    : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
+{
+public:
+    IMPLEMENT_TYPEID(URATPOLYPIRANHA)
+    //! Constructor of UIntPolyPiranha class
+    URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict);
+    //! \return size of the hash
+    hash_t __hash__() const;
+};
 
 inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
     // following the convention, that leading coefficient should be positive
@@ -185,18 +289,41 @@ inline RCP<const UIntPolyPiranha> gcd_upoly(const UIntPolyPiranha &a,
     return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(gcdx));
 }
 
+inline RCP<const URatPolyPiranha> gcd_upoly(const URatPolyPiranha &a,
+                                            const URatPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw SymEngineException("Error: variables must agree.");
+
+    pratpoly gcdx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
+    // following the convention, that polynomial should be monic
+    gcdx *= (1 / gcdx.find_cf(pmonomial{gcdx.degree()}));
+    return make_rcp<const URatPolyPiranha>(a.get_var(), std::move(gcdx));
+}
+
 inline RCP<const UIntPolyPiranha> lcm_upoly(const UIntPolyPiranha &a,
                                             const UIntPolyPiranha &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
-    pintpoly gcdx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
-    if (gcdx.find_cf(pmonomial{gcdx.degree()}) < 0)
-        piranha::math::negate(gcdx);
-    pintpoly mulx(a.get_poly() * b.get_poly());
-    return make_rcp<const UIntPolyPiranha>(
-        a.get_var(), std::move(pintpoly::udivrem(mulx, gcdx)).first);
+    pintpoly lcmx(std::get<0>(pintpoly::gcd(a.get_poly(), b.get_poly())));
+    lcmx = (a.get_poly() * b.get_poly()) / lcmx;
+    if (lcmx.find_cf(pmonomial{lcmx.degree()}) < 0)
+        piranha::math::negate(lcmx);
+    return make_rcp<const UIntPolyPiranha>(a.get_var(), std::move(lcmx));
+}
+
+inline RCP<const URatPolyPiranha> lcm_upoly(const URatPolyPiranha &a,
+                                            const URatPolyPiranha &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw SymEngineException("Error: variables must agree.");
+
+    pratpoly lcmx(std::get<0>(pratpoly::gcd(a.get_poly(), b.get_poly())));
+    lcmx = (a.get_poly() * b.get_poly()) / lcmx;
+    lcmx *= (1 / lcmx.find_cf(pmonomial{lcmx.degree()}));
+    return make_rcp<const URatPolyPiranha>(a.get_var(), std::move(lcmx));
 }
 
 inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
@@ -206,16 +333,39 @@ inline RCP<const UIntPolyPiranha> pow_upoly(const UIntPolyPiranha &a,
         a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
 }
 
+inline RCP<const URatPolyPiranha> pow_upoly(const URatPolyPiranha &a,
+                                            unsigned int p)
+{
+    return make_rcp<const URatPolyPiranha>(
+        a.get_var(), std::move(piranha::math::pow(a.get_poly(), p)));
+}
+
 inline bool divides_upoly(const UIntPolyPiranha &a, const UIntPolyPiranha &b,
                           const Ptr<RCP<const UIntPolyPiranha>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
+        throw SymEngineException("Error: variables must agree.");
 
     try {
         pintpoly z;
         piranha::math::divexact(z, b.get_poly(), a.get_poly());
         *res = UIntPolyPiranha::from_container(a.get_var(), std::move(z));
+        return true;
+    } catch (const piranha::math::inexact_division &) {
+        return false;
+    }
+}
+
+inline bool divides_upoly(const URatPolyPiranha &a, const URatPolyPiranha &b,
+                          const Ptr<RCP<const URatPolyPiranha>> &res)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw SymEngineException("Error: variables must agree.");
+
+    try {
+        pratpoly z;
+        piranha::math::divexact(z, b.get_poly(), a.get_poly());
+        *res = URatPolyPiranha::from_container(a.get_var(), std::move(z));
         return true;
     } catch (const piranha::math::inexact_division &) {
         return false;

@@ -3,7 +3,9 @@
 #include <symengine/pow.h>
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;

@@ -1,7 +1,9 @@
 #include <symengine/series_flint.h>
 #include "catch.hpp"
 #include <chrono>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -21,13 +23,13 @@ using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::URatPSeriesFlint;
-using SymEngine::fp_t;
+using SymEngine::fqp_t;
 using SymEngine::fmpq_wrapper;
 #define series_coeff(EX, SYM, PREC, COEFF)                                     \
     SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)             \
         ->get_coeff(COEFF)
 
-static RCP<const Number> fmpqxx2sym(const fmpq_wrapper& fc)
+static RCP<const Number> fmpqxx2sym(const fmpq_wrapper &fc)
 {
     mpq_t gc;
     mpq_init(gc);
@@ -43,7 +45,7 @@ static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex,
 {
     auto ser = URatPSeriesFlint::series(ex, sym->get_name(), prec);
     auto serrev = URatPSeriesFlint::series_reverse(
-        ser->get_poly(), fp_t(sym->get_name().c_str()), prec);
+        ser->get_poly(), fqp_t(sym->get_name().c_str()), prec);
     return fmpqxx2sym(serrev.get_coeff(n));
 }
 
@@ -219,11 +221,11 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     //    auto ex8 = cot(sin(x));
     //    auto ex10 = csc(x);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex7, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex8, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex10, "x", 10),
-    //    std::runtime_error);
+    //    SymEngineException);
 }
 
 TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
@@ -261,8 +263,8 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     auto ex1 = lambertw(x);
     auto ex2 = lambertw(sin(x));
 
-    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10), std::runtime_error);
-    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex2, "x", 10), std::runtime_error);
+    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10), SymEngineException);
+    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex2, "x", 10), SymEngineException);
 }
 #endif
 
@@ -273,6 +275,6 @@ TEST_CASE("Check error when expansion called without Flint ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10),
-                      std::runtime_error);
+                      SymEngineException);
 }
 #endif

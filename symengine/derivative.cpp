@@ -1,4 +1,5 @@
 #include <symengine/visitor.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -30,7 +31,6 @@ public:
         return Derivative::create(self.rcp_from_this(), {x});                  \
     }
 
-    DIFF0(GaloisField)
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
@@ -212,7 +212,7 @@ public:
         do {
             name = "_" + name;
             s = symbol(name);
-        } while (has_symbol(b, s));
+        } while (has_symbol(b, *s));
         return s;
     }
 
@@ -484,23 +484,48 @@ public:
         return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
 
+    static RCP<const Basic> diff(const URatPoly &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<URatPoly, map_uint_mpq>(self, x);
+    }
+
 #ifdef HAVE_SYMENGINE_PIRANHA
     static RCP<const Basic> diff(const UIntPolyPiranha &self,
                                  const RCP<const Symbol> &x)
     {
         return diff_upoly<UIntPolyPiranha, map_uint_mpz>(self, x);
     }
+    static RCP<const Basic> diff(const URatPolyPiranha &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<URatPolyPiranha, map_uint_mpq>(self, x);
+    }
 #endif
 
 #ifdef HAVE_SYMENGINE_FLINT
+    template <typename P>
+    static RCP<const Basic> diff_upolyflint(const P &self,
+                                            const RCP<const Symbol> &x)
+    {
+        if (self.get_var()->__eq__(*x)) {
+            return P::from_container(self.get_var(),
+                                     self.get_poly().derivative());
+        } else {
+            return P::from_dict(self.get_var(), {{}});
+        }
+    }
+
     static RCP<const Basic> diff(const UIntPolyFlint &self,
                                  const RCP<const Symbol> &x)
     {
-        if (self.get_var()->__eq__(*x)) {
-            return UIntPolyFlint::from_container(self.get_var(), self.get_poly().derivative());
-        } else {
-            return UIntPolyFlint::from_dict(self.get_var(), {{}});
-        }
+        return diff_upolyflint(self, x);
+    }
+
+    static RCP<const Basic> diff(const URatPolyFlint &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upolyflint(self, x);
     }
 #endif
 
@@ -510,11 +535,14 @@ public:
         return diff_upoly<UExprPoly, map_int_Expr>(self, x);
     }
 
-    template <typename MPoly, typename Dict, typename Coeff, typename Vec>
-    static RCP<const Basic> diff(const MPolyBase<MPoly, Dict, Coeff, Vec> &self,
+    template <typename Container, typename Poly>
+    static RCP<const Basic> diff(const MSymEnginePoly<Container, Poly> &self,
                                  const RCP<const Symbol> &x)
     {
+        using Dict = typename Container::dict_type;
+        using Vec = typename Container::vec_type;
         Dict dict;
+
         if (self.vars_.find(x) != self.vars_.end()) {
             auto i = self.vars_.begin();
             unsigned int index = 0;
@@ -522,23 +550,20 @@ public:
                 i++;
                 index++;
             } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.dict_) {
+            for (auto bucket : self.poly_.dict_) {
                 if (bucket.first[index] != 0) {
                     Vec v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<Vec, Coeff>(
-                        v, bucket.second * bucket.first[index]));
+                    dict.insert({v, bucket.second * bucket.first[index]});
                 }
             }
             vec_basic v;
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(v, std::move(dict));
+            return Poly::from_dict(v, std::move(dict));
         } else {
-            Vec v;
-            v.resize(self.vars_.size(), 0);
             vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(vs, {{v, Coeff(0)}});
+            return Poly::from_dict(vs, {{}});
         }
     }
 
@@ -563,7 +588,35 @@ public:
 
     static RCP<const Basic> diff(const Set &self, const RCP<const Symbol> &x)
     {
-        throw std::runtime_error("Derivative doesn't exist.");
+        throw SymEngineException("Derivative doesn't exist.");
+    }
+
+    static RCP<const Basic> diff(const Boolean &self,
+                                 const RCP<const Symbol> &x)
+    {
+        throw SymEngineException("Derivative doesn't exist.");
+    }
+
+    static RCP<const Basic> diff(const GaloisField &self,
+                                 const RCP<const Symbol> &x)
+    {
+        GaloisFieldDict d;
+        if (self.get_var()->__eq__(*x)) {
+            d = self.get_poly().gf_diff();
+            return GaloisField::from_dict(self.get_var(), std::move(d));
+        } else {
+            return GaloisField::from_dict(self.get_var(), std::move(d));
+        }
+    }
+
+    static RCP<const Basic> diff(const Piecewise &self,
+                                 const RCP<const Symbol> &x)
+    {
+        PiecewiseVec v = self.get_vec();
+        for (auto &p : v) {
+            p.first = p.first->diff(x);
+        }
+        return piecewise(std::move(v));
     }
 
     static RCP<const Basic> diff(const KroneckerDelta &self,
@@ -635,7 +688,7 @@ RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
         return arg->diff(rcp_static_cast<const Symbol>(x));
     } else {
         RCP<const Symbol> d = DiffImplementation::get_dummy(*arg, "x");
-        return arg->subs({{x, d}})->diff(d)->subs({{d, x}});
+        return ssubs(ssubs(arg, {{x, d}})->diff(d), {{d, x}});
     }
 }
 

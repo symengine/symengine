@@ -4,6 +4,17 @@
 namespace SymEngine
 {
 
+//! Less operator `(<)` using cmp:
+struct PrinterBasicCmp {
+    //! true if `x < y`, false otherwise
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        if (x->__eq__(*y))
+            return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
 std::string ascii_art()
 {
     std::string a = " _____           _____         _         \n"
@@ -25,6 +36,18 @@ void StrPrinter::bvisit(const Basic &x)
 void StrPrinter::bvisit(const Symbol &x)
 {
     str_ = x.get_name();
+}
+
+void StrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-oo";
+    else if (x.is_positive_infinity())
+        s << "oo";
+    else
+        s << "zoo";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Integer &x)
@@ -80,8 +103,9 @@ void StrPrinter::bvisit(const RealDouble &x)
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i;
     str_ = s.str();
-    if (str_.find(".") == std::string::npos) {
-        s << ".0";
+    if (str_.find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
+        s << ".";
         str_ = s.str();
     }
 }
@@ -91,8 +115,9 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     std::ostringstream s;
     s.precision(std::numeric_limits<double>::digits10);
     s << x.i.real();
-    if (s.str().find(".") == std::string::npos) {
-        s << ".0";
+    if (s.str().find(".") == std::string::npos
+        and str_.find("e") == std::string::npos) {
+        s << ".";
     }
     if (x.i.imag() < 0) {
         s << " - " << -x.i.imag();
@@ -101,7 +126,7 @@ void StrPrinter::bvisit(const ComplexDouble &x)
     }
     str_ = s.str();
     if (str_.find(".") == str_.find_last_of(".")) {
-        str_ += ".0*I";
+        str_ += ".*I";
     } else {
         str_ += "*I";
     }
@@ -122,9 +147,92 @@ void StrPrinter::bvisit(const Interval &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const BooleanAtom &x)
+{
+    if (x.get_val()) {
+        str_ = "True";
+    } else {
+        str_ = "False";
+    }
+}
+
+void StrPrinter::bvisit(const And &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "And(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Or &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "Or(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Not &x)
+{
+    std::ostringstream s;
+    s << "Not(" << *x.get_arg() << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Contains &x)
+{
+    std::ostringstream s;
+    s << "Contains(" << apply(x.get_expr()) << ", " << apply(x.get_set())
+      << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Piecewise &x)
+{
+    std::ostringstream s;
+    auto vec = x.get_vec();
+    auto it = vec.begin();
+    s << "Piecewise(";
+    while (true) {
+        s << "(";
+        s << apply((*it).first);
+        s << ", ";
+        s << apply((*it).second);
+        s << ")";
+        ++it;
+        if (it != vec.end()) {
+            s << ", ";
+        } else {
+            break;
+        }
+    }
+    s << ")";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const EmptySet &x)
 {
     str_ = "EmptySet";
+}
+
+void StrPrinter::bvisit(const Union &x)
+{
+    std::ostringstream s;
+    s << apply(*x.container_.begin());
+    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+        s << " U " << apply(*it);
+    }
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const UniversalSet &x)
@@ -143,7 +251,11 @@ void StrPrinter::bvisit(const FiniteSet &x)
 void StrPrinter::bvisit(const RealMPFR &x)
 {
     mpfr_exp_t ex;
-    char *c = mpfr_get_str(nullptr, &ex, 10, 0, x.i.get_mpfr_t(), MPFR_RNDN);
+    // mpmath.libmp.libmpf.prec_to_dps
+    long digits = std::max(
+        long(1), std::lround(x.i.get_prec() / 3.3219280948873626) - 1);
+    char *c
+        = mpfr_get_str(nullptr, &ex, 10, digits, x.i.get_mpfr_t(), MPFR_RNDN);
     std::ostringstream s;
     str_ = std::string(c);
     if (str_.at(0) == '-') {
@@ -187,7 +299,7 @@ void StrPrinter::bvisit(const Add &x)
 {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(
+    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
         x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
@@ -219,13 +331,23 @@ void StrPrinter::bvisit(const Add &x)
     str_ = o.str();
 }
 
+void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b)
+{
+    if (eq(*b, *rational(1, 2))) {
+        o << "sqrt(" << apply(a) << ")";
+    } else {
+        o << parenthesizeLE(a, PrecedenceEnum::Pow);
+        o << "**";
+        o << parenthesizeLE(b, PrecedenceEnum::Pow);
+    }
+}
+
 void StrPrinter::bvisit(const Mul &x)
 {
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(
-        x.dict_.begin(), x.dict_.end());
 
     if (eq(*(x.coef_), *minus_one)) {
         o << "-";
@@ -234,7 +356,7 @@ void StrPrinter::bvisit(const Mul &x)
         num = true;
     }
 
-    for (const auto &p : dict) {
+    for (const auto &p : x.dict_) {
         if ((is_a<Integer>(*p.second)
              and rcp_static_cast<const Integer>(p.second)->is_negative())
             || (is_a<Rational>(*p.second)
@@ -242,9 +364,7 @@ void StrPrinter::bvisit(const Mul &x)
             if (eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-                o2 << "**";
-                o2 << parenthesizeLE(neg(p.second), PrecedenceEnum::Pow);
+                _print_pow(o2, p.first, neg(p.second));
             }
             o2 << "*";
             den++;
@@ -252,9 +372,7 @@ void StrPrinter::bvisit(const Mul &x)
             if (eq(*(p.second), *one)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-                o << "**";
-                o << parenthesizeLE(p.second, PrecedenceEnum::Pow);
+                _print_pow(o, p.first, p.second);
             }
             o << "*";
             num = true;
@@ -284,13 +402,12 @@ void StrPrinter::bvisit(const Mul &x)
 void StrPrinter::bvisit(const Pow &x)
 {
     std::ostringstream o;
-    o << parenthesizeLE(x.get_base(), PrecedenceEnum::Pow);
-    o << "**";
-    o << parenthesizeLE(x.get_exp(), PrecedenceEnum::Pow);
+    _print_pow(o, x.get_base(), x.get_exp());
     str_ = o.str();
 }
 
-char _print_sign(const integer_class &i)
+template <typename T>
+char _print_sign(const T &i)
 {
     if (i < 0) {
         return '-';
@@ -331,10 +448,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 if (first) {
                     if (dict[it] == -1)
                         s << "-";
-                    s << x.get_var()->get_name();
+                    s << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " "
-                      << x.get_var()->get_name();
+                      << detail::poly_print(x.get_var());
                 }
             }
             // same logic is followed as above
@@ -342,10 +459,10 @@ void StrPrinter::bvisit(const GaloisField &x)
                 // in cases of -2*x, print -2*x
                 // in cases of x**2 - 2*x, print - 2*x
                 if (first) {
-                    s << dict[it] << "*" << x.get_var()->get_name();
+                    s << dict[it] << "*" << detail::poly_print(x.get_var());
                 } else {
                     s << " " << _print_sign(dict[it]) << " " << mp_abs(dict[it])
-                      << "*" << x.get_var()->get_name();
+                      << "*" << detail::poly_print(x.get_var());
                 }
             }
             // if exponent is not 1, print the exponent;
@@ -360,17 +477,18 @@ void StrPrinter::bvisit(const GaloisField &x)
     str_ = s.str();
 }
 
-// UIntPoly printing, tests taken from SymPy and printing ensures
-// that there is compatibility
-template <typename T>
-void uintpoly_print(const T &x, std::ostringstream &s)
+// Printing of Integer and Rational Polynomials, tests taken
+// from SymPy and printing ensures that there is compatibility
+template <typename P>
+std::string upoly_print(const P &x)
 {
+    std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
-        integer_class m = to_integer_class(it->second);
+        auto m = it->second;
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
@@ -388,9 +506,10 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             if (first) {
                 if (m == -1)
                     s << "-";
-                s << x.get_var()->get_name();
+                s << detail::poly_print(x.get_var());
             } else {
-                s << " " << _print_sign(m) << " " << x.get_var()->get_name();
+                s << " " << _print_sign(m) << " "
+                  << detail::poly_print(x.get_var());
             }
         }
         // same logic is followed as above
@@ -398,10 +517,10 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << m << "*" << x.get_var()->get_name();
+                s << m << "*" << detail::poly_print(x.get_var());
             } else {
                 s << " " << _print_sign(m) << " " << mp_abs(m) << "*"
-                  << x.get_var()->get_name();
+                  << detail::poly_print(x.get_var());
             }
         }
         // if exponent is not 1, print the exponent;
@@ -413,30 +532,38 @@ void uintpoly_print(const T &x, std::ostringstream &s)
     }
     if (x.size() == 0)
         s << "0";
+    return s.str();
 }
 
 void StrPrinter::bvisit(const UIntPoly &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPoly>(x);
+}
+
+void StrPrinter::bvisit(const URatPoly &x)
+{
+    str_ = upoly_print<URatPoly>(x);
 }
 
 #ifdef HAVE_SYMENGINE_FLINT
 void StrPrinter::bvisit(const UIntPolyFlint &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyFlint>(x);
+}
+void StrPrinter::bvisit(const URatPolyFlint &x)
+{
+    str_ = upoly_print<URatPolyFlint>(x);
 }
 #endif
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const UIntPolyPiranha &x)
 {
-    std::ostringstream s;
-    uintpoly_print(x, s);
-    str_ = s.str();
+    str_ = upoly_print<UIntPolyPiranha>(x);
+}
+void StrPrinter::bvisit(const URatPolyPiranha &x)
+{
+    str_ = upoly_print<URatPolyPiranha>(x);
 }
 #endif
 
@@ -448,7 +575,7 @@ void StrPrinter::bvisit(const UExprPoly &x)
     if (x.get_dict().size() == 0)
         s << "0";
     else
-        s << x.get_poly().__str__(x.get_var()->get_name());
+        s << x.get_poly().__str__(detail::poly_print(x.get_var()));
     str_ = s.str();
 }
 
@@ -522,10 +649,8 @@ void StrPrinter::bvisit(const Derivative &x)
 {
     std::ostringstream o;
     o << "Derivative(" << this->apply(x.get_arg());
-    multiset_basic m1 = x.get_symbols();
-    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(),
-                                                           m1.end());
-    for (const auto &elem : m2) {
+    auto m1 = x.get_symbols();
+    for (const auto &elem : m1) {
         o << ", " << this->apply(elem);
     }
     o << ")";
@@ -553,16 +678,16 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
+void StrPrinter::bvisit(const MIntPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = sorted_keys(x.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
 
     for (vec_uint exps : v) {
-        integer_class c = x.dict_.find(exps)->second;
+        integer_class c = x.poly_.dict_.find(exps)->second;
         if (!first) {
             s << " " << _print_sign(c) << " ";
         } else if (c < 0) {
@@ -601,16 +726,16 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x)
+void StrPrinter::bvisit(const MExprPoly &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = sorted_keys(x.dict_);
+    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
 
     for (vec_int exps : v) {
-        Expression c = x.dict_.find(exps)->second;
+        Expression c = x.poly_.dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -627,7 +752,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
                     expr << "*";
                 }
                 expr << it->__str__();
-                if (exps[i] > 1)
+                if (exps[i] > 1 or exps[i] < 0)
                     expr << "**" << exps[i];
                 first_var = false;
             }

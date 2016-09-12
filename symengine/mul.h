@@ -24,7 +24,7 @@ public:
     //! dictionary:
     Mul(const RCP<const Number> &coef, map_basic_basic &&dict);
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -62,6 +62,15 @@ public:
                       const map_basic_basic &dict) const;
 
     virtual vec_basic get_args() const;
+
+    RCP<const Number> get_coef() const
+    {
+        return coef_;
+    }
+    const map_basic_basic &get_dict() const
+    {
+        return dict_;
+    }
 };
 //! Multiplication
 RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b);

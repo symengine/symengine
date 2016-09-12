@@ -7,6 +7,7 @@
 #define SYMENGINE_COMPLEX_DOUBLE_H
 
 #include <symengine/real_double.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
@@ -21,7 +22,7 @@ public:
     //! Constructor of ComplexDouble class
     explicit ComplexDouble(std::complex<double> i);
     //! \return size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -242,7 +243,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rsubcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -413,7 +414,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rdivcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 
@@ -530,7 +531,7 @@ public:
         } else if (is_a<RealDouble>(other)) {
             return rpowcomp(static_cast<const RealDouble &>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };

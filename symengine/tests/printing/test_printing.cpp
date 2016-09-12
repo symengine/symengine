@@ -35,6 +35,8 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
+using SymEngine::Infty;
+using SymEngine::infty;
 
 using namespace SymEngine::literals;
 
@@ -61,14 +63,14 @@ TEST_CASE("test_printing(): printing", "[printing]")
     RCP<const Symbol> z = symbol("z");
 
     r = div(integer(12), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "(4/65)*195**(1/2)");
+    REQUIRE(r->__str__() == "(4/65)*sqrt(195)");
 
     r = mul(integer(12), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "12*195**(1/2)");
+    REQUIRE(r->__str__() == "12*sqrt(195)");
 
     r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
                              pow(integer(7), div(integer(1), integer(2)))));
-    REQUIRE(r->__str__() == "23*5**(1/2)*7**(1/2)");
+    REQUIRE(r->__str__() == "23*sqrt(5)*sqrt(7)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     REQUIRE(r->__str__() == "2*x**2");
@@ -76,13 +78,13 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r = mul(integer(23),
             mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
                 pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
-    REQUIRE(r->__str__() == "(23/6)*2**(1/2)*3**(1/2)*5**(1/2)*7**(1/2)");
+    REQUIRE(r->__str__() == "(23/6)*sqrt(2)*sqrt(3)*sqrt(5)*sqrt(7)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*x**(1/2)");
+    REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(x)");
 
     r = pow(div(integer(3), integer(2)), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*3**(1/2)");
+    REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(3)");
 
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
@@ -96,10 +98,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r2->__str__() == "-x*y");
     REQUIRE(r2->__str__() != "-1x*y");
 
-    r = mul(integer(-1), pow(integer(195), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "-195**(1/2)");
+    r = mul(integer(-1), pow(integer(195), div(integer(1), integer(3))));
+    REQUIRE(r->__str__() == "-195**(1/3)");
     r = pow(integer(-6), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "I*6**(1/2)");
+    REQUIRE(r->__str__() == "I*sqrt(6)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
     rn1 = Rational::from_two_ints(*integer(2), *integer(4));
@@ -326,6 +328,18 @@ TEST_CASE("test_uexpr_poly(): printing", "[printing]")
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 
+TEST_CASE("test_infinity(): printing", "[printing]")
+{
+    RCP<const Basic> a;
+
+    a = infty(1);
+    REQUIRE(a->__str__() == "oo");
+    a = infty(-1);
+    REQUIRE(a->__str__() == "-oo");
+    a = infty(0);
+    REQUIRE(a->__str__() == "zoo");
+}
+
 TEST_CASE("test_floats(): printing", "[printing]")
 {
     RCP<const Basic> p;
@@ -336,9 +350,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = pow(p, x);
     REQUIRE(p->__str__() == "11111.11**x");
 
+    p = real_double(0.00001);
+    p = pow(p, x);
+    bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";
+    REQUIRE(pr == true);
+
     p = real_double(0.00000011);
     p = mul(p, x);
-    bool pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
+    pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
     REQUIRE(pr == true);
 
     p = complex_double(std::complex<double>(0.1, 0.2));
@@ -347,25 +366,25 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(123);
     p = sub(p, x);
-    REQUIRE(p->__str__() == "123.0 - x");
+    REQUIRE(p->__str__() == "123. - x");
 
     p = complex_double(std::complex<double>(1, 2));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
+    REQUIRE(p->__str__() == "1. + 2.*I + x");
 
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
     mpfr_set_ui(m1.get_mpfr_t(), 123, MPFR_RNDN);
     p = SymEngine::real_mpfr(m1);
     p = add(p, x);
-    REQUIRE(p->__str__() == "123.000000000000000000000 + x");
+    REQUIRE(p->__str__() == "123.0000000000000000000 + x");
 #ifdef HAVE_SYMENGINE_MPC
     SymEngine::mpc_class m2(75);
     mpc_set_si_si(m2.get_mpc_t(), -10, 10, MPC_RNDNN);
     p = SymEngine::complex_mpc(m2);
     p = div(p, x);
     REQUIRE(p->__str__()
-            == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
+            == "(-10.00000000000000000000 + 10.00000000000000000000*I)/x");
 #endif
 #endif
 }

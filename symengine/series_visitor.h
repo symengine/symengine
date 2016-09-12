@@ -55,7 +55,7 @@ public:
         if (is_a<Integer>(*exp)) {
             const Integer &ii = (static_cast<const Integer &>(*exp));
             if (not mp_fits_slong_p(ii.i))
-                throw std::runtime_error("series power exponent size");
+                throw SymEngineException("series power exponent size");
             const int sh = mp_get_si(ii.i);
             base->accept(*this);
             if (sh == 1) {
@@ -76,7 +76,7 @@ public:
             const integer_class &expnumz = get_num(rat.i);
             const integer_class &expdenz = get_den(rat.i);
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
-                throw std::runtime_error("series rational power exponent size");
+                throw SymEngineException("series rational power exponent size");
             const int num = mp_get_si(expnumz);
             const int den = mp_get_si(expdenz);
             base->accept(*this);
@@ -147,10 +147,10 @@ public:
     void bvisit(const Series &x)
     {
         if (x.get_var() != varname) {
-            throw std::runtime_error("Multivariate Series not implemented");
+            throw SymEngineException("Multivariate Series not implemented");
         }
         if (x.get_degree() < prec) {
-            throw std::runtime_error("Series with lesser prec found");
+            throw SymEngineException("Series with lesser prec found");
         }
         p = x.get_poly();
     }
@@ -280,10 +280,10 @@ public:
     }
     void bvisit(const Basic &x)
     {
-        if (!has_symbol(x, symbol(varname))) {
+        if (!has_symbol(x, *symbol(varname))) {
             p = Series::convert(x);
         } else {
-            throw std::runtime_error("Not Implemented");
+            throw SymEngineException("Not Implemented");
         }
     }
 };

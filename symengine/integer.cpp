@@ -1,15 +1,15 @@
 #include <symengine/rational.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {
 
-std::size_t Integer::__hash__() const
+hash_t Integer::__hash__() const
 {
-    std::hash<long long int> hash_fn;
-    // only the least significant bits that fit into "signed long int" are
+    // only the least significant bits that fit into "long long int" are
     // hashed:
-    return hash_fn(((long long int)mp_get_ui(this->i)) * mp_sign(this->i));
+    return ((hash_t)mp_get_ui(this->i)) * mp_sign(this->i);
 }
 
 bool Integer::__eq__(const Basic &o) const
@@ -36,7 +36,7 @@ signed long int Integer::as_int() const
     // "as_int()" and we leave it to the user to do any possible further integer
     // conversions.
     if (not(mp_fits_slong_p(this->i))) {
-        throw std::runtime_error("as_int: Integer larger than int");
+        throw SymEngineException("as_int: Integer larger than int");
     }
     return mp_get_si(this->i);
 }
@@ -44,7 +44,7 @@ signed long int Integer::as_int() const
 RCP<const Number> Integer::divint(const Integer &other) const
 {
     if (other.i == 0)
-        throw std::runtime_error("Rational: Division by zero.");
+        throw DivisionByZeroError("Division By Zero");
     rational_class q(this->i, other.i);
 
     // This is potentially slow, but has to be done, since q might not
@@ -58,7 +58,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 {
     if (is_a<Integer>(other)) {
         if (this->i == 0) {
-            throw std::runtime_error("Rational: Division by zero.");
+            throw DivisionByZeroError("Division By Zero");
         }
         rational_class q((static_cast<const Integer &>(other)).i, this->i);
 
@@ -68,7 +68,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 
         return Rational::from_mpq(std::move(q));
     } else {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 };
 
@@ -80,7 +80,7 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
                          mp_abs(static_cast<const Integer &>(*tmp).i));
         return Rational::from_mpq(std::move(q));
     } else {
-        throw std::runtime_error("powint returned non-integer");
+        throw SymEngineException("powint returned non-integer");
     }
 }
 
@@ -98,7 +98,7 @@ int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
                unsigned long int n)
 {
     if (n == 0)
-        throw std::runtime_error("i_nth_root: Can not find Zeroth root");
+        throw SymEngineException("i_nth_root: Can not find Zeroth root");
 
     int ret_val;
     integer_class t;

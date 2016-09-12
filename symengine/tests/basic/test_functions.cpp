@@ -5,6 +5,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/eval_double.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -93,6 +94,9 @@ using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::get_mpz_t;
+using SymEngine::DivisionByZeroError;
+using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 using namespace SymEngine::literals;
 
@@ -448,7 +452,7 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
+    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), DivisionByZeroError);
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -548,7 +552,7 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
+    CHECK_THROWS_AS(cot(mul(integer(7), pi)), DivisionByZeroError);
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -648,7 +652,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
+    CHECK_THROWS_AS(csc(mul(integer(7), pi)), DivisionByZeroError);
+    CHECK_THROWS_AS(csc(integer(0)), DivisionByZeroError);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -689,6 +694,10 @@ TEST_CASE("Sec: functions", "[functions]")
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
+
+    // sec(0) = zero
+    r1 = sec(zero);
+    REQUIRE(eq(*r1, *i1));
 
     // sec(-y) = sec(y)
     r1 = sec(mul(im1, y));
@@ -748,7 +757,7 @@ TEST_CASE("Sec: functions", "[functions]")
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);
+    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), DivisionByZeroError);
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
@@ -2207,7 +2216,7 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
-    CHECK_THROWS_AS(zeta(one, i2), std::runtime_error);
+    CHECK_THROWS_AS(zeta(one, i2), NotImplementedError);
 }
 
 TEST_CASE("Levi Civita: functions", "[functions]")
@@ -2735,7 +2744,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }

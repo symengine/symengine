@@ -25,7 +25,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex,
     if (prec == 0)
         return make_rcp<const UPSeriesPiranha>(p_expr{Expression()},
                                                var->get_name(), prec);
-    if (not has_symbol(*ex, var))
+    if (not has_symbol(*ex, *var))
         return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)},
                                                var->get_name(), prec);
     if (is_a<Symbol>(*ex))
@@ -78,7 +78,7 @@ RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex,
         var->get_name(), prec);
 
 #else
-    throw std::runtime_error("Series reversion is supported only with Piranha");
+    throw SymEngineException("Series reversion is supported only with Piranha");
 #endif
 }
 

@@ -4,6 +4,7 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -22,6 +23,8 @@ using SymEngine::eye;
 using SymEngine::diag;
 using SymEngine::vec_basic;
 using SymEngine::function_symbol;
+using SymEngine::permutelist;
+using SymEngine::SymEngineException;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -287,25 +290,25 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
 
 TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
 {
-    auto pivotlist = std::vector<unsigned>(2);
+    permutelist pl;
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B, pivotlist);
+    pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(
                      2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
 
     A = DenseMatrix(2, 2, {integer(2), integer(3), integer(3), integer(4)});
     B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B, pivotlist);
+    pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2, {integer(1), div(integer(3), integer(2)),
                                     integer(0), div(minus_one, integer(2))}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B, pivotlist);
+    pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(
         B == DenseMatrix(
@@ -313,12 +316,11 @@ TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
                         sub(symbol("d"),
                             mul(symbol("c"), div(symbol("b"), symbol("a"))))}));
 
-    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_gaussian_elimination(A, B, pivotlist);
+    pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -328,7 +330,7 @@ TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_gaussian_elimination(A, B, pivotlist);
+    pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                     integer(0), integer(1), integer(2),
@@ -425,22 +427,21 @@ TEST_CASE("test_fraction_free_gaussian_elimination(): matrices", "[matrices]")
 TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
           "[matrices]")
 {
-    auto pivotlist = std::vector<unsigned>(2);
+    permutelist pl;
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(
                      2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
 
-    pivotlist = std::vector<unsigned>(4);
     A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
                            integer(2), integer(2), integer(3), integer(4),
                            integer(3), integer(3), integer(3), integer(4),
                            integer(9), integer(8), integer(7), integer(6)});
     B = DenseMatrix(4, 4);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(
                      4, 4, {integer(1), integer(2), integer(3), integer(4),
@@ -448,12 +449,11 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
                             integer(0), integer(0), integer(3), integer(4),
                             integer(0), integer(0), integer(0), integer(-10)}));
 
-    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
                            integer(-1), integer(0), integer(1), integer(0),
                            integer(3), integer(5), integer(6), integer(9)});
     B = DenseMatrix(3, 4);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3),
                                     integer(4), integer(0), integer(2),
@@ -464,7 +464,7 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(2), integer(3), integer(3), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                     integer(0), integer(0), integer(0),
@@ -475,7 +475,7 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -485,7 +485,7 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                     integer(0), integer(2), integer(4),
@@ -495,51 +495,50 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
 TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
 {
     // These test cases are verified with SymPy
-    auto pivotlist = std::vector<unsigned>(2);
+    permutelist pl;
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), integer(0), symbol("c"), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(1), integer(0), integer(0), integer(0)}));
 
-    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(-1),
                            integer(7), integer(6), integer(4), integer(5),
                            integer(2)});
     B = DenseMatrix(3, 3);
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
                                     integer(0), integer(1), integer(0),
@@ -548,7 +547,7 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
     A = DenseMatrix(3, 2, {integer(-9), integer(4), integer(3), integer(-1),
                            integer(7), integer(6)});
     B = DenseMatrix(3, 2);
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0),
                                     integer(1), integer(0), integer(0)}));
@@ -558,7 +557,7 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -568,7 +567,7 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
                                     integer(0), integer(1), integer(0),
@@ -617,12 +616,12 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
           "[matrices]")
 {
     // These tests won't work with fraction_free_gauss_jordan_elimination
-    auto pivotlist = std::vector<unsigned>(3);
+    permutelist pl;
     DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                                        integer(2), integer(2), integer(2),
                                        integer(3), integer(4), integer(3)});
     DenseMatrix B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -632,7 +631,7 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
                      integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
 
     // Here the diagonal entry is 6 although the det(A) = -6, this because we
     // have interchanged two rows
@@ -822,6 +821,47 @@ TEST_CASE("test_LU(): matrices", "[matrices]")
     mul_dense_dense(L, U, B);
 
     REQUIRE(A == B);
+}
+
+TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+                                       integer(2), integer(6), integer(6),
+                                       integer(8), integer(3), integer(1)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+    permutelist pl;
+    pivoted_LU(A, L, U, pl);
+    REQUIRE(pl == permutelist({{2, 1}}));
+
+    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+                                    integer(8), integer(1), integer(0),
+                                    integer(2), integer(0), integer(1)}));
+    REQUIRE(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+                                    integer(0), integer(-21), integer(-39),
+                                    integer(0), integer(0), integer(-4)}));
+
+    pl.clear();
+
+    A = DenseMatrix(3, 3,
+                    {integer(0), integer(0), integer(5), integer(2), integer(6),
+                     integer(6), integer(8), integer(3), integer(1)});
+
+    pivoted_LU(A, L, U, pl);
+
+    REQUIRE(pl == permutelist({{1, 0}, {2, 1}}));
+
+    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+                                    integer(4), integer(1), integer(0),
+                                    integer(0), integer(0), integer(1)}));
+    REQUIRE(U == DenseMatrix(3, 3, {integer(2), integer(6), integer(6),
+                                    integer(0), integer(-21), integer(-23),
+                                    integer(0), integer(0), integer(5)}));
+
+    A = DenseMatrix(3, 3,
+                    {integer(0), integer(0), integer(0), integer(0), integer(0),
+                     integer(0), integer(8), integer(3), integer(1)});
+    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), SymEngineException);
 }
 
 TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
@@ -1320,7 +1360,7 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
                             integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
 }
 
 TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
@@ -1337,7 +1377,7 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
                             integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
 }
 
 TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
@@ -1367,24 +1407,24 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
 
 TEST_CASE("test_eye(): matrices", "[matrices]")
 {
-    DenseMatrix A;
-    eye(A, 3);
+    DenseMatrix A(3, 3);
+    eye(A);
 
     REQUIRE(A == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
                                     integer(0), integer(1), integer(0),
                                     integer(0), integer(0), integer(1)}));
 
-    eye(A, 3, 3, 1);
+    eye(A, 1);
     REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(1), integer(0),
                                     integer(0), integer(0), integer(1),
                                     integer(0), integer(0), integer(0)}));
 
-    eye(A, 3, 3, -1);
+    eye(A, -1);
     REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
                                     integer(1), integer(0), integer(0),
                                     integer(0), integer(1), integer(0)}));
 
-    eye(A, 3, 3, -2);
+    eye(A, -2);
     REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
                                     integer(0), integer(0), integer(0),
                                     integer(1), integer(0), integer(0)}));
@@ -1392,7 +1432,7 @@ TEST_CASE("test_eye(): matrices", "[matrices]")
 
 TEST_CASE("test_diag(): matrices", "[matrices]")
 {
-    DenseMatrix A;
+    DenseMatrix A(3, 3);
     vec_basic d{integer(1), integer(2), integer(3)};
 
     diag(A, d);
@@ -1400,6 +1440,7 @@ TEST_CASE("test_diag(): matrices", "[matrices]")
                                     integer(0), integer(2), integer(0),
                                     integer(0), integer(0), integer(3)}));
 
+    A = DenseMatrix(4, 4);
     diag(A, d, 1);
     REQUIRE(A == DenseMatrix(4, 4,
                              {integer(0), integer(1), integer(0), integer(0),
@@ -1407,6 +1448,7 @@ TEST_CASE("test_diag(): matrices", "[matrices]")
                               integer(0), integer(0), integer(0), integer(3),
                               integer(0), integer(0), integer(0), integer(0)}));
 
+    A = DenseMatrix(5, 5);
     diag(A, d, -2);
     REQUIRE(
         A == DenseMatrix(5, 5, {integer(0), integer(0), integer(0), integer(0),
@@ -1420,17 +1462,19 @@ TEST_CASE("test_diag(): matrices", "[matrices]")
 
 TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
 {
-    DenseMatrix A;
+    DenseMatrix A(1, 5);
+    ones(A);
 
-    ones(A, 1, 5);
     REQUIRE(A == DenseMatrix(1, 5, {integer(1), integer(1), integer(1),
                                     integer(1), integer(1)}));
 
-    ones(A, 2, 3);
+    A = DenseMatrix(2, 3);
+    ones(A);
     REQUIRE(A == DenseMatrix(2, 3, {integer(1), integer(1), integer(1),
                                     integer(1), integer(1), integer(1)}));
 
-    zeros(A, 3, 2);
+    A = DenseMatrix(3, 2);
+    zeros(A);
     REQUIRE(A == DenseMatrix(3, 2, {integer(0), integer(0), integer(0),
                                     integer(0), integer(0), integer(0)}));
 }
@@ -1451,7 +1495,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
                                     integer(1), integer(0), integer(0)}));
 
     X = DenseMatrix(4, 1, {f, y, z, t});
-    CHECK_THROWS_AS(jacobian(A, X, J), std::runtime_error);
+    CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException);
 
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});

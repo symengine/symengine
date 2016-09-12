@@ -1,6 +1,9 @@
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
 #include <stack>
+#include <symengine/symengine_exception.h>
+#include <cctype>
+#include <cerrno>
 
 namespace SymEngine
 {
@@ -110,31 +113,51 @@ class ExpressionParser
     // it's length
     unsigned int s_len;
 
+    std::string get_string(int start, int end)
+    {
+        if (start == -1 or start >= end) {
+            return "";
+        } else {
+            while (s[end - 1] == ' ') {
+                --end;
+            }
+            return s.substr(start, end - start);
+        }
+    }
+
     // parses a string from [l, r)
     RCP<const Basic> parse_string(unsigned int l, unsigned int h)
     {
         // the result of a particular parse from l->h
         RCP<const Basic> result;
-        // the current expr being processed
-        std::string expr = "";
+        // start of the current expr being processed
+        int expr_start = -1;
         // has the result been set even once?
         bool result_set = false;
-        // is the current expr being parsed numeric?
-        bool is_not_numeric = false;
-        // number of '.' in the expression
-        int num_dots = 0;
 
         // a parse_string is called empty in scenarios like "x+"
         if (l == h)
-            throw std::runtime_error("Expected token!");
+            throw ParseError("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
             if (is_operator(iter)) {
+
+                if (s[iter] == '+' or s[iter] == '-') {
+                    if (iter > l + 1 and iter < h - 1 and s[iter - 1] == 'e'
+                        and s[iter - 2] >= '0' and s[iter - 2] <= '9'
+                        and s[iter + 1] >= '0' and s[iter + 1] <= '9') {
+                        continue;
+                    }
+                }
+
                 // if an operator is encountered, which is not '(' a result must
                 // be evaluated (if not already)!
-                if (!result_set)
-                    if (s[iter] != '(')
-                        result = set_result(expr, is_not_numeric, num_dots);
+                if (!result_set) {
+                    if (s[iter] != '(') {
+                        result = set_result(get_string(expr_start, iter));
+                        expr_start = -1;
+                    }
+                }
 
                 // continue the parsing after operator_end[iter], as we have
                 // already parsed till there
@@ -165,8 +188,8 @@ class ExpressionParser
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '(') {
-                    result = functionify(iter, expr);
-
+                    result = functionify(iter, get_string(expr_start, iter));
+                    expr_start = -1;
                 } else {
                     continue;
                 }
@@ -174,24 +197,16 @@ class ExpressionParser
                 result_set = true;
 
             } else {
-                // if not an operator, we append it to the current expr
-                expr += s[iter];
-                // check wether it's numeric or not
-                if (s[iter] == '.') {
-                    num_dots++;
-
-                } else {
-                    int ascii = s[iter] - '0';
-                    if (ascii < 0 or ascii > 9)
-                        is_not_numeric = true;
-                }
+                if (expr_start == -1 && s[iter] != ' ')
+                    expr_start = iter;
                 // if the parsing was to finish after this, result must be set
                 // occurs when no operator present eg. "3"
-                if (iter == h - 1)
-                    result = set_result(expr, is_not_numeric, num_dots);
+                if (!result_set && iter == h - 1) {
+                    result = set_result(get_string(expr_start, iter + 1));
+                    expr_start = -1;
+                }
             }
         }
-
         return result;
     }
 
@@ -215,47 +230,85 @@ class ExpressionParser
             iter = operator_end[iter];
         }
 
-        if (params.size() == 1)
+        if (params.size() == 1) {
             if (single_arg_functions.find(expr) != single_arg_functions.end())
                 return single_arg_functions[expr](params[0]);
+        }
 
-        if (params.size() == 2)
+        if (params.size() == 2) {
             if (double_arg_functions.find(expr) != double_arg_functions.end())
                 return double_arg_functions[expr](params[0], params[1]);
+        }
 
-        if (multi_arg_functions.find(expr) != multi_arg_functions.end())
+        if (multi_arg_functions.find(expr) != multi_arg_functions.end()) {
             return multi_arg_functions[expr](params);
+        }
 
         return function_symbol(expr, params);
     }
 
     // return a <Basic> by parsing the 'expr' passed from parse_string
-    RCP<const Basic> set_result(const std::string &expr,
-                                const bool &is_not_numeric, const int &num_dots)
+    RCP<const Basic> set_result(const std::string &expr)
     {
         // for handling cases like "-2"
         // expr will be "" in this case, but we must return 0
         if (expr == "")
             return zero;
 
-        // if the expr wasn't numeric, it's either a constant, or a user
-        // declared symbol
-        // otherwise it's an integer (yet to add float/double support)
-        if (is_not_numeric) {
+        char *endptr = 0;
+        double d = std::strtod(expr.c_str(), &endptr);
+
+        if (*endptr == '\0') {
+            // if the expr is numeric, it's either a float or an integer
+            errno = 0;
+            long l = std::strtol(expr.c_str(), &endptr, 0);
+            if (*endptr == '\0') {
+                if (errno != ERANGE) {
+                    // No overflow in l
+                    return integer(l);
+                } else {
+                    return integer(integer_class(expr.c_str()));
+                }
+            } else {
+#ifdef HAVE_SYMENGINE_MPFR
+                unsigned digits = 0;
+                for (unsigned i = 0; i < expr.length(); ++i) {
+                    if (expr[i] == '.' or expr[i] == '-')
+                        continue;
+                    if (expr[i] == 'E' or expr[i] == 'e')
+                        break;
+                    if (digits != 0 or expr[i] != '0') {
+                        ++digits;
+                    }
+                }
+                if (digits <= 15) {
+                    return real_double(d);
+                } else {
+                    // mpmath.libmp.libmpf.dps_to_prec
+                    long prec
+                        = std::max(long(1), std::lround((digits + 1)
+                                                        * 3.3219280948873626));
+                    return real_mpfr(mpfr_class(expr, prec));
+                }
+#else
+                return real_double(d);
+#endif
+            }
+        } else {
+            // if the expr is not numeric, it's either a constant, or a user
+            // declared symbol
             if (constants.find(expr) != constants.end())
                 return constants[expr];
-            return symbol(expr);
 
-        } else {
-            if (num_dots > 1) {
-                throw std::runtime_error("Invalid symbol or number!");
-
-            } else if (num_dots == 1) {
-                return real_double(std::atof(expr.c_str()));
-
-            } else {
-                return integer(std::atoi(expr.c_str()));
+            if (std::isalpha(expr[0]) or expr[0] == '_') {
+                for (unsigned i = 1; i < expr.length(); ++i) {
+                    if (not std::isalnum(expr[i]) and expr[i] != '_') {
+                        throw ParseError(expr + " is not a symbol or numeric");
+                    }
+                }
+                return symbol(expr);
             }
+            throw ParseError(expr + " is not a symbol or numeric");
         }
     }
 
@@ -265,10 +318,7 @@ class ExpressionParser
             if (current == ')')
                 return true;
 
-        } else if (prev == '-') {
-            if (current != '(' and current != ',' and current != ')')
-                return true;
-
+        } else if (prev == '-' or prev == '+') {
         } else {
             if (current != ')')
                 return true;
@@ -289,18 +339,14 @@ public:
 
         bool last_char_was_op = false;
         char last_char = 'x';
-        s = "";
+        s.clear();
+        s.reserve(in.length());
 
-        // removing spaces from the string
+        // Replacing ** with ^
         for (unsigned int i = 0; i < in.length(); ++i) {
-            if (in[i] == ' ') {
-                continue;
-
-            } else if (in[i] == '*' and i + 1 < in.length()
-                       and in[i + 1] == '*') {
+            if (in[i] == '*' and i + 1 < in.length() and in[i + 1] == '*') {
                 s += '^';
                 i++;
-
             } else {
                 s += in[i];
             }
@@ -328,7 +374,7 @@ public:
                     // this should never happen, every '(' should have a
                     // matcihng ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
-                        throw std::runtime_error("Mismatching parantheses!");
+                        throw ParseError("Mismatching parantheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
@@ -343,6 +389,18 @@ public:
                     right_bracket.push(i);
 
                 } else {
+                    if (x == '+' or x == '-') {
+                        if (i > 1 and i < (int)s_len - 1 and s[i - 1] == 'e'
+                            and s[i - 2] >= '0' and s[i - 2] <= '9'
+                            and s[i + 1] >= '0' and s[i + 1] <= '9') {
+                            // numeric like 1e-10
+                            last_char_was_op = false;
+                            continue;
+                        }
+                    }
+                    if (last_char_was_op
+                        and (last_char == '-' or last_char == '+'))
+                        op_stack.pop();
                     // if it's a normal operator, remove operators with higher
                     // precedence
                     while (op_precedence[x] < op_stack.top().first)
@@ -351,11 +409,15 @@ public:
                     operator_end[i] = op_stack.top().second;
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
-
                 if (last_char_was_op and operator_error(last_char, x))
-                    throw std::runtime_error("Operator inconsistency!");
+                    throw ParseError("Operator inconsistency!");
+                if (last_char_was_op and operator_error(last_char, x)) {
+                    throw SymEngineException("Operator inconsistency!");
+                }
                 last_char_was_op = true;
 
+            } else if (s[i] == ' ') {
+                continue;
             } else {
                 last_char_was_op = false;
             }
@@ -364,7 +426,7 @@ public:
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
-            throw std::runtime_error("Mismatching parantheses!");
+            throw ParseError("Mismatching parantheses!");
 
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);

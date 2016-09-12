@@ -57,12 +57,12 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
 
 RCP<const Integer> mod(const Integer &n, const Integer &d)
 {
-    return integer(std::move(n.as_integer_class() % d.as_integer_class()));
+    return integer(n.as_integer_class() % d.as_integer_class());
 }
 
 RCP<const Integer> quotient(const Integer &n, const Integer &d)
 {
-    return integer(std::move(n.as_integer_class() / d.as_integer_class()));
+    return integer(n.as_integer_class() / d.as_integer_class());
 }
 
 void quotient_mod(const Ptr<RCP<const Integer>> &q,
@@ -176,7 +176,7 @@ int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
     integer_class sqrtN = mp_sqrt(N);
     unsigned long limit = mp_get_ui(sqrtN);
     if (limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
     while ((p = pi.next_prime()) <= limit) {
@@ -191,7 +191,7 @@ int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
 int _factor_lehman_method(integer_class &rop, const integer_class &n)
 {
     if (n < 21)
-        throw std::runtime_error("Require n >= 21 to use lehman method");
+        throw SymEngineException("Require n >= 21 to use lehman method");
 
     int ret_val = 0;
     integer_class u_bound;
@@ -259,7 +259,7 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
                                const integer_class &c, unsigned B)
 {
     if (n < 4 or B < 3)
-        throw std::runtime_error(
+        throw SymEngineException(
             "Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     integer_class m, _c;
@@ -316,7 +316,7 @@ int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
                                unsigned steps = 10000)
 {
     if (n < 5)
-        throw std::runtime_error("Require n > 4 to use pollard's-rho method");
+        throw SymEngineException("Require n > 4 to use pollard's-rho method");
 
     integer_class u, v, g, m;
     u = s;
@@ -404,7 +404,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
                 ret_val = ecm_factor(get_mpz_t(_f), get_mpz_t(_n), B1, nullptr);
             mp_demote(_f);
             if (not ret_val)
-                throw std::runtime_error(
+                throw SymEngineException(
                     "ECM failed to factor the given number");
         }
     }
@@ -441,7 +441,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list,
     auto limit = mp_get_ui(sqrtN);
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
 
@@ -471,7 +471,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     auto limit = mp_get_ui(sqrtN);
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
-        throw std::runtime_error("N too large to factor");
+        throw SymEngineException("N too large to factor");
     Sieve::iterator pi(limit);
 
     unsigned p;
@@ -662,9 +662,9 @@ bool crt(const Ptr<RCP<const Integer>> &R,
          const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
-        throw std::runtime_error("Too few remainders");
+        throw SymEngineException("Too few remainders");
     if (mod.size() == 0)
-        throw std::runtime_error("Moduli vector cannot be empty");
+        throw SymEngineException("Moduli vector cannot be empty");
 
     integer_class m, r, g, s, t;
     m = mod[0]->as_integer_class();
@@ -693,9 +693,9 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R,
                     const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
-        throw std::runtime_error("Too few remainders");
+        throw SymEngineException("Too few remainders");
     if (mod.size() == 0)
-        throw std::runtime_error("Moduli vector cannot be empty");
+        throw SymEngineException("Moduli vector cannot be empty");
     integer_class m, _m, r, s, t;
     m = mod[0]->as_integer_class();
     R = rem[0];
@@ -952,7 +952,8 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o,
                           const RCP<const Integer> &n)
 {
     integer_class order, p, t;
-    integer_class _a = a->as_integer_class(), _n = mp_abs(n->as_integer_class());
+    integer_class _a = a->as_integer_class(),
+                  _n = mp_abs(n->as_integer_class());
     mp_gcd(t, _a, _n);
     if (t != 1)
         return false;
@@ -1300,7 +1301,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
                 if (c > 0 and a % 4 == 3) {
                     return false;
                 }
-                roots.push_back(integer(std::move(a % 4)));
+                roots.push_back(integer(a % 4));
                 if (all_roots and c > 0)
                     roots.push_back(integer(3));
                 return true;
@@ -1390,7 +1391,8 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
             m = r / mp_get_ui(n);
             mp_pow_ui(pm, p, m);
             if (not all_roots) {
-                roots.push_back(integer(_roots.back()->as_integer_class() * pm));
+                roots.push_back(
+                    integer(_roots.back()->as_integer_class() * pm));
                 return true;
             }
             for (auto &it : _roots) {
@@ -1498,9 +1500,9 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root,
         integer_class _mod;
         mp_pow_ui(_mod, it.first->as_integer_class(), it.second);
         moduli.push_back(integer(std::move(_mod)));
-        ret_val
-            = _nthroot_mod_prime_power(rem, a->as_integer_class(), n->as_integer_class(),
-                                       it.first->as_integer_class(), it.second, false);
+        ret_val = _nthroot_mod_prime_power(
+            rem, a->as_integer_class(), n->as_integer_class(),
+            it.first->as_integer_class(), it.second, false);
         if (not ret_val)
             return false;
     }
@@ -1529,8 +1531,9 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots,
         mp_pow_ui(_mod, it.first->as_integer_class(), it.second);
         moduli.push_back(integer(std::move(_mod)));
         std::vector<RCP<const Integer>> rem1;
-        ret_val = _nthroot_mod_prime_power(rem1, a->as_integer_class(), n->as_integer_class(),
-                                           it.first->as_integer_class(), it.second, true);
+        ret_val = _nthroot_mod_prime_power(
+            rem1, a->as_integer_class(), n->as_integer_class(),
+            it.first->as_integer_class(), it.second, true);
         if (not ret_val)
             return;
         rem.push_back(rem1);
@@ -1580,7 +1583,8 @@ void powermod_list(std::vector<RCP<const Integer>> &pows,
                    const RCP<const Integer> &m)
 {
     if (is_a<Integer>(*b)) {
-        integer_class t = mp_abs(rcp_static_cast<const Integer>(b)->as_integer_class());
+        integer_class t
+            = mp_abs(rcp_static_cast<const Integer>(b)->as_integer_class());
         mp_powm(t, a->as_integer_class(), t, m->as_integer_class());
         if (b->is_negative()) {
             bool ret_val = mp_invert(t, t, m->as_integer_class());
@@ -1621,7 +1625,7 @@ vec_integer_class quadratic_residues(const Integer &a)
     */
 
     if (a.as_integer_class() < 1) {
-        throw std::runtime_error("quadratic_residues: Input must be > 0");
+        throw SymEngineException("quadratic_residues: Input must be > 0");
     }
 
     vec_integer_class residue;
@@ -1645,7 +1649,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 
     integer_class p2 = p.as_integer_class();
     if (p2 == 0)
-        throw std::runtime_error(
+        throw SymEngineException(
             "is_quad_residue: Second parameter must be non-zero");
     if (p2 < 0)
         p2 = -p2;
@@ -1668,8 +1672,8 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 
         for (const auto &it : prime_mul) {
             ret_val = _is_nthroot_mod_prime_power(
-                a1->as_integer_class(), integer(2)->as_integer_class(), it.first->as_integer_class(),
-                it.second);
+                a1->as_integer_class(), integer(2)->as_integer_class(),
+                it.first->as_integer_class(), it.second);
             if (not ret_val)
                 return false;
         }
@@ -1702,8 +1706,9 @@ i.e a % mod in set([i**n % mod for i in range(mod)]).
     bool ret_val;
 
     for (const auto &it : prime_mul) {
-        ret_val = _is_nthroot_mod_prime_power(a.as_integer_class(), n.as_integer_class(),
-                                              it.first->as_integer_class(), it.second);
+        ret_val = _is_nthroot_mod_prime_power(
+            a.as_integer_class(), n.as_integer_class(),
+            it.first->as_integer_class(), it.second);
         if (not ret_val)
             return false;
     }
@@ -1713,7 +1718,7 @@ i.e a % mod in set([i**n % mod for i in range(mod)]).
 int mobius(const Integer &a)
 {
     if (a.as_int() <= 0) {
-        throw std::runtime_error("mobius: Integer <= 0");
+        throw SymEngineException("mobius: Integer <= 0");
     }
     map_integer_uint prime_mul;
     bool is_square_free = true;

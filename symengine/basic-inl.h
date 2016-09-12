@@ -4,7 +4,7 @@
 namespace SymEngine
 {
 
-inline std::size_t Basic::hash() const
+inline hash_t Basic::hash() const
 {
     if (hash_ == 0)
         hash_ = __hash__();
@@ -52,16 +52,52 @@ inline std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p)
     out << p.__str__();
     return out;
 }
-} // SymEngine
 
-// global namespace functions
 //! Templatised version to combine hash
-template <class T>
-inline void hash_combine(std::size_t &seed, const T &v)
+template <typename T>
+inline void hash_combine_impl(
+    hash_t &seed, const T &v,
+    typename std::enable_if<std::is_base_of<Basic, T>::value>::type * = nullptr)
 {
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    hash_combine(seed, v.hash());
 }
+
+template <typename T>
+inline void hash_combine_impl(
+    hash_t &seed, const T &v,
+    typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
+{
+    seed ^= v + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
+}
+
+inline void hash_combine_impl(hash_t &seed, const std::string &s)
+{
+    for (const char &c : s) {
+        hash_combine<hash_t>(seed, c);
+    }
+}
+
+inline void hash_combine_impl(hash_t &seed, const double &s)
+{
+    hash_combine(seed, static_cast<hash_t>(s));
+}
+
+template <class T>
+inline void hash_combine(hash_t &seed, const T &v)
+{
+    hash_combine_impl(seed, v);
+}
+
+template <typename T>
+hash_t vec_hash<T>::operator()(const T &v) const
+{
+    hash_t h = 0;
+    for (auto i : v)
+        hash_combine<typename T::value_type>(h, i);
+    return h;
+};
+
+} // SymEngine
 
 // std namespace functions
 namespace std

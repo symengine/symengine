@@ -77,9 +77,9 @@ if [[ "${WITH_COVERAGE}" != "" ]]; then
 fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-    CXXFLAGS=""
+    export CXXFLAGS=""
 else
-    CXXFLAGS="-Werror"
+    export CXXFLAGS="-Werror"
 fi
 cmake $cmake_line ${SOURCE_DIR}
 

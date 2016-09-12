@@ -24,9 +24,9 @@ public:
     //! Constructor
     OneArgFunction(const RCP<const Basic> &arg) : arg_{arg} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *arg_);
         return seed;
     }
@@ -70,9 +70,9 @@ public:
     TwoArgFunction(const RCP<const Basic> &a, const RCP<const Basic> &b)
         : a_{a}, b_{b} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *a_);
         hash_combine<Basic>(seed, *b_);
         return seed;
@@ -130,9 +130,9 @@ public:
     //! Constructor
     MultiArgFunction(const vec_basic &arg) : arg_{arg} {};
     //! \return the hash
-    inline std::size_t __hash__() const
+    inline hash_t __hash__() const
     {
-        std::size_t seed = this->get_type_code();
+        hash_t seed = this->get_type_code();
         for (const auto &a : arg_)
             hash_combine<Basic>(seed, *a);
         return seed;
@@ -398,12 +398,12 @@ public:
     bool is_canonical(const RCP<const Basic> &num,
                       const RCP<const Basic> &den) const;
     //! \return `y` in `atan2(y, x)`
-    inline const RCP<const Basic>& get_num() const
+    inline const RCP<const Basic> &get_num() const
     {
         return get_arg1();
     }
     //! \return `x` in `atan2(y, x)`
-    inline const RCP<const Basic>& get_den() const
+    inline const RCP<const Basic> &get_den() const
     {
         return get_arg2();
     }
@@ -456,12 +456,12 @@ public:
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s);
     //! \return `s_`
-    inline const RCP<const Basic>& get_s() const
+    inline const RCP<const Basic> &get_s() const
     {
         return get_arg1();
     }
     //! \return `a_`
-    inline const RCP<const Basic>& get_a() const
+    inline const RCP<const Basic> &get_a() const
     {
         return get_arg2();
     }
@@ -485,7 +485,7 @@ public:
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
     //! \return `s`
-    inline const RCP<const Basic>& get_s() const
+    inline const RCP<const Basic> &get_s() const
     {
         return get_arg();
     }
@@ -512,7 +512,7 @@ public:
     FunctionSymbol(std::string name, const vec_basic &arg);
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
     //! \return Size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o  Object to be compared with
      * \return whether the 2 objects are equal
@@ -520,7 +520,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `name_`
-    inline const std::string& get_name() const
+    inline const std::string &get_name() const
     {
         return name_;
     }
@@ -584,14 +584,14 @@ public:
         return make_rcp<const Derivative>(arg, x);
     }
 
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline const RCP<const Basic>& get_arg() const
+    inline const RCP<const Basic> &get_arg() const
     {
         return arg_;
     }
-    inline const multiset_basic& get_symbols() const
+    inline const multiset_basic &get_symbols() const
     {
         return x_;
     }
@@ -625,10 +625,10 @@ public:
         return make_rcp<const Subs>(arg, x);
     }
 
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline const RCP<const Basic>& get_arg() const
+    inline const RCP<const Basic> &get_arg() const
     {
         return arg_;
     }

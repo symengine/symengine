@@ -7,7 +7,7 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/usymenginepoly.h>
 
 namespace SymEngine
 {
@@ -169,21 +169,16 @@ public:
     }
 }; // UExprDict
 
-class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
+class UExprPoly : public USymEnginePoly<UExprDict, UExprPolyBase, UExprPoly>
 {
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
     //! Constructor of UExprPoly class
-    UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict);
+    UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 
-    bool is_canonical(const UExprDict &dict) const;
-    std::size_t __hash__() const;
-    int compare(const Basic &o) const;
+    hash_t __hash__() const;
 
-    static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
-                                          map_int_Expr &&d);
-    static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<Expression> &v);
+    typedef Expression coef_type;
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x
@@ -204,48 +199,14 @@ public:
     //! \return `true` if pow
     bool is_pow() const;
 
-    virtual vec_basic get_args() const;
-
-    inline int get_degree() const
-    {
-        return poly_.degree();
-    }
-    inline const map_int_Expr &get_dict() const
-    {
-        return poly_.get_dict();
-    }
-
-    inline Expression get_coeff(int x) const
-    {
-        return poly_.get_coeff(x);
-    }
-
-    typedef map_int_Expr::const_iterator iterator;
-    typedef map_int_Expr::const_reverse_iterator reverse_iterator;
-    iterator begin() const
-    {
-        return poly_.dict_.begin();
-    }
-    iterator end() const
-    {
-        return poly_.dict_.end();
-    }
-    reverse_iterator obegin() const
-    {
-        return poly_.dict_.rbegin();
-    }
-    reverse_iterator oend() const
-    {
-        return poly_.dict_.rend();
-    }
 }; // UExprPoly
 
-inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, UExprDict &&dict)
 {
     return UExprPoly::from_container(i, std::move(dict));
 }
 
-inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, map_int_Expr &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, map_int_Expr &&dict)
 {
     return UExprPoly::from_dict(i, std::move(dict));
 }

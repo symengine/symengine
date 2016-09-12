@@ -560,6 +560,7 @@ TEST_CASE("test_legendre_jacobi_kronecker(): ntheory", "[ntheory]")
 TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
 {
     RCP<const Integer> im1 = integer(-1);
+    RCP<const Integer> im4 = integer(-4);
     RCP<const Integer> i1 = integer(1);
     RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i3 = integer(3);
@@ -575,6 +576,7 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     RCP<const Integer> i32 = integer(32);
     RCP<const Integer> i41 = integer(41);
     RCP<const Integer> i64 = integer(64);
+    RCP<const Integer> i65 = integer(65);
     RCP<const Integer> i93 = integer(93);
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i105 = integer(105);
@@ -593,7 +595,8 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     REQUIRE(eq(*nthroot, *i5));
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
-    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class() - im1->as_integer_class());
+    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class()
+                  - im1->as_integer_class());
     REQUIRE(divides(*rem, *i41));
 
     REQUIRE(nthroot_mod(outArg(nthroot), i31, i4, i41) == true);
@@ -601,7 +604,8 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     nthroot_mod_list(roots, i1, i10, i100);
 
     REQUIRE(nthroot_mod(outArg(nthroot), i4, i2, i64) == true);
-    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class() - i4->as_integer_class());
+    rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class()
+                  - i4->as_integer_class());
     REQUIRE(divides(*rem, *i64));
 
     REQUIRE(nthroot_mod(outArg(nthroot), i32, i10, i41) == true);
@@ -621,6 +625,17 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     roots.clear();
     nthroot_mod_list(roots, i1, i18, i105);
     REQUIRE(roots.size() == 24);
+
+    roots.clear();
+    nthroot_mod_list(roots, im4, i4, i65);
+    REQUIRE(roots.size() == 16);
+    v = {integer(4),  integer(6),  integer(7),  integer(9),
+         integer(17), integer(19), integer(22), integer(32),
+         integer(33), integer(43), integer(46), integer(48),
+         integer(56), integer(58), integer(59), integer(61)};
+    same = std::equal(v.begin(), v.end(), roots.begin(),
+                      SymEngine::RCPBasicKeyEq());
+    REQUIRE(same == true);
 }
 
 TEST_CASE("test_powermod(): ntheory", "[ntheory]")

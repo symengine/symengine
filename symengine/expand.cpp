@@ -278,51 +278,24 @@ public:
         }
     }
 
-    void pow_expand(RCP<const UExprPoly> &x, unsigned long &i)
-    {
-        UExprDict e({{0, Expression(1)}});
-        RCP<const UExprPoly> r = uexpr_poly(x->get_var(), std::move(e));
-        while (i != 0) {
-            if (i % 2 == 1) {
-                r = mul_upoly(*r, *x);
-                i--;
-            }
-            x = mul_upoly(*x, *x);
-            i /= 2;
-        }
-        _coef_dict_add_term(multiply, r);
-    }
-
-    void pow_expand(RCP<const UIntPoly> &x, unsigned long &i)
-    {
-        RCP<const UIntPoly> r
-            = UIntPoly::from_dict(x->get_var(), {{0, integer_class(1)}});
-        while (i != 0) {
-            if (i % 2 == 1) {
-                r = mul_upoly(*r, *x);
-                i--;
-            }
-            x = mul_upoly(*x, *x);
-            i /= 2;
-        }
-        _coef_dict_add_term(multiply, r);
-    }
-
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand(self.get_base());
+        // TODO add all types of polys
         if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();
             RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
-            pow_expand(p, q);
+            RCP<const UExprPoly> r = pow_upoly(*p, q);
+            _coef_dict_add_term(multiply, r);
             return;
         }
         if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();
             RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
-            pow_expand(p, q);
+            RCP<const UIntPoly> r = pow_upoly(*p, q);
+            _coef_dict_add_term(multiply, r);
             return;
         }
 
@@ -335,8 +308,8 @@ public:
             return;
         }
 
-        integer_class n
-            = rcp_static_cast<const Integer>(self.get_exp())->as_integer_class();
+        integer_class n = rcp_static_cast<const Integer>(self.get_exp())
+                              ->as_integer_class();
         if (n < 0)
             return _coef_dict_add_term(
                 multiply, div(one, expand(pow(_base, integer(-n)))));

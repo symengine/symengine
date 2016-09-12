@@ -9,13 +9,18 @@
 #include <symengine/polys/uintpoly_flint.h>
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
-#include <symengine/polynomial_multivariate.h>
+#include <symengine/polys/msymenginepoly.h>
+#include <symengine/polys/uratpoly.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>
 #include <symengine/series_piranha.h>
 #include <symengine/series_flint.h>
+#include <symengine/series_generic.h>
+#include <symengine/series_piranha.h>
 #include <symengine/sets.h>
 #include <symengine/fields.h>
+#include <symengine/logic.h>
+#include <symengine/infinity.h>
 
 namespace SymEngine
 {
@@ -72,10 +77,14 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
 protected:
-    RCP<const Symbol> x_;
+    Ptr<const Symbol> x_;
     bool has_;
 
 public:
+    HasSymbolVisitor(Ptr<const Symbol> x) : x_(x)
+    {
+    }
+
     void bvisit(const Symbol &x)
     {
         if (x_->__eq__(x)) {
@@ -86,9 +95,8 @@ public:
 
     void bvisit(const Basic &x){};
 
-    bool apply(const Basic &b, const RCP<const Symbol> &x)
+    bool apply(const Basic &b)
     {
-        x_ = x;
         has_ = false;
         stop_ = false;
         preorder_traversal_stop(b, *this);
@@ -96,16 +104,20 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
+bool has_symbol(const Basic &b, const Symbol &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
 protected:
-    RCP<const Symbol> x_;
-    RCP<const Basic> n_;
+    Ptr<const Symbol> x_;
+    Ptr<const Basic> n_;
     RCP<const Basic> coeff_;
 
 public:
+    CoeffVisitor(Ptr<const Symbol> x, Ptr<const Basic> n) : x_(x), n_(n)
+    {
+    }
+
     void bvisit(const Add &x)
     {
         umap_basic_num dict;
@@ -136,6 +148,8 @@ public:
     {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
+        } else {
+            coeff_ = zero;
         }
     }
 
@@ -153,19 +167,15 @@ public:
         coeff_ = zero;
     }
 
-    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
-                           const RCP<const Basic> &n)
+    RCP<const Basic> apply(const Basic &b)
     {
-        x_ = x;
-        n_ = n;
         coeff_ = zero;
         b.accept(*this);
         return coeff_;
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
-                       const RCP<const Basic> &n);
+RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
 

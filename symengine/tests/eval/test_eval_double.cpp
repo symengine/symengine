@@ -4,6 +4,7 @@
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/eval_mpc.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::constant;
@@ -46,11 +47,14 @@ using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::loggamma;
+using SymEngine::gamma;
 using SymEngine::vec_basic;
 using SymEngine::rational_class;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
+using SymEngine::NotImplementedError;
+using SymEngine::SymEngineException;
 
 TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
@@ -124,23 +128,23 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     }
 
     // Symbol must raise an exception
-    CHECK_THROWS_AS(eval_double(*symbol("x")), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException);
     CHECK_THROWS_AS(eval_double_single_dispatch(*symbol("x")),
-                    std::runtime_error);
+                    NotImplementedError);
 
     // TODO: this is not implemented yet, so we check that it raises an
     // exception for now
-    CHECK_THROWS_AS(eval_double(*levi_civita({r1})), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*levi_civita({r1})), NotImplementedError);
     CHECK_THROWS_AS(eval_double_single_dispatch(*levi_civita({r1})),
-                    std::runtime_error);
+                    NotImplementedError);
 
-    CHECK_THROWS_AS(eval_double(*zeta(r1, r2)), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*zeta(r1, r2)), NotImplementedError);
     CHECK_THROWS_AS(eval_double_single_dispatch(*zeta(r1, r2)),
-                    std::runtime_error);
+                    NotImplementedError);
 
-    CHECK_THROWS_AS(eval_double(*constant("dummy")), std::runtime_error);
+    CHECK_THROWS_AS(eval_double(*constant("dummy")), SymEngineException);
     CHECK_THROWS_AS(eval_double_single_dispatch(*constant("dummy")),
-                    std::runtime_error);
+                    SymEngineException);
     // ... we don't test the rest of functions that are not implemented.
 }
 

@@ -33,8 +33,8 @@ public:
     template <typename Poly>
     void bvisit_upoly(const Poly &x)
     {
-        if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
+        if (x.end() == ++x.begin()) {
+            auto it = x.begin();
             precedence = PrecedenceEnum::Atom;
             if (it->second == 1) {
                 if (it->first == 0 or it->first == 1) {
@@ -49,29 +49,32 @@ public:
                     precedence = PrecedenceEnum::Mul;
                 }
             }
-        } else if (x.get_dict().size() == 0) {
+        } else if (x.begin() == x.end()) {
             precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
         }
     }
 
-    void bvisit(const UIntPoly &x)
+    template <typename Container, typename Poly>
+    void bvisit(const UPolyBase<Container, Poly> &x)
     {
-        bvisit_upoly(x);
+        bvisit_upoly(static_cast<const Poly &>(x));
     }
 
-    void bvisit(const UExprPoly &x)
+    void bvisit(const GaloisField &x)
     {
-        bvisit_upoly(x);
+        // iterators need to be implemented
+        // bvisit_upoly(x);
     }
 
-    void bvisit(const MultivariateIntPolynomial &x)
+    template <typename Container, typename Poly>
+    void bvisit(const MSymEnginePoly<Container, Poly> &x)
     {
-        if (0 == x.dict_.size()) {
+        if (0 == x.poly_.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
-        } else if (1 == x.dict_.size()) {
-            auto iter = x.dict_.begin();
+        } else if (1 == x.poly_.dict_.size()) {
+            auto iter = x.poly_.dict_.begin();
             precedence = PrecedenceEnum::Atom;
             bool first = true; // true if there are no nonzero exponents, false
                                // otherwise
@@ -85,35 +88,6 @@ public:
                 }
             }
             if (!first) {
-                if (iter->second != 1)
-                    precedence = PrecedenceEnum::Mul;
-            }
-        } else {
-            precedence = PrecedenceEnum::Add;
-        }
-    }
-
-    void bvisit(const MultivariatePolynomial &x)
-    {
-        if (0 == x.dict_.size()) {
-            precedence = PrecedenceEnum::Atom;
-        } else if (1 == x.dict_.size()) {
-            auto iter = x.dict_.begin();
-            precedence = PrecedenceEnum::Atom;
-            bool first = true; // true if there are no nonzero exponents, false
-                               // otherwise
-            for (unsigned int exp : iter->first) {
-                if (exp > 0) {
-                    if (first && exp > 1)
-                        precedence = PrecedenceEnum::Pow;
-                    if (!first)
-                        precedence = PrecedenceEnum::Mul;
-                    first = false;
-                }
-            }
-            if (first) {
-                iter->second.get_basic()->accept(*this);
-            } else {
                 if (iter->second != 1)
                     precedence = PrecedenceEnum::Mul;
             }
@@ -215,25 +189,36 @@ public:
     void bvisit(const Rational &x);
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
+    void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const UniversalSet &x);
+    void bvisit(const Contains &x);
+    void bvisit(const BooleanAtom &x);
+    void bvisit(const And &x);
+    void bvisit(const Or &x);
+    void bvisit(const Not &x);
+    void bvisit(const Union &x);
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
+    void bvisit(const MIntPoly &x);
+    void bvisit(const URatPoly &x);
 #ifdef HAVE_SYMENGINE_FLINT
     void bvisit(const UIntPolyFlint &x);
+    void bvisit(const URatPolyFlint &x);
 #endif
-    void bvisit(const MultivariateIntPolynomial &x);
-    void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UExprPoly &x);
+    void bvisit(const MExprPoly &x);
     void bvisit(const GaloisField &x);
+    void bvisit(const Infty &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
     void bvisit(const UIntPolyPiranha &x);
+    void bvisit(const URatPolyPiranha &x);
 #endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
@@ -250,6 +235,9 @@ public:
     void bvisit(const ComplexMPC &x);
 #endif
     void bvisit(const NumberWrapper &x);
+
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
 
     std::string parenthesizeLT(const RCP<const Basic> &x,
                                PrecedenceEnum precedenceEnum);

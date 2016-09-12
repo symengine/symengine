@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_arb.h>
+#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 
@@ -127,32 +128,32 @@ public:
 
     void bvisit(const Symbol &x)
     {
-        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+        throw SymEngineException("Symbol cannot be evaluated as an arb type.");
     }
 
     void bvisit(const UIntPoly &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     void bvisit(const Complex &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     void bvisit(const ComplexDouble &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     void bvisit(const RealMPFR &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 #endif
     void bvisit(const Log &x)
@@ -163,7 +164,7 @@ public:
 
     void bvisit(const Derivative &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     void bvisit(const Cot &x)
@@ -239,7 +240,7 @@ public:
 
     void bvisit(const LambertW &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     }
 
     void bvisit(const FunctionWrapper &x)
@@ -255,7 +256,7 @@ public:
 
     void bvisit(const Csch &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const Cosh &x)
@@ -266,7 +267,7 @@ public:
 
     void bvisit(const Sech &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const Tanh &x)
@@ -323,43 +324,43 @@ public:
 
     void bvisit(const ASinh &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const ACsch &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const ACosh &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const ATanh &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const ACoth &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const ASech &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const KroneckerDelta &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const LeviCivita &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const Zeta &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const Dirichlet_eta &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const Gamma &x)
     {
@@ -373,11 +374,11 @@ public:
     }
     void bvisit(const LowerGamma &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
     void bvisit(const UpperGamma &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const Constant &x)
@@ -389,19 +390,19 @@ public:
         } else if (x.__eq__(*EulerGamma)) {
             arb_const_euler(result_, prec_);
         } else {
-            throw std::runtime_error("Constant " + x.get_name()
+            throw SymEngineException("Constant " + x.get_name()
                                      + " is not implemented.");
         }
     }
 
     void bvisit(const Abs &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not Implemented");
     };
 
     void bvisit(const NumberWrapper &x)

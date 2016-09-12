@@ -2,6 +2,7 @@
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/derivative.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -30,6 +31,7 @@ using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Complex;
 using SymEngine::has_symbol;
+using SymEngine::coeff;
 using SymEngine::is_a;
 using SymEngine::rcp_static_cast;
 using SymEngine::set_basic;
@@ -39,6 +41,7 @@ using SymEngine::rational_class;
 using SymEngine::pi;
 using SymEngine::diff;
 using SymEngine::sdiff;
+using SymEngine::DivisionByZeroError;
 
 using namespace SymEngine::literals;
 
@@ -56,20 +59,9 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
-    // Hashes of x and y can but don't have to be different:
-    if (hash_fn(*x) != hash_fn(*y))
-        REQUIRE(x->__neq__(*y));
 
-    std::size_t seed1 = 0;
-    hash_combine<std::string>(seed1, "x");
-    hash_combine<std::string>(seed1, "y");
-
-    std::size_t seed2 = 0;
-    hash_combine<Basic>(seed2, *x);
-    hash_combine<Basic>(seed2, *y);
-
-    // This checks that the Symbols are hashed by their strings:
-    REQUIRE(seed1 == seed2);
+    // This checks that the hash of the Symbols are ordered:
+    REQUIRE(hash_fn(*x) < hash_fn(*y));
 }
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
@@ -163,11 +155,11 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     buffer.str("");
     buffer << vb;
     bool check_vec_str;
-    check_vec_str = buffer.str() == "{x, 3}" or buffer.str() == "{3, x}";
+    check_vec_str = buffer.str() == "{x, 3}";
     REQUIRE(check_vec_str);
     buffer.str("");
     buffer << sb;
-    check_vec_str = buffer.str() == "{2, y}" or buffer.str() == "{y, 2}";
+    check_vec_str = buffer.str() == "{2, y}";
     REQUIRE(check_vec_str);
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
@@ -240,6 +232,16 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Add> ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *zero));
+    const umap_basic_num &addmap = ar->get_dict();
+    auto search = addmap.find(x);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = addmap.find(y);
+    REQUIRE(search != addmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
+
     RCP<const Basic> term1, term2;
     RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
     a1->as_two_terms(outArg(term1), outArg(term2));
@@ -247,6 +249,8 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(eq(*a1, *a2));
 
     r = add(mul(integer(5), x), integer(5));
+    ar = rcp_static_cast<const Add>(r);
+    REQUIRE(eq(*ar->get_coef(), *integer(5)));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
@@ -295,7 +299,7 @@ TEST_CASE("Integer: Basic", "[basic]")
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
 
-    CHECK_THROWS_AS(divnum(i, zero), std::runtime_error);
+    CHECK_THROWS_AS(divnum(i, zero), DivisionByZeroError);
 }
 
 TEST_CASE("Rational: Basic", "[basic]")
@@ -398,7 +402,7 @@ TEST_CASE("Rational: Basic", "[basic]")
 
     r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = zero;
-    CHECK_THROWS_AS(divnum(r1, r2), std::runtime_error);
+    CHECK_THROWS_AS(divnum(r1, r2), DivisionByZeroError);
 
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
@@ -445,7 +449,18 @@ TEST_CASE("Mul: Basic", "[basic]")
     r = div(x, x);
     REQUIRE(unified_eq(r->get_args(), {}));
 
-    CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
+    CHECK_THROWS_AS(div(integer(1), zero), DivisionByZeroError);
+
+    r = mul(mul(mul(x, y), mul(x, integer(2))), integer(3));
+    RCP<const Mul> mr = rcp_static_cast<const Mul>(r);
+    REQUIRE(eq(*mr->get_coef(), *integer(6)));
+    const map_basic_basic &mulmap = mr->get_dict();
+    auto search = mulmap.find(x);
+    REQUIRE(search != mulmap.end());
+    REQUIRE(eq(*search->second, *integer(2)));
+    search = mulmap.find(y);
+    REQUIRE(search != mulmap.end());
+    REQUIRE(eq(*search->second, *integer(1)));
 }
 
 TEST_CASE("Diff: Basic", "[basic]")
@@ -764,13 +779,13 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*c->imaginary_part(), *r2));
 
     // Explicit division by zero checks
-    CHECK_THROWS_AS(divnum(c1, integer(0)), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, integer(0)), DivisionByZeroError);
 
     r3 = Rational::from_two_ints(*integer(0), *integer(1));
-    CHECK_THROWS_AS(divnum(c1, r3), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, r3), DivisionByZeroError);
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    CHECK_THROWS_AS(divnum(c1, c2), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, c2), DivisionByZeroError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")
@@ -781,14 +796,40 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     y = symbol("y");
     z = symbol("z");
     r1 = add(x, pow(y, integer(2)));
-    REQUIRE(has_symbol(*r1, x));
-    REQUIRE(has_symbol(*r1, y));
-    REQUIRE(not has_symbol(*r1, z));
+    REQUIRE(has_symbol(*r1, *x));
+    REQUIRE(has_symbol(*r1, *y));
+    REQUIRE(not has_symbol(*r1, *z));
 
     r1 = sin(add(x, pow(y, integer(2))));
-    REQUIRE(has_symbol(*r1, x));
-    REQUIRE(has_symbol(*r1, y));
-    REQUIRE(not has_symbol(*r1, z));
+    REQUIRE(has_symbol(*r1, *x));
+    REQUIRE(has_symbol(*r1, *y));
+    REQUIRE(not has_symbol(*r1, *z));
+}
+
+TEST_CASE("coeff: Basic", "[basic]")
+{
+    RCP<const Basic> r1, r2;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, pow(y, integer(2)));
+    r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
+    REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r1, *z, *integer(2)), *integer(0)));
+
+    REQUIRE(eq(*coeff(*r2, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(2)), *integer(1)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(1)), *integer(2)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")

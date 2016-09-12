@@ -60,6 +60,11 @@ inline integer_class operator"" _z(const char *str)
 {
     return integer_class(str);
 }
+
+inline rational_class operator"" _q(const char *str)
+{
+    return rational_class(integer_class(str));
+}
 }
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
@@ -127,6 +132,13 @@ inline void mp_pow_ui(integer_class &res, const integer_class &i,
                       unsigned long n)
 {
     mpz_pow_ui(res.get_mpz_t(), i.get_mpz_t(), n);
+}
+
+inline void mp_pow_ui(rational_class &res, const rational_class &i,
+                      unsigned long n)
+{
+    mpz_pow_ui(res.get_num().get_mpz_t(), i.get_num().get_mpz_t(), n);
+    mpz_pow_ui(res.get_den().get_mpz_t(), i.get_den().get_mpz_t(), n);
 }
 
 inline void mp_powm(integer_class &res, const integer_class &a,
@@ -277,6 +289,12 @@ inline auto get_mpz_t(const piranha::integer &i) -> decltype(i.get_mpz_view())
 }
 
 inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i,
+                      unsigned long n)
+{
+    res = i.pow(n);
+}
+
+inline void mp_pow_ui(piranha::rational &res, const piranha::rational &i,
                       unsigned long n)
 {
     res = i.pow(n);
@@ -507,10 +525,23 @@ inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
     fmpz_pow_ui(res.get_fmpz_t(), i.get_fmpz_t(), n);
 }
 
+inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, unsigned long n)
+{
+    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), n);
+}
+
 inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,
                     const fmpz_wrapper &b, const fmpz_wrapper &m)
 {
-    fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t(), m.get_fmpz_t());
+    if (b >= 0) {
+        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t(),
+                  m.get_fmpz_t());
+    } else {
+        fmpz_neg(res.get_fmpz_t(), b.get_fmpz_t());
+        fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), res.get_fmpz_t(),
+                  m.get_fmpz_t());
+        fmpz_invmod(res.get_fmpz_t(), res.get_fmpz_t(), m.get_fmpz_t());
+    }
 }
 
 inline bool mp_invert(fmpz_wrapper &res, const fmpz_wrapper &a,
@@ -752,6 +783,16 @@ inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
     auto _a = get_mpz_t(a);
     mpz_urandomm(_a, t, get_mpz_t(b));
     mp_demote(a);
+}
+
+inline auto get_mp_t(const integer_class &x) -> decltype(get_mpz_t(x))
+{
+    return get_mpz_t(x);
+}
+
+inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
+{
+    return get_mpq_t(x);
 }
 
 } // SymEngine namespace

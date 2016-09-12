@@ -24,7 +24,7 @@ public:
     //! Pow Constructor
     Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp);
     //! \return Size of the hash
-    virtual std::size_t __hash__() const;
+    virtual hash_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -34,12 +34,12 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const Basic &base, const Basic &exp) const;
     //! \return `base` of `base**exp`
-    inline const RCP<const Basic>& get_base() const
+    inline const RCP<const Basic> &get_base() const
     {
         return base_;
     }
     //! \return `exp` of `base**exp`
-    inline const RCP<const Basic>& get_exp() const
+    inline const RCP<const Basic> &get_exp() const
     {
         return exp_;
     }

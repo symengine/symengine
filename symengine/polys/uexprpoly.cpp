@@ -1,85 +1,26 @@
-#include <symengine/polys/uexprpoly.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
 
-UExprPoly::UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict)
-    : UPolyBase(var, std::move(dict))
+UExprPoly::UExprPoly(const RCP<const Basic> &var, UExprDict &&dict)
+    : USymEnginePoly(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
-bool UExprPoly::is_canonical(const UExprDict &dict) const
+hash_t UExprPoly::__hash__() const
 {
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.get_dict())
-        if (iter.second == 0)
-            return false;
-    return true;
-}
+    hash_t seed = UEXPRPOLY;
 
-std::size_t UExprPoly::__hash__() const
-{
-    std::hash<std::string> hash_string;
-    std::size_t seed = UEXPRPOLY;
-
-    seed += hash_string(var_->get_name());
+    seed += var_->hash();
     for (const auto &it : poly_.dict_) {
-        std::size_t temp = UEXPRPOLY;
+        hash_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }
     return seed;
-}
-
-int UExprPoly::compare(const Basic &o) const
-{
-    const UExprPoly &s = static_cast<const UExprPoly &>(o);
-
-    if (poly_.size() != s.poly_.size())
-        return (poly_.size() < s.poly_.size()) ? -1 : 1;
-
-    int cmp = unified_compare(var_, s.var_);
-    if (cmp != 0)
-        return cmp;
-
-    return unified_compare(poly_.get_dict(), s.poly_.get_dict());
-}
-
-RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
-                                          map_int_Expr &&d)
-{
-    UExprDict x(d);
-    return make_rcp<const UExprPoly>(var, std::move(x));
-}
-
-RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<Expression> &v)
-{
-    return make_rcp<const UExprPoly>(var, UExprDict::from_vec(v));
-}
-
-vec_basic UExprPoly::get_args() const
-{
-    vec_basic args;
-    for (const auto &p : poly_.get_dict()) {
-        if (p.first == 0)
-            args.push_back(p.second.get_basic());
-        else if (p.first == 1) {
-            if (p.second == Expression(1))
-                args.push_back(var_);
-            else
-                args.push_back(mul(p.second.get_basic(), var_));
-        } else if (p.second == 1)
-            args.push_back(pow(var_, integer(p.first)));
-        else
-            args.push_back(
-                mul(p.second.get_basic(), pow(var_, integer(p.first))));
-    }
-    if (poly_.empty())
-        args.push_back(Expression(0).get_basic());
-    return args;
 }
 
 Expression UExprPoly::max_coef() const

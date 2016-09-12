@@ -89,6 +89,16 @@ inline Ptr<T> outArg(T &arg)
     return Ptr<T>(&arg);
 }
 
+/** \brief Create a pointer to a object from an object reference.
+ *
+ * \relates Ptr
+ */
+template <typename T>
+inline Ptr<T> ptrFromRef(T &arg)
+{
+    return Ptr<T>(&arg);
+}
+
 /* RCP */
 
 enum ENull { null };
@@ -258,6 +268,7 @@ void print_stack_on_segfault();
 using Teuchos::RCP;
 using Teuchos::Ptr;
 using Teuchos::outArg;
+using Teuchos::ptrFromRef;
 using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
 using Teuchos::rcp_static_cast;

@@ -1,5 +1,6 @@
 #include <symengine/complex.h>
 #include <symengine/add.h>
+#include <symengine/infinity.h>
 #include <symengine/pow.h>
 
 namespace SymEngine
@@ -9,9 +10,9 @@ Constant::Constant(const std::string &name) : name_{name}
 {
 }
 
-std::size_t Constant::__hash__() const
+hash_t Constant::__hash__() const
 {
-    std::size_t seed = CONSTANT;
+    hash_t seed = CONSTANT;
     hash_combine<std::string>(seed, name_);
     return seed;
 }
@@ -40,6 +41,10 @@ RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
 RCP<const Constant> EulerGamma = constant("EulerGamma");
+
+RCP<const Infty> Inf = Infty::from_int(1);
+RCP<const Infty> NegInf = Infty::from_int(-1);
+RCP<const Infty> ComplexInf = Infty::from_int(0);
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272

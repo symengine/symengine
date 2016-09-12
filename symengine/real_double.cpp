@@ -13,7 +13,7 @@ RealDouble::RealDouble(double i)
     this->i = i;
 }
 
-std::size_t RealDouble::__hash__() const
+hash_t RealDouble::__hash__() const
 {
     std::hash<double> hash_fn;
     return hash_fn(i);
@@ -236,7 +236,7 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        throw std::runtime_error("Not Implemented.");
+        throw NotImplementedError("Not Implemented.");
     }
     virtual RCP<const Basic> asin(const Basic &x) const override
     {
