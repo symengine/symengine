@@ -174,12 +174,10 @@ public:
     TrigFunction(RCP<const Basic> arg) : OneArgFunction(arg){};
 };
 
-/*! \return `true` if `arg` is of form `theta + n*pi/12`
- * `n` is the n in `n*pi/12`
- * `x` is `theta`
+/*! \return `true` if `arg` is of form `m + n*pi` where `n` is a rational
  * */
-bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
-                  const Ptr<RCP<const Basic>> &x);
+bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
+                  const Ptr<RCP<const Basic>> &m);
 
 //! \return `true` if `arg` contains a negative sign.
 bool could_extract_minus(const Basic &arg);
@@ -194,9 +192,10 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
                     const Ptr<RCP<const Basic>> &index);
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, unsigned period, bool odd,
-          bool conj_odd,                                             // input
-          const Ptr<RCP<const Basic>> &rarg, int &index, int &sign); // output
+bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
+                   bool conj_odd, // input
+                   const Ptr<RCP<const Basic>> &rarg, int &index,
+                   int &sign); // output
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);

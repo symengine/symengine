@@ -85,7 +85,7 @@ RCP<const Basic> mC4 = mul(minus_one, C4);
 RCP<const Basic> mC5 = mul(minus_one, C5);
 RCP<const Basic> mC6 = mul(minus_one, C6);
 
-// sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
+// sin_table[n] represents the value of sin(pi*n/12) for n = 0..23
 RCP<const Basic> sin_table[]
     = {zero, C0,  C1,  C2,  C3,  C4,  one,       C4,  C3,  C2,  C1,  C0,
        zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0};
