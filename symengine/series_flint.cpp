@@ -111,7 +111,7 @@ fqp_t URatPSeriesFlint::convert(const rational_class &x)
 
 fqp_t URatPSeriesFlint::convert(const Integer &x)
 {
-    return convert(x.as_mpz());
+    return convert(x.as_integer_class());
 }
 
 fqp_t URatPSeriesFlint::convert(const Rational &x)

@@ -31,7 +31,7 @@ public:
         return seed;
     }
     //! \return `arg_`
-    inline const RCP<const Basic> &get_arg() const
+    inline RCP<const Basic> get_arg() const
     {
         return arg_;
     }
@@ -78,12 +78,12 @@ public:
         return seed;
     }
     //! \return `arg_`
-    inline const RCP<const Basic> &get_arg1() const
+    inline RCP<const Basic> get_arg1() const
     {
         return a_;
     }
     //! \return `arg_`
-    inline const RCP<const Basic> &get_arg2() const
+    inline RCP<const Basic> get_arg2() const
     {
         return b_;
     }
@@ -519,7 +519,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `name_`
-    inline std::string get_name() const
+    inline const std::string &get_name() const
     {
         return name_;
     }
@@ -590,7 +590,7 @@ public:
     {
         return arg_;
     }
-    inline multiset_basic get_symbols() const
+    inline const multiset_basic &get_symbols() const
     {
         return x_;
     }

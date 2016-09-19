@@ -86,12 +86,12 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 
 RCP<const Integer> isqrt(const Integer &n)
 {
-    return integer(mp_sqrt(n.as_mpz()));
+    return integer(mp_sqrt(n.as_integer_class()));
 }
 
 RCP<const Integer> iabs(const Integer &n)
 {
-    return integer(mp_abs(n.as_mpz()));
+    return integer(mp_abs(n.as_integer_class()));
 }
 
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
@@ -103,7 +103,7 @@ int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
     int ret_val;
     integer_class t;
 
-    ret_val = mp_root(t, a.as_mpz(), n);
+    ret_val = mp_root(t, a.as_integer_class(), n);
     *r = integer(std::move(t));
 
     return ret_val;
@@ -111,12 +111,12 @@ int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
 
 bool perfect_square(const Integer &n)
 {
-    return mp_perfect_square_p(n.as_mpz());
+    return mp_perfect_square_p(n.as_integer_class());
 }
 
 bool perfect_power(const Integer &n)
 {
-    return mp_perfect_power_p(n.as_mpz());
+    return mp_perfect_power_p(n.as_integer_class());
 }
 
 } // SymEngine

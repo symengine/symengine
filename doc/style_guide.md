@@ -64,7 +64,7 @@ is *not* modified, use `const A &a`:
     RCP<const Integer> gcd(const Integer &a, const Integer &b)
     {
         integer_class g;
-        mp_gcd(g, a.as_mpz(), b.as_mpz());
+        mp_gcd(g, a.as_integer_class(), b.as_integer_class());
         return integer(std::move(g));
     }
 

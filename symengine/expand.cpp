@@ -308,8 +308,8 @@ public:
             return;
         }
 
-        integer_class n
-            = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
+        integer_class n = rcp_static_cast<const Integer>(self.get_exp())
+                              ->as_integer_class();
         if (n < 0)
             return _coef_dict_add_term(
                 multiply, div(one, expand(pow(_base, integer(-n)))));
