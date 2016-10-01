@@ -214,12 +214,12 @@ public:
 
     const Cf &get_coeff_ref(unsigned int x) const
     {
-        static Cf PZERO(0);
+        static Cf pzero(0);
 
         term temp = term(0, pmonomial{x});
         auto it = this->poly_._container().find(temp);
         if (it == this->poly_._container().end())
-            return PZERO;
+            return pzero;
         return it->m_cf;
     }
 
