@@ -112,11 +112,14 @@ using pratpoly = piranha::polynomial<rational_class, pmonomial>;
 template <typename Cf, typename Container>
 class PiranhaForIter
 {
-    typename Container::container_type::const_iterator ptr_;
+public:
+    typedef decltype(std::declval<Container &>()._container().begin()) ptr_type;
+
+private:
+    ptr_type ptr_;
 
 public:
-    PiranhaForIter(typename Container::container_type::const_iterator ptr)
-        : ptr_{ptr}
+    PiranhaForIter(ptr_type ptr) : ptr_{ptr}
     {
     }
 
@@ -214,12 +217,12 @@ public:
 
     const Cf &get_coeff_ref(unsigned int x) const
     {
-        static Cf PZERO(0);
+        static Cf pzero(0);
 
         term temp = term(0, pmonomial{x});
         auto it = this->poly_._container().find(temp);
         if (it == this->poly_._container().end())
-            return PZERO;
+            return pzero;
         return it->m_cf;
     }
 

@@ -50,7 +50,6 @@ if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
         sudo apt-get install cmake libgmp-dev
     fi
 else
-    brew install cmake
     wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/gmp-6.0.0a.tar.bz2
     tar -xjf gmp-6.0.0a.tar.bz2;
     cd gmp-6.0.0 && ./configure --prefix=$our_install_dir --enable-cxx && make -j8 install && cd ..;
