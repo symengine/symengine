@@ -99,6 +99,7 @@ symengine/tests/basic/test_infinity
 symengine/tests/logic/test_logic
 symengine/tests/printing/test_ccode
 symengine/tests/finitediff/test_finitediff
+symengine/tests/basic/test_integer_class
 
 # Benchmarks executables
 benchmarks/add1
