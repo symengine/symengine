@@ -51,7 +51,7 @@ typedef fmpq_wrapper rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 typedef mpz_wrapper integer_class;
 typedef mpq_wrapper rational_class;
-#else
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif

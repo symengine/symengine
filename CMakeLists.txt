@@ -102,7 +102,14 @@ set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
 set(WITH_FLINT no CACHE BOOL "Build with Flint")
 set(HAVE_SYMENGINE_FLINT False)
 
-if ("${INTEGER_CLASS}" MATCHES "piranha")
+# Boost.multiprecision
+set(WITH_BOOSTMP no CACHE BOOL "Build with Boost.multiprecision")
+
+if ("${INTEGER_CLASS}" MATCHES "boostmp")
+    set(SYMENGINE_INTEGER_CLASS "BOOSTMP")
+    set(WITH_BOOSTMP yes)
+    set(WITH_BOOST yes)
+elseif ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
     set(WITH_PIRANHA yes)
 elseif ("${INTEGER_CLASS}" MATCHES "flint")
