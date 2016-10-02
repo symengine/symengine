@@ -3,7 +3,10 @@
 
 #include <symengine/mp_wrapper.h>
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/multiprecision/cpp_rational.hpp>
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
@@ -37,7 +40,10 @@ namespace SymEngine
  * to be defined.
  */
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+typedef boost::multiprecision::cpp_int integer_class;
+typedef boost::multiprecision::cpp_rational rational_class;
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
 typedef piranha::rational rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
@@ -69,7 +75,7 @@ inline rational_class operator"" _q(const char *str)
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-// Helper functions for mpz_class
+// Helper functions for mpz
 inline integer_class mp_abs(const integer_class &i)
 {
     integer_class res;
@@ -214,7 +220,7 @@ inline void mp_addmul(integer_class &r, const integer_class &a,
     mpz_addmul(r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-// Helper functions for rational_class
+// Helper functions for mpq
 inline const integer_class &get_den(const rational_class &i)
 {
     return i.get_den();
@@ -461,6 +467,8 @@ inline int mp_sign(const piranha::rational &i)
 }
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 
+//helper functions for fmpz
+
 inline mpz_view_flint get_mpz_t(const fmpz_wrapper &i)
 {
     return mpz_view_flint(i);
@@ -612,6 +620,8 @@ inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a,
 {
     fmpz_addmul(r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
+
+//helper functions for fmpq
 
 inline const fmpz_wrapper &get_den(const fmpq_wrapper &i)
 {
