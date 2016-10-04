@@ -1,6 +1,8 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
+//Once GMP is an optional dependency, this include
+//will be unnecessary in non-GMP builds
 #include <symengine/mp_wrapper.h>
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
@@ -700,15 +702,23 @@ inline double mp_get_d(const integer_class &i)
 }
 */
 
+/*
+//Don't define this function if SYMENGINE_INTEGER == BOOSTMP
+//Used only in this file and ntheory.cpp, where it is wrapped
+//in #ifdef HAVE_SYMENGINE_ECM.
+//Only needed in this file for functions
+//that wrap GMP functions, which will not be available
+//in a permissive-license build with boost::multiprecision
 inline void mp_demote(integer_class &i)
 {
-  //do nothing?  TODO: check on this.
+
 }
+*/
 
 /*
 inline bool mp_fits_ulong_p(const integer_class &i)
 {
-  TODO: implement.  
+  //TODO: implement.  
 }
 
 inline bool mp_fits_slong_p(const integer_class &i)
@@ -727,20 +737,6 @@ inline long mp_get_si(const integer_class &i)
 {
     return i.convert_to<long>();
 }
-
-/* these two functions should not be implemented if using boost.multiprecision
- * because the goal is to rid the build of LGPL code - including GMP
- * TODO:  figure out why these functions are required
-inline mpz_srcptr get_mpz_t(const integer_class &i)
-{
-
-}
-
-inline mpz_ptr get_mpz_t(integer_class &i)
-{
-
-}
-*/
 
 inline void mp_pow_ui(integer_class &res, const integer_class &i,
                       unsigned long n)
@@ -776,39 +772,60 @@ inline void mp_gcd(integer_class &res, const integer_class &a,
 inline void mp_gcdext(integer_class &res, integer_class &r, integer_class &s,
                       const integer_class &a, const integer_class &b)
 {
-    //TODO: implement
+  //TODO: implement
   //is this actually missing from boost::multiprecision?  it seems so
 }
 
-/* copied from helpers for mpz and mpq; TODO implement for boost's cpp_int and cpp_rational
+
+//bitwise and
 inline void mp_and(integer_class &res, const integer_class &a,
                    const integer_class &b)
 {
-    //I can't tell if this is bitwise and or logical and.  GMP documentation says
-    //logical, but then why isn't the result a bool?
-    //TODO:  test it and find out, then implement for boost.
-    mpz_and(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
-}
-
-
-inline void mp_fdiv_r(integer_class &res, const integer_class &a,
-                      const integer_class &b)
-{
-    mpz_fdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
-}
-
-inline void mp_fdiv_q(integer_class &res, const integer_class &a,
-                      const integer_class &b)
-{
-    mpz_fdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+  res = a;
+  boost::multiprecision::default_ops::eval_bitwise_and(res,b);
 }
 
 inline void mp_fdiv_qr(integer_class &q, integer_class &r,
                        const integer_class &a, const integer_class &b)
 {
-    mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+  /*boost::multiprecision doesn't have a built-in fdiv_qr (floored division).
+    Its divide_qr uses truncated division, as does its
+    modulus operator. Thus, using boost::multiprecision::operator% we get:
+    divide_qr(quo, rem, -5, 3) //quo == -1, rem == -2
+    divide_qr(quo, rem, 5, -3) //quo == -1, rem == 2
+    but we want:
+    mp_fdiv_r(quo, rem, -5, 3) //quo == -2, rem == 1
+    mp_fdiv_r(quo, rem, 5, -3) //rem == -2, rem == -1
+    The problem only arises when the quotient is negative.  To convert
+    a truncated result into a floored result in this case, simply subtract 
+    one from the truncated quotient and add the divisor to the truncated
+    remainder.
+    */
+  boost::multiprecision::divide_qr(q,r,a,b);
+  if ((a<0 && b>0) || (a>0 && b<0)) {
+    q -= 1;
+    r += b;
+  }
 }
 
+inline void mp_fdiv_r(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+  //TODO: benchmark this speed
+  integer_class quo;
+  mp_fdiv_qr(quo, res, a, b);
+}
+
+
+inline void mp_fdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+  //TODO:  benchmark this speed
+   integer_class rem;
+   mp_fdiv_qr(res,rem,a,b);
+}
+
+/* copied from helpers for mpz and mpq; TODO implement for boost's cpp_int and cpp_rational
 inline void mp_divexact(integer_class &q, const integer_class &a,
                         const integer_class &b)
 {
@@ -853,12 +870,38 @@ inline integer_class &get_num(rational_class &i)
 {
     return i.get_num();
 }
+*/
+
+/*
+//To make a permissive-license build of symengine
+//possible, get_mpq_t should only be called from code
+//wrapped in
+//#if HAVE_SYMENGINE_FLINT
+//#if HAVE_SYMENGINE_PIRANHA
+//#if HAVE_SYMENGINE_MPC
+//etc.  Only code that will not be compiled in a permissive-
+//license build, i.e. with boost::multiprecision instead of GMP.
+//Therefore we do no implement get_mpz_t and 
+//get_mpq_t if integer_class == cpp_int
+
+inline mpz_srcptr get_mpz_t(const integer_class &i)
+{
+
+}
+
+inline mpz_ptr get_mpz_t(integer_class &i)
+{
+
+}
 
 inline mpq_srcptr get_mpq_t(const rational_class &i)
 {
     return i.get_mpq_t();
 }
 
+*/
+
+/*
 inline void canonicalize(rational_class &i)
 {
     i.canonicalize();
@@ -880,14 +923,163 @@ inline rational_class mp_abs(const rational_class &i)
     mpq_abs(res.get_mpq_t(), i.get_mpq_t());
     return res;
 }
-*/
+
 inline void mp_pow_ui(rational_class &res, const rational_class &i,
                       unsigned long n)
 {
+    //this implementation doesn't work - can't call
+    //pow(i,n), even though boost documentation suggests it
+    //should work.
     res = boost::multiprecision::pow(i,n);
 }
 
-#endif
+/*  These functions must be reimplemented 
+inline bool mp_root(integer_class &res, const integer_class &i, unsigned long n)
+{
+    auto _res = get_mpz_t(res);
+    int ret = mpz_root(_res, get_mpz_t(i), n);
+    mp_demote(res);
+    return ret != 0;
+}
+
+inline void mp_nextprime(integer_class &res, const integer_class &i)
+{
+    auto _res = get_mpz_t(res);
+    mpz_nextprime(_res, get_mpz_t(i));
+    mp_demote(res);
+}
+
+inline void mp_sqrtrem(integer_class &a, integer_class &b,
+                       const integer_class &i)
+{
+    auto _a = get_mpz_t(a);
+    auto _b = get_mpz_t(b);
+    mpz_sqrtrem(_a, _b, get_mpz_t(i));
+    mp_demote(a);
+    mp_demote(b);
+}
+
+inline void mp_rootrem(integer_class &a, integer_class &b,
+                       const integer_class &i, unsigned long n)
+{
+    auto _a = get_mpz_t(a);
+    auto _b = get_mpz_t(b);
+    mpz_rootrem(_a, _b, get_mpz_t(i), n);
+    mp_demote(a);
+    mp_demote(b);
+}
+
+inline unsigned long mp_scan1(const integer_class &i)
+{
+    return mpz_scan1(get_mpz_t(i), 0);
+}
+
+inline void mp_fib_ui(integer_class &res, unsigned long n)
+{
+    mpz_fib_ui(get_mpz_t(res), n);
+    mp_demote(res);
+}
+
+inline void mp_fib2_ui(integer_class &a, integer_class &b, unsigned long n)
+{
+    mpz_fib2_ui(get_mpz_t(a), get_mpz_t(b), n);
+    mp_demote(a);
+    mp_demote(b);
+}
+
+inline void mp_lucnum_ui(integer_class &res, unsigned long n)
+{
+    mpz_lucnum_ui(get_mpz_t(res), n);
+    mp_demote(res);
+}
+
+inline void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n)
+{
+    mpz_lucnum2_ui(get_mpz_t(a), get_mpz_t(b), n);
+    mp_demote(a);
+    mp_demote(b);
+}
+
+inline void mp_bin_ui(integer_class &res, const integer_class &n,
+                      unsigned long r)
+{
+    auto _res = get_mpz_t(res);
+    mpz_bin_ui(_res, get_mpz_t(n), r);
+    mp_demote(res);
+}
+
+inline void mp_fac_ui(integer_class &res, unsigned long n)
+{
+    mpz_fac_ui(get_mpz_t(res), n);
+    mp_demote(res);
+}
+
+inline int mp_legendre(const integer_class &a, const integer_class &n)
+{
+    return mpz_legendre(get_mpz_t(a), get_mpz_t(n));
+}
+
+inline int mp_kronecker(const integer_class &a, const integer_class &n)
+{
+    return mpz_kronecker(get_mpz_t(a), get_mpz_t(n));
+}
+
+inline int mp_jacobi(const integer_class &a, const integer_class &n)
+{
+    return mpz_jacobi(get_mpz_t(a), get_mpz_t(n));
+}
+
+inline bool mp_perfect_power_p(const integer_class &i)
+{
+    return mpz_perfect_power_p(get_mpz_t(i)) != 0;
+}
+
+inline bool mp_perfect_square_p(const integer_class &i)
+{
+    return mpz_perfect_square_p(get_mpz_t(i)) != 0;
+}
+
+inline int mp_probab_prime_p(const integer_class &i, unsigned retries)
+{
+    return mpz_probab_prime_p(get_mpz_t(i), retries);
+}
+
+inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
+{
+    return mpz_divisible_p(get_mpz_t(a), get_mpz_t(b)) != 0;
+}
+
+inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
+                        const integer_class &b)
+{
+    auto _a = get_mpz_t(a);
+    mpz_urandomm(_a, t, get_mpz_t(b));
+    mp_demote(a);
+}
+
+inline auto get_mp_t(const integer_class &x) -> decltype(get_mpz_t(x))
+{
+    return get_mpz_t(x);
+}
+
+inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
+{
+    return get_mpq_t(x);
+}
+*/
+#endif //SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+
+
+//The implementation of each of the following
+//requires only get_mpz_t(integer_class), mp_demote
+//and functions from GMP.  They don't depend on
+//any members of the backend class mpz, fmpz, or piranha::integer.
+//These functions will all need to be implemented separately
+//for a GMP-free build (with boost::multiprecision, for instance)
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA          \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT         \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP           \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 
 inline bool mp_root(integer_class &res, const integer_class &i, unsigned long n)
 {
@@ -1021,7 +1213,9 @@ inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
 {
     return get_mpq_t(x);
 }
+#endif //SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
 
 } // SymEngine namespace
+
 
 #endif // SYMENGINE_INTEGER_CLASS_H
