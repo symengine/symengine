@@ -825,42 +825,48 @@ inline void mp_fdiv_q(integer_class &res, const integer_class &a,
    mp_fdiv_qr(res,rem,a,b);
 }
 
-/* copied from helpers for mpz and mpq; TODO implement for boost's cpp_int and cpp_rational
+
 inline void mp_divexact(integer_class &q, const integer_class &a,
                         const integer_class &b)
 {
-    mpz_divexact(q.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    //TODO: make faster
+    mp_fdiv_q(q,a,b);
 }
+
 
 inline void mp_lcm(integer_class &q, const integer_class &a,
                    const integer_class &b)
 {
-    mpz_lcm(q.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+  q = boost:multiprecision::lcm(a,b);
 }
 
 inline void mp_tdiv_qr(integer_class &q, integer_class &r,
                        const integer_class &a, const integer_class &b)
 {
-    mpz_tdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    boost::multiprecision::divide_qr(q,r,a,b);
 }
 
 inline void mp_addmul(integer_class &r, const integer_class &a,
                       const integer_class &b)
 {
-    mpz_addmul(r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    boost::multiprecision::eval_multiply_add(r,a,b);
 }
 
 // Helper functions for cpp_rational
 inline const integer_class &get_den(const rational_class &i)
 {
-    return i.get_den();
+    return boost::multiprecision::denominator(i);
 }
 
 inline const integer_class &get_num(const rational_class &i)
 {
-    return i.get_num();
+    return boost::multiprecision::numerator(i);
 }
 
+/*
+
+//cpp_rational doesn't provide non-const access to 
+//the numerator and denominator.  How necessary is it?
 inline integer_class &get_den(rational_class &i)
 {
     return i.get_den();
@@ -901,27 +907,29 @@ inline mpq_srcptr get_mpq_t(const rational_class &i)
 
 */
 
-/*
+
 inline void canonicalize(rational_class &i)
 {
-    i.canonicalize();
+  //do nothing; boost::multiprecision::cpp_int
+  //is always stored in canonical form
+  //numerator and denominator share no common factors
+  //denominator is positive.
 }
+
 
 inline double mp_get_d(const rational_class &i)
 {
-    return i.get_d();
+    return i.convert_to<double>();
 }
 
 inline int mp_sign(const rational_class &i)
 {
-    return mpq_sgn(i.get_mpq_t());
+    return i.sign();
 }
 
 inline rational_class mp_abs(const rational_class &i)
 {
-    rational_class res;
-    mpq_abs(res.get_mpq_t(), i.get_mpq_t());
-    return res;
+    return boost::multiprecision::abs(i);
 }
 
 inline void mp_pow_ui(rational_class &res, const rational_class &i,
@@ -936,127 +944,130 @@ inline void mp_pow_ui(rational_class &res, const rational_class &i,
 /*  These functions must be reimplemented 
 inline bool mp_root(integer_class &res, const integer_class &i, unsigned long n)
 {
-    auto _res = get_mpz_t(res);
-    int ret = mpz_root(_res, get_mpz_t(i), n);
-    mp_demote(res);
-    return ret != 0;
+    //http://www.boost.org/doc/libs/1_62_0/libs/math/doc/html/math_toolkit/roots/root_finding_examples/multiprecision_root.html
+    //http://www.boost.org/doc/libs/1_62_0/libs/math/doc/html/math_toolkit/roots/root_comparison/root_n_comparison.html
 }
 
 inline void mp_nextprime(integer_class &res, const integer_class &i)
 {
-    auto _res = get_mpz_t(res);
-    mpz_nextprime(_res, get_mpz_t(i));
-    mp_demote(res);
+    //http://www.boost.org/doc/libs/1_62_0/libs/multiprecision/doc/html/boost_multiprecision/tut/primetest.html
 }
-
+*/
 inline void mp_sqrtrem(integer_class &a, integer_class &b,
                        const integer_class &i)
 {
-    auto _a = get_mpz_t(a);
-    auto _b = get_mpz_t(b);
-    mpz_sqrtrem(_a, _b, get_mpz_t(i));
-    mp_demote(a);
-    mp_demote(b);
+  a = boost::multiprecision::sqrt(i); 
+  b = i - a*a; 
 }
-
+/*
 inline void mp_rootrem(integer_class &a, integer_class &b,
                        const integer_class &i, unsigned long n)
 {
-    auto _a = get_mpz_t(a);
-    auto _b = get_mpz_t(b);
-    mpz_rootrem(_a, _b, get_mpz_t(i), n);
-    mp_demote(a);
-    mp_demote(b);
+    //uncomment once mp_root and mp_pow_ui are defined
+    mp_root(a,i,n);
+    integer_class p;
+    mp_pow_ui(p,i,n);
+    b = i - p;
 }
 
 inline unsigned long mp_scan1(const integer_class &i)
 {
-    return mpz_scan1(get_mpz_t(i), 0);
+    //https://gmplib.org/manual/Integer-Logic-and-Bit-Fiddling.html   
+    //http://www.boost.org/doc/libs/1_62_0/boost/multiprecision/detail/bitscan.hpp
+    //find_lsb
 }
 
 inline void mp_fib_ui(integer_class &res, unsigned long n)
 {
-    mpz_fib_ui(get_mpz_t(res), n);
-    mp_demote(res);
+    //fibonacci
+    //http://sahandsaba.com/five-ways-to-calculate-fibonacci-numbers-with-python-code.html
 }
 
 inline void mp_fib2_ui(integer_class &a, integer_class &b, unsigned long n)
 {
-    mpz_fib2_ui(get_mpz_t(a), get_mpz_t(b), n);
-    mp_demote(a);
-    mp_demote(b);
+    //use mp_fib_ui
 }
 
 inline void mp_lucnum_ui(integer_class &res, unsigned long n)
 {
-    mpz_lucnum_ui(get_mpz_t(res), n);
-    mp_demote(res);
+    //lucas number
+    //like fibonacci, may need to implement
 }
 
 inline void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n)
 {
-    mpz_lucnum2_ui(get_mpz_t(a), get_mpz_t(b), n);
-    mp_demote(a);
-    mp_demote(b);
+    //use mp_lucnum_ui
 }
 
 inline void mp_bin_ui(integer_class &res, const integer_class &n,
                       unsigned long r)
 {
-    auto _res = get_mpz_t(res);
-    mpz_bin_ui(_res, get_mpz_t(n), r);
-    mp_demote(res);
+    //binomial coefficient
+    //may need to write it.  see here:
+    //http://stackoverflow.com/questions/22685563/integer-calculation-of-the-binomial-coefficient-using-boostmathbinomial-coef
 }
 
 inline void mp_fac_ui(integer_class &res, unsigned long n)
 {
-    mpz_fac_ui(get_mpz_t(res), n);
-    mp_demote(res);
+    //factorial
+    //check out:
+    //multiprecision/test/concepts/sf_concept_check_gamma.cpp
 }
 
 inline int mp_legendre(const integer_class &a, const integer_class &n)
 {
-    return mpz_legendre(get_mpz_t(a), get_mpz_t(n));
+    
 }
 
 inline int mp_kronecker(const integer_class &a, const integer_class &n)
 {
-    return mpz_kronecker(get_mpz_t(a), get_mpz_t(n));
+
 }
 
 inline int mp_jacobi(const integer_class &a, const integer_class &n)
 {
-    return mpz_jacobi(get_mpz_t(a), get_mpz_t(n));
+
 }
 
 inline bool mp_perfect_power_p(const integer_class &i)
 {
-    return mpz_perfect_power_p(get_mpz_t(i)) != 0;
+    //need to implement
+    //maybe use repeated nth root extractions
+    https://gmplib.org/manual/Perfect-Power-Algorithm.html
 }
 
 inline bool mp_perfect_square_p(const integer_class &i)
 {
-    return mpz_perfect_square_p(get_mpz_t(i)) != 0;
+    //need to implement
 }
 
+//return nonzero if i is probably prime.
 inline int mp_probab_prime_p(const integer_class &i, unsigned retries)
 {
-    return mpz_probab_prime_p(get_mpz_t(i), retries);
+    //http://www.boost.org/doc/libs/1_62_0/libs/multiprecision/doc/html/boost_multiprecision/tut/primetest.html
 }
 
+*/
+//return true iff b divides a
 inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
 {
-    return mpz_divisible_p(get_mpz_t(a), get_mpz_t(b)) != 0;
+    return a % b == 0;
 }
 
+//Generate a uniform random integer in the range 0 to n-1, inclusive.
 inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
                         const integer_class &b)
 {
-    auto _a = get_mpz_t(a);
-    mpz_urandomm(_a, t, get_mpz_t(b));
-    mp_demote(a);
+  //http://www.boost.org/doc/libs/1_62_0/libs/multiprecision/doc/html/boost_multiprecision/tut/random.html
+  //need to remove param gmp_randstate_t &t because it is GMP-dependent
+  //maybe create a new overload with two params, and implement
+  //for the other backends also, using a default gmp_randstate?
+  boost::random::mt19937 mt;
+  boost::random::uniform_int_distribution<cpp_int> ui(cpp_int(0), b);
+  a = ui(mt);
 }
-
+/*
+//these two shouldn't be present in a non-GMP build
 inline auto get_mp_t(const integer_class &x) -> decltype(get_mpz_t(x))
 {
     return get_mpz_t(x);
