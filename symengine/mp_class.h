@@ -695,12 +695,11 @@ inline integer_class mp_sqrt(const integer_class &i)
     return boost::multiprecision::sqrt(i);
 }
 
-/*
+
 inline double mp_get_d(const integer_class &i)
 {
-    //TODO: implement.
+    return boost::multiprecision::convert_to<double>(i);
 }
-*/
 
 /*
 //Don't define this function if SYMENGINE_INTEGER == BOOSTMP
@@ -715,23 +714,21 @@ inline void mp_demote(integer_class &i)
 }
 */
 
-/*
+
 inline bool mp_fits_ulong_p(const integer_class &i)
 {
-  //TODO: implement.  
+  return (i >= 0) && (i <= ULONG_MAX);
 }
 
 inline bool mp_fits_slong_p(const integer_class &i)
 {
-  //TODO: implement.
+  return (i >= LONG_MIN) && (i <= LONG_MAX);
 }
-*/
 
 inline unsigned long mp_get_ui(const integer_class &i)
 {
     return i.convert_to<unsigned long>();
 }
-
 
 inline long mp_get_si(const integer_class &i)
 {
@@ -766,6 +763,8 @@ inline bool mp_invert(integer_class &res, const integer_class &a,
 inline void mp_gcd(integer_class &res, const integer_class &a,
                    const integer_class &b)
 {
+    //TODO:  make this rvalue ref, then assign with std::move
+    // to avoid copying the temporary?
     res = boost::multiprecision::gcd(a,b);
 }
 
@@ -837,6 +836,7 @@ inline void mp_divexact(integer_class &q, const integer_class &a,
 inline void mp_lcm(integer_class &q, const integer_class &a,
                    const integer_class &b)
 {
+  //TODO: implement with rvalue references and std::move to avoid copying temporaries?
   q = boost:multiprecision::lcm(a,b);
 }
 
