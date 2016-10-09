@@ -750,16 +750,6 @@ inline void mp_powm(integer_class &res, const integer_class &a,
     res = boost::multiprecision::powm(a,b,m);
 }
 
-
-/*
-inline bool mp_invert(integer_class &res, const integer_class &a,
-                      const integer_class &m)
-{
-    //TODO: implement.
-    //boost::multiprecision may not have it
-}
-*/
-
 inline void mp_gcd(integer_class &res, const integer_class &a,
                    const integer_class &b)
 {
@@ -768,13 +758,48 @@ inline void mp_gcd(integer_class &res, const integer_class &a,
     res = boost::multiprecision::gcd(a,b);
 }
 
-inline void mp_gcdext(integer_class &res, integer_class &r, integer_class &s,
+inline void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
                       const integer_class &a, const integer_class &b)
 {
-  //TODO: implement
-  //is this actually missing from boost::multiprecision?  it seems so
+  integer_class this_s(1);
+  integer_class this_t(0);
+  integer_class next_s(0);
+  integer_class next_t(1);
+  integer_class this_r(a);
+  integer_class next_r(b);
+  integer_class q;
+  while (next_r != 0) {
+    boost::multiprecision::divide_qr(this_r, next_r, q, this_r);
+    this_s -= q*next_s;
+    this_t -= q*next_t;
+    std::swap(this_s, next_s);
+    std::swap(this_t, next_t);
+    std::swap(this_r, next_r);
+  }
+  //normalize the gcd, s and t
+  if (this_r < 0) {
+    this_r *= -1;
+    this_s *= -1;
+    this_t *= -1;
+  }
+  gcd = std::move(this_r);
+  s = std::move(this_s);
+  t = std::move(this_t);
 }
 
+inline bool mp_invert(integer_class &res, const integer_class &a,
+                      const integer_class &m)
+{
+    integer_class gcd, s, t;
+    mp_gcdext(gcd, s, t, a, m);
+    if (gcd != 1) {
+      res = 0;
+      return false;
+    } else {
+      res = s;
+      return true;
+    }
+}
 
 //bitwise and
 inline void mp_and(integer_class &res, const integer_class &a,
