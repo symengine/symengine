@@ -221,7 +221,7 @@ TEST_CASE("Division of Infinity", "[Infinity]")
     n1 = c->div(*zero);
     REQUIRE(n1->__str__() == "zoo");
 
-    CHECK_THROWS_AS(a->div(*b), std::runtime_error);
-    CHECK_THROWS_AS(b->div(*c), std::runtime_error);
-    CHECK_THROWS_AS(c->div(*c), std::runtime_error);
+    CHECK_THROWS_AS(a->div(*b), SymEngineException);
+    CHECK_THROWS_AS(b->div(*c), SymEngineException);
+    CHECK_THROWS_AS(c->div(*c), SymEngineException);
 }
