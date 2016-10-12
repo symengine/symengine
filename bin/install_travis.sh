@@ -32,7 +32,6 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CC=gcc-5
         export CXX=g++-5
         export GCOV_EXECUTABLE=gcov-5
-
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
@@ -98,7 +97,7 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
     fi
 fi
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    git clone https://github.com/bluescarni/piranha;
+    wget https://github.com/bluescarni/piranha/archive/v0.5.tar.gz;
     cd piranha && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
