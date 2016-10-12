@@ -98,7 +98,8 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
 fi
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     wget https://github.com/bluescarni/piranha/archive/v0.5.tar.gz;
-    cd piranha && mkdir build && cd build;
+    tar -xzf v0.5.tar.gz;
+    cd piranha-0.5 && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
 cd $SOURCE_DIR;
