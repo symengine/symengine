@@ -275,9 +275,8 @@ endif()
 set(WITH_LLVM no
     CACHE BOOL "Build with LLVM")
 
-set(SYMENGINE_LLVM_COMPONENTS core mcjit native)
-
 if (WITH_LLVM)
+    set(SYMENGINE_LLVM_COMPONENTS core mcjit native)
     find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
     foreach(LLVM_FLAG ${LLVM_DEFINITIONS})
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${LLVM_FLAG}")

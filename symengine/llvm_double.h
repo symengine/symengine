@@ -62,11 +62,16 @@ public:
 
     void init(const vec_basic &x, const Basic &b)
     {
+        init(x, {b.rcp_from_this()});
+    }
+
+    void init(const vec_basic &inputs, const vec_basic &outputs)
+    {
         llvm::InitializeNativeTarget();
         llvm::InitializeNativeTargetAsmPrinter();
         llvm::InitializeNativeTargetAsmParser();
         context = llvm::make_unique<llvm::LLVMContext>();
-        symbols = x;
+        symbols = inputs;
 
         // Create some module to put our function into it.
         std::unique_ptr<llvm::Module> owner
@@ -76,6 +81,8 @@ public:
         // Create a new pass manager attached to it.
         auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(M);
 
+        // Provide basic AliasAnalysis support for GVN.
+        // fpm->add(llvm::createBasicAliasAnalysisPass());
         // Do simple "peephole" optimizations and bit-twiddling optzns.
         fpm->add(llvm::createInstructionCombiningPass());
         // Reassociate expressions.
@@ -84,16 +91,18 @@ public:
         fpm->add(llvm::createGVNPass());
         // Simplify the control flow graph (deleting unreachable blocks, etc).
         fpm->add(llvm::createCFGSimplificationPass());
-        fpm->add(llvm::createScalarReplAggregatesPass());
 
         fpm->doInitialization();
 
         std::vector<llvm::Type *> inp;
-        inp.push_back(
-            llvm::PointerType::get(llvm::Type::getDoubleTy(*context), 0));
-        FT = llvm::FunctionType::get(llvm::Type::getDoubleTy(*context), inp,
+        for (int i = 0; i < 2; i++) {
+            inp.push_back(
+                llvm::PointerType::get(llvm::Type::getDoubleTy(*context), 0));
+        }
+        FT = llvm::FunctionType::get(llvm::Type::getVoidTy(*context), inp,
                                      false);
         F = llvm::Function::Create(FT, llvm::Function::InternalLinkage, "", M);
+        F->setCallingConv(llvm::CallingConv::C);
 
         // Add a basic block to the function. As before, it automatically
         // inserts
@@ -106,23 +115,36 @@ public:
         // automatically append instructions to the basic block `BB'.
         builder = llvm::make_unique<llvm::IRBuilder<>>(BB);
         builder->SetInsertPoint(BB);
-
-        apply(b);
+        std::cout << "asd" << std::endl;
+        auto it = ++(F->args().begin());
+        auto out = &(*it);
+        std::vector<llvm::Value *> output_vals;
+        for (unsigned i = 0; i < outputs.size(); i++) {
+            apply(*outputs[i]);
+            output_vals.push_back(result_);
+        }
+        for (unsigned i = 0; i < outputs.size(); i++) {
+            auto index
+                = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
+            auto ptr = builder->CreateGEP(llvm::Type::getDoubleTy(*context),
+                                          out, index);
+            builder->CreateStore(output_vals[i], ptr);
+        }
 
         // Create the return instruction and add it to the basic block
-        builder->CreateRet(result_);
+        builder->CreateRetVoid();
 
         // Validate the generated code, checking for consistency.
         llvm::verifyFunction(*F);
 
-        // std::cout << "LLVM IR for " << b.__str__() << std::endl;
-        // M->dump();
+        std::cout << "LLVM IR" << std::endl;
+        M->dump();
 
         // Optimize the function.
         fpm->run(*F);
 
         // std::cout << "LLVM IR for " << b.__str__() << std::endl;
-        // M->dump();
+        M->dump();
 
         // Now we create the JIT.
         std::string error;
@@ -136,7 +158,14 @@ public:
 
     double call(const std::vector<double> &vec)
     {
-        return ((double (*)(const double *))func)(vec.data());
+        double ret;
+        ((double (*)(const double *, double *))func)(vec.data(), &ret);
+        return ret;
+    }
+
+    void call(double *outs, const double *inps)
+    {
+        ((double (*)(const double *, double *))func)(inps, outs);
     }
 
     void set_double(double d)
@@ -148,7 +177,7 @@ public:
     {
         if (as_int64) {
             int64_t d = mp_get_si(x.i);
-            result_ = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context),
+            result_ = llvm::ConstantInt::get(llvm::Type::getInt64Ty(*context),
                                              d, true);
         } else {
             result_ = llvm::ConstantFP::get(llvm::Type::getDoubleTy(*context),
@@ -175,11 +204,22 @@ public:
 
     void bvisit(const Add &x)
     {
-        llvm::Value *tmp = apply(*x.coef_);
-        llvm::Value *tmp1, *tmp2;
-        for (const auto &p : x.dict_) {
-            tmp1 = apply(*(p.first));
-            tmp2 = apply(*(p.second));
+        llvm::Value *tmp, *tmp1, *tmp2;
+        auto it = x.get_dict().begin();
+
+        if (eq(*x.coef_, *zero)) {
+            // `x + 0.0` is not optimized out
+            tmp1 = apply(*(it->first));
+            tmp2 = apply(*(it->second));
+            tmp = builder->CreateFMul(tmp1, tmp2);
+            ++it;
+        } else {
+            tmp = apply(*x.coef_);
+        }
+
+        for (; it != x.get_dict().end(); ++it) {
+            tmp1 = apply(*(it->first));
+            tmp2 = apply(*(it->second));
             tmp = builder->CreateFAdd(tmp, builder->CreateFMul(tmp1, tmp2));
         }
         result_ = tmp;
