@@ -76,8 +76,15 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
+        #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+        //boost::multiprecision::cpp_rational lacks an (int, cpp_int) constructor
+        //must use cpp_rational(cpp_int,cpp_int)
+        rational_class q(integer_class(mp_sign(static_cast<const Integer &>(*tmp).i)),
+                         mp_abs(static_cast<const Integer &>(*tmp).i));
+        #else
         rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i),
                          mp_abs(static_cast<const Integer &>(*tmp).i));
+        #endif
         return Rational::from_mpq(std::move(q));
     } else {
         throw SymEngineException("powint returned non-integer");
