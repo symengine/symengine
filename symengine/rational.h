@@ -179,9 +179,21 @@ public:
         if (not mp_fits_ulong_p(exp_))
             throw SymEngineException("powrat: 'exp' does not fit ulong.");
         unsigned long exp = mp_get_ui(exp_);
+        
+        #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+        //boost::multiprecision::cpp_rational doesn't provide
+        //non-const references to num and den
+        integer_class num;
+        integer_class den;
+        mp_pow_ui(num, SymEngine::get_num(i), exp);
+        mp_pow_ui(den, SymEngine::get_den(i), exp);
+        rational_class val(num,den);
+        #else
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
         mp_pow_ui(SymEngine::get_den(val), SymEngine::get_den(i), exp);
+        #endif
+
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass val into the constructor directly without canonicalizing:
