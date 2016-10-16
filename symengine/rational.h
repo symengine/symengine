@@ -21,7 +21,9 @@ public:
 public:
     IMPLEMENT_TYPEID(RATIONAL)
     //! Constructor of Rational class
-    explicit Rational(rational_class i);
+    //explicit Rational(rational_class i);
+    Rational(const rational_class &_i) : i(_i) {}
+    Rational(rational_class &&_i) : i(std::move(_i)) {}
     /*! \param `i` must already be in rational_class canonical form
     *   \return Integer or Rational depending on denumerator.
     * */
