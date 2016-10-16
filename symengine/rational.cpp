@@ -5,10 +5,12 @@
 namespace SymEngine
 {
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 Rational::Rational(rational_class i) : i{i}
 {
     SYMENGINE_ASSERT(is_canonical(this->i))
 }
+#endif
 
 bool Rational::is_canonical(const rational_class &i) const
 {
