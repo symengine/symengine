@@ -52,6 +52,7 @@ set(SRC
     infinity.cpp
     logic.cpp
     finitediff.cpp
+    mp_boost.cpp
 )
 
 if (WITH_MPFR)

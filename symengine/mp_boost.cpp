@@ -1,4 +1,4 @@
-#include "boostmp_wrapper.h"
+#include "mp_class.h"
 #include <boost/multiprecision/miller_rabin.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/math/special_functions.hpp>
@@ -14,8 +14,10 @@ using boost::multiprecision::miller_rabin_test;
 using boost::multiprecision::detail::find_lsb;
 using boost::mpl::int_;
 
-typedef cpp_int integer_class;
-typedef cpp_rational rational_class;
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+
+namespace SymEngine
+{
 
 void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
                       const integer_class &a, const integer_class &b)
@@ -46,7 +48,7 @@ void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
   t = std::move(this_t);
 }
 
-inline bool mp_invert(integer_class &res, const integer_class &a,
+bool mp_invert(integer_class &res, const integer_class &a,
                       const integer_class &m)
 {
     integer_class gcd, s, t;
@@ -68,7 +70,7 @@ integer_class fmod(const integer_class &a,const integer_class &mod)
 	return res;
 }
 
-void mp_pow_ui(boost::multiprecision::cpp_rational &res, const boost::multiprecision::cpp_rational &i, unsigned long n)
+void mp_pow_ui(cpp_rational &res, const cpp_rational &i, unsigned long n)
 {
 	cpp_int num = numerator(i); //copy
 	cpp_int den = denominator(i); //copy
@@ -395,3 +397,7 @@ int mp_kronecker(const integer_class &a, const integer_class &n)
 		return kr_a_u * unchecked_jacobi(a,m);
 	}
 }
+
+} //SymEngine
+
+#endif //SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP

@@ -105,10 +105,12 @@ set(HAVE_SYMENGINE_FLINT False)
 # Boost.multiprecision
 set(WITH_BOOSTMP no CACHE BOOL "Build with Boost.multiprecision")
 
+set(HAVE_SYMENGINE_GMP yes)
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
     set(SYMENGINE_INTEGER_CLASS "BOOSTMP")
     set(WITH_BOOSTMP yes)
     set(WITH_BOOST yes)
+    set(HAVE_SYMENGINE_GMP no)
 elseif ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
     set(WITH_PIRANHA yes)
@@ -128,6 +130,7 @@ else()
 endif()
 
 # GMP
+if(HAVE_SYMENGINE_GMP) 
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_TARGETS})
@@ -255,6 +258,9 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
     set(PKGS ${PKGS} "MPC")
 endif()
+
+endif()
+# HAVE_SYMENGINE_GMP
 
 # Boost
 set(WITH_BOOST no
