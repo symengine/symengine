@@ -682,6 +682,13 @@ inline integer_class mp_abs(const integer_class &i)
     return boost::multiprecision::abs(i);
 }
 
+inline int mp_cmpabs(const integer_class &a, const integer_class &b)
+{
+    if (mp_abs(a) > mp_abs(b)) {return 1;}
+    if (mp_abs(a) == mp_abs(b)) {return 0;}
+    return -1;
+}
+
 inline int mp_sign(const integer_class &i)
 {
     return boost::multiprecision::sign(i);
@@ -1034,6 +1041,11 @@ inline auto get_mp_t(const integer_class &x) -> decltype(get_mpz_t(x))
 inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
 {
     return get_mpq_t(x);
+}
+
+inline int mp_cmpabs(const integer_class &a, const integer_class &b)
+{
+  return mpz_cmpabs(get_mpz_t(a),get_mpz_t(b));
 }
 #endif //SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
 

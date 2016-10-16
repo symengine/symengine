@@ -113,7 +113,7 @@ bool Rational::is_perfect_power(bool is_expected) const
     const integer_class &den = SymEngine::get_den(i);
     // TODO: fix this
     if (not is_expected) {
-        if (mpz_cmpabs(get_mpz_t(num), get_mpz_t(den)) > 0) {
+        if (mp_cmpabs(num,den) > 0) {
             if (!mp_perfect_power_p(den))
                 return false;
         } else {
@@ -131,6 +131,7 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat,
     if (n == 0)
         throw SymEngineException("i_nth_root: Can not find Zeroth root");
 
+    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     rational_class r;
     int ret = mp_root(SymEngine::get_num(r), SymEngine::get_num(i), n);
     if (ret == 0)
@@ -138,6 +139,18 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat,
     ret = mp_root(SymEngine::get_den(r), SymEngine::get_den(i), n);
     if (ret == 0)
         return false;
+    #else
+    //boost::multiprecision::cpp_rational doesn't provide 
+    //non-const get_num and get_den
+    integer_class num, den;
+    int ret = mp_root(num, SymEngine::get_num(i), n);
+    if (ret == 0)
+        return false;
+    ret = mp_root(den, SymEngine::get_den(i), n);
+    if (ret == 0)
+        return false;
+    rational_class r(num,den);
+    #endif
     // No need to canonicalize since `this` is in canonical form
     *the_rat = make_rcp<const Rational>(r);
     return true;
