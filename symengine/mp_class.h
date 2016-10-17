@@ -761,7 +761,7 @@ inline void mp_fdiv_qr(integer_class &q, integer_class &r,
 {
   /*boost::multiprecision doesn't have a built-in fdiv_qr (floored division).
     Its divide_qr uses truncated division, as does its
-    modulus operator. Thus, using boost::multiprecision::operator% we get:
+    modulus operator. Thus, using boost::multiprecision::divide_qr we get:
     divide_qr(-5, 3, quo, rem) //quo == -1, rem == -2
     divide_qr(5, -3, quo, rem) //quo == -1, rem == 2
     but we want:
@@ -857,7 +857,7 @@ inline rational_class mp_abs(const rational_class &i)
     return boost::multiprecision::abs(i);
 }
 
-bool mp_divisible_p(const integer_class &a, const integer_class &b)
+inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
 {
   return a % b == 0;
 }
