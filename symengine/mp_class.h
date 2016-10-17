@@ -851,12 +851,17 @@ inline rational_class mp_abs(const rational_class &i)
     return boost::multiprecision::abs(i);
 }
 
+bool mp_divisible_p(const integer_class &a, const integer_class &b)
+{
+  return a % b == 0;
+}
+
 void mp_pow_ui(rational_class &res, const rational_class &i, unsigned long n);
 
 /*  Extended Euclidean algorithm in Z
  *  inargs:  integers a, b
  *  outargs:  gcd, the greatest common divisor of a and b
- *        s, t such that sa + tb = gcd
+ *            s, t such that sa + tb = gcd
  */
 void mp_gcdext(integer_class &gcd, integer_class &s, \
   integer_class &t, const integer_class &a, \
@@ -870,6 +875,7 @@ void mp_rootrem(integer_class &a, integer_class &b,
                        const integer_class &i, unsigned long n);
 
 int mp_probab_prime_p(const integer_class &i, unsigned retries);
+
 
 void mp_nextprime(integer_class &res, const integer_class &i);
 
