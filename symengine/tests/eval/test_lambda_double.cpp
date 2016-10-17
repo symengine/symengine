@@ -173,4 +173,3 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
 }
 #endif
-
