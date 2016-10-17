@@ -647,7 +647,11 @@ RCP<const Number> harmonic(unsigned long n, long m)
         for (unsigned i = 1; i <= n; ++i) {
             if (m > 0) {
                 rational_class t(1u, i);
+                #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
                 mp_pow_ui(get_den(t), get_den(t), m);
+                #else
+                mp_pow_ui(t, t, m);
+                #endif
                 res += t;
             } else {
                 integer_class t(i);
