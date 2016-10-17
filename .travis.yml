@@ -67,6 +67,7 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.7
+          - george-edison55-precise-backports
           packages:
           - libgmp-dev
           - libmpfr-dev
@@ -74,6 +75,8 @@ matrix:
           - binutils-dev
           - g++-5
           - clang-format-3.7
+          - cmake
+          - cmake-data
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes"
       compiler: gcc
       os: linux
@@ -82,6 +85,7 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - boost-latest
+          - george-edison55-precise-backports
           packages:
           - libgmp-dev
           - libmpfr-dev
@@ -90,6 +94,8 @@ matrix:
           - libboost-serialization1.55-dev
           - libboost-iostreams1.55-dev
           - g++-4.8
+          - cmake
+          - cmake-data
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha"
       compiler: gcc
       os: linux
@@ -98,6 +104,7 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - boost-latest
+          - george-edison55-precise-backports
           packages:
           - libgmp-dev
           - libmpfr-dev
@@ -105,6 +112,8 @@ matrix:
           - libboost-serialization1.55-dev
           - libboost-iostreams1.55-dev
           - g++-4.8
+          - cmake
+          - cmake-data
     - env: BUILD_TYPE="Debug" WITH_BFD="yes"
       compiler: clang
       os: linux
