@@ -122,12 +122,15 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.8
+          - george-edison55-precise-backports
           packages:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
           - llvm-3.8-dev
+          - cmake
+          - cmake-data
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
