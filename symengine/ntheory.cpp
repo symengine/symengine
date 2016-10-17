@@ -285,6 +285,8 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
 }
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+//Current implementations invoke gmp types and methods directly
 int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned B, unsigned retries)
 {
@@ -364,6 +366,8 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
     gmp_randclear(state);
     return ret_val;
 }
+#endif
+
 
 // Factorization
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
@@ -621,7 +625,7 @@ RCP<const Number> bernoulli(unsigned long n)
     // TODO: implement a faster algorithm
     std::vector<rational_class> v(n + 1);
     for (unsigned m = 0; m <= n; ++m) {
-        v[m] = rational_class(1, m + 1);
+        v[m] = rational_class(1u, m + 1);
 
         for (unsigned j = m; j >= 1; --j) {
             v[j - 1] = j * (v[j - 1] - v[j]);
@@ -636,7 +640,7 @@ RCP<const Number> harmonic(unsigned long n, long m)
     rational_class res(0);
     if (m == 1) {
         for (unsigned i = 1; i <= n; ++i) {
-            res += rational_class(1, i);
+            res += rational_class(1u, i);
         }
         return Rational::from_mpq(res);
     } else {
