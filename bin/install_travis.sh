@@ -17,6 +17,7 @@ fi
 export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
+    brew install gcc48
     export CC=gcc-4.8
     export CXX=g++-4.8
     export GCOV_EXECUTABLE=gcov-4.8
@@ -31,7 +32,6 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CC=gcc-5
         export CXX=g++-5
         export GCOV_EXECUTABLE=gcov-5
-
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
@@ -97,10 +97,12 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
     fi
 fi
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    git clone https://github.com/bluescarni/piranha;
-    cd piranha;
-    git checkout 2c5b58a;
-    mkdir build && cd build;
+    wget https://github.com/bluescarni/piranha/archive/v0.5.tar.gz;
+    tar -xzf v0.5.tar.gz;
+    cd piranha-0.5 && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
 cd $SOURCE_DIR;
+
+# Since this script is getting sourced, remove error on exit
+set +e
