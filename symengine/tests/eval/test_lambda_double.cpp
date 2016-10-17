@@ -22,6 +22,8 @@ using SymEngine::complex_double;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
+using SymEngine::sin;
+using SymEngine::cos;
 using SymEngine::E;
 using SymEngine::gamma;
 using SymEngine::loggamma;
@@ -141,9 +143,10 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     y = symbol("y");
     z = symbol("z");
 
-    r = add(sin(x), add(mul(y, z), pow(sin(x), integer(2))));
+    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                        pow(sin(x), integer(2))));
     for (int i = 0; i < 4; ++i) {
-        r = mul(add(r, x), r);
+        r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
     }
 
     LLVMDoubleVisitor v;

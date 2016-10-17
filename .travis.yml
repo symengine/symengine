@@ -121,6 +121,7 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.8
           packages:
           - clang
           - libstdc++-4.8-dev
