@@ -699,6 +699,12 @@ inline integer_class mp_sqrt(const integer_class &i)
     return boost::multiprecision::sqrt(i);
 }
 
+inline void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i)
+{
+    a = mp_sqrt(i);
+    b = i - boost::multiprecision::pow(a,2);
+}
+
 inline double mp_get_d(const integer_class &i)
 {
     return i.convert_to<double>();
