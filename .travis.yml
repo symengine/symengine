@@ -105,7 +105,7 @@ matrix:
           - libboost-serialization1.55-dev
           - libboost-iostreams1.55-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes"
       compiler: clang
       os: linux
       addons:
@@ -117,6 +117,7 @@ matrix:
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
+          - llvm-3.8-dev
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
