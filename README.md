@@ -114,6 +114,7 @@ their default values indicated below:
         -DWITH_PIRANHA:BOOL=OFF \                     # Install with Piranha library
         -DWITH_MPFR:BOOL=OFF \                        # Install with MPFR library
         -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
+        -DWITH_LLVM:BOOL=OFF \                        # Build with LLVM 3.8 libraries
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
