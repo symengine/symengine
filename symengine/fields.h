@@ -110,8 +110,13 @@ public:
     GaloisFieldDict _gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
+    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+    //cannot use type gmp_randstate_t as a param in a gmp-free build
     GaloisFieldDict gf_random(const unsigned int &n_val,
                               gmp_randstate_t &state) const;
+    #else
+    GaloisFieldDict gf_random(const unsigned int &n_val) const;
+    #endif
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.

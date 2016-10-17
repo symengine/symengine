@@ -4,6 +4,7 @@
 
 using SymEngine::integer_class;
 using SymEngine::mp_and;
+using SymEngine::mp_fdiv_r;
 
 TEST_CASE("integer_class: helper functions", "[mp_class]")
 {
