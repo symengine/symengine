@@ -161,6 +161,9 @@ public:
         // Load all the symbols and create references
         auto input_arg = &(*(F->args().begin()));
         for (unsigned i = 0; i < inputs.size(); i++) {
+            if (not is_a<Symbol>(*inputs[i])) {
+                throw SymEngineException("Input contains a non-symbol.");
+            }
             auto index
                 = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
             auto ptr = builder->CreateGEP(llvm::Type::getDoubleTy(*context),
