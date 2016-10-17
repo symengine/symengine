@@ -862,7 +862,7 @@ void mp_gcdext(integer_class &gcd, integer_class &s, \
   integer_class &t, const integer_class &a, \
   const integer_class &b);
 
-void mp_invert(integer_class &res, const integer_class &a, const integer_class &m);
+bool mp_invert(integer_class &res, const integer_class &a, const integer_class &m);
 
 bool mp_root(integer_class &res, const integer_class &i, unsigned long n);
 
