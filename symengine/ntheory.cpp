@@ -252,6 +252,8 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
     return ret_val;
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+//Current implementations invoke gmp types and methods directly
 namespace
 {
 // Factor using Pollard's p-1 method
@@ -283,10 +285,8 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
     else
         return 1;
 }
-}
+} //anonymous namespace
 
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-//Current implementations invoke gmp types and methods directly
 int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned B, unsigned retries)
 {
@@ -1005,10 +1005,14 @@ namespace
 bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
                               const integer_class &p)
 {
+    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed(state, get_mpz_t(p));
-
+    #else
+    boost::random::mt19937 mt;
+    boost::random::uniform_int_distribution<integer_class> ui(0, p);
+    #endif
     integer_class n, y, b, q, pm1, t(1);
     pm1 = p - 1;
     unsigned e, m;
@@ -1016,8 +1020,12 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
     q = pm1 >> e; // p - 1 = 2**e*q
 
     while (t != -1) {
+        #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
         mp_urandomm(n, state, p);
         mp_demote(n);
+        #else
+        n = ui(mt);
+        #endif
         t = mp_legendre(n, p);
     }
     mp_powm(y, n, q, p); // y = n**q mod p
