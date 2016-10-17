@@ -5,6 +5,9 @@
 #include <symengine/visitor.h>
 
 #ifdef HAVE_SYMENGINE_LLVM
+// byte_swap is a macro defined in flint and it conflicts with LLVM's definition
+#undef byte_swap
+
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/Analysis/Passes.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
@@ -43,14 +46,12 @@ namespace SymEngine
 class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
 {
 protected:
-    llvm::Value *result_;
     std::unique_ptr<llvm::LLVMContext> context;
     std::unique_ptr<llvm::IRBuilder<>> builder;
-    llvm::Module *M;
-    llvm::Function *F;
-    llvm::ExecutionEngine *EE;
-    llvm::FunctionType *FT;
+    std::unique_ptr<llvm::Module> module;
     vec_basic symbols;
+    std::vector<llvm::Value *> symbol_ptrs;
+    llvm::Value *result_;
     intptr_t func;
 
 public:
@@ -74,12 +75,12 @@ public:
         symbols = inputs;
 
         // Create some module to put our function into it.
-        std::unique_ptr<llvm::Module> owner
-            = llvm::make_unique<llvm::Module>("SymEngine", *context);
-        M = owner.get();
+        module = llvm::make_unique<llvm::Module>("SymEngine", *context);
+        module->setDataLayout("");
 
         // Create a new pass manager attached to it.
-        auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(M);
+        auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(
+            module.get());
 
         // Provide basic AliasAnalysis support for GVN.
         // fpm->add(llvm::createBasicAliasAnalysisPass());
@@ -91,6 +92,13 @@ public:
         fpm->add(llvm::createGVNPass());
         // Simplify the control flow graph (deleting unreachable blocks, etc).
         fpm->add(llvm::createCFGSimplificationPass());
+        fpm->add(llvm::createPartiallyInlineLibCallsPass());
+        fpm->add(llvm::createLoadCombinePass());
+        fpm->add(llvm::createInstructionSimplifierPass());
+        fpm->add(llvm::createMemCpyOptPass());
+        fpm->add(llvm::createMergedLoadStoreMotionPass());
+        fpm->add(llvm::createBitTrackingDCEPass());
+        fpm->add(llvm::createAggressiveDCEPass());
 
         fpm->doInitialization();
 
@@ -99,10 +107,41 @@ public:
             inp.push_back(
                 llvm::PointerType::get(llvm::Type::getDoubleTy(*context), 0));
         }
-        FT = llvm::FunctionType::get(llvm::Type::getVoidTy(*context), inp,
-                                     false);
-        F = llvm::Function::Create(FT, llvm::Function::InternalLinkage, "", M);
+        llvm::FunctionType *function_type = llvm::FunctionType::get(
+            llvm::Type::getVoidTy(*context), inp, false);
+        auto F = llvm::Function::Create(
+            function_type, llvm::Function::InternalLinkage, "", module.get());
         F->setCallingConv(llvm::CallingConv::C);
+        {
+            llvm::SmallVector<llvm::AttributeSet, 4> attrs;
+            llvm::AttributeSet PAS;
+            {
+                llvm::AttrBuilder B;
+                B.addAttribute(llvm::Attribute::ReadOnly);
+                B.addAttribute(llvm::Attribute::NoCapture);
+                PAS = llvm::AttributeSet::get(module->getContext(), 1U, B);
+            }
+
+            attrs.push_back(PAS);
+            {
+                llvm::AttrBuilder B;
+                B.addAttribute(llvm::Attribute::NoCapture);
+                PAS = llvm::AttributeSet::get(module->getContext(), 2U, B);
+            }
+
+            attrs.push_back(PAS);
+            {
+                llvm::AttrBuilder B;
+                B.addAttribute(llvm::Attribute::NoUnwind);
+                B.addAttribute(llvm::Attribute::UWTable);
+                PAS = llvm::AttributeSet::get(module->getContext(), ~0U, B);
+            }
+
+            attrs.push_back(PAS);
+
+            F->setAttributes(
+                llvm::AttributeSet::get(module->getContext(), attrs));
+        }
 
         // Add a basic block to the function. As before, it automatically
         // inserts
@@ -115,14 +154,32 @@ public:
         // automatically append instructions to the basic block `BB'.
         builder = llvm::make_unique<llvm::IRBuilder<>>(BB);
         builder->SetInsertPoint(BB);
-        std::cout << "asd" << std::endl;
+        auto fmf = llvm::FastMathFlags();
+        // fmf.setUnsafeAlgebra();
+        builder->setFastMathFlags(fmf);
+
+        // Load all the symbols and create references
+        auto input_arg = &(*(F->args().begin()));
+        for (unsigned i = 0; i < inputs.size(); i++) {
+            auto index
+                = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
+            auto ptr = builder->CreateGEP(llvm::Type::getDoubleTy(*context),
+                                          input_arg, index);
+            result_
+                = builder->CreateLoad(llvm::Type::getDoubleTy(*context), ptr);
+            symbol_ptrs.push_back(result_);
+        }
+
         auto it = ++(F->args().begin());
         auto out = &(*it);
         std::vector<llvm::Value *> output_vals;
+
+        // Generate Ir for all the output exprs and save references
         for (unsigned i = 0; i < outputs.size(); i++) {
-            apply(*outputs[i]);
-            output_vals.push_back(result_);
+            output_vals.push_back(apply(*outputs[i]));
         }
+
+        // Store all the output exprs at the end
         for (unsigned i = 0; i < outputs.size(); i++) {
             auto index
                 = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
@@ -137,23 +194,28 @@ public:
         // Validate the generated code, checking for consistency.
         llvm::verifyFunction(*F);
 
-        std::cout << "LLVM IR" << std::endl;
-        M->dump();
+        // std::cout << "LLVM IR" << std::endl;
+        // module->dump();
 
         // Optimize the function.
         fpm->run(*F);
 
-        // std::cout << "LLVM IR for " << b.__str__() << std::endl;
-        M->dump();
+        // std::cout << "Optimized LLVM IR" << std::endl;
+        // module->dump();
 
         // Now we create the JIT.
         std::string error;
-        EE = llvm::EngineBuilder(std::move(owner)).setErrorStr(&error).create();
+        auto executionengine
+            = llvm::EngineBuilder(std::move(module))
+                  .setEngineKind(llvm::EngineKind::Kind::JIT)
+                  .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+                  .setErrorStr(&error)
+                  .create();
         // std::cout << error << std::endl;
-        EE->finalizeObject();
+        executionengine->finalizeObject();
 
         // Get the symbol's address
-        func = (intptr_t)EE->getPointerToFunction(F);
+        func = (intptr_t)executionengine->getPointerToFunction(F);
     }
 
     double call(const std::vector<double> &vec)
@@ -173,11 +235,11 @@ public:
         result_ = llvm::ConstantFP::get(llvm::Type::getDoubleTy(*context), d);
     }
 
-    void bvisit(const Integer &x, bool as_int64 = false)
+    void bvisit(const Integer &x, bool as_int32 = false)
     {
-        if (as_int64) {
-            int64_t d = mp_get_si(x.i);
-            result_ = llvm::ConstantInt::get(llvm::Type::getInt64Ty(*context),
+        if (as_int32) {
+            int d = mp_get_si(x.i);
+            result_ = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context),
                                              d, true);
         } else {
             result_ = llvm::ConstantFP::get(llvm::Type::getDoubleTy(*context),
@@ -220,34 +282,42 @@ public:
         for (; it != x.get_dict().end(); ++it) {
             tmp1 = apply(*(it->first));
             tmp2 = apply(*(it->second));
+            // if (eq(*it->second, *one)) {
             tmp = builder->CreateFAdd(tmp, builder->CreateFMul(tmp1, tmp2));
+            //} else {
+            //    std::vector<llvm::Value *> args({tmp1, tmp2, tmp});
+            //    tmp =
+            //    builder->CreateCall(get_double_intrinsic(llvm::Intrinsic::fma,
+            //    3), args);
+            //}
         }
         result_ = tmp;
     }
 
     void bvisit(const Mul &x)
     {
-        llvm::Value *tmp = apply(*x.coef_);
+        set_double(1.0);
+        llvm::Value *tmp = result_;
         for (const auto &p : x.get_args()) {
             tmp = builder->CreateFMul(tmp, apply(*p));
         }
         result_ = tmp;
     }
 
-    llvm::Function *get_pow()
+    llvm::Function *get_powi()
     {
         std::vector<llvm::Type *> arg_type;
         arg_type.push_back(llvm::Type::getDoubleTy(*context));
-        arg_type.push_back(llvm::Type::getDoubleTy(*context));
-        return llvm::Intrinsic::getDeclaration(M, llvm::Intrinsic::pow,
-                                               arg_type);
+        arg_type.push_back(llvm::Type::getInt32Ty(*context));
+        return llvm::Intrinsic::getDeclaration(module.get(),
+                                               llvm::Intrinsic::powi, arg_type);
     }
 
-    llvm::Function *get_double_intrinsic(llvm::Intrinsic::ID id)
+    llvm::Function *get_double_intrinsic(llvm::Intrinsic::ID id, unsigned n = 1)
     {
-        std::vector<llvm::Type *> arg_type;
-        arg_type.push_back(llvm::Type::getDoubleTy(*context));
-        return llvm::Intrinsic::getDeclaration(M, id, arg_type);
+        std::vector<llvm::Type *> arg_type(n,
+                                           llvm::Type::getDoubleTy(*context));
+        return llvm::Intrinsic::getDeclaration(module.get(), id, arg_type);
     }
 
     void bvisit(const Pow &x)
@@ -256,18 +326,33 @@ public:
         llvm::Function *fun;
         if (eq(*(x.get_base()), *E)) {
             args.push_back(apply(*x.get_exp()));
-            fun = get_double_intrinsic(llvm::Intrinsic::exp);
+            fun = get_double_intrinsic(llvm::Intrinsic::exp, 1);
 
         } else if (eq(*(x.get_base()), *integer(2))) {
             args.push_back(apply(*x.get_exp()));
-            fun = get_double_intrinsic(llvm::Intrinsic::exp2);
+            fun = get_double_intrinsic(llvm::Intrinsic::exp2, 1);
 
         } else {
-            args.push_back(apply(*x.get_base()));
-            args.push_back(apply(*x.get_exp()));
-            fun = get_pow();
+            if (is_a<Integer>(*x.get_exp())) {
+                if (eq(*x.get_exp(), *integer(2))) {
+                    llvm::Value *tmp = apply(*x.get_base());
+                    result_ = builder->CreateFMul(tmp, tmp);
+                    return;
+                } else {
+                    args.push_back(apply(*x.get_base()));
+                    bvisit(static_cast<const Integer &>(*x.get_exp()), true);
+                    args.push_back(result_);
+                    fun = get_powi();
+                }
+            } else {
+                args.push_back(apply(*x.get_base()));
+                args.push_back(apply(*x.get_exp()));
+                fun = get_double_intrinsic(llvm::Intrinsic::pow, 2);
+            }
         }
-        result_ = builder->CreateCall(fun, args);
+        auto r = builder->CreateCall(fun, args);
+        r->setTailCall(true);
+        result_ = r;
     }
 
     void bvisit(const Sin &x)
@@ -275,8 +360,10 @@ public:
         std::vector<llvm::Value *> args;
         llvm::Function *fun;
         args.push_back(apply(*x.get_arg()));
-        fun = get_double_intrinsic(llvm::Intrinsic::sin);
-        result_ = builder->CreateCall(fun, args);
+        fun = get_double_intrinsic(llvm::Intrinsic::sin, 1);
+        auto r = builder->CreateCall(fun, args);
+        r->setTailCall(true);
+        result_ = r;
     }
 
     void bvisit(const Cos &x)
@@ -284,8 +371,10 @@ public:
         std::vector<llvm::Value *> args;
         llvm::Function *fun;
         args.push_back(apply(*x.get_arg()));
-        fun = get_double_intrinsic(llvm::Intrinsic::cos);
-        result_ = builder->CreateCall(fun, args);
+        fun = get_double_intrinsic(llvm::Intrinsic::cos, 1);
+        auto r = builder->CreateCall(fun, args);
+        r->setTailCall(true);
+        result_ = r;
     }
 
     void bvisit(const Tan &x)
@@ -297,14 +386,8 @@ public:
     {
         unsigned i = 0;
         for (auto &symb : symbols) {
-            if (static_cast<const Symbol &>(*symb).get_name() == x.get_name()) {
-                auto inp = &(*(F->args().begin()));
-                auto index = llvm::ConstantInt::get(
-                    llvm::Type::getInt32Ty(*context), i);
-                auto ptr = builder->CreateGEP(llvm::Type::getDoubleTy(*context),
-                                              inp, index);
-                result_ = builder->CreateLoad(llvm::Type::getDoubleTy(*context),
-                                              ptr);
+            if (eq(x, *symb)) {
+                result_ = symbol_ptrs[i];
                 return;
             }
             ++i;
