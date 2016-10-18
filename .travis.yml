@@ -114,18 +114,23 @@ matrix:
           - g++-4.8
           - cmake
           - cmake-data
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes"
       compiler: clang
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.8
+          - george-edison55-precise-backports
           packages:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
+          - llvm-3.8-dev
+          - cmake
+          - cmake-data
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux

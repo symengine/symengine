@@ -271,6 +271,26 @@ if (WITH_PIRANHA)
     set(WITH_BOOST yes)
 endif()
 
+# LLVM
+set(WITH_LLVM no
+    CACHE BOOL "Build with LLVM")
+
+if (WITH_LLVM)
+    set(SYMENGINE_LLVM_COMPONENTS core mcjit native)
+    find_package(LLVM 3.8 REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
+    foreach(LLVM_FLAG ${LLVM_DEFINITIONS})
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${LLVM_FLAG}")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${LLVM_FLAG}")
+    endforeach()
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+
+    llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
+    set(LIBS ${LIBS} ${llvm_libs})
+    include_directories(${LLVM_INCLUDE_DIRS})
+    set(HAVE_SYMENGINE_LLVM yes)
+    set(PKGS ${PKGS} "LLVM")
+endif()
+
 # BENCHMARKS
 set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
@@ -583,6 +603,11 @@ endif()
 message("WITH_PIRANHA: ${WITH_PIRANHA}")
 if (WITH_PIRANHA)
     message("PIRANHA_INCLUDE_DIRS: ${PIRANHA_INCLUDE_DIRS}")
+endif()
+
+message("WITH_LLVM: ${WITH_LLVM}")
+if (WITH_LLVM)
+    message("LLVM_INCLUDE_DIRS: ${LLVM_INCLUDE_DIRS}")
 endif()
 
 message("WITH_BOOST: ${WITH_BOOST}")

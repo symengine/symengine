@@ -102,6 +102,7 @@ if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     cd piranha-0.5 && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
+export LLVM_DIR=/usr/lib/llvm-3.8/
 cd $SOURCE_DIR;
 
 # Since this script is getting sourced, remove error on exit

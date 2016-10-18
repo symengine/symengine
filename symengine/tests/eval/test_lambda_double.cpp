@@ -1,7 +1,13 @@
 #include "catch.hpp"
+#include <chrono>
 
 #include <symengine/lambda_double.h>
 #include <symengine/symengine_exception.h>
+
+#ifdef HAVE_SYMENGINE_LLVM
+#include <symengine/llvm_double.h>
+using SymEngine::LLVMDoubleVisitor;
+#endif
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -16,6 +22,8 @@ using SymEngine::complex_double;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
+using SymEngine::sin;
+using SymEngine::cos;
 using SymEngine::E;
 using SymEngine::gamma;
 using SymEngine::loggamma;
@@ -124,3 +132,47 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     d = v.call({1.1});
     REQUIRE(::fabs(d - 0.88020506957408169) < 1e-12);
 }
+
+#ifdef HAVE_SYMENGINE_LLVM
+
+TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
+{
+    RCP<const Basic> x, y, z, r;
+    double d, d2;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+
+    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                        pow(sin(x), integer(2))));
+    for (int i = 0; i < 4; ++i) {
+        r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
+    }
+
+    LLVMDoubleVisitor v;
+    v.init({x, y, z}, *r);
+
+    LambdaRealDoubleVisitor v2;
+    v2.init({x, y, z}, *r);
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 500; i++) {
+        d = v.call({1.5, 2.0, 3.0});
+    }
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 500; i++) {
+        d2 = v2.call({1.5, 2.0, 3.0});
+    }
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    REQUIRE(::fabs((d - d2) / d) < 1e-12);
+}
+#endif

@@ -37,6 +37,9 @@
 /* Define if you want to enable MPC support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_MPC
 
+/* Define if you want to enable LLVM support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_LLVM
+
 /* Define if the C compiler supports __FUNCTION__ but not __func__ */
 #cmakedefine HAVE_C_FUNCTION_NOT_FUNC
 

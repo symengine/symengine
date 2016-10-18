@@ -41,9 +41,10 @@ class BaseVisitor : public Base
 {
 
 public:
+#if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
     // Following two ctors can be replaced by `using Base::Base` if inheriting
-    // constructors are allowed by the compiler. GCC 4.8 is the latest version
-    // supporting this.
+    // constructors are allowed by the compiler. GCC 4.8 is the earliest
+    // version supporting this.
     template <typename... Args,
               typename
               = enable_if_t<std::is_constructible<Base, Args...>::value>>
@@ -55,6 +56,9 @@ public:
     BaseVisitor() : Base()
     {
     }
+#else
+    using Base::Base;
+#endif
 
 #define SYMENGINE_ENUM(TypeID, Class)                                          \
     virtual void visit(const Class &x)                                         \

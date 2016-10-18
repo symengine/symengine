@@ -75,6 +75,9 @@ fi
 if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
+if [[ "${WITH_LLVM}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_LLVM=${WITH_LLVM} -DLLVM_DIR=${LLVM_DIR}"
+fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     export CXXFLAGS=""
