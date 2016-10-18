@@ -62,6 +62,10 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     REQUIRE(a->__str__() == "oo");
     REQUIRE(b->__str__() == "-oo");
 
+    //! Checking copy constructor
+    Infty inf2 = Infty(*NegInf);
+    REQUIRE(inf2.__str__() == "-oo");
+
     // RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     // CHECK_THROWS_AS(Infty::from_direction(cx), SymEngineException);
 }
@@ -196,4 +200,28 @@ TEST_CASE("Multiplication with Infinity", "[Infinity]")
 
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(c->mul(*cx), NotImplementedError);
+}
+
+TEST_CASE("Division of Infinity", "[Infinity]")
+{
+    RCP<const Infty> a = Inf;
+    RCP<const Infty> b = NegInf;
+    RCP<const Infty> c = ComplexInf;
+
+    RCP<const Number> n1 = b->div(*integer(-10));
+    REQUIRE(n1->__str__() == "oo");
+    n1 = b->div(*integer(10));
+    REQUIRE(n1->__str__() == "-oo");
+    n1 = c->div(*minus_one);
+    REQUIRE(n1->__str__() == "zoo");
+    n1 = a->div(*zero);
+    REQUIRE(n1->__str__() == "zoo");
+    n1 = b->div(*zero);
+    REQUIRE(n1->__str__() == "zoo");
+    n1 = c->div(*zero);
+    REQUIRE(n1->__str__() == "zoo");
+
+    CHECK_THROWS_AS(a->div(*b), SymEngineException);
+    CHECK_THROWS_AS(b->div(*c), SymEngineException);
+    CHECK_THROWS_AS(c->div(*c), SymEngineException);
 }

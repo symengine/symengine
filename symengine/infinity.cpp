@@ -126,10 +126,20 @@ RCP<const Number> Infty::mul(const Number &other) const
     }
 }
 
-// TODO
 RCP<const Number> Infty::div(const Number &other) const
 {
-    return zero;
+    if (is_a<Infty>(other)) {
+        throw UndefinedError("Indeterminate Expression: "
+                             "`Infty / Infty` "
+                             "encountered");
+    } else {
+        if (other.is_positive())
+            return rcp_from_this_cast<Number>();
+        else if (other.is_zero())
+            return infty(0);
+        else
+            return infty(this->_direction->mul(*minus_one));
+    }
 }
 // TODO
 RCP<const Number> Infty::pow(const Number &other) const
