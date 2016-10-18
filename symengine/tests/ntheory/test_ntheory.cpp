@@ -253,7 +253,7 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
     REQUIRE((divides(*i1001, *f) and not eq(*f, *i1) and not eq(*f, *i1001)));
 }
-
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
 {
     RCP<const Integer> i23 = integer(23);
@@ -309,6 +309,7 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
     REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0
              or divides(*i1850, *f)));
 }
+#endif //SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 
 TEST_CASE("test_sieve(): ntheory", "[ntheory]")
 {

@@ -101,7 +101,9 @@ using SymEngine::Rational;
 using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
+#endif
 using SymEngine::DivisionByZeroError;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
