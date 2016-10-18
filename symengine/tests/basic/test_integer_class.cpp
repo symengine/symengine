@@ -1,10 +1,15 @@
 #include "catch.hpp"
 
 #include <symengine/mp_class.h>
+#include <symengine/pow.h>
+#include <symengine/integer.h>
 
 using SymEngine::integer_class;
 using SymEngine::mp_and;
 using SymEngine::mp_fdiv_r;
+using SymEngine::Integer;
+using SymEngine::make_rcp;
+using SymEngine::RCP;
 
 TEST_CASE("integer_class: helper functions", "[mp_class]")
 {
@@ -16,4 +21,8 @@ TEST_CASE("integer_class: helper functions", "[mp_class]")
 	j = -12;
 	mp_fdiv_r(k, j, i);
 	REQUIRE(k == 6);
+
+	RCP<const Integer> a = make_rcp<const Integer>(2);
+	RCP<const Integer> b = make_rcp<const Integer>(3);
+	pow(a,b);
 }
