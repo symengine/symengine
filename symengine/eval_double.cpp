@@ -306,6 +306,12 @@ public:
         result_ = std::erf(tmp);
     }
 
+    void bvisit(const Erfc &x)
+    {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::erfc(tmp);
+    }
+
     void bvisit(const Max &x)
     {
         auto d = x.get_args();
@@ -576,6 +582,11 @@ std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(
             *(static_cast<const Erf &>(x)).get_args()[0]);
         return ::erf(tmp);
+    };
+    table[ERFC] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Erfc &>(x)).get_args()[0]);
+        return ::erfc(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {
