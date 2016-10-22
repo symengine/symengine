@@ -304,6 +304,13 @@ public:
         apply(result_, *(x.get_args()[0]));
         mpfr_erf(result_, result_, rnd_);
     }
+
+    void bvisit(const Erfc &x)
+    {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_erfc(result_, result_, rnd_);
+    }
+
     void bvisit(const Max &x)
     {
         mpfr_class t(mpfr_get_prec(result_));
