@@ -21,6 +21,7 @@ using SymEngine::Number;
 using SymEngine::add;
 using SymEngine::Symbol;
 using SymEngine::erf;
+using SymEngine::erfc;
 using SymEngine::Integer;
 using SymEngine::DenseMatrix;
 using SymEngine::loggamma;
@@ -401,6 +402,9 @@ TEST_CASE("test_functions(): printing", "[printing]")
 
     p = erf(add(x, y));
     REQUIRE(p->__str__() == "erf(x + y)");
+
+    p = erfc(x);
+    REQUIRE(p->__str__() == "erfc(x)");
 }
 
 TEST_CASE("test custom printing", "[printing]")

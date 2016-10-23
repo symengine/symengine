@@ -345,6 +345,12 @@ public:
         result_ = [=](const double *x) { return std::erf(tmp(x)); };
     }
 
+    void bvisit(const Erfc &x)
+    {
+        fn tmp = apply(*(x.get_args()[0]));
+        result_ = [=](const double *x) { return std::erfc(tmp(x)); };
+    }
+
     void bvisit(const Max &x)
     {
         std::vector<fn> applys;
