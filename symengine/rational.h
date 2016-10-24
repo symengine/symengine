@@ -206,12 +206,13 @@ public:
             return Rational::from_mpq(1 / val);
         }
     }
-    /*! Raise Rationals to power `other`
-     * \param other power to be raised
+    /*! Raise *this to power `other`
+     * \param other exponent
      * */
     RCP<const Basic> powrat(const Rational &other) const;
-    /*! Raise Integer to power Rational
-     * \param other power to be raised
+    /*!Reverse powrat
+     * Raise 'other' to power *this
+     * \param other base
      * */
     RCP<const Basic> rpowrat(const Integer &other) const;
 
