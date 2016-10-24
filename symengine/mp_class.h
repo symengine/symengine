@@ -712,7 +712,7 @@ inline double mp_get_d(const integer_class &i)
 
 inline unsigned long mp_get_ui(const integer_class &i)
 {
-    return i.convert_to<unsigned long>();
+    return mp_abs(i).convert_to<unsigned long>();
 }
 
 inline long mp_get_si(const integer_class &i)
