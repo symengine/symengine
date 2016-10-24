@@ -773,7 +773,7 @@ inline void mp_fdiv_qr(integer_class &q, integer_class &r,
     remainder.
     */
   boost::multiprecision::divide_qr(a,b,q,r);
-  if (q < 0) {
+  if ((a < 0 && b > 0) || (a > 0 && b < 0)) {
     q -= 1;
     r += b;
   }
