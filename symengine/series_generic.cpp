@@ -93,6 +93,23 @@ UExprDict UnivariateSeries::mul(const UExprDict &a, const UExprDict &b,
     return UExprDict(p);
 }
 
+UExprDict UnivariateSeries::add(const UExprDict &a, const UExprDict &b,
+                                unsigned prec)
+{
+    map_int_Expr p;
+    for (auto &it : a.get_dict()) {
+        if (it.first < (int)prec) {
+            p[it.first] += it.second;
+        }
+    }
+    for (auto &it : b.get_dict()) {
+        if (it.first < (int)prec) {
+            p[it.first] += it.second;
+        }
+    }
+    return UExprDict(p);
+}
+
 UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
 {
     if (exp < 0) {

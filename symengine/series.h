@@ -94,7 +94,7 @@ public:
         if (var_ != o.var_) {
             throw std::runtime_error("Multivariate Series not implemented");
         }
-        return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
+        return make_rcp<Series>(Series::add(p_, o.p_, deg), var_, deg);
     }
 
     inline RCP<const Series> mul(const Series &o) const

@@ -19,6 +19,8 @@ class UnivariateSeries
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},
     // {2, 1}} with var_ = "x" and prec_ = 5
 public:
+    using SeriesBase::mul;
+    using SeriesBase::add;
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)
@@ -47,6 +49,7 @@ public:
     static Expression convert(const Basic &x);
 
     static int ldegree(const UExprDict &s);
+    static UExprDict add(const UExprDict &s, const UExprDict &r, unsigned prec);
     static UExprDict mul(const UExprDict &s, const UExprDict &r, unsigned prec);
     static UExprDict pow(const UExprDict &s, int n, unsigned prec);
     static Expression find_cf(const UExprDict &s, const UExprDict &var,

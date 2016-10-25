@@ -17,6 +17,8 @@ class URatPSeriesPiranha
     : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha>
 {
 public:
+    using SeriesBase::mul;
+    using SeriesBase::add;
     URatPSeriesPiranha(const pp_t p, const std::string varname,
                        const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
@@ -34,6 +36,7 @@ public:
     static piranha::rational convert(const Rational &x);
     static piranha::rational convert(const Basic &x);
     static pp_t mul(const pp_t &s, const pp_t &r, unsigned prec);
+    static pp_t add(const pp_t &s, const pp_t &r, unsigned prec);
     static pp_t pow(const pp_t &s, int n, unsigned prec);
     static unsigned ldegree(const pp_t &s);
     static piranha::rational find_cf(const pp_t &s, const pp_t &var,
@@ -50,6 +53,8 @@ using p_expr = piranha::polynomial<Expression, piranha::monomial<int>>;
 class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
 {
 public:
+    using SeriesBase::mul;
+    using SeriesBase::add;
     UPSeriesPiranha(const p_expr p, const std::string varname,
                     const unsigned degree);
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
@@ -64,6 +69,7 @@ public:
     static p_expr var(const std::string &s);
     static Expression convert(const Basic &x);
     static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
+    static p_expr add(const p_expr &s, const p_expr &r, unsigned prec);
     static p_expr pow(const p_expr &s, int n, unsigned prec);
     static unsigned ldegree(const p_expr &s);
     static Expression find_cf(const p_expr &s, const p_expr &var, unsigned deg);

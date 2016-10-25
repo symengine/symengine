@@ -17,6 +17,8 @@ class URatPSeriesFlint
     : public SeriesBase<fqp_t, fmpq_wrapper, URatPSeriesFlint>
 {
 public:
+    using SeriesBase::mul;
+    using SeriesBase::add;
     URatPSeriesFlint(const fqp_t p, const std::string varname,
                      const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESFLINT)
@@ -37,6 +39,10 @@ public:
     static inline fqp_t mul(const fqp_t &s, const fqp_t &r, unsigned prec)
     {
         return s.mullow(r, prec);
+    }
+    static inline fqp_t add(const fqp_t &s, const fqp_t &r, unsigned prec)
+    {
+        return s.addtrunc(r, prec);
     }
     static fqp_t pow(const fqp_t &s, int n, unsigned prec);
     static unsigned ldegree(const fqp_t &s);
