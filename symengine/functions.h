@@ -924,6 +924,30 @@ public:
 //! Canonicalize Erf:
 RCP<const Basic> erf(const RCP<const Basic> &arg);
 
+class Erfc : public OneArgFunction
+{
+    /*   The complementary error function. This function is defined as:
+     *
+     *   .. math::
+     *      \mathrm{erfc}(x) = 1 - \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2}
+     *	 	 \mathrm{d}t.
+     **/
+public:
+    IMPLEMENT_TYPEID(ERFC)
+    //! Erfc Constructor
+    Erfc(const RCP<const Basic> &arg) : OneArgFunction(arg)
+    {
+        SYMENGINE_ASSERT(is_canonical(arg))
+    }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized erfc
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Erfc:
+RCP<const Basic> erfc(const RCP<const Basic> &arg);
+
 class Gamma : public OneArgFunction
 {
     /*!    The gamma function

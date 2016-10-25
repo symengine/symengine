@@ -47,6 +47,7 @@ using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::EulerGamma;
 using SymEngine::erf;
+using SymEngine::erfc;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::rcp_dynamic_cast;
@@ -2330,6 +2331,25 @@ TEST_CASE("Erf: functions", "[functions]")
     REQUIRE(eq(*r1->diff(x), *r2));
 
     REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
+}
+
+TEST_CASE("Erfc: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i3 = integer(3);
+
+    r1 = erfc(zero);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = erfc(mul(i3, x));
+    r2 = exp(mul(integer(-9), (mul(x, x))));
+    r2 = div(mul(integer(6), r2), sqrt(pi));
+    REQUIRE(eq(*r1->diff(x), *neg(r2)));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")

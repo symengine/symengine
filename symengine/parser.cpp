@@ -74,6 +74,7 @@ class ExpressionParser
             {"abs", abs},
             {"exp", exp},
             {"erf", erf},
+            {"erfc", erfc},
             {"loggamma", loggamma},
             {"lambertw", lambertw},
             {"dirichlet_eta", dirichlet_eta},

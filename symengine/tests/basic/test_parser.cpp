@@ -25,6 +25,7 @@ using SymEngine::has_symbol;
 using SymEngine::is_a;
 using SymEngine::pi;
 using SymEngine::erf;
+using SymEngine::erfc;
 using SymEngine::function_symbol;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
@@ -197,6 +198,10 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "erf(erf(x*y)) + y";
     res = parse(s);
     REQUIRE(eq(*res, *add(erf(erf(mul(x, y))), y)));
+
+    s = "erfc(sin(x))+erfc(x*y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(erfc(mul(x, y)), erfc(sin(x)))));
 
     s = "beta(sin(x+3), gamma(2^y+sin(y)))";
     res = parse(s);

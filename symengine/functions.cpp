@@ -2298,6 +2298,32 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     return make_rcp<Erf>(arg);
 }
 
+bool Erfc::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    if (could_extract_minus(*arg))
+        return false;
+    return true;
+}
+
+RCP<const Basic> Erfc::create(const RCP<const Basic> &arg) const
+{
+    return erfc(arg);
+}
+
+RCP<const Basic> erfc(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)
+        and rcp_static_cast<const Integer>(arg)->is_zero()) {
+        return one;
+    }
+    if (could_extract_minus(*arg)) {
+        return add(integer(2), neg((erfc(arg))));
+    }
+    return make_rcp<Erfc>(arg);
+}
+
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg))

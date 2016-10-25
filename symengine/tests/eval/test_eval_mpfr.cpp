@@ -15,6 +15,7 @@ using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::mul;
 using SymEngine::erf;
+using SymEngine::erfc;
 using SymEngine::sub;
 using SymEngine::eval_mpfr;
 using SymEngine::integer_class;
@@ -103,6 +104,12 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     eval_mpfr(a, *r, MPFR_RNDN);
     REQUIRE(mpfr_cmp_d(a, 0.778918254988) == -1);
     REQUIRE(mpfr_cmp_d(a, 0.778918254986) == 1);
+
+    r = erfc(integer(2));
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(a, 0.004677734983) == -1);
+    REQUIRE(mpfr_cmp_d(a, 0.004677734981) == 1);
 
     mpfr_clear(a);
 }

@@ -42,6 +42,7 @@ using SymEngine::acosh;
 using SymEngine::atanh;
 using SymEngine::acoth;
 using SymEngine::erf;
+using SymEngine::erfc;
 using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
@@ -80,6 +81,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         {pow(r1, r2), 0.920580670898},
         {tan(pow(r1, r2)), 1.314847038576},
         {erf(E), 0.9998790689599},
+        {erfc(E), 0.0001209310401},
         {add(sin(r3), add(cos(r4), add(tan(r3), add(sec(integer(6)),
                                                     add(csc(r4), cot(r4)))))),
          0.387875350057},
