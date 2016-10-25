@@ -87,7 +87,8 @@ TEST_CASE("test_probab_prime_p(): ntheory", "[ntheory]")
     RCP<const Integer> i6 = integer(6);
 
     REQUIRE(probab_prime_p(*i1) == 0);
-    REQUIRE(probab_prime_p(*i5) == 2);
+    //REQUIRE(probab_prime_p(*i5) == 2); //should only require nonzero
+    REQUIRE(probab_prime_p(*i5) != 0);
     REQUIRE(probab_prime_p(*i6) == 0);
 }
 
