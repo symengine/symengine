@@ -104,7 +104,7 @@ UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
     }
     if (exp == 0) {
         if (base == 0 or base.get_dict().size() == 0) {
-            throw UndefinedError("Error: 0**0 is undefined.");
+            throw DomainError("Error: 0**0 is undefined.");
         } else {
             return UExprDict(1);
         }

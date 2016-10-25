@@ -129,9 +129,9 @@ RCP<const Number> Infty::mul(const Number &other) const
 RCP<const Number> Infty::div(const Number &other) const
 {
     if (is_a<Infty>(other)) {
-        throw UndefinedError("Indeterminate Expression: "
-                             "`Infty / Infty` "
-                             "encountered");
+        throw DomainError("Indeterminate Expression: "
+                          "`Infty / Infty` "
+                          "encountered");
     } else {
         if (other.is_positive())
             return rcp_from_this_cast<Number>();
