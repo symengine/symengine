@@ -129,6 +129,7 @@ int mp_probab_prime_p(const integer_class &i, unsigned retries)
 void mp_nextprime(integer_class &res, const integer_class &i)
 {
 	//simple implementation:  just check all odds bigger than i for primality
+	if (i < 2) {res=2; return;}
 	integer_class candidate;
 	candidate = (i % 2 == 0) ? i + 1: i+2;
 	//Knuth recommends 25 trials for a pretty strong likelihood that candidate is prime
@@ -247,6 +248,7 @@ void mp_bin_ui(integer_class &res, const integer_class &n, unsigned long r)
 //this is extremely slow!
 bool mp_perfect_power_p(const integer_class &i) 
 {
+	if (i == 0 || i == 1 || i == -1) {return true;}
 	//if i == a**k, with k == pq for some integers p,q
 	//then i == a**(pq) == (a**p)**q == (a**q)**p
 	//hence i is a pth power and a qth power
@@ -260,7 +262,10 @@ bool mp_perfect_power_p(const integer_class &i)
 
 	unsigned long max = std::ilogb(i.convert_to<double>());
 	
-	integer_class p(0);
+	//treat case p=2 separately b/c mp_root throws exception
+	//with an even root of a negative
+	if (mp_perfect_square_p(i)) {return true;}
+	integer_class p(2);
 	integer_class root(0);
 	while (true) {
 		mp_nextprime(p,p);
@@ -271,6 +276,7 @@ bool mp_perfect_power_p(const integer_class &i)
 
 bool mp_perfect_square_p(const integer_class &i) 
 {
+	if (i < 0) {return false;}
 	integer_class root;
 	return mp_root(root, i, 2);
 }
