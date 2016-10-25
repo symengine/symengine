@@ -2,6 +2,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor_double.h>
 
 namespace SymEngine
 {
@@ -341,83 +342,35 @@ void Mul::as_base_exp(const RCP<const Basic> &self,
     }
 }
 
-RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
-{
-    SymEngine::map_basic_basic d;
-    RCP<const Number> coef = one;
-    if (is_a<Mul>(*a) and is_a<Mul>(*b)) {
-        RCP<const Mul> A = rcp_static_cast<const Mul>(a);
-        RCP<const Mul> B = rcp_static_cast<const Mul>(b);
-        // This is important optimization, as coef=1 if Mul is inside an Add.
-        // To further speed this up, the upper level code could tell us that we
-        // are inside an Add, then we don't even have can simply skip the
-        // following two lines.
-        if (not(A->coef_->is_one()) or not(B->coef_->is_one()))
-            coef = mulnum(A->coef_, B->coef_);
-        d = A->dict_;
-        for (const auto &p : B->dict_)
-            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-    } else if (is_a<Mul>(*a)) {
-        RCP<const Basic> exp;
-        RCP<const Basic> t;
-        coef = (rcp_static_cast<const Mul>(a))->coef_;
-        d = (rcp_static_cast<const Mul>(a))->dict_;
-        if (is_a_Number(*b)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(b));
-        } else {
-            Mul::as_base_exp(b, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-    } else if (is_a<Mul>(*b)) {
-        RCP<const Basic> exp;
-        RCP<const Basic> t;
-        coef = (rcp_static_cast<const Mul>(b))->coef_;
-        d = (rcp_static_cast<const Mul>(b))->dict_;
-        if (is_a_Number(*a)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(a));
-        } else {
-            Mul::as_base_exp(a, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-    } else {
-        RCP<const Basic> exp;
-        RCP<const Basic> t;
-        if (is_a_Number(*a)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(a));
-        } else {
-            Mul::as_base_exp(a, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-        if (is_a_Number(*b)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(b));
-        } else {
-            Mul::as_base_exp(b, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-    }
-    return Mul::from_dict(coef, std::move(d));
-}
-
 RCP<const Basic> mul(const vec_basic &a)
 {
-    SymEngine::map_basic_basic d;
+    map_basic_basic d;
     RCP<const Number> coef = one;
+    RCP<const Basic> others = one;
     for (const auto &i : a) {
-        if (is_a<Mul>(*i)) {
-            RCP<const Mul> A = rcp_static_cast<const Mul>(i);
-            imulnum(outArg(coef), A->coef_);
-            for (const auto &p : A->dict_)
-                Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-        } else if (is_a_Number(*i)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(i));
+        if (is_a_Symbolic(*i)) {
+            if (is_a<Mul>(*i)) {
+                RCP<const Mul> A = rcp_static_cast<const Mul>(i);
+                imulnum(outArg(coef), A->coef_);
+                for (const auto &p : A->dict_)
+                    Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
+            } else if (is_a_Number(*i)) {
+                imulnum(outArg(coef), rcp_static_cast<const Number>(i));
+            } else {
+                RCP<const Basic> exp;
+                RCP<const Basic> t;
+                Mul::as_base_exp(i, outArg(exp), outArg(t));
+                Mul::dict_add_term_new(outArg(coef), d, exp, t);
+            }
         } else {
-            RCP<const Basic> exp;
-            RCP<const Basic> t;
-            Mul::as_base_exp(i, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+            others = mul(others, i);
         }
     }
-    return Mul::from_dict(coef, std::move(d));
+    if (eq(*others, *one)) {
+        return Mul::from_dict(coef, std::move(d));
+    } else {
+        return mul(others, Mul::from_dict(coef, std::move(d)));
+    }
 }
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
@@ -500,6 +453,126 @@ vec_basic Mul::get_args() const
         args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
     }
     return args;
+}
+
+class MulVisitor : DoubleDispatchVisitor<MulVisitor>
+{
+public:
+    using DoubleDispatchVisitor::apply;
+    using DoubleDispatchVisitor::dispatch;
+    inline MulVisitor(const RCP<const Basic> &a) : DoubleDispatchVisitor(a){};
+
+    static inline RCP<const Basic> dispatch(const Number &a, const Number &b)
+    {
+        return a.mul(b);
+    }
+
+    template <typename P>
+    static inline RCP<const Basic> dispatch(const P &a, const Mul &b)
+    {
+        return dispatch(b, a);
+    }
+
+    static inline RCP<const Basic> dispatch(const Mul &a, const Mul &b)
+    {
+        if (a.dict_.size() < b.dict_.size()) {
+            return dispatch(b, a);
+        }
+        map_basic_basic d = a.dict_;
+        RCP<const Number> coef = one;
+        // This is important optimization, as coef=1 if Mul is inside an Add.
+        // To further speed this up, the upper level code could tell us that we
+        // are inside an Add, then we can simply skip the following two lines.
+        if ((not a.coef_->is_one()) or (not b.coef_->is_one())) {
+            coef = mulnum(a.coef_, b.coef_);
+        }
+        for (const auto &p : b.dict_) {
+            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
+        }
+        return Mul::from_dict(coef, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Mul &a, const Number &b)
+    {
+        map_basic_basic d = a.dict_;
+        return Mul::from_dict(a.coef_->mul(b), std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Mul &a, const Pow &b)
+    {
+        map_basic_basic d = a.dict_;
+        RCP<const Number> coef = a.coef_;
+        Mul::dict_add_term_new(outArg(coef), d, b.get_exp(), b.get_base());
+        return Mul::from_dict(coef, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Mul &a, const Symbolic &b)
+    {
+        map_basic_basic d = a.dict_;
+        Mul::dict_add_term(d, one, b.rcp_from_this());
+        return Mul::from_dict(a.coef_, std::move(d));
+    }
+
+    static inline RCP<const Basic> dispatch(const Symbolic &a,
+                                            const Symbolic &b)
+    {
+        map_basic_basic d;
+        RCP<const Number> coef = one;
+        RCP<const Basic> exp;
+        RCP<const Basic> t;
+        if (is_a_Number(a)) {
+            imulnum(outArg(coef), a.rcp_from_this_cast<const Number>());
+        } else {
+            Mul::as_base_exp(a.rcp_from_this(), outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
+        if (is_a_Number(b)) {
+            imulnum(outArg(coef), b.rcp_from_this_cast<const Number>());
+        } else {
+            Mul::as_base_exp(b.rcp_from_this(), outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
+        return Mul::from_dict(coef, std::move(d));
+    }
+
+    template <typename P,
+              typename
+              = enable_if_t<std::is_base_of<SeriesCoeffInterface, P>::value>>
+    static inline RCP<const Basic> dispatch(const P &a, const P &b)
+    {
+        return a.mul(b);
+    }
+
+    template <typename P, typename Q,
+              typename = enable_if_t<std::is_base_of<Set, P>::value
+                                     or std::is_base_of<Set, Q>::value
+                                     or std::is_base_of<Boolean, P>::value
+                                     or std::is_base_of<Boolean, Q>::value
+                                     or std::is_base_of<MPoly, P>::value
+                                     or std::is_base_of<MPoly, Q>::value
+                                     or std::is_base_of<GaloisField, P>::value
+                                     or std::is_base_of<GaloisField, Q>::value>>
+    static inline RCP<const Basic> dispatch(const P &a, const Q &b)
+    {
+        throw std::runtime_error("Multiplication is not supported");
+    }
+
+    template <typename Container, typename Poly>
+    static inline RCP<const Poly> dispatch(const UPolyBase<Container, Poly> &a,
+                                           const UPolyBase<Container, Poly> &b)
+    {
+        if (!(a.get_var()->__eq__(*b.get_var())))
+            throw std::runtime_error("Error: variables must agree.");
+        auto dict = a.get_poly();
+        dict *= b.get_poly();
+        return Poly::from_container(a.get_var(), std::move(dict));
+    }
+};
+
+RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    MulVisitor mulvisitor(a);
+    return mulvisitor.apply(b);
 }
 
 } // SymEngine

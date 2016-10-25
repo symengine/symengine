@@ -1,8 +1,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex.h>
-#include <symengine/visitor.h>
-#include <symengine/polys/basic_conversions.h>
+#include <symengine/visitor_double.h>
 
 namespace SymEngine
 {
