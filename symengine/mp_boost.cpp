@@ -206,7 +206,7 @@ inline two_by_two_matrix luc_matrix(unsigned long n)
 {
 	two_by_two_matrix multiplier(1,1,1,0);
     two_by_two_matrix start(1,0,2,0);
-    return multiplier.pow(n-1) * start;
+    return multiplier.pow(n) * start;
 }
 
 void mp_lucnum_ui(integer_class &res, unsigned long n)
@@ -214,13 +214,12 @@ void mp_lucnum_ui(integer_class &res, unsigned long n)
 	// implementation based on the following fact:
 	// [[1,1],[1,0]]^(n-1)*[2,0,1,0] = [[L(n+1),0][L(n),0]]
 	// where L(n) is the nth Lucas number
-	if (n==0) {throw std::runtime_error("index of Lucas number must be greater than 0");}
     res = luc_matrix(n).data[1][0];
 }
 
 void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n)
 {
-	if (n<=1) {throw std::runtime_error("index of both Lucas numbers must be greater than 0");}
+	if (n==0) {throw std::runtime_error("index of lucas number cannot be negative");}
 	two_by_two_matrix result_matrix = luc_matrix(n-1);
 	a = result_matrix.data[0][0];
 	b = result_matrix.data[1][0];
