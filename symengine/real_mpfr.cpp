@@ -86,7 +86,7 @@ RCP<const Number> RealMPFR::addreal(const Complex &other) const
     mpc_add_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), MPFR_RNDN);
     return complex_mpc(std::move(t));
 #else
-    throw SymEngineException("Result is complex. Recompile with MPC support.");
+    throw DomainError("Result is complex. Recompile with MPC support.");
 #endif
 }
 
