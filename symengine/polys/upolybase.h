@@ -256,7 +256,7 @@ public:
     static Wrapper from_poly(const FromPoly &p)
     {
         Wrapper t;
-        for (auto it = p.begin(); it != p.end(); it++)
+        for (auto it = p.begin(); it != p.end(); ++it)
             t.dict_[it->first] = it->second;
         return t;
     }

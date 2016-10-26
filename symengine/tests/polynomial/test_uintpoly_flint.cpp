@@ -1,13 +1,20 @@
 #include "catch.hpp"
 #include <chrono>
 
+#include <symengine/polys/uintpoly.h>
 #include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 #include <symengine/add.h>
 #include <symengine/symengine_exception.h>
 
+#ifdef HAVE_SYMENGINE_PIRANHA
+using SymEngine::UIntPolyPiranha;
+#endif
+
 using SymEngine::SymEngineException;
+using SymEngine::UIntPoly;
 using SymEngine::UIntPolyFlint;
 using SymEngine::Symbol;
 using SymEngine::add;
@@ -279,3 +286,23 @@ TEST_CASE("Derivative of UIntPolyFlint", "[UIntPolyFlint]")
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "8*y");
 }
+
+TEST_CASE("UIntPolyFlint from_poly", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPoly> a
+        = UIntPoly::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_poly(*a);
+    REQUIRE(b->__str__() == "x**2 + 2*x + 1");
+}
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+TEST_CASE("UIntPolyFlint from_poly piranha", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_poly(*a);
+    REQUIRE(b->__str__() == "x**2 + 2*x + 1");
+}
+#endif

@@ -58,7 +58,8 @@ public:
     template <typename FromPoly>
     static RCP<const Poly> from_poly(const FromPoly &p)
     {
-        return from_container(p.var_, Container::from_poly(p));
+        return Poly::from_container(p.get_var(),
+                                    std::move(Container::from_poly(p)));
     }
 
     Cf eval(const Cf &x) const
