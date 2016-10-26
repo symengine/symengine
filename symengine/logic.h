@@ -154,6 +154,7 @@ RCP<const Boolean> logical_and(const set_boolean &s);
 RCP<const Boolean> logical_nand(const set_boolean &s);
 RCP<const Boolean> logical_or(const set_boolean &s);
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
+RCP<const Boolean> logical_nor(const set_boolean &s);
 } // SymEngine
 
 #endif
