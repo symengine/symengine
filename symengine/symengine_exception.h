@@ -6,7 +6,7 @@ typedef enum {
     SYMENGINE_RUNTIME_ERROR = 1,
     SYMENGINE_DIV_BY_ZERO = 2,
     SYMENGINE_NOT_IMPLEMENTED = 3,
-    SYMENGINE_UNDEFINED = 4,
+    SYMENGINE_DOMAIN_ERROR = 4,
     SYMENGINE_PARSE_ERROR = 5,
 } symengine_exceptions_t;
 
@@ -57,11 +57,11 @@ public:
     }
 };
 
-class UndefinedError : public SymEngineException
+class DomainError : public SymEngineException
 {
 public:
-    UndefinedError(const std::string &msg)
-        : SymEngineException(msg, SYMENGINE_UNDEFINED)
+    DomainError(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_DOMAIN_ERROR)
     {
     }
 };

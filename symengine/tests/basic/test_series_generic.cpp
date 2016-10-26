@@ -31,7 +31,7 @@ using SymEngine::Number;
 using SymEngine::umap_int_basic;
 using SymEngine::pi;
 using SymEngine::I;
-using SymEngine::UndefinedError;
+using SymEngine::DomainError;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 using SymEngine::gamma;
@@ -164,7 +164,7 @@ TEST_CASE("Exponentiation of UExprDict with precision", "[UnivariateSeries]")
     REQUIRE(e == c);
     REQUIRE(f == d);
     REQUIRE(g == one);
-    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), UndefinedError);
+    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), DomainError);
 }
 
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
