@@ -29,6 +29,7 @@ using SymEngine::boolean;
 using SymEngine::logical_and;
 using SymEngine::logical_or;
 using SymEngine::logical_not;
+using SymEngine::logical_nor;
 using SymEngine::set_boolean;
 
 TEST_CASE("BooleanAtom : Basic", "[basic]")
@@ -174,6 +175,24 @@ TEST_CASE("And, Or : Basic", "[basic]")
         *logical_or({c1, logical_and({c2, c3, c4}), logical_and({c2, c4}),
                      logical_and({c2, c3, c4}), c1, logical_and({c2, c4})}),
         *logical_or({c1, logical_and({c2, c3, c4}), logical_and({c2, c4})})));
+}
+
+TEST_CASE("Nor : Basic", "[basic]")
+{
+    REQUIRE(eq(*logical_nor({boolTrue}), *boolFalse));
+    REQUIRE(eq(*logical_nor({boolFalse}), *boolTrue));
+
+    auto x = symbol("x");
+    auto int1 = interval(integer(1), integer(2), false, false);
+    auto int2 = interval(integer(1), integer(5), false, false);
+    auto c1 = contains(x, int1);
+    auto c2 = contains(x, int2);
+
+    REQUIRE(eq(*logical_nor({boolTrue, c1}), *boolFalse));
+    REQUIRE(eq(*logical_nor({boolFalse, c1}), *logical_not(c1)));
+    REQUIRE(eq(*logical_nor({boolTrue, boolTrue, boolTrue}), *boolFalse));
+    REQUIRE(eq(*logical_nor({boolTrue, boolTrue, c1}), *boolFalse));
+    REQUIRE(eq(*logical_nor({boolTrue, boolFalse, c1}), *boolFalse));
 }
 
 TEST_CASE("Not : Basic", "[basic]")
