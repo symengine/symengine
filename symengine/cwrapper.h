@@ -182,6 +182,8 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long i, long j);
 //! Assign to s, a rational i/j, where i and j are unsigned longs.
 CWRAPPER_OUTPUT_TYPE rational_set_ui(basic s, unsigned long i, unsigned long j);
+//! Returns s as a mpq_t.
+CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s);
 //! Assign to s, a rational i, where is of type mpq_t.
 CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i);
 
