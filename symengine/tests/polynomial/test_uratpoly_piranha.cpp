@@ -4,7 +4,15 @@
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uratpoly.h>
+#include <symengine/polys/uintpoly.h>
 
+#ifdef HAVE_SYMENGINE_FLINT
+using SymEngine::URatPolyFlint;
+#endif
+using SymEngine::URatPoly;
+using SymEngine::UIntPoly;
 using SymEngine::SymEngineException;
 using SymEngine::URatPolyPiranha;
 using SymEngine::Symbol;
@@ -277,3 +285,28 @@ TEST_CASE("URatPolyPiranha divides", "[URatPolyPiranha]")
     REQUIRE(res->__str__() == "1/4*x + 1/4");
     REQUIRE(!divides_upoly(*a, *b, outArg(res)));
 }
+
+TEST_CASE("URatPolyPiranha from_poly symengine", "[URatPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {2, 1_z}});
+    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_poly(*a);
+
+    RCP<const URatPoly> c
+        = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
+    RCP<const URatPolyPiranha> d = URatPolyPiranha::from_poly(*c);
+
+    REQUIRE(b->__str__() == "x**2 + 1");
+    REQUIRE(d->__str__() == "3/2*x**2 + 1/2");
+}
+
+#ifdef HAVE_SYMENGINE_FLINT
+TEST_CASE("URatPolyPiranha from_poly flint", "[URatPolyPiranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const URatPolyFlint> a
+        = URatPolyFlint::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
+    RCP<const URatPolyPiranha> b = URatPolyPiranha::from_poly(*a);
+    REQUIRE(b->__str__() == "3/2*x**2 + 1/2");
+}
+#endif
