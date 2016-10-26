@@ -252,6 +252,15 @@ public:
         return (res * tmp);
     }
 
+    template <typename FromPoly>
+    static Wrapper from_poly(const FromPoly &p)
+    {
+        Wrapper t;
+        for (auto it = p.begin(); it != p.end(); it++)
+            t.dict_[it->first] = it->second;
+        return t;
+    }
+
     friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
     {
         return Wrapper::mul(a, b);
