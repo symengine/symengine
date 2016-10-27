@@ -645,6 +645,12 @@ public:
     }
 };
 
+template <typename P>
+struct is_a_UPoly {
+    static const bool value
+        = std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value;
+};
+
 template <typename Poly>
 RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 {

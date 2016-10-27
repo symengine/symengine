@@ -204,7 +204,8 @@ public:
     }
 
     template <typename FromPoly>
-    static RCP<const Poly> from_poly(const FromPoly &f)
+    static enable_if_t<is_a_UPoly<FromPoly>::value, RCP<const Poly>>
+    from_poly(const FromPoly &f)
     {
         Container p;
         piranha::symbol_set ss(

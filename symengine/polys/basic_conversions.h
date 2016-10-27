@@ -18,8 +18,7 @@ RCP<const P> from_basic(const RCP<const Basic> &basic,
 // `ex` is the optional parameter for expanding the given `basic` or not.
 
 template <typename P>
-enable_if_t<std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value,
-            RCP<const P>>
+enable_if_t<is_a_UPoly<P>::value, RCP<const P>>
 from_basic(const RCP<const Basic> &basic, bool ex = false);
 
 template <typename T, typename P>
@@ -229,8 +228,7 @@ RCP<const P> from_basic(const RCP<const Basic> &basic,
 }
 
 template <typename P>
-enable_if_t<std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value,
-            RCP<const P>>
+enable_if_t<is_a_UPoly<P>::value, RCP<const P>>
 from_basic(const RCP<const Basic> &basic, bool ex)
 {
     RCP<const Basic> exp = basic;

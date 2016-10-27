@@ -271,8 +271,8 @@ TEST_CASE("URatPoly from_poly piranha", "[URatPoly]")
 TEST_CASE("URatPoly from_poly flint", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const URatPolyPiranha> a
-        = URatPolyPiranha::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
+    RCP<const URatPolyFlint> a
+        = URatPolyFlint::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
     RCP<const URatPoly> b = URatPoly::from_poly(*a);
     REQUIRE(b->__str__() == "3/2*x**2 + 1/2");
 }
