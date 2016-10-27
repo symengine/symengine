@@ -364,4 +364,9 @@ RCP<const Boolean> logical_or(const set_boolean &s)
 {
     return and_or<Or>(s, true);
 }
+
+RCP<const Boolean> logical_nor(const set_boolean &s)
+{
+    return logical_not(and_or<Or>(s, true));
+}
 }
