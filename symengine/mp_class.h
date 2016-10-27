@@ -1,12 +1,13 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
-//Once GMP is an optional dependency, this include
-//will be unnecessary in non-GMP builds
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 #include <symengine/mp_wrapper.h>
+#endif
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
 #include <boost/multiprecision/cpp_int.hpp>
+#include <symengine/symengine_rcp.h>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
@@ -42,8 +43,10 @@ namespace SymEngine
  */
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
-typedef boost::multiprecision::cpp_int integer_class;
-typedef boost::multiprecision::cpp_rational rational_class;
+typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>,
+                                      boost::multiprecision::et_off> integer_class;
+typedef boost::multiprecision::number<boost::multiprecision::cpp_rational_backend,
+                                      boost::multiprecision::et_off> rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
 typedef piranha::rational rational_class;
@@ -734,20 +737,13 @@ inline bool mp_fits_slong_p(const integer_class &i)
 inline void mp_and(integer_class &res, const integer_class &a,
                    const integer_class &b)
 {
-  res = a & b;
-  //boost::multiprecision::default_ops::eval_bitwise_and(res,b); //not faster
+  res = boost::multiprecision::operator&(a,b);
 }
 
 inline void mp_pow_ui(integer_class &res, const integer_class &i,
                       unsigned long n)
 {
     res = boost::multiprecision::pow(i,n);
-}
-
-inline void mp_powm(integer_class &res, const integer_class &a,
-                    const integer_class &b, const integer_class &m)
-{
-    res = boost::multiprecision::powm(a,b,m);
 }
 
 inline void mp_gcd(integer_class &res, const integer_class &a,
@@ -863,6 +859,8 @@ inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
 }
 
 void mp_pow_ui(rational_class &res, const rational_class &i, unsigned long n);
+
+void mp_powm(integer_class &res, const integer_class &a, const integer_class &b, const integer_class &m);
 
 /*  Extended Euclidean algorithm in Z
  *  inargs:  integers a, b

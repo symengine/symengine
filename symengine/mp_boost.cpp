@@ -4,9 +4,9 @@
 #include <boost/math/special_functions.hpp>
 #include <utility>
 #include <cmath>
+#include <symengine/symengine_assert.h>
+#include <symengine/symengine_exception.h>
 
-using boost::multiprecision::cpp_int;
-using boost::multiprecision::cpp_rational;
 using boost::multiprecision::numerator;
 using boost::multiprecision::denominator;
 using boost::multiprecision::pow;
@@ -70,24 +70,41 @@ integer_class fmod(const integer_class &a,const integer_class &mod)
 	return res;
 }
 
-void mp_pow_ui(cpp_rational &res, const cpp_rational &i, unsigned long n)
+void mp_pow_ui(rational_class &res, const rational_class &i, unsigned long n)
 {
-	cpp_int num = numerator(i); //copy
-	cpp_int den = denominator(i); //copy
+	integer_class num = numerator(i); //copy
+	integer_class den = denominator(i); //copy
 	num = pow(num,n);
 	den = pow(den,n);
-	res = cpp_rational(std::move(num),std::move(den));
+	res = rational_class(std::move(num),std::move(den));
+}
+
+void mp_powm(integer_class &res, const integer_class &base,
+                    const integer_class &exp, const integer_class &m)
+{
+	//if exp is negative, interpret as follows
+	//base**(exp) mod m 	== (base**(-1))**abs(exp) mod m
+	// 						== (base**(-1) mod m) ** abs(exp) mod m
+	// where base**(-1) mod m is the modular inverse
+	if (exp < 0) {
+		integer_class base_inverse;
+		if (!mp_invert(base_inverse,base,m)) {throw SymEngine::UndefinedError("negative exponent undefined in powm if base is not invertible mod m");}
+		res = boost::multiprecision::powm(base_inverse,mp_abs(exp),m);
+	} else {
+		res = boost::multiprecision::powm(base,exp,m);
+	}
 }
 
 integer_class step(const unsigned long &n, const integer_class &i, integer_class &x)
 {
+	SYMENGINE_ASSERT(n > 1);
 	unsigned long m = n - 1;
 	integer_class &&x_m = pow(x,m);
 	return integer_class((integer_class(m*x) + integer_class(i/x_m))/n);
 }
 
 bool positive_root(integer_class &res, const integer_class &i, const unsigned long n)
-{
+{	
 	integer_class x = 1; //TODO: make a better starting guess based on (number of bits)/n
     integer_class y = step(n,i,x);
     do
@@ -100,10 +117,11 @@ bool positive_root(integer_class &res, const integer_class &i, const unsigned lo
     return false;
 }
 
-//return true if it is an exact root
+//return true if i is a perfect nth power, i.e. res**i == n
 bool mp_root(integer_class &res, const integer_class &i, const unsigned long n)
 {
 	if (n == 0) {throw std::runtime_error("0th root is undefined");}
+	if (n == 1) {res = i; return true;}
 	if (i == 0) {res = 0; return true;}
 	if (i > 0) {return positive_root(res, i, n);}
 	if (i < 0 && (n % 2 == 0)) {throw std::runtime_error("even root of a negative is non-real");}
