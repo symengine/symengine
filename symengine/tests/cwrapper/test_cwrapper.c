@@ -70,7 +70,14 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
-    
+
+    mpq_t testr;
+    mpq_init(testr);
+
+    rational_set_ui(e, 2, 4);
+    rational_get_mpq(testr, e);
+    SYMENGINE_C_ASSERT(mpq_cmp_ui(testr, 1, 2) == 0);
+
     integer_set_si(e, 0);
     SYMENGINE_C_ASSERT(integer_get_si(e) == 0);
     SYMENGINE_C_ASSERT(basic_number_sign(e) == 0);
@@ -97,6 +104,7 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
 
+    mpq_clear(testr);
     mpz_clear(test);
     basic_free_stack(f);
     basic_free_stack(e);
