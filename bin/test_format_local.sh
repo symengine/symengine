@@ -11,7 +11,7 @@ CLANG_FORMAT="clang-format"
 
 which "clang-format-3.7" > /dev/null && CLANG_FORMAT="clang-format-3.7"
 
-FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
+FILES=`git ls-files | grep -E "\.(cpp|h|hpp|c)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
 for FILE in $FILES; do
     if [ "$NAME" != "pre-commit" ]; then
