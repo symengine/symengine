@@ -19,6 +19,34 @@ using boost::mpl::int_;
 namespace SymEngine
 {
 
+void mp_fdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b)
+{
+  /*boost::multiprecision doesn't have a built-in fdiv_qr (floored division).
+    Its divide_qr uses truncated division, as does its
+    modulus operator. Thus, using boost::multiprecision::divide_qr we get:
+    divide_qr(-5, 3, quo, rem) //quo == -1, rem == -2
+    divide_qr(5, -3, quo, rem) //quo == -1, rem == 2
+    but we want:
+    mp_fdiv_r(quo, rem, -5, 3) //quo == -2, rem == 1
+    mp_fdiv_r(quo, rem, 5, -3) //rem == -2, rem == -1
+    The problem arises only when the quotient is negative.  To convert
+    a truncated result into a floored result in this case, simply subtract 
+    one from the truncated quotient and add the divisor to the truncated
+    remainder.
+    */
+
+  //must copy a and b before calling divide_qr because a or b may refer to the same
+  //object as q or r, causing incorrect results
+  integer_class a_cpy = a, b_cpy = b;
+  bool needs_flooring = ((a < 0 && b > 0) || (a > 0 && b < 0)) ? true : false; 
+  boost::multiprecision::divide_qr(a_cpy,b_cpy,q,r);
+  if (needs_flooring) {
+    q -= 1;
+    if (r<0) {r += b_cpy;}
+  }
+}
+
 void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
                       const integer_class &a, const integer_class &b)
 {
@@ -90,6 +118,7 @@ void mp_powm(integer_class &res, const integer_class &base,
 		integer_class base_inverse;
 		if (!mp_invert(base_inverse,base,m)) {throw SymEngine::UndefinedError("negative exponent undefined in powm if base is not invertible mod m");}
 		res = boost::multiprecision::powm(base_inverse,mp_abs(exp),m);
+		return;
 	} else {
 		res = boost::multiprecision::powm(base,exp,m);
 	}
@@ -305,7 +334,8 @@ bool mp_perfect_square_p(const integer_class &i)
 // but it is up to the caller to very this.
 int mp_legendre(const integer_class &a, const integer_class &n)
 {
-	integer_class res = boost::multiprecision::powm(a,integer_class((n-1)/2),n);
+	integer_class res;
+	mp_powm(res,a,integer_class((n-1)/2),n);
 	return res <= 1 ? res.convert_to<int>() : -1;
 }	
 

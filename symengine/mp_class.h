@@ -752,28 +752,8 @@ inline void mp_gcd(integer_class &res, const integer_class &a,
     res = boost::multiprecision::gcd(a,b);
 }
 
-inline void mp_fdiv_qr(integer_class &q, integer_class &r,
-                       const integer_class &a, const integer_class &b)
-{
-  /*boost::multiprecision doesn't have a built-in fdiv_qr (floored division).
-    Its divide_qr uses truncated division, as does its
-    modulus operator. Thus, using boost::multiprecision::divide_qr we get:
-    divide_qr(-5, 3, quo, rem) //quo == -1, rem == -2
-    divide_qr(5, -3, quo, rem) //quo == -1, rem == 2
-    but we want:
-    mp_fdiv_r(quo, rem, -5, 3) //quo == -2, rem == 1
-    mp_fdiv_r(quo, rem, 5, -3) //rem == -2, rem == -1
-    The problem arises only when the quotient is negative.  To convert
-    a truncated result into a floored result in this case, simply subtract 
-    one from the truncated quotient and add the divisor to the truncated
-    remainder.
-    */
-  boost::multiprecision::divide_qr(a,b,q,r);
-  if ((a < 0 && b > 0) || (a > 0 && b < 0)) {
-    q -= 1;
-    r += b;
-  }
-}
+void mp_fdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b);
 
 inline void mp_fdiv_r(integer_class &res, const integer_class &a,
                       const integer_class &b)
