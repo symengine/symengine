@@ -26,6 +26,7 @@ using SymEngine::vec_basic;
 using SymEngine::vec_uint;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::MExprPoly;
+using SymEngine::UExprPoly;
 
 using namespace SymEngine::literals;
 
@@ -752,4 +753,15 @@ TEST_CASE("Testing Precedence of MExprPoly", "[MExprPoly]")
     REQUIRE(Prec.getPrecedence(p5) == PrecedenceEnum::Mul);
     REQUIRE(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
     REQUIRE(Prec.getPrecedence(p7) == PrecedenceEnum::Mul);
+}
+
+TEST_CASE("MExprPoly from_poly", "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const MExprPoly> mpoly
+        = MExprPoly::from_dict({x}, {{{1}, y}, {{2}, 3_z}});
+    RCP<const UExprPoly> upoly = UExprPoly::from_vec(x, {0_z, y, 3_z});
+
+    REQUIRE(eq(*MExprPoly::from_poly(*upoly), *mpoly));
 }
