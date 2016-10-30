@@ -73,7 +73,6 @@ void test_cwrapper()
 
     mpq_t testr;
     mpq_init(testr);
-    mpq_canonicalize(testr);
     basic a, b;
     basic_new_stack(a);
     basic_new_stack(b);
