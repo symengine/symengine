@@ -37,6 +37,7 @@ using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
 using SymEngine::get_mpz_t;
+using SymEngine::get_mpq_t;
 using SymEngine::mp_get_ui;
 using SymEngine::mp_get_si;
 using SymEngine::eye;
@@ -358,6 +359,15 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic a, const basic b)
         *(rcp_static_cast<const Integer>(a->m)),
         *(rcp_static_cast<const Integer>(b->m)));
     return SYMENGINE_NO_EXCEPTION;
+}
+
+CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Rational>(*(s->m)));
+    mpq_set(a, get_mpq_t((rcp_static_cast<const Rational>(s->m))
+                             ->as_rational_class()));
+    CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
