@@ -73,8 +73,14 @@ void test_cwrapper()
 
     mpq_t testr;
     mpq_init(testr);
+    mpq_canonicalize(testr);
+    basic a, b;
+    basic_new_stack(a);
+    basic_new_stack(b);
 
-    rational_set_ui(e, 2, 4);
+    integer_set_ui(a, 2);
+    integer_set_ui(b, 4);
+    rational_set(e, a, b);
     rational_get_mpq(testr, e);
     SYMENGINE_C_ASSERT(mpq_cmp_ui(testr, 1, 2) == 0);
 
@@ -112,6 +118,8 @@ void test_cwrapper()
     basic_free_stack(y);
     basic_free_stack(z);
     basic_free_stack(p);
+    basic_free_stack(a);
+    basic_free_stack(b);
     basic_str_free(s);
 }
 
