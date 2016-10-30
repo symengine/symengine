@@ -699,6 +699,9 @@ inline int mp_sign(const integer_class &i)
 
 inline integer_class mp_sqrt(const integer_class &i)
 {
+    //for some reason, boost::multiprecision::sqrt(1) == 0
+    //for other values, boost's sqrt function seems to behave as expected
+    if (i == 1) {return 1;}
     return boost::multiprecision::sqrt(i);
 }
 
