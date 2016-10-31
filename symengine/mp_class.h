@@ -701,6 +701,8 @@ inline integer_class mp_sqrt(const integer_class &i)
 {
     //for some reason, boost::multiprecision::sqrt(1) == 0
     //for other values, boost's sqrt function seems to behave as expected
+    //should do further testing; see bug report here:
+    //https://svn.boost.org/trac/boost/ticket/12559
     if (i == 1) {return 1;}
     return boost::multiprecision::sqrt(i);
 }
@@ -785,7 +787,7 @@ inline void mp_divexact(integer_class &q, const integer_class &a,
                         const integer_class &b)
 {
     //TODO: make faster
-    mp_fdiv_q(q,a,b);
+    q = a/b;
 }
 
 inline void mp_lcm(integer_class &q, const integer_class &a,

@@ -39,17 +39,18 @@ void mp_fdiv_qr(integer_class &q, integer_class &r,
   //must copy a and b before calling divide_qr because a or b may refer to the same
   //object as q or r, causing incorrect results
   integer_class a_cpy = a, b_cpy = b;
-  bool needs_flooring = ((a < 0 && b > 0) || (a > 0 && b < 0)) ? true : false; 
+  bool neg_quotient = ((a < 0 && b > 0) || (a > 0 && b < 0)) ? true : false; 
   boost::multiprecision::divide_qr(a_cpy,b_cpy,q,r);
-  if (needs_flooring) {
-    q -= 1;
-    if (r<0) {r += b_cpy;}
-  }
+  // floor the quotient if necessary
+  if (neg_quotient && r!=0) {q -= 1;}
+  //remainder should have same sign as divisor
+  if ((b_cpy > 0 && r<0) || (b_cpy < 0 && r > 0)) {r += b_cpy; return;}
 }
 
 void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
                       const integer_class &a, const integer_class &b)
 {
+
   integer_class this_s(1);
   integer_class this_t(0);
   integer_class next_s(0);
@@ -58,6 +59,10 @@ void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
   integer_class next_r(b);
   integer_class q;
   while (next_r != 0) {
+  	//should use truncated division, so use boost::multiprecision::divide_qr
+  	//beware of overwriting this_r during internal operations of divide_qr
+  	//copy it first
+  	integer_class this_r_cpy = this_r;
     boost::multiprecision::divide_qr(this_r, next_r, q, this_r);
     this_s -= q*next_s;
     this_t -= q*next_t;
@@ -85,6 +90,8 @@ bool mp_invert(integer_class &res, const integer_class &a,
       res = 0;
       return false;
     } else {
+      mp_fdiv_r(s,s,m); //reduce s modulo m.  undefined behavior when m == 0, so don't need to check
+      if (s < 0) {s += mp_abs(m);} //give the canonical representative of s
       res = s;
       return true;
     }
@@ -186,6 +193,7 @@ void mp_nextprime(integer_class &res, const integer_class &i)
 
 unsigned long mp_scan1(const integer_class &i)
 {
+	if (i == 0) {return ULONG_MAX;}
 	return find_lsb(i,int_<0>());
 }
 
