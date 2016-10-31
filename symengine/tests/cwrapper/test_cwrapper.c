@@ -740,6 +740,7 @@ void test_functions()
     basic_csc(ans, pi_div_two);
     s = basic_str(ans);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
+    basic_str_free(s);
 
     basic_sec(ans, pi);
     SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
