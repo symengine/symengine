@@ -128,6 +128,9 @@ void mp_powm(integer_class &res, const integer_class &base,
 		return;
 	} else {
 		res = boost::multiprecision::powm(base,exp,m);
+		//boost's powm calculates base**exp % m, but uses truncated
+		//modulus, e.g. powm(-2,3,5) == -3.  We want powm(-2,3,5) == 2
+		if (res < 0) {res += m;}
 	}
 }
 
