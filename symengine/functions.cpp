@@ -264,7 +264,7 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
             get_num(m) = t;
             #else
             integer_class quo;
-            mp_fdiv_qr(t,quo,get_num(m),get_den(m));
+            mp_fdiv_qr(quo,t,get_num(m),get_den(m));
             m -= rational_class(quo);
             #endif
             // m = a / b => m = (a % b / b)
