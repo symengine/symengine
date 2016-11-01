@@ -10,6 +10,10 @@
 #include <symengine/polys/upolybase.h>
 #include <symengine/polys/uintpoly.h>
 #include <random>
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#endif
 namespace SymEngine
 {
 class GaloisFieldDict
@@ -115,7 +119,7 @@ public:
     GaloisFieldDict gf_random(const unsigned int &n_val,
                               gmp_randstate_t &state) const;
     #else
-    GaloisFieldDict gf_random(const unsigned int &n_val) const;
+    GaloisFieldDict gf_random(const unsigned int &n_val, boost::random::mt19937 &twister) const;
     #endif
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,

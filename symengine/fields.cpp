@@ -685,13 +685,13 @@ GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
     return GaloisFieldDict::from_vec(v, modulo_);
 }
 #else
-GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val) const
+GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
+                                           boost::random::mt19937 &twister) const
 {
     std::vector<integer_class> v(n_val + 1);
-    boost::random::mt19937 mt;
     boost::random::uniform_int_distribution<integer_class> ui(0,modulo_);
     for (unsigned i = 0; i < n_val; ++i) {
-        v[i] = ui(mt);
+        v[i] = ui(twister);
     }
     v[n_val] = 1_z;
     return GaloisFieldDict::from_vec(v, modulo_);
@@ -715,12 +715,14 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed_ui(state, std::rand());
+    #else
+    boost::random::mt19937 mt;
     #endif
     while (factors.size() < N) {
         #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
         auto r = gf_random(2 * n - 1, state);
         #else
-        auto r = gf_random(2 * n - 1);
+        auto r = gf_random(2 * n - 1, mt);
         #endif
         GaloisFieldDict g;
         if (modulo_ == 2_z) {
@@ -820,7 +822,8 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
     gmp_randseed_ui(state, std::rand());
     auto r = gf_random(N - 1, state);
     #else
-    auto r = gf_random(N - 1);
+    boost::random::mt19937 mt;
+    auto r = gf_random(N - 1,mt);
     #endif
     if (modulo_ == 2_z) {
         auto h = gf_pow_mod(x, mp_get_ui(modulo_));
