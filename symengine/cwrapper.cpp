@@ -568,6 +568,33 @@ void basic_str_free(char *s)
     delete[] s;
 }
 
+int symengine_have_component(const char *c)
+{
+    bool t[4] = {};
+#ifdef HAVE_SYMENGINE_MPFR
+    t[0] = true;
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    t[1] = true;
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+    t[2] = true;
+#endif
+#ifdef HAVE_SYMENGINE_ARB
+    t[3] = true;
+#endif
+    const char *component[] = {"mpfr", "mpc", "flint", "arb"};
+    for (int i = 0; i < 4; i++) {
+        if (std::strcmp(component[i], c) == 0) {
+            if (t[i])
+                return 1;
+            else
+                return 0;
+        }
+    }
+    return 0;
+}
+
 int is_a_Number(const basic s)
 {
     return (int)is_a_Number(*(s->m));
