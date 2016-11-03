@@ -33,7 +33,7 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TRIGGER_FEEDSTOCK="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
-  # Debug build (with BFD) with ECM
+  # Debug build (with BFD) with ECM, MPC and PRIMESIEVE
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_MPC="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD) with Arb
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
