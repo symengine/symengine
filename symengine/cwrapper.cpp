@@ -570,28 +570,22 @@ void basic_str_free(char *s)
 
 int symengine_have_component(const char *c)
 {
-    bool t[4] = {};
 #ifdef HAVE_SYMENGINE_MPFR
-    t[0] = true;
+    if (std::strcmp("mpfr", c) == 0)
+        return 1;
 #endif
 #ifdef HAVE_SYMENGINE_MPC
-    t[1] = true;
+    if (std::strcmp("mpc", c) == 0)
+        return 1;
 #endif
 #ifdef HAVE_SYMENGINE_FLINT
-    t[2] = true;
+    if (std::strcmp("flint", c) == 0)
+        return 1;
 #endif
 #ifdef HAVE_SYMENGINE_ARB
-    t[3] = true;
+    if (std::strcmp("arb", c) == 0)
+        return 1;
 #endif
-    const char *component[] = {"mpfr", "mpc", "flint", "arb"};
-    for (int i = 0; i < 4; i++) {
-        if (std::strcmp(component[i], c) == 0) {
-            if (t[i])
-                return 1;
-            else
-                return 0;
-        }
-    }
     return 0;
 }
 
