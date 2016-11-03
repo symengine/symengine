@@ -301,6 +301,8 @@ char *basic_str(const basic s);
 void basic_str_free(char *s);
 
 //! Returns 1 if a specific component is installed, 0 if not.
+//! Component can be "mpfr", "flint", "arb", "mpc", "ecm", "primesieve",
+//! "piranha", "boost", "pthread" or "llvm".
 int symengine_have_component(const char *c);
 
 //! Return 1 if s is a Number, 0 if not.

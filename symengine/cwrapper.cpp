@@ -586,6 +586,30 @@ int symengine_have_component(const char *c)
     if (std::strcmp("arb", c) == 0)
         return 1;
 #endif
+#ifdef HAVE_SYMENGINE_ECM
+    if (std::strcmp("ecm", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
+    if (std::strcmp("primesieve", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+    if (std::strcmp("piranha", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_BOOST
+    if (std::strcmp("boost", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PTHREAD
+    if (std::strcmp("pthread", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_LLVM
+    if (std::strcmp("llvm", c) == 0)
+        return 1;
+#endif
     return 0;
 }
 
