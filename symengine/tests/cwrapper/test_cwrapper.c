@@ -678,9 +678,13 @@ void test_constants()
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);
     basic_str_free(s);
 
-    // Rejecting non mpfr builds
+    // Checking mpfr builds
     s = "mpfr";
+#ifdef HAVE_SYMENGINE_MPFR
     SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
 
     basic_free_stack(custom);
     basic_free_stack(pi);
