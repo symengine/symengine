@@ -134,6 +134,8 @@ benchmarks/expand7_ginac
 benchmarks/series_expansion_sincos_piranha
 benchmarks/series_expansion_sinp
 benchmarks/series_expansion_sincos_flint
+benchmarks/ntheorybench
+benchmarks/symengine_bench
 
 #rubygem
 symengine/ruby/Gemfile.lock
