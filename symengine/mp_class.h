@@ -697,22 +697,6 @@ inline int mp_sign(const integer_class &i)
     return boost::multiprecision::sign(i);
 }
 
-inline integer_class mp_sqrt(const integer_class &i)
-{
-    //for some reason, boost::multiprecision::sqrt(1) == 0
-    //for other values, boost's sqrt function seems to behave as expected
-    //should do further testing; see bug report here:
-    //https://svn.boost.org/trac/boost/ticket/12559
-    if (i == 1) {return 1;}
-    return boost::multiprecision::sqrt(i);
-}
-
-inline void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i)
-{
-    a = mp_sqrt(i);
-    b = i - boost::multiprecision::pow(a,2);
-}
-
 inline double mp_get_d(const integer_class &i)
 {
     return i.convert_to<double>();
@@ -860,11 +844,14 @@ bool mp_invert(integer_class &res, const integer_class &a, const integer_class &
 
 bool mp_root(integer_class &res, const integer_class &i, unsigned long n);
 
+integer_class mp_sqrt(const integer_class &i);
+
 void mp_rootrem(integer_class &a, integer_class &b,
                        const integer_class &i, unsigned long n);
 
-int mp_probab_prime_p(const integer_class &i, unsigned retries);
+void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i);
 
+int mp_probab_prime_p(const integer_class &i, unsigned retries);
 
 void mp_nextprime(integer_class &res, const integer_class &i);
 

@@ -169,12 +169,28 @@ bool mp_root(integer_class &res, const integer_class &i, const unsigned long n)
 	return b;
 }
 
+integer_class mp_sqrt(const integer_class &i)
+{
+    //as of 11/1/2016, boost::multiprecision::sqrt() is buggy:
+    //https://svn.boost.org/trac/boost/ticket/12559
+    //implement with mp_root for now
+	integer_class res;
+	mp_root(res,i,2);
+	return res;
+}
+
 void mp_rootrem(integer_class &a, integer_class &b,
                        const integer_class &i, unsigned long n)
 {
     mp_root(a,i,n);
     integer_class p = pow(a,n);;
     b = i - p;
+}
+
+void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i)
+{
+    a = mp_sqrt(i);
+    b = i - boost::multiprecision::pow(a,2);
 }
 
 //return nonzero if i is probably prime.
