@@ -63,7 +63,7 @@ void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
   	//beware of overwriting this_r during internal operations of divide_qr
   	//copy it first
   	integer_class this_r_cpy = this_r;
-    boost::multiprecision::divide_qr(this_r, next_r, q, this_r);
+    boost::multiprecision::divide_qr(this_r_cpy, next_r, q, this_r);
     this_s -= q*next_s;
     this_t -= q*next_t;
     std::swap(this_s, next_s);
