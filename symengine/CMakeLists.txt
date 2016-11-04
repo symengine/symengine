@@ -52,8 +52,11 @@ set(SRC
     infinity.cpp
     logic.cpp
     finitediff.cpp
-    mp_boost.cpp
 )
+
+if ("${INTEGER_CLASS}" MATCHES "boostmp")
+    set(SRC ${SRC} mp_boost.cpp)
+endif()
 
 if (WITH_MPFR)
     set(SRC ${SRC} eval_mpfr.cpp real_mpfr.cpp)
