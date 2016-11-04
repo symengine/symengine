@@ -108,6 +108,23 @@ matrix:
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
+<<<<<<< e7fc72819e6c87e89eec5b232001b15595bff1de
+=======
+          - llvm-3.8-dev
+          - cmake
+          - cmake-data
+    - env: BUILD_TYPE="Debug" WITH_ASAN="yes"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
+>>>>>>> Added Changes with MSAN and ASAN (Only Debug Mode Tested)
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
