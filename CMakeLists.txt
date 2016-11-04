@@ -209,6 +209,34 @@ if (WITH_PRIMESIEVE)
     set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
+# Memory Sanitizer
+set (WITH_MSAN no
+     CACHE BOOL "Build with Memory Sanitizer")
+
+if (WITH_MSAN)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=memory")
+    else ()
+        set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=memory")
+    endif()
+endif()
+
+# Address Sanitizer
+set (WITH_ASAN no
+     CACHE BOOL "Build with Address Sanitizer")
+
+if (WITH_ASAN)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
+    else ()
+        set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=address")
+    endif()
+endif()
+
 # ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
@@ -625,6 +653,10 @@ if (WITH_FLINT)
     message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
     message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
 endif()
+
+message("WITH_MSAN: ${WITH_MSAN}")
+
+message("WITH_ASAN: ${WITH_ASAN}")
 
 message("WITH_ARB: ${WITH_ARB}")
 if (WITH_ARB)

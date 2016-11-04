@@ -42,6 +42,12 @@ fi
 if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PRIMESIEVE=${WITH_PRIMESIEVE}"
 fi
+if [[ "${WITH_MSAN}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_MSAN=${WITH_MSAN}"
+fi
+if [[ "${WITH_ASAN}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_ASAN=${WITH_ASAN}"
+fi
 if [[ "${WITH_ARB}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ARB=${WITH_ARB}"
 fi
