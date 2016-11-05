@@ -48,6 +48,9 @@ fi
 if [[ "${WITH_ASAN}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ASAN=${WITH_ASAN}"
 fi
+if [[ "${WITH_TSAN}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_TSAN=${WITH_TSAN}"
+fi
 if [[ "${WITH_ARB}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ARB=${WITH_ARB}"
 fi
@@ -124,7 +127,7 @@ echo "Running tests using installed SymEngine:"
 cd $SOURCE_DIR/benchmarks
 
 compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK -fsanitize=address`
 
 ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH

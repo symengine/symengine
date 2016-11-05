@@ -124,7 +124,21 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
+<<<<<<< 736230b0697302441b8d08e85780b8a40544b195
 >>>>>>> Added Changes with MSAN and ASAN (Only Debug Mode Tested)
+=======
+    - env: BUILD_TYPE="Debug" WITH_TSAN="yes"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
+>>>>>>> Added Thread Sanitizer and Link Flag for ASAN
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux

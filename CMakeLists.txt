@@ -239,6 +239,22 @@ if (WITH_ASAN)
     endif()
 endif()
 
+# Thread Sanitizer
+set (WITH_TSAN no
+        CACHE BOOL "Build with Thread Sanitizer")
+
+if (WITH_TSAN)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_CXX_FLAGS_DEBUG
+                "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
+        set(CMAKE_C_FLAGS_DEBUG
+                "${CMAKE_C_FLAGS_DEBUG} -fPIC")
+    else ()
+        set(CMAKE_CXX_FLAGS_RELEASE
+                "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=thread")
+    endif()
+endif()
+
 # ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
@@ -659,6 +675,8 @@ endif()
 message("WITH_MSAN: ${WITH_MSAN}")
 
 message("WITH_ASAN: ${WITH_ASAN}")
+
+message("WITH_TSAN: ${WITH_TSAN}")
 
 message("WITH_ARB: ${WITH_ARB}")
 if (WITH_ARB)
