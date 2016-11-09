@@ -31,6 +31,7 @@ using SymEngine::logical_or;
 using SymEngine::logical_not;
 using SymEngine::logical_nand;
 using SymEngine::logical_nor;
+using SymEngine::logical_xor;
 using SymEngine::set_boolean;
 
 TEST_CASE("BooleanAtom : Basic", "[basic]")
@@ -193,6 +194,12 @@ TEST_CASE("Nand : Basic", "[basic]")
     auto c2 = contains(x, int2);
     REQUIRE(eq(*logical_nand({boolTrue, c1}), *logical_not(c1)));
     REQUIRE(eq(*logical_nand({boolFalse, c2}), *boolTrue));
+}
+
+TEST_CASE("Xor : Basic", "[basic]")
+{
+    REQUIRE(eq(*logical_xor({boolTrue, boolFalse}), *boolTrue));
+    REQUIRE(eq(*logical_xor({boolTrue, boolFalse, boolTrue, boolTrue, boolFalse}), *boolTrue));
 }
 
 TEST_CASE("Nor : Basic", "[basic]")

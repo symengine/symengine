@@ -1,4 +1,7 @@
 #include <symengine/logic.h>
+#include <symengine/add.h>
+#include <symengine/ntheory.h>
+#include <symengine/integer.h>
 
 namespace SymEngine
 {
@@ -322,6 +325,27 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
     return make_rcp<const caller>(args);
 }
 
+RCP<const Boolean> xor_(const set_boolean &s,const bool &op_x_notx)
+{
+    set_boolean args;
+    integer_class r1 = 0;
+    integer_class i2 = 2;
+    for (auto &a : s) {
+        if (is_a<BooleanAtom>(*a)) {
+            auto val = static_cast<const BooleanAtom &>(*a).get_val();
+            if (val == op_x_notx)
+                r1 ++; 
+            else
+                continue;
+        }
+    }
+    
+    if ((r1 % i2) == 0)
+        return logical_not(boolean(op_x_notx));
+    else 
+        return boolean(op_x_notx);
+}
+
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
 {
     if (is_a<BooleanAtom>(*s)) {
@@ -358,6 +382,11 @@ RCP<const Boolean> logical_nand(const set_boolean &s)
 {
     RCP<const Boolean> a = logical_and(s);
     return logical_not(a);
+}
+
+RCP<const Boolean> logical_xor(const set_boolean &s)
+{
+    return xor_(s, true);
 }
 
 RCP<const Boolean> logical_or(const set_boolean &s)
