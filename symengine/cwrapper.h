@@ -300,9 +300,14 @@ char *basic_str(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
-//! Returns 1 if a specific component is installed, 0 if not.
+//! Returns 1 if a specific component is installed and 0 if not.
 //! Component can be "mpfr", "flint", "arb", "mpc", "ecm", "primesieve",
-//! "piranha", "boost", "pthread" or "llvm".
+//! "piranha", "boost", "pthread" or "llvm" (all in lowercase).
+//! This function, using string comparison, was implemented for particular
+//! libraries that do not provide header access (i.e. SymEngine.jl
+//! and other related shared libraries).
+//! Avoid usage while having access to the headers. Instead simply use
+//! HAVE_SYMENGINE_MPFR and other related macros directly.
 int symengine_have_component(const char *c);
 
 //! Return 1 if s is a Number, 0 if not.
