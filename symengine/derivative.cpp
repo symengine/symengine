@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/subs.h>
+#include <symengine/functions.h>
 
 namespace SymEngine
 {
@@ -32,7 +33,6 @@ public:
     }
 
     DIFF0(UnivariateSeries)
-    DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
     DIFF0(LeviCivita)
@@ -78,6 +78,19 @@ public:
         return mul(mul(mul(minus_one, self.get_s()),
                        zeta(add(self.get_s(), one), self.get_a())),
                    self.get_a()->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Dirichlet_eta &self,
+                                 const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> m1;
+        m1 = zeta(self.get_arg())->diff(x);
+        // check https://en.wikipedia.org/wiki/Dirichlet_eta_function
+        // for the equation
+        return add(mul(mul(pow(i2, sub(one, self.get_arg())),
+                           mul(log(i2), zeta(self.get_arg()))),
+                       self.get_arg()->diff(x)),
+                   mul(sub(one, pow(i2, sub(one, self.get_arg()))), m1));
     }
 
     static RCP<const Basic> diff(const ASech &self, const RCP<const Symbol> &x)

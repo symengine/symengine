@@ -2248,8 +2248,13 @@ TEST_CASE("Levi Civita: functions", "[functions]")
 TEST_CASE("Dirichlet Eta: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i8 = integer(8);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i7 = integer(7);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2261,6 +2266,28 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     r1 = dirichlet_eta(zero);
     r2 = div(one, i2);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(im1);
+    r2 = div(one, i4);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(i2);
+    r2 = div(pow(pi, i2), integer(12));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(i4);
+    r2 = div(mul(pow(pi, i4), i7), integer(720));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(i6);
+    r2 = div(mul(pow(pi, i6), integer(31)), integer(30240));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(i8);
+    r2 = div(mul(pow(pi, i8), integer(127)), integer(1209600));
+
+    r1 = dirichlet_eta(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 }
 
 TEST_CASE("Erf: functions", "[functions]")
