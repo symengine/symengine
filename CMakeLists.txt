@@ -216,12 +216,11 @@ set (WITH_MSAN no
 if (WITH_MSAN)
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=memory")
+        "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=memory -fPIE")
         set(CMAKE_C_FLAGS_DEBUG
         "${CMAKE_C_FLAGS_DEBUG} -fPIC")
-    else ()
-        set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=memory")
+        set(CMAKE_EXE_LINKER_FLAGS
+                "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=memory -pie")
     endif()
 endif()
 
@@ -233,9 +232,6 @@ if (WITH_ASAN)
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
-    else ()
-        set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=address")
     endif()
 endif()
 
@@ -246,12 +242,11 @@ set (WITH_TSAN no
 if (WITH_TSAN)
     if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(CMAKE_CXX_FLAGS_DEBUG
-                "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread")
+                "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=thread -fPIE")
         set(CMAKE_C_FLAGS_DEBUG
                 "${CMAKE_C_FLAGS_DEBUG} -fPIC")
-    else ()
-        set(CMAKE_CXX_FLAGS_RELEASE
-                "${CMAKE_CXX_FLAGS_RELEASE} -fsanitize=thread")
+        set(CMAKE_EXE_LINKER_FLAGS
+                "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=thread -pie")
     endif()
 endif()
 
