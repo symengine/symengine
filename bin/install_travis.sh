@@ -55,6 +55,10 @@ cd $our_install_dir
 
 conda_pkgs="$conda_pkgs gmp=6.1.1"
 
+if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
+    conda_pkgs="${conda_pkgs} boost=1.62"
+fi
+
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs boost=1.62 cmake=3.6.2 mpfr=3.1.4"
 fi

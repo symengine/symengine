@@ -69,6 +69,9 @@ fi
 if [[ "${TEST_CPP}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_BENCHMARKS=${TEST_CPP} -DBUILD_TESTS=${TEST_CPP}"
 fi
+if [[ "${BUILD_BENCHMARKS}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS=${BUILD_BENCHMARKS}"
+fi
 if [[ "${INTEGER_CLASS}" != "" ]]; then
     cmake_line="$cmake_line -DINTEGER_CLASS=${INTEGER_CLASS}"
 fi
