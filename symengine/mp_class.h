@@ -1038,7 +1038,8 @@ inline int mp_cmpabs(const integer_class &a, const integer_class &b)
 
 } // SymEngine namespace
 
-#ifndef HAVE_SYMENGINE_GMP
+#if !defined(HAVE_SYMENGINE_GMP) && defined(HAVE_SYMENGINE_BOOST)              \
+    && BOOST_VERSION < 105900
 namespace boost
 {
 namespace detail
