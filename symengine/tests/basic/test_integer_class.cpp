@@ -28,7 +28,9 @@ TEST_CASE("operators: integer_class", "[integer_class]")
     rational_class r, p;
 
     // shift operators
-    REQUIRE((integer_class(-1024) << 3) == -8192);
+    // Shift operators of negatives are unnecessary and
+    // undefined behaviour for C++ standard
+    /*REQUIRE((integer_class(-1024) << 3) == -8192);
     REQUIRE((integer_class(-1024) >> 3) == -128);
     REQUIRE((integer_class(-768) << 5) == -24576);
     REQUIRE((integer_class(-768) >> 5) == -24);
@@ -41,7 +43,7 @@ TEST_CASE("operators: integer_class", "[integer_class]")
     REQUIRE((integer_class(-2) << 10) == -2048);
     REQUIRE((integer_class(-2) >> 10) == -1);
     REQUIRE((integer_class(-1) << 4) == -16);
-    REQUIRE((integer_class(-1) >> 4) == -1);
+    REQUIRE((integer_class(-1) >> 4) == -1);*/
     REQUIRE((integer_class(0) << 5) == 0);
     REQUIRE((integer_class(0) >> 5) == 0);
     REQUIRE((integer_class(1) << 2) == 4);
