@@ -699,7 +699,7 @@ inline int mp_cmpabs(const integer_class &a, const integer_class &b)
 
 inline int mp_sign(const integer_class &i)
 {
-    return boost::multiprecision::sign(i);
+    return boost::math::sign(i);
 }
 
 inline double mp_get_d(const integer_class &i)
@@ -1037,5 +1037,18 @@ inline int mp_cmpabs(const integer_class &a, const integer_class &b)
 #endif // SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
 
 } // SymEngine namespace
+
+#ifndef HAVE_SYMENGINE_GMP
+namespace boost
+{
+namespace detail
+{
+template <>
+struct make_unsigned_imp<SymEngine::integer_class> {
+    typedef SymEngine::integer_class type;
+};
+}
+}
+#endif
 
 #endif // SYMENGINE_INTEGER_CLASS_H

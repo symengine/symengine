@@ -231,6 +231,8 @@ void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i)
 // return nonzero if i is probably prime.
 int mp_probab_prime_p(const integer_class &i, unsigned retries)
 {
+    if (i % 2 == 0)
+        return (i == 2);
     return miller_rabin_test(i, retries);
 }
 
