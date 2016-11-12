@@ -87,7 +87,7 @@ TEST_CASE("test_probab_prime_p(): ntheory", "[ntheory]")
     RCP<const Integer> i6 = integer(6);
 
     REQUIRE(probab_prime_p(*i1) == 0);
-    //REQUIRE(probab_prime_p(*i5) == 2); //should only require nonzero
+    // REQUIRE(probab_prime_p(*i5) == 2); //should only require nonzero
     REQUIRE(probab_prime_p(*i5) != 0);
     REQUIRE(probab_prime_p(*i6) == 0);
 }
@@ -310,7 +310,7 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
     REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0
              or divides(*i1850, *f)));
 }
-#endif //SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#endif // SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 
 TEST_CASE("test_sieve(): ntheory", "[ntheory]")
 {

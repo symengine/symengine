@@ -685,11 +685,12 @@ GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
     return GaloisFieldDict::from_vec(v, modulo_);
 }
 #else
-GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
-                                           boost::random::mt19937 &twister) const
+GaloisFieldDict
+GaloisFieldDict::gf_random(const unsigned int &n_val,
+                           boost::random::mt19937 &twister) const
 {
     std::vector<integer_class> v(n_val + 1);
-    boost::random::uniform_int_distribution<integer_class> ui(0,modulo_);
+    boost::random::uniform_int_distribution<integer_class> ui(0, modulo_);
     for (unsigned i = 0; i < n_val; ++i) {
         v[i] = ui(twister);
     }
@@ -711,19 +712,19 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
     std::vector<GaloisFieldDict> b;
     if (modulo_ != 2_z)
         b = this->gf_frobenius_monomial_base();
-    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed_ui(state, std::rand());
-    #else
+#else
     boost::random::mt19937 mt;
-    #endif
+#endif
     while (factors.size() < N) {
-        #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
         auto r = gf_random(2 * n - 1, state);
-        #else
+#else
         auto r = gf_random(2 * n - 1, mt);
-        #endif
+#endif
         GaloisFieldDict g;
         if (modulo_ == 2_z) {
             GaloisFieldDict h = r;
@@ -746,9 +747,9 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
                 factors.insert(to_add.begin(), to_add.end());
         }
     }
-    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     gmp_randclear(state);
-    #endif
+#endif
     return factors;
 }
 
@@ -816,15 +817,15 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
         return factors;
     }
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
-    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     gmp_randstate_t state;
     gmp_randinit_default(state);
     gmp_randseed_ui(state, std::rand());
     auto r = gf_random(N - 1, state);
-    #else
+#else
     boost::random::mt19937 mt;
-    auto r = gf_random(N - 1,mt);
-    #endif
+    auto r = gf_random(N - 1, mt);
+#endif
     if (modulo_ == 2_z) {
         auto h = gf_pow_mod(x, mp_get_ui(modulo_));
         auto H = gf_trace_map(r, h, x, n - 1).second;
@@ -846,9 +847,9 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
         temp = h3.gf_edf_shoup(n);
         factors.insert(temp.begin(), temp.end());
     }
-    #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     gmp_randclear(state);
-    #endif
+#endif
     return factors;
 }
 

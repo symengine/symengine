@@ -74,16 +74,16 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
     REQUIRE(f->__str__() == "x**2 + 2/3*x + 1");
 
     RCP<const URatPoly> g = URatPoly::from_dict(
-        //With expression templates on in boostmp, we cannot
-        //use negated literal in constructor of rational_class.
-        //rc(-3_z,2_z); //error
-        //a literal (e.g. 2_z) returns an integer_class, but unary minus 
-        //applied to a literal (e.g. -3_z) returns an expression template,
-        //and rational_class cannot be constructed from two args,
-        //one of which is an expression template and one of which
-        //is an integer_class.
-        //So we must use the string constructor of integer_class directly
-        y, {{0, 2_q}, {1, rc(ic(-3), 2_z)}, {2, rc(1_z, 4_z)}}); 
+        // With expression templates on in boostmp, we cannot
+        // use negated literal in constructor of rational_class.
+        // rc(-3_z,2_z); //error
+        // a literal (e.g. 2_z) returns an integer_class, but unary minus
+        // applied to a literal (e.g. -3_z) returns an expression template,
+        // and rational_class cannot be constructed from two args,
+        // one of which is an expression template and one of which
+        // is an integer_class.
+        // So we must use the string constructor of integer_class directly
+        y, {{0, 2_q}, {1, rc(ic(-3), 2_z)}, {2, rc(1_z, 4_z)}});
     CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException);
 }
 

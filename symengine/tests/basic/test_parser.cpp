@@ -348,10 +348,10 @@ TEST_CASE("Parsing: polys", "[parser]")
 
     s = "2*(x+1)**10 + 3*(x+2)**5";
     poly1 = from_basic<UIntPoly>(parse(s));
-    //double-braced initialization of 2-element vector
-    //causes compiler error with boost.multiprecision
-    //so use single brace.
-    poly2 = pow_upoly(*UIntPoly::from_vec(x, {1_z, 1_z}), 10); 
+    // double-braced initialization of 2-element vector
+    // causes compiler error with boost.multiprecision
+    // so use single brace.
+    poly2 = pow_upoly(*UIntPoly::from_vec(x, {1_z, 1_z}), 10);
     poly3 = UIntPoly::from_vec(x, {{2_z}});
     poly2 = mul_upoly(*poly2, *poly3);
     poly3 = pow_upoly(*UIntPoly::from_vec(x, {2_z, 1_z}), 5);

@@ -259,14 +259,14 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
             SYMENGINE_ASSERT(is_a<Rational>(*n));
             m = static_cast<const Rational &>(*n).i / period;
             integer_class t;
-            #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             mp_fdiv_r(t, get_num(m), get_den(m));
             get_num(m) = t;
-            #else
+#else
             integer_class quo;
-            mp_fdiv_qr(quo,t,get_num(m),get_den(m));
+            mp_fdiv_qr(quo, t, get_num(m), get_den(m));
             m -= rational_class(quo);
-            #endif
+#endif
             // m = a / b => m = (a % b / b)
         }
         // Now, arg = r + 2 * pi * m  where 0 <= m < 1
@@ -2775,11 +2775,12 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
             } else {
                 return make_rcp<const PolyGamma>(n_, x_);
             }
-            #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             rational_class a(0), f(r, den);
-            #else
-            rational_class a(0), f(integer_class(r),den); //r is an expression template in boost
-            #endif
+#else
+            rational_class a(0), f(integer_class(r),
+                                   den); // r is an expression template in boost
+#endif
             for (unsigned long i = 0; i < (num - r) / den; ++i) {
                 a += 1 / (f + i);
             }

@@ -108,13 +108,12 @@ set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
 set(WITH_FLINT no CACHE BOOL "Build with Flint")
 set(HAVE_SYMENGINE_FLINT False)
 
-# Boost.multiprecision
-set(WITH_BOOSTMP no CACHE BOOL "Build with Boost.multiprecision")
+# Boost
+set(WITH_BOOST no CACHE BOOL "Build with Boost")
 
 set(HAVE_SYMENGINE_GMP yes)
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
     set(SYMENGINE_INTEGER_CLASS "BOOSTMP")
-    set(WITH_BOOSTMP yes)
     set(WITH_BOOST yes)
     set(HAVE_SYMENGINE_GMP no)
 elseif ("${INTEGER_CLASS}" MATCHES "piranha")
@@ -136,7 +135,7 @@ else()
 endif()
 
 # GMP
-if(HAVE_SYMENGINE_GMP) 
+if (HAVE_SYMENGINE_GMP) 
     find_package(GMP REQUIRED)
     include_directories(${GMP_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${GMP_TARGETS})
@@ -155,155 +154,151 @@ if(HAVE_SYMENGINE_GMP)
                 "Error Log : \n${GMPXX_ERROR_LOG}")
         endif()
     endif()
-
-    set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
-    set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
-
-    if (MSVC)
-        if (MSVC_USE_MT)
-    	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-    	      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
-    	    endforeach()
-        endif()
-        foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-          set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
-        endforeach()
-    endif()
-
-    if (BUILD_SHARED_LIBS)
-        if (WIN32)
-            if (MSVC)
-                # Use CMake 3.4 feature
-                set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
-            else()
-                set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-            endif()
-        endif()
-        set(SYMENGINE_STATIC_DEFINE no)
-    else()
-        set(SYMENGINE_STATIC_DEFINE yes)
-    endif()
-
-    # ECM
-    set(WITH_ECM no
-        CACHE BOOL "Build with ECM (libecm-dev) support")
-
-    if (WITH_ECM)
-        find_package(ECM REQUIRED)
-        include_directories(${ECM_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${ECM_TARGETS})
-        set(HAVE_SYMENGINE_ECM yes)
-        set(PKGS ${PKGS} "ECM")
-    endif()
-
-    # PRIMESIEVE
-    set(WITH_PRIMESIEVE no
-        CACHE BOOL "Build with primesieve")
-
-    if (WITH_PRIMESIEVE)
-        find_package(PRIMESIEVE REQUIRED)
-        include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
-        set(HAVE_SYMENGINE_PRIMESIEVE yes)
-        set(PKGS ${PKGS} "PRIMESIEVE")
-    endif()
-
-    # ARB
-    set(WITH_ARB no
-        CACHE BOOL "Build with Arb")
-    set(HAVE_SYMENGINE_ARB False)
-
-    # MPFR
-    set(WITH_MPFR no
-        CACHE BOOL "Build with MPFR")
-    set(HAVE_SYMENGINE_MPFR False)
-
-    # MPC
-    set(WITH_MPC no
-        CACHE BOOL "Build with MPC")
-    set(HAVE_SYMENGINE_MPC False)
-
-    if (WITH_FLINT)
-        find_package(FLINT REQUIRED)
-        include_directories(${FLINT_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${FLINT_TARGETS})
-        set(HAVE_SYMENGINE_FLINT True)
-        set(PKGS ${PKGS} "FLINT")
-
-        # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-        include_directories(${FLINT_INCLUDE_DIRS}/flint)
-
-        set(WITH_MPFR yes)
-    endif()
-
-    if (WITH_ARB)
-        find_package(FLINT REQUIRED)
-        include_directories(${FLINT_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${FLINT_TARGETS})
-        set(PKGS ${PKGS} "FLINT")
-
-        # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-        include_directories(${FLINT_INCLUDE_DIRS}/flint)
-
-        set(WITH_FLINT yes)
-        set(HAVE_SYMENGINE_FLINT True)
-        set(WITH_MPFR yes)
-
-        find_package(ARB REQUIRED)
-        include_directories(${ARB_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${ARB_TARGETS})
-        set(HAVE_SYMENGINE_ARB True)
-        set(PKGS ${PKGS} "ARB")
-    endif()
-
-    if (WITH_MPC)
-        find_package(MPC REQUIRED)
-        include_directories(${MPC_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${MPC_TARGETS})
-        set(HAVE_SYMENGINE_MPC True)
-        set(WITH_MPFR yes)
-        set(PKGS ${PKGS} "MPC")
-    endif()
-
-    # PTHREAD
-    set(WITH_PTHREAD no
-    CACHE BOOL "Build with PTHREAD")
-
-    if (WITH_PTHREAD)
-        find_package(PTHREAD REQUIRED)
-        include_directories(${PTHREAD_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${PTHREAD_TARGETS})
-        set(HAVE_SYMENGINE_PTHREAD yes)
-        set(PKGS ${PKGS} "PTHREAD")
-    endif()
-
-    if (WITH_PIRANHA)
-        set(WITH_PTHREAD yes)
-        set(WITH_MPFR yes)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
-
-        find_package(PIRANHA REQUIRED)
-        include_directories(${PIRANHA_INCLUDE_DIRS})
-        set(HAVE_SYMENGINE_PIRANHA yes)
-        set(PKGS ${PKGS} "PIRANHA")
-        set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
-        set(WITH_BOOST yes)
-    endif()
-
-    if (WITH_MPFR)
-        find_package(MPFR REQUIRED)
-        include_directories(${MPFR_INCLUDE_DIRS})
-        set(LIBS ${LIBS} ${MPFR_TARGETS})
-        set(HAVE_SYMENGINE_MPFR True)
-        set(PKGS ${PKGS} "MPFR")
-    endif()
 endif()
-# HAVE_SYMENGINE_GMP
 
-# Boost
-set(WITH_BOOST no
-    CACHE BOOL "Build with Boost")
+
+set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
+
+if (MSVC)
+    if (MSVC_USE_MT)
+	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+	      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+	    endforeach()
+    endif()
+    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
+    endforeach()
+endif()
+
+if (BUILD_SHARED_LIBS)
+    if (WIN32)
+        if (MSVC)
+            # Use CMake 3.4 feature
+            set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+        else()
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
+        endif()
+    endif()
+    set(SYMENGINE_STATIC_DEFINE no)
+else()
+    set(SYMENGINE_STATIC_DEFINE yes)
+endif()
+
+# ECM
+set(WITH_ECM no
+    CACHE BOOL "Build with ECM (libecm-dev) support")
+
+if (WITH_ECM)
+    find_package(ECM REQUIRED)
+    include_directories(${ECM_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ECM_TARGETS})
+    set(HAVE_SYMENGINE_ECM yes)
+    set(PKGS ${PKGS} "ECM")
+endif()
+
+# PRIMESIEVE
+set(WITH_PRIMESIEVE no
+    CACHE BOOL "Build with primesieve")
+
+if (WITH_PRIMESIEVE)
+    find_package(PRIMESIEVE REQUIRED)
+    include_directories(${PRIMESIEVE_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
+    set(HAVE_SYMENGINE_PRIMESIEVE yes)
+    set(PKGS ${PKGS} "PRIMESIEVE")
+endif()
+
+# ARB
+set(WITH_ARB no
+    CACHE BOOL "Build with Arb")
+set(HAVE_SYMENGINE_ARB False)
+
+# MPFR
+set(WITH_MPFR no
+    CACHE BOOL "Build with MPFR")
+set(HAVE_SYMENGINE_MPFR False)
+
+# MPC
+set(WITH_MPC no
+    CACHE BOOL "Build with MPC")
+set(HAVE_SYMENGINE_MPC False)
+
+if (WITH_FLINT)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(HAVE_SYMENGINE_FLINT True)
+    set(PKGS ${PKGS} "FLINT")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+
+    set(WITH_MPFR yes)
+endif()
+
+if (WITH_ARB)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(PKGS ${PKGS} "FLINT")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+
+    set(WITH_FLINT yes)
+    set(HAVE_SYMENGINE_FLINT True)
+    set(WITH_MPFR yes)
+
+    find_package(ARB REQUIRED)
+    include_directories(${ARB_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ARB_TARGETS})
+    set(HAVE_SYMENGINE_ARB True)
+    set(PKGS ${PKGS} "ARB")
+endif()
+
+if (WITH_MPC)
+    find_package(MPC REQUIRED)
+    include_directories(${MPC_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPC_TARGETS})
+    set(HAVE_SYMENGINE_MPC True)
+    set(WITH_MPFR yes)
+    set(PKGS ${PKGS} "MPC")
+endif()
+
+# PTHREAD
+set(WITH_PTHREAD no
+CACHE BOOL "Build with PTHREAD")
+
+if (WITH_PTHREAD)
+    find_package(PTHREAD REQUIRED)
+    include_directories(${PTHREAD_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
+    set(HAVE_SYMENGINE_PTHREAD yes)
+    set(PKGS ${PKGS} "PTHREAD")
+endif()
+
+if (WITH_PIRANHA)
+    set(WITH_PTHREAD yes)
+    set(WITH_MPFR yes)
+    set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+
+    find_package(PIRANHA REQUIRED)
+    include_directories(${PIRANHA_INCLUDE_DIRS})
+    set(HAVE_SYMENGINE_PIRANHA yes)
+    set(PKGS ${PKGS} "PIRANHA")
+    set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
+    set(WITH_BOOST yes)
+endif()
+
+if (WITH_MPFR)
+    find_package(MPFR REQUIRED)
+    include_directories(${MPFR_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPFR_TARGETS})
+    set(HAVE_SYMENGINE_MPFR True)
+    set(PKGS ${PKGS} "MPFR")
+endif()
 
 # PTHREAD
 set(WITH_PTHREAD no
