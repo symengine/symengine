@@ -19,7 +19,7 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random.hpp>
-#endif
+#endif // !HAVE_SYMENGINE_GMP
 
 namespace SymEngine
 {
