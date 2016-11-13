@@ -2279,15 +2279,20 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     r2 = div(mul(pow(pi, i4), i7), integer(720));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = dirichlet_eta(i6);
-    r2 = div(mul(pow(pi, i6), integer(31)), integer(30240));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = dirichlet_eta(i8);
-    r2 = div(mul(pow(pi, i8), integer(127)), integer(1209600));
-
     r1 = dirichlet_eta(x)->diff(y);
     REQUIRE(eq(*r1, *zero));
+
+    r1 = mul(x, dirichlet_eta(x))->diff(x);
+    r2 = add(dirichlet_eta(x), mul(x, dirichlet_eta(x)->diff(x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(x, dirichlet_eta(y))->diff(x);
+    r2 = dirichlet_eta(y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(x, dirichlet_eta(y))->diff(y);
+    r2 = mul(x, dirichlet_eta(y)->diff(y));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Erf: functions", "[functions]")
