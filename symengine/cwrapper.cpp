@@ -434,6 +434,19 @@ CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE complex_double_get(dcomplex *d, basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
+    d->real
+        = ((rcp_static_cast<const ComplexDouble>(s->m))->as_complex_double())
+              .real();
+    d->imag
+        = ((rcp_static_cast<const ComplexDouble>(s->m))->as_complex_double())
+              .imag();
+    CWRAPPER_END
+}
+
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
