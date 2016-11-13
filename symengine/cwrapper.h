@@ -39,6 +39,13 @@ typedef enum {
     SYMENGINE_TypeID_Count
 } TypeID;
 
+//! Struct to hold the real and imaginary parts of std::complex<double>
+//! extracted from basic
+typedef struct dcomplex {
+    double real;
+    double imag;
+} dcomplex;
+
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
 // single RCP<const Basic> member) *and* they must have the same alignment
 // (because we allocate CRCPBasic into the memory occupied by this struct in
@@ -201,6 +208,9 @@ CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com);
 CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com);
 //! Assign to s, an imaginary double where com is a complex double
 CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com);
+//! Extract the real and imaginary doubles from the std::complex<double> stored
+//! in basic
+CWRAPPER_OUTPUT_TYPE complex_double_get(dcomplex *d, basic s);
 
 //! Assigns s = a + b.
 CWRAPPER_OUTPUT_TYPE basic_add(basic s, const basic a, const basic b);
