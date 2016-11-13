@@ -678,6 +678,77 @@ void test_constants()
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);
     basic_str_free(s);
 
+    // Checking mpfr builds
+    s = "mpfr";
+#ifdef HAVE_SYMENGINE_MPFR
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking mpc builds
+    s = "mpc";
+#ifdef HAVE_SYMENGINE_MPC
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking arb builds
+    s = "arb";
+#ifdef HAVE_SYMENGINE_ARB
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking flint builds
+    s = "flint";
+#ifdef HAVE_SYMENGINE_FLINT
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking ecm builds
+    s = "ecm";
+#ifdef HAVE_SYMENGINE_ECM
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking primesieve builds
+    s = "primesieve";
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking piranha builds
+    s = "piranha";
+#ifdef HAVE_SYMENGINE_PIRANHA
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking boost builds
+    s = "boost";
+#ifdef HAVE_SYMENGINE_BOOST
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking pthread builds
+    s = "pthread";
+#ifdef HAVE_SYMENGINE_PTHREAD
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+    // Checking llvm builds
+    s = "llvm";
+#ifdef HAVE_SYMENGINE_LLVM
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
+
     basic_free_stack(custom);
     basic_free_stack(pi);
     basic_free_stack(e);

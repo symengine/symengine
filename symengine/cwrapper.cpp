@@ -568,6 +568,51 @@ void basic_str_free(char *s)
     delete[] s;
 }
 
+int symengine_have_component(const char *c)
+{
+#ifdef HAVE_SYMENGINE_MPFR
+    if (std::strcmp("mpfr", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    if (std::strcmp("mpc", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+    if (std::strcmp("flint", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_ARB
+    if (std::strcmp("arb", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_ECM
+    if (std::strcmp("ecm", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
+    if (std::strcmp("primesieve", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+    if (std::strcmp("piranha", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_BOOST
+    if (std::strcmp("boost", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_PTHREAD
+    if (std::strcmp("pthread", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_LLVM
+    if (std::strcmp("llvm", c) == 0)
+        return 1;
+#endif
+    return 0;
+}
+
 int is_a_Number(const basic s)
 {
     return (int)is_a_Number(*(s->m));
