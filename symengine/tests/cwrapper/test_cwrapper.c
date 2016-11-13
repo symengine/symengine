@@ -190,6 +190,7 @@ void test_complex_double()
     char *s;
     basic_new_stack(e);
     basic_new_stack(f);
+    dcomplex d;
 
     basic_const_I(e);
     real_double_set_d(f, 76.59);
@@ -206,6 +207,10 @@ void test_complex_double()
     SYMENGINE_C_ASSERT(is_a_ComplexDouble(e));
 
     basic_str_free(s);
+
+    complex_double_get(&d, e);
+    SYMENGINE_C_ASSERT(d.real == 100.47);
+    SYMENGINE_C_ASSERT(d.imag == 76.59);
 
     complex_double_real_part(f, e);
     s = basic_str(f);
