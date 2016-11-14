@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_SYMENGINE_GMP
 #include <gmp.h>
+#endif
 
 #include "symengine/symengine_config.h"
 
@@ -141,7 +143,9 @@ CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
 //! Assign to s, a ulong.
 CWRAPPER_OUTPUT_TYPE integer_set_ui(basic s, unsigned long i);
 //! Assign to s, a mpz_t.
+#ifdef HAVE_SYMENGINE_GMP
 CWRAPPER_OUTPUT_TYPE integer_set_mpz(basic s, const mpz_t i);
+#endif
 //! Assign to s, an integer that has base 10 representation c.
 CWRAPPER_OUTPUT_TYPE integer_set_str(basic s, const char *c);
 //! Assign to s, a real_double that has value of d.
@@ -181,7 +185,9 @@ signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
 unsigned long integer_get_ui(const basic s);
 //! Returns s as a mpz_t.
+#ifdef HAVE_SYMENGINE_GMP
 CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s);
+#endif
 
 //! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
 CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
@@ -189,17 +195,21 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long i, long j);
 //! Assign to s, a rational i/j, where i and j are unsigned longs.
 CWRAPPER_OUTPUT_TYPE rational_set_ui(basic s, unsigned long i, unsigned long j);
+#ifdef HAVE_SYMENGINE_GMP
 //! Returns s as a mpq_t.
 CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s);
 //! Assign to s, a rational i, where is of type mpq_t.
 CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i);
+#endif
 
 //! Assign to s, a complex re + i*im.
 CWRAPPER_OUTPUT_TYPE complex_set(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are rationals.
 CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im);
+#ifdef HAVE_SYMENGINE_GMP
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
+#endif
 //! Assign to s, a real where com is a complex
 CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com);
 //! Assign to s, an imaginary where com is a complex
