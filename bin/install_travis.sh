@@ -41,69 +41,70 @@ fi
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
-mkdir -p $our_install_dir
+
+
+if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+else
+    wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+fi
+bash miniconda.sh -b -p $our_install_dir
+export PATH="$our_install_dir/bin:$PATH"
+conda config --add channels conda-forge --force
 cd $our_install_dir
 
-if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
-    if [[ "${TRAVIS}" != "true" ]]; then
-        sudo apt-get update
-        sudo apt-get install cmake libgmp-dev
-    fi
-else
-    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/gmp-6.0.0a.tar.bz2
-    tar -xjf gmp-6.0.0a.tar.bz2;
-    cd gmp-6.0.0 && ./configure --prefix=$our_install_dir --enable-cxx && make -j8 install && cd ..;
+conda_pkgs="$conda_pkgs gmp=6.1.1"
+
+if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
+    conda_pkgs="${conda_pkgs} boost=1.62"
 fi
 
-if [[ "${WITH_BFD}" == "yes" ]]; then
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-        brew install binutils;
-    elif [[ "${TRAVIS}" != "true" ]]; then
-        sudo apt-get install binutils-dev;
-    fi
+if [[ "${WITH_PIRANHA}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs boost=1.62 cmake=3.6.2 mpfr=3.1.4"
 fi
+
+if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs primesieve=5.6.0"
+fi
+
+if [[ "${WITH_MPFR}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs mpfr=3.1.4"
+fi
+
+if [[ "${WITH_MPC}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs mpc=1.0.3"
+fi
+
+if [[ "${WITH_FLINT}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs libflint=2.5.2"
+fi
+
+if [[ "${WITH_ARB}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs arb=2.8.1"
+fi
+
+if [[ "${WITH_LLVM}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs llvmdev=3.8 cmake=3.6.2"
+fi
+
+conda install -y $conda_pkgs
+
 if [[ "${WITH_ECM}" == "yes" ]]; then
     wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/ecm-6.4.4.tar.gz
     tar -xzf ecm-6.4.4.tar.gz;
-    cd ecm-6.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
+    cd ecm-6.4.4 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir && make -j8 install && cd ..;
 fi
-if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
-    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/primesieve-5.2.tar.gz
-    tar -xzf primesieve-5.2.tar.gz;
-    cd primesieve-5.2 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
-fi
-if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-        brew install mpfr;
-    elif [[ "${TRAVIS}" != "true" ]]; then
-        sudo apt-get install libmpfr-dev;
-    fi
-fi
-if [[ "${WITH_ARB}" == "yes" ]] || [[ "${WITH_FLINT}" == "yes" ]]; then
-    git clone https://github.com/wbhart/flint2;
-    cd flint2 && git checkout 44ec3871a555507038fe3838d9c2f6c0ac3064fb && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
-fi
-if [[ "${WITH_ARB}" == "yes" ]]; then
-    wget https://github.com/fredrik-johansson/arb/archive/2.6.0.tar.gz;
-    tar -xzf 2.6.0.tar.gz;
-    cd arb-2.6.0 && ./configure --prefix=$our_install_dir  --with-flint=$our_install_dir;
-    make -j8 install ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && cd ..;
-fi
-if [[ "${WITH_MPC}" == "yes" ]]; then
-    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-        brew install libmpc;
-    elif [[ "${TRAVIS}" != "true" ]]; then
-        sudo apt-get install libmpc-dev;
-    fi
-fi
+
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     wget https://github.com/bluescarni/piranha/archive/v0.5.tar.gz;
     tar -xzf v0.5.tar.gz;
     cd piranha-0.5 && mkdir build && cd build;
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir -DBUILD_TESTS=no ../
+    make -j8 install && cd ../..;
 fi
-export LLVM_DIR=/usr/lib/llvm-3.8/
+export LLVM_DIR=$our_install_dir/share/llvm/
 cd $SOURCE_DIR;
 
 # Since this script is getting sourced, remove error on exit
 set +e
+set +x

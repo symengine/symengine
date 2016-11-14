@@ -11,9 +11,6 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - libgmp-dev
-    - libmpfr-dev
-    - libmpc-dev
     - binutils-dev
     - g++-4.7
 
@@ -67,35 +64,20 @@ matrix:
           sources:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.7
-          - george-edison55-precise-backports
           packages:
-          - libgmp-dev
-          - libmpfr-dev
-          - libmpc-dev
           - binutils-dev
           - g++-5
           - clang-format-3.7
-          - cmake
-          - cmake-data
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no"
       compiler: gcc
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - boost-latest
-          - george-edison55-precise-backports
           packages:
-          - libgmp-dev
-          - libmpfr-dev
-          - libmpc-dev
           - binutils-dev
-          - libboost-serialization1.55-dev
-          - libboost-iostreams1.55-dev
           - g++-4.8
-          - cmake
-          - cmake-data
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha"
       compiler: gcc
       os: linux
@@ -103,34 +85,21 @@ matrix:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - boost-latest
-          - george-edison55-precise-backports
           packages:
-          - libgmp-dev
-          - libmpfr-dev
           - binutils-dev
-          - libboost-serialization1.55-dev
-          - libboost-iostreams1.55-dev
           - g++-4.8
-          - cmake
-          - cmake-data
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes" WITH_BENCHMARKS_NONIUS="yes"
       compiler: clang
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-precise-3.8
-          - george-edison55-precise-backports
           packages:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
-          - llvm-3.8-dev
-          - cmake
-          - cmake-data
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
