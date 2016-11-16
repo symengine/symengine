@@ -269,10 +269,10 @@ struct two_by_two_matrix {
 
     two_by_two_matrix(integer_class a, integer_class b, integer_class c,
                       integer_class d)
-        : data{a, b, c, d}
+        : data{{a, b}, {c, d}}
     {
     }
-    two_by_two_matrix() : data{0, 0, 0, 0}
+    two_by_two_matrix() : data{{0, 0}, {0, 0}}
     {
     }
     two_by_two_matrix &operator=(const two_by_two_matrix &other)
