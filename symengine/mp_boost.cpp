@@ -1,7 +1,6 @@
 #include "mp_class.h"
 #include <boost/multiprecision/miller_rabin.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/math/special_functions.hpp>
 #include <utility>
 #include <cmath>
 #include <symengine/symengine_assert.h>
