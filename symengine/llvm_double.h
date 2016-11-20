@@ -40,6 +40,10 @@
 #include <memory>
 #include <vector>
 
+#if LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 9
+#include <llvm/Transforms/Scalar/GVN.h>
+#endif
+
 namespace SymEngine
 {
 
