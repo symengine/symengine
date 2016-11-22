@@ -737,14 +737,23 @@ void vecbasic_free(CVecBasic *self)
     delete self;
 }
 
-void vecbasic_push_back(CVecBasic *self, const basic value)
+CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value)
 {
+    CWRAPPER_BEGIN
+
     self->m.push_back(value->m);
+
+    CWRAPPER_END
 }
 
-void vecbasic_get(CVecBasic *self, int n, basic result)
+CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
 {
+    CWRAPPER_BEGIN
+
+    SYMENGINE_ASSERT(n < self->m.size());
     result->m = self->m[n];
+
+    CWRAPPER_END
 }
 
 size_t vecbasic_size(CVecBasic *self)

@@ -367,8 +367,8 @@ typedef struct CVecBasic CVecBasic;
 
 CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
-void vecbasic_push_back(CVecBasic *self, const basic value);
-void vecbasic_get(CVecBasic *self, int n, basic result);
+CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
+CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
 size_t vecbasic_size(CVecBasic *self);
 
 //! Wrappers for Matrices
