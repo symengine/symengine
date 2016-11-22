@@ -1245,7 +1245,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d)
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     s->m = SymEngine::mod_f(static_cast<const Integer &>(*(n->m)),
-                          static_cast<const Integer &>(*(d->m)));
+                            static_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
@@ -1255,7 +1255,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d)
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     s->m = SymEngine::quotient_f(static_cast<const Integer &>(*(n->m)),
-                               static_cast<const Integer &>(*(d->m)));
+                                 static_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
