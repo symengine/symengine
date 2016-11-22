@@ -922,6 +922,8 @@ void test_ntheory()
     basic_new_stack(i2);
     basic_new_stack(i4);
     basic_new_stack(i5);
+    basic_new_stack(im2);
+    basic_new_stack(im7);
 
     integer_set_si(i1, 1);
     integer_set_si(i2, 2);
@@ -965,6 +967,8 @@ void test_ntheory()
     basic_free_stack(i2);
     basic_free_stack(i4);
     basic_free_stack(i5);
+    basic_free_stack(im2);
+    basic_free_stack(im7);
 }
 
 void test_eval()
