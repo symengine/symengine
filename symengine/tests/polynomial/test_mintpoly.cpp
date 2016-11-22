@@ -4,6 +4,7 @@
 #include <symengine/printer.h>
 
 using SymEngine::Expression;
+using SymEngine::UIntPoly;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Pow;
@@ -567,6 +568,16 @@ TEST_CASE("Testing Precedence of MIntPoly", "[MIntPoly]")
     REQUIRE(Prec.getPrecedence(p4) == PrecedenceEnum::Atom);
     REQUIRE(Prec.getPrecedence(p5) == PrecedenceEnum::Mul);
     REQUIRE(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
+}
+
+TEST_CASE("MIntPoly from_poly", "[MIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const MIntPoly> mpoly
+        = MIntPoly::from_dict({x}, {{{1}, -1_z}, {{2}, 3_z}, {{0}, 0_z}});
+    RCP<const UIntPoly> upoly = UIntPoly::from_vec(x, {0_z, -1_z, 3_z});
+
+    REQUIRE(eq(*MIntPoly::from_poly(*upoly), *mpoly));
 }
 /*
 TEST_CASE("Testing equality of MultivariateExprPolynomials with Expressions",

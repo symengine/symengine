@@ -55,6 +55,14 @@ public:
         return std::move(Container(d));
     }
 
+    template <typename FromPoly>
+    static enable_if_t<is_a_UPoly<FromPoly>::value, RCP<const Poly>>
+    from_poly(const FromPoly &p)
+    {
+        return Poly::from_container(p.get_var(),
+                                    std::move(Container::from_poly(p)));
+    }
+
     Cf eval(const Cf &x) const
     {
         Key last_deg = this->poly_.dict_.rbegin()->first;

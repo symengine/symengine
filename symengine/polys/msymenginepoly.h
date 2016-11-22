@@ -366,6 +366,18 @@ public:
         return unified_compare(poly_.dict_, s.poly_.dict_);
     }
 
+    template <typename FromPoly>
+    static enable_if_t<is_a_UPoly<FromPoly>::value, RCP<const Poly>>
+    from_poly(const FromPoly &p)
+    {
+        Container c;
+        for (auto it = p.begin(); it != p.end(); ++it)
+            c.dict_[{it->first}] = it->second;
+        c.vec_size = 1;
+
+        return Poly::from_container({p.get_var()}, std::move(c));
+    }
+
     static RCP<const Poly> from_dict(const vec_basic &v,
                                      typename Container::dict_type &&d)
     {

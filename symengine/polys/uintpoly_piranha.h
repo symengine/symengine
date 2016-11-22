@@ -203,6 +203,19 @@ public:
         return make_rcp<const Poly>(var, std::move(p));
     }
 
+    template <typename FromPoly>
+    static enable_if_t<is_a_UPoly<FromPoly>::value, RCP<const Poly>>
+    from_poly(const FromPoly &f)
+    {
+        Container p;
+        piranha::symbol_set ss(
+            {{piranha::symbol(detail::poly_print(f.get_var()))}});
+        p.set_symbol_set(ss);
+        for (auto it = f.begin(); it != f.end(); ++it)
+            p.insert(term(it->second, pmonomial{it->first}));
+        return Poly::from_container(f.get_var(), std::move(p));
+    }
+
     Cf eval(const Cf &x) const
     {
         const std::unordered_map<std::string, Cf> t

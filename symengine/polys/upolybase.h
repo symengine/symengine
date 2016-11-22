@@ -252,6 +252,15 @@ public:
         return (res * tmp);
     }
 
+    template <typename FromPoly>
+    static Wrapper from_poly(const FromPoly &p)
+    {
+        Wrapper t;
+        for (auto it = p.begin(); it != p.end(); ++it)
+            t.dict_[it->first] = it->second;
+        return t;
+    }
+
     friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
     {
         return Wrapper::mul(a, b);
@@ -634,6 +643,12 @@ public:
         }
         return *this;
     }
+};
+
+template <typename P>
+struct is_a_UPoly {
+    static const bool value
+        = std::is_base_of<UPolyBase<typename P::container_type, P>, P>::value;
 };
 
 template <typename Poly>

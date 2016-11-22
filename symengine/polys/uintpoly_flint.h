@@ -74,6 +74,18 @@ public:
         return make_rcp<const Poly>(var, std::move(f));
     }
 
+    template <typename FromPoly>
+    static enable_if_t<is_a_UPoly<FromPoly>::value, RCP<const Poly>>
+    from_poly(const FromPoly &p)
+    {
+        Container f;
+        for (auto it = p.begin(); it != p.end(); ++it) {
+            typename Container::internal_coef_type r(get_mp_t(it->second));
+            f.set_coeff(it->first, r);
+        }
+        return Poly::from_container(p.get_var(), std::move(f));
+    }
+
     Cf eval(const Cf &x) const
     {
         typename Container::internal_coef_type r(get_mp_t(x));
