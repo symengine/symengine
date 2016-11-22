@@ -20,7 +20,6 @@ unsigned int bit_length(T t)
     }
     return count;
 }
-
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
 
@@ -66,6 +65,10 @@ public:
 
     static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
+        if (a.empty())
+            return a;
+        if (b.empty())
+            return b;
         int mul = 1;
 
         unsigned int N = bit_length(std::min(a.degree() + 1, b.degree() + 1))
@@ -119,7 +122,17 @@ public:
         }
         return curr;
     }
-
+    // Reduces the polynomial modulo a constant `mod` in `Z[x]`
+    // All the coefficients are coerced to range `[-mod/2, mod/2]`
+    void itrunc(const integer_class &mod);
+    // `res` is set to the primitive part of polynomial
+    // returns the content of polynomial
+    integer_class primitive(const Ptr<UIntDict> &res) const;
+    //! \return l1 norm of the polynomial
+    integer_class l1_norm() const;
+    // Divides a polynomial in integer domain
+    static void zz_divide(const UIntDict &a, const UIntDict &b,
+                          const Ptr<UIntDict> &quo, const Ptr<UIntDict> &rem);
 }; // UIntDict
 
 class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
@@ -131,7 +144,34 @@ public:
 
     //! \return size of the hash
     hash_t __hash__() const;
+    // Factors a primitive suare free polynomial in Z[x] using Zassenhaus's
+    // algorithm
+    // returns a set of factors
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999,
+    //     page no: 453-454
+    std::set<RCP<const UIntPoly>, RCPBasicKeyLess> zz_zassenhaus() const;
+    // Factors a square free(non-primitive) polynomial in Z[x]
+    // returns a pair, where first is the content of polynomial and second is
+    // the set of factors
+    // References :
+    //     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999
+    std::pair<integer_class, std::set<RCP<const UIntPoly>, RCPBasicKeyLess>>
+    zz_factor_sqf() const;
 }; // UIntPoly
+
+// Divides a polynomial in integer domain
+inline void divide_upoly_int(const UIntPoly &a, const UIntPoly &b,
+                             const Ptr<RCP<const UIntPoly>> &quo,
+                             const Ptr<RCP<const UIntPoly>> &rem)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+    UIntDict q, r;
+    UIntDict::zz_divide(a.get_poly(), b.get_poly(), outArg(q), outArg(r));
+    *quo = UIntPoly::from_dict(a.get_var(), std::move(q.dict_));
+    *rem = UIntPoly::from_dict(a.get_var(), std::move(r.dict_));
+}
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
