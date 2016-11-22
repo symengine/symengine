@@ -750,7 +750,7 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
 {
     CWRAPPER_BEGIN
 
-    assert(n < self->m.size());
+    SYMENGINE_ASSERT(n < self->m.size());
     result->m = self->m[n];
 
     CWRAPPER_END
