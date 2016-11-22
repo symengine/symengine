@@ -916,17 +916,21 @@ void test_functions()
 
 void test_ntheory()
 {
-    basic x, i1, i2, i4, i5;
+    basic x, i1, i2, i4, i5, im2, im7;
     basic_new_stack(x);
     basic_new_stack(i1);
     basic_new_stack(i2);
     basic_new_stack(i4);
     basic_new_stack(i5);
+    basic_new_stack(im2);
+    basic_new_stack(im7);
 
     integer_set_si(i1, 1);
     integer_set_si(i2, 2);
     integer_set_si(i4, 4);
     integer_set_si(i5, 5);
+    integer_set_si(im2, -2);
+    integer_set_si(im7, -7);
 
     ntheory_gcd(x, i2, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i2));
@@ -943,6 +947,12 @@ void test_ntheory()
     ntheory_quotient(x, i5, i2);
     SYMENGINE_C_ASSERT(basic_eq(x, i2));
 
+    ntheory_mod_f(x, im7, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, i1));
+
+    ntheory_quotient_f(x, im7, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, im2));
+
     ntheory_fibonacci(x, 5);
     SYMENGINE_C_ASSERT(basic_eq(x, i5));
 
@@ -957,6 +967,8 @@ void test_ntheory()
     basic_free_stack(i2);
     basic_free_stack(i4);
     basic_free_stack(i5);
+    basic_free_stack(im2);
+    basic_free_stack(im7);
 }
 
 void test_eval()

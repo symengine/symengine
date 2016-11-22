@@ -559,6 +559,10 @@ CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE ntheory_mod(basic s, const basic n, const basic d);
 //! \return quotient round toward zero when `n` is divided by `d`
 CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d);
+//! modulo round toward -inf
+CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d);
+//! \return quotient round toward -inf when `n` is divided by `d`
+CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d);
 //! nth Fibonacci number //  fibonacci(0) = 0 and fibonacci(1) = 1
 CWRAPPER_OUTPUT_TYPE ntheory_fibonacci(basic s, unsigned long a);
 //! Lucas number
