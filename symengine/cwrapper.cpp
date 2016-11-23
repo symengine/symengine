@@ -1228,6 +1228,23 @@ CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE ntheory_gcd_ext(basic g, basic s, basic t, const basic a,
+                                     const basic b)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    SymEngine::RCP<const Integer> g_, s_, t_;
+    SymEngine::gcd_ext(
+        SymEngine::outArg_Integer(g_), SymEngine::outArg_Integer(s_),
+        SymEngine::outArg_Integer(t_), static_cast<const Integer &>(*(a->m)),
+        static_cast<const Integer &>(*(b->m)));
+    g->m = g_;
+    s->m = s_;
+    t->m = t_;
+    CWRAPPER_END
+}
+
 CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a)
 {
     CWRAPPER_BEGIN
@@ -1256,6 +1273,22 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod(basic q, basic r, const basic n,
+                                          const basic d)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    SymEngine::RCP<const Integer> q_, r_;
+    SymEngine::quotient_mod(SymEngine::outArg_Integer(q_),
+                            SymEngine::outArg_Integer(r_),
+                            static_cast<const Integer &>(*(n->m)),
+                            static_cast<const Integer &>(*(d->m)));
+    q->m = q_;
+    r->m = r_;
+    CWRAPPER_END
+}
+
 CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
@@ -1276,10 +1309,50 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod_f(basic q, basic r, const basic n,
+                                            const basic d)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    SymEngine::RCP<const Integer> q_, r_;
+    SymEngine::quotient_mod_f(SymEngine::outArg_Integer(q_),
+                              SymEngine::outArg_Integer(r_),
+                              static_cast<const Integer &>(*(n->m)),
+                              static_cast<const Integer &>(*(d->m)));
+    q->m = q_;
+    r->m = r_;
+    CWRAPPER_END
+}
+
+int ntheory_mod_inverse(basic b, const basic a, const basic m)
+{
+    int ret_val;
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(m->m)));
+    SymEngine::RCP<const Integer> b_;
+    ret_val = SymEngine::mod_inverse(SymEngine::outArg_Integer(b_),
+                                     static_cast<const Integer &>(*(a->m)),
+                                     static_cast<const Integer &>(*(m->m)));
+    b->m = b_;
+    return ret_val;
+}
+
 CWRAPPER_OUTPUT_TYPE ntheory_fibonacci(basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::fibonacci(a);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE ntheory_fibonacci2(basic g, basic s, unsigned long a)
+{
+    CWRAPPER_BEGIN
+    SymEngine::RCP<const Integer> g_, s_;
+    SymEngine::fibonacci2(SymEngine::outArg_Integer(g_),
+                          SymEngine::outArg_Integer(s_), a);
+    g->m = g_;
+    s->m = s_;
     CWRAPPER_END
 }
 
@@ -1290,11 +1363,29 @@ CWRAPPER_OUTPUT_TYPE ntheory_lucas(basic s, unsigned long a)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE ntheory_lucas2(basic g, basic s, unsigned long a)
+{
+    CWRAPPER_BEGIN
+    SymEngine::RCP<const Integer> g_, s_;
+    SymEngine::lucas2(SymEngine::outArg_Integer(g_),
+                      SymEngine::outArg_Integer(s_), a);
+    g->m = g_;
+    s->m = s_;
+    CWRAPPER_END
+}
+
 CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE ntheory_factorial(basic s, unsigned long n)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::factorial(n);
     CWRAPPER_END
 }
 
