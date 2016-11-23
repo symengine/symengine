@@ -55,14 +55,6 @@ inline bool is_aligned(T *p, size_t n = alignof(T))
 {
     return 0 == reinterpret_cast<uintptr_t>(p) % n;
 }
-
-// Make a value with type Ptr<RCP<const Integer>>, which is commonly used in
-// ntheory.h.
-inline SymEngine::Ptr<RCP<const Integer>>
-outArg_Integer(RCP<const Integer> &arg)
-{
-    return SymEngine::outArg<RCP<const Integer>>(arg);
-}
 }
 
 extern "C" {
@@ -1235,10 +1227,10 @@ CWRAPPER_OUTPUT_TYPE ntheory_gcd_ext(basic g, basic s, basic t, const basic a,
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
     SymEngine::RCP<const Integer> g_, s_, t_;
-    SymEngine::gcd_ext(
-        SymEngine::outArg_Integer(g_), SymEngine::outArg_Integer(s_),
-        SymEngine::outArg_Integer(t_), static_cast<const Integer &>(*(a->m)),
-        static_cast<const Integer &>(*(b->m)));
+    SymEngine::gcd_ext(SymEngine::outArg(g_), SymEngine::outArg(s_),
+                       SymEngine::outArg(t_),
+                       static_cast<const Integer &>(*(a->m)),
+                       static_cast<const Integer &>(*(b->m)));
     g->m = g_;
     s->m = s_;
     t->m = t_;
@@ -1280,8 +1272,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod(basic q, basic r, const basic n,
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     SymEngine::RCP<const Integer> q_, r_;
-    SymEngine::quotient_mod(SymEngine::outArg_Integer(q_),
-                            SymEngine::outArg_Integer(r_),
+    SymEngine::quotient_mod(SymEngine::outArg(q_), SymEngine::outArg(r_),
                             static_cast<const Integer &>(*(n->m)),
                             static_cast<const Integer &>(*(d->m)));
     q->m = q_;
@@ -1316,8 +1307,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod_f(basic q, basic r, const basic n,
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     SymEngine::RCP<const Integer> q_, r_;
-    SymEngine::quotient_mod_f(SymEngine::outArg_Integer(q_),
-                              SymEngine::outArg_Integer(r_),
+    SymEngine::quotient_mod_f(SymEngine::outArg(q_), SymEngine::outArg(r_),
                               static_cast<const Integer &>(*(n->m)),
                               static_cast<const Integer &>(*(d->m)));
     q->m = q_;
@@ -1331,7 +1321,7 @@ int ntheory_mod_inverse(basic b, const basic a, const basic m)
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(m->m)));
     SymEngine::RCP<const Integer> b_;
-    ret_val = SymEngine::mod_inverse(SymEngine::outArg_Integer(b_),
+    ret_val = SymEngine::mod_inverse(SymEngine::outArg(b_),
                                      static_cast<const Integer &>(*(a->m)),
                                      static_cast<const Integer &>(*(m->m)));
     b->m = b_;
@@ -1349,8 +1339,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_fibonacci2(basic g, basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
     SymEngine::RCP<const Integer> g_, s_;
-    SymEngine::fibonacci2(SymEngine::outArg_Integer(g_),
-                          SymEngine::outArg_Integer(s_), a);
+    SymEngine::fibonacci2(SymEngine::outArg(g_), SymEngine::outArg(s_), a);
     g->m = g_;
     s->m = s_;
     CWRAPPER_END
@@ -1367,8 +1356,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_lucas2(basic g, basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
     SymEngine::RCP<const Integer> g_, s_;
-    SymEngine::lucas2(SymEngine::outArg_Integer(g_),
-                      SymEngine::outArg_Integer(s_), a);
+    SymEngine::lucas2(SymEngine::outArg(g_), SymEngine::outArg(s_), a);
     g->m = g_;
     s->m = s_;
     CWRAPPER_END
