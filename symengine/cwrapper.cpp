@@ -434,15 +434,15 @@ CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
+dcomplex csqrt(dcomplex z);
+
 dcomplex complex_double_get(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
-    dcomplex d;
-    d.real = (static_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
-                 .real();
-    d.imag = (static_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
-                 .imag();
-    return d;
+    std::complex<double> cd
+        = static_cast<const ComplexDouble &>(*(s->m)).as_complex_double();
+    static const dcomplex ImagI = csqrt(-1);
+    return cd.real() + cd.imag() * ImagI;
 }
 
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)

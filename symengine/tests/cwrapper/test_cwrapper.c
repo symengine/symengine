@@ -12,6 +12,8 @@
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
 
+#include <complex.h>
+
 void test_cwrapper()
 {
     char *s;
@@ -209,8 +211,8 @@ void test_complex_double()
     basic_str_free(s);
 
     k = complex_double_get(e);
-    SYMENGINE_C_ASSERT(k.real == 100.47);
-    SYMENGINE_C_ASSERT(k.imag == 76.59);
+    SYMENGINE_C_ASSERT(creal(k) == 100.47);
+    SYMENGINE_C_ASSERT(cimag(k) == 76.59);
 
     complex_double_real_part(f, e);
     s = basic_str(f);
