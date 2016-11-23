@@ -55,6 +55,14 @@ inline bool is_aligned(T *p, size_t n = alignof(T))
 {
     return 0 == reinterpret_cast<uintptr_t>(p) % n;
 }
+
+// Make a value with type Ptr<RCP<const Integer>>, which is commonly used in
+// ntheory.h.
+inline SymEngine::Ptr<RCP<const Integer>>
+outArg_Integer(RCP<const Integer> &arg)
+{
+    return SymEngine::outArg<RCP<const Integer>>(arg);
+}
 }
 
 extern "C" {
