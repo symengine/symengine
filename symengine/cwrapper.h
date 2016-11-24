@@ -553,22 +553,39 @@ char *ascii_art_str();
 CWRAPPER_OUTPUT_TYPE ntheory_gcd(basic s, const basic a, const basic b);
 //! Least Common Multiple
 CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, const basic a, const basic b);
+//! Extended GCD
+CWRAPPER_OUTPUT_TYPE ntheory_gcd_ext(basic g, basic s, basic t, const basic a,
+                                     const basic b);
 //! \return next prime after `a`
 CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a);
 //! modulo round toward zero
 CWRAPPER_OUTPUT_TYPE ntheory_mod(basic s, const basic n, const basic d);
 //! \return quotient round toward zero when `n` is divided by `d`
 CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d);
+//! \return modulo and quotient round toward zero
+CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod(basic q, basic r, const basic n,
+                                          const basic d);
 //! modulo round toward -inf
 CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d);
 //! \return quotient round toward -inf when `n` is divided by `d`
 CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d);
+//! \return modulo and quotient round toward -inf
+CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod_f(basic q, basic r, const basic n,
+                                            const basic d);
+//! inverse modulo
+int ntheory_mod_inverse(basic b, const basic a, const basic m);
 //! nth Fibonacci number //  fibonacci(0) = 0 and fibonacci(1) = 1
 CWRAPPER_OUTPUT_TYPE ntheory_fibonacci(basic s, unsigned long a);
+//! Fibonacci n and n-1
+CWRAPPER_OUTPUT_TYPE ntheory_fibonacci2(basic g, basic s, unsigned long a);
 //! Lucas number
 CWRAPPER_OUTPUT_TYPE ntheory_lucas(basic s, unsigned long a);
+//! Lucas number n and n-1
+CWRAPPER_OUTPUT_TYPE ntheory_lucas2(basic g, basic s, unsigned long a);
 //! Binomial Coefficient
 CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b);
+//! Factorial
+CWRAPPER_OUTPUT_TYPE ntheory_factorial(basic s, unsigned long n);
 //! Evaluate b and assign the value to s
 CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
                                  int real);

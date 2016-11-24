@@ -916,20 +916,32 @@ void test_functions()
 
 void test_ntheory()
 {
-    basic x, i1, i2, i4, i5, im2, im7;
+    int ret_val;
+    basic x, y, z, a, b, c, i1, i2, i3, i4, i5, im1, im2, im3, im7;
     basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(a);
+    basic_new_stack(b);
+    basic_new_stack(c);
     basic_new_stack(i1);
     basic_new_stack(i2);
+    basic_new_stack(i3);
     basic_new_stack(i4);
     basic_new_stack(i5);
+    basic_new_stack(im1);
     basic_new_stack(im2);
+    basic_new_stack(im3);
     basic_new_stack(im7);
 
     integer_set_si(i1, 1);
     integer_set_si(i2, 2);
+    integer_set_si(i3, 3);
     integer_set_si(i4, 4);
     integer_set_si(i5, 5);
+    integer_set_si(im1, -1);
     integer_set_si(im2, -2);
+    integer_set_si(im3, -3);
     integer_set_si(im7, -7);
 
     ntheory_gcd(x, i2, i4);
@@ -937,6 +949,13 @@ void test_ntheory()
 
     ntheory_lcm(x, i2, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i4));
+
+    ntheory_gcd_ext(x, y, z, i2, i3);
+    SYMENGINE_C_ASSERT(basic_eq(x, i1));
+    basic_mul(a, i2, y);
+    basic_mul(b, i3, z);
+    basic_add(c, a, b);
+    SYMENGINE_C_ASSERT(basic_eq(x, c));
 
     ntheory_nextprime(x, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i5));
@@ -947,27 +966,62 @@ void test_ntheory()
     ntheory_quotient(x, i5, i2);
     SYMENGINE_C_ASSERT(basic_eq(x, i2));
 
+    ntheory_quotient_mod(x, y, im7, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, im1));
+    SYMENGINE_C_ASSERT(basic_eq(y, im3));
+
     ntheory_mod_f(x, im7, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, i1));
 
     ntheory_quotient_f(x, im7, i4);
     SYMENGINE_C_ASSERT(basic_eq(x, im2));
 
+    ntheory_quotient_mod_f(x, y, im7, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, im2));
+    SYMENGINE_C_ASSERT(basic_eq(y, i1));
+
+    ret_val = ntheory_mod_inverse(x, i3, i5);
+    SYMENGINE_C_ASSERT(ret_val != 0);
+    SYMENGINE_C_ASSERT(basic_eq(x, i2));
+
     ntheory_fibonacci(x, 5);
     SYMENGINE_C_ASSERT(basic_eq(x, i5));
+
+    ntheory_fibonacci2(x, y, 5);
+    SYMENGINE_C_ASSERT(basic_eq(x, i5));
+    SYMENGINE_C_ASSERT(basic_eq(y, i3));
 
     ntheory_lucas(x, 1);
     SYMENGINE_C_ASSERT(basic_eq(x, i1));
 
+    ntheory_lucas2(x, y, 3);
+    SYMENGINE_C_ASSERT(basic_eq(x, i4));
+    SYMENGINE_C_ASSERT(basic_eq(y, i3));
+
     ntheory_binomial(x, i5, 1);
     SYMENGINE_C_ASSERT(basic_eq(x, i5));
 
+    ntheory_factorial(x, 0);
+    ntheory_factorial(y, 1);
+    ntheory_factorial(z, 2);
+    SYMENGINE_C_ASSERT(basic_eq(x, i1));
+    SYMENGINE_C_ASSERT(basic_eq(y, i1));
+    SYMENGINE_C_ASSERT(basic_eq(z, i2));
+
     basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+    basic_free_stack(a);
+    basic_free_stack(b);
+    basic_free_stack(c);
     basic_free_stack(i1);
     basic_free_stack(i2);
+    basic_free_stack(i3);
     basic_free_stack(i4);
     basic_free_stack(i5);
+    basic_free_stack(im1);
     basic_free_stack(im2);
+    basic_free_stack(im3);
     basic_free_stack(im7);
 }
 
