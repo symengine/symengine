@@ -7,6 +7,8 @@
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
 #include <boost/multiprecision/cpp_int.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
 #include <symengine/symengine_rcp.h>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
@@ -884,6 +886,26 @@ int mp_jacobi(const integer_class &a, const integer_class &n);
 
 int mp_kronecker(const integer_class &a, const integer_class &n);
 
+class mp_randstate
+{
+public:
+    // returns a uniformly distributed random integer between 0 and a-1,
+    // inclusive
+    integer_class urandomint(const integer_class &a)
+    {
+        boost::random::uniform_int_distribution<integer_class> ui(0, a);
+        return ui(_twister);
+    }
+
+    void seed(const uint32_t &i)
+    {
+        _twister.seed(i);
+    }
+
+private:
+    boost::random::mt19937 _twister;
+};
+
 #endif // SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
 
 // The implementation of each of the following
@@ -1034,6 +1056,39 @@ inline int mp_cmpabs(const integer_class &a, const integer_class &b)
 {
     return mpz_cmpabs(get_mpz_t(a), get_mpz_t(b));
 }
+
+class mp_randstate
+{
+public:
+    // returns a uniformly distributed random integer between 0 and a-1,
+    // inclusive
+    integer_class urandomint(const integer_class &a)
+    {
+        integer_class temp;
+        mpz_urandomm(get_mpz_t(temp), _state, get_mpz_t(a));
+        return temp;
+    }
+
+    void seed(const integer_class &i)
+    {
+        gmp_randseed(_state, get_mpz_t(i));
+    }
+
+    mp_randstate()
+    {
+        gmp_randinit_default(_state);
+        gmp_randseed_ui(_state, std::rand());
+    }
+
+    ~mp_randstate()
+    {
+        gmp_randclear(_state);
+    }
+
+private:
+    gmp_randstate_t _state;
+};
+
 #endif // SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
 
 } // SymEngine namespace
