@@ -2754,7 +2754,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
             const auto den = get_den(x->i);
             const auto num = get_num(x->i);
-            const auto r = num % den;
+            const integer_class r = num % den;
             RCP<const Basic> res;
             if (den == 2) {
                 res = sub(mul(im2, log(i2)), EulerGamma);
@@ -2775,12 +2775,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
             } else {
                 return make_rcp<const PolyGamma>(n_, x_);
             }
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             rational_class a(0), f(r, den);
-#else
-            rational_class a(0), f(integer_class(r),
-                                   den); // r is an expression template in boost
-#endif
             for (unsigned long i = 0; i < (num - r) / den; ++i) {
                 a += 1 / (f + i);
             }

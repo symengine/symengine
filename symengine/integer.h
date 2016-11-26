@@ -210,11 +210,7 @@ bool perfect_square(const Integer &n);
 bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
-/*
-inline Integer::Integer(integer_class i_) : i{std::move(i_)}
-{
-}
-*/
+
 } // SymEngine
 
 #endif

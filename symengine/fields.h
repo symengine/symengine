@@ -9,11 +9,7 @@
 #include <symengine/dict.h>
 #include <symengine/polys/upolybase.h>
 #include <symengine/polys/uintpoly.h>
-#include <random>
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#endif
+
 namespace SymEngine
 {
 class GaloisFieldDict
