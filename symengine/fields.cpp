@@ -676,7 +676,7 @@ GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
 {
     std::vector<integer_class> v(n_val + 1);
     for (unsigned i = 0; i < n_val; ++i) {
-        v[i] = state.urandomint(modulo_);
+        state.urandomint(v[i], modulo_);
     }
     v[n_val] = 1_z;
     return GaloisFieldDict::from_vec(v, modulo_);

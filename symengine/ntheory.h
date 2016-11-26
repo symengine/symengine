@@ -86,8 +86,6 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 //! Factor using lehman's methods
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
 
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-// Current implementations invoke gmp types and methods directly
 //! Factor using Pollard's p-1 method
 int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned B = 10,
@@ -96,7 +94,6 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
 //! Factor using Pollard's rho methods
 int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned retries = 5);
-#endif
 
 //! Find prime factors of `n`
 void prime_factors(std::vector<RCP<const Integer>> &primes, const Integer &n);

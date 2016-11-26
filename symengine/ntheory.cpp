@@ -257,8 +257,6 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
     return ret_val;
 }
 
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-// Current implementations invoke gmp types and methods directly
 namespace
 {
 // Factor using Pollard's p-1 method
@@ -297,21 +295,18 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
 {
     int ret_val = 0;
     integer_class rop, nm4, c;
-    gmp_randstate_t state;
 
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, retries);
+    mp_randstate state;
     nm4 = n.as_integer_class() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; ++i) {
-        mp_urandomm(c, state, nm4);
-        c = c + 2;
+        state.urandomint(c, nm4);
+        c += 2;
         ret_val = _factor_pollard_pm1_method(rop, n.as_integer_class(), c, B);
     }
 
     if (ret_val != 0)
         *f = integer(std::move(rop));
-    gmp_randclear(state);
     return ret_val;
 }
 
@@ -352,26 +347,21 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
 {
     int ret_val = 0;
     integer_class rop, nm1, nm4, a, s;
-    gmp_randstate_t state;
-
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, retries);
+    mp_randstate state;
     nm1 = n.as_integer_class() - 1;
     nm4 = n.as_integer_class() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; ++i) {
-        mp_urandomm(a, state, nm1);
-        mp_urandomm(s, state, nm4);
-        s = s + 1;
+        state.urandomint(a, nm1);
+        state.urandomint(s, nm4);
+        s += 1;
         ret_val = _factor_pollard_rho_method(rop, n.as_integer_class(), a, s);
     }
 
     if (ret_val != 0)
         *f = integer(std::move(rop));
-    gmp_randclear(state);
     return ret_val;
 }
-#endif
 
 // Factorization
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
@@ -1009,14 +999,7 @@ namespace
 bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
                               const integer_class &p)
 {
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-    gmp_randstate_t state;
-    gmp_randinit_default(state);
-    gmp_randseed(state, get_mpz_t(p));
-#else
-    boost::random::mt19937 mt;
-    boost::random::uniform_int_distribution<integer_class> ui(0, p);
-#endif
+    mp_randstate state;
     integer_class n, y, b, q, pm1, t(1);
     pm1 = p - 1;
     unsigned e, m;
@@ -1024,12 +1007,7 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
     q = pm1 >> e; // p - 1 = 2**e*q
 
     while (t != -1) {
-#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-        mp_urandomm(n, state, p);
-        mp_demote(n);
-#else
-        n = ui(mt);
-#endif
+        state.urandomint(n, p);
         t = mp_legendre(n, p);
     }
     mp_powm(y, n, q, p); // y = n**q mod p

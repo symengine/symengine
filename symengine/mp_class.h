@@ -891,10 +891,10 @@ class mp_randstate
 public:
     // returns a uniformly distributed random integer between 0 and a-1,
     // inclusive
-    integer_class urandomint(const integer_class &a)
+    void urandomint(integer_class &res, const integer_class &a)
     {
         boost::random::uniform_int_distribution<integer_class> ui(0, a);
-        return ui(_twister);
+        res = ui(_twister);
     }
 
     void seed(const uint32_t &i)
@@ -1062,11 +1062,10 @@ class mp_randstate
 public:
     // returns a uniformly distributed random integer between 0 and a-1,
     // inclusive
-    integer_class urandomint(const integer_class &a)
+    void urandomint(integer_class &res, const integer_class &a)
     {
-        integer_class temp;
-        mpz_urandomm(get_mpz_t(temp), _state, get_mpz_t(a));
-        return temp;
+        mpz_urandomm(get_mpz_t(res), _state, get_mpz_t(a));
+        mp_demote(res);
     }
 
     void seed(const integer_class &i)
