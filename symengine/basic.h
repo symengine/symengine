@@ -254,6 +254,8 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 template <class T>
 void hash_combine(hash_t &seed, const T &v);
 
+const char *get_version();
+
 } // SymEngine
 
 //! Specialise `std::hash` for Basic.
