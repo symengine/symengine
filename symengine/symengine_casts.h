@@ -33,11 +33,18 @@
 
 #include <symengine/symengine_assert.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 // Reference modifications.
-template<typename T> struct remove_reference { typedef T type; };
-template<typename T> struct remove_reference<T&> { typedef T type; };
+template <typename T>
+struct remove_reference {
+    typedef T type;
+};
+template <typename T>
+struct remove_reference<T &> {
+    typedef T type;
+};
 
 // Use implicit_cast as a safe version of static_cast or const_cast
 // for upcasting in the type hierarchy (i.e. casting a pointer to Foo
@@ -54,7 +61,8 @@ template<typename T> struct remove_reference<T&> { typedef T type; };
 //   implicit_cast<ToType>(expr)
 
 template <typename To, typename From>
-inline To implicit_cast(const From &f) {
+inline To implicit_cast(const From &f)
+{
     return f;
 }
 
@@ -76,37 +84,39 @@ inline To implicit_cast(const From &f) {
 //    if (dynamic_cast<Subclass2>(foo)) HandleASubclass2Object(foo);
 // You should design the code some other way not to need this.
 
-template <typename To, typename From>	 // use like this: down_cast<T*>(foo).
-inline To down_cast(From* f) {				// only accept pointers.
+template <typename To, typename From> // use like this: down_cast<T*>(foo).
+inline To down_cast(From *f)          // only accept pointers.
+{
     // Ensures that To is a sub-type of From *.  This test is here only
     // for compile-time type checking, and has no overhead in an
     // optimized build at run-time, as it will be optimized away
     // completely.
     if (false) {
-        implicit_cast<From*, To>(0);
+        implicit_cast<From *, To>(0);
     }
 
-    SYMENGINE_ASSERT(f == NULL || dynamic_cast<To>(f) != NULL);  // debug mode only!
-    
+    SYMENGINE_ASSERT(f == NULL || dynamic_cast<To>(f) != NULL);
+
     return static_cast<To>(f);
 }
 
-template<typename To, typename From>	// use like this: down_cast<T&>(foo);
-inline To down_cast(From& f) {
-    typedef typename remove_reference<To>::type* ToAsPointer;
+template <typename To, typename From> // use like this: down_cast<T&>(foo);
+inline To down_cast(From &f)
+{
+    typedef typename remove_reference<To>::type *ToAsPointer;
     // Ensures that To is a sub-type of From *.  This test is here only
     // for compile-time type checking, and has no overhead in an
     // optimized build at run-time, as it will be optimized away
     // completely.
     if (false) {
-        implicit_cast<From*, ToAsPointer>(0);
+        implicit_cast<From *, ToAsPointer>(0);
     }
 
-    SYMENGINE_ASSERT(dynamic_cast<ToAsPointer>(&f) != NULL); // debug mode only!
+    SYMENGINE_ASSERT(dynamic_cast<ToAsPointer>(&f) != NULL);
 
     return *static_cast<ToAsPointer>(&f);
 }
 
 } // SymEngine
 
-#endif  // SYMENGINE_CASTS_H
+#endif // SYMENGINE_CASTS_H
