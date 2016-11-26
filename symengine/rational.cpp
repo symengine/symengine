@@ -27,13 +27,24 @@ bool Rational::is_canonical(const rational_class &i) const
     return true;
 }
 
-RCP<const Number> Rational::from_mpq(rational_class i)
+RCP<const Number> Rational::from_mpq(const rational_class &i)
 {
     // If the result is an Integer, return an Integer:
     if (SymEngine::get_den(i) == 1) {
         return integer(SymEngine::get_num(i));
     } else {
-        return make_rcp<const Rational>(i);
+        rational_class j(i);
+        return make_rcp<const Rational>(std::move(j));
+    }
+}
+
+RCP<const Number> Rational::from_mpq(rational_class &&i)
+{
+    // If the result is an Integer, return an Integer:
+    if (SymEngine::get_den(i) == 1) {
+        return integer(SymEngine::get_num(i));
+    } else {
+        return make_rcp<const Rational>(std::move(i));
     }
 }
 
@@ -152,7 +163,7 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat,
     rational_class r(num, den);
 #endif
     // No need to canonicalize since `this` is in canonical form
-    *the_rat = make_rcp<const Rational>(r);
+    *the_rat = make_rcp<const Rational>(std::move(r));
     return true;
 }
 

@@ -20,21 +20,15 @@ public:
 
 public:
     IMPLEMENT_TYPEID(RATIONAL)
-//! Constructor of Rational class
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
-    Rational(const rational_class &_i) : i(_i)
-    {
-    }
+    //! Constructor of Rational class
     Rational(rational_class &&_i) : i(std::move(_i))
     {
     }
-#else
-    explicit Rational(rational_class i);
-#endif
     /*! \param `i` must already be in rational_class canonical form
     *   \return Integer or Rational depending on denumerator.
     * */
-    static RCP<const Number> from_mpq(rational_class i);
+    static RCP<const Number> from_mpq(const rational_class &i);
+    static RCP<const Number> from_mpq(rational_class &&i);
     //! \return size of the hash
     virtual hash_t __hash__() const;
     /*! Equality comparator
