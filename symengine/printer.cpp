@@ -336,6 +336,8 @@ void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
 {
     if (eq(*b, *rational(1, 2))) {
         o << "sqrt(" << apply(a) << ")";
+    } else if (eq(*a, *E)) {
+        o << "exp(" << apply(b) << ")";
     } else {
         o << parenthesizeLE(a, PrecedenceEnum::Pow);
         o << "**";

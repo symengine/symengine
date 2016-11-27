@@ -81,6 +81,9 @@ TEST_CASE("test_printing(): printing", "[printing]")
                 pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "(23/6)*sqrt(2)*sqrt(3)*sqrt(5)*sqrt(7)");
 
+    r = exp(symbol("x"));
+    REQUIRE(r->__str__() == "exp(x)");
+
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
     REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(x)");
 
