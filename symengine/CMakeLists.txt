@@ -45,7 +45,6 @@ set(SRC
     numer_denom.cpp
     derivative.cpp
     parser.cpp
-    mp_wrapper.cpp
     sets.cpp
     eval.cpp
     fields.cpp
@@ -53,6 +52,14 @@ set(SRC
     logic.cpp
     finitediff.cpp
 )
+
+if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
+    set(SRC ${SRC} mp_boost.cpp)
+elseif ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "FLINT")
+    set(SRC ${SRC} mp_wrapper.cpp)
+elseif ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "GMP")
+    set(SRC ${SRC} mp_wrapper.cpp)
+endif()
 
 if (WITH_MPFR)
     set(SRC ${SRC} eval_mpfr.cpp real_mpfr.cpp)

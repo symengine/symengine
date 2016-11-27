@@ -15,6 +15,11 @@
 #include "bernoulli.h"
 #include "rational.h"
 #endif // HAVE_SYMENGINE_ARB
+#ifndef HAVE_SYMENGINE_GMP
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random.hpp>
+#endif // !HAVE_SYMENGINE_GMP
 
 namespace SymEngine
 {
@@ -283,28 +288,25 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
     else
         return 1;
 }
-}
+} // anonymous namespace
 
 int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned B, unsigned retries)
 {
     int ret_val = 0;
     integer_class rop, nm4, c;
-    gmp_randstate_t state;
 
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, retries);
+    mp_randstate state;
     nm4 = n.as_integer_class() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; ++i) {
-        mp_urandomm(c, state, nm4);
-        c = c + 2;
+        state.urandomint(c, nm4);
+        c += 2;
         ret_val = _factor_pollard_pm1_method(rop, n.as_integer_class(), c, B);
     }
 
     if (ret_val != 0)
         *f = integer(std::move(rop));
-    gmp_randclear(state);
     return ret_val;
 }
 
@@ -345,23 +347,19 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
 {
     int ret_val = 0;
     integer_class rop, nm1, nm4, a, s;
-    gmp_randstate_t state;
-
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, retries);
+    mp_randstate state;
     nm1 = n.as_integer_class() - 1;
     nm4 = n.as_integer_class() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; ++i) {
-        mp_urandomm(a, state, nm1);
-        mp_urandomm(s, state, nm4);
-        s = s + 1;
+        state.urandomint(a, nm1);
+        state.urandomint(s, nm4);
+        s += 1;
         ret_val = _factor_pollard_rho_method(rop, n.as_integer_class(), a, s);
     }
 
     if (ret_val != 0)
         *f = integer(std::move(rop));
-    gmp_randclear(state);
     return ret_val;
 }
 
@@ -621,7 +619,7 @@ RCP<const Number> bernoulli(unsigned long n)
     // TODO: implement a faster algorithm
     std::vector<rational_class> v(n + 1);
     for (unsigned m = 0; m <= n; ++m) {
-        v[m] = rational_class(1, m + 1);
+        v[m] = rational_class(1u, m + 1);
 
         for (unsigned j = m; j >= 1; --j) {
             v[j - 1] = j * (v[j - 1] - v[j]);
@@ -636,14 +634,18 @@ RCP<const Number> harmonic(unsigned long n, long m)
     rational_class res(0);
     if (m == 1) {
         for (unsigned i = 1; i <= n; ++i) {
-            res += rational_class(1, i);
+            res += rational_class(1u, i);
         }
         return Rational::from_mpq(res);
     } else {
         for (unsigned i = 1; i <= n; ++i) {
             if (m > 0) {
                 rational_class t(1u, i);
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
                 mp_pow_ui(get_den(t), get_den(t), m);
+#else
+                mp_pow_ui(t, t, m);
+#endif
                 res += t;
             } else {
                 integer_class t(i);
@@ -997,10 +999,7 @@ namespace
 bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
                               const integer_class &p)
 {
-    gmp_randstate_t state;
-    gmp_randinit_default(state);
-    gmp_randseed(state, get_mpz_t(p));
-
+    mp_randstate state;
     integer_class n, y, b, q, pm1, t(1);
     pm1 = p - 1;
     unsigned e, m;
@@ -1008,8 +1007,7 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
     q = pm1 >> e; // p - 1 = 2**e*q
 
     while (t != -1) {
-        mp_urandomm(n, state, p);
-        mp_demote(n);
+        state.urandomint(n, p);
         t = mp_legendre(n, p);
     }
     mp_powm(y, n, q, p); // y = n**q mod p

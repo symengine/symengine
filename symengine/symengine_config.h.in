@@ -1,6 +1,9 @@
 /* Define if you want to enable ASSERT testing in SymEngine */
 #cmakedefine WITH_SYMENGINE_ASSERT
 
+/* Define if you want to enable GMP support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_GMP
+
 /* Define if you want to enable SYMENGINE_RCP support in SymEngine */
 #cmakedefine WITH_SYMENGINE_RCP
 
@@ -62,6 +65,7 @@
 #define SYMENGINE_PIRANHA 1
 #define SYMENGINE_FLINT 2
 #define SYMENGINE_GMP 3
+#define SYMENGINE_BOOSTMP 4
 
 #define SYMENGINE_INTEGER_CLASS SYMENGINE_${SYMENGINE_INTEGER_CLASS}
 

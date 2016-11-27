@@ -23,7 +23,13 @@ public:
 public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `integer_class`
-    explicit Integer(integer_class i);
+    // explicit Integer(integer_class i);
+    Integer(const integer_class &_i) : i(_i)
+    {
+    }
+    Integer(integer_class &&_i) : i(std::move(_i))
+    {
+    }
     //! \return size of the hash
     virtual hash_t __hash__() const;
     /*! Equality comparator
@@ -204,10 +210,6 @@ bool perfect_square(const Integer &n);
 bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
-
-inline Integer::Integer(integer_class i_) : i{std::move(i_)}
-{
-}
 
 } // SymEngine
 

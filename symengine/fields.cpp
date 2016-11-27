@@ -672,13 +672,11 @@ GaloisFieldDict::_gf_pow_pnm1d2(const GaloisFieldDict &f, const unsigned &n,
 }
 
 GaloisFieldDict GaloisFieldDict::gf_random(const unsigned int &n_val,
-                                           gmp_randstate_t &state) const
+                                           mp_randstate &state) const
 {
     std::vector<integer_class> v(n_val + 1);
     for (unsigned i = 0; i < n_val; ++i) {
-        integer_class temp;
-        mp_urandomm(temp, state, modulo_);
-        v[i] = temp;
+        state.urandomint(v[i], modulo_);
     }
     v[n_val] = 1_z;
     return GaloisFieldDict::from_vec(v, modulo_);
@@ -697,9 +695,7 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
     std::vector<GaloisFieldDict> b;
     if (modulo_ != 2_z)
         b = this->gf_frobenius_monomial_base();
-    gmp_randstate_t state;
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, std::rand());
+    mp_randstate state;
     while (factors.size() < N) {
         auto r = gf_random(2 * n - 1, state);
         GaloisFieldDict g;
@@ -724,7 +720,6 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
                 factors.insert(to_add.begin(), to_add.end());
         }
     }
-    gmp_randclear(state);
     return factors;
 }
 
@@ -792,9 +787,7 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
         return factors;
     }
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
-    gmp_randstate_t state;
-    gmp_randinit_default(state);
-    gmp_randseed_ui(state, std::rand());
+    mp_randstate state;
     auto r = gf_random(N - 1, state);
     if (modulo_ == 2_z) {
         auto h = gf_pow_mod(x, mp_get_ui(modulo_));
@@ -817,7 +810,6 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
         temp = h3.gf_edf_shoup(n);
         factors.insert(temp.begin(), temp.end());
     }
-    gmp_randclear(state);
     return factors;
 }
 

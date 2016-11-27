@@ -348,10 +348,13 @@ TEST_CASE("Parsing: polys", "[parser]")
 
     s = "2*(x+1)**10 + 3*(x+2)**5";
     poly1 = from_basic<UIntPoly>(parse(s));
-    poly2 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 1_z}}), 10);
+    // double-braced initialization of 2-element vector
+    // causes compiler error with boost.multiprecision
+    // so use single brace.
+    poly2 = pow_upoly(*UIntPoly::from_vec(x, {1_z, 1_z}), 10);
     poly3 = UIntPoly::from_vec(x, {{2_z}});
     poly2 = mul_upoly(*poly2, *poly3);
-    poly3 = pow_upoly(*UIntPoly::from_vec(x, {{2_z, 1_z}}), 5);
+    poly3 = pow_upoly(*UIntPoly::from_vec(x, {2_z, 1_z}), 5);
     poly4 = UIntPoly::from_vec(x, {{3_z}});
     poly3 = mul_upoly(*poly4, *poly3);
     poly2 = add_upoly(*poly2, *poly3);
@@ -360,10 +363,10 @@ TEST_CASE("Parsing: polys", "[parser]")
     s = "((x+1)**5)*(x+2)*(2*x + 1)**3";
     poly1 = from_basic<UIntPoly>(parse(s));
 
-    poly2 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 1_z}}), 5);
-    poly3 = UIntPoly::from_vec(x, {{2_z, 1_z}});
+    poly2 = pow_upoly(*UIntPoly::from_vec(x, {1_z, 1_z}), 5);
+    poly3 = UIntPoly::from_vec(x, {2_z, 1_z});
     poly2 = mul_upoly(*poly2, *poly3);
-    poly3 = pow_upoly(*UIntPoly::from_vec(x, {{1_z, 2_z}}), 3);
+    poly3 = pow_upoly(*UIntPoly::from_vec(x, {1_z, 2_z}), 3);
     poly2 = mul_upoly(*poly2, *poly3);
     REQUIRE(eq(*poly1, *poly2));
 }

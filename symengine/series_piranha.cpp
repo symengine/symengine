@@ -77,11 +77,7 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const
         if (it.first != 0) {
             rational_class cl_rat(it.first.get_mpq_view());
             canonicalize(cl_rat);
-            RCP<const Number> co_basic;
-            if (get_den(cl_rat) == 1)
-                co_basic = make_rcp<const Integer>(get_num(cl_rat));
-            else
-                co_basic = make_rcp<const Rational>(cl_rat);
+            RCP<const Number> co_basic = Rational::from_mpq(std::move(cl_rat));
             auto term = SymEngine::mul(
                 SymEngine::pow(x, SymEngine::integer(it.second.degree())),
                 co_basic);
@@ -99,11 +95,7 @@ umap_int_basic URatPSeriesPiranha::as_dict() const
     for (const auto &it : p_) {
         if (it.first != 0) {
             rational_class cl_rat(it.first.get_mpq_view());
-            RCP<const Basic> basic;
-            if (get_den(cl_rat) == 1)
-                basic = make_rcp<const Integer>(get_num(cl_rat));
-            else
-                basic = make_rcp<const Rational>(cl_rat);
+            RCP<const Basic> basic = Rational::from_mpq(std::move(cl_rat));
             map[it.second.degree()] = basic;
         }
     }
@@ -113,12 +105,7 @@ umap_int_basic URatPSeriesPiranha::as_dict() const
 RCP<const Basic> URatPSeriesPiranha::get_coeff(int i) const
 {
     rational_class cl_rat(p_.find_cf({i}).get_mpq_view());
-    RCP<const Basic> basic;
-    if (get_den(cl_rat) == 1)
-        basic = make_rcp<const Integer>(get_num(cl_rat));
-    else
-        basic = make_rcp<const Rational>(cl_rat);
-    return basic;
+    return Rational::from_mpq(std::move(cl_rat));
 }
 
 pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec)
@@ -152,20 +139,22 @@ piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var,
 piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n)
 {
     rational_class cl_rat(c.get_mpq_view());
-    rational_class cl_root;
     bool res;
     if (get_den(cl_rat) == 1) {
         // integer constant
+        rational_class cl_root;
         res = mp_root(get_num(cl_root), get_num(cl_rat), n);
+        if (not res)
+            throw SymEngineException("constant term is not an nth power");
+        return convert(cl_root);
     } else {
-        RCP<const Rational> cterm = make_rcp<const Rational>(cl_root);
+        RCP<const Rational> cterm = make_rcp<const Rational>(std::move(cl_rat));
         RCP<const Number> cout;
         res = cterm->nth_root(outArg(cout), n);
-        cl_root = static_cast<const Rational &>(*cout).i;
+        if (not res)
+            throw SymEngineException("constant term is not an nth power");
+        return convert(static_cast<const Rational &>(*cout).i);
     }
-    if (not res)
-        throw SymEngineException("constant term is not an nth power");
-    return convert(cl_root);
 }
 
 pp_t URatPSeriesPiranha::diff(const pp_t &s, const pp_t &var)

@@ -53,7 +53,11 @@ export PATH="$our_install_dir/bin:$PATH"
 conda config --add channels conda-forge --force
 cd $our_install_dir
 
-conda_pkgs="$conda_pkgs gmp=6.1.1"
+if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
+    conda_pkgs="$conda_pkgs boost=1.62";
+else
+    conda_pkgs="$conda_pkgs gmp=6.1.1";
+fi
 
 if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
     conda_pkgs="${conda_pkgs} boost=1.62"

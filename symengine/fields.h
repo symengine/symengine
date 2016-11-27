@@ -9,7 +9,7 @@
 #include <symengine/dict.h>
 #include <symengine/polys/upolybase.h>
 #include <symengine/polys/uintpoly.h>
-#include <random>
+
 namespace SymEngine
 {
 class GaloisFieldDict
@@ -111,7 +111,8 @@ public:
                                    const std::vector<GaloisFieldDict> &b) const;
     // Generates a random polynomial in `modulo_` of degree `n`.
     GaloisFieldDict gf_random(const unsigned int &n_val,
-                              gmp_randstate_t &state) const;
+                              mp_randstate &state) const;
+
     // Given a monic square-free polynomial and an integer `n`, such that `n`
     // divides `this->degree()`,
     // returns all irreducible factors, each of degree `n`.

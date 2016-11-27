@@ -1,9 +1,16 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 #include <symengine/mp_wrapper.h>
+#endif
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <symengine/symengine_rcp.h>
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
@@ -37,7 +44,14 @@ namespace SymEngine
  * to be defined.
  */
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>,
+                                      boost::multiprecision::et_off>
+    integer_class;
+typedef boost::multiprecision::
+    number<boost::multiprecision::cpp_rational_backend,
+           boost::multiprecision::et_off> rational_class;
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
 typedef piranha::rational rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
@@ -46,7 +60,7 @@ typedef fmpq_wrapper rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 typedef mpz_wrapper integer_class;
 typedef mpq_wrapper rational_class;
-#else
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif
@@ -69,7 +83,7 @@ inline rational_class operator"" _q(const char *str)
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-// Helper functions for mpz_class
+// Helper functions for mpz
 inline integer_class mp_abs(const integer_class &i)
 {
     integer_class res;
@@ -214,7 +228,7 @@ inline void mp_addmul(integer_class &r, const integer_class &a,
     mpz_addmul(r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-// Helper functions for rational_class
+// Helper functions for mpq
 inline const integer_class &get_den(const rational_class &i)
 {
     return i.get_den();
@@ -461,6 +475,8 @@ inline int mp_sign(const piranha::rational &i)
 }
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 
+// helper functions for fmpz
+
 inline mpz_view_flint get_mpz_t(const fmpz_wrapper &i)
 {
     return mpz_view_flint(i);
@@ -613,6 +629,8 @@ inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a,
     fmpz_addmul(r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
+// helper functions for fmpq
+
 inline const fmpz_wrapper &get_den(const fmpq_wrapper &i)
 {
     return i.get_den();
@@ -660,7 +678,246 @@ inline fmpq_wrapper mp_abs(const fmpq_wrapper &i)
     return res;
 }
 
-#endif
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+
+inline integer_class mp_abs(const integer_class &i)
+{
+    // boost::multiprecision::abs(i) returns
+    // an expression template, not a cpp_int
+    // but it's ok: cpp_int is constructible from an expression template
+    return boost::multiprecision::abs(i);
+}
+
+inline int mp_cmpabs(const integer_class &a, const integer_class &b)
+{
+    if (mp_abs(a) > mp_abs(b)) {
+        return 1;
+    }
+    if (mp_abs(a) == mp_abs(b)) {
+        return 0;
+    }
+    return -1;
+}
+
+inline int mp_sign(const integer_class &i)
+{
+    return boost::math::sign(i);
+}
+
+inline double mp_get_d(const integer_class &i)
+{
+    return i.convert_to<double>();
+}
+
+inline unsigned long mp_get_ui(const integer_class &i)
+{
+    return mp_abs(i).convert_to<unsigned long>();
+}
+
+inline long mp_get_si(const integer_class &i)
+{
+    return i.convert_to<long>();
+}
+
+inline bool mp_fits_ulong_p(const integer_class &i)
+{
+    return (i >= 0) && (i <= ULONG_MAX);
+}
+
+inline bool mp_fits_slong_p(const integer_class &i)
+{
+    return (i >= LONG_MIN) && (i <= LONG_MAX);
+}
+
+// bitwise and
+inline void mp_and(integer_class &res, const integer_class &a,
+                   const integer_class &b)
+{
+    res = boost::multiprecision::operator&(a, b);
+}
+
+inline void mp_pow_ui(integer_class &res, const integer_class &i,
+                      unsigned long n)
+{
+    res = boost::multiprecision::pow(i, n);
+}
+
+inline void mp_gcd(integer_class &res, const integer_class &a,
+                   const integer_class &b)
+{
+    res = boost::multiprecision::gcd(a, b);
+}
+
+void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
+                const integer_class &b);
+
+inline void mp_fdiv_r(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    // TODO: benchmark this speed
+    integer_class quo;
+    mp_fdiv_qr(quo, res, a, b);
+}
+
+inline void mp_fdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    // TODO:  benchmark this speed
+    integer_class rem;
+    mp_fdiv_qr(res, rem, a, b);
+}
+
+inline void mp_tdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b)
+{
+    boost::multiprecision::divide_qr(a, b, q, r);
+}
+
+inline void mp_divexact(integer_class &q, const integer_class &a,
+                        const integer_class &b)
+{
+    // TODO: make faster
+    q = a / b;
+}
+
+inline void mp_lcm(integer_class &q, const integer_class &a,
+                   const integer_class &b)
+{
+    q = boost::multiprecision::lcm(a, b);
+}
+
+inline void mp_addmul(integer_class &r, const integer_class &a,
+                      const integer_class &b)
+{
+    // boost::multiprecision::default_ops::eval_multiply_add(r,a,b);
+    // //segfaults.
+    r += a * b;
+}
+
+// Helper functions for cpp_rational
+inline const integer_class get_den(const rational_class &i)
+{
+    return boost::multiprecision::denominator(i);
+}
+
+inline const integer_class get_num(const rational_class &i)
+{
+    return boost::multiprecision::numerator(i);
+}
+
+inline void canonicalize(rational_class &i)
+{
+    // do nothing; boost::multiprecision::cpp_int
+    // is always stored in canonical form
+    // numerator and denominator share no common factors
+    // denominator is positive.
+}
+
+inline double mp_get_d(const rational_class &i)
+{
+    return i.convert_to<double>();
+}
+
+inline int mp_sign(const rational_class &i)
+{
+    return i.sign();
+}
+
+inline rational_class mp_abs(const rational_class &i)
+{
+    return boost::multiprecision::abs(i);
+}
+
+inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
+{
+    return a % b == 0;
+}
+
+void mp_pow_ui(rational_class &res, const rational_class &i, unsigned long n);
+
+void mp_powm(integer_class &res, const integer_class &a, const integer_class &b,
+             const integer_class &m);
+
+/*  Extended Euclidean algorithm in Z
+ *  inargs:  integers a, b
+ *  outargs:  gcd, the greatest common divisor of a and b
+ *            s, t such that sa + tb = gcd
+ */
+void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
+               const integer_class &a, const integer_class &b);
+
+bool mp_invert(integer_class &res, const integer_class &a,
+               const integer_class &m);
+
+bool mp_root(integer_class &res, const integer_class &i, unsigned long n);
+
+integer_class mp_sqrt(const integer_class &i);
+
+void mp_rootrem(integer_class &a, integer_class &b, const integer_class &i,
+                unsigned long n);
+
+void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i);
+
+int mp_probab_prime_p(const integer_class &i, unsigned retries);
+
+void mp_nextprime(integer_class &res, const integer_class &i);
+
+unsigned long mp_scan1(const integer_class &i);
+
+void mp_fib_ui(integer_class &res, unsigned long n);
+
+void mp_fib2_ui(integer_class &a, integer_class &b, unsigned long n);
+
+void mp_lucnum_ui(integer_class &res, unsigned long n);
+
+void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n);
+
+void mp_fac_ui(integer_class &res, unsigned long n);
+
+void mp_bin_ui(integer_class &res, const integer_class &n, unsigned long r);
+
+bool mp_perfect_power_p(const integer_class &i);
+
+bool mp_perfect_square_p(const integer_class &i);
+
+int mp_legendre(const integer_class &a, const integer_class &n);
+
+int mp_jacobi(const integer_class &a, const integer_class &n);
+
+int mp_kronecker(const integer_class &a, const integer_class &n);
+
+class mp_randstate
+{
+public:
+    // returns a uniformly distributed random integer between 0 and a-1,
+    // inclusive
+    void urandomint(integer_class &res, const integer_class &a)
+    {
+        boost::random::uniform_int_distribution<integer_class> ui(0, a);
+        res = ui(_twister);
+    }
+
+    void seed(const uint32_t &i)
+    {
+        _twister.seed(i);
+    }
+
+private:
+    boost::random::mt19937 _twister;
+};
+
+#endif // SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+
+// The implementation of each of the following
+// requires only get_mpz_t(integer_class), mp_demote
+// and functions from GMP.  They don't depend on
+// any members of the backend class mpz, fmpz, or piranha::integer.
+// These functions will all need to be implemented separately
+// for a GMP-free build (with boost::multiprecision, for instance)
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA                               \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT                              \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP                                \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 
 inline bool mp_root(integer_class &res, const integer_class &i, unsigned long n)
 {
@@ -795,6 +1052,58 @@ inline auto get_mp_t(const rational_class &x) -> decltype(get_mpq_t(x))
     return get_mpq_t(x);
 }
 
+inline int mp_cmpabs(const integer_class &a, const integer_class &b)
+{
+    return mpz_cmpabs(get_mpz_t(a), get_mpz_t(b));
+}
+
+class mp_randstate
+{
+public:
+    // returns a uniformly distributed random integer between 0 and a-1,
+    // inclusive
+    void urandomint(integer_class &res, const integer_class &a)
+    {
+        mpz_urandomm(get_mpz_t(res), _state, get_mpz_t(a));
+        mp_demote(res);
+    }
+
+    void seed(const integer_class &i)
+    {
+        gmp_randseed(_state, get_mpz_t(i));
+    }
+
+    mp_randstate()
+    {
+        gmp_randinit_default(_state);
+        gmp_randseed_ui(_state, std::rand());
+    }
+
+    ~mp_randstate()
+    {
+        gmp_randclear(_state);
+    }
+
+private:
+    gmp_randstate_t _state;
+};
+
+#endif // SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
+
 } // SymEngine namespace
+
+#if !defined(HAVE_SYMENGINE_GMP) && defined(HAVE_SYMENGINE_BOOST)              \
+    && BOOST_VERSION < 105900
+namespace boost
+{
+namespace detail
+{
+template <>
+struct make_unsigned_imp<SymEngine::integer_class> {
+    typedef SymEngine::integer_class type;
+};
+}
+}
+#endif
 
 #endif // SYMENGINE_INTEGER_CLASS_H

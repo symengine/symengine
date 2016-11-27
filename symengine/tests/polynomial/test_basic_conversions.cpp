@@ -188,7 +188,7 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     basic = add(mul(x, i3), i2);
     gen = x;
     poly1 = from_basic<UIntPoly>(basic, gen);
-    poly2 = UIntPoly::from_vec(gen, {{2_z, 3_z}});
+    poly2 = UIntPoly::from_vec(gen, {2_z, 3_z});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(2x + 1)
@@ -216,7 +216,7 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
     gen = pow(x, hf);
     poly1 = from_basic<UIntPoly>(basic, gen);
-    poly2 = pow_upoly(*UIntPoly::from_vec(gen, {{1_z, 1_z}}), 3);
+    poly2 = pow_upoly(*UIntPoly::from_vec(gen, {1_z, 1_z}), 3);
     poly3 = pow_upoly(*UIntPoly::from_vec(gen, {{2_z, 0_z, 1_z}}), 6);
     poly2 = add_upoly(*poly2, *poly3);
     REQUIRE(eq(*poly1, *poly2));

@@ -259,8 +259,14 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
             SYMENGINE_ASSERT(is_a<Rational>(*n));
             m = static_cast<const Rational &>(*n).i / period;
             integer_class t;
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             mp_fdiv_r(t, get_num(m), get_den(m));
             get_num(m) = t;
+#else
+            integer_class quo;
+            mp_fdiv_qr(quo, t, get_num(m), get_den(m));
+            m -= rational_class(quo);
+#endif
             // m = a / b => m = (a % b / b)
         }
         // Now, arg = r + 2 * pi * m  where 0 <= m < 1
@@ -2748,7 +2754,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
             const auto den = get_den(x->i);
             const auto num = get_num(x->i);
-            const auto r = num % den;
+            const integer_class r = num % den;
             RCP<const Basic> res;
             if (den == 2) {
                 res = sub(mul(im2, log(i2)), EulerGamma);

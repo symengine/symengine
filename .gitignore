@@ -30,6 +30,9 @@ Debug/
 x64/
 Win32/
 
+# OS X .DS_Store files
+*.DS_Store
+
 # Documentation
 doc/_build
 doc/doxyxml
@@ -99,6 +102,7 @@ symengine/tests/basic/test_infinity
 symengine/tests/logic/test_logic
 symengine/tests/printing/test_ccode
 symengine/tests/finitediff/test_finitediff
+symengine/tests/basic/test_integer_class
 
 # Benchmarks executables
 benchmarks/add1
@@ -130,6 +134,8 @@ benchmarks/expand7_ginac
 benchmarks/series_expansion_sincos_piranha
 benchmarks/series_expansion_sinp
 benchmarks/series_expansion_sincos_flint
+benchmarks/ntheorybench
+benchmarks/symengine_bench
 
 #rubygem
 symengine/ruby/Gemfile.lock

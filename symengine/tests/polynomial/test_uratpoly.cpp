@@ -34,6 +34,7 @@ using SymEngine::add;
 
 using namespace SymEngine::literals;
 using rc = rational_class;
+using ic = SymEngine::integer_class;
 
 TEST_CASE("Constructor of URatPoly", "[URatPoly]")
 {
@@ -73,7 +74,16 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
     REQUIRE(f->__str__() == "x**2 + 2/3*x + 1");
 
     RCP<const URatPoly> g = URatPoly::from_dict(
-        y, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+        // With expression templates on in boostmp, we cannot
+        // use negated literal in constructor of rational_class.
+        // rc(-3_z,2_z); //error
+        // a literal (e.g. 2_z) returns an integer_class, but unary minus
+        // applied to a literal (e.g. -3_z) returns an expression template,
+        // and rational_class cannot be constructed from two args,
+        // one of which is an expression template and one of which
+        // is an integer_class.
+        // So we must use the string constructor of integer_class directly
+        y, {{0, 2_q}, {1, rc(ic(-3), 2_z)}, {2, rc(1_z, 4_z)}});
     CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException);
 }
 
@@ -81,7 +91,7 @@ TEST_CASE("Negative of a URatPoly", "[URatPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const URatPoly> a
-        = URatPoly::from_dict(x, {{0, rc(-1_z, 2_z)}, {1, 2_q}, {2, 3_q}});
+        = URatPoly::from_dict(x, {{0, rc(ic(-1), 2_z)}, {1, 2_q}, {2, 3_q}});
 
     RCP<const URatPoly> b = neg_upoly(*a);
     REQUIRE(b->__str__() == "-3*x**2 - 2*x + 1/2");
@@ -97,7 +107,7 @@ TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
     RCP<const URatPoly> b
         = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
     RCP<const URatPoly> c = URatPoly::from_dict(
-        x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+        x, {{0, 2_q}, {1, rc(ic(-3), 2_z)}, {2, rc(1_z, 4_z)}});
     RCP<const URatPoly> f = URatPoly::from_dict(y, {{0, 2_q}});
 
     RCP<const Basic> d = sub_upoly(*b, *a);
@@ -119,7 +129,7 @@ TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
     RCP<const URatPoly> b
         = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
     RCP<const URatPoly> e = URatPoly::from_dict(
-        x, {{0, 2_q}, {1, rc(-3_z, 2_z)}, {2, rc(1_z, 4_z)}});
+        x, {{0, 2_q}, {1, rc(ic(-3), 2_z)}, {2, rc(1_z, 4_z)}});
     RCP<const URatPoly> f
         = URatPoly::from_dict(x, {{0, 1_q}, {1, rc(1_z, 2_z)}});
 

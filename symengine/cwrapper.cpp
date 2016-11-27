@@ -36,8 +36,10 @@ using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 using SymEngine::get_mpq_t;
+#endif
 using SymEngine::mp_get_ui;
 using SymEngine::mp_get_si;
 using SymEngine::eye;
@@ -206,12 +208,14 @@ CWRAPPER_OUTPUT_TYPE integer_set_ui(basic s, unsigned long i)
     CWRAPPER_END
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 CWRAPPER_OUTPUT_TYPE integer_set_mpz(basic s, const mpz_t i)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
+#endif
 
 CWRAPPER_OUTPUT_TYPE integer_set_str(basic s, const char *c)
 {
@@ -327,6 +331,7 @@ unsigned long integer_get_ui(const basic s)
         (rcp_static_cast<const Integer>(s->m))->as_integer_class());
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
 {
     CWRAPPER_BEGIN
@@ -335,6 +340,7 @@ CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
                    (rcp_static_cast<const Integer>(s->m))->as_integer_class()));
     CWRAPPER_END
 }
+#endif
 
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long a, long b)
 {
@@ -361,6 +367,7 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic a, const basic b)
     return SYMENGINE_NO_EXCEPTION;
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s)
 {
     CWRAPPER_BEGIN
@@ -376,6 +383,7 @@ CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
     s->m = SymEngine::Rational::from_mpq(rational_class(i));
     CWRAPPER_END
 }
+#endif
 
 CWRAPPER_OUTPUT_TYPE complex_set(basic s, const basic re, const basic im)
 {
@@ -395,12 +403,14 @@ CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im)
     CWRAPPER_END
 }
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
     CWRAPPER_END
 }
+#endif
 
 CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
 {

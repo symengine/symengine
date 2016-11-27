@@ -24,6 +24,12 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
+#Boost.multiprecision build segfaults if -O3 optimization is on
+#which it is by default for cmake Release mode. Remove -O3 from flags.
+if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+endif()
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
@@ -102,7 +108,15 @@ set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
 set(WITH_FLINT no CACHE BOOL "Build with Flint")
 set(HAVE_SYMENGINE_FLINT False)
 
-if ("${INTEGER_CLASS}" MATCHES "piranha")
+# Boost
+set(WITH_BOOST no CACHE BOOL "Build with Boost")
+
+set(HAVE_SYMENGINE_GMP yes)
+if ("${INTEGER_CLASS}" MATCHES "boostmp")
+    set(SYMENGINE_INTEGER_CLASS "BOOSTMP")
+    set(WITH_BOOST yes)
+    set(HAVE_SYMENGINE_GMP no)
+elseif ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
     set(WITH_PIRANHA yes)
 elseif ("${INTEGER_CLASS}" MATCHES "flint")
@@ -121,24 +135,27 @@ else()
 endif()
 
 # GMP
-find_package(GMP REQUIRED)
-include_directories(${GMP_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${GMP_TARGETS})
-set(PKGS ${PKGS} "GMP")
+if (HAVE_SYMENGINE_GMP) 
+    find_package(GMP REQUIRED)
+    include_directories(${GMP_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${GMP_TARGETS})
+    set(PKGS ${PKGS} "GMP")
 
-# Check gmpxx
-if (NOT(MSVC) AND WITH_GMPXX)
-    try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
-        OUTPUT_VARIABLE GMPXX_ERROR_LOG)
-    if (NOT ${GMPXX})
-        message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
-            "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
-            "Error Log : \n${GMPXX_ERROR_LOG}")
+    # Check gmpxx
+    if (NOT(MSVC) AND WITH_GMPXX)
+        try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+            CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+            CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+            CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+            OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+        if (NOT ${GMPXX})
+            message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+                "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+                "Error Log : \n${GMPXX_ERROR_LOG}")
+        endif()
     endif()
 endif()
+
 
 set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
 set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
@@ -249,9 +266,39 @@ if (WITH_MPC)
     set(PKGS ${PKGS} "MPC")
 endif()
 
-# Boost
-set(WITH_BOOST no
-    CACHE BOOL "Build with Boost")
+# PTHREAD
+set(WITH_PTHREAD no
+CACHE BOOL "Build with PTHREAD")
+
+if (WITH_PIRANHA)
+    set(WITH_PTHREAD yes)
+    set(WITH_MPFR yes)
+    set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+
+    find_package(PIRANHA REQUIRED)
+    include_directories(${PIRANHA_INCLUDE_DIRS})
+    set(HAVE_SYMENGINE_PIRANHA yes)
+    set(PKGS ${PKGS} "PIRANHA")
+    set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
+    set(WITH_BOOST yes)
+endif()
+
+if (WITH_PTHREAD)
+    find_package(PTHREAD REQUIRED)
+    include_directories(${PTHREAD_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
+    set(HAVE_SYMENGINE_PTHREAD yes)
+    set(PKGS ${PKGS} "PTHREAD")
+endif()
+
+if (WITH_MPFR)
+    find_package(MPFR REQUIRED)
+    include_directories(${MPFR_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPFR_TARGETS})
+    set(HAVE_SYMENGINE_MPFR True)
+    set(PKGS ${PKGS} "MPFR")
+endif()
 
 # PTHREAD
 set(WITH_PTHREAD no
@@ -312,27 +359,11 @@ if (BUILD_BENCHMARKS)
     endif()
 endif()
 
-if (WITH_PTHREAD)
-    find_package(PTHREAD REQUIRED)
-    include_directories(${PTHREAD_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
-    set(HAVE_SYMENGINE_PTHREAD yes)
-    set(PKGS ${PKGS} "PTHREAD")
-endif()
-
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
     include_directories(${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
-endif()
-
-if (WITH_MPFR)
-    find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_TARGETS})
-    set(HAVE_SYMENGINE_MPFR True)
-    set(PKGS ${PKGS} "MPFR")
 endif()
 
 # BFD
@@ -543,6 +574,7 @@ message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message("BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
 message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
+message("HAVE_SYMENGINE_GMP: ${HAVE_SYMENGINE_GMP}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
 message("WITH_SYMENGINE_TEUCHOS: ${WITH_SYMENGINE_TEUCHOS}")
@@ -562,8 +594,11 @@ message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
 message("BUILD_BENCHMARKS_NONIUS: ${BUILD_BENCHMARKS_NONIUS}")
 
-message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
-message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
+message("WITH_GMP: ${HAVE_SYMENGINE_GMP}")
+if (HAVE_SYMENGINE_GMP)
+    message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
+    message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
+endif()
 
 message("WITH_BFD: ${WITH_BFD}")
 if (WITH_BFD)

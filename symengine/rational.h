@@ -21,11 +21,14 @@ public:
 public:
     IMPLEMENT_TYPEID(RATIONAL)
     //! Constructor of Rational class
-    explicit Rational(rational_class i);
+    Rational(rational_class &&_i) : i(std::move(_i))
+    {
+    }
     /*! \param `i` must already be in rational_class canonical form
     *   \return Integer or Rational depending on denumerator.
     * */
-    static RCP<const Number> from_mpq(rational_class i);
+    static RCP<const Number> from_mpq(const rational_class &i);
+    static RCP<const Number> from_mpq(rational_class &&i);
     //! \return size of the hash
     virtual hash_t __hash__() const;
     /*! Equality comparator
@@ -177,9 +180,20 @@ public:
         if (not mp_fits_ulong_p(exp_))
             throw SymEngineException("powrat: 'exp' does not fit ulong.");
         unsigned long exp = mp_get_ui(exp_);
+
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
+        // boost::multiprecision::cpp_rational doesn't provide
+        // non-const references to num and den
+        integer_class num;
+        integer_class den;
+        mp_pow_ui(num, SymEngine::get_num(i), exp);
+        mp_pow_ui(den, SymEngine::get_den(i), exp);
+        rational_class val(num, den);
+#else
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
         mp_pow_ui(SymEngine::get_den(val), SymEngine::get_den(i), exp);
+#endif
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass val into the constructor directly without canonicalizing:
@@ -189,12 +203,13 @@ public:
             return Rational::from_mpq(1 / val);
         }
     }
-    /*! Raise Rationals to power `other`
-     * \param other power to be raised
+    /*! Raise *this to power `other`
+     * \param other exponent
      * */
     RCP<const Basic> powrat(const Rational &other) const;
-    /*! Raise Integer to power Rational
-     * \param other power to be raised
+    /*!Reverse powrat
+     * Raise 'other' to power *this
+     * \param other base
      * */
     RCP<const Basic> rpowrat(const Integer &other) const;
 

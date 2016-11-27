@@ -30,21 +30,19 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TRIGGER_FEEDSTOCK="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
-  # Debug build (with BFD) with ECM
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes"
-  # Debug build (with BFD) with PRIMESIEVE
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PRIMESIEVE="yes"
-  # Debug build (with BFD) with Arb
+  # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_PRIMESIEVE="yes" WITH_MPC="yes"
+  # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
-  # Debug build (with BFD) with MPC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPC="yes"
-  # Debug build (with BFD) with MPC
+  # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
+  # Debug build (with BFD and INTEGER_CLASS from boostmp)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" INTEGER_CLASS="boostmp"
   # Debug build shared lib (with BFD)
   - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
   # Release build (with BFD)
   - WITH_BFD="yes"
-  # Release build (with BFD and SHARED_LIBS)
+  # Release shared build (with BFD)
   - WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
 
   ## In-tree builds (we just check a few configurations to make sure they work):
