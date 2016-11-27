@@ -83,6 +83,12 @@ TEST_CASE("test_printing(): printing", "[printing]")
 
     r = exp(symbol("x"));
     REQUIRE(r->__str__() == "exp(x)");
+    r = mul(exp(symbol("x")), integer(10));
+    REQUIRE(r->__str__() == "10*exp(x)");
+    r = exp(mul(symbol("x"), integer(-1)));
+    REQUIRE(r->__str__() == "exp(-x)");
+    r = exp(integer(-1));
+    REQUIRE(r->__str__() == "exp(-1)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
     REQUIRE(r->__str__() == "(1/2)*sqrt(2)*sqrt(x)");
