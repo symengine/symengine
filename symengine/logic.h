@@ -72,7 +72,7 @@ typedef std::vector<std::pair<RCP<const Basic>, RCP<const Boolean>>>
 
 // Represents a piecewise function
 // Keeps a vector of (Expr, Condition) pairs
-class Piecewise : public Basic
+class Piecewise : public Symbolic
 {
 private:
     PiecewiseVec vec_;

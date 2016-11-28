@@ -77,12 +77,12 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
     RCP<const Basic> c = add(a, b);
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 4, dpoly_);
-    REQUIRE(c->__cmp__(*d));
+    REQUIRE(eq(*c, *d));
 
-    RCP<const UnivariateSeries> e = UnivariateSeries::create(x, 2, bpoly_);
+    RCP<const UnivariateSeries> e = UnivariateSeries::create(x, 3, bpoly_);
     RCP<const Basic> f = add(a, e);
-    RCP<const Basic> g = UnivariateSeries::create(x, 2, dpoly_);
-    REQUIRE(f->__cmp__(*g));
+    RCP<const Basic> g = UnivariateSeries::create(x, 3, dpoly_);
+    REQUIRE(eq(*f, *g));
 }
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
@@ -103,8 +103,8 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 5, cpoly_);
     RCP<const Basic> e = neg(d);
     RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 5, dpoly_);
-    REQUIRE(b->__cmp__(*c));
-    REQUIRE(e->__cmp__(*f));
+    REQUIRE(eq(*b, *c));
+    REQUIRE(eq(*e, *f));
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
@@ -122,13 +122,14 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 3, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
     RCP<const Basic> c = sub(a, b);
-    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 4, fpoly_);
-    REQUIRE(c->__cmp__(*f));
+    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 3, fpoly_);
+    REQUIRE(eq(*c, *f));
 
     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 2, bpoly_);
     RCP<const Basic> e = sub(a, d);
     RCP<const UnivariateSeries> g = UnivariateSeries::create(x, 2, gpoly_);
-    REQUIRE(e->__cmp__(*f));
+    std::cout << e->__str__() << " " << g->__str__() << std::endl;
+    REQUIRE(eq(*e, *g));
 }
 
 TEST_CASE("Multiplication of two UExprDict with precision",

@@ -355,7 +355,7 @@ public:
 
 inline RCP<const RealMPFR> real_mpfr(mpfr_class x)
 {
-    return rcp(new RealMPFR(std::move(x)));
+    return make_rcp<RealMPFR>(std::move(x));
 }
 }
 #else

@@ -14,7 +14,7 @@
 namespace SymEngine
 {
 
-class Pow : public Basic
+class Pow : public Symbolic
 {
 private:
     RCP<const Basic> base_, exp_; //! base**exp

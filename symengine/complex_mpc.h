@@ -381,7 +381,7 @@ public:
 
 inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
 {
-    return rcp(new ComplexMPC(std::move(x)));
+    return make_rcp<ComplexMPC>(std::move(x));
 }
 }
 #else

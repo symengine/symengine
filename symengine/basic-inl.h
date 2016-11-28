@@ -41,6 +41,11 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
+inline bool is_a_Symbolic(const Basic &b)
+{
+    return b.get_type_code() < SYMBOLIC;
+}
+
 inline bool is_same_type(const Basic &a, const Basic &b)
 {
     return a.get_type_code() == b.get_type_code();

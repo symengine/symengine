@@ -116,6 +116,14 @@ pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec)
     return ret;
 }
 
+pp_t URatPSeriesPiranha::add(const pp_t &s, const pp_t &r, unsigned prec)
+{
+    pp_t::set_auto_truncate_degree(prec - 1);
+    pp_t ret = s + r;
+    pp_t::unset_auto_truncate_degree();
+    return ret;
+}
+
 pp_t URatPSeriesPiranha::pow(const pp_t &s, int n, unsigned prec)
 {
     pp_t::set_auto_truncate_degree(prec - 1);
@@ -260,6 +268,14 @@ p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec)
 {
     p_expr::set_auto_truncate_degree(prec - 1);
     p_expr ret = s * r;
+    p_expr::unset_auto_truncate_degree();
+    return ret;
+}
+
+p_expr UPSeriesPiranha::add(const p_expr &s, const p_expr &r, unsigned prec)
+{
+    p_expr::set_auto_truncate_degree(prec - 1);
+    p_expr ret = s + r;
     p_expr::unset_auto_truncate_degree();
     return ret;
 }

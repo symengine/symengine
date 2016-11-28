@@ -31,7 +31,8 @@ public:
         return Derivative::create(self.rcp_from_this(), {x});                  \
     }
 
-    DIFF0(UnivariateSeries)
+    // TODO: fix this
+    DIFF0(SeriesCoeffInterface)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)

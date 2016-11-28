@@ -11,7 +11,7 @@
 namespace SymEngine
 {
 
-class Symbol : public Basic
+class Symbol : public Symbolic
 {
 private:
     //! name of Symbol

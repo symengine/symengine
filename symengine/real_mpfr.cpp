@@ -61,7 +61,7 @@ RCP<const Number> RealMPFR::addreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_add_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Add RealMPFRs
@@ -71,7 +71,7 @@ RCP<const Number> RealMPFR::addreal(const Rational &other) const
 {
     mpfr_class t(get_prec());
     mpfr_add_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Add RealMPFRs
@@ -97,7 +97,7 @@ RCP<const Number> RealMPFR::addreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_add_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Add RealMPFRs
@@ -122,7 +122,7 @@ RCP<const Number> RealMPFR::addreal(const RealMPFR &other) const
 {
     mpfr_class t(std::max(get_prec(), other.get_prec()));
     mpfr_add(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -132,7 +132,7 @@ RCP<const Number> RealMPFR::subreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_sub_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -142,7 +142,7 @@ RCP<const Number> RealMPFR::subreal(const Rational &other) const
 {
     mpfr_class t(get_prec());
     mpfr_sub_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -168,7 +168,7 @@ RCP<const Number> RealMPFR::subreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_sub_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -193,7 +193,7 @@ RCP<const Number> RealMPFR::subreal(const RealMPFR &other) const
 {
     mpfr_class t(std::max(get_prec(), other.get_prec()));
     mpfr_sub(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -203,7 +203,7 @@ RCP<const Number> RealMPFR::rsubreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_z_sub(t.get_mpfr_t(), get_mpz_t(other.i), i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -214,7 +214,7 @@ RCP<const Number> RealMPFR::rsubreal(const Rational &other) const
     mpfr_class t(get_prec());
     mpfr_sub_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
     mpfr_neg(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -240,7 +240,7 @@ RCP<const Number> RealMPFR::rsubreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_d_sub(t.get_mpfr_t(), other.i, i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Subtract RealMPFRs
@@ -265,7 +265,7 @@ RCP<const Number> RealMPFR::mulreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_mul_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Multiply RealMPFRs
@@ -275,7 +275,7 @@ RCP<const Number> RealMPFR::mulreal(const Rational &other) const
 {
     mpfr_class t(get_prec());
     mpfr_mul_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Multiply RealMPFRs
@@ -301,7 +301,7 @@ RCP<const Number> RealMPFR::mulreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_mul_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Multiply RealMPFRs
@@ -326,7 +326,7 @@ RCP<const Number> RealMPFR::mulreal(const RealMPFR &other) const
 {
     mpfr_class t(std::max(get_prec(), other.get_prec()));
     mpfr_mul(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -336,7 +336,7 @@ RCP<const Number> RealMPFR::divreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_div_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -346,7 +346,7 @@ RCP<const Number> RealMPFR::divreal(const Rational &other) const
 {
     mpfr_class t(get_prec());
     mpfr_div_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -372,7 +372,7 @@ RCP<const Number> RealMPFR::divreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_div_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -397,7 +397,7 @@ RCP<const Number> RealMPFR::divreal(const RealMPFR &other) const
 {
     mpfr_class t(std::max(get_prec(), other.get_prec()));
     mpfr_div(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -408,7 +408,7 @@ RCP<const Number> RealMPFR::rdivreal(const Integer &other) const
     mpfr_class t(get_prec());
     mpfr_div_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
     mpfr_pow_si(t.get_mpfr_t(), t.get_mpfr_t(), -1, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -419,7 +419,7 @@ RCP<const Number> RealMPFR::rdivreal(const Rational &other) const
     mpfr_class t(get_prec());
     mpfr_div_q(t.get_mpfr_t(), i.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
     mpfr_pow_si(t.get_mpfr_t(), t.get_mpfr_t(), -1, MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -445,7 +445,7 @@ RCP<const Number> RealMPFR::rdivreal(const RealDouble &other) const
 {
     mpfr_class t(get_prec());
     mpfr_d_div(t.get_mpfr_t(), other.i, i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Divide RealMPFRs
@@ -470,7 +470,7 @@ RCP<const Number> RealMPFR::powreal(const Integer &other) const
 {
     mpfr_class t(get_prec());
     mpfr_pow_z(t.get_mpfr_t(), i.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise RealMPFR to power `other`
@@ -493,7 +493,7 @@ RCP<const Number> RealMPFR::powreal(const Rational &other) const
     mpfr_class t(get_prec());
     mpfr_set_q(t.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
     mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise RealMPFR to power `other`
@@ -531,7 +531,7 @@ RCP<const Number> RealMPFR::powreal(const RealDouble &other) const
     mpfr_class t(get_prec());
     mpfr_set_d(t.get_mpfr_t(), other.i, MPFR_RNDN);
     mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise RealMPFR to power `other`
@@ -569,7 +569,7 @@ RCP<const Number> RealMPFR::powreal(const RealMPFR &other) const
     }
     mpfr_class t(std::max(get_prec(), other.get_prec()));
     mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise `other` to power RealMPFR
@@ -592,7 +592,7 @@ RCP<const Number> RealMPFR::rpowreal(const Integer &other) const
     mpfr_class t(get_prec());
     mpfr_set_z(t.get_mpfr_t(), get_mpz_t(other.i), MPFR_RNDN);
     mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise `other` to power RealMPFR
@@ -615,7 +615,7 @@ RCP<const Number> RealMPFR::rpowreal(const Rational &other) const
     mpfr_class t(get_prec());
     mpfr_set_q(t.get_mpfr_t(), get_mpq_t(other.i), MPFR_RNDN);
     mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise `other` to power RealMPFR
@@ -655,7 +655,7 @@ RCP<const Number> RealMPFR::rpowreal(const RealDouble &other) const
     mpfr_class t(get_prec());
     mpfr_set_d(t.get_mpfr_t(), other.i, MPFR_RNDN);
     mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);
-    return rcp(new RealMPFR(std::move(t)));
+    return make_rcp<RealMPFR>(std::move(t));
 }
 
 /*! Raise `other` to power RealMPFR

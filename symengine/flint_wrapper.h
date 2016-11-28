@@ -742,6 +742,14 @@ public:
                          prec);
         return r;
     }
+    fmpq_poly_wrapper addtrunc(const fmpq_poly_wrapper &o,
+                               unsigned int prec) const
+    {
+        fmpq_poly_wrapper r;
+        fmpq_poly_add_series(*r.get_fmpq_poly_t(), poly, *o.get_fmpq_poly_t(),
+                             prec);
+        return r;
+    }
     fmpq_poly_wrapper pow(unsigned int n) const
     {
         fmpq_poly_wrapper r;

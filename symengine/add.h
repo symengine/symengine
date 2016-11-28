@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 
-class Add : public Basic
+class Add : public Symbolic
 {
 public:                      // TODO: make this private
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2+x+y`)
