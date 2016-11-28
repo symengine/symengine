@@ -119,7 +119,7 @@ their default values indicated below:
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         -DINTEGER_CLASS:STRING=gmp \                  # Choose storage type for Integer. one of gmp, gmpxx,
-                                                        flint, piranha
+                                                        flint, piranha, boostmp
         -DBUILD_SHARED_LIBS:BOOL=OFF \                # Build a shared library.
         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built
         .
@@ -133,6 +133,11 @@ If you want to use a different compiler, do:
     CC=clang CXX=clang++ cmake .
 
 and check that CMake picked it up.
+
+Using `INTEGER_CLASS=boostmp` would remove the dependency on gmp and use boost's
+multiprecision integer and rational classes. This would make boost, the only
+dependency and all the code would be under permissive licenses, namely, MIT,
+BSD 3-clause and Boost License.
 
 The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
 (`WITH_PIRANHA`) depend on Boost, so they are off by default. The bechmarked
