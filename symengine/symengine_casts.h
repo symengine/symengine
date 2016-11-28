@@ -55,8 +55,9 @@ inline To implicit_cast(const From &f)
 // You should design the code some other way not to need this.
 
 template <typename To, typename From> // use like this: down_cast<T*>(foo).
-inline To down_cast(From *f)          // only accept pointers.
+inline To down_cast(From *f)
 {
+    // Only accept pointers.
     // Ensures that To is a sub-type of From *.  This test is here only
     // for compile-time type checking, and has no overhead in an
     // optimized build at run-time, as it will be optimized away

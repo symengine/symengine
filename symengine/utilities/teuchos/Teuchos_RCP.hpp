@@ -733,6 +733,7 @@ Teuchos::rcp_static_cast(const RCP<T1>& p1)
 #endif
 }
 
+
 template<class T2, class T1>
 inline
 Teuchos::RCP<T2>

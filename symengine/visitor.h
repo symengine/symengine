@@ -21,6 +21,7 @@
 #include <symengine/fields.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -63,7 +64,7 @@ public:
 #define SYMENGINE_ENUM(TypeID, Class)                                          \
     virtual void visit(const Class &x)                                         \
     {                                                                          \
-        static_cast<Derived *>(this)->bvisit(x);                               \
+        down_cast<Derived *>(this)->bvisit(x);                                 \
     };
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
