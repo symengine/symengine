@@ -17,8 +17,8 @@ wrappers allow usage of the library from other languages, e.g.:
 ## License
 
 All files are licensed under MIT license, see the [LICENSE](LICENSE) for more
-information. The `src/teuchos` directory is licensed under the Trilinos BSD
-license (see the LICENSE file).
+information. Third party code packaged are licensed under BSD 3-clause license
+(see the LICENSE file).
 
 ## Mailinglist, Chat
 
@@ -66,8 +66,8 @@ Run tests:
 
 The Travis-CI checks the code in both Release and Debug mode with all possible
 checks, so just sending a GitHub pull request is enough and you can use any
-mode you want to develop it. However, the best way to develop SymEngine is to
-use the Debug mode with `BFD` support on:
+mode you want to develop it. However, the best way to develop SymEngine on Linux
+is to use the Debug mode with `BFD` support on:
 
     cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes .
 
@@ -114,7 +114,7 @@ their default values indicated below:
         -DWITH_PIRANHA:BOOL=OFF \                     # Install with Piranha library
         -DWITH_MPFR:BOOL=OFF \                        # Install with MPFR library
         -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
-        -DWITH_LLVM:BOOL=OFF \                        # Build with LLVM 3.8 libraries
+        -DWITH_LLVM:BOOL=OFF \                        # Build with LLVM libraries
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
@@ -160,6 +160,7 @@ use `CMAKE_LIBRARY_PATH` and `CMAKE_INCLUDE_PATH`.
 If CMake still cannot find the library, you can specify the path to the library by
 doing `cmake -DPKG_LIBRARY=/path/libname.so .`, where `PKG` should be replaced
 with the name of the external library (`GMP`, `ARB`, `BFD`, `FLINT`, `MPFR`, ...).
+Similarly, `-DPKG_INCLUDE_DIR` can be used for headers.
 
 ## Developer Documentation
 
