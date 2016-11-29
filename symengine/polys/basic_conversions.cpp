@@ -34,10 +34,10 @@ public:
 
         if (is_a<const Rational>(*exp)) {
             RCP<const Integer> den
-                = static_cast<const Rational &>(*exp).get_den();
+                = down_cast<const Rational &>(*exp).get_den();
             if (is_a<const Rational>(*it->second))
                 gen_set[base] = divnum(
-                    one, lcm(*den, *static_cast<const Rational &>(*it->second)
+                    one, lcm(*den, *down_cast<const Rational &>(*it->second)
                                         .get_den()));
             else
                 gen_set[base] = divnum(one, den);
@@ -122,7 +122,7 @@ public:
                 mulx = minus_one;
 
             if (is_a<const Rational>(*it.second))
-                divx = static_cast<const Rational &>(*it.second).get_den();
+                divx = down_cast<const Rational &>(*it.second).get_den();
 
             gen_set[mul(mulx, it.first)] = divnum(one, divx);
         }
@@ -138,7 +138,7 @@ public:
             mulx = minus_one;
 
         if (is_a<const Rational>(*x.coef_))
-            divx = static_cast<const Rational &>(*x.coef_).get_den();
+            divx = down_cast<const Rational &>(*x.coef_).get_den();
 
         auto dict = x.dict_;
         gen_set[Mul::from_dict(mulx, std::move(dict))] = divnum(one, divx);

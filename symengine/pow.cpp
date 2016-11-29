@@ -15,16 +15,16 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
     // e.g. 0**x
-    if (is_a<Integer>(base) and static_cast<const Integer &>(base).is_zero())
+    if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_zero())
         return false;
     // e.g. 1**x
-    if (is_a<Integer>(base) and static_cast<const Integer &>(base).is_one())
+    if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_a_Number(exp) and static_cast<const Number &>(exp).is_zero())
+    if (is_a_Number(exp) and down_cast<const Number &>(exp).is_zero())
         return false;
     // e.g. x**1
-    if (is_a<Integer>(exp) and static_cast<const Integer &>(exp).is_one())
+    if (is_a<Integer>(exp) and down_cast<const Integer &>(exp).is_one())
         return false;
     // e.g. 2**3, (2/3)**4
     if ((is_a<Integer>(base) or is_a<Rational>(base)) and is_a<Integer>(exp))
@@ -38,18 +38,17 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(base) or is_a<Integer>(base)) and is_a<Rational>(exp)
-        and (static_cast<const Rational &>(exp).i < 0
-             or static_cast<const Rational &>(exp).i > 1))
+        and (down_cast<const Rational &>(exp).i < 0
+             or down_cast<const Rational &>(exp).i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
-    if (is_a<Complex>(base) and static_cast<const Complex &>(base).is_re_zero()
+    if (is_a<Complex>(base) and down_cast<const Complex &>(base).is_re_zero()
         and is_a<Integer>(exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if (is_a_Number(base) and not static_cast<const Number &>(base).is_exact()
-        and is_a_Number(exp)
-        and not static_cast<const Number &>(exp).is_exact())
+    if (is_a_Number(base) and not down_cast<const Number &>(base).is_exact()
+        and is_a_Number(exp) and not down_cast<const Number &>(exp).is_exact())
         return false;
     return true;
 }
@@ -64,8 +63,8 @@ hash_t Pow::__hash__() const
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_))
-        and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
+    if (is_a<Pow>(o) and eq(*base_, *(down_cast<const Pow &>(o).base_))
+        and eq(*exp_, *(down_cast<const Pow &>(o).exp_)))
         return true;
 
     return false;
@@ -74,7 +73,7 @@ bool Pow::__eq__(const Basic &o) const
 int Pow::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Pow>(o))
-    const Pow &s = static_cast<const Pow &>(o);
+    const Pow &s = down_cast<const Pow &>(o);
     int base_cmp = base_->__cmp__(*s.base_);
     if (base_cmp == 0)
         return exp_->__cmp__(*s.exp_);
@@ -123,11 +122,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             }
         } else if (is_a<Rational>(*b)) {
             if (is_a<Rational>(*a)) {
-                return static_cast<const Rational &>(*a)
-                    .powrat(static_cast<const Rational &>(*b));
+                return down_cast<const Rational &>(*a)
+                    .powrat(down_cast<const Rational &>(*b));
             } else if (is_a<Integer>(*a)) {
-                return static_cast<const Rational &>(*b)
-                    .rpowrat(static_cast<const Integer &>(*a));
+                return down_cast<const Rational &>(*b)
+                    .rpowrat(down_cast<const Integer &>(*a));
             } else if (is_a<Complex>(*a)) {
                 return make_rcp<const Pow>(a, b);
             } else {
@@ -267,19 +266,19 @@ Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
 bool Log::is_canonical(const Basic &arg) const
 {
     //  log(0)
-    if (is_a<Integer>(arg) and static_cast<const Integer &>(arg).is_zero())
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(arg) and static_cast<const Integer &>(arg).is_one())
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_one())
         return false;
     // log(E)
     if (eq(arg, *E))
         return false;
     // Currently not implemented, however should be expanded as `-ipi +
     // log(-arg)`
-    if (is_a_Number(arg) and static_cast<const Number &>(arg).is_negative())
+    if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
         return false;
-    if (is_a_Number(arg) and not static_cast<const Number &>(arg).is_exact())
+    if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
@@ -313,7 +312,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
-        get_num_den(static_cast<const Rational &>(*arg), outArg(num),
+        get_num_den(down_cast<const Rational &>(*arg), outArg(num),
                     outArg(den));
         return sub(log(num), log(den));
     }

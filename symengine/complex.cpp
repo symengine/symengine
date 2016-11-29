@@ -47,7 +47,7 @@ hash_t Complex::__hash__() const
 bool Complex::__eq__(const Basic &o) const
 {
     if (is_a<Complex>(o)) {
-        const Complex &s = static_cast<const Complex &>(o);
+        const Complex &s = down_cast<const Complex &>(o);
         return ((this->real_ == s.real_)
                 and (this->imaginary_ == s.imaginary_));
     }
@@ -57,7 +57,7 @@ bool Complex::__eq__(const Basic &o) const
 int Complex::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Complex>(o))
-    const Complex &s = static_cast<const Complex &>(o);
+    const Complex &s = down_cast<const Complex &>(o);
     if (real_ == s.real_) {
         if (imaginary_ == s.imaginary_) {
             return 0;
@@ -88,24 +88,24 @@ RCP<const Number> Complex::from_two_rats(const Rational &re, const Rational &im)
 RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
 {
     if (is_a<Integer>(re) and is_a<Integer>(im)) {
-        rational_class re_mpq(static_cast<const Integer &>(re).i,
-                              static_cast<const Integer &>(*one).i);
-        rational_class im_mpq(static_cast<const Integer &>(im).i,
-                              static_cast<const Integer &>(*one).i);
+        rational_class re_mpq(down_cast<const Integer &>(re).i,
+                              down_cast<const Integer &>(*one).i);
+        rational_class im_mpq(down_cast<const Integer &>(im).i,
+                              down_cast<const Integer &>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Integer>(im)) {
-        rational_class re_mpq = static_cast<const Rational &>(re).i;
-        rational_class im_mpq(static_cast<const Integer &>(im).i,
-                              static_cast<const Integer &>(*one).i);
+        rational_class re_mpq = down_cast<const Rational &>(re).i;
+        rational_class im_mpq(down_cast<const Integer &>(im).i,
+                              down_cast<const Integer &>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Integer>(re) and is_a<Rational>(im)) {
-        rational_class re_mpq(static_cast<const Integer &>(re).i,
-                              static_cast<const Integer &>(*one).i);
-        rational_class im_mpq = static_cast<const Rational &>(im).i;
+        rational_class re_mpq(down_cast<const Integer &>(re).i,
+                              down_cast<const Integer &>(*one).i);
+        rational_class im_mpq = down_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Rational>(im)) {
-        rational_class re_mpq = static_cast<const Rational &>(re).i;
-        rational_class im_mpq = static_cast<const Rational &>(im).i;
+        rational_class re_mpq = down_cast<const Rational &>(re).i;
+        rational_class im_mpq = down_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
         throw SymEngineException(

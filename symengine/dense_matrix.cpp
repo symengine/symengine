@@ -62,7 +62,7 @@ RCP<const Basic> DenseMatrix::det() const
 void DenseMatrix::inv(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         inverse_LU(*this, r);
     }
 }
@@ -72,8 +72,8 @@ void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
     SYMENGINE_ASSERT(row_ == result.nrows() and col_ == result.ncols());
 
     if (is_a<DenseMatrix>(other) and is_a<DenseMatrix>(result)) {
-        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        const DenseMatrix &o = down_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         add_dense_dense(*this, o, r);
     }
 }
@@ -84,8 +84,8 @@ void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
                      and other.ncols() == result.ncols());
 
     if (is_a<DenseMatrix>(other) and is_a<DenseMatrix>(result)) {
-        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        const DenseMatrix &o = down_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         mul_dense_dense(*this, o, r);
     }
 }
@@ -95,7 +95,7 @@ void DenseMatrix::add_scalar(const RCP<const Basic> &k,
                              MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         add_dense_scalar(*this, k, r);
     }
 }
@@ -105,7 +105,7 @@ void DenseMatrix::mul_scalar(const RCP<const Basic> &k,
                              MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         mul_dense_scalar(*this, k, r);
     }
 }
@@ -114,7 +114,7 @@ void DenseMatrix::mul_scalar(const RCP<const Basic> &k,
 void DenseMatrix::transpose(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         transpose_dense(*this, r);
     }
 }
@@ -126,7 +126,7 @@ void DenseMatrix::submatrix(MatrixBase &result, unsigned row_start,
                             unsigned col_step) const
 {
     if (is_a<DenseMatrix>(result)) {
-        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
         submatrix_dense(*this, r, row_start, col_start, row_end, col_end,
                         row_step, col_step);
     }
@@ -136,8 +136,8 @@ void DenseMatrix::submatrix(MatrixBase &result, unsigned row_start,
 void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
 {
     if (is_a<DenseMatrix>(L) and is_a<DenseMatrix>(U)) {
-        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
-        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        DenseMatrix &L_ = down_cast<DenseMatrix &>(L);
+        DenseMatrix &U_ = down_cast<DenseMatrix &>(U);
         SymEngine::LU(*this, L_, U_);
     }
 }
@@ -146,8 +146,8 @@ void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
 void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
 {
     if (is_a<DenseMatrix>(L) and is_a<DenseMatrix>(D)) {
-        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
-        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        DenseMatrix &L_ = down_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = down_cast<DenseMatrix &>(D);
         SymEngine::LDL(*this, L_, D_);
     }
 }
@@ -156,8 +156,8 @@ void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
 void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
     if (is_a<DenseMatrix>(b) and is_a<DenseMatrix>(x)) {
-        const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
-        DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
+        const DenseMatrix &b_ = down_cast<const DenseMatrix &>(b);
+        DenseMatrix &x_ = down_cast<DenseMatrix &>(x);
         SymEngine::LU_solve(*this, b_, x_);
     }
 }
@@ -166,7 +166,7 @@ void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 void DenseMatrix::FFLU(MatrixBase &LU) const
 {
     if (is_a<DenseMatrix>(LU)) {
-        DenseMatrix &LU_ = static_cast<DenseMatrix &>(LU);
+        DenseMatrix &LU_ = down_cast<DenseMatrix &>(LU);
         fraction_free_LU(*this, LU_);
     }
 }
@@ -176,9 +176,9 @@ void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 {
     if (is_a<DenseMatrix>(L) and is_a<DenseMatrix>(D)
         and is_a<DenseMatrix>(U)) {
-        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
-        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
-        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        DenseMatrix &L_ = down_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = down_cast<DenseMatrix &>(D);
+        DenseMatrix &U_ = down_cast<DenseMatrix &>(U);
         fraction_free_LDU(*this, L_, D_, U_);
     }
 }

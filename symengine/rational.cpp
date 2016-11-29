@@ -80,7 +80,7 @@ hash_t Rational::__hash__() const
 bool Rational::__eq__(const Basic &o) const
 {
     if (is_a<Rational>(o)) {
-        const Rational &s = static_cast<const Rational &>(o);
+        const Rational &s = down_cast<const Rational &>(o);
         return this->i == s.i;
     }
     return false;
@@ -89,13 +89,13 @@ bool Rational::__eq__(const Basic &o) const
 int Rational::compare(const Basic &o) const
 {
     if (is_a<Rational>(o)) {
-        const Rational &s = static_cast<const Rational &>(o);
+        const Rational &s = down_cast<const Rational &>(o);
         if (i == s.i)
             return 0;
         return i < s.i ? -1 : 1;
     }
     if (is_a<Integer>(o)) {
-        const Integer &s = static_cast<const Integer &>(o);
+        const Integer &s = down_cast<const Integer &>(o);
         return i < s.i ? -1 : 1;
     }
     throw SymEngineException("unhandled comparison of Rational");

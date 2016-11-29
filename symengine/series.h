@@ -79,15 +79,15 @@ public:
 
     inline virtual bool __eq__(const Basic &o) const
     {
-        return (is_a<Series>(o) and var_ == static_cast<const Series &>(o).var_
-                and p_ == static_cast<const Series &>(o).p_
-                and degree_ == static_cast<const Series &>(o).degree_);
+        return (is_a<Series>(o) and var_ == down_cast<const Series &>(o).var_
+                and p_ == down_cast<const Series &>(o).p_
+                and degree_ == down_cast<const Series &>(o).degree_);
     }
 
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
+            const Series &o = down_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
@@ -105,7 +105,7 @@ public:
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
+            const Series &o = down_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
@@ -125,7 +125,7 @@ public:
         long deg = degree_;
         Poly p;
         if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
+            const Series &o = down_cast<const Series &>(other);
             deg = std::min(deg, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
@@ -135,12 +135,12 @@ public:
         } else if (is_a<Integer>(other)) {
             if (other.is_negative()) {
                 p = Series::pow(
-                    p_, (static_cast<const Integer &>(other).neg()->as_int()),
+                    p_, (down_cast<const Integer &>(other).neg()->as_int()),
                     deg);
                 p = Series::series_invert(p, Series::var(var_), deg);
                 return make_rcp<Series>(p, var_, deg);
             }
-            p = Series::pow(p_, (static_cast<const Integer &>(other).as_int()),
+            p = Series::pow(p_, (down_cast<const Integer &>(other).as_int()),
                             deg);
             return make_rcp<Series>(p, var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {

@@ -63,7 +63,7 @@ RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)
     if (!is_a<Symbol>(x)) {
         throw NotImplementedError("Not implemented for non Symbols.");
     }
-    CoeffVisitor v(ptrFromRef(static_cast<const Symbol &>(x)), ptrFromRef(n));
+    CoeffVisitor v(ptrFromRef(down_cast<const Symbol &>(x)), ptrFromRef(n));
     return v.apply(b);
 }
 

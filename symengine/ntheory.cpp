@@ -518,7 +518,7 @@ void Sieve::_extend(unsigned limit)
     if (_primes.back() < limit)
         primesieve::generate_primes(_primes.back() + 1, limit, &_primes);
 #else
-    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
+    const unsigned sqrt_limit = implicit_cast<unsigned>(std::sqrt(limit));
     unsigned start = _primes.back() + 1;
     if (limit <= start)
         return;
@@ -1557,8 +1557,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         return true;
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(static_cast<const Rational &>(*b), outArg(num),
-                    outArg(den));
+        get_num_den(down_cast<const Rational &>(*b), outArg(num), outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*minus_one);
             num = num->mulint(*minus_one);
@@ -1592,8 +1591,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows,
         pows.push_back(integer(std::move(t)));
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(static_cast<const Rational &>(*b), outArg(num),
-                    outArg(den));
+        get_num_den(down_cast<const Rational &>(*b), outArg(num), outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));

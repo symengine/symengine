@@ -32,7 +32,7 @@ void hash_combine_impl(hash_t &seed, mpfr_srcptr s)
 bool RealMPFR::__eq__(const Basic &o) const
 {
     if (is_a<RealMPFR>(o)) {
-        const RealMPFR &s = static_cast<const RealMPFR &>(o);
+        const RealMPFR &s = down_cast<const RealMPFR &>(o);
         if (get_prec() == s.get_prec()) {
             return mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t()) == 0;
         }
@@ -43,7 +43,7 @@ bool RealMPFR::__eq__(const Basic &o) const
 int RealMPFR::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(o))
-    const RealMPFR &s = static_cast<const RealMPFR &>(o);
+    const RealMPFR &s = down_cast<const RealMPFR &>(o);
     if (get_prec() == s.get_prec()) {
         int cmp = mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t());
         if (cmp == 0)
@@ -680,55 +680,55 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> sin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_sin(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sin(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> cos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_cos(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cos(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> tan(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_tan(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_tan(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> cot(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_cot(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cot(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> sec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_sec(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sec(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> csc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_csc(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_csc(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> asin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_asin(t.get_mpfr_t(), x_, MPFR_RNDN);
@@ -747,7 +747,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> acos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_acos(t.get_mpfr_t(), x_, MPFR_RNDN);
@@ -766,24 +766,24 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> atan(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_atan(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_atan(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> acot(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
         mpfr_ui_div(t.get_mpfr_t(), 1,
-                    static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+                    down_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         mpfr_atan(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> asec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
@@ -804,7 +804,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> acsc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
@@ -825,63 +825,63 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> sinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_sinh(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sinh(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> csch(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_csch(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_csch(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> cosh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_cosh(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cosh(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> sech(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_sech(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sech(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_tanh(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_tanh(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> coth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_coth(t.get_mpfr_t(),
-                  static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_coth(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                  MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> asinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
         mpfr_asinh(t.get_mpfr_t(),
-                   static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+                   down_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> acsch(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         mpfr_class t(mpfr_get_prec(x_));
         mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
         mpfr_asinh(t.get_mpfr_t(), x_, MPFR_RNDN);
@@ -890,7 +890,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> acosh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_acosh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
@@ -909,7 +909,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> atanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
@@ -928,7 +928,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> acoth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
@@ -949,7 +949,7 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> log(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 0) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_log(t.get_mpfr_t(), x_, MPFR_RNDN);
@@ -968,16 +968,16 @@ class EvaluateMPFR : public Evaluate
     virtual RCP<const Basic> abs(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
-        mpfr_abs(t.get_mpfr_t(),
-                 static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_class t(down_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_abs(t.get_mpfr_t(), down_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                 MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
 
     virtual RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
-        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 0) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_gamma(t.get_mpfr_t(), x_, MPFR_RNDN);

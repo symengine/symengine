@@ -27,13 +27,13 @@ vec_basic BooleanAtom::get_args() const
 bool BooleanAtom::__eq__(const Basic &o) const
 {
     return is_a<BooleanAtom>(o)
-           and get_val() == static_cast<const BooleanAtom &>(o).get_val();
+           and get_val() == down_cast<const BooleanAtom &>(o).get_val();
 }
 
 int BooleanAtom::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<BooleanAtom>(o))
-    bool ob = static_cast<const BooleanAtom &>(o).get_val();
+    bool ob = down_cast<const BooleanAtom &>(o).get_val();
     if (get_val()) {
         return (ob) ? 0 : 1;
     } else {
@@ -78,16 +78,14 @@ vec_basic Contains::get_args() const
 bool Contains::__eq__(const Basic &o) const
 {
     return is_a<Contains>(o)
-           and unified_eq(get_expr(),
-                          static_cast<const Contains &>(o).get_expr())
-           and unified_eq(get_set(),
-                          static_cast<const Contains &>(o).get_set());
+           and unified_eq(get_expr(), down_cast<const Contains &>(o).get_expr())
+           and unified_eq(get_set(), down_cast<const Contains &>(o).get_set());
 }
 
 int Contains::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Contains>(o))
-    const Contains &c = static_cast<const Contains &>(o);
+    const Contains &c = down_cast<const Contains &>(o);
     int cmp = unified_compare(get_expr(), c.get_expr());
     if (cmp != 0)
         return cmp;
@@ -136,8 +134,7 @@ vec_basic Piecewise::get_args() const
 bool Piecewise::__eq__(const Basic &o) const
 {
     return is_a<Piecewise>(o)
-           and unified_eq(get_vec(),
-                          static_cast<const Piecewise &>(o).get_vec());
+           and unified_eq(get_vec(), down_cast<const Piecewise &>(o).get_vec());
 }
 
 int Piecewise::compare(const Basic &o) const
@@ -168,7 +165,7 @@ vec_basic And::get_args() const
 
 bool And::__eq__(const Basic &o) const
 {
-    return is_a<And>(o) and unified_eq(container_, static_cast<const And &>(o)
+    return is_a<And>(o) and unified_eq(container_, down_cast<const And &>(o)
                                                        .get_container());
 }
 
@@ -176,7 +173,7 @@ int And::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<And>(o))
     return unified_compare(container_,
-                           static_cast<const And &>(o).get_container());
+                           down_cast<const And &>(o).get_container());
 }
 
 bool And::is_canonical(const set_boolean &container_)
@@ -219,15 +216,15 @@ vec_basic Or::get_args() const
 
 bool Or::__eq__(const Basic &o) const
 {
-    return is_a<Or>(o) and unified_eq(container_, static_cast<const Or &>(o)
-                                                      .get_container());
+    return is_a<Or>(o)
+           and unified_eq(container_, down_cast<const Or &>(o).get_container());
 }
 
 int Or::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Or>(o))
     return unified_compare(container_,
-                           static_cast<const Or &>(o).get_container());
+                           down_cast<const Or &>(o).get_container());
 }
 
 bool Or::is_canonical(const set_boolean &container_)
@@ -270,13 +267,13 @@ vec_basic Not::get_args() const
 
 bool Not::__eq__(const Basic &o) const
 {
-    return is_a<Not>(o) and eq(*arg_, *static_cast<const Not &>(o).get_arg());
+    return is_a<Not>(o) and eq(*arg_, *down_cast<const Not &>(o).get_arg());
 }
 
 int Not::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Not>(o))
-    return arg_->__cmp__(*static_cast<const Not &>(o).get_arg());
+    return arg_->__cmp__(*down_cast<const Not &>(o).get_arg());
 }
 
 bool Not::is_canonical(const RCP<const Boolean> &in)
@@ -297,14 +294,14 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
     set_boolean args;
     for (auto &a : s) {
         if (is_a<BooleanAtom>(*a)) {
-            auto val = static_cast<const BooleanAtom &>(*a).get_val();
+            auto val = down_cast<const BooleanAtom &>(*a).get_val();
             if (val == op_x_notx)
                 return boolean(op_x_notx);
             else
                 continue;
         }
         if (is_a<caller>(*a)) {
-            const caller &to_insert = static_cast<const caller &>(*a);
+            const caller &to_insert = down_cast<const caller &>(*a);
             auto container = to_insert.get_container();
             args.insert(container.begin(), container.end());
             continue;
@@ -325,20 +322,20 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
 {
     if (is_a<BooleanAtom>(*s)) {
-        const BooleanAtom &a = static_cast<const BooleanAtom &>(*s);
+        const BooleanAtom &a = down_cast<const BooleanAtom &>(*s);
         return boolean(not a.get_val());
     } else if (is_a<Not>(*s)) {
-        const Not &a = static_cast<const Not &>(*s);
+        const Not &a = down_cast<const Not &>(*s);
         return a.get_arg();
     } else if (is_a<Or>(*s)) {
-        auto container = static_cast<const Or &>(*s).get_container();
+        auto container = down_cast<const Or &>(*s).get_container();
         set_boolean cont;
         for (auto &a : container) {
             cont.insert(logical_not(a));
         }
         return make_rcp<const And>(cont);
     } else if (is_a<And>(*s)) {
-        auto container = static_cast<const And &>(*s).get_container();
+        auto container = down_cast<const And &>(*s).get_container();
         set_boolean cont;
         for (auto &a : container) {
             cont.insert(logical_not(a));

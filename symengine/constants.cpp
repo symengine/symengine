@@ -20,14 +20,14 @@ hash_t Constant::__hash__() const
 bool Constant::__eq__(const Basic &o) const
 {
     if (is_a<Constant>(o))
-        return name_ == static_cast<const Constant &>(o).name_;
+        return name_ == down_cast<const Constant &>(o).name_;
     return false;
 }
 
 int Constant::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Constant>(o))
-    const Constant &s = static_cast<const Constant &>(o);
+    const Constant &s = down_cast<const Constant &>(o);
     if (name_ == s.name_)
         return 0;
     return name_ < s.name_ ? -1 : 1;

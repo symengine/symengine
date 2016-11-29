@@ -30,7 +30,7 @@ public:
     int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_a<Poly>(o))
-        const Poly &s = static_cast<const Poly &>(o);
+        const Poly &s = down_cast<const Poly &>(o);
 
         if (this->poly_.degree() != s.poly_.degree())
             return (this->poly_.degree() < s.poly_.degree()) ? -1 : 1;

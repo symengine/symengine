@@ -7,6 +7,7 @@
 
 #include <symengine/functions.h>
 #include <symengine/complex.h>
+#include <symengine/symengine_casts.h>
 #include <iterator>
 namespace SymEngine
 {
@@ -220,7 +221,7 @@ inline RCP<const Set> set_union(const set_set &in, bool solve = true)
     set_basic combined_FiniteSet;
     for (auto it = in.begin(); it != in.end(); ++it) {
         if (is_a<FiniteSet>(**it)) {
-            const FiniteSet &other = static_cast<const FiniteSet &>(**it);
+            const FiniteSet &other = down_cast<const FiniteSet &>(**it);
             combined_FiniteSet.insert(other.container_.begin(),
                                       other.container_.end());
         } else if (is_a<UniversalSet>(**it)) {

@@ -159,19 +159,19 @@ public:
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return add(static_cast<const Rational &>(other));
+            return add(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return add(static_cast<const Integer &>(other));
+            return add(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return add(static_cast<const Complex &>(other));
+            return add(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return add(static_cast<const RealDouble &>(other));
+            return add(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return add(static_cast<const ComplexDouble &>(other));
+            return add(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return add(static_cast<const RealMPFR &>(other));
+            return add(down_cast<const RealMPFR &>(other));
         } else if (is_a<ComplexMPC>(other)) {
-            return add(static_cast<const ComplexMPC &>(other));
+            return add(down_cast<const ComplexMPC &>(other));
         } else {
             return other.add(*this);
         }
@@ -189,19 +189,19 @@ public:
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return sub(static_cast<const Rational &>(other));
+            return sub(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return sub(static_cast<const Integer &>(other));
+            return sub(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return sub(static_cast<const Complex &>(other));
+            return sub(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return sub(static_cast<const RealDouble &>(other));
+            return sub(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return sub(static_cast<const ComplexDouble &>(other));
+            return sub(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return sub(static_cast<const RealMPFR &>(other));
+            return sub(down_cast<const RealMPFR &>(other));
         } else if (is_a<ComplexMPC>(other)) {
-            return sub(static_cast<const ComplexMPC &>(other));
+            return sub(down_cast<const ComplexMPC &>(other));
         } else {
             return other.rsub(*this);
         }
@@ -218,17 +218,17 @@ public:
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return rsub(static_cast<const Rational &>(other));
+            return rsub(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return rsub(static_cast<const Integer &>(other));
+            return rsub(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return rsub(static_cast<const Complex &>(other));
+            return rsub(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return rsub(static_cast<const RealDouble &>(other));
+            return rsub(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return rsub(static_cast<const ComplexDouble &>(other));
+            return rsub(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return rsub(static_cast<const RealMPFR &>(other));
+            return rsub(down_cast<const RealMPFR &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }
@@ -246,19 +246,19 @@ public:
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return mul(static_cast<const Rational &>(other));
+            return mul(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return mul(static_cast<const Integer &>(other));
+            return mul(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return mul(static_cast<const Complex &>(other));
+            return mul(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return mul(static_cast<const RealDouble &>(other));
+            return mul(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return mul(static_cast<const ComplexDouble &>(other));
+            return mul(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return mul(static_cast<const RealMPFR &>(other));
+            return mul(down_cast<const RealMPFR &>(other));
         } else if (is_a<ComplexMPC>(other)) {
-            return mul(static_cast<const ComplexMPC &>(other));
+            return mul(down_cast<const ComplexMPC &>(other));
         } else {
             return other.mul(*this);
         }
@@ -276,19 +276,19 @@ public:
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return div(static_cast<const Rational &>(other));
+            return div(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return div(static_cast<const Integer &>(other));
+            return div(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return div(static_cast<const Complex &>(other));
+            return div(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return div(static_cast<const RealDouble &>(other));
+            return div(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return div(static_cast<const ComplexDouble &>(other));
+            return div(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return div(static_cast<const RealMPFR &>(other));
+            return div(down_cast<const RealMPFR &>(other));
         } else if (is_a<ComplexMPC>(other)) {
-            return div(static_cast<const ComplexMPC &>(other));
+            return div(down_cast<const ComplexMPC &>(other));
         } else {
             return other.rdiv(*this);
         }
@@ -305,17 +305,17 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return rdiv(static_cast<const Rational &>(other));
+            return rdiv(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return rdiv(static_cast<const Integer &>(other));
+            return rdiv(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return rdiv(static_cast<const Complex &>(other));
+            return rdiv(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return rdiv(static_cast<const RealDouble &>(other));
+            return rdiv(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return rdiv(static_cast<const ComplexDouble &>(other));
+            return rdiv(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return rdiv(static_cast<const RealMPFR &>(other));
+            return rdiv(down_cast<const RealMPFR &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }
@@ -333,19 +333,19 @@ public:
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return pow(static_cast<const Rational &>(other));
+            return pow(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return pow(static_cast<const Integer &>(other));
+            return pow(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return pow(static_cast<const Complex &>(other));
+            return pow(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return pow(static_cast<const RealDouble &>(other));
+            return pow(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return pow(static_cast<const ComplexDouble &>(other));
+            return pow(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return pow(static_cast<const RealMPFR &>(other));
+            return pow(down_cast<const RealMPFR &>(other));
         } else if (is_a<ComplexMPC>(other)) {
-            return pow(static_cast<const ComplexMPC &>(other));
+            return pow(down_cast<const ComplexMPC &>(other));
         } else {
             return other.rpow(*this);
         }
@@ -362,17 +362,17 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return rpow(static_cast<const Rational &>(other));
+            return rpow(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return rpow(static_cast<const Integer &>(other));
+            return rpow(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return rpow(static_cast<const Complex &>(other));
+            return rpow(down_cast<const Complex &>(other));
         } else if (is_a<RealDouble>(other)) {
-            return rpow(static_cast<const RealDouble &>(other));
+            return rpow(down_cast<const RealDouble &>(other));
         } else if (is_a<ComplexDouble>(other)) {
-            return rpow(static_cast<const ComplexDouble &>(other));
+            return rpow(down_cast<const ComplexDouble &>(other));
         } else if (is_a<RealMPFR>(other)) {
-            return rpow(static_cast<const RealMPFR &>(other));
+            return rpow(down_cast<const RealMPFR &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }

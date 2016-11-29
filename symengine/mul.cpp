@@ -55,8 +55,8 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (is_a<Mul>(*p.first)) {
             if (is_a<Integer>(*p.second))
                 return false;
-            if (neq(*static_cast<const Mul &>(*p.first).coef_, *one)
-                and neq(*static_cast<const Mul &>(*p.first).coef_, *minus_one))
+            if (neq(*down_cast<const Mul &>(*p.first).coef_, *one)
+                and neq(*down_cast<const Mul &>(*p.first).coef_, *minus_one))
                 return false;
         }
         // e.g. x**2**y (={x**2:y}), which should be represented as x**(2y)
@@ -86,8 +86,8 @@ hash_t Mul::__hash__() const
 
 bool Mul::__eq__(const Basic &o) const
 {
-    if (is_a<Mul>(o) and eq(*coef_, *(static_cast<const Mul &>(o).coef_))
-        and unified_eq(dict_, static_cast<const Mul &>(o).dict_))
+    if (is_a<Mul>(o) and eq(*coef_, *(down_cast<const Mul &>(o).coef_))
+        and unified_eq(dict_, down_cast<const Mul &>(o).dict_))
         return true;
 
     return false;
@@ -96,7 +96,7 @@ bool Mul::__eq__(const Basic &o) const
 int Mul::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Mul>(o))
-    const Mul &s = static_cast<const Mul &>(o);
+    const Mul &s = down_cast<const Mul &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
         return (dict_.size() < s.dict_.size()) ? -1 : 1;
@@ -189,11 +189,11 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
             } else if (is_a<Rational>(*exp)) {
                 RCP<const Basic> res;
                 if (is_a<Integer>(*t)) {
-                    res = static_cast<const Rational &>(*exp)
-                              .rpowrat(static_cast<const Integer &>(*t));
+                    res = down_cast<const Rational &>(*exp)
+                              .rpowrat(down_cast<const Integer &>(*t));
                 } else {
-                    res = static_cast<const Rational &>(*t)
-                              .powrat(static_cast<const Rational &>(*exp));
+                    res = down_cast<const Rational &>(*t)
+                              .powrat(down_cast<const Rational &>(*exp));
                 }
                 if (is_a_Number(*res)) {
                     imulnum(outArg(*coef), rcp_static_cast<const Number>(res));
@@ -257,11 +257,11 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
             if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
                 RCP<const Basic> res;
                 if (is_a<Integer>(*t)) {
-                    res = static_cast<const Rational &>(*it->second)
-                              .rpowrat(static_cast<const Integer &>(*t));
+                    res = down_cast<const Rational &>(*it->second)
+                              .rpowrat(down_cast<const Integer &>(*t));
                 } else {
-                    res = static_cast<const Rational &>(*t).powrat(
-                        static_cast<const Rational &>(*it->second));
+                    res = down_cast<const Rational &>(*t)
+                              .powrat(down_cast<const Rational &>(*it->second));
                 }
                 if (is_a_Number(*res)) {
                     d.erase(it);
@@ -279,7 +279,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
             }
         }
         if (is_a_Number(*it->second)) {
-            if (static_cast<const Number &>(*it->second).is_zero()) {
+            if (down_cast<const Number &>(*it->second).is_zero()) {
                 // In 1*x**0.0, result should be 1.0
                 imulnum(
                     outArg(*coef),
@@ -448,7 +448,7 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
         for (const auto &p : dict_) {
             new_exp = mul(p.second, exp);
             if (is_a<Integer>(*new_exp) and is_a<Mul>(*p.first)) {
-                static_cast<const Mul &>(*p.first)
+                down_cast<const Mul &>(*p.first)
                     .power_num(coef, d, rcp_static_cast<const Number>(new_exp));
             } else {
                 // No need for additional dict checks here.

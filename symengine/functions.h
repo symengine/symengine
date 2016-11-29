@@ -8,6 +8,7 @@
 #define SYMENGINE_FUNCTIONS_H
 
 #include <symengine/basic.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -49,14 +50,14 @@ public:
     {
         return is_same_type(*this, o)
                and eq(*get_arg(),
-                      *static_cast<const OneArgFunction &>(o).get_arg());
+                      *down_cast<const OneArgFunction &>(o).get_arg());
     }
     //! Structural equality comparator
     virtual inline int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
         return get_arg()->__cmp__(
-            *(static_cast<const OneArgFunction &>(o).get_arg()));
+            *(down_cast<const OneArgFunction &>(o).get_arg()));
     }
 };
 
@@ -102,21 +103,21 @@ public:
     {
         return is_same_type(*this, o)
                and eq(*get_arg1(),
-                      *static_cast<const TwoArgFunction &>(o).get_arg1())
+                      *down_cast<const TwoArgFunction &>(o).get_arg1())
                and eq(*get_arg2(),
-                      *static_cast<const TwoArgFunction &>(o).get_arg2());
+                      *down_cast<const TwoArgFunction &>(o).get_arg2());
     }
     //! Structural equality comparator
     virtual inline int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
-        const TwoArgFunction &t = static_cast<const TwoArgFunction &>(o);
+        const TwoArgFunction &t = down_cast<const TwoArgFunction &>(o);
         if (neq(*get_arg1(), *(t.get_arg1()))) {
             return get_arg1()->__cmp__(
-                *(static_cast<const TwoArgFunction &>(o).get_arg1()));
+                *(down_cast<const TwoArgFunction &>(o).get_arg1()));
         } else {
             return get_arg2()->__cmp__(
-                *(static_cast<const TwoArgFunction &>(o).get_arg2()));
+                *(down_cast<const TwoArgFunction &>(o).get_arg2()));
         }
     }
 };
@@ -154,16 +155,15 @@ public:
     virtual inline bool __eq__(const Basic &o) const
     {
         return is_same_type(*this, o)
-               and unified_eq(
-                       get_vec(),
-                       static_cast<const MultiArgFunction &>(o).get_vec());
+               and unified_eq(get_vec(),
+                              down_cast<const MultiArgFunction &>(o).get_vec());
     }
     //! Structural equality comparator
     virtual inline int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
         return unified_compare(
-            get_vec(), static_cast<const MultiArgFunction &>(o).get_vec());
+            get_vec(), down_cast<const MultiArgFunction &>(o).get_vec());
     }
 };
 

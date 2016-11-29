@@ -9,6 +9,7 @@
 
 #include <symengine/number.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -118,7 +119,7 @@ public:
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return addint(static_cast<const Integer &>(other));
+            return addint(down_cast<const Integer &>(other));
         } else {
             return other.add(*this);
         }
@@ -127,7 +128,7 @@ public:
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return subint(static_cast<const Integer &>(other));
+            return subint(down_cast<const Integer &>(other));
         } else {
             return other.rsub(*this);
         }
@@ -142,7 +143,7 @@ public:
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return mulint(static_cast<const Integer &>(other));
+            return mulint(down_cast<const Integer &>(other));
         } else {
             return other.mul(*this);
         }
@@ -151,7 +152,7 @@ public:
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return divint(static_cast<const Integer &>(other));
+            return divint(down_cast<const Integer &>(other));
         } else {
             return other.rdiv(*this);
         }
@@ -163,7 +164,7 @@ public:
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return powint(static_cast<const Integer &>(other));
+            return powint(down_cast<const Integer &>(other));
         } else {
             return other.rpow(*this);
         }

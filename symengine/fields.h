@@ -154,7 +154,7 @@ public:
             dict_ = std::move(other.dict_);
             modulo_ = std::move(other.modulo_);
         }
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     template <typename T>
@@ -170,10 +170,10 @@ public:
         if (modulo_ != other.modulo_)
             throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
             *this = other;
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         if (other.dict_.size() < this->dict_.size()) {
             for (unsigned int i = 0; i < other.dict_.size(); i++) {
@@ -201,19 +201,19 @@ public:
                 dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(),
                              other.dict_.end());
         }
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator+=(const integer_class &other)
     {
         if (dict_.empty() or other == integer_class(0))
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         integer_class temp = dict_[0] + other;
         mp_fdiv_r(temp, temp, modulo_);
         dict_[0] = temp;
         if (dict_.size() == 1)
             gf_istrip();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     template <typename T>
@@ -246,10 +246,10 @@ public:
         if (modulo_ != other.modulo_)
             throw SymEngineException("Error: field must be same.");
         if (other.dict_.size() == 0)
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         if (this->dict_.size() == 0) {
             *this = -other;
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         if (other.dict_.size() < this->dict_.size()) {
             for (unsigned int i = 0; i < other.dict_.size(); i++) {
@@ -283,7 +283,7 @@ public:
                 }
             }
         }
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     static GaloisFieldDict mul(const GaloisFieldDict &a,
@@ -298,11 +298,11 @@ public:
     GaloisFieldDict &operator*=(const integer_class &other)
     {
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
 
         if (other == integer_class(0)) {
             dict_.clear();
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
 
         for (auto &arg : dict_) {
@@ -312,7 +312,7 @@ public:
             }
         }
         gf_istrip();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator*=(const GaloisFieldDict &other)
@@ -320,12 +320,12 @@ public:
         if (modulo_ != other.modulo_)
             throw SymEngineException("Error: field must be same.");
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
 
         auto o_dict = other.dict_;
         if (o_dict.empty()) {
             dict_.clear();
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
 
         // ! other is a just constant term
@@ -337,13 +337,13 @@ public:
                 }
             }
             gf_istrip();
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         // mul will return a stripped dict
-        GaloisFieldDict res = GaloisFieldDict::mul(
-            static_cast<GaloisFieldDict &>(*this), other);
+        GaloisFieldDict res
+            = GaloisFieldDict::mul(down_cast<GaloisFieldDict &>(*this), other);
         res.dict_.swap(this->dict_);
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     template <class T>
@@ -360,7 +360,7 @@ public:
             throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         integer_class inv;
         mp_invert(inv, other, modulo_);
         for (auto &arg : dict_) {
@@ -370,7 +370,7 @@ public:
             }
         }
         gf_istrip();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
@@ -382,7 +382,7 @@ public:
             throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         integer_class inv;
         mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
 
@@ -394,14 +394,14 @@ public:
                     mp_fdiv_r(iter, iter, modulo_);
                 }
             }
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         std::vector<integer_class> dict_out;
         size_t deg_dividend = this->degree();
         size_t deg_divisor = other.degree();
         if (deg_dividend < deg_divisor) {
             dict_.clear();
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         dict_out.swap(dict_);
         dict_.resize(deg_dividend - deg_divisor + 1);
@@ -421,7 +421,7 @@ public:
             dict_out[riter] = dict_[riter - deg_divisor] = coeff;
         }
         gf_istrip();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     template <class T>
@@ -438,9 +438,9 @@ public:
             throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         dict_.clear();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator%=(const GaloisFieldDict &other)
@@ -452,20 +452,20 @@ public:
             throw DivisionByZeroError("ZeroDivisionError");
         }
         if (dict_.empty())
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         integer_class inv;
         mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
 
         // ! other is a just constant term
         if (dict_divisor.size() == 1) {
             dict_.clear();
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         std::vector<integer_class> dict_out;
         size_t deg_dividend = this->degree();
         size_t deg_divisor = other.degree();
         if (deg_dividend < deg_divisor) {
-            return static_cast<GaloisFieldDict &>(*this);
+            return down_cast<GaloisFieldDict &>(*this);
         }
         dict_out.swap(dict_);
         dict_.resize(deg_divisor);
@@ -490,7 +490,7 @@ public:
             }
         }
         gf_istrip();
-        return static_cast<GaloisFieldDict &>(*this);
+        return down_cast<GaloisFieldDict &>(*this);
     }
 
     static GaloisFieldDict pow(const GaloisFieldDict &a, unsigned int p)

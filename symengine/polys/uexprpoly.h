@@ -89,7 +89,7 @@ public:
                     if (it->second == -1)
                         o << "-";
                 } else {
-                    if (static_cast<const Integer &>(*it->second.get_basic())
+                    if (down_cast<const Integer &>(*it->second.get_basic())
                             .as_integer_class()
                         < 0) {
                         o << " "

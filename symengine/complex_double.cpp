@@ -33,7 +33,7 @@ hash_t ComplexDouble::__hash__() const
 bool ComplexDouble::__eq__(const Basic &o) const
 {
     if (is_a<ComplexDouble>(o)) {
-        const ComplexDouble &s = static_cast<const ComplexDouble &>(o);
+        const ComplexDouble &s = down_cast<const ComplexDouble &>(o);
         return this->i == s.i;
     }
     return false;
@@ -42,7 +42,7 @@ bool ComplexDouble::__eq__(const Basic &o) const
 int ComplexDouble::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(o))
-    const ComplexDouble &s = static_cast<const ComplexDouble &>(o);
+    const ComplexDouble &s = down_cast<const ComplexDouble &>(o);
     if (i == s.i)
         return 0;
     if (i.real() == s.i.real()) {

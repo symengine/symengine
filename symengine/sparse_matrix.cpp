@@ -31,7 +31,7 @@ bool CSRMatrix::eq(const MatrixBase &other) const
         return false;
 
     if (is_a<CSRMatrix>(other)) {
-        const CSRMatrix &o = static_cast<const CSRMatrix &>(other);
+        const CSRMatrix &o = down_cast<const CSRMatrix &>(other);
 
         if (this->p_[row] != o.p_[row])
             return false;
