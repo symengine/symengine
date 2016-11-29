@@ -77,7 +77,7 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        const integer_class &j = static_cast<const Integer &>(*tmp).i;
+        const integer_class &j = down_cast<const Integer &>(*tmp).i;
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
         // boost::multiprecision::cpp_rational lacks an (int, cpp_int)
         // constructor. must use cpp_rational(cpp_int,cpp_int)
