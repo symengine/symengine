@@ -35,7 +35,7 @@ hash_t UnivariateSeries::__hash__() const
 int UnivariateSeries::compare(const Basic &other) const
 {
     SYMENGINE_ASSERT(is_a<UnivariateSeries>(other))
-    const UnivariateSeries &o_ = static_cast<const UnivariateSeries &>(other);
+    const UnivariateSeries &o_ = down_cast<const UnivariateSeries &>(other);
     return p_.compare(o_.get_poly());
 }
 

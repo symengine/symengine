@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/subs.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -195,7 +196,7 @@ public:
         }
         // Avoid cycles
         if (is_a<Derivative>(*ret)
-            && eq(*static_cast<const Derivative &>(*ret).get_arg(),
+            && eq(*down_cast<const Derivative &>(*ret).get_arg(),
                   *self.get_arg())) {
             t.insert(x);
             return Derivative::create(self.get_arg(), t);

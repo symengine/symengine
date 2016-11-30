@@ -63,8 +63,8 @@ hash_t Add::__hash__() const
 
 bool Add::__eq__(const Basic &o) const
 {
-    if (is_a<Add>(o) and eq(*coef_, *(static_cast<const Add &>(o).coef_))
-        and unified_eq(dict_, static_cast<const Add &>(o).dict_))
+    if (is_a<Add>(o) and eq(*coef_, *(down_cast<const Add &>(o).coef_))
+        and unified_eq(dict_, down_cast<const Add &>(o).dict_))
         return true;
 
     return false;
@@ -73,7 +73,7 @@ bool Add::__eq__(const Basic &o) const
 int Add::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Add>(o))
-    const Add &s = static_cast<const Add &>(o);
+    const Add &s = down_cast<const Add &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
         return (dict_.size() < s.dict_.size()) ? -1 : 1;

@@ -347,7 +347,7 @@ public:
                     return;
                 } else {
                     args.push_back(apply(*x.get_base()));
-                    bvisit(static_cast<const Integer &>(*x.get_exp()), true);
+                    bvisit(down_cast<const Integer &>(*x.get_exp()), true);
                     args.push_back(result_);
                     fun = get_powi();
                 }

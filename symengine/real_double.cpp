@@ -22,7 +22,7 @@ hash_t RealDouble::__hash__() const
 bool RealDouble::__eq__(const Basic &o) const
 {
     if (is_a<RealDouble>(o)) {
-        const RealDouble &s = static_cast<const RealDouble &>(o);
+        const RealDouble &s = down_cast<const RealDouble &>(o);
         return this->i == s.i;
     }
     return false;
@@ -31,7 +31,7 @@ bool RealDouble::__eq__(const Basic &o) const
 int RealDouble::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<RealDouble>(o))
-    const RealDouble &s = static_cast<const RealDouble &>(o);
+    const RealDouble &s = down_cast<const RealDouble &>(o);
     if (i == s.i)
         return 0;
     return i < s.i ? -1 : 1;
@@ -58,87 +58,87 @@ class EvaluateDouble : public Evaluate
     virtual RCP<const Basic> sin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::sin(static_cast<const T &>(x).i));
+        return number(std::sin(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::cos(static_cast<const T &>(x).i));
+        return number(std::cos(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> tan(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::tan(static_cast<const T &>(x).i));
+        return number(std::tan(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cot(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::tan(static_cast<const T &>(x).i));
+        return number(1.0 / std::tan(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> sec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::sin(static_cast<const T &>(x).i));
+        return number(1.0 / std::sin(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> csc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::cos(static_cast<const T &>(x).i));
+        return number(1.0 / std::cos(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> atan(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::atan(static_cast<const T &>(x).i));
+        return number(std::atan(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acot(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::atan(1.0 / static_cast<const T &>(x).i));
+        return number(std::atan(1.0 / down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> sinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::sinh(static_cast<const T &>(x).i));
+        return number(std::sinh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> csch(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::sinh(static_cast<const T &>(x).i));
+        return number(1.0 / std::sinh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cosh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::cosh(static_cast<const T &>(x).i));
+        return number(std::cosh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> sech(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::cosh(static_cast<const T &>(x).i));
+        return number(1.0 / std::cosh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::tanh(static_cast<const T &>(x).i));
+        return number(std::tanh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> coth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::tanh(static_cast<const T &>(x).i));
+        return number(1.0 / std::tanh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> asinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::asinh(static_cast<const T &>(x).i));
+        return number(std::asinh(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acsch(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::asinh(1.0 / static_cast<const T &>(x).i));
+        return number(std::asinh(1.0 / down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> abs(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(std::abs(static_cast<const T &>(x).i));
+        return number(std::abs(down_cast<const T &>(x).i));
     }
 };
 
@@ -147,12 +147,12 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return number(std::tgamma(static_cast<const RealDouble &>(x).i));
+        return number(std::tgamma(down_cast<const RealDouble &>(x).i));
     }
     virtual RCP<const Basic> asin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d <= 1.0 and d >= -1.0) {
             return number(std::asin(d));
         } else {
@@ -162,7 +162,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> acos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d <= 1.0 and d >= -1.0) {
             return number(std::acos(d));
         } else {
@@ -172,7 +172,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> acsc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d >= 1.0 or d <= -1.0) {
             return number(std::asin(1.0 / d));
         } else {
@@ -182,7 +182,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> asec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d >= 1.0 or d <= -1.0) {
             return number(std::acos(1.0 / d));
         } else {
@@ -192,7 +192,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> acosh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d >= 1.0) {
             return number(std::acosh(d));
         } else {
@@ -202,7 +202,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> atanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d <= 1.0 and d >= -1.0) {
             return number(std::atanh(d));
         } else {
@@ -212,7 +212,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> acoth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d >= 1.0 or d <= -1.0) {
             return number(std::atanh(1.0 / d));
         } else {
@@ -222,7 +222,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> log(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        double d = static_cast<const RealDouble &>(x).i;
+        double d = down_cast<const RealDouble &>(x).i;
         if (d >= 0.0) {
             return number(std::log(d));
         } else {
@@ -241,43 +241,42 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> asin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::asin(static_cast<const ComplexDouble &>(x).i));
+        return number(std::asin(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> acos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::acos(static_cast<const ComplexDouble &>(x).i));
+        return number(std::acos(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> acsc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(1.0 / std::asin(static_cast<const ComplexDouble &>(x).i));
+        return number(1.0 / std::asin(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> asec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(1.0 / std::acos(static_cast<const ComplexDouble &>(x).i));
+        return number(1.0 / std::acos(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::acosh(static_cast<const ComplexDouble &>(x).i));
+        return number(std::acosh(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> atanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::atanh(static_cast<const ComplexDouble &>(x).i));
+        return number(std::atanh(down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> acoth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(
-            std::atanh(1.0 / static_cast<const ComplexDouble &>(x).i));
+        return number(std::atanh(1.0 / down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> log(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::log(static_cast<const ComplexDouble &>(x).i));
+        return number(std::log(down_cast<const ComplexDouble &>(x).i));
     }
 };
 

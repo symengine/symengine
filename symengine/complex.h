@@ -243,11 +243,11 @@ public:
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return addcomp(static_cast<const Rational &>(other));
+            return addcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return addcomp(static_cast<const Integer &>(other));
+            return addcomp(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return addcomp(static_cast<const Complex &>(other));
+            return addcomp(down_cast<const Complex &>(other));
         } else {
             return other.add(*this);
         }
@@ -256,11 +256,11 @@ public:
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return subcomp(static_cast<const Rational &>(other));
+            return subcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return subcomp(static_cast<const Integer &>(other));
+            return subcomp(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return subcomp(static_cast<const Complex &>(other));
+            return subcomp(down_cast<const Complex &>(other));
         } else {
             return other.rsub(*this);
         }
@@ -269,9 +269,9 @@ public:
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return rsubcomp(static_cast<const Rational &>(other));
+            return rsubcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return rsubcomp(static_cast<const Integer &>(other));
+            return rsubcomp(down_cast<const Integer &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }
@@ -280,11 +280,11 @@ public:
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return mulcomp(static_cast<const Rational &>(other));
+            return mulcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return mulcomp(static_cast<const Integer &>(other));
+            return mulcomp(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return mulcomp(static_cast<const Complex &>(other));
+            return mulcomp(down_cast<const Complex &>(other));
         } else {
             return other.mul(*this);
         }
@@ -293,11 +293,11 @@ public:
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
-            return divcomp(static_cast<const Rational &>(other));
+            return divcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
-            return divcomp(static_cast<const Integer &>(other));
+            return divcomp(down_cast<const Integer &>(other));
         } else if (is_a<Complex>(other)) {
-            return divcomp(static_cast<const Complex &>(other));
+            return divcomp(down_cast<const Complex &>(other));
         } else {
             return other.rdiv(*this);
         }
@@ -306,7 +306,7 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return rdivcomp(static_cast<const Integer &>(other));
+            return rdivcomp(down_cast<const Integer &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }
@@ -315,7 +315,7 @@ public:
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Integer>(other)) {
-            return powcomp(static_cast<const Integer &>(other));
+            return powcomp(down_cast<const Integer &>(other));
         } else {
             return other.rpow(*this);
         }

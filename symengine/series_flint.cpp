@@ -83,7 +83,7 @@ RCP<const Basic> URatPSeriesFlint::get_coeff(int n) const
 int URatPSeriesFlint::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<URatPSeriesFlint>(o))
-    const URatPSeriesFlint &s = static_cast<const URatPSeriesFlint &>(o);
+    const URatPSeriesFlint &s = down_cast<const URatPSeriesFlint &>(o);
     if (var_ != s.var_)
         return (var_ < s.var_) ? -1 : 1;
     if (degree_ != s.degree_)

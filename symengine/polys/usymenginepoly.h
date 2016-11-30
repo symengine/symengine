@@ -22,7 +22,7 @@ public:
     int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_a<Poly>(o))
-        const Poly &s = static_cast<const Poly &>(o);
+        const Poly &s = down_cast<const Poly &>(o);
 
         if (this->poly_.size() != s.poly_.size())
             return (this->poly_.size() < s.poly_.size()) ? -1 : 1;

@@ -53,7 +53,7 @@ hash_t Infty::__hash__() const
 bool Infty::__eq__(const Basic &o) const
 {
     if (is_a<Infty>(o)) {
-        const Infty &s = static_cast<const Infty &>(o);
+        const Infty &s = down_cast<const Infty &>(o);
         return eq(*_direction, *(s.get_direction()));
     }
 
@@ -63,7 +63,7 @@ bool Infty::__eq__(const Basic &o) const
 int Infty::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Infty>(o))
-    const Infty &s = static_cast<const Infty &>(o);
+    const Infty &s = down_cast<const Infty &>(o);
     return _direction->compare(*(s.get_direction()));
 }
 
@@ -87,7 +87,7 @@ RCP<const Number> Infty::add(const Number &other) const
     if (not is_a<Infty>(other))
         return rcp_from_this_cast<Number>();
 
-    const Infty &s = static_cast<const Infty &>(other);
+    const Infty &s = down_cast<const Infty &>(other);
 
     if (not eq(*s.get_direction(), *_direction)) {
         if (is_unsigned_infinity() or s.is_unsigned_infinity())
@@ -112,7 +112,7 @@ RCP<const Number> Infty::mul(const Number &other) const
         throw NotImplementedError("Multiplation with Complex not implemented");
 
     if (is_a<Infty>(other)) {
-        const Infty &s = static_cast<const Infty &>(other);
+        const Infty &s = down_cast<const Infty &>(other);
 
         return make_rcp<const Infty>(this->_direction->mul(*(s._direction)));
     } else {

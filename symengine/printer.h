@@ -59,7 +59,7 @@ public:
     template <typename Container, typename Poly>
     void bvisit(const UPolyBase<Container, Poly> &x)
     {
-        bvisit_upoly(static_cast<const Poly &>(x));
+        bvisit_upoly(down_cast<const Poly &>(x));
     }
 
     void bvisit(const GaloisField &x)

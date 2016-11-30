@@ -220,10 +220,10 @@ public:
         }
         RCP<const Basic> presub = x.get_arg()->subs(n);
         if (is_a<Subs>(*presub)) {
-            for (auto &q : static_cast<const Subs &>(*presub).get_dict()) {
+            for (auto &q : down_cast<const Subs &>(*presub).get_dict()) {
                 insert(m, q.first, q.second);
             }
-            result_ = static_cast<const Subs &>(*presub).get_arg()->subs(m);
+            result_ = down_cast<const Subs &>(*presub).get_arg()->subs(m);
         } else {
             result_ = presub->subs(m);
         }

@@ -50,7 +50,7 @@ public:
 
     void dict_set(unsigned int pow, const Basic &x)
     {
-        static_cast<V *>(this)->dict_set(pow, x);
+        down_cast<V *>(this)->dict_set(pow, x);
     }
 
     void bvisit(const Pow &x)
@@ -69,8 +69,8 @@ public:
 
         RCP<const Basic> genbase = gen, genpow = one, coef = one, tmp;
         if (is_a<const Pow>(*gen)) {
-            genbase = static_cast<const Pow &>(*gen).get_base();
-            genpow = static_cast<const Pow &>(*gen).get_exp();
+            genbase = down_cast<const Pow &>(*gen).get_base();
+            genpow = down_cast<const Pow &>(*gen).get_exp();
         }
 
         if (eq(*genbase, *x.get_base())) {
@@ -173,7 +173,7 @@ public:
     {
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
-                this->gen, {{pow, static_cast<const Integer &>(x).i}});
+                this->gen, {{pow, down_cast<const Integer &>(x).i}});
         else
             throw SymEngineException("Non-integer found");
     }
@@ -293,7 +293,7 @@ public:
 
     void dict_set(Vec pow, const Basic &x)
     {
-        static_cast<V *>(this)->dict_set(pow, x);
+        down_cast<V *>(this)->dict_set(pow, x);
     }
 
     void bvisit(const Pow &x)
@@ -422,7 +422,7 @@ public:
     {
         if (is_a<const Integer>(x))
             dict = MIntPoly::container_from_dict(
-                gens, {{pow, static_cast<const Integer &>(x).i}});
+                gens, {{pow, down_cast<const Integer &>(x).i}});
         else
             throw SymEngineException("Non-integer found");
     }

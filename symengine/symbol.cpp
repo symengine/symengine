@@ -1,4 +1,5 @@
 #include <symengine/constants.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -17,14 +18,14 @@ hash_t Symbol::__hash__() const
 bool Symbol::__eq__(const Basic &o) const
 {
     if (is_a<Symbol>(o))
-        return name_ == static_cast<const Symbol &>(o).name_;
+        return name_ == down_cast<const Symbol &>(o).name_;
     return false;
 }
 
 int Symbol::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Symbol>(o))
-    const Symbol &s = static_cast<const Symbol &>(o);
+    const Symbol &s = down_cast<const Symbol &>(o);
     if (name_ == s.name_)
         return 0;
     return name_ < s.name_ ? -1 : 1;

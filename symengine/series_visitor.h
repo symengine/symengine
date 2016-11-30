@@ -53,7 +53,7 @@ public:
     {
         const RCP<const Basic> &base = x.get_base(), exp = x.get_exp();
         if (is_a<Integer>(*exp)) {
-            const Integer &ii = (static_cast<const Integer &>(*exp));
+            const Integer &ii = (down_cast<const Integer &>(*exp));
             if (not mp_fits_slong_p(ii.i))
                 throw SymEngineException("series power exponent size");
             const int sh = mp_get_si(ii.i);
@@ -72,7 +72,7 @@ public:
             }
 
         } else if (is_a<Rational>(*exp)) {
-            const Rational &rat = (static_cast<const Rational &>(*exp));
+            const Rational &rat = (down_cast<const Rational &>(*exp));
             const integer_class &expnumz = get_num(rat.i);
             const integer_class &expdenz = get_den(rat.i);
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
@@ -134,13 +134,13 @@ public:
         if (eq(*arg->subs({{s, zero}}), *zero)) {
             RCP<const Basic> g = gamma(add(arg, one));
             if (is_a<Gamma>(*g)) {
-                bvisit(static_cast<const Function &>(*g));
+                bvisit(down_cast<const Function &>(*g));
                 p *= Series::pow(var, -1, prec);
             } else {
                 g->accept(*this);
             }
         } else {
-            bvisit(static_cast<const Function &>(x));
+            bvisit(implicit_cast<const Function &>(x));
         }
     }
 
@@ -324,7 +324,7 @@ public:
         // exp(const) or x^-1
         if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
             or (is_a_Number(*exp)
-                and static_cast<const Number &>(*exp).is_negative()
+                and down_cast<const Number &>(*exp).is_negative()
                 and base->subs(subsx0)->__eq__(*integer(0)))) {
             needs_ = true;
             stop_ = true;

@@ -29,7 +29,7 @@ hash_t URatPSeriesPiranha::__hash__() const
 int URatPSeriesPiranha::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<URatPSeriesPiranha>(o))
-    const URatPSeriesPiranha &s = static_cast<const URatPSeriesPiranha &>(o);
+    const URatPSeriesPiranha &s = down_cast<const URatPSeriesPiranha &>(o);
     if (var_ != s.var_)
         return (var_ < s.var_) ? -1 : 1;
     if (degree_ != s.degree_)
@@ -153,7 +153,7 @@ piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n)
         res = cterm->nth_root(outArg(cout), n);
         if (not res)
             throw SymEngineException("constant term is not an nth power");
-        return convert(static_cast<const Rational &>(*cout).i);
+        return convert(down_cast<const Rational &>(*cout).i);
     }
 }
 
@@ -203,7 +203,7 @@ hash_t UPSeriesPiranha::__hash__() const
 int UPSeriesPiranha::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<UPSeriesPiranha>(o))
-    const UPSeriesPiranha &s = static_cast<const UPSeriesPiranha &>(o);
+    const UPSeriesPiranha &s = down_cast<const UPSeriesPiranha &>(o);
     if (var_ != s.var_)
         return (var_ < s.var_) ? -1 : 1;
     if (degree_ != s.degree_)

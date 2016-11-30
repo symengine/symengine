@@ -1,6 +1,7 @@
 #include <symengine/rational.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -15,7 +16,7 @@ hash_t Integer::__hash__() const
 bool Integer::__eq__(const Basic &o) const
 {
     if (is_a<Integer>(o)) {
-        const Integer &s = static_cast<const Integer &>(o);
+        const Integer &s = down_cast<const Integer &>(o);
         return this->i == s.i;
     }
     return false;
@@ -24,7 +25,7 @@ bool Integer::__eq__(const Basic &o) const
 int Integer::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Integer>(o))
-    const Integer &s = static_cast<const Integer &>(o);
+    const Integer &s = down_cast<const Integer &>(o);
     if (i == s.i)
         return 0;
     return i < s.i ? -1 : 1;
@@ -60,7 +61,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
         if (this->i == 0) {
             throw DivisionByZeroError("Division By Zero");
         }
-        rational_class q((static_cast<const Integer &>(other)).i, this->i);
+        rational_class q((down_cast<const Integer &>(other)).i, this->i);
 
         // This is potentially slow, but has to be done, since q might not
         // be in canonical form.
@@ -76,7 +77,7 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        const integer_class &j = static_cast<const Integer &>(*tmp).i;
+        const integer_class &j = down_cast<const Integer &>(*tmp).i;
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
         // boost::multiprecision::cpp_rational lacks an (int, cpp_int)
         // constructor. must use cpp_rational(cpp_int,cpp_int)

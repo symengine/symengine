@@ -1,4 +1,5 @@
 #include <symengine/logic.h>
+#include <symengine/symengine_casts.h>
 #include <iterator>
 
 namespace SymEngine
@@ -39,7 +40,7 @@ hash_t Interval::__hash__() const
 bool Interval::__eq__(const Basic &o) const
 {
     if (is_a<Interval>(o)) {
-        const Interval &s = static_cast<const Interval &>(o);
+        const Interval &s = down_cast<const Interval &>(o);
         return ((this->left_open_ == s.left_open_)
                 and (this->right_open_ == s.right_open_)
                 and eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_));
@@ -51,7 +52,7 @@ int Interval::compare(const Basic &s) const
 {
     // compares two interval based on their length
     SYMENGINE_ASSERT(is_a<Interval>(s))
-    const Interval &o = static_cast<const Interval &>(s);
+    const Interval &o = down_cast<const Interval &>(s);
     if (left_open_ and not o.left_open_) {
         return -1;
     } else if (not left_open_ and o.left_open_) {
@@ -106,7 +107,7 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
-        const Interval &other = static_cast<const Interval &>(*o);
+        const Interval &other = down_cast<const Interval &>(*o);
         RCP<const Number> start, end;
         bool left_open, right_open;
         RCP<const Basic> start_end, end_start;
@@ -157,7 +158,7 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
-        const Interval &other = static_cast<const Interval &>(*o);
+        const Interval &other = down_cast<const Interval &>(*o);
         RCP<const Basic> start_start, end_end, m;
         RCP<const Number> start, end;
         bool left_open, right_open;
@@ -289,7 +290,7 @@ hash_t FiniteSet::__hash__() const
 bool FiniteSet::__eq__(const Basic &o) const
 {
     if (is_a<FiniteSet>(o)) {
-        const FiniteSet &other = static_cast<const FiniteSet &>(o);
+        const FiniteSet &other = down_cast<const FiniteSet &>(o);
         return unified_eq(container_, other.container_);
     }
     return false;
@@ -299,7 +300,7 @@ int FiniteSet::compare(const Basic &o) const
 {
     // compares two FiniteSet based on their length
     SYMENGINE_ASSERT(is_a<FiniteSet>(o))
-    const FiniteSet &other = static_cast<const FiniteSet &>(o);
+    const FiniteSet &other = down_cast<const FiniteSet &>(o);
     return unified_compare(container_, other.container_);
 }
 
@@ -311,7 +312,7 @@ RCP<const Boolean> FiniteSet::contains(const RCP<const Basic> &a) const
 RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
-        const FiniteSet &other = static_cast<const FiniteSet &>(*o);
+        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
         set_basic container;
         std::set_union(container_.begin(), container_.end(),
                        other.container_.begin(), other.container_.end(),
@@ -321,7 +322,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
     }
     if (is_a<Interval>(*o)) {
         set_basic container;
-        const Interval &other = static_cast<const Interval &>(*o);
+        const Interval &other = down_cast<const Interval &>(*o);
         bool left = other.left_open_, right = other.right_open_;
         for (const auto &a : container_) {
             auto contain = o->contains(a);
@@ -365,7 +366,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
-        const FiniteSet &other = static_cast<const FiniteSet &>(*o);
+        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
         set_basic container;
         std::set_intersection(container_.begin(), container_.end(),
                               other.container_.begin(), other.container_.end(),
@@ -405,7 +406,7 @@ hash_t Union::__hash__() const
 bool Union::__eq__(const Basic &o) const
 {
     if (is_a<Union>(o)) {
-        const Union &other = static_cast<const Union &>(o);
+        const Union &other = down_cast<const Union &>(o);
         return unified_eq(container_, other.container_);
     }
     return false;
@@ -414,7 +415,7 @@ bool Union::__eq__(const Basic &o) const
 int Union::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Union>(o))
-    const Union &other = static_cast<const Union &>(o);
+    const Union &other = down_cast<const Union &>(o);
     return unified_compare(container_, other.container_);
 }
 
