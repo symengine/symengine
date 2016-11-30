@@ -66,6 +66,16 @@ matrix:
           - binutils-dev
           - g++-5
           - clang-format-3.7
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_COVERAGE="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-6
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no"
       compiler: gcc
       os: linux
