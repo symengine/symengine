@@ -334,10 +334,10 @@ void StrPrinter::bvisit(const Add &x)
 void StrPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                             const RCP<const Basic> &b)
 {
-    if (eq(*b, *rational(1, 2))) {
-        o << "sqrt(" << apply(a) << ")";
-    } else if (eq(*a, *E)) {
+    if (eq(*a, *E)) {
         o << "exp(" << apply(b) << ")";
+    } else if (eq(*b, *rational(1, 2))) {
+        o << "sqrt(" << apply(a) << ")";
     } else {
         o << parenthesizeLE(a, PrecedenceEnum::Pow);
         o << "**";
@@ -359,10 +359,9 @@ void StrPrinter::bvisit(const Mul &x)
     }
 
     for (const auto &p : x.dict_) {
-        if ((is_a<Integer>(*p.second)
-             and rcp_static_cast<const Integer>(p.second)->is_negative())
-            || (is_a<Rational>(*p.second)
-                and rcp_static_cast<const Rational>(p.second)->is_negative())) {
+        if ((is_a<Integer>(*p.second) or is_a<Rational>(*p.second))
+            and down_cast<const Number &>(*p.second).is_negative()
+            and neq(*(p.first), *E)) {
             if (eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
