@@ -38,6 +38,7 @@ using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
 using SymEngine::Infty;
 using SymEngine::infty;
+using SymEngine::down_cast;
 
 using namespace SymEngine::literals;
 
@@ -126,10 +127,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     rn2 = Rational::from_two_ints(*integer(5), *integer(7));
     rn3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
-    c1 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
-                                static_cast<const Rational &>(*rn2));
-    c2 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
-                                static_cast<const Rational &>(*rn3));
+    c1 = Complex::from_two_rats(down_cast<const Rational &>(*rn1),
+                                down_cast<const Rational &>(*rn2));
+    c2 = Complex::from_two_rats(down_cast<const Rational &>(*rn1),
+                                down_cast<const Rational &>(*rn3));
     r1 = mul(c1, x);
     r2 = mul(c2, x);
     REQUIRE(c1->__str__() == "1/2 + 5/7*I");

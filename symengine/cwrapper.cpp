@@ -25,6 +25,7 @@ using SymEngine::Number;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
+using SymEngine::down_cast;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::RealMPFR;
 using SymEngine::mpfr_class;
@@ -453,9 +454,9 @@ dcomplex complex_double_get(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
     dcomplex d;
-    d.real = (static_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
+    d.real = (down_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
                  .real();
-    d.imag = (static_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
+    d.imag = (down_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
                  .imag();
     return d;
 }
@@ -1220,8 +1221,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_gcd(basic s, const basic a, const basic b)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)),
-                          static_cast<const Integer &>(*(b->m)));
+    s->m = SymEngine::gcd(down_cast<const Integer &>(*(a->m)),
+                          down_cast<const Integer &>(*(b->m)));
     CWRAPPER_END
 }
 
@@ -1230,8 +1231,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, const basic a, const basic b)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)),
-                          static_cast<const Integer &>(*(b->m)));
+    s->m = SymEngine::lcm(down_cast<const Integer &>(*(a->m)),
+                          down_cast<const Integer &>(*(b->m)));
     CWRAPPER_END
 }
 
@@ -1244,8 +1245,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_gcd_ext(basic g, basic s, basic t, const basic a,
     SymEngine::RCP<const Integer> g_, s_, t_;
     SymEngine::gcd_ext(SymEngine::outArg(g_), SymEngine::outArg(s_),
                        SymEngine::outArg(t_),
-                       static_cast<const Integer &>(*(a->m)),
-                       static_cast<const Integer &>(*(b->m)));
+                       down_cast<const Integer &>(*(a->m)),
+                       down_cast<const Integer &>(*(b->m)));
     g->m = g_;
     s->m = s_;
     t->m = t_;
@@ -1256,7 +1257,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    s->m = SymEngine::nextprime(static_cast<const Integer &>(*(a->m)));
+    s->m = SymEngine::nextprime(down_cast<const Integer &>(*(a->m)));
     CWRAPPER_END
 }
 
@@ -1265,8 +1266,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_mod(basic s, const basic n, const basic d)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)),
-                          static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::mod(down_cast<const Integer &>(*(n->m)),
+                          down_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
@@ -1275,8 +1276,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)),
-                               static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::quotient(down_cast<const Integer &>(*(n->m)),
+                               down_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
@@ -1288,8 +1289,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod(basic q, basic r, const basic n,
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     SymEngine::RCP<const Integer> q_, r_;
     SymEngine::quotient_mod(SymEngine::outArg(q_), SymEngine::outArg(r_),
-                            static_cast<const Integer &>(*(n->m)),
-                            static_cast<const Integer &>(*(d->m)));
+                            down_cast<const Integer &>(*(n->m)),
+                            down_cast<const Integer &>(*(d->m)));
     q->m = q_;
     r->m = r_;
     CWRAPPER_END
@@ -1300,8 +1301,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::mod_f(static_cast<const Integer &>(*(n->m)),
-                            static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::mod_f(down_cast<const Integer &>(*(n->m)),
+                            down_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
@@ -1310,8 +1311,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d)
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::quotient_f(static_cast<const Integer &>(*(n->m)),
-                                 static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::quotient_f(down_cast<const Integer &>(*(n->m)),
+                                 down_cast<const Integer &>(*(d->m)));
     CWRAPPER_END
 }
 
@@ -1323,8 +1324,8 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod_f(basic q, basic r, const basic n,
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     SymEngine::RCP<const Integer> q_, r_;
     SymEngine::quotient_mod_f(SymEngine::outArg(q_), SymEngine::outArg(r_),
-                              static_cast<const Integer &>(*(n->m)),
-                              static_cast<const Integer &>(*(d->m)));
+                              down_cast<const Integer &>(*(n->m)),
+                              down_cast<const Integer &>(*(d->m)));
     q->m = q_;
     r->m = r_;
     CWRAPPER_END
@@ -1337,8 +1338,8 @@ int ntheory_mod_inverse(basic b, const basic a, const basic m)
     SYMENGINE_ASSERT(is_a<Integer>(*(m->m)));
     SymEngine::RCP<const Integer> b_;
     ret_val = SymEngine::mod_inverse(SymEngine::outArg(b_),
-                                     static_cast<const Integer &>(*(a->m)),
-                                     static_cast<const Integer &>(*(m->m)));
+                                     down_cast<const Integer &>(*(a->m)),
+                                     down_cast<const Integer &>(*(m->m)));
     b->m = b_;
     return ret_val;
 }
@@ -1381,7 +1382,7 @@ CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+    s->m = SymEngine::binomial(down_cast<const Integer &>(*(a->m)), b);
     CWRAPPER_END
 }
 

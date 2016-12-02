@@ -26,6 +26,7 @@ using SymEngine::eval_double;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::hash_t;
+using SymEngine::down_cast;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::mpfr_class;
 using SymEngine::real_mpfr;
@@ -288,11 +289,11 @@ TEST_CASE("Test NumberWrapper", "[number]")
         //! true if `this` is equal to `o`.
         virtual bool __eq__(const Basic &o) const
         {
-            return i_ == static_cast<const Long &>(o).i_;
+            return i_ == down_cast<const Long &>(o).i_;
         };
         virtual int compare(const Basic &o) const
         {
-            long j = static_cast<const Long &>(o).i_;
+            long j = down_cast<const Long &>(o).i_;
             if (i_ == j)
                 return 0;
             return i_ > j ? 1 : -1;
