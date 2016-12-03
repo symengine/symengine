@@ -41,12 +41,7 @@ typedef enum {
     SYMENGINE_TypeID_Count
 } TypeID;
 
-//! Struct to hold the real and imaginary parts of std::complex<double>
-//! extracted from basic
-typedef struct dcomplex {
-    double real;
-    double imag;
-} dcomplex;
+typedef double _Complex dcomplex;
 
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
 // single RCP<const Basic> member) *and* they must have the same alignment
