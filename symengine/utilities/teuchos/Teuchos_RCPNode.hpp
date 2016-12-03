@@ -153,7 +153,7 @@ public:
       count_[RCP_WEAK] = 0;
     }
   /** \brief . */
-  virtual ~RCPNode()
+  virtual ~RCPNode() noexcept(false)
     {
       if(extra_data_map_)
         delete extra_data_map_;
@@ -649,7 +649,7 @@ public:
   /** \brief . */
   ActiveRCPNodesSetup();
   /** \brief . */
-  ~ActiveRCPNodesSetup();
+  ~ActiveRCPNodesSetup() noexcept(false);
   /** \brief . */
   void foo();
 private:
