@@ -624,7 +624,10 @@ ActiveRCPNodesSetup::ActiveRCPNodesSetup()
 }
 
 
-ActiveRCPNodesSetup::~ActiveRCPNodesSetup() noexcept(false)
+ActiveRCPNodesSetup::~ActiveRCPNodesSetup()
+#ifdef TEUCHOS_DEBUG
+noexcept(false)
+#endif
 {
 #ifdef TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE
   std::cerr << "\nCalled ActiveRCPNodesSetup::~ActiveRCPNodesSetup() : count = " << count_ << "\n";
