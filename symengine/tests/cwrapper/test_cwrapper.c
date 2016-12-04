@@ -12,6 +12,11 @@
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
 
+void test_version()
+{
+    SYMENGINE_C_ASSERT(strcmp(SYMENGINE_VERSION, symengine_version()) == 0);
+}
+
 void test_cwrapper()
 {
     char *s;
@@ -1494,6 +1499,7 @@ void test_matrix()
 
 int main(int argc, char *argv[])
 {
+    test_version();
     test_cwrapper();
     test_complex();
     test_complex_double();

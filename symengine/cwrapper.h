@@ -103,6 +103,8 @@ void basic_free_stack(basic s);
 basic_struct *basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
+const char *symengine_version();
+
 //! Use these functions to get the commonly used constants as basic.
 
 //! Assigns to s a SymEngine constant with name c

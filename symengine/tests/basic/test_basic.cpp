@@ -3,6 +3,7 @@
 #include <symengine/eval_double.h>
 #include <symengine/derivative.h>
 #include <symengine/symengine_exception.h>
+#include <cstring>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -44,6 +45,11 @@ using SymEngine::sdiff;
 using SymEngine::DivisionByZeroError;
 
 using namespace SymEngine::literals;
+
+TEST_CASE("Test version", "[basic]")
+{
+    REQUIRE(std::strcmp(SymEngine::get_version(), SYMENGINE_VERSION) == 0);
+}
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {

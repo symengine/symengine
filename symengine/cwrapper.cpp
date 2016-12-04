@@ -105,6 +105,11 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
+const char *symengine_version()
+{
+    return SYMENGINE_VERSION;
+}
+
 void basic_const_set(basic s, const char *c)
 {
     s->m = SymEngine::constant(std::string(c));
