@@ -64,13 +64,13 @@ void test_cwrapper()
     basic_str_free(s);
 
     basic numer, denom;
-    numer_denom_as_numer_denom(e, numer, denom);
-    s = basic_str(numer);
-    SYMENGINE_C_ASSERT(strcmp(s, "y*(456 + x)") == 0);
-    basic_str_free(s);
-    s = basic_str(denom);
-    SYMENGINE_C_ASSERT(strcmp(s, "z") == 0);
-    basic_str_free(s);
+    basic_new_stack(numer);
+    basic_new_stack(denom);
+    basic_as_numer_denom(numer, denom, e);
+    basic_mul(e, e, z);
+    SYMENGINE_C_ASSERT(basic_eq(numer, e) == 1);
+    SYMENGINE_C_ASSERT(basic_eq(denom, z) == 1);
+    basic_div(e, e, z);
 
     basic_diff(e, e, z);
     s = basic_str(e);
