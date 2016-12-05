@@ -39,7 +39,7 @@ hash_t GaloisField::__hash__() const
 
 int GaloisField::compare(const Basic &o) const
 {
-    const GaloisField &s = static_cast<const GaloisField &>(o);
+    const GaloisField &s = down_cast<const GaloisField &>(o);
 
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
@@ -164,7 +164,7 @@ GaloisFieldDict &GaloisFieldDict::negate()
         if (a != 0_z)
             a += modulo_;
     }
-    return static_cast<GaloisFieldDict &>(*this);
+    return down_cast<GaloisFieldDict &>(*this);
 }
 
 void GaloisFieldDict::gf_istrip()

@@ -5,6 +5,7 @@
 #include <symengine/monomials.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/polys/uexprpoly.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -64,7 +65,7 @@ public:
     {
         if (this != &other)
             dict_ = std::move(other.dict_);
-        return static_cast<Wrapper &>(*this);
+        return down_cast<Wrapper &>(*this);
     }
 
     friend Wrapper operator+(const Wrapper &a, const Wrapper &b)
@@ -352,7 +353,7 @@ public:
     {
         SYMENGINE_ASSERT(is_a<Poly>(o))
 
-        const Poly &s = static_cast<const Poly &>(o);
+        const Poly &s = down_cast<const Poly &>(o);
 
         if (vars_.size() != s.vars_.size())
             return vars_.size() < s.vars_.size() ? -1 : 1;
@@ -424,7 +425,7 @@ public:
         // TODO : fix for when vars are different, but there is an intersection
         if (not is_a<Poly>(o))
             return false;
-        const Poly &o_ = static_cast<const Poly &>(o);
+        const Poly &o_ = down_cast<const Poly &>(o);
         // compare constants without regards to vars
         if (1 == poly_.dict_.size() && 1 == o_.poly_.dict_.size()) {
             if (poly_.dict_.begin()->second != o_.poly_.dict_.begin()->second)
