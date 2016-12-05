@@ -154,6 +154,9 @@ public:
     }
   /** \brief . */
   virtual ~RCPNode()
+#ifdef TEUCHOS_DEBUG
+    noexcept(false)
+#endif
     {
       if(extra_data_map_)
         delete extra_data_map_;
@@ -649,7 +652,11 @@ public:
   /** \brief . */
   ActiveRCPNodesSetup();
   /** \brief . */
+#ifdef TEUCHOS_DEBUG
+  ~ActiveRCPNodesSetup() noexcept(false);
+#else
   ~ActiveRCPNodesSetup();
+#endif
   /** \brief . */
   void foo();
 private:

@@ -32,6 +32,10 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CC=gcc-5
         export CXX=g++-5
         export GCOV_EXECUTABLE=gcov-5
+    elif [[ "${WITH_GCC_6}" == "yes" ]]; then
+        export CC=gcc-6
+        export CXX=g++-6
+        export GCOV_EXECUTABLE=gcov-6
     else
         export CC=gcc-4.7
         export CXX=g++-4.7

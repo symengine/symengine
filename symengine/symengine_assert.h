@@ -9,7 +9,7 @@
 #define XSTR(s) stringize(s)
 #define SYMENGINE_ASSERT(cond)                                                 \
     {                                                                          \
-        if (0 == (cond)) {                                                     \
+        if (!(cond)) {                                                         \
             std::cerr << "SYMENGINE_ASSERT failed: " << __FILE__               \
                       << "\nfunction " << __func__ << "(), line number "       \
                       << __LINE__ << " at \n" << XSTR(cond) << "\n";           \
