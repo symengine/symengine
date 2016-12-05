@@ -156,7 +156,7 @@ public:
     {
         if (this != &other)
             dict_ = std::move(other.dict_);
-        return down_cast<Wrapper &>(*this);
+        return static_cast<Wrapper &>(*this);
     }
 
     friend Wrapper operator+(const Wrapper &a, const Wrapper &b)
@@ -179,7 +179,7 @@ public:
                 dict_.insert(t, {iter.first, iter.second});
             }
         }
-        return down_cast<Wrapper &>(*this);
+        return static_cast<Wrapper &>(*this);
     }
 
     friend Wrapper operator-(const Wrapper &a, const Wrapper &b)
@@ -194,7 +194,7 @@ public:
         ODictWrapper c = *this;
         for (auto &iter : c.dict_)
             iter.second *= -1;
-        return down_cast<Wrapper &>(c);
+        return static_cast<Wrapper &>(c);
     }
 
     Wrapper &operator-=(const Wrapper &other)
@@ -210,7 +210,7 @@ public:
                 dict_.insert(t, {iter.first, -iter.second});
             }
         }
-        return down_cast<Wrapper &>(*this);
+        return static_cast<Wrapper &>(*this);
     }
 
     static Wrapper mul(const Wrapper &a, const Wrapper &b)
@@ -269,11 +269,11 @@ public:
     Wrapper &operator*=(const Wrapper &other)
     {
         if (dict_.empty())
-            return down_cast<Wrapper &>(*this);
+            return static_cast<Wrapper &>(*this);
 
         if (other.dict_.empty()) {
             dict_.clear();
-            return down_cast<Wrapper &>(*this);
+            return static_cast<Wrapper &>(*this);
         }
 
         // ! other is a just constant term
@@ -282,12 +282,12 @@ public:
             auto t = other.dict_.begin();
             for (auto &i1 : dict_)
                 i1.second *= t->second;
-            return down_cast<Wrapper &>(*this);
+            return static_cast<Wrapper &>(*this);
         }
 
-        Wrapper res = Wrapper::mul(down_cast<Wrapper &>(*this), other);
+        Wrapper res = Wrapper::mul(static_cast<Wrapper &>(*this), other);
         res.dict_.swap(this->dict_);
-        return down_cast<Wrapper &>(*this);
+        return static_cast<Wrapper &>(*this);
     }
 
     bool operator==(const Wrapper &other) const
