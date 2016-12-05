@@ -626,7 +626,7 @@ ActiveRCPNodesSetup::ActiveRCPNodesSetup()
 
 ActiveRCPNodesSetup::~ActiveRCPNodesSetup()
 #ifdef TEUCHOS_DEBUG
-noexcept(false)
+    noexcept(false)
 #endif
 {
 #ifdef TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE

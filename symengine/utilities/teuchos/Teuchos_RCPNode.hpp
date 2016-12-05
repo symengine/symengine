@@ -155,7 +155,7 @@ public:
   /** \brief . */
   virtual ~RCPNode()
 #ifdef TEUCHOS_DEBUG
-  noexcept(false)
+    noexcept(false)
 #endif
     {
       if(extra_data_map_)
