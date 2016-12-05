@@ -602,6 +602,10 @@ CWRAPPER_OUTPUT_TYPE ntheory_factorial(basic s, unsigned long n);
 CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
                                  int real);
 
+//! Wrapper for as_numer_denom
+CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
+                                          const basic x);
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
 

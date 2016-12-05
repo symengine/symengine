@@ -63,6 +63,15 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(strcmp(s, "y*(456 + x)/z") == 0);
     basic_str_free(s);
 
+    basic numer, denom;
+    basic_new_stack(numer);
+    basic_new_stack(denom);
+    basic_as_numer_denom(numer, denom, e);
+    basic_mul(e, e, z);
+    SYMENGINE_C_ASSERT(basic_eq(numer, e) == 1);
+    SYMENGINE_C_ASSERT(basic_eq(denom, z) == 1);
+    basic_div(e, e, z);
+
     basic_diff(e, e, z);
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z**2") == 0);
@@ -132,6 +141,8 @@ void test_cwrapper()
     basic_free_stack(p);
     basic_free_stack(a);
     basic_free_stack(b);
+    basic_free_stack(numer);
+    basic_free_stack(denom);
     basic_str_free(s);
 }
 

@@ -1402,6 +1402,15 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
+                                          const basic x)
+{
+    CWRAPPER_BEGIN
+    SymEngine::as_numer_denom(x->m, SymEngine::outArg(numer->m),
+                              SymEngine::outArg(denom->m));
+    CWRAPPER_END
+}
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault()
 {
