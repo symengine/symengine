@@ -92,7 +92,7 @@ public:
                 dict_.insert(t, {iter.first, iter.second});
             }
         }
-        return static_cast<Wrapper &>(*this);
+        return down_cast<Wrapper &>(*this);
     }
 
     friend Wrapper operator-(const Wrapper &a, const Wrapper &b)
@@ -109,7 +109,7 @@ public:
         auto c = *this;
         for (auto &iter : c.dict_)
             iter.second *= -1;
-        return static_cast<Wrapper &>(c);
+        return down_cast<Wrapper &>(c);
     }
 
     // both wrappers must have "aligned" vectors, ie same size
@@ -128,7 +128,7 @@ public:
                 dict_.insert(t, {iter.first, -iter.second});
             }
         }
-        return static_cast<Wrapper &>(*this);
+        return down_cast<Wrapper &>(*this);
     }
 
     static Wrapper mul(const Wrapper &a, const Wrapper &b)
@@ -192,11 +192,11 @@ public:
         SYMENGINE_ASSERT(vec_size == other.vec_size)
 
         if (dict_.empty())
-            return static_cast<Wrapper &>(*this);
+            return down_cast<Wrapper &>(*this);
 
         if (other.dict_.empty()) {
             dict_.clear();
-            return static_cast<Wrapper &>(*this);
+            return down_cast<Wrapper &>(*this);
         }
 
         Vec zero_v(vec_size, 0);
@@ -206,12 +206,12 @@ public:
             auto t = other.dict_.begin();
             for (auto &i1 : dict_)
                 i1.second *= t->second;
-            return static_cast<Wrapper &>(*this);
+            return down_cast<Wrapper &>(*this);
         }
 
-        Wrapper res = Wrapper::mul(static_cast<Wrapper &>(*this), other);
+        Wrapper res = Wrapper::mul(down_cast<Wrapper &>(*this), other);
         res.dict_.swap(this->dict_);
-        return static_cast<Wrapper &>(*this);
+        return down_cast<Wrapper &>(*this);
     }
 
     bool operator==(const Wrapper &other) const
