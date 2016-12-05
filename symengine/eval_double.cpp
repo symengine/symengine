@@ -620,7 +620,7 @@ std::vector<fn> init_eval_double()
     table[MIN] = [](const Basic &x) {
         double result;
         result = eval_double_single_dispatch(
-            *(static_cast<const Max &>(x).get_args()[0]));
+            *(down_cast<const Min &>(x).get_args()[0]));
         for (const auto &p : down_cast<const Min &>(x).get_args()) {
             double tmp = eval_double_single_dispatch(*p);
             result = std::min(result, tmp);
