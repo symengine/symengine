@@ -321,7 +321,7 @@ public:
 
     unsigned int size() const
     {
-        return dict_.size();
+        return static_cast<unsigned>(dict_.size());
     }
 
     bool empty() const

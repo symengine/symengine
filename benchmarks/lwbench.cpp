@@ -34,7 +34,9 @@ double A()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -48,7 +50,9 @@ double B()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -64,7 +68,9 @@ double C()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -81,7 +87,9 @@ double D()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -98,7 +106,9 @@ double E()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 

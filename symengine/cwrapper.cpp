@@ -832,7 +832,8 @@ void sparse_matrix_init(CSparseMatrix *s)
 void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
                              unsigned long int cols)
 {
-    s->m = SymEngine::CSRMatrix(rows, cols);
+    s->m = SymEngine::CSRMatrix(static_cast<unsigned int>(rows),
+                                static_cast<unsigned int>(cols));
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
@@ -871,7 +872,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
                                             unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(r, c);
+    s->m = mat->m.get(static_cast<unsigned int>(r),
+                      static_cast<unsigned int>(c));
     CWRAPPER_END
 }
 
@@ -880,7 +882,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat,
                                             unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(r, c, s->m);
+    mat->m.set(static_cast<unsigned int>(r), static_cast<unsigned int>(c),
+               s->m);
     CWRAPPER_END
 }
 
@@ -889,7 +892,8 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
                                              unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(r, c);
+    s->m = mat->m.get(static_cast<unsigned int>(r),
+                      static_cast<unsigned int>(c));
     CWRAPPER_END
 }
 
@@ -898,7 +902,8 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat,
                                              unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(r, c, s->m);
+    mat->m.set(static_cast<unsigned int>(r), static_cast<unsigned int>(c),
+               s->m);
     CWRAPPER_END
 }
 
@@ -930,8 +935,12 @@ dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
                        unsigned long int r, unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r2 - r1 + 1, c2 - c1 + 1);
-    mat->m.submatrix(s->m, r1, c1, r2, c2, r, c);
+    dense_matrix_rows_cols(s, static_cast<unsigned int>(r2 - r1 + 1),
+                           static_cast<unsigned int>(c2 - c1 + 1));
+    mat->m.submatrix(
+        s->m, static_cast<unsigned int>(r1), static_cast<unsigned int>(c1),
+        static_cast<unsigned int>(r2), static_cast<unsigned int>(c2),
+        static_cast<unsigned int>(r), static_cast<unsigned int>(c));
     CWRAPPER_END
 }
 
@@ -1040,7 +1049,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
                                        unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r, c);
+    dense_matrix_rows_cols(s, static_cast<unsigned int>(r),
+                           static_cast<unsigned int>(c));
     ones(s->m);
     CWRAPPER_END
 }
@@ -1049,7 +1059,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
                                         unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r, c);
+    dense_matrix_rows_cols(s, static_cast<unsigned int>(r),
+                           static_cast<unsigned int>(c));
     zeros(s->m);
     CWRAPPER_END
 }
@@ -1057,10 +1068,11 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
                                        long int k)
 {
     CWRAPPER_BEGIN
-    int vec_size = vecbasic_size(d);
-    dense_matrix_rows_cols(s, vec_size + (k >= 0 ? k : -k),
-                           vec_size + (k >= 0 ? k : -k));
-    diag(s->m, d->m, k);
+    unsigned int vec_size = static_cast<unsigned int>(vecbasic_size(d));
+    dense_matrix_rows_cols(
+        s, static_cast<unsigned int>(vec_size + (k >= 0 ? k : -k)),
+        static_cast<unsigned int>(vec_size + (k >= 0 ? k : -k)));
+    diag(s->m, d->m, static_cast<int>(k));
     CWRAPPER_END
 }
 
@@ -1068,7 +1080,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
                                       unsigned long int M, int k)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, N, M);
+    dense_matrix_rows_cols(s, static_cast<unsigned int>(N),
+                           static_cast<unsigned int>(M));
     eye(s->m, k);
     CWRAPPER_END
 }

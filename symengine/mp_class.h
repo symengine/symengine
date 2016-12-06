@@ -106,7 +106,7 @@ inline integer_class mp_sqrt(const integer_class &i)
 
 inline double mp_get_d(const integer_class &i)
 {
-    return i.get_d();
+    return static_cast<double>(i.get_d());
 }
 
 inline void mp_demote(integer_class &i)

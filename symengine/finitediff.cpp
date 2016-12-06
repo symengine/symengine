@@ -26,8 +26,8 @@ vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
     // Generation of Finite Difference Formulas on Arbitrarily Spaced Grids
     //     Bengt Fornberg, Mathematics of compuation, 51, 184, 1988, 699-706
     //
-    const unsigned len_g = grid.size();
-    const unsigned len_w = len_g * (max_deriv + 1);
+    const auto len_g = grid.size();
+    const unsigned len_w = static_cast<unsigned>(len_g * (max_deriv + 1));
     RCP<const Basic> c1, c4, c5;
     c1 = one;
     c4 = sub(grid[0], around);

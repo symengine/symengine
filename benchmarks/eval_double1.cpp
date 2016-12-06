@@ -45,9 +45,11 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 500; i++)
         r = eval_double(*e);
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
-                         .count()
-                     / 500.
+    std::cout << static_cast<double>(
+                     std::chrono::duration_cast<std::chrono::milliseconds>(t2
+                                                                           - t1)
+                         .count())
+                     / 500.0
               << "ms" << std::endl;
     /*
     In SymPy for few iterations:

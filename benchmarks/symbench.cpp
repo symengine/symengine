@@ -88,7 +88,9 @@ double R1()
     auto t1 = std::chrono::high_resolution_clock::now();
     g = expand(f(f(f(f(f(f(f(f(f(f(h)))))))))));
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -112,7 +114,9 @@ double R2()
     auto t1 = std::chrono::high_resolution_clock::now();
     g = hermite(n, y);
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -129,7 +133,9 @@ double R3()
         vec.push_back(eq(*f, *f));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -151,7 +157,9 @@ double R5()
     auto t1 = std::chrono::high_resolution_clock::now();
     std::set<RCP<const Basic>, RCPBasicKeyLess> s(v.begin(), v.end());
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -171,7 +179,9 @@ double R7()
         v.push_back(f->subs({{x, real_double(0.5)}}));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -195,7 +205,9 @@ double R8()
     auto t1 = std::chrono::high_resolution_clock::now();
     x = right(pow(x, integer(2)), integer(0), integer(5), x, 10000);
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -213,7 +225,9 @@ double S1()
     auto t1 = std::chrono::high_resolution_clock::now();
     f = expand(f);
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -231,7 +245,9 @@ double S2()
     auto t1 = std::chrono::high_resolution_clock::now();
     f = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -249,7 +265,9 @@ double S3()
     auto t1 = std::chrono::high_resolution_clock::now();
     f = e->diff(rcp_static_cast<const Symbol>(x));
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }
 
@@ -267,6 +285,8 @@ double S3a()
     auto t1 = std::chrono::high_resolution_clock::now();
     f = e->diff(rcp_static_cast<const Symbol>(x));
     auto t2 = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+    return static_cast<double>(
+               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
+                   .count())
            / 1000000000.0;
 }

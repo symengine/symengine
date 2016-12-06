@@ -200,7 +200,7 @@ public:
                 "Series::series_invert: Division By Zero");
         if (s == 1)
             return Poly(1);
-        const short ldeg = Series::ldegree(s);
+        const int ldeg = Series::ldegree(s);
         const Coeff co = Series::find_cf(s, var, ldeg);
         Poly p(1 / co), ss = s;
         if (ldeg != 0) {

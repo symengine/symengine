@@ -274,9 +274,9 @@ public:
             if (other.dict_.size() == this->dict_.size())
                 gf_istrip();
             else {
-                unsigned int orig_size = dict_.size();
+                auto orig_size = dict_.size();
                 dict_.resize(other.dict_.size());
-                for (unsigned int i = orig_size; i < other.dict_.size(); i++) {
+                for (auto i = orig_size; i < other.dict_.size(); i++) {
                     dict_[i] = -other.dict_[i];
                     if (dict_[i] != 0_z)
                         dict_[i] += modulo_;
@@ -412,7 +412,7 @@ public:
                           ? deg_divisor + riter - deg_dividend
                           : 0;
             auto ub = std::min(riter + 1, deg_divisor);
-            for (unsigned j = lb; j < ub; ++j) {
+            for (auto j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[riter - j + deg_divisor],
                           -dict_divisor[j]);
             }
@@ -510,7 +510,7 @@ public:
 
     unsigned int size() const
     {
-        return dict_.size();
+        return static_cast<unsigned int>(dict_.size());
     }
 
     bool empty() const
@@ -522,7 +522,7 @@ public:
     {
         if (dict_.empty())
             return 0;
-        return dict_.size() - 1;
+        return static_cast<unsigned>(dict_.size() - 1);
     }
 
     const std::vector<integer_class> &get_dict() const
