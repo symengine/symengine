@@ -199,7 +199,7 @@ endif()
 
 # PRIMESIEVE
 set(WITH_PRIMESIEVE no
-    CACHE BOOL "Build with primesieve")
+    CACHE BOOL "Build with Primesieve")
 
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)

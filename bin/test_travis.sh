@@ -83,7 +83,11 @@ if [[ "${WITH_LLVM}" != "" ]]; then
 fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-    export CXXFLAGS=""
+    if [[ "${BUILD_TYPE}" == "Debug" ]]; then
+        export  CXXFLAGS="-ftrapv"
+    else
+        export CXXFLAGS=""
+    fi
 else
     export CXXFLAGS="-Werror"
 fi
