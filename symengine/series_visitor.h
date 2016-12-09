@@ -77,8 +77,8 @@ public:
             const integer_class &expdenz = get_den(rat.as_rational_class());
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw SymEngineException("series rational power exponent size");
-            const int num = mp_get_si(expnumz);
-            const int den = mp_get_si(expdenz);
+            const int num = static_cast<int>(mp_get_si(expnumz));
+            const int den = static_cast<int>(mp_get_si(expdenz));
             base->accept(*this);
             const Poly proot(
                 Series::series_nthroot(apply(base), den, var, prec));

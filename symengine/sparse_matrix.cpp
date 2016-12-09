@@ -323,7 +323,7 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
                               const std::vector<unsigned> &j,
                               const vec_basic &x)
 {
-    unsigned nnz = x.size();
+    unsigned nnz = static_cast<unsigned>(x.size());
     std::vector<unsigned> p_ = std::vector<unsigned>(row + 1, 0);
     std::vector<unsigned> j_ = std::vector<unsigned>(nnz);
     vec_basic x_ = vec_basic(nnz);

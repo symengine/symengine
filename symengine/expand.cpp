@@ -208,7 +208,8 @@ public:
     {
         map_vec_mpz r;
         long m = base_dict.size();
-        multinomial_coefficients_mpz(m, n, r);
+        multinomial_coefficients_mpz(static_cast<int>(m),
+                                     static_cast<unsigned>(n), r);
 // This speeds up overall expansion. For example for the benchmark
 // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
 #if defined(HAVE_SYMENGINE_RESERVE)

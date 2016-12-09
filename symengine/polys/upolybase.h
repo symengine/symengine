@@ -319,9 +319,9 @@ public:
         return dict_;
     }
 
-    unsigned int size() const
+    size_t size() const
     {
-        return static_cast<unsigned>(dict_.size());
+        return dict_.size();
     }
 
     bool empty() const
@@ -483,7 +483,7 @@ public:
         return res;
     }
 
-    inline unsigned int get_degree() const
+    inline int get_degree() const
     {
         return this->get_poly().degree();
     }

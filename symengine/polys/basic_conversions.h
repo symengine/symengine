@@ -97,7 +97,7 @@ public:
                 if (is_a<const Integer>(*tmp)) {
                     RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
                     if (i->is_positive()) {
-                        powr = i->as_int();
+                        powr = static_cast<int>(i->as_int());
                         continue;
                     }
                 }
@@ -309,7 +309,7 @@ public:
     BasicToMPolyBase(const set_basic &gens_)
     {
         gens = gens_;
-        dict.vec_size = gens.size();
+        dict.vec_size = static_cast<int>(gens.size());
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -381,7 +381,7 @@ public:
                         i = rcp_static_cast<const Integer>(tmp);
                         if (i->is_positive()) {
                             zero_v[gens_map[pow(ite->first, powr)]]
-                                = i->as_int();
+                                = static_cast<int>(i->as_int());
                             found = true;
                             break;
                         }

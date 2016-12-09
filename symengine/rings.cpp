@@ -66,7 +66,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
 {
     vec_int exp;
-    int n = (A.begin()->first).size();
+    int n = static_cast<int>((A.begin()->first).size());
     exp.assign(n, 0); // Initialize to [0]*n
     /*
     std::cout << "A: " << A.load_factor() << " " << A.bucket_count() << " " <<

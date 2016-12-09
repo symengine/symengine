@@ -508,9 +508,9 @@ public:
         return not(*this == other);
     }
 
-    unsigned int size() const
+    size_t size() const
     {
-        return static_cast<unsigned int>(dict_.size());
+        return dict_.size();
     }
 
     bool empty() const
@@ -518,11 +518,11 @@ public:
         return dict_.empty();
     }
 
-    unsigned degree() const
+    size_t degree() const
     {
         if (dict_.empty())
             return 0;
-        return static_cast<unsigned>(dict_.size() - 1);
+        return dict_.size() - 1;
     }
 
     const std::vector<integer_class> &get_dict() const

@@ -100,7 +100,9 @@ public:
             }
             return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
+            Poly p = Series::series(other.rcp_from_this(), var_,
+                                    static_cast<unsigned>(degree_))
+                         ->p_;
             return make_rcp<Series>(Poly(p_ + p), var_, degree_);
         } else {
             return other.add(*this);
@@ -116,10 +118,15 @@ public:
                 throw NotImplementedError(
                     "Multivariate Series not implemented");
             }
-            return make_rcp<Series>(Series::mul(p_, o.p_, deg), var_, deg);
+            return make_rcp<Series>(
+                Series::mul(p_, o.p_, static_cast<unsigned>(deg)), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(Series::mul(p_, p, degree_), var_, degree_);
+            Poly p = Series::series(other.rcp_from_this(), var_,
+                                    static_cast<unsigned>(degree_))
+                         ->p_;
+            return make_rcp<Series>(
+                Series::mul(p_, p, static_cast<unsigned>(degree_)), var_,
+                degree_);
         } else {
             return other.mul(*this);
         }
@@ -140,32 +147,42 @@ public:
         } else if (is_a<Integer>(other)) {
             if (other.is_negative()) {
                 p = Series::pow(
-                    p_, (down_cast<const Integer &>(other).neg()->as_int()),
-                    deg);
-                p = Series::series_invert(p, Series::var(var_), deg);
+                    p_, (static_cast<unsigned>(
+                            down_cast<const Integer &>(other).neg()->as_int())),
+                    static_cast<unsigned>(deg));
+                p = Series::series_invert(p, Series::var(var_),
+                                          static_cast<unsigned>(deg));
                 return make_rcp<Series>(p, var_, deg);
             }
-            p = Series::pow(p_, (down_cast<const Integer &>(other).as_int()),
-                            deg);
+            p = Series::pow(p_,
+                            static_cast<unsigned>(
+                                (down_cast<const Integer &>(other).as_int())),
+                            static_cast<unsigned>(deg));
             return make_rcp<Series>(p, var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
-            p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
+            p = Series::series(other.rcp_from_this(), var_,
+                               static_cast<unsigned>(degree_))
+                    ->p_;
         } else {
             return other.rpow(*this);
         }
         p = Series::series_exp(
-            Poly(p * Series::series_log(p_, Series::var(var_), deg)),
-            Series::var(var_), deg);
+            Poly(p * Series::series_log(p_, Series::var(var_),
+                                        static_cast<unsigned>(deg))),
+            Series::var(var_), static_cast<unsigned>(deg));
         return make_rcp<Series>(p, var_, deg);
     }
 
     virtual RCP<const Number> rpow(const Number &other) const
     {
         if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
+            Poly p = Series::series(other.rcp_from_this(), var_,
+                                    static_cast<unsigned>(degree_))
+                         ->p_;
             p = Series::series_exp(
-                Poly(p_ * Series::series_log(p, Series::var(var_), degree_)),
-                Series::var(var_), degree_);
+                Poly(p_ * Series::series_log(p, Series::var(var_),
+                                             static_cast<unsigned>(degree_))),
+                Series::var(var_), static_cast<unsigned>(degree_));
             return make_rcp<Series>(p, var_, degree_);
         } else {
             throw SymEngineException("Unknown type");
@@ -246,7 +263,7 @@ public:
         if (n == -1)
             return Series::series_invert(s, var, prec);
 
-        const short ldeg = Series::ldegree(s);
+        const int ldeg = Series::ldegree(s);
         if (ldeg % n != 0) {
             throw NotImplementedError("Puiseux series not implemented.");
         }
@@ -286,7 +303,7 @@ public:
 
         if (s == var) {
             //! fast atan(x)
-            short sign = 1;
+            int sign = 1;
             Poly monom(var), vsquare(var * var);
             for (unsigned int i = 1; i < prec; i += 2, sign *= -1) {
                 res_p += monom * (Coeff(sign) / Coeff(i));
@@ -359,7 +376,7 @@ public:
         Poly ssquare = Series::mul(s, s, prec);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
-            const short j = 2 * i + 1;
+            const int j = 2 * i + 1;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
@@ -438,7 +455,7 @@ public:
         Poly monom(ssquare);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
-            const short j = 2 * i;
+            const int j = 2 * i;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;

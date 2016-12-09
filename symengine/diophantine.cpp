@@ -52,7 +52,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 {
     unsigned p = A.nrows();
     unsigned q = A.ncols();
-    unsigned n;
+    long n;
 
     SYMENGINE_ASSERT(p > 0 and q > 1);
 
@@ -118,9 +118,11 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
                     dot = dot->addint(*p_j0->mulint(*A_ji));
                 }
 
-                if (F[i] == false and ((dot->is_negative()
-                                        and is_minimum(T, basis, basis.size()))
-                                       or t.eq(row_zero))) {
+                if (F[i] == false
+                    and ((dot->is_negative()
+                          and is_minimum(T, basis,
+                                         static_cast<int>(basis.size())))
+                         or t.eq(row_zero))) {
                     P.push_back(T);
                     n = n + 1;
 

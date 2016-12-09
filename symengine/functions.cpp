@@ -48,7 +48,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.get_coef();
-        int size = s.get_dict().size();
+        long unsigned size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
@@ -238,8 +238,9 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
         RCP<const Number> t = mulnum(n, integer(12));
         sign = 1;
         if (is_a<Integer>(*t)) {
-            int m = mod_f(down_cast<const Integer &>(*t), *integer(12 * period))
-                        ->as_int();
+            int m = static_cast<int>(
+                mod_f(down_cast<const Integer &>(*t), *integer(12 * period))
+                    ->as_int());
             if (eq(*r, *zero)) {
                 index = m;
                 *rarg = zero;

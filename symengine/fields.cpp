@@ -221,8 +221,8 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         return;
     }
     auto dict_divisor = o.dict_;
-    unsigned int deg_dividend = this->degree();
-    unsigned int deg_divisor = o.degree();
+    unsigned int deg_dividend = static_cast<unsigned>(this->degree());
+    unsigned int deg_divisor = static_cast<unsigned>(o.degree());
     if (deg_dividend < deg_divisor) {
         *quo = GaloisFieldDict::from_vec(dict_out, modulo_);
         *rem = GaloisFieldDict::from_vec(dict_, modulo_);
@@ -452,7 +452,7 @@ GaloisFieldDict::gf_sqf_list() const
                 f = g;
         }
         if (not sqf) {
-            unsigned int deg = f.degree();
+            unsigned int deg = static_cast<unsigned>(f.degree());
             unsigned int d = deg / r;
             GaloisFieldDict temp = f;
             for (unsigned int i = 0; i <= d; ++i) {
@@ -541,7 +541,7 @@ std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
     b.resize(n);
     b[0] = GaloisFieldDict::from_vec({1_z}, modulo_);
     GaloisFieldDict temp_out;
-    if (mp_get_si(modulo_) < n) {
+    if (static_cast<unsigned>(mp_get_si(modulo_)) < n) {
         for (unsigned i = 1; i < n; ++i) {
             b[i] = b[i - 1].gf_lshift(modulo_);
             b[i] %= (*this);
@@ -563,7 +563,7 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
 {
     if (modulo_ != g.modulo_)
         throw SymEngineException("Error: field must be same.");
-    unsigned m = g.degree();
+    unsigned m = static_cast<unsigned>(g.degree());
     GaloisFieldDict temp_out(*this), out;
     if (this->degree() >= m) {
         temp_out %= g;
@@ -571,7 +571,7 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
     if (temp_out.empty()) {
         return temp_out;
     }
-    m = temp_out.degree();
+    m = static_cast<unsigned>(temp_out.degree());
     out = GaloisFieldDict::from_vec({temp_out.dict_[0]}, modulo_);
     for (unsigned i = 1; i <= m; ++i) {
         auto v = b[i];
@@ -692,7 +692,7 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
     if (this->degree() <= n)
         return factors;
 
-    unsigned N = this->degree() / n;
+    unsigned N = static_cast<unsigned>(this->degree() / n);
 
     std::vector<GaloisFieldDict> b;
     if (modulo_ != 2_z)
@@ -732,8 +732,8 @@ GaloisFieldDict::gf_ddf_shoup() const
     if (dict_.empty())
         return factors;
     GaloisFieldDict f(*this);
-    unsigned n = this->degree();
-    auto k = static_cast<unsigned>(std::sqrt(n / 2) + 1);
+    unsigned n = static_cast<unsigned>(this->degree());
+    auto k = std::ceil(std::sqrt(n / 2));
     auto b = gf_frobenius_monomial_base();
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
     auto h = x.gf_frobenius_map(f, b);
@@ -741,19 +741,19 @@ GaloisFieldDict::gf_ddf_shoup() const
     std::vector<GaloisFieldDict> U;
     U.push_back(x);
     U.push_back(h);
-    U.resize(k + 1);
+    U.resize(static_cast<unsigned>(k + 1));
     for (unsigned i = 2; i <= k; ++i)
         U[i] = U[i - 1].gf_frobenius_map(*this, b);
-    h = U[k];
-    U.resize(k);
+    h = U[static_cast<unsigned>(k)];
+    U.resize(static_cast<unsigned>(k));
     std::vector<GaloisFieldDict> V;
     V.push_back(h);
-    V.resize(k);
+    V.resize(static_cast<unsigned>(k));
     for (unsigned i = 1; i <= k - 1; ++i)
         V[i] = this->gf_compose_mod(V[i - 1], h);
     for (unsigned i = 0; i < V.size(); i++) {
         h = GaloisFieldDict::from_vec({1_z}, modulo_);
-        unsigned j = k - 1;
+        unsigned j = static_cast<unsigned>(k - 1);
         GaloisFieldDict g;
         for (auto &u : U) {
             g = V[i] - u;
@@ -766,7 +766,7 @@ GaloisFieldDict::gf_ddf_shoup() const
             h = V[i] - (*rit);
             auto F = g.gf_gcd(h);
             if (not F.is_one()) {
-                int temp = k * (i + 1) - j;
+                int temp = static_cast<int>(k * (i + 1) - j);
                 factors.push_back({F, temp});
             }
             g /= F;
@@ -790,7 +790,7 @@ GaloisFieldDict::gf_edf_shoup(const unsigned &n) const
     }
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
     mp_randstate state;
-    auto r = gf_random(N - 1, state);
+    auto r = gf_random(static_cast<unsigned>(N - 1), state);
     if (modulo_ == 2_z) {
         auto h = gf_pow_mod(x, static_cast<unsigned>(mp_get_ui(modulo_)));
         auto H = gf_trace_map(r, h, x, n - 1).second;
