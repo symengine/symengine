@@ -38,6 +38,7 @@ using SymEngine::gamma;
 using SymEngine::UIntPoly;
 using SymEngine::from_basic;
 using SymEngine::ParseError;
+using SymEngine::down_cast;
 
 using namespace SymEngine::literals;
 
@@ -325,13 +326,13 @@ TEST_CASE("Parsing: doubles", "[parser]")
     s = "1.324/(2+3)";
     res = parse(s);
     REQUIRE(is_a<RealDouble>(*res));
-    d = static_cast<const RealDouble &>(*res).as_double();
+    d = down_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - 0.2648) < 1e-12);
 
     s = "sqrt(2.0)+5";
     res = parse(s);
     REQUIRE(is_a<RealDouble>(*res));
-    d = static_cast<const RealDouble &>(*res).as_double();
+    d = down_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
 }
 

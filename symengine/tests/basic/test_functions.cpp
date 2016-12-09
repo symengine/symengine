@@ -101,6 +101,7 @@ using SymEngine::Rational;
 using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
+using SymEngine::down_cast;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
@@ -255,9 +256,9 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = sin(sub(div(pi, i2), real_double(2.0)));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.841470984807897)
             < 1e-12);
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i + 0.416146836547142)
             < 1e-12);
 }
 
@@ -369,9 +370,9 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = cos(sub(div(pi, i2), real_double(2.0)));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.540302305868140)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.540302305868140)
             < 1e-12);
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i - 0.909297426825682)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.909297426825682)
             < 1e-12);
 }
 
@@ -1543,17 +1544,17 @@ TEST_CASE("Asin: functions", "[functions]")
 
     r1 = asin(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.523598775598299)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.523598775598299)
             < 1e-12);
 
     r1 = asin(complex_double(std::complex<double>(1, 1)));
     r2 = asin(real_double(2.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i)
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
                      - 1.2530681300031)
             < 1e-10);
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i)
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
                      - 2.0498241882037)
             < 1e-10);
 }
@@ -2112,17 +2113,17 @@ TEST_CASE("Atanh: functions", "[functions]")
 
     r1 = atanh(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.549306144334055)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.549306144334055)
             < 1e-12);
 
     r1 = atanh(complex_double(std::complex<double>(1, 1)));
     r2 = atanh(real_double(2.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i)
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
                      - 1.09390752881482)
             < 1e-12);
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i)
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
                      - 1.66407281705924)
             < 1e-12);
 }
@@ -2738,17 +2739,15 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<RealMPFR>(*r1));
     REQUIRE(is_a<RealMPFR>(*r2));
 
-    mpfr_mul_z(a.get_mpfr_t(),
-               static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
-               MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
     q = 84147098480789650_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = 84147098480789651_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
-    mpfr_mul_z(a.get_mpfr_t(),
-               static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), get_mpz_t(p),
-               MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r2).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
     q = -41614683654714239_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = -41614683654714238_z;
@@ -2757,9 +2756,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
     r1 = gamma(div(real_mpfr(a), i2));
     REQUIRE(is_a<RealMPFR>(*r1));
-    mpfr_mul_z(a.get_mpfr_t(),
-               static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
-               MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
     q = 88622692545275801_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = 88622692545275802_z;
@@ -2774,7 +2772,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     r1 = asin(real_mpfr(a));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    mpc_srcptr b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 157079632679489661_z;
@@ -2793,7 +2791,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     r1 = asin(complex_mpc(c));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 66623943249251525_z;

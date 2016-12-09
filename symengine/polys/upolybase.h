@@ -366,8 +366,8 @@ public:
     inline bool __eq__(const Basic &o) const
     {
         if (is_a<Poly>(o))
-            return eq(*var_, *(static_cast<const Poly &>(o).var_))
-                   and poly_ == static_cast<const Poly &>(o).poly_;
+            return eq(*var_, *(down_cast<const Poly &>(o).var_))
+                   and poly_ == down_cast<const Poly &>(o).poly_;
         return false;
     }
 
@@ -418,8 +418,8 @@ public:
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const Poly &>(*this)).begin();
-        auto end = (static_cast<const Poly &>(*this)).end();
+        auto it = (down_cast<const Poly &>(*this)).begin();
+        auto end = (down_cast<const Poly &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {
@@ -498,8 +498,8 @@ public:
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const Poly &>(*this)).begin();
-        auto end = (static_cast<const Poly &>(*this)).end();
+        auto it = (down_cast<const Poly &>(*this)).begin();
+        auto end = (down_cast<const Poly &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {
@@ -539,8 +539,8 @@ public:
 
     RCP<const Basic> as_symbolic() const
     {
-        auto it = (static_cast<const Poly &>(*this)).begin();
-        auto end = (static_cast<const Poly &>(*this)).end();
+        auto it = (down_cast<const Poly &>(*this)).begin();
+        auto end = (down_cast<const Poly &>(*this)).end();
 
         vec_basic args;
         for (; it != end; ++it) {

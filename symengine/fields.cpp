@@ -39,7 +39,7 @@ hash_t GaloisField::__hash__() const
 
 int GaloisField::compare(const Basic &o) const
 {
-    const GaloisField &s = static_cast<const GaloisField &>(o);
+    const GaloisField &s = down_cast<const GaloisField &>(o);
 
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
@@ -164,7 +164,7 @@ GaloisFieldDict &GaloisFieldDict::negate()
         if (a != 0_z)
             a += modulo_;
     }
-    return static_cast<GaloisFieldDict &>(*this);
+    return down_cast<GaloisFieldDict &>(*this);
 }
 
 void GaloisFieldDict::gf_istrip()
@@ -284,7 +284,7 @@ void GaloisFieldDict::gf_rshift(const integer_class n,
                                             dict_.begin() + n_val);
         *rem = GaloisFieldDict::from_vec(dict_rem, modulo_);
     } else {
-        *rem = static_cast<GaloisFieldDict>(*this);
+        *rem = down_cast<const GaloisFieldDict &>(*this);
     }
 }
 
@@ -299,11 +299,11 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
         return GaloisFieldDict({integer_class(1)}, modulo_);
     }
     if (n == 1)
-        return static_cast<GaloisFieldDict>(*this);
+        return down_cast<const GaloisFieldDict &>(*this);
     if (n == 2)
         return gf_sqr();
     unsigned int num = n;
-    GaloisFieldDict to_sq = static_cast<GaloisFieldDict>(*this);
+    GaloisFieldDict to_sq = down_cast<const GaloisFieldDict &>(*this);
     GaloisFieldDict to_ret = GaloisFieldDict({integer_class(1)}, modulo_);
     while (1) {
         if (num & 1) {
@@ -319,7 +319,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
 void GaloisFieldDict::gf_monic(integer_class &res,
                                const Ptr<GaloisFieldDict> &monic) const
 {
-    *monic = static_cast<GaloisFieldDict>(*this);
+    *monic = down_cast<const GaloisFieldDict &>(*this);
     if (dict_.empty()) {
         res = integer_class(0);
     } else {
@@ -340,7 +340,7 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
 {
     if (modulo_ != o.modulo_)
         throw SymEngineException("Error: field must be same.");
-    GaloisFieldDict f = static_cast<GaloisFieldDict>(*this);
+    GaloisFieldDict f = down_cast<const GaloisFieldDict &>(*this);
     GaloisFieldDict g = o;
     GaloisFieldDict temp_out;
     while (not g.dict_.empty()) {
@@ -357,7 +357,7 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     if (modulo_ != o.modulo_)
         throw SymEngineException("Error: field must be same.");
     if (dict_.empty())
-        return static_cast<GaloisFieldDict>(*this);
+        return down_cast<const GaloisFieldDict &>(*this);
     if (o.dict_.empty())
         return o;
     GaloisFieldDict out, temp_out;
