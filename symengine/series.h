@@ -30,10 +30,10 @@ class SeriesBase : public SeriesCoeffInterface
 protected:
     const Poly p_;
     const std::string var_;
-    const long degree_;
+    const int degree_;
 
 public:
-    inline SeriesBase(Poly p, std::string var, long degree)
+    inline SeriesBase(Poly p, std::string var, int degree)
         : p_(std::move(p)), var_(var), degree_(degree)
     {
     }
@@ -93,7 +93,7 @@ public:
     {
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
+            auto deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
                     "Multivariate Series not implemented");
@@ -113,7 +113,7 @@ public:
     {
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
+            auto deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
                     "Multivariate Series not implemented");
@@ -134,7 +134,7 @@ public:
 
     virtual RCP<const Number> pow(const Number &other) const
     {
-        long deg = degree_;
+        auto deg = degree_;
         Poly p;
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
