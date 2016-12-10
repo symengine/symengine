@@ -34,10 +34,7 @@ double A()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return static_cast<double>(
-               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                   .count())
-           / 1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double B()
@@ -50,10 +47,7 @@ double B()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return static_cast<double>(
-               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                   .count())
-           / 1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double C()
@@ -68,10 +62,7 @@ double C()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return static_cast<double>(
-               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                   .count())
-           / 1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double D()
@@ -87,10 +78,7 @@ double D()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return static_cast<double>(
-               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                   .count())
-           / 1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double E()
@@ -105,11 +93,7 @@ double E()
                        pow(add(y, mul(integer(abs(5 - i)), t)), integer(i))));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-
-    return static_cast<double>(
-               std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                   .count())
-           / 1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 int main(int argc, char *argv[])
