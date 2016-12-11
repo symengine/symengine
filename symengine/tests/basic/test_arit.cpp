@@ -15,7 +15,7 @@ using SymEngine::Log;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
-using SymEngine::map_vec_int;
+using SymEngine::map_vec_uint;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
@@ -1101,7 +1101,7 @@ TEST_CASE("Log: arit", "[arit]")
 
 TEST_CASE("Multinomial: arit", "[arit]")
 {
-    map_vec_int r;
+    map_vec_uint r;
     auto t1 = std::chrono::high_resolution_clock::now();
     multinomial_coefficients(4, 20, r);
     auto t2 = std::chrono::high_resolution_clock::now();

@@ -10,7 +10,7 @@ namespace SymEngine
 void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
-        int n = syms.size();
+        auto n = syms.size();
         const umap_basic_num &d = down_cast<const Add &>(*p).get_dict();
         vec_int exp;
         integer_class coef;

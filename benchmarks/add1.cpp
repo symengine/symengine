@@ -15,7 +15,6 @@ using SymEngine::Mul;
 using SymEngine::Pow;
 using SymEngine::Symbol;
 using SymEngine::symbol;
-using SymEngine::map_vec_int;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
 using SymEngine::RCP;

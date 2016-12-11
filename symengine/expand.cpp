@@ -204,12 +204,11 @@ public:
         }
     }
 
-    void pow_expand(umap_basic_num &base_dict, unsigned long n)
+    void pow_expand(umap_basic_num &base_dict, unsigned n)
     {
         map_vec_mpz r;
-        long m = base_dict.size();
-        multinomial_coefficients_mpz(static_cast<int>(m),
-                                     static_cast<unsigned>(n), r);
+        unsigned m = static_cast<unsigned>(base_dict.size());
+        multinomial_coefficients_mpz(m, n, r);
 // This speeds up overall expansion. For example for the benchmark
 // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
 #if defined(HAVE_SYMENGINE_RESERVE)
@@ -327,7 +326,7 @@ public:
         if (n == 2)
             return square_expand(base_dict);
         else
-            return pow_expand(base_dict, mp_get_ui(n));
+            return pow_expand(base_dict, static_cast<unsigned>(mp_get_ui(n)));
     }
 
     inline void _coef_dict_add_term(const RCP<const Number> &c,

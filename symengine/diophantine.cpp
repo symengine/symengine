@@ -121,7 +121,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
                 if (F[i] == false
                     and ((dot->is_negative()
                           and is_minimum(T, basis,
-                                         static_cast<int>(basis.size())))
+                                         static_cast<unsigned>(basis.size())))
                          or t.eq(row_zero))) {
                     P.push_back(T);
                     n = n + 1;
