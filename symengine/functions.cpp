@@ -238,7 +238,7 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
         RCP<const Number> t = mulnum(n, integer(12));
         sign = 1;
         if (is_a<Integer>(*t)) {
-            int m = static_cast<int>(
+            int m = numeric_cast<int>(
                 mod_f(down_cast<const Integer &>(*t), *integer(12 * period))
                     ->as_int());
             if (eq(*r, *zero)) {

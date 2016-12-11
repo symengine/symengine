@@ -111,8 +111,6 @@ inline To numeric_cast(
     SYMENGINE_ASSERT(f >= 0);
     SYMENGINE_ASSERT(static_cast<unsigned_from_type>(f)
                      <= std::numeric_limits<To>::max());
-    SYMENGINE_ASSERT(static_cast<unsigned_from_type>(f)
-                     >= std::numeric_limits<To>::min());
     return static_cast<To>(f);
 }
 

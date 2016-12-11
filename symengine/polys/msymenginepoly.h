@@ -401,15 +401,15 @@ public:
             mptr++;
         }
 
-        Container x(std::move(d), static_cast<unsigned>(s.size()));
+        Container x(std::move(d), numeric_cast<unsigned>(s.size()));
         return Poly::from_container(
-            s, std::move(x.translate(trans, static_cast<unsigned>(s.size()))));
+            s, std::move(x.translate(trans, numeric_cast<unsigned>(s.size()))));
     }
 
     static Container container_from_dict(const set_basic &s,
                                          typename Container::dict_type &&d)
     {
-        return Container(std::move(d), static_cast<unsigned>(s.size()));
+        return Container(std::move(d), numeric_cast<unsigned>(s.size()));
     }
 
     inline vec_basic get_args() const

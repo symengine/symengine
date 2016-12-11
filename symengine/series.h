@@ -140,14 +140,14 @@ public:
         } else if (is_a<Integer>(other)) {
             if (other.is_negative()) {
                 p = Series::pow(
-                    p_, (static_cast<unsigned>(
+                    p_, (numeric_cast<unsigned>(
                             down_cast<const Integer &>(other).neg()->as_int())),
                     deg);
                 p = Series::series_invert(p, Series::var(var_), deg);
                 return make_rcp<Series>(p, var_, deg);
             }
             p = Series::pow(p_,
-                            static_cast<unsigned>(
+                            numeric_cast<unsigned>(
                                 (down_cast<const Integer &>(other).as_int())),
                             deg);
             return make_rcp<Series>(p, var_, deg);

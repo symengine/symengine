@@ -423,7 +423,7 @@ GaloisFieldDict::gf_sqf_list() const
         return vec_out;
     unsigned n = 1;
     // This cast is okay, because the multiplicities are unsigned
-    unsigned r = static_cast<unsigned>(mp_get_ui(modulo_));
+    unsigned r = numeric_cast<unsigned>(mp_get_ui(modulo_));
     bool sqf = false;
     integer_class LC;
     GaloisFieldDict f;

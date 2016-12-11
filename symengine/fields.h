@@ -522,7 +522,7 @@ public:
     {
         if (dict_.empty())
             return 0;
-        return static_cast<unsigned>(dict_.size()) - 1;
+        return numeric_cast<unsigned>(dict_.size()) - 1;
     }
 
     const std::vector<integer_class> &get_dict() const

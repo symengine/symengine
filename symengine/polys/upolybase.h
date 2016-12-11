@@ -485,7 +485,7 @@ public:
 
     inline int get_degree() const
     {
-        return this->get_poly().degree();
+        return numeric_cast<int>(this->get_poly().degree());
     }
 
     Cf get_lc() const
