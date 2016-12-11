@@ -88,11 +88,12 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
     } else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = down_cast<const Mul &>(*arg);
-        auto p = s.dict_.begin();
+        auto p = s.get_dict().begin();
         // dict should contain symbol `pi` only
-        if (s.dict_.size() == 1 and eq(*p->first, *pi) and eq(*p->second, *one)
-            and (is_a<Integer>(*s.coef_) or is_a<Rational>(*s.coef_))) {
-            *n = s.coef_;
+        if (s.get_dict().size() == 1 and eq(*p->first, *pi)
+            and eq(*p->second, *one) and (is_a<Integer>(*s.get_coef())
+                                          or is_a<Rational>(*s.get_coef()))) {
+            *n = s.get_coef();
             *x = zero;
             return true;
         } else {
@@ -136,9 +137,9 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
         // dict should contain symbol `pi` only
         // and `k` should be a rational s.t. 0 < k < 1
         const Mul &s = down_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = mul(s.coef_, integer(2));
-        auto p = s.dict_.begin();
-        if (s.dict_.size() == 1 and eq(*p->first, *pi)
+        RCP<const Basic> coef = mul(s.get_coef(), integer(2));
+        auto p = s.get_dict().begin();
+        if (s.get_dict().size() == 1 and eq(*p->first, *pi)
             and eq(*p->second, *one)) {
             if (is_a<Integer>(*coef)) {
                 return true;
@@ -174,7 +175,7 @@ bool could_extract_minus(const Basic &arg)
         }
     } else if (is_a<Mul>(arg)) {
         const Mul &s = down_cast<const Mul &>(arg);
-        return could_extract_minus(*s.coef_);
+        return could_extract_minus(*s.get_coef());
     } else if (is_a<Add>(arg)) {
         const Add &s = down_cast<const Add &>(arg);
         if (s.coef_->is_zero()) {
@@ -194,10 +195,10 @@ bool handle_minus(const RCP<const Basic> &arg,
     if (is_a<Mul>(*arg)) {
         const Mul &s = down_cast<const Mul &>(*arg);
         // Check for -Add instances to transform -(-x + 2*y) to (x - 2*y)
-        if (s.coef_->is_minus_one() && s.dict_.size() == 1
-            && eq(*s.dict_.begin()->second, *one)) {
+        if (s.get_coef()->is_minus_one() && s.get_dict().size() == 1
+            && eq(*s.get_dict().begin()->second, *one)) {
             return not handle_minus(mul(minus_one, arg), rarg);
-        } else if (could_extract_minus(*s.coef_)) {
+        } else if (could_extract_minus(*s.get_coef())) {
             *rarg = mul(minus_one, arg);
             return true;
         }

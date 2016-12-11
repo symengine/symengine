@@ -292,20 +292,20 @@ public:
     {
         RCP<const Number> overall_coef = zero;
         umap_basic_num add_dict;
-        for (auto &p : self.dict_) {
-            RCP<const Number> coef = self.coef_;
+        for (auto &p : self.get_dict()) {
+            RCP<const Number> coef = self.get_coef();
             RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
             if (is_a<Integer>(*factor)
                 && down_cast<const Integer &>(*factor).is_zero())
                 continue;
-            map_basic_basic d = self.dict_;
+            map_basic_basic d = self.get_dict();
             d.erase(p.first);
             if (is_a_Number(*factor)) {
                 imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
             } else if (is_a<Mul>(*factor)) {
                 RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-                imulnum(outArg(coef), tmp->coef_);
-                for (auto &q : tmp->dict_) {
+                imulnum(outArg(coef), tmp->get_coef());
+                for (auto &q : tmp->get_dict()) {
                     Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
                 }
             } else {

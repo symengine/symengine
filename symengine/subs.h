@@ -61,9 +61,9 @@ public:
 
     void bvisit(const Mul &x)
     {
-        RCP<const Number> coef = x.coef_;
+        RCP<const Number> coef = x.get_coef();
         map_basic_basic d;
-        for (const auto &p : x.dict_) {
+        for (const auto &p : x.get_dict()) {
             RCP<const Basic> factor_old;
             if (eq(*p.second, *one)) {
                 factor_old = p.first;
@@ -82,8 +82,8 @@ public:
                 imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
             } else if (is_a<Mul>(*factor)) {
                 RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-                imulnum(outArg(coef), tmp->coef_);
-                for (const auto &q : tmp->dict_) {
+                imulnum(outArg(coef), tmp->get_coef());
+                for (const auto &q : tmp->get_dict()) {
                     Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
                 }
             } else {

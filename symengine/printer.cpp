@@ -351,14 +351,14 @@ void StrPrinter::bvisit(const Mul &x)
     bool num = false;
     unsigned den = 0;
 
-    if (eq(*(x.coef_), *minus_one)) {
+    if (eq(*(x.get_coef()), *minus_one)) {
         o << "-";
-    } else if (neq(*(x.coef_), *one)) {
-        o << parenthesizeLT(x.coef_, PrecedenceEnum::Mul) << "*";
+    } else if (neq(*(x.get_coef()), *one)) {
+        o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul) << "*";
         num = true;
     }
 
-    for (const auto &p : x.dict_) {
+    for (const auto &p : x.get_dict()) {
         if ((is_a<Integer>(*p.second) or is_a<Rational>(*p.second))
             and down_cast<const Number &>(*p.second).is_negative()
             and neq(*(p.first), *E)) {

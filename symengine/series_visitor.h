@@ -43,8 +43,8 @@ public:
     }
     void bvisit(const Mul &x)
     {
-        Poly temp(apply(x.coef_));
-        for (const auto &term : x.dict_) {
+        Poly temp(apply(x.get_coef()));
+        for (const auto &term : x.get_dict()) {
             temp = Series::mul(temp, apply(pow(term.first, term.second)), prec);
         }
         p = temp;

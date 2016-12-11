@@ -44,7 +44,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
 
         // e.g. {3x: 2}, this should rather be just {x: 6}
         if (is_a<Mul>(*p.first)
-            and not(down_cast<const Mul &>(*p.first).coef_->is_one()))
+            and not(down_cast<const Mul &>(*p.first).get_coef()->is_one()))
             return false;
     }
     return true;
@@ -121,7 +121,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
                     // unnecessary copy. We know the refcount_ is one, so
                     // nobody else is using the Mul except us.
                     const map_basic_basic &d2
-                        = down_cast<const Mul &>(*(p->first)).dict_;
+                        = down_cast<const Mul &>(*(p->first)).get_dict();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
@@ -130,7 +130,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
 #endif
                     // We need to copy the dictionary:
                     map_basic_basic d2
-                        = down_cast<const Mul &>(*(p->first)).dict_;
+                        = down_cast<const Mul &>(*(p->first)).get_dict();
                     return Mul::from_dict(p->second, std::move(d2));
                 }
             }
@@ -155,7 +155,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
                     // unnecessary copy. We know the refcount_ is one, so
                     // nobody else is using the Mul except us.
                     const map_basic_basic &d2
-                        = down_cast<const Mul &>(*(p->first)).dict_;
+                        = down_cast<const Mul &>(*(p->first)).get_dict();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
@@ -164,7 +164,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
 #endif
                     // We need to copy the dictionary:
                     map_basic_basic d2
-                        = down_cast<const Mul &>(*(p->first)).dict_;
+                        = down_cast<const Mul &>(*(p->first)).get_dict();
                     return Mul::from_dict(p->second, std::move(d2));
                 }
             }
@@ -229,10 +229,10 @@ void Add::as_coef_term(const RCP<const Basic> &self,
                        const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
-        if (neq(*(down_cast<const Mul &>(*self).coef_), *one)) {
-            *coef = (down_cast<const Mul &>(*self)).coef_;
+        if (neq(*(down_cast<const Mul &>(*self).get_coef()), *one)) {
+            *coef = (down_cast<const Mul &>(*self)).get_coef();
             // We need to copy our 'dict_' here, as 'term' has to have its own.
-            map_basic_basic d2 = (down_cast<const Mul &>(*self)).dict_;
+            map_basic_basic d2 = (down_cast<const Mul &>(*self)).get_dict();
             *term = Mul::from_dict(one, std::move(d2));
         } else {
             *coef = one;

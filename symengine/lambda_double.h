@@ -99,9 +99,9 @@ public:
 
     void bvisit(const Mul &x)
     {
-        fn tmp = apply(*x.coef_);
+        fn tmp = apply(*x.get_coef());
         fn tmp1, tmp2;
-        for (const auto &p : x.dict_) {
+        for (const auto &p : x.get_dict()) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const T *x) {

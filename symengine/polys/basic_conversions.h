@@ -116,8 +116,8 @@ public:
 
     void bvisit(const Mul &x)
     {
-        D res = apply(*x.coef_);
-        for (auto const &it : x.dict_)
+        D res = apply(*x.get_coef());
+        for (auto const &it : x.get_dict())
             res *= apply(*pow(it.first, it.second));
         dict = std::move(res);
     }
@@ -363,8 +363,8 @@ public:
 
     void bvisit(const Mul &x)
     {
-        Dict res = apply(*x.coef_);
-        for (auto const &it : x.dict_)
+        Dict res = apply(*x.get_coef());
+        for (auto const &it : x.get_dict())
             res *= apply(*pow(it.first, it.second));
         dict = std::move(res);
     }

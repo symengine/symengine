@@ -57,7 +57,7 @@ public:
 
     void bvisit(const Mul &self)
     {
-        for (auto &p : self.dict_) {
+        for (auto &p : self.get_dict()) {
             if (!is_a<Symbol>(*p.first)) {
                 RCP<const Basic> a, b;
                 self.as_two_terms(outArg(a), outArg(b));
@@ -98,13 +98,14 @@ public:
                     } else {
                         if (is_a<Mul>(*term)
                             && !(down_cast<const Mul &>(*term)
-                                     .coef_->is_one())) {
+                                     .get_coef()
+                                     ->is_one())) {
                             // Tidy up things like {2x: 3} -> {x: 6}
                             RCP<const Number> coef2
-                                = down_cast<const Mul &>(*term).coef_;
+                                = down_cast<const Mul &>(*term).get_coef();
                             // We make a copy of the dict_:
                             map_basic_basic d2
-                                = down_cast<const Mul &>(*term).dict_;
+                                = down_cast<const Mul &>(*term).get_dict();
                             term = Mul::from_dict(one, std::move(d2));
                             Add::dict_add_term(
                                 d_, _mulnum(_mulnum(temp, q.second), coef2),
@@ -146,13 +147,15 @@ public:
                                     rcp_static_cast<const Number>(term)));
                 } else {
                     if (is_a<Mul>(*term)
-                        && !(down_cast<const Mul &>(*term).coef_->is_one())) {
+                        && !(down_cast<const Mul &>(*term)
+                                 .get_coef()
+                                 ->is_one())) {
                         // Tidy up things like {2x: 3} -> {x: 6}
                         RCP<const Number> coef2
-                            = down_cast<const Mul &>(*term).coef_;
+                            = down_cast<const Mul &>(*term).get_coef();
                         // We make a copy of the dict_:
                         map_basic_basic d2
-                            = down_cast<const Mul &>(*term).dict_;
+                            = down_cast<const Mul &>(*term).get_dict();
                         term = Mul::from_dict(one, std::move(d2));
                         Add::dict_add_term(
                             d_, _mulnum(_mulnum(q.second, a_coef), coef2),
@@ -231,12 +234,12 @@ public:
                         tmp = pow(base, exp);
                         if (is_a<Mul>(*tmp)) {
                             for (auto &p :
-                                 (down_cast<const Mul &>(*tmp)).dict_) {
+                                 (down_cast<const Mul &>(*tmp)).get_dict()) {
                                 Mul::dict_add_term_new(outArg(overall_coeff), d,
                                                        p.second, p.first);
                             }
                             _imulnum(outArg(overall_coeff),
-                                     (down_cast<const Mul &>(*tmp)).coef_);
+                                     (down_cast<const Mul &>(*tmp)).get_coef());
                         } else if (is_a_Number(*tmp)) {
                             _imulnum(outArg(overall_coeff),
                                      rcp_static_cast<const Number>(tmp));
@@ -262,12 +265,13 @@ public:
                                 coef2));
             } else {
                 if (is_a<Mul>(*term)
-                    && !(down_cast<const Mul &>(*term).coef_->is_one())) {
+                    && !(down_cast<const Mul &>(*term).get_coef()->is_one())) {
                     // Tidy up things like {2x: 3} -> {x: 6}
                     _imulnum(outArg(coef2),
-                             down_cast<const Mul &>(*term).coef_);
+                             down_cast<const Mul &>(*term).get_coef());
                     // We make a copy of the dict_:
-                    map_basic_basic d2 = down_cast<const Mul &>(*term).dict_;
+                    map_basic_basic d2
+                        = down_cast<const Mul &>(*term).get_dict();
                     term = Mul::from_dict(one, std::move(d2));
                 }
                 Add::dict_add_term(d_, _mulnum(multiply, coef2), term);
