@@ -64,7 +64,7 @@ public:
     void gf_rshift(const integer_class n, const Ptr<GaloisFieldDict> &quo,
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
-    GaloisFieldDict gf_pow(const unsigned int n) const;
+    GaloisFieldDict gf_pow(const unsigned long n) const;
     void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
@@ -90,7 +90,7 @@ public:
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
     // computes `f**n % (*this)` in modulo_
     GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
-                               const unsigned int &n) const;
+                               const unsigned long &n) const;
     // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
     // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
@@ -518,11 +518,11 @@ public:
         return dict_.empty();
     }
 
-    size_t degree() const
+    unsigned degree() const
     {
         if (dict_.empty())
             return 0;
-        return dict_.size() - 1;
+        return static_cast<unsigned>(dict_.size()) - 1;
     }
 
     const std::vector<integer_class> &get_dict() const
