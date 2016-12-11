@@ -87,6 +87,47 @@ inline To down_cast(From &f)
     return *static_cast<ToAsPointer>(&f);
 }
 
+template <typename To, typename From>
+inline To
+numeric_cast(From f,
+             typename std::enable_if<(std::is_signed<From>::value
+                                      && std::is_signed<To>::value)
+                                     or (std::is_unsigned<From>::value
+                                         && std::is_unsigned<To>::value)>::type
+                 * = nullptr)
+{
+    SYMENGINE_ASSERT(f <= std::numeric_limits<To>::max());
+    SYMENGINE_ASSERT(f >= std::numeric_limits<To>::min());
+    return static_cast<To>(f);
+}
+
+template <typename To, typename From>
+inline To numeric_cast(
+    From f,
+    typename std::enable_if<(std::is_signed<From>::value
+                             && std::is_unsigned<To>::value)>::type * = nullptr)
+{
+    typedef typename std::make_unsigned<From>::type unsigned_from_type;
+    SYMENGINE_ASSERT(f >= 0);
+    SYMENGINE_ASSERT(static_cast<unsigned_from_type>(f)
+                     <= std::numeric_limits<To>::max());
+    SYMENGINE_ASSERT(static_cast<unsigned_from_type>(f)
+                     >= std::numeric_limits<To>::min());
+    return static_cast<To>(f);
+}
+
+template <typename To, typename From>
+inline To numeric_cast(
+    From f,
+    typename std::enable_if<(std::is_unsigned<From>::value
+                             && std::is_signed<To>::value)>::type * = nullptr)
+{
+    typedef typename std::make_unsigned<To>::type unsigned_to_type;
+    SYMENGINE_ASSERT(
+        f <= static_cast<unsigned_to_type>(std::numeric_limits<To>::max()));
+    return static_cast<To>(f);
+}
+
 } // SymEngine
 
 #endif // SYMENGINE_CASTS_H
