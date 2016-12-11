@@ -72,7 +72,7 @@ public:
 
     void bvisit(const Add &x)
     {
-        for (auto it : x.dict_)
+        for (auto it : x.get_dict())
             it.first->accept(*this);
     }
 
@@ -112,10 +112,10 @@ public:
 
     void bvisit(const Add &x)
     {
-        if (not x.coef_->is_zero())
-            x.coef_->accept(*this);
+        if (not x.get_coef()->is_zero())
+            x.get_coef()->accept(*this);
 
-        for (auto it : x.dict_) {
+        for (auto it : x.get_dict()) {
             RCP<const Number> mulx = one, divx = one;
 
             if (it.second->is_negative())

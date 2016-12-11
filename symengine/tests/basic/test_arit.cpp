@@ -853,7 +853,8 @@ TEST_CASE("Expand1: arit", "[arit]")
                      .count()
               << "ms" << std::endl;
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
+              << rcp_dynamic_cast<const Add>(r2)->get_dict().size()
+              << std::endl;
 }
 
 TEST_CASE("Expand2: arit", "[arit]")
@@ -1039,8 +1040,8 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = add(r1, x);
     r2 = expand(pow(r1, i2));
     REQUIRE(is_a<Add>(*r2));
-    auto it = down_cast<const Add &>(*r2).dict_.find(x);
-    REQUIRE(it != down_cast<const Add &>(*r2).dict_.end());
+    auto it = down_cast<const Add &>(*r2).get_dict().find(x);
+    REQUIRE(it != down_cast<const Add &>(*r2).get_dict().end());
     REQUIRE(is_a<RealDouble>(*it->second));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*(it->second)).i - 0.4)
             < 1e-12);
@@ -1091,7 +1092,7 @@ TEST_CASE("Expand3: arit", "[arit]")
                      .count()
               << "ms" << std::endl;
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
 
     RCP<const Number> rc1, rc2, c1;
     rc1 = Rational::from_two_ints(*integer(2), *integer(1));
@@ -1109,7 +1110,7 @@ TEST_CASE("Expand3: arit", "[arit]")
                      .count()
               << "ms" << std::endl;
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
 
     e = pow(c1, integer(-40));
 

@@ -300,10 +300,10 @@ void StrPrinter::bvisit(const Add &x)
     std::ostringstream o;
     bool first = true;
     std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
-        x.dict_.begin(), x.dict_.end());
+        x.get_dict().begin(), x.get_dict().end());
 
-    if (neq(*(x.coef_), *zero)) {
-        o << this->apply(x.coef_);
+    if (neq(*(x.get_coef()), *zero)) {
+        o << this->apply(x.get_coef());
         first = false;
     }
     for (const auto &p : dict) {

@@ -35,8 +35,8 @@ public:
 
     void bvisit(const Add &x)
     {
-        Poly temp(apply(x.coef_));
-        for (const auto &term : x.dict_) {
+        Poly temp(apply(x.get_coef()));
+        for (const auto &term : x.get_dict()) {
             temp += apply(term.first) * apply(term.second);
         }
         p = temp;

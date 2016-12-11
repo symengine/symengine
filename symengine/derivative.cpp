@@ -266,7 +266,7 @@ public:
         SymEngine::umap_basic_num d;
         RCP<const Number> coef = zero, coef2;
         RCP<const Basic> t;
-        for (auto &p : self.dict_) {
+        for (auto &p : self.get_dict()) {
             RCP<const Basic> term = p.first->diff(x);
             if (is_a<Integer>(*term)
                 && down_cast<const Integer &>(*term).is_zero()) {
@@ -275,10 +275,11 @@ public:
                 iaddnum(outArg(coef),
                         mulnum(p.second, rcp_static_cast<const Number>(term)));
             } else if (is_a<Add>(*term)) {
-                for (auto &q : (down_cast<const Add &>(*term)).dict_)
+                for (auto &q : (down_cast<const Add &>(*term)).get_dict())
                     Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
-                iaddnum(outArg(coef),
-                        mulnum(p.second, down_cast<const Add &>(*term).coef_));
+                iaddnum(
+                    outArg(coef),
+                    mulnum(p.second, down_cast<const Add &>(*term).get_coef()));
             } else {
                 Add::as_coef_term(mul(p.second, term), outArg(coef2),
                                   outArg(t));

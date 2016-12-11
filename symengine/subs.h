@@ -32,15 +32,15 @@ public:
         SymEngine::umap_basic_num d;
         RCP<const Number> coef;
 
-        auto it = subs_dict_.find(x.coef_);
+        auto it = subs_dict_.find(x.get_coef());
         if (it != subs_dict_.end()) {
             coef = zero;
             Add::coef_dict_add_term(outArg(coef), d, one, it->second);
         } else {
-            coef = x.coef_;
+            coef = x.get_coef();
         }
 
-        for (const auto &p : x.dict_) {
+        for (const auto &p : x.get_dict()) {
             auto it
                 = subs_dict_.find(Add::from_dict(zero, {{p.first, p.second}}));
             if (it != subs_dict_.end()) {

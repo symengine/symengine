@@ -127,7 +127,7 @@ public:
     {
         umap_basic_num dict;
         RCP<const Number> coef = zero;
-        for (auto &p : x.dict_) {
+        for (auto &p : x.get_dict()) {
             p.first->accept(*this);
             if (neq(*coeff_, *zero)) {
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);

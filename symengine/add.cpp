@@ -254,14 +254,14 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     RCP<const Number> coef;
     RCP<const Basic> t;
     if (is_a<Add>(*a) and is_a<Add>(*b)) {
-        coef = (down_cast<const Add &>(*a)).coef_;
-        d = (down_cast<const Add &>(*a)).dict_;
-        for (const auto &p : (down_cast<const Add &>(*b)).dict_)
+        coef = (down_cast<const Add &>(*a)).get_coef();
+        d = (down_cast<const Add &>(*a)).get_dict();
+        for (const auto &p : (down_cast<const Add &>(*b)).get_dict())
             Add::dict_add_term(d, p.second, p.first);
-        iaddnum(outArg(coef), down_cast<const Add &>(*b).coef_);
+        iaddnum(outArg(coef), down_cast<const Add &>(*b).get_coef());
     } else if (is_a<Add>(*a)) {
-        coef = (down_cast<const Add &>(*a)).coef_;
-        d = (down_cast<const Add &>(*a)).dict_;
+        coef = (down_cast<const Add &>(*a)).get_coef();
+        d = (down_cast<const Add &>(*a)).get_dict();
         if (is_a_Number(*b)) {
             iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
         } else {
@@ -270,8 +270,8 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::dict_add_term(d, coef2, t);
         }
     } else if (is_a<Add>(*b)) {
-        coef = (down_cast<const Add &>(*b)).coef_;
-        d = (down_cast<const Add &>(*b)).dict_;
+        coef = (down_cast<const Add &>(*b)).get_coef();
+        d = (down_cast<const Add &>(*b)).get_dict();
         if (is_a_Number(*a)) {
             iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
         } else {

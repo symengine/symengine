@@ -79,10 +79,10 @@ public:
 
             if (is_a<const Add>(*x.get_exp())) {
                 RCP<const Add> addx = rcp_static_cast<const Add>(x.get_exp());
-                for (auto const &it : addx->dict_)
+                for (auto const &it : addx->get_dict())
                     expos.insert(mul(it.first, it.second));
-                if (not addx->coef_->is_zero())
-                    expos.insert(addx->coef_);
+                if (not addx->get_coef()->is_zero())
+                    expos.insert(addx->get_coef());
             } else {
                 expos.insert(x.get_exp());
             }
@@ -108,8 +108,8 @@ public:
 
     void bvisit(const Add &x)
     {
-        D res = apply(*x.coef_);
-        for (auto const &it : x.dict_)
+        D res = apply(*x.get_coef());
+        for (auto const &it : x.get_dict())
             res += apply(*it.first) * apply(*it.second);
         dict = std::move(res);
     }
@@ -318,10 +318,10 @@ public:
 
             if (is_a<const Add>(*x.get_exp())) {
                 RCP<const Add> addx = rcp_static_cast<const Add>(x.get_exp());
-                for (auto const &it : addx->dict_)
+                for (auto const &it : addx->get_dict())
                     expos.insert(mul(it.first, it.second));
-                if (not addx->coef_->is_zero())
-                    expos.insert(addx->coef_);
+                if (not addx->get_coef()->is_zero())
+                    expos.insert(addx->get_coef());
             } else {
                 expos.insert(x.get_exp());
             }
@@ -355,8 +355,8 @@ public:
 
     void bvisit(const Add &x)
     {
-        Dict res = apply(*x.coef_);
-        for (auto const &it : x.dict_)
+        Dict res = apply(*x.get_coef());
+        for (auto const &it : x.get_dict())
             res += apply(*it.first) * apply(*it.second);
         dict = std::move(res);
     }

@@ -47,8 +47,8 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
 {
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        int size = s.dict_.size();
+        RCP<const Basic> coef = s.get_coef();
+        int size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
@@ -56,7 +56,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
-            for (const auto &p : s.dict_) {
+            for (const auto &p : s.get_dict()) {
                 if (eq(*p.first, *pi) and (is_a<Integer>(*p.second)
                                            or is_a<Rational>(*p.second))) {
                     check_pi = true;
@@ -72,7 +72,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
         } else if (size == 1) {
             // arg should be of form `a + n*pi`
             // where `a` is a `Number`.
-            auto p = s.dict_.begin();
+            auto p = s.get_dict().begin();
             if (eq(*p->first, *pi)
                 and (is_a<Integer>(*p->second) or is_a<Rational>(*p->second))) {
                 *n = p->second;
@@ -118,7 +118,7 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
 {
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
-        for (const auto &p : s.dict_) {
+        for (const auto &p : s.get_dict()) {
             const auto &temp = mul(p.second, integer(2));
             if (eq(*p.first, *pi)) {
                 if (is_a<Integer>(*temp)) {
@@ -178,11 +178,11 @@ bool could_extract_minus(const Basic &arg)
         return could_extract_minus(*s.get_coef());
     } else if (is_a<Add>(arg)) {
         const Add &s = down_cast<const Add &>(arg);
-        if (s.coef_->is_zero()) {
-            map_basic_num d(s.dict_.begin(), s.dict_.end());
+        if (s.get_coef()->is_zero()) {
+            map_basic_num d(s.get_dict().begin(), s.get_dict().end());
             return could_extract_minus(*d.begin()->second);
         } else {
-            return could_extract_minus(*s.coef_);
+            return could_extract_minus(*s.get_coef());
         }
     } else {
         return false;
@@ -205,11 +205,11 @@ bool handle_minus(const RCP<const Basic> &arg,
     } else if (is_a<Add>(*arg)) {
         if (could_extract_minus(*arg)) {
             const Add &s = down_cast<const Add &>(*arg);
-            umap_basic_num d = s.dict_;
+            umap_basic_num d = s.get_dict();
             for (auto &p : d) {
                 p.second = p.second->mul(*minus_one);
             }
-            *rarg = Add::from_dict(s.coef_->mul(*minus_one), std::move(d));
+            *rarg = Add::from_dict(s.get_coef()->mul(*minus_one), std::move(d));
             return true;
         }
     } else if (could_extract_minus(*arg)) {
