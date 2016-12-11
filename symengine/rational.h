@@ -105,7 +105,7 @@ public:
      * */
     inline RCP<const Number> addrat(const Integer &other) const
     {
-        return from_mpq(this->i + other.i);
+        return from_mpq(this->i + other.as_integer_class());
     }
     /*! Subtract Rationals
      * \param other of type Rational
@@ -119,11 +119,11 @@ public:
      * */
     inline RCP<const Number> subrat(const Integer &other) const
     {
-        return from_mpq(this->i - other.i);
+        return from_mpq(this->i - other.as_integer_class());
     }
     inline RCP<const Number> rsubrat(const Integer &other) const
     {
-        return from_mpq(other.i - this->i);
+        return from_mpq(other.as_integer_class() - this->i);
     }
     /*! Multiply Rationals
      * \param other of type Rational
@@ -137,7 +137,7 @@ public:
      * */
     inline RCP<const Number> mulrat(const Integer &other) const
     {
-        return from_mpq(this->i * other.i);
+        return from_mpq(this->i * other.as_integer_class());
     }
     /*! Divide Rationals
      * \param other of type Rational
@@ -155,10 +155,10 @@ public:
      * */
     inline RCP<const Number> divrat(const Integer &other) const
     {
-        if (other.i == 0) {
+        if (other.as_integer_class() == 0) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(this->i / other.i);
+            return from_mpq(this->i / other.as_integer_class());
         }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const
@@ -166,7 +166,7 @@ public:
         if (this->i == 0) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(other.i / this->i);
+            return from_mpq(other.as_integer_class() / this->i);
         }
     }
     /*! Raise Rationals to power `other`
@@ -175,7 +175,7 @@ public:
     inline RCP<const Number> powrat(const Integer &other) const
     {
         bool neg = other.is_negative();
-        integer_class exp_ = other.i;
+        integer_class exp_ = other.as_integer_class();
         if (neg)
             exp_ = -exp_;
         if (not mp_fits_ulong_p(exp_))

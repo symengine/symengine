@@ -28,7 +28,7 @@ public:
 
     void bvisit(const Integer &x)
     {
-        mpc_set_z(result_, get_mpz_t(x.i), rnd_);
+        mpc_set_z(result_, get_mpz_t(x.as_integer_class()), rnd_);
     }
 
     void bvisit(const Rational &x)

@@ -54,9 +54,9 @@ public:
         const RCP<const Basic> &base = x.get_base(), exp = x.get_exp();
         if (is_a<Integer>(*exp)) {
             const Integer &ii = (down_cast<const Integer &>(*exp));
-            if (not mp_fits_slong_p(ii.i))
+            if (not mp_fits_slong_p(ii.as_integer_class()))
                 throw SymEngineException("series power exponent size");
-            const int sh = mp_get_si(ii.i);
+            const int sh = mp_get_si(ii.as_integer_class());
             base->accept(*this);
             if (sh == 1) {
                 return;

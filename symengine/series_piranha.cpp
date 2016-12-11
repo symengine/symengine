@@ -42,7 +42,7 @@ int URatPSeriesPiranha::compare(const Basic &o) const
 
 piranha::integer URatPSeriesPiranha::convert(const Integer &x)
 {
-    return piranha::integer(get_mpz_t(x.i));
+    return piranha::integer(get_mpz_t(x.as_integer_class()));
 }
 
 piranha::rational URatPSeriesPiranha::convert(const rational_class &x)

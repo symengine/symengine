@@ -17,7 +17,7 @@ namespace SymEngine
 //! Integer Class
 class Integer : public Number
 {
-public:
+private:
     //! `i` : object of `integer_class`
     integer_class i;
 

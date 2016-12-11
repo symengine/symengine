@@ -124,7 +124,7 @@ public:
 
     void bvisit(const Integer &x)
     {
-        integer_class i = x.i;
+        integer_class i = x.as_integer_class();
         dict = P::container_from_dict(gen, {{0, i}});
     }
 
@@ -173,7 +173,8 @@ public:
     {
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
-                this->gen, {{pow, down_cast<const Integer &>(x).i}});
+                this->gen,
+                {{pow, down_cast<const Integer &>(x).as_integer_class()}});
         else
             throw SymEngineException("Non-integer found");
     }
@@ -371,7 +372,7 @@ public:
 
     void bvisit(const Integer &x)
     {
-        integer_class i = x.i;
+        integer_class i = x.as_integer_class();
         Vec zero_v(gens.size(), 0);
         dict = P::container_from_dict(gens, {{zero_v, i}});
     }
@@ -422,7 +423,8 @@ public:
     {
         if (is_a<const Integer>(x))
             dict = MIntPoly::container_from_dict(
-                gens, {{pow, down_cast<const Integer &>(x).i}});
+                gens,
+                {{pow, down_cast<const Integer &>(x).as_integer_class()}});
         else
             throw SymEngineException("Non-integer found");
     }

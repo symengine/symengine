@@ -61,7 +61,7 @@ public:
 
     void bvisit(const Integer &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_integer_class());
         result_ = [=](const T *x_) { return tmp; };
     }
 

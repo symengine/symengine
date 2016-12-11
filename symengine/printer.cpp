@@ -53,7 +53,7 @@ void StrPrinter::bvisit(const Infty &x)
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
-    s << x.i;
+    s << x.as_integer_class();
     str_ = s.str();
 }
 

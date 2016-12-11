@@ -27,7 +27,7 @@ public:
 
     void bvisit(const Integer &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_integer_class());
         result_ = tmp;
     }
 
@@ -399,7 +399,8 @@ std::vector<fn> init_eval_double()
         throw NotImplementedError("Not Implemented");
     });
     table[INTEGER] = [](const Basic &x) {
-        double tmp = mp_get_d((down_cast<const Integer &>(x)).i);
+        double tmp
+            = mp_get_d((down_cast<const Integer &>(x)).as_integer_class());
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {

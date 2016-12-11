@@ -79,7 +79,8 @@ public:
      * */
     RCP<const Number> addreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(i + mp_get_d(other.i));
+        return make_rcp<const RealDouble>(i
+                                          + mp_get_d(other.as_integer_class()));
     }
 
     /*! Add RealDoubles
@@ -128,7 +129,8 @@ public:
      * */
     RCP<const Number> subreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(i - mp_get_d(other.i));
+        return make_rcp<const RealDouble>(i
+                                          - mp_get_d(other.as_integer_class()));
     }
 
     /*! Subtract RealDoubles
@@ -177,7 +179,8 @@ public:
      * */
     RCP<const Number> rsubreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(mp_get_d(other.i) - i);
+        return make_rcp<const RealDouble>(mp_get_d(other.as_integer_class())
+                                          - i);
     }
 
     /*! Subtract RealDoubles
@@ -216,7 +219,8 @@ public:
      * */
     RCP<const Number> mulreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(i * mp_get_d(other.i));
+        return make_rcp<const RealDouble>(i
+                                          * mp_get_d(other.as_integer_class()));
     }
 
     /*! Multiply RealDoubles
@@ -265,7 +269,8 @@ public:
      * */
     RCP<const Number> divreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(i / mp_get_d(other.i));
+        return make_rcp<const RealDouble>(i
+                                          / mp_get_d(other.as_integer_class()));
     }
 
     /*! Divide RealDoubles
@@ -314,7 +319,8 @@ public:
      * */
     RCP<const Number> rdivreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(mp_get_d(other.i) / i);
+        return make_rcp<const RealDouble>(mp_get_d(other.as_integer_class())
+                                          / i);
     }
 
     /*! Divide RealDoubles
@@ -354,7 +360,8 @@ public:
      * */
     RCP<const Number> powreal(const Integer &other) const
     {
-        return make_rcp<const RealDouble>(std::pow(i, mp_get_d(other.i)));
+        return make_rcp<const RealDouble>(
+            std::pow(i, mp_get_d(other.as_integer_class())));
     }
 
     /*! Raise RealDouble to power `other`
@@ -411,9 +418,11 @@ public:
     RCP<const Number> rpowreal(const Integer &other) const
     {
         if (other.is_negative()) {
-            return number(std::pow(mp_get_d(other.i), std::complex<double>(i)));
+            return number(std::pow(mp_get_d(other.as_integer_class()),
+                                   std::complex<double>(i)));
         }
-        return make_rcp<const RealDouble>(std::pow(mp_get_d(other.i), i));
+        return make_rcp<const RealDouble>(
+            std::pow(mp_get_d(other.as_integer_class()), i));
     }
 
     /*! Raise `other` to power RealDouble

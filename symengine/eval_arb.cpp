@@ -30,7 +30,7 @@ public:
     {
         fmpz_t z_;
         fmpz_init(z_);
-        fmpz_set_mpz(z_, get_mpz_t(x.i));
+        fmpz_set_mpz(z_, get_mpz_t(x.as_integer_class()));
         arb_set_fmpz(result_, z_);
         fmpz_clear(z_);
     }
