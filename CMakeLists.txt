@@ -135,7 +135,7 @@ else()
 endif()
 
 # GMP
-if (HAVE_SYMENGINE_GMP) 
+if (HAVE_SYMENGINE_GMP)
     find_package(GMP REQUIRED)
     include_directories(${GMP_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${GMP_TARGETS})
@@ -476,6 +476,25 @@ endif()
 
 if ((NOT WITH_SYMENGINE_RCP) OR HAVE_TEUCHOS_BFD)
     set(WITH_SYMENGINE_TEUCHOS yes)
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  ## References:
+  ## cmake  --help-policy CMP0042
+  set(CMAKE_MACOSX_RPATH ON)
+endif()
+
+if(CMAKE_INSTALL_RPATH_USE_LINK_PATH)
+  ## References:
+  ## https://cmake.org/Wiki/CMake_RPATH_handling#Mac_OS_X_and_the_RPATH
+  set(CMAKE_SKIP_BUILD_RPATH FALSE)
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+  # set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+  if("${isSystemDir}" STREQUAL "-1")
+     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+     set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+  endif("${isSystemDir}" STREQUAL "-1")
 endif()
 
 enable_testing()
