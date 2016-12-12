@@ -343,7 +343,7 @@ umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
 template <typename Container, typename Poly>
 class UPolyBase : public Basic
 {
-protected:
+private:
     RCP<const Basic> var_;
     Container poly_;
 
@@ -406,7 +406,7 @@ public:
 
     inline int get_degree() const
     {
-        return this->poly_.degree();
+        return this->get_poly().degree();
     }
 
     static RCP<const Poly> from_dict(const RCP<const Basic> &var,
@@ -427,16 +427,17 @@ public:
                 args.push_back(it->second.get_basic());
             else if (it->first == 1) {
                 if (it->second == Expression(1))
-                    args.push_back(this->var_);
+                    args.push_back(this->get_var());
                 else
-                    args.push_back(mul(it->second.get_basic(), this->var_));
+                    args.push_back(
+                        mul(it->second.get_basic(), this->get_var()));
             } else if (it->second == 1)
-                args.push_back(pow(this->var_, integer(it->first)));
+                args.push_back(pow(this->get_var(), integer(it->first)));
             else
                 args.push_back(mul(it->second.get_basic(),
-                                   pow(this->var_, integer(it->first))));
+                                   pow(this->get_var(), integer(it->first))));
         }
-        if (this->poly_.empty())
+        if (this->get_poly().empty())
             args.push_back(zero);
         return SymEngine::add(args);
     }
@@ -470,7 +471,7 @@ public:
 
     inline unsigned int get_degree() const
     {
-        return this->poly_.degree();
+        return this->get_poly().degree();
     }
 
     Cf get_lc() const
@@ -509,17 +510,17 @@ public:
                 args.push_back(integer(m));
             } else if (it->first == 1) {
                 if (m == 1) {
-                    args.push_back(this->var_);
+                    args.push_back(this->get_var());
                 } else {
                     args.push_back(
-                        Mul::from_dict(integer(m), {{this->var_, one}}));
+                        Mul::from_dict(integer(m), {{this->get_var(), one}}));
                 }
             } else {
                 if (m == 1) {
-                    args.push_back(pow(this->var_, integer(it->first)));
+                    args.push_back(pow(this->get_var(), integer(it->first)));
                 } else {
                     args.push_back(Mul::from_dict(
-                        integer(m), {{this->var_, integer(it->first)}}));
+                        integer(m), {{this->get_var(), integer(it->first)}}));
                 }
             }
         }
@@ -550,18 +551,18 @@ public:
                 args.push_back(Rational::from_mpq(m));
             } else if (it->first == 1) {
                 if (m == 1) {
-                    args.push_back(this->var_);
+                    args.push_back(this->get_var());
                 } else {
                     args.push_back(Mul::from_dict(Rational::from_mpq(m),
-                                                  {{this->var_, one}}));
+                                                  {{this->get_var(), one}}));
                 }
             } else {
                 if (m == 1) {
-                    args.push_back(pow(this->var_, integer(it->first)));
+                    args.push_back(pow(this->get_var(), integer(it->first)));
                 } else {
-                    args.push_back(
-                        Mul::from_dict(Rational::from_mpq(m),
-                                       {{this->var_, integer(it->first)}}));
+                    args.push_back(Mul::from_dict(
+                        Rational::from_mpq(m),
+                        {{this->get_var(), integer(it->first)}}));
                 }
             }
         }

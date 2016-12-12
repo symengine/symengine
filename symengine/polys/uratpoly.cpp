@@ -7,15 +7,15 @@ URatPoly::URatPoly(const RCP<const Basic> &var, URatDict &&dict)
     : USymEnginePoly(var, std::move(dict))
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    SYMENGINE_ASSERT(is_canonical(get_poly()))
 }
 
 hash_t URatPoly::__hash__() const
 {
     hash_t seed = URATPOLY;
 
-    seed += var_->hash();
-    for (const auto &it : poly_.dict_) {
+    seed += get_var()->hash();
+    for (const auto &it : get_poly().dict_) {
         hash_t temp = URATPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(get_num(it.second)));

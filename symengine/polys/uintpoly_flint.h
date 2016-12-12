@@ -32,17 +32,19 @@ public:
         SYMENGINE_ASSERT(is_a<Poly>(o))
         const Poly &s = down_cast<const Poly &>(o);
 
-        if (this->poly_.degree() != s.poly_.degree())
-            return (this->poly_.degree() < s.poly_.degree()) ? -1 : 1;
+        if (this->get_poly().degree() != s.get_poly().degree())
+            return (this->get_poly().degree() < s.get_poly().degree()) ? -1 : 1;
 
-        int cmp = this->var_->compare(*s.var_);
+        int cmp = this->get_var()->compare(*s.get_var());
         if (cmp != 0)
             return cmp;
 
-        for (unsigned int i = 0; i < this->poly_.length(); ++i) {
-            if (this->poly_.get_coeff(i) != s.poly_.get_coeff(i))
-                return (this->poly_.get_coeff(i) < s.poly_.get_coeff(i)) ? -1
-                                                                         : 1;
+        for (unsigned int i = 0; i < this->get_poly().length(); ++i) {
+            if (this->get_poly().get_coeff(i) != s.get_poly().get_coeff(i))
+                return (this->get_poly().get_coeff(i)
+                        < s.get_poly().get_coeff(i))
+                           ? -1
+                           : 1;
         }
         return 0;
     }
@@ -89,18 +91,18 @@ public:
     Cf eval(const Cf &x) const
     {
         typename Container::internal_coef_type r(get_mp_t(x));
-        return to_mp_class(this->poly_.eval(r));
+        return to_mp_class(this->get_poly().eval(r));
     }
 
     Cf get_coeff(unsigned int x) const
     {
-        return to_mp_class(this->poly_.get_coeff(x));
+        return to_mp_class(this->get_poly().get_coeff(x));
     }
 
     // can't return by reference
     Cf get_coeff_ref(unsigned int x) const
     {
-        return to_mp_class(this->poly_.get_coeff(x));
+        return to_mp_class(this->get_poly().get_coeff(x));
     }
 
     typedef ContainerForIter<Poly, Cf> iterator;
@@ -125,7 +127,7 @@ public:
 
     unsigned int size() const
     {
-        return this->poly_.length();
+        return this->get_poly().length();
     }
 };
 
