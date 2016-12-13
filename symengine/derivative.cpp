@@ -34,8 +34,6 @@ public:
 
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
-    DIFF0(UpperGamma)
-    DIFF0(LowerGamma)
     DIFF0(Max)
     DIFF0(Min)
 #endif
@@ -72,28 +70,40 @@ public:
             return Derivative::create(self.rcp_from_this(), {x});
     }
 
-    static RCP<const Basic> diff(const Zeta &self, const RCP<const Symbol> &x)
+    static RCP<const Basic> diff(const TwoArgFunction &self,
+                                 const RCP<const Symbol> &x)
     {
-        RCP<const Basic> m1 = self.get_s()->diff(x);
-        RCP<const Basic> diff
-            = mul(mul(mul(minus_one, self.get_s()),
-                      zeta(add(self.get_s(), one), self.get_a())),
-                  self.get_a()->diff(x));
+        RCP<const Basic> m1 = self.get_arg1()->diff(x);
+        RCP<const Basic> m2 = self.get_arg2()->diff(x);
+        RCP<const Basic> diff;
+        if (is_a<Zeta>(self))
+            diff = mul(mul(mul(minus_one, self.get_arg1()),
+                           zeta(add(self.get_arg1(), one), self.get_arg2())),
+                       self.get_arg2()->diff(x));
+        else {
+            diff = mul(mul(mul(pow(self.get_arg2(), sub(self.get_arg1(), one)),
+                               exp(mul(self.get_arg2(), minus_one))),
+                           minus_one),
+                       m2);
+            if (is_a<LowerGamma>(self))
+                diff = mul(minus_one, diff);
+        }
         if (eq(*m1, *zero)) {
             return diff;
         } else {
             if (eq(*diff, *zero)) {
-                if (eq(*self.get_s(), *x)) {
+                if (eq(*self.get_arg1(), *x)) {
                     return Derivative::create(self.rcp_from_this(), {x});
                 }
             }
             auto s = get_dummy(self, "xi_1");
             map_basic_basic m;
-            insert(m, s, self.get_s());
-            diff = add(diff, mul(m1, make_rcp<const Subs>(
-                                         Derivative::create(
-                                             self.create(s, self.get_a()), {s}),
-                                         m)));
+            insert(m, s, self.get_arg1());
+            diff = add(diff,
+                       mul(m1, make_rcp<const Subs>(
+                                   Derivative::create(
+                                       self.create(s, self.get_arg2()), {s}),
+                                   m)));
             return diff;
         }
     }
