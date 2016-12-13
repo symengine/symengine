@@ -550,14 +550,14 @@ public:
         using Vec = typename Container::vec_type;
         Dict dict;
 
-        if (self.vars_.find(x) != self.vars_.end()) {
-            auto i = self.vars_.begin();
+        if (self.get_vars().find(x) != self.get_vars().end()) {
+            auto i = self.get_vars().begin();
             unsigned int index = 0;
             while (!(*i)->__eq__(*x)) {
                 i++;
                 index++;
             } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.poly_.dict_) {
+            for (auto bucket : self.get_poly().dict_) {
                 if (bucket.first[index] != 0) {
                     Vec v = bucket.first;
                     v[index]--;
@@ -565,11 +565,12 @@ public:
                 }
             }
             vec_basic v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
+            v.insert(v.begin(), self.get_vars().begin(), self.get_vars().end());
             return Poly::from_dict(v, std::move(dict));
         } else {
             vec_basic vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            vs.insert(vs.begin(), self.get_vars().begin(),
+                      self.get_vars().end());
             return Poly::from_dict(vs, {{}});
         }
     }

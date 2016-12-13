@@ -71,10 +71,10 @@ public:
     template <typename Container, typename Poly>
     void bvisit(const MSymEnginePoly<Container, Poly> &x)
     {
-        if (0 == x.poly_.dict_.size()) {
+        if (0 == x.get_poly().dict_.size()) {
             precedence = PrecedenceEnum::Atom;
-        } else if (1 == x.poly_.dict_.size()) {
-            auto iter = x.poly_.dict_.begin();
+        } else if (1 == x.get_poly().dict_.size()) {
+            auto iter = x.get_poly().dict_.begin();
             precedence = PrecedenceEnum::Atom;
             bool first = true; // true if there are no nonzero exponents, false
                                // otherwise

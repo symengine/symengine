@@ -685,10 +685,10 @@ void StrPrinter::bvisit(const MIntPoly &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.get_poly().dict_);
 
     for (vec_uint exps : v) {
-        integer_class c = x.poly_.dict_.find(exps)->second;
+        integer_class c = x.get_poly().dict_.find(exps)->second;
         if (!first) {
             s << " " << _print_sign(c) << " ";
         } else if (c < 0) {
@@ -698,7 +698,7 @@ void StrPrinter::bvisit(const MIntPoly &x)
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : x.vars_) {
+        for (auto it : x.get_vars()) {
             if (exps[i] != 0) {
                 if (!first_var) {
                     expr << "*";
@@ -733,10 +733,10 @@ void StrPrinter::bvisit(const MExprPoly &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
+    std::vector<vec_int> v = sorted_keys(x.get_poly().dict_);
 
     for (vec_int exps : v) {
-        Expression c = x.poly_.dict_.find(exps)->second;
+        Expression c = x.get_poly().dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -747,7 +747,7 @@ void StrPrinter::bvisit(const MExprPoly &x)
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : x.vars_) {
+        for (auto it : x.get_vars()) {
             if (exps[i] != 0) {
                 if (!first_var) {
                     expr << "*";
