@@ -260,8 +260,10 @@ void StrPrinter::bvisit(const RealMPFR &x)
 {
     mpfr_exp_t ex;
     // mpmath.libmp.libmpf.prec_to_dps
-    long digits = std::max(
-        long(1), std::lround(x.i.get_prec() / 3.3219280948873626) - 1);
+    long digits
+        = std::max(long(1), std::lround(static_cast<double>(x.i.get_prec())
+                                        / 3.3219280948873626)
+                                - 1);
     char *c
         = mpfr_get_str(nullptr, &ex, 10, digits, x.i.get_mpfr_t(), MPFR_RNDN);
     std::ostringstream s;
