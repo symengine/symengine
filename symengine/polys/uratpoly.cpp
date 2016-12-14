@@ -6,6 +6,7 @@ namespace SymEngine
 URatPoly::URatPoly(const RCP<const Basic> &var, URatDict &&dict)
     : USymEnginePoly(var, std::move(dict))
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 

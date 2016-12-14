@@ -8,6 +8,7 @@ URatPSeriesFlint::URatPSeriesFlint(fqp_t p, const std::string varname,
                                    const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
+    ASSIGN_TYPEID()
 }
 RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
                                                      const std::string &x,

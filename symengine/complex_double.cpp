@@ -10,6 +10,7 @@ namespace SymEngine
 
 ComplexDouble::ComplexDouble(std::complex<double> i)
 {
+    ASSIGN_TYPEID()
     this->i = i;
 }
 //! Get the real part of the complex number

@@ -10,12 +10,14 @@ namespace SymEngine
 
 Infty::Infty(const RCP<const Number> &direction)
 {
+    ASSIGN_TYPEID()
     _direction = direction;
     SYMENGINE_ASSERT(is_canonical(_direction));
 }
 
 Infty::Infty(const Infty &inf)
 {
+    ASSIGN_TYPEID()
     _direction = inf.get_direction();
     SYMENGINE_ASSERT(is_canonical(_direction))
 }

@@ -6,6 +6,7 @@ namespace SymEngine
 UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)
     : USymEnginePoly(var, std::move(dict))
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 

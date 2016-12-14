@@ -6,6 +6,7 @@ namespace SymEngine
 UExprPoly::UExprPoly(const RCP<const Basic> &var, UExprDict &&dict)
     : USymEnginePoly(var, std::move(dict))
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 

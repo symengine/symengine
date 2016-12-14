@@ -8,6 +8,7 @@ namespace SymEngine
 Add::Add(const RCP<const Number> &coef, umap_basic_num &&dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(coef, dict_))
 }
 

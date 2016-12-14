@@ -9,6 +9,7 @@ namespace SymEngine
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
 
@@ -260,6 +261,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
 
 Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(*arg))
 }
 

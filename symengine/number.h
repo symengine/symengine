@@ -133,6 +133,11 @@ inline bool is_a_Number(const Basic &b)
 class NumberWrapper : public Number
 {
 public:
+    NumberWrapper()
+    {
+        ASSIGN_TYPEID()
+    }
+
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const
     {

@@ -5,6 +5,7 @@ namespace SymEngine
 
 BooleanAtom::BooleanAtom(bool b) : b_{b}
 {
+    ASSIGN_TYPEID()
 }
 
 hash_t BooleanAtom::__hash__() const
@@ -47,6 +48,7 @@ RCP<const BooleanAtom> boolFalse = make_rcp<BooleanAtom>(false);
 Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
     : expr_{expr}, set_{set}
 {
+    ASSIGN_TYPEID()
 }
 
 hash_t Contains::__hash__() const
@@ -104,6 +106,7 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
 
 Piecewise::Piecewise(PiecewiseVec &&vec) : vec_(vec)
 {
+    ASSIGN_TYPEID()
 }
 
 hash_t Piecewise::__hash__() const
@@ -146,6 +149,7 @@ int Piecewise::compare(const Basic &o) const
 
 And::And(const set_boolean &s) : container_{s}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s));
 }
 
@@ -197,6 +201,7 @@ const set_boolean &And::get_container() const
 
 Or::Or(const set_boolean &s) : container_{s}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s));
 }
 
@@ -248,6 +253,7 @@ const set_boolean &Or::get_container() const
 
 Not::Not(const RCP<const Boolean> &in) : arg_{in}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(in));
 }
 

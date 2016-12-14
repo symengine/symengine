@@ -7,6 +7,7 @@ namespace SymEngine
 Complex::Complex(rational_class real, rational_class imaginary)
     : real_{real}, imaginary_{imaginary}
 {
+    ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 

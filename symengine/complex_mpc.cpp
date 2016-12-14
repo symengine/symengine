@@ -12,6 +12,7 @@ namespace SymEngine
 
 ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
 {
+    ASSIGN_TYPEID()
 }
 
 hash_t ComplexMPC::__hash__() const
