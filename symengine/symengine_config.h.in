@@ -24,6 +24,9 @@
 /* Define if you want to enable PRIMESIEVE support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_PRIMESIEVE
 
+/* Define if you want to use virtual TypeIDs in SymEngine */
+#cmakedefine USE_VIRTUAL_TYPEID
+
 /* Define if you want to enable Flint support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_FLINT
 
