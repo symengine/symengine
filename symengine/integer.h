@@ -44,6 +44,8 @@ public:
 
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
+    //! Convert to `uint`, raise an exception if it does not fit
+    unsigned long int as_uint() const;
     //! Convert to `integer_class`.
     inline const integer_class &as_integer_class() const
     {
