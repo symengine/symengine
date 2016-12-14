@@ -377,9 +377,9 @@ public:
     {
         mpfr_class t(x.get_prec());
         double real, imag;
-        mpc_real(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_real(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
-        mpc_imag(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
         result_ = std::complex<double>(real, imag);
     }

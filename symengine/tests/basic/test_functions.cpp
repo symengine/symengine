@@ -2837,7 +2837,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     r1 = asin(real_mpfr(a));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 157079632679489661_z;
@@ -2856,7 +2856,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     r1 = asin(complex_mpc(c));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 66623943249251525_z;

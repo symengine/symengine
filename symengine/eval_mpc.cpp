@@ -58,7 +58,7 @@ public:
 
     void bvisit(const ComplexMPC &x)
     {
-        mpc_set(result_, x.i.get_mpc_t(), rnd_);
+        mpc_set(result_, x.as_mpc().get_mpc_t(), rnd_);
     }
 
     void bvisit(const Add &x)
