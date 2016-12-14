@@ -109,7 +109,7 @@ public:
         return this->get_poly().dict_.rend();
     }
 
-    unsigned int size() const
+    int size() const
     {
         if (this->get_poly().dict_.empty())
             return 0;

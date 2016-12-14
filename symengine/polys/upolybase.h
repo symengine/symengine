@@ -374,7 +374,7 @@ public:
     virtual hash_t __hash__() const = 0;
 
     // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
+    virtual int size() const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const

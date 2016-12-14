@@ -612,7 +612,7 @@ public:
         return get_poly().dict_;
     }
 
-    inline unsigned int size() const
+    inline int size() const
     {
         if (get_poly().empty())
             return 0;

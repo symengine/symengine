@@ -650,7 +650,7 @@ RCP<const Number> harmonic(unsigned long n, long m)
                 res += t;
             } else {
                 integer_class t(i);
-                mp_pow_ui(t, t, -m);
+                mp_pow_ui(t, t, static_cast<unsigned long>(-m));
                 res += t;
             }
         }

@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_CASTS_H
 #define SYMENGINE_CASTS_H
 
+#include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
 
 namespace SymEngine
@@ -107,7 +108,7 @@ inline To numeric_cast(
     typename std::enable_if<(std::is_signed<From>::value
                              && std::is_unsigned<To>::value)>::type * = nullptr)
 {
-#ifdef(WITH_SYMENGINE_ASSERT)
+#ifdef WITH_SYMENGINE_ASSERT
     // Above ifdef is needed to avoid a warning about unused typedefs
     typedef typename std::make_unsigned<From>::type unsigned_from_type;
     SYMENGINE_ASSERT(f >= 0);
@@ -123,7 +124,7 @@ inline To numeric_cast(
     typename std::enable_if<(std::is_unsigned<From>::value
                              && std::is_signed<To>::value)>::type * = nullptr)
 {
-#ifdef(WITH_SYMENGINE_ASSERT)
+#ifdef WITH_SYMENGINE_ASSERT
     typedef typename std::make_unsigned<To>::type unsigned_to_type;
     SYMENGINE_ASSERT(
         f <= static_cast<unsigned_to_type>(std::numeric_limits<To>::max()));
