@@ -296,7 +296,7 @@ public:
             unsigned long q
                 = down_cast<const Integer &>(*self.get_exp()).as_int();
             unsigned q = numeric_cast<unsigned>(
-                rcp_static_cast<const Integer>(self.get_exp())->as_int());
+                rcp_static_cast<const Integer>(self.get_exp())->as_uint());
             RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
             RCP<const UIntPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);

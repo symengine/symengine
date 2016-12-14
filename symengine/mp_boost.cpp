@@ -8,7 +8,6 @@
 
 using boost::multiprecision::numerator;
 using boost::multiprecision::denominator;
-using boost::multiprecision::pow;
 using boost::multiprecision::miller_rabin_test;
 using boost::multiprecision::detail::find_lsb;
 using boost::mpl::int_;
@@ -17,6 +16,11 @@ using boost::mpl::int_;
 
 namespace SymEngine
 {
+
+integer_class pow(const integer_class &a, unsigned long b)
+{
+    return boost::multiprecision::pow(a, numeric_cast<unsigned>(b));
+}
 
 void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
                 const integer_class &b)
