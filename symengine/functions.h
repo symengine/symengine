@@ -499,7 +499,7 @@ public:
 //! Create a new Dirichlet_eta instance:
 RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
-class FunctionSymbol : public Function
+class FunctionSymbol : public MultiArgFunction
 {
 protected:
     std::string name_; //! The `f` in `f(x+y, z)`
@@ -522,11 +522,6 @@ public:
     inline const std::string &get_name() const
     {
         return name_;
-    }
-    //! \return `arg_`
-    virtual vec_basic get_args() const
-    {
-        return arg_;
     }
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
