@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_CASTS_H
 #define SYMENGINE_CASTS_H
 
+#include <iostream>
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
 
