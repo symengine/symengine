@@ -183,7 +183,7 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion")
+    set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)
