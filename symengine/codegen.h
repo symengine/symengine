@@ -26,27 +26,27 @@ public:
     {
         std::string var = str_;
         std::ostringstream s;
-        bool is_inf = eq(*x.start_, *NegInf);
+        bool is_inf = eq(*x.get_start(), *NegInf);
         if (not is_inf) {
             s << var;
-            if (x.left_open_) {
+            if (x.get_left_open()) {
                 s << " > ";
             } else {
                 s << " >= ";
             }
-            s << apply(x.start_);
+            s << apply(x.get_start());
         }
-        if (neq(*x.end_, *Inf)) {
+        if (neq(*x.get_end(), *Inf)) {
             if (not is_inf) {
                 s << " && ";
             }
             s << var;
-            if (x.right_open_) {
+            if (x.get_right_open()) {
                 s << " < ";
             } else {
                 s << " <= ";
             }
-            s << apply(x.end_);
+            s << apply(x.get_end());
         }
         str_ = s.str();
     }

@@ -135,12 +135,12 @@ void StrPrinter::bvisit(const ComplexDouble &x)
 void StrPrinter::bvisit(const Interval &x)
 {
     std::ostringstream s;
-    if (x.left_open_)
+    if (x.get_left_open())
         s << "(";
     else
         s << "[";
-    s << *x.start_ << ", " << *x.end_;
-    if (x.right_open_)
+    s << *x.get_start() << ", " << *x.get_end();
+    if (x.get_right_open())
         s << ")";
     else
         s << "]";

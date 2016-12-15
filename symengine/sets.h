@@ -138,7 +138,7 @@ public:
 
 class Interval : public Set
 {
-public:
+private:
     RCP<const Number> start_;
     RCP<const Number> end_;
     bool left_open_, right_open_;
@@ -165,6 +165,23 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     virtual vec_basic get_args() const;
+
+    inline const RCP<const Number> &get_start() const
+    {
+        return start_;
+    }
+    inline const RCP<const Number> &get_end() const
+    {
+        return end_;
+    }
+    inline const bool &get_left_open() const
+    {
+        return this->left_open_;
+    }
+    inline const bool &get_right_open() const
+    {
+        return this->right_open_;
+    }
 };
 
 class Union : public Set

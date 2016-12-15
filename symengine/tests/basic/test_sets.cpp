@@ -146,10 +146,10 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(r5->Ropen()->compare(*r5) == 1);
     REQUIRE(r5->compare(*r5->Ropen()) == -1);
 
-    REQUIRE(eq(*r5->get_args()[0], *r5->start_));
-    REQUIRE(eq(*r5->get_args()[1], *r5->end_));
-    REQUIRE(eq(*r5->get_args()[2], *boolean(r5->left_open_)));
-    REQUIRE(eq(*r5->get_args()[3], *boolean(r5->right_open_)));
+    REQUIRE(eq(*r5->get_args()[0], *r5->get_start()));
+    REQUIRE(eq(*r5->get_args()[1], *r5->get_end()));
+    REQUIRE(eq(*r5->get_args()[2], *boolean(r5->get_left_open())));
+    REQUIRE(eq(*r5->get_args()[3], *boolean(r5->get_right_open())));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
     CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException);
