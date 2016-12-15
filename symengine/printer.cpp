@@ -243,7 +243,7 @@ void StrPrinter::bvisit(const UniversalSet &x)
 void StrPrinter::bvisit(const FiniteSet &x)
 {
     std::ostringstream s;
-    s << x.container_;
+    s << x.get_container();
     str_ = s.str();
 }
 
