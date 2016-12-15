@@ -662,7 +662,7 @@ void StrPrinter::bvisit(const Derivative &x)
 void StrPrinter::bvisit(const Subs &x)
 {
     std::ostringstream o, vars, point;
-    for (auto p = x.get_dict().begin(); p != x.dict_.end(); p++) {
+    for (auto p = x.get_dict().begin(); p != x.get_dict().end(); p++) {
         if (p != x.get_dict().begin()) {
             vars << ", ";
             point << ", ";
@@ -670,7 +670,7 @@ void StrPrinter::bvisit(const Subs &x)
         vars << apply(p->first);
         point << apply(p->second);
     }
-    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), ("
+    o << "Subs(" << apply(x.get_arg()) << ", (" << vars.str() << "), ("
       << point.str() << "))";
     str_ = o.str();
 }
