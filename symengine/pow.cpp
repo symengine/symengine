@@ -83,7 +83,7 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero()) {
+    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
         return pownum(rcp_static_cast<const Number>(b), zero);
     }
     if (eq(*b, *one))
@@ -96,8 +96,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
         } else if (is_a<Rational>(*b)
-                   and (get_num(rcp_static_cast<const Rational>(b)->i) == 1)
-                   and (get_den(rcp_static_cast<const Rational>(b)->i) == 2)) {
+                   and (get_num(down_cast<const Rational &>(*b).i) == 1)
+                   and (get_den(down_cast<const Rational &>(*b).i) == 2)) {
             return I;
         }
     }
@@ -117,8 +117,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Number> res = exp_new->pow(*pow_new);
                 return res;
             } else {
-                return rcp_static_cast<const Number>(a)
-                    ->pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a)
+                    .pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
             if (is_a<Rational>(*a)) {
@@ -130,21 +130,21 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Complex>(*a)) {
                 return make_rcp<const Pow>(a, b);
             } else {
-                return rcp_static_cast<const Number>(a)
-                    ->pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a)
+                    .pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
             return make_rcp<const Pow>(a, b);
         } else {
-            return rcp_static_cast<const Number>(a)
-                ->pow(*rcp_static_cast<const Number>(b));
+            return down_cast<const Number &>(*a)
+                .pow(*rcp_static_cast<const Number>(b));
         }
     }
     if (is_a<Mul>(*a) and is_a_Number(*b)) {
         map_basic_basic d;
         RCP<const Number> coef = one;
-        rcp_static_cast<const Mul>(a)
-            ->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+        down_cast<const Mul &>(*a)
+            .power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
         return Mul::from_dict(coef, std::move(d));
     }
     if (is_a<Pow>(*a) and is_a<Integer>(*b)) {

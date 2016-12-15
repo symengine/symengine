@@ -270,17 +270,16 @@ public:
         for (auto &p : self.dict_) {
             RCP<const Basic> term = p.first->diff(x);
             if (is_a<Integer>(*term)
-                && rcp_static_cast<const Integer>(term)->is_zero()) {
+                && down_cast<const Integer &>(*term).is_zero()) {
                 continue;
             } else if (is_a_Number(*term)) {
                 iaddnum(outArg(coef),
                         mulnum(p.second, rcp_static_cast<const Number>(term)));
             } else if (is_a<Add>(*term)) {
-                for (auto &q : (rcp_static_cast<const Add>(term))->dict_)
+                for (auto &q : (down_cast<const Add &>(*term)).dict_)
                     Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
-                iaddnum(
-                    outArg(coef),
-                    mulnum(p.second, rcp_static_cast<const Add>(term)->coef_));
+                iaddnum(outArg(coef),
+                        mulnum(p.second, down_cast<const Add &>(*term).coef_));
             } else {
                 Add::as_coef_term(mul(p.second, term), outArg(coef2),
                                   outArg(t));
@@ -298,7 +297,7 @@ public:
             RCP<const Number> coef = self.coef_;
             RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
             if (is_a<Integer>(*factor)
-                && rcp_static_cast<const Integer>(factor)->is_zero())
+                && down_cast<const Integer &>(*factor).is_zero())
                 continue;
             map_basic_basic d = self.dict_;
             d.erase(p.first);

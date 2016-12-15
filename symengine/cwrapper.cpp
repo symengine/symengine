@@ -240,7 +240,7 @@ CWRAPPER_OUTPUT_TYPE real_double_set_d(basic s, double d)
 double real_double_get_d(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealDouble>(*(s->m)));
-    return (rcp_static_cast<const RealDouble>(s->m))->as_double();
+    return (down_cast<const RealDouble &>(*(s->m))).as_double();
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -265,7 +265,7 @@ double real_mpfr_get_d(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
     return mpfr_get_d(
-        ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_mpfr_t(),
+        ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_mpfr_t(),
         MPFR_RNDN);
 }
 
@@ -280,8 +280,7 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    mpfr_set(m,
-             ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_mpfr_t(),
+    mpfr_set(m, ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_mpfr_t(),
              MPFR_RNDN);
     CWRAPPER_END
 }
@@ -289,13 +288,13 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s)
 mpfr_prec_t real_mpfr_get_prec(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_prec();
+    return ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_prec();
 }
 
 int real_mpfr_is_zero(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return (int)((rcp_static_cast<const RealMPFR>(s->m))->is_zero());
+    return (int)((down_cast<const RealMPFR &>(*(s->m))).is_zero());
 }
 
 #endif // HAVE_SYMENGINE_MPFR
@@ -303,14 +302,14 @@ int real_mpfr_is_zero(const basic s)
 int complex_mpc_is_zero(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
-    return (int)((rcp_static_cast<const ComplexMPC>(s->m))->is_zero());
+    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
 }
 
 CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (rcp_static_cast<const ComplexMPC>(com->m))->real_part();
+    s->m = (down_cast<const ComplexMPC &>(*(com->m))).real_part();
     CWRAPPER_END
 }
 
@@ -318,7 +317,7 @@ CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (rcp_static_cast<const ComplexMPC>(com->m))->imaginary_part();
+    s->m = (down_cast<const ComplexMPC &>(*(com->m))).imaginary_part();
     CWRAPPER_END
 }
 
@@ -326,15 +325,13 @@ CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_si(
-        (rcp_static_cast<const Integer>(s->m))->as_integer_class());
+    return mp_get_si((down_cast<const Integer &>(*(s->m))).as_integer_class());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_ui(
-        (rcp_static_cast<const Integer>(s->m))->as_integer_class());
+    return mp_get_ui((down_cast<const Integer &>(*(s->m))).as_integer_class());
 }
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
@@ -342,8 +339,8 @@ CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    mpz_set(a, get_mpz_t(
-                   (rcp_static_cast<const Integer>(s->m))->as_integer_class()));
+    mpz_set(
+        a, get_mpz_t((down_cast<const Integer &>(*(s->m))).as_integer_class()));
     CWRAPPER_END
 }
 #endif
@@ -378,8 +375,8 @@ CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Rational>(*(s->m)));
-    mpq_set(a, get_mpq_t((rcp_static_cast<const Rational>(s->m))
-                             ->as_rational_class()));
+    mpq_set(a, get_mpq_t(
+                   (down_cast<const Rational &>(*(s->m))).as_rational_class()));
     CWRAPPER_END
 }
 
@@ -422,7 +419,7 @@ CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
+    s->m = (down_cast<const Complex &>(*(com->m))).real_part();
     CWRAPPER_END
 }
 
@@ -430,7 +427,7 @@ CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
+    s->m = (down_cast<const Complex &>(*(com->m))).imaginary_part();
     CWRAPPER_END
 }
 
@@ -438,7 +435,7 @@ CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
+    s->m = (down_cast<const ComplexDouble &>(*(com->m))).real_part();
     CWRAPPER_END
 }
 
@@ -446,7 +443,7 @@ CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
+    s->m = (down_cast<const ComplexDouble &>(*(com->m))).imaginary_part();
     CWRAPPER_END
 }
 
@@ -533,9 +530,9 @@ int basic_number_sign(const basic s)
 
     SYMENGINE_ASSERT(is_a_Number(*(s->m)));
 
-    if ((rcp_static_cast<const Number>(s->m))->is_positive()) {
+    if ((down_cast<const Number &>(*(s->m))).is_positive()) {
         return 1;
-    } else if ((rcp_static_cast<const Number>(s->m))->is_zero()) {
+    } else if ((down_cast<const Number &>(*(s->m))).is_zero()) {
         return 0;
     } else {
         return -1;

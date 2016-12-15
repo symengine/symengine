@@ -14,11 +14,11 @@ bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis,
     for (unsigned j = 0; j < t.ncols(); j++) {
         SYMENGINE_ASSERT(is_a<Integer>(*t.get(0, j)));
         integer_class t_
-            = rcp_static_cast<const Integer>(t.get(0, j))->as_integer_class();
+            = down_cast<const Integer &>(*t.get(0, j)).as_integer_class();
 
         SYMENGINE_ASSERT(is_a<Integer>(*basis[k].get(0, j)));
-        integer_class b_ = rcp_static_cast<const Integer>(basis[k].get(0, j))
-                               ->as_integer_class();
+        integer_class b_ = down_cast<const Integer &>(*basis[k].get(0, j))
+                               .as_integer_class();
 
         if (t_ < b_) {
             return false;
@@ -96,14 +96,13 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
             T = t;
             for (unsigned i = 0; i < q; i++) {
                 SYMENGINE_ASSERT(is_a<Integer>(*T.get(0, i)));
-                T.set(0, i, rcp_static_cast<const Integer>(T.get(0, i))
-                                ->addint(*one));
+                T.set(0, i,
+                      down_cast<const Integer &>(*T.get(0, i)).addint(*one));
 
                 if (i > 0) {
                     SYMENGINE_ASSERT(is_a<Integer>(*T.get(0, i - 1)));
-                    T.set(0, i - 1,
-                          rcp_static_cast<const Integer>(T.get(0, i - 1))
-                              ->subint(*one));
+                    T.set(0, i - 1, down_cast<const Integer &>(*T.get(0, i - 1))
+                                        .subint(*one));
                 }
 
                 dot = zero;
