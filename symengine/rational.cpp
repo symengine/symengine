@@ -104,8 +104,8 @@ int Rational::compare(const Basic &o) const
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
                  const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer(SymEngine::get_num(rat.i));
-    *den = integer(SymEngine::get_den(rat.i));
+    *num = integer(SymEngine::get_num(rat.as_rational_class()));
+    *den = integer(SymEngine::get_den(rat.as_rational_class()));
 }
 
 bool Rational::is_perfect_power(bool is_expected) const

@@ -73,8 +73,8 @@ public:
 
         } else if (is_a<Rational>(*exp)) {
             const Rational &rat = (down_cast<const Rational &>(*exp));
-            const integer_class &expnumz = get_num(rat.i);
-            const integer_class &expdenz = get_den(rat.i);
+            const integer_class &expnumz = get_num(rat.as_rational_class());
+            const integer_class &expdenz = get_den(rat.as_rational_class());
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw SymEngineException("series rational power exponent size");
             const int num = mp_get_si(expnumz);

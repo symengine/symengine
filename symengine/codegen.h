@@ -83,8 +83,8 @@ public:
     void bvisit(const Rational &x)
     {
         std::ostringstream o;
-        double n = mp_get_d(get_num(x.i));
-        double d = mp_get_d(get_den(x.i));
+        double n = mp_get_d(get_num(x.as_rational_class()));
+        double d = mp_get_d(get_den(x.as_rational_class()));
         o << n << "/" << d;
         str_ = o.str();
     }

@@ -39,7 +39,7 @@ public:
     {
         fmpq_t q_;
         fmpq_init(q_);
-        fmpq_set_mpq(q_, get_mpq_t(x.i));
+        fmpq_set_mpq(q_, get_mpq_t(x.as_rational_class()));
         arb_set_fmpq(result_, q_, prec_);
         fmpq_clear(q_);
     }

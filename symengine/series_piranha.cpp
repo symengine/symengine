@@ -154,7 +154,7 @@ piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n)
         res = cterm->nth_root(outArg(cout), n);
         if (not res)
             throw SymEngineException("constant term is not an nth power");
-        return convert(down_cast<const Rational &>(*cout).i);
+        return convert(down_cast<const Rational &>(*cout).as_rational_class());
     }
 }
 

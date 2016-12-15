@@ -39,8 +39,8 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(base) or is_a<Integer>(base)) and is_a<Rational>(exp)
-        and (down_cast<const Rational &>(exp).i < 0
-             or down_cast<const Rational &>(exp).i > 1))
+        and (down_cast<const Rational &>(exp).as_rational_class() < 0
+             or down_cast<const Rational &>(exp).as_rational_class() > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
@@ -97,8 +97,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
         } else if (is_a<Rational>(*b)
-                   and (get_num(down_cast<const Rational &>(*b).i) == 1)
-                   and (get_den(down_cast<const Rational &>(*b).i) == 2)) {
+                   and (get_num(
+                            down_cast<const Rational &>(*b).as_rational_class())
+                        == 1)
+                   and (get_den(
+                            down_cast<const Rational &>(*b).as_rational_class())
+                        == 2)) {
             return I;
         }
     }

@@ -125,7 +125,8 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
                     return true;
                 }
                 if (is_a<Rational>(*temp)) {
-                    auto m = down_cast<const Rational &>(*temp).i;
+                    auto m = down_cast<const Rational &>(*temp)
+                                 .as_rational_class();
                     return (m < 0) or (m > 1);
                 }
                 return false;
@@ -145,7 +146,7 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
                 return true;
             }
             if (is_a<Rational>(*coef)) {
-                auto m = down_cast<const Rational &>(*coef).i;
+                auto m = down_cast<const Rational &>(*coef).as_rational_class();
                 return (m < 0) or (m > 1);
             }
             return false;
@@ -257,7 +258,7 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
             m /= period;
         } else {
             SYMENGINE_ASSERT(is_a<Rational>(*n));
-            m = down_cast<const Rational &>(*n).i / period;
+            m = down_cast<const Rational &>(*n).as_rational_class() / period;
             integer_class t;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             mp_fdiv_r(t, get_num(m), get_den(m));
@@ -2358,7 +2359,8 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<Integer>(*arg))
         return false;
     if (is_a<Rational>(*arg)
-        and (get_den(down_cast<const Rational &>(*arg).i)) == 2) {
+        and (get_den(down_cast<const Rational &>(*arg).as_rational_class()))
+                == 2) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -2384,11 +2386,11 @@ RCP<const Basic> gamma_multiple_2(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Rational>(*arg))
     RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-    SYMENGINE_ASSERT(get_den(arg_->i) == 2)
+    SYMENGINE_ASSERT(get_den(arg_->as_rational_class()) == 2)
     RCP<const Integer> n, k;
     RCP<const Number> coeff;
-    n = quotient_f(*(integer(mp_abs(get_num(arg_->i)))),
-                   *(integer(get_den(arg_->i))));
+    n = quotient_f(*(integer(mp_abs(get_num(arg_->as_rational_class())))),
+                   *(integer(get_den(arg_->as_rational_class()))));
     if (arg_->is_positive()) {
         k = n;
         coeff = one;
@@ -2424,7 +2426,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((get_den(arg_->i)) == 2) {
+        if ((get_den(arg_->as_rational_class())) == 2) {
             return gamma_multiple_2(arg);
         } else {
             return make_rcp<const Gamma>(arg);
@@ -2612,10 +2614,12 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
     }
     if (is_a<Integer>(*x)
         or (is_a<Rational>(*x)
-            and (get_den(down_cast<const Rational &>(*x).i)) == 2)) {
-        if (is_a<Integer>(*y)
-            or (is_a<Rational>(*y)
-                and (get_den(down_cast<const Rational &>(*y).i)) == 2)) {
+            and (get_den(down_cast<const Rational &>(*x).as_rational_class()))
+                    == 2)) {
+        if (is_a<Integer>(*y) or (is_a<Rational>(*y)
+                                  and (get_den(down_cast<const Rational &>(*y)
+                                                   .as_rational_class()))
+                                          == 2)) {
             return false;
         }
     }
@@ -2656,7 +2660,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             } else if (is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
-                if (get_den(y_->i) == 2) {
+                if (get_den(y_->as_rational_class()) == 2) {
                     return div(mul(gamma_positive_int(x), gamma_multiple_2(y)),
                                gamma_multiple_2(add(x, y)));
                 } else {
@@ -2673,7 +2677,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         if (y_int->is_positive()) {
             if (is_a<Rational>(*x)) {
                 RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
-                if (get_den(x_->i) == 2) {
+                if (get_den(x_->as_rational_class()) == 2) {
                     return div(mul(gamma_positive_int(y), gamma_multiple_2(x)),
                                gamma_multiple_2(add(x, y)));
                 } else {
@@ -2686,7 +2690,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
     }
 
     if (is_a<const Rational>(*x)
-        and get_den(down_cast<const Rational &>(*x).i) == 2) {
+        and get_den(down_cast<const Rational &>(*x).as_rational_class()) == 2) {
         if (is_a<Integer>(*y)) {
             RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
             if (y_int->is_positive()) {
@@ -2698,7 +2702,8 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             }
         }
         if (is_a<const Rational>(*y)
-            and get_den((down_cast<const Rational &>(*y)).i) == 2) {
+            and get_den((down_cast<const Rational &>(*y)).as_rational_class())
+                    == 2) {
             return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)),
                        gamma_positive_int(add(x, y)));
         }
@@ -2718,7 +2723,7 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n,
         }
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
-            auto den = get_den(x_->i);
+            auto den = get_den(x_->as_rational_class());
             if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
@@ -2772,8 +2777,8 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
         }
         if (is_a<Rational>(*x_)) {
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
-            const auto den = get_den(x->i);
-            const auto num = get_num(x->i);
+            const auto den = get_den(x->as_rational_class());
+            const auto num = get_num(x->as_rational_class());
             const integer_class r = num % den;
             RCP<const Basic> res;
             if (den == 2) {

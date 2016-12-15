@@ -33,7 +33,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_rational_class());
         result_ = tmp;
     }
 
@@ -404,7 +404,8 @@ std::vector<fn> init_eval_double()
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {
-        double tmp = mp_get_d((down_cast<const Rational &>(x)).i);
+        double tmp
+            = mp_get_d((down_cast<const Rational &>(x)).as_rational_class());
         return tmp;
     };
     table[REAL_DOUBLE] = [](const Basic &x) {

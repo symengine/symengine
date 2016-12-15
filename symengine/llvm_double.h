@@ -256,7 +256,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        set_double(mp_get_d(x.i));
+        set_double(mp_get_d(x.as_rational_class()));
     }
 
     void bvisit(const RealDouble &x)

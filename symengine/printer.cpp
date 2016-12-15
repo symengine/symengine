@@ -60,7 +60,7 @@ void StrPrinter::bvisit(const Integer &x)
 void StrPrinter::bvisit(const Rational &x)
 {
     std::ostringstream s;
-    s << x.i;
+    s << x.as_rational_class();
     str_ = s.str();
 }
 

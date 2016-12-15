@@ -67,7 +67,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_rational_class());
         result_ = [=](const T *x) { return tmp; };
     }
 

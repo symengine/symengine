@@ -33,7 +33,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        mpfr_set_q(result_, get_mpq_t(x.i), rnd_);
+        mpfr_set_q(result_, get_mpq_t(x.as_rational_class()), rnd_);
     }
 
     void bvisit(const RealDouble &x)

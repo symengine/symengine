@@ -14,7 +14,7 @@ namespace SymEngine
 //! Rational Class
 class Rational : public Number
 {
-public:
+private:
     //! `i` : object of `rational_class`
     rational_class i;
 
@@ -47,7 +47,7 @@ public:
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
-    inline rational_class as_rational_class() const
+    inline const rational_class &as_rational_class() const
     {
         return this->i;
     }

@@ -83,7 +83,7 @@ RCP<const Number> Complex::from_mpq(const rational_class re,
 
 RCP<const Number> Complex::from_two_rats(const Rational &re, const Rational &im)
 {
-    return Complex::from_mpq(re.i, im.i);
+    return Complex::from_mpq(re.as_rational_class(), im.as_rational_class());
 }
 
 RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
@@ -97,7 +97,8 @@ RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
             down_cast<const Integer &>(*one).as_integer_class());
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Integer>(im)) {
-        rational_class re_mpq = down_cast<const Rational &>(re).i;
+        rational_class re_mpq
+            = down_cast<const Rational &>(re).as_rational_class();
         rational_class im_mpq(
             down_cast<const Integer &>(im).as_integer_class(),
             down_cast<const Integer &>(*one).as_integer_class());
@@ -106,11 +107,14 @@ RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
         rational_class re_mpq(
             down_cast<const Integer &>(re).as_integer_class(),
             down_cast<const Integer &>(*one).as_integer_class());
-        rational_class im_mpq = down_cast<const Rational &>(im).i;
+        rational_class im_mpq
+            = down_cast<const Rational &>(im).as_rational_class();
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Rational>(im)) {
-        rational_class re_mpq = down_cast<const Rational &>(re).i;
-        rational_class im_mpq = down_cast<const Rational &>(im).i;
+        rational_class re_mpq
+            = down_cast<const Rational &>(re).as_rational_class();
+        rational_class im_mpq
+            = down_cast<const Rational &>(im).as_rational_class();
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
         throw SymEngineException(
