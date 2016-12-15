@@ -314,10 +314,11 @@ TEST_CASE("Union : Basic", "[basic]")
     i3 = interval(integer(2), integer(3));
     RCP<const Set> r2 = set_union({i1, i2, i3});
     RCP<const Union> u = rcp_dynamic_cast<const Union>(r2);
-    REQUIRE(u->container_.size() == 2);
-    REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
-    REQUIRE(u->container_.find(interval(integer(2), integer(4)))
-            != u->container_.end());
+    REQUIRE(u->get_container().size() == 2);
+    REQUIRE(u->get_container().find(interval(zero, one))
+            != u->get_container().end());
+    REQUIRE(u->get_container().find(interval(integer(2), integer(4)))
+            != u->get_container().end());
     REQUIRE(
         check_union_str(u->__str__(), {i1, interval(integer(2), integer(4))}));
 
@@ -327,9 +328,10 @@ TEST_CASE("Union : Basic", "[basic]")
     r2 = set_union({i1, i2, i3});
     r1 = set_union({finiteset({zero}), i2});
     u = rcp_dynamic_cast<const Union>(set_union({r1, r2}));
-    REQUIRE(u->container_.find(interval(integer(2), integer(4)))
-            != u->container_.end());
-    REQUIRE(u->container_.find(interval(zero, one)) != u->container_.end());
+    REQUIRE(u->get_container().find(interval(integer(2), integer(4)))
+            != u->get_container().end());
+    REQUIRE(u->get_container().find(interval(zero, one))
+            != u->get_container().end());
     REQUIRE(
         check_union_str(u->__str__(), {i1, interval(integer(2), integer(4))}));
     REQUIRE(eq(*u->contains(one), *boolTrue));

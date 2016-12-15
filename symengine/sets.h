@@ -169,7 +169,7 @@ public:
 
 class Union : public Set
 {
-public:
+private:
     set_set container_;
 
 public:
@@ -186,6 +186,11 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const set_set &get_container() const
+    {
+        return this->container_;
+    }
 };
 
 //! \return RCP<const EmptySet>

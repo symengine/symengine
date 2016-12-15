@@ -228,8 +228,9 @@ void StrPrinter::bvisit(const EmptySet &x)
 void StrPrinter::bvisit(const Union &x)
 {
     std::ostringstream s;
-    s << apply(*x.container_.begin());
-    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+    s << apply(*x.get_container().begin());
+    for (auto it = ++(x.get_container().begin()); it != x.get_container().end();
+         ++it) {
         s << " U " << apply(*it);
     }
     str_ = s.str();
