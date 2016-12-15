@@ -8,7 +8,7 @@ namespace SymEngine
 
 Constant::Constant(const std::string &name) : name_{name}
 {
-    ASSIGN_TYPEID()
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t Constant::__hash__() const

@@ -135,7 +135,7 @@ class NumberWrapper : public Number
 public:
     NumberWrapper()
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)

@@ -24,7 +24,7 @@ public:
                      const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,

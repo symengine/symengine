@@ -10,7 +10,7 @@ namespace SymEngine
 GaloisField::GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-    ASSIGN_TYPEID()
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 

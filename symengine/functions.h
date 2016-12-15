@@ -913,7 +913,7 @@ public:
     //! Erf Constructor
     Erf(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
         SYMENGINE_ASSERT(is_canonical(arg))
     }
     //! \return `true` if canonical
@@ -938,7 +938,7 @@ public:
     //! Erfc Constructor
     Erfc(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
         SYMENGINE_ASSERT(is_canonical(arg))
     }
     //! \return `true` if canonical
@@ -1024,7 +1024,7 @@ public:
     //! LogGamma Constructor
     LogGamma(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
         SYMENGINE_ASSERT(is_canonical(arg))
     }
     //! \return `true` if canonical
@@ -1051,7 +1051,7 @@ public:
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         : TwoArgFunction(x, y)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
         SYMENGINE_ASSERT(is_canonical(x, y))
     }
     //! return `Beta` with ordered arguments
@@ -1086,7 +1086,7 @@ public:
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
         : TwoArgFunction(n, x)
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
         SYMENGINE_ASSERT(is_canonical(n, x))
     }
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);

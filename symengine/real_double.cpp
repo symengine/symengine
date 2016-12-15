@@ -10,7 +10,7 @@ namespace SymEngine
 
 RealDouble::RealDouble(double i)
 {
-    ASSIGN_TYPEID()
+    SYMENGINE_ASSIGN_TYPEID()
     this->i = i;
 }
 

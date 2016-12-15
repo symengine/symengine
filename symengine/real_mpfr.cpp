@@ -12,7 +12,7 @@ namespace SymEngine
 
 RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)}
 {
-    ASSIGN_TYPEID()
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t RealMPFR::__hash__() const

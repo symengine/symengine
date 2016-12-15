@@ -50,7 +50,7 @@ class EmptySet : public Set
 public:
     EmptySet()
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
     IMPLEMENT_TYPEID(EMPTYSET)
@@ -81,7 +81,7 @@ class UniversalSet : public Set
 public:
     UniversalSet()
     {
-        ASSIGN_TYPEID()
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
 public:

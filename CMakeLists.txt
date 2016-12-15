@@ -103,7 +103,7 @@ set(INTEGER_CLASS "gmp"
 
 # Virtual TypeID
 set(WITH_VIRTUAL_TYPEID no CACHE BOOL "Use virtual TypeID getter")
-set(USE_VIRTUAL_TYPEID False)
+set(WITH_SYMENGINE_VIRTUAL_TYPEID False)
 
 # Piranha
 set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
@@ -230,7 +230,7 @@ set(HAVE_SYMENGINE_MPC False)
 
 # Virtual TypeID
 if (WITH_VIRTUAL_TYPEID)
-    set(USE_VIRTUAL_TYPEID True)
+    set(WITH_SYMENGINE_VIRTUAL_TYPEID True)
 endif()
 
 if (WITH_FLINT)
