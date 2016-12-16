@@ -12,9 +12,10 @@ enum class PrecedenceEnum { Add, Mul, Pow, Atom };
 
 class Precedence : public BaseVisitor<Precedence>
 {
-public:
+private:
     PrecedenceEnum precedence;
 
+public:
     void bvisit(const Add &x)
     {
         precedence = PrecedenceEnum::Add;
