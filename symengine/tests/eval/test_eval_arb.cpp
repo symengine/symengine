@@ -16,7 +16,6 @@ using SymEngine::Basic;
 using SymEngine::integer;
 using SymEngine::eval_mpfr;
 using SymEngine::div;
-using SymEngine::rcp_static_cast;
 using SymEngine::Rational;
 using SymEngine::add;
 using SymEngine::sqrt;

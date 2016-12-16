@@ -15,7 +15,6 @@ using SymEngine::Symbol;
 using SymEngine::Number;
 using SymEngine::symbol;
 using SymEngine::Add;
-using SymEngine::rcp_static_cast;
 using SymEngine::RCP;
 using SymEngine::add;
 using SymEngine::sin;

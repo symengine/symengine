@@ -36,7 +36,6 @@ using SymEngine::Complex;
 using SymEngine::Number;
 using SymEngine::I;
 using SymEngine::rcp_dynamic_cast;
-using SymEngine::rcp_static_cast;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;

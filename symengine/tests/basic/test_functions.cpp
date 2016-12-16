@@ -98,7 +98,6 @@ using SymEngine::min;
 using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
-using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
