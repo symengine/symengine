@@ -7,6 +7,7 @@ namespace SymEngine
 UIntPolyFlint::UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict)
     : UFlintPoly(var, std::move(dict))
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t UIntPolyFlint::__hash__() const
@@ -22,6 +23,7 @@ hash_t UIntPolyFlint::__hash__() const
 URatPolyFlint::URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict)
     : UFlintPoly(var, std::move(dict))
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t URatPolyFlint::__hash__() const

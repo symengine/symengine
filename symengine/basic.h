@@ -97,7 +97,15 @@ private:
     mutable hash_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
 public:
+#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
     virtual TypeID get_type_code() const = 0;
+#else
+    TypeID type_code_;
+    inline TypeID get_type_code() const
+    {
+        return type_code_;
+    };
+#endif
     //! Constructor
     Basic() : hash_{0}
     {
@@ -269,6 +277,7 @@ struct hash<SymEngine::Basic>;
 #include "basic-inl.h"
 
 // Macro to define the type_code_id variable and its getter method
+#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
 #define IMPLEMENT_TYPEID(ID)                                                   \
     /*! Type_code_id shared by all instances */                                \
     const static TypeID type_code_id = ID;                                     \
@@ -278,5 +287,17 @@ struct hash<SymEngine::Basic>;
         return type_code_id;                                                   \
     };                                                                         \
     SYMENGINE_INCLUDE_METHODS(;)
+#else
+#define IMPLEMENT_TYPEID(ID)                                                   \
+    /*! Type_code_id shared by all instances */                                \
+    const static TypeID type_code_id = ID;                                     \
+    SYMENGINE_INCLUDE_METHODS(;)
+#endif
+
+#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
+#define SYMENGINE_ASSIGN_TYPEID()
+#else
+#define SYMENGINE_ASSIGN_TYPEID() this->type_code_ = type_code_id;
+#endif
 
 #endif

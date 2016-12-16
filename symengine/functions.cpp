@@ -326,6 +326,7 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
 
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -393,6 +394,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 
 Cos::Cos(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -458,6 +460,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 
 Tan::Tan(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -524,6 +527,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 
 Cot::Cot(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -588,6 +592,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 
 Csc::Csc(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -652,6 +657,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 
 Sec::Sec(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -811,6 +817,7 @@ RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg)
 /* ---------------------------- */
 ASin::ASin(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -853,6 +860,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
 
 ACos::ACos(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -895,6 +903,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
 
 ASec::ASec(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -935,6 +944,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 
 ACsc::ACsc(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -975,6 +985,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 
 ATan::ATan(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1017,6 +1028,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
 
 ACot::ACot(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1060,6 +1072,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
 ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     : TwoArgFunction(num, den)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(num, den))
 }
 
@@ -1209,6 +1222,7 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 /* ---------------------------- */
 LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1246,12 +1260,14 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{{arg}}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     : name_{name}, arg_{arg}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
@@ -1306,11 +1322,13 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 FunctionWrapper::FunctionWrapper(std::string name, const RCP<const Basic> &arg)
     : FunctionSymbol(name, arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
     : FunctionSymbol(name, vec)
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 /* ---------------------------- */
@@ -1318,6 +1336,7 @@ FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
 Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)
     : arg_{arg}, x_{x}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
@@ -1415,6 +1434,7 @@ int Derivative::compare(const Basic &o) const
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg, dict))
 }
 
@@ -1489,6 +1509,7 @@ vec_basic Subs::get_args() const
 
 Sinh::Sinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1534,6 +1555,7 @@ RCP<const Basic> Sinh::expand_as_exp() const
 
 Csch::Csch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1583,6 +1605,7 @@ RCP<const Basic> Csch::expand_as_exp() const
 
 Cosh::Cosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1628,6 +1651,7 @@ RCP<const Basic> Cosh::expand_as_exp() const
 
 Sech::Sech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1675,6 +1699,7 @@ RCP<const Basic> Sech::expand_as_exp() const
 
 Tanh::Tanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1722,6 +1747,7 @@ RCP<const Basic> Tanh::expand_as_exp() const
 
 Coth::Coth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1771,6 +1797,7 @@ RCP<const Basic> Coth::expand_as_exp() const
 
 ASinh::ASinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1815,6 +1842,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
 
 ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1849,6 +1877,7 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
 
 ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1877,6 +1906,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
 
 ATanh::ATanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1917,6 +1947,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
 
 ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -1953,6 +1984,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
 
 ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -2037,6 +2069,7 @@ KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i,
                                const RCP<const Basic> &j)
     : TwoArgFunction(i, j)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(i, j))
 }
 
@@ -2092,6 +2125,7 @@ bool has_dup(const vec_basic &arg)
 
 LeviCivita::LeviCivita(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
@@ -2155,11 +2189,13 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
 Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
     : TwoArgFunction(s, a)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s, a))
 }
 
 Zeta::Zeta(const RCP<const Basic> &s) : TwoArgFunction(s, one)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s, one))
 }
 
@@ -2223,6 +2259,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s)
 
 Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s) : OneArgFunction(s)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s))
 }
 
@@ -2312,6 +2349,7 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
 
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -2401,6 +2439,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : TwoArgFunction(s, x)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s, x))
 }
 
@@ -2458,6 +2497,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
 UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : TwoArgFunction(s, x)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s, x))
 }
 
@@ -2766,6 +2806,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
 
 Abs::Abs(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
@@ -2823,6 +2864,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
 
 Max::Max(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
@@ -2926,6 +2968,7 @@ RCP<const Basic> max(const vec_basic &arg)
 
 Min::Min(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 

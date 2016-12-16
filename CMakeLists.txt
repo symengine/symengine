@@ -101,6 +101,10 @@ endif()
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
 
+# Virtual TypeID
+set(WITH_VIRTUAL_TYPEID no CACHE BOOL "Use virtual TypeID getter")
+set(WITH_SYMENGINE_VIRTUAL_TYPEID False)
+
 # Piranha
 set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
 
@@ -223,6 +227,11 @@ set(HAVE_SYMENGINE_MPFR False)
 set(WITH_MPC no
     CACHE BOOL "Build with MPC")
 set(HAVE_SYMENGINE_MPC False)
+
+# Virtual TypeID
+if (WITH_VIRTUAL_TYPEID)
+    set(WITH_SYMENGINE_VIRTUAL_TYPEID True)
+endif()
 
 if (WITH_FLINT)
     find_package(FLINT REQUIRED)
@@ -693,6 +702,7 @@ if (WITH_TCMALLOC)
 endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
+message("WITH_VIRTUAL_TYPEID: ${WITH_VIRTUAL_TYPEID}")
 
 message("")
 message("--------------------------------------------------------------------------------")

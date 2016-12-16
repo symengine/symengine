@@ -27,9 +27,11 @@ public:
     // explicit Integer(integer_class i);
     Integer(const integer_class &_i) : i(_i)
     {
+        SYMENGINE_ASSIGN_TYPEID()
     }
     Integer(integer_class &&_i) : i(std::move(_i))
     {
+        SYMENGINE_ASSIGN_TYPEID()
     }
     //! \return size of the hash
     virtual hash_t __hash__() const;

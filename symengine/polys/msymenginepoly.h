@@ -455,6 +455,7 @@ public:
     MIntPoly(const set_basic &vars, MIntDict &&dict)
         : MSymEnginePoly(vars, std::move(dict))
     {
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
     IMPLEMENT_TYPEID(MINTPOLY);
@@ -471,6 +472,7 @@ public:
     MExprPoly(const set_basic &vars, MExprDict &&dict)
         : MSymEnginePoly(vars, std::move(dict))
     {
+        SYMENGINE_ASSIGN_TYPEID()
     }
 
     IMPLEMENT_TYPEID(MEXPRPOLY);

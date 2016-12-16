@@ -6,6 +6,7 @@ namespace SymEngine
 
 Symbol::Symbol(const std::string &name) : name_{name}
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t Symbol::__hash__() const

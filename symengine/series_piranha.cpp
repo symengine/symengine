@@ -7,6 +7,7 @@ URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, const std::string varname,
                                        const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 RCP<const URatPSeriesPiranha>
 URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
@@ -180,6 +181,7 @@ UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname,
                                  const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t,

@@ -23,6 +23,7 @@ public:
     //! Constructor of Rational class
     Rational(rational_class &&_i) : i(std::move(_i))
     {
+        SYMENGINE_ASSIGN_TYPEID()
     }
     /*! \param `i` must already be in rational_class canonical form
     *   \return Integer or Rational depending on denumerator.

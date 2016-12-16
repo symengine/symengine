@@ -9,6 +9,7 @@ Interval::Interval(const RCP<const Number> &start, const RCP<const Number> &end,
                    const bool left_open, const bool right_open)
     : start_(start), end_(end), left_open_(left_open), right_open_(right_open)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(
         Interval::is_canonical(start_, end_, left_open_, right_open_));
 }
@@ -271,6 +272,7 @@ const RCP<const UniversalSet> &UniversalSet::getInstance()
 
 FiniteSet::FiniteSet(const set_basic container) : container_(container)
 {
+    SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(FiniteSet::is_canonical(container_));
 }
 
@@ -393,6 +395,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 
 Union::Union(set_set in) : container_(in)
 {
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
 hash_t Union::__hash__() const

@@ -47,10 +47,12 @@ public:
 
 class EmptySet : public Set
 {
-private:
-    EmptySet(){};
-
 public:
+    EmptySet()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
+
     IMPLEMENT_TYPEID(EMPTYSET)
     // EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const &) = delete;
@@ -76,8 +78,11 @@ public:
 
 class UniversalSet : public Set
 {
-private:
-    UniversalSet(){};
+public:
+    UniversalSet()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
 
 public:
     IMPLEMENT_TYPEID(UNIVERSALSET)
