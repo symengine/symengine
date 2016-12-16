@@ -483,6 +483,11 @@ TEST_CASE("Tan: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), DivisionByZeroError);
+
+    r1 = tan(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 0.142546543074278)
+            < 1e-12);
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -588,6 +593,11 @@ TEST_CASE("Cot: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(cot(mul(integer(7), pi)), DivisionByZeroError);
+
+    r1 = cot(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 0.457657554360286)
+            < 1e-12);
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -695,6 +705,11 @@ TEST_CASE("Csc: functions", "[functions]")
 
     CHECK_THROWS_AS(csc(mul(integer(7), pi)), DivisionByZeroError);
     CHECK_THROWS_AS(csc(integer(0)), DivisionByZeroError);
+
+    r1 = csc(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 7.08616739573719)
+            < 1e-12);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -804,6 +819,11 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), DivisionByZeroError);
+
+    r1 = sec(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 1.01010866590799)
+            < 1e-12);
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
