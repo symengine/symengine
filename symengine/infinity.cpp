@@ -147,7 +147,7 @@ RCP<const Number> Infty::div(const Number &other) const
             return infty(this->_direction->mul(*minus_one));
     }
 }
-// TODO
+
 RCP<const Number> Infty::pow(const Number &other) const
 {
     if (is_a<Infty>(other)) {
@@ -194,7 +194,7 @@ RCP<const Number> Infty::pow(const Number &other) const
         }
     }
 }
-// TODO
+
 RCP<const Number> Infty::rpow(const Number &other) const
 {
     if (is_a<Complex>(other) or is_a<ComplexMPC>(other)
