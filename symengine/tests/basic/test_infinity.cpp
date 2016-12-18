@@ -264,5 +264,33 @@ TEST_CASE("Powers of Infinity", "[Infinity]")
     CHECK_THROWS_AS(b->pow(*c), NotImplementedError);
     CHECK_THROWS_AS(b->pow(*cx), NotImplementedError);
     CHECK_THROWS_AS(c->pow(*c), SymEngineException);
-    CHECK_THROWS_AS(c->pow(*cx), NotImplementedError);
+}
+
+TEST_CASE("Powers to Infinity", "[Infinity]")
+{
+    RCP<const Infty> a = Inf;
+    RCP<const Infty> b = NegInf;
+    RCP<const Infty> c = ComplexInf;
+
+    RCP<const Number> n1;
+    n1 = integer(10)->pow(*a);
+    REQUIRE(n1->__str__() == "oo");
+    n1 = rational(2, 5)->pow(*a);
+    REQUIRE(eq(*n1, *zero));
+    n1 = rational(5, 2)->pow(*a);
+    REQUIRE(n1->__str__() == "oo");
+    n1 = integer(10)->pow(*b);
+    REQUIRE(eq(*n1, *zero));
+    n1 = rational(2, 5)->pow(*b);
+    REQUIRE(n1->__str__() == "zoo");
+    n1 = rational(5, 2)->pow(*b);
+    REQUIRE(eq(*n1, *zero));
+
+    RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
+    CHECK_THROWS_AS(integer(-10)->pow(*a), NotImplementedError);
+    CHECK_THROWS_AS(integer(0)->pow(*b), SymEngineException);
+    CHECK_THROWS_AS(integer(1)->pow(*c), SymEngineException);
+    CHECK_THROWS_AS(rational(3, 3)->pow(*c), SymEngineException);
+    CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException);
+    CHECK_THROWS_AS(cx->pow(*c), NotImplementedError);
 }
