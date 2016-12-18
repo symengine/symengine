@@ -111,7 +111,8 @@ RCP<const Number> Infty::add(const Number &other) const
 RCP<const Number> Infty::mul(const Number &other) const
 {
     if (is_a<Complex>(other))
-        throw NotImplementedError("Multiplation with Complex not implemented");
+        throw NotImplementedError(
+            "Multiplication with Complex not implemented");
 
     if (is_a<Infty>(other)) {
         const Infty &s = down_cast<const Infty &>(other);
