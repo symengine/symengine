@@ -79,12 +79,12 @@ class EvaluateDouble : public Evaluate
     virtual RCP<const Basic> sec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::sin(down_cast<const T &>(x).i));
+        return number(1.0 / std::cos(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> csc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<T>(x))
-        return number(1.0 / std::cos(down_cast<const T &>(x).i));
+        return number(1.0 / std::sin(down_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> atan(const Basic &x) const override
     {
