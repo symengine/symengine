@@ -559,6 +559,15 @@ TEST_CASE("Pow: arit", "[arit]")
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = pow(zero, zero);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = pow(zero, i2);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = pow(zero, im1);
+    REQUIRE(r1->__str__() == "zoo");
+
     /* Test (x*y)**2 -> x**2*y**2 type of simplifications */
 
     r1 = pow(mul(x, y), i2);
