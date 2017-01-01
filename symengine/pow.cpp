@@ -17,7 +17,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
     // e.g. 0**x
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_zero())
-        return false;
+        return true;
     // e.g. 1**x
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
@@ -89,8 +89,19 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     }
     if (eq(*b, *one))
         return a;
-    if (eq(*a, *zero))
-        return zero;
+
+    if (eq(*a, *zero)) {
+        if (is_a_Number(*b)
+            and rcp_static_cast<const Number>(b)->is_positive()) {
+            return zero;
+        } else if (is_a_Number(*b)
+                   and rcp_static_cast<const Number>(b)->is_negative()) {
+            return ComplexInf;
+        } else {
+            return make_rcp<const Pow>(a, b);
+        }
+    }
+
     if (eq(*a, *one))
         return one;
     if (eq(*a, *minus_one)) {

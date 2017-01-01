@@ -152,6 +152,11 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = mul(x, y)->subs({{x, real_double(0.0)}});
     r2 = real_double(0.0);
     REQUIRE(eq(*r1, *r2));
+
+    d.clear();
+    r1 = div(one, x);
+    d[x] = zero;
+    REQUIRE((*r1->subs(d)).__str__() == "zoo");
 }
 
 TEST_CASE("Pow: subs", "[subs]")

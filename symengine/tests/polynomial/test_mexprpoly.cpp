@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include <symengine/printer.h>
+#include <symengine/symengine_exception.h>
 
 using SymEngine::Expression;
 using SymEngine::Symbol;
@@ -27,6 +28,7 @@ using SymEngine::vec_uint;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::MExprPoly;
 using SymEngine::UExprPoly;
+using SymEngine::SymEngineException;
 
 using namespace SymEngine::literals;
 
@@ -174,7 +176,7 @@ TEST_CASE("Testing MExprPoly::eval", "[MExprPoly]")
         = {{x, Expression(0)}, {y, Expression(0)}, {z, Expression(0)}};
     std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> m2
         = {{x, ex}, {y, why}, {z, zee}};
-    REQUIRE(p->eval(m1) == expr4);
+    CHECK_THROWS_AS(p->eval(m1), SymEngineException);
     REQUIRE(p->eval(m2)
             == expr1 * pow_ex(ex, 2) + expr2 * pow_ex(why, 2)
                    + expr3 * pow_ex(zee, 2) + expr4 * ex * why * zee
