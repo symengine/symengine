@@ -2249,10 +2249,16 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
 TEST_CASE("Zeta: functions", "[functions]")
 {
+    RCP<const Symbol> s = symbol("s");
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2287,7 +2293,44 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
-    CHECK_THROWS_AS(zeta(one, i2), NotImplementedError);
+    r1 = zeta(one, x)->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(zero, x)->diff(x);
+    REQUIRE(eq(*r1, *im1));
+
+    r1 = zeta(s, x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(i2, x)->diff(x);
+    r2 = mul(im2, zeta(i3, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(s, x)->diff(s);
+    r2 = Derivative::create(zeta(s, x), {s});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(one, i2)->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(mul(mul(pow(i2, x), pow(x, i2)), log(i2)),
+                     zeta(add(pow(x, i2), i1), pow(i2, x))),
+                 im1),
+             mul(mul(i2, x), Subs::create(Derivative::create(
+                                              zeta(_xi_1, pow(i2, x)), {_xi_1}),
+                                          {{_xi_1, pow(x, i2)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(s, pow(s, i2))->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(pow(s, i3), pow(i2, x))->diff(s);
+    r2 = mul(i3,
+             mul(pow(s, i2), Subs::create(Derivative::create(
+                                              zeta(_xi_1, pow(i2, x)), {_xi_1}),
+                                          {{_xi_1, pow(s, i3)}})));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Levi Civita: functions", "[functions]")
