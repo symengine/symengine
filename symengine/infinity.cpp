@@ -4,6 +4,9 @@
 #include <symengine/infinity.h>
 #include <symengine/functions.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/complex_mpc.h>
+
+using SymEngine::ComplexMPC;
 
 namespace SymEngine
 {
@@ -111,7 +114,8 @@ RCP<const Number> Infty::add(const Number &other) const
 RCP<const Number> Infty::mul(const Number &other) const
 {
     if (is_a<Complex>(other))
-        throw NotImplementedError("Multiplation with Complex not implemented");
+        throw NotImplementedError(
+            "Multiplication with Complex not implemented");
 
     if (is_a<Infty>(other)) {
         const Infty &s = down_cast<const Infty &>(other);
@@ -143,15 +147,90 @@ RCP<const Number> Infty::div(const Number &other) const
             return infty(this->_direction->mul(*minus_one));
     }
 }
-// TODO
+
 RCP<const Number> Infty::pow(const Number &other) const
 {
-    return zero;
+    if (is_a<Infty>(other)) {
+        if (is_positive_infinity()) {
+            if (other.is_negative()) {
+                return zero;
+            } else if (other.is_positive()) {
+                return rcp_from_this_cast<Number>();
+            } else {
+                throw SymEngineException("Indeterminate Expression: `Infty ** "
+                                         "unsigned Infty` encountered");
+            }
+        } else if (is_negative_infinity()) {
+            throw NotImplementedError("NaN module not yet implemented");
+        } else {
+            if (other.is_positive()) {
+                return infty(0);
+            } else if (other.is_negative()) {
+                return zero;
+            } else {
+                throw SymEngineException("Indeterminate Expression: `unsigned "
+                                         "Infty ** unsigned Infty` "
+                                         "encountered");
+            }
+        }
+    } else if (is_a<Complex>(other)) {
+        throw NotImplementedError(
+            "Raising to the Complex powers not yet implemented");
+    } else {
+        if (other.is_negative()) {
+            return zero;
+        } else if (other.is_zero()) {
+            return one;
+        } else {
+            if (is_positive_infinity()) {
+                return rcp_from_this_cast<Number>();
+            } else if (is_negative_infinity()) {
+                throw NotImplementedError("Raising Negative Infty to the "
+                                          "Positive Real powers not yet "
+                                          "implemented");
+            } else {
+                return infty(0);
+            }
+        }
+    }
 }
-// TODO
+
 RCP<const Number> Infty::rpow(const Number &other) const
 {
-    return zero;
+    if (is_a<Complex>(other) or is_a<ComplexMPC>(other)
+        or is_a<ComplexDouble>(other)) {
+        throw NotImplementedError(
+            "Raising Complex powers to Infty not yet implemented");
+    } else {
+        if (other.is_negative()) {
+            throw NotImplementedError("NaN module not yet implemented");
+        } else if (other.is_zero()) {
+            throw SymEngineException("Indeterminate Expression: `0 ** +- "
+                                     "unsigned Infty` encountered");
+        } else {
+            const Number &s = down_cast<const Number &>(other);
+            if (s.is_one()) {
+                throw SymEngineException("Indeterminate Expression: `1 ** +- "
+                                         "unsigned Infty` encountered");
+            } else if (is_positive_infinity()) {
+                if (s.sub(*one)->is_negative()) {
+                    return zero;
+                } else {
+                    return rcp_from_this_cast<Number>();
+                }
+            } else if (is_negative_infinity()) {
+                if (s.sub(*one)->is_negative()) {
+                    return infty(0);
+                } else {
+                    return zero;
+                }
+            } else {
+                throw SymEngineException("Indeterminate Expression: `Positive "
+                                         "Real Number ** unsigned Infty` "
+                                         "encountered");
+            }
+        }
+    }
 }
 
 inline RCP<const Infty> infty(const RCP<const Number> &direction)
