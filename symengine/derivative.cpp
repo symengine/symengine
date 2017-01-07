@@ -36,7 +36,6 @@ public:
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
 #endif
@@ -217,7 +216,7 @@ public:
         return s;
     }
 
-    static RCP<const Basic> diff(const FunctionSymbol &self,
+    static RCP<const Basic> diff(const MultiArgFunction &self,
                                  const RCP<const Symbol> &x)
     {
         RCP<const Basic> diff = zero, t;
@@ -239,7 +238,7 @@ public:
             t = self.get_args()[i]->diff(x);
             if (neq(*t, *zero)) {
                 vec_basic v = self.get_args();
-                v[i] = get_dummy(self, "x");
+                v[i] = get_dummy(self, "xi_" + std::to_string(i + 1));
                 map_basic_basic m;
                 insert(m, v[i], self.get_args()[i]);
                 diff = add(

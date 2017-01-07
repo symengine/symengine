@@ -1258,17 +1258,17 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
-    : name_{name}, arg_{{arg}}
+    : MultiArgFunction({arg}), name_{name}
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
-    : name_{name}, arg_{arg}
+    : MultiArgFunction(arg), name_{name}
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
 bool FunctionSymbol::is_canonical(const vec_basic &arg) const
@@ -1279,7 +1279,7 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg) const
 hash_t FunctionSymbol::__hash__() const
 {
     hash_t seed = FUNCTIONSYMBOL;
-    for (const auto &a : arg_)
+    for (const auto &a : get_vec())
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
     return seed;
@@ -1289,7 +1289,8 @@ bool FunctionSymbol::__eq__(const Basic &o) const
 {
     if (is_a<FunctionSymbol>(o)
         and name_ == down_cast<const FunctionSymbol &>(o).name_
-        and unified_eq(arg_, down_cast<const FunctionSymbol &>(o).arg_))
+        and unified_eq(get_vec(),
+                       down_cast<const FunctionSymbol &>(o).get_vec()))
         return true;
     return false;
 }
@@ -1299,7 +1300,7 @@ int FunctionSymbol::compare(const Basic &o) const
     SYMENGINE_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = down_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
-        return unified_compare(arg_, s.arg_);
+        return unified_compare(get_vec(), s.get_vec());
     else
         return name_ < s.name_ ? -1 : 1;
 }
@@ -1347,11 +1348,11 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     for (const auto &a : x)
         if (not is_a<Symbol>(*a))
             return false;
-    if (is_a<FunctionSymbol>(*arg)) {
+    if (is_a<FunctionSymbol>(*arg) or is_a<LeviCivita>(*arg)) {
         for (auto &p : x) {
             RCP<const Symbol> s = rcp_static_cast<const Symbol>(p);
-            RCP<const FunctionSymbol> f
-                = rcp_static_cast<const FunctionSymbol>(arg);
+            RCP<const MultiArgFunction> f
+                = rcp_static_cast<const MultiArgFunction>(arg);
             bool found_s = false;
             // 's' should be one of the args of the function
             // and should not appear anywhere else.
