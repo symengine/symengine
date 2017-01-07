@@ -68,7 +68,7 @@ if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs boost=1.62 cmake=3.6.2 mpfr=3.1.4"
+    conda_pkgs="$conda_pkgs piranha=0.8 cmake=3.6.2"
 fi
 
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
@@ -95,21 +95,12 @@ if [[ "${WITH_LLVM}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs llvmdev=3.8 cmake=3.6.2"
 fi
 
+if [[ "${WITH_ECM}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs ecm=7.0.4"
+fi
+
 conda install -y $conda_pkgs
 
-if [[ "${WITH_ECM}" == "yes" ]]; then
-    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/ecm-6.4.4.tar.gz
-    tar -xzf ecm-6.4.4.tar.gz;
-    cd ecm-6.4.4 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir && make -j8 install && cd ..;
-fi
-
-if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    wget https://github.com/bluescarni/piranha/archive/v0.5.tar.gz;
-    tar -xzf v0.5.tar.gz;
-    cd piranha-0.5 && mkdir build && cd build;
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir -DBUILD_TESTS=no ../
-    make -j8 install && cd ../..;
-fi
 export LLVM_DIR=$our_install_dir/share/llvm/
 cd $SOURCE_DIR;
 
