@@ -98,7 +98,6 @@ using SymEngine::min;
 using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
-using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
@@ -2888,9 +2887,9 @@ TEST_CASE("max: functions", "[functions]")
     RCP<const Basic> res, tmp;
 
     res = max({x, y}); // checking if elements stored in order
-    tmp = rcp_static_cast<const Max>(res)->get_args()[0];
+    tmp = down_cast<const Max &>(*res).get_args()[0];
     res = max({y, x});
-    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *tmp));
+    REQUIRE(eq(*(down_cast<const Max &>(*res).get_args()[0]), *tmp));
 
     res = max({x, y});
     REQUIRE(eq(*res, *max({y, x}))); // max(x, y) == max(y, x)

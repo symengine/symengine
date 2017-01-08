@@ -47,7 +47,7 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            if (rcp_static_cast<const Integer>(x.get_exp())->is_positive()) {
+            if (down_cast<const Integer &>(*x.get_exp()).is_positive()) {
                 x.get_base()->accept(*this);
             } else {
                 add_to_gen_set(pow(x.get_base(), minus_one), one);
