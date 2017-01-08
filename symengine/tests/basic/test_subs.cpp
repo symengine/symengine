@@ -157,6 +157,16 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = div(one, x);
     d[x] = zero;
     REQUIRE((*r1->subs(d)).__str__() == "zoo");
+
+    d.clear();
+    r1 = div(i2, x);
+    d[x] = zero;
+    REQUIRE((*r1->subs(d)).__str__() == "zoo");
+
+    d.clear();
+    r1 = div(one, mul(x, y));
+    d[x] = zero;
+    REQUIRE((*r1->subs(d)).__str__() == "zoo/y");
 }
 
 TEST_CASE("Pow: subs", "[subs]")
