@@ -41,15 +41,15 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
             return false;
         // e.g. 0**x
         if (is_a<Integer>(*p.first)
-            and rcp_static_cast<const Integer>(p.first)->is_zero())
+            and down_cast<const Integer &>(*p.first).is_zero())
             return false;
         // e.g. 1**x
         if (is_a<Integer>(*p.first)
-            and rcp_static_cast<const Integer>(p.first)->is_one())
+            and down_cast<const Integer &>(*p.first).is_one())
             return false;
         // e.g. x**0
         if (is_a_Number(*p.second)
-            and rcp_static_cast<const Number>(p.second)->is_zero())
+            and down_cast<const Number &>(*p.second).is_zero())
             return false;
         // e.g. (x*y)**2 (={xy:2}), which should be represented as x**2*y**2
         //     (={x:2, y:2})
@@ -66,9 +66,9 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
             return false;
         // e.g. 0.5^2.0 should be represented as 0.25
         if (is_a_Number(*p.first)
-            and not rcp_static_cast<const Number>(p.first)->is_exact()
+            and not down_cast<const Number &>(*p.first).is_exact()
             and is_a_Number(*p.second)
-            and not rcp_static_cast<const Number>(p.second)->is_exact())
+            and not down_cast<const Number &>(*p.second).is_exact())
             return false;
     }
     return true;
@@ -122,7 +122,7 @@ RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef,
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (coef->is_one()) {
-                if ((rcp_static_cast<const Integer>(p->second))->is_one()) {
+                if ((down_cast<const Integer &>(*(p->second))).is_one()) {
                     // For x**1 we simply return "x":
                     return p->first;
                 }
@@ -166,7 +166,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
             // General case:
             it->second = add(it->second, exp);
             if (is_a_Number(*it->second)
-                and rcp_static_cast<const Number>(it->second)->is_zero()) {
+                and down_cast<const Number &>(*(it->second)).is_zero()) {
                 d.erase(it);
             }
         }
@@ -211,9 +211,9 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
                 insert(d, t, exp);
             }
         } else if (is_a<Integer>(*exp) and is_a<Complex>(*t)) {
-            if (rcp_static_cast<const Integer>(exp)->is_one()) {
+            if (down_cast<const Integer &>(*exp).is_one()) {
                 imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
-            } else if (rcp_static_cast<const Integer>(exp)->is_minus_one()) {
+            } else if (down_cast<const Integer &>(*exp).is_minus_one()) {
                 idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
             } else {
                 insert(d, t, exp);
@@ -233,22 +233,22 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
         if (is_a<Integer>(*it->second)) {
             // `pow` for Complex is not expanded by default
             if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
-                if (not rcp_static_cast<const Integer>(it->second)->is_zero()) {
+                if (not down_cast<const Integer &>(*(it->second)).is_zero()) {
                     imulnum(outArg(*coef),
                             pownum(rcp_static_cast<const Number>(t),
                                    rcp_static_cast<const Number>(it->second)));
                 }
                 d.erase(it);
                 return;
-            } else if (rcp_static_cast<const Integer>(it->second)->is_zero()) {
+            } else if (down_cast<const Integer &>(*(it->second)).is_zero()) {
                 d.erase(it);
                 return;
             } else if (is_a<Complex>(*t)) {
-                if (rcp_static_cast<const Integer>(it->second)->is_one()) {
+                if (down_cast<const Integer &>(*(it->second)).is_one()) {
                     imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
                     d.erase(it);
-                } else if (rcp_static_cast<const Integer>(it->second)
-                               ->is_minus_one()) {
+                } else if (down_cast<const Integer &>(*(it->second))
+                               .is_minus_one()) {
                     idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
                     d.erase(it);
                 }
@@ -333,8 +333,8 @@ void Mul::as_base_exp(const RCP<const Basic> &self,
             *base = self;
         }
     } else if (is_a<Pow>(*self)) {
-        *exp = rcp_static_cast<const Pow>(self)->get_exp();
-        *base = rcp_static_cast<const Pow>(self)->get_base();
+        *exp = down_cast<const Pow &>(*self).get_exp();
+        *base = down_cast<const Pow &>(*self).get_base();
     } else {
         SYMENGINE_ASSERT(not is_a<Mul>(*self));
         *exp = one;
@@ -361,8 +361,8 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else if (is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        coef = (rcp_static_cast<const Mul>(a))->coef_;
-        d = (rcp_static_cast<const Mul>(a))->dict_;
+        coef = (down_cast<const Mul &>(*a)).coef_;
+        d = (down_cast<const Mul &>(*a)).dict_;
         if (is_a_Number(*b)) {
             imulnum(outArg(coef), rcp_static_cast<const Number>(b));
         } else {
@@ -372,8 +372,8 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else if (is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        coef = (rcp_static_cast<const Mul>(b))->coef_;
-        d = (rcp_static_cast<const Mul>(b))->dict_;
+        coef = (down_cast<const Mul &>(*b)).coef_;
+        d = (down_cast<const Mul &>(*b)).dict_;
         if (is_a_Number(*a)) {
             imulnum(outArg(coef), rcp_static_cast<const Number>(a));
         } else {
@@ -423,7 +423,7 @@ RCP<const Basic> mul(const vec_basic &a)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero())
+    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero())
         throw DivisionByZeroError("Division By Zero");
     return mul(a, pow(b, minus_one));
 }
@@ -436,7 +436,7 @@ RCP<const Basic> neg(const RCP<const Basic> &a)
 void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
                     const RCP<const Number> &exp) const
 {
-    if (is_a_Number(*exp) and rcp_static_cast<const Number>(exp)->is_zero()) {
+    if (is_a_Number(*exp) and down_cast<const Number &>(*exp).is_zero()) {
         // (x*y)**(0.0) should return 1.0
         imulnum(coef, pownum(rcp_static_cast<const Number>(exp), zero));
         return;

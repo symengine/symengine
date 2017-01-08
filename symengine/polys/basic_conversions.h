@@ -56,7 +56,7 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
             if (i > 0) {
                 dict
                     = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
@@ -132,14 +132,14 @@ public:
     {
         RCP<const Basic> genpow = one, genbase = gen, powr;
         if (is_a<const Pow>(*gen)) {
-            genpow = rcp_static_cast<const Pow>(gen)->get_exp();
-            genbase = rcp_static_cast<const Pow>(gen)->get_base();
+            genpow = down_cast<const Pow &>(*gen).get_exp();
+            genbase = down_cast<const Pow &>(*gen).get_base();
         }
 
         if (eq(*genbase, x)) {
             powr = div(one, genpow);
             if (is_a<const Integer>(*powr)) {
-                int i = rcp_static_cast<const Integer>(powr)->as_int();
+                int i = down_cast<const Integer &>(*powr).as_int();
                 if (i > 0) {
                     dict = P::container_from_dict(
                         gen, {{i, typename P::coef_type(1)}});
@@ -273,8 +273,8 @@ public:
             genpow = one;
             genbase = it;
             if (is_a<const Pow>(*it)) {
-                genpow = rcp_static_cast<const Pow>(it)->get_exp();
-                genbase = rcp_static_cast<const Pow>(it)->get_base();
+                genpow = down_cast<const Pow &>(*it).get_exp();
+                genbase = down_cast<const Pow &>(*it).get_base();
             }
             auto ite = gens_pow.find(genbase);
             if (ite == gens_pow.end())
@@ -299,7 +299,7 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = rcp_static_cast<const Integer>(x.get_exp())->as_int();
+            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
             if (i > 0) {
                 dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
                 return;
@@ -387,7 +387,7 @@ public:
             for (auto pows : it->second) {
                 powr = div(one, pows);
                 if (is_a<const Integer>(*powr)) {
-                    int i = rcp_static_cast<const Integer>(powr)->as_int();
+                    int i = down_cast<const Integer &>(*powr).as_int();
                     if (i > 0) {
                         // can be optimized
                         zero_v[gens_map[pow(it->first, pows)]] = i;

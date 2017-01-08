@@ -85,9 +85,9 @@ public:
     // Think about it again
     RCP<const Number> add(const Number &other) const;
     RCP<const Number> mul(const Number &other) const;
-    RCP<const Number> div(const Number &other) const;  // TODO
-    RCP<const Number> pow(const Number &other) const;  // TODO
-    RCP<const Number> rpow(const Number &other) const; // TODO
+    RCP<const Number> div(const Number &other) const;
+    RCP<const Number> pow(const Number &other) const;
+    RCP<const Number> rpow(const Number &other) const;
 };
 
 inline RCP<const Infty> infty(int n = 1)

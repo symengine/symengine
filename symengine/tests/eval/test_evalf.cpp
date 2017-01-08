@@ -19,6 +19,7 @@
 #include <symengine/symengine_rcp.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
+#include <symengine/symengine_casts.h>
 #ifdef HAVE_SYMENGINE_MPFR
 #include <symengine/real_mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
@@ -87,6 +88,7 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
 using SymEngine::rcp_static_cast;
+using SymEngine::down_cast;
 
 TEST_CASE("evalf: real_double", "[evalf]")
 {
@@ -95,7 +97,7 @@ TEST_CASE("evalf: real_double", "[evalf]")
     r2 = evalf(*r1, 53, true);
     REQUIRE(r2->get_type_code() == SymEngine::REAL_DOUBLE);
     double d1 = 0.909297;
-    double d2 = (rcp_static_cast<const RealDouble>(r2))->as_double();
+    double d2 = (down_cast<const RealDouble &>(*r2)).as_double();
     d1 = fabs(d1 - d2);
     d2 = 0.000001;
     REQUIRE(d1 < d2);
@@ -111,11 +113,11 @@ TEST_CASE("evalf: real_mpfr", "[evalf]")
 
     r2 = evalf(*r1, 100, true);
     REQUIRE(r2->get_type_code() == SymEngine::REAL_MPFR);
-    REQUIRE(!(rcp_static_cast<const RealMPFR>(r2))->is_zero());
+    REQUIRE(!(down_cast<const RealMPFR &>(*r2)).is_zero());
 
     r2 = evalf(*r1, 60, true);
     REQUIRE(r2->get_type_code() == SymEngine::REAL_MPFR);
-    REQUIRE((rcp_static_cast<const RealMPFR>(r2))->is_zero());
+    REQUIRE((down_cast<const RealMPFR &>(*r2)).is_zero());
 }
 #endif // HAVE_SYMENGINE_MPFR
 
@@ -133,21 +135,21 @@ TEST_CASE("evalf: complex_double", "[evalf]")
     r2 = evalf(*r1, 53, false);
     REQUIRE(r2->get_type_code() == SymEngine::COMPLEX_DOUBLE);
 
-    r1 = (rcp_static_cast<const ComplexDouble>(r2))->real_part();
+    r1 = (down_cast<const ComplexDouble &>(*r2)).real_part();
     REQUIRE(r1->get_type_code() == SymEngine::REAL_DOUBLE);
 
     double d1 = (rcp_static_cast<const RealDouble>(
-                     (rcp_static_cast<const ComplexDouble>(r2))->real_part()))
+                     (down_cast<const ComplexDouble &>(*r2)).real_part()))
                     ->as_double();
     double d2 = -0.780872515;
     d2 = fabs(d1 - d2);
     d1 = 0.000001;
     REQUIRE(d2 < d1);
 
-    r1 = (rcp_static_cast<const ComplexDouble>(r2))->imaginary_part();
+    r1 = (down_cast<const ComplexDouble &>(*r2)).imaginary_part();
     REQUIRE(r1->get_type_code() == SymEngine::REAL_DOUBLE);
     d1 = (rcp_static_cast<const RealDouble>(
-              (rcp_static_cast<const ComplexDouble>(r2))->imaginary_part()))
+              (down_cast<const ComplexDouble &>(*r2)).imaginary_part()))
              ->as_double();
     d2 = -0.3688890370;
     d2 = fabs(d1 - d2);
@@ -168,6 +170,6 @@ TEST_CASE("evalf: complex_mpc", "[evalf]")
 
     REQUIRE(static_cast<SymEngine::TypeID>(r1->get_type_code())
             == SymEngine::COMPLEX_MPC);
-    REQUIRE(!(rcp_static_cast<const ComplexMPC>(r1))->is_zero());
+    REQUIRE(!(down_cast<const ComplexMPC &>(*r1)).is_zero());
 }
 #endif // HAVE_SYMENGINE_MPC

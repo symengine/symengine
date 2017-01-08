@@ -98,7 +98,6 @@ using SymEngine::min;
 using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
-using SymEngine::rcp_static_cast;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
@@ -935,7 +934,9 @@ TEST_CASE("Derivative: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> _x = symbol("_x");
-    RCP<const Symbol> __x = symbol("__x");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
+    RCP<const Symbol> __xi_1 = symbol("__xi_1");
+    RCP<const Symbol> _xi_2 = symbol("_xi_2");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const Basic> f = function_symbol("f", x);
@@ -970,30 +971,31 @@ TEST_CASE("Derivative: functions", "[functions]")
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = Derivative::create(function_symbol("f", _x), {_x});
-    r2 = Subs::create(r2, {{_x, pow(x, integer(2))}});
+    r2 = Derivative::create(function_symbol("f", _xi_1), {_xi_1});
+    r2 = Subs::create(r2, {{_xi_1, pow(x, integer(2))}});
     REQUIRE(eq(*r1, *mul(mul(integer(2), x), r2)));
 
     f = function_symbol("f", {x, x});
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = Derivative::create(function_symbol("f", {_x, x}), {_x});
-    r2 = Subs::create(r2, {{_x, x}});
-    r3 = Derivative::create(function_symbol("f", {x, _x}), {_x});
-    r3 = Subs::create(r3, {{_x, x}});
+    r2 = Derivative::create(function_symbol("f", {_xi_1, x}), {_xi_1});
+    r2 = Subs::create(r2, {{_xi_1, x}});
+    r3 = Derivative::create(function_symbol("f", {x, _xi_2}), {_xi_2});
+    r3 = Subs::create(r3, {{_xi_2, x}});
     REQUIRE(eq(*r1, *add(r2, r3)));
 
     f = function_symbol("f", {y, add(x, y)});
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = Derivative::create(function_symbol("f", {y, _x}), {_x});
-    r2 = Subs::create(r2, {{_x, add(y, x)}});
+    r2 = Derivative::create(function_symbol("f", {y, _xi_2}), {_xi_2});
+    r2 = Subs::create(r2, {{_xi_2, add(y, x)}});
     REQUIRE(eq(*r1, *r2));
 
-    r1 = function_symbol("f", add(_x, x))->diff(_x);
+    r1 = function_symbol("f", add(_xi_1, x))->diff(_xi_1);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = Subs::create(Derivative::create(function_symbol("f", __x), {__x}),
-                      {{__x, add(_x, x)}});
+    r2 = Subs::create(
+        Derivative::create(function_symbol("f", __xi_1), {__xi_1}),
+        {{__xi_1, add(_xi_1, x)}});
     REQUIRE(eq(*r1, *r2));
 
     // Test is_canonical()
@@ -1037,7 +1039,8 @@ TEST_CASE("Subs: functions", "[functions]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const Symbol> _x = symbol("_x");
-    RCP<const Symbol> __x = symbol("__x");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
+    RCP<const Symbol> _xi_2 = symbol("_xi_2");
     RCP<const Basic> r1, r2, r3, r4;
 
     // Test Subs::subs
@@ -1071,17 +1074,19 @@ TEST_CASE("Subs: functions", "[functions]")
 
     r2 = r1->diff(x);
     r3 = Subs::create(
-        Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-        {{_x, add(x, y)}});
+        Derivative::create(function_symbol("f", {add(y, y), _xi_2}),
+                           {_xi_2, _xi_2}),
+        {{_xi_2, add(x, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(y);
     r3 = Subs::create(
-        Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-        {{_x, add(x, y)}});
-    r4 = Subs::create(
-        Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
-        {{_x, add(x, y)}, {__x, add(y, y)}});
+        Derivative::create(function_symbol("f", {add(y, y), _xi_2}),
+                           {_xi_2, _xi_2}),
+        {{_xi_2, add(x, y)}});
+    r4 = Subs::create(Derivative::create(function_symbol("f", {_xi_1, _xi_2}),
+                                         {_xi_1, _xi_2}),
+                      {{_xi_2, add(x, y)}, {_xi_1, add(y, y)}});
     r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
@@ -2289,11 +2294,17 @@ TEST_CASE("Levi Civita: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
+    RCP<const Symbol> k = symbol("k");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
+    RCP<const Symbol> _xi_2 = symbol("_xi_2");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = levi_civita({one, i2, i3});
     REQUIRE(eq(*r1, *one));
@@ -2309,6 +2320,40 @@ TEST_CASE("Levi Civita: functions", "[functions]")
 
     r1 = levi_civita({i2, i4});
     REQUIRE(eq(*r1, *i2));
+
+    r1 = levi_civita({one, i2, i3})->diff(i);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = levi_civita({i, j, k})->diff(k);
+    r2 = Derivative::create(levi_civita({i, j, k}), {k});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = levi_civita({one, i2, k})->diff(k);
+    r2 = Derivative::create(levi_civita({one, i2, k}), {k});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = levi_civita({i, j, k})->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = levi_civita({j, j, k})->diff(j);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = levi_civita({pow(x, i2), y})->diff(x);
+    r2 = mul(mul(i2, x),
+             Subs::create(Derivative::create(levi_civita({_xi_1, y}), {_xi_1}),
+                          {{_xi_1, pow(x, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = levi_civita({pow(x, i2), mul(i2, x)})->diff(x);
+    r2 = add(
+        mul(mul(i2, x),
+            Subs::create(
+                Derivative::create(levi_civita({_xi_1, mul(i2, x)}), {_xi_1}),
+                {{_xi_1, pow(x, i2)}})),
+        mul(i2, Subs::create(Derivative::create(
+                                 levi_civita({pow(x, i2), _xi_2}), {_xi_2}),
+                             {{_xi_2, mul(i2, x)}})));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Dirichlet Eta: functions", "[functions]")
@@ -2706,7 +2751,7 @@ public:
     }
     RCP<const Number> eval(long bits) const
     {
-        return real_double(::sin(eval_double(*arg_[0])));
+        return real_double(::sin(eval_double(*get_vec()[0])));
     }
     RCP<const Basic> create(const vec_basic &v) const
     {
@@ -2718,7 +2763,7 @@ public:
     }
     RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const
     {
-        return mul(cos(arg_[0]), arg_[0]->diff(x));
+        return mul(cos(get_vec()[0]), get_vec()[0]->diff(x));
     }
 };
 
@@ -2842,9 +2887,9 @@ TEST_CASE("max: functions", "[functions]")
     RCP<const Basic> res, tmp;
 
     res = max({x, y}); // checking if elements stored in order
-    tmp = rcp_static_cast<const Max>(res)->get_args()[0];
+    tmp = down_cast<const Max &>(*res).get_args()[0];
     res = max({y, x});
-    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *tmp));
+    REQUIRE(eq(*(down_cast<const Max &>(*res).get_args()[0]), *tmp));
 
     res = max({x, y});
     REQUIRE(eq(*res, *max({y, x}))); // max(x, y) == max(y, x)

@@ -185,17 +185,17 @@ public:
      * */
     inline RCP<const Number> divcomp(const Complex &other) const
     {
-        rational_class conjugate
+        rational_class modulus_sq
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
-        if (get_num(conjugate) == 0) {
+        if (get_num(modulus_sq) == 0) {
             throw DivisionByZeroError("Divide by zero.");
         } else {
             return from_mpq((this->real_ * other.real_
                              + this->imaginary_ * other.imaginary_)
-                                / conjugate,
+                                / modulus_sq,
                             (-this->real_ * other.imaginary_
                              + this->imaginary_ * other.real_)
-                                / conjugate);
+                                / modulus_sq);
         }
     }
     /*! Divide Complex
@@ -225,13 +225,13 @@ public:
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const
     {
-        rational_class conjugate
+        rational_class modulus_sq
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
-        if (get_num(conjugate) == 0) {
+        if (get_num(modulus_sq) == 0) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq((this->real_ * other.i) / conjugate,
-                            (this->imaginary_ * (-other.i)) / conjugate);
+            return from_mpq((this->real_ * other.i) / modulus_sq,
+                            (this->imaginary_ * (-other.i)) / modulus_sq);
         }
     }
     /*! Pow Complex

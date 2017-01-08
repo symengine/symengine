@@ -13,7 +13,6 @@ using SymEngine::interval;
 using SymEngine::symbol;
 using SymEngine::piecewise;
 using SymEngine::add;
-using SymEngine::rcp_static_cast;
 using SymEngine::ccode;
 using SymEngine::Inf;
 using SymEngine::NegInf;

@@ -1544,7 +1544,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
               const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if (is_a<Integer>(*b)) {
-        integer_class t = rcp_static_cast<const Integer>(b)->as_integer_class();
+        integer_class t = down_cast<const Integer &>(*b).as_integer_class();
         if (b->is_negative())
             t *= -1;
         mp_powm(t, a->as_integer_class(), t, m->as_integer_class());
@@ -1581,7 +1581,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows,
 {
     if (is_a<Integer>(*b)) {
         integer_class t
-            = mp_abs(rcp_static_cast<const Integer>(b)->as_integer_class());
+            = mp_abs(down_cast<const Integer &>(*b).as_integer_class());
         mp_powm(t, a->as_integer_class(), t, m->as_integer_class());
         if (b->is_negative()) {
             bool ret_val = mp_invert(t, t, m->as_integer_class());

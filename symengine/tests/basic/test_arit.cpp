@@ -5,6 +5,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/symengine_casts.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -35,7 +36,6 @@ using SymEngine::Complex;
 using SymEngine::Number;
 using SymEngine::I;
 using SymEngine::rcp_dynamic_cast;
-using SymEngine::rcp_static_cast;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
@@ -46,6 +46,7 @@ using SymEngine::is_a;
 using SymEngine::set_basic;
 using SymEngine::SymEngineException;
 using SymEngine::ComplexInf;
+using SymEngine::down_cast;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -110,24 +111,24 @@ TEST_CASE("Add: arit", "[arit]")
     r2 = Rational::from_mpq(rational_class(1, 2));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r3));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r3).i - 1.8) < 1e-12);
     r3 = add({r1, r2, integer(1), real_double(0.2)});
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r3).i - 1.8) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r3));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() - 2.0)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 1.6)
             < 1e-12);
     r3 = add({r1, r2, integer(1), real_double(0.4)});
     REQUIRE(is_a<ComplexDouble>(*r3));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() - 2.0)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 1.6)
             < 1e-12);
 
     r1 = add({i2, i3, i4});
@@ -273,25 +274,25 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = mul(mul(mul(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.03) < 1e-12);
     r2 = mul({r1, Rational::from_mpq(rational_class(1, 2)), integer(3),
               real_double(0.2)});
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.03) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
     REQUIRE(is_a<ComplexDouble>(*r3));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() + 0.805)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() + 0.805)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 0.84)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 0.84)
             < 1e-12);
     r3 = mul({r1, r2, integer(5), real_double(0.7)});
     REQUIRE(is_a<ComplexDouble>(*r3));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() + 0.805)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() + 0.805)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 0.84)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 0.84)
             < 1e-12);
 
     r1 = real_double(0.0);
@@ -392,16 +393,16 @@ TEST_CASE("Sub: arit", "[arit]")
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i + 3.6) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i + 3.6) < 1e-12);
 
     r1 = real_double(0.1);
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r2 = sub(sub(sub(r1, r2), integer(1)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 1.8)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.real() + 1.8)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 1.4)
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.imag() + 1.4)
             < 1e-12);
 }
 
@@ -503,7 +504,7 @@ TEST_CASE("Div: arit", "[arit]")
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = div(div(div(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.333333333333)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.333333333333)
             < 1e-12);
 
     r1 = real_double(0.1);
@@ -511,10 +512,10 @@ TEST_CASE("Div: arit", "[arit]")
                                 *Rational::from_mpq(rational_class(7, 5)));
     r2 = div(div(div(r1, r2), integer(2)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real()
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.real()
                      - 0.0282805429864253)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag()
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.imag()
                      + 0.0791855203619909)
             < 1e-12);
 }
@@ -567,7 +568,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *zero));
 
     r1 = pow(zero, im1);
-    REQUIRE(eq(*r1,*ComplexInf));
+    REQUIRE(eq(*r1, *ComplexInf));
 
     /* Test (x*y)**2 -> x**2*y**2 type of simplifications */
 
@@ -761,20 +762,20 @@ TEST_CASE("Pow: arit", "[arit]")
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = pow(r1, r2);
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.316227766016)
             < 1e-12);
     r2 = pow(pow(r2, integer(3)), real_double(0.2));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.501187233627)
             < 1e-12);
 
     r1 = real_double(-0.01);
     r2 = pow(r1, Rational::from_mpq(rational_class(1, 2)));
     r2 = pow(integer(2), r2);
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real()
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.real()
                      - 0.997598696589298)
             < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag()
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r2).i.imag()
                      - 0.069259227279362)
             < 1e-12);
 
@@ -1048,10 +1049,10 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = add(r1, x);
     r2 = expand(pow(r1, i2));
     REQUIRE(is_a<Add>(*r2));
-    auto it = rcp_static_cast<const Add>(r2)->dict_.find(x);
-    REQUIRE(it != rcp_static_cast<const Add>(r2)->dict_.end());
+    auto it = down_cast<const Add &>(*r2).dict_.find(x);
+    REQUIRE(it != down_cast<const Add &>(*r2).dict_.end());
     REQUIRE(is_a<RealDouble>(*it->second));
-    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(it->second)->i - 0.4)
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*(it->second)).i - 0.4)
             < 1e-12);
 
     r1 = expand(pow(add(real_double(0.0), x), i2));
