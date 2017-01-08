@@ -16,8 +16,13 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
     // e.g. 0**x
-    if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_zero())
+    if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_zero()) {
+      if (is_a_Number(exp)) {
+        return false;
+      } else {
         return true;
+      }
+    }
     // e.g. 1**x
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
