@@ -45,6 +45,7 @@ using SymEngine::rational_class;
 using SymEngine::is_a;
 using SymEngine::set_basic;
 using SymEngine::SymEngineException;
+using SymEngine::ComplexInf;
 using SymEngine::down_cast;
 
 TEST_CASE("Add: arit", "[arit]")
@@ -559,6 +560,15 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = sub(pow(x, y), pow(x, y));
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(zero, zero);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = pow(zero, i2);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = pow(zero, im1);
+    REQUIRE(eq(*r1, *ComplexInf));
 
     /* Test (x*y)**2 -> x**2*y**2 type of simplifications */
 

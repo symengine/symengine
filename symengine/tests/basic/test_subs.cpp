@@ -28,6 +28,7 @@ using SymEngine::levi_civita;
 using SymEngine::msubs;
 using SymEngine::function_symbol;
 using SymEngine::gamma;
+using SymEngine::ComplexInf;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -152,6 +153,21 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = mul(x, y)->subs({{x, real_double(0.0)}});
     r2 = real_double(0.0);
     REQUIRE(eq(*r1, *r2));
+
+    d.clear();
+    r1 = div(one, x);
+    d[x] = zero;
+    REQUIRE(eq(*r1->subs(d), *ComplexInf));
+
+    d.clear();
+    r1 = div(i2, x);
+    d[x] = zero;
+    REQUIRE(eq(*r1->subs(d), *ComplexInf));
+
+    d.clear();
+    r1 = div(one, mul(x, y));
+    d[x] = zero;
+    REQUIRE(eq(*r1->subs(d), *div(ComplexInf, y)));
 }
 
 TEST_CASE("Pow: subs", "[subs]")
