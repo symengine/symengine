@@ -44,7 +44,7 @@ signed long int Integer::as_int() const
 
 RCP<const Number> Integer::divint(const Integer &other) const
 {
-    if (other.is_zero()) {
+    if (other.i == 0) {
         if (this->i == 0) {
             throw NotImplementedError("0/0 is NaN. Yet to be implemented");
         } else {
