@@ -145,7 +145,11 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (this->i == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -156,7 +160,11 @@ public:
     inline RCP<const Number> divrat(const Integer &other) const
     {
         if (other.i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (this->i == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -164,7 +172,11 @@ public:
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (other.is_zero()) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(other.i / this->i);
         }

@@ -423,8 +423,13 @@ RCP<const Basic> mul(const vec_basic &a)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero())
-        throw DivisionByZeroError("Division By Zero");
+    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
+        if (is_a_Number(*a) and down_cast<const Number &>(*a).is_zero()) {
+            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+        } else {
+            return ComplexInf;
+        }
+    }
     return mul(a, pow(b, minus_one));
 }
 

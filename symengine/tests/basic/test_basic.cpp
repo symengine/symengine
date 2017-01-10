@@ -42,8 +42,9 @@ using SymEngine::rational_class;
 using SymEngine::pi;
 using SymEngine::diff;
 using SymEngine::sdiff;
-using SymEngine::DivisionByZeroError;
 using SymEngine::down_cast;
+using SymEngine::NotImplementedError;
+using SymEngine::ComplexInf;
 
 using namespace SymEngine::literals;
 
@@ -293,6 +294,14 @@ TEST_CASE("Integer: Basic", "[basic]")
     REQUIRE(eq(*k, *Rational::from_two_ints(*integer(5), *integer(6))));
     std::cout << *k << std::endl;
 
+    k = divnum(i, zero);
+    REQUIRE(eq(*k, *ComplexInf));
+
+    k = divnum(zero, i);
+    REQUIRE(eq(*k, *zero));
+
+    CHECK_THROWS_AS(divnum(zero, zero), NotImplementedError); // NaN
+
     k = pownum(i, j);
     REQUIRE(eq(*k, *integer(15625)));
     std::cout << *k << std::endl;
@@ -305,8 +314,6 @@ TEST_CASE("Integer: Basic", "[basic]")
     std::cout << *k << std::endl;
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
-
-    CHECK_THROWS_AS(divnum(i, zero), DivisionByZeroError);
 }
 
 TEST_CASE("Rational: Basic", "[basic]")
@@ -409,7 +416,16 @@ TEST_CASE("Rational: Basic", "[basic]")
 
     r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = zero;
-    CHECK_THROWS_AS(divnum(r1, r2), DivisionByZeroError);
+    REQUIRE(eq(*divnum(r1, r2), *ComplexInf));
+
+    r1 = Rational::from_two_ints(*integer(2), *zero);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = Rational::from_two_ints(2, 0);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    CHECK_THROWS_AS(Rational::from_two_ints(*zero, *zero), NotImplementedError);
+    CHECK_THROWS_AS(Rational::from_two_ints(0, 0), NotImplementedError);
 
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
@@ -456,7 +472,7 @@ TEST_CASE("Mul: Basic", "[basic]")
     r = div(x, x);
     REQUIRE(unified_eq(r->get_args(), {}));
 
-    CHECK_THROWS_AS(div(integer(1), zero), DivisionByZeroError);
+    REQUIRE(eq(*div(integer(1), zero), *ComplexInf));
 
     r = mul(mul(mul(x, y), mul(x, integer(2))), integer(3));
     RCP<const Mul> mr = rcp_static_cast<const Mul>(r);
@@ -785,13 +801,17 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*c->imaginary_part(), *r2));
 
     // Explicit division by zero checks
-    CHECK_THROWS_AS(divnum(c1, integer(0)), DivisionByZeroError);
+    REQUIRE(eq(*divnum(c1, integer(0)), *ComplexInf));
 
     r3 = Rational::from_two_ints(*integer(0), *integer(1));
-    CHECK_THROWS_AS(divnum(c1, r3), DivisionByZeroError);
+    REQUIRE(eq(*divnum(c1, r3), *ComplexInf));
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    CHECK_THROWS_AS(divnum(c1, c2), DivisionByZeroError);
+    REQUIRE(eq(*divnum(c1, c2), *ComplexInf));
+
+    CHECK_THROWS_AS(*divnum(c2, integer(0)), NotImplementedError);
+    CHECK_THROWS_AS(*divnum(c2, r3), NotImplementedError);
+    CHECK_THROWS_AS(*divnum(c2, c2), NotImplementedError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")

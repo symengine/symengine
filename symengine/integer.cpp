@@ -44,8 +44,13 @@ signed long int Integer::as_int() const
 
 RCP<const Number> Integer::divint(const Integer &other) const
 {
-    if (other.i == 0)
-        throw DivisionByZeroError("Division By Zero");
+    if (other.is_zero()) {
+        if (this->i == 0) {
+            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+        } else {
+            return ComplexInf;
+        }
+    }
     rational_class q(this->i, other.i);
 
     // This is potentially slow, but has to be done, since q might not
@@ -59,7 +64,11 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 {
     if (is_a<Integer>(other)) {
         if (this->i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (other.is_zero()) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         }
         rational_class q((down_cast<const Integer &>(other)).i, this->i);
 
