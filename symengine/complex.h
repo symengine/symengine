@@ -186,12 +186,13 @@ public:
      * */
     inline RCP<const Number> divcomp(const Complex &other) const
     {
-        rational_class modulus_sq_this
-            = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
         rational_class modulus_sq_other
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
 
         if (get_num(modulus_sq_other) == 0) {
+            rational_class modulus_sq_this
+                = this->real_ * this->real_
+                  + this->imaginary_ * this->imaginary_;
             if (get_num(modulus_sq_this) == 0) {
                 throw NotImplementedError("0/0 is NaN. Yet to be implemented");
             } else {
