@@ -45,6 +45,11 @@ public:
     {
         return false;
     }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
+    }
     //! \return self as a double
     inline std::complex<double> as_complex_double() const
     {

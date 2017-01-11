@@ -74,6 +74,11 @@ public:
     {
         return false;
     }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
+    }
 
     /*! Constructs Complex from re, im. If im is 0
      * it will return a Rational instead.

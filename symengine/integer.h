@@ -74,6 +74,12 @@ public:
     {
         return this->i < 0u;
     }
+    //! \returns `false`
+    // False is returned because a pure integer cannot have an imaginary part
+    inline virtual bool is_complex() const
+    {
+        return false;
+    }
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition

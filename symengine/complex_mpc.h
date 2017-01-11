@@ -118,6 +118,11 @@ public:
     {
         return false;
     }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
+    }
     //! \return `true` if this number is an exact number
     inline virtual bool is_exact() const
     {
