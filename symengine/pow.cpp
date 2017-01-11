@@ -307,6 +307,9 @@ bool Log::is_canonical(const Basic &arg) const
     if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
         return false;
 
+    // log(3I) should be expanded to log(3) + I*pi/2
+    if (is_a<Complex>(arg) and down_cast<const Complex &>(arg).is_re_zero())
+        return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
         return false;
@@ -339,16 +342,34 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
         if (not _arg->is_exact()) {
             return _arg->get_eval().log(*_arg);
         } else if (_arg->is_negative()) {
-            throw NotImplementedError(
-                "Imaginary Result. Yet to be implemented");
+            return add(log(mul(minus_one, _arg)), mul(pi, I));
         }
     }
+
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
         get_num_den(down_cast<const Rational &>(*arg), outArg(num),
                     outArg(den));
         return sub(log(num), log(den));
     }
+
+    if (is_a<Complex>(*arg)) {
+        RCP<const Complex> _arg = rcp_static_cast<const Complex>(arg);
+        if (_arg->is_re_zero()) {
+            if (not _arg->is_exact()) {
+                return _arg->get_eval().log(*_arg);
+            } else if (_arg->imaginary_part()->is_negative()) {
+                return sub(log(mul(minus_one, _arg->imaginary_part())),
+                           mul(I, div(pi, integer(2))));
+            } else if (_arg->imaginary_ == 0) {
+                return ComplexInf;
+            } else if (_arg->imaginary_part()->is_positive()) {
+                return add(log(_arg->imaginary_part()),
+                           mul(I, div(pi, integer(2))));
+            }
+        }
+    }
+
     return make_rcp<const Log>(arg);
 }
 
