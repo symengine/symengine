@@ -605,7 +605,7 @@ public:
  * */
 class Subs : public Basic
 {
-public:
+private:
     RCP<const Basic> arg_;
     map_basic_basic dict_;
 
@@ -622,7 +622,7 @@ public:
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const
+    inline const RCP<const Basic> &get_arg() const
     {
         return arg_;
     }

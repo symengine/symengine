@@ -27,13 +27,13 @@ public:
 
     void bvisit(const Integer &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_integer_class());
         result_ = tmp;
     }
 
     void bvisit(const Rational &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_rational_class());
         result_ = tmp;
     }
 
@@ -377,9 +377,9 @@ public:
     {
         mpfr_class t(x.get_prec());
         double real, imag;
-        mpc_real(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_real(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
-        mpc_imag(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
         result_ = std::complex<double>(real, imag);
     }
@@ -399,11 +399,13 @@ std::vector<fn> init_eval_double()
         throw NotImplementedError("Not Implemented");
     });
     table[INTEGER] = [](const Basic &x) {
-        double tmp = mp_get_d((down_cast<const Integer &>(x)).i);
+        double tmp
+            = mp_get_d((down_cast<const Integer &>(x)).as_integer_class());
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {
-        double tmp = mp_get_d((down_cast<const Rational &>(x)).i);
+        double tmp
+            = mp_get_d((down_cast<const Rational &>(x)).as_rational_class());
         return tmp;
     };
     table[REAL_DOUBLE] = [](const Basic &x) {

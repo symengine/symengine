@@ -6,10 +6,10 @@ namespace SymEngine
 RCP<const Basic> MIntPoly::as_symbolic() const
 {
     vec_basic args;
-    for (const auto &p : poly_.dict_) {
+    for (const auto &p : get_poly().dict_) {
         RCP<const Basic> res = integer(p.second);
         int whichvar = 0;
-        for (auto sym : vars_) {
+        for (auto sym : get_vars()) {
             if (0 != p.first[whichvar])
                 res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
             whichvar++;
@@ -22,10 +22,10 @@ RCP<const Basic> MIntPoly::as_symbolic() const
 hash_t MIntPoly::__hash__() const
 {
     hash_t seed = MINTPOLY;
-    for (auto var : vars_)
+    for (auto var : get_vars())
         hash_combine<std::string>(seed, var->__str__());
 
-    for (auto &p : poly_.dict_) {
+    for (auto &p : get_poly().dict_) {
         hash_t t = vec_hash<vec_uint>()(p.first);
         hash_combine<hash_t>(t, mp_get_si(p.second));
         seed ^= t;
@@ -38,10 +38,10 @@ integer_class MIntPoly::eval(
 {
     // TODO : handle missing values
     integer_class ans(0), temp, term;
-    for (auto bucket : poly_.dict_) {
+    for (auto bucket : get_poly().dict_) {
         term = bucket.second;
         unsigned int whichvar = 0;
-        for (auto sym : vars_) {
+        for (auto sym : get_vars()) {
             mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar]);
             term *= temp;
             whichvar++;
@@ -54,10 +54,10 @@ integer_class MIntPoly::eval(
 RCP<const Basic> MExprPoly::as_symbolic() const
 {
     vec_basic args;
-    for (const auto &p : poly_.dict_) {
+    for (const auto &p : get_poly().dict_) {
         RCP<const Basic> res = (p.second.get_basic());
         int whichvar = 0;
-        for (auto sym : vars_) {
+        for (auto sym : get_vars()) {
             if (0 != p.first[whichvar])
                 res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
             whichvar++;
@@ -70,10 +70,10 @@ RCP<const Basic> MExprPoly::as_symbolic() const
 hash_t MExprPoly::__hash__() const
 {
     hash_t seed = MEXPRPOLY;
-    for (auto var : vars_)
+    for (auto var : get_vars())
         hash_combine<std::string>(seed, var->__str__());
 
-    for (auto &p : poly_.dict_) {
+    for (auto &p : get_poly().dict_) {
         hash_t t = vec_hash<vec_int>()(p.first);
         hash_combine<Basic>(t, *(p.second.get_basic()));
         seed ^= t;
@@ -86,10 +86,10 @@ Expression MExprPoly::eval(
 {
     // TODO : handle missing values
     Expression ans(0);
-    for (auto bucket : poly_.dict_) {
+    for (auto bucket : get_poly().dict_) {
         Expression term = bucket.second;
         unsigned int whichvar = 0;
-        for (auto sym : vars_) {
+        for (auto sym : get_vars()) {
             term *= pow_ex(vals.find(sym)->second, bucket.first[whichvar]);
             whichvar++;
         }

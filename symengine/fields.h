@@ -574,47 +574,47 @@ public:
 
     integer_class eval(const integer_class &x) const
     {
-        return poly_.gf_eval(x);
+        return get_poly().gf_eval(x);
     }
 
     vec_integer_class multieval(const vec_integer_class &v) const
     {
-        return poly_.gf_multi_eval(v);
+        return get_poly().gf_multi_eval(v);
     }
 
     typedef vec_integer_class::const_iterator iterator;
     typedef vec_integer_class::const_reverse_iterator reverse_iterator;
     iterator begin() const
     {
-        return poly_.dict_.begin();
+        return get_poly().dict_.begin();
     }
     iterator end() const
     {
-        return poly_.dict_.end();
+        return get_poly().dict_.end();
     }
     reverse_iterator obegin() const
     {
-        return poly_.dict_.rbegin();
+        return get_poly().dict_.rbegin();
     }
     reverse_iterator oend() const
     {
-        return poly_.dict_.rend();
+        return get_poly().dict_.rend();
     }
 
     inline integer_class get_coeff(unsigned int x) const
     {
-        return poly_.get_coeff(x);
+        return get_poly().get_coeff(x);
     }
 
     virtual vec_basic get_args() const;
     inline const std::vector<integer_class> &get_dict() const
     {
-        return poly_.dict_;
+        return get_poly().dict_;
     }
 
     inline unsigned int size() const
     {
-        if (poly_.empty())
+        if (get_poly().empty())
             return 0;
         return get_degree() + 1;
     }

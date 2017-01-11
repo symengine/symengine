@@ -11,7 +11,7 @@ GaloisField::GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    SYMENGINE_ASSERT(is_canonical(get_poly()))
 }
 
 bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
@@ -29,8 +29,8 @@ hash_t GaloisField::__hash__() const
 {
     hash_t seed = GALOISFIELD;
 
-    seed += var_->hash();
-    for (const auto &it : poly_.dict_) {
+    seed += get_var()->hash();
+    for (const auto &it : get_poly().dict_) {
         hash_t temp = GALOISFIELD;
         hash_combine<hash_t>(temp, mp_get_si(it));
         seed += temp;
@@ -42,18 +42,18 @@ int GaloisField::compare(const Basic &o) const
 {
     const GaloisField &s = down_cast<const GaloisField &>(o);
 
-    if (poly_.size() != s.poly_.size())
-        return (poly_.size() < s.poly_.size()) ? -1 : 1;
+    if (get_poly().size() != s.get_poly().size())
+        return (get_poly().size() < s.get_poly().size()) ? -1 : 1;
 
-    int cmp = unified_compare(var_, s.var_);
+    int cmp = unified_compare(get_var(), s.get_var());
     if (cmp != 0)
         return cmp;
 
-    cmp = unified_compare(poly_.modulo_, s.poly_.modulo_);
+    cmp = unified_compare(get_poly().modulo_, s.get_poly().modulo_);
     if (cmp != 0)
         return cmp;
 
-    return unified_compare(poly_.dict_, s.poly_.dict_);
+    return unified_compare(get_poly().dict_, s.get_poly().dict_);
 }
 
 RCP<const GaloisField> GaloisField::from_dict(const RCP<const Basic> &var,
@@ -81,27 +81,27 @@ RCP<const GaloisField> GaloisField::from_uintpoly(const UIntPoly &a,
 vec_basic GaloisField::get_args() const
 {
     vec_basic args;
-    if (poly_.dict_.empty())
+    if (get_poly().dict_.empty())
         args.push_back(zero);
     else {
-        for (unsigned i = 0; i < poly_.dict_.size(); i++) {
-            if (poly_.dict_[i] == integer_class(0))
+        for (unsigned i = 0; i < get_poly().dict_.size(); i++) {
+            if (get_poly().dict_[i] == integer_class(0))
                 continue;
             if (i == 0) {
-                args.push_back(integer(poly_.dict_[i]));
+                args.push_back(integer(get_poly().dict_[i]));
             } else if (i == 1) {
-                if (poly_.dict_[i] == 1) {
-                    args.push_back(var_);
+                if (get_poly().dict_[i] == 1) {
+                    args.push_back(get_var());
                 } else {
-                    args.push_back(
-                        Mul::from_dict(integer(poly_.dict_[i]), {{var_, one}}));
+                    args.push_back(Mul::from_dict(integer(get_poly().dict_[i]),
+                                                  {{get_var(), one}}));
                 }
             } else {
-                if (poly_.dict_[i] == 1) {
-                    args.push_back(pow(var_, integer(i)));
+                if (get_poly().dict_[i] == 1) {
+                    args.push_back(pow(get_var(), integer(i)));
                 } else {
-                    args.push_back(Mul::from_dict(integer(poly_.dict_[i]),
-                                                  {{var_, integer(i)}}));
+                    args.push_back(Mul::from_dict(integer(get_poly().dict_[i]),
+                                                  {{get_var(), integer(i)}}));
                 }
             }
         }

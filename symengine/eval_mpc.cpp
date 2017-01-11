@@ -28,12 +28,12 @@ public:
 
     void bvisit(const Integer &x)
     {
-        mpc_set_z(result_, get_mpz_t(x.i), rnd_);
+        mpc_set_z(result_, get_mpz_t(x.as_integer_class()), rnd_);
     }
 
     void bvisit(const Rational &x)
     {
-        mpc_set_q(result_, get_mpq_t(x.i), rnd_);
+        mpc_set_q(result_, get_mpq_t(x.as_rational_class()), rnd_);
     }
 
     void bvisit(const RealDouble &x)
@@ -58,7 +58,7 @@ public:
 
     void bvisit(const ComplexMPC &x)
     {
-        mpc_set(result_, x.i.get_mpc_t(), rnd_);
+        mpc_set(result_, x.as_mpc().get_mpc_t(), rnd_);
     }
 
     void bvisit(const Add &x)

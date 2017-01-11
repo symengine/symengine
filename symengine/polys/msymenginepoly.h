@@ -332,10 +332,11 @@ public:
 template <typename Container, typename Poly>
 class MSymEnginePoly : public Basic
 {
-public:
+private:
     Container poly_;
     set_basic vars_;
 
+public:
     typedef Container container_type;
     typedef typename Container::coef_type coef_type;
 
@@ -420,6 +421,11 @@ public:
         return poly_;
     }
 
+    inline const set_basic &get_vars() const
+    {
+        return vars_;
+    }
+
     bool __eq__(const Basic &o) const
     {
         // TODO : fix for when vars are different, but there is an intersection
@@ -498,9 +504,9 @@ set_basic get_translated_container(Container &x, Container &y, const Poly &a,
     vec_uint v1, v2;
     set_basic s;
 
-    unsigned int sz = reconcile(v1, v2, s, a.vars_, b.vars_);
-    x = a.poly_.translate(v1, sz);
-    y = b.poly_.translate(v2, sz);
+    unsigned int sz = reconcile(v1, v2, s, a.get_vars(), b.get_vars());
+    x = a.get_poly().translate(v1, sz);
+    y = b.get_poly().translate(v2, sz);
 
     return s;
 }
@@ -535,15 +541,15 @@ RCP<const Poly> mul_mpoly(const Poly &a, const Poly &b)
 template <typename Poly>
 RCP<const Poly> neg_mpoly(const Poly &a)
 {
-    auto x = a.poly_;
-    return Poly::from_container(a.vars_, std::move(-x));
+    auto x = a.get_poly();
+    return Poly::from_container(a.get_vars(), std::move(-x));
 }
 
 template <typename Poly>
 RCP<const Poly> pow_mpoly(const Poly &a, unsigned int n)
 {
-    auto x = a.poly_;
-    return Poly::from_container(a.vars_, Poly::container_type::pow(x, n));
+    auto x = a.get_poly();
+    return Poly::from_container(a.get_vars(), Poly::container_type::pow(x, n));
 }
 } // SymEngine
 

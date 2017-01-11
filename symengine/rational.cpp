@@ -43,14 +43,14 @@ RCP<const Number> Rational::from_mpq(rational_class &&i)
 
 RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
-    if (d.i == 0) {
-        if (n.i == 0) {
+    if (d.as_integer_class() == 0) {
+        if (n.as_integer_class() == 0) {
             throw NotImplementedError("0/0 is NaN. Yet to be implemented");
         } else {
             return ComplexInf;
         }
     }
-    rational_class q(n.i, d.i);
+    rational_class q(n.as_integer_class(), d.as_integer_class());
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
@@ -106,7 +106,7 @@ int Rational::compare(const Basic &o) const
     }
     if (is_a<Integer>(o)) {
         const Integer &s = down_cast<const Integer &>(o);
-        return i < s.i ? -1 : 1;
+        return i < s.as_integer_class() ? -1 : 1;
     }
     throw SymEngineException("unhandled comparison of Rational");
 }
@@ -114,8 +114,8 @@ int Rational::compare(const Basic &o) const
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
                  const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer(SymEngine::get_num(rat.i));
-    *den = integer(SymEngine::get_den(rat.i));
+    *num = integer(SymEngine::get_num(rat.as_rational_class()));
+    *den = integer(SymEngine::get_den(rat.as_rational_class()));
 }
 
 bool Rational::is_perfect_power(bool is_expected) const
@@ -209,7 +209,7 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const
     if ((other.is_negative()) and den == 2) {
         imulnum(outArg(coef), I);
         // if other.neg() is one, no need to add it to dict
-        if (other.i != -1)
+        if (other.as_integer_class() != -1)
             insert(surd, other.neg(),
                    Rational::from_mpq(rational_class(r, den)));
     } else {

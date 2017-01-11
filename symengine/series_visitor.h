@@ -35,16 +35,16 @@ public:
 
     void bvisit(const Add &x)
     {
-        Poly temp(apply(x.coef_));
-        for (const auto &term : x.dict_) {
+        Poly temp(apply(x.get_coef()));
+        for (const auto &term : x.get_dict()) {
             temp += apply(term.first) * apply(term.second);
         }
         p = temp;
     }
     void bvisit(const Mul &x)
     {
-        Poly temp(apply(x.coef_));
-        for (const auto &term : x.dict_) {
+        Poly temp(apply(x.get_coef()));
+        for (const auto &term : x.get_dict()) {
             temp = Series::mul(temp, apply(pow(term.first, term.second)), prec);
         }
         p = temp;
@@ -54,9 +54,9 @@ public:
         const RCP<const Basic> &base = x.get_base(), exp = x.get_exp();
         if (is_a<Integer>(*exp)) {
             const Integer &ii = (down_cast<const Integer &>(*exp));
-            if (not mp_fits_slong_p(ii.i))
+            if (not mp_fits_slong_p(ii.as_integer_class()))
                 throw SymEngineException("series power exponent size");
-            const int sh = mp_get_si(ii.i);
+            const int sh = mp_get_si(ii.as_integer_class());
             base->accept(*this);
             if (sh == 1) {
                 return;
@@ -73,8 +73,8 @@ public:
 
         } else if (is_a<Rational>(*exp)) {
             const Rational &rat = (down_cast<const Rational &>(*exp));
-            const integer_class &expnumz = get_num(rat.i);
-            const integer_class &expdenz = get_den(rat.i);
+            const integer_class &expnumz = get_num(rat.as_rational_class());
+            const integer_class &expdenz = get_den(rat.as_rational_class());
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw SymEngineException("series rational power exponent size");
             const int num = mp_get_si(expnumz);
