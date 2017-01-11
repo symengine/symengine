@@ -127,7 +127,7 @@ public:
     {
         umap_basic_num dict;
         RCP<const Number> coef = zero;
-        for (auto &p : x.dict_) {
+        for (auto &p : x.get_dict()) {
             p.first->accept(*this);
             if (neq(*coeff_, *zero)) {
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
@@ -138,11 +138,11 @@ public:
 
     void bvisit(const Mul &x)
     {
-        for (auto &p : x.dict_) {
+        for (auto &p : x.get_dict()) {
             if (eq(*p.first, *x_) and eq(*p.second, *n_)) {
-                map_basic_basic dict = x.dict_;
+                map_basic_basic dict = x.get_dict();
                 dict.erase(p.first);
-                coeff_ = Mul::from_dict(x.coef_, std::move(dict));
+                coeff_ = Mul::from_dict(x.get_coef(), std::move(dict));
                 return;
             }
         }

@@ -61,13 +61,13 @@ public:
 
     void bvisit(const Integer &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_integer_class());
         result_ = [=](const T *x_) { return tmp; };
     }
 
     void bvisit(const Rational &x)
     {
-        T tmp = mp_get_d(x.i);
+        T tmp = mp_get_d(x.as_rational_class());
         result_ = [=](const T *x) { return tmp; };
     }
 
@@ -87,9 +87,9 @@ public:
 
     void bvisit(const Add &x)
     {
-        fn tmp = apply(*x.coef_);
+        fn tmp = apply(*x.get_coef());
         fn tmp1, tmp2;
-        for (const auto &p : x.dict_) {
+        for (const auto &p : x.get_dict()) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const T *x) { return tmp(x) + tmp1(x) * tmp2(x); };
@@ -99,9 +99,9 @@ public:
 
     void bvisit(const Mul &x)
     {
-        fn tmp = apply(*x.coef_);
+        fn tmp = apply(*x.get_coef());
         fn tmp1, tmp2;
-        for (const auto &p : x.dict_) {
+        for (const auto &p : x.get_dict()) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const T *x) {
@@ -416,9 +416,9 @@ public:
     {
         mpfr_class t(x.get_prec());
         double real, imag;
-        mpc_real(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_real(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
-        mpc_imag(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
         std::complex<double> tmp(real, imag);
         result_ = [=](const std::complex<double> *x) { return tmp; };

@@ -14,8 +14,8 @@ UIntPolyPiranha::UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict)
 hash_t UIntPolyPiranha::__hash__() const
 {
     hash_t seed = UINTPOLYPIRANHA;
-    seed += poly_.hash();
-    seed += var_->hash();
+    seed += get_poly().hash();
+    seed += get_var()->hash();
     return seed;
 }
 
@@ -28,8 +28,8 @@ URatPolyPiranha::URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict)
 hash_t URatPolyPiranha::__hash__() const
 {
     hash_t seed = URATPOLYPIRANHA;
-    seed += poly_.hash();
-    seed += var_->hash();
+    seed += get_poly().hash();
+    seed += get_var()->hash();
     return seed;
 }
 }

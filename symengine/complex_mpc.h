@@ -81,7 +81,7 @@ RCP<const Number> number(mpfr_ptr x);
 //! ComplexMPC Class to hold mpc_t values
 class ComplexMPC : public Number
 {
-public:
+private:
     mpc_class i;
 
 public:

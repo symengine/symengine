@@ -28,12 +28,12 @@ public:
 
     void bvisit(const Integer &x)
     {
-        mpfr_set_z(result_, get_mpz_t(x.i), rnd_);
+        mpfr_set_z(result_, get_mpz_t(x.as_integer_class()), rnd_);
     }
 
     void bvisit(const Rational &x)
     {
-        mpfr_set_q(result_, get_mpq_t(x.i), rnd_);
+        mpfr_set_q(result_, get_mpq_t(x.as_rational_class()), rnd_);
     }
 
     void bvisit(const RealDouble &x)

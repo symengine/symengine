@@ -101,14 +101,16 @@ public:
      * */
     inline RCP<const Number> addcomp(const Rational &other) const
     {
-        return from_mpq(this->real_ + other.i, this->imaginary_);
+        return from_mpq(this->real_ + other.as_rational_class(),
+                        this->imaginary_);
     }
     /*! Add Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> addcomp(const Integer &other) const
     {
-        return from_mpq(this->real_ + other.i, this->imaginary_);
+        return from_mpq(this->real_ + other.as_integer_class(),
+                        this->imaginary_);
     }
 
     /*! Subtract Complex
@@ -124,14 +126,16 @@ public:
      * */
     inline RCP<const Number> subcomp(const Rational &other) const
     {
-        return from_mpq(this->real_ - other.i, this->imaginary_);
+        return from_mpq(this->real_ - other.as_rational_class(),
+                        this->imaginary_);
     }
     /*! Subtract Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> subcomp(const Integer &other) const
     {
-        return from_mpq(this->real_ - other.i, this->imaginary_);
+        return from_mpq(this->real_ - other.as_integer_class(),
+                        this->imaginary_);
     }
     /*! Subtract Complex from other
      * \param other of type Complex
@@ -146,14 +150,16 @@ public:
      * */
     inline RCP<const Number> rsubcomp(const Rational &other) const
     {
-        return from_mpq(other.i - this->real_, -this->imaginary_);
+        return from_mpq(other.as_rational_class() - this->real_,
+                        -this->imaginary_);
     }
     /*! Subtract Complex from other
      * \param other of type Integer
      * */
     inline RCP<const Number> rsubcomp(const Integer &other) const
     {
-        return from_mpq(other.i - this->real_, -this->imaginary_);
+        return from_mpq(other.as_integer_class() - this->real_,
+                        -this->imaginary_);
     }
 
     /*! Multiply Complex
@@ -170,14 +176,16 @@ public:
      * */
     inline RCP<const Number> mulcomp(const Rational &other) const
     {
-        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+        return from_mpq(this->real_ * other.as_rational_class(),
+                        this->imaginary_ * other.as_rational_class());
     }
     /*! Multiply Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> mulcomp(const Integer &other) const
     {
-        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+        return from_mpq(this->real_ * other.as_integer_class(),
+                        this->imaginary_ * other.as_integer_class());
     }
 
     /*! Divide Complex
@@ -206,7 +214,8 @@ public:
         if (other.is_zero()) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+            return from_mpq(this->real_ / other.as_rational_class(),
+                            this->imaginary_ / other.as_rational_class());
         }
     }
     /*! Divide Complex
@@ -217,7 +226,8 @@ public:
         if (other.is_zero()) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+            return from_mpq(this->real_ / other.as_integer_class(),
+                            this->imaginary_ / other.as_integer_class());
         }
     }
     /*! Divide other by the Complex
@@ -230,8 +240,9 @@ public:
         if (get_num(modulus_sq) == 0) {
             throw DivisionByZeroError("Division By Zero");
         } else {
-            return from_mpq((this->real_ * other.i) / modulus_sq,
-                            (this->imaginary_ * (-other.i)) / modulus_sq);
+            return from_mpq(
+                (this->real_ * other.as_integer_class()) / modulus_sq,
+                (this->imaginary_ * (-other.as_integer_class())) / modulus_sq);
         }
     }
     /*! Pow Complex

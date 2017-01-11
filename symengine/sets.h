@@ -110,7 +110,7 @@ public:
 
 class FiniteSet : public Set
 {
-public:
+private:
     set_basic container_;
 
 public:
@@ -129,11 +129,16 @@ public:
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const set_basic &get_container() const
+    {
+        return this->container_;
+    }
 };
 
 class Interval : public Set
 {
-public:
+private:
     RCP<const Number> start_;
     RCP<const Number> end_;
     bool left_open_, right_open_;
@@ -160,11 +165,28 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     virtual vec_basic get_args() const;
+
+    inline const RCP<const Number> &get_start() const
+    {
+        return start_;
+    }
+    inline const RCP<const Number> &get_end() const
+    {
+        return end_;
+    }
+    inline const bool &get_left_open() const
+    {
+        return this->left_open_;
+    }
+    inline const bool &get_right_open() const
+    {
+        return this->right_open_;
+    }
 };
 
 class Union : public Set
 {
-public:
+private:
     set_set container_;
 
 public:
@@ -181,6 +203,11 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const set_set &get_container() const
+    {
+        return this->container_;
+    }
 };
 
 //! \return RCP<const EmptySet>
@@ -227,8 +254,8 @@ inline RCP<const Set> set_union(const set_set &in, bool solve = true)
     for (auto it = in.begin(); it != in.end(); ++it) {
         if (is_a<FiniteSet>(**it)) {
             const FiniteSet &other = down_cast<const FiniteSet &>(**it);
-            combined_FiniteSet.insert(other.container_.begin(),
-                                      other.container_.end());
+            combined_FiniteSet.insert(other.get_container().begin(),
+                                      other.get_container().end());
         } else if (is_a<UniversalSet>(**it)) {
             return universalset();
         } else if (not is_a<EmptySet>(**it)) {

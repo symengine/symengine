@@ -245,18 +245,18 @@ public:
     void bvisit(const Integer &x, bool as_int32 = false)
     {
         if (as_int32) {
-            int d = mp_get_si(x.i);
+            int d = mp_get_si(x.as_integer_class());
             result_ = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context),
                                              d, true);
         } else {
             result_ = llvm::ConstantFP::get(llvm::Type::getDoubleTy(*context),
-                                            mp_get_d(x.i));
+                                            mp_get_d(x.as_integer_class()));
         }
     }
 
     void bvisit(const Rational &x)
     {
-        set_double(mp_get_d(x.i));
+        set_double(mp_get_d(x.as_rational_class()));
     }
 
     void bvisit(const RealDouble &x)
@@ -276,14 +276,14 @@ public:
         llvm::Value *tmp, *tmp1, *tmp2;
         auto it = x.get_dict().begin();
 
-        if (eq(*x.coef_, *zero)) {
+        if (eq(*x.get_coef(), *zero)) {
             // `x + 0.0` is not optimized out
             tmp1 = apply(*(it->first));
             tmp2 = apply(*(it->second));
             tmp = builder->CreateFMul(tmp1, tmp2);
             ++it;
         } else {
-            tmp = apply(*x.coef_);
+            tmp = apply(*x.get_coef());
         }
 
         for (; it != x.get_dict().end(); ++it) {

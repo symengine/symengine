@@ -14,7 +14,7 @@ namespace SymEngine
 
 class Add : public Basic
 {
-public:                      // TODO: make this private
+private:
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2+x+y`)
     umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
 
@@ -69,11 +69,11 @@ public:
 
     virtual vec_basic get_args() const;
 
-    RCP<const Number> get_coef() const
+    inline const RCP<const Number> &get_coef() const
     {
         return coef_;
     }
-    const umap_basic_num &get_dict() const
+    inline const umap_basic_num &get_dict() const
     {
         return dict_;
     }

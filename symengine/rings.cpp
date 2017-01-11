@@ -11,7 +11,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        const umap_basic_num &d = down_cast<const Add &>(*p).dict_;
+        const umap_basic_num &d = down_cast<const Add &>(*p).get_dict();
         vec_int exp;
         integer_class coef;
         for (const auto &p : d) {
@@ -21,7 +21,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
                 const map_basic_basic &term
-                    = down_cast<const Mul &>(*p.first).dict_;
+                    = down_cast<const Mul &>(*p.first).get_dict();
                 for (const auto &q : term) {
                     RCP<const Basic> sym = q.first;
                     if (not is_a<Integer>(*syms.at(sym)))
