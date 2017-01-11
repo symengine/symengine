@@ -45,6 +45,8 @@ using SymEngine::rational_class;
 using SymEngine::is_a;
 using SymEngine::set_basic;
 using SymEngine::SymEngineException;
+using SymEngine::Inf;
+using SymEngine::NegInf;
 using SymEngine::ComplexInf;
 using SymEngine::down_cast;
 
@@ -801,6 +803,7 @@ TEST_CASE("Log: arit", "[arit]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -812,6 +815,49 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = log(one);
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = log(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = log(Inf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = log(NegInf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = log(ComplexInf);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = log(i2, zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = log(i3);
+    REQUIRE((r1->__str__()) == "log(3)");
+
+    r1 = log(im3);
+    REQUIRE((r1->__str__()) == "log(3) + I*pi");
+
+    RCP<const Number> rc1, rc2, rc3, rc4, c1;
+    rc1 = Rational::from_mpq(rational_class(0, 2));
+    rc2 = Rational::from_mpq(rational_class(2, 1));
+    rc3 = Rational::from_mpq(rational_class(-2, 1));
+    rc4 = Rational::from_mpq(rational_class(-1, 1));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    r1 = log(c1);
+    REQUIRE(r1->__str__() == "log(2) + 1/2*I*pi");
+
+    c1 = Complex::from_two_nums(*rc1, *rc3);
+    r1 = log(c1);
+    REQUIRE(r1->__str__() == "log(2) - 1/2*I*pi");
+
+    c1 = Complex::from_two_nums(*rc1, *rc4);
+    r1 = log(c1);
+    REQUIRE(r1->__str__() == "-1/2*I*pi");
+
+    c1 = Complex::from_two_nums(*rc2, *rc3);
+    r1 = log(c1);
+    REQUIRE(r1->__str__() == "log(2 - 2*I)");
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));

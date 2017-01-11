@@ -293,11 +293,11 @@ bool Log::is_canonical(const Basic &arg) const
     if (eq(arg, *E))
         return false;
     // log(Inf)
-    if (eq(*arg, *Inf))
+    if (eq(arg, *Inf))
         return false;
-    if (eq(*arg, *NegInf))
+    if (eq(arg, *NegInf))
         return false;
-    if (eq(*arg, *ComplexInf))
+    if (eq(arg, *ComplexInf))
         return false;
 
     // Currently not implemented, however should be expanded as `-ipi +
@@ -313,7 +313,6 @@ bool Log::is_canonical(const Basic &arg) const
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
         return false;
-    return false;
     return true;
 }
 
