@@ -292,15 +292,25 @@ bool Log::is_canonical(const Basic &arg) const
     // log(E)
     if (eq(arg, *E))
         return false;
+    // log(Inf)
+    if (eq(*arg, *Inf))
+        return false;
+    if (eq(*arg, *NegInf))
+        return false;
+    if (eq(*arg, *ComplexInf))
+        return false;
+
     // Currently not implemented, however should be expanded as `-ipi +
     // log(-arg)`
     if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
         return false;
     if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
         return false;
+
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
         return false;
+    return false;
     return true;
 }
 
@@ -311,14 +321,19 @@ RCP<const Basic> Log::create(const RCP<const Basic> &a) const
 
 RCP<const Basic> log(const RCP<const Basic> &arg)
 {
-    if (eq(*arg, *zero)) {
-        throw NotImplementedError(
-            "log(0) is complex infinity. Yet to be implemented");
-    }
+    if (eq(*arg, *zero))
+        return ComplexInf;
     if (eq(*arg, *one))
         return zero;
     if (eq(*arg, *E))
         return one;
+    if (eq(*arg, *Inf))
+        return Inf;
+    if (eq(*arg, *NegInf))
+        return Inf;
+    if (eq(*arg, *ComplexInf))
+        return ComplexInf;
+
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
         if (not _arg->is_exact()) {
