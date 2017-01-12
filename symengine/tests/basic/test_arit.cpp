@@ -837,25 +837,21 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = log(im3);
     REQUIRE((r1->__str__()) == "log(3) + I*pi");
 
-    RCP<const Number> rc1, rc2, rc3, rc4, c1;
-    rc1 = Rational::from_mpq(rational_class(0, 2));
-    rc2 = Rational::from_mpq(rational_class(2, 1));
-    rc3 = Rational::from_mpq(rational_class(-2, 1));
-    rc4 = Rational::from_mpq(rational_class(-1, 1));
+    RCP<const Number> c1;
 
-    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c1 = Complex::from_two_nums(*integer(0), *integer(2));
     r1 = log(c1);
     REQUIRE(r1->__str__() == "log(2) + 1/2*I*pi");
 
-    c1 = Complex::from_two_nums(*rc1, *rc3);
+    c1 = Complex::from_two_nums(*integer(0), *integer(-2));
     r1 = log(c1);
     REQUIRE(r1->__str__() == "log(2) - 1/2*I*pi");
 
-    c1 = Complex::from_two_nums(*rc1, *rc4);
+    c1 = Complex::from_two_nums(*integer(0), *integer(-1));
     r1 = log(c1);
     REQUIRE(r1->__str__() == "-1/2*I*pi");
 
-    c1 = Complex::from_two_nums(*rc2, *rc3);
+    c1 = Complex::from_two_nums(*integer(2), *integer(-2));
     r1 = log(c1);
     REQUIRE(r1->__str__() == "log(2 - 2*I)");
 
