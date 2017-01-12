@@ -79,7 +79,7 @@ public:
 RCP<const Number> number(mpfr_ptr x);
 
 //! ComplexMPC Class to hold mpc_t values
-class ComplexMPC : public Number
+class ComplexMPC : public ComplexBase
 {
 private:
     mpc_class i;
@@ -105,9 +105,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! Get the real part of the complex number
-    RCP<const Number> real_part() const;
+    virtual RCP<const Number> real_part() const;
     //! Get the imaginary part of the complex number
-    RCP<const Number> imaginary_part() const;
+    virtual RCP<const Number> imaginary_part() const;
     //! \return `true` if positive
     inline virtual bool is_positive() const
     {
@@ -117,6 +117,11 @@ public:
     inline virtual bool is_negative() const
     {
         return false;
+    }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
     }
     //! \return `true` if this number is an exact number
     inline virtual bool is_exact() const
@@ -388,7 +393,7 @@ inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
 
 namespace SymEngine
 {
-class ComplexMPC : public Number
+class ComplexMPC : public ComplexBase
 {
 public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)

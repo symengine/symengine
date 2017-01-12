@@ -282,6 +282,12 @@ TEST_CASE("Test NumberWrapper", "[number]")
         {
             return i_ > 0;
         }
+        //! \returns `false`
+        // False is returned because a long cannot have an imaginary part
+        virtual bool is_complex() const
+        {
+            return false;
+        }
         virtual hash_t __hash__() const
         {
             return i_;

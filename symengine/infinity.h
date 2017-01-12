@@ -82,6 +82,11 @@ public:
         return is_negative_infinity();
     }
 
+    inline bool is_complex() const
+    {
+        return is_unsigned_infinity();
+    }
+
     // Think about it again
     RCP<const Number> add(const Number &other) const;
     RCP<const Number> mul(const Number &other) const;

@@ -70,6 +70,16 @@ int Complex::compare(const Basic &o) const
     }
 }
 
+RCP<const Number> Complex::real_part() const
+{
+    return Rational::from_mpq(real_);
+};
+
+RCP<const Number> Complex::imaginary_part() const
+{
+    return Rational::from_mpq(imaginary_);
+};
+
 RCP<const Number> Complex::from_mpq(const rational_class re,
                                     const rational_class im)
 {

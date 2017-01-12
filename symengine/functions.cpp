@@ -167,10 +167,12 @@ bool could_extract_minus(const Basic &arg)
     if (is_a_Number(arg)) {
         if (down_cast<const Number &>(arg).is_negative()) {
             return true;
-            // TODO: see #915
-        } else if (is_a<Complex>(arg)) {
-            const Complex &c = down_cast<const Complex &>(arg);
-            return c.real_ < 0 or (c.real_ == 0 and c.imaginary_ < 0);
+        } else if (is_a_Complex(arg)) {
+            const ComplexBase &c = down_cast<const ComplexBase &>(arg);
+            RCP<const Number> real_part = c.real_part();
+            return (real_part->is_negative())
+                   or (eq(*real_part, *zero)
+                       and c.imaginary_part()->is_negative());
         } else {
             return false;
         }

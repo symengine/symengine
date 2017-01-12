@@ -77,6 +77,11 @@ public:
         return false;
     }
 
+    inline virtual bool is_complex() const
+    {
+        return false;
+    }
+
     inline virtual bool __eq__(const Basic &o) const
     {
         return (is_a<Series>(o) and var_ == down_cast<const Series &>(o).var_

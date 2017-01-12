@@ -11,8 +11,23 @@
 
 namespace SymEngine
 {
+//! ComplexBase Class for deriving all complex classes
+class ComplexBase : public Number
+{
+public:
+    virtual RCP<const Number> real_part() const = 0;
+    virtual RCP<const Number> imaginary_part() const = 0;
+};
+
+//! \return true if 'b' is any of the subclasses of ComplexBase
+inline bool is_a_Complex(const Basic &b)
+{
+    return (b.get_type_code() == COMPLEX || b.get_type_code() == COMPLEX_MPC
+            || b.get_type_code() == COMPLEX_DOUBLE);
+}
+
 //! Complex Class
-class Complex : public Number
+class Complex : public ComplexBase
 {
 public:
     //! `real_` : Real part of the complex Number
@@ -43,6 +58,10 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
+    //! Get the real part of the complex number
+    virtual RCP<const Number> real_part() const;
+    //! Get the imaginary part of the complex number
+    virtual RCP<const Number> imaginary_part() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const
@@ -54,6 +73,11 @@ public:
     inline virtual bool is_negative() const
     {
         return false;
+    }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
     }
 
     /*! Constructs Complex from re, im. If im is 0
@@ -330,18 +354,6 @@ public:
         } else {
             return other.rpow(*this);
         }
-    };
-
-    //! Get the real part of the complex number
-    inline RCP<const Number> real_part() const
-    {
-        return Rational::from_mpq(real_);
-    };
-
-    //! Get the imaginary part of the complex number
-    inline RCP<const Number> imaginary_part() const
-    {
-        return Rational::from_mpq(imaginary_);
     };
 
     virtual RCP<const Number> rpow(const Number &other) const

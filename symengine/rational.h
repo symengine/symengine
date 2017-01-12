@@ -81,6 +81,12 @@ public:
     {
         return i < 0;
     }
+    //! \returns `false`
+    // False is returned because a rational cannot have an imaginary part
+    inline virtual bool is_complex() const
+    {
+        return false;
+    }
 
     //! \return negative of `this`
     inline RCP<const Rational> neg() const

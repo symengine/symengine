@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 //! Complex Double Class to hold std::complex<double> values
-class ComplexDouble : public Number
+class ComplexDouble : public ComplexBase
 {
 public:
     std::complex<double> i;
@@ -30,9 +30,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! Get the real part of the complex number
-    RCP<const Number> real_part() const;
+    virtual RCP<const Number> real_part() const;
     //! Get the imaginary part of the complex number
-    RCP<const Number> imaginary_part() const;
+    virtual RCP<const Number> imaginary_part() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const
@@ -44,6 +44,11 @@ public:
     inline virtual bool is_negative() const
     {
         return false;
+    }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
     }
     //! \return self as a double
     inline std::complex<double> as_complex_double() const

@@ -73,6 +73,12 @@ public:
     {
         return false;
     }
+    //! \returns `false`
+    // False is returned because a RealDouble cannot have a imaginary part
+    virtual bool is_complex() const
+    {
+        return false;
+    }
 
     /*! Add RealDoubles
      * \param other of type Integer
