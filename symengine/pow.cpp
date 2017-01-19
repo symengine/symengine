@@ -2,6 +2,8 @@
 #include <symengine/add.h>
 #include <symengine/complex.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/real_double.h>
+#include <symengine/eval_double.h>
 
 namespace SymEngine
 {
@@ -160,6 +162,14 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             return down_cast<const Number &>(*a)
                 .pow(*rcp_static_cast<const Number>(b));
         }
+    }
+    if (is_a<RealDouble>(*a) and is_a<Constant>(*b)) {
+        return number(
+            std::pow(down_cast<const RealDouble &>(*a).i, eval_double(*b)));
+    }
+    if (is_a<Constant>(*a) and is_a<RealDouble>(*b)) {
+        return number(
+            std::pow(eval_double(*a), down_cast<const RealDouble &>(*b).i));
     }
     if (is_a<Mul>(*a) and is_a_Number(*b)) {
         map_basic_basic d;
