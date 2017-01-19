@@ -2,8 +2,6 @@
 #include <symengine/add.h>
 #include <symengine/complex.h>
 #include <symengine/symengine_exception.h>
-#include <symengine/real_double.h>
-#include <symengine/eval_double.h>
 
 namespace SymEngine
 {
