@@ -884,6 +884,14 @@ class EvaluateMPC : public Evaluate
     {
         throw NotImplementedError("Not Implemented.");
     }
+    virtual RCP<const Basic> constant(const Constant &c,
+                                      const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        eval_mpc(t.get_mpc_t(), c, MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
 };
 
 Evaluate &ComplexMPC::get_eval() const

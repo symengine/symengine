@@ -230,6 +230,12 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
             return number(std::log(std::complex<double>(d)));
         }
     }
+    virtual RCP<const Basic> constant(const Constant &c,
+                                      const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        return number(eval_double(c));
+    }
 };
 
 class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
@@ -278,6 +284,12 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
         return number(std::log(down_cast<const ComplexDouble &>(x).i));
+    }
+    virtual RCP<const Basic> constant(const Constant &c,
+                                      const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        return number(eval_complex_double(c));
     }
 };
 
