@@ -214,6 +214,7 @@ public:
     void bvisit(const MExprPoly &x);
     void bvisit(const GaloisField &x);
     void bvisit(const Infty &x);
+    void bvisit(const NaN &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);

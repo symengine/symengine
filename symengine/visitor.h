@@ -21,6 +21,7 @@
 #include <symengine/fields.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/nan.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine
