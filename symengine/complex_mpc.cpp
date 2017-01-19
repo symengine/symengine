@@ -889,7 +889,7 @@ class EvaluateMPC : public Evaluate
                                        const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
-        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
         eval_mpc(t.get_mpc_t(), c, MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
