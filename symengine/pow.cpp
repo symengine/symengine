@@ -145,11 +145,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                     .pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Constant>(*a)) {
-            RCP<const Number> p = rcp_static_cast<const Number &>(b);
+            RCP<const Number> p = rcp_static_cast<const Number>(b);
             if (not p->is_exact()) {
                 // Evaluate E**0.2, but not E**2
                 return p->get_eval()
-                    .constant(down_cast<const Constant &>(*a), p)
+                    .constant(down_cast<const Constant &>(*a), *p)
                     ->pow(*p);
             }
         } else if (is_a<Mul>(*a)) {
@@ -161,12 +161,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             return Mul::from_dict(coef, std::move(d));
         }
     }
-    if (is_a<Constant>(*b) and is_a<Number>(*a)) {
+    if (is_a<Constant>(*b) and is_a_Number(*a)) {
         // Handle 2.0**E
-        RCP<const Number> p = rcp_static_cast<const Number &>(a);
+        RCP<const Number> p = rcp_static_cast<const Number>(a);
         if (not p->is_exact()) {
             return p->pow(
-                *p->get_eval().constant(down_cast<const Constant &>(*b), p));
+                *p->get_eval().constant(down_cast<const Constant &>(*b), *p));
         }
     }
     if (is_a<Pow>(*a) and is_a<Integer>(*b)) {

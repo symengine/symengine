@@ -4,6 +4,7 @@
  *
  **/
 #include <symengine/complex_mpc.h>
+#include <symengine/eval_mpc.h>
 #include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPC
@@ -884,8 +885,8 @@ class EvaluateMPC : public Evaluate
     {
         throw NotImplementedError("Not Implemented.");
     }
-    virtual RCP<const Basic> constant(const Constant &c,
-                                      const Basic &x) const override
+    virtual RCP<const Number> constant(const Constant &c,
+                                       const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
         mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
