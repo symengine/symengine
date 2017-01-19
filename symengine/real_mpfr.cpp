@@ -4,6 +4,7 @@
  *
  **/
 #include <symengine/complex_mpc.h>
+#include <symengine/eval_mpfr.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 
