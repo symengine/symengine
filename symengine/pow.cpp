@@ -127,22 +127,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
     if (is_a_Number(*a) and is_a_Number(*b)) {
         if (is_a<Integer>(*b)) {
-            if (is_a<Rational>(*a)) {
-                RCP<const Rational> exp_new
-                    = rcp_static_cast<const Rational>(a);
-                return exp_new->powrat(*rcp_static_cast<const Integer>(b));
-            } else if (is_a<Integer>(*a)) {
-                RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
-                return exp_new->powint(*rcp_static_cast<const Integer>(b));
-            } else if (is_a<Complex>(*a)) {
-                RCP<const Complex> exp_new = rcp_static_cast<const Complex>(a);
-                RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
-                RCP<const Number> res = exp_new->pow(*pow_new);
-                return res;
-            } else {
-                return down_cast<const Number &>(*a)
-                    .pow(*rcp_static_cast<const Number>(b));
-            }
+            return down_cast<const Number &>(*a)
+                .pow(*rcp_static_cast<const Number>(b));
         } else if (is_a<Rational>(*b)) {
             if (is_a<Rational>(*a)) {
                 return down_cast<const Rational &>(*a)
@@ -156,7 +142,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 return down_cast<const Number &>(*a)
                     .pow(*rcp_static_cast<const Number>(b));
             }
-        } else if (is_a<Complex>(*b)) {
+        } else if (is_a<Complex>(*b)
+                   and down_cast<const Number &>(*a).is_exact()) {
             return make_rcp<const Pow>(a, b);
         } else {
             return down_cast<const Number &>(*a)
