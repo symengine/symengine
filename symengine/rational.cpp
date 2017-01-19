@@ -43,8 +43,13 @@ RCP<const Number> Rational::from_mpq(rational_class &&i)
 
 RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
-    if (d.as_integer_class() == 0)
-        throw DivisionByZeroError("Division By Zero");
+    if (d.as_integer_class() == 0) {
+        if (n.as_integer_class() == 0) {
+            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+        } else {
+            return ComplexInf;
+        }
+    }
     rational_class q(n.as_integer_class(), d.as_integer_class());
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
@@ -56,8 +61,13 @@ RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 
 RCP<const Number> Rational::from_two_ints(long n, long d)
 {
-    if (d == 0)
-        throw DivisionByZeroError("Division By Zero");
+    if (d == 0) {
+        if (n == 0) {
+            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+        } else {
+            return ComplexInf;
+        }
+    }
     rational_class q(n, d);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be

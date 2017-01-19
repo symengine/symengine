@@ -112,6 +112,7 @@ public:
     {
         return (this->real_ == 0);
     }
+
     /*! Add Complex
      * \param other of type Complex
      * */
@@ -217,17 +218,25 @@ public:
      * */
     inline RCP<const Number> divcomp(const Complex &other) const
     {
-        rational_class modulus_sq
+        rational_class modulus_sq_other
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
-        if (get_num(modulus_sq) == 0) {
-            throw DivisionByZeroError("Divide by zero.");
+
+        if (get_num(modulus_sq_other) == 0) {
+            rational_class modulus_sq_this
+                = this->real_ * this->real_
+                  + this->imaginary_ * this->imaginary_;
+            if (get_num(modulus_sq_this) == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq((this->real_ * other.real_
                              + this->imaginary_ * other.imaginary_)
-                                / modulus_sq,
+                                / modulus_sq_other,
                             (-this->real_ * other.imaginary_
                              + this->imaginary_ * other.real_)
-                                / modulus_sq);
+                                / modulus_sq_other);
         }
     }
     /*! Divide Complex
@@ -236,7 +245,15 @@ public:
     inline RCP<const Number> divcomp(const Rational &other) const
     {
         if (other.is_zero()) {
-            throw DivisionByZeroError("Division By Zero");
+            rational_class modulus_sq_this
+                = this->real_ * this->real_
+                  + this->imaginary_ * this->imaginary_;
+
+            if (get_num(modulus_sq_this) == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(this->real_ / other.as_rational_class(),
                             this->imaginary_ / other.as_rational_class());
@@ -248,7 +265,15 @@ public:
     inline RCP<const Number> divcomp(const Integer &other) const
     {
         if (other.is_zero()) {
-            throw DivisionByZeroError("Division By Zero");
+            rational_class modulus_sq_this
+                = this->real_ * this->real_
+                  + this->imaginary_ * this->imaginary_;
+
+            if (get_num(modulus_sq_this) == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(this->real_ / other.as_integer_class(),
                             this->imaginary_ / other.as_integer_class());
@@ -259,14 +284,20 @@ public:
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const
     {
-        rational_class modulus_sq
+        rational_class modulus_sq_this
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
-        if (get_num(modulus_sq) == 0) {
-            throw DivisionByZeroError("Division By Zero");
+
+        if (get_num(modulus_sq_this) == 0) {
+            if (other.is_zero()) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
-            return from_mpq(
-                (this->real_ * other.as_integer_class()) / modulus_sq,
-                (this->imaginary_ * (-other.as_integer_class())) / modulus_sq);
+            return from_mpq((this->real_ * other.as_integer_class())
+                                / modulus_sq_this,
+                            (this->imaginary_ * (-other.as_integer_class()))
+                                / modulus_sq_this);
         }
     }
     /*! Pow Complex

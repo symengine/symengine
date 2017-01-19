@@ -101,10 +101,10 @@ using SymEngine::Rational;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
+using SymEngine::ComplexInf;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
-using SymEngine::DivisionByZeroError;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -481,7 +481,7 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = neg(cot(add(div(pi, i6), y)));
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), DivisionByZeroError);
+    REQUIRE(eq(*tan(mul(integer(5), div(pi, i2))), *ComplexInf));
 
     r1 = tan(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -591,7 +591,7 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = cot(add(div(mul(i2, pi), integer(7)), y));
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(cot(mul(integer(7), pi)), DivisionByZeroError);
+    REQUIRE(eq(*cot(mul(integer(7), pi)), *ComplexInf));
 
     r1 = cot(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -702,8 +702,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = add(div(pi, i5), y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(csc(mul(integer(7), pi)), DivisionByZeroError);
-    CHECK_THROWS_AS(csc(integer(0)), DivisionByZeroError);
+    REQUIRE(eq(*csc(mul(integer(7), pi)), *ComplexInf));
+    REQUIRE(eq(*csc(integer(0)), *ComplexInf));
 
     r1 = csc(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -817,7 +817,7 @@ TEST_CASE("Sec: functions", "[functions]")
     r2 = add(div(pi, i3), y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), DivisionByZeroError);
+    REQUIRE(eq(*sec(mul(integer(7), div(pi, i2))), *ComplexInf));
 
     r1 = sec(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
