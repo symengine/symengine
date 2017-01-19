@@ -114,13 +114,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
-        } else if (is_a<Rational>(*b)
-                   and (get_num(
-                            down_cast<const Rational &>(*b).as_rational_class())
-                        == 1)
-                   and (get_den(
-                            down_cast<const Rational &>(*b).as_rational_class())
-                        == 2)) {
+        } else if (is_a<Rational>(*b) and eq(*b, *rational(1, 2))) {
             return I;
         }
     }
