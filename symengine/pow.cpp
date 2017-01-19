@@ -329,12 +329,6 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
         return zero;
     if (eq(*arg, *E))
         return one;
-    if (eq(*arg, *Inf))
-        return Inf;
-    if (eq(*arg, *NegInf))
-        return Inf;
-    if (eq(*arg, *ComplexInf))
-        return ComplexInf;
 
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);

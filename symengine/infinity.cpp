@@ -238,4 +238,144 @@ inline RCP<const Infty> infty(const RCP<const Number> &direction)
     return make_rcp<Infty>(direction);
 }
 
+class EvaluateInfty : public Evaluate
+{
+    virtual RCP<const Basic> sin(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::sin(INFINITY));
+    }
+    virtual RCP<const Basic> cos(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::cos(INFINITY));
+    }
+    virtual RCP<const Basic> tan(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::tan(INFINITY));
+    }
+    virtual RCP<const Basic> cot(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::tan(INFINITY));
+    }
+    virtual RCP<const Basic> sec(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::cos(INFINITY));
+    }
+    virtual RCP<const Basic> csc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::sin(INFINITY));
+    }
+    virtual RCP<const Basic> asin(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::asin(INFINITY));
+    }
+    virtual RCP<const Basic> acos(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::acos(INFINITY));
+    }
+    virtual RCP<const Basic> acsc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::asin(INFINITY));
+    }
+    virtual RCP<const Basic> asec(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::acos(INFINITY));
+    }
+    virtual RCP<const Basic> atan(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::atan(INFINITY));
+    }
+    virtual RCP<const Basic> acot(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::atan(1.0 / INFINITY));
+    }
+    virtual RCP<const Basic> sinh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::sinh(INFINITY));
+    }
+    virtual RCP<const Basic> csch(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::sinh(INFINITY));
+    }
+    virtual RCP<const Basic> cosh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::cosh(INFINITY));
+    }
+    virtual RCP<const Basic> sech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::cosh(INFINITY));
+    }
+    virtual RCP<const Basic> tanh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::tanh(INFINITY));
+    }
+    virtual RCP<const Basic> coth(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(1.0 / std::tanh(INFINITY));
+    }
+    virtual RCP<const Basic> asinh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::asinh(INFINITY));
+    }
+    virtual RCP<const Basic> acosh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::acosh(INFINITY));
+    }
+    virtual RCP<const Basic> acsch(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::asinh(1.0 / INFINITY));
+    }
+    virtual RCP<const Basic> atanh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::atanh(INFINITY));
+    }
+    virtual RCP<const Basic> acoth(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::atanh(1.0 / INFINITY));
+    }
+    virtual RCP<const Basic> abs(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::abs(INFINITY));
+    }
+    virtual RCP<const Basic> log(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return number(std::log(INFINITY));
+    }
+    virtual RCP<const Basic> gamma(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        throw NotImplementedError("Not Implemented.");
+    }
+};
+
+Evaluate &Infty::get_eval() const
+{
+    static EvaluateInfty evaluate_infty;
+    return evaluate_infty;
+}
+
 } // SymEngine
