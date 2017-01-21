@@ -31,6 +31,8 @@ using SymEngine::symbol;
 using SymEngine::Complex;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
+using SymEngine::DomainError;
+using SymEngine::pi;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -293,4 +295,31 @@ TEST_CASE("Powers to Infinity", "[Infinity]")
     CHECK_THROWS_AS(rational(3, 3)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(cx->pow(*c), NotImplementedError);
+}
+
+TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
+{
+    RCP<const Infty> a = Inf;
+    RCP<const Infty> c = ComplexInf;
+    RCP<const Basic> r;
+
+    CHECK_THROWS_AS(a->get_eval().sin(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().cos(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().tan(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().csc(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().sec(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().cot(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().asin(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().acos(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().acsc(*a), DomainError);
+    CHECK_THROWS_AS(a->get_eval().asec(*a), DomainError);
+
+    r = a->get_eval().atan(*a);
+    REQUIRE(eq(*r, *div(pi, integer(2))));
+
+    r = a->get_eval().acot(*a);
+    REQUIRE(eq(*r, *zero));
+
+    r = a->get_eval().abs(*a);
+    REQUIRE(eq(*r, *a));
 }
