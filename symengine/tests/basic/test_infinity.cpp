@@ -36,6 +36,7 @@ using SymEngine::SymEngineException;
 using SymEngine::DomainError;
 using SymEngine::pi;
 using SymEngine::gamma;
+using SymEngine::Nan;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -165,9 +166,13 @@ TEST_CASE("Adding to Infinity", "[Infinity]")
     REQUIRE(eq(*n1, *NegInf));
     n1 = c->add(*minus_one);
     REQUIRE(eq(*n1, *ComplexInf));
-    CHECK_THROWS_AS(c->add(*c), SymEngineException);
-    CHECK_THROWS_AS(c->add(*a), SymEngineException);
-    CHECK_THROWS_AS(b->add(*a), SymEngineException);
+
+    n1 = c->add(*a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = c->add(*c);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = b->add(*a);
+    REQUIRE(eq(*n1, *Nan));
 }
 
 TEST_CASE("Subtracting from Infinity", "[Infinity]")
@@ -199,9 +204,12 @@ TEST_CASE("Multiplication with Infinity", "[Infinity]")
     n2 = c->mul(*c);
     REQUIRE(eq(*n2, *ComplexInf));
 
-    CHECK_THROWS_AS(a->mul(*zero), SymEngineException);
-    CHECK_THROWS_AS(b->mul(*zero), SymEngineException);
-    CHECK_THROWS_AS(c->mul(*zero), SymEngineException);
+    n2 = a->mul(*zero);
+    REQUIRE(eq(*n2, *Nan));
+    n2 = b->mul(*zero);
+    REQUIRE(eq(*n2, *Nan));
+    n2 = c->mul(*zero);
+    REQUIRE(eq(*n2, *Nan));
 
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(c->mul(*cx), NotImplementedError);
@@ -226,9 +234,12 @@ TEST_CASE("Division of Infinity", "[Infinity]")
     n1 = c->div(*zero);
     REQUIRE(eq(*n1, *ComplexInf));
 
-    CHECK_THROWS_AS(a->div(*b), SymEngineException);
-    CHECK_THROWS_AS(b->div(*c), SymEngineException);
-    CHECK_THROWS_AS(c->div(*c), SymEngineException);
+    n1 = a->div(*b);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = b->div(*c);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = c->div(*c);
+    REQUIRE(eq(*n1, *Nan));
 }
 
 TEST_CASE("Powers of Infinity", "[Infinity]")
@@ -262,13 +273,18 @@ TEST_CASE("Powers of Infinity", "[Infinity]")
     n1 = c->pow(*integer(10));
     REQUIRE(eq(*n1, *ComplexInf));
 
+    n1 = a->pow(*c);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = b->pow(*a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = b->pow(*c);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = c->pow(*c);
+    REQUIRE(eq(*n1, *Nan));
+
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
-    CHECK_THROWS_AS(a->pow(*c), SymEngineException);
     CHECK_THROWS_AS(b->pow(*integer(2)), NotImplementedError);
-    CHECK_THROWS_AS(b->pow(*a), NotImplementedError);
-    CHECK_THROWS_AS(b->pow(*c), NotImplementedError);
     CHECK_THROWS_AS(b->pow(*cx), NotImplementedError);
-    CHECK_THROWS_AS(c->pow(*c), SymEngineException);
 }
 
 TEST_CASE("Powers to Infinity", "[Infinity]")
@@ -291,11 +307,13 @@ TEST_CASE("Powers to Infinity", "[Infinity]")
     n1 = rational(5, 2)->pow(*b);
     REQUIRE(eq(*n1, *zero));
 
+    n1 = integer(1)->pow(*c);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = rational(3, 3)->pow(*c);
+
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(integer(-10)->pow(*a), NotImplementedError);
     CHECK_THROWS_AS(integer(0)->pow(*b), SymEngineException);
-    CHECK_THROWS_AS(integer(1)->pow(*c), SymEngineException);
-    CHECK_THROWS_AS(rational(3, 3)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(cx->pow(*c), NotImplementedError);
 }

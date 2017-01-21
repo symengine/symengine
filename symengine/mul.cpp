@@ -426,7 +426,7 @@ RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
         if (is_a_Number(*a) and down_cast<const Number &>(*a).is_zero()) {
-            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            return Nan;
         } else {
             return ComplexInf;
         }

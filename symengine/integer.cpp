@@ -46,7 +46,7 @@ RCP<const Number> Integer::divint(const Integer &other) const
 {
     if (other.i == 0) {
         if (this->i == 0) {
-            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            return Nan;
         } else {
             return ComplexInf;
         }
@@ -65,7 +65,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
     if (is_a<Integer>(other)) {
         if (this->i == 0) {
             if (other.is_zero()) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }

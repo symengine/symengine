@@ -152,7 +152,7 @@ public:
     {
         if (other.i == 0) {
             if (this->i == 0) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }
@@ -167,7 +167,7 @@ public:
     {
         if (other.as_integer_class() == 0) {
             if (this->i == 0) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }
@@ -179,7 +179,7 @@ public:
     {
         if (this->i == 0) {
             if (other.is_zero()) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }

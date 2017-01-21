@@ -45,6 +45,7 @@ using SymEngine::sdiff;
 using SymEngine::down_cast;
 using SymEngine::NotImplementedError;
 using SymEngine::ComplexInf;
+using SymEngine::Nan;
 
 using namespace SymEngine::literals;
 
@@ -272,6 +273,7 @@ TEST_CASE("Integer: Basic", "[basic]")
 {
     RCP<const Integer> i = integer(5);
     RCP<const Integer> j = integer(6);
+    RCP<const Basic> r;
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
@@ -300,7 +302,8 @@ TEST_CASE("Integer: Basic", "[basic]")
     k = divnum(zero, i);
     REQUIRE(eq(*k, *zero));
 
-    CHECK_THROWS_AS(divnum(zero, zero), NotImplementedError); // NaN
+    k = divnum(zero, zero);
+    REQUIRE(eq(*k, *Nan));
 
     k = pownum(i, j);
     REQUIRE(eq(*k, *integer(15625)));
@@ -314,6 +317,11 @@ TEST_CASE("Integer: Basic", "[basic]")
     std::cout << *k << std::endl;
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
+
+    i = integer(0);
+    j = integer(0);
+    r = i->div(*j);
+    REQUIRE(eq(*r, *Nan));
 }
 
 TEST_CASE("Rational: Basic", "[basic]")
@@ -424,8 +432,10 @@ TEST_CASE("Rational: Basic", "[basic]")
     r1 = Rational::from_two_ints(2, 0);
     REQUIRE(eq(*r1, *ComplexInf));
 
-    CHECK_THROWS_AS(Rational::from_two_ints(*zero, *zero), NotImplementedError);
-    CHECK_THROWS_AS(Rational::from_two_ints(0, 0), NotImplementedError);
+    r1 = Rational::from_two_ints(*zero, *zero);
+    REQUIRE(eq(*r1, *Nan));
+    r1 = Rational::from_two_ints(0, 0);
+    REQUIRE(eq(*r1, *Nan));
 
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
@@ -433,6 +443,15 @@ TEST_CASE("Rational: Basic", "[basic]")
     a = rational_class(3, 5);
     b = r->as_rational_class();
     REQUIRE(a == b);
+
+    r1 = Rational::from_two_ints(*integer(0), *integer(0));
+    r2 = r1->div(*integer(0));
+    REQUIRE(eq(*r2, *Nan));
+    r1 = Rational::from_two_ints(*integer(0), *integer(0));
+    r2 = r1->div(*Rational::from_two_ints(*integer(0), *integer(0)));
+    REQUIRE(eq(*r2, *Nan));
+    r2 = integer(0)->div(*r1);
+    REQUIRE(eq(*r2, *Nan));
 }
 
 TEST_CASE("Mul: Basic", "[basic]")
@@ -674,6 +693,7 @@ TEST_CASE("Complex: Basic", "[basic]")
 {
     RCP<const Number> r1, r2, r3, c1, c2, c3;
     RCP<const Complex> c;
+    RCP<const Basic> s;
     r1 = Rational::from_two_ints(*integer(2), *integer(4));
     r2 = Rational::from_two_ints(*integer(5), *integer(7));
     r3 = Rational::from_two_ints(*integer(-5), *integer(7));
@@ -809,9 +829,22 @@ TEST_CASE("Complex: Basic", "[basic]")
     c2 = Complex::from_two_nums(*r3, *r3);
     REQUIRE(eq(*divnum(c1, c2), *ComplexInf));
 
-    CHECK_THROWS_AS(*divnum(c2, integer(0)), NotImplementedError);
-    CHECK_THROWS_AS(*divnum(c2, r3), NotImplementedError);
-    CHECK_THROWS_AS(*divnum(c2, c2), NotImplementedError);
+    c2 = divnum(c2, integer(0));
+    REQUIRE(eq(*c2, *Nan));
+    c2 = divnum(c2, r3);
+    REQUIRE(eq(*c2, *Nan));
+    c2 = divnum(c2, c2);
+    REQUIRE(eq(*c2, *Nan));
+
+    c2 = Complex::from_two_nums(*integer(0), *integer(0));
+    s = c2->div(*integer(0));
+    REQUIRE(eq(*s, *Nan));
+    s = c2->div(*Rational::from_two_ints(*integer(0), *integer(0)));
+    REQUIRE(eq(*s, *Nan));
+    s = c2->div(*Complex::from_two_nums(*integer(0), *integer(0)));
+    REQUIRE(eq(*s, *Nan));
+    s = integer(0)->div(*c2);
+    REQUIRE(eq(*s, *Nan));
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")
