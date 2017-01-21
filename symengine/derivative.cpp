@@ -74,10 +74,28 @@ public:
 
     static RCP<const Basic> diff(const Zeta &self, const RCP<const Symbol> &x)
     {
-        // TODO: check if it is differentiated wrt s
-        return mul(mul(mul(minus_one, self.get_s()),
-                       zeta(add(self.get_s(), one), self.get_a())),
-                   self.get_a()->diff(x));
+        RCP<const Basic> m1 = self.get_s()->diff(x);
+        RCP<const Basic> diff
+            = mul(mul(mul(minus_one, self.get_s()),
+                      zeta(add(self.get_s(), one), self.get_a())),
+                  self.get_a()->diff(x));
+        if (eq(*m1, *zero)) {
+            return diff;
+        } else {
+            if (eq(*diff, *zero)) {
+                if (eq(*self.get_s(), *x)) {
+                    return Derivative::create(self.rcp_from_this(), {x});
+                }
+            }
+            auto s = get_dummy(self, "xi_1");
+            map_basic_basic m;
+            insert(m, s, self.get_s());
+            diff = add(diff, mul(m1, make_rcp<const Subs>(
+                                         Derivative::create(
+                                             self.create(s, self.get_a()), {s}),
+                                         m)));
+            return diff;
+        }
     }
 
     static RCP<const Basic> diff(const ASech &self, const RCP<const Symbol> &x)

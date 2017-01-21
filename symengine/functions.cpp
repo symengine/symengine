@@ -1380,7 +1380,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
-    } else if (is_a<PolyGamma>(*arg)) {
+    } else if (is_a<PolyGamma>(*arg) or is_a<Zeta>(*arg)) {
         bool found = false;
         auto v = arg->get_args();
         for (auto &p : x) {
@@ -2231,8 +2231,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
         if (down_cast<const Number &>(*s).is_zero()) {
             return sub(div(one, i2), a);
         } else if (down_cast<const Number &>(*s).is_one()) {
-            throw NotImplementedError(
-                "Complex infinity is not yet implemented");
+            return infty(0);
         } else if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
             auto s_ = down_cast<const Integer &>(*s).as_int();
             auto a_ = down_cast<const Integer &>(*a).as_int();
