@@ -767,6 +767,14 @@ TEST_CASE("Pow: arit", "[arit]")
     r2 = pow(pow(r2, integer(3)), real_double(0.2));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.501187233627)
             < 1e-12);
+    r2 = pow(E, real_double(0.2));
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 1.22140275816017)
+            < 1e-12);
+    r2 = exp(x)->subs({{x, real_double(1.0)}});
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 2.71828182845905)
+            < 1e-12);
 
     r1 = real_double(-0.01);
     r2 = pow(r1, Rational::from_mpq(rational_class(1, 2)));
