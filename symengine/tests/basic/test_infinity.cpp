@@ -313,6 +313,7 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(a->get_eval().acos(*a), DomainError);
     CHECK_THROWS_AS(a->get_eval().acsc(*a), DomainError);
     CHECK_THROWS_AS(a->get_eval().asec(*a), DomainError);
+    CHECK_THROWS_AS(c->get_eval().sin(*c), DomainError);
 
     r = a->get_eval().atan(*a);
     REQUIRE(eq(*r, *div(pi, integer(2))));
