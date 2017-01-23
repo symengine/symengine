@@ -452,6 +452,12 @@ class EvaluateInfty : public Evaluate
             return ComplexInf;
         }
     }
+    virtual RCP<const Number> constant(const Constant &c,
+                                       const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        return (zero); // ??
+    }
 };
 
 Evaluate &Infty::get_eval() const
