@@ -52,8 +52,8 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
 else
     wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
 fi
-bash miniconda.sh -b -p $our_install_dir
-export PATH="$our_install_dir/bin:$PATH"
+bash miniconda.sh -b -p $HOME/conda_root
+export PATH="$HOME/conda_root/bin:$PATH"
 conda config --add channels conda-forge --force
 cd $our_install_dir
 
@@ -99,7 +99,8 @@ if [[ "${WITH_ECM}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs ecm=7.0.4"
 fi
 
-conda install -y $conda_pkgs
+conda create -q -p $our_install_dir ${conda_pkgs};
+source activate $our_install_dir;
 
 export LLVM_DIR=$our_install_dir/share/llvm/
 cd $SOURCE_DIR;
