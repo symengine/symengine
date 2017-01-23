@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
+#include <symengine/symengine_config.h>
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 #include <symengine/mp_wrapper.h>
 #endif
