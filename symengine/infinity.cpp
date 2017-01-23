@@ -197,8 +197,7 @@ RCP<const Number> Infty::pow(const Number &other) const
 
 RCP<const Number> Infty::rpow(const Number &other) const
 {
-    if (is_a<Complex>(other) or is_a<ComplexMPC>(other)
-        or is_a<ComplexDouble>(other)) {
+    if (is_a_Complex(other)) {
         throw NotImplementedError(
             "Raising Complex powers to Infty not yet implemented");
     } else {

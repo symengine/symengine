@@ -74,10 +74,28 @@ public:
 
     static RCP<const Basic> diff(const Zeta &self, const RCP<const Symbol> &x)
     {
-        // TODO: check if it is differentiated wrt s
-        return mul(mul(mul(minus_one, self.get_s()),
-                       zeta(add(self.get_s(), one), self.get_a())),
-                   self.get_a()->diff(x));
+        RCP<const Basic> m1 = self.get_s()->diff(x);
+        RCP<const Basic> diff
+            = mul(mul(mul(minus_one, self.get_s()),
+                      zeta(add(self.get_s(), one), self.get_a())),
+                  self.get_a()->diff(x));
+        if (eq(*m1, *zero)) {
+            return diff;
+        } else {
+            if (eq(*diff, *zero)) {
+                if (eq(*self.get_s(), *x)) {
+                    return Derivative::create(self.rcp_from_this(), {x});
+                }
+            }
+            auto s = get_dummy(self, "xi_1");
+            map_basic_basic m;
+            insert(m, s, self.get_s());
+            diff = add(diff, mul(m1, make_rcp<const Subs>(
+                                         Derivative::create(
+                                             self.create(s, self.get_a()), {s}),
+                                         m)));
+            return diff;
+        }
     }
 
     static RCP<const Basic> diff(const ASech &self, const RCP<const Symbol> &x)
@@ -266,7 +284,7 @@ public:
         SymEngine::umap_basic_num d;
         RCP<const Number> coef = zero, coef2;
         RCP<const Basic> t;
-        for (auto &p : self.dict_) {
+        for (auto &p : self.get_dict()) {
             RCP<const Basic> term = p.first->diff(x);
             if (is_a<Integer>(*term)
                 && down_cast<const Integer &>(*term).is_zero()) {
@@ -275,10 +293,11 @@ public:
                 iaddnum(outArg(coef),
                         mulnum(p.second, rcp_static_cast<const Number>(term)));
             } else if (is_a<Add>(*term)) {
-                for (auto &q : (down_cast<const Add &>(*term)).dict_)
+                for (auto &q : (down_cast<const Add &>(*term)).get_dict())
                     Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
-                iaddnum(outArg(coef),
-                        mulnum(p.second, down_cast<const Add &>(*term).coef_));
+                iaddnum(
+                    outArg(coef),
+                    mulnum(p.second, down_cast<const Add &>(*term).get_coef()));
             } else {
                 Add::as_coef_term(mul(p.second, term), outArg(coef2),
                                   outArg(t));
@@ -292,20 +311,20 @@ public:
     {
         RCP<const Number> overall_coef = zero;
         umap_basic_num add_dict;
-        for (auto &p : self.dict_) {
-            RCP<const Number> coef = self.coef_;
+        for (auto &p : self.get_dict()) {
+            RCP<const Number> coef = self.get_coef();
             RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
             if (is_a<Integer>(*factor)
                 && down_cast<const Integer &>(*factor).is_zero())
                 continue;
-            map_basic_basic d = self.dict_;
+            map_basic_basic d = self.get_dict();
             d.erase(p.first);
             if (is_a_Number(*factor)) {
                 imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
             } else if (is_a<Mul>(*factor)) {
                 RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-                imulnum(outArg(coef), tmp->coef_);
-                for (auto &q : tmp->dict_) {
+                imulnum(outArg(coef), tmp->get_coef());
+                for (auto &q : tmp->get_dict()) {
                     Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
                 }
             } else {
@@ -549,14 +568,14 @@ public:
         using Vec = typename Container::vec_type;
         Dict dict;
 
-        if (self.vars_.find(x) != self.vars_.end()) {
-            auto i = self.vars_.begin();
+        if (self.get_vars().find(x) != self.get_vars().end()) {
+            auto i = self.get_vars().begin();
             unsigned int index = 0;
             while (!(*i)->__eq__(*x)) {
                 i++;
                 index++;
             } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.poly_.dict_) {
+            for (auto bucket : self.get_poly().dict_) {
                 if (bucket.first[index] != 0) {
                     Vec v = bucket.first;
                     v[index]--;
@@ -564,11 +583,12 @@ public:
                 }
             }
             vec_basic v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
+            v.insert(v.begin(), self.get_vars().begin(), self.get_vars().end());
             return Poly::from_dict(v, std::move(dict));
         } else {
             vec_basic vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            vs.insert(vs.begin(), self.get_vars().begin(),
+                      self.get_vars().end());
             return Poly::from_dict(vs, {{}});
         }
     }

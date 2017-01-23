@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
                      .count()
               << "ms" << std::endl;
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
 
     return 0;
 }

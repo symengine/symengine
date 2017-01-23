@@ -168,12 +168,12 @@ public:
     {
         SYMENGINE_ASSERT(is_a<Poly>(o))
         const Poly &s = down_cast<const Poly &>(o);
-        int cmp = this->var_->compare(*s.var_);
+        int cmp = this->get_var()->compare(*s.get_var());
         if (cmp != 0)
             return cmp;
-        if (this->poly_ == s.poly_)
+        if (this->get_poly() == s.get_poly())
             return 0;
-        return (this->poly_.hash() < s.poly_.hash()) ? -1 : 1;
+        return (this->get_poly().hash() < s.get_poly().hash()) ? -1 : 1;
     }
 
     static Container container_from_dict(const RCP<const Basic> &var,
@@ -219,13 +219,13 @@ public:
     Cf eval(const Cf &x) const
     {
         const std::unordered_map<std::string, Cf> t
-            = {{detail::poly_print(this->var_), x}};
-        return piranha::math::evaluate<Cf, Container>(this->poly_, t);
+            = {{detail::poly_print(this->get_var()), x}};
+        return piranha::math::evaluate<Cf, Container>(this->get_poly(), t);
     }
 
     Cf get_coeff(unsigned int x) const
     {
-        return this->poly_.find_cf(pmonomial{x});
+        return this->get_poly().find_cf(pmonomial{x});
     }
 
     const Cf &get_coeff_ref(unsigned int x) const
@@ -233,15 +233,15 @@ public:
         static Cf pzero(0);
 
         term temp = term(0, pmonomial{x});
-        auto it = this->poly_._container().find(temp);
-        if (it == this->poly_._container().end())
+        auto it = this->get_poly()._container().find(temp);
+        if (it == this->get_poly()._container().end())
             return pzero;
         return it->m_cf;
     }
 
     unsigned int size() const
     {
-        if (this->poly_.size() == 0)
+        if (this->get_poly().size() == 0)
             return 0;
         return this->get_degree() + 1;
     }
@@ -252,11 +252,11 @@ public:
     typedef ContainerRevIter<Poly, const Cf &> r_iterator;
     iterator begin() const
     {
-        return iterator(this->poly_._container().begin());
+        return iterator(this->get_poly()._container().begin());
     }
     iterator end() const
     {
-        return iterator(this->poly_._container().end());
+        return iterator(this->get_poly()._container().end());
     }
     r_iterator obegin() const
     {

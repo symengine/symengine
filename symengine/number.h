@@ -27,6 +27,8 @@ public:
     virtual bool is_negative() const = 0;
     //! \return true if positive
     virtual bool is_positive() const = 0;
+    //! \return true if a complex number
+    virtual bool is_complex() const = 0;
     //! return true if the number is an exact representation
     //  false if the number is an approximation
     virtual bool is_exact() const
@@ -149,6 +151,8 @@ public:
     };
 };
 
+class Constant;
+
 //! A class that will evaluate functions numerically.
 class Evaluate
 {
@@ -179,6 +183,8 @@ public:
     virtual RCP<const Basic> log(const Basic &) const = 0;
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;
+    virtual RCP<const Number> constant(const Constant &,
+                                       const Basic &) const = 0;
 };
 
 } // SymEngine

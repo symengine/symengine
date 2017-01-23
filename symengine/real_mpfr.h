@@ -141,6 +141,12 @@ public:
     {
         return false;
     }
+    //! \returns `false`
+    // False is returned because an 'mpfr' cannot have an imaginary part
+    virtual bool is_complex() const
+    {
+        return false;
+    }
 
     /*! Add RealMPFRs
      * \param other of type Integer

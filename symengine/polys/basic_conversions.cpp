@@ -72,13 +72,13 @@ public:
 
     void bvisit(const Add &x)
     {
-        for (auto it : x.dict_)
+        for (auto it : x.get_dict())
             it.first->accept(*this);
     }
 
     void bvisit(const Mul &x)
     {
-        for (auto it : x.dict_)
+        for (auto it : x.get_dict())
             it.first->accept(*this);
     }
 
@@ -112,10 +112,10 @@ public:
 
     void bvisit(const Add &x)
     {
-        if (not x.coef_->is_zero())
-            x.coef_->accept(*this);
+        if (not x.get_coef()->is_zero())
+            x.get_coef()->accept(*this);
 
-        for (auto it : x.dict_) {
+        for (auto it : x.get_dict()) {
             RCP<const Number> mulx = one, divx = one;
 
             if (it.second->is_negative())
@@ -134,13 +134,13 @@ public:
         // needs `expand` to have been called
         RCP<const Number> mulx = one, divx = one;
 
-        if (x.coef_->is_negative())
+        if (x.get_coef()->is_negative())
             mulx = minus_one;
 
-        if (is_a<const Rational>(*x.coef_))
-            divx = down_cast<const Rational &>(*x.coef_).get_den();
+        if (is_a<const Rational>(*x.get_coef()))
+            divx = down_cast<const Rational &>(*x.get_coef()).get_den();
 
-        auto dict = x.dict_;
+        auto dict = x.get_dict();
         gen_set[Mul::from_dict(mulx, std::move(dict))] = divnum(one, divx);
     }
 

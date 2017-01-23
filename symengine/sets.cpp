@@ -325,17 +325,17 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
     if (is_a<Interval>(*o)) {
         set_basic container;
         const Interval &other = down_cast<const Interval &>(*o);
-        bool left = other.left_open_, right = other.right_open_;
+        bool left = other.get_left_open(), right = other.get_right_open();
         for (const auto &a : container_) {
             auto contain = o->contains(a);
             if (eq(*contain, *boolFalse)) {
                 if (left)
-                    if (eq(*other.start_, *a)) {
+                    if (eq(*other.get_start(), *a)) {
                         left = false;
                         continue;
                     }
                 if (right)
-                    if (eq(*other.end_, *a)) {
+                    if (eq(*other.get_end(), *a)) {
                         right = false;
                         continue;
                     }
@@ -345,18 +345,21 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
             }
         }
         if (not container.empty()) {
-            if (left == other.left_open_ and right == other.right_open_)
+            if (left == other.get_left_open()
+                and right == other.get_right_open())
                 return SymEngine::set_union({finiteset(container), o}, false);
             else
                 return SymEngine::set_union(
                     {finiteset(container),
-                     interval(other.start_, other.end_, left, right)},
+                     interval(other.get_start(), other.get_end(), left, right)},
                     false);
         } else {
-            if (left == other.left_open_ and right == other.right_open_)
+            if (left == other.get_left_open()
+                and right == other.get_right_open())
                 return o;
             else
-                return interval(other.start_, other.end_, left, right);
+                return interval(other.get_start(), other.get_end(), left,
+                                right);
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {

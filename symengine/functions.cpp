@@ -47,8 +47,8 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
 {
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        int size = s.dict_.size();
+        RCP<const Basic> coef = s.get_coef();
+        int size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
@@ -56,7 +56,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
-            for (const auto &p : s.dict_) {
+            for (const auto &p : s.get_dict()) {
                 if (eq(*p.first, *pi) and (is_a<Integer>(*p.second)
                                            or is_a<Rational>(*p.second))) {
                     check_pi = true;
@@ -72,7 +72,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
         } else if (size == 1) {
             // arg should be of form `a + n*pi`
             // where `a` is a `Number`.
-            auto p = s.dict_.begin();
+            auto p = s.get_dict().begin();
             if (eq(*p->first, *pi)
                 and (is_a<Integer>(*p->second) or is_a<Rational>(*p->second))) {
                 *n = p->second;
@@ -88,11 +88,12 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
     } else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = down_cast<const Mul &>(*arg);
-        auto p = s.dict_.begin();
+        auto p = s.get_dict().begin();
         // dict should contain symbol `pi` only
-        if (s.dict_.size() == 1 and eq(*p->first, *pi) and eq(*p->second, *one)
-            and (is_a<Integer>(*s.coef_) or is_a<Rational>(*s.coef_))) {
-            *n = s.coef_;
+        if (s.get_dict().size() == 1 and eq(*p->first, *pi)
+            and eq(*p->second, *one) and (is_a<Integer>(*s.get_coef())
+                                          or is_a<Rational>(*s.get_coef()))) {
+            *n = s.get_coef();
             *x = zero;
             return true;
         } else {
@@ -117,14 +118,15 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
 {
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
-        for (const auto &p : s.dict_) {
+        for (const auto &p : s.get_dict()) {
             const auto &temp = mul(p.second, integer(2));
             if (eq(*p.first, *pi)) {
                 if (is_a<Integer>(*temp)) {
                     return true;
                 }
                 if (is_a<Rational>(*temp)) {
-                    auto m = down_cast<const Rational &>(*temp).i;
+                    auto m = down_cast<const Rational &>(*temp)
+                                 .as_rational_class();
                     return (m < 0) or (m > 1);
                 }
                 return false;
@@ -136,15 +138,15 @@ bool trig_has_basic_shift(const RCP<const Basic> &arg)
         // dict should contain symbol `pi` only
         // and `k` should be a rational s.t. 0 < k < 1
         const Mul &s = down_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = mul(s.coef_, integer(2));
-        auto p = s.dict_.begin();
-        if (s.dict_.size() == 1 and eq(*p->first, *pi)
+        RCP<const Basic> coef = mul(s.get_coef(), integer(2));
+        auto p = s.get_dict().begin();
+        if (s.get_dict().size() == 1 and eq(*p->first, *pi)
             and eq(*p->second, *one)) {
             if (is_a<Integer>(*coef)) {
                 return true;
             }
             if (is_a<Rational>(*coef)) {
-                auto m = down_cast<const Rational &>(*coef).i;
+                auto m = down_cast<const Rational &>(*coef).as_rational_class();
                 return (m < 0) or (m > 1);
             }
             return false;
@@ -165,23 +167,25 @@ bool could_extract_minus(const Basic &arg)
     if (is_a_Number(arg)) {
         if (down_cast<const Number &>(arg).is_negative()) {
             return true;
-            // TODO: see #915
-        } else if (is_a<Complex>(arg)) {
-            const Complex &c = down_cast<const Complex &>(arg);
-            return c.real_ < 0 or (c.real_ == 0 and c.imaginary_ < 0);
+        } else if (is_a_Complex(arg)) {
+            const ComplexBase &c = down_cast<const ComplexBase &>(arg);
+            RCP<const Number> real_part = c.real_part();
+            return (real_part->is_negative())
+                   or (eq(*real_part, *zero)
+                       and c.imaginary_part()->is_negative());
         } else {
             return false;
         }
     } else if (is_a<Mul>(arg)) {
         const Mul &s = down_cast<const Mul &>(arg);
-        return could_extract_minus(*s.coef_);
+        return could_extract_minus(*s.get_coef());
     } else if (is_a<Add>(arg)) {
         const Add &s = down_cast<const Add &>(arg);
-        if (s.coef_->is_zero()) {
-            map_basic_num d(s.dict_.begin(), s.dict_.end());
+        if (s.get_coef()->is_zero()) {
+            map_basic_num d(s.get_dict().begin(), s.get_dict().end());
             return could_extract_minus(*d.begin()->second);
         } else {
-            return could_extract_minus(*s.coef_);
+            return could_extract_minus(*s.get_coef());
         }
     } else {
         return false;
@@ -194,21 +198,21 @@ bool handle_minus(const RCP<const Basic> &arg,
     if (is_a<Mul>(*arg)) {
         const Mul &s = down_cast<const Mul &>(*arg);
         // Check for -Add instances to transform -(-x + 2*y) to (x - 2*y)
-        if (s.coef_->is_minus_one() && s.dict_.size() == 1
-            && eq(*s.dict_.begin()->second, *one)) {
+        if (s.get_coef()->is_minus_one() && s.get_dict().size() == 1
+            && eq(*s.get_dict().begin()->second, *one)) {
             return not handle_minus(mul(minus_one, arg), rarg);
-        } else if (could_extract_minus(*s.coef_)) {
+        } else if (could_extract_minus(*s.get_coef())) {
             *rarg = mul(minus_one, arg);
             return true;
         }
     } else if (is_a<Add>(*arg)) {
         if (could_extract_minus(*arg)) {
             const Add &s = down_cast<const Add &>(*arg);
-            umap_basic_num d = s.dict_;
+            umap_basic_num d = s.get_dict();
             for (auto &p : d) {
                 p.second = p.second->mul(*minus_one);
             }
-            *rarg = Add::from_dict(s.coef_->mul(*minus_one), std::move(d));
+            *rarg = Add::from_dict(s.get_coef()->mul(*minus_one), std::move(d));
             return true;
         }
     } else if (could_extract_minus(*arg)) {
@@ -252,11 +256,11 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 
         rational_class m;
         if (is_a<Integer>(*n)) {
-            m = down_cast<const Integer &>(*n).i;
+            m = down_cast<const Integer &>(*n).as_integer_class();
             m /= period;
         } else {
             SYMENGINE_ASSERT(is_a<Rational>(*n));
-            m = down_cast<const Rational &>(*n).i / period;
+            m = down_cast<const Rational &>(*n).as_rational_class() / period;
             integer_class t;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
             mp_fdiv_r(t, get_num(m), get_den(m));
@@ -1376,7 +1380,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
-    } else if (is_a<PolyGamma>(*arg)) {
+    } else if (is_a<PolyGamma>(*arg) or is_a<Zeta>(*arg)) {
         bool found = false;
         auto v = arg->get_args();
         for (auto &p : x) {
@@ -2227,8 +2231,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
         if (down_cast<const Number &>(*s).is_zero()) {
             return sub(div(one, i2), a);
         } else if (down_cast<const Number &>(*s).is_one()) {
-            throw NotImplementedError(
-                "Complex infinity is not yet implemented");
+            return infty(0);
         } else if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
             auto s_ = down_cast<const Integer &>(*s).as_int();
             auto a_ = down_cast<const Integer &>(*a).as_int();
@@ -2357,7 +2360,8 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<Integer>(*arg))
         return false;
     if (is_a<Rational>(*arg)
-        and (get_den(down_cast<const Rational &>(*arg).i)) == 2) {
+        and (get_den(down_cast<const Rational &>(*arg).as_rational_class()))
+                == 2) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -2383,11 +2387,11 @@ RCP<const Basic> gamma_multiple_2(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Rational>(*arg))
     RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-    SYMENGINE_ASSERT(get_den(arg_->i) == 2)
+    SYMENGINE_ASSERT(get_den(arg_->as_rational_class()) == 2)
     RCP<const Integer> n, k;
     RCP<const Number> coeff;
-    n = quotient_f(*(integer(mp_abs(get_num(arg_->i)))),
-                   *(integer(get_den(arg_->i))));
+    n = quotient_f(*(integer(mp_abs(get_num(arg_->as_rational_class())))),
+                   *(integer(get_den(arg_->as_rational_class()))));
     if (arg_->is_positive()) {
         k = n;
         coeff = one;
@@ -2423,7 +2427,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((get_den(arg_->i)) == 2) {
+        if ((get_den(arg_->as_rational_class())) == 2) {
             return gamma_multiple_2(arg);
         } else {
             return make_rcp<const Gamma>(arg);
@@ -2448,7 +2452,8 @@ bool LowerGamma::is_canonical(const RCP<const Basic> &s,
     // Only special values are evaluated
     if (eq(*s, *one))
         return false;
-    if (is_a<Integer>(*s) and down_cast<const Integer &>(*s).i > 1)
+    if (is_a<Integer>(*s)
+        and down_cast<const Integer &>(*s).as_integer_class() > 1)
         return false;
     if (is_a<Integer>(*mul(i2, s)))
         return false;
@@ -2469,7 +2474,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
         RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
         if (s_int->is_one()) {
             return sub(one, exp(mul(minus_one, x)));
-        } else if (s_int->i > 1) {
+        } else if (s_int->as_integer_class() > 1) {
             s_int = s_int->subint(*one);
             return sub(mul(s_int, lowergamma(s_int, x)),
                        mul(pow(x, s_int), exp(mul(minus_one, x))));
@@ -2506,7 +2511,8 @@ bool UpperGamma::is_canonical(const RCP<const Basic> &s,
     // Only special values are evaluated
     if (eq(*s, *one))
         return false;
-    if (is_a<Integer>(*s) and down_cast<const Integer &>(*s).i > 1)
+    if (is_a<Integer>(*s)
+        and down_cast<const Integer &>(*s).as_integer_class() > 1)
         return false;
     if (is_a<Integer>(*mul(i2, s)))
         return false;
@@ -2527,7 +2533,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s,
         RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
         if (s_int->is_one()) {
             return exp(mul(minus_one, x));
-        } else if (s_int->i > 1) {
+        } else if (s_int->as_integer_class() > 1) {
             s_int = s_int->subint(*one);
             return add(mul(s_int, uppergamma(s_int, x)),
                        mul(pow(x, s_int), exp(mul(minus_one, x))));
@@ -2609,10 +2615,12 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
     }
     if (is_a<Integer>(*x)
         or (is_a<Rational>(*x)
-            and (get_den(down_cast<const Rational &>(*x).i)) == 2)) {
-        if (is_a<Integer>(*y)
-            or (is_a<Rational>(*y)
-                and (get_den(down_cast<const Rational &>(*y).i)) == 2)) {
+            and (get_den(down_cast<const Rational &>(*x).as_rational_class()))
+                    == 2)) {
+        if (is_a<Integer>(*y) or (is_a<Rational>(*y)
+                                  and (get_den(down_cast<const Rational &>(*y)
+                                                   .as_rational_class()))
+                                          == 2)) {
             return false;
         }
     }
@@ -2653,7 +2661,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             } else if (is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
-                if (get_den(y_->i) == 2) {
+                if (get_den(y_->as_rational_class()) == 2) {
                     return div(mul(gamma_positive_int(x), gamma_multiple_2(y)),
                                gamma_multiple_2(add(x, y)));
                 } else {
@@ -2670,7 +2678,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         if (y_int->is_positive()) {
             if (is_a<Rational>(*x)) {
                 RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
-                if (get_den(x_->i) == 2) {
+                if (get_den(x_->as_rational_class()) == 2) {
                     return div(mul(gamma_positive_int(y), gamma_multiple_2(x)),
                                gamma_multiple_2(add(x, y)));
                 } else {
@@ -2683,7 +2691,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
     }
 
     if (is_a<const Rational>(*x)
-        and get_den(down_cast<const Rational &>(*x).i) == 2) {
+        and get_den(down_cast<const Rational &>(*x).as_rational_class()) == 2) {
         if (is_a<Integer>(*y)) {
             RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
             if (y_int->is_positive()) {
@@ -2695,7 +2703,8 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             }
         }
         if (is_a<const Rational>(*y)
-            and get_den((down_cast<const Rational &>(*y)).i) == 2) {
+            and get_den((down_cast<const Rational &>(*y)).as_rational_class())
+                    == 2) {
             return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)),
                        gamma_positive_int(add(x, y)));
         }
@@ -2715,7 +2724,7 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n,
         }
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
-            auto den = get_den(x_->i);
+            auto den = get_den(x_->as_rational_class());
             if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
@@ -2769,8 +2778,8 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
         }
         if (is_a<Rational>(*x_)) {
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
-            const auto den = get_den(x->i);
-            const auto num = get_num(x->i);
+            const auto den = get_den(x->as_rational_class());
+            const auto num = get_num(x->as_rational_class());
             const integer_class r = num % den;
             RCP<const Basic> res;
             if (den == 2) {

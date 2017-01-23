@@ -53,14 +53,14 @@ void StrPrinter::bvisit(const Infty &x)
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
-    s << x.i;
+    s << x.as_integer_class();
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Rational &x)
 {
     std::ostringstream s;
-    s << x.i;
+    s << x.as_rational_class();
     str_ = s.str();
 }
 
@@ -135,12 +135,12 @@ void StrPrinter::bvisit(const ComplexDouble &x)
 void StrPrinter::bvisit(const Interval &x)
 {
     std::ostringstream s;
-    if (x.left_open_)
+    if (x.get_left_open())
         s << "(";
     else
         s << "[";
-    s << *x.start_ << ", " << *x.end_;
-    if (x.right_open_)
+    s << *x.get_start() << ", " << *x.get_end();
+    if (x.get_right_open())
         s << ")";
     else
         s << "]";
@@ -228,8 +228,9 @@ void StrPrinter::bvisit(const EmptySet &x)
 void StrPrinter::bvisit(const Union &x)
 {
     std::ostringstream s;
-    s << apply(*x.container_.begin());
-    for (auto it = ++(x.container_.begin()); it != x.container_.end(); ++it) {
+    s << apply(*x.get_container().begin());
+    for (auto it = ++(x.get_container().begin()); it != x.get_container().end();
+         ++it) {
         s << " U " << apply(*it);
     }
     str_ = s.str();
@@ -243,7 +244,7 @@ void StrPrinter::bvisit(const UniversalSet &x)
 void StrPrinter::bvisit(const FiniteSet &x)
 {
     std::ostringstream s;
-    s << x.container_;
+    s << x.get_container();
     str_ = s.str();
 }
 
@@ -300,10 +301,10 @@ void StrPrinter::bvisit(const Add &x)
     std::ostringstream o;
     bool first = true;
     std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
-        x.dict_.begin(), x.dict_.end());
+        x.get_dict().begin(), x.get_dict().end());
 
-    if (neq(*(x.coef_), *zero)) {
-        o << this->apply(x.coef_);
+    if (neq(*(x.get_coef()), *zero)) {
+        o << this->apply(x.get_coef());
         first = false;
     }
     for (const auto &p : dict) {
@@ -351,14 +352,14 @@ void StrPrinter::bvisit(const Mul &x)
     bool num = false;
     unsigned den = 0;
 
-    if (eq(*(x.coef_), *minus_one)) {
+    if (eq(*(x.get_coef()), *minus_one)) {
         o << "-";
-    } else if (neq(*(x.coef_), *one)) {
-        o << parenthesizeLT(x.coef_, PrecedenceEnum::Mul) << "*";
+    } else if (neq(*(x.get_coef()), *one)) {
+        o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul) << "*";
         num = true;
     }
 
-    for (const auto &p : x.dict_) {
+    for (const auto &p : x.get_dict()) {
         if ((is_a<Integer>(*p.second) or is_a<Rational>(*p.second))
             and down_cast<const Number &>(*p.second).is_negative()
             and neq(*(p.first), *E)) {
@@ -661,7 +662,7 @@ void StrPrinter::bvisit(const Derivative &x)
 void StrPrinter::bvisit(const Subs &x)
 {
     std::ostringstream o, vars, point;
-    for (auto p = x.get_dict().begin(); p != x.dict_.end(); p++) {
+    for (auto p = x.get_dict().begin(); p != x.get_dict().end(); p++) {
         if (p != x.get_dict().begin()) {
             vars << ", ";
             point << ", ";
@@ -669,7 +670,7 @@ void StrPrinter::bvisit(const Subs &x)
         vars << apply(p->first);
         point << apply(p->second);
     }
-    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), ("
+    o << "Subs(" << apply(x.get_arg()) << ", (" << vars.str() << "), ("
       << point.str() << "))";
     str_ = o.str();
 }
@@ -685,10 +686,10 @@ void StrPrinter::bvisit(const MIntPoly &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = sorted_keys(x.poly_.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.get_poly().dict_);
 
     for (vec_uint exps : v) {
-        integer_class c = x.poly_.dict_.find(exps)->second;
+        integer_class c = x.get_poly().dict_.find(exps)->second;
         if (!first) {
             s << " " << _print_sign(c) << " ";
         } else if (c < 0) {
@@ -698,7 +699,7 @@ void StrPrinter::bvisit(const MIntPoly &x)
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : x.vars_) {
+        for (auto it : x.get_vars()) {
             if (exps[i] != 0) {
                 if (!first_var) {
                     expr << "*";
@@ -733,10 +734,10 @@ void StrPrinter::bvisit(const MExprPoly &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = sorted_keys(x.poly_.dict_);
+    std::vector<vec_int> v = sorted_keys(x.get_poly().dict_);
 
     for (vec_int exps : v) {
-        Expression c = x.poly_.dict_.find(exps)->second;
+        Expression c = x.get_poly().dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -747,7 +748,7 @@ void StrPrinter::bvisit(const MExprPoly &x)
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : x.vars_) {
+        for (auto it : x.get_vars()) {
             if (exps[i] != 0) {
                 if (!first_var) {
                     expr << "*";

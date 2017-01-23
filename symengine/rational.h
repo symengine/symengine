@@ -14,7 +14,7 @@ namespace SymEngine
 //! Rational Class
 class Rational : public Number
 {
-public:
+private:
     //! `i` : object of `rational_class`
     rational_class i;
 
@@ -47,7 +47,7 @@ public:
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
-    inline rational_class as_rational_class() const
+    inline const rational_class &as_rational_class() const
     {
         return this->i;
     }
@@ -81,6 +81,12 @@ public:
     {
         return i < 0;
     }
+    //! \returns `false`
+    // False is returned because a rational cannot have an imaginary part
+    inline virtual bool is_complex() const
+    {
+        return false;
+    }
 
     //! \return negative of `this`
     inline RCP<const Rational> neg() const
@@ -105,7 +111,7 @@ public:
      * */
     inline RCP<const Number> addrat(const Integer &other) const
     {
-        return from_mpq(this->i + other.i);
+        return from_mpq(this->i + other.as_integer_class());
     }
     /*! Subtract Rationals
      * \param other of type Rational
@@ -119,11 +125,11 @@ public:
      * */
     inline RCP<const Number> subrat(const Integer &other) const
     {
-        return from_mpq(this->i - other.i);
+        return from_mpq(this->i - other.as_integer_class());
     }
     inline RCP<const Number> rsubrat(const Integer &other) const
     {
-        return from_mpq(other.i - this->i);
+        return from_mpq(other.as_integer_class() - this->i);
     }
     /*! Multiply Rationals
      * \param other of type Rational
@@ -137,7 +143,7 @@ public:
      * */
     inline RCP<const Number> mulrat(const Integer &other) const
     {
-        return from_mpq(this->i * other.i);
+        return from_mpq(this->i * other.as_integer_class());
     }
     /*! Divide Rationals
      * \param other of type Rational
@@ -145,7 +151,11 @@ public:
     inline RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (this->i == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
             return from_mpq(this->i / other.i);
         }
@@ -155,18 +165,26 @@ public:
      * */
     inline RCP<const Number> divrat(const Integer &other) const
     {
-        if (other.i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+        if (other.as_integer_class() == 0) {
+            if (this->i == 0) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
-            return from_mpq(this->i / other.i);
+            return from_mpq(this->i / other.as_integer_class());
         }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
-            throw DivisionByZeroError("Division By Zero");
+            if (other.is_zero()) {
+                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            } else {
+                return ComplexInf;
+            }
         } else {
-            return from_mpq(other.i / this->i);
+            return from_mpq(other.as_integer_class() / this->i);
         }
     }
     /*! Raise Rationals to power `other`
@@ -175,7 +193,7 @@ public:
     inline RCP<const Number> powrat(const Integer &other) const
     {
         bool neg = other.is_negative();
-        integer_class exp_ = other.i;
+        integer_class exp_ = other.as_integer_class();
         if (neg)
             exp_ = -exp_;
         if (not mp_fits_ulong_p(exp_))

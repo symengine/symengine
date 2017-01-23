@@ -15,8 +15,8 @@ hash_t UIntPolyFlint::__hash__() const
     std::hash<std::string> str_hash;
     hash_t seed = UINTPOLYFLINT;
 
-    seed += var_->hash();
-    hash_combine(seed, str_hash(poly_.to_string()));
+    seed += get_var()->hash();
+    hash_combine(seed, str_hash(get_poly().to_string()));
     return seed;
 }
 
@@ -31,8 +31,8 @@ hash_t URatPolyFlint::__hash__() const
     std::hash<std::string> str_hash;
     hash_t seed = URATPOLYFLINT;
 
-    seed += var_->hash();
-    hash_combine(seed, str_hash(poly_.to_string()));
+    seed += get_var()->hash();
+    hash_combine(seed, str_hash(get_poly().to_string()));
     return seed;
 }
 }

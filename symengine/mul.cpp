@@ -321,7 +321,8 @@ void Mul::as_base_exp(const RCP<const Basic> &self,
         if (is_a<Rational>(*self)) {
             RCP<const Rational> self_new
                 = rcp_static_cast<const Rational>(self);
-            if (mp_abs(get_num(self_new->i)) < mp_abs(get_den(self_new->i))) {
+            if (mp_abs(get_num(self_new->as_rational_class()))
+                < mp_abs(get_den(self_new->as_rational_class()))) {
                 *exp = minus_one;
                 *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
             } else {
@@ -353,16 +354,16 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         // To further speed this up, the upper level code could tell us that we
         // are inside an Add, then we don't even have can simply skip the
         // following two lines.
-        if (not(A->coef_->is_one()) or not(B->coef_->is_one()))
-            coef = mulnum(A->coef_, B->coef_);
-        d = A->dict_;
-        for (const auto &p : B->dict_)
+        if (not(A->get_coef()->is_one()) or not(B->get_coef()->is_one()))
+            coef = mulnum(A->get_coef(), B->get_coef());
+        d = A->get_dict();
+        for (const auto &p : B->get_dict())
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
     } else if (is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        coef = (down_cast<const Mul &>(*a)).coef_;
-        d = (down_cast<const Mul &>(*a)).dict_;
+        coef = (down_cast<const Mul &>(*a)).get_coef();
+        d = (down_cast<const Mul &>(*a)).get_dict();
         if (is_a_Number(*b)) {
             imulnum(outArg(coef), rcp_static_cast<const Number>(b));
         } else {
@@ -372,8 +373,8 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else if (is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        coef = (down_cast<const Mul &>(*b)).coef_;
-        d = (down_cast<const Mul &>(*b)).dict_;
+        coef = (down_cast<const Mul &>(*b)).get_coef();
+        d = (down_cast<const Mul &>(*b)).get_dict();
         if (is_a_Number(*a)) {
             imulnum(outArg(coef), rcp_static_cast<const Number>(a));
         } else {
@@ -406,8 +407,8 @@ RCP<const Basic> mul(const vec_basic &a)
     for (const auto &i : a) {
         if (is_a<Mul>(*i)) {
             RCP<const Mul> A = rcp_static_cast<const Mul>(i);
-            imulnum(outArg(coef), A->coef_);
-            for (const auto &p : A->dict_)
+            imulnum(outArg(coef), A->get_coef());
+            for (const auto &p : A->get_dict())
                 Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
         } else if (is_a_Number(*i)) {
             imulnum(outArg(coef), rcp_static_cast<const Number>(i));
@@ -423,8 +424,13 @@ RCP<const Basic> mul(const vec_basic &a)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero())
-        throw DivisionByZeroError("Division By Zero");
+    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
+        if (is_a_Number(*a) and down_cast<const Number &>(*a).is_zero()) {
+            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+        } else {
+            return ComplexInf;
+        }
+    }
     return mul(a, pow(b, minus_one));
 }
 

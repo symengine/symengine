@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 //! Complex Double Class to hold std::complex<double> values
-class ComplexDouble : public Number
+class ComplexDouble : public ComplexBase
 {
 public:
     std::complex<double> i;
@@ -30,9 +30,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! Get the real part of the complex number
-    RCP<const Number> real_part() const;
+    virtual RCP<const Number> real_part() const;
     //! Get the imaginary part of the complex number
-    RCP<const Number> imaginary_part() const;
+    virtual RCP<const Number> imaginary_part() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const
@@ -44,6 +44,11 @@ public:
     inline virtual bool is_negative() const
     {
         return false;
+    }
+    //! \returns `true`
+    inline virtual bool is_complex() const
+    {
+        return true;
     }
     //! \return self as a double
     inline std::complex<double> as_complex_double() const
@@ -82,7 +87,8 @@ public:
      * */
     RCP<const Number> addcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(i + mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i + mp_get_d(other.as_integer_class()));
     }
 
     /*! Add ComplexDoubles
@@ -90,7 +96,8 @@ public:
      * */
     RCP<const Number> addcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(i + mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i + mp_get_d(other.as_rational_class()));
     }
 
     /*! Add ComplexDoubles
@@ -142,7 +149,8 @@ public:
      * */
     RCP<const Number> subcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(i - mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i - mp_get_d(other.as_integer_class()));
     }
 
     /*! Subtract ComplexDoubles
@@ -150,7 +158,8 @@ public:
      * */
     RCP<const Number> subcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(i - mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i - mp_get_d(other.as_rational_class()));
     }
 
     /*! Subtract ComplexDoubles
@@ -202,7 +211,8 @@ public:
      * */
     RCP<const Number> rsubcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(mp_get_d(other.i) - i);
+        return make_rcp<const ComplexDouble>(mp_get_d(other.as_integer_class())
+                                             - i);
     }
 
     /*! Subtract ComplexDoubles
@@ -210,7 +220,8 @@ public:
      * */
     RCP<const Number> rsubcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(mp_get_d(other.i) - i);
+        return make_rcp<const ComplexDouble>(mp_get_d(other.as_rational_class())
+                                             - i);
     }
 
     /*! Subtract ComplexDoubles
@@ -252,7 +263,8 @@ public:
      * */
     RCP<const Number> mulcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(i * mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i * mp_get_d(other.as_integer_class()));
     }
 
     /*! Multiply ComplexDoubles
@@ -260,7 +272,8 @@ public:
      * */
     RCP<const Number> mulcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(i * mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i * mp_get_d(other.as_rational_class()));
     }
 
     /*! Multiply ComplexDoubles
@@ -312,7 +325,8 @@ public:
      * */
     RCP<const Number> divcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(i / mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i / mp_get_d(other.as_integer_class()));
     }
 
     /*! Divide ComplexDoubles
@@ -320,7 +334,8 @@ public:
      * */
     RCP<const Number> divcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(i / mp_get_d(other.i));
+        return make_rcp<const ComplexDouble>(
+            i / mp_get_d(other.as_rational_class()));
     }
 
     /*! Divide ComplexDoubles
@@ -372,7 +387,8 @@ public:
      * */
     RCP<const Number> rdivcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(mp_get_d(other.i) / i);
+        return make_rcp<const ComplexDouble>(mp_get_d(other.as_integer_class())
+                                             / i);
     }
 
     /*! Divide ComplexDoubles
@@ -380,7 +396,8 @@ public:
      * */
     RCP<const Number> rdivcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(mp_get_d(other.i) / i);
+        return make_rcp<const ComplexDouble>(mp_get_d(other.as_rational_class())
+                                             / i);
     }
 
     /*! Divide ComplexDoubles
@@ -423,8 +440,8 @@ public:
      * */
     RCP<const Number> powcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(i, mp_get_d(other.i)));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            i, mp_get_d(other.as_integer_class())));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -432,8 +449,8 @@ public:
      * */
     RCP<const Number> powcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(i, mp_get_d(other.i)));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            i, mp_get_d(other.as_rational_class())));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -486,8 +503,8 @@ public:
      * */
     RCP<const Number> rpowcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(mp_get_d(other.i), i));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            mp_get_d(other.as_integer_class()), i));
     }
 
     /*! Raise `other` to power ComplexDouble
@@ -495,8 +512,8 @@ public:
      * */
     RCP<const Number> rpowcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(mp_get_d(other.i), i));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            mp_get_d(other.as_rational_class()), i));
     }
 
     /*! Raise `other` to power ComplexDouble

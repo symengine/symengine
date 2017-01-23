@@ -101,10 +101,10 @@ using SymEngine::Rational;
 using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
+using SymEngine::ComplexInf;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
-using SymEngine::DivisionByZeroError;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -481,7 +481,7 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = neg(cot(add(div(pi, i6), y)));
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), DivisionByZeroError);
+    REQUIRE(eq(*tan(mul(integer(5), div(pi, i2))), *ComplexInf));
 
     r1 = tan(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -591,7 +591,7 @@ TEST_CASE("Cot: functions", "[functions]")
     r2 = cot(add(div(mul(i2, pi), integer(7)), y));
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(cot(mul(integer(7), pi)), DivisionByZeroError);
+    REQUIRE(eq(*cot(mul(integer(7), pi)), *ComplexInf));
 
     r1 = cot(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -702,8 +702,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = add(div(pi, i5), y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(csc(mul(integer(7), pi)), DivisionByZeroError);
-    CHECK_THROWS_AS(csc(integer(0)), DivisionByZeroError);
+    REQUIRE(eq(*csc(mul(integer(7), pi)), *ComplexInf));
+    REQUIRE(eq(*csc(integer(0)), *ComplexInf));
 
     r1 = csc(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -817,7 +817,7 @@ TEST_CASE("Sec: functions", "[functions]")
     r2 = add(div(pi, i3), y);
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), DivisionByZeroError);
+    REQUIRE(eq(*sec(mul(integer(7), div(pi, i2))), *ComplexInf));
 
     r1 = sec(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
@@ -2249,10 +2249,16 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
 TEST_CASE("Zeta: functions", "[functions]")
 {
+    RCP<const Symbol> s = symbol("s");
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2287,7 +2293,44 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
-    CHECK_THROWS_AS(zeta(one, i2), NotImplementedError);
+    r1 = zeta(one, x)->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(zero, x)->diff(x);
+    REQUIRE(eq(*r1, *im1));
+
+    r1 = zeta(s, x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(i2, x)->diff(x);
+    r2 = mul(im2, zeta(i3, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(s, x)->diff(s);
+    r2 = Derivative::create(zeta(s, x), {s});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(one, i2)->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(mul(mul(pow(i2, x), pow(x, i2)), log(i2)),
+                     zeta(add(pow(x, i2), i1), pow(i2, x))),
+                 im1),
+             mul(mul(i2, x), Subs::create(Derivative::create(
+                                              zeta(_xi_1, pow(i2, x)), {_xi_1}),
+                                          {{_xi_1, pow(x, i2)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(s, pow(s, i2))->diff(x);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = zeta(pow(s, i3), pow(i2, x))->diff(s);
+    r2 = mul(i3,
+             mul(pow(s, i2), Subs::create(Derivative::create(
+                                              zeta(_xi_1, pow(i2, x)), {_xi_1}),
+                                          {{_xi_1, pow(s, i3)}})));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Levi Civita: functions", "[functions]")
@@ -2837,7 +2880,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     r1 = asin(real_mpfr(a));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 157079632679489661_z;
@@ -2856,7 +2899,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     r1 = asin(complex_mpc(c));
     REQUIRE(is_a<ComplexMPC>(*r1));
-    b = down_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
     q = 66623943249251525_z;
