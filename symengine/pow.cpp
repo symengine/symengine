@@ -292,18 +292,13 @@ bool Log::is_canonical(const Basic &arg) const
     // log(E)
     if (eq(arg, *E))
         return false;
-    // log(Inf)
-    if (eq(arg, *Inf))
-        return false;
-    if (eq(arg, *NegInf))
-        return false;
-    if (eq(arg, *ComplexInf))
-        return false;
 
     // Currently not implemented, however should be expanded as `-ipi +
     // log(-arg)`
     if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
         return false;
+
+    // log(Inf) is also handled here.
     if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
         return false;
 
@@ -349,16 +344,14 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     if (is_a<Complex>(*arg)) {
         RCP<const Complex> _arg = rcp_static_cast<const Complex>(arg);
         if (_arg->is_re_zero()) {
-            if (not _arg->is_exact()) {
-                return _arg->get_eval().log(*_arg);
-            } else if (_arg->imaginary_part()->is_negative()) {
-                return sub(log(mul(minus_one, _arg->imaginary_part())),
+            RCP<const Number> arg_img = _arg->imaginary_part();
+            if (arg_img->is_negative()) {
+                return sub(log(mul(minus_one, arg_img)),
                            mul(I, div(pi, integer(2))));
-            } else if (_arg->imaginary_ == 0) {
+            } else if (arg_img->is_zero()) {
                 return ComplexInf;
-            } else if (_arg->imaginary_part()->is_positive()) {
-                return add(log(_arg->imaginary_part()),
-                           mul(I, div(pi, integer(2))));
+            } else if (arg_img->is_positive()) {
+                return add(log(arg_img), mul(I, div(pi, integer(2))));
             }
         }
     }

@@ -243,106 +243,52 @@ class EvaluateInfty : public Evaluate
     virtual RCP<const Basic> sin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("sin(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("sin(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("sin is not defined for infinite values");
     }
     virtual RCP<const Basic> cos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("cos(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("cos(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("cos is not defined for infinite values");
     }
     virtual RCP<const Basic> tan(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("tan(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("tan(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("tan is not defined for infinite values");
     }
     virtual RCP<const Basic> cot(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("cot(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("cot(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("cot is not defined for infinite values");
     }
     virtual RCP<const Basic> sec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("sec(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("sec(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("sec is not defined for infinite values");
     }
     virtual RCP<const Basic> csc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("csc(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError("csc(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("csc is not defined for infinite values");
     }
     virtual RCP<const Basic> asin(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("asin(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError(
-                "asin(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("asin is not defined for infinite values");
     }
     virtual RCP<const Basic> acos(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("acos(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError(
-                "acos(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("acos is not defined for infinite values");
     }
     virtual RCP<const Basic> acsc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("acsc(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError(
-                "acsc(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("acsc is not defined for infinite values");
     }
     virtual RCP<const Basic> asec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive() or s.is_negative()) {
-            throw DomainError("asec(x) is not defined for x = Infinity");
-        } else {
-            throw DomainError(
-                "asec(x) is not defined for x = Complex Infinity");
-        }
+        throw DomainError("asec is not defined for infinite values");
     }
     virtual RCP<const Basic> atan(const Basic &x) const override
     {
@@ -353,8 +299,7 @@ class EvaluateInfty : public Evaluate
         } else if (s.is_negative()) {
             return mul(minus_one, (div(pi, integer(2))));
         } else {
-            throw DomainError(
-                "atan(x) is not defined for x = Complex Infinity");
+            throw DomainError("atan is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> acot(const Basic &x) const override
@@ -364,21 +309,17 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return zero;
         } else {
-            throw DomainError(
-                "acot(x) is not defined for x = Complex Infinity");
+            throw DomainError("acot is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> sinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
         const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive()) {
-            return Inf;
-        } else if (s.is_negative()) {
-            return NegInf;
+        if (s.is_positive() or s.is_negative()) {
+            return infty(s.get_direction());
         } else {
-            throw DomainError(
-                "sinh(x) is not defined for x = Complex Infinity");
+            throw DomainError("sinh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> csch(const Basic &x) const override
@@ -388,8 +329,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return zero;
         } else {
-            throw DomainError(
-                "csch(x) is not defined for x = Complex Infinity");
+            throw DomainError("csch is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> cosh(const Basic &x) const override
@@ -399,8 +339,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return Inf;
         } else {
-            throw DomainError(
-                "cosh(x) is not defined for x = Complex Infinity");
+            throw DomainError("cosh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> sech(const Basic &x) const override
@@ -410,8 +349,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return zero;
         } else {
-            throw DomainError(
-                "sech(x) is not defined for x = Complex Infinity");
+            throw DomainError("sech is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> tanh(const Basic &x) const override
@@ -423,8 +361,7 @@ class EvaluateInfty : public Evaluate
         } else if (s.is_negative()) {
             return minus_one;
         } else {
-            throw DomainError(
-                "tanh(x) is not defined for x = Complex Infinity");
+            throw DomainError("tanh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> coth(const Basic &x) const override
@@ -436,21 +373,17 @@ class EvaluateInfty : public Evaluate
         } else if (s.is_negative()) {
             return minus_one;
         } else {
-            throw DomainError(
-                "coth(x) is not defined for x = Complex Infinity");
+            throw DomainError("coth is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> asinh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
         const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive()) {
-            return Inf;
-        } else if (s.is_negative()) {
-            return NegInf;
+        if (s.is_positive() or s.is_negative()) {
+            return infty(s.get_direction());
         } else {
-            throw DomainError(
-                "asinh(x) is not defined for x = Complex Infinity");
+            throw DomainError("asinh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> acosh(const Basic &x) const override
@@ -460,8 +393,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return Inf;
         } else {
-            throw DomainError(
-                "acosh(x) is not defined for x = Complex Infinity");
+            throw DomainError("acosh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> acsch(const Basic &x) const override
@@ -471,8 +403,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return zero;
         } else {
-            throw DomainError(
-                "acsch(x) is not defined for x = Complex Infinity");
+            throw DomainError("acsch is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> atanh(const Basic &x) const override
@@ -484,8 +415,7 @@ class EvaluateInfty : public Evaluate
         } else if (s.is_negative()) {
             return div(mul(pi, I), integer(2));
         } else {
-            throw DomainError(
-                "atanh(x) is not defined for x = Complex Infinity");
+            throw DomainError("atanh is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> acoth(const Basic &x) const override
@@ -495,8 +425,7 @@ class EvaluateInfty : public Evaluate
         if (s.is_positive() or s.is_negative()) {
             return zero;
         } else {
-            throw DomainError(
-                "acoth(x) is not defined for x = Complex Infinity");
+            throw DomainError("acoth is not defined for Complex Infinity");
         }
     }
     virtual RCP<const Basic> abs(const Basic &x) const override
@@ -508,9 +437,7 @@ class EvaluateInfty : public Evaluate
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
         const Infty &s = down_cast<const Infty &>(x);
-        if (s.is_positive()) {
-            return Inf;
-        } else if (s.is_negative()) {
+        if (s.is_positive() or s.is_negative()) {
             return Inf;
         } else {
             return ComplexInf;
@@ -519,7 +446,12 @@ class EvaluateInfty : public Evaluate
     virtual RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        throw NotImplementedError("Not Implemented.");
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return Inf;
+        } else {
+            return ComplexInf;
+        }
     }
 };
 
