@@ -273,11 +273,8 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
     Sieve::iterator pi(B);
     unsigned p;
     while ((p = pi.next_prime()) <= B) {
-        m = 1;
-        // calculate log(p, B), this can be improved
-        while (m <= B / p) {
-            m = m * p;
-        }
+        unsigned temp = (std::log(B) / std::log(p));
+        mp_pow_ui(m, p, temp);
         mp_powm(_c, _c, m, n);
     }
     _c = _c - 1;
@@ -375,13 +372,10 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     if (mp_perfect_power_p(_n)) {
 
         unsigned long int i = 1;
-        integer_class m, rem;
+        integer_class rem;
         rem = 1; // Any non zero number
-        m = 2;   // set `m` to 2**i, i = 1 at the begining
 
-        // calculate log2n, this can be improved
-        for (; m < _n; ++i)
-            m = m * 2;
+        i = (std::log(n) / std::log(2));
 
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
