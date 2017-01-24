@@ -1004,13 +1004,12 @@ class EvaluateMPFR : public Evaluate
             throw NotImplementedError("Not Implemented.");
         }
     }
-    virtual RCP<const Number> constant(const Constant &c,
-                                       const Basic &x) const override
+    virtual RCP<const Basic> exp(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         mpfr_class t(mpfr_get_prec(x_));
-        eval_mpfr(t.get_mpfr_t(), c, MPFR_RNDN);
+        mpfr_exp(t.get_mpfr_t(), x_, MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
 };
