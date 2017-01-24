@@ -1584,8 +1584,7 @@ bool Csch::is_canonical(const RCP<const Basic> &arg) const
 RCP<const Basic> csch(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
-        // Answer is infinity. Yet to be implemented in SymEngine
-        throw NotImplementedError("Not Implemented");
+        return ComplexInf;
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -1776,8 +1775,7 @@ bool Coth::is_canonical(const RCP<const Basic> &arg) const
 RCP<const Basic> coth(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
-        // Answer is infinity. Yet to be implemented in SymEngine
-        throw NotImplementedError("Not Implemented");
+        return ComplexInf;
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -2423,7 +2421,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         if (arg_->is_positive()) {
             return gamma_positive_int(arg);
         } else {
-            throw NotImplementedError("Complex Infinity not yet implemented");
+            return ComplexInf;
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
@@ -2588,7 +2586,7 @@ RCP<const Basic> loggamma(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
         if (not arg_int->is_positive()) {
-            throw NotImplementedError("Infinity not yet implemented");
+            return Inf;
         }
         if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
             return zero;
@@ -2643,7 +2641,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
     // Only special values are being evaluated
     if (eq(*add(x, y), *one)) {
-        throw NotImplementedError("Complex Infinity not yet implemented");
+        return ComplexInf;
     }
 
     if (is_a<Integer>(*x)) {
@@ -2656,8 +2654,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                         mul(gamma_positive_int(x), gamma_positive_int(y)),
                         gamma_positive_int(add(x, y)));
                 } else {
-                    throw NotImplementedError(
-                        "Complex Infinity not yet implemented");
+                    return ComplexInf;
                 }
             } else if (is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
@@ -2669,7 +2666,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             }
         } else {
-            throw NotImplementedError("Complex Infinity not yet implemented");
+            return ComplexInf;
         }
     }
 
@@ -2686,7 +2683,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             }
         } else {
-            throw NotImplementedError("Complex Infinity not yet implemented");
+            return ComplexInf;
         }
     }
 
@@ -2698,8 +2695,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 return div(mul(gamma_multiple_2(x), gamma_positive_int(y)),
                            gamma_multiple_2(add(x, y)));
             } else {
-                throw NotImplementedError(
-                    "Complex Infinity not yet implemented");
+                return ComplexInf;
             }
         }
         if (is_a<const Rational>(*y)
@@ -2761,7 +2757,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
     // Only special values are being evaluated
     if (is_a_Number(*x_)
         and not(down_cast<const Number &>(*x_)).is_positive()) {
-        throw NotImplementedError("Complex Infinity not yet implemented");
+        return ComplexInf;
     }
     if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
         auto n = down_cast<const Integer &>(*n_).as_int();
