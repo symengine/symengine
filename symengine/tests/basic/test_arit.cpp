@@ -49,6 +49,8 @@ using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::ComplexInf;
 using SymEngine::down_cast;
+using SymEngine::pi;
+using SymEngine::minus_one;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -840,28 +842,32 @@ TEST_CASE("Log: arit", "[arit]")
     REQUIRE(eq(*r1, *zero));
 
     r1 = log(i3);
-    REQUIRE((r1->__str__()) == "log(3)");
+    REQUIRE(r1->get_type_code() == SymEngine::LOG);
 
     r1 = log(im3);
-    REQUIRE((r1->__str__()) == "log(3) + I*pi");
+    r2 = add(log(i3), mul(I, pi));
+    REQUIRE(eq(*r1, *r2));
 
     RCP<const Number> c1;
 
     c1 = Complex::from_two_nums(*integer(0), *integer(2));
     r1 = log(c1);
-    REQUIRE(r1->__str__() == "log(2) + 1/2*I*pi");
+    r2 = add(log(i2), mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
 
     c1 = Complex::from_two_nums(*integer(0), *integer(-2));
     r1 = log(c1);
-    REQUIRE(r1->__str__() == "log(2) - 1/2*I*pi");
+    r2 = sub(log(i2), mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
 
     c1 = Complex::from_two_nums(*integer(0), *integer(-1));
     r1 = log(c1);
-    REQUIRE(r1->__str__() == "-1/2*I*pi");
+    r2 = mul(minus_one, mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
 
     c1 = Complex::from_two_nums(*integer(2), *integer(-2));
     r1 = log(c1);
-    REQUIRE(r1->__str__() == "log(2 - 2*I)");
+    REQUIRE(r1->get_type_code() == SymEngine::LOG);
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));
