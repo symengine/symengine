@@ -142,13 +142,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 return down_cast<const Number &>(*a)
                     .pow(*rcp_static_cast<const Number>(b));
             }
-        } else if (is_a<Constant>(*a)) {
+        } else if (eq(*a, *E)) {
             RCP<const Number> p = rcp_static_cast<const Number>(b);
             if (not p->is_exact()) {
                 // Evaluate E**0.2, but not E**2
-                return p->get_eval()
-                    .constant(down_cast<const Constant &>(*a), *p)
-                    ->pow(*p);
+                return p->get_eval().exp(*p);
             }
         } else if (is_a<Mul>(*a)) {
             // Expand (x*y)**b = x**b*y**b
@@ -157,14 +155,6 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             down_cast<const Mul &>(*a)
                 .power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
             return Mul::from_dict(coef, std::move(d));
-        }
-    }
-    if (is_a<Constant>(*b) and is_a_Number(*a)) {
-        // Handle 2.0**E
-        RCP<const Number> p = rcp_static_cast<const Number>(a);
-        if (not p->is_exact()) {
-            return p->pow(
-                *p->get_eval().constant(down_cast<const Constant &>(*b), *p));
         }
     }
     if (is_a<Pow>(*a) and is_a<Integer>(*b)) {

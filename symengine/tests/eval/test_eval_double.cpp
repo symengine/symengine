@@ -107,8 +107,6 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         {SymEngine::atan2(r1, neg(r2)), 2.08867384922582},
         {mul(pi, mul(E, EulerGamma)), 4.92926836742289},
         {pow(mul(EulerGamma, r4), integer(8)), 4813.54354505117582},
-        {pow(E, real_double(0.2)), 1.22140275816017},
-        {pow(real_double(0.2), E), 0.01258932770594},
         {mul(EulerGamma, integer(10)), 5.7721566490153286},
         {max({r2, r1}), 0.841470984808},
         {min({add(r1, r4), r2}), 0.479425538604},
@@ -117,7 +115,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         {loggamma(pi), 0.82769459232343710152},
         {add(asech(div(one, integer(2))), real_double(0.1)), 1.41695789692482},
         {r5, 0.841470984807897},
-        {pow(E, r5), 2.31977682471585}};
+    };
 
     for (unsigned i = 0; i < vec.size(); i++) {
         double val = eval_double(*vec[i].first);
