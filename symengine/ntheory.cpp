@@ -274,7 +274,7 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
     unsigned p;
     while ((p = pi.next_prime()) <= B) {
         unsigned temp = (std::log(B) / std::log(p));
-        mp_pow_ui(m, p, temp);
+        mp_pow_ui(m, integer_class(p), temp);
         mp_powm(_c, _c, m, n);
     }
     _c = _c - 1;
@@ -375,7 +375,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         integer_class rem;
         rem = 1; // Any non zero number
 
-        i = (std::log(n) / std::log(2));
+        i = (std::log(mp_get_d(_n)) / std::log(2));
 
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
