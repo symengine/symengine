@@ -35,6 +35,7 @@ using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 using SymEngine::DomainError;
 using SymEngine::pi;
+using SymEngine::gamma;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
