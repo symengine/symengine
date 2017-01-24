@@ -246,6 +246,16 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
             return number(std::log(std::complex<double>(d)));
         }
     }
+    virtual RCP<const Basic> erf(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        return number(std::erf(down_cast<const RealDouble &>(x).i));
+    }
+    virtual RCP<const Basic> erfc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        return number(std::erfc(down_cast<const RealDouble &>(x).i));
+    }
 };
 
 class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
@@ -299,6 +309,17 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
         return number(std::log(down_cast<const ComplexDouble &>(x).i));
+    }
+    virtual RCP<const Basic> erf(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        throw NotImplementedError("erf is not implemented for Complex numbers");
+    }
+    virtual RCP<const Basic> erfc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        throw NotImplementedError(
+            "erfc is not implemented for Complex numbers");
     }
 };
 

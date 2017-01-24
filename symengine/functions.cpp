@@ -2396,6 +2396,9 @@ bool Erf::is_canonical(const RCP<const Basic> &arg) const
         return false;
     if (could_extract_minus(*arg))
         return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2408,6 +2411,12 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return zero;
+    }
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().erf(*_arg);
+        }
     }
     RCP<const Basic> d;
     bool b = handle_minus(arg, outArg(d));
@@ -2423,6 +2432,9 @@ bool Erfc::is_canonical(const RCP<const Basic> &arg) const
         return false;
     if (could_extract_minus(*arg))
         return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2435,6 +2447,12 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return one;
+    }
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().erfc(*_arg);
+        }
     }
 
     RCP<const Basic> d;
