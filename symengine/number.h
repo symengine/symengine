@@ -151,8 +151,6 @@ public:
     };
 };
 
-class Constant;
-
 //! A class that will evaluate functions numerically.
 class Evaluate
 {
@@ -183,8 +181,7 @@ public:
     virtual RCP<const Basic> log(const Basic &) const = 0;
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;
-    virtual RCP<const Number> constant(const Constant &,
-                                       const Basic &) const = 0;
+    virtual RCP<const Basic> exp(const Basic &) const = 0;
 };
 
 } // SymEngine

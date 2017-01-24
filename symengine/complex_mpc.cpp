@@ -890,7 +890,9 @@ class EvaluateMPC : public Evaluate
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
         mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
-        eval_mpc(t.get_mpc_t(), c, MPFR_RNDN);
+        mpc_exp(t.get_mpc_t(),
+                down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
 };
