@@ -842,7 +842,7 @@ TEST_CASE("Log: arit", "[arit]")
     REQUIRE(eq(*r1, *zero));
 
     r1 = log(i3);
-    REQUIRE(r1->get_type_code() == SymEngine::LOG);
+    REQUIRE(is_a<Log>(*r1));
 
     r1 = log(im3);
     r2 = add(log(i3), mul(I, pi));
@@ -867,7 +867,7 @@ TEST_CASE("Log: arit", "[arit]")
 
     c1 = Complex::from_two_nums(*integer(2), *integer(-2));
     r1 = log(c1);
-    REQUIRE(r1->get_type_code() == SymEngine::LOG);
+    REQUIRE(is_a<Log>(*r1));
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));
