@@ -968,7 +968,7 @@ class EvaluateMPFR : public Evaluate
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 0) >= 0 or mpfr_cmp_si(x_, 1) <= 0) {
+        if (mpfr_cmp_si(x_, 0) >= 0 and mpfr_cmp_si(x_, 1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
             mpfr_acosh(t.get_mpfr_t(), x_, MPFR_RNDN);
