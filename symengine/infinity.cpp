@@ -452,11 +452,17 @@ class EvaluateInfty : public Evaluate
             return ComplexInf;
         }
     }
-    virtual RCP<const Number> constant(const Constant &c,
-                                       const Basic &x) const override
+    virtual RCP<const Basic> exp(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
-        return (zero); // ??
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return Inf;
+        } else if (s.is_negative()) {
+            return zero;
+        } else {
+            throw DomainError("exp is not defined for Complex Infinity");
+        }
     }
 };
 

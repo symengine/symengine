@@ -8,6 +8,7 @@
 #include <symengine/constants.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/functions.h>
+#include <symengine/pow.h>
 
 using SymEngine::Basic;
 using SymEngine::Number;
@@ -331,4 +332,7 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
 
     r = sinh(NegInf);
     REQUIRE(eq(*r, *b));
+
+    r = exp(NegInf);
+    REQUIRE(eq(*r, *zero));
 }
