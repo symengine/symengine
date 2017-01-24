@@ -54,8 +54,10 @@ else
 fi
 bash miniconda.sh -b -p $HOME/conda_root
 export PATH="$HOME/conda_root/bin:$PATH"
+conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge --force
-cd $our_install_dir
+# Useful for debugging any issues with conda
+conda info -a
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
     conda_pkgs="$conda_pkgs boost=1.62";
