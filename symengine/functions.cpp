@@ -1,5 +1,5 @@
-#include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -2615,10 +2615,11 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
         or (is_a<Rational>(*x)
             and (get_den(down_cast<const Rational &>(*x).as_rational_class()))
                     == 2)) {
-        if (is_a<Integer>(*y) or (is_a<Rational>(*y)
-                                  and (get_den(down_cast<const Rational &>(*y)
-                                                   .as_rational_class()))
-                                          == 2)) {
+        if (is_a<Integer>(*y)
+            or (is_a<Rational>(*y)
+                and (get_den(
+                        down_cast<const Rational &>(*y).as_rational_class()))
+                        == 2)) {
             return false;
         }
     }
@@ -2933,8 +2934,8 @@ RCP<const Basic> max(const vec_basic &arg)
                         max_number = rcp_static_cast<const Number>(l);
 
                     } else {
-                        difference = rcp_static_cast<const Number>(l)
-                                         ->sub(*max_number);
+                        difference = rcp_static_cast<const Number>(l)->sub(
+                            *max_number);
 
                         if (difference->is_zero()
                             and not difference->is_exact()) {
@@ -3071,6 +3072,73 @@ RCP<const Basic> min(const vec_basic &arg)
     } else {
         throw SymEngineException("Empty vec_basic passed to min!");
     }
+}
+
+Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(*arg))
+}
+
+bool Log::is_canonical(const Basic &arg) const
+{
+    //  log(0)
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_zero())
+        return false;
+    //  log(1)
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_one())
+        return false;
+    // log(E)
+    if (eq(arg, *E))
+        return false;
+    // Currently not implemented, however should be expanded as `-ipi +
+    // log(-arg)`
+    if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
+        return false;
+    if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
+        return false;
+    // log(num/den) = log(num) - log(den)
+    if (is_a<Rational>(arg))
+        return false;
+    return true;
+}
+
+RCP<const Basic> Log::create(const RCP<const Basic> &a) const
+{
+    return log(a);
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) {
+        throw NotImplementedError(
+            "log(0) is complex infinity. Yet to be implemented");
+    }
+    if (eq(*arg, *one))
+        return zero;
+    if (eq(*arg, *E))
+        return one;
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().log(*_arg);
+        } else if (_arg->is_negative()) {
+            throw NotImplementedError(
+                "Imaginary Result. Yet to be implemented");
+        }
+    }
+    if (is_a<Rational>(*arg)) {
+        RCP<const Integer> num, den;
+        get_num_den(down_cast<const Rational &>(*arg), outArg(num),
+                    outArg(den));
+        return sub(log(num), log(den));
+    }
+    return make_rcp<const Log>(arg);
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
+{
+    return div(log(arg), log(base));
 }
 
 } // SymEngine
