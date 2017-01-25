@@ -405,6 +405,16 @@ class EvaluateInfty : public Evaluate
             throw DomainError("acsch is not defined for Complex Infinity");
         }
     }
+    virtual RCP<const Basic> asech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive() or s.is_negative()) {
+            return mul(mul(I, pi), div(one, integer(2)));
+        } else {
+            throw DomainError("asech is not defined for Complex Infinity");
+        }
+    }
     virtual RCP<const Basic> atanh(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))
