@@ -36,6 +36,8 @@ using SymEngine::SymEngineException;
 using SymEngine::DomainError;
 using SymEngine::pi;
 using SymEngine::gamma;
+using SymEngine::erf;
+using SymEngine::erfc;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -318,6 +320,7 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(acsc(Inf), DomainError);
     CHECK_THROWS_AS(asec(Inf), DomainError);
     CHECK_THROWS_AS(sin(ComplexInf), DomainError);
+    CHECK_THROWS_AS(erfc(ComplexInf), DomainError);
 
     r = atan(Inf);
     REQUIRE(eq(*r, *div(pi, integer(2))));
@@ -335,5 +338,14 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     REQUIRE(eq(*r, *b));
 
     r = exp(NegInf);
+    REQUIRE(eq(*r, *zero));
+
+    r = erf(zero);
+    REQUIRE(eq(*r, *zero));
+
+    r = erf(Inf);
+    REQUIRE(eq(*r, *one));
+
+    r = erfc(Inf);
     REQUIRE(eq(*r, *zero));
 }

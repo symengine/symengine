@@ -303,7 +303,8 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> erfc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        throw NotImplementedError("erfc is not implemented for Complex numbers");
+        throw NotImplementedError(
+            "erfc is not implemented for Complex numbers");
     }
 };
 
