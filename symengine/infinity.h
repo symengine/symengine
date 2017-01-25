@@ -8,6 +8,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/number.h>
+#include <symengine/mul.h>
 
 namespace SymEngine
 {
@@ -62,6 +63,14 @@ public:
     {
         return false;
     }
+
+    //! \return `true` if this number is an exact number
+    inline virtual bool is_exact() const
+    {
+        return false;
+    }
+    // //! Get `Evaluate` singleton to evaluate numerically
+    virtual Evaluate &get_eval() const;
 
     inline RCP<const Number> get_direction() const
     {

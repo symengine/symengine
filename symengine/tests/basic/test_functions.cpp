@@ -19,6 +19,7 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
 using SymEngine::one;
+using SymEngine::minus_one;
 using SymEngine::zero;
 using SymEngine::sin;
 using SymEngine::Sin;
@@ -102,6 +103,7 @@ using SymEngine::I;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
 using SymEngine::ComplexInf;
+using SymEngine::Inf;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
@@ -1926,6 +1928,9 @@ TEST_CASE("Csch: functions", "[functions]")
     r1 = csch(mul(im1, x))->diff(x);
     r2 = mul(csch(x), coth(x));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = csch(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
@@ -2028,6 +2033,9 @@ TEST_CASE("Coth: functions", "[functions]")
     r1 = coth(mul(im1, x))->diff(x);
     r2 = pow(sinh(x), im2);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = coth(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
 }
 
 TEST_CASE("Asinh: functions", "[functions]")
@@ -2293,6 +2301,9 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
+    r1 = zeta(i1, i2);
+    REQUIRE(eq(*r1, *ComplexInf));
+
     r1 = zeta(one, x)->diff(x);
     REQUIRE(eq(*r1, *zero));
 
@@ -2480,6 +2491,9 @@ TEST_CASE("Gamma: functions", "[functions]")
     r2 = one;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = gamma(minus_one);
+    REQUIRE(eq(*r1, *ComplexInf));
+
     r1 = gamma(mul(i2, i2));
     r2 = mul(i2, i3);
     REQUIRE(eq(*r1, *r2));
@@ -2541,6 +2555,9 @@ TEST_CASE("LogGamma: functions", "[functions]")
 
     r1 = loggamma(integer(3));
     REQUIRE(eq(*r1, *log(integer(2))));
+
+    r1 = loggamma(integer(0));
+    REQUIRE(eq(*r1, *Inf));
 
     r1 = loggamma(x);
     r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_gamma();
@@ -2620,6 +2637,7 @@ TEST_CASE("Beta: functions", "[functions]")
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2669,6 +2687,15 @@ TEST_CASE("Beta: functions", "[functions]")
             sub(polygamma(zero, x), mul(add(mul(i2, x), one),
                                         polygamma(zero, add(x, mul(x, x)))))));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = beta(i2, im1);
+    REQUIRE(eq(*r1, *ComplexInf));
+    r1 = beta(i3, im1);
+    REQUIRE(eq(*r1, *ComplexInf));
+    r1 = beta(im1, im1);
+    REQUIRE(eq(*r1, *ComplexInf));
+    r1 = beta(r2_5, im1);
+    REQUIRE(eq(*r1, *ComplexInf));
 }
 
 TEST_CASE("Polygamma: functions", "[functions]")
@@ -2688,6 +2715,9 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r1 = polygamma(zero, one);
     r2 = neg(EulerGamma);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(i2, im2);
+    REQUIRE(eq(*r1, *ComplexInf));
 
     r1 = polygamma(zero, div(one, i2));
     r2 = sub(mul(im2, log(i2)), EulerGamma);

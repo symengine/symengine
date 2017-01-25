@@ -45,8 +45,12 @@ using SymEngine::rational_class;
 using SymEngine::is_a;
 using SymEngine::set_basic;
 using SymEngine::SymEngineException;
+using SymEngine::Inf;
+using SymEngine::NegInf;
 using SymEngine::ComplexInf;
 using SymEngine::down_cast;
+using SymEngine::pi;
+using SymEngine::minus_one;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -809,6 +813,7 @@ TEST_CASE("Log: arit", "[arit]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -820,6 +825,49 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = log(one);
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = log(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = log(Inf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = log(NegInf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = log(ComplexInf);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = log(i2, zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = log(i3);
+    REQUIRE(is_a<Log>(*r1));
+
+    r1 = log(im3);
+    r2 = add(log(i3), mul(I, pi));
+    REQUIRE(eq(*r1, *r2));
+
+    RCP<const Number> c1;
+
+    c1 = Complex::from_two_nums(*integer(0), *integer(2));
+    r1 = log(c1);
+    r2 = add(log(i2), mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    c1 = Complex::from_two_nums(*integer(0), *integer(-2));
+    r1 = log(c1);
+    r2 = sub(log(i2), mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    c1 = Complex::from_two_nums(*integer(0), *integer(-1));
+    r1 = log(c1);
+    r2 = mul(minus_one, mul(mul(I, pi), div(one, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(-2));
+    r1 = log(c1);
+    REQUIRE(is_a<Log>(*r1));
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));

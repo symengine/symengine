@@ -285,11 +285,18 @@ bool Log::is_canonical(const Basic &arg) const
     // log(E)
     if (eq(arg, *E))
         return false;
+
     // Currently not implemented, however should be expanded as `-ipi +
     // log(-arg)`
     if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
         return false;
+
+    // log(Inf) is also handled here.
     if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
+        return false;
+
+    // log(3I) should be expanded to log(3) + I*pi/2
+    if (is_a<Complex>(arg) and down_cast<const Complex &>(arg).is_re_zero())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
@@ -304,29 +311,44 @@ RCP<const Basic> Log::create(const RCP<const Basic> &a) const
 
 RCP<const Basic> log(const RCP<const Basic> &arg)
 {
-    if (eq(*arg, *zero)) {
-        throw NotImplementedError(
-            "log(0) is complex infinity. Yet to be implemented");
-    }
+    if (eq(*arg, *zero))
+        return ComplexInf;
     if (eq(*arg, *one))
         return zero;
     if (eq(*arg, *E))
         return one;
+
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
         if (not _arg->is_exact()) {
             return _arg->get_eval().log(*_arg);
         } else if (_arg->is_negative()) {
-            throw NotImplementedError(
-                "Imaginary Result. Yet to be implemented");
+            return add(log(mul(minus_one, _arg)), mul(pi, I));
         }
     }
+
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
         get_num_den(down_cast<const Rational &>(*arg), outArg(num),
                     outArg(den));
         return sub(log(num), log(den));
     }
+
+    if (is_a<Complex>(*arg)) {
+        RCP<const Complex> _arg = rcp_static_cast<const Complex>(arg);
+        if (_arg->is_re_zero()) {
+            RCP<const Number> arg_img = _arg->imaginary_part();
+            if (arg_img->is_negative()) {
+                return sub(log(mul(minus_one, arg_img)),
+                           mul(I, div(pi, integer(2))));
+            } else if (arg_img->is_zero()) {
+                return ComplexInf;
+            } else if (arg_img->is_positive()) {
+                return add(log(arg_img), mul(I, div(pi, integer(2))));
+            }
+        }
+    }
+
     return make_rcp<const Log>(arg);
 }
 
