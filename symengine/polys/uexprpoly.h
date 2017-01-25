@@ -140,17 +140,17 @@ public:
     {
         RCP<const Symbol> x = symbol(var);
         umap_basic_num dict;
-        RCP<const Number> coeff;
+        RCP<const Number> coeff = zero;
         for (const auto &it : dict_) {
             if (it.first != 0) {
-                auto term = SymEngine::mul(
-                    it.second.get_basic(),
-                    pow_ex(Expression(x), Expression(it.first)).get_basic());
-                RCP<const Number> coef;
-                coef = zero;
-                Add::coef_dict_add_term(outArg((coef)), dict, one, term);
-            } else
-                coeff = rcp_static_cast<const Number>(it.second.get_basic());
+                auto term
+                    = SymEngine::mul(it.second.get_basic(),
+                                     SymEngine::pow(x, integer(it.first)));
+                Add::coef_dict_add_term(outArg(coeff), dict, one, term);
+            } else {
+                Add::coef_dict_add_term(outArg(coeff), dict, one,
+                                        it.second.get_basic());
+            }
         }
         return Add::from_dict(coeff, std::move(dict));
     }
