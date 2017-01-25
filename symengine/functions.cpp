@@ -470,7 +470,6 @@ Tan::Tan(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Tan::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     // e.g tan(k*pi/2)
@@ -537,7 +536,6 @@ Cot::Cot(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Cot::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     // e.g cot(k*pi/2)
@@ -605,7 +603,6 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     // e.g. Csc(0)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
-    // Update for +inf/-inf constraints
     // e.g csc(k*pi/2)
     if (trig_has_basic_shift(arg)) {
         return false;
@@ -670,7 +667,6 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
     // e.g. Sec(0)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
-    // TODO: Update for +inf/-inf constraints
     // e.g sec(k*pi/2)
     if (trig_has_basic_shift(arg)) {
         return false;
@@ -827,7 +823,6 @@ ASin::ASin(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ASin::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -870,7 +865,6 @@ ACos::ACos(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACos::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -913,7 +907,6 @@ ASec::ASec(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ASec::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -954,7 +947,6 @@ ACsc::ACsc(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACsc::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -995,7 +987,6 @@ ATan::ATan(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ATan::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -1038,7 +1029,6 @@ ACot::ACot(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACot::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -1520,7 +1510,6 @@ Sinh::Sinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Sinh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1566,7 +1555,6 @@ Csch::Csch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Csch::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1615,7 +1603,6 @@ Cosh::Cosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Cosh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1661,7 +1648,6 @@ Sech::Sech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Sech::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1709,7 +1695,6 @@ Tanh::Tanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Tanh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1757,7 +1742,6 @@ Coth::Coth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Coth::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1806,7 +1790,6 @@ ASinh::ASinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ASinh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     if (is_a_Number(*arg)) {
@@ -1851,7 +1834,6 @@ ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACsch::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     if (is_a_Number(*arg)) {
@@ -1886,7 +1868,6 @@ ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACosh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;
@@ -1915,7 +1896,6 @@ ATanh::ATanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ATanh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1956,7 +1936,6 @@ ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACoth::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a_Number(*arg)) {
         if (down_cast<const Number &>(*arg).is_negative()) {
             return false;
@@ -1993,7 +1972,6 @@ ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ASech::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;

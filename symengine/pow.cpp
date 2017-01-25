@@ -286,8 +286,6 @@ bool Log::is_canonical(const Basic &arg) const
     if (eq(arg, *E))
         return false;
 
-    // Currently not implemented, however should be expanded as `-ipi +
-    // log(-arg)`
     if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
         return false;
 
