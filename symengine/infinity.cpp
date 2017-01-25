@@ -458,6 +458,30 @@ class EvaluateInfty : public Evaluate
             throw DomainError("exp is not defined for Complex Infinity");
         }
     }
+    virtual RCP<const Basic> erf(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return one;
+        } else if (s.is_negative()) {
+            return minus_one;
+        } else {
+            throw DomainError("erf is not defined for Complex Infinity");
+        }
+    }
+    virtual RCP<const Basic> erfc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return zero;
+        } else if (s.is_negative()) {
+            return integer(2);
+        } else {
+            throw DomainError("erfc is not defined for Complex Infinity");
+        }
+    }
 };
 
 Evaluate &Infty::get_eval() const
