@@ -6,10 +6,10 @@
 #ifndef SYMENGINE_POW_H
 #define SYMENGINE_POW_H
 
+#include <symengine/constants.h>
 #include <symengine/functions.h>
 #include <symengine/mul.h>
 #include <symengine/ntheory.h>
-#include <symengine/constants.h>
 
 namespace SymEngine
 {
@@ -62,26 +62,6 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x)
 {
     return pow(x, div(one, integer(2)));
 }
-
-class Log : public OneArgFunction
-{
-    // Logarithms are taken with the natural base, `e`. To get
-    // a logarithm of a different base `b`, use `log(x, b)`,
-    // which is essentially short-hand for `log(x)/log(b)`.
-public:
-    IMPLEMENT_TYPEID(LOG)
-    //! Log Constructor
-    Log(const RCP<const Basic> &arg);
-    //! \return `true` if canonical
-    bool is_canonical(const Basic &arg) const;
-    //! \return canonicalized `log`
-    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-};
-
-//! Returns the Natural Logarithm from argument `arg`
-RCP<const Basic> log(const RCP<const Basic> &arg);
-//! \return Log from argument `arg` wrt base `b`
-RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &b);
 
 } // SymEngine
 
