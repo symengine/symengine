@@ -389,6 +389,8 @@ public:
             arb_const_e(result_, prec_);
         } else if (x.__eq__(*EulerGamma)) {
             arb_const_euler(result_, prec_);
+        } else if (x.__eq__(*Catalan)) {
+            arb_const_catalan(result_, prec_);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
