@@ -291,6 +291,8 @@ public:
             result_ = [=](const T *x) { return std::exp(1); };
         } else if (eq(x, *EulerGamma)) {
             result_ = [=](const T *x) { return 0.57721566490153286; };
+        } else if (eq(x, *Catalan)) {
+            result_ = [=](const T *x) { return 0.9159655941772190150546; };
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

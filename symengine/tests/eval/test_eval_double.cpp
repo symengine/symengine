@@ -47,6 +47,7 @@ using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
+using SymEngine::Catalan;
 using SymEngine::loggamma;
 using SymEngine::gamma;
 using SymEngine::vec_basic;
@@ -115,6 +116,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         {loggamma(pi), 0.82769459232343710152},
         {add(asech(div(one, integer(2))), real_double(0.1)), 1.41695789692482},
         {r5, 0.841470984807897},
+        {mul(Catalan, integer(1000)), 915.965594177219015},
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {

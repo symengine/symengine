@@ -121,6 +121,7 @@ void basic_const_I(basic s);
 void basic_const_pi(basic s);
 void basic_const_E(basic s);
 void basic_const_EulerGamma(basic s);
+void basic_const_Catalan(basic s);
 
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);

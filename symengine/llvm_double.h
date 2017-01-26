@@ -415,6 +415,8 @@ public:
             set_double(2.7182818284590452);
         } else if (eq(x, *EulerGamma)) {
             set_double(0.57721566490153286);
+        } else if (eq(x, *Catalan)) {
+            set_double(0.9159655941772190150546);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

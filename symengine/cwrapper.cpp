@@ -151,6 +151,11 @@ void basic_const_EulerGamma(basic s)
     s->m = SymEngine::EulerGamma;
 }
 
+void basic_const_Catalan(basic s)
+{
+    s->m = SymEngine::Catalan;
+}
+
 TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {

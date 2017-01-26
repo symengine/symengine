@@ -278,6 +278,8 @@ public:
             mpfr_clear(one_);
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
+        } else if (x.__eq__(*Catalan)) {
+            mpfr_const_catalan(result_, rnd_);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
