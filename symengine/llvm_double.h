@@ -417,6 +417,8 @@ public:
             set_double(0.57721566490153286);
         } else if (eq(x, *Catalan)) {
             set_double(0.9159655941772190150546);
+        } else if (eq(x, *Catalan)) {
+            set_double(1.6180339887498948482);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

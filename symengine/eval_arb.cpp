@@ -391,6 +391,10 @@ public:
             arb_const_euler(result_, prec_);
         } else if (x.__eq__(*Catalan)) {
             arb_const_catalan(result_, prec_);
+        } else if (x.__eq__(*GoldenRatio)) {
+            arb_sqrt_ui(result_, 5, prec_);
+            arb_add_ui(result_, result_, 1, prec_);
+            arb_ui_div(result_, result_, 2, prec_);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

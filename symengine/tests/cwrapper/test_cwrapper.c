@@ -691,18 +691,20 @@ void test_constants()
     basic_free_stack(i);
     basic_free_stack(iota);
 
-    basic custom, pi, e, euler_gamma, catalan;
+    basic custom, pi, e, euler_gamma, catalan, goldenratio;
     basic_new_stack(custom);
     basic_new_stack(pi);
     basic_new_stack(e);
     basic_new_stack(euler_gamma);
     basic_new_stack(catalan);
+    basic_new_stack(goldenratio);
 
     basic_const_set(custom, "custom");
     basic_const_pi(pi);
     basic_const_E(e);
     basic_const_EulerGamma(euler_gamma);
     basic_const_Catalan(catalan);
+    basic_const_GoldenRatio(goldenratio);
 
     char *s;
     s = basic_str(custom);
@@ -719,6 +721,9 @@ void test_constants()
     basic_str_free(s);
     s = basic_str(catalan);
     SYMENGINE_C_ASSERT(strcmp(s, "Catalan") == 0);
+    basic_str_free(s);
+    s = basic_str(goldenratio);
+    SYMENGINE_C_ASSERT(strcmp(s, "GoldenRatio") == 0);
     basic_str_free(s);
 
     // Checking mpfr builds
@@ -796,6 +801,8 @@ void test_constants()
     basic_free_stack(pi);
     basic_free_stack(e);
     basic_free_stack(euler_gamma);
+    basic_free_stack(goldenratio);
+    basic_free_stack(catalan);
 }
 
 void test_ascii_art()

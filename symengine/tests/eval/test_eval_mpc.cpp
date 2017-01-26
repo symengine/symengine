@@ -16,6 +16,7 @@ using SymEngine::I;
 using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::Catalan;
+using SymEngine::GoldenRatio;
 using SymEngine::mul;
 using SymEngine::pow;
 using SymEngine::one;
@@ -69,6 +70,18 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     r = add(one, mul(Catalan, I));
     s = one;
     t = Catalan;
+
+    eval_mpc(a, *r, MPFR_RNDN);
+    eval_mpfr(real, *s, MPFR_RNDN);
+    eval_mpfr(imag, *t, MPFR_RNDN);
+
+    mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
+
+    REQUIRE(mpc_cmp(a, b) == 0);
+
+    r = add(one, mul(GoldenRatio, I));
+    s = one;
+    t = GoldenRatio;
 
     eval_mpc(a, *r, MPFR_RNDN);
     eval_mpfr(real, *s, MPFR_RNDN);

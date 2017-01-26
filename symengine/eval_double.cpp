@@ -242,6 +242,8 @@ public:
                                                 // digamma is implemented
         } else if (eq(x, *Catalan)) {
             result_ = 0.9159655941772190150546;
+        } else if (eq(x, *GoldenRatio)) {
+            result_ = 1.6180339887498948482045;
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
@@ -602,6 +604,8 @@ std::vector<fn> init_eval_double()
                                              // is implemented
         } else if (eq(x, *Catalan)) {
             return 0.9159655941772190150546;
+        } else if (eq(x, *GoldenRatio)) {
+            return 1.6180339887498948482045;
         } else {
             throw NotImplementedError(
                 "Constant " + down_cast<const Constant &>(x).get_name()

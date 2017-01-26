@@ -293,6 +293,8 @@ public:
             result_ = [=](const T *x) { return 0.57721566490153286; };
         } else if (eq(x, *Catalan)) {
             result_ = [=](const T *x) { return 0.9159655941772190150546; };
+        } else if (eq(x, *GoldenRatio)) {
+            result_ = [=](const T *x) { return 1.6180339887498948482045; };
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
