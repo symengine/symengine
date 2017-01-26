@@ -39,6 +39,7 @@ using SymEngine::map_uint_mpz;
 using SymEngine::Infty;
 using SymEngine::infty;
 using SymEngine::down_cast;
+using SymEngine::zero;
 
 using namespace SymEngine::literals;
 
@@ -76,6 +77,9 @@ TEST_CASE("test_printing(): printing", "[printing]")
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     REQUIRE(r->__str__() == "2*x**2");
+
+    r = pow(zero, x);
+    REQUIRE(r->__str__() == "0**x");
 
     r = mul(integer(23),
             mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
@@ -238,6 +242,7 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r->__str__() == "Derivative(f(x), x)");
     REQUIRE(r1->__str__() == "Derivative(f(x), x)");
     REQUIRE(r2->__str__() == "Derivative(g(x), x)");
+    REQUIRE(r1->compare(*r2) == -1);
 
     r1 = f->diff(x)->diff(x);
     REQUIRE(r1->__str__() == "Derivative(f(x), x, x)");

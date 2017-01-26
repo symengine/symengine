@@ -5,6 +5,7 @@
 #include <symengine/rational.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
+#include <symengine/real_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -39,6 +40,12 @@ using SymEngine::mertens;
 using SymEngine::integer_class;
 using SymEngine::harmonic;
 using SymEngine::vec_integer_class;
+using SymEngine::zero;
+using SymEngine::one;
+using SymEngine::minus_one;
+using SymEngine::RealDouble;
+using SymEngine::real_double;
+using SymEngine::SymEngineException;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -253,10 +260,13 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE((divides(*i900, *f) and not eq(*f, *i1) and not eq(*f, *i900)));
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
     REQUIRE((divides(*i1001, *f) and not eq(*f, *i1) and not eq(*f, *i1001)));
+
+    CHECK_THROWS_AS(factor_lehman_method(outArg(f), *i1), SymEngineException);
 }
 
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
 {
+    RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i23 = integer(23);
     RCP<const Integer> i31 = integer(31);
     RCP<const Integer> i47 = integer(47);
@@ -281,10 +291,16 @@ TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
              or divides(*i1001, *f)));
     REQUIRE((factor_pollard_pm1_method(outArg(f), *i1850) == 0
              or divides(*i1850, *f)));
+
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+    CHECK_THROWS_AS(factor_pollard_pm1_method(outArg(f), *i2),
+                    SymEngineException);
+#endif
 }
 
 TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
 {
+    RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i23 = integer(23);
     RCP<const Integer> i31 = integer(31);
     RCP<const Integer> i47 = integer(47);
@@ -309,6 +325,11 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
              or divides(*i1001, *f)));
     REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0
              or divides(*i1850, *f)));
+
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
+    CHECK_THROWS_AS(factor_pollard_rho_method(outArg(f), *i2),
+                    SymEngineException);
+#endif
 }
 
 TEST_CASE("test_sieve(): ntheory", "[ntheory]")
@@ -376,6 +397,7 @@ TEST_CASE("test_prime_factors(): ntheory", "[ntheory]")
     _test_primefactors(i36, 4);
     _test_primefactors(i125, 3);
     _test_primefactors(i1001, 3);
+    _test_primefactors(minus_one, 0);
 }
 
 void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
@@ -447,10 +469,18 @@ TEST_CASE("test_crt(): ntheory", "[ntheory]")
     m = {integer(2), integer(3), integer(4), integer(5), integer(6)};
     REQUIRE(crt(outArg(g), r, m) == true);
     REQUIRE(eq(*g, *integer(59)));
+
+    r = {integer(21), integer(31), integer(6), integer(17)};
+    m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
+    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException);
+
+    m = {};
+    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException);
 }
 
 TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
 {
+    RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i15 = integer(15);
     RCP<const Integer> im18 = integer(-18);
     RCP<const Integer> im22 = integer(-22);
@@ -485,6 +515,17 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
     bool same = std::equal(v.begin(), v.end(), roots.begin(),
                            SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
+
+    roots.clear();
+    primitive_root_list(roots, *one);
+    REQUIRE(roots.size() == 0);
+
+    roots.clear();
+    primitive_root_list(roots, *i2);
+    REQUIRE(roots.size() == 1);
+
+    REQUIRE(primitive_root(outArg(g), *one) == false);
+    REQUIRE(primitive_root(outArg(g), *i2) == true);
 }
 
 TEST_CASE("test_totient_carmichael(): ntheory", "[ntheory]")
@@ -498,11 +539,13 @@ TEST_CASE("test_totient_carmichael(): ntheory", "[ntheory]")
     REQUIRE(eq(*totient(i9), *integer(6)));
     REQUIRE(eq(*totient(i30), *integer(8)));
     REQUIRE(eq(*totient(im1729), *integer(1296)));
+    REQUIRE(eq(*totient(zero), *integer(1)));
 
     REQUIRE(eq(*carmichael(i8), *integer(2)));
     REQUIRE(eq(*carmichael(i9), *integer(6)));
     REQUIRE(eq(*carmichael(i30), *integer(4)));
     REQUIRE(eq(*carmichael(im1729), *integer(36)));
+    REQUIRE(eq(*carmichael(zero), *integer(1)));
 }
 
 TEST_CASE("test_multiplicative_order(): ntheory", "[ntheory]")
@@ -585,6 +628,8 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     std::vector<RCP<const Integer>> roots, v;
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i23) == false);
+    REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, zero) == false);
+    REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i1) == true);
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i93) == false);
     REQUIRE(nthroot_mod(outArg(nthroot), i3, i2, i27) == false);
     REQUIRE(nthroot_mod(outArg(nthroot), i18, i2, i27) == false);
@@ -637,6 +682,14 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     same = std::equal(v.begin(), v.end(), roots.begin(),
                       SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
+
+    roots.clear();
+    nthroot_mod_list(roots, i1, i18, zero);
+    REQUIRE(roots.size() == 0);
+
+    roots.clear();
+    nthroot_mod_list(roots, i1, i18, i1);
+    REQUIRE(roots.size() == 1);
 }
 
 TEST_CASE("test_powermod(): ntheory", "[ntheory]")
@@ -651,6 +704,7 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
     RCP<const Integer> i23 = integer(23);
     RCP<const Integer> i41 = integer(41);
     RCP<const Integer> i105 = integer(105);
+    RCP<const RealDouble> rd = real_double(0.8);
     RCP<const Integer> r;
     std::vector<RCP<const Integer>> powms;
 
@@ -660,6 +714,8 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 
     REQUIRE(powermod(outArg(r), i2, i23->divint(*i41), i41) == true);
     REQUIRE(eq(*r, *integer(8)));
+
+    REQUIRE(powermod(outArg(r), i2, rd, i41) == false);
 
     powermod_list(powms, i15, i1->divint(*i18), i105);
     REQUIRE(powms.size() == 6);
@@ -702,11 +758,14 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
     REQUIRE(quadratic_residues(*a5) == i5);
     REQUIRE(quadratic_residues(*a7) == i7);
     REQUIRE(quadratic_residues(*a100) == i100);
+
+    CHECK_THROWS_AS(quadratic_residues(*zero), SymEngineException);
 }
 
 TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
 {
     const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> ma1 = integer(-1);
     const RCP<const Integer> a2 = integer(2);
     const RCP<const Integer> a3 = integer(3);
     const RCP<const Integer> a4 = integer(4);
@@ -725,6 +784,7 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
 
     std::cout << "Is_Quadratic_Residue:" << std::endl;
     REQUIRE(is_quad_residue(*t0, *a1) == true);
+    REQUIRE(is_quad_residue(*t0, *ma1) == true);
     REQUIRE(is_quad_residue(*t1, *a1) == true);
     REQUIRE(is_quad_residue(*t1, *a2) == true);
     REQUIRE(is_quad_residue(*t0, *a4) == true);
@@ -740,6 +800,8 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     REQUIRE(is_quad_residue(*t4, *a100) == true);
     REQUIRE(is_quad_residue(*t89, *a100) == true);
     REQUIRE(is_quad_residue(*t3, *a100) == false);
+
+    CHECK_THROWS_AS(is_quad_residue(*t3, *t0), SymEngineException);
 }
 
 TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
@@ -776,6 +838,9 @@ TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
     REQUIRE(is_nth_residue(*i31, *i4, *i41) == true);
     REQUIRE(is_nth_residue(*i4, *i2, *i64) == true);
     REQUIRE(is_nth_residue(*i32, *i10, *i41) == true);
+    REQUIRE(is_nth_residue(*i32, *i10, *zero) == false);
+    REQUIRE(is_nth_residue(*i32, *i10, *i1) == true);
+    REQUIRE(is_nth_residue(*i32, *i10, *im1) == true);
 }
 
 TEST_CASE("test_mobius(): ntheory", "[ntheory]")
@@ -801,6 +866,8 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     REQUIRE(mobius(*i8) == 0);
     REQUIRE(mobius(*i9) == 0);
     REQUIRE(mobius(*i10) == 1);
+
+    CHECK_THROWS_AS(mobius(*minus_one), SymEngineException);
 }
 
 TEST_CASE("test_mertens(): ntheory", "[ntheory]")
@@ -827,4 +894,12 @@ TEST_CASE("test_harmonic(): ntheory", "[ntheory]")
     r1 = harmonic(3, 2);
     r2 = rational(49, 36);
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("test_factor_trial_division(): ntheory", "[ntheory]")
+{
+    RCP<const Integer> i47 = integer(47);
+    RCP<const Integer> f;
+
+    REQUIRE(factor_trial_division(outArg(f), *i47) == 0);
 }
