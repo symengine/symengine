@@ -1098,9 +1098,8 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return pi;
             else if (den_new->is_positive())
                 return zero;
-            // else it is NAN, yet to be implemented
             else {
-                throw NotImplementedError("Not Implemented");
+                return Nan;
             }
         }
     } else if (eq(*den, *zero)) {
@@ -1110,9 +1109,8 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return div(pi, i2);
             else if (num_new->is_positive())
                 return div(pi, im2);
-            // else it is NAN, yet to be implemented
             else {
-                throw NotImplementedError("Not Implemented");
+                return Nan;
             }
         }
     }

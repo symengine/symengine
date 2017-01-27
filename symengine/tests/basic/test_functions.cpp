@@ -104,6 +104,7 @@ using SymEngine::integer_class;
 using SymEngine::down_cast;
 using SymEngine::ComplexInf;
 using SymEngine::Inf;
+using SymEngine::Nan;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
@@ -1850,6 +1851,9 @@ TEST_CASE("Atan2: functions", "[functions]")
 
     r1 = atan2(y, x);
     REQUIRE(unified_eq(r1->get_args(), {y, x}));
+
+    r1 = atan2(zero, zero);
+    REQUIRE(eq(*r1, *Nan));
 }
 
 TEST_CASE("Lambertw: functions", "[functions]")

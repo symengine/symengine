@@ -45,7 +45,7 @@ RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
     if (d.as_integer_class() == 0) {
         if (n.as_integer_class() == 0) {
-            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            return Nan;
         } else {
             return ComplexInf;
         }
@@ -63,7 +63,7 @@ RCP<const Number> Rational::from_two_ints(long n, long d)
 {
     if (d == 0) {
         if (n == 0) {
-            throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+            return Nan;
         } else {
             return ComplexInf;
         }

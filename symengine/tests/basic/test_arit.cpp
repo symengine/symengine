@@ -51,6 +51,7 @@ using SymEngine::ComplexInf;
 using SymEngine::down_cast;
 using SymEngine::pi;
 using SymEngine::minus_one;
+using SymEngine::Nan;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -453,6 +454,9 @@ TEST_CASE("Div: arit", "[arit]")
     r1 = div(pow(x, i2), x);
     r2 = x;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = div(zero, zero);
+    REQUIRE(eq(*r1, *Nan));
 
     r1 = div(mul(mul(i2, x), y), mul(x, y));
     r2 = i2;
