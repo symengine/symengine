@@ -394,7 +394,7 @@ public:
         } else if (x.__eq__(*GoldenRatio)) {
             arb_sqrt_ui(result_, 5, prec_);
             arb_add_ui(result_, result_, 1, prec_);
-            arb_ui_div(result_, result_, 2, prec_);
+            arb_div_ui(result_, result_, 2, prec_);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
