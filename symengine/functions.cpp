@@ -1622,10 +1622,12 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
             return neg(sinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(sinh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(sinh(d));
     }
-    return make_rcp<const Sinh>(arg);
+    return make_rcp<const Sinh>(d);
 }
 
 RCP<const Basic> Sinh::expand_as_exp() const
@@ -1668,10 +1670,12 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
             return neg(csch(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(csch(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(csch(d));
     }
-    return make_rcp<const Csch>(arg);
+    return make_rcp<const Csch>(d);
 }
 
 RCP<const Basic> Csch::expand_as_exp() const
@@ -1715,10 +1719,9 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
             return cosh(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return cosh(neg(arg));
-    }
-    return make_rcp<const Cosh>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Cosh>(d);
 }
 
 RCP<const Basic> Cosh::expand_as_exp() const
@@ -1760,10 +1763,9 @@ RCP<const Basic> sech(const RCP<const Basic> &arg)
             return sech(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return sech(neg(arg));
-    }
-    return make_rcp<const Sech>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Sech>(d);
 }
 
 RCP<const Basic> Sech::expand_as_exp() const
@@ -1807,10 +1809,13 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
             return neg(tanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(tanh(neg(arg)));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(tanh(d));
     }
-    return make_rcp<const Tanh>(arg);
+    return make_rcp<const Tanh>(d);
 }
 
 RCP<const Basic> Tanh::expand_as_exp() const
@@ -1855,10 +1860,12 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
             return neg(coth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(coth(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(coth(d));
     }
-    return make_rcp<const Coth>(arg);
+    return make_rcp<const Coth>(d);
 }
 
 RCP<const Basic> Coth::expand_as_exp() const
@@ -1906,10 +1913,12 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
             return neg(asinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(asinh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(asinh(d));
     }
-    return make_rcp<const ASinh>(arg);
+    return make_rcp<const ASinh>(d);
 }
 
 ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1940,10 +1949,13 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
         return log(add(one, sq2));
     if (eq(*arg, *minus_one))
         return log(sub(sq2, one));
-    if (could_extract_minus(*arg)) {
-        return neg(acsch(neg(arg)));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(acsch(d));
     }
-    return make_rcp<const ACsch>(arg);
+    return make_rcp<const ACsch>(d);
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -2008,10 +2020,12 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
             return neg(atanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(atanh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(atanh(d));
     }
-    return make_rcp<const ATanh>(arg);
+    return make_rcp<const ATanh>(d);
 }
 
 ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -2044,10 +2058,12 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
             return neg(acoth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(acoth(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(acoth(d));
     }
-    return make_rcp<const ACoth>(arg);
+    return make_rcp<const ACoth>(d);
 }
 
 ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -2380,10 +2396,12 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return zero;
     }
-    if (could_extract_minus(*arg)) {
-        return neg(erf(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(erf(d));
     }
-    return make_rcp<Erf>(arg);
+    return make_rcp<const Erf>(d);
 }
 
 bool Erfc::is_canonical(const RCP<const Basic> &arg) const
@@ -2405,10 +2423,13 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return one;
     }
-    if (could_extract_minus(*arg)) {
-        return add(integer(2), neg((erfc(arg))));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return add(integer(2), neg(erfc(d)));
     }
-    return make_rcp<Erfc>(arg);
+    return make_rcp<const Erfc>(d);
 }
 
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
@@ -2922,11 +2943,9 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         return down_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
 
-    if (could_extract_minus(*arg)) {
-        return abs(neg(arg));
-    }
-
-    return make_rcp<const Abs>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Abs>(d);
 }
 
 Max::Max(const vec_basic &&arg) : MultiArgFunction(std::move(arg))

@@ -1890,6 +1890,7 @@ TEST_CASE("Lambertw: functions", "[functions]")
 TEST_CASE("Sinh: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1911,11 +1912,14 @@ TEST_CASE("Sinh: functions", "[functions]")
     r1 = sinh(mul(im1, x))->diff(x);
     r2 = mul(im1, cosh(x));
     REQUIRE(eq(*r1, *r2));
+
+    REQUIRE(eq(*sinh(sub(x, y)), *neg(sinh(sub(y, x)))));
 }
 
 TEST_CASE("Csch: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1935,11 +1939,13 @@ TEST_CASE("Csch: functions", "[functions]")
 
     r1 = csch(zero);
     REQUIRE(eq(*r1, *ComplexInf));
+    REQUIRE(eq(*csch(sub(x, y)), *neg(csch(sub(y, x)))));
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1961,11 +1967,13 @@ TEST_CASE("Cosh: functions", "[functions]")
     r1 = cosh(mul(im1, x))->diff(x);
     r2 = mul(im1, sinh(mul(im1, x)));
     REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*cosh(sub(x, y)), *cosh(sub(y, x))));
 }
 
 TEST_CASE("Sech: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1987,11 +1995,13 @@ TEST_CASE("Sech: functions", "[functions]")
     r1 = sech(mul(im1, x))->diff(x);
     r2 = mul(im1, mul(sech(x), tanh(x)));
     REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*sech(sub(x, y)), *sech(sub(y, x))));
 }
 
 TEST_CASE("Tanh: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -2015,11 +2025,14 @@ TEST_CASE("Tanh: functions", "[functions]")
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     // REQUIRE(eq(*r1, *r2));
+
+    REQUIRE(eq(*tanh(sub(x, y)), *neg(tanh(sub(y, x)))));
 }
 
 TEST_CASE("Coth: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> im2 = integer(-2);
 
@@ -2040,6 +2053,8 @@ TEST_CASE("Coth: functions", "[functions]")
 
     r1 = coth(zero);
     REQUIRE(eq(*r1, *ComplexInf));
+
+    REQUIRE(eq(*coth(sub(x, y)), *neg(coth(sub(y, x)))));
 }
 
 TEST_CASE("Asinh: functions", "[functions]")
@@ -2072,11 +2087,14 @@ TEST_CASE("Asinh: functions", "[functions]")
     r1 = asinh(mul(i2, y))->diff(y);
     r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), one)));
     REQUIRE(eq(*r1, *r2));
+
+    REQUIRE(eq(*asinh(sub(x, y)), *neg(asinh(sub(y, x)))));
 }
 
 TEST_CASE("Acsch: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> one = integer(1);
     RCP<const Basic> i2 = integer(2);
@@ -2095,6 +2113,8 @@ TEST_CASE("Acsch: functions", "[functions]")
     r1 = acsch(x)->diff(x);
     r2 = div(im1, mul(sqrt(add(one, div(one, pow(x, i2)))), pow(x, i2)));
     REQUIRE(eq(*r1, *r2));
+
+    REQUIRE(eq(*acsch(sub(x, y)), *neg(acsch(sub(y, x)))));
 }
 
 TEST_CASE("Acosh: functions", "[functions]")
@@ -2163,11 +2183,14 @@ TEST_CASE("Atanh: functions", "[functions]")
     REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
                      - 1.66407281705924)
             < 1e-12);
+
+    REQUIRE(eq(*atanh(sub(x, y)), *neg(atanh(sub(y, x)))));
 }
 
 TEST_CASE("Acoth: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -2181,6 +2204,8 @@ TEST_CASE("Acoth: functions", "[functions]")
     r1 = acoth(mul(im1, x));
     r2 = mul(im1, acoth(x));
     REQUIRE(eq(*r1, *r2));
+
+    REQUIRE(eq(*acoth(sub(x, y)), *neg(acoth(sub(y, x)))));
 }
 
 TEST_CASE("Asech: functions", "[functions]")
@@ -2457,6 +2482,7 @@ TEST_CASE("Erf: functions", "[functions]")
     REQUIRE(eq(*r1->diff(x), *r2));
 
     REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
+    REQUIRE(eq(*erf(sub(x, y)), *neg(erf(sub(y, x)))));
 }
 
 TEST_CASE("Erfc: functions", "[functions]")
@@ -2468,6 +2494,7 @@ TEST_CASE("Erfc: functions", "[functions]")
     RCP<const Basic> r2;
 
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i2 = integer(2);
 
     r1 = erfc(zero);
     REQUIRE(eq(*r1, *one));
@@ -2476,6 +2503,9 @@ TEST_CASE("Erfc: functions", "[functions]")
     r2 = exp(mul(integer(-9), (mul(x, x))));
     r2 = div(mul(integer(6), r2), sqrt(pi));
     REQUIRE(eq(*r1->diff(x), *neg(r2)));
+
+    REQUIRE(eq(*erfc(neg(x)), *sub(i2, erfc(x))));
+    REQUIRE(eq(*erfc(sub(y, x)), *sub(i2, erfc(sub(x, y)))));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")
@@ -2818,6 +2848,7 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(neg(div(i2, i3))), *div(i2, i3)));
     REQUIRE(neq(*abs(x)->diff(x), *integer(0)));
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
+    REQUIRE(eq(*abs(sub(x, y)), *abs(sub(y, x))));
 }
 
 class MySin : public FunctionWrapper
