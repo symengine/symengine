@@ -470,7 +470,6 @@ Tan::Tan(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Tan::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     // e.g tan(k*pi/2)
@@ -537,7 +536,6 @@ Cot::Cot(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool Cot::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     // e.g cot(k*pi/2)
@@ -605,7 +603,6 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     // e.g. Csc(0)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
-    // Update for +inf/-inf constraints
     // e.g csc(k*pi/2)
     if (trig_has_basic_shift(arg)) {
         return false;
@@ -670,7 +667,6 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
     // e.g. Sec(0)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
-    // TODO: Update for +inf/-inf constraints
     // e.g sec(k*pi/2)
     if (trig_has_basic_shift(arg)) {
         return false;
@@ -827,7 +823,6 @@ ASin::ASin(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ASin::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -870,7 +865,6 @@ ACos::ACos(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACos::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -913,7 +907,6 @@ ASec::ASec(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ASec::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -954,7 +947,6 @@ ACsc::ACsc(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACsc::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -995,7 +987,6 @@ ATan::ATan(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ATan::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -1038,7 +1029,6 @@ ACot::ACot(const RCP<const Basic> &arg) : TrigFunction(arg)
 
 bool ACot::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
@@ -1108,9 +1098,8 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return pi;
             else if (den_new->is_positive())
                 return zero;
-            // else it is NAN, yet to be implemented
             else {
-                throw NotImplementedError("Not Implemented");
+                return Nan;
             }
         }
     } else if (eq(*den, *zero)) {
@@ -1120,9 +1109,8 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
                 return div(pi, i2);
             else if (num_new->is_positive())
                 return div(pi, im2);
-            // else it is NAN, yet to be implemented
             else {
-                throw NotImplementedError("Not Implemented");
+                return Nan;
             }
         }
     }
@@ -1224,6 +1212,94 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 }
 
 /* ---------------------------- */
+
+Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(*arg))
+}
+
+bool Log::is_canonical(const Basic &arg) const
+{
+    //  log(0)
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_zero())
+        return false;
+    //  log(1)
+    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_one())
+        return false;
+    // log(E)
+    if (eq(arg, *E))
+        return false;
+
+    if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
+        return false;
+
+    // log(Inf) is also handled here.
+    if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
+        return false;
+
+    // log(3I) should be expanded to log(3) + I*pi/2
+    if (is_a<Complex>(arg) and down_cast<const Complex &>(arg).is_re_zero())
+        return false;
+    // log(num/den) = log(num) - log(den)
+    if (is_a<Rational>(arg))
+        return false;
+    return true;
+}
+
+RCP<const Basic> Log::create(const RCP<const Basic> &a) const
+{
+    return log(a);
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return ComplexInf;
+    if (eq(*arg, *one))
+        return zero;
+    if (eq(*arg, *E))
+        return one;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().log(*_arg);
+        } else if (_arg->is_negative()) {
+            return add(log(mul(minus_one, _arg)), mul(pi, I));
+        }
+    }
+
+    if (is_a<Rational>(*arg)) {
+        RCP<const Integer> num, den;
+        get_num_den(down_cast<const Rational &>(*arg), outArg(num),
+                    outArg(den));
+        return sub(log(num), log(den));
+    }
+
+    if (is_a<Complex>(*arg)) {
+        RCP<const Complex> _arg = rcp_static_cast<const Complex>(arg);
+        if (_arg->is_re_zero()) {
+            RCP<const Number> arg_img = _arg->imaginary_part();
+            if (arg_img->is_negative()) {
+                return sub(log(mul(minus_one, arg_img)),
+                           mul(I, div(pi, integer(2))));
+            } else if (arg_img->is_zero()) {
+                return ComplexInf;
+            } else if (arg_img->is_positive()) {
+                return add(log(arg_img), mul(I, div(pi, integer(2))));
+            }
+        }
+    }
+
+    return make_rcp<const Log>(arg);
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
+{
+    return div(log(arg), log(base));
+}
+
 LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1520,7 +1596,6 @@ Sinh::Sinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Sinh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1547,10 +1622,12 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
             return neg(sinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(sinh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(sinh(d));
     }
-    return make_rcp<const Sinh>(arg);
+    return make_rcp<const Sinh>(d);
 }
 
 RCP<const Basic> Sinh::expand_as_exp() const
@@ -1566,7 +1643,6 @@ Csch::Csch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Csch::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1594,10 +1670,12 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
             return neg(csch(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(csch(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(csch(d));
     }
-    return make_rcp<const Csch>(arg);
+    return make_rcp<const Csch>(d);
 }
 
 RCP<const Basic> Csch::expand_as_exp() const
@@ -1615,7 +1693,6 @@ Cosh::Cosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Cosh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1642,10 +1719,9 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
             return cosh(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return cosh(neg(arg));
-    }
-    return make_rcp<const Cosh>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Cosh>(d);
 }
 
 RCP<const Basic> Cosh::expand_as_exp() const
@@ -1661,7 +1737,6 @@ Sech::Sech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Sech::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1688,10 +1763,9 @@ RCP<const Basic> sech(const RCP<const Basic> &arg)
             return sech(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return sech(neg(arg));
-    }
-    return make_rcp<const Sech>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Sech>(d);
 }
 
 RCP<const Basic> Sech::expand_as_exp() const
@@ -1709,7 +1783,6 @@ Tanh::Tanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Tanh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1736,10 +1809,13 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
             return neg(tanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(tanh(neg(arg)));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(tanh(d));
     }
-    return make_rcp<const Tanh>(arg);
+    return make_rcp<const Tanh>(d);
 }
 
 RCP<const Basic> Tanh::expand_as_exp() const
@@ -1757,7 +1833,6 @@ Coth::Coth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool Coth::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1785,10 +1860,12 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
             return neg(coth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(coth(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(coth(d));
     }
-    return make_rcp<const Coth>(arg);
+    return make_rcp<const Coth>(d);
 }
 
 RCP<const Basic> Coth::expand_as_exp() const
@@ -1806,7 +1883,6 @@ ASinh::ASinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ASinh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     if (is_a_Number(*arg)) {
@@ -1837,10 +1913,12 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
             return neg(asinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(asinh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(asinh(d));
     }
-    return make_rcp<const ASinh>(arg);
+    return make_rcp<const ASinh>(d);
 }
 
 ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1851,7 +1929,6 @@ ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACsch::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     if (is_a_Number(*arg)) {
@@ -1872,10 +1949,13 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
         return log(add(one, sq2));
     if (eq(*arg, *minus_one))
         return log(sub(sq2, one));
-    if (could_extract_minus(*arg)) {
-        return neg(acsch(neg(arg)));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(acsch(d));
     }
-    return make_rcp<const ACsch>(arg);
+    return make_rcp<const ACsch>(d);
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1886,7 +1966,6 @@ ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACosh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;
@@ -1915,7 +1994,6 @@ ATanh::ATanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ATanh::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
         return false;
     if (is_a_Number(*arg)) {
@@ -1942,10 +2020,12 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
             return neg(atanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(atanh(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(atanh(d));
     }
-    return make_rcp<const ATanh>(arg);
+    return make_rcp<const ATanh>(d);
 }
 
 ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1956,7 +2036,6 @@ ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ACoth::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     if (is_a_Number(*arg)) {
         if (down_cast<const Number &>(*arg).is_negative()) {
             return false;
@@ -1979,10 +2058,12 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
             return neg(acoth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(*arg)) {
-        return neg(acoth(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(acoth(d));
     }
-    return make_rcp<const ACoth>(arg);
+    return make_rcp<const ACoth>(d);
 }
 
 ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1993,7 +2074,6 @@ ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 
 bool ASech::is_canonical(const RCP<const Basic> &arg) const
 {
-    // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;
@@ -2319,8 +2399,10 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return zero;
     }
-    if (could_extract_minus(*arg)) {
-        return neg(erf(neg(arg)));
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(erf(d));
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -2328,7 +2410,7 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
             return _arg->get_eval().erf(*_arg);
         }
     }
-    return make_rcp<Erf>(arg);
+    return make_rcp<const Erf>(d);
 }
 
 bool Erfc::is_canonical(const RCP<const Basic> &arg) const
@@ -2353,8 +2435,11 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
         return one;
     }
-    if (could_extract_minus(*arg)) {
-        return add(integer(2), neg((erfc(arg))));
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return add(integer(2), neg(erfc(d)));
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
@@ -2362,7 +2447,7 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
             return _arg->get_eval().erfc(*_arg);
         }
     }
-    return make_rcp<Erfc>(arg);
+    return make_rcp<const Erfc>(d);
 }
 
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
@@ -2876,11 +2961,9 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         return down_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
 
-    if (could_extract_minus(*arg)) {
-        return abs(neg(arg));
-    }
-
-    return make_rcp<const Abs>(arg);
+    RCP<const Basic> d;
+    handle_minus(arg, outArg(d));
+    return make_rcp<const Abs>(d);
 }
 
 Max::Max(const vec_basic &&arg) : MultiArgFunction(std::move(arg))

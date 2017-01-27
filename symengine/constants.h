@@ -10,6 +10,7 @@
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 #include <symengine/infinity.h>
+#include <symengine/nan.h>
 
 namespace SymEngine
 {
@@ -69,6 +70,9 @@ extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
 extern SYMENGINE_EXPORT RCP<const Infty> Inf;
 extern SYMENGINE_EXPORT RCP<const Infty> NegInf;
 extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
+
+// Not a Number
+extern SYMENGINE_EXPORT RCP<const NaN> Nan;
 } // SymEngine
 
 #endif

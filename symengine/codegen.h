@@ -130,6 +130,12 @@ public:
             throw SymEngineException("Not supported");
         str_ = s.str();
     }
+    void bvisit(const NaN &x)
+    {
+        std::ostringstream s;
+        s << "NAN";
+        str_ = s.str();
+    }
     void bvisit(const UnivariateSeries &x)
     {
         throw SymEngineException("Not supported");

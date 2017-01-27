@@ -94,20 +94,11 @@ RCP<const Number> Infty::add(const Number &other) const
 
     const Infty &s = down_cast<const Infty &>(other);
 
-    if (not eq(*s.get_direction(), *_direction)) {
-        if (is_unsigned_infinity() or s.is_unsigned_infinity())
-            throw SymEngineException("Indeterminate Expression: "
-                                     "`unsigned_Infty +- Infty` "
-                                     "encountered");
-        else
-            throw SymEngineException("Indeterminate Expression: `Infty +- "
-                                     "Infty` encountered. Directions don't "
-                                     "match");
-    } else if (is_unsigned_infinity()) {
-        throw SymEngineException("Indeterminate Expression: "
-                                 "`unsigned_Infty +- unsigned Infty` "
-                                 "encountered");
-    } else
+    if (not eq(*s.get_direction(), *_direction))
+        return Nan;
+    else if (is_unsigned_infinity())
+        return Nan;
+    else
         return rcp_from_this_cast<Number>();
 }
 
@@ -119,7 +110,6 @@ RCP<const Number> Infty::mul(const Number &other) const
 
     if (is_a<Infty>(other)) {
         const Infty &s = down_cast<const Infty &>(other);
-
         return make_rcp<const Infty>(this->_direction->mul(*(s._direction)));
     } else {
         if (other.is_positive())
@@ -127,17 +117,14 @@ RCP<const Number> Infty::mul(const Number &other) const
         else if (other.is_negative())
             return make_rcp<const Infty>(this->_direction->mul(*minus_one));
         else
-            throw SymEngineException(
-                "Indeterminate Expression: `0 * Infty` encountered");
+            return Nan;
     }
 }
 
 RCP<const Number> Infty::div(const Number &other) const
 {
     if (is_a<Infty>(other)) {
-        throw DomainError("Indeterminate Expression: "
-                          "`Infty / Infty` "
-                          "encountered");
+        return Nan;
     } else {
         if (other.is_positive())
             return rcp_from_this_cast<Number>();
@@ -157,20 +144,17 @@ RCP<const Number> Infty::pow(const Number &other) const
             } else if (other.is_positive()) {
                 return rcp_from_this_cast<Number>();
             } else {
-                throw SymEngineException("Indeterminate Expression: `Infty ** "
-                                         "unsigned Infty` encountered");
+                return Nan;
             }
         } else if (is_negative_infinity()) {
-            throw NotImplementedError("NaN module not yet implemented");
+            return Nan;
         } else {
             if (other.is_positive()) {
                 return infty(0);
             } else if (other.is_negative()) {
                 return zero;
             } else {
-                throw SymEngineException("Indeterminate Expression: `unsigned "
-                                         "Infty ** unsigned Infty` "
-                                         "encountered");
+                return Nan;
             }
         }
     } else if (is_a<Complex>(other)) {
@@ -202,15 +186,15 @@ RCP<const Number> Infty::rpow(const Number &other) const
             "Raising Complex powers to Infty not yet implemented");
     } else {
         if (other.is_negative()) {
-            throw NotImplementedError("NaN module not yet implemented");
+            throw NotImplementedError("Raising Negative numbers to infinite "
+                                      "powers not yet implemented");
         } else if (other.is_zero()) {
             throw SymEngineException("Indeterminate Expression: `0 ** +- "
                                      "unsigned Infty` encountered");
         } else {
             const Number &s = down_cast<const Number &>(other);
             if (s.is_one()) {
-                throw SymEngineException("Indeterminate Expression: `1 ** +- "
-                                         "unsigned Infty` encountered");
+                return Nan;
             } else if (is_positive_infinity()) {
                 if (s.sub(*one)->is_negative()) {
                     return zero;

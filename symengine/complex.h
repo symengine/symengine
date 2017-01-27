@@ -226,7 +226,7 @@ public:
                 = this->real_ * this->real_
                   + this->imaginary_ * this->imaginary_;
             if (get_num(modulus_sq_this) == 0) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }
@@ -250,7 +250,7 @@ public:
                   + this->imaginary_ * this->imaginary_;
 
             if (get_num(modulus_sq_this) == 0) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }
@@ -270,7 +270,7 @@ public:
                   + this->imaginary_ * this->imaginary_;
 
             if (get_num(modulus_sq_this) == 0) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }
@@ -289,7 +289,7 @@ public:
 
         if (get_num(modulus_sq_this) == 0) {
             if (other.is_zero()) {
-                throw NotImplementedError("0/0 is NaN. Yet to be implemented");
+                return Nan;
             } else {
                 return ComplexInf;
             }

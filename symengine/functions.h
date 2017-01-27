@@ -415,6 +415,26 @@ public:
 RCP<const Basic> atan2(const RCP<const Basic> &num,
                        const RCP<const Basic> &den);
 
+class Log : public OneArgFunction
+{
+    // Logarithms are taken with the natural base, `e`. To get
+    // a logarithm of a different base `b`, use `log(x, b)`,
+    // which is essentially short-hand for `log(x)/log(b)`.
+public:
+    IMPLEMENT_TYPEID(LOG)
+    //! Log Constructor
+    Log(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const Basic &arg) const;
+    //! \return canonicalized `log`
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Returns the Natural Logarithm from argument `arg`
+RCP<const Basic> log(const RCP<const Basic> &arg);
+//! \return Log from argument `arg` wrt base `b`
+RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &b);
+
 class LambertW : public OneArgFunction
 {
     // Lambert W function, defined as the inverse function of
