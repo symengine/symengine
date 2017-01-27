@@ -50,6 +50,13 @@ void StrPrinter::bvisit(const Infty &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const NaN &x)
+{
+    std::ostringstream s;
+    s << "nan";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;

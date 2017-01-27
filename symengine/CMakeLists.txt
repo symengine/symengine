@@ -51,6 +51,7 @@ set(SRC
     infinity.cpp
     logic.cpp
     finitediff.cpp
+    nan.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -118,6 +119,7 @@ set(HEADERS
     mp_class.h
     mp_wrapper.h
     mul.h
+    nan.h
     ntheory.h
     number.h
     parser.h

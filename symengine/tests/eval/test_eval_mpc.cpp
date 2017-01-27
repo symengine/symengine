@@ -47,7 +47,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     r = asech(add(integer(2), mul(integer(3), I)));
     eval_mpc(a, *r, MPFR_RNDN);
-    mpc_abs(real,a,MPFR_RNDN);
+    mpc_abs(real, a, MPFR_RNDN);
 
     REQUIRE(mpfr_cmp_d(real, 1.43912555507282) == -1);
     REQUIRE(mpfr_cmp_d(real, 1.43912555507281) == 1);

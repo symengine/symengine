@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/infinity.h>
 #include <symengine/pow.h>
+#include <symengine/nan.h>
 
 namespace SymEngine
 {
@@ -46,6 +47,8 @@ RCP<const Constant> EulerGamma = constant("EulerGamma");
 RCP<const Infty> Inf = Infty::from_int(1);
 RCP<const Infty> NegInf = Infty::from_int(-1);
 RCP<const Infty> ComplexInf = Infty::from_int(0);
+
+RCP<const NaN> Nan = make_rcp<NaN>();
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272
