@@ -2441,6 +2441,11 @@ TEST_CASE("Erf: functions", "[functions]")
     r1 = erf(zero);
     REQUIRE(eq(*r1, *zero));
 
+    r1 = erf(real_double(1.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.84270079294971)
+            < 1e-12);
+
     r1 = erf(mul(i2, x));
     r2 = exp(mul(integer(-4), (mul(x, x))));
     r2 = div(mul(integer(4), r2), sqrt(pi));
@@ -2467,6 +2472,11 @@ TEST_CASE("Erfc: functions", "[functions]")
 
     r1 = erfc(zero);
     REQUIRE(eq(*r1, *one));
+
+    r1 = erfc(real_double(1.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.15729920705028)
+            < 1e-12);
 
     r1 = erfc(mul(i3, x));
     r2 = exp(mul(integer(-9), (mul(x, x))));
