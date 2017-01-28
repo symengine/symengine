@@ -2678,28 +2678,37 @@ TEST_CASE("Lowergamma: functions", "[functions]")
     r2 = sub(integer(120), mul(integer(872), exp(mul(im1, i2))));
     REQUIRE(eq(*expand(r1), *r2));
 
-    r1 = lowergamma(i2, i3)->diff(x);
-    REQUIRE(eq(*r1, *zero));
-
     r1 = lowergamma(s, x)->diff(y);
     REQUIRE(eq(*r1, *zero));
-
-    r1 = lowergamma(i2, x)->diff(x);
-    r2 = mul(x, exp(mul(im1, x)));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = lowergamma(one, x)->diff(x);
-    r2 = exp(mul(im1, x));
-    REQUIRE(eq(*r1, *r2));
 
     r1 = lowergamma(s, x)->diff(s);
     r2 = Derivative::create(lowergamma(s, x), {s});
     REQUIRE(eq(*r1, *r2));
 
-    r1 = uppergamma(pow(s, i2), x)->diff(s);
+    r1 = lowergamma(pow(s, i2), x)->diff(s);
     r2 = mul(mul(i2, s),
-             Subs::create(Derivative::create(uppergamma(_xi_1, x), {_xi_1}),
+             Subs::create(Derivative::create(lowergamma(_xi_1, x), {_xi_1}),
                           {{_xi_1, pow(s, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(s, i2), x)->diff(x);
+    r2 = mul(pow(x, add(pow(s, i2), minus_one)), exp(mul(minus_one, x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(s, i2), pow(x, i2))->diff(x);
+    r2 = mul(mul(pow(pow(x, i2), add(pow(s, i2), minus_one)),
+                 exp(mul(minus_one, pow(x, i2)))),
+             mul(x, i2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(pow(pow(i2, x), add(pow(x, i2), minus_one)),
+                     mul(exp(mul(minus_one, pow(i2, x))), log(i2))),
+                 pow(i2, x)),
+             mul(mul(i2, x),
+                 Subs::create(
+                     Derivative::create(lowergamma(_xi_1, pow(i2, x)), {_xi_1}),
+                     {{_xi_1, pow(x, i2)}})));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2728,19 +2737,8 @@ TEST_CASE("Uppergamma: functions", "[functions]")
     r2 = mul(integer(872), exp(mul(im1, i2)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = uppergamma(i2, i3)->diff(x);
-    REQUIRE(eq(*r1, *zero));
-
     r1 = uppergamma(s, x)->diff(y);
     REQUIRE(eq(*r1, *zero));
-
-    r1 = uppergamma(i2, x)->diff(x);
-    r2 = mul(mul(x, exp(mul(im1, x))), im1);
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = uppergamma(one, x)->diff(x);
-    r2 = mul(exp(mul(im1, x)), im1);
-    REQUIRE(eq(*r1, *r2));
 
     r1 = uppergamma(s, x)->diff(s);
     r2 = Derivative::create(uppergamma(s, x), {s});
@@ -2750,6 +2748,29 @@ TEST_CASE("Uppergamma: functions", "[functions]")
     r2 = mul(mul(i2, s),
              Subs::create(Derivative::create(uppergamma(_xi_1, x), {_xi_1}),
                           {{_xi_1, pow(s, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(s, i2), x)->diff(x);
+    r2 = mul(mul(pow(x, add(pow(s, i2), minus_one)), exp(mul(minus_one, x))),
+             minus_one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(s, i2), pow(x, i2))->diff(x);
+    r2 = mul(mul(mul(pow(pow(x, i2), add(pow(s, i2), minus_one)),
+                     exp(mul(minus_one, pow(x, i2)))),
+                 mul(x, i2)),
+             minus_one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(mul(pow(pow(i2, x), add(pow(x, i2), minus_one)),
+                         mul(exp(mul(minus_one, pow(i2, x))), log(i2))),
+                     pow(i2, x)),
+                 minus_one),
+             mul(mul(i2, x),
+                 Subs::create(
+                     Derivative::create(uppergamma(_xi_1, pow(i2, x)), {_xi_1}),
+                     {{_xi_1, pow(x, i2)}})));
     REQUIRE(eq(*r1, *r2));
 }
 

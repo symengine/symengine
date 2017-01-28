@@ -90,7 +90,7 @@ public:
         }
 
         if (count == 0) {
-            return zero;
+            return diff;
         }
 
         for (unsigned i = 0; i < v.size(); i++) {
