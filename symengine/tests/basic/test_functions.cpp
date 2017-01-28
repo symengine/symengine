@@ -2250,9 +2250,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
-    RCP<const Symbol> _x = symbol("_x");
-    RCP<const Symbol> _x1 = symbol("_x1");
-    RCP<const Symbol> _x2 = symbol("_x2");
+    RCP<const Symbol> _x1 = symbol("_xi_1");
+    RCP<const Symbol> _x2 = symbol("_xi_2");
     RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
@@ -2272,8 +2271,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
     r1 = kronecker_delta(i, mul(j, j))->diff(j);
     r2 = mul(i2, mul(j, Subs::create(
-                            Derivative::create(kronecker_delta(i, _x), {_x}),
-                            {{_x, mul(j, j)}})));
+                            Derivative::create(kronecker_delta(i, _x2), {_x2}),
+                            {{_x2, mul(j, j)}})));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(i, mul(j, j))->diff(i);
@@ -2282,8 +2281,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
     r1 = kronecker_delta(mul(i, i), j)->diff(i);
     r2 = mul(i2, mul(i, Subs::create(
-                            Derivative::create(kronecker_delta(_x, j), {_x}),
-                            {{_x, mul(i, i)}})));
+                            Derivative::create(kronecker_delta(_x1, j), {_x1}),
+                            {{_x1, mul(i, i)}})));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(mul(i, i), j)->diff(j);
@@ -2827,7 +2826,7 @@ TEST_CASE("Beta: functions", "[functions]")
 TEST_CASE("Polygamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> _x = symbol("_xi_1");
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);

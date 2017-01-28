@@ -42,6 +42,13 @@ public:
     }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const = 0;
+
+    inline RCP<const Basic> create(const vec_basic &b) const
+    {
+        SYMENGINE_ASSERT(b.size() == 1);
+        return create(b[0]);
+    }
+
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -95,6 +102,13 @@ public:
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &a,
                                     const RCP<const Basic> &b) const = 0;
+
+    inline RCP<const Basic> create(const vec_basic &b) const
+    {
+        SYMENGINE_ASSERT(b.size() == 2);
+        return create(b[0], b[1]);
+    }
+
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -469,6 +483,7 @@ class Zeta : public TwoArgFunction
     // value
     // of :math:`a = 1`, yielding the Riemann zeta function.
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(ZETA)
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
@@ -878,6 +893,7 @@ class KroneckerDelta : public TwoArgFunction
      * http://en.wikipedia.org/wiki/Kronecker_delta
      **/
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(KRONECKERDELTA)
     //! KroneckerDelta Constructor
     KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
@@ -994,6 +1010,7 @@ class LowerGamma : public TwoArgFunction
 {
     //! The lower incomplete gamma function.
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(LOWERGAMMA)
     //! LowerGamma Constructor
     LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
@@ -1013,6 +1030,7 @@ class UpperGamma : public TwoArgFunction
 {
     //! The upper incomplete gamma function.
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(UPPERGAMMA)
     //! UpperGamma Constructor
     UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
@@ -1061,6 +1079,7 @@ class Beta : public TwoArgFunction
      *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
      **/
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(BETA)
     //! Beta Constructor
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
@@ -1096,6 +1115,7 @@ class PolyGamma : public TwoArgFunction
      *\log\Gamma(z).
      **/
 public:
+    using TwoArgFunction::create;
     IMPLEMENT_TYPEID(POLYGAMMA)
     //! PolyGamma Constructor
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
