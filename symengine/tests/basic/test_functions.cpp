@@ -2475,7 +2475,8 @@ TEST_CASE("Erf: functions", "[functions]")
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.84270079294971)
             < 1e-12);
 
-    CHECK_THROWS_AS(erf(complex_double(std::complex<double>(1, 1))),NotImplementedError);
+    CHECK_THROWS_AS(erf(complex_double(std::complex<double>(1, 1))),
+                    NotImplementedError);
 
     r1 = erf(mul(i2, x));
     r2 = exp(mul(integer(-4), (mul(x, x))));
@@ -2511,7 +2512,8 @@ TEST_CASE("Erfc: functions", "[functions]")
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.15729920705028)
             < 1e-12);
 
-    CHECK_THROWS_AS(erfc(complex_double(std::complex<double>(1, 1))),NotImplementedError);
+    CHECK_THROWS_AS(erfc(complex_double(std::complex<double>(1, 1))),
+                    NotImplementedError);
 
     r1 = erfc(mul(i3, x));
     r2 = exp(mul(integer(-9), (mul(x, x))));

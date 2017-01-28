@@ -365,5 +365,5 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     REQUIRE(eq(*r, *zero));
 
     r = erf(NegInf);
-    REQUIRE(eq(*r, *minus_one));    
+    REQUIRE(eq(*r, *minus_one));
 }
