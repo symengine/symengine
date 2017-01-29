@@ -241,8 +241,8 @@ public:
             result_ = 0.5772156649015328606065; // use until polygamma or
                                                 // digamma is implemented
         } else {
-            throw SymEngineException("Constant " + x.get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError("Constant " + x.get_name()
+                                      + " is not implemented.");
         }
     };
 
@@ -599,9 +599,9 @@ std::vector<fn> init_eval_double()
             return 0.5772156649015328606065; // use until polygamma or digamma
                                              // is implemented
         } else {
-            throw SymEngineException("Constant "
-                                     + down_cast<const Constant &>(x).get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError(
+                "Constant " + down_cast<const Constant &>(x).get_name()
+                + " is not implemented.");
         }
     };
     table[ABS] = [](const Basic &x) {

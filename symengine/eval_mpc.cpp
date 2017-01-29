@@ -294,14 +294,14 @@ public:
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else {
-            throw SymEngineException("Constant " + x.get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError("Constant " + x.get_name()
+                                      + " is not implemented.");
         }
     }
 
     void bvisit(const Gamma &x)
     {
-        throw SymEngineException("Not implemented");
+        throw NotImplementedError("Not implemented");
     }
 
     void bvisit(const Abs &x)

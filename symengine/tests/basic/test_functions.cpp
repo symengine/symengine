@@ -3014,7 +3014,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
     mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 0.000000000000000_z;
+    q = 0_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) == 0);
 
     mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);

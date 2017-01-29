@@ -108,7 +108,7 @@ int Rational::compare(const Basic &o) const
         const Integer &s = down_cast<const Integer &>(o);
         return i < s.as_integer_class() ? -1 : 1;
     }
-    throw SymEngineException("unhandled comparison of Rational");
+    throw NotImplementedError("unhandled comparison of Rational");
 }
 
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,

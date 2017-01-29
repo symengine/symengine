@@ -144,9 +144,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     CHECK_THROWS_AS(eval_double_single_dispatch(*zeta(r1, r2)),
                     NotImplementedError);
 
-    CHECK_THROWS_AS(eval_double(*constant("dummy")), SymEngineException);
+    CHECK_THROWS_AS(eval_double(*constant("dummy")), NotImplementedError);
     CHECK_THROWS_AS(eval_double_single_dispatch(*constant("dummy")),
-                    SymEngineException);
+                    NotImplementedError);
     // ... we don't test the rest of functions that are not implemented.
 }
 

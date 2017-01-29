@@ -147,7 +147,7 @@ public:
     void bvisit(const Series &x)
     {
         if (x.get_var() != varname) {
-            throw SymEngineException("Multivariate Series not implemented");
+            throw NotImplementedError("Multivariate Series not implemented");
         }
         if (x.get_degree() < prec) {
             throw SymEngineException("Series with lesser prec found");
@@ -283,7 +283,7 @@ public:
         if (!has_symbol(x, *symbol(varname))) {
             p = Series::convert(x);
         } else {
-            throw SymEngineException("Not Implemented");
+            throw NotImplementedError("Not Implemented");
         }
     }
 };
