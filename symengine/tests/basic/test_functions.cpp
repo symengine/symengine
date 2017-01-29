@@ -2985,6 +2985,28 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     r1 = asin(real_mpfr(a));
     REQUIRE(is_a<RealMPFR>(*r1));
 
+    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
+    r1 = erf(real_mpfr(a));
+
+    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
+    r2 = erfc(real_mpfr(a));
+    REQUIRE(is_a<RealMPFR>(*r1));
+    REQUIRE(is_a<RealMPFR>(*r2));
+
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
+    q = 99532226501895273_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 99532226501895274_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r2).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
+    q = 467773498104726_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 467773498104727_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
 #ifdef HAVE_SYMENGINE_MPC
     // Check asin(2.0)
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
@@ -3059,6 +3081,9 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     q = -132627416165935647_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
+    mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
+    CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError);
+    CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);
