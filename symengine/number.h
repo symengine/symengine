@@ -178,6 +178,7 @@ public:
     virtual RCP<const Basic> acosh(const Basic &) const = 0;
     virtual RCP<const Basic> atanh(const Basic &) const = 0;
     virtual RCP<const Basic> acoth(const Basic &) const = 0;
+    virtual RCP<const Basic> asech(const Basic &) const = 0;
     virtual RCP<const Basic> log(const Basic &) const = 0;
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;

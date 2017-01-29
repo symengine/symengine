@@ -38,6 +38,10 @@ SymEngine mailinglist: http://groups.google.com/group/symengine
 
     conda install symengine -c symengine -c conda-forge
 
+### Homebrew pacakge manager
+
+    brew install homebrew/science/symengine
+
 ### Building from source
 
 Install prerequisites.

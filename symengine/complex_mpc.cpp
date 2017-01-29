@@ -863,6 +863,16 @@ class EvaluateMPC : public Evaluate
         mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
+    virtual RCP<const Basic> asech(const Basic &x) const
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_ui_div(t.get_mpc_t(), 1,
+                   down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                   MPFR_RNDN);
+        mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
     virtual RCP<const Basic> log(const Basic &x) const
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))

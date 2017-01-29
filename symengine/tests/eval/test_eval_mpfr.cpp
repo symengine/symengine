@@ -23,6 +23,8 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::loggamma;
+using SymEngine::one;
+using SymEngine::asech;
 
 TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 {
@@ -110,6 +112,12 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     eval_mpfr(a, *r, MPFR_RNDN);
     REQUIRE(mpfr_cmp_d(a, 0.004677734983) == -1);
     REQUIRE(mpfr_cmp_d(a, 0.004677734981) == 1);
+
+    r = asech(div(one, integer(3)));
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(a, 1.76274717403909) == -1);
+    REQUIRE(mpfr_cmp_d(a, 1.76274717403908) == 1);
 
     mpfr_clear(a);
 }

@@ -226,6 +226,16 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
             return number(std::atanh(1.0 / std::complex<double>(d)));
         }
     }
+    virtual RCP<const Basic> asech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        double d = down_cast<const RealDouble &>(x).i;
+        if (d <= 1.0 and d >= 0.0) {
+            return number(std::acosh(1.0 / d));
+        } else {
+            return number(std::acosh(1.0 / std::complex<double>(d)));
+        }
+    }
     virtual RCP<const Basic> log(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
@@ -289,6 +299,11 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
         return number(std::atanh(1.0 / down_cast<const ComplexDouble &>(x).i));
+    }
+    virtual RCP<const Basic> asech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        return number(std::acosh(1.0 / down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> log(const Basic &x) const override
     {
