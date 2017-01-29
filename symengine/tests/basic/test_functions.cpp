@@ -2221,6 +2221,9 @@ TEST_CASE("Asech: functions", "[functions]")
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = asech(zero);
+    REQUIRE(eq(*r1, *Inf));
+
     r1 = asech(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.31695789692482)

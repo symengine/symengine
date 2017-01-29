@@ -337,6 +337,7 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(acsc(Inf), DomainError);
     CHECK_THROWS_AS(asec(Inf), DomainError);
     CHECK_THROWS_AS(sin(ComplexInf), DomainError);
+    CHECK_THROWS_AS(asech(ComplexInf), DomainError);
 
     r1 = atan(Inf);
     REQUIRE(eq(*r1, *div(pi, integer(2))));
