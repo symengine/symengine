@@ -67,6 +67,7 @@ public:
     {
         return false;
     }
+    virtual Evaluate &get_eval() const;
 
     RCP<const Number> add(const Number &other) const;
     RCP<const Number> mul(const Number &other) const;

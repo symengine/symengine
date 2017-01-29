@@ -1,4 +1,5 @@
 #include <symengine/nan.h>
+#include <symengine/constants.h>
 
 namespace SymEngine
 {
@@ -51,6 +52,156 @@ RCP<const Number> NaN::pow(const Number &other) const
 RCP<const Number> NaN::rpow(const Number &other) const
 {
     return rcp_from_this_cast<Number>();
+}
+
+class EvaluateNaN : public Evaluate
+{
+    virtual RCP<const Basic> sin(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> cos(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> tan(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> cot(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> sec(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> csc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> asin(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acos(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acsc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> asec(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> atan(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acot(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> sinh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> csch(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> cosh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> sech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> tanh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> coth(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> asinh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acosh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acsch(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> asech(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> atanh(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> acoth(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> abs(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> log(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> gamma(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> exp(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+};
+
+Evaluate &NaN::get_eval() const
+{
+    static EvaluateNaN evaluate_NaN;
+    return evaluate_NaN;
 }
 
 } // SymEngine
