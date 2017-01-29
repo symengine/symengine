@@ -36,6 +36,7 @@ using SymEngine::SymEngineException;
 using SymEngine::DomainError;
 using SymEngine::pi;
 using SymEngine::gamma;
+using SymEngine::I;
 using SymEngine::Nan;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
@@ -323,7 +324,7 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     RCP<const Infty> a = Inf;
     RCP<const Infty> b = NegInf;
     RCP<const Infty> c = ComplexInf;
-    RCP<const Basic> r;
+    RCP<const Basic> r1, r2;
 
     CHECK_THROWS_AS(sin(Inf), DomainError);
     CHECK_THROWS_AS(cos(Inf), DomainError);
@@ -336,22 +337,27 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(acsc(Inf), DomainError);
     CHECK_THROWS_AS(asec(Inf), DomainError);
     CHECK_THROWS_AS(sin(ComplexInf), DomainError);
+    CHECK_THROWS_AS(asech(ComplexInf), DomainError);
 
-    r = atan(Inf);
-    REQUIRE(eq(*r, *div(pi, integer(2))));
+    r1 = atan(Inf);
+    REQUIRE(eq(*r1, *div(pi, integer(2))));
 
-    r = acot(Inf);
-    REQUIRE(eq(*r, *zero));
+    r1 = acot(Inf);
+    REQUIRE(eq(*r1, *zero));
 
-    r = abs(ComplexInf);
-    REQUIRE(eq(*r, *a));
+    r1 = abs(ComplexInf);
+    REQUIRE(eq(*r1, *a));
 
-    r = gamma(Inf);
-    REQUIRE(eq(*r, *a));
+    r1 = gamma(Inf);
+    REQUIRE(eq(*r1, *a));
 
-    r = sinh(NegInf);
-    REQUIRE(eq(*r, *b));
+    r1 = sinh(NegInf);
+    REQUIRE(eq(*r1, *b));
 
-    r = exp(NegInf);
-    REQUIRE(eq(*r, *zero));
+    r1 = exp(NegInf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = asech(Inf);
+    r2 = mul(mul(I, pi), div(one, integer(2)));
+    REQUIRE(eq(*r1, *r2));
 }

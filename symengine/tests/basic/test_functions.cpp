@@ -2221,6 +2221,26 @@ TEST_CASE("Asech: functions", "[functions]")
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = asech(zero);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = asech(real_double(0.5));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.31695789692482)
+            < 1e-12);
+
+    r1 = asech(real_double(-0.5));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 3.40646187463796)
+            < 1e-12);
+
+    r1 = asech(complex_double(std::complex<double>(1, 1)));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.2380058304943624757)
+            < 1e-12);
+
     r1 = asech(x)->diff(x);
     r2 = div(im1, mul(sqrt(sub(one, pow(x, i2))), x));
     REQUIRE(eq(*r1, *r2));
@@ -2926,6 +2946,15 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     q = -41614683654714238_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
+    mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
+    r1 = asech(real_mpfr(a));
+    REQUIRE(is_a<RealMPFR>(*r1));
+
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
+    q = 0_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) == 0);
+
     mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
     r1 = gamma(div(real_mpfr(a), i2));
     REQUIRE(is_a<RealMPFR>(*r1));
@@ -2977,9 +3006,47 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = 106127506190503566_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
+    // Check asech(2)
+    mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
+    r1 = asech(real_mpfr(a));
+    REQUIRE(is_a<ComplexMPC>(*r1));
+    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
+    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 0.000000000000000_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) == 0);
+
+    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 104719755119659774_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 104719755119659775_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
+    // Check asech(2+2*I)
+    mpc_set_si_si(c.get_mpc_t(), 2, 2, MPFR_RNDN);
+    r1 = asech(complex_mpc(c));
+    REQUIRE(is_a<ComplexMPC>(*r1));
+    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
+    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 25489557334055081_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 25489557334055082_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
+    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = -132627416165935648_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = -132627416165935647_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);
+    CHECK_THROWS_AS(asech(real_mpfr(a)), SymEngineException);
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }

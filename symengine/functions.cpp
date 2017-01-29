@@ -2077,6 +2077,11 @@ bool ASech::is_canonical(const RCP<const Basic> &arg) const
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2085,6 +2090,14 @@ RCP<const Basic> asech(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return zero;
+    if (eq(*arg, *zero))
+        return Inf;
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().asech(*_arg);
+        }
+    }
     return make_rcp<const ASech>(arg);
 }
 

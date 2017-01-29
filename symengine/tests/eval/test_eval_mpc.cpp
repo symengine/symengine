@@ -4,6 +4,7 @@
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/real_double.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::RCP;
@@ -21,6 +22,8 @@ using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::eval_mpc;
 using SymEngine::print_stack_on_segfault;
+using SymEngine::asech;
+using SymEngine::real_double;
 
 TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 {
@@ -41,6 +44,13 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
     REQUIRE(mpc_cmp(a, b) == 0);
+
+    r = asech(add(integer(2), mul(integer(3), I)));
+    eval_mpc(a, *r, MPFR_RNDN);
+    mpc_abs(real, a, MPFR_RNDN);
+
+    REQUIRE(mpfr_cmp_d(real, 1.43912555507282) == -1);
+    REQUIRE(mpfr_cmp_d(real, 1.43912555507281) == 1);
 
     r = add(one, mul(EulerGamma, I));
     s = one;
