@@ -285,16 +285,10 @@ public:
 
     void bvisit(const Constant &x)
     {
-        if (eq(x, *pi)) {
-            result_ = [=](const T *x) { return std::atan2(0, -1); };
-        } else if (eq(x, *E)) {
-            result_ = [=](const T *x) { return std::exp(1); };
-        } else if (eq(x, *EulerGamma)) {
-            result_ = [=](const T *x) { return 0.57721566490153286; };
-        } else if (eq(x, *Catalan)) {
-            result_ = [=](const T *x) { return 0.9159655941772190150546; };
-        } else if (eq(x, *GoldenRatio)) {
-            result_ = [=](const T *x) { return 1.6180339887498948482045; };
+        if (eq(x, *pi) or eq(x, *E) or eq(x, *EulerGamma) or eq(x, *Catalan)
+            or eq(x, *GoldenRatio)) {
+            T tmp = eval_double(x);
+            result_ = [=](const T *x) { return tmp; };
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");
