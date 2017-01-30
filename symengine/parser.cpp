@@ -18,7 +18,13 @@ class ExpressionParser
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
-        {"e", E}, {"E", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"I", I}};
+        {"e", E},
+        {"E", E},
+        {"EulerGamma", EulerGamma},
+        {"Catalan", Catalan},
+        {"GoldenRatio", GoldenRatio},
+        {"pi", pi},
+        {"I", I}};
 
     // reference :
     // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions

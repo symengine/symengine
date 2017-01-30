@@ -409,13 +409,7 @@ public:
 
     void bvisit(const Constant &x)
     {
-        if (eq(x, *pi) or eq(x, *E) or eq(x, *EulerGamma) or eq(x, *Catalan)
-            or eq(x, *GoldenRatio)) {
-            set_double(eval_double(x));
-        } else {
-            throw NotImplementedError("Constant " + x.get_name()
-                                      + " is not implemented.");
-        }
+        set_double(eval_double(x));
     };
 
     void bvisit(const Abs &x)
