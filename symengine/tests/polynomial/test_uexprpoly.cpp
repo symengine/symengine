@@ -225,6 +225,16 @@ TEST_CASE("Evaluation of UExprPoly", "[UExprPoly]")
     REQUIRE(a->eval(2).get_basic()->__str__() == "31/4");
 }
 
+TEST_CASE("Convert UExprPoly to Symbolic", "[UExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
+
+    REQUIRE(eq(*a->get_poly().get_basic("x"),
+               *add(integer(1),
+                    add(mul(integer(2), x), mul(symbol("a"), mul(x, x))))));
+}
+
 TEST_CASE("Derivative of UExprPoly", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
