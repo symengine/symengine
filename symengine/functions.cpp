@@ -1950,6 +1950,13 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
     if (eq(*arg, *minus_one))
         return log(sub(sq2, one));
 
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().acsch(*_arg);
+        }
+    }
+
     RCP<const Basic> d;
     bool b = handle_minus(arg, outArg(d));
     if (b) {
