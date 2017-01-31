@@ -364,15 +364,15 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     r2 = mul(mul(I, pi), div(one, integer(2)));
     REQUIRE(eq(*r1, *r2));
 
-    r = exp(NegInf);
-    REQUIRE(eq(*r, *zero));
+    r1 = exp(NegInf);
+    REQUIRE(eq(*r1, *zero));
 
-    r = erf(Inf);
-    REQUIRE(eq(*r, *one));
+    r1 = erf(Inf);
+    REQUIRE(eq(*r1, *one));
 
-    r = erfc(Inf);
-    REQUIRE(eq(*r, *zero));
+    r1 = erfc(Inf);
+    REQUIRE(eq(*r1, *zero));
 
-    r = erf(NegInf);
-    REQUIRE(eq(*r, *minus_one));
+    r1 = erf(NegInf);
+    REQUIRE(eq(*r1, *minus_one));
 }
