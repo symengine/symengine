@@ -2587,8 +2587,9 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
             return sub(mul(s_num, lowergamma(s_num, x)),
                        mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {
-            return add(lowergamma(add(s, one), x),
-                       mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+            return div(add(lowergamma(add(s, one), x),
+                           mul(pow(x, s), exp(mul(minus_one, x)))),
+                       s);
         }
     }
     return make_rcp<const LowerGamma>(s, x);
@@ -2647,8 +2648,9 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s,
             return add(mul(s_num, uppergamma(s_num, x)),
                        mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {
-            return sub(uppergamma(add(s, one), x),
-                       mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+            return div(sub(uppergamma(add(s, one), x),
+                           mul(pow(x, s), exp(mul(minus_one, x)))),
+                       s);
         }
     }
     return make_rcp<const UpperGamma>(s, x);
