@@ -7,6 +7,7 @@
 #include <symengine/real_double.h>
 
 using SymEngine::SymEngineException;
+using SymEngine::NotImplementedError;
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;
