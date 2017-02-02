@@ -390,8 +390,8 @@ public:
         } else if (x.__eq__(*EulerGamma)) {
             arb_const_euler(result_, prec_);
         } else {
-            throw SymEngineException("Constant " + x.get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError("Constant " + x.get_name()
+                                      + " is not implemented.");
         }
     }
 

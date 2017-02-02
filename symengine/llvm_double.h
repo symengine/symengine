@@ -386,7 +386,7 @@ public:
 
     void bvisit(const Tan &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not implemented.");
     }
 
     void bvisit(const Symbol &x)
@@ -404,7 +404,7 @@ public:
 
     void bvisit(const Log &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not implemented.");
     };
 
     void bvisit(const Constant &x)
@@ -416,19 +416,19 @@ public:
         } else if (eq(x, *EulerGamma)) {
             set_double(0.57721566490153286);
         } else {
-            throw SymEngineException("Constant " + x.get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError("Constant " + x.get_name()
+                                      + " is not implemented.");
         }
     };
 
     void bvisit(const Abs &x)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not implemented.");
     };
 
     void bvisit(const Basic &)
     {
-        throw std::runtime_error("Not implemented.");
+        throw NotImplementedError("Not implemented.");
     };
 };
 }

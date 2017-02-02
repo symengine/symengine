@@ -292,8 +292,8 @@ public:
         } else if (eq(x, *EulerGamma)) {
             result_ = [=](const T *x) { return 0.57721566490153286; };
         } else {
-            throw SymEngineException("Constant " + x.get_name()
-                                     + " is not implemented.");
+            throw NotImplementedError("Constant " + x.get_name()
+                                      + " is not implemented.");
         }
     };
 
