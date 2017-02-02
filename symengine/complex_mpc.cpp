@@ -904,6 +904,16 @@ class EvaluateMPC : public Evaluate
                 MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
+    virtual RCP<const Basic> erf(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        throw NotImplementedError("erf is not implemented in mpc");
+    }
+    virtual RCP<const Basic> erfc(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        throw NotImplementedError("erfc is not implemented in mpc");
+    }
 };
 
 Evaluate &ComplexMPC::get_eval() const

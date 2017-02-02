@@ -183,6 +183,8 @@ public:
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;
     virtual RCP<const Basic> exp(const Basic &) const = 0;
+    virtual RCP<const Basic> erf(const Basic &) const = 0;
+    virtual RCP<const Basic> erfc(const Basic &) const = 0;
 };
 
 } // SymEngine
