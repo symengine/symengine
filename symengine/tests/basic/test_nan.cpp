@@ -165,4 +165,8 @@ TEST_CASE("Evaluate Class of NaN", "[NaN]")
     REQUIRE(eq(*n1, *Nan));
     n1 = exp(a);
     REQUIRE(eq(*n1, *Nan));
+    n1 = erf(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = erfc(a);
+    REQUIRE(eq(*n1, *Nan));
 }
