@@ -35,6 +35,9 @@ public:
     DIFF0(UnivariateSeries)
     DIFF0(Max)
     DIFF0(Min)
+    DIFF0(Erf2)
+    DIFF0(Erfinv)
+    DIFF0(Erfcinv)
 #endif
 
     static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)
