@@ -87,6 +87,42 @@ int Pow::compare(const Basic &o) const
         return base_cmp;
 }
 
+RCP<const Basic> simplify_log_add(const RCP<const Basic> &b)
+{
+    RCP<const Basic> ret1 = one, ret2;
+    RCP<const Basic> coef = (down_cast<const Add &>(*b)).get_coef();
+    ret2 = pow(E, coef);
+
+    for (auto &p : (down_cast<const Add &>(*b)).get_dict()) {
+        if (is_a<Log>(*p.first)) {
+            RCP<const Number> s = rcp_static_cast<const Number>(
+                down_cast<const Log &>(*p.first).get_arg());
+            ret1 = mul(ret1, pownum(s, p.second));
+        } else {
+            ret2 = mul(ret2, pow(E, mul(p.first, p.second)));
+        }
+    }
+    return mul(ret1, ret2);
+}
+
+RCP<const Basic> simplify_log_mul(const RCP<const Basic> &b)
+{
+    RCP<const Basic> ret1, coef = (down_cast<const Mul &>(*b)).get_coef();
+    auto mulmap = (down_cast<const Mul &>(*b)).get_dict();
+
+    if (mulmap.size() == 1) {
+        if (is_a<Log>(*mulmap.begin()->first)) {
+            RCP<const Number> s = rcp_static_cast<const Number>(
+                down_cast<const Log &>(*mulmap.begin()->first).get_arg());
+            ret1 = pow(pownum(s, rcp_static_cast<const Number>(
+                                     mulmap.begin()->second)),
+                       coef);
+            return ret1;
+        }
+    }
+    return make_rcp<const Pow>(E, b);
+}
+
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
@@ -94,6 +130,18 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     }
     if (eq(*b, *one))
         return a;
+
+    if (eq(*a, *E)) {
+        if (is_a<Log>(*b)) {
+            return down_cast<const Log &>(*b).get_arg();
+        } else if (not is_a_Number(*b)) {
+            if (is_a<Add>(*b)) {
+                return simplify_log_add(b);
+            } else if (is_a<Mul>(*b)) {
+                return simplify_log_mul(b);
+            }
+        }
+    }
 
     if (eq(*a, *zero)) {
         if (is_a_Number(*b)
