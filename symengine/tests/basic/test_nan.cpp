@@ -40,16 +40,18 @@ TEST_CASE("Boolean tests for NaN", "[NaN]")
 
     REQUIRE((not a->is_zero() && not a->is_one() && not a->is_minus_one()
              && not a->is_positive() && not a->is_negative()
-             && not a->is_complex() && is_a<NaN>(*a)));
+             && not a->is_complex() && not a->is_exact() && is_a<NaN>(*a)));
 }
 
 TEST_CASE("Comparing NaN", "[NaN]")
 {
     RCP<const NaN> a = Nan;
     RCP<const NaN> b = Nan;
+    RCP<const Basic> i1 = integer(1);
 
     REQUIRE(a->compare(*b) == 0);
     REQUIRE(eq(*a, *b));
+    REQUIRE(neq(*a, *i1));
 }
 
 TEST_CASE("Check Derivative", "[NaN]")

@@ -23,6 +23,7 @@ using SymEngine::set_basic;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Rational;
+using SymEngine::real_double;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::Number;
@@ -31,6 +32,7 @@ using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Complex;
+using SymEngine::complex_double;
 using SymEngine::has_symbol;
 using SymEngine::coeff;
 using SymEngine::is_a;
@@ -687,6 +689,8 @@ TEST_CASE("compare: Basic", "[basic]")
     r2 = log(x);
     CHECK(r1->__cmp__(*r2) != 0);
     CHECK(r1->__cmp__(*r1) == 0);
+
+    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
 }
 
 TEST_CASE("Complex: Basic", "[basic]")
@@ -700,6 +704,8 @@ TEST_CASE("Complex: Basic", "[basic]")
 
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
+
+    REQUIRE(c1->is_complex());
 
     // Basic check for equality in Complex::from_two_nums and
     // Complex::from_two_rats
@@ -845,6 +851,41 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*s, *Nan));
     s = integer(0)->div(*c2);
     REQUIRE(eq(*s, *Nan));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = Complex::from_two_nums(*integer(1), *integer(5));
+    s = c1->sub(*Rational::from_two_ints(5, 5));
+    REQUIRE(eq(*s, *c2));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = Complex::from_two_nums(*integer(1), *integer(5));
+    s = c1->sub(*integer(1));
+    REQUIRE(eq(*s, *c2));
+
+    c1 = integer(1);
+    c2 = Complex::from_two_nums(*integer(-1), *integer(-5));
+    s = c1->sub(*Complex::from_two_nums(*integer(2), *integer(5)));
+    REQUIRE(eq(*s, *c2));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = Rational::from_two_ints(5, 5);
+    c3 = Complex::from_two_nums(*integer(-1), *integer(-5));
+    s = c2->sub(*c1);
+    REQUIRE(eq(*s, *c3));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = Rational::from_two_ints(5, 5);
+    c3 = Complex::from_two_nums(*integer(2), *integer(5));
+    s = c1->div(*c2);
+    REQUIRE(eq(*s, *c3));
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = Rational::from_two_ints(4, 5);
+    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError);
+
+    c1 = Complex::from_two_nums(*integer(2), *integer(5));
+    c2 = integer(3);
+    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")

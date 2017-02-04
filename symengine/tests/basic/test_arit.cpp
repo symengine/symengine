@@ -289,6 +289,8 @@ TEST_CASE("Mul: arit", "[arit]")
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
     REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(down_cast<const ComplexDouble &>(*r3).is_complex());
+    REQUIRE(not down_cast<const ComplexDouble &>(*r3).is_minus_one());
     REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() + 0.805)
             < 1e-12);
     REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 0.84)
@@ -329,6 +331,176 @@ TEST_CASE("Mul: arit", "[arit]")
 
     r1 = mul({i2});
     REQUIRE(eq(*r1, *i2));
+
+    RCP<const Number> s1, s2, s3;
+
+    s1 = complex_double(std::complex<double>(1.0, 2.0));
+    rc1 = Rational::from_two_ints(*integer(2), *integer(1));
+    s2 = complex_double(std::complex<double>(3.0, 2.0));
+    s3 = s1->add(*rc1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(2.0, 4.0));
+    s3 = s1->add(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(2.0, 2.0));
+    s3 = s1->sub(*integer(-1));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-1.0, 2.0));
+    s3 = s1->sub(*Rational::from_two_ints(2, 1));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(0.0, 0.0));
+    s3 = s1->sub(*Complex::from_two_nums(*integer(1), *integer(2)));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(0.0, 2.0));
+    s3 = s1->sub(*real_double(1.0));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(0.0, 0.0));
+    s3 = s1->sub(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-2.0, -2.0));
+    s3 = integer(-1)->sub(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(1.0, -2.0));
+    s3 = Rational::from_two_ints(2, 1)->sub(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(0.0, 0.0));
+    s3 = Complex::from_two_nums(*integer(1), *integer(2))->sub(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(0.0, -2.0));
+    s3 = real_double(1.0)->sub(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-3.0, 4.0));
+    s3 = s1->mul(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s1 = complex_double(std::complex<double>(4.0, 4.0));
+    s2 = complex_double(std::complex<double>(-2.0, -2.0));
+    s3 = s1->div(*integer(-2));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-2.0, -2.0));
+    s3 = s1->div(*Rational::from_two_ints(-2, 1));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-2.0, -2.0));
+    s3 = s1->div(*real_double(-2.0));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(4.0, 0.0));
+    s3 = s1->div(*Complex::from_two_nums(*integer(1), *integer(1)));
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(1.0, 0.0));
+    s3 = s1->div(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s1 = complex_double(std::complex<double>(1.0, -1.0));
+    s2 = complex_double(std::complex<double>(1.0, 1.0));
+    s3 = integer(2)->div(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-1.0, -1.0));
+    s3 = Rational::from_two_ints(-2, 1)->div(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(-1.0, -1.0));
+    s3 = real_double(-2.0)->div(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s2 = complex_double(std::complex<double>(1.0, 0.0));
+    s3 = Complex::from_two_nums(*integer(1), *integer(-1))->div(*s1);
+    REQUIRE(eq(*s2, *s3));
+
+    s1 = complex_double(std::complex<double>(1.0, 1.0));
+    s2 = complex_double(std::complex<double>(0.0, 2.0));
+    s3 = s1->pow(*integer(2));
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(std::complex<double>(0.0, 2.0));
+    s3 = s1->pow(*Rational::from_two_ints(2, 1));
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(std::complex<double>(0.0, 2.0));
+    s3 = s1->pow(*real_double(2.0));
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(
+        std::complex<double>(0.27395725383012, 0.58370075875861));
+    s3 = s1->pow(*Complex::from_two_nums(*integer(1), *integer(1)));
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(
+        std::complex<double>(0.27395725383012, 0.58370075875861));
+    s3 = s1->pow(*s1);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(
+        std::complex<double>(1.53847780272794, 1.27792255262727));
+    s3 = Rational::from_two_ints(2, 1)->pow(*s1);
+    std::cout << *s3 << std::endl;
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(
+        std::complex<double>(1.53847780272794, 1.27792255262727));
+    s3 = real_double(2.0)->pow(*s1);
+    std::cout << *s3 << std::endl;
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
+
+    s2 = complex_double(
+        std::complex<double>(0.27395725383012, 0.58370075875861));
+    s3 = Complex::from_two_nums(*integer(1), *integer(1))->pow(*s1);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
+                     - down_cast<const ComplexDouble &>(*s2).i.real())
+            < 1e-12);
+    REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
+                     - down_cast<const ComplexDouble &>(*s2).i.imag())
+            < 1e-12);
 }
 
 TEST_CASE("Sub: arit", "[arit]")
@@ -818,7 +990,7 @@ TEST_CASE("Log: arit", "[arit]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im3 = integer(-3);
-
+    RCP<const Basic> q = Complex::from_two_nums(*zero, *zero);
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
@@ -831,6 +1003,9 @@ TEST_CASE("Log: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = log(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = log(q);
     REQUIRE(eq(*r1, *ComplexInf));
 
     r1 = log(Inf);
@@ -872,6 +1047,10 @@ TEST_CASE("Log: arit", "[arit]")
     c1 = Complex::from_two_nums(*integer(2), *integer(-2));
     r1 = log(c1);
     REQUIRE(is_a<Log>(*r1));
+
+    c1 = Complex::from_two_nums(*integer(0), *integer(0));
+    r1 = log(c1);
+    REQUIRE(eq(*r1, *ComplexInf));
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));

@@ -25,6 +25,7 @@ using SymEngine::min;
 using SymEngine::loggamma;
 using SymEngine::one;
 using SymEngine::asech;
+using SymEngine::zero;
 
 TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 {
@@ -78,6 +79,12 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     eval_mpfr(a, *r, MPFR_RNDN);
     REQUIRE(mpfr_cmp_d(a, 3.00000000000001) == -1);
     REQUIRE(mpfr_cmp_d(a, 2.99999999999999) == 1);
+
+    r = max({sqrt(integer(3)), sqrt(integer(2))});
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(a, 1.73205080756) == 1);
+    REQUIRE(mpfr_cmp_d(a, 1.73205080758) == -1);
 
     r = min({sqrt(integer(3)), sqrt(integer(2))});
 

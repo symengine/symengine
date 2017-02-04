@@ -2,6 +2,7 @@
 
 #include <symengine/rational.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/real_double.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -9,12 +10,17 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Rational;
 using SymEngine::rational;
+using SymEngine::RealDouble;
+using SymEngine::real_double;
 using SymEngine::Number;
 using SymEngine::is_a;
+using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
+using SymEngine::ComplexInf;
 
 TEST_CASE("Rational", "[rational]")
 {
+    RCP<const Integer> i1 = integer(1);
     RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i10 = integer(10);
@@ -24,16 +30,24 @@ TEST_CASE("Rational", "[rational]")
     RCP<const Number> q2_5 = Rational::from_two_ints(*i2, *i5);
     RCP<const Number> q = rational(2, 5);
 
-    REQUIRE(q10_25->__eq__(*q2_5));
-    REQUIRE(q10_25->__eq__(*q));
-
     RCP<const Number> r1 = rational(2, 1);
+    RCP<const Number> r2 = rational(0, 3);
+
+    REQUIRE(eq(*q10_25, *q2_5));
+    REQUIRE(eq(*q10_25, *q));
+    REQUIRE(not q10_25->is_complex());
+
     CHECK(is_a<Integer>(*r1));
     CHECK(r1->__eq__(*integer(2)));
 
     r1 = rational(9, 3);
     CHECK(is_a<Integer>(*r1));
     CHECK(r1->__eq__(*integer(3)));
+
+    r1 = q->div(*r2);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError);
 }
 
 TEST_CASE("Rational compare", "[rational compare]")
@@ -44,6 +58,7 @@ TEST_CASE("Rational compare", "[rational compare]")
     RCP<const Integer> im2 = integer(-2);
     RCP<const Integer> i0 = integer(0);
     RCP<const Integer> i2 = integer(2);
+    RCP<const RealDouble> r = real_double(0.4);
 
     REQUIRE(q2_5->compare(*q2_5a) == 0);
     REQUIRE(q2_5->compare(*qm1_27) == 1);
@@ -54,6 +69,8 @@ TEST_CASE("Rational compare", "[rational compare]")
     REQUIRE(qm1_27->compare(*im2) == 1);
     REQUIRE(qm1_27->compare(*i0) == -1);
     REQUIRE(qm1_27->compare(*i2) == -1);
+
+    CHECK_THROWS_AS(q2_5->compare(*r), SymEngineException);
 }
 
 TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")

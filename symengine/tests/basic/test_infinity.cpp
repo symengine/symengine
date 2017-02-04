@@ -40,6 +40,7 @@ using SymEngine::I;
 using SymEngine::Nan;
 using SymEngine::erf;
 using SymEngine::erfc;
+using SymEngine::I;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -118,7 +119,7 @@ TEST_CASE("Boolean tests for Infinity", "[Infinity]")
     REQUIRE((not c->is_zero() && not c->is_one() && not c->is_minus_one()
              && not c->is_negative_infinity() && not c->is_positive_infinity()
              && c->is_unsigned_infinity() && not c->is_positive()
-             && not c->is_negative() && is_a<Infty>(*c)));
+             && not c->is_negative() && c->is_complex() && is_a<Infty>(*c)));
 }
 
 TEST_CASE("Comparing Infinitys", "[Infinity]")
@@ -275,7 +276,6 @@ TEST_CASE("Powers of Infinity", "[Infinity]")
     REQUIRE(eq(*n1, *one));
     n1 = c->pow(*integer(10));
     REQUIRE(eq(*n1, *ComplexInf));
-
     n1 = a->pow(*c);
     REQUIRE(eq(*n1, *Nan));
     n1 = b->pow(*a);
@@ -317,6 +317,7 @@ TEST_CASE("Powers to Infinity", "[Infinity]")
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(integer(-10)->pow(*a), NotImplementedError);
     CHECK_THROWS_AS(integer(0)->pow(*b), SymEngineException);
+    CHECK_THROWS_AS(integer(10)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException);
     CHECK_THROWS_AS(cx->pow(*c), NotImplementedError);
 }
@@ -341,11 +342,69 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(sin(ComplexInf), DomainError);
     CHECK_THROWS_AS(asech(ComplexInf), DomainError);
     CHECK_THROWS_AS(erfc(ComplexInf), DomainError);
+    CHECK_THROWS_AS(atan(ComplexInf), DomainError);
+    CHECK_THROWS_AS(acot(ComplexInf), DomainError);
+    CHECK_THROWS_AS(sinh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(csch(ComplexInf), DomainError);
+    CHECK_THROWS_AS(cosh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(sech(ComplexInf), DomainError);
+    CHECK_THROWS_AS(tanh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(coth(ComplexInf), DomainError);
+    CHECK_THROWS_AS(asinh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(acosh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(atanh(ComplexInf), DomainError);
+    CHECK_THROWS_AS(acoth(ComplexInf), DomainError);
+    CHECK_THROWS_AS(exp(ComplexInf), DomainError);
 
     r1 = atan(Inf);
     REQUIRE(eq(*r1, *div(pi, integer(2))));
 
     r1 = acot(Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = abs(ComplexInf);
+    REQUIRE(eq(*r1, *a));
+
+    r1 = atan(NegInf);
+    REQUIRE(eq(*r1, *mul(minus_one, (div(pi, integer(2))))));
+
+    r1 = acot(Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = csch(Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = cosh(Inf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = sech(Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = tanh(Inf);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = tanh(NegInf);
+    REQUIRE(eq(*r1, *minus_one));
+
+    r1 = coth(Inf);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = coth(NegInf);
+    REQUIRE(eq(*r1, *minus_one));
+
+    r1 = asinh(Inf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = acosh(NegInf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = atanh(Inf);
+    REQUIRE(eq(*r1, *mul(minus_one, div(mul(pi, I), integer(2)))));
+
+    r1 = atanh(NegInf);
+    REQUIRE(eq(*r1, *div(mul(pi, I), integer(2))));
+
+    r1 = acoth(NegInf);
     REQUIRE(eq(*r1, *zero));
 
     r1 = abs(ComplexInf);
@@ -375,4 +434,10 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
 
     r1 = erf(NegInf);
     REQUIRE(eq(*r1, *minus_one));
+
+    r1 = exp(Inf);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = gamma(NegInf);
+    REQUIRE(eq(*r1, *ComplexInf));
 }

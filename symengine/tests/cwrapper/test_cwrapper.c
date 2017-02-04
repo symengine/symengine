@@ -84,6 +84,15 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    basic_str_free(s);
+
+    rational_set_si(e, 100, 47);
+    s = basic_str(e);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     mpq_t testr;
@@ -1201,6 +1210,16 @@ void test_matrix()
     CDenseMatrix *A = dense_matrix_new();
     SYMENGINE_C_ASSERT(is_a_DenseMatrix(A));
     dense_matrix_free(A);
+
+    CSparseMatrix *SA = sparse_matrix_new();
+    sparse_matrix_init(SA);
+    SYMENGINE_C_ASSERT(is_a_SparseMatrix(SA));
+    sparse_matrix_free(SA);
+
+    CSparseMatrix *SB = sparse_matrix_new();
+    sparse_matrix_init(SB);
+    SYMENGINE_C_ASSERT(is_a_SparseMatrix(SB));
+    sparse_matrix_free(SB);
 
     basic i1, i2, i3, i4;
     basic_new_stack(i1);

@@ -3,6 +3,7 @@
 
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/functions.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
@@ -100,10 +101,12 @@ using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
 using SymEngine::I;
+using SymEngine::E;
 using SymEngine::integer_class;
 using SymEngine::down_cast;
 using SymEngine::ComplexInf;
 using SymEngine::Inf;
+using SymEngine::NegInf;
 using SymEngine::Nan;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
@@ -845,17 +848,38 @@ TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
     r1 = sin(atan(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_p_x2))));
 
+    r1 = sin(asec(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_xm2)));
+
+    r1 = sin(acot(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, mul(x, sqrt(one_p_xm2)))));
+
+    r1 = cos(asin(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_x2)));
+
+    r1 = cos(atan(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_p_x2))));
+
     r1 = cos(acsc(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_xm2)));
 
     r1 = cos(acot(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_p_xm2))));
 
+    r1 = tan(asin(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_m_x2))));
+
     r1 = tan(acos(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_m_x2), x)));
 
+    r1 = tan(acsc(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, mul(x, sqrt(one_m_xm2)))));
+
     r1 = tan(asec(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *mul(x, sqrt(one_m_xm2))));
+
+    r1 = csc(acos(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_x2))));
 
     r1 = csc(atan(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_p_x2), x)));
@@ -863,8 +887,17 @@ TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
     r1 = csc(asec(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_xm2))));
 
+    r1 = csc(acot(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *mul(x, sqrt(one_p_xm2))));
+
+    r1 = sec(asin(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_x2))));
+
     r1 = sec(acos(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(one, x)));
+
+    r1 = sec(atan(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_x2)));
 
     r1 = sec(acot(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_xm2)));
@@ -874,6 +907,12 @@ TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
 
     r1 = cot(acos(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_m_x2))));
+
+    r1 = cot(acsc(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *mul(x, sqrt(one_m_xm2))));
+
+    r1 = cot(asec(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, mul(x, sqrt(one_m_xm2)))));
 }
 
 TEST_CASE("function_symbol: functions", "[functions]")
@@ -1603,6 +1642,10 @@ TEST_CASE("Acos: functions", "[functions]")
     r2 = pi;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = acos(zero);
+    r2 = div(pi, i2);
+    REQUIRE(eq(*r1, *r2));
+
     r1 = acos(div(im1, i2));
     r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
@@ -1725,6 +1768,9 @@ TEST_CASE("atan: functions", "[functions]")
     r2 = div(pi, integer(4));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = atan(zero);
+    REQUIRE(eq(*r1, *zero));
+
     r1 = atan(im1);
     r2 = div(pi, integer(-4));
     REQUIRE(eq(*r1, *r2));
@@ -1764,6 +1810,10 @@ TEST_CASE("Acot: functions", "[functions]")
 
     r1 = acot(i1);
     r2 = div(pi, integer(4));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acot(zero);
+    r2 = div(pi, i2);
     REQUIRE(eq(*r1, *r2));
 
     r1 = acot(im1);
@@ -1854,6 +1904,23 @@ TEST_CASE("Atan2: functions", "[functions]")
 
     r1 = atan2(zero, zero);
     REQUIRE(eq(*r1, *Nan));
+
+    r1 = atan2(zero, i2);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = atan2(zero, im1);
+    REQUIRE(eq(*r1, *pi));
+
+    r1 = atan2(zero, zero);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = atan2(i2, zero);
+    r2 = mul(div(pi, i2), minus_one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = atan2(im2, zero);
+    r2 = div(pi, i2);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Lambertw: functions", "[functions]")
@@ -1869,6 +1936,9 @@ TEST_CASE("Lambertw: functions", "[functions]")
     r1 = lambertw(zero);
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = lambertw(E);
+    REQUIRE(eq(*r1, *one));
 
     r1 = lambertw(neg(exp(im1)));
     r2 = im1;
@@ -2324,6 +2394,9 @@ TEST_CASE("Zeta: functions", "[functions]")
     r2 = sub(div(one, i2), x);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = zeta(one);
+    REQUIRE(eq(*r1, *ComplexInf));
+
     r1 = zeta(zero, im1);
     r2 = div(integer(3), i2);
     REQUIRE(eq(*r1, *r2));
@@ -2369,6 +2442,7 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(s, x)->diff(s);
     r2 = Derivative::create(zeta(s, x), {s});
     REQUIRE(eq(*r1, *r2));
+    REQUIRE(r1->compare(*r2) == 0);
 
     r1 = zeta(one, i2)->diff(x);
     REQUIRE(eq(*r1, *zero));
@@ -2474,6 +2548,10 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
 
     r1 = dirichlet_eta(zero);
     r2 = div(one, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(zeta(one));
+    r2 = dirichlet_eta(ComplexInf);
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2708,6 +2786,7 @@ TEST_CASE("Beta: functions", "[functions]")
     RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
+    RCP<const Basic> r5_2 = Rational::from_two_ints(*integer(5), *integer(2));
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2766,6 +2845,9 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *ComplexInf));
     r1 = beta(r2_5, im1);
     REQUIRE(eq(*r1, *ComplexInf));
+    r1 = beta(one, r5_2);
+    r2 = beta(r5_2, one);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Polygamma: functions", "[functions]")
@@ -3099,6 +3181,7 @@ TEST_CASE("max: functions", "[functions]")
     RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
     RCP<const Basic> rd = real_double(0.32);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> c = Complex::from_two_nums(*one, *one);
 
     RCP<const Basic> res, tmp;
 
@@ -3113,6 +3196,12 @@ TEST_CASE("max: functions", "[functions]")
 
     res = max({x});
     REQUIRE(eq(*res, *x)); // max(x) == x
+
+    res = max({Inf});
+    REQUIRE(eq(*res, *Inf));
+
+    res = max({NegInf, one});
+    REQUIRE(eq(*res, *one));
 
     res = max({x, x});
     REQUIRE(eq(*res, *x)); // max(x, x) == x
@@ -3138,6 +3227,10 @@ TEST_CASE("max: functions", "[functions]")
     res = max({max({x, i2}), max({y, r2_5})});
     REQUIRE(eq(
         *res, *max({x, i2, y}))); // max(max(2, x), max(2/5, y)) == max(x, 2, y)
+
+    CHECK_THROWS_AS(min({}), SymEngineException);
+
+    CHECK_THROWS_AS(min({c}), SymEngineException);
 }
 
 TEST_CASE("min: functions", "[functions]")
@@ -3147,6 +3240,7 @@ TEST_CASE("min: functions", "[functions]")
     RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
     RCP<const Basic> rd = real_double(0.32);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> c = Complex::from_two_nums(*one, *one);
 
     RCP<const Basic> res;
 
@@ -3183,4 +3277,8 @@ TEST_CASE("min: functions", "[functions]")
     REQUIRE(eq(
         *res,
         *min({x, r2_5, y}))); // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
+
+    CHECK_THROWS_AS(min({}), SymEngineException);
+
+    CHECK_THROWS_AS(min({c}), SymEngineException);
 }
