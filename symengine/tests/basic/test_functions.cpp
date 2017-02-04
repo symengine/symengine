@@ -2948,6 +2948,9 @@ TEST_CASE("Digamma: functions", "[functions]")
     RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i4 = integer(4);
 
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
@@ -2986,6 +2989,13 @@ TEST_CASE("Digamma: functions", "[functions]")
     r1 = digamma(div(i3, i4));
     r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(x)->diff(x);
+    r2 = polygamma(one, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 }
 
 TEST_CASE("Trigamma: functions", "[functions]")
@@ -2994,6 +3004,9 @@ TEST_CASE("Trigamma: functions", "[functions]")
     RCP<const Basic> im2 = integer(-2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -3004,6 +3017,13 @@ TEST_CASE("Trigamma: functions", "[functions]")
 
     r1 = trigamma(im2);
     REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = trigamma(x)->diff(x);
+    r2 = polygamma(integer(2), x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 }
 
 TEST_CASE("Polygamma: functions", "[functions]")

@@ -1136,15 +1136,9 @@ public:
 RCP<const Basic> polygamma(const RCP<const Basic> &n,
                            const RCP<const Basic> &x);
 
-inline RCP<const Basic> digamma(const RCP<const Basic> &x)
-{
-    return polygamma(zero, x);
-}
+RCP<const Basic> digamma(const RCP<const Basic> &x);
 
-inline RCP<const Basic> trigamma(const RCP<const Basic> &x)
-{
-    return polygamma(one, x);
-}
+RCP<const Basic> trigamma(const RCP<const Basic> &x);
 
 class Abs : public OneArgFunction
 {
