@@ -294,6 +294,58 @@ RCP<const Boolean> Not::get_arg() const
     return arg_;
 }
 
+Xor::Xor(const set_boolean &s) : container_{s}
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(s));
+}
+
+hash_t Xor::__hash__() const
+{
+    hash_t seed = XOR;
+    for (const auto &a : container_)
+        hash_combine<Basic>(seed, *a);
+    return seed;
+}
+
+vec_basic Xor::get_args() const
+{
+    vec_basic v(container_.begin(), container_.end());
+    return v;
+}
+
+bool Xor::__eq__(const Basic &o) const
+{
+    return is_a<Xor>(o) and unified_eq(container_, down_cast<const Xor &>(o)
+                                                       .get_container());
+}
+
+int Xor::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Xor>(o))
+    return unified_compare(container_,
+                           down_cast<const Xor &>(o).get_container());
+}
+
+bool Xor::is_canonical(const set_boolean &container_)
+{
+    if (container_.size() >= 2) {
+        for (auto &a : container_) {
+            if (is_a<BooleanAtom>(*a) or is_a<Xor>(*a))
+                return false;
+            if (container_.find(logical_not(a)) != container_.end())
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+const set_boolean &Xor::get_container() const
+{
+    return container_;
+}
+
 template <typename caller>
 RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
 {
@@ -352,6 +404,43 @@ RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
     }
 }
 
+RCP<const Boolean> logical_xor(const set_boolean &s)
+{
+    set_boolean args;
+    for (auto &a : s) {
+        if (is_a<BooleanAtom>(*a)) {
+            auto val = down_cast<const BooleanAtom &>(*a).get_val();
+            if (val == false) {
+                continue;
+            }
+        } else if (is_a<Xor>(*a)) {
+            auto container = down_cast<const Xor &>(*a).get_container();
+            args.insert(container.begin(), container.end());
+            continue;
+        }
+        args.insert(a);
+    }
+
+    if (args.size() == 0) {
+        return boolFalse;
+    } else if (args.size() == 1) {
+        return *args.begin();
+    } else {
+        for (auto &a : args) {
+            if (is_a<BooleanAtom>(*a)) {
+                SYMENGINE_ASSERT(a == boolTrue)
+                args.erase(a);
+                return logical_xnor(args);
+            } else if (args.find(logical_not(a)) != args.end()) {
+                args.erase(a);
+                args.erase(args.find(logical_not(a)));
+                return logical_xnor(args);
+            }
+        }
+        return make_rcp<const Xor>(args);
+    }
+}
+
 RCP<const Boolean> logical_and(const set_boolean &s)
 {
     return and_or<And>(s, false);
@@ -371,5 +460,10 @@ RCP<const Boolean> logical_or(const set_boolean &s)
 RCP<const Boolean> logical_nor(const set_boolean &s)
 {
     return logical_not(and_or<Or>(s, true));
+}
+
+RCP<const Boolean> logical_xnor(const set_boolean &s)
+{
+    return logical_not(logical_xor(s));
 }
 }
