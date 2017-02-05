@@ -4,6 +4,8 @@
 #include <symengine/nan.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/constants.h>
+#include <symengine/functions.h>
+#include <symengine/pow.h>
 
 using SymEngine::Basic;
 using SymEngine::is_a;
@@ -20,6 +22,7 @@ using SymEngine::Nan;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Inf;
+using SymEngine::gamma;
 
 TEST_CASE("Hash Size for NaN", "[NaN]")
 {
@@ -100,5 +103,72 @@ TEST_CASE("Powers to NaN", "[NaN]")
 
     RCP<const Basic> n1;
     n1 = integer(-10)->pow(*a);
+    REQUIRE(eq(*n1, *Nan));
+}
+
+TEST_CASE("Evaluate Class of NaN", "[NaN]")
+{
+    RCP<const NaN> a = Nan;
+    RCP<const Basic> n1;
+
+    n1 = sin(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = cos(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = tan(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = csc(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = sec(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = cot(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = asin(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acos(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = atan(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acsc(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = asec(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acot(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = sinh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = cosh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = tanh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = csch(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = sech(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = coth(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = asinh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acosh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = atanh(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acsch(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = asech(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = acoth(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = log(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = gamma(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = abs(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = exp(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = erf(a);
+    REQUIRE(eq(*n1, *Nan));
+    n1 = erfc(a);
     REQUIRE(eq(*n1, *Nan));
 }
