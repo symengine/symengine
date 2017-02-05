@@ -43,6 +43,8 @@ RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
 RCP<const Constant> EulerGamma = constant("EulerGamma");
+RCP<const Constant> Catalan = constant("Catalan");
+RCP<const Constant> GoldenRatio = constant("GoldenRatio");
 
 RCP<const Infty> Inf = Infty::from_int(1);
 RCP<const Infty> NegInf = Infty::from_int(-1);

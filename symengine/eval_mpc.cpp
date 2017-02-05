@@ -293,6 +293,20 @@ public:
             mpfr_const_euler(t, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
+        } else if (x.__eq__(*Catalan)) {
+            mpfr_t t;
+            mpfr_init2(t, mpc_get_prec(result_));
+            mpfr_const_catalan(t, rnd_);
+            mpc_set_fr(result_, t, rnd_);
+            mpfr_clear(t);
+        } else if (x.__eq__(*GoldenRatio)) {
+            mpfr_t t;
+            mpfr_init2(t, mpc_get_prec(result_));
+            mpfr_sqrt_ui(t, 5, rnd_);
+            mpfr_add_ui(t, t, 1, rnd_);
+            mpfr_div_ui(t, t, 2, rnd_);
+            mpc_set_fr(result_, t, rnd_);
+            mpfr_clear(t);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

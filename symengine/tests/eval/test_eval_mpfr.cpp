@@ -26,6 +26,8 @@ using SymEngine::loggamma;
 using SymEngine::one;
 using SymEngine::asech;
 using SymEngine::zero;
+using SymEngine::Catalan;
+using SymEngine::GoldenRatio;
 
 TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 {
@@ -73,6 +75,24 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     // Check that value of `r` (`a`) starts with 0.00000000182845
     REQUIRE(mpfr_cmp_d(a, 0.00000000182845) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.00000000182846) == -1);
+
+    s = mul(Catalan, integer(100000000));
+    t = integer(91596559);
+    r = div(sub(s, t), integer(100000000));
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    // Check that value of `r` (`a`) starts with 0.000000004177219
+    REQUIRE(mpfr_cmp_d(a, 0.000000004177219) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.000000004177220) == -1);
+
+    s = mul(GoldenRatio, integer(100000000));
+    t = integer(161803398);
+    r = div(sub(s, t), integer(100000000));
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    // Check that value of `r` (`a`) starts with 0.0000000087498948482
+    REQUIRE(mpfr_cmp_d(a, 0.00000000874989) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.00000000874990) == -1);
 
     r = max({integer(3), integer(2)});
 

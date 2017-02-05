@@ -278,6 +278,12 @@ public:
             mpfr_clear(one_);
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
+        } else if (x.__eq__(*Catalan)) {
+            mpfr_const_catalan(result_, rnd_);
+        } else if (x.__eq__(*GoldenRatio)) {
+            mpfr_sqrt_ui(result_, 5, rnd_);
+            mpfr_add_ui(result_, result_, 1, rnd_);
+            mpfr_div_ui(result_, result_, 2, rnd_);
         } else {
             throw NotImplementedError("Constant " + x.get_name()
                                       + " is not implemented.");

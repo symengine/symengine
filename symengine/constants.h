@@ -65,6 +65,8 @@ extern SYMENGINE_EXPORT RCP<const Number> I;
 extern SYMENGINE_EXPORT RCP<const Constant> pi;
 extern SYMENGINE_EXPORT RCP<const Constant> E;
 extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
+extern SYMENGINE_EXPORT RCP<const Constant> Catalan;
+extern SYMENGINE_EXPORT RCP<const Constant> GoldenRatio;
 
 // Infinity
 extern SYMENGINE_EXPORT RCP<const Infty> Inf;
