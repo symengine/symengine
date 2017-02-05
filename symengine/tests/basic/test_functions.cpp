@@ -2954,6 +2954,10 @@ TEST_CASE("Digamma: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
+    r1 = digamma(x);
+    r2 = polygamma(zero, x);
+    REQUIRE(eq(*r1, *r2));
+
     r1 = digamma(zero);
     REQUIRE(eq(*r1, *ComplexInf));
 
@@ -3018,11 +3022,19 @@ TEST_CASE("Trigamma: functions", "[functions]")
     r1 = trigamma(im2);
     REQUIRE(eq(*r1, *ComplexInf));
 
+    r1 = digamma(x)->diff(x);
+    r2 = trigamma(x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = trigamma(x);
+    r2 = polygamma(one, x);
+    REQUIRE(eq(*r1, *r2));
+
     r1 = trigamma(x)->diff(x);
     r2 = polygamma(integer(2), x);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = digamma(x)->diff(y);
+    r1 = trigamma(x)->diff(y);
     REQUIRE(eq(*r1, *zero));
 }
 
