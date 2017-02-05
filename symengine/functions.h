@@ -1055,7 +1055,7 @@ class Erfinv : public OneArgFunction
         \mathrm{erf}(x) = y \quad \Rightarrow \quad \mathrm{erfinv}(y) = x
      **/
 public:
-    IMPLEMENT_TYPEID(ERFC)
+    IMPLEMENT_TYPEID(ERFINV)
     Erfinv(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
         SYMENGINE_ASSIGN_TYPEID()
@@ -1076,7 +1076,7 @@ class Erfcinv : public OneArgFunction
         \mathrm{erfc}(x) = y \quad \Rightarrow \quad \mathrm{erfcinv}(y) = x
      **/
 public:
-    IMPLEMENT_TYPEID(ERFC)
+    IMPLEMENT_TYPEID(ERFCINV)
     Erfcinv(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
         SYMENGINE_ASSIGN_TYPEID()

@@ -35,9 +35,6 @@ public:
     DIFF0(UnivariateSeries)
     DIFF0(Max)
     DIFF0(Min)
-    DIFF0(Erf2)
-    DIFF0(Erfinv)
-    DIFF0(Erfcinv)
 #endif
 
     static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)
@@ -516,6 +513,38 @@ public:
         RCP<const Basic> arg = self.get_args()[0];
         return neg(mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)),
                        arg->diff(x)));
+    }
+
+    static RCP<const Basic> diff(const Erfinv &self, const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(
+            div(mul(sqrt(pi), exp(mul(erfinv(arg), erfinv(arg)))), integer(2)),
+            arg->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Erfcinv &self,
+                                 const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> arg = self.get_args()[0];
+        return neg(mul(div(mul(sqrt(pi), exp(mul(erfcinv(arg), erfcinv(arg)))),
+                           integer(2)),
+                       arg->diff(x)));
+    }
+
+    static RCP<const Basic> diff(const Erf2 &self, const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> arg1 = self.get_args()[0], arg2 = self.get_args()[1];
+        auto ch = arg1->diff(x);
+        if (eq(*ch, *zero)) {
+            return mul(
+                div(mul(integer(2), exp(neg(mul(arg2, arg2)))), sqrt(pi)),
+                arg2->diff(x));
+        } else {
+            return neg(
+                mul(div(mul(integer(2), exp(neg(mul(arg1, arg1)))), sqrt(pi)),
+                    arg1->diff(x)));
+        }
     }
 
     static RCP<const Basic> diff(const Gamma &self, const RCP<const Symbol> &x)

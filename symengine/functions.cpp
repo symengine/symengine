@@ -2934,7 +2934,10 @@ RCP<const Basic> Erf2::create(const RCP<const Basic> &a,
 RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if ((is_a<Integer>(*a) and down_cast<const Integer &>(*a).is_zero())
-        or (is_a<Integer>(*b) and down_cast<const Integer &>(*b).is_zero())) {
+        and (is_a<Integer>(*b) and down_cast<const Integer &>(*b).is_zero())) {
+        return zero;
+    }
+    if (eq(*a, *b)) {
         return zero;
     }
     if ((is_a_Number(*a) and not down_cast<const Number &>(*a).is_exact())
@@ -2943,7 +2946,7 @@ RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b)
     }
 
     RCP<const Basic> d1, d2;
-    bool b1 = handle_minus(a, outArg(d1)), b2 = handle_minus(a, outArg(d2));
+    bool b1 = handle_minus(a, outArg(d1)), b2 = handle_minus(b, outArg(d2));
     if (b1 and b2) {
         return neg(erf2(d1, d2));
     } else if (b1 or b2) {

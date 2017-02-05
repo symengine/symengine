@@ -3140,6 +3140,116 @@ TEST_CASE("Erfc: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
+TEST_CASE("Erfinv: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+
+    r1 = erfinv(zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erfinv(one);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = erfinv(minus_one);
+    REQUIRE(eq(*r1, *NegInf));
+
+    r1 = erfinv(mul(i3, x));
+    r2 = div(mul(mul(integer(3), exp(mul(r1, r1))), sqrt(pi)), i2);
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = add(x, y);
+    r1 = erfinv(r2);
+    r2 = div(mul(exp(mul(r1, r1)), sqrt(pi)), i2);
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    REQUIRE(eq(*erfinv(neg(x)), *neg(erfinv(x))));
+}
+
+TEST_CASE("Erfcinv: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+
+    r1 = erfcinv(zero);
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = erfcinv(one);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erfcinv(integer(2));
+    REQUIRE(eq(*r1, *NegInf));
+
+    r1 = erfcinv(mul(i3, x));
+    r2 = neg(div(mul(mul(integer(3), exp(mul(r1, r1))), sqrt(pi)), i2));
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = add(x, y);
+    r1 = erfcinv(r2);
+    r2 = neg(div(mul(exp(mul(r1, r1)), sqrt(pi)), i2));
+    REQUIRE(eq(*r1->diff(x), *r2));
+}
+
+TEST_CASE("Erf2: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+
+    r1 = erf2(i3, i3);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erf2(real_double(1.0), real_double(1.0));
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erf2(real_double(1.0), zero);
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 0.84270079294971)
+            < 1e-12);
+
+    r1 = erf2(Inf, NegInf);
+    r2 = neg(i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = erf2(neg(i2), neg(i3));
+    r2 = neg(erf2(i2, i3));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = erf2(neg(i2), i3);
+    r2 = sub(erf(i3), neg(erf(i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = erf2(i2, i3);
+    REQUIRE(is_a<Erf2>(*r1));
+
+    r1 = erf2(mul(i2, pow(x, i2)), mul(i3, y));
+    r2 = neg(div(
+        mul(mul(integer(8), x), exp(neg(mul(integer(4), pow(x, integer(4)))))),
+        sqrt(pi)));
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = div(mul(integer(6), exp(neg(mul(integer(9), pow(y, integer(2)))))),
+             sqrt(pi));
+    REQUIRE(eq(*r1->diff(y), *r2));
+}
+
 TEST_CASE("Gamma: functions", "[functions]")
 {
     RCP<const Basic> i2 = integer(2);
