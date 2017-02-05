@@ -171,14 +171,14 @@ public:
     {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
-        mpc_asin(result_, result_, rnd_);
+        mpc_acos(result_, result_, rnd_);
     }
 
     void bvisit(const ACsc &x)
     {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
-        mpc_acos(result_, result_, rnd_);
+        mpc_asin(result_, result_, rnd_);
     }
 
     void bvisit(const ATan &x)
