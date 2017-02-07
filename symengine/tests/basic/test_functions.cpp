@@ -2749,6 +2749,11 @@ TEST_CASE("Lowergamma: functions", "[functions]")
     r2 = sub(one, mul(i3, exp(mul(im1, i2))));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = lowergamma(div(i3, i2), i2);
+    r2 = add(mul(mul(minus_one, sqrt(i2)), exp(mul(i2, minus_one))),
+             mul(mul(div(one, integer(2)), sqrt(pi)), erf(sqrt(i2))));
+    REQUIRE(eq(*r1, *r2));
+
     r1 = lowergamma(mul(i2, i3), i2);
     r2 = sub(integer(120), mul(integer(872), exp(mul(im1, i2))));
     REQUIRE(eq(*expand(r1), *r2));
@@ -2769,6 +2774,11 @@ TEST_CASE("Uppergamma: functions", "[functions]")
 
     r1 = uppergamma(i2, i2);
     r2 = mul(i3, exp(mul(im1, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(div(i3, i2), i2);
+    r2 = add(mul(sqrt(i2), exp(mul(i2, minus_one))),
+             mul(mul(div(one, integer(2)), sqrt(pi)), erfc(sqrt(i2))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = uppergamma(mul(i2, i3), i2);

@@ -2603,17 +2603,18 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
             return make_rcp<const LowerGamma>(s, x);
         }
     } else if (is_a<Integer>(*(mul(i2, s)))) {
-        // TODO: Implement `erf`. Currently the recursive expansion has no base
-        // case
-        // when s is of form n/2 n is Integer
         RCP<const Number> s_num = rcp_static_cast<const Number>(s);
         s_num = subnum(s_num, one);
-        if (s_num->is_positive()) {
+        if (eq(*s, *div(one, integer(2)))) {
+            return mul(sqrt(pi),
+                       erf(sqrt(x))); // base case for s of the form n/2
+        } else if (s_num->is_positive()) {
             return sub(mul(s_num, lowergamma(s_num, x)),
                        mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {
-            return add(lowergamma(add(s, one), x),
-                       mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+            return div(add(lowergamma(add(s, one), x),
+                           mul(pow(x, s), exp(mul(minus_one, x)))),
+                       s);
         }
     }
     return make_rcp<const LowerGamma>(s, x);
@@ -2663,17 +2664,18 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s,
             return make_rcp<const LowerGamma>(s, x);
         }
     } else if (is_a<Integer>(*(mul(i2, s)))) {
-        // TODO: Implement `erf`. Currently the recursive expansion has no base
-        // case
-        // when s is of form n/2 n is Integer
         RCP<const Number> s_num = rcp_static_cast<const Number>(s);
         s_num = subnum(s_num, one);
-        if (s_num->is_positive()) {
+        if (eq(*s, *div(one, integer(2)))) {
+            return mul(sqrt(pi),
+                       erfc(sqrt(x))); // base case for s of the form n/2
+        } else if (s_num->is_positive()) {
             return add(mul(s_num, uppergamma(s_num, x)),
                        mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {
-            return sub(uppergamma(add(s, one), x),
-                       mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+            return div(sub(uppergamma(add(s, one), x),
+                           mul(pow(x, s), exp(mul(minus_one, x)))),
+                       s);
         }
     }
     return make_rcp<const UpperGamma>(s, x);
