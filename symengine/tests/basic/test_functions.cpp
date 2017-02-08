@@ -2320,9 +2320,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
-    RCP<const Symbol> _x = symbol("_x");
-    RCP<const Symbol> _x1 = symbol("_x1");
-    RCP<const Symbol> _x2 = symbol("_x2");
+    RCP<const Symbol> _x1 = symbol("_xi_1");
+    RCP<const Symbol> _x2 = symbol("_xi_2");
     RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
@@ -2342,8 +2341,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
     r1 = kronecker_delta(i, mul(j, j))->diff(j);
     r2 = mul(i2, mul(j, Subs::create(
-                            Derivative::create(kronecker_delta(i, _x), {_x}),
-                            {{_x, mul(j, j)}})));
+                            Derivative::create(kronecker_delta(i, _x2), {_x2}),
+                            {{_x2, mul(j, j)}})));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(i, mul(j, j))->diff(i);
@@ -2352,8 +2351,8 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 
     r1 = kronecker_delta(mul(i, i), j)->diff(i);
     r2 = mul(i2, mul(i, Subs::create(
-                            Derivative::create(kronecker_delta(_x, j), {_x}),
-                            {{_x, mul(i, i)}})));
+                            Derivative::create(kronecker_delta(_x1, j), {_x1}),
+                            {{_x1, mul(i, i)}})));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(mul(i, i), j)->diff(j);
@@ -2734,6 +2733,10 @@ TEST_CASE("LogGamma: functions", "[functions]")
 
 TEST_CASE("Lowergamma: functions", "[functions]")
 {
+    RCP<const Symbol> s = symbol("s");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
@@ -2757,10 +2760,47 @@ TEST_CASE("Lowergamma: functions", "[functions]")
     r1 = lowergamma(mul(i2, i3), i2);
     r2 = sub(integer(120), mul(integer(872), exp(mul(im1, i2))));
     REQUIRE(eq(*expand(r1), *r2));
+
+    r1 = lowergamma(s, x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = lowergamma(s, x)->diff(s);
+    r2 = Derivative::create(lowergamma(s, x), {s});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(s, i2), x)->diff(s);
+    r2 = mul(mul(i2, s),
+             Subs::create(Derivative::create(lowergamma(_xi_1, x), {_xi_1}),
+                          {{_xi_1, pow(s, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(s, i2), x)->diff(x);
+    r2 = mul(pow(x, add(pow(s, i2), minus_one)), exp(mul(minus_one, x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(s, i2), pow(x, i2))->diff(x);
+    r2 = mul(mul(pow(pow(x, i2), add(pow(s, i2), minus_one)),
+                 exp(mul(minus_one, pow(x, i2)))),
+             mul(x, i2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = lowergamma(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(pow(pow(i2, x), add(pow(x, i2), minus_one)),
+                     mul(exp(mul(minus_one, pow(i2, x))), log(i2))),
+                 pow(i2, x)),
+             mul(mul(i2, x),
+                 Subs::create(
+                     Derivative::create(lowergamma(_xi_1, pow(i2, x)), {_xi_1}),
+                     {{_xi_1, pow(x, i2)}})));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Uppergamma: functions", "[functions]")
 {
+    RCP<const Symbol> s = symbol("s");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
@@ -2783,6 +2823,42 @@ TEST_CASE("Uppergamma: functions", "[functions]")
 
     r1 = uppergamma(mul(i2, i3), i2);
     r2 = mul(integer(872), exp(mul(im1, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(s, x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = uppergamma(s, x)->diff(s);
+    r2 = Derivative::create(uppergamma(s, x), {s});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(s, i2), x)->diff(s);
+    r2 = mul(mul(i2, s),
+             Subs::create(Derivative::create(uppergamma(_xi_1, x), {_xi_1}),
+                          {{_xi_1, pow(s, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(s, i2), x)->diff(x);
+    r2 = mul(mul(pow(x, add(pow(s, i2), minus_one)), exp(mul(minus_one, x))),
+             minus_one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(s, i2), pow(x, i2))->diff(x);
+    r2 = mul(mul(mul(pow(pow(x, i2), add(pow(s, i2), minus_one)),
+                     exp(mul(minus_one, pow(x, i2)))),
+                 mul(x, i2)),
+             minus_one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = uppergamma(pow(x, i2), pow(i2, x))->diff(x);
+    r2 = add(mul(mul(mul(pow(pow(i2, x), add(pow(x, i2), minus_one)),
+                         mul(exp(mul(minus_one, pow(i2, x))), log(i2))),
+                     pow(i2, x)),
+                 minus_one),
+             mul(mul(i2, x),
+                 Subs::create(
+                     Derivative::create(uppergamma(_xi_1, pow(i2, x)), {_xi_1}),
+                     {{_xi_1, pow(x, i2)}})));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2863,7 +2939,7 @@ TEST_CASE("Beta: functions", "[functions]")
 TEST_CASE("Polygamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> _x = symbol("_xi_1");
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);

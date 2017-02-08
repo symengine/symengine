@@ -34,8 +34,6 @@ public:
 
     DIFF0(UnivariateSeries)
     DIFF0(Dirichlet_eta)
-    DIFF0(UpperGamma)
-    DIFF0(LowerGamma)
     DIFF0(Max)
     DIFF0(Min)
 #endif
@@ -72,30 +70,116 @@ public:
             return Derivative::create(self.rcp_from_this(), {x});
     }
 
-    static RCP<const Basic> diff(const Zeta &self, const RCP<const Symbol> &x)
+    // Needs create(vec_basic) method to be used.
+    template <typename T>
+    static RCP<const Basic> fdiff(const T &self, const RCP<const Symbol> &x)
     {
-        RCP<const Basic> m1 = self.get_s()->diff(x);
-        RCP<const Basic> diff
-            = mul(mul(mul(minus_one, self.get_s()),
-                      zeta(add(self.get_s(), one), self.get_a())),
-                  self.get_a()->diff(x));
-        if (eq(*m1, *zero)) {
-            return diff;
-        } else {
-            if (eq(*diff, *zero)) {
-                if (eq(*self.get_s(), *x)) {
-                    return Derivative::create(self.rcp_from_this(), {x});
-                }
+        RCP<const Basic> diff = zero;
+        RCP<const Basic> ret;
+        bool know_deriv;
+
+        vec_basic v = self.get_args();
+        vec_basic vdiff(v.size());
+
+        unsigned count = 0;
+        for (unsigned i = 0; i < v.size(); i++) {
+            vdiff[i] = v[i]->diff(x);
+            if (neq(*vdiff[i], *zero)) {
+                count++;
             }
-            auto s = get_dummy(self, "xi_1");
-            map_basic_basic m;
-            insert(m, s, self.get_s());
-            diff = add(diff, mul(m1, make_rcp<const Subs>(
-                                         Derivative::create(
-                                             self.create(s, self.get_a()), {s}),
-                                         m)));
+        }
+
+        if (count == 0) {
             return diff;
         }
+
+        for (unsigned i = 0; i < v.size(); i++) {
+            if (eq(*vdiff[i], *zero))
+                continue;
+            know_deriv = fdiff(outArg(ret), self, i);
+            if (know_deriv) {
+                diff = add(diff, mul(ret, vdiff[i]));
+            } else {
+                if (count == 1 and eq(*v[i], *x)) {
+                    return Derivative::create(self.rcp_from_this(), {x});
+                }
+                vec_basic new_args = v;
+                new_args[i] = get_dummy(self, "xi_" + std::to_string(i + 1));
+                map_basic_basic m;
+                insert(m, new_args[i], v[i]);
+                diff = add(
+                    diff,
+                    mul(vdiff[i], make_rcp<const Subs>(
+                                      Derivative::create(self.create(new_args),
+                                                         {new_args[i]}),
+                                      m)));
+            }
+        }
+        return diff;
+    }
+
+    template <typename T>
+    static RCP<const Basic> diff(
+        const T &self, const RCP<const Symbol> &x,
+        typename std::enable_if<std::is_base_of<TwoArgFunction, T>::value>::type
+            * = nullptr)
+    {
+        return fdiff(self, x);
+    }
+
+    static bool fdiff(const Ptr<RCP<const Basic>> &ret, const Zeta &self,
+                      unsigned index)
+    {
+        if (index == 1) {
+            *ret = mul(mul(minus_one, self.get_arg1()),
+                       zeta(add(self.get_arg1(), one), self.get_arg2()));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static bool fdiff(const Ptr<RCP<const Basic>> &ret, const UpperGamma &self,
+                      unsigned index)
+    {
+        if (index == 1) {
+            *ret = mul(mul(pow(self.get_arg2(), sub(self.get_arg1(), one)),
+                           exp(neg(self.get_arg2()))),
+                       minus_one);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static bool fdiff(const Ptr<RCP<const Basic>> &ret, const LowerGamma &self,
+                      unsigned index)
+    {
+        if (index == 1) {
+            *ret = mul(pow(self.get_arg2(), sub(self.get_arg1(), one)),
+                       exp(neg(self.get_arg2())));
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static bool fdiff(const Ptr<RCP<const Basic>> &ret, const PolyGamma &self,
+                      unsigned index)
+    {
+        if (index == 1) {
+            *ret = polygamma(add(self.get_arg1(), one), self.get_arg2());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static bool fdiff(const Ptr<RCP<const Basic>> &ret, const Function &self,
+                      unsigned index)
+    {
+        // Don't know the derivative, fallback to `Derivative` instances
+        return false;
     }
 
     static RCP<const Basic> diff(const ASech &self, const RCP<const Symbol> &x)
@@ -237,35 +321,7 @@ public:
     static RCP<const Basic> diff(const MultiArgFunction &self,
                                  const RCP<const Symbol> &x)
     {
-        RCP<const Basic> diff = zero, t;
-        RCP<const Basic> self_ = self.rcp_from_this();
-        unsigned count = 0;
-        bool found_x = false;
-        for (const auto &a : self.get_args()) {
-            if (eq(*a, *x)) {
-                found_x = true;
-                count++;
-            } else if (count < 2 and neq(*a->diff(x), *zero)) {
-                count++;
-            }
-        }
-        if (count == 1 and found_x) {
-            return Derivative::create(self_, {x});
-        }
-        for (unsigned i = 0; i < self.get_args().size(); i++) {
-            t = self.get_args()[i]->diff(x);
-            if (neq(*t, *zero)) {
-                vec_basic v = self.get_args();
-                v[i] = get_dummy(self, "xi_" + std::to_string(i + 1));
-                map_basic_basic m;
-                insert(m, v[i], self.get_args()[i]);
-                diff = add(
-                    diff,
-                    mul(t, make_rcp<const Subs>(
-                               Derivative::create(self.create(v), {v[i]}), m)));
-            }
-        }
-        return diff;
+        return fdiff(self, x);
     }
 
     static RCP<const Basic> diff(const LambertW &self,
@@ -459,27 +515,6 @@ public:
                    gamma_arg->diff(x));
     }
 
-    static RCP<const Basic> diff(const PolyGamma &self,
-                                 const RCP<const Symbol> &x)
-    {
-        auto args = self.get_args();
-        auto f = args[0]->diff(x);
-        if (neq(*f, *zero)) {
-            auto g = args[1]->diff(x);
-            if (eq(*args[0], *x) and eq(*g, *zero)) {
-                return Derivative::create(self.rcp_from_this(), {x});
-            } else {
-                auto s = get_dummy(self, "x");
-                map_basic_basic m({{s, args[0]}});
-                f = mul(f,
-                        make_rcp<const Subs>(
-                            Derivative::create(polygamma(s, args[1]), {s}), m));
-                return add(mul(polygamma(add(args[0], one), args[1]), g), f);
-            }
-        }
-        return mul(polygamma(add(args[0], one), args[1]), args[1]->diff(x));
-    }
-
     static RCP<const Basic> diff(const LogGamma &self,
                                  const RCP<const Symbol> &x)
     {
@@ -643,50 +678,6 @@ public:
             p.first = p.first->diff(x);
         }
         return piecewise(std::move(v));
-    }
-
-    static RCP<const Basic> diff(const KroneckerDelta &self,
-                                 const RCP<const Symbol> &x)
-    {
-        auto args = self.get_args();
-        auto f = args[0]->diff(x);
-        auto g = args[1]->diff(x);
-        if (neq(*f, *zero) and neq(*g, *zero)) {
-            RCP<const Basic> a, b;
-            auto s = get_dummy(self, "x1");
-            map_basic_basic m({{s, args[0]}});
-            a = mul(f, make_rcp<const Subs>(
-                           Derivative::create(kronecker_delta(s, args[1]), {s}),
-                           m));
-            s = get_dummy(self, "x2");
-            m = {{s, args[1]}};
-            b = mul(g, make_rcp<const Subs>(
-                           Derivative::create(kronecker_delta(args[0], s), {s}),
-                           m));
-            return add(a, b);
-        } else {
-            if (eq(*f, *one) or eq(*g, *one)) {
-                return Derivative::create(self.rcp_from_this(), {x});
-            } else if (eq(*f, *zero) and eq(*g, *zero)) {
-                return zero;
-            } else {
-                auto s = get_dummy(self, "x");
-                map_basic_basic m;
-                if (neq(*f, *zero)) {
-                    m = {{s, args[0]}};
-                    return mul(f, make_rcp<const Subs>(
-                                      Derivative::create(
-                                          kronecker_delta(s, args[1]), {s}),
-                                      m));
-                } else {
-                    m = {{s, args[1]}};
-                    return mul(g, make_rcp<const Subs>(
-                                      Derivative::create(
-                                          kronecker_delta(args[0], s), {s}),
-                                      m));
-                }
-            }
-        }
     }
 };
 
