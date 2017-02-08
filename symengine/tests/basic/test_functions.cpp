@@ -3228,16 +3228,9 @@ TEST_CASE("Erf2: functions", "[functions]")
     r2 = neg(i2);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = erf2(neg(i2), neg(i3));
-    r2 = neg(erf2(i2, i3));
-    REQUIRE(eq(*r1, *r2));
-
     r1 = erf2(neg(i2), i3);
     r2 = sub(erf(i3), neg(erf(i2)));
     REQUIRE(eq(*r1, *r2));
-
-    r1 = erf2(i2, i3);
-    REQUIRE(is_a<Erf2>(*r1));
 
     r1 = erf2(mul(i2, pow(x, i2)), mul(i3, y));
     r2 = neg(div(

@@ -519,7 +519,7 @@ public:
     {
         RCP<const Basic> arg = self.get_args()[0];
         return mul(
-            div(mul(sqrt(pi), exp(mul(erfinv(arg), erfinv(arg)))), integer(2)),
+            div(mul(sqrt(pi), exp(pow(erfinv(arg), integer(2)))), integer(2)),
             arg->diff(x));
     }
 
@@ -527,24 +527,9 @@ public:
                                  const RCP<const Symbol> &x)
     {
         RCP<const Basic> arg = self.get_args()[0];
-        return neg(mul(div(mul(sqrt(pi), exp(mul(erfcinv(arg), erfcinv(arg)))),
-                           integer(2)),
-                       arg->diff(x)));
-    }
-
-    static RCP<const Basic> diff(const Erf2 &self, const RCP<const Symbol> &x)
-    {
-        RCP<const Basic> arg1 = self.get_args()[0], arg2 = self.get_args()[1];
-        auto ch = arg1->diff(x);
-        if (eq(*ch, *zero)) {
-            return mul(
-                div(mul(integer(2), exp(neg(mul(arg2, arg2)))), sqrt(pi)),
-                arg2->diff(x));
-        } else {
-            return neg(
-                mul(div(mul(integer(2), exp(neg(mul(arg1, arg1)))), sqrt(pi)),
-                    arg1->diff(x)));
-        }
+        return neg(mul(
+            div(mul(sqrt(pi), exp(pow(erfcinv(arg), integer(2)))), integer(2)),
+            arg->diff(x)));
     }
 
     static RCP<const Basic> diff(const Gamma &self, const RCP<const Symbol> &x)

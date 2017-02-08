@@ -1088,23 +1088,6 @@ public:
 
 RCP<const Basic> erfcinv(const RCP<const Basic> &arg);
 
-class Erf2 : public TwoArgFunction
-{
-    /*   Two-argument error function. This function is defined as:
-
-    .. math ::
-        \mathrm{erf2}(x, y) = \frac{2}{\sqrt{\pi}} \int_x^y e^{-t^2} \mathrm{d}t
-     **/
-public:
-    IMPLEMENT_TYPEID(ERF2)
-    Erf2(const RCP<const Basic> &a, const RCP<const Basic> &b);
-    bool is_canonical(const RCP<const Basic> &a,
-                      const RCP<const Basic> &b) const;
-    virtual RCP<const Basic> create(const RCP<const Basic> &a,
-                                    const RCP<const Basic> &b) const;
-};
-
-//! Canonicalize Erf:
 RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
 class Gamma : public OneArgFunction

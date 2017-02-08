@@ -2837,13 +2837,10 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
 
 bool Erfinv::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
+    if (eq(*arg, *zero) or eq(*arg, *one))
         return false;
     if (could_extract_minus(*arg))
         return false;
-    if (eq(*arg, *one) or eq(*arg, *minus_one)) {
-        return false;
-    }
     return true;
 }
 
@@ -2854,7 +2851,7 @@ RCP<const Basic> Erfinv::create(const RCP<const Basic> &arg) const
 
 RCP<const Basic> erfinv(const RCP<const Basic> &arg)
 {
-    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
+    if (eq(*arg, *zero)) {
         return zero;
     }
     if (eq(*arg, *one)) {
@@ -2874,13 +2871,11 @@ RCP<const Basic> erfinv(const RCP<const Basic> &arg)
 
 bool Erfcinv::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
-        return false;
-    if (could_extract_minus(*arg))
-        return false;
-    if (eq(*arg, *one) or eq(*arg, *integer(2))) {
+    if (eq(*arg, *one) or eq(*arg, *integer(2)) or eq(*arg, *zero)) {
         return false;
     }
+    if (could_extract_minus(*arg))
+        return false;
     return true;
 }
 
@@ -2891,7 +2886,7 @@ RCP<const Basic> Erfcinv::create(const RCP<const Basic> &arg) const
 
 RCP<const Basic> erfcinv(const RCP<const Basic> &arg)
 {
-    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero()) {
+    if (eq(*arg, *zero)) {
         return Inf;
     }
     if (eq(*arg, *one)) {
@@ -2903,56 +2898,9 @@ RCP<const Basic> erfcinv(const RCP<const Basic> &arg)
     return make_rcp<const Erfcinv>(arg);
 }
 
-Erf2::Erf2(const RCP<const Basic> &a, const RCP<const Basic> &b)
-    : TwoArgFunction(a, b)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(a, b))
-}
-
-bool Erf2::is_canonical(const RCP<const Basic> &a,
-                        const RCP<const Basic> &b) const
-{
-    if ((is_a<Integer>(*a) and down_cast<const Integer &>(*a).is_zero())
-        or (is_a<Integer>(*b) and down_cast<const Integer &>(*b).is_zero()))
-        return false;
-    if (could_extract_minus(*a) or could_extract_minus(*b))
-        return false;
-    if ((is_a_Number(*a) and not down_cast<const Number &>(*a).is_exact())
-        or (is_a_Number(*b) and not down_cast<const Number &>(*b).is_exact())) {
-        return false;
-    }
-    return true;
-}
-
-RCP<const Basic> Erf2::create(const RCP<const Basic> &a,
-                              const RCP<const Basic> &b) const
-{
-    return erf2(a, b);
-}
-
 RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if ((is_a<Integer>(*a) and down_cast<const Integer &>(*a).is_zero())
-        and (is_a<Integer>(*b) and down_cast<const Integer &>(*b).is_zero())) {
-        return zero;
-    }
-    if (eq(*a, *b)) {
-        return zero;
-    }
-    if ((is_a_Number(*a) and not down_cast<const Number &>(*a).is_exact())
-        or (is_a_Number(*b) and not down_cast<const Number &>(*b).is_exact())) {
-        return sub(erf(b), erf(a));
-    }
-
-    RCP<const Basic> d1, d2;
-    bool b1 = handle_minus(a, outArg(d1)), b2 = handle_minus(b, outArg(d2));
-    if (b1 and b2) {
-        return neg(erf2(d1, d2));
-    } else if (b1 or b2) {
-        return sub(erf(b), erf(a));
-    }
-    return make_rcp<const Erf2>(a, b);
+    return sub(erf(b), erf(a));
 }
 
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
