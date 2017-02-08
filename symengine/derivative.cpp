@@ -33,7 +33,6 @@ public:
     }
 
     DIFF0(UnivariateSeries)
-    DIFF0(Dirichlet_eta)
     DIFF0(Max)
     DIFF0(Min)
 #endif
@@ -316,6 +315,12 @@ public:
             s = symbol(name);
         } while (has_symbol(b, *s));
         return s;
+    }
+
+    static RCP<const Basic> diff(const OneArgFunction &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return fdiff(self, x);
     }
 
     static RCP<const Basic> diff(const MultiArgFunction &self,

@@ -2535,6 +2535,8 @@ TEST_CASE("Levi Civita: functions", "[functions]")
 TEST_CASE("Dirichlet Eta: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -2551,6 +2553,33 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
 
     r1 = dirichlet_eta(zeta(one));
     r2 = dirichlet_eta(ComplexInf);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = mul(x, dirichlet_eta(x))->diff(x);
+    r2 = add(dirichlet_eta(x), mul(x, dirichlet_eta(x)->diff(x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(x, dirichlet_eta(y))->diff(x);
+    r2 = dirichlet_eta(y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(x)->diff(x);
+    r2 = Derivative::create(dirichlet_eta(x), {x});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(pow(x, i2))->diff(x);
+    r2 = mul(mul(i2, x),
+             Subs::create(Derivative::create(dirichlet_eta(_xi_1), {_xi_1}),
+                          {{_xi_1, pow(x, i2)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = dirichlet_eta(pow(x, x))->diff(x);
+    r2 = mul(mul(pow(x, x), add(log(x), one)),
+             Subs::create(Derivative::create(dirichlet_eta(_xi_1), {_xi_1}),
+                          {{_xi_1, pow(x, x)}}));
     REQUIRE(eq(*r1, *r2));
 }
 

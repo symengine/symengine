@@ -1457,7 +1457,8 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
     } else if (is_a<PolyGamma>(*arg) or is_a<Zeta>(*arg)
-               or is_a<UpperGamma>(*arg) or is_a<LowerGamma>(*arg)) {
+               or is_a<UpperGamma>(*arg) or is_a<LowerGamma>(*arg)
+               or is_a<Dirichlet_eta>(*arg)) {
         bool found = false;
         auto v = arg->get_args();
         for (auto &p : x) {
