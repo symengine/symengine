@@ -2948,9 +2948,6 @@ TEST_CASE("Digamma: functions", "[functions]")
     RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i4 = integer(4);
 
-    RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
-
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
@@ -3041,7 +3038,7 @@ TEST_CASE("Trigamma: functions", "[functions]")
 TEST_CASE("Polygamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> _x = symbol("_xi_1");
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);
