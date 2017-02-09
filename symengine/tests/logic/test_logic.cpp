@@ -34,6 +34,7 @@ using SymEngine::logical_nor;
 using SymEngine::logical_xor;
 using SymEngine::logical_xnor;
 using SymEngine::set_boolean;
+using SymEngine::vec_boolean;
 using SymEngine::Xor;
 using SymEngine::Not;
 
@@ -236,12 +237,15 @@ TEST_CASE("Not : Basic", "[basic]")
 
 TEST_CASE("Xor : Basic", "[basic]")
 {
-    set_boolean e;
+    vec_boolean e;
     REQUIRE(eq(*logical_xor(e), *boolFalse));
     REQUIRE(eq(*logical_xor({boolTrue}), *boolTrue));
     REQUIRE(eq(*logical_xor({boolFalse}), *boolFalse));
     REQUIRE(eq(*logical_xor({boolFalse, boolFalse, boolFalse, boolTrue}),
                *boolTrue));
+    REQUIRE(eq(*logical_xor({boolTrue, boolTrue}), *boolFalse));
+    REQUIRE(eq(*logical_xor({boolTrue, boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_xor({boolFalse, boolFalse}), *boolFalse));
 
     auto x = symbol("x");
     auto int1 = interval(integer(1), integer(2), false, false);
@@ -250,6 +254,9 @@ TEST_CASE("Xor : Basic", "[basic]")
     auto c2 = contains(x, int2);
 
     REQUIRE(eq(*logical_xor({boolTrue, c1}), *logical_not(c1)));
+    REQUIRE(eq(*logical_xor({boolTrue, c1, c1, c1}), *logical_not(c1)));
+    REQUIRE(eq(*logical_xor({boolTrue, c1, c1}), *boolTrue));
+    REQUIRE(eq(*logical_xor({c1, c1}), *boolFalse));
     REQUIRE(eq(*logical_xor({boolFalse, c2}), *(c2)));
     REQUIRE(eq(*logical_xor({logical_not(c2), c2}), *boolTrue));
     REQUIRE(is_a<Xor>(*logical_xor({c1, c2})));
@@ -257,12 +264,14 @@ TEST_CASE("Xor : Basic", "[basic]")
 
 TEST_CASE("Xnor : Basic", "[basic]")
 {
-    set_boolean e;
+    vec_boolean e;
     REQUIRE(eq(*logical_xnor(e), *boolTrue));
     REQUIRE(eq(*logical_xnor({boolTrue}), *boolFalse));
     REQUIRE(eq(*logical_xnor({boolFalse}), *boolTrue));
     REQUIRE(eq(*logical_xnor({boolFalse, boolFalse, boolFalse, boolTrue}),
                *boolFalse));
+    REQUIRE(eq(*logical_xnor({boolTrue, boolTrue}), *boolTrue));
+    REQUIRE(eq(*logical_xnor({boolTrue, boolTrue, boolTrue}), *boolFalse));
 
     auto x = symbol("x");
     auto int1 = interval(integer(1), integer(2), false, false);
@@ -271,6 +280,8 @@ TEST_CASE("Xnor : Basic", "[basic]")
     auto c2 = contains(x, int2);
 
     REQUIRE(eq(*logical_xnor({boolFalse, c1}), *logical_not(c1)));
+    REQUIRE(eq(*logical_xnor({c2, c2}), *boolTrue));
+    REQUIRE(eq(*logical_xnor({c2, c2, c1}), *logical_not(c1)));
     REQUIRE(eq(*logical_xnor({boolTrue, boolFalse, c2}), *(c2)));
     REQUIRE(is_a<Not>(*logical_xnor({c1, c2})));
 }

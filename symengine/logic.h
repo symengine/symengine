@@ -12,6 +12,8 @@
 namespace SymEngine
 {
 typedef std::set<RCP<const Boolean>, RCPBasicKeyLess> set_boolean;
+typedef std::vector<RCP<const Boolean>> vec_boolean;
+
 // Parent class for expressing boolean statements
 class Boolean : public Basic
 {
@@ -153,17 +155,17 @@ public:
 class Xor : public Boolean
 {
 private:
-    set_boolean container_;
+    vec_boolean container_;
 
 public:
     IMPLEMENT_TYPEID(XOR)
-    Xor(const set_boolean &s);
-    bool is_canonical(const set_boolean &container_);
+    Xor(const vec_boolean &s);
+    bool is_canonical(const vec_boolean &container_);
     hash_t __hash__() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    const set_boolean &get_container() const;
+    const vec_boolean &get_container() const;
 };
 
 RCP<const Boolean> logical_and(const set_boolean &s);
@@ -171,8 +173,8 @@ RCP<const Boolean> logical_nand(const set_boolean &s);
 RCP<const Boolean> logical_or(const set_boolean &s);
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
 RCP<const Boolean> logical_nor(const set_boolean &s);
-RCP<const Boolean> logical_xor(const set_boolean &s);
-RCP<const Boolean> logical_xnor(const set_boolean &s);
+RCP<const Boolean> logical_xor(const vec_boolean &s);
+RCP<const Boolean> logical_xnor(const vec_boolean &s);
 } // SymEngine
 
 #endif

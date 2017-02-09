@@ -294,7 +294,7 @@ RCP<const Boolean> Not::get_arg() const
     return arg_;
 }
 
-Xor::Xor(const set_boolean &s) : container_{s}
+Xor::Xor(const vec_boolean &s) : container_{s}
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s));
@@ -327,23 +327,41 @@ int Xor::compare(const Basic &o) const
                            down_cast<const Xor &>(o).get_container());
 }
 
-bool Xor::is_canonical(const set_boolean &container_)
+bool Xor::is_canonical(const vec_boolean &container_)
 {
     if (container_.size() >= 2) {
+        set_boolean args;
         for (auto &a : container_) {
-            if (is_a<BooleanAtom>(*a) or is_a<Xor>(*a))
+            if (is_a<BooleanAtom>(*a)) {
+                auto val = down_cast<const BooleanAtom &>(*a).get_val();
+                if (val == false) {
+                    return false;
+                }
+            } else if (is_a<Xor>(*a)) {
                 return false;
-            if (container_.find(logical_not(a)) != container_.end())
+            }
+            if (args.find(a) != args.end()) {
                 return false;
+            }
+            if (args.find(logical_not(a)) != args.end()) {
+                return false;
+            }
+            args.insert(a);
         }
         return true;
     }
     return false;
 }
 
-const set_boolean &Xor::get_container() const
+const vec_boolean &Xor::get_container() const
 {
     return container_;
+}
+
+const vec_boolean get_vec_from_set(const set_boolean &s)
+{
+    vec_boolean v(s.begin(), s.end());
+    return v;
 }
 
 template <typename caller>
@@ -404,7 +422,7 @@ RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
     }
 }
 
-RCP<const Boolean> logical_xor(const set_boolean &s)
+RCP<const Boolean> logical_xor(const vec_boolean &s)
 {
     set_boolean args;
     for (auto &a : s) {
@@ -415,10 +433,20 @@ RCP<const Boolean> logical_xor(const set_boolean &s)
             }
         } else if (is_a<Xor>(*a)) {
             auto container = down_cast<const Xor &>(*a).get_container();
-            args.insert(container.begin(), container.end());
+            for (auto &aa : container) {
+                if (args.find(aa) != args.end()) {
+                    args.erase(aa);
+                } else {
+                    args.insert(aa);
+                }
+            }
             continue;
         }
-        args.insert(a);
+        if (args.find(a) != args.end()) {
+            args.erase(a);
+        } else {
+            args.insert(a);
+        }
     }
 
     if (args.size() == 0) {
@@ -430,14 +458,14 @@ RCP<const Boolean> logical_xor(const set_boolean &s)
             if (is_a<BooleanAtom>(*a)) {
                 SYMENGINE_ASSERT(a == boolTrue)
                 args.erase(a);
-                return logical_xnor(args);
+                return logical_xnor(get_vec_from_set(args));
             } else if (args.find(logical_not(a)) != args.end()) {
                 args.erase(a);
                 args.erase(args.find(logical_not(a)));
-                return logical_xnor(args);
+                return logical_xnor(get_vec_from_set(args));
             }
         }
-        return make_rcp<const Xor>(args);
+        return make_rcp<const Xor>(get_vec_from_set(args));
     }
 }
 
@@ -462,7 +490,7 @@ RCP<const Boolean> logical_nor(const set_boolean &s)
     return logical_not(and_or<Or>(s, true));
 }
 
-RCP<const Boolean> logical_xnor(const set_boolean &s)
+RCP<const Boolean> logical_xnor(const vec_boolean &s)
 {
     return logical_not(logical_xor(s));
 }
