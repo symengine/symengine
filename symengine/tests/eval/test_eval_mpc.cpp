@@ -48,6 +48,20 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     REQUIRE(mpc_cmp(a, b) == 0);
 
+    r = acsc(add(integer(2), mul(integer(3), I)));
+    eval_mpc(a, *r, MPFR_RNDN);
+    mpc_abs(real, a, MPFR_RNDN);
+
+    REQUIRE(mpfr_cmp_d(real, 0.27591950411917) == -1);
+    REQUIRE(mpfr_cmp_d(real, 0.27591950411916) == 1);
+
+    r = asec(add(one, mul(integer(3), I)));
+    eval_mpc(a, *r, MPFR_RNDN);
+    mpc_abs(real, a, MPFR_RNDN);
+
+    REQUIRE(mpfr_cmp_d(real, 1.50450934308357) == -1);
+    REQUIRE(mpfr_cmp_d(real, 1.50450934308356) == 1);
+
     r = asech(add(integer(2), mul(integer(3), I)));
     eval_mpc(a, *r, MPFR_RNDN);
     mpc_abs(real, a, MPFR_RNDN);
