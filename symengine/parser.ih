@@ -1,0 +1,23 @@
+#include "parser.h"
+
+namespace SymEngine
+{
+
+inline void Parser::error(char const *msg)
+{
+    std::cerr << msg << '\n';
+}
+
+// $insert lex
+inline int Parser::lex()
+{
+    return d_scanner.lex();
+}
+
+inline void Parser::print()         
+{
+    print__();           // displays tokens if --print was specified
+}
+
+}
+
