@@ -253,8 +253,30 @@ TEST_CASE("Xor : Basic", "[basic]")
     auto c1 = contains(x, int1);
     auto c2 = contains(x, int2);
 
+    auto p = logical_xor({c2, c1});
+    vec_basic v = p->get_args();
+    vec_basic u = {c2, c1};
+    REQUIRE(unified_eq(v, u));
+
+    auto s1 = logical_xor({c1, c2});
+    auto s2 = logical_xor({c2, c1});
+    REQUIRE(s1->__hash__() == s2->__hash__());
+
+    auto y = symbol("y");
+    auto c3 = contains(y, int1);
+    auto c4 = contains(y, int2);
+    REQUIRE(eq(*logical_xor({c1, c1, c2}), *c2));
+    REQUIRE(eq(*logical_xor({logical_xor({c1, c2}), logical_xor({c3, c4})}),
+               *logical_xor({c1, c2, c3, c4})));
+
+    REQUIRE(eq(*logical_xor({boolTrue, c1, p}), *logical_not(c2)));
+    REQUIRE(eq(*logical_xor({boolTrue, logical_not(c2), p}), *c1));
     REQUIRE(eq(*logical_xor({boolTrue, c1}), *logical_not(c1)));
     REQUIRE(eq(*logical_xor({boolTrue, c1, c1, c1}), *logical_not(c1)));
+    REQUIRE(eq(*logical_xor({boolTrue, c1, c2}), *logical_xnor({c1, c2})));
+    REQUIRE(
+        eq(*logical_xor({boolTrue, c1, logical_not(c1), c2, logical_not(c2)}),
+           *boolTrue));
     REQUIRE(eq(*logical_xor({boolTrue, c1, c1}), *boolTrue));
     REQUIRE(eq(*logical_xor({c1, c1}), *boolFalse));
     REQUIRE(eq(*logical_xor({boolFalse, c2}), *(c2)));
