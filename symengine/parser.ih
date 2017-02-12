@@ -3,11 +3,6 @@
 namespace SymEngine
 {
 
-inline void Parser::error(char const *msg)
-{
-    std::cerr << msg << '\n';
-}
-
 // $insert lex
 inline int Parser::lex()
 {
