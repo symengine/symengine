@@ -9,10 +9,8 @@
 %polymorphic basic: RCP<const Basic>;
 			 basic_vec :  vec_basic;
 			 string : std::string;
-			 symbol : RCP<const Symbol>;
-			 integer : RCP<const Integer>;
 
-%token <integer> INTEGER
+%token <string> INTEGER
 %token <string> IDENTIFIER
 %token <string> CONSTANT
 
@@ -43,7 +41,6 @@ expr:
         expr '+' expr
         {
         	$$ = add($1, $3);
-        	std::cout<<"here"<<std::endl;
         }
 |
         expr '-' expr
@@ -90,7 +87,7 @@ leaf:
 |
 	INTEGER
 	{
-		$$ = $1;
+		$$ = SymEngine::integer(SymEngine::integer_class($1 .c_str()));
 	}
 |
 	CONSTANT
@@ -105,35 +102,30 @@ leaf:
 ;
 
 func:
-	IDENTIFIER '(' expr ')'
-	{
-		if (single_arg_functions.find($1) != single_arg_functions.end()) {
-		    $$ = single_arg_functions[$1]($3);
-		} else if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
-			vec_basic v = {$3};
-		    $$ = multi_arg_functions[$1](v);
-		} else {
-			$$ = function_symbol($1, vec_basic({$3}));
-		}
-	}
-|
-	IDENTIFIER '(' expr ',' expr ')'
-	{
-		if (double_arg_functions.find($1) != double_arg_functions.end()) {
-		    $$ = double_arg_functions[$1]($3, $5);
-		} else if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
-			vec_basic v = {$3, $5};
-		    $$ = multi_arg_functions[$1](v);
-		} else {
-			$$ = function_symbol($1, vec_basic({$3, $5}));
-		}
-	} 
-|
 	IDENTIFIER '(' expr_list ')'
 	{
-		if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
-		    $$ = multi_arg_functions[$1]($3);
-		} else {
+		bool found = false;
+
+		if ($3 .size() == 1) {
+			if (single_arg_functions.find($1) != single_arg_functions.end()) {
+			    $$ = single_arg_functions[$1]($3[0]);
+			    found = true;
+			}
+		} else if ($3 .size() == 2) {
+			if (double_arg_functions.find($1) != double_arg_functions.end()) {
+			    $$ = double_arg_functions[$1]($3[0], $3[1]);
+			    found = true;
+			}
+		}
+
+		if (not found) {
+			if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
+			    $$ = multi_arg_functions[$1]($3);
+			    found = true;
+			}
+		}
+		
+		if (not found) {
 			$$ = function_symbol($1, $3);
 		}
 	}
@@ -147,8 +139,8 @@ expr_list:
 		$$ .push_back($3);
 	}
 |
-	expr ',' expr ',' expr
+	expr
 	{
-		$$ = {$1, $3, $5};
+		$$ = {$1};
 	}
 ;

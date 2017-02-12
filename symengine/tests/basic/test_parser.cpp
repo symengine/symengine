@@ -156,9 +156,9 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *div(mul(y, integer(3)), add(x, integer(1)))));
 
-    s = "x + y";
+    s = "y/x*x";
     res = parse(s);
-    REQUIRE(eq(*res, *add(x, y)));
+    REQUIRE(eq(*res, *y));
 
     s = "x * -y";
     res = parse(s);
