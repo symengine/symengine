@@ -12,33 +12,40 @@ pows      ("**"|"^")
 %%
 //ADD YOUR CODE HERE
 
-{constants}                 {
-                                *dval = std::string(matched());
-                                return Parser::CONSTANT;
-                            }
+{constants}                         {
+                                        *dval = std::string(matched());
+                                        return Parser::CONSTANT;
+                                    }
 
-{dig}+                      {
-                                *dval = std::string(matched());
-                                return Parser::INTEGER;
-                            }
+{dig}+                              {
+                                        *dval = std::string(matched());
+                                        return Parser::INTEGER;
+                                    }
 
-{operators}                 {
-                                return matched()[0];
-                            }
+{dig}+[eE][+-]?{dig}+             |
+{dig}+\.{dig}*([eE][+-]?{dig}+)?  |
+{dig}*\.{dig}+([eE][+-]?{dig}+)?    {
+                                        *dval = std::string(matched());
+                                        return Parser::DOUBLE;
+                                    }
 
-{pows}                      {
-                                return Parser::POW;
-                            }
+{operators}                         {
+                                        return matched()[0];
+                                    }
 
-{char}({char}|{dig})*       {
-                                *dval = std::string(matched());
-                                return Parser::IDENTIFIER;
-                            }
+{pows}                              {
+                                        return Parser::POW;
+                                    }
+
+{char}({char}|{dig})*               {
+                                        *dval = std::string(matched());
+                                        return Parser::IDENTIFIER;
+                                    }
 
 \n              |
 \t              |
-" "                         {
-                            }
+" "                                 {
+                                    }
 
-.                           {
-                            }
+.                                   {
+                                    }

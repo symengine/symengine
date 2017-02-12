@@ -104,19 +104,19 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     REQUIRE(eq(*res, *pow(integer(10), integer(25))));
 
     // Make sure that parsing and printing works correctly
-//     s = "0.123123123e-10";
-//     res = parse(s);
-//     REQUIRE(eq(*res, *parse(res->__str__())));
+    s = "0.123123123e-10";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
 
-//     s = "123123123123123.";
-//     res = parse(s);
-//     REQUIRE(eq(*res, *parse(res->__str__())));
+    s = "123123123123123.";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
 
-// #ifdef HAVE_SYMENGINE_MPFR
-//     s = "1.231231232123123123123123123123e8";
-//     res = parse(s);
-//     REQUIRE(eq(*res, *parse(res->__str__())));
-// #endif
+#ifdef HAVE_SYMENGINE_MPFR
+    s = "1.231231232123123123123123123123e8";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse(res->__str__())));
+#endif
 }
 
 TEST_CASE("Parsing: symbols", "[parser]")
@@ -168,9 +168,9 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *pow(x, y)));
 
-    // s = "x**2e-1+3e+2-2e-2";
-    // res = parse(s);
-    // REQUIRE(eq(*res, *add(real_double(299.98), pow(x, real_double(0.2)))));
+    s = "x**2e-1+3e+2-2e-2";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(real_double(299.98), pow(x, real_double(0.2)))));
 }
 
 TEST_CASE("Parsing: functions", "[parser]")
@@ -308,33 +308,33 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
         *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
 }
 
-// TEST_CASE("Parsing: doubles", "[parser]")
-// {
-//     std::string s;
-//     double d;
-//     RCP<const Basic> res;
-//     RCP<const Basic> x = symbol("x");
+TEST_CASE("Parsing: doubles", "[parser]")
+{
+    std::string s;
+    double d;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
 
-//     s = "1.324";
-//     res = parse(s);
-//     REQUIRE(eq(*res, *real_double(1.324)));
+    s = "1.324";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(1.324)));
 
-//     s = "0.0324*x + 2*3";
-//     res = parse(s);
-//     REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
+    s = "0.0324*x + 2*3";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
 
-//     s = "1.324/(2+3)";
-//     res = parse(s);
-//     REQUIRE(is_a<RealDouble>(*res));
-//     d = down_cast<const RealDouble &>(*res).as_double();
-//     REQUIRE(std::abs(d - 0.2648) < 1e-12);
+    s = "1.324/(2+3)";
+    res = parse(s);
+    REQUIRE(is_a<RealDouble>(*res));
+    d = down_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - 0.2648) < 1e-12);
 
-//     s = "sqrt(2.0)+5";
-//     res = parse(s);
-//     REQUIRE(is_a<RealDouble>(*res));
-//     d = down_cast<const RealDouble &>(*res).as_double();
-//     REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
-// }
+    s = "sqrt(2.0)+5";
+    res = parse(s);
+    REQUIRE(is_a<RealDouble>(*res));
+    d = down_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
+}
 
 TEST_CASE("Parsing: polys", "[parser]")
 {

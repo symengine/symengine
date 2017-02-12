@@ -7,12 +7,13 @@
 
 
 %polymorphic basic: RCP<const Basic>;
-			 basic_vec :  vec_basic;
+			 basic_vec : vec_basic;
 			 string : std::string;
 
 %token <string> INTEGER
 %token <string> IDENTIFIER
 %token <string> CONSTANT
+%token <string> DOUBLE
 
 %left '+' '-'
 %left '*' '/'
@@ -93,6 +94,34 @@ leaf:
 	CONSTANT
 	{
 		$$ = constants[$1];
+	}
+|
+	DOUBLE
+	{
+		char *endptr = 0;
+		double d = std::strtod($1 .c_str(), &endptr);
+
+#ifdef HAVE_SYMENGINE_MPFR
+        unsigned digits = 0;
+        for (unsigned i = 0; i < expr.length(); ++i) {
+            if (expr[i] == '.' or expr[i] == '-')
+                continue;
+            if (expr[i] == 'E' or expr[i] == 'e')
+                break;
+            if (digits != 0 or expr[i] != '0') {
+                ++digits;
+            }
+        }
+        if (digits <= 15) {
+            $$ = SymEngine::real_double(d);
+        } else {
+            // mpmath.libmp.libmpf.dps_to_prec
+            long prec = std::max(long(1), std::lround((digits + 1) * 3.3219280948873626));
+            $$ = SymEngine::real_mpfr(mpfr_class(expr, prec));
+        }
+#else
+		$$ = SymEngine::real_double(d);
+#endif
 	}
 |
 	func
