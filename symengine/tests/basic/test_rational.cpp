@@ -33,9 +33,9 @@ TEST_CASE("Rational", "[rational]")
     RCP<const Number> r1 = rational(2, 1);
     RCP<const Number> r2 = rational(0, 3);
 
-    REQUIRE(eq(*q10_25, *q2_5));
-    REQUIRE(eq(*q10_25, *q));
-    REQUIRE(not q10_25->is_complex());
+    CHECK(eq(*q10_25, *q2_5));
+    CHECK(eq(*q10_25, *q));
+    CHECK(not q10_25->is_complex());
 
     CHECK(is_a<Integer>(*r1));
     CHECK(r1->__eq__(*integer(2)));
@@ -45,7 +45,7 @@ TEST_CASE("Rational", "[rational]")
     CHECK(r1->__eq__(*integer(3)));
 
     r1 = q->div(*r2);
-    REQUIRE(eq(*r1, *ComplexInf));
+    CHECK(eq(*r1, *ComplexInf));
 
     CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError);
 }
@@ -60,15 +60,15 @@ TEST_CASE("Rational compare", "[rational compare]")
     RCP<const Integer> i2 = integer(2);
     RCP<const RealDouble> r = real_double(0.4);
 
-    REQUIRE(q2_5->compare(*q2_5a) == 0);
-    REQUIRE(q2_5->compare(*qm1_27) == 1);
-    REQUIRE(qm1_27->compare(*q2_5) == -1);
-    REQUIRE(q2_5->compare(*im2) == 1);
-    REQUIRE(q2_5->compare(*i0) == 1);
-    REQUIRE(q2_5->compare(*i2) == -1);
-    REQUIRE(qm1_27->compare(*im2) == 1);
-    REQUIRE(qm1_27->compare(*i0) == -1);
-    REQUIRE(qm1_27->compare(*i2) == -1);
+    CHECK(q2_5->compare(*q2_5a) == 0);
+    CHECK(q2_5->compare(*qm1_27) == 1);
+    CHECK(qm1_27->compare(*q2_5) == -1);
+    CHECK(q2_5->compare(*im2) == 1);
+    CHECK(q2_5->compare(*i0) == 1);
+    CHECK(q2_5->compare(*i2) == -1);
+    CHECK(qm1_27->compare(*im2) == 1);
+    CHECK(qm1_27->compare(*i0) == -1);
+    CHECK(qm1_27->compare(*i2) == -1);
 
     CHECK_THROWS_AS(q2_5->compare(*r), SymEngineException);
 }
@@ -82,13 +82,13 @@ TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
     RCP<const Number> q3_5 = rational(3, 5);
     RCP<const Number> res;
 
-    REQUIRE(not q2_5->is_perfect_power());
-    REQUIRE(qm1_27->is_perfect_power());
-    REQUIRE(q9_25->is_perfect_power());
-    REQUIRE(not q2_5->nth_root(outArg(res), 2));
-    REQUIRE(qm1_27->nth_root(outArg(res), 3));
-    REQUIRE(res->__eq__(*qm1_3));
-    REQUIRE(q9_25->nth_root(outArg(res), 2));
-    REQUIRE(res->__eq__(*q3_5));
+    CHECK(not q2_5->is_perfect_power());
+    CHECK(qm1_27->is_perfect_power());
+    CHECK(q9_25->is_perfect_power());
+    CHECK(not q2_5->nth_root(outArg(res), 2));
+    CHECK(qm1_27->nth_root(outArg(res), 3));
+    CHECK(res->__eq__(*qm1_3));
+    CHECK(q9_25->nth_root(outArg(res), 2));
+    CHECK(res->__eq__(*q3_5));
     CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), SymEngineException);
 }

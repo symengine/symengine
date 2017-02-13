@@ -67,10 +67,10 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
 
     auto vb = umap_short_basic{
         {0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
-    REQUIRE(expand_check_pairs(z, x, 5, vb));
+    CHECK(expand_check_pairs(z, x, 5, vb));
     auto vb1
         = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
-    REQUIRE(expand_check_pairs(z, x, 3, vb1));
+    CHECK(expand_check_pairs(z, x, 3, vb1));
 }
 
 TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
@@ -84,13 +84,13 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     auto z5 = sin(atan(x));
     auto z6 = cos(div(x, sub(one, x)));
 
-    REQUIRE(series_coeff(z1, x, 10, 9)->__eq__(*rational(1, 362880)));
+    CHECK(series_coeff(z1, x, 10, 9)->__eq__(*rational(1, 362880)));
     auto res = umap_short_basic{{0, integer(1)}, {2, rational(-1, 2)}};
-    REQUIRE(expand_check_pairs(z2, x, 3, res));
-    REQUIRE(series_coeff(z3, x, 9, 8)->__eq__(*rational(1, 40320)));
-    REQUIRE(series_coeff(z4, x, 12, 11)->__eq__(*rational(-4, 155925)));
-    REQUIRE(series_coeff(z5, x, 30, 27)->__eq__(*rational(-1300075, 8388608)));
-    REQUIRE(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
+    CHECK(expand_check_pairs(z2, x, 3, res));
+    CHECK(series_coeff(z3, x, 9, 8)->__eq__(*rational(1, 40320)));
+    CHECK(series_coeff(z4, x, 12, 11)->__eq__(*rational(-4, 155925)));
+    CHECK(series_coeff(z5, x, 30, 27)->__eq__(*rational(-1300075, 8388608)));
+    CHECK(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
 }
 
 TEST_CASE("Expression series expansion: division, inversion ",
@@ -110,12 +110,12 @@ TEST_CASE("Expression series expansion: division, inversion ",
     auto res1 = umap_short_basic{{-1, integer(1)}};
     auto res2 = umap_short_basic{{-1, integer(1)}, {0, integer(1)}};
 
-    REQUIRE(series_coeff(ex1, x, 100, 99)->__eq__(*integer(1)));
-    REQUIRE(series_coeff(ex2, x, 100, 35)->__eq__(*integer(9227465)));
-    REQUIRE(series_coeff(ex3, x, 100, 49)->__eq__(*integer(8388608)));
-    REQUIRE(series_coeff(ex4, x, 20, 10)->__eq__(*rational(1382, 14175)));
-    REQUIRE(expand_check_pairs(ex5, x, 8, res1));
-    REQUIRE(expand_check_pairs(ex6, x, 8, res2));
+    CHECK(series_coeff(ex1, x, 100, 99)->__eq__(*integer(1)));
+    CHECK(series_coeff(ex2, x, 100, 35)->__eq__(*integer(9227465)));
+    CHECK(series_coeff(ex3, x, 100, 49)->__eq__(*integer(8388608)));
+    CHECK(series_coeff(ex4, x, 20, 10)->__eq__(*rational(1382, 14175)));
+    CHECK(expand_check_pairs(ex5, x, 8, res1));
+    CHECK(expand_check_pairs(ex6, x, 8, res2));
 }
 
 TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
@@ -132,12 +132,12 @@ TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
     auto ex5 = pow(cos(x), qm23);
     auto ex6 = sqrt(cos(x));
 
-    REQUIRE(series_coeff(ex1, x, 8, 6)->__eq__(*rational(-21, 2097152)));
-    REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(1621477, 4782969)));
-    REQUIRE(series_coeff(ex3, x, 12, 10)->__eq__(*rational(-2431, 262144)));
-    REQUIRE(series_coeff(ex4, x, 100, 8)->__eq__(*rational(-559, 645120)));
-    REQUIRE(series_coeff(ex5, x, 20, 10)->__eq__(*rational(701, 127575)));
-    REQUIRE(series_coeff(ex6, x, 10, 8)->__eq__(*rational(-559, 645120)));
+    CHECK(series_coeff(ex1, x, 8, 6)->__eq__(*rational(-21, 2097152)));
+    CHECK(series_coeff(ex2, x, 12, 10)->__eq__(*rational(1621477, 4782969)));
+    CHECK(series_coeff(ex3, x, 12, 10)->__eq__(*rational(-2431, 262144)));
+    CHECK(series_coeff(ex4, x, 100, 8)->__eq__(*rational(-559, 645120)));
+    CHECK(series_coeff(ex5, x, 20, 10)->__eq__(*rational(701, 127575)));
+    CHECK(series_coeff(ex6, x, 10, 8)->__eq__(*rational(-559, 645120)));
 }
 
 TEST_CASE("Expression series expansion: log, exp ", "[Expansion of log, exp]")
@@ -155,16 +155,16 @@ TEST_CASE("Expression series expansion: log, exp ", "[Expansion of log, exp]")
     auto ex7 = exp(sin(x));
     auto ex8 = pow(cos(x), sin(x));
 
-    REQUIRE(series_coeff(ex1, x, 100, 98)->__eq__(*rational(-1, 98)));
-    REQUIRE(series_coeff(ex2, x, 20, 12)->__eq__(*rational(-691, 935550)));
-    REQUIRE(series_coeff(ex3, x, 100, 48)->__eq__(*rational(1, 48)));
-    REQUIRE(series_coeff(ex4, x, 20, 9)->__eq__(*rational(1, 362880)));
+    CHECK(series_coeff(ex1, x, 100, 98)->__eq__(*rational(-1, 98)));
+    CHECK(series_coeff(ex2, x, 20, 12)->__eq__(*rational(-691, 935550)));
+    CHECK(series_coeff(ex3, x, 100, 48)->__eq__(*rational(1, 48)));
+    CHECK(series_coeff(ex4, x, 20, 9)->__eq__(*rational(1, 362880)));
     auto res1 = umap_short_basic{{0, integer(1)}, {1, integer(1)}};
     auto res2 = umap_short_basic{{1, integer(1)}};
-    REQUIRE(expand_check_pairs(ex5, x, 20, res1));
-    REQUIRE(expand_check_pairs(ex6, x, 20, res2));
-    REQUIRE(series_coeff(ex7, x, 20, 10)->__eq__(*rational(-2951, 3628800)));
-    REQUIRE(series_coeff(ex8, x, 20, 16)->__eq__(*rational(1381, 2661120)));
+    CHECK(expand_check_pairs(ex5, x, 20, res1));
+    CHECK(expand_check_pairs(ex6, x, 20, res2));
+    CHECK(series_coeff(ex7, x, 20, 10)->__eq__(*rational(-2951, 3628800)));
+    CHECK(series_coeff(ex8, x, 20, 16)->__eq__(*rational(1381, 2661120)));
 }
 
 TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
@@ -177,10 +177,10 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     auto ex3 = sin(x);
     auto ex4 = mul(x, exp(x));
 
-    REQUIRE(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
-    REQUIRE(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
-    REQUIRE(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
-    REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
+    CHECK(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
+    CHECK(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
+    CHECK(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
+    CHECK(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
 TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
@@ -202,16 +202,16 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     auto ex9 = sec(x);
     auto ex10 = csc(x);
 
-    REQUIRE(series_coeff(ex1, x, 20, 19)->__eq__(*rational(-1, 19)));
-    REQUIRE(series_coeff(ex2, x, 40, 33)->__eq__(*rational(65536, 33)));
-    REQUIRE(series_coeff(ex3, x, 20, 13)->__eq__(*rational(21844, 6081075)));
-    REQUIRE(series_coeff(ex4, x, 20, 12)->__eq__(*rational(1303712, 14175)));
-    REQUIRE(series_coeff(ex5, x, 20, 15)->__eq__(*rational(143, 10240)));
-    REQUIRE(series_coeff(ex6, x, 20, 16)->__eq__(*rational(1259743, 2048)));
-    REQUIRE(expand_check_pairs(ex7, x, 5, res1));
-    REQUIRE(expand_check_pairs(ex8, x, 10, res2));
-    REQUIRE(series_coeff(ex9, x, 20, 8)->__eq__(*rational(277, 8064)));
-    REQUIRE(series_coeff(ex10, x, 20, 7)->__eq__(*rational(127, 604800)));
+    CHECK(series_coeff(ex1, x, 20, 19)->__eq__(*rational(-1, 19)));
+    CHECK(series_coeff(ex2, x, 40, 33)->__eq__(*rational(65536, 33)));
+    CHECK(series_coeff(ex3, x, 20, 13)->__eq__(*rational(21844, 6081075)));
+    CHECK(series_coeff(ex4, x, 20, 12)->__eq__(*rational(1303712, 14175)));
+    CHECK(series_coeff(ex5, x, 20, 15)->__eq__(*rational(143, 10240)));
+    CHECK(series_coeff(ex6, x, 20, 16)->__eq__(*rational(1259743, 2048)));
+    CHECK(expand_check_pairs(ex7, x, 5, res1));
+    CHECK(expand_check_pairs(ex8, x, 10, res2));
+    CHECK(series_coeff(ex9, x, 20, 8)->__eq__(*rational(277, 8064)));
+    CHECK(series_coeff(ex10, x, 20, 7)->__eq__(*rational(127, 604800)));
 }
 
 TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
@@ -230,16 +230,16 @@ TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
     auto ex9 = asinh(x);
     auto ex10 = asinh(div(x, sub(one, x)));
 
-    REQUIRE(series_coeff(ex1, x, 10, 9)->__eq__(*rational(1, 362880)));
-    REQUIRE(series_coeff(ex2, x, 20, 10)->__eq__(*rational(325249, 40320)));
-    REQUIRE(series_coeff(ex3, x, 12, 10)->__eq__(*rational(1, 3628800)));
-    REQUIRE(series_coeff(ex4, x, 20, 11)->__eq__(*rational(3756889, 362880)));
-    REQUIRE(series_coeff(ex5, x, 20, 13)->__eq__(*rational(21844, 6081075)));
-    REQUIRE(series_coeff(ex6, x, 20, 14)->__eq__(*rational(225979, 66825)));
-    REQUIRE(series_coeff(ex7, x, 100, 99)->__eq__(*rational(1, 99)));
-    REQUIRE(series_coeff(ex8, x, 20, 16)->__eq__(*integer(2048)));
-    REQUIRE(series_coeff(ex9, x, 20, 15)->__eq__(*rational(-143, 10240)));
-    REQUIRE(series_coeff(ex10, x, 20, 16)->__eq__(*rational(-3179, 2048)));
+    CHECK(series_coeff(ex1, x, 10, 9)->__eq__(*rational(1, 362880)));
+    CHECK(series_coeff(ex2, x, 20, 10)->__eq__(*rational(325249, 40320)));
+    CHECK(series_coeff(ex3, x, 12, 10)->__eq__(*rational(1, 3628800)));
+    CHECK(series_coeff(ex4, x, 20, 11)->__eq__(*rational(3756889, 362880)));
+    CHECK(series_coeff(ex5, x, 20, 13)->__eq__(*rational(21844, 6081075)));
+    CHECK(series_coeff(ex6, x, 20, 14)->__eq__(*rational(225979, 66825)));
+    CHECK(series_coeff(ex7, x, 100, 99)->__eq__(*rational(1, 99)));
+    CHECK(series_coeff(ex8, x, 20, 16)->__eq__(*integer(2048)));
+    CHECK(series_coeff(ex9, x, 20, 15)->__eq__(*rational(-143, 10240)));
+    CHECK(series_coeff(ex10, x, 20, 16)->__eq__(*rational(-3179, 2048)));
 }
 
 TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
@@ -248,17 +248,17 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     auto ex1 = lambertw(x);
     auto ex2 = lambertw(sin(x));
 
-    REQUIRE(series_coeff(ex1, x, 10, 7)->__eq__(*rational(16807, 720)));
-    REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
+    CHECK(series_coeff(ex1, x, 10, 7)->__eq__(*rational(16807, 720)));
+    CHECK(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
 }
 
 TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
-    REQUIRE_THROWS_AS(
+    CHECK_THROWS_AS(
         URatPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10),
         SymEngineException);
-    REQUIRE_THROWS_AS(
+    CHECK_THROWS_AS(
         URatPSeriesPiranha::series(
             mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10),
         SymEngineException);
@@ -267,7 +267,7 @@ TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
 TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
-    REQUIRE_THROWS_AS(
+    CHECK_THROWS_AS(
         URatPSeriesPiranha::series(log(add(x, integer(2))), "x", 10),
         SymEngineException);
 }
@@ -278,7 +278,7 @@ TEST_CASE("Check error when expansion called without Piranha ",
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
-    REQUIRE_THROWS_AS(URatPSeriesPiranha::series(ex1, "x", 10),
-                      SymEngineException);
+    CHECK_THROWS_AS(URatPSeriesPiranha::series(ex1, "x", 10),
+                    SymEngineException);
 }
 #endif

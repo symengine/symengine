@@ -70,22 +70,22 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     v.init({x, y, z}, *r);
 
     d = v.call({1.5, 2.0, 3.0});
-    REQUIRE(::fabs(d - 9.75) < 1e-12);
+    CHECK(::fabs(d - 9.75) < 1e-12);
 
     d = v.call({1.5, -1.0, 2.0});
-    REQUIRE(::fabs(d - 1.75) < 1e-12);
+    CHECK(::fabs(d - 1.75) < 1e-12);
 
     r = max({x, add(mul(y, z), integer(3))});
     v.init({x, y, z}, *r);
 
     d = v.call({4.0, 1.0, 2.5});
-    REQUIRE(::fabs(d - 5.5) < 1e-12);
+    CHECK(::fabs(d - 5.5) < 1e-12);
 
     r = min({pow(x, y), add(mul(y, z), integer(3))});
     v.init({x, y, z}, *r);
 
     d = v.call({4.0, 2.0, 2.5});
-    REQUIRE(::fabs(d - 8.0) < 1e-12);
+    CHECK(::fabs(d - 8.0) < 1e-12);
 
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(
@@ -112,14 +112,14 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
 
     d = v.call({std::complex<double>(1.5, 1.0), std::complex<double>(2.5, 4.0),
                 std::complex<double>(-8.3, 3.2)});
-    REQUIRE(::fabs(d.real() + 32.360749607381) < 1e-12);
-    REQUIRE(::fabs(d.imag() + 24.6630395370884) < 1e-12);
+    CHECK(::fabs(d.real() + 32.360749607381) < 1e-12);
+    CHECK(::fabs(d.imag() + 24.6630395370884) < 1e-12);
 
     v.init({x, y, z}, *add(x, add(mul(y, z), pow(x, integer(2)))));
     d = v.call({std::complex<double>(1.5, 0.0), std::complex<double>(-1.0, 0.0),
                 std::complex<double>(2.0, 0.0)});
-    REQUIRE(::fabs(d.real() - 1.75) < 1e-12);
-    REQUIRE(::fabs(d.imag() - 0.0) < 1e-12);
+    CHECK(::fabs(d.real() - 1.75) < 1e-12);
+    CHECK(::fabs(d.imag() - 0.0) < 1e-12);
 
     // Undefined symbols raise an exception
     CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
@@ -164,7 +164,7 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     for (unsigned i = 0; i < testvec.size(); i++) {
         v.init({x}, *std::get<0>(testvec[i]));
         d = v.call({std::get<1>(testvec[i])});
-        REQUIRE(::fabs(d - std::get<2>(testvec[i])) < 1e-12);
+        CHECK(::fabs(d - std::get<2>(testvec[i])) < 1e-12);
     }
 }
 
@@ -213,6 +213,6 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
                      .count()
               << "us" << std::endl;
     std::cout << d << " " << d2 << std::endl;
-    REQUIRE(::fabs((d - d2) / d) < 1e-12);
+    CHECK(::fabs((d - d2) / d) < 1e-12);
 }
 #endif

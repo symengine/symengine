@@ -42,17 +42,17 @@ TEST_CASE("Constructor of URatPoly", "[URatPoly]")
 
     RCP<const URatPoly> P
         = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
-    REQUIRE(P->__str__() == "3/2*x**2 + 1/2");
+    CHECK(P->__str__() == "3/2*x**2 + 1/2");
 
     RCP<const URatPoly> Q
         = URatPoly::from_vec(x, {0_q, rc(1_z, 2_z), rc(1_z, 2_z)});
-    REQUIRE(Q->__str__() == "1/2*x**2 + 1/2*x");
+    CHECK(Q->__str__() == "1/2*x**2 + 1/2*x");
 
     RCP<const URatPoly> S = URatPoly::from_dict(x, {{0, 2_q}});
-    REQUIRE(S->__str__() == "2");
+    CHECK(S->__str__() == "2");
 
     RCP<const URatPoly> T = URatPoly::from_dict(x, map_uint_mpq{});
-    REQUIRE(T->__str__() == "0");
+    CHECK(T->__str__() == "0");
 }
 
 TEST_CASE("Adding two URatPoly", "[URatPoly]")
@@ -65,13 +65,13 @@ TEST_CASE("Adding two URatPoly", "[URatPoly]")
         = URatPoly::from_dict(x, {{0, rc(2_z, 3_z)}, {1, 3_q}, {2, 2_q}});
 
     RCP<const Basic> c = add_upoly(*a, *b);
-    REQUIRE(c->__str__() == "3*x**2 + 11/3*x + 7/6");
+    CHECK(c->__str__() == "3*x**2 + 11/3*x + 7/6");
 
     RCP<const URatPoly> d = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}});
     RCP<const Basic> e = add_upoly(*a, *d);
     RCP<const Basic> f = add_upoly(*d, *a);
-    REQUIRE(e->__str__() == "x**2 + 2/3*x + 1");
-    REQUIRE(f->__str__() == "x**2 + 2/3*x + 1");
+    CHECK(e->__str__() == "x**2 + 2/3*x + 1");
+    CHECK(f->__str__() == "x**2 + 2/3*x + 1");
 
     RCP<const URatPoly> g = URatPoly::from_dict(
         // With expression templates on in boostmp, we cannot
@@ -94,7 +94,7 @@ TEST_CASE("Negative of a URatPoly", "[URatPoly]")
         = URatPoly::from_dict(x, {{0, rc(ic(-1), 2_z)}, {1, 2_q}, {2, 3_q}});
 
     RCP<const URatPoly> b = neg_upoly(*a);
-    REQUIRE(b->__str__() == "-3*x**2 - 2*x + 1/2");
+    CHECK(b->__str__() == "-3*x**2 - 2*x + 1/2");
 }
 
 TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
@@ -111,11 +111,11 @@ TEST_CASE("Subtracting two URatPoly", "[URatPoly]")
     RCP<const URatPoly> f = URatPoly::from_dict(y, {{0, 2_q}});
 
     RCP<const Basic> d = sub_upoly(*b, *a);
-    REQUIRE(d->__str__() == "x**2 + 7/3*x + 1/6");
+    CHECK(d->__str__() == "x**2 + 7/3*x + 1/6");
     d = sub_upoly(*c, *a);
-    REQUIRE(d->__str__() == "-3/4*x**2 - 13/6*x + 3/2");
+    CHECK(d->__str__() == "-3/4*x**2 - 13/6*x + 3/2");
     d = sub_upoly(*a, *c);
-    REQUIRE(d->__str__() == "3/4*x**2 + 13/6*x - 3/2");
+    CHECK(d->__str__() == "3/4*x**2 + 13/6*x - 3/2");
     CHECK_THROWS_AS(sub_upoly(*a, *f), SymEngineException);
 }
 
@@ -139,15 +139,15 @@ TEST_CASE("Multiplication of two URatPoly", "[URatPoly]")
     RCP<const URatPoly> h = mul_upoly(*e, *f);
     RCP<const URatPoly> i = mul_upoly(*f, *f);
 
-    REQUIRE(c->__str__() == "x**4 + 4/3*x**3 + 13/9*x**2 + 2/3*x + 1/4");
-    REQUIRE(d->__str__() == "2*x**4 + 13/3*x**3 + 11/3*x**2 + 35/18*x + 1/3");
-    REQUIRE(g->__str__() == "1/16*x**4 - 3/4*x**3 + 13/4*x**2 - 6*x + 4");
-    REQUIRE(h->__str__() == "1/8*x**3 - 1/2*x**2 - 1/2*x + 2");
-    REQUIRE(i->__str__() == "1/4*x**2 + x + 1");
+    CHECK(c->__str__() == "x**4 + 4/3*x**3 + 13/9*x**2 + 2/3*x + 1/4");
+    CHECK(d->__str__() == "2*x**4 + 13/3*x**3 + 11/3*x**2 + 35/18*x + 1/3");
+    CHECK(g->__str__() == "1/16*x**4 - 3/4*x**3 + 13/4*x**2 - 6*x + 4");
+    CHECK(h->__str__() == "1/8*x**3 - 1/2*x**2 - 1/2*x + 2");
+    CHECK(i->__str__() == "1/4*x**2 + x + 1");
 
     c = URatPoly::from_dict(x, {{0, rc(-1_z)}});
-    REQUIRE(mul_upoly(*a, *c)->__str__() == "-x**2 - 2/3*x - 1/2");
-    REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2/3*x - 1/2");
+    CHECK(mul_upoly(*a, *c)->__str__() == "-x**2 - 2/3*x - 1/2");
+    CHECK(mul_upoly(*c, *a)->__str__() == "-x**2 - 2/3*x - 1/2");
 
     c = URatPoly::from_dict(y, {{0, rc(-1_z)}});
     CHECK_THROWS_AS(mul_upoly(*a, *c), SymEngineException);
@@ -162,16 +162,16 @@ TEST_CASE("Comparing two URatPoly", "[URatPoly]")
     RCP<const URatPoly> Q
         = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 1_q}});
 
-    REQUIRE(P->compare(*Q) == -1);
+    CHECK(P->compare(*Q) == -1);
 
     P = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 3_q}, {3, 2_q}});
-    REQUIRE(P->compare(*Q) == 1);
+    CHECK(P->compare(*Q) == 1);
 
     P = URatPoly::from_dict(x, {{0, 1_q}, {1, 2_q}, {2, 1_q}});
-    REQUIRE(P->compare(*Q) == 0);
+    CHECK(P->compare(*Q) == 0);
 
     P = URatPoly::from_dict(y, {{0, 1_q}, {1, rc(2_z, 3_z)}});
-    REQUIRE(P->compare(*Q) == -1);
+    CHECK(P->compare(*Q) == -1);
 }
 
 TEST_CASE("URatPoly as_symbolic", "[URatPoly]")
@@ -180,17 +180,16 @@ TEST_CASE("URatPoly as_symbolic", "[URatPoly]")
     RCP<const URatPoly> a
         = URatPoly::from_dict(x, {{0, rc(1_z, 2_z)}, {1, 2_q}, {2, 1_q}});
 
-    REQUIRE(eq(
-        *a->as_symbolic(),
-        *add({div(one, integer(2)), mul(integer(2), x), pow(x, integer(2))})));
+    CHECK(eq(*a->as_symbolic(), *add({div(one, integer(2)), mul(integer(2), x),
+                                      pow(x, integer(2))})));
 
     RCP<const URatPoly> b
         = URatPoly::from_dict(x, {{1, rc(3_z, 2_z)}, {2, 2_q}});
-    REQUIRE(eq(*b->as_symbolic(), *add(mul(x, div(integer(3), integer(2))),
-                                       mul(integer(2), pow(x, integer(2))))));
+    CHECK(eq(*b->as_symbolic(), *add(mul(x, div(integer(3), integer(2))),
+                                     mul(integer(2), pow(x, integer(2))))));
 
     RCP<const URatPoly> c = URatPoly::from_dict(x, map_uint_mpq{});
-    REQUIRE(eq(*c->as_symbolic(), *zero));
+    CHECK(eq(*c->as_symbolic(), *zero));
 }
 
 TEST_CASE("Evaluation of URatPoly", "[URatPoly]")
@@ -201,16 +200,16 @@ TEST_CASE("Evaluation of URatPoly", "[URatPoly]")
     RCP<const URatPoly> b = URatPoly::from_dict(
         x, {{0, rc(1_z, 2_z)}, {1, rc(2_z, 5_z)}, {2, 1_q}});
 
-    REQUIRE(a->eval(2_q) == rc(7_z, 3_z));
-    REQUIRE(a->eval(10_q) == rc(23_z, 3_z));
-    REQUIRE(b->eval(-1_q) == rc(11_z, 10_z));
-    REQUIRE(b->eval(0_q) == rc(1_z, 2_z));
+    CHECK(a->eval(2_q) == rc(7_z, 3_z));
+    CHECK(a->eval(10_q) == rc(23_z, 3_z));
+    CHECK(b->eval(-1_q) == rc(11_z, 10_z));
+    CHECK(b->eval(0_q) == rc(1_z, 2_z));
 
     std::vector<rational_class> resa = {rc(7_z, 3_z), rc(5_z, 3_z), 1_q};
     std::vector<rational_class> resb
         = {rc(53_z, 10_z), rc(19_z, 10_z), rc(1_z, 2_z)};
-    REQUIRE(a->multieval({2_q, 1_q, 0_q}) == resa);
-    REQUIRE(b->multieval({2_q, 1_q, 0_q}) == resb);
+    CHECK(a->multieval({2_q, 1_q, 0_q}) == resa);
+    CHECK(b->multieval({2_q, 1_q, 0_q}) == resb);
 }
 
 TEST_CASE("Derivative of URatPoly", "[URatPoly]")
@@ -221,9 +220,9 @@ TEST_CASE("Derivative of URatPoly", "[URatPoly]")
         x, {{0, 1_q}, {1, rc(2_z, 3_z)}, {2, rc(1_z, 2_z)}});
     RCP<const URatPoly> b = URatPoly::from_dict(y, {{2, rc(4_z, 3_z)}});
 
-    REQUIRE(a->diff(x)->__str__() == "x + 2/3");
-    REQUIRE(a->diff(y)->__str__() == "0");
-    REQUIRE(b->diff(y)->__str__() == "8/3*y");
+    CHECK(a->diff(x)->__str__() == "x + 2/3");
+    CHECK(a->diff(y)->__str__() == "0");
+    CHECK(b->diff(y)->__str__() == "8/3*y");
 }
 
 TEST_CASE("URatPoly pow", "[URatPoly]")
@@ -237,8 +236,8 @@ TEST_CASE("URatPoly pow", "[URatPoly]")
     RCP<const URatPoly> aaa = pow_upoly(*a, 3);
     RCP<const URatPoly> bb = pow_upoly(*b, 2);
 
-    REQUIRE(aaa->__str__() == "x**3 + 3/2*x**2 + 3/4*x + 1/8");
-    REQUIRE(bb->__str__() == "9/4*x**4 + 9*x**2 + 9");
+    CHECK(aaa->__str__() == "x**3 + 3/2*x**2 + 3/4*x + 1/8");
+    CHECK(bb->__str__() == "9/4*x**4 + 9*x**2 + 9");
 }
 
 TEST_CASE("URatPoly divides", "[URatPoly]")
@@ -249,13 +248,13 @@ TEST_CASE("URatPoly divides", "[URatPoly]")
     RCP<const URatPoly> c = URatPoly::from_dict(x, {{0, 8_q}, {1, 8_q}});
     RCP<const URatPoly> res;
 
-    REQUIRE(divides_upoly(*a, *c, outArg(res)));
-    REQUIRE(res->__str__() == "8");
-    REQUIRE(divides_upoly(*b, *c, outArg(res)));
-    REQUIRE(res->__str__() == "2*x + 2");
-    REQUIRE(divides_upoly(*b, *a, outArg(res)));
-    REQUIRE(res->__str__() == "1/4*x + 1/4");
-    REQUIRE(!divides_upoly(*a, *b, outArg(res)));
+    CHECK(divides_upoly(*a, *c, outArg(res)));
+    CHECK(res->__str__() == "8");
+    CHECK(divides_upoly(*b, *c, outArg(res)));
+    CHECK(res->__str__() == "2*x + 2");
+    CHECK(divides_upoly(*b, *a, outArg(res)));
+    CHECK(res->__str__() == "1/4*x + 1/4");
+    CHECK(!divides_upoly(*a, *b, outArg(res)));
 }
 
 TEST_CASE("URatPoly from_poly uint", "[URatPoly]")
@@ -263,7 +262,7 @@ TEST_CASE("URatPoly from_poly uint", "[URatPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {2, 1_z}});
     RCP<const URatPoly> b = URatPoly::from_poly(*a);
-    REQUIRE(b->__str__() == "x**2 + 1");
+    CHECK(b->__str__() == "x**2 + 1");
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -273,7 +272,7 @@ TEST_CASE("URatPoly from_poly piranha", "[URatPoly]")
     RCP<const URatPolyPiranha> a
         = URatPolyPiranha::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
     RCP<const URatPoly> b = URatPoly::from_poly(*a);
-    REQUIRE(b->__str__() == "3/2*x**2 + 1/2");
+    CHECK(b->__str__() == "3/2*x**2 + 1/2");
 }
 #endif
 
@@ -284,6 +283,6 @@ TEST_CASE("URatPoly from_poly flint", "[URatPoly]")
     RCP<const URatPolyFlint> a
         = URatPolyFlint::from_dict(x, {{0, rc(1_z, 2_z)}, {2, rc(3_z, 2_z)}});
     RCP<const URatPoly> b = URatPoly::from_poly(*a);
-    REQUIRE(b->__str__() == "3/2*x**2 + 1/2");
+    CHECK(b->__str__() == "3/2*x**2 + 1/2");
 }
 #endif

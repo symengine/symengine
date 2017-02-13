@@ -50,7 +50,7 @@ TEST_CASE("test_homogeneous_lde()", "[diophantine]")
         DenseMatrix(1, 4, {integer(0), integer(1), integer(1), integer(1)}),
         DenseMatrix(1, 4, {integer(4), integer(2), integer(1), integer(0)})};
 
-    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
+    CHECK(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 4, {integer(-1), integer(1), integer(2), integer(-3)});
@@ -63,14 +63,14 @@ TEST_CASE("test_homogeneous_lde()", "[diophantine]")
         DenseMatrix(1, 4, {integer(2), integer(0), integer(1), integer(0)}),
         DenseMatrix(1, 4, {integer(1), integer(1), integer(0), integer(0)})};
 
-    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
+    CHECK(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 2, {integer(2), integer(3)});
     homogeneous_lde(basis, A);
     true_basis = std::vector<DenseMatrix>{};
 
-    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
+    CHECK(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 2, {integer(2), integer(-3)});
@@ -78,5 +78,5 @@ TEST_CASE("test_homogeneous_lde()", "[diophantine]")
     true_basis
         = std::vector<DenseMatrix>{DenseMatrix(1, 2, {integer(3), integer(2)})};
 
-    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
+    CHECK(vec_dense_matrix_eq_perm(basis, true_basis));
 }

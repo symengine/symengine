@@ -65,30 +65,30 @@ TEST_CASE("Constructing MExprPoly", "[MExprPoly]")
                                                             {{-2, 2}, comp3},
                                                             {{-3, -3}, comp4}});
 
-    REQUIRE(eq(*p1->as_symbolic(),
-               *add({mul(integer(2), mul(pow(x, integer(2)), y)),
-                     mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
-                     mul(symbol("a"), mul(x, y)), mul(integer(-3), y)})));
-    REQUIRE(eq(*pprime->as_symbolic(),
-               *add({mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
-                     mul(integer(2), mul(x, pow(y, integer(2)))),
-                     mul(symbol("a"), mul(x, y)), mul(integer(-3), x)})));
-    REQUIRE(eq(*p2->as_symbolic(),
-               *add({mul(comp4.get_basic(),
-                         mul(pow(x, integer(3)), pow(y, integer(4)))),
-                     mul(comp3.get_basic(),
-                         mul(pow(x, integer(2)), pow(y, integer(2)))),
-                     mul(comp1.get_basic(), x), comp2.get_basic()})));
-    REQUIRE(eq(*p3->as_symbolic(), *zero));
-    REQUIRE(eq(*p4->as_symbolic(), *zero));
-    REQUIRE(eq(*p5->as_symbolic(), *comp1.get_basic()));
-    REQUIRE(eq(*p6->as_symbolic(),
-               *add({comp1.get_basic(),
-                     mul(comp3.get_basic(),
-                         mul(pow(x, integer(-2)), pow(y, integer(2)))),
-                     mul(comp2.get_basic(), pow(y, integer(-1))),
-                     mul(comp4.get_basic(),
-                         mul(pow(x, integer(-3)), pow(y, integer(-3))))})));
+    CHECK(eq(*p1->as_symbolic(),
+             *add({mul(integer(2), mul(pow(x, integer(2)), y)),
+                   mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
+                   mul(symbol("a"), mul(x, y)), mul(integer(-3), y)})));
+    CHECK(eq(*pprime->as_symbolic(),
+             *add({mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
+                   mul(integer(2), mul(x, pow(y, integer(2)))),
+                   mul(symbol("a"), mul(x, y)), mul(integer(-3), x)})));
+    CHECK(eq(*p2->as_symbolic(),
+             *add({mul(comp4.get_basic(),
+                       mul(pow(x, integer(3)), pow(y, integer(4)))),
+                   mul(comp3.get_basic(),
+                       mul(pow(x, integer(2)), pow(y, integer(2)))),
+                   mul(comp1.get_basic(), x), comp2.get_basic()})));
+    CHECK(eq(*p3->as_symbolic(), *zero));
+    CHECK(eq(*p4->as_symbolic(), *zero));
+    CHECK(eq(*p5->as_symbolic(), *comp1.get_basic()));
+    CHECK(eq(*p6->as_symbolic(),
+             *add({comp1.get_basic(),
+                   mul(comp3.get_basic(),
+                       mul(pow(x, integer(-2)), pow(y, integer(2)))),
+                   mul(comp2.get_basic(), pow(y, integer(-1))),
+                   mul(comp4.get_basic(),
+                       mul(pow(x, integer(-3)), pow(y, integer(-3))))})));
 }
 
 TEST_CASE("Testing MExprPoly::__eq__(), __hash__, and compare", "[MExprPoly]")
@@ -118,27 +118,27 @@ TEST_CASE("Testing MExprPoly::__eq__(), __hash__, and compare", "[MExprPoly]")
     RCP<const MExprPoly> p7 = MExprPoly::from_dict(s, {{v, sum}});
     RCP<const MExprPoly> p8 = MExprPoly::from_dict({x, y}, {{{0, 0}, sum}});
 
-    REQUIRE(p1->__eq__(*p1));
-    REQUIRE(!(p2->__eq__(*p1)));
-    REQUIRE(p3->__eq__(*add_mpoly(*p1, *p2)));
-    REQUIRE(p5->__eq__(*p6));
-    REQUIRE(p7->__eq__(*p8));
-    REQUIRE(!p6->__eq__(*p7));
+    CHECK(p1->__eq__(*p1));
+    CHECK(!(p2->__eq__(*p1)));
+    CHECK(p3->__eq__(*add_mpoly(*p1, *p2)));
+    CHECK(p5->__eq__(*p6));
+    CHECK(p7->__eq__(*p8));
+    CHECK(!p6->__eq__(*p7));
 
     // Only requre that the same polynomial hash to the same value and that
     // different polynomials
     // hash to different values
-    // Don't want to require a polynomial to have a particular hash in case
+    // Don't want to CHECK a polynomial to have a particular hash in case
     // someone comes up with
     // a better hash function
-    REQUIRE(p3->__hash__() == add_mpoly(*p1, *p2)->__hash__());
-    REQUIRE(p1->__hash__() != p2->__hash__());
-    REQUIRE(p3->__hash__() != p4->__hash__());
+    CHECK(p3->__hash__() == add_mpoly(*p1, *p2)->__hash__());
+    CHECK(p1->__hash__() != p2->__hash__());
+    CHECK(p3->__hash__() != p4->__hash__());
 
     // Same for compare.
-    REQUIRE(0 == p3->compare(*add_mpoly(*p1, *p2)));
-    REQUIRE(0 != p1->compare(*p2));
-    REQUIRE(0 != p3->compare(*p4));
+    CHECK(0 == p3->compare(*add_mpoly(*p1, *p2)));
+    CHECK(0 != p1->compare(*p2));
+    CHECK(0 != p3->compare(*p4));
 }
 
 TEST_CASE("Testing MExprPoly::eval", "[MExprPoly]")
@@ -177,14 +177,14 @@ TEST_CASE("Testing MExprPoly::eval", "[MExprPoly]")
     std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> m2
         = {{x, ex}, {y, why}, {z, zee}};
     // CHECK_THROWS_AS(p->eval(m1), SymEngineException);
-    REQUIRE(p->eval(m2)
-            == expr1 * pow_ex(ex, 2) + expr2 * pow_ex(why, 2)
-                   + expr3 * pow_ex(zee, 2) + expr4 * ex * why * zee
-                   + expr1 * ex * why + expr2 * why * zee + expr1 * ex
-                   + expr2 * why + expr3 * zee + expr4
-                   + expr1 * pow_ex(ex, -1) * pow_ex(why, -1) * pow_ex(zee, -1)
-                   + expr2 * pow_ex(ex, -2) * pow_ex(why, -2) * pow_ex(zee, -2)
-                   + expr3 * pow_ex(ex, -2) * pow_ex(why, 2) * pow_ex(zee, -2));
+    CHECK(p->eval(m2)
+          == expr1 * pow_ex(ex, 2) + expr2 * pow_ex(why, 2)
+                 + expr3 * pow_ex(zee, 2) + expr4 * ex * why * zee
+                 + expr1 * ex * why + expr2 * why * zee + expr1 * ex
+                 + expr2 * why + expr3 * zee + expr4
+                 + expr1 * pow_ex(ex, -1) * pow_ex(why, -1) * pow_ex(zee, -1)
+                 + expr2 * pow_ex(ex, -2) * pow_ex(why, -2) * pow_ex(zee, -2)
+                 + expr3 * pow_ex(ex, -2) * pow_ex(why, 2) * pow_ex(zee, -2));
 }
 
 TEST_CASE("Testing derivative of MExprPoly", "[MExprPoly]")
@@ -225,9 +225,9 @@ TEST_CASE("Testing derivative of MExprPoly", "[MExprPoly]")
     RCP<const MExprPoly> q3
         = MExprPoly::from_dict({x, y}, {{{0, 0}, Expression(0)}});
 
-    REQUIRE(eq(*(p->diff(x)), *q1));
-    REQUIRE(eq(*(p->diff(y)), *q2));
-    REQUIRE(eq(*(p->diff(z)), *q3));
+    CHECK(eq(*(p->diff(x)), *q1));
+    CHECK(eq(*(p->diff(y)), *q2));
+    CHECK(eq(*(p->diff(z)), *q3));
 }
 
 TEST_CASE("Testing MExprPoly::get_args()", "[MExprPoly]")
@@ -255,9 +255,9 @@ TEST_CASE("Testing MExprPoly::get_args()", "[MExprPoly]")
                                            {{-1, -1, -1}, expr2},
                                            {{0, 0, -2}, expr3},
                                            {{0, -2, 0}, expr4}});
-    REQUIRE(eq(*p1->as_symbolic(), *add({mul(integer(2), mul(x, mul(y, z))),
-                                         pow(z, integer(2)), one})));
-    REQUIRE(
+    CHECK(eq(*p1->as_symbolic(), *add({mul(integer(2), mul(x, mul(y, z))),
+                                       pow(z, integer(2)), one})));
+    CHECK(
         eq(*p2->as_symbolic(),
            *add({mul(expr2.get_basic(), mul(x, mul(y, z))),
                  mul(expr4.get_basic(), pow(y, integer(2))),
@@ -305,9 +305,9 @@ TEST_CASE("Testing MExprPoly negation"
     RCP<const MExprPoly> q3
         = MExprPoly::from_dict({x, y}, {{{0, 0}, Expression(integer(0))}});
 
-    REQUIRE(neg_mpoly(*p1)->__eq__(*q1));
-    REQUIRE(neg_mpoly(*p2)->__eq__(*q2));
-    REQUIRE(neg_mpoly(*p3)->__eq__(*q3));
+    CHECK(neg_mpoly(*p1)->__eq__(*q1));
+    CHECK(neg_mpoly(*p2)->__eq__(*q2));
+    CHECK(neg_mpoly(*p3)->__eq__(*q3));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -361,17 +361,17 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                  {{0, -1}, negNum * comp4},
                  {{0, -2}, negNum * comp4}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*add_mpoly(*p1, *p3), *p1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q22));
-    REQUIRE(eq(*sub_mpoly(*p1, *p3), *p1));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*add_mpoly(*p1, *p3), *p1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q22));
+    CHECK(eq(*sub_mpoly(*p1, *p3), *p1));
 
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q3));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p3), *p3));
-    REQUIRE(eq(*mul_mpoly(*p3, *p1), *p3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q3));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p3), *p3));
+    CHECK(eq(*mul_mpoly(*p3, *p1), *p3));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -419,12 +419,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                               {{1, 0, -1, 0}, negB * comp1},
                                               {{1, 0, 0, 0}, negNum * comp1}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -471,12 +471,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                            {{0, 1, 0}, negNum * comp1},
                                            {{0, -2, 1}, comp4 * negNum}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -512,12 +512,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                      {{1}, expr1 * expr4 + expr1 * expr3},
                                      {{0}, expr3 * expr4}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -564,12 +564,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                         {{0, 1}, expr3 * expr5},
                                         {{0, 0}, expr3 * expr4}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -617,12 +617,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                         {{0, 1}, 2 * negNum},
                                         {{0, 0}, negNum * comp4}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -673,12 +673,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                            {{0, 0, 1}, 2 * negNum},
                                            {{0, 0, 0}, negNum * comp4}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q3));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q2));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q3));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -714,12 +714,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                         {{0, 1}, expr3 * expr1},
                                         {{-1, 0}, expr4 * expr1}});
 
-    REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
-    REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
-    REQUIRE(eq(*sub_mpoly(*p1, *p2), *q3));
-    REQUIRE(eq(*sub_mpoly(*p2, *p1), *q2));
-    REQUIRE(eq(*mul_mpoly(*p1, *p2), *q4));
-    REQUIRE(eq(*mul_mpoly(*p2, *p1), *q4));
+    CHECK(eq(*add_mpoly(*p1, *p2), *q1));
+    CHECK(eq(*add_mpoly(*p2, *p1), *q1));
+    CHECK(eq(*sub_mpoly(*p1, *p2), *q3));
+    CHECK(eq(*sub_mpoly(*p2, *p1), *q2));
+    CHECK(eq(*mul_mpoly(*p1, *p2), *q4));
+    CHECK(eq(*mul_mpoly(*p2, *p1), *q4));
 }
 
 TEST_CASE("Testing Precedence of MExprPoly", "[MExprPoly]")
@@ -748,13 +748,13 @@ TEST_CASE("Testing Precedence of MExprPoly", "[MExprPoly]")
         = MExprPoly::from_dict({x, y}, {{{2, 0}, Expression(1)}});
     RCP<const MExprPoly> p7 = MExprPoly::from_dict({x, y}, {{{1, 0}, expr1}});
 
-    REQUIRE(Prec.getPrecedence(p1) == PrecedenceEnum::Atom);
-    REQUIRE(Prec.getPrecedence(p2) == PrecedenceEnum::Add);
-    REQUIRE(Prec.getPrecedence(p3) == PrecedenceEnum::Atom);
-    REQUIRE(Prec.getPrecedence(p4) == PrecedenceEnum::Atom);
-    REQUIRE(Prec.getPrecedence(p5) == PrecedenceEnum::Mul);
-    REQUIRE(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
-    REQUIRE(Prec.getPrecedence(p7) == PrecedenceEnum::Mul);
+    CHECK(Prec.getPrecedence(p1) == PrecedenceEnum::Atom);
+    CHECK(Prec.getPrecedence(p2) == PrecedenceEnum::Add);
+    CHECK(Prec.getPrecedence(p3) == PrecedenceEnum::Atom);
+    CHECK(Prec.getPrecedence(p4) == PrecedenceEnum::Atom);
+    CHECK(Prec.getPrecedence(p5) == PrecedenceEnum::Mul);
+    CHECK(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
+    CHECK(Prec.getPrecedence(p7) == PrecedenceEnum::Mul);
 }
 
 TEST_CASE("MExprPoly from_poly", "[MExprPoly]")
@@ -765,5 +765,5 @@ TEST_CASE("MExprPoly from_poly", "[MExprPoly]")
         = MExprPoly::from_dict({x}, {{{1}, y}, {{2}, 3_z}});
     RCP<const UExprPoly> upoly = UExprPoly::from_vec(x, {0_z, y, 3_z});
 
-    REQUIRE(eq(*MExprPoly::from_poly(*upoly), *mpoly));
+    CHECK(eq(*MExprPoly::from_poly(*upoly), *mpoly));
 }

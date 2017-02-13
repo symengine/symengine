@@ -125,12 +125,12 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         double val = eval_double(*vec[i].first);
         std::cout.precision(12);
         std::cout << vec[i].first->__str__() << " ~ " << val << std::endl;
-        REQUIRE(::fabs(val - vec[i].second) < 1e-12);
+        CHECK(::fabs(val - vec[i].second) < 1e-12);
     }
 
     for (unsigned i = 0; i < vec.size(); i++) {
         double val = eval_double_single_dispatch(*vec[i].first);
-        REQUIRE(::fabs(val - vec[i].second) < 1e-12);
+        CHECK(::fabs(val - vec[i].second) < 1e-12);
     }
 
     // Symbol must raise an exception
@@ -204,7 +204,7 @@ TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
         std::complex<double> val = eval_complex_double(*vec[i].first);
         std::cout.precision(12);
         std::cout << vec[i].first->__str__() << " ~ " << val << std::endl;
-        REQUIRE(std::abs(val.imag() - vec[i].second.imag()) < 1e-12);
-        REQUIRE(std::abs(val.real() - vec[i].second.real()) < 1e-12);
+        CHECK(std::abs(val.imag() - vec[i].second.imag()) < 1e-12);
+        CHECK(std::abs(val.real() - vec[i].second.real()) < 1e-12);
     }
 }

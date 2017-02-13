@@ -74,7 +74,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     // rounding mode `MPFR_RNDN`
     // With 53 bit precision, `s` and `t` have the same value.
     // Hence value of `r` was  rounded down to `0.000000000000000`
-    REQUIRE(mpfr_cmp_si(a, 0) == 0);
+    CHECK(mpfr_cmp_si(a, 0) == 0);
 
     mpfr_set_prec(a, 100);
     eval_mpfr(a, *r, MPFR_RNDN);
@@ -82,11 +82,11 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     // rounding mode `MPFR_RNDN`
     // With 100 bit precision, `s` and `t` are not equal in value.
     // Value of `r` is a positive quantity with value 0.000000000149734291.....
-    REQUIRE(mpfr_cmp_si(a, 0) == 1);
+    CHECK(mpfr_cmp_si(a, 0) == 1);
 
     // Check that value of `r` (`a`) starts with 0.000000000149734291
-    REQUIRE(mpfr_cmp_d(a, 0.000000000149734291) == 1);
-    REQUIRE(mpfr_cmp_d(a, 0.000000000149734292) == -1);
+    CHECK(mpfr_cmp_d(a, 0.000000000149734291) == 1);
+    CHECK(mpfr_cmp_d(a, 0.000000000149734292) == -1);
 
     s = mul(EulerGamma, integer(100000000));
     t = integer(57721566);
@@ -95,8 +95,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // Check that value of `r` (`a`) starts with 0.00000000490153
-    REQUIRE(mpfr_cmp_d(a, 0.00000000490153) == 1);
-    REQUIRE(mpfr_cmp_d(a, 0.00000000490154) == -1);
+    CHECK(mpfr_cmp_d(a, 0.00000000490153) == 1);
+    CHECK(mpfr_cmp_d(a, 0.00000000490154) == -1);
 
     s = mul(E, integer(100000));
     t = integer(271828);
@@ -104,8 +104,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // Check that value of `r` (`a`) starts with 0.00000000182845
-    REQUIRE(mpfr_cmp_d(a, 0.00000000182845) == 1);
-    REQUIRE(mpfr_cmp_d(a, 0.00000000182846) == -1);
+    CHECK(mpfr_cmp_d(a, 0.00000000182845) == 1);
+    CHECK(mpfr_cmp_d(a, 0.00000000182846) == -1);
 
     s = mul(Catalan, integer(100000000));
     t = integer(91596559);
@@ -113,8 +113,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // Check that value of `r` (`a`) starts with 0.000000004177219
-    REQUIRE(mpfr_cmp_d(a, 0.000000004177219) == 1);
-    REQUIRE(mpfr_cmp_d(a, 0.000000004177220) == -1);
+    CHECK(mpfr_cmp_d(a, 0.000000004177219) == 1);
+    CHECK(mpfr_cmp_d(a, 0.000000004177220) == -1);
 
     s = mul(GoldenRatio, integer(100000000));
     t = integer(161803398);
@@ -122,8 +122,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // Check that value of `r` (`a`) starts with 0.0000000087498948482
-    REQUIRE(mpfr_cmp_d(a, 0.00000000874989) == 1);
-    REQUIRE(mpfr_cmp_d(a, 0.00000000874990) == -1);
+    CHECK(mpfr_cmp_d(a, 0.00000000874989) == 1);
+    CHECK(mpfr_cmp_d(a, 0.00000000874990) == -1);
 
     RCP<const Basic> arg1 = integer(2);
     RCP<const Basic> arg2 = div(one, integer(4));
@@ -181,8 +181,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         eval_mpfr(a, *std::get<0>(testvec[i]), MPFR_RNDN);
-        REQUIRE(mpfr_cmp_d(a, std::get<1>(testvec[i])) == 1);
-        REQUIRE(mpfr_cmp_d(a, std::get<2>(testvec[i])) == -1);
+        CHECK(mpfr_cmp_d(a, std::get<1>(testvec[i])) == 1);
+        CHECK(mpfr_cmp_d(a, std::get<2>(testvec[i])) == -1);
     }
 
     CHECK_THROWS_AS(eval_mpfr(a, *constant("dummy_constant"), MPFR_RNDN),

@@ -37,9 +37,9 @@ TEST_CASE("monomial_mul: poly", "[poly]")
     monomial_mul(a, b, c);
 
     d = {3, 5, 5, 9};
-    REQUIRE(c == d);
+    CHECK(c == d);
     d = {5, 6, 5, 5};
-    REQUIRE(c != d);
+    CHECK(c != d);
 
     umap_vec_mpz m;
     m[a] = 4;

@@ -26,14 +26,14 @@ TEST_CASE("Arithmetic", "[ccode]")
     auto y = symbol("y");
     auto p = add(add(add(add(x, mul(x, y)), pow(x, y)), mul(x, x)),
                  sqrt(integer(2)));
-    REQUIRE(ccode(*p) == "x + x*y + sqrt(2) + pow(x, 2) + pow(x, y)");
+    CHECK(ccode(*p) == "x + x*y + sqrt(2) + pow(x, 2) + pow(x, y)");
 }
 
 TEST_CASE("Functions", "[ccode]")
 {
     auto x = symbol("x");
     auto p = sin(x);
-    REQUIRE(ccode(*p) == "sin(x)");
+    CHECK(ccode(*p) == "sin(x)");
 }
 
 TEST_CASE("Piecewise", "[ccode]")
@@ -46,6 +46,6 @@ TEST_CASE("Piecewise", "[ccode]")
                         {y, contains(x, int2)},
                         {add(x, y), boolTrue}});
 
-    REQUIRE(ccode(*p) == "((x <= 2) ? (\n   x\n)\n: ((x > 2 && x <= 5) ? (\n   "
-                         "y\n)\n: (\n   x + y\n)))");
+    CHECK(ccode(*p) == "((x <= 2) ? (\n   x\n)\n: ((x > 2 && x <= 5) ? (\n   "
+                       "y\n)\n: (\n   x + y\n)))");
 }

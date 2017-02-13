@@ -72,7 +72,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    REQUIRE(mpc_cmp(a, b) == 0);
+    CHECK(mpc_cmp(a, b) == 0);
 
     std::vector<std::tuple<RCP<const Basic>, double, double>> testvec = {
         std::make_tuple(sin(arg1), 10.0590576035560, 10.0590576035561),
@@ -107,8 +107,8 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     for (unsigned i = 0; i < testvec.size(); i++) {
         eval_mpc(a, *std::get<0>(testvec[i]), MPFR_RNDN);
         mpc_abs(real, a, MPFR_RNDN);
-        REQUIRE(mpfr_cmp_d(real, std::get<1>(testvec[i])) == 1);
-        REQUIRE(mpfr_cmp_d(real, std::get<2>(testvec[i])) == -1);
+        CHECK(mpfr_cmp_d(real, std::get<1>(testvec[i])) == 1);
+        CHECK(mpfr_cmp_d(real, std::get<2>(testvec[i])) == -1);
     }
 
     r = add(one, mul(EulerGamma, I));
@@ -121,7 +121,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    REQUIRE(mpc_cmp(a, b) == 0);
+    CHECK(mpc_cmp(a, b) == 0);
 
     r = add(one, mul(Catalan, I));
     s = one;
@@ -133,7 +133,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    REQUIRE(mpc_cmp(a, b) == 0);
+    CHECK(mpc_cmp(a, b) == 0);
 
     r = add(one, mul(GoldenRatio, I));
     s = one;
@@ -145,7 +145,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    REQUIRE(mpc_cmp(a, b) == 0);
+    CHECK(mpc_cmp(a, b) == 0);
 
     r = add(one, mul(E, I));
     s = one;
@@ -157,7 +157,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    REQUIRE(mpc_cmp(a, b) == 0);
+    CHECK(mpc_cmp(a, b) == 0);
 
     CHECK_THROWS_AS(eval_mpc(a, *constant("dummy_constant"), MPFR_RNDN),
                     NotImplementedError);
