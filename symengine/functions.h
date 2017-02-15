@@ -529,6 +529,7 @@ public:
     RCP<const Basic> rewrite_as_zeta() const;
     //! \return Canonicalized zeta
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    using OneArgFunction::create;
 };
 
 //! Create a new Dirichlet_eta instance:
