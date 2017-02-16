@@ -113,6 +113,8 @@ using SymEngine::get_mpz_t;
 #endif
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
+using SymEngine::digamma;
+using SymEngine::trigamma;
 
 using namespace SymEngine::literals;
 
@@ -2965,10 +2967,9 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
-TEST_CASE("Polygamma: functions", "[functions]")
+TEST_CASE("Digamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> _x = symbol("_xi_1");
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);
@@ -2979,42 +2980,105 @@ TEST_CASE("Polygamma: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
-    r1 = polygamma(zero, one);
+    r1 = digamma(x);
+    r2 = polygamma(zero, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(zero);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = digamma(one);
     r2 = neg(EulerGamma);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(i2, im2);
+    r1 = digamma(im2);
     REQUIRE(eq(*r1, *ComplexInf));
 
-    r1 = polygamma(zero, div(one, i2));
-    r2 = sub(mul(im2, log(i2)), EulerGamma);
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = polygamma(zero, div(integer(5), i2));
+    r1 = digamma(div(integer(5), i2));
     r2 = add(sub(mul(im2, log(i2)), EulerGamma), div(integer(8), integer(3)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(one, i3));
+    r1 = digamma(div(one, i3));
     r2 = add(neg(div(div(pi, i2), sqrt(i3))),
              sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(i2, i3));
+    r1 = digamma(div(one, i2));
+    r2 = sub(mul(im2, log(i2)), EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(div(i2, i3));
     r2 = add(div(div(pi, i2), sqrt(i3)),
              sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(one, i4));
+    r1 = digamma(div(one, i4));
     r2 = add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(i3, i4));
+    r1 = digamma(div(i3, i4));
     r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(one, i3);
+    r1 = digamma(x)->diff(x);
+    r2 = polygamma(one, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = digamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+}
+
+TEST_CASE("Trigamma: functions", "[functions]")
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = trigamma(i3);
     r2 = add(div(integer(-5), i4), div(pow(pi, i2), integer(6)));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = trigamma(im2);
+    REQUIRE(eq(*r1, *ComplexInf));
+
+    r1 = digamma(x)->diff(x);
+    r2 = trigamma(x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = trigamma(x);
+    r2 = polygamma(one, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = trigamma(x)->diff(x);
+    r2 = polygamma(integer(2), x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = trigamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+}
+
+TEST_CASE("Polygamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> _x = symbol("_xi_1");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = polygamma(i2, im2);
+    REQUIRE(eq(*r1, *ComplexInf));
 
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))
              ->rewrite_as_zeta();

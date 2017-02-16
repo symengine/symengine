@@ -2934,6 +2934,16 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
     return make_rcp<const PolyGamma>(n_, x_);
 }
 
+RCP<const Basic> digamma(const RCP<const Basic> &x)
+{
+    return polygamma(zero, x);
+}
+
+RCP<const Basic> trigamma(const RCP<const Basic> &x)
+{
+    return polygamma(one, x);
+}
+
 Abs::Abs(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()

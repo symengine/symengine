@@ -9,6 +9,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/symengine_casts.h>
+#include <symengine/constants.h>
 
 namespace SymEngine
 {
@@ -1135,6 +1136,10 @@ public:
 //! Canonicalize PolyGamma
 RCP<const Basic> polygamma(const RCP<const Basic> &n,
                            const RCP<const Basic> &x);
+
+RCP<const Basic> digamma(const RCP<const Basic> &x);
+
+RCP<const Basic> trigamma(const RCP<const Basic> &x);
 
 class Abs : public OneArgFunction
 {
