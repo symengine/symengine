@@ -219,6 +219,7 @@ public:
                   .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
                   .setErrorStr(&error)
                   .create();
+
         // std::cout << error << std::endl;
         executionengine->finalizeObject();
 
@@ -385,24 +386,6 @@ public:
         result_ = r;
     }
 
-    void bvisit(const Tan &x)
-    {
-        throw NotImplementedError("Not implemented.");
-    }
-
-    void bvisit(const Symbol &x)
-    {
-        unsigned i = 0;
-        for (auto &symb : symbols) {
-            if (eq(x, *symb)) {
-                result_ = symbol_ptrs[i];
-                return;
-            }
-            ++i;
-        }
-        throw std::runtime_error("Symbol not in the symbols vector.");
-    };
-
     void bvisit(const Log &x)
     {
         std::vector<llvm::Value *> args;
@@ -414,14 +397,72 @@ public:
         result_ = r;
     };
 
-    void bvisit(const Constant &x)
+    void bvisit(const Tan &x)
     {
-        set_double(eval_double(x));
-    };
+        static llvm::Function *func = get_external_function("tan");
+        auto r = builder->CreateCall(func, {apply(*x.get_arg())});
+        r->setTailCall(true);
+        result_ = r;
+    }
 
     void bvisit(const Abs &x)
     {
-        throw NotImplementedError("Not implemented.");
+        static llvm::Function *func = get_external_function("abs");
+        auto r = builder->CreateCall(func, {apply(*x.get_arg())});
+        r->setTailCall(true);
+        result_ = r;
+    };
+
+    void bvisit(const Symbol &x)
+    {
+        unsigned i = 0;
+        for (auto &symb : symbols) {
+            if (eq(x, *symb)) {
+                result_ = symbol_ptrs[i];
+                return;
+            }
+            ++i;
+        }
+        throw std::runtime_error("Symbol " + x.__str__()
+                                 + " not in the symbols vector.");
+    };
+
+    llvm::Function *get_external_function(const std::string &name)
+    {
+        std::vector<llvm::Type *> func_args;
+        func_args.push_back(llvm::Type::getDoubleTy(module->getContext()));
+        llvm::FunctionType *func_type = llvm::FunctionType::get(
+            llvm::Type::getDoubleTy(module->getContext()), func_args, false);
+
+        llvm::Function *func = module->getFunction(name);
+        if (!func) {
+            func = llvm::Function::Create(func_type,
+                                          llvm::GlobalValue::ExternalLinkage,
+                                          name, module.get());
+            func->setCallingConv(llvm::CallingConv::C);
+        }
+        llvm::AttributeSet func_attr_set;
+        {
+            llvm::SmallVector<llvm::AttributeSet, 4> attrs;
+            llvm::AttributeSet attr_set;
+            {
+                llvm::AttrBuilder attr_builder;
+                attr_builder.addAttribute(llvm::Attribute::NoUnwind);
+                attr_set = llvm::AttributeSet::get(module->getContext(), ~0U,
+                                                   attr_builder);
+            }
+
+            attrs.push_back(attr_set);
+            func_attr_set
+                = llvm::AttributeSet::get(module->getContext(), attrs);
+        }
+        func->setAttributes(func_attr_set);
+        return func;
+    }
+
+    void bvisit(const Constant &x)
+    {
+        set_double(eval_double(x));
     };
 
     void bvisit(const Basic &)
