@@ -24,7 +24,32 @@ using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
 using SymEngine::sin;
 using SymEngine::cos;
+using SymEngine::tan;
+using SymEngine::cot;
+using SymEngine::csc;
+using SymEngine::sec;
+using SymEngine::asin;
+using SymEngine::acos;
+using SymEngine::atan;
+using SymEngine::acot;
+using SymEngine::acsc;
+using SymEngine::asec;
+using SymEngine::sinh;
+using SymEngine::cosh;
+using SymEngine::tanh;
+using SymEngine::coth;
+using SymEngine::csch;
+using SymEngine::sech;
+using SymEngine::asinh;
+using SymEngine::acosh;
+using SymEngine::atanh;
+using SymEngine::acoth;
+using SymEngine::acsch;
+using SymEngine::asech;
+using SymEngine::atan2;
+using SymEngine::log;
 using SymEngine::E;
+using SymEngine::Catalan;
 using SymEngine::gamma;
 using SymEngine::loggamma;
 using SymEngine::min;
@@ -106,31 +131,41 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     double d;
     x = symbol("x");
 
-    r = gamma(x);
-
     LambdaRealDoubleVisitor v;
-    v.init({x}, *r);
 
-    d = v.call({1.1});
-    REQUIRE(::fabs(d - 0.9513507698668) < 1e-12);
+    std::vector<std::tuple<RCP<const Basic>, double, double>> testvec = {
+        std::make_tuple(pow(E, cos(x)), 1.3, 1.30669209920819),
+        std::make_tuple(add(sin(x), cos(x)), 1.2, 1.29439684044390),
+        std::make_tuple(mul(tan(x), sec(x)), 2.2, 2.33444426269917),
+        std::make_tuple(add(csc(x), cot(x)), 0.5, 3.91631736464594),
+        std::make_tuple(asin(x), 0.5, 0.523598775598299),
+        std::make_tuple(acos(x), 0.9, 0.451026811796262),
+        std::make_tuple(add(atan(x), asec(x)), 1.1, 1.26268093282586),
+        std::make_tuple(add(acot(x), acsc(x)), 3, 0.661587463850764),
+        std::make_tuple(add(sinh(x), csch(x)), 2.2, 4.68146604193974),
+        std::make_tuple(mul(tanh(x), cosh(x)), 0.2, 0.201336002541094),
+        std::make_tuple(sech(x), 0.5, 0.886818883970074),
+        std::make_tuple(coth(x), 0.9, 1.39606725303001),
+        std::make_tuple(mul(asinh(x), acosh(x)), 1.2, 0.632303583495024),
+        std::make_tuple(mul(acsch(x), asech(x)), 0.3, 3.59566705273267),
+        std::make_tuple(acoth(x), 3.3, 0.312852949882206),
+        std::make_tuple(atanh(x), 0.7, 0.867300527694053),
+        std::make_tuple(atan2(x, add(x, integer(1))), 2.1, 0.595409875478733),
+        std::make_tuple(log(x), 1.2, 0.182321556793955),
+        std::make_tuple(gamma(x), 1.1, 0.9513507698668),
+        std::make_tuple(add(Catalan, x), 1.1, 2.01596559417722),
+        std::make_tuple(loggamma(x), 1.3, -0.10817480950786047),
+        std::make_tuple(add(gamma(x), loggamma(x)), 1.1, 0.901478328607033459),
+        std::make_tuple(abs(x), -1.112111321, 1.112111321),
+        std::make_tuple(erf(x), 1.1, 0.88020506957408169),
+        std::make_tuple(erfc(x), 2.1, 0.00297946665633298),
+    };
 
-    r = loggamma(x);
-    v.init({x}, *r);
-
-    d = v.call({1.3});
-    REQUIRE(::fabs(d + 0.10817480950786047) < 1e-12);
-
-    r = add(gamma(x), loggamma(x));
-    v.init({x}, *r);
-
-    d = v.call({1.1});
-    REQUIRE(::fabs(d - 0.901478328607033459) < 1e-12);
-
-    r = erf(x);
-    v.init({x}, *r);
-
-    d = v.call({1.1});
-    REQUIRE(::fabs(d - 0.88020506957408169) < 1e-12);
+    for (unsigned i = 0; i < testvec.size(); i++) {
+        v.init({x}, *std::get<0>(testvec[i]));
+        d = v.call({std::get<1>(testvec[i])});
+        REQUIRE(::fabs(d - std::get<2>(testvec[i])) < 1e-12);
+    }
 }
 
 #ifdef HAVE_SYMENGINE_LLVM

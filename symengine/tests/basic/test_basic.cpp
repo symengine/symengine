@@ -48,6 +48,7 @@ using SymEngine::down_cast;
 using SymEngine::NotImplementedError;
 using SymEngine::ComplexInf;
 using SymEngine::Nan;
+using SymEngine::EulerGamma;
 
 using namespace SymEngine::literals;
 
@@ -319,6 +320,8 @@ TEST_CASE("Integer: Basic", "[basic]")
     std::cout << *k << std::endl;
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
+
+    REQUIRE(not i->is_complex());
 
     i = integer(0);
     j = integer(0);
@@ -647,6 +650,12 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r2->compare(*r1) == 1);
     CHECK(r1->compare(*r1) == 0);
 
+    r1 = real_double(1.0);
+    r2 = real_double(2.0);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r1) == 0);
+
     // These are specific to the order in the declaration of enum TypeID,
     // so we just make sure that if x < y, then y > x.
     r1 = add(x, z);
@@ -691,6 +700,11 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r1->__cmp__(*r1) == 0);
 
     CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
+
+    r1 = pi;
+    r2 = EulerGamma;
+    CHECK(r1->__cmp__(*r2) > 0);
+    CHECK(r1->__cmp__(*r1) == 0);
 }
 
 TEST_CASE("Complex: Basic", "[basic]")

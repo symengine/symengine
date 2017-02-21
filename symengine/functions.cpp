@@ -2755,7 +2755,7 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
     return div(mul(gamma(get_arg1()), gamma(get_arg2())),
-               add(get_arg1(), get_arg2()));
+               gamma(add(get_arg1(), get_arg2())));
 }
 
 RCP<const Basic> Beta::create(const RCP<const Basic> &a,

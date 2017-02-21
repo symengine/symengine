@@ -9,6 +9,7 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/functions.h>
 #include <symengine/pow.h>
+#include <symengine/complex_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Number;
@@ -41,6 +42,8 @@ using SymEngine::Nan;
 using SymEngine::erf;
 using SymEngine::erfc;
 using SymEngine::I;
+using SymEngine::make_rcp;
+using SymEngine::complex_double;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -58,6 +61,12 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     REQUIRE(eq(*a, *Inf));
     REQUIRE(eq(*b, *NegInf));
     REQUIRE(eq(*c, *ComplexInf));
+
+    CHECK_THROWS_AS(a->is_canonical(complex_double(std::complex<double>(2, 3))),
+                    NotImplementedError);
+    CHECK_THROWS_AS(
+        a->is_canonical(Complex::from_two_nums(*integer(1), *integer(2))),
+        NotImplementedError);
 
     a = infty();
     b = infty(-1);
@@ -354,7 +363,9 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     CHECK_THROWS_AS(acosh(ComplexInf), DomainError);
     CHECK_THROWS_AS(atanh(ComplexInf), DomainError);
     CHECK_THROWS_AS(acoth(ComplexInf), DomainError);
+    CHECK_THROWS_AS(acsch(ComplexInf), DomainError);
     CHECK_THROWS_AS(exp(ComplexInf), DomainError);
+    CHECK_THROWS_AS(erf(ComplexInf), DomainError);
 
     r1 = atan(Inf);
     REQUIRE(eq(*r1, *div(pi, integer(2))));
@@ -395,6 +406,9 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     r1 = asinh(Inf);
     REQUIRE(eq(*r1, *Inf));
 
+    r1 = acsch(Inf);
+    REQUIRE(eq(*r1, *zero));
+
     r1 = acosh(NegInf);
     REQUIRE(eq(*r1, *Inf));
 
@@ -434,6 +448,9 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
 
     r1 = erf(NegInf);
     REQUIRE(eq(*r1, *minus_one));
+
+    r1 = erfc(NegInf);
+    REQUIRE(eq(*r1, *integer(2)));
 
     r1 = exp(Inf);
     REQUIRE(eq(*r1, *Inf));

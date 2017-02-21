@@ -6,6 +6,8 @@
 #include <symengine/functions.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/eval_double.h>
+#include <symengine/eval_mpc.h>
+#include <symengine/eval_mpfr.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
@@ -34,13 +36,33 @@ using SymEngine::csc;
 using SymEngine::Csc;
 using SymEngine::sec;
 using SymEngine::Sec;
+using SymEngine::ASin;
+using SymEngine::ACos;
+using SymEngine::ASec;
+using SymEngine::ACsc;
+using SymEngine::ATan;
+using SymEngine::ACot;
+using SymEngine::Sinh;
+using SymEngine::Cosh;
+using SymEngine::Sech;
+using SymEngine::Csch;
+using SymEngine::Tanh;
+using SymEngine::Coth;
+using SymEngine::ASinh;
+using SymEngine::ACosh;
+using SymEngine::ASech;
+using SymEngine::ACsch;
+using SymEngine::ATanh;
+using SymEngine::ACoth;
 using SymEngine::asin;
 using SymEngine::acos;
 using SymEngine::asec;
 using SymEngine::acsc;
 using SymEngine::atan;
 using SymEngine::acot;
+using SymEngine::ATan2;
 using SymEngine::atan2;
+using SymEngine::LambertW;
 using SymEngine::lambertw;
 using SymEngine::log;
 using SymEngine::exp;
@@ -68,16 +90,23 @@ using SymEngine::atanh;
 using SymEngine::acoth;
 using SymEngine::asech;
 using SymEngine::kronecker_delta;
+using SymEngine::KroneckerDelta;
 using SymEngine::levi_civita;
+using SymEngine::LeviCivita;
 using SymEngine::zeta;
+using SymEngine::Zeta;
 using SymEngine::dirichlet_eta;
+using SymEngine::Dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::Gamma;
 using SymEngine::loggamma;
 using SymEngine::LogGamma;
 using SymEngine::polygamma;
 using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
+using SymEngine::LowerGamma;
 using SymEngine::uppergamma;
+using SymEngine::UpperGamma;
 using SymEngine::Beta;
 using SymEngine::beta;
 using SymEngine::abs;
@@ -108,6 +137,8 @@ using SymEngine::ComplexInf;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::Nan;
+using SymEngine::Erf;
+using SymEngine::Erfc;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
@@ -122,12 +153,14 @@ using namespace SymEngine::literals;
 using SymEngine::real_mpfr;
 using SymEngine::RealMPFR;
 using SymEngine::mpfr_class;
+using SymEngine::eval_mpfr;
 #endif
 
 #ifdef HAVE_SYMENGINE_MPC
 using SymEngine::complex_mpc;
 using SymEngine::ComplexMPC;
 using SymEngine::mpc_class;
+using SymEngine::eval_mpc;
 #endif
 
 TEST_CASE("Sin: functions", "[functions]")
@@ -267,6 +300,14 @@ TEST_CASE("Sin: functions", "[functions]")
             < 1e-12);
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i + 0.416146836547142)
             < 1e-12);
+
+    // Test is_canonical()
+    RCP<const Sin> r4 = make_rcp<Sin>(i2); // dummy Sin
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -381,6 +422,13 @@ TEST_CASE("Cos: functions", "[functions]")
             < 1e-12);
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.909297426825682)
             < 1e-12);
+
+    RCP<const Cos> r4 = make_rcp<Cos>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Tan: functions", "[functions]")
@@ -495,6 +543,13 @@ TEST_CASE("Tan: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 0.142546543074278)
             < 1e-12);
+
+    RCP<const Tan> r4 = make_rcp<Tan>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -605,6 +660,13 @@ TEST_CASE("Cot: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 0.457657554360286)
             < 1e-12);
+
+    RCP<const Cot> r4 = make_rcp<Cot>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -717,6 +779,13 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 7.08616739573719)
             < 1e-12);
+
+    RCP<const Csc> r4 = make_rcp<Csc>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -831,6 +900,13 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i + 1.01010866590799)
             < 1e-12);
+
+    RCP<const Sec> r4 = make_rcp<Sec>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(mul(pi, i2))));
+    REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
@@ -900,6 +976,9 @@ TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
 
     r1 = sec(atan(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_x2)));
+
+    r1 = sec(acsc(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_xm2))));
 
     r1 = sec(acot(x));
     REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_xm2)));
@@ -1042,7 +1121,6 @@ TEST_CASE("Derivative: functions", "[functions]")
         {{__xi_1, add(_xi_1, x)}});
     REQUIRE(eq(*r1, *r2));
 
-    // Test is_canonical()
     f = function_symbol("f", x);
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
@@ -1075,6 +1153,9 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(eq(*r2, *r3));
 
     // r1 = Derivative::create(kronecker_delta(x, y), {y});
+
+    r1 = EulerGamma->diff(x);
+    REQUIRE(eq(*r1, *zero));
 }
 
 TEST_CASE("Subs: functions", "[functions]")
@@ -1587,6 +1668,19 @@ TEST_CASE("Asin: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = asin(x)->diff(x);
+    r2 = div(one, sqrt(sub(one, pow(x, i2))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = asin(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = asin(zero);
+    REQUIRE(eq(*r1, *zero));
+
     r1 = asin(im1);
     r2 = mul(im1, div(pi, i2));
     REQUIRE(eq(*r1, *r2));
@@ -1626,6 +1720,13 @@ TEST_CASE("Asin: functions", "[functions]")
     REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
                      - 2.0498241882037)
             < 1e-10);
+
+    RCP<const ASin> r4 = make_rcp<ASin>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acos: functions", "[functions]")
@@ -1639,6 +1740,16 @@ TEST_CASE("Acos: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = acos(x)->diff(x);
+    r2 = div(minus_one, sqrt(sub(one, pow(x, i2))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acos(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 
     r1 = acos(im1);
     r2 = pi;
@@ -1671,6 +1782,29 @@ TEST_CASE("Acos: functions", "[functions]")
     r1 = acos(div(sub(sqrt(i5), i1), integer(4)));
     r2 = mul(i2, div(pi, i5));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = acos(real_double(0.5));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.04719755119660)
+            < 1e-12);
+
+    r1 = acos(complex_double(std::complex<double>(1, 2)));
+    r2 = acos(real_double(4.0));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.90908861124732)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 2.06343706889556)
+            < 1e-12);
+
+    RCP<const ACos> r4 = make_rcp<ACos>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Asec: functions", "[functions]")
@@ -1684,6 +1818,16 @@ TEST_CASE("Asec: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = asec(x)->diff(x);
+    r2 = div(one, mul(pow(x, i2), sqrt(sub(one, div(one, pow(x, i2))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = asec(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 
     r1 = asec(im1);
     r2 = pi;
@@ -1715,6 +1859,28 @@ TEST_CASE("Asec: functions", "[functions]")
     r1 = asec(div(integer(4), sub(sqrt(i5), i1)));
     r2 = mul(i2, div(pi, i5));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = asec(real_double(-2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 2.09439510239320)
+            < 1e-12);
+
+    r1 = asec(complex_double(std::complex<double>(1, 2)));
+    r2 = asec(real_double(0.5));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.44015500855881)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 1.31695789692482)
+            < 1e-12);
+
+    RCP<const ASec> r4 = make_rcp<ASec>(i5);
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i5));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acsc: functions", "[functions]")
@@ -1728,6 +1894,16 @@ TEST_CASE("Acsc: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = acsc(x)->diff(x);
+    r2 = div(minus_one, mul(pow(x, i2), sqrt(sub(one, div(one, pow(x, i2))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acsc(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 
     r1 = acsc(im1);
     r2 = mul(im1, div(pi, i2));
@@ -1752,6 +1928,28 @@ TEST_CASE("Acsc: functions", "[functions]")
     r1 = acsc(mul(div(integer(4), sub(sqrt(i5), i1)), im1));
     r2 = div(pi, mul(im2, i5));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = acsc(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.523598775598299)
+            < 1e-12);
+
+    r1 = acsc(complex_double(std::complex<double>(1, 2)));
+    r2 = acsc(real_double(0.4));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 0.438156111929239)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 2.21861690006402)
+            < 1e-12);
+
+    RCP<const ACsc> r4 = make_rcp<ACsc>(i5);
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i5));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("atan: functions", "[functions]")
@@ -1765,6 +1963,16 @@ TEST_CASE("atan: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = atan(x)->diff(x);
+    r2 = div(one, add(one, pow(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = atan(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 
     r1 = atan(i1);
     r2 = div(pi, integer(4));
@@ -1796,6 +2004,18 @@ TEST_CASE("atan: functions", "[functions]")
     r1 = atan(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
     r2 = div(mul(pi, im2), i5);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = atan(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.24904577239825)
+            < 1e-12);
+
+    RCP<const ATan> r4 = make_rcp<ATan>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acot: functions", "[functions]")
@@ -1809,6 +2029,16 @@ TEST_CASE("Acot: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = acot(x)->diff(x);
+    r2 = div(minus_one, add(one, pow(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acot(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
 
     r1 = acot(i1);
     r2 = div(pi, integer(4));
@@ -1841,6 +2071,18 @@ TEST_CASE("Acot: functions", "[functions]")
     r1 = acot(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
     r2 = div(mul(pi, integer(9)), mul(i5, i2));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = acot(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.463647609000806)
+            < 1e-12);
+
+    RCP<const ACot> r4 = make_rcp<ACot>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Atan2: functions", "[functions]")
@@ -1913,9 +2155,6 @@ TEST_CASE("Atan2: functions", "[functions]")
     r1 = atan2(zero, im1);
     REQUIRE(eq(*r1, *pi));
 
-    r1 = atan2(zero, zero);
-    REQUIRE(eq(*r1, *Nan));
-
     r1 = atan2(i2, zero);
     r2 = mul(div(pi, i2), minus_one);
     REQUIRE(eq(*r1, *r2));
@@ -1923,6 +2162,14 @@ TEST_CASE("Atan2: functions", "[functions]")
     r1 = atan2(im2, zero);
     r2 = div(pi, i2);
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const ATan2> r4 = make_rcp<ATan2>(i2, i3);
+    REQUIRE(not(r4->is_canonical(zero, i2)));
+    REQUIRE(not(r4->is_canonical(zero, zero)));
+    REQUIRE(not(r4->is_canonical(i2, i2)));
+    REQUIRE(not(r4->is_canonical(i2, neg(i2))));
+    REQUIRE(r4->is_canonical(i2, i3));
+    REQUIRE(not(r4->is_canonical(one, sqrt(i3))));
 }
 
 TEST_CASE("Lambertw: functions", "[functions]")
@@ -1957,6 +2204,13 @@ TEST_CASE("Lambertw: functions", "[functions]")
     r1 = lambertw(mul(i2, x))->diff(x);
     r2 = div(lambertw(mul(i2, x)), mul(x, add(lambertw(mul(i2, x)), one)));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const LambertW> r4 = make_rcp<LambertW>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(E)));
+    REQUIRE(not(r4->is_canonical(neg(div(one, E)))));
+    REQUIRE(not(r4->is_canonical(div(log(i2), im2))));
+    REQUIRE(r4->is_canonical(i2));
 }
 
 TEST_CASE("Sinh: functions", "[functions]")
@@ -1986,6 +2240,20 @@ TEST_CASE("Sinh: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     REQUIRE(eq(*sinh(sub(x, y)), *neg(sinh(sub(y, x)))));
+
+    r1 = sinh(real_double(1.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.1752011936438)
+            < 1e-12);
+
+    RCP<const Sinh> r4 = make_rcp<Sinh>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Csch: functions", "[functions]")
@@ -2012,6 +2280,20 @@ TEST_CASE("Csch: functions", "[functions]")
     r1 = csch(zero);
     REQUIRE(eq(*r1, *ComplexInf));
     REQUIRE(eq(*csch(sub(x, y)), *neg(csch(sub(y, x)))));
+
+    r1 = csch(real_double(1.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.850918128239322)
+            < 1e-12);
+
+    RCP<const Csch> r4 = make_rcp<Csch>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
@@ -2040,6 +2322,20 @@ TEST_CASE("Cosh: functions", "[functions]")
     r2 = mul(im1, sinh(mul(im1, x)));
     REQUIRE(eq(*r1, *r2));
     REQUIRE(eq(*cosh(sub(x, y)), *cosh(sub(y, x))));
+
+    r1 = cosh(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 3.76219569108363)
+            < 1e-12);
+
+    RCP<const Cosh> r4 = make_rcp<Cosh>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Sech: functions", "[functions]")
@@ -2068,6 +2364,20 @@ TEST_CASE("Sech: functions", "[functions]")
     r2 = mul(im1, mul(sech(x), tanh(x)));
     REQUIRE(eq(*r1, *r2));
     REQUIRE(eq(*sech(sub(x, y)), *sech(sub(y, x))));
+
+    r1 = sech(real_double(4.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.0366189934736865)
+            < 1e-12);
+
+    RCP<const Sech> r4 = make_rcp<Sech>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Tanh: functions", "[functions]")
@@ -2099,12 +2409,27 @@ TEST_CASE("Tanh: functions", "[functions]")
     // REQUIRE(eq(*r1, *r2));
 
     REQUIRE(eq(*tanh(sub(x, y)), *neg(tanh(sub(y, x)))));
+
+    r1 = tanh(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.964027580075817)
+            < 1e-12);
+
+    RCP<const Tanh> r4 = make_rcp<Tanh>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Coth: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> im2 = integer(-2);
 
@@ -2127,6 +2452,20 @@ TEST_CASE("Coth: functions", "[functions]")
     REQUIRE(eq(*r1, *ComplexInf));
 
     REQUIRE(eq(*coth(sub(x, y)), *neg(coth(sub(y, x)))));
+
+    r1 = coth(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.03731472072755)
+            < 1e-12);
+
+    RCP<const Coth> r4 = make_rcp<Coth>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Asinh: functions", "[functions]")
@@ -2152,6 +2491,10 @@ TEST_CASE("Asinh: functions", "[functions]")
     r2 = log(add(sqrt(i2), im1));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = asinh(neg(i2));
+    r2 = asinh(i2);
+    REQUIRE(eq(*r1, *neg(r2)));
+
     r1 = asinh(mul(im1, x))->diff(x);
     r2 = div(im1, sqrt(add(pow(x, i2), one)));
     REQUIRE(eq(*r1, *r2));
@@ -2161,6 +2504,20 @@ TEST_CASE("Asinh: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     REQUIRE(eq(*asinh(sub(x, y)), *neg(asinh(sub(y, x)))));
+
+    r1 = asinh(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.81844645923207)
+            < 1e-12);
+
+    RCP<const ASinh> r4 = make_rcp<ASinh>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acsch: functions", "[functions]")
@@ -2187,6 +2544,19 @@ TEST_CASE("Acsch: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     REQUIRE(eq(*acsch(sub(x, y)), *neg(acsch(sub(y, x)))));
+
+    r1 = acsch(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.481211825059603)
+            < 1e-12);
+
+    RCP<const ACsch> r4 = make_rcp<ACsch>(i2);
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acosh: functions", "[functions]")
@@ -2211,6 +2581,27 @@ TEST_CASE("Acosh: functions", "[functions]")
     r1 = acosh(mul(i2, y))->diff(y);
     r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), im1)));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = acosh(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 1.31695789692482)
+            < 1e-12);
+
+    r1 = acosh(complex_double(std::complex<double>(1, 2)));
+    r2 = acosh(real_double(-1.0));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.90908861124732)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 3.14159265358979)
+            < 1e-12);
+
+    RCP<const ACosh> r4 = make_rcp<ACosh>(i2);
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Atanh: functions", "[functions]")
@@ -2240,6 +2631,10 @@ TEST_CASE("Atanh: functions", "[functions]")
     r2 = mul(im1, atanh(x));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = atanh(neg(i2));
+    r2 = atanh(i2);
+    REQUIRE(eq(*r1, *neg(r2)));
+
     r1 = atanh(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.549306144334055)
@@ -2257,6 +2652,13 @@ TEST_CASE("Atanh: functions", "[functions]")
             < 1e-12);
 
     REQUIRE(eq(*atanh(sub(x, y)), *neg(atanh(sub(y, x)))));
+
+    RCP<const ATanh> r4 = make_rcp<ATanh>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Acoth: functions", "[functions]")
@@ -2277,7 +2679,33 @@ TEST_CASE("Acoth: functions", "[functions]")
     r2 = mul(im1, acoth(x));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = acoth(neg(i2));
+    r2 = acoth(i2);
+    REQUIRE(eq(*r1, *neg(r2)));
+
     REQUIRE(eq(*acoth(sub(x, y)), *neg(acoth(sub(y, x)))));
+
+    r1 = acoth(real_double(3.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.346573590279973)
+            < 1e-12);
+
+    r1 = acoth(complex_double(std::complex<double>(1, 2)));
+    r2 = acoth(real_double(0.5));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 0.429232899644131)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 1.66407281705924)
+            < 1e-12);
+
+    RCP<const ACoth> r4 = make_rcp<ACoth>(i2);
+    REQUIRE(not(r4->is_canonical(neg(i2))));
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Asech: functions", "[functions]")
@@ -2316,6 +2744,12 @@ TEST_CASE("Asech: functions", "[functions]")
     r1 = asech(x)->diff(x);
     r2 = div(im1, mul(sqrt(sub(one, pow(x, i2))), x));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const ASech> r4 = make_rcp<ASech>(i2);
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Kronecker Delta: functions", "[functions]")
@@ -2373,6 +2807,12 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
     r1 = kronecker_delta(i, add(i, one));
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const KroneckerDelta> r4 = make_rcp<KroneckerDelta>(i2, i);
+    REQUIRE(not(r4->is_canonical(i2, i2)));
+    REQUIRE(not(r4->is_canonical(i, i)));
+    REQUIRE(not(r4->is_canonical(i2, add(i2, i2))));
+    REQUIRE(r4->is_canonical(i, j));
 }
 
 TEST_CASE("Zeta: functions", "[functions]")
@@ -2424,6 +2864,9 @@ TEST_CASE("Zeta: functions", "[functions]")
     r1 = zeta(x, i2);
     REQUIRE(r1->__str__() == "zeta(x, 2)");
 
+    r2 = zeta(s, x);
+    REQUIRE(r1->compare(*r2) == 1);
+
     r1 = zeta(i1, i2);
     REQUIRE(eq(*r1, *ComplexInf));
 
@@ -2466,6 +2909,12 @@ TEST_CASE("Zeta: functions", "[functions]")
                                               zeta(_xi_1, pow(i2, x)), {_xi_1}),
                                           {{_xi_1, pow(s, i3)}})));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const Zeta> r4 = make_rcp<Zeta>(i2, x);
+    REQUIRE(not(r4->is_canonical(zero, i2)));
+    REQUIRE(not(r4->is_canonical(one, i2)));
+    REQUIRE(not(r4->is_canonical(i2, add(i2, i2))));
+    REQUIRE(r4->is_canonical(x, y));
 }
 
 TEST_CASE("Levi Civita: functions", "[functions]")
@@ -2516,6 +2965,10 @@ TEST_CASE("Levi Civita: functions", "[functions]")
     r1 = levi_civita({j, j, k})->diff(j);
     REQUIRE(eq(*r1, *zero));
 
+    r1 = levi_civita({i, j, k});
+    r2 = levi_civita({j, k, x});
+    REQUIRE(r1->compare(*r2) == -1);
+
     r1 = levi_civita({pow(x, i2), y})->diff(x);
     r2 = mul(mul(i2, x),
              Subs::create(Derivative::create(levi_civita({_xi_1, y}), {_xi_1}),
@@ -2532,6 +2985,12 @@ TEST_CASE("Levi Civita: functions", "[functions]")
                                  levi_civita({pow(x, i2), _xi_2}), {_xi_2}),
                              {{_xi_2, mul(i2, x)}})));
     REQUIRE(eq(*r1, *r2));
+
+    vec_basic temp = {i2, i};
+    RCP<const LeviCivita> r4 = make_rcp<LeviCivita>(std::move(temp));
+    REQUIRE(not r4->is_canonical({i2, i2}));
+    REQUIRE(not(r4->is_canonical({i2, i, i})));
+    REQUIRE(r4->is_canonical({i2, i}));
 }
 
 TEST_CASE("Dirichlet Eta: functions", "[functions]")
@@ -2541,6 +3000,7 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     RCP<const Symbol> _xi_1 = symbol("_xi_1");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2583,6 +3043,15 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
              Subs::create(Derivative::create(dirichlet_eta(_xi_1), {_xi_1}),
                           {{_xi_1, pow(x, x)}}));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = make_rcp<Dirichlet_eta>(i3)->rewrite_as_zeta();
+    r2 = mul(sub(one, pow(i2, sub(one, i3))), zeta(i3));
+    REQUIRE(eq(*r1, *r2));
+
+    RCP<const Dirichlet_eta> r4 = make_rcp<Dirichlet_eta>(i3);
+    REQUIRE(not r4->is_canonical(one));
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(i2)));
 }
 
 TEST_CASE("Erf: functions", "[functions]")
@@ -2619,6 +3088,12 @@ TEST_CASE("Erf: functions", "[functions]")
 
     REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
     REQUIRE(eq(*erf(sub(x, y)), *neg(erf(sub(y, x)))));
+
+    RCP<const Erf> r4 = make_rcp<Erf>(i2);
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Erfc: functions", "[functions]")
@@ -2650,6 +3125,12 @@ TEST_CASE("Erfc: functions", "[functions]")
 
     REQUIRE(eq(*erfc(neg(x)), *sub(i2, erfc(x))));
     REQUIRE(eq(*erfc(sub(y, x)), *sub(i2, erfc(sub(x, y)))));
+
+    RCP<const Erfc> r4 = make_rcp<Erfc>(i2);
+    REQUIRE(not(r4->is_canonical(neg(x))));
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")
@@ -2688,6 +3169,14 @@ TEST_CASE("Gamma: functions", "[functions]")
     r2 = mul(mul(im1, i2), sqrt(pi));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = gamma(real_double(3.7));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 4.17065178379660)
+            < 1e-12);
+
+    CHECK_THROWS_AS(gamma(complex_double(std::complex<double>(1, 1))),
+                    NotImplementedError);
+
     r1 = gamma(div(integer(-15), i2));
     r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
     REQUIRE(eq(*r1, *r2));
@@ -2716,6 +3205,12 @@ TEST_CASE("Gamma: functions", "[functions]")
     r1 = gamma(add(x, y))->subs({{x, y}});
     r2 = gamma(add(y, y));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const Gamma> r4 = make_rcp<Gamma>(x);
+    REQUIRE(not(r4->is_canonical(i2)));
+    REQUIRE(r4->is_canonical(y));
+    REQUIRE(not(r4->is_canonical(div(one, i2))));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
 }
 
 TEST_CASE("LogGamma: functions", "[functions]")
@@ -2760,6 +3255,12 @@ TEST_CASE("LogGamma: functions", "[functions]")
     r1 = loggamma(add(y, mul(x, y)))->subs({{y, x}});
     r2 = loggamma(add(x, mul(x, x)));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const LogGamma> r4 = make_rcp<LogGamma>(x);
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(integer(2))));
+    REQUIRE(not(r4->is_canonical(integer(3))));
 }
 
 TEST_CASE("Lowergamma: functions", "[functions]")
@@ -2824,6 +3325,11 @@ TEST_CASE("Lowergamma: functions", "[functions]")
                      Derivative::create(lowergamma(_xi_1, pow(i2, x)), {_xi_1}),
                      {{_xi_1, pow(x, i2)}})));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const LowerGamma> r4 = make_rcp<LowerGamma>(x, y);
+    REQUIRE(not(r4->is_canonical(one, x)));
+    REQUIRE(not(r4->is_canonical(i2, y)));
+    REQUIRE(not(r4->is_canonical(div(one, i2), i2)));
 }
 
 TEST_CASE("Uppergamma: functions", "[functions]")
@@ -2891,6 +3397,11 @@ TEST_CASE("Uppergamma: functions", "[functions]")
                      Derivative::create(uppergamma(_xi_1, pow(i2, x)), {_xi_1}),
                      {{_xi_1, pow(x, i2)}})));
     REQUIRE(eq(*r1, *r2));
+
+    RCP<const UpperGamma> r4 = make_rcp<UpperGamma>(x, y);
+    REQUIRE(not(r4->is_canonical(one, x)));
+    REQUIRE(not(r4->is_canonical(i2, y)));
+    REQUIRE(not(r4->is_canonical(div(one, i2), i2)));
 }
 
 TEST_CASE("Beta: functions", "[functions]")
@@ -2964,6 +3475,10 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *ComplexInf));
     r1 = beta(one, r5_2);
     r2 = beta(r5_2, one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = make_rcp<Beta>(y, x)->rewrite_as_gamma();
+    r2 = div(mul(gamma(y), gamma(x)), gamma(add(x, y)));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -3146,6 +3661,7 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(neq(*abs(x)->diff(x), *integer(0)));
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
     REQUIRE(eq(*abs(sub(x, y)), *abs(sub(y, x))));
+    REQUIRE(eq(*abs(real_double(-1.0)), *real_double(1.0)));
 }
 
 class MySin : public FunctionWrapper
@@ -3189,6 +3705,20 @@ TEST_CASE("FunctionWrapper: functions", "[functions]")
     REQUIRE(std::fabs(d - 1.84147098480789) < 1e-12);
 
     REQUIRE(e->__str__() == "1 + MySin(x)");
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class aa(100);
+    eval_mpfr(aa.get_mpfr_t(), *f, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(aa.get_mpfr_t(), 1.8414709848078) == 1);
+    REQUIRE(mpfr_cmp_d(aa.get_mpfr_t(), 1.8414709848079) == -1);
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class a(100);
+    eval_mpc(a.get_mpc_t(), *f, MPFR_RNDN);
+    mpc_abs(aa.get_mpfr_t(), a.get_mpc_t(), MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(aa.get_mpfr_t(), 1.8414709848078) == 1);
+    REQUIRE(mpfr_cmp_d(aa.get_mpfr_t(), 1.8414709848079) == -1);
+#endif // HAVE_SYMENGINE_MPC
+#endif // HAVE_SYMENGINE_MPFR
 }
 /* ---------------------------- */
 
@@ -3197,31 +3727,84 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 #ifdef HAVE_SYMENGINE_MPFR
     RCP<const Basic> r1, r2;
     RCP<const Basic> i2 = integer(2);
-    integer_class p = 100000000000000000_z;
+    integer_class p = 1000000000000000_z;
     integer_class q;
 
-    mpfr_class a(60);
-    mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
-    r1 = sin(real_mpfr(a));
+    mpfr_class a(60), b1(60), b2(60), b3(60), b4(60), b5(60), b6(60);
+    mpfr_set_ui(b1.get_mpfr_t(), 1, MPFR_RNDN);
+    mpfr_set_ui(b2.get_mpfr_t(), 2, MPFR_RNDN);
+    mpfr_set_ui(b3.get_mpfr_t(), 3, MPFR_RNDN);
+    mpfr_set_d(b4.get_mpfr_t(), 2.2, MPFR_RNDN);
+    mpfr_set_d(b5.get_mpfr_t(), 0.5, MPFR_RNDN);
+    mpfr_set_d(b6.get_mpfr_t(), 0.4, MPFR_RNDN);
 
-    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
-    r2 = sin(sub(div(pi, i2), real_mpfr(a)));
-    REQUIRE(is_a<RealMPFR>(*r1));
-    REQUIRE(is_a<RealMPFR>(*r2));
+    std::vector<std::tuple<RCP<const Basic>, integer_class, integer_class>>
+        testvec = {
+            std::make_tuple(sin(real_mpfr(b1)), 841470984807896_z,
+                            841470984807897_z),
+            std::make_tuple(sin(sub(div(pi, i2), real_mpfr(b2))),
+                            -416146836547143_z, -416146836547142_z),
+            std::make_tuple(cos(real_mpfr(b1)), 540302305868139_z,
+                            540302305868140_z),
+            std::make_tuple(tan(real_mpfr(b1)), 1557407724654902_z,
+                            1557407724654903_z),
+            std::make_tuple(cot(real_mpfr(b2)), -457657554360286_z,
+                            -457657554360285_z),
+            std::make_tuple(sec(real_mpfr(b3)), -1010108665907994_z,
+                            -1010108665907993_z),
+            std::make_tuple(csc(real_mpfr(b4)), 1236863881243858_z,
+                            1236863881243859_z),
 
-    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
-               get_mpz_t(p), MPFR_RNDN);
-    q = 84147098480789650_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 84147098480789651_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+            std::make_tuple(asin(real_mpfr(b1)), 1570796326794896_z,
+                            1570796326794897_z),
+            std::make_tuple(acos(real_mpfr(b5)), 1047197551196597_z,
+                            1047197551196598_z),
+            std::make_tuple(atan(real_mpfr(b4)), 1144168833668020_z,
+                            1144168833668021_z),
+            std::make_tuple(acot(real_mpfr(b5)), 1107148717794090_z,
+                            1107148717794091_z),
+            std::make_tuple(asec(real_mpfr(b3)), 1230959417340774_z,
+                            1230959417340775_z),
+            std::make_tuple(acsc(real_mpfr(b3)), 339836909454121_z,
+                            339836909454122_z),
 
-    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r2).i.get_mpfr_t(),
-               get_mpz_t(p), MPFR_RNDN);
-    q = -41614683654714239_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = -41614683654714238_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+            std::make_tuple(sinh(real_mpfr(b2)), 3626860407847018_z,
+                            3626860407847019_z),
+            std::make_tuple(cosh(real_mpfr(b2)), 3762195691083631_z,
+                            3762195691083632_z),
+            std::make_tuple(tanh(real_mpfr(b1)), 761594155955764_z,
+                            761594155955765_z),
+            std::make_tuple(coth(real_mpfr(b4)), 1024859893164471_z,
+                            1024859893164472_z),
+            std::make_tuple(sech(real_mpfr(b5)), 886818883970073_z,
+                            886818883970074_z),
+            std::make_tuple(csch(real_mpfr(b4)), 224360871403841_z,
+                            2243608714038412_z),
+
+            std::make_tuple(asinh(real_mpfr(b1)), 881373587019543_z,
+                            881373587019544_z),
+            std::make_tuple(acosh(real_mpfr(b2)), 1316957896924816_z,
+                            1316957896924817_z),
+            std::make_tuple(atanh(real_mpfr(b5)), 549306144334054_z,
+                            549306144334055_z),
+            std::make_tuple(acoth(real_mpfr(b4)), 490414626505863_z,
+                            490414626505864_z),
+            std::make_tuple(asech(real_mpfr(b6)), 1566799236972411_z,
+                            1566799236972412_z),
+            std::make_tuple(acsch(real_mpfr(b4)), 440191235352683_z,
+                            440191235352684_z),
+
+            std::make_tuple(log(real_mpfr(b4)), 788457360364270,
+                            788457360364271),
+            std::make_tuple(gamma(div(real_mpfr(b3), i2)), 886226925452758_z,
+                            886226925452759_z),
+            std::make_tuple(exp(real_mpfr(b4)), 9025013499434122_z,
+                            9025013499434123_z),
+            std::make_tuple(erf(real_mpfr(b2)), 995322265018952_z,
+                            995322265018953_z),
+            std::make_tuple(erfc(real_mpfr(b2)), 4677734981047_z,
+                            4677734981048_z),
+        };
 
     mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
     r1 = asech(real_mpfr(a));
@@ -3232,119 +3815,138 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     q = 0_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) == 0);
 
-    mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
-    r1 = gamma(div(real_mpfr(a), i2));
-    REQUIRE(is_a<RealMPFR>(*r1));
-    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
-               get_mpz_t(p), MPFR_RNDN);
-    q = 88622692545275801_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 88622692545275802_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+    mpfr_set_si(a.get_mpfr_t(), -22, MPFR_RNDN);
+    r1 = abs(real_mpfr(a));
+    q = 22_z;
+    REQUIRE(mpfr_cmp_z(down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+                       get_mpz_t(q))
+            == 0);
 
-    mpfr_set_si(a.get_mpfr_t(), 0, MPFR_RNDN);
-    r1 = asin(real_mpfr(a));
-    REQUIRE(is_a<RealMPFR>(*r1));
+    mpfr_set_si(a.get_mpfr_t(), -3, MPFR_RNDN);
+    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError);
 
-    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
-    r1 = erf(real_mpfr(a));
-
-    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
-    r2 = erfc(real_mpfr(a));
-    REQUIRE(is_a<RealMPFR>(*r1));
-    REQUIRE(is_a<RealMPFR>(*r2));
-
-    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
-               get_mpz_t(p), MPFR_RNDN);
-    q = 99532226501895273_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 99532226501895274_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
-
-    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r2).i.get_mpfr_t(),
-               get_mpz_t(p), MPFR_RNDN);
-    q = 467773498104726_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 467773498104727_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+    for (unsigned i = 0; i < testvec.size(); i++) {
+        r1 = std::get<0>(testvec[i]);
+        REQUIRE(is_a<RealMPFR>(*r1));
+        mpfr_mul_z(a.get_mpfr_t(),
+                   down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+                   get_mpz_t(p), MPFR_RNDN);
+        REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<1>(testvec[i])))
+                > 0);
+        REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<2>(testvec[i])))
+                < 0);
+    }
+    testvec.clear();
 
 #ifdef HAVE_SYMENGINE_MPC
-    // Check asin(2.0)
-    mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    r1 = asin(real_mpfr(a));
-    REQUIRE(is_a<ComplexMPC>(*r1));
-    mpc_srcptr b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
-    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 157079632679489661_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 157079632679489662_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
-    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 131695789692481670_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 131695789692481671_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
-    // Check asin(1.0 + 1.0*I)
-    mpc_class c(60);
-    mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
-    r1 = asin(complex_mpc(c));
-    REQUIRE(is_a<ComplexMPC>(*r1));
-    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
-    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 66623943249251525_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 66623943249251526_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
-    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 106127506190503565_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 106127506190503566_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+    mpc_srcptr b;
+    mpc_class c(60), d1(60), d2(60), d3(60);
+    mpc_set_si_si(d1.get_mpc_t(), 1, 1, MPFR_RNDN);
+    mpc_set_si_si(d2.get_mpc_t(), 2, 3, MPFR_RNDN);
+    mpc_set_si_si(d3.get_mpc_t(), 4, 5, MPFR_RNDN);
 
-    // Check asech(2)
-    mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    r1 = asech(real_mpfr(a));
-    REQUIRE(is_a<ComplexMPC>(*r1));
-    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
-    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 0_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) == 0);
+    testvec = {
+        std::make_tuple(asin(real_mpfr(b2)), 2049824188203704_z,
+                        2049824188203705_z),
+        std::make_tuple(acos(real_mpfr(b2)), 1316957896924816_z,
+                        1316957896924817_z),
+        std::make_tuple(asec(real_mpfr(b6)), 1566799236972411_z,
+                        1566799236972412_z),
+        std::make_tuple(acsc(real_mpfr(b6)), 2218616900064017_z,
+                        2218616900064018_z),
+        std::make_tuple(acosh(real_mpfr(b5)), 1047197551196597_z,
+                        1047197551196598_z),
+        std::make_tuple(atanh(real_mpfr(b2)), 1664072817059243_z,
+                        1664072817059244_z),
+        std::make_tuple(acoth(real_mpfr(b6)), 1626923328349102_z,
+                        1626923328349103_z),
+        std::make_tuple(asech(real_mpfr(b2)), 1047197551196597_z,
+                        1047197551196598_z),
+        std::make_tuple(log(sub(real_mpfr(b1), real_mpfr(b3))),
+                        3217150511711809_z, 3217150511711810_z),
 
-    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 104719755119659774_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 104719755119659775_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+        std::make_tuple(sin(complex_mpc(d2)), 10059057603556098_z,
+                        10059057603556099_z),
+        std::make_tuple(cos(complex_mpc(d2)), 10026514661176940_z,
+                        10026514661176941_z),
+        std::make_tuple(tan(complex_mpc(d2)), 1003245688405081_z,
+                        1003245688405082_z),
+        std::make_tuple(csc(complex_mpc(d2)), 99412891287795_z,
+                        99412891287796_z),
+        std::make_tuple(sec(complex_mpc(d2)), 99735554556364_z,
+                        99735554556365_z),
+        std::make_tuple(cot(complex_mpc(d2)), 996764812007075_z,
+                        996764812007076_z),
 
-    // Check asech(2+2*I)
-    mpc_set_si_si(c.get_mpc_t(), 2, 2, MPFR_RNDN);
-    r1 = asech(complex_mpc(c));
-    REQUIRE(is_a<ComplexMPC>(*r1));
-    b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
-    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = 25489557334055081_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = 25489557334055082_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+        std::make_tuple(asin(complex_mpc(d2)), 2063848034787096_z,
+                        2063848034787097_z),
+        std::make_tuple(acos(complex_mpc(d3)), 2706069014027540_z,
+                        2706069014027541_z),
+        std::make_tuple(atan(complex_mpc(d2)), 1428408786089582_z,
+                        1428408786089583_z),
+        std::make_tuple(acsc(complex_mpc(d2)), 275919504119167_z,
+                        275919504119168_z),
+        std::make_tuple(asec(complex_mpc(d2)), 1439125555072813_z,
+                        1439125555072814_z),
+        std::make_tuple(acot(complex_mpc(d3)), 156440457398915_z,
+                        156440457398916_z),
 
-    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
-    q = -132627416165935648_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
-    q = -132627416165935647_z;
-    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+        std::make_tuple(sinh(complex_mpc(d2)), 3629604837263012_z,
+                        3629604837263013_z),
+        std::make_tuple(cosh(complex_mpc(d3)), 27291391405744611_z,
+                        27291391405744612_z),
+        std::make_tuple(tanh(complex_mpc(d2)), 965436479673952_z,
+                        965436479673953_z),
+        std::make_tuple(csch(complex_mpc(d2)), 275512085980707_z,
+                        275512085980708_z),
+        std::make_tuple(sech(complex_mpc(d2)), 265989418396841_z,
+                        265989418396842_z),
+        std::make_tuple(coth(complex_mpc(d3)), 999437204152625_z,
+                        999437204152626_z),
+
+        std::make_tuple(asinh(complex_mpc(d2)), 2192282215636676_z,
+                        2192282215636677_z),
+        std::make_tuple(acosh(complex_mpc(d2)), 2221285937468018_z,
+                        2221285937468019_z),
+        std::make_tuple(atanh(complex_mpc(d3)), 1451512702064822_z,
+                        1451512702064823_z),
+        std::make_tuple(acsch(complex_mpc(d3)), 156308000814648_z,
+                        156308000814649_z),
+        std::make_tuple(acoth(complex_mpc(d3)), 155883315867942_z,
+                        155883315867943_z),
+        std::make_tuple(asech(complex_mpc(d2)), 1439125555072813_z,
+                        1439125555072814_z),
+
+        std::make_tuple(log(complex_mpc(d2)), 1615742802564794_z,
+                        1615742802564795_z),
+        std::make_tuple(exp(complex_mpc(d1)), 2718281828459045_z,
+                        2718281828459046_z),
+    };
+
+    r1 = abs(complex_mpc(d2));
+    REQUIRE(is_a<RealMPFR>(*r1));
+    mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
+               get_mpz_t(p), MPFR_RNDN);
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(3605551275463989_z)) == 1);
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(3605551275463990_z)) == -1);
+
+    for (unsigned i = 0; i < testvec.size(); i++) {
+        r1 = std::get<0>(testvec[i]);
+        REQUIRE(is_a<ComplexMPC>(*r1));
+        b = down_cast<const ComplexMPC &>(*r1).as_mpc().get_mpc_t();
+        mpc_abs(a.get_mpfr_t(), b, MPFR_RNDN);
+        mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+        REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<1>(testvec[i])))
+                > 0);
+        REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<2>(testvec[i])))
+                < 0);
+    }
 
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError);
     CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError);
+    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);

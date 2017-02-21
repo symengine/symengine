@@ -418,9 +418,6 @@ public:
                 }
                 if (last_char_was_op and operator_error(last_char, x))
                     throw ParseError("Operator inconsistency!");
-                if (last_char_was_op and operator_error(last_char, x)) {
-                    throw SymEngineException("Operator inconsistency!");
-                }
                 last_char_was_op = true;
 
             } else if (s[i] == ' ') {
