@@ -116,7 +116,7 @@ TEST_CASE("Add: arit", "[arit]")
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.2));
-    CHECK(is_a<RealDouble>(*r3));
+    REQUIRE(is_a<RealDouble>(*r3));
     CHECK(std::abs(down_cast<const RealDouble &>(*r3).i - 1.8) < 1e-12);
     r3 = add({r1, r2, integer(1), real_double(0.2)});
     CHECK(std::abs(down_cast<const RealDouble &>(*r3).i - 1.8) < 1e-12);
@@ -125,13 +125,13 @@ TEST_CASE("Add: arit", "[arit]")
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.4));
-    CHECK(is_a<ComplexDouble>(*r3));
+    REQUIRE(is_a<ComplexDouble>(*r3));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() - 2.0)
           < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 1.6)
           < 1e-12);
     r3 = add({r1, r2, integer(1), real_double(0.4)});
-    CHECK(is_a<ComplexDouble>(*r3));
+    REQUIRE(is_a<ComplexDouble>(*r3));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() - 2.0)
           < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 1.6)
@@ -279,7 +279,7 @@ TEST_CASE("Mul: arit", "[arit]")
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = mul(mul(mul(r1, r2), integer(3)), real_double(0.2));
-    CHECK(is_a<RealDouble>(*r2));
+    REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 0.03) < 1e-12);
     r2 = mul({r1, Rational::from_mpq(rational_class(1, 2)), integer(3),
               real_double(0.2)});
@@ -289,15 +289,15 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
-    CHECK(is_a<ComplexDouble>(*r3));
-    CHECK(down_cast<const ComplexDouble &>(*r3).is_complex());
-    CHECK(not down_cast<const ComplexDouble &>(*r3).is_minus_one());
+    REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(down_cast<const ComplexDouble &>(*r3).is_complex());
+    REQUIRE(not down_cast<const ComplexDouble &>(*r3).is_minus_one());
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() + 0.805)
           < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 0.84)
           < 1e-12);
     r3 = mul({r1, r2, integer(5), real_double(0.7)});
-    CHECK(is_a<ComplexDouble>(*r3));
+    REQUIRE(is_a<ComplexDouble>(*r3));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() + 0.805)
           < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r3).i.imag() - 0.84)
@@ -497,11 +497,11 @@ TEST_CASE("Mul: arit", "[arit]")
         std::complex<double>(0.27395725383012, 0.58370075875861));
     s3 = Complex::from_two_nums(*integer(1), *integer(1))->pow(*s1);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*s3).i.real()
-                     - down_cast<const ComplexDouble &>(*s2).i.real())
-            < 1e-12);
+                   - down_cast<const ComplexDouble &>(*s2).i.real())
+          < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
-                     - down_cast<const ComplexDouble &>(*s2).i.imag())
-            < 1e-12);
+                   - down_cast<const ComplexDouble &>(*s2).i.imag())
+          < 1e-12);
 
     s2 = complex_double(std::complex<double>(0.0, 0.0));
     s3 = complex_double(std::complex<double>(1.0, 0.0));
@@ -581,7 +581,7 @@ TEST_CASE("Sub: arit", "[arit]")
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r2 = sub(sub(sub(r1, r2), integer(1)), real_double(0.4));
-    CHECK(is_a<ComplexDouble>(*r2));
+    REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r2).i.real() + 1.8)
           < 1e-12);
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r2).i.imag() + 1.4)
@@ -688,7 +688,7 @@ TEST_CASE("Div: arit", "[arit]")
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = div(div(div(r1, r2), integer(3)), real_double(0.2));
-    CHECK(is_a<RealDouble>(*r2));
+    REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 0.333333333333)
           < 1e-12);
 
@@ -696,7 +696,7 @@ TEST_CASE("Div: arit", "[arit]")
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r2 = div(div(div(r1, r2), integer(2)), real_double(0.4));
-    CHECK(is_a<ComplexDouble>(*r2));
+    REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r2).i.real()
                    - 0.0282805429864253)
           < 1e-12);
@@ -946,25 +946,25 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = pow(r1, r2);
-    CHECK(is_a<RealDouble>(*r2));
+    REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 0.316227766016)
           < 1e-12);
     r2 = pow(pow(r2, integer(3)), real_double(0.2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 0.501187233627)
           < 1e-12);
     r2 = pow(E, real_double(0.2));
-    CHECK(is_a<RealDouble>(*r2));
+    REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 1.22140275816017)
           < 1e-12);
     r2 = exp(x)->subs({{x, real_double(1.0)}});
-    CHECK(is_a<RealDouble>(*r2));
+    REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 2.71828182845905)
           < 1e-12);
 
     r1 = real_double(-0.01);
     r2 = pow(r1, Rational::from_mpq(rational_class(1, 2)));
     r2 = pow(integer(2), r2);
-    CHECK(is_a<ComplexDouble>(*r2));
+    REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(down_cast<const ComplexDouble &>(*r2).i.real()
                    - 0.997598696589298)
           < 1e-12);
@@ -1073,18 +1073,18 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = log(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.693147180559945)
-            < 1e-12);
+          < 1e-12);
 
     r1 = log(complex_double(std::complex<double>(1, 2)));
     r2 = log(real_double(-3.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.36870408847499)
-            < 1e-12);
+                   - 1.36870408847499)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 3.32814563411849)
-            < 1e-12);
+                   - 3.32814563411849)
+          < 1e-12);
 
     // Test is_canonical()
     RCP<const Log> r4 = make_rcp<Log>(i2);
@@ -1319,10 +1319,10 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = real_double(0.2);
     r1 = add(r1, x);
     r2 = expand(pow(r1, i2));
-    CHECK(is_a<Add>(*r2));
+    REQUIRE(is_a<Add>(*r2));
     auto it = down_cast<const Add &>(*r2).get_dict().find(x);
-    CHECK(it != down_cast<const Add &>(*r2).get_dict().end());
-    CHECK(is_a<RealDouble>(*it->second));
+    REQUIRE(it != down_cast<const Add &>(*r2).get_dict().end());
+    REQUIRE(is_a<RealDouble>(*it->second));
     CHECK(std::abs(down_cast<const RealDouble &>(*(it->second)).i - 0.4)
           < 1e-12);
 

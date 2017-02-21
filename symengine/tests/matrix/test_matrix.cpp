@@ -181,7 +181,7 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
     mul_dense_dense(A, B, A);
 
     CHECK(A == DenseMatrix(2, 2,
-                             {integer(1), integer(2), integer(3), integer(4)}));
+                           {integer(1), integer(2), integer(3), integer(4)}));
 
     A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
     B = DenseMatrix(4, 1, {integer(1), integer(2), integer(3), integer(4)});

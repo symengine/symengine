@@ -37,11 +37,11 @@ TEST_CASE("Rational", "[rational]")
     CHECK(eq(*q10_25, *q));
     CHECK(not q10_25->is_complex());
 
-    CHECK(is_a<Integer>(*r1));
+    REQUIRE(is_a<Integer>(*r1));
     CHECK(r1->__eq__(*integer(2)));
 
     r1 = rational(9, 3);
-    CHECK(is_a<Integer>(*r1));
+    REQUIRE(is_a<Integer>(*r1));
     CHECK(r1->__eq__(*integer(3)));
 
     r1 = q->div(*r2);

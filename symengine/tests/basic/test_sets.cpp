@@ -53,9 +53,9 @@ TEST_CASE("Interval : Basic", "[basic]")
     r1 = interval(zero, i20); // [0, 20]
     r2 = interval(im5, i2);   // [-5, 2]
 
-    CHECK(is_a<Interval>(*r1));
-    CHECK(not is_a<EmptySet>(*r1));
-    CHECK(not is_a<UniversalSet>(*r1));
+    REQUIRE(is_a<Interval>(*r1));
+    REQUIRE(not is_a<EmptySet>(*r1));
+    REQUIRE(not is_a<UniversalSet>(*r1));
 
     r3 = r1->set_intersection(r2); // [0, 2]
     CHECK(eq(*r1->contains(one), *boolTrue));

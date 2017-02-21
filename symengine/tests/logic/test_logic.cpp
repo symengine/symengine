@@ -80,7 +80,7 @@ TEST_CASE("Contains", "[logic]")
     CHECK(eq(*p, *boolFalse));
 
     p = contains(x, int1);
-    CHECK(is_a<Contains>(*p));
+    REQUIRE(is_a<Contains>(*p));
     CHECK(p->__str__() == "Contains(x, [1, 2])");
     CHECK(eq(*p, *p));
 
@@ -255,7 +255,7 @@ TEST_CASE("Xor : Basic", "[basic]")
     CHECK(eq(*logical_xor({boolTrue}), *boolTrue));
     CHECK(eq(*logical_xor({boolFalse}), *boolFalse));
     CHECK(eq(*logical_xor({boolFalse, boolFalse, boolFalse, boolTrue}),
-               *boolTrue));
+             *boolTrue));
     CHECK(eq(*logical_xor({boolTrue, boolTrue}), *boolFalse));
     CHECK(eq(*logical_xor({boolTrue, boolTrue, boolTrue}), *boolTrue));
     CHECK(eq(*logical_xor({boolFalse, boolFalse}), *boolFalse));
@@ -280,16 +280,15 @@ TEST_CASE("Xor : Basic", "[basic]")
     auto c4 = contains(y, int2);
     CHECK(eq(*logical_xor({c1, c1, c2}), *c2));
     CHECK(eq(*logical_xor({logical_xor({c1, c2}), logical_xor({c3, c4})}),
-               *logical_xor({c1, c2, c3, c4})));
+             *logical_xor({c1, c2, c3, c4})));
 
     CHECK(eq(*logical_xor({boolTrue, c1, p}), *logical_not(c2)));
     CHECK(eq(*logical_xor({boolTrue, logical_not(c2), p}), *c1));
     CHECK(eq(*logical_xor({boolTrue, c1}), *logical_not(c1)));
     CHECK(eq(*logical_xor({boolTrue, c1, c1, c1}), *logical_not(c1)));
     CHECK(eq(*logical_xor({boolTrue, c1, c2}), *logical_xnor({c1, c2})));
-    CHECK(
-        eq(*logical_xor({boolTrue, c1, logical_not(c1), c2, logical_not(c2)}),
-           *boolTrue));
+    CHECK(eq(*logical_xor({boolTrue, c1, logical_not(c1), c2, logical_not(c2)}),
+             *boolTrue));
     CHECK(eq(*logical_xor({boolTrue, c1, c1}), *boolTrue));
     CHECK(eq(*logical_xor({c1, c1}), *boolFalse));
     CHECK(eq(*logical_xor({boolFalse, c2}), *(c2)));
@@ -304,7 +303,7 @@ TEST_CASE("Xnor : Basic", "[basic]")
     CHECK(eq(*logical_xnor({boolTrue}), *boolFalse));
     CHECK(eq(*logical_xnor({boolFalse}), *boolTrue));
     CHECK(eq(*logical_xnor({boolFalse, boolFalse, boolFalse, boolTrue}),
-               *boolFalse));
+             *boolFalse));
     CHECK(eq(*logical_xnor({boolTrue, boolTrue}), *boolTrue));
     CHECK(eq(*logical_xnor({boolTrue, boolTrue, boolTrue}), *boolFalse));
 

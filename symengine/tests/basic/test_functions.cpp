@@ -296,9 +296,9 @@ TEST_CASE("Sin: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.841470984807897)
-            < 1e-12);
+          < 1e-12);
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i + 0.416146836547142)
-            < 1e-12);
+          < 1e-12);
 
     // Test is_canonical()
     RCP<const Sin> r4 = make_rcp<Sin>(i2); // dummy Sin
@@ -418,9 +418,9 @@ TEST_CASE("Cos: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.540302305868140)
-            < 1e-12);
+          < 1e-12);
     CHECK(std::abs(down_cast<const RealDouble &>(*r2).i - 0.909297426825682)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Cos> r4 = make_rcp<Cos>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -541,7 +541,7 @@ TEST_CASE("Tan: functions", "[functions]")
     r1 = tan(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i + 0.142546543074278)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Tan> r4 = make_rcp<Tan>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -658,7 +658,7 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i + 0.457657554360286)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Cot> r4 = make_rcp<Cot>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -777,7 +777,7 @@ TEST_CASE("Csc: functions", "[functions]")
     r1 = csc(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 7.08616739573719)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Csc> r4 = make_rcp<Csc>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -898,7 +898,7 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i + 1.01010866590799)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Sec> r4 = make_rcp<Sec>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -1234,7 +1234,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     // arg = k + n*pi
     r = add(i3, mul(i2, pi));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    CHECK(b == true);
+    REQUIRE(b == true);
     CHECK(eq(*n, *integer(2)));
     CHECK(eq(*r1, *i3));
 
@@ -1267,21 +1267,21 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     // arg = theta + n*pi (theta is just another symbol)
     r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    CHECK(b == true);
+    REQUIRE(b == true);
     CHECK(eq(*n, *div(i2, integer(3))));
     CHECK(eq(*r1, *mul(i2, x)));
 
     // arg = theta + n*pi (theta is constant plus a symbol)
     r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    CHECK(b == true);
+    REQUIRE(b == true);
     CHECK(eq(*n, *div(i2, integer(3))));
     CHECK(eq(*r1, *add(i2, x)));
 
     // arg = theta + n*pi (theta is an expression)
     r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    CHECK(b == true);
+    REQUIRE(b == true);
     CHECK(eq(*n, *div(i2, integer(3))));
     CHECK(eq(*r1, *add(i2, mul(x, i2))));
 
@@ -1303,7 +1303,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = add(add(mul(i2, x), mul(i2, symbol("y"))),
             mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    CHECK(b == true);
+    REQUIRE(b == true);
     CHECK(eq(*n, *div(i2, integer(3))));
     CHECK(eq(*r1, *add(mul(i2, x), mul(i2, symbol("y")))));
 }
@@ -1704,7 +1704,7 @@ TEST_CASE("Asin: functions", "[functions]")
     CHECK(eq(*r1, *r2));
 
     r1 = asin(real_double(0.5));
-    CHECK(is_a<RealDouble>(*r1));
+    REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.523598775598299)
           < 1e-12);
 
@@ -1713,11 +1713,11 @@ TEST_CASE("Asin: functions", "[functions]")
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.2530681300031)
-            < 1e-10);
+                   - 1.2530681300031)
+          < 1e-10);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 2.0498241882037)
-            < 1e-10);
+                   - 2.0498241882037)
+          < 1e-10);
 
     RCP<const ASin> r4 = make_rcp<ASin>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -1784,18 +1784,18 @@ TEST_CASE("Acos: functions", "[functions]")
     r1 = acos(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.04719755119660)
-            < 1e-12);
+          < 1e-12);
 
     r1 = acos(complex_double(std::complex<double>(1, 2)));
     r2 = acos(real_double(4.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.90908861124732)
-            < 1e-12);
+                   - 1.90908861124732)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 2.06343706889556)
-            < 1e-12);
+                   - 2.06343706889556)
+          < 1e-12);
 
     RCP<const ACos> r4 = make_rcp<ACos>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -1861,18 +1861,18 @@ TEST_CASE("Asec: functions", "[functions]")
     r1 = asec(real_double(-2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 2.09439510239320)
-            < 1e-12);
+          < 1e-12);
 
     r1 = asec(complex_double(std::complex<double>(1, 2)));
     r2 = asec(real_double(0.5));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.44015500855881)
-            < 1e-12);
+                   - 1.44015500855881)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 1.31695789692482)
-            < 1e-12);
+                   - 1.31695789692482)
+          < 1e-12);
 
     RCP<const ASec> r4 = make_rcp<ASec>(i5);
     CHECK(not(r4->is_canonical(one)));
@@ -1930,18 +1930,18 @@ TEST_CASE("Acsc: functions", "[functions]")
     r1 = acsc(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.523598775598299)
-            < 1e-12);
+          < 1e-12);
 
     r1 = acsc(complex_double(std::complex<double>(1, 2)));
     r2 = acsc(real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 0.438156111929239)
-            < 1e-12);
+                   - 0.438156111929239)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 2.21861690006402)
-            < 1e-12);
+                   - 2.21861690006402)
+          < 1e-12);
 
     RCP<const ACsc> r4 = make_rcp<ACsc>(i5);
     CHECK(not(r4->is_canonical(one)));
@@ -2006,7 +2006,7 @@ TEST_CASE("atan: functions", "[functions]")
     r1 = atan(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.24904577239825)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const ATan> r4 = make_rcp<ATan>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2073,7 +2073,7 @@ TEST_CASE("Acot: functions", "[functions]")
     r1 = acot(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.463647609000806)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const ACot> r4 = make_rcp<ACot>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2242,7 +2242,7 @@ TEST_CASE("Sinh: functions", "[functions]")
     r1 = sinh(real_double(1.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.1752011936438)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Sinh> r4 = make_rcp<Sinh>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2282,7 +2282,7 @@ TEST_CASE("Csch: functions", "[functions]")
     r1 = csch(real_double(1.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.850918128239322)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Csch> r4 = make_rcp<Csch>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2324,7 +2324,7 @@ TEST_CASE("Cosh: functions", "[functions]")
     r1 = cosh(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 3.76219569108363)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Cosh> r4 = make_rcp<Cosh>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2366,7 +2366,7 @@ TEST_CASE("Sech: functions", "[functions]")
     r1 = sech(real_double(4.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.0366189934736865)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Sech> r4 = make_rcp<Sech>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2411,7 +2411,7 @@ TEST_CASE("Tanh: functions", "[functions]")
     r1 = tanh(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.964027580075817)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Tanh> r4 = make_rcp<Tanh>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2454,7 +2454,7 @@ TEST_CASE("Coth: functions", "[functions]")
     r1 = coth(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.03731472072755)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const Coth> r4 = make_rcp<Coth>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2506,7 +2506,7 @@ TEST_CASE("Asinh: functions", "[functions]")
     r1 = asinh(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.81844645923207)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const ASinh> r4 = make_rcp<ASinh>(i2);
     CHECK(not(r4->is_canonical(zero)));
@@ -2546,7 +2546,7 @@ TEST_CASE("Acsch: functions", "[functions]")
     r1 = acsch(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.481211825059603)
-            < 1e-12);
+          < 1e-12);
 
     RCP<const ACsch> r4 = make_rcp<ACsch>(i2);
     CHECK(not(r4->is_canonical(one)));
@@ -2583,18 +2583,18 @@ TEST_CASE("Acosh: functions", "[functions]")
     r1 = acosh(real_double(2.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.31695789692482)
-            < 1e-12);
+          < 1e-12);
 
     r1 = acosh(complex_double(std::complex<double>(1, 2)));
     r2 = acosh(real_double(-1.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.90908861124732)
-            < 1e-12);
+                   - 1.90908861124732)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 3.14159265358979)
-            < 1e-7);
+                   - 3.14159265358979)
+          < 1e-7);
 
     RCP<const ACosh> r4 = make_rcp<ACosh>(i2);
     CHECK(not(r4->is_canonical(one)));
@@ -2634,7 +2634,7 @@ TEST_CASE("Atanh: functions", "[functions]")
     CHECK(eq(*r1, *neg(r2)));
 
     r1 = atanh(real_double(0.5));
-    CHECK(is_a<RealDouble>(*r1));
+    REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.549306144334055)
           < 1e-12);
 
@@ -2643,11 +2643,11 @@ TEST_CASE("Atanh: functions", "[functions]")
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 1.09390752881482)
-            < 1e-12);
+                   - 1.09390752881482)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 1.66407281705924)
-            < 1e-12);
+                   - 1.66407281705924)
+          < 1e-12);
 
     CHECK(eq(*atanh(sub(x, y)), *neg(atanh(sub(y, x)))));
 
@@ -2686,18 +2686,18 @@ TEST_CASE("Acoth: functions", "[functions]")
     r1 = acoth(real_double(3.0));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.346573590279973)
-            < 1e-12);
+          < 1e-12);
 
     r1 = acoth(complex_double(std::complex<double>(1, 2)));
     r2 = acoth(real_double(0.5));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
-                     - 0.429232899644131)
-            < 1e-12);
+                   - 0.429232899644131)
+          < 1e-12);
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
-                     - 1.66407281705924)
-            < 1e-12);
+                   - 1.66407281705924)
+          < 1e-12);
 
     RCP<const ACoth> r4 = make_rcp<ACoth>(i2);
     CHECK(not(r4->is_canonical(neg(i2))));
@@ -2723,18 +2723,18 @@ TEST_CASE("Asech: functions", "[functions]")
     CHECK(eq(*r1, *Inf));
 
     r1 = asech(real_double(0.5));
-    CHECK(is_a<RealDouble>(*r1));
+    REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 1.31695789692482)
           < 1e-12);
 
     r1 = asech(real_double(-0.5));
-    CHECK(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r1));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
                    - 3.40646187463796)
           < 1e-12);
 
     r1 = asech(complex_double(std::complex<double>(1, 1)));
-    CHECK(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r1));
     CHECK(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
                    - 1.2380058304943624757)
           < 1e-12);
@@ -3066,7 +3066,7 @@ TEST_CASE("Erf: functions", "[functions]")
     CHECK(eq(*r1, *zero));
 
     r1 = erf(real_double(1.0));
-    CHECK(is_a<RealDouble>(*r1));
+    REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.84270079294971)
           < 1e-12);
 
@@ -3109,7 +3109,7 @@ TEST_CASE("Erfc: functions", "[functions]")
     CHECK(eq(*r1, *one));
 
     r1 = erfc(real_double(1.0));
-    CHECK(is_a<RealDouble>(*r1));
+    REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 0.15729920705028)
           < 1e-12);
 
@@ -3170,7 +3170,7 @@ TEST_CASE("Gamma: functions", "[functions]")
     r1 = gamma(real_double(3.7));
     REQUIRE(is_a<RealDouble>(*r1));
     CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 4.17065178379660)
-            < 1e-12);
+          < 1e-12);
 
     CHECK_THROWS_AS(gamma(complex_double(std::complex<double>(1, 1))),
                     NotImplementedError);
@@ -3806,7 +3806,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 
     mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
     r1 = asech(real_mpfr(a));
-    CHECK(is_a<RealMPFR>(*r1));
+    REQUIRE(is_a<RealMPFR>(*r1));
 
     mpfr_mul_z(a.get_mpfr_t(), down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
                get_mpz_t(p), MPFR_RNDN);
@@ -3817,8 +3817,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     r1 = abs(real_mpfr(a));
     q = 22_z;
     CHECK(mpfr_cmp_z(down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
-                       get_mpz_t(q))
-            == 0);
+                     get_mpz_t(q))
+          == 0);
 
     mpfr_set_si(a.get_mpfr_t(), -3, MPFR_RNDN);
     CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError);
@@ -3830,9 +3830,9 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
                    down_cast<const RealMPFR &>(*r1).i.get_mpfr_t(),
                    get_mpz_t(p), MPFR_RNDN);
         CHECK(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<1>(testvec[i])))
-                > 0);
+              > 0);
         CHECK(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<2>(testvec[i])))
-                < 0);
+              < 0);
     }
     testvec.clear();
 
@@ -3936,9 +3936,9 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
         mpc_abs(a.get_mpfr_t(), b, MPFR_RNDN);
         mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
         CHECK(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<1>(testvec[i])))
-                > 0);
+              > 0);
         CHECK(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(std::get<2>(testvec[i])))
-                < 0);
+              < 0);
     }
 
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);

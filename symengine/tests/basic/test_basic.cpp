@@ -503,10 +503,10 @@ TEST_CASE("Mul: Basic", "[basic]")
     CHECK(eq(*mr->get_coef(), *integer(6)));
     const map_basic_basic &mulmap = mr->get_dict();
     auto search = mulmap.find(x);
-    CHECK(search != mulmap.end());
+    REQUIRE(search != mulmap.end());
     CHECK(eq(*search->second, *integer(2)));
     search = mulmap.find(y);
-    CHECK(search != mulmap.end());
+    REQUIRE(search != mulmap.end());
     CHECK(eq(*search->second, *integer(1)));
 }
 
@@ -834,7 +834,7 @@ TEST_CASE("Complex: Basic", "[basic]")
     c3 = Complex::from_two_nums(*r1, *r2);
     CHECK(eq(*subnum(c1, c2), *c3));
 
-    CHECK(is_a<Complex>(*c3));
+    REQUIRE(is_a<Complex>(*c3));
     c = rcp_static_cast<const Complex>(c3);
     CHECK(eq(*c->real_part(), *r1));
     CHECK(eq(*c->imaginary_part(), *r2));

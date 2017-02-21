@@ -358,13 +358,13 @@ TEST_CASE("Parsing: doubles", "[parser]")
 
     s = "1.324/(2+3)";
     res = parse(s);
-    CHECK(is_a<RealDouble>(*res));
+    REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
     CHECK(std::abs(d - 0.2648) < 1e-12);
 
     s = "sqrt(2.0)+5";
     res = parse(s);
-    CHECK(is_a<RealDouble>(*res));
+    REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
     CHECK(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
 }
