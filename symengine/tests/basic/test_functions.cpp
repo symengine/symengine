@@ -3794,8 +3794,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
             std::make_tuple(acsch(real_mpfr(b4)), 440191235352683_z,
                             440191235352684_z),
 
-            std::make_tuple(log(real_mpfr(b4)), 788457360364270,
-                            788457360364271),
+            std::make_tuple(log(real_mpfr(b4)), 788457360364270_z,
+                            788457360364271_z),
             std::make_tuple(gamma(div(real_mpfr(b3), i2)), 886226925452758_z,
                             886226925452759_z),
             std::make_tuple(exp(real_mpfr(b4)), 9025013499434122_z,
