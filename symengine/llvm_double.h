@@ -404,7 +404,13 @@ public:
 
     void bvisit(const Log &x)
     {
-        throw NotImplementedError("Not implemented.");
+        std::vector<llvm::Value *> args;
+        llvm::Function *fun;
+        args.push_back(apply(*x.get_arg()));
+        fun = get_double_intrinsic(llvm::Intrinsic::log, 1);
+        auto r = builder->CreateCall(fun, args);
+        r->setTailCall(true);
+        result_ = r;
     };
 
     void bvisit(const Constant &x)
