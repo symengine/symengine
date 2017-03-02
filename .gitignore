@@ -14,12 +14,6 @@ SymEngineTargets.cmake
 symengine/cotire
 symengine/symengine_CXX_cotire.cmake
 
-# flex/bison
-symengine/parser.cpp
-symengine/scanner.cpp
-symengine/parserbase.h
-symengine/scannerbase.h
-
 # Compiled Object Files, Static/Dynamic Libraries
 *.so
 *.a

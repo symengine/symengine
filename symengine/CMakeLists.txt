@@ -6,15 +6,17 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
-add_custom_command(OUTPUT parser.cpp parserbase.h
-                   COMMAND bisonc++ parser.yy
-                   DEPENDS parser.yy
-                  )
+if (WITH_SYMENGINE_PARSER)
+    add_custom_command(OUTPUT parser.cpp parserbase.h
+                      COMMAND bisonc++ parser.yy
+                      DEPENDS parser.yy parser.h
+                     )
 
-add_custom_command(OUTPUT scanner.cpp scannerbase.h
-                   COMMAND flexc++ --namespace=SymEngine scanner.ll
-                   DEPENDS scanner.ll
-                  )
+    add_custom_command(OUTPUT scanner.cpp scannerbase.h
+                      COMMAND flexc++ --namespace=SymEngine scanner.ll
+                      DEPENDS scanner.ll scanner.h
+                     )
+endif()
 
 set(SRC
     symengine_rcp.cpp
@@ -135,8 +137,9 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
+    parserbase.h
     scanner.h
-    # TODO what about the .ih files?
+    scannerbase.h
     polys/basic_conversions.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h
