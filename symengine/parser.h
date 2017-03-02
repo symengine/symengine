@@ -150,10 +150,10 @@ private:
 
 inline RCP<const Basic> parse(const std::string &s)
 {
-    Parser pp(s);
+    Parser p(s);
 
-    if (pp.parse() == 0)
-        return pp.res;
+    if (p.parse() == 0)
+        return p.res;
 
     throw ParseError("Parsing Unsuccessful");
 }

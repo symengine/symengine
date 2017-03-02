@@ -87,12 +87,12 @@ leaf:
 
 #ifdef HAVE_SYMENGINE_MPFR
         unsigned digits = 0;
-        for (unsigned i = 0; i < expr.length(); ++i) {
-            if (expr[i] == '.' or expr[i] == '-')
+        for (unsigned i = 0; i < $1 .length(); ++i) {
+            if ($1[i] == '.' or $1[i] == '-')
                 continue;
-            if (expr[i] == 'E' or expr[i] == 'e')
+            if ($1[i] == 'E' or $1[i] == 'e')
                 break;
-            if (digits != 0 or expr[i] != '0') {
+            if (digits != 0 or $1[i] != '0') {
                 ++digits;
             }
         }
@@ -101,7 +101,7 @@ leaf:
         } else {
             // mpmath.libmp.libmpf.dps_to_prec
             long prec = std::max(long(1), std::lround((digits + 1) * 3.3219280948873626));
-            $$ = SymEngine::real_mpfr(mpfr_class(expr, prec));
+            $$ = SymEngine::real_mpfr(mpfr_class($1, prec));
         }
 #else
         $$ = SymEngine::real_double(d);
