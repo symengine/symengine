@@ -34,6 +34,7 @@ using SymEngine::integer_class;
 using SymEngine::UIntDict;
 using SymEngine::add;
 using SymEngine::vec_integer_class;
+using SymEngine::RCPBasicKeyLess;
 
 using namespace SymEngine::literals;
 
@@ -257,19 +258,25 @@ TEST_CASE("UIntPoly pow", "[UIntPoly]")
     REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
 }
 
-TEST_CASE("UIntPoly divides", "[UIntPoly]")
+TEST_CASE("UIntPoly divide", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UIntPoly> a = UIntPoly::from_dict(x, {{0, 1_z}, {1, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_dict(x, {{0, 4_z}});
     RCP<const UIntPoly> c = UIntPoly::from_dict(x, {{0, 8_z}, {1, 8_z}});
-    RCP<const UIntPoly> res;
+    RCP<const UIntPoly> quo, rem;
 
-    REQUIRE(divides_upoly(*a, *c, outArg(res)));
-    REQUIRE(res->__str__() == "8");
-    REQUIRE(divides_upoly(*b, *c, outArg(res)));
-    REQUIRE(res->__str__() == "2*x + 2");
-    REQUIRE(!divides_upoly(*b, *a, outArg(res)));
+    divide_upoly_int(*a, *c, outArg(quo), outArg(rem));
+    REQUIRE(quo->__str__() == "8");
+    REQUIRE(rem->__str__() == "0");
+
+    divide_upoly_int(*b, *c, outArg(quo), outArg(rem));
+    REQUIRE(quo->__str__() == "2*x + 2");
+    REQUIRE(rem->__str__() == "0");
+
+    divide_upoly_int(*b, *a, outArg(quo), outArg(rem));
+    REQUIRE(quo->__str__() == "0");
+    REQUIRE(eq(*rem, *a));
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -293,3 +300,67 @@ TEST_CASE("UIntPoly from_poly flint", "[UIntPoly]")
     REQUIRE(b->__str__() == "x**2 + 2*x + 1");
 }
 #endif
+
+TEST_CASE("UIntPoly zassenhaus", "[UIntPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto find_in_set
+        = [](RCP<const UIntPoly> to_find,
+             std::set<RCP<const UIntPoly>, RCPBasicKeyLess> in_set) {
+              for (auto &a : in_set) {
+                  if (eq(*a, *to_find))
+                      return true;
+              }
+              return false;
+          };
+
+    RCP<const UIntPoly> f = UIntPoly::from_vec(x, {1_z, 0_z, -9_z});
+    std::set<RCP<const UIntPoly>, RCPBasicKeyLess> out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {1_z, -3_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, -3_z}), out));
+    REQUIRE(out.size() == 2);
+    auto out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {1_z, 3_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 3_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 2);
+    REQUIRE(out_f.first == -1_z);
+
+    f = UIntPoly::from_vec(x, {-6_z, 11_z, -6_z, 1_z});
+    out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-2_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-3_z, 1_z}), out));
+    REQUIRE(out.size() == 3);
+    out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-1_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-2_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {-3_z, 1_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 3);
+    REQUIRE(out_f.first == 1_z);
+
+    f = UIntPoly::from_vec(x, {10_z, 13_z, 10_z, 3_z});
+    out = f->zz_zassenhaus();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {2_z, 1_z}), out));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {5_z, 4_z, 3_z}), out));
+    REQUIRE(out.size() == 2);
+    out_f = f->zz_factor_sqf();
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {2_z, 1_z}), out_f.second));
+    REQUIRE(find_in_set(UIntPoly::from_vec(x, {5_z, 4_z, 3_z}), out_f.second));
+    REQUIRE(out_f.second.size() == 2);
+    REQUIRE(out_f.first == 1_z);
+
+    f = UIntPoly::from_vec(x, {0_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == 0_z);
+
+    f = UIntPoly::from_vec(x, {7_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == 7_z);
+
+    f = UIntPoly::from_vec(x, {-7_z});
+    out_f = f->zz_factor_sqf();
+    REQUIRE(out_f.second.size() == 0);
+    REQUIRE(out_f.first == -7_z);
+}
