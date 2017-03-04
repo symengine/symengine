@@ -1179,7 +1179,6 @@ public:
     IMPLEMENT_TYPEID(MIN)
     //! Min Constructor
     Min(const vec_basic &&arg);
-    Min(const RCP<const Basic> &arg, ...);
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
     //! \return canonicalized Max
