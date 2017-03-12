@@ -214,7 +214,7 @@ public:
 
     void bvisit(const Rational &x)
     {
-        this->dict = URatDict(x.i);
+        this->dict = URatDict(x.as_rational_class());
     }
 
     void dict_set(unsigned int pow, const Basic &x)
@@ -222,10 +222,10 @@ public:
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
                 this->gen,
-                {{pow, rational_class(static_cast<const Integer &>(x).i)}});
+                {{pow, rational_class(static_cast<const Integer &>(x).as_integer_class())}});
         else if (is_a<const Rational>(x))
             this->dict = Poly::container_from_dict(
-                this->gen, {{pow, static_cast<const Rational &>(x).i}});
+                this->gen, {{pow, static_cast<const Rational &>(x).as_rational_class()}});
         else
             throw std::runtime_error("Non-rational found");
     }
