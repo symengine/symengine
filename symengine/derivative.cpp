@@ -103,7 +103,9 @@ public:
                     return Derivative::create(self.rcp_from_this(), {x});
                 }
                 vec_basic new_args = v;
-                new_args[i] = get_dummy(self, "xi_" + std::to_string(i + 1));
+                std::ostringstream stm;
+                stm << (i + 1);
+                new_args[i] = get_dummy(self, "xi_" + stm.str());
                 map_basic_basic m;
                 insert(m, new_args[i], v[i]);
                 diff = add(
