@@ -319,21 +319,21 @@ TEST_CASE("basic_to_poly URat", "[b2poly]")
     basic = xb2;
     gen = x;
     poly1 = from_basic<URatPoly>(basic, gen);
-    poly2 = URatPoly::from_vec(gen, {{0_q, rc(1_z, 2_z)}});
+    poly2 = URatPoly::from_vec(gen, {0_q, rc(1_z, 2_z)});
     REQUIRE(eq(*poly1, *poly2));
 
     // 3x + 2
     basic = add(mul(x, i3), i2);
     gen = x;
     poly1 = from_basic<URatPoly>(basic, gen);
-    poly2 = URatPoly::from_vec(gen, {{2_q, 3_q}});
+    poly2 = URatPoly::from_vec(gen, {2_q, 3_q});
     REQUIRE(eq(*poly1, *poly2));
 
     // 3/2 * (2**x)
     basic = mul(div(i3, i2), pow(i2, x));
     gen = pow(i2, x);
     poly1 = from_basic<URatPoly>(basic, gen);
-    poly2 = URatPoly::from_vec(gen, {{0_q, rc(3_z, 2_z)}});
+    poly2 = URatPoly::from_vec(gen, {0_q, rc(3_z, 2_z)});
     REQUIRE(eq(*poly1, *poly2));
 
     // x + y
