@@ -116,6 +116,15 @@ public:
         return this->get_degree() + 1;
     }
 };
+
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+RCP<const Poly> pow_upoly(const USymEnginePoly<Container, BaseType, Poly> &a,
+                          unsigned int p)
+{
+    auto dict = Poly::container_type::pow(a.get_poly(), p);
+    return Poly::from_container(a.get_var(), std::move(dict));
+}
 }
 
 #endif

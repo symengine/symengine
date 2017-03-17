@@ -129,6 +129,20 @@ public:
         }
     }
 
+    ODictWrapper(std::map<Key, Value> &&p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0)) {
+                auto erase = iter;
+                iter++;
+                p.erase(erase);
+            } else {
+                iter++;
+            }
+        }
+        dict_ = p;
+    }
+
     ODictWrapper(const Value &p)
     {
         if (p != Value(0))
@@ -690,13 +704,6 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
-    return Poly::from_container(a.get_var(), std::move(dict));
-}
-
-template <typename Poly>
-RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
-{
-    auto dict = Poly::container_type::pow(a.get_poly(), p);
     return Poly::from_container(a.get_var(), std::move(dict));
 }
 

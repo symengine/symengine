@@ -151,55 +151,47 @@ public:
     hash_t __hash__() const;
 }; // URatPolyFlint
 
-template <typename T>
-enable_if_t<std::is_same<UIntPolyFlint, T>::value
-                or std::is_same<URatPolyFlint, T>::value,
-            RCP<const T>>
-gcd_upoly(const T &a, const T &b)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+RCP<const Poly> gcd_upoly(const UFlintPoly<Container, BaseType, Poly> &a,
+                          const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw SymEngineException("Error: variables must agree.");
-    return make_rcp<const T>(a.get_var(), a.get_poly().gcd(b.get_poly()));
+    return make_rcp<const Poly>(a.get_var(), a.get_poly().gcd(b.get_poly()));
 }
 
-template <typename T>
-enable_if_t<std::is_same<UIntPolyFlint, T>::value
-                or std::is_same<URatPolyFlint, T>::value,
-            RCP<const T>>
-lcm_upoly(const T &a, const T &b)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+RCP<const Poly> lcm_upoly(const UFlintPoly<Container, BaseType, Poly> &a,
+                          const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw SymEngineException("Error: variables must agree.");
-    return make_rcp<const T>(a.get_var(), a.get_poly().lcm(b.get_poly()));
+    return make_rcp<const Poly>(a.get_var(), a.get_poly().lcm(b.get_poly()));
 }
 
-inline RCP<const UIntPolyFlint> pow_upoly(const UIntPolyFlint &a,
-                                          unsigned int p)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+RCP<const Poly> pow_upoly(const UFlintPoly<Container, BaseType, Poly> &a,
+                          unsigned int p)
 {
-    return make_rcp<const UIntPolyFlint>(a.get_var(), a.get_poly().pow(p));
+    return make_rcp<const Poly>(a.get_var(), a.get_poly().pow(p));
 }
 
-// temporary, needs to be common ^
-inline RCP<const URatPolyFlint> pow_upoly(const URatPolyFlint &a,
-                                          unsigned int p)
-{
-    return make_rcp<const URatPolyFlint>(a.get_var(), a.get_poly().pow(p));
-}
-
-template <typename T>
-enable_if_t<std::is_same<UIntPolyFlint, T>::value
-                or std::is_same<URatPolyFlint, T>::value,
-            bool>
-divides_upoly(const T &a, const T &b, const Ptr<RCP<const T>> &res)
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+bool divides_upoly(const UFlintPoly<Container, BaseType, Poly> &a,
+                   const Poly &b, const Ptr<RCP<const Poly>> &res)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw SymEngineException("Error: variables must agree.");
 
-    typename T::container_type q, r;
+    typename Poly::container_type q, r;
 
     b.get_poly().divrem(q, r, a.get_poly());
     if (r == 0) {
-        *res = make_rcp<T>(a.get_var(), std::move(q));
+        *res = make_rcp<Poly>(a.get_var(), std::move(q));
         return true;
     } else {
         return false;
