@@ -1083,16 +1083,16 @@ TEST_CASE("Log: arit", "[arit]")
             < 1e-12);
 
     // Test is_canonical()
-    // RCP<const Log> r4 = make_rcp<Log>(i2);
-    // REQUIRE(not (r4->is_canonical(zero)));
-    // REQUIRE(not (r4->is_canonical(one)));
-    // REQUIRE(not (r4->is_canonical(E)));
-    // REQUIRE(not (r4->is_canonical(minus_one)));
-    // REQUIRE(not (r4->is_canonical(im3)));
-    // REQUIRE(not (r4->is_canonical(c1)));
-    // REQUIRE(r4->is_canonical(i2));
-    // REQUIRE(not (r4->is_canonical(real_double(2.0))));
-    // REQUIRE(not (r4->is_canonical(div(one,i2))));
+    RCP<const Log> r4 = make_rcp<Log>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(E)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(im3)));
+    REQUIRE(not(r4->is_canonical(c1)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
+    REQUIRE(not(r4->is_canonical(div(one, i2))));
 }
 
 TEST_CASE("Multinomial: arit", "[arit]")

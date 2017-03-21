@@ -97,6 +97,11 @@ TEST_CASE("Piecewise", "[logic]")
                         {y, contains(x, int2)},
                         {add(x, y), contains(x, int3)}});
 
+    vec_basic v = p->get_args();
+    vec_basic u = {x,         contains(x, int1), y, contains(x, int2),
+                   add(x, y), contains(x, int3)};
+    REQUIRE(unified_eq(v, u));
+
     std::string s = "Piecewise((x, Contains(x, (1, 2])), (y, Contains(x, (2, "
                     "5])), (x + y, Contains(x, (5, 10])))";
     REQUIRE(s == p->__str__());
@@ -105,6 +110,7 @@ TEST_CASE("Piecewise", "[logic]")
                         {zero, contains(x, int2)},
                         {one, contains(x, int3)}});
 
+    REQUIRE((p->diff(x))->__hash__() == q->__hash__());
     REQUIRE(eq(*p->diff(x), *q));
 }
 
@@ -136,6 +142,10 @@ TEST_CASE("And, Or : Basic", "[basic]")
     auto s2 = logical_and({c2, c1});
     REQUIRE(s1->__hash__() == s2->__hash__());
     REQUIRE(eq(*s1, *s2));
+    vec_basic v = s2->get_args();
+    vec_basic u = {c2, c1};
+    REQUIRE(unified_eq(v, u));
+
     s1 = logical_or({c1, c2});
     str = s1->__str__();
     REQUIRE(str.find("Or(") == 0);
@@ -144,6 +154,9 @@ TEST_CASE("And, Or : Basic", "[basic]")
     s2 = logical_or({c2, c1});
     REQUIRE(s1->__hash__() == s2->__hash__());
     REQUIRE(eq(*s1, *s2));
+    v = s2->get_args();
+    u = {c2, c1};
+    REQUIRE(unified_eq(v, u));
 
     REQUIRE(eq(*logical_and({c1}), *c1));
     REQUIRE(eq(*logical_or({c1}), *c1));

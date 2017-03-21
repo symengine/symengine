@@ -68,6 +68,8 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
         a->is_canonical(Complex::from_two_nums(*integer(1), *integer(2))),
         NotImplementedError);
 
+    REQUIRE(not(a->is_canonical(integer(2))));
+
     a = infty();
     b = infty(-1);
     c = infty(0);

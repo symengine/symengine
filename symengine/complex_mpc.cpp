@@ -41,9 +41,13 @@ int ComplexMPC::compare(const Basic &o) const
     const ComplexMPC &s = down_cast<const ComplexMPC &>(o);
     if (get_prec() == s.get_prec()) {
         int cmp = mpc_cmp(this->i.get_mpc_t(), s.i.get_mpc_t());
-        if (cmp == 0)
+        int x = MPC_INEX_RE(cmp), y = MPC_INEX_IM(cmp);
+        if (x == 0) {
+            if (y != 0)
+                return y > 0 ? 1 : -1;
             return 0;
-        return cmp > 0 ? 1 : -1;
+        }
+        return x > 0 ? 1 : -1;
     } else {
         return get_prec() > s.get_prec() ? 1 : -1;
     }

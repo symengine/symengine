@@ -109,6 +109,12 @@ TEST_CASE("RealMPFR: arithmetic", "[number]")
     REQUIRE(r1->compare(*r3) == -1);
     REQUIRE(r3->compare(*r2) == 1);
 
+    // to increase coverage
+    mpfr_class ee(10);
+    mpfr_set_ui(ee.get_mpfr_t(), 101, MPFR_RNDN);
+    r2 = real_mpfr(std::move(ee));
+    REQUIRE(r1->compare(*r2) == 1); // TO-DO is this is a bug or what ?
+
 #ifdef HAVE_SYMENGINE_MPC
     REQUIRE(is_a<ComplexMPC>(*addnum(r1, c1)));
     REQUIRE(is_a<ComplexMPC>(*addnum(r1, cd1)));
@@ -220,7 +226,13 @@ TEST_CASE("ComplexMPC: arithmetic", "[number]")
     RCP<const Number> r6 = complex_mpc(std::move(ee));
     REQUIRE(r6->__hash__() == r2->__hash__());
     REQUIRE(r6->compare(*r2) == 0);
-    REQUIRE(r6->compare(*r3) == 1);
+    REQUIRE(r6->compare(*r3) == -1);
+    REQUIRE(r3->compare(*r6) == 1);
+    REQUIRE(r2->compare(*r5) == 1);
+
+    mpc_class temp(101);
+    mpc_set_ui_ui(temp.get_mpc_t(), 20, 14, MPFR_RNDN);
+    REQUIRE(complex_mpc(std::move(temp))->compare(*r6) == 1);
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class f(100);
