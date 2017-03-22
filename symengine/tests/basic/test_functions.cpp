@@ -2596,7 +2596,7 @@ TEST_CASE("Acosh: functions", "[functions]")
             < 1e-12);
     REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
                      - 3.14159265358979)
-            < 1e-12);
+            < 1e-7);
 
     RCP<const ACosh> r4 = make_rcp<ACosh>(i2);
     REQUIRE(not(r4->is_canonical(one)));
