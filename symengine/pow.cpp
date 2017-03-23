@@ -90,7 +90,8 @@ int Pow::compare(const Basic &o) const
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
-        return pownum(rcp_static_cast<const Number>(b), zero);
+        // addnum is used for converting to the type of `b`.
+        return addnum(one, rcp_static_cast<const Number>(b));
     }
     if (eq(*b, *one))
         return a;

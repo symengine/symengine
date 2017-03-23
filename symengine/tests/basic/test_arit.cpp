@@ -501,6 +501,10 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
                      - down_cast<const ComplexDouble &>(*s2).i.imag())
             < 1e-12);
+
+    s2 = complex_double(std::complex<double>(0.0, 0.0));
+    s3 = complex_double(std::complex<double>(1.0, 0.0));
+    REQUIRE(eq(*exp(s2), *s3));
 }
 
 TEST_CASE("Sub: arit", "[arit]")
