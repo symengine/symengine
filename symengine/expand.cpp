@@ -301,6 +301,51 @@ public:
             return;
         }
 
+        if (eq(*_base, *E) and !is_a_Number(*self.get_exp())) {
+            if (is_a<Add>(*self.get_exp())) {
+                RCP<const Basic> ret1 = one, ret2;
+                RCP<const Basic> coef
+                    = (down_cast<const Add &>(*self.get_exp())).get_coef();
+                ret2 = pow(E, coef);
+
+                for (auto &p :
+                     (down_cast<const Add &>(*self.get_exp())).get_dict()) {
+                    if (is_a<Log>(*p.first)) {
+                        RCP<const Number> s = rcp_static_cast<const Number>(
+                            down_cast<const Log &>(*p.first).get_arg());
+                        ret1 = mul(ret1, pownum(s, p.second));
+                    } else {
+                        ret2 = mul(ret2, pow(E, mul(p.first, p.second)));
+                    }
+                }
+                ret1 = expand(ret1);
+                ret2 = expand(ret2);
+                mul_expand_two(ret1, ret2);
+                return;
+            } else if (is_a<Mul>(*self.get_exp())) {
+                RCP<const Basic> ret1,
+                    coef = (down_cast<const Mul &>(*self.get_exp())).get_coef();
+                auto mulmap
+                    = (down_cast<const Mul &>(*self.get_exp())).get_dict();
+
+                if (mulmap.size() == 1) {
+                    if (is_a<Log>(*mulmap.begin()->first)) {
+                        RCP<const Number> s = rcp_static_cast<const Number>(
+                            down_cast<const Log &>(*mulmap.begin()->first)
+                                .get_arg());
+                        ret1 = pow(pownum(s, rcp_static_cast<const Number>(
+                                                 mulmap.begin()->second)),
+                                   coef);
+                        ret1 = expand(ret1);
+                        _coef_dict_add_term(one, ret1);
+                        return;
+                    }
+                }
+                _coef_dict_add_term(one, self.rcp_from_this());
+                return;
+            }
+        }
+
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));

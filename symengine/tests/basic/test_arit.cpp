@@ -852,28 +852,40 @@ TEST_CASE("Log: arit", "[arit]")
     r2 = add(log(i3), mul(I, pi));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = pow(E, log(i2));
+    r2 = i2;
+    REQUIRE(eq(*r1, *r2));
+
     r1 = div(i2, i3);
     r2 = pow(E, (sub(log(i2), log(i3))));
+    REQUIRE(not eq(*r1, *r2));
+
+    r1 = div(i2, i3);
+    r2 = expand(pow(E, (sub(log(i2), log(i3)))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(pow(integer(2), i2), i3);
-    r2 = pow(E, (add(mul(integer(2), log(i2)), log(i3))));
+    r2 = expand(pow(E, (add(mul(integer(2), log(i2)), log(i3)))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(i2, i3);
-    r2 = pow(E, (add(log(i2), log(i3))));
+    r2 = expand(pow(E, (add(log(i2), log(i3)))));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = pow(E, (add(add(log(i2), log(i3)), i3)));
-    r2 = mul(pow(E, i3), integer(6));
+    r1 = expand(pow(E, (add(add(log(i2), log(i3)), i3))));
+    r2 = expand(mul(pow(E, i3), integer(6)));
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(i3, i2);
-    r2 = pow(E, (mul(i2, log(i3))));
+    r2 = expand(pow(E, (mul(i2, log(i3)))));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = pow(E, mul(mul(i2, i3), log(i3)));
+    r1 = expand(pow(E, mul(mul(i2, i3), log(i3))));
     r2 = pow(i3, mul(i2, i3));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(pow(E, mul(i2, x)));
+    r2 = pow(E, mul(i2, x));
     REQUIRE(eq(*r1, *r2));
 
     RCP<const Number> c1;
