@@ -84,6 +84,10 @@ if (WITH_PIRANHA)
     set(SRC polys/uintpoly_piranha.cpp ${SRC})
 endif()
 
+if (WITH_LLVM)
+    set(SRC ${SRC} llvm_double.cpp)
+endif()
+
 # Needed for "make install"
 set(HEADERS
     add.h
