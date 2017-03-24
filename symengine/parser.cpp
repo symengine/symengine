@@ -307,9 +307,10 @@ class ExpressionParser
             if (constants.find(expr) != constants.end())
                 return constants[expr];
 
-            if (std::isalpha(expr[0]) or expr[0] == '_') {
+            if (std::isalpha(expr[0]) or expr[0] == '_' or expr[0] < 0) {
                 for (unsigned i = 1; i < expr.length(); ++i) {
-                    if (not std::isalnum(expr[i]) and expr[i] != '_') {
+                    if (not std::isalnum(expr[i]) and expr[i] != '_'
+                        and expr[i] >= 0) {
                         throw ParseError(expr + " is not a symbol or numeric");
                     }
                 }
