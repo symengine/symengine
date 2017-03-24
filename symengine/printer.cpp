@@ -381,7 +381,10 @@ void StrPrinter::bvisit(const Mul &x)
             den++;
         } else {
             if (eq(*(p.second), *one)) {
-                o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+                if(eq(*(p.first), *E))
+                    _print_pow(o, p.first, p.second);
+                else
+                    o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 _print_pow(o, p.first, p.second);
             }
