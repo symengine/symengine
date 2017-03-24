@@ -126,7 +126,6 @@ TEST_CASE("Parsing: symbols", "[parser]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> w = symbol("w1");
-    RCP<const Basic> mu = symbol("μ");
     RCP<const Basic> l = symbol("l0ngn4me");
 
     s = "x + 2*y";
@@ -169,10 +168,12 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *pow(x, y)));
 
+#if !defined(_MSC_VER) || !defined(_DEBUG)
     // test unicode
     s = "μ + 1";
     res = parse(s);
-    REQUIRE(eq(*res, *add(mu, one)));
+    REQUIRE(eq(*res, *add(symbol("μ"), one)));
+#endif
 
     s = "x**2e-1+3e+2-2e-2";
     res = parse(s);
