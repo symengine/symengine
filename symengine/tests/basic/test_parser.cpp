@@ -168,6 +168,13 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *pow(x, y)));
 
+#if !defined(_MSC_VER) || !defined(_DEBUG)
+    // test unicode
+    s = "μ + 1";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(symbol("μ"), one)));
+#endif
+
     s = "x**2e-1+3e+2-2e-2";
     res = parse(s);
     REQUIRE(eq(*res, *add(real_double(299.98), pow(x, real_double(0.2)))));
