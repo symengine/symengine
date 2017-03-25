@@ -729,7 +729,7 @@ void test_constants()
     SYMENGINE_C_ASSERT(strcmp(s, "pi") == 0);
     basic_str_free(s);
     s = basic_str(e);
-    SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);
     basic_str_free(s);
     s = basic_str_julia(e);
     SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);

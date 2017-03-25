@@ -380,11 +380,8 @@ void StrPrinter::bvisit(const Mul &x)
             o2 << "*";
             den++;
         } else {
-            if (eq(*(p.second), *one)) {
-                if(eq(*(p.first), *E))
-                    _print_pow(o, p.first, p.second);
-                else
-                    o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+            if (eq(*(p.second), *one) and neq(*(p.first), *E)) {
+                o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 _print_pow(o, p.first, p.second);
             }
@@ -625,13 +622,11 @@ void StrPrinter::bvisit(const Log &x)
 
 void StrPrinter::bvisit(const Constant &x)
 {
-    /*If the constant is E then it is to
-      be printed as exp(1), this is done
-      to maintain consistency with sympy*/
+    //If the constant is E then it is to
+    //be printed as exp(1), this is done
+    //to maintain consistency
     if(x.get_name() == "E") {
-        std::ostringstream s;
-        s << "exp(1)";
-        str_ = s.str() ;
+        str_ = "exp(1)" ;
     } else {
         str_ = x.get_name();
     }
