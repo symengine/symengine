@@ -625,7 +625,16 @@ void StrPrinter::bvisit(const Log &x)
 
 void StrPrinter::bvisit(const Constant &x)
 {
-    str_ = x.get_name();
+    /*If the constant is E then it is to
+      be printed as exp(1), this is done
+      to maintain consistency with sympy*/
+    if(x.get_name() == "E") {
+        std::ostringstream s;
+        s << "exp(1)";
+        str_ = s.str() ;
+    } else {
+        str_ = x.get_name();
+    }
 }
 
 std::string StrPrinter::apply(const vec_basic &d)

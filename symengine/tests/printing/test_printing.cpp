@@ -94,6 +94,8 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r->__str__() == "exp(-x)");
     r = exp(integer(-1));
     REQUIRE(r->__str__() == "exp(-1)");
+    r = exp(integer(1));
+    REQUIRE(r->__str__() == "exp(1)");
     r = mul(exp(integer(-1)), integer(2));
     REQUIRE(r->__str__() == "2*exp(-1)");
     r = mul(exp(integer(-3)), integer(2));
