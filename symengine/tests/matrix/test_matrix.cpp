@@ -179,15 +179,14 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
         = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     DenseMatrix B
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
-    DenseMatrix C = DenseMatrix(2, 2);
-    mul_dense_dense(A, B, C);
+    mul_dense_dense(A, B, A);
 
-    REQUIRE(C == DenseMatrix(2, 2,
+    REQUIRE(A == DenseMatrix(2, 2,
                              {integer(1), integer(2), integer(3), integer(4)}));
 
     A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
     B = DenseMatrix(4, 1, {integer(1), integer(2), integer(3), integer(4)});
-    C = DenseMatrix(1, 1);
+    DenseMatrix C = DenseMatrix(1, 1);
     mul_dense_dense(A, B, C);
 
     REQUIRE(C == DenseMatrix(1, 1, {integer(8)}));
