@@ -148,10 +148,27 @@ public:
         RCP<const Symbol> s;
         map_basic_basic m, n;
         bool subs;
+
+        for (const auto &p : subs_dict_) {
+            // If the derivative arg is to be replaced in its entirety, allow
+            // it.
+            if (eq(*x.get_arg(), *p.first)) {
+                RCP<const Basic> t = p.second;
+                for (auto &p : x.get_symbols()) {
+                    if (not is_a<Symbol>(*p)) {
+                        throw SymEngineException("Error, expected a Symbol.");
+                    }
+                    t = t->diff(rcp_static_cast<const Symbol>(p));
+                }
+                result_ = t;
+                return;
+            }
+        }
         for (const auto &p : subs_dict_) {
             subs = true;
             if (eq(*x.get_arg()->subs({{p.first, p.second}}), *x.get_arg()))
                 continue;
+
             // If p.first and p.second are symbols and arg_ is
             // independent of p.second, p.first can be replaced
             if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)

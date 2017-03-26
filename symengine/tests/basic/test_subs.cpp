@@ -348,6 +348,16 @@ TEST_CASE("LowerGamma: subs", "[subs]")
     REQUIRE(eq(*r1->subs(d), *r2));
 }
 
+TEST_CASE("FunctionSymbol: subs", "[subs]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> f = function_symbol("f", x);
+
+    auto t = subs(f->diff(x), {{f, mul(x, x)}});
+    REQUIRE(eq(*t, *mul(integer(2), x)));
+}
+
 TEST_CASE("UpperGamma: subs", "[subs]")
 {
     RCP<const Basic> x = symbol("x");
