@@ -332,14 +332,20 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
     unsigned row = A.row_, col = B.col_;
 
-    for (unsigned r = 0; r < row; r++) {
-        for (unsigned c = 0; c < col; c++) {
-            C.m_[r * col + c] = zero; // Integer Zero
-            for (unsigned k = 0; k < A.col_; k++)
-                C.m_[r * col + c]
-                    = add(C.m_[r * col + c],
-                          mul(A.m_[r * A.col_ + k], B.m_[k * col + c]));
+    if (&A != &C and &B != &C) {
+        for (unsigned r = 0; r < row; r++) {
+            for (unsigned c = 0; c < col; c++) {
+                C.m_[r * col + c] = zero; // Integer Zero
+                for (unsigned k = 0; k < A.col_; k++)
+                    C.m_[r * col + c]
+                        = add(C.m_[r * col + c],
+                              mul(A.m_[r * A.col_ + k], B.m_[k * col + c]));
+            }
         }
+    } else {
+        DenseMatrix tmp = DenseMatrix(A.row_, B.col_);
+        mul_dense_dense(A, B, tmp);
+        C = tmp;
     }
 }
 
