@@ -154,11 +154,11 @@ public:
             // it.
             if (eq(*x.get_arg(), *p.first)) {
                 RCP<const Basic> t = p.second;
-                for (auto &p : x.get_symbols()) {
-                    if (not is_a<Symbol>(*p)) {
+                for (auto &sym : x.get_symbols()) {
+                    if (not is_a<Symbol>(*sym)) {
                         throw SymEngineException("Error, expected a Symbol.");
                     }
-                    t = t->diff(rcp_static_cast<const Symbol>(p));
+                    t = t->diff(rcp_static_cast<const Symbol>(sym));
                 }
                 result_ = t;
                 return;
