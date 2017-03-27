@@ -1,7 +1,7 @@
-from os.path import join
+from __future__ import print_function
+from os.path import join, relpath
 import sys
 from glob import glob
-from ntpath import basename
 
 # First argument is where symengine header files are installed.
 install_dir = sys.argv[1]
@@ -9,22 +9,15 @@ install_dir = sys.argv[1]
 # Second argument is Folder containing symengine header files.
 symengine_dir = sys.argv[2]
 
-installed_files = [basename(x) for x in glob(join(install_dir, '*.h'))]
-print('Total number of installed files : %d' % len(installed_files))
+installed_files = set([relpath(x, install_dir) for x in glob(join(install_dir, '*.h'))])
+all_files = set([relpath(x, symengine_dir) for x in glob(join(symengine_dir, '*.h'))])
 
-all_files = [basename(x) for x in glob(join(symengine_dir, '*.h'))]
-print('Number of all files to be installed : %d' % len(all_files))
+difference = all_files - installed_files
 
-# res = True if all are installed
-res = True
-
-for fl in all_files:
-    if not fl in installed_files:
-        print('%s is not installed!' % fl)
-        res = False
-
-if res:
+if len(difference) == 0:
     print('All files are installed!')
     exit(0)
 else:
+    for fl in difference:
+        print('%s is not installed!' % fl)
     exit(1)
