@@ -278,12 +278,12 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> acsc(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(1.0 / std::asin(down_cast<const ComplexDouble &>(x).i));
+        return number(std::asin(1.0 / down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> asec(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(1.0 / std::acos(down_cast<const ComplexDouble &>(x).i));
+        return number(std::acos(1.0 / down_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const override
     {

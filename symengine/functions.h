@@ -440,7 +440,7 @@ public:
     //! Log Constructor
     Log(const RCP<const Basic> &arg);
     //! \return `true` if canonical
-    bool is_canonical(const Basic &arg) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return canonicalized `log`
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };

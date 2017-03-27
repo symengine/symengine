@@ -901,8 +901,8 @@ class EvaluateMPFR : public Evaluate
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         mpfr_class t(mpfr_get_prec(x_));
-        mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
-        mpfr_asinh(t.get_mpfr_t(), x_, MPFR_RNDN);
+        mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
+        mpfr_asinh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const override
@@ -911,12 +911,12 @@ class EvaluateMPFR : public Evaluate
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
-            mpfr_acosh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+            mpfr_acosh(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
 #ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
-        mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
 #else
@@ -949,8 +949,8 @@ class EvaluateMPFR : public Evaluate
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
-            mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
-            mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
+            mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
+            mpfr_atanh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
 #ifdef HAVE_SYMENGINE_MPC
@@ -970,8 +970,8 @@ class EvaluateMPFR : public Evaluate
         mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 0) >= 0 and mpfr_cmp_si(x_, 1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
-            mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
-            mpfr_acosh(t.get_mpfr_t(), x_, MPFR_RNDN);
+            mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
+            mpfr_acosh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
 #ifdef HAVE_SYMENGINE_MPC

@@ -52,6 +52,7 @@ using SymEngine::down_cast;
 using SymEngine::pi;
 using SymEngine::minus_one;
 using SymEngine::Nan;
+using SymEngine::make_rcp;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -572,9 +573,9 @@ TEST_CASE("Sub: arit", "[arit]")
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
-    r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
+    r2 = sub(r1, sub(sub(sub(r1, r2), integer(3)), real_double(0.2)));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i + 3.6) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 3.7) < 1e-12);
 
     r1 = real_double(0.1);
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
@@ -1068,6 +1069,34 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = r1->subs({{x, E}});
     r2 = one;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = log(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.693147180559945)
+            < 1e-12);
+
+    r1 = log(complex_double(std::complex<double>(1, 2)));
+    r2 = log(real_double(-3.0));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.36870408847499)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 3.32814563411849)
+            < 1e-12);
+
+    // Test is_canonical()
+    RCP<const Log> r4 = make_rcp<Log>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(E)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(im3)));
+    REQUIRE(not(r4->is_canonical(c1)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
+    REQUIRE(not(r4->is_canonical(div(one, i2))));
 }
 
 TEST_CASE("Multinomial: arit", "[arit]")

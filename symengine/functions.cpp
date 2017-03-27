@@ -1213,33 +1213,33 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(*arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Log::is_canonical(const Basic &arg) const
+bool Log::is_canonical(const RCP<const Basic> &arg) const
 {
     //  log(0)
-    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_zero())
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_one())
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_one())
         return false;
     // log(E)
-    if (eq(arg, *E))
+    if (eq(*arg, *E))
         return false;
 
-    if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
+    if (is_a_Number(*arg) and down_cast<const Number &>(*arg).is_negative())
         return false;
 
     // log(Inf) is also handled here.
-    if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
         return false;
 
     // log(3I) should be expanded to log(3) + I*pi/2
-    if (is_a<Complex>(arg) and down_cast<const Complex &>(arg).is_re_zero())
+    if (is_a<Complex>(*arg) and down_cast<const Complex &>(*arg).is_re_zero())
         return false;
     // log(num/den) = log(num) - log(den)
-    if (is_a<Rational>(arg))
+    if (is_a<Rational>(*arg))
         return false;
     return true;
 }
@@ -2752,7 +2752,7 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
     return div(mul(gamma(get_arg1()), gamma(get_arg2())),
-               add(get_arg1(), get_arg2()));
+               gamma(add(get_arg1(), get_arg2())));
 }
 
 RCP<const Basic> Beta::create(const RCP<const Basic> &a,

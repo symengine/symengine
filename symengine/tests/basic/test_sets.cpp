@@ -177,6 +177,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
     REQUIRE(eq(*r1->contains(zero), *boolFalse));
+    REQUIRE(r1->get_args().empty());
     CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
@@ -212,6 +213,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(r1->__hash__() == universalset()->__hash__());
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*universalset()) == 0);
+    REQUIRE(r1->get_args().empty());
     CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
@@ -230,8 +232,10 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(eq(*r3->contains(integer(3)), *boolFalse));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
+    REQUIRE(r1->get_args().empty());
 
     r1 = finiteset({zero, one});
+    REQUIRE(r1->__str__() == "{0, 1}");
     RCP<const Set> r4 = interval(zero, one);
     r3 = r2->set_intersection(r4);
     REQUIRE(eq(*r3->contains(one), *boolTrue));
@@ -294,6 +298,7 @@ TEST_CASE("Union : Basic", "[basic]")
     };
     RCP<const Set> f1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r1 = set_union({f1, emptyset()});
+    REQUIRE(r1->get_args().empty());
     REQUIRE(eq(*r1, *f1));
     r1 = set_union({emptyset()});
     REQUIRE(eq(*r1, *emptyset()));
