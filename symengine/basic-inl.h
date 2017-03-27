@@ -79,7 +79,13 @@ inline void hash_combine_impl(hash_t &seed, const std::string &s)
 
 inline void hash_combine_impl(hash_t &seed, const double &s)
 {
-    hash_combine(seed, static_cast<hash_t>(s));
+    union {
+        hash_t h;
+        double d;
+    } u;
+    u.h = 0u;
+    u.d = s;
+    hash_combine(seed, u.h);
 }
 
 template <class T>
