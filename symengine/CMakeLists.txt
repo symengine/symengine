@@ -162,6 +162,8 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+
+
 if (WITH_COTIRE)
     # throws if CMAKE_VERSION < 2.8.12
     include(cotire)
@@ -171,7 +173,14 @@ endif()
 include(GenerateExportHeader)
 generate_export_header(symengine)
 set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
-
+if (BUILD_SHARED_LIBS)
+    set_target_properties(
+        symengine
+        PROPERTIES
+        VERSION ${SYMENGINE_VERSION}
+        SOVERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
+    )
+endif()
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()
