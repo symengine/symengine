@@ -622,11 +622,11 @@ void StrPrinter::bvisit(const Log &x)
 
 void StrPrinter::bvisit(const Constant &x)
 {
-    //If the constant is E then it is to
-    //be printed as exp(1), this is done
-    //to maintain consistency
-    if(x.get_name() == "E") {
-        str_ = "exp(1)" ;
+    // If the constant is E then it is to
+    // be printed as exp(1), this is done
+    // to maintain consistency
+    if (x.get_name() == "E") {
+        str_ = "exp(1)";
     } else {
         str_ = x.get_name();
     }
