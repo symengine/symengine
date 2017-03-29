@@ -29,10 +29,15 @@ if [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
     done
 
     if [ $RETURN -ne 0 ]; then
+        RED='\033[0;31m'
+        echo -e "\\n${RED}FORMATTING TEST FAILED\\n"
         echo "Apply the following diff for correct formatting"
         echo "###########################################################################"
         git diff | cat
         echo "###########################################################################"
+    else
+        GREEN='\033[0;32m'
+        echo -e "\\n${GREEN}FORMATTING TEST PASSED\\n"
     fi
     exit $RETURN
 fi
