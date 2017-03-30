@@ -36,7 +36,7 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
     umap_basic_num dict_;
     mpq_t gc;
     mpq_init(gc);
-    for (int n = 0; n < degree_; n++) {
+    for (unsigned n = 0; n < degree_; n++) {
         const fmpq_wrapper fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc.get_fmpq_t());
@@ -58,7 +58,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
     umap_int_basic map;
     mpq_t gc;
     mpq_init(gc);
-    for (int n = 0; n < degree_; n++) {
+    for (unsigned n = 0; n < degree_; n++) {
         const fmpq_wrapper fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc.get_fmpq_t());
@@ -136,10 +136,10 @@ fqp_t URatPSeriesFlint::pow(const fqp_t &s, int n, unsigned prec)
 
 unsigned URatPSeriesFlint::ldegree(const fqp_t &s)
 {
-    long i = 0;
-    while (i <= s.degree())
+    int i = 0;
+    while (i <= numeric_cast<int>(s.degree()))
         if (not s.get_coeff(i++).is_zero())
-            return i - 1;
+            return numeric_cast<unsigned>(i - 1);
     return 0;
 }
 

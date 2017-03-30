@@ -2,6 +2,7 @@
 #define SYMENGINE_CASTS_H
 
 #include <iostream>
+#include <limits>
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
 
@@ -94,7 +95,7 @@ inline To
 numeric_cast(From f,
              typename std::enable_if<(std::is_signed<From>::value
                                       && std::is_signed<To>::value)
-                                     or (std::is_unsigned<From>::value
+                                     || (std::is_unsigned<From>::value
                                          && std::is_unsigned<To>::value)>::type
                  * = nullptr)
 {

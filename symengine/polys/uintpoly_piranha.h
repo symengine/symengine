@@ -239,7 +239,7 @@ public:
         return it->m_cf;
     }
 
-    unsigned int size() const
+    int size() const
     {
         if (this->get_poly().size() == 0)
             return 0;

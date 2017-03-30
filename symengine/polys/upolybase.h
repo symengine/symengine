@@ -613,8 +613,8 @@ public:
 
     std::shared_ptr<std::pair<long, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(i_,
-                                                      ptr_->get_coeff_ref(i_));
+        return std::make_shared<std::pair<long, Int>>(
+            i_, ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
     }
 };
 
@@ -631,7 +631,8 @@ public:
     {
         this->i_++;
         while (this->i_ < this->ptr_->size()) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_++;
         }
@@ -652,7 +653,8 @@ public:
     {
         this->i_--;
         while (this->i_ >= 0) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_--;
         }

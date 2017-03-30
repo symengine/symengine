@@ -60,7 +60,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict
                     = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
@@ -143,7 +144,8 @@ public:
         if (eq(*genbase, x)) {
             powr = div(one, genpow);
             if (is_a<const Integer>(*powr)) {
-                int i = down_cast<const Integer &>(*powr).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*powr).as_int());
                 if (i > 0) {
                     dict = P::container_from_dict(
                         gen, {{i, typename P::coef_type(1)}});
@@ -344,7 +346,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
                 return;
@@ -432,7 +435,8 @@ public:
             for (auto pows : it->second) {
                 powr = div(one, pows);
                 if (is_a<const Integer>(*powr)) {
-                    int i = down_cast<const Integer &>(*powr).as_int();
+                    int i = numeric_cast<int>(
+                        down_cast<const Integer &>(*powr).as_int());
                     if (i > 0) {
                         // can be optimized
                         zero_v[gens_map[pow(it->first, pows)]] = i;

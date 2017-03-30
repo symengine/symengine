@@ -285,18 +285,16 @@ public:
         RCP<const Basic> _base = expand(self.get_base());
         // TODO add all types of polys
         if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
-            unsigned long q
-                = down_cast<const Integer &>(*self.get_exp()).as_int();
+            unsigned q = numeric_cast<unsigned>(
+                down_cast<const Integer &>(*self.get_exp()).as_uint());
             RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
             RCP<const UExprPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);
             return;
         }
         if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
-            unsigned long q
-                = down_cast<const Integer &>(*self.get_exp()).as_int();
             unsigned q = numeric_cast<unsigned>(
-                rcp_static_cast<const Integer>(self.get_exp())->as_uint());
+                down_cast<const Integer &>(*self.get_exp()).as_uint());
             RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
             RCP<const UIntPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);

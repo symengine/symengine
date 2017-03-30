@@ -26,9 +26,11 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     RCP<const Basic> sym = q.first;
                     if (not is_a<Integer>(*syms.at(sym)))
                         throw NotImplementedError("Not Implemented");
-                    int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                    int i = numeric_cast<int>(
+                        down_cast<const Integer &>(*syms.at(sym)).as_int());
                     if (is_a<Integer>(*q.second)) {
-                        exp[i] = down_cast<const Integer &>(*q.second).as_int();
+                        exp[i] = numeric_cast<int>(
+                            down_cast<const Integer &>(*q.second).as_int());
                     } else {
                         throw SymEngineException(
                             "Cannot convert symbolic exponents to sparse "
@@ -42,15 +44,18 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     = down_cast<const Pow &>(*p.first).get_exp();
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*syms.at(sym)).as_int());
                 if (not is_a<Integer>(*exp_))
                     throw NotImplementedError("Not Implemented");
-                exp[i] = down_cast<const Integer &>(*exp_).as_int();
+                exp[i] = numeric_cast<int>(
+                    down_cast<const Integer &>(*exp_).as_int());
             } else if (is_a<Symbol>(*p.first)) {
                 RCP<const Basic> sym = p.first;
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*syms.at(sym)).as_int());
                 exp[i] = 1;
             } else {
                 throw NotImplementedError("Not Implemented");
