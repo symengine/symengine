@@ -332,7 +332,7 @@ set(WITH_LLVM no
     CACHE BOOL "Build with LLVM")
 
 if (WITH_LLVM)
-    set(SYMENGINE_LLVM_COMPONENTS core mcjit native)
+    set(SYMENGINE_LLVM_COMPONENTS core mcjit native executionengine scalaropts support instcombine transformutils)
     find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
     set(LLVM_MINIMUM_REQUIRED_VERSION "3.8")
     if (LLVM_PACKAGE_VERSION LESS ${LLVM_MINIMUM_REQUIRED_VERSION})
