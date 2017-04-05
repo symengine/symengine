@@ -3173,10 +3173,15 @@ TEST_CASE("Erfinv: functions", "[functions]")
 
     REQUIRE(eq(*erfinv(neg(x)), *neg(erfinv(x))));
 
+    r1 = erf(i2);
+    r2 = erfinv(r1);
+    REQUIRE(eq(*i2, *r2));
+
     RCP<const Erfinv> r3 = make_rcp<Erfinv>(i2);
     REQUIRE(not(r3->is_canonical(neg(x))));
     REQUIRE(not(r3->is_canonical(zero)));
     REQUIRE(not(r3->is_canonical(one)));
+    REQUIRE(not(r3->is_canonical(r1)));
     REQUIRE(r3->is_canonical(i2));
 }
 
@@ -3209,11 +3214,16 @@ TEST_CASE("Erfcinv: functions", "[functions]")
     r2 = neg(div(mul(exp(mul(r1, r1)), sqrt(pi)), i2));
     REQUIRE(eq(*r1->diff(x), *r2));
 
+    r1 = erfc(i2);
+    r2 = erfcinv(r1);
+    REQUIRE(eq(*i2, *r2));
+
     RCP<const Erfcinv> r3 = make_rcp<Erfcinv>(i3);
     REQUIRE(not(r3->is_canonical(neg(x))));
     REQUIRE(not(r3->is_canonical(zero)));
     REQUIRE(not(r3->is_canonical(one)));
     REQUIRE(not(r3->is_canonical(i2)));
+    REQUIRE(not(r3->is_canonical(r1)));
     REQUIRE(r3->is_canonical(i3));
 }
 

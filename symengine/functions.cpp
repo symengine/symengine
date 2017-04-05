@@ -2839,6 +2839,9 @@ bool Erfinv::is_canonical(const RCP<const Basic> &arg) const
 {
     if (eq(*arg, *zero) or eq(*arg, *one))
         return false;
+    if (is_a<Erf>(*arg)) {
+        return false;
+    }
     if (could_extract_minus(*arg))
         return false;
     return true;
@@ -2860,6 +2863,9 @@ RCP<const Basic> erfinv(const RCP<const Basic> &arg)
     if (eq(*arg, *minus_one)) {
         return NegInf;
     }
+    if (is_a<Erf>(*arg)) {
+        return down_cast<const Erf &>(*arg).get_arg();
+    }
 
     RCP<const Basic> d;
     bool b = handle_minus(arg, outArg(d));
@@ -2872,6 +2878,9 @@ RCP<const Basic> erfinv(const RCP<const Basic> &arg)
 bool Erfcinv::is_canonical(const RCP<const Basic> &arg) const
 {
     if (eq(*arg, *one) or eq(*arg, *integer(2)) or eq(*arg, *zero)) {
+        return false;
+    }
+    if (is_a<Erfc>(*arg)) {
         return false;
     }
     if (could_extract_minus(*arg))
@@ -2895,6 +2904,10 @@ RCP<const Basic> erfcinv(const RCP<const Basic> &arg)
     if (eq(*arg, *integer(2))) {
         return NegInf;
     }
+    if (is_a<Erfc>(*arg)) {
+        return down_cast<const Erfc &>(*arg).get_arg();
+    }
+
     return make_rcp<const Erfcinv>(arg);
 }
 
