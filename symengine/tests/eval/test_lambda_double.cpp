@@ -178,8 +178,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     y = symbol("y");
     z = symbol("z");
 
-    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
-                        pow(sin(x), integer(2))));
+    r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                            pow(sin(x), integer(2)))),
+            log(x));
     for (int i = 0; i < 4; ++i) {
         r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
     }
