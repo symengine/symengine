@@ -132,6 +132,10 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *add(x, mul(integer(2), y))));
 
+    s = "x + 2y";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(x, mul(integer(2), y))));
+
     s = "w1*y";
     res = parse(s);
     REQUIRE(eq(*res, *mul(w, y)));
@@ -265,6 +269,10 @@ TEST_CASE("Parsing: constants", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *mul(E, pi)));
 
+    s = "2pi";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(integer(2), pi)));
+
     s = "sin(pi/2)";
     res = parse(s);
     REQUIRE(eq(*res, *one));
@@ -327,6 +335,10 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(eq(*res, *real_double(1.324)));
 
     s = "0.0324*x + 2*3";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
+
+    s = "0.324e-1x + 2*3";
     res = parse(s);
     REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
 
