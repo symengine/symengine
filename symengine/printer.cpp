@@ -867,4 +867,28 @@ std::vector<std::string> init_str_printer_names()
 }
 
 const std::vector<std::string> StrPrinter::names_ = init_str_printer_names();
+
+void JuliaStrPrinter::_print_pow(std::ostringstream &o,
+                                 const RCP<const Basic> &a,
+                                 const RCP<const Basic> &b)
+{
+    if (eq(*a, *E)) {
+        o << "exp(" << apply(b) << ")";
+    } else if (eq(*b, *rational(1, 2))) {
+        o << "sqrt(" << apply(a) << ")";
+    } else {
+        o << parenthesizeLE(a, PrecedenceEnum::Pow);
+        o << "^";
+        o << parenthesizeLE(b, PrecedenceEnum::Pow);
+    }
+}
+
+void JuliaStrPrinter::bvisit(const Constant &x)
+{
+    if (eq(*x, *E)) {
+        str_ = "exp(1)";
+    } else {
+        str_ = x.get_name();
+    }
+}
 }

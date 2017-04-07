@@ -250,6 +250,13 @@ public:
     std::string apply(const vec_basic &v);
     std::string apply(const Basic &b);
 };
+
+class JuliaStrPrinter : public BaseVisitor<JuliaStrPrinter, StrPrinter>
+{
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
+    void bvisit(const Constant &x);
+}
 }
 
 #endif // SYMENGINE_PRINTER_H
