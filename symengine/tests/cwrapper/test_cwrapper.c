@@ -76,6 +76,9 @@ void test_cwrapper()
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z**2") == 0);
     basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z^2") == 0);
+    basic_str_free(s);
 
     rational_set_ui(e, 100, 47);
     s = basic_str(e);
@@ -715,6 +718,9 @@ void test_constants()
     basic_str_free(s);
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);
     basic_str_free(s);
     s = basic_str(euler_gamma);
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);

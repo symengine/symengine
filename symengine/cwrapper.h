@@ -322,6 +322,9 @@ CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
+//! Returns a new char pointer to the string representation of s.
+//! Compatible with Julia
+char *basic_str_julia(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 

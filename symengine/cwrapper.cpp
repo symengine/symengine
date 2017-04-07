@@ -597,6 +597,15 @@ char *basic_str(const basic s)
     return cc;
 }
 
+char *basic_str_julia(const basic s)
+{
+    JuliaStrPrinter p;
+    std::string str = p.apply(s->m);
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
 void basic_str_free(char *s)
 {
     delete[] s;
