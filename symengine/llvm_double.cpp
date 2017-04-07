@@ -36,6 +36,7 @@
 #endif
 
 #include <symengine/llvm_double.h>
+#include <symengine/eval_double.h>
 
 namespace SymEngine
 {
@@ -456,16 +457,7 @@ LLVMDoubleVisitor::get_external_function(const std::string &name)
 
 void LLVMDoubleVisitor::bvisit(const Constant &x)
 {
-    if (eq(x, *pi)) {
-        set_double(3.1415926535897932);
-    } else if (eq(x, *E)) {
-        set_double(2.7182818284590452);
-    } else if (eq(x, *EulerGamma)) {
-        set_double(0.57721566490153286);
-    } else {
-        throw SymEngineException("Constant " + x.get_name()
-                                 + " is not implemented.");
-    }
+    set_double(eval_double(x));
 };
 
 void LLVMDoubleVisitor::bvisit(const Basic &)
