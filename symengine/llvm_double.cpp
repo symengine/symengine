@@ -383,21 +383,30 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
     result_ = r;
 };
 
-void LLVMDoubleVisitor::bvisit(const Tan &x)
-{
-    static llvm::Function *func = get_external_function("tan");
-    auto r = builder->CreateCall(func, {apply(*x.get_arg())});
-    r->setTailCall(true);
-    result_ = r;
-}
+#define ONE_ARG_EXTERNAL_FUNCTION(Class, ext)                                  \
+    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+    {                                                                          \
+        static llvm::Function *func = get_external_function(#ext);             \
+        auto r = builder->CreateCall(func, {apply(*x.get_arg())});             \
+        r->setTailCall(true);                                                  \
+        result_ = r;                                                           \
+    }
 
-void LLVMDoubleVisitor::bvisit(const Abs &x)
-{
-    static llvm::Function *func = get_external_function("abs");
-    auto r = builder->CreateCall(func, {apply(*x.get_arg())});
-    r->setTailCall(true);
-    result_ = r;
-};
+ONE_ARG_EXTERNAL_FUNCTION(Abs, abs)
+ONE_ARG_EXTERNAL_FUNCTION(Tan, tan)
+ONE_ARG_EXTERNAL_FUNCTION(Sinh, sinh)
+ONE_ARG_EXTERNAL_FUNCTION(Cosh, cosh)
+ONE_ARG_EXTERNAL_FUNCTION(Tanh, tanh)
+ONE_ARG_EXTERNAL_FUNCTION(ASinh, asinh)
+ONE_ARG_EXTERNAL_FUNCTION(ACosh, acosh)
+ONE_ARG_EXTERNAL_FUNCTION(ATanh, atanh)
+ONE_ARG_EXTERNAL_FUNCTION(ASin, asin)
+ONE_ARG_EXTERNAL_FUNCTION(ACos, acos)
+ONE_ARG_EXTERNAL_FUNCTION(ATan, atan)
+ONE_ARG_EXTERNAL_FUNCTION(Gamma, tgamma)
+ONE_ARG_EXTERNAL_FUNCTION(LogGamma, lgamma)
+ONE_ARG_EXTERNAL_FUNCTION(Erf, erf)
+ONE_ARG_EXTERNAL_FUNCTION(Erfc, erfc)
 
 void LLVMDoubleVisitor::bvisit(const Symbol &x)
 {

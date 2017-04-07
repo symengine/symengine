@@ -53,14 +53,27 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
-    void bvisit(const Sin &x);
-    void bvisit(const Cos &x);
     void bvisit(const Log &x);
-    void bvisit(const Tan &x);
     void bvisit(const Abs &x);
     void bvisit(const Symbol &x);
     void bvisit(const Constant &x);
     void bvisit(const Basic &);
+    void bvisit(const Sin &x);
+    void bvisit(const Cos &x);
+    void bvisit(const Tan &x);
+    void bvisit(const ASin &x);
+    void bvisit(const ACos &x);
+    void bvisit(const ATan &x);
+    void bvisit(const Sinh &x);
+    void bvisit(const Cosh &x);
+    void bvisit(const Tanh &x);
+    void bvisit(const ASinh &x);
+    void bvisit(const ACosh &x);
+    void bvisit(const ATanh &x);
+    void bvisit(const Gamma &x);
+    void bvisit(const LogGamma &x);
+    void bvisit(const Erf &x);
+    void bvisit(const Erfc &x);
 };
 }
 #endif

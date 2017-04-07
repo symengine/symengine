@@ -178,9 +178,13 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     y = symbol("y");
     z = symbol("z");
 
+    vec_basic vec = {log(x),   abs(x),      tan(x),   sinh(x), cosh(x), tanh(x),
+                     asinh(y), acosh(y),    atanh(x), asin(x), acos(x), atan(x),
+                     gamma(x), loggamma(x), erf(x),   erfc(x)};
+
     r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
                             pow(sin(x), integer(2)))),
-            log(x));
+            add(vec));
     for (int i = 0; i < 4; ++i) {
         r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
     }
@@ -193,7 +197,7 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {
-        d = v.call({1.5, 2.0, 3.0});
+        d = v.call({0.4, 2.0, 3.0});
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
@@ -202,13 +206,13 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 
     t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {
-        d2 = v2.call({1.5, 2.0, 3.0});
+        d2 = v2.call({0.4, 2.0, 3.0});
     }
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
                      .count()
               << "us" << std::endl;
-
+    std::cout << d << " " << d2 << std::endl;
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
 }
 #endif
