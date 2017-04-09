@@ -80,7 +80,7 @@ std::set<RCP<const UIntPoly>, RCPBasicKeyLess> UIntPoly::zz_zassenhaus() const
     auto A = get_poly().max_abs_coef();
     auto b = get_lc();
     integer_class temp;
-    mp_pow_ui(temp, integer_class(2), n);
+    temp = 1 << n;
     integer_class B = integer_class(int(std::sqrt(n + 1))) * temp * A * b;
     B = mp_abs(B);
 

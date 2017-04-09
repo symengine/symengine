@@ -387,7 +387,7 @@ void GaloisFieldDict::gf_gcdex(const GaloisFieldDict &f,
     mp_invert(p0, p0, f.modulo_);
     mp_invert(p1, p1, f.modulo_);
     GaloisFieldDict s0, t0;
-    s0.modulo_ = (*s).modulo_ = t0.modulo_ = (*t).modulo_ = f.modulo_;
+    s0.modulo_ = t0.modulo_ = f.modulo_;
     s0.dict_.push_back(p0);
     (*t).dict_.push_back(p1);
     while (1) {
