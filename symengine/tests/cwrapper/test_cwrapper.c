@@ -101,7 +101,6 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
     basic_str_free(s);
 
-
     rational_set_si(e, 100, 47);
     s = basic_str(e);
 
