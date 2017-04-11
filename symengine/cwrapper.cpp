@@ -49,6 +49,7 @@ using SymEngine::ones;
 using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
+using SymEngine::JuliaStrPrinter;
 
 namespace SymEngine
 {
@@ -588,6 +589,8 @@ IMPLEMENT_ONE_ARG_FUNC(lambertw);
 IMPLEMENT_ONE_ARG_FUNC(zeta);
 IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
 IMPLEMENT_ONE_ARG_FUNC(gamma);
+IMPLEMENT_ONE_ARG_FUNC(sqrt);
+IMPLEMENT_ONE_ARG_FUNC(exp);
 
 char *basic_str(const basic s)
 {

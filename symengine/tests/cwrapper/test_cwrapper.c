@@ -89,6 +89,19 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     basic_str_free(s);
 
+    integer_set_ui(e, 123);
+    basic_sqrt(e, e);
+    basic_exp(e, e);
+
+    s = basic_str(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
+    basic_str_free(s);
+
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
+    basic_str_free(s);
+
+
     rational_set_si(e, 100, 47);
     s = basic_str(e);
 
@@ -720,7 +733,10 @@ void test_constants()
     SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
     basic_str_free(s);
     s = basic_str_julia(e);
-    SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);
+    SYMENGINE_C_ASSERT(strcmp(s, "e") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(catalan);
+    SYMENGINE_C_ASSERT(strcmp(s, "catalan") == 0);
     basic_str_free(s);
     s = basic_str(euler_gamma);
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);

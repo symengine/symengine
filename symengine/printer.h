@@ -253,10 +253,12 @@ public:
 
 class JuliaStrPrinter : public BaseVisitor<JuliaStrPrinter, StrPrinter>
 {
+public:
+    using StrPrinter::bvisit;
     virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                             const RCP<const Basic> &b);
     void bvisit(const Constant &x);
-}
+};
 }
 
 #endif // SYMENGINE_PRINTER_H
