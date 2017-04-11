@@ -805,6 +805,48 @@ void test_constants()
     basic_free_stack(catalan);
 }
 
+void test_infinity()
+{
+    basic Inf, NegInf, ComplexInf;
+    basic_new_stack(Inf);
+    basic_new_stack(NegInf);
+    basic_new_stack(ComplexInf);
+
+    basic_const_infinity(Inf);
+    basic_const_neginfinity(NegInf);
+    basic_const_complex_infinity(ComplexInf);
+
+    char *s;
+    s = basic_str(Inf);
+    SYMENGINE_C_ASSERT(strcmp(s, "oo") == 0);
+    basic_str_free(s);
+    s = basic_str(NegInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "-oo") == 0);
+    basic_str_free(s);
+    s = basic_str(ComplexInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(Inf);
+    basic_free_stack(NegInf);
+    basic_free_stack(ComplexInf);
+}
+
+void test_nan()
+{
+    basic custom;
+    basic_new_stack(custom);
+
+    basic_const_nan(custom);
+
+    char *s;
+    s = basic_str(custom);
+    SYMENGINE_C_ASSERT(strcmp(s, "nan") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(custom);
+}
+
 void test_ascii_art()
 {
     char *s = ascii_art_str();
@@ -1581,6 +1623,8 @@ int main(int argc, char *argv[])
     test_subs();
     test_subs2();
     test_constants();
+    test_infinity();
+    test_nan();
     test_ascii_art();
     test_functions();
     test_ntheory();

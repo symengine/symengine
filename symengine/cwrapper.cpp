@@ -161,6 +161,26 @@ void basic_const_GoldenRatio(basic s)
     s->m = SymEngine::GoldenRatio;
 }
 
+void basic_const_infinity(basic s)
+{
+    s->m = SymEngine::Inf;
+}
+
+void basic_const_neginfinity(basic s)
+{
+    s->m = SymEngine::NegInf;
+}
+
+void basic_const_complex_infinity(basic s)
+{
+    s->m = SymEngine::ComplexInf;
+}
+
+void basic_const_nan(basic s)
+{
+    s->m = SymEngine::Nan;
+}
+
 TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {

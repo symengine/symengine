@@ -124,6 +124,15 @@ void basic_const_EulerGamma(basic s);
 void basic_const_Catalan(basic s);
 void basic_const_GoldenRatio(basic s);
 
+//! Use these functions to get the use of positive, negative or unsigned
+//! infinity as basic.
+void basic_const_infinity(basic s);
+void basic_const_neginfinity(basic s);
+void basic_const_complex_infinity(basic s);
+
+//! Use this function to get the use of Nan as basic.
+void basic_const_nan(basic s);
+
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);
 
