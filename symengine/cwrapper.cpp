@@ -591,6 +591,7 @@ IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
 IMPLEMENT_ONE_ARG_FUNC(gamma);
 IMPLEMENT_ONE_ARG_FUNC(sqrt);
 IMPLEMENT_ONE_ARG_FUNC(exp);
+IMPLEMENT_ONE_ARG_FUNC(log);
 
 char *basic_str(const basic s)
 {

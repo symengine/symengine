@@ -323,6 +323,8 @@ CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
 //! Assigns s = exp(a).
 CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
+//! Assigns s = log(a).
+CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);

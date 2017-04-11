@@ -885,7 +885,11 @@ void JuliaStrPrinter::_print_pow(std::ostringstream &o,
 
 void JuliaStrPrinter::bvisit(const Constant &x)
 {
-    str_ = x.get_name();
-    std::transform(str_.begin(), str_.end(), str_.begin(), ::tolower);
+    if (eq(x, *E)) {
+        str_ = "exp(1)";
+    } else {
+        str_ = x.get_name();
+        std::transform(str_.begin(), str_.end(), str_.begin(), ::tolower);
+    }
 }
 }
