@@ -104,38 +104,31 @@ void StrPrinter::bvisit(const Complex &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const RealDouble &x)
+std::string print_double(double d)
 {
     std::ostringstream s;
     s.precision(std::numeric_limits<double>::digits10);
-    s << x.i;
-    str_ = s.str();
+    s << d;
+    auto str_ = s.str();
     if (str_.find(".") == std::string::npos
         and str_.find("e") == std::string::npos) {
-        s << ".";
-        str_ = s.str();
+        str_ += ".0";
     }
+    return str_;
+}
+
+void StrPrinter::bvisit(const RealDouble &x)
+{
+    str_ = print_double(x.i);
 }
 
 void StrPrinter::bvisit(const ComplexDouble &x)
 {
-    std::ostringstream s;
-    s.precision(std::numeric_limits<double>::digits10);
-    s << x.i.real();
-    if (s.str().find(".") == std::string::npos
-        and str_.find("e") == std::string::npos) {
-        s << ".";
-    }
+    str_ = print_double(x.i.real());
     if (x.i.imag() < 0) {
-        s << " - " << -x.i.imag();
+        str_ += " - " + print_double(-x.i.imag()) + "*I";
     } else {
-        s << " + " << x.i.imag();
-    }
-    str_ = s.str();
-    if (str_.find(".") == str_.find_last_of(".")) {
-        str_ += ".*I";
-    } else {
-        str_ += "*I";
+        str_ += " + " + print_double(x.i.imag()) + "*I";
     }
 }
 
