@@ -255,6 +255,11 @@ CWRAPPER_OUTPUT_TYPE basic_neg(basic s, const basic a);
 //! Assigns s = abs(a).
 CWRAPPER_OUTPUT_TYPE basic_abs(basic s, const basic a);
 
+//! Assigns s = erf(a).
+CWRAPPER_OUTPUT_TYPE basic_erf(basic s, const basic a);
+//! Assigns s = erfc(a).
+CWRAPPER_OUTPUT_TYPE basic_erfc(basic s, const basic a);
+
 //! Assigns s = sin(a).
 CWRAPPER_OUTPUT_TYPE basic_sin(basic s, const basic a);
 //! Assigns s = cos(a).

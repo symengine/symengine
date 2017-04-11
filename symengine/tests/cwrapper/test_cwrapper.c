@@ -858,6 +858,12 @@ void test_functions()
 
     char *s;
 
+    basic_erf(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_erfc(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
     basic_sin(ans, pi);
     SYMENGINE_C_ASSERT(basic_eq(ans, zero));
 
