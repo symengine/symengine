@@ -385,6 +385,11 @@ CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
 size_t vecbasic_size(CVecBasic *self);
 
+//! Assigns to s the max of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d);
+//! Assigns to s the min of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d);
+
 //! Wrappers for Matrices
 
 typedef struct CDenseMatrix CDenseMatrix;

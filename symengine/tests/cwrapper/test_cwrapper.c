@@ -815,7 +815,7 @@ void test_ascii_art()
 void test_functions()
 {
     basic pi, e;
-    basic minus_one, minus_half, zero, one, two, four;
+    basic minus_one, minus_half, zero, one, two, three, four;
     basic pi_div_two, pi_div_four;
     basic e_minus_one;
     basic ans;
@@ -824,6 +824,7 @@ void test_functions()
     basic_new_stack(e);
     basic_new_stack(ans);
     basic_new_stack(two);
+    basic_new_stack(three);
     basic_new_stack(pi_div_two);
     basic_new_stack(four);
     basic_new_stack(pi_div_four);
@@ -837,9 +838,17 @@ void test_functions()
     basic_const_E(e);
     integer_set_si(two, 2);
     integer_set_si(four, 4);
+    integer_set_si(three, 3);
     integer_set_si(one, 1);
     integer_set_si(minus_one, -1);
     integer_set_si(zero, 0);
+
+    CVecBasic *vec = vecbasic_new();
+
+    vecbasic_push_back(vec, four);
+    vecbasic_push_back(vec, two);
+    vecbasic_push_back(vec, three);
+    vecbasic_push_back(vec, one);
 
     basic_div(pi_div_two, pi, two);
     basic_div(pi_div_four, pi, four);
@@ -945,6 +954,12 @@ void test_functions()
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
+    basic_max(ans, vec);
+    SYMENGINE_C_ASSERT(basic_eq(ans, four));
+
+    basic_min(ans, vec);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
     basic_free_stack(ans);
     basic_free_stack(pi);
     basic_free_stack(two);
@@ -952,11 +967,13 @@ void test_functions()
     basic_free_stack(four);
     basic_free_stack(pi_div_four);
     basic_free_stack(one);
+    basic_free_stack(three);
     basic_free_stack(minus_one);
     basic_free_stack(zero);
     basic_free_stack(e);
     basic_free_stack(e_minus_one);
     basic_free_stack(minus_half);
+    vecbasic_free(vec);
 }
 
 void test_ntheory()

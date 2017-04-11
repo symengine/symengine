@@ -784,6 +784,20 @@ size_t vecbasic_size(CVecBasic *self)
     return self->m.size();
 }
 
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::max(d->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::min(d->m);
+    CWRAPPER_END
+}
+
 // C wrapper for Matrix
 
 struct CDenseMatrix {
