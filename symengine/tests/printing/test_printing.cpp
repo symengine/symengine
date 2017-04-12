@@ -396,6 +396,10 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = add(p, x);
     REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
 
+    p = complex_double(std::complex<double>(1, -2));
+    p = add(p, x);
+    REQUIRE(p->__str__() == "1.0 - 2.0*I + x");
+
     p = complex_double(std::complex<double>(1, 0.00000000000000001));
     p = add(p, x);
     pr = (p->__str__() == "1.0 + 1e-17*I + x")
