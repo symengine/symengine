@@ -124,6 +124,15 @@ void basic_const_EulerGamma(basic s);
 void basic_const_Catalan(basic s);
 void basic_const_GoldenRatio(basic s);
 
+//! Use these functions to get the use of positive, negative or unsigned
+//! infinity as basic.
+void basic_const_infinity(basic s);
+void basic_const_neginfinity(basic s);
+void basic_const_complex_infinity(basic s);
+
+//! Use this function to get the use of Nan as basic.
+void basic_const_nan(basic s);
+
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);
 
@@ -254,6 +263,11 @@ CWRAPPER_OUTPUT_TYPE basic_neg(basic s, const basic a);
 
 //! Assigns s = abs(a).
 CWRAPPER_OUTPUT_TYPE basic_abs(basic s, const basic a);
+
+//! Assigns s = erf(a).
+CWRAPPER_OUTPUT_TYPE basic_erf(basic s, const basic a);
+//! Assigns s = erfc(a).
+CWRAPPER_OUTPUT_TYPE basic_erfc(basic s, const basic a);
 
 //! Assigns s = sin(a).
 CWRAPPER_OUTPUT_TYPE basic_sin(basic s, const basic a);
@@ -393,6 +407,11 @@ void vecbasic_free(CVecBasic *self);
 CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
 size_t vecbasic_size(CVecBasic *self);
+
+//! Assigns to s the max of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d);
+//! Assigns to s the min of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d);
 
 //! Wrappers for Matrices
 
