@@ -49,6 +49,7 @@ using SymEngine::ones;
 using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
+using SymEngine::JuliaStrPrinter;
 
 namespace SymEngine
 {
@@ -588,10 +589,22 @@ IMPLEMENT_ONE_ARG_FUNC(lambertw);
 IMPLEMENT_ONE_ARG_FUNC(zeta);
 IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
 IMPLEMENT_ONE_ARG_FUNC(gamma);
+IMPLEMENT_ONE_ARG_FUNC(sqrt);
+IMPLEMENT_ONE_ARG_FUNC(exp);
+IMPLEMENT_ONE_ARG_FUNC(log);
 
 char *basic_str(const basic s)
 {
     std::string str = s->m->__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_julia(const basic s)
+{
+    JuliaStrPrinter p;
+    std::string str = p.apply(s->m);
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;

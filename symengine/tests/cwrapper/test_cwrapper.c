@@ -76,6 +76,9 @@ void test_cwrapper()
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z**2") == 0);
     basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z^2") == 0);
+    basic_str_free(s);
 
     rational_set_ui(e, 100, 47);
     s = basic_str(e);
@@ -84,6 +87,18 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    basic_str_free(s);
+
+    integer_set_ui(e, 123);
+    basic_sqrt(e, e);
+    basic_exp(e, e);
+
+    s = basic_str(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
+    basic_str_free(s);
+
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
     basic_str_free(s);
 
     rational_set_si(e, 100, 47);
@@ -716,6 +731,12 @@ void test_constants()
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
     basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(catalan);
+    SYMENGINE_C_ASSERT(strcmp(s, "catalan") == 0);
+    basic_str_free(s);
     s = basic_str(euler_gamma);
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);
     basic_str_free(s);
@@ -818,11 +839,12 @@ void test_functions()
     basic minus_one, minus_half, zero, one, two, four;
     basic pi_div_two, pi_div_four;
     basic e_minus_one;
-    basic ans;
+    basic ans, res;
 
     basic_new_stack(pi);
     basic_new_stack(e);
     basic_new_stack(ans);
+    basic_new_stack(res);
     basic_new_stack(two);
     basic_new_stack(pi_div_two);
     basic_new_stack(four);
@@ -942,10 +964,15 @@ void test_functions()
     SYMENGINE_C_ASSERT(strcmp(s, "log(2)") == 0);
     basic_str_free(s);
 
+    integer_set_ui(res, 2);
+    basic_log(res, res);
+    SYMENGINE_C_ASSERT(basic_eq(res, ans));
+
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
     basic_free_stack(ans);
+    basic_free_stack(res);
     basic_free_stack(pi);
     basic_free_stack(two);
     basic_free_stack(pi_div_two);
