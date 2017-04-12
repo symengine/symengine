@@ -398,12 +398,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = complex_double(std::complex<double>(1, 0.00000000000000001));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1.0 + 1e-17*I + x");
+    pr = (p->__str__() == "1.0 + 1e-17*I + x") or (p->__str__() == "1.0 + 1e-017*I + x");
+    REQUIRE(pr == true);
 
     p = complex_double(
         std::complex<double>(0.00000000000000001, 0.00000000000000001));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1e-17 + 1e-17*I + x");
+    pr = (p->__str__() == "1e-17 + 1e-17*I + x") or (p->__str__() == "1e-017 + 1e-017*I + x");
+    REQUIRE(pr == true);
 
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
