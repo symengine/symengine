@@ -50,6 +50,7 @@ using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
 using SymEngine::numeric_cast;
+using SymEngine::JuliaStrPrinter;
 
 namespace SymEngine
 {
@@ -160,6 +161,26 @@ void basic_const_Catalan(basic s)
 void basic_const_GoldenRatio(basic s)
 {
     s->m = SymEngine::GoldenRatio;
+}
+
+void basic_const_infinity(basic s)
+{
+    s->m = SymEngine::Inf;
+}
+
+void basic_const_neginfinity(basic s)
+{
+    s->m = SymEngine::NegInf;
+}
+
+void basic_const_complex_infinity(basic s)
+{
+    s->m = SymEngine::ComplexInf;
+}
+
+void basic_const_nan(basic s)
+{
+    s->m = SymEngine::Nan;
 }
 
 TypeID basic_get_class_id(const char *c)
@@ -561,6 +582,8 @@ int basic_number_sign(const basic s)
 IMPLEMENT_ONE_ARG_FUNC(expand);
 IMPLEMENT_ONE_ARG_FUNC(neg);
 IMPLEMENT_ONE_ARG_FUNC(abs);
+IMPLEMENT_ONE_ARG_FUNC(erf);
+IMPLEMENT_ONE_ARG_FUNC(erfc);
 IMPLEMENT_ONE_ARG_FUNC(sin);
 IMPLEMENT_ONE_ARG_FUNC(cos);
 IMPLEMENT_ONE_ARG_FUNC(tan);
@@ -589,10 +612,22 @@ IMPLEMENT_ONE_ARG_FUNC(lambertw);
 IMPLEMENT_ONE_ARG_FUNC(zeta);
 IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
 IMPLEMENT_ONE_ARG_FUNC(gamma);
+IMPLEMENT_ONE_ARG_FUNC(sqrt);
+IMPLEMENT_ONE_ARG_FUNC(exp);
+IMPLEMENT_ONE_ARG_FUNC(log);
 
 char *basic_str(const basic s)
 {
     std::string str = s->m->__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_julia(const basic s)
+{
+    JuliaStrPrinter p;
+    std::string str = p.apply(s->m);
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
@@ -783,6 +818,20 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
 size_t vecbasic_size(CVecBasic *self)
 {
     return self->m.size();
+}
+
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::max(d->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::min(d->m);
+    CWRAPPER_END
 }
 
 // C wrapper for Matrix

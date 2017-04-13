@@ -262,24 +262,36 @@ class ExpressionParser
         if (expr == "")
             return zero;
 
+        const char *startptr = expr.c_str();
         char *endptr = 0;
-        double d = std::strtod(expr.c_str(), &endptr);
+        double d = std::strtod(startptr, &endptr);
 
-        if (*endptr == '\0') {
+        RCP<const Basic> num = one, sym;
+
+        // Numerical part of the result of e.g. "100x";
+        size_t length = endptr - startptr;
+        std::string lexpr = std::string(startptr, length);
+        bool has_numeric_part = endptr != startptr;
+
+        // Check if there is a numeric part;
+        if (has_numeric_part) {
+            char *lendptr;
             // if the expr is numeric, it's either a float or an integer
             errno = 0;
-            long l = std::strtol(expr.c_str(), &endptr, 0);
-            if (*endptr == '\0') {
+            long l = std::strtol(startptr, &lendptr, 0);
+
+            // Number is a long;
+            if (lendptr == endptr) {
                 if (errno != ERANGE) {
                     // No overflow in l
-                    return integer(l);
+                    num = integer(l);
                 } else {
-                    return integer(integer_class(expr.c_str()));
+                    num = integer(integer_class(lexpr));
                 }
             } else {
 #ifdef HAVE_SYMENGINE_MPFR
                 unsigned digits = 0;
-                for (unsigned i = 0; i < expr.length(); ++i) {
+                for (size_t i = 0; i < length; ++i) {
                     if (expr[i] == '.' or expr[i] == '-')
                         continue;
                     if (expr[i] == 'E' or expr[i] == 'e')
@@ -289,34 +301,44 @@ class ExpressionParser
                     }
                 }
                 if (digits <= 15) {
-                    return real_double(d);
+                    num = real_double(d);
                 } else {
                     // mpmath.libmp.libmpf.dps_to_prec
                     long prec
                         = std::max(long(1), std::lround((digits + 1)
                                                         * 3.3219280948873626));
-                    return real_mpfr(mpfr_class(expr, prec));
+                    num = real_mpfr(mpfr_class(lexpr, prec));
                 }
 #else
-                return real_double(d);
+                num = real_double(d);
 #endif
             }
-        } else {
-            // if the expr is not numeric, it's either a constant, or a user
-            // declared symbol
-            if (constants.find(expr) != constants.end())
-                return constants[expr];
-
-            if (std::isalpha(expr[0]) or expr[0] == '_' or expr[0] < 0) {
-                for (unsigned i = 1; i < expr.length(); ++i) {
-                    if (not std::isalnum(expr[i]) and expr[i] != '_'
-                        and expr[i] >= 0) {
-                        throw ParseError(expr + " is not a symbol or numeric");
-                    }
-                }
-                return symbol(expr);
+            // Expression is numeric
+            if (*endptr == '\0') {
+                return num;
             }
-            throw ParseError(expr + " is not a symbol or numeric");
+        }
+
+        // get the rest of the string
+        lexpr = std::string(endptr, expr.length() - length);
+        // if the expr is not numeric, it's either a constant, or a user
+        // declared symbol
+        auto c = constants.find(lexpr);
+        if (c != constants.end()) {
+            sym = c->second;
+        } else {
+            for (unsigned i = 0; i < lexpr.length(); ++i) {
+                if (not std::isalnum(lexpr[i]) and lexpr[i] != '_'
+                    and lexpr[i] >= 0) {
+                    throw ParseError(lexpr + " is not a symbol or numeric");
+                }
+            }
+            sym = symbol(lexpr);
+        }
+        if (has_numeric_part) {
+            return mul(num, sym);
+        } else {
+            return sym;
         }
     }
 

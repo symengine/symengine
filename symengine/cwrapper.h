@@ -124,6 +124,15 @@ void basic_const_EulerGamma(basic s);
 void basic_const_Catalan(basic s);
 void basic_const_GoldenRatio(basic s);
 
+//! Use these functions to get the use of positive, negative or unsigned
+//! infinity as basic.
+void basic_const_infinity(basic s);
+void basic_const_neginfinity(basic s);
+void basic_const_complex_infinity(basic s);
+
+//! Use this function to get the use of Nan as basic.
+void basic_const_nan(basic s);
+
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);
 
@@ -255,6 +264,11 @@ CWRAPPER_OUTPUT_TYPE basic_neg(basic s, const basic a);
 //! Assigns s = abs(a).
 CWRAPPER_OUTPUT_TYPE basic_abs(basic s, const basic a);
 
+//! Assigns s = erf(a).
+CWRAPPER_OUTPUT_TYPE basic_erf(basic s, const basic a);
+//! Assigns s = erfc(a).
+CWRAPPER_OUTPUT_TYPE basic_erfc(basic s, const basic a);
+
 //! Assigns s = sin(a).
 CWRAPPER_OUTPUT_TYPE basic_sin(basic s, const basic a);
 //! Assigns s = cos(a).
@@ -319,9 +333,18 @@ CWRAPPER_OUTPUT_TYPE basic_zeta(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_dirichlet_eta(basic s, const basic a);
 //! Assigns s = gamma(a).
 CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
+//! Assigns s = sqrt(a).
+CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
+//! Assigns s = exp(a).
+CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
+//! Assigns s = log(a).
+CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
+//! Returns a new char pointer to the string representation of s.
+//! Compatible with Julia
+char *basic_str_julia(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
@@ -384,6 +407,11 @@ void vecbasic_free(CVecBasic *self);
 CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
 size_t vecbasic_size(CVecBasic *self);
+
+//! Assigns to s the max of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d);
+//! Assigns to s the min of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d);
 
 //! Wrappers for Matrices
 

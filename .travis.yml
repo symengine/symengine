@@ -54,7 +54,17 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" TEST_CLANG_FORMAT="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-5
+    - env: TEST_CLANG_FORMAT="yes"
       compiler: gcc
       os: linux
       addons:
@@ -63,9 +73,11 @@ matrix:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.7
           packages:
-          - binutils-dev
-          - g++-5
           - clang-format-3.7
+      install:
+        - echo "nothing to install"
+      script:
+        - bin/travis_clang.sh
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes"
       compiler: gcc
       os: linux
