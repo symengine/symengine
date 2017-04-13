@@ -374,6 +374,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = pow(p, x);
     REQUIRE(p->__str__() == "11111.11**x");
 
+    p = real_double(123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456.0**x");
+
+    p = real_double(123456789123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456789123456.**x");
+
     p = real_double(0.00001);
     p = pow(p, x);
     bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";

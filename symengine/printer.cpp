@@ -112,7 +112,11 @@ std::string print_double(double d)
     auto str_ = s.str();
     if (str_.find(".") == std::string::npos
         and str_.find("e") == std::string::npos) {
-        str_ += ".0";
+        if (str_.size() < std::numeric_limits<double>::digits10) {
+            str_ += ".0";
+        } else {
+            str_ += ".";
+        }
     }
     return str_;
 }
