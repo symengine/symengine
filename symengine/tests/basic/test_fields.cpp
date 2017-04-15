@@ -18,6 +18,7 @@ using SymEngine::map_uint_mpz;
 using SymEngine::GaloisField;
 using SymEngine::GaloisFieldDict;
 using SymEngine::UIntPoly;
+using SymEngine::UIntDict;
 
 using namespace SymEngine::literals;
 
@@ -334,28 +335,28 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     integer_class LC;
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d1.gf_monic(LC, outArg(d2));
+    LC = d1.gf_monic(outArg(d2));
     REQUIRE(LC == 0_z);
     REQUIRE(d2 == d1);
     a = {1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d1.gf_monic(LC, outArg(d2));
+    LC = d1.gf_monic(outArg(d2));
     REQUIRE(LC == 1_z);
     REQUIRE(d2 == d1);
     a = {2_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d1.gf_monic(LC, outArg(d2));
+    LC = d1.gf_monic(outArg(d2));
     REQUIRE(LC == 2_z);
     mp = d2.get_dict();
     REQUIRE(mp[0] == 1_z);
     a = {4_z, 3_z, 2_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d1.gf_monic(LC, outArg(d2));
+    LC = d1.gf_monic(outArg(d2));
     REQUIRE(LC == 1_z);
     REQUIRE(d2 == d1);
     a = {5_z, 4_z, 3_z, 2_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    d1.gf_monic(LC, outArg(d2));
+    LC = d1.gf_monic(outArg(d2));
     REQUIRE(LC == 2_z);
     mp = d2.get_dict();
     REQUIRE(mp[0] == 8);
@@ -1000,4 +1001,98 @@ TEST_CASE("GaloisFieldDict eval : Basic", "[basic]")
     d1 = GaloisFieldDict::from_vec({1_z, 2_z, 3_z}, 11_z);
     std::vector<integer_class> resa = {1_z, 6_z, 6_z, 1_z};
     REQUIRE(d1.gf_multi_eval({0_z, 1_z, 2_z, 3_z}) == resa);
+}
+
+TEST_CASE("GaloisFieldDict gcdex : Basic", "[basic]")
+{
+    GaloisFieldDict d1, d2, s, t, h;
+    d1 = GaloisFieldDict::from_vec({}, 11_z);
+    d2 = GaloisFieldDict::from_vec({}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(t.empty());
+    REQUIRE(h.empty());
+    REQUIRE(s == GaloisFieldDict::from_vec({1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({2_z}, 11_z);
+    d2 = GaloisFieldDict::from_vec({}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(t.empty());
+    REQUIRE(s == GaloisFieldDict::from_vec({6_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({}, 11_z);
+    d2 = GaloisFieldDict::from_vec({2_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(s.empty());
+    REQUIRE(t == GaloisFieldDict::from_vec({6_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({2_z}, 11_z);
+    d2 = GaloisFieldDict::from_vec({2_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(s.empty());
+    REQUIRE(t == GaloisFieldDict::from_vec({6_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({}, 11_z);
+    d2 = GaloisFieldDict::from_vec({0_z, 3_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(s.empty());
+    REQUIRE(t == GaloisFieldDict::from_vec({4_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({0_z, 1_z}, 11_z));
+
+    d2 = GaloisFieldDict::from_vec({}, 11_z);
+    d1 = GaloisFieldDict::from_vec({0_z, 3_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(t.empty());
+    REQUIRE(s == GaloisFieldDict::from_vec({4_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({0_z, 1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({0_z, 3_z}, 11_z);
+    d2 = GaloisFieldDict::from_vec({0_z, 3_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(s.empty());
+    REQUIRE(t == GaloisFieldDict::from_vec({4_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({0_z, 1_z}, 11_z));
+
+    d1 = GaloisFieldDict::from_vec({7_z, 8_z, 1_z}, 11_z);
+    d2 = GaloisFieldDict::from_vec({7_z, 1_z, 7_z, 1_z}, 11_z);
+    GaloisFieldDict::gf_gcdex(d1, d2, outArg(s), outArg(t), outArg(h));
+    REQUIRE(s == GaloisFieldDict::from_vec({6_z, 5_z}, 11_z));
+    REQUIRE(t == GaloisFieldDict::from_vec({6_z}, 11_z));
+    REQUIRE(h == GaloisFieldDict::from_vec({7_z, 1_z}, 11_z));
+}
+
+TEST_CASE("GaloisFieldDict hensel_lift", "[UIntPoly]")
+{
+    GaloisFieldDict f
+        = GaloisFieldDict::from_vec({-1_z, 0_z, 0_z, 0_z, 1_z}, 625_z);
+    GaloisFieldDict g = GaloisFieldDict::from_vec({-1_z, 1_z}, 5_z);
+    GaloisFieldDict h = GaloisFieldDict::from_vec({-2_z, 1_z}, 5_z);
+    GaloisFieldDict s = GaloisFieldDict::from_vec({2_z, 1_z}, 5_z);
+    GaloisFieldDict t = GaloisFieldDict::from_vec({1_z, 1_z}, 5_z);
+    std::set<GaloisFieldDict, GaloisFieldDict::DictLess> v = {g, h, s, t};
+    auto out = GaloisFieldDict::zz_hensel_lift(f, 5_z, v, 4);
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({-1_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({1_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({-182_z, 1_z}))
+            != out.end());
+    REQUIRE(std::find(out.begin(), out.end(), UIntDict::from_vec({182_z, 1_z}))
+            != out.end());
+    REQUIRE(out.size() == 4);
+
+    GaloisFieldDict G, H, S, T;
+    f = GaloisFieldDict::from_vec({-1_z, 0_z, 0_z, 0_z, 1_z}, 25_z);
+    g = GaloisFieldDict::from_vec({-2_z, -1_z, 2_z, 1_z}, 5_z);
+    h = GaloisFieldDict::from_vec({-2_z, 1_z}, 5_z);
+    s = GaloisFieldDict::from_vec({-2_z}, 5_z);
+    t = GaloisFieldDict::from_vec({-1_z, -2_z, 2_z}, 5_z);
+    GaloisFieldDict::zz_hensel_step(5_z, f, g, h, s, t, outArg(G), outArg(H),
+                                    outArg(S), outArg(T));
+    REQUIRE(G == GaloisFieldDict::from_vec({-7_z, -1_z, 7_z, 1_z}, 25_z));
+    REQUIRE(H == GaloisFieldDict::from_vec({-7_z, 1_z}, 25_z));
+    REQUIRE(S == GaloisFieldDict::from_vec({8_z}, 25_z));
+    REQUIRE(T == GaloisFieldDict::from_vec({-1_z, -12_z, -8_z}, 25_z));
 }
