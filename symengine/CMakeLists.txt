@@ -185,6 +185,11 @@ if (BUILD_SHARED_LIBS)
         SOVERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
     )
 endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
+endif()
+
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()

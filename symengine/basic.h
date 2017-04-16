@@ -176,7 +176,7 @@ public:
 //! Our hash:
 struct RCPBasicHash {
     //! Returns the hashed value.
-    long operator()(const RCP<const Basic> &k) const
+    size_t operator()(const RCP<const Basic> &k) const
     {
         return k->hash();
     }

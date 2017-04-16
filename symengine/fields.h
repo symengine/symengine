@@ -64,7 +64,7 @@ public:
     void gf_rshift(const integer_class n, const Ptr<GaloisFieldDict> &quo,
                    const Ptr<GaloisFieldDict> &rem) const;
     GaloisFieldDict gf_sqr() const;
-    GaloisFieldDict gf_pow(const unsigned int n) const;
+    GaloisFieldDict gf_pow(const unsigned long n) const;
     void gf_monic(integer_class &res, const Ptr<GaloisFieldDict> &monic) const;
     GaloisFieldDict gf_gcd(const GaloisFieldDict &o) const;
     GaloisFieldDict gf_lcm(const GaloisFieldDict &o) const;
@@ -90,7 +90,7 @@ public:
     std::vector<GaloisFieldDict> gf_frobenius_monomial_base() const;
     // computes `f**n % (*this)` in modulo_
     GaloisFieldDict gf_pow_mod(const GaloisFieldDict &f,
-                               const unsigned int &n) const;
+                               const unsigned long &n) const;
     // uses Frobenius Map to find g.gf_pow_mod(*this, modulo_)
     // i.e. `(*this)**modulo_ % g`
     GaloisFieldDict
@@ -274,9 +274,9 @@ public:
             if (other.dict_.size() == this->dict_.size())
                 gf_istrip();
             else {
-                unsigned int orig_size = dict_.size();
+                auto orig_size = dict_.size();
                 dict_.resize(other.dict_.size());
-                for (unsigned int i = orig_size; i < other.dict_.size(); i++) {
+                for (auto i = orig_size; i < other.dict_.size(); i++) {
                     dict_[i] = -other.dict_[i];
                     if (dict_[i] != 0_z)
                         dict_[i] += modulo_;
@@ -412,7 +412,7 @@ public:
                           ? deg_divisor + riter - deg_dividend
                           : 0;
             auto ub = std::min(riter + 1, deg_divisor);
-            for (unsigned j = lb; j < ub; ++j) {
+            for (auto j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[riter - j + deg_divisor],
                           -dict_divisor[j]);
             }
@@ -508,7 +508,7 @@ public:
         return not(*this == other);
     }
 
-    unsigned int size() const
+    size_t size() const
     {
         return dict_.size();
     }
@@ -522,7 +522,7 @@ public:
     {
         if (dict_.empty())
             return 0;
-        return dict_.size() - 1;
+        return numeric_cast<unsigned>(dict_.size()) - 1;
     }
 
     const std::vector<integer_class> &get_dict() const
@@ -612,7 +612,7 @@ public:
         return get_poly().dict_;
     }
 
-    inline unsigned int size() const
+    inline int size() const
     {
         if (get_poly().empty())
             return 0;

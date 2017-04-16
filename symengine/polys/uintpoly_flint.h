@@ -125,9 +125,9 @@ public:
         return r_iterator(this->template rcp_from_this_cast<Poly>(), -1);
     }
 
-    unsigned int size() const
+    int size() const
     {
-        return this->get_poly().length();
+        return numeric_cast<int>(this->get_poly().length());
     }
 };
 

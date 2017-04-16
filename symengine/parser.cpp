@@ -381,7 +381,7 @@ public:
                 s += in[i];
             }
         }
-        s_len = s.length();
+        s_len = numeric_cast<unsigned>(s.length());
         operator_end.clear();
         operator_end.resize(s_len, -1);
         // the 'defacto' end of any operator

@@ -319,7 +319,7 @@ public:
         return dict_;
     }
 
-    unsigned int size() const
+    size_t size() const
     {
         return dict_.size();
     }
@@ -374,7 +374,7 @@ public:
     virtual hash_t __hash__() const = 0;
 
     // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
+    virtual int size() const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
@@ -483,9 +483,9 @@ public:
         return res;
     }
 
-    inline unsigned int get_degree() const
+    inline int get_degree() const
     {
-        return this->get_poly().degree();
+        return numeric_cast<int>(this->get_poly().degree());
     }
 
     Cf get_lc() const
@@ -613,8 +613,8 @@ public:
 
     std::shared_ptr<std::pair<long, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(i_,
-                                                      ptr_->get_coeff_ref(i_));
+        return std::make_shared<std::pair<long, Int>>(
+            i_, ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
     }
 };
 
@@ -631,7 +631,8 @@ public:
     {
         this->i_++;
         while (this->i_ < this->ptr_->size()) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_++;
         }
@@ -652,7 +653,8 @@ public:
     {
         this->i_--;
         while (this->i_ >= 0) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_--;
         }

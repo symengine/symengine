@@ -67,13 +67,13 @@ inline void hash_combine_impl(
     hash_t &seed, const T &v,
     typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
 {
-    seed ^= v + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
+    seed ^= hash_t(v) + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
 }
 
 inline void hash_combine_impl(hash_t &seed, const std::string &s)
 {
     for (const char &c : s) {
-        hash_combine<hash_t>(seed, c);
+        hash_combine<hash_t>(seed, static_cast<hash_t>(c));
     }
 }
 

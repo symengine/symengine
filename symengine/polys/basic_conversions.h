@@ -60,7 +60,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict
                     = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
@@ -97,7 +98,7 @@ public:
                 if (is_a<const Integer>(*tmp)) {
                     RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
                     if (i->is_positive()) {
-                        powr = i->as_int();
+                        powr = static_cast<int>(i->as_int());
                         continue;
                     }
                 }
@@ -143,7 +144,8 @@ public:
         if (eq(*genbase, x)) {
             powr = div(one, genpow);
             if (is_a<const Integer>(*powr)) {
-                int i = down_cast<const Integer &>(*powr).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*powr).as_int());
                 if (i > 0) {
                     dict = P::container_from_dict(
                         gen, {{i, typename P::coef_type(1)}});
@@ -309,7 +311,7 @@ public:
     BasicToMPolyBase(const set_basic &gens_)
     {
         gens = gens_;
-        dict.vec_size = gens.size();
+        dict.vec_size = static_cast<int>(gens.size());
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -344,7 +346,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
                 return;
@@ -381,7 +384,7 @@ public:
                         i = rcp_static_cast<const Integer>(tmp);
                         if (i->is_positive()) {
                             zero_v[gens_map[pow(ite->first, powr)]]
-                                = i->as_int();
+                                = static_cast<int>(i->as_int());
                             found = true;
                             break;
                         }
@@ -432,7 +435,8 @@ public:
             for (auto pows : it->second) {
                 powr = div(one, pows);
                 if (is_a<const Integer>(*powr)) {
-                    int i = down_cast<const Integer &>(*powr).as_int();
+                    int i = numeric_cast<int>(
+                        down_cast<const Integer &>(*powr).as_int());
                     if (i > 0) {
                         // can be optimized
                         zero_v[gens_map[pow(it->first, pows)]] = i;

@@ -221,8 +221,8 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         return;
     }
     auto dict_divisor = o.dict_;
-    unsigned int deg_dividend = this->degree();
-    unsigned int deg_divisor = o.degree();
+    auto deg_dividend = this->degree();
+    auto deg_divisor = o.degree();
     if (deg_dividend < deg_divisor) {
         *quo = GaloisFieldDict::from_vec(dict_out, modulo_);
         *rem = GaloisFieldDict::from_vec(dict_, modulo_);
@@ -265,7 +265,7 @@ GaloisFieldDict GaloisFieldDict::gf_lshift(const integer_class n) const
     std::vector<integer_class> dict_out;
     auto to_ret = GaloisFieldDict::from_vec(dict_out, modulo_);
     if (!dict_.empty()) {
-        unsigned n_val = mp_get_si(n);
+        auto n_val = mp_get_ui(n);
         to_ret.dict_.resize(n_val, integer_class(0));
         to_ret.dict_.insert(to_ret.dict_.end(), dict_.begin(), dict_.end());
     }
@@ -278,7 +278,7 @@ void GaloisFieldDict::gf_rshift(const integer_class n,
 {
     std::vector<integer_class> dict_quo;
     *quo = GaloisFieldDict::from_vec(dict_quo, modulo_);
-    unsigned n_val = mp_get_si(n);
+    auto n_val = mp_get_ui(n);
     if (n_val < dict_.size()) {
         quo->dict_.insert(quo->dict_.end(), dict_.begin() + n_val, dict_.end());
         std::vector<integer_class> dict_rem(dict_.begin(),
@@ -294,7 +294,7 @@ GaloisFieldDict GaloisFieldDict::gf_sqr() const
     return (*this * *this);
 }
 
-GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
+GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned long n) const
 {
     if (n == 0) {
         return GaloisFieldDict({integer_class(1)}, modulo_);
@@ -303,7 +303,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const unsigned int n) const
         return down_cast<const GaloisFieldDict &>(*this);
     if (n == 2)
         return gf_sqr();
-    unsigned int num = n;
+    auto num = n;
     GaloisFieldDict to_sq = down_cast<const GaloisFieldDict &>(*this);
     GaloisFieldDict to_ret = GaloisFieldDict({integer_class(1)}, modulo_);
     while (1) {
@@ -422,7 +422,8 @@ GaloisFieldDict::gf_sqf_list() const
     if (degree() < 1)
         return vec_out;
     unsigned n = 1;
-    unsigned r = mp_get_ui(modulo_);
+    // This cast is okay, because the multiplicities are unsigned
+    unsigned r = numeric_cast<unsigned>(mp_get_ui(modulo_));
     bool sqf = false;
     integer_class LC;
     GaloisFieldDict f;
@@ -452,8 +453,8 @@ GaloisFieldDict::gf_sqf_list() const
                 f = g;
         }
         if (not sqf) {
-            unsigned int deg = f.degree();
-            unsigned int d = deg / r;
+            auto deg = f.degree();
+            auto d = deg / r;
             GaloisFieldDict temp = f;
             for (unsigned int i = 0; i <= d; ++i) {
                 f.dict_[d - i] = temp.dict_[deg - i * r];
@@ -490,7 +491,7 @@ GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
     GaloisFieldDict out
         = GaloisFieldDict::from_vec({*(g.dict_.rbegin())}, modulo_);
     if (g.dict_.size() >= 2) {
-        for (unsigned i = g.dict_.size() - 2;; --i) {
+        for (auto i = g.dict_.size() - 2;; --i) {
             out *= h;
             out += g.dict_[i];
             out %= (*this);
@@ -502,7 +503,7 @@ GaloisFieldDict GaloisFieldDict::gf_compose_mod(const GaloisFieldDict &g,
 }
 
 GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
-                                            const unsigned int &n) const
+                                            const unsigned long &n) const
 {
     if (modulo_ != f.modulo_)
         throw SymEngineException("Error: field must be same.");
@@ -516,7 +517,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow_mod(const GaloisFieldDict &f,
         return f.gf_sqr() % (*this);
     }
     GaloisFieldDict h = GaloisFieldDict::from_vec({1_z}, modulo_);
-    unsigned int mod = n;
+    auto mod = n;
     while (true) {
         if (mod & 1) {
             h *= in;
@@ -541,7 +542,7 @@ std::vector<GaloisFieldDict> GaloisFieldDict::gf_frobenius_monomial_base() const
     b.resize(n);
     b[0] = GaloisFieldDict::from_vec({1_z}, modulo_);
     GaloisFieldDict temp_out;
-    if (mp_get_si(modulo_) < n) {
+    if (mp_get_ui(modulo_) < n) {
         for (unsigned i = 1; i < n; ++i) {
             b[i] = b[i - 1].gf_lshift(modulo_);
             b[i] %= (*this);
@@ -563,7 +564,7 @@ GaloisFieldDict::gf_frobenius_map(const GaloisFieldDict &g,
 {
     if (modulo_ != g.modulo_)
         throw SymEngineException("Error: field must be same.");
-    unsigned m = g.degree();
+    auto m = g.degree();
     GaloisFieldDict temp_out(*this), out;
     if (this->degree() >= m) {
         temp_out %= g;
@@ -691,7 +692,7 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
     if (this->degree() <= n)
         return factors;
 
-    unsigned N = this->degree() / n;
+    auto N = this->degree() / n;
 
     std::vector<GaloisFieldDict> b;
     if (modulo_ != 2_z)
@@ -731,8 +732,8 @@ GaloisFieldDict::gf_ddf_shoup() const
     if (dict_.empty())
         return factors;
     GaloisFieldDict f(*this);
-    unsigned n = this->degree();
-    auto k = std::ceil(std::sqrt(n / 2));
+    auto n = this->degree();
+    auto k = static_cast<unsigned>(std::ceil(std::sqrt(n / 2)));
     auto b = gf_frobenius_monomial_base();
     auto x = GaloisFieldDict::from_vec({0_z, 1_z}, modulo_);
     auto h = x.gf_frobenius_map(f, b);
@@ -748,11 +749,11 @@ GaloisFieldDict::gf_ddf_shoup() const
     std::vector<GaloisFieldDict> V;
     V.push_back(h);
     V.resize(k);
-    for (unsigned i = 1; i <= k - 1; ++i)
+    for (unsigned i = 1; i + 1 <= k; ++i)
         V[i] = this->gf_compose_mod(V[i - 1], h);
     for (unsigned i = 0; i < V.size(); i++) {
         h = GaloisFieldDict::from_vec({1_z}, modulo_);
-        unsigned j = k - 1;
+        auto j = k - 1;
         GaloisFieldDict g;
         for (auto &u : U) {
             g = V[i] - u;
@@ -765,7 +766,7 @@ GaloisFieldDict::gf_ddf_shoup() const
             h = V[i] - (*rit);
             auto F = g.gf_gcd(h);
             if (not F.is_one()) {
-                int temp = k * (i + 1) - j;
+                unsigned temp = k * (i + 1) - j;
                 factors.push_back({F, temp});
             }
             g /= F;

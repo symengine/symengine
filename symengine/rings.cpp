@@ -10,7 +10,7 @@ namespace SymEngine
 void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
-        int n = syms.size();
+        auto n = syms.size();
         const umap_basic_num &d = down_cast<const Add &>(*p).get_dict();
         vec_int exp;
         integer_class coef;
@@ -26,9 +26,11 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     RCP<const Basic> sym = q.first;
                     if (not is_a<Integer>(*syms.at(sym)))
                         throw NotImplementedError("Not Implemented");
-                    int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                    int i = numeric_cast<int>(
+                        down_cast<const Integer &>(*syms.at(sym)).as_int());
                     if (is_a<Integer>(*q.second)) {
-                        exp[i] = down_cast<const Integer &>(*q.second).as_int();
+                        exp[i] = numeric_cast<int>(
+                            down_cast<const Integer &>(*q.second).as_int());
                     } else {
                         throw SymEngineException(
                             "Cannot convert symbolic exponents to sparse "
@@ -42,15 +44,18 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     = down_cast<const Pow &>(*p.first).get_exp();
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*syms.at(sym)).as_int());
                 if (not is_a<Integer>(*exp_))
                     throw NotImplementedError("Not Implemented");
-                exp[i] = down_cast<const Integer &>(*exp_).as_int();
+                exp[i] = numeric_cast<int>(
+                    down_cast<const Integer &>(*exp_).as_int());
             } else if (is_a<Symbol>(*p.first)) {
                 RCP<const Basic> sym = p.first;
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = down_cast<const Integer &>(*syms.at(sym)).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*syms.at(sym)).as_int());
                 exp[i] = 1;
             } else {
                 throw NotImplementedError("Not Implemented");
@@ -66,7 +71,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
 {
     vec_int exp;
-    int n = (A.begin()->first).size();
+    auto n = A.begin()->first.size();
     exp.assign(n, 0); // Initialize to [0]*n
     /*
     std::cout << "A: " << A.load_factor() << " " << A.bucket_count() << " " <<

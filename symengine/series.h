@@ -20,7 +20,7 @@ public:
     virtual RCP<const Basic> as_basic() const = 0;
     virtual umap_int_basic as_dict() const = 0;
     virtual RCP<const Basic> get_coeff(int) const = 0;
-    virtual long get_degree() const = 0;
+    virtual unsigned get_degree() const = 0;
     virtual const std::string &get_var() const = 0;
 };
 
@@ -30,14 +30,14 @@ class SeriesBase : public SeriesCoeffInterface
 protected:
     const Poly p_;
     const std::string var_;
-    const long degree_;
+    const unsigned degree_;
 
 public:
-    inline SeriesBase(Poly p, std::string var, long degree)
+    inline SeriesBase(Poly p, std::string var, unsigned degree)
         : p_(std::move(p)), var_(var), degree_(degree)
     {
     }
-    inline virtual long get_degree() const
+    inline virtual unsigned get_degree() const
     {
         return degree_;
     }
@@ -93,7 +93,7 @@ public:
     {
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
+            auto deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
                     "Multivariate Series not implemented");
@@ -111,7 +111,7 @@ public:
     {
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
+            auto deg = std::min(degree_, o.degree_);
             if (var_ != o.var_) {
                 throw NotImplementedError(
                     "Multivariate Series not implemented");
@@ -127,7 +127,7 @@ public:
 
     virtual RCP<const Number> pow(const Number &other) const
     {
-        long deg = degree_;
+        auto deg = degree_;
         Poly p;
         if (is_a<Series>(other)) {
             const Series &o = down_cast<const Series &>(other);
@@ -140,13 +140,16 @@ public:
         } else if (is_a<Integer>(other)) {
             if (other.is_negative()) {
                 p = Series::pow(
-                    p_, (down_cast<const Integer &>(other).neg()->as_int()),
+                    p_, (numeric_cast<int>(
+                            down_cast<const Integer &>(other).neg()->as_int())),
                     deg);
                 p = Series::series_invert(p, Series::var(var_), deg);
                 return make_rcp<Series>(p, var_, deg);
             }
-            p = Series::pow(p_, (down_cast<const Integer &>(other).as_int()),
-                            deg);
+            p = Series::pow(
+                p_,
+                numeric_cast<int>((down_cast<const Integer &>(other).as_int())),
+                deg);
             return make_rcp<Series>(p, var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
             p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
@@ -200,7 +203,7 @@ public:
                 "Series::series_invert: Division By Zero");
         if (s == 1)
             return Poly(1);
-        const short ldeg = Series::ldegree(s);
+        const int ldeg = Series::ldegree(s);
         const Coeff co = Series::find_cf(s, var, ldeg);
         Poly p(1 / co), ss = s;
         if (ldeg != 0) {
@@ -246,7 +249,7 @@ public:
         if (n == -1)
             return Series::series_invert(s, var, prec);
 
-        const short ldeg = Series::ldegree(s);
+        const int ldeg = Series::ldegree(s);
         if (ldeg % n != 0) {
             throw NotImplementedError("Puiseux series not implemented.");
         }
@@ -286,7 +289,7 @@ public:
 
         if (s == var) {
             //! fast atan(x)
-            short sign = 1;
+            int sign = 1;
             Poly monom(var), vsquare(var * var);
             for (unsigned int i = 1; i < prec; i += 2, sign *= -1) {
                 res_p += monom * (Coeff(sign) / Coeff(i));
@@ -359,7 +362,7 @@ public:
         Poly ssquare = Series::mul(s, s, prec);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
-            const short j = 2 * i + 1;
+            const int j = 2 * i + 1;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
@@ -438,7 +441,7 @@ public:
         Poly monom(ssquare);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
-            const short j = 2 * i;
+            const int j = 2 * i;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;

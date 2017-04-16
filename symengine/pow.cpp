@@ -170,15 +170,13 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 // This function can overflow, but it is fast.
 // TODO: figure out condition for (m, n) when it overflows and raise an
 // exception.
-void multinomial_coefficients(int m, int n, map_vec_int &r)
+void multinomial_coefficients(unsigned m, unsigned n, map_vec_uint &r)
 {
-    vec_int t;
-    int j, tj, start, k;
-    long long int v;
+    vec_uint t;
+    unsigned j, tj, start, k;
+    unsigned long long int v;
     if (m < 2)
         throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
-    if (n < 0)
-        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
@@ -215,15 +213,13 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
 }
 
 // Slower, but returns exact (possibly large) integers (as mpz)
-void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
+void multinomial_coefficients_mpz(unsigned m, unsigned n, map_vec_mpz &r)
 {
-    vec_int t;
-    int j, tj, start, k;
+    vec_uint t;
+    unsigned j, tj, start, k;
     integer_class v;
     if (m < 2)
         throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
-    if (n < 0)
-        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;

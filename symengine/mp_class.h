@@ -2,6 +2,7 @@
 #define SYMENGINE_INTEGER_CLASS_H
 
 #include <symengine/symengine_config.h>
+#include <symengine/symengine_casts.h>
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 #include <symengine/mp_wrapper.h>
 #endif
@@ -106,7 +107,7 @@ inline integer_class mp_sqrt(const integer_class &i)
 
 inline double mp_get_d(const integer_class &i)
 {
-    return i.get_d();
+    return static_cast<double>(i.get_d());
 }
 
 inline void mp_demote(integer_class &i)
@@ -740,7 +741,7 @@ inline void mp_and(integer_class &res, const integer_class &a,
 inline void mp_pow_ui(integer_class &res, const integer_class &i,
                       unsigned long n)
 {
-    res = boost::multiprecision::pow(i, n);
+    res = boost::multiprecision::pow(i, numeric_cast<unsigned>(n));
 }
 
 inline void mp_gcd(integer_class &res, const integer_class &a,
