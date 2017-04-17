@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
+#include <symengine/symengine_casts.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/solve.h>
@@ -491,7 +492,8 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
 void permuteFwd(DenseMatrix &A, permutelist &pl)
 {
     for (auto &p : pl) {
-        row_exchange_dense(A, p.first, p.second);
+        row_exchange_dense(A, numeric_cast<unsigned>(p.first),
+                           numeric_cast<unsigned>(p.second));
     }
 }
 
@@ -765,12 +767,16 @@ void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     x.m_ = b.m_;
 
     for (unsigned k = 0; k < sys; k++) {
-        for (int i = col - 1; i >= 0; i--) {
-            for (unsigned j = i + 1; j < col; j++)
-                x.m_[i * sys + k]
-                    = sub(x.m_[i * sys + k],
-                          mul(U.m_[i * col + j], x.m_[j * sys + k]));
-            x.m_[i * sys + k] = div(x.m_[i * sys + k], U.m_[i * col + i]);
+        for (int i = numeric_cast<int>(col) - 1; i >= 0; i--) {
+            for (unsigned j = numeric_cast<unsigned>(i + 1); j < col; j++)
+                x.m_[numeric_cast<unsigned>(i) * sys + k]
+                    = sub(x.m_[numeric_cast<unsigned>(i) * sys + k],
+                          mul(U.m_[numeric_cast<unsigned>(i) * col + j],
+                              x.m_[j * sys + k]));
+            x.m_[numeric_cast<unsigned>(i) * sys + k]
+                = div(x.m_[numeric_cast<unsigned>(i) * sys + k],
+                      U.m_[numeric_cast<unsigned>(i) * col
+                           + numeric_cast<unsigned>(i)]);
         }
     }
 }
@@ -808,42 +814,54 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
     SYMENGINE_ASSERT(x.col_ == b.col_);
 
-    int i, j, k, col = A.col_, bcol = b.col_;
+    int i, j, k, col = numeric_cast<int>(A.col_),
+                 bcol = numeric_cast<int>(b.col_);
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
     DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
             for (k = 0; k < bcol; k++) {
-                b_.m_[j * bcol + k]
-                    = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]),
-                          mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
+                b_.m_[numeric_cast<unsigned long>(j * bcol + k)] = sub(
+                    mul(A_.m_[numeric_cast<unsigned long>(i * col + i)],
+                        b_.m_[numeric_cast<unsigned long>(j * bcol + k)]),
+                    mul(A_.m_[numeric_cast<unsigned long>(j * col + i)],
+                        b_.m_[numeric_cast<unsigned long>(i * bcol + k)]));
                 if (i > 0)
-                    b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k],
-                                              A_.m_[i * col - col + i - 1]);
+                    b_.m_[numeric_cast<unsigned long>(j * bcol + k)]
+                        = div(b_.m_[numeric_cast<unsigned long>(j * bcol + k)],
+                              A_.m_[numeric_cast<unsigned long>(i * col - col
+                                                                + i - 1)]);
             }
 
             for (k = i + 1; k < col; k++) {
-                A_.m_[j * col + k]
-                    = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]),
-                          mul(A_.m_[j * col + i], A_.m_[i * col + k]));
+                A_.m_[numeric_cast<unsigned long>(j * col + k)]
+                    = sub(mul(A_.m_[numeric_cast<unsigned long>(i * col + i)],
+                              A_.m_[numeric_cast<unsigned long>(j * col + k)]),
+                          mul(A_.m_[numeric_cast<unsigned long>(j * col + i)],
+                              A_.m_[numeric_cast<unsigned long>(i * col + k)]));
                 if (i > 0)
-                    A_.m_[j * col + k]
-                        = div(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);
+                    A_.m_[numeric_cast<unsigned long>(j * col + k)]
+                        = div(A_.m_[numeric_cast<unsigned long>(j * col + k)],
+                              A_.m_[numeric_cast<unsigned long>(i * col - col
+                                                                + i - 1)]);
             }
-            A_.m_[j * col + i] = zero;
+            A_.m_[numeric_cast<unsigned long>(j * col + i)] = zero;
         }
 
     for (i = 0; i < col * bcol; i++)
-        x.m_[i] = zero; // Integer zero;
+        x.m_[numeric_cast<unsigned long>(i)] = zero; // Integer zero;
 
     for (k = 0; k < bcol; k++) {
         for (i = col - 1; i >= 0; i--) {
             for (j = i + 1; j < col; j++)
-                b_.m_[i * bcol + k]
-                    = sub(b_.m_[i * bcol + k],
-                          mul(A_.m_[i * col + j], x.m_[j * bcol + k]));
-            x.m_[i * bcol + k] = div(b_.m_[i * bcol + k], A_.m_[i * col + i]);
+                b_.m_[numeric_cast<unsigned long>(i * bcol + k)]
+                    = sub(b_.m_[numeric_cast<unsigned long>(i * bcol + k)],
+                          mul(A_.m_[numeric_cast<unsigned long>(i * col + j)],
+                              x.m_[numeric_cast<unsigned long>(j * bcol + k)]));
+            x.m_[numeric_cast<unsigned long>(i * bcol + k)]
+                = div(b_.m_[numeric_cast<unsigned long>(i * bcol + k)],
+                      A_.m_[numeric_cast<unsigned long>(i * col + i)]);
         }
     }
 }
@@ -1047,12 +1065,12 @@ void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
                                        mul(LU.m_[i * n + k], LU.m_[k * n + j]));
             }
             if (pivot == -1 and neq(*LU.m_[i * n + j], *zero))
-                pivot = i;
+                pivot = numeric_cast<int>(i);
         }
         if (pivot == -1)
             throw SymEngineException("Matrix is rank deficient");
-        if (pivot - j != 0) { // row must be swapped
-            row_exchange_dense(LU, pivot, j);
+        if (pivot - numeric_cast<int>(j) != 0) { // row must be swapped
+            row_exchange_dense(LU, numeric_cast<unsigned>(pivot), j);
             pl.push_back({pivot, j});
         }
         scale = div(one, LU.m_[j * n + j]);
@@ -1303,7 +1321,8 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
         DenseMatrix B = DenseMatrix(n, n, A.m_);
-        unsigned i, sign = 1;
+        unsigned i;
+        int sign = 1;
         RCP<const Basic> d;
 
         for (unsigned k = 0; k < n - 1; k++) {
@@ -1610,7 +1629,7 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
 {
     SYMENGINE_ASSERT(v.size() > 0);
 
-    unsigned k_ = std::abs(k);
+    unsigned k_ = numeric_cast<unsigned>(std::abs(k));
 
     if (k >= 0) {
         for (unsigned i = 0; i < A.row_; i++) {
@@ -1618,7 +1637,7 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
                 if (j != (unsigned)k) {
                     A.m_[i * A.col_ + j] = zero;
                 } else {
-                    A.m_[i * A.col_ + j] = v[k - k_];
+                    A.m_[i * A.col_ + j] = v[numeric_cast<unsigned>(k) - k_];
                 }
             }
             k++;
@@ -1631,7 +1650,7 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
                 if (i != (unsigned)k) {
                     A.m_[i * A.col_ + j] = zero;
                 } else {
-                    A.m_[i * A.col_ + j] = v[k - k_];
+                    A.m_[i * A.col_ + j] = v[numeric_cast<unsigned>(k) - k_];
                 }
             }
             k++;

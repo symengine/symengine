@@ -181,10 +181,11 @@ class ExpressionParser
         if (start == -1 or start >= end) {
             return "";
         } else {
-            while (s[end - 1] == ' ') {
+            while (s[numeric_cast<long unsigned>(end - 1)] == ' ') {
                 --end;
             }
-            return s.substr(start, end - start);
+            return s.substr(numeric_cast<long unsigned>(start),
+                            numeric_cast<long unsigned>(end - start));
         }
     }
 
@@ -218,7 +219,8 @@ class ExpressionParser
                 // be evaluated (if not already)!
                 if (!result_set) {
                     if (s[iter] != '(') {
-                        result = set_result(get_string(expr_start, iter));
+                        result = set_result(
+                            get_string(expr_start, numeric_cast<int>(iter)));
                         expr_start = -1;
                     }
                 }
@@ -227,90 +229,102 @@ class ExpressionParser
                 // already parsed till there
                 // using the recursive call to parse_string
                 if (s[iter] == '+') {
-                    result = add(result,
-                                 parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = add(result, parse_string(iter + 1,
+                                                      numeric_cast<unsigned>(
+                                                          operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '*' and iter + 1 < h
                            and s[iter + 1] == '*') {
-                    result = pow(result,
-                                 parse_string(iter + 2, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = pow(result, parse_string(iter + 2,
+                                                      numeric_cast<unsigned>(
+                                                          operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '*') {
-                    result = mul(result,
-                                 parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = mul(result, parse_string(iter + 1,
+                                                      numeric_cast<unsigned>(
+                                                          operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '-') {
-                    result = sub(result,
-                                 parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = sub(result, parse_string(iter + 1,
+                                                      numeric_cast<unsigned>(
+                                                          operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '/') {
-                    result = div(result,
-                                 parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = div(result, parse_string(iter + 1,
+                                                      numeric_cast<unsigned>(
+                                                          operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '=' and iter + 1 < h
                            and s[iter + 1] == '=') {
-                    result = Eq(result,
-                                parse_string(iter + 2, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = Eq(result, parse_string(iter + 2,
+                                                     numeric_cast<unsigned>(
+                                                         operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '<' and iter + 1 < h
                            and s[iter + 1] == '=') {
-                    result = Le(result,
-                                parse_string(iter + 2, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = Le(result, parse_string(iter + 2,
+                                                     numeric_cast<unsigned>(
+                                                         operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '>' and iter + 1 < h
                            and s[iter + 1] == '=') {
-                    result = Ge(result,
-                                parse_string(iter + 2, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = Ge(result, parse_string(iter + 2,
+                                                     numeric_cast<unsigned>(
+                                                         operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '<') {
-                    result = Lt(result,
-                                parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = Lt(result, parse_string(iter + 1,
+                                                     numeric_cast<unsigned>(
+                                                         operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '>') {
-                    result = Gt(result,
-                                parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
+                    result = Gt(result, parse_string(iter + 1,
+                                                     numeric_cast<unsigned>(
+                                                         operator_end[iter])));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '&') {
                     set_boolean s;
                     s.insert(rcp_static_cast<const Boolean>(result));
-                    s.insert(rcp_static_cast<const Boolean>(
-                        parse_string(iter + 1, operator_end[iter])));
+                    s.insert(rcp_static_cast<const Boolean>(parse_string(
+                        iter + 1, numeric_cast<unsigned>(operator_end[iter]))));
                     result = logical_and(s);
-                    iter = operator_end[iter] - 1;
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '|') {
                     set_boolean s;
                     s.insert(rcp_static_cast<const Boolean>(result));
-                    s.insert(rcp_static_cast<const Boolean>(
-                        parse_string(iter + 1, operator_end[iter])));
+                    s.insert(rcp_static_cast<const Boolean>(parse_string(
+                        iter + 1, numeric_cast<unsigned>(operator_end[iter]))));
                     result = logical_or(s);
-                    iter = operator_end[iter] - 1;
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '^') {
                     vec_boolean s;
                     s.push_back(rcp_static_cast<const Boolean>(result));
-                    s.push_back(rcp_static_cast<const Boolean>(
-                        parse_string(iter + 1, operator_end[iter])));
+                    s.push_back(rcp_static_cast<const Boolean>(parse_string(
+                        iter + 1, numeric_cast<unsigned>(operator_end[iter]))));
                     result = logical_xor(s);
-                    iter = operator_end[iter] - 1;
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '~') {
                     result = logical_not(rcp_static_cast<const Boolean>(
-                        parse_string(iter + 1, operator_end[iter])));
-                    iter = operator_end[iter] - 1;
+                        parse_string(iter + 1, numeric_cast<unsigned>(
+                                                   operator_end[iter]))));
+                    iter = numeric_cast<unsigned>(operator_end[iter] - 1);
 
                 } else if (s[iter] == '(') {
-                    result = functionify(iter, get_string(expr_start, iter));
+                    result = functionify(
+                        iter, get_string(expr_start, numeric_cast<int>(iter)));
                     expr_start = -1;
                 } else {
                     continue;
@@ -320,11 +334,12 @@ class ExpressionParser
 
             } else {
                 if (expr_start == -1 && s[iter] != ' ')
-                    expr_start = iter;
+                    expr_start = numeric_cast<int>(iter);
                 // if the parsing was to finish after this, result must be set
                 // occurs when no operator present eg. "3"
                 if (!result_set && iter == h - 1) {
-                    result = set_result(get_string(expr_start, iter + 1));
+                    result = set_result(
+                        get_string(expr_start, numeric_cast<int>(iter + 1)));
                     expr_start = -1;
                 }
             }
@@ -333,9 +348,9 @@ class ExpressionParser
     }
 
     // returns true if the s[iter] is an operator
-    bool is_single_character_operator(int iter)
+    bool is_single_character_operator(unsigned iter)
     {
-        if (iter >= 0 and iter < (int)s_len) {
+        if (iter < s_len) {
             std::string x;
             x = s[iter];
             if (OPERATORS.find(x) != OPERATORS.end())
@@ -344,9 +359,9 @@ class ExpressionParser
         return false;
     }
 
-    bool is_dual_character_operator(int iter)
+    bool is_dual_character_operator(unsigned iter)
     {
-        if (iter >= 1 and iter < (int)s_len) {
+        if (iter >= 1 and iter < s_len) {
             std::string x;
             x = s.substr(iter - 1, 2);
             if (OPERATORS.find(x) != OPERATORS.end())
@@ -362,8 +377,9 @@ class ExpressionParser
         vec_basic params;
 
         while (s[iter] != ')') {
-            params.push_back(parse_string(iter + 1, operator_end[iter]));
-            iter = operator_end[iter];
+            params.push_back(parse_string(
+                iter + 1, numeric_cast<unsigned>(operator_end[iter])));
+            iter = numeric_cast<unsigned>(operator_end[iter]);
         }
 
         if (params.size() == 1) {
@@ -431,7 +447,7 @@ class ExpressionParser
         RCP<const Basic> num = one, sym;
 
         // Numerical part of the result of e.g. "100x";
-        size_t length = endptr - startptr;
+        size_t length = numeric_cast<long unsigned>(endptr - startptr);
         std::string lexpr = std::string(startptr, length);
         bool has_numeric_part = endptr != startptr;
 
@@ -545,15 +561,15 @@ public:
         op_stack.push(std::make_pair(-1, s_len));
         right_bracket.push(s_len);
 
-        for (int i = s_len - 1; i >= 0; i--) {
-            if (is_single_character_operator(i)
-                or is_dual_character_operator(i)) {
+        for (int i = numeric_cast<int>(s_len - 1); i >= 0; i--) {
+            if (is_single_character_operator(numeric_cast<unsigned>(i))
+                or is_dual_character_operator(numeric_cast<unsigned>(i))) {
                 std::string x;
-                x = s[i];
+                x = s[numeric_cast<unsigned>(i)];
 
-                if (is_dual_character_operator(i)) {
+                if (is_dual_character_operator(numeric_cast<unsigned>(i))) {
                     i--;
-                    x = s[i] + x;
+                    x = s[numeric_cast<unsigned>(i)] + x;
                 }
 
                 if (x == "(") {
@@ -562,11 +578,12 @@ public:
                         op_stack.pop();
                     // it's end is the index of the ')' (maybe pseudo created by
                     // a ',')
-                    operator_end[i] = right_bracket.top();
+                    operator_end[numeric_cast<unsigned>(i)]
+                        = numeric_cast<int>(right_bracket.top());
 
                     // this should never happen, every '(' should have a
                     // matching ')' in the bracket stack
-                    if (operator_end[i] == (int)s_len)
+                    if (operator_end[numeric_cast<unsigned>(i)] == (int)s_len)
                         throw ParseError("Mismatching parentheses!");
                     right_bracket.pop();
                     op_stack.pop();
@@ -575,17 +592,21 @@ public:
                     // ',' acts as a pseudo ')', for the intended '('
                     if (x == ",") {
                         // its end is the actual ')'
-                        operator_end[i] = right_bracket.top();
+                        operator_end[numeric_cast<unsigned>(i)]
+                            = numeric_cast<int>(right_bracket.top());
                         right_bracket.pop();
                     }
                     op_stack.push(std::make_pair(op_precedence[x], i));
-                    right_bracket.push(i);
+                    right_bracket.push(numeric_cast<unsigned>(i));
 
                 } else {
                     if (x == "+" or x == "-") {
-                        if (i > 1 and i < (int)s_len - 1 and s[i - 1] == 'e'
-                            and s[i - 2] >= '0' and s[i - 2] <= '9'
-                            and s[i + 1] >= '0' and s[i + 1] <= '9') {
+                        if (i > 1 and i < (int)s_len - 1
+                            and s[numeric_cast<unsigned>(i - 1)] == 'e'
+                            and s[numeric_cast<unsigned>(i - 2)] >= '0'
+                            and s[numeric_cast<unsigned>(i - 2)] <= '9'
+                            and s[numeric_cast<unsigned>(i + 1)] >= '0'
+                            and s[numeric_cast<unsigned>(i + 1)] <= '9') {
                             // numeric like 1e-10
                             last_char_was_op = false;
                             continue;
@@ -599,22 +620,24 @@ public:
                     while (op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
                     // whatever is on the top now, it's the 'end'
-                    operator_end[i] = op_stack.top().second;
+                    operator_end[numeric_cast<unsigned>(i)]
+                        = numeric_cast<int>(op_stack.top().second);
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
                 if (last_char_was_op and operator_error(last_char, x))
                     throw ParseError("Operator inconsistency!");
                 last_char_was_op = true;
 
-            } else if (s[i] == ' ') {
+            } else if (s[numeric_cast<unsigned>(i)] == ' ') {
                 continue;
             } else {
                 last_char_was_op = false;
             }
 
-            last_char = s[i];
-            if (i + 1 < (int)s_len and is_dual_character_operator(i + 1)) {
-                last_char = last_char + s[i + 1];
+            last_char = s[numeric_cast<unsigned>(i)];
+            if (i + 1 < (int)s_len
+                and is_dual_character_operator(numeric_cast<unsigned>(i + 1))) {
+                last_char = last_char + s[numeric_cast<unsigned>(i + 1)];
             }
         }
         // extra right_brackets in the string

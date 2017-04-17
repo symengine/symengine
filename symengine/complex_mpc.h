@@ -38,7 +38,7 @@ public:
     {
         mpc_init2(mp, prec);
     }
-    mpc_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10)
+    mpc_class(std::string s, mpfr_prec_t prec = 53, int base = 10)
     {
         mpc_init2(mp, prec);
         mpc_set_str(mp, s.c_str(), base, MPFR_RNDN);

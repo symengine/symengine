@@ -128,7 +128,7 @@ pp_t URatPSeriesPiranha::pow(const pp_t &s, int n, unsigned prec)
 
 unsigned URatPSeriesPiranha::ldegree(const pp_t &s)
 {
-    return s.ldegree();
+    return numeric_cast<unsigned>(s.ldegree());
 }
 
 piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var,
@@ -277,7 +277,7 @@ p_expr UPSeriesPiranha::pow(const p_expr &s, int n, unsigned prec)
 
 unsigned UPSeriesPiranha::ldegree(const p_expr &s)
 {
-    return s.ldegree();
+    return numeric_cast<unsigned>(s.ldegree());
 }
 
 Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var,

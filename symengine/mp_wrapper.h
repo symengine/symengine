@@ -127,7 +127,7 @@ public:
     {
         mpz_init_set(mp, m);
     }
-    inline mpz_wrapper(const std::string &s, unsigned base = 10)
+    inline mpz_wrapper(const std::string &s, int base = 10)
     {
         mpz_init_set_str(mp, s.c_str(), base);
     }

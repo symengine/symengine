@@ -52,7 +52,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 {
     unsigned p = A.nrows();
     unsigned q = A.ncols();
-    long n;
+    long unsigned n;
 
     SYMENGINE_ASSERT(p > 0 and q > 1);
 

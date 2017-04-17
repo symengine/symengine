@@ -51,7 +51,7 @@ public:
         fmpz_init(mp);
         fmpz_set(mp, m);
     }
-    inline fmpz_wrapper(const std::string &s, unsigned base = 10)
+    inline fmpz_wrapper(const std::string &s, int base = 10)
     {
         fmpz_init(mp);
         fmpz_set_str(mp, s.c_str(), base);

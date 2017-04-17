@@ -564,7 +564,7 @@ void Sieve::generate_primes(std::vector<unsigned> &primes, unsigned limit)
     auto it = std::upper_bound(_primes.begin(), _primes.end(), limit);
     // find the first position greater than limit and reserve space for the
     // primes
-    primes.reserve(it - _primes.begin());
+    primes.reserve(numeric_cast<unsigned>(it - _primes.begin()));
     std::copy(_primes.begin(), it, std::back_inserter(primes));
     if (_clear)
         clear();
@@ -643,14 +643,15 @@ RCP<const Number> harmonic(unsigned long n, long m)
             if (m > 0) {
                 rational_class t(1u, i);
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-                mp_pow_ui(get_den(t), get_den(t), m);
+                mp_pow_ui(get_den(t), get_den(t),
+                          numeric_cast<unsigned long>(m));
 #else
                 mp_pow_ui(t, t, m);
 #endif
                 res += t;
             } else {
                 integer_class t(i);
-                mp_pow_ui(t, t, static_cast<unsigned long>(-m));
+                mp_pow_ui(t, t, numeric_cast<unsigned long>(-m));
                 res += t;
             }
         }
@@ -1722,7 +1723,7 @@ int mobius(const Integer &a)
     prime_factor_multiplicities(prime_mul, a);
     unsigned long num_prime_factors = prime_mul.size();
     for (const auto &it : prime_mul) {
-        int p_freq = it.second;
+        unsigned p_freq = it.second;
         if (p_freq > 1) {
             is_square_free = false;
             break;

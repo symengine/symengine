@@ -174,7 +174,7 @@ public:
         if (n == -1)
             return series_invert(s, var, prec);
 
-        const unsigned ldeg = ldegree(s);
+        const int ldeg = numeric_cast<int>(ldegree(s));
         if (ldeg % n != 0) {
             throw NotImplementedError("Puiseux series not implemented.");
         }
@@ -189,7 +189,7 @@ public:
             do_inv = true;
         }
 
-        fmpq_wrapper ctroot = root(ct, n);
+        fmpq_wrapper ctroot = root(ct, numeric_cast<unsigned>(n));
         fqp_t res_p = one, sn = fqp_t(ss / ct);
         auto steps = step_list(prec);
         for (const auto step : steps) {

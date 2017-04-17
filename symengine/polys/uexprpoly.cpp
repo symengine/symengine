@@ -17,7 +17,7 @@ hash_t UExprPoly::__hash__() const
     seed += get_var()->hash();
     for (const auto &it : get_poly().dict_) {
         hash_t temp = UEXPRPOLY;
-        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<unsigned int>(temp, numeric_cast<unsigned>(it.first));
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }

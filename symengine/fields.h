@@ -198,7 +198,9 @@ public:
             if (other.dict_.size() == this->dict_.size())
                 gf_istrip();
             else
-                dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(),
+                dict_.insert(dict_.end(),
+                             other.dict_.begin()
+                                 + numeric_cast<long>(dict_.size()),
                              other.dict_.end());
         }
         return down_cast<GaloisFieldDict &>(*this);

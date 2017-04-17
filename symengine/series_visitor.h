@@ -121,7 +121,7 @@ public:
             t = i;
             prod /= t;
             d = d->diff(s);
-            res_p += Series::pow(var, i, prec)
+            res_p += Series::pow(var, numeric_cast<int>(i), prec)
                      * (prod * apply(expand(d->subs(m))));
         }
         p = res_p;

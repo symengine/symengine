@@ -26,8 +26,8 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     RCP<const Basic> sym = q.first;
                     if (not is_a<Integer>(*syms.at(sym)))
                         throw NotImplementedError("Not Implemented");
-                    int i = numeric_cast<int>(
-                        down_cast<const Integer &>(*syms.at(sym)).as_int());
+                    long unsigned i
+                        = down_cast<const Integer &>(*syms.at(sym)).as_uint();
                     if (is_a<Integer>(*q.second)) {
                         exp[i] = numeric_cast<int>(
                             down_cast<const Integer &>(*q.second).as_int());
@@ -44,8 +44,8 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                     = down_cast<const Pow &>(*p.first).get_exp();
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = numeric_cast<int>(
-                    down_cast<const Integer &>(*syms.at(sym)).as_int());
+                long unsigned i
+                    = down_cast<const Integer &>(*syms.at(sym)).as_uint();
                 if (not is_a<Integer>(*exp_))
                     throw NotImplementedError("Not Implemented");
                 exp[i] = numeric_cast<int>(
@@ -54,8 +54,8 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
                 RCP<const Basic> sym = p.first;
                 if (not is_a<Integer>(*syms.at(sym)))
                     throw NotImplementedError("Not Implemented");
-                int i = numeric_cast<int>(
-                    down_cast<const Integer &>(*syms.at(sym)).as_int());
+                long unsigned i
+                    = down_cast<const Integer &>(*syms.at(sym)).as_uint();
                 exp[i] = 1;
             } else {
                 throw NotImplementedError("Not Implemented");

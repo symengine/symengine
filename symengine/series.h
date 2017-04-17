@@ -203,7 +203,7 @@ public:
                 "Series::series_invert: Division By Zero");
         if (s == 1)
             return Poly(1);
-        const int ldeg = Series::ldegree(s);
+        const int ldeg = numeric_cast<int>(Series::ldegree(s));
         const Coeff co = Series::find_cf(s, var, ldeg);
         Poly p(1 / co), ss = s;
         if (ldeg != 0) {
@@ -249,7 +249,7 @@ public:
         if (n == -1)
             return Series::series_invert(s, var, prec);
 
-        const int ldeg = Series::ldegree(s);
+        const int ldeg = numeric_cast<int>(Series::ldegree(s));
         if (ldeg % n != 0) {
             throw NotImplementedError("Puiseux series not implemented.");
         }
@@ -264,7 +264,7 @@ public:
             do_inv = true;
         }
 
-        Coeff ctroot = Series::root(ct, n);
+        Coeff ctroot = Series::root(ct, numeric_cast<unsigned>(n));
         Poly res_p(1), sn = ss / ct;
         auto steps = step_list(prec);
         for (const auto step : steps) {
@@ -362,7 +362,7 @@ public:
         Poly ssquare = Series::mul(s, s, prec);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
-            const int j = 2 * i + 1;
+            const int j = numeric_cast<int>(2 * i + 1);
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
@@ -441,7 +441,7 @@ public:
         Poly monom(ssquare);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
-            const int j = 2 * i;
+            const int j = numeric_cast<int>(2 * i);
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;

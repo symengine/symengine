@@ -371,7 +371,7 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 {
     // method that uses O(n) temp storage
-    std::vector<unsigned> mask(A.col_, -1);
+    std::vector<unsigned> mask(A.col_, numeric_cast<unsigned>(-1));
     C.p_[0] = 0;
 
     unsigned nnz = 0;
@@ -432,7 +432,7 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
                 if (next[k] == -1) {
                     next[k] = head;
-                    head = k;
+                    head = numeric_cast<int>(k);
                     length++;
                 }
             }
@@ -440,14 +440,14 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         for (unsigned jj = 0; jj < length; jj++) {
 
-            if (neq(*sums[head], *zero)) {
-                C.j_[nnz] = head;
-                C.x_[nnz] = sums[head];
+            if (neq(*sums[numeric_cast<unsigned long>(head)], *zero)) {
+                C.j_[nnz] = numeric_cast<unsigned>(head);
+                C.x_[nnz] = sums[numeric_cast<unsigned>(head)];
                 nnz++;
             }
 
-            unsigned temp = head;
-            head = next[head];
+            unsigned temp = numeric_cast<unsigned>(head);
+            head = next[numeric_cast<unsigned>(head)];
 
             next[temp] = -1; // clear arrays
             sums[temp] = zero;

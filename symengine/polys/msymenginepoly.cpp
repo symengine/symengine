@@ -8,7 +8,7 @@ RCP<const Basic> MIntPoly::as_symbolic() const
     vec_basic args;
     for (const auto &p : get_poly().dict_) {
         RCP<const Basic> res = integer(p.second);
-        int whichvar = 0;
+        size_t whichvar = 0;
         for (auto sym : get_vars()) {
             if (0 != p.first[whichvar])
                 res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
@@ -56,7 +56,7 @@ RCP<const Basic> MExprPoly::as_symbolic() const
     vec_basic args;
     for (const auto &p : get_poly().dict_) {
         RCP<const Basic> res = (p.second.get_basic());
-        int whichvar = 0;
+        size_t whichvar = 0;
         for (auto sym : get_vars()) {
             if (0 != p.first[whichvar])
                 res = SymEngine::mul(res, pow(sym, integer(p.first[whichvar])));
