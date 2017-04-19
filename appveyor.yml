@@ -41,6 +41,13 @@ environment:
       COMPILER: MinGW-w64
       PLATFORM: x64
 
+matrix:
+  allow_failures:
+    - BUILD_TYPE: Release
+      COMPILER: MinGW
+      PLATFORM: Win32
+      WITH_MPFR: yes
+
 install:
 # Download MPIR
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
