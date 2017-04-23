@@ -108,7 +108,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *parse(res->__str__())));
 
-    s = "123123123123123.";
+    s = "123123123123123.0";
     res = parse(s);
     REQUIRE(eq(*res, *parse(res->__str__())));
 

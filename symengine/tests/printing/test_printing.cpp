@@ -374,6 +374,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = pow(p, x);
     REQUIRE(p->__str__() == "11111.11**x");
 
+    p = real_double(123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456.0**x");
+
+    p = real_double(123456789123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456789123456.**x");
+
     p = real_double(0.00001);
     p = pow(p, x);
     bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";
@@ -390,11 +398,28 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(123);
     p = sub(p, x);
-    REQUIRE(p->__str__() == "123. - x");
+    REQUIRE(p->__str__() == "123.0 - x");
 
     p = complex_double(std::complex<double>(1, 2));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1. + 2.*I + x");
+    REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
+
+    p = complex_double(std::complex<double>(1, -2));
+    p = add(p, x);
+    REQUIRE(p->__str__() == "1.0 - 2.0*I + x");
+
+    p = complex_double(std::complex<double>(1, 0.00000000000000001));
+    p = add(p, x);
+    pr = (p->__str__() == "1.0 + 1e-17*I + x")
+         or (p->__str__() == "1.0 + 1e-017*I + x");
+    REQUIRE(pr == true);
+
+    p = complex_double(
+        std::complex<double>(0.00000000000000001, 0.00000000000000001));
+    p = add(p, x);
+    pr = (p->__str__() == "1e-17 + 1e-17*I + x")
+         or (p->__str__() == "1e-017 + 1e-017*I + x");
+    REQUIRE(pr == true);
 
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
