@@ -232,7 +232,7 @@ void LLVMDoubleVisitor::set_double(double d)
 void LLVMDoubleVisitor::bvisit(const Integer &x, bool as_int32)
 {
     if (as_int32) {
-        int d = mp_get_si(x.as_integer_class());
+        int d = numeric_cast<int>(mp_get_si(x.as_integer_class()));
         result_ = llvm::ConstantInt::get(
             llvm::Type::getInt32Ty(mod->getContext()), d, true);
     } else {
