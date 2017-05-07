@@ -34,6 +34,7 @@ using SymEngine::gcd_upoly;
 using SymEngine::lcm_upoly;
 using SymEngine::divides_upoly;
 using SymEngine::pow_upoly;
+using SymEngine::factors;
 using SymEngine::vec_integer_class;
 
 using namespace SymEngine::literals;
@@ -285,6 +286,17 @@ TEST_CASE("Derivative of UIntPolyFlint", "[UIntPolyFlint]")
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "8*y");
+}
+
+TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const UIntPolyFlint> a
+        = UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(y, {{2, 4_z}});
+
+    auto fac = factors(*a);
 }
 
 TEST_CASE("UIntPolyFlint from_poly", "[UIntPolyFlint]")
