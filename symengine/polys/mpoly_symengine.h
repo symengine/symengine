@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_POLYNOMIALS_MULTIVARIATE
 #define SYMENGINE_POLYNOMIALS_MULTIVARIATE
 
+#include <symengine/polys/mpoly_base.h>
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
 #include <symengine/polys/upoly_int_symengine.h>
@@ -330,24 +331,15 @@ public:
 };
 
 template <typename Container, typename Poly>
-class MSymEnginePoly : public Basic
+class MSymEnginePoly : public MPolyBase<Container, Poly>
 {
-private:
-    Container poly_;
-    set_basic vars_;
-
 public:
     typedef Container container_type;
     typedef typename Container::coef_type coef_type;
 
     MSymEnginePoly(const set_basic &vars, Container &&dict)
-        : poly_{dict}, vars_{vars}
+        : MPolyBase<Container, Poly>(vars, std::move(dict))
     {
-    }
-
-    static RCP<const Poly> from_container(const set_basic &vars, Container &&d)
-    {
-        return make_rcp<const Poly>(vars, std::move(d));
     }
 
     int compare(const Basic &o) const
@@ -356,16 +348,16 @@ public:
 
         const Poly &s = down_cast<const Poly &>(o);
 
-        if (vars_.size() != s.vars_.size())
-            return vars_.size() < s.vars_.size() ? -1 : 1;
-        if (poly_.dict_.size() != s.poly_.dict_.size())
-            return poly_.dict_.size() < s.poly_.dict_.size() ? -1 : 1;
+        if (this->get_vars().size() != s.get_vars().size())
+            return this->get_vars().size() < s.get_vars().size() ? -1 : 1;
+        if (this->get_poly().dict_.size() != s.get_poly().dict_.size())
+            return this->get_poly().dict_.size() < s.get_poly().dict_.size() ? -1 : 1;
 
-        int cmp = unified_compare(vars_, s.vars_);
+        int cmp = unified_compare(this->get_vars(), s.get_vars());
         if (cmp != 0)
             return cmp;
 
-        return unified_compare(poly_.dict_, s.poly_.dict_);
+        return unified_compare(this->get_poly().dict_, s.get_poly().dict_);
     }
 
     template <typename FromPoly>
@@ -412,20 +404,6 @@ public:
         return Container(std::move(d), numeric_cast<unsigned>(s.size()));
     }
 
-    inline vec_basic get_args() const
-    {
-        return {};
-    }
-
-    inline const Container &get_poly() const
-    {
-        return poly_;
-    }
-
-    inline const set_basic &get_vars() const
-    {
-        return vars_;
-    }
 
     bool __eq__(const Basic &o) const
     {
@@ -434,25 +412,38 @@ public:
             return false;
         const Poly &o_ = down_cast<const Poly &>(o);
         // compare constants without regards to vars
-        if (1 == poly_.dict_.size() && 1 == o_.poly_.dict_.size()) {
-            if (poly_.dict_.begin()->second != o_.poly_.dict_.begin()->second)
+        if (1 == this->get_poly().dict_.size() && 1 == o_.get_poly().dict_.size()) {
+            if (this->get_poly().dict_.begin()->second != o_.get_poly().dict_.begin()->second)
                 return false;
-            if (poly_.dict_.begin()->first == o_.poly_.dict_.begin()->first
-                && unified_eq(vars_, o_.vars_))
+            if (this->get_poly().dict_.begin()->first == o_.get_poly().dict_.begin()->first
+                && unified_eq(this->get_vars(), o_.get_vars()))
                 return true;
             typename Container::vec_type v1, v2;
-            v1.resize(vars_.size(), 0);
-            v2.resize(o_.vars_.size(), 0);
-            if (poly_.dict_.begin()->first == v1
-                || o_.poly_.dict_.begin()->first == v2)
+            v1.resize(this->get_vars().size(), 0);
+            v2.resize(o_.get_vars().size(), 0);
+            if (this->get_poly().dict_.begin()->first == v1
+                || o_.get_poly().dict_.begin()->first == v2)
                 return true;
             return false;
-        } else if (0 == poly_.dict_.size() && 0 == o_.poly_.dict_.size()) {
+        } else if (0 == this->get_poly().dict_.size() && 0 == o_.get_poly().dict_.size()) {
             return true;
         } else {
-            return (unified_eq(vars_, o_.vars_)
-                    && unified_eq(poly_.dict_, o_.poly_.dict_));
+            return (unified_eq(this->get_vars(), o_.get_vars())
+                    && unified_eq(this->get_poly().dict_, o_.get_poly().dict_));
         }
+    }
+
+    static set_basic get_translated_container(Container &x, Container &y, const Poly &a,
+                                       const Poly &b)
+    {
+        vec_uint v1, v2;
+        set_basic s;
+
+        unsigned int sz = reconcile(v1, v2, s, a.get_vars(), b.get_vars());
+        x = a.get_poly().translate(v1, sz);
+        y = b.get_poly().translate(v2, sz);
+
+        return s;
     }
 };
 
@@ -498,25 +489,11 @@ public:
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 
-template <typename Poly, typename Container>
-set_basic get_translated_container(Container &x, Container &y, const Poly &a,
-                                   const Poly &b)
-{
-    vec_uint v1, v2;
-    set_basic s;
-
-    unsigned int sz = reconcile(v1, v2, s, a.get_vars(), b.get_vars());
-    x = a.get_poly().translate(v1, sz);
-    y = b.get_poly().translate(v2, sz);
-
-    return s;
-}
-
 template <typename Poly>
 RCP<const Poly> add_mpoly(const Poly &a, const Poly &b)
 {
     typename Poly::container_type x, y;
-    set_basic s = get_translated_container(x, y, a, b);
+    set_basic s = Poly::get_translated_container(x, y, a, b);
     x += y;
     return Poly::from_container(s, std::move(x));
 }
@@ -525,7 +502,7 @@ template <typename Poly>
 RCP<const Poly> sub_mpoly(const Poly &a, const Poly &b)
 {
     typename Poly::container_type x, y;
-    set_basic s = get_translated_container(x, y, a, b);
+    set_basic s = Poly::get_translated_container(x, y, a, b);
     x -= y;
     return Poly::from_container(s, std::move(x));
 }
@@ -534,7 +511,7 @@ template <typename Poly>
 RCP<const Poly> mul_mpoly(const Poly &a, const Poly &b)
 {
     typename Poly::container_type x, y;
-    set_basic s = get_translated_container(x, y, a, b);
+    set_basic s = Poly::get_translated_container(x, y, a, b);
     x *= y;
     return Poly::from_container(s, std::move(x));
 }
