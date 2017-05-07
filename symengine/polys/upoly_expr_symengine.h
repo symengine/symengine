@@ -7,7 +7,7 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
-#include <symengine/polys/usymenginepoly.h>
+#include <symengine/polys/upoly_base_symengine.h>
 
 namespace SymEngine
 {

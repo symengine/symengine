@@ -1,11 +1,11 @@
 /**
- *  \file uintpoly_flint.h
+ *  \file upoly_flint.h
  *  Class for Polynomial: UIntPolyFlint
  **/
 #ifndef SYMENGINE_UINTPOLY_FLINT_H
 #define SYMENGINE_UINTPOLY_FLINT_H
 
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/upoly_base.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>

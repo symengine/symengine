@@ -3,9 +3,9 @@
 #include <iostream>
 
 #include <symengine/mul.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uintpoly_piranha.h>
-#include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/upoly_int_symengine.h>
+#include <symengine/polys/upoly_piranha.h>
+#include <symengine/polys/upoly_flint.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/dict.h>

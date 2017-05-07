@@ -1,11 +1,11 @@
 /**
- *  \file uratpoly.h
+ *  \file upoly_rat_symengine.h
  *  Class for sparse Polynomial: URatPoly
  **/
 #ifndef SYMENGINE_URATPOLY_H
 #define SYMENGINE_URATPOLY_H
 
-#include <symengine/polys/usymenginepoly.h>
+#include <symengine/polys/upoly_base_symengine.h>
 
 namespace SymEngine
 {

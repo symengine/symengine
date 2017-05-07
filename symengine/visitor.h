@@ -6,11 +6,11 @@
 #ifndef SYMENGINE_VISITOR_H
 #define SYMENGINE_VISITOR_H
 
-#include <symengine/polys/uintpoly_flint.h>
-#include <symengine/polys/uintpoly_piranha.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/polys/msymenginepoly.h>
-#include <symengine/polys/uratpoly.h>
+#include <symengine/polys/upoly_flint.h>
+#include <symengine/polys/upoly_piranha.h>
+#include <symengine/polys/upoly_expr_symengine.h>
+#include <symengine/polys/mpoly_symengine.h>
+#include <symengine/polys/upoly_rat_symengine.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>
 #include <symengine/series_piranha.h>

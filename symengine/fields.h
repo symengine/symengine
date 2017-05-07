@@ -7,8 +7,8 @@
 
 #include <symengine/basic.h>
 #include <symengine/dict.h>
-#include <symengine/polys/upolybase.h>
-#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/upoly_base.h>
+#include <symengine/polys/upoly_int_symengine.h>
 
 namespace SymEngine
 {
@@ -569,7 +569,7 @@ public:
     static RCP<const GaloisField> from_vec(const RCP<const Basic> &var,
                                            const std::vector<integer_class> &v,
                                            const integer_class &modulo);
-    static RCP<const GaloisField> from_uintpoly(const UIntPoly &a,
+    static RCP<const GaloisField> from_upoly_int_symengine(const UIntPoly &a,
                                                 const integer_class &modulo);
 
     integer_class eval(const integer_class &x) const

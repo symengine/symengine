@@ -1,5 +1,5 @@
 #include <symengine/symbol.h>
-#include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/upoly_flint.h>
 
 namespace SymEngine
 {

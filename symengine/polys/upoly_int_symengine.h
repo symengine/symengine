@@ -1,11 +1,11 @@
 /**
- *  \file uintpoly.h
+ *  \file upoly_int_symengine.h
  *  Class for sparse Polynomial: UIntPoly
  **/
 #ifndef SYMENGINE_UINTPOLY_H
 #define SYMENGINE_UINTPOLY_H
 
-#include <symengine/polys/usymenginepoly.h>
+#include <symengine/polys/upoly_base_symengine.h>
 
 namespace SymEngine
 {

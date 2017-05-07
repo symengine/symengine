@@ -6,8 +6,8 @@
 #ifndef SYMENGINE_SERIES_GENERIC_H
 #define SYMENGINE_SERIES_GENERIC_H
 
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
+#include <symengine/polys/upoly_int_symengine.h>
+#include <symengine/polys/upoly_expr_symengine.h>
 #include <symengine/series.h>
 
 namespace SymEngine

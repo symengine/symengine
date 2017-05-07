@@ -3,8 +3,8 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
+#include <symengine/polys/upoly_int_symengine.h>
+#include <symengine/polys/upoly_expr_symengine.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine
