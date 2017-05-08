@@ -292,11 +292,69 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const UIntPolyFlint> a
-        = UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 1_z}});
-    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(y, {{2, 4_z}});
 
-    auto fac = factors(*a);
+    auto fac = factors(
+        *UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})); // 2*x + 1
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 1);
+    REQUIRE(fac.second[0].first->__str__() == "2*x + 1");
+    REQUIRE(fac.second[0].second == 1);
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x, {{0, 2_z}, {1, 3_z}, {2, 1_z}})); // x**2 + 3*x + 2
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 2);
+    REQUIRE(fac.second[0].first->__str__() == "x + 1");
+    REQUIRE(fac.second[0].second == 1);
+    REQUIRE(fac.second[1].first->__str__() == "x + 2");
+    REQUIRE(fac.second[1].second == 1);
+
+    fac = factors(*UIntPolyFlint::from_dict(y, {{2, 4_z}})); // 4*y**2
+    REQUIRE(fac.first == 4_z);
+    REQUIRE(fac.second.size() == 1);
+    REQUIRE(fac.second[0].first->__str__() == "y");
+    REQUIRE(fac.second[0].second == 2);
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x, {{0, 3_z}, {1, 8_z}, {2, 4_z}})); // 4*x**2 + 8*x + 3
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 2);
+    REQUIRE(fac.second[0].first->__str__() == "2*x + 1");
+    REQUIRE(fac.second[0].second == 1);
+    REQUIRE(fac.second[1].first->__str__() == "2*x + 3");
+    REQUIRE(fac.second[1].second == 1);
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x, {{0, 2_z}, {1, 2_z}, {2, 1_z}})); // x**2 + 2*x + 2
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 1);
+    REQUIRE(fac.second[0].first->__str__() == "x**2 + 2*x + 2");
+    REQUIRE(fac.second[0].second == 1);
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x,
+        {{0, -1_z}, {1, 3_z}, {2, -3_z}, {3, 1_z}})); // x**3 - 3*x**2 + 3*x - 1
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 1);
+    REQUIRE(fac.second[0].first->__str__() == "x - 1");
+    REQUIRE(fac.second[0].second == 3);
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x, {{0, -15_z},
+            {1, -46_z},
+            {2, -31_z},
+            {3, 4_z},
+            {4, 4_z}})); // 4*x**4 + 4*x**3 - 31*x**2 - 46*x - 15
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 4);
+    REQUIRE(fac.second[0].first->__str__() == "2*x + 5");
+    REQUIRE(fac.second[1].first->__str__() == "x + 1");
+    REQUIRE(fac.second[2].first->__str__() == "x - 3");
+    REQUIRE(fac.second[3].first->__str__() == "2*x + 1");
+    REQUIRE(fac.second[0].second == 1);
+    REQUIRE(fac.second[1].second == 1);
+    REQUIRE(fac.second[2].second == 1);
+    REQUIRE(fac.second[3].second == 1);
 }
 
 TEST_CASE("UIntPolyFlint from_poly", "[UIntPolyFlint]")
