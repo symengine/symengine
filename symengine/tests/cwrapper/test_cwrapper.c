@@ -329,10 +329,10 @@ void test_real_mpfr()
     SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
 
     real_mpfr_set_d(d, 0, 200);
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 1);
 
     real_mpfr_set_d(d, 0.000001, 200);
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
 
     mpfr_clear(mp);
     basic_free_stack(d);
@@ -355,7 +355,7 @@ void test_complex_mpc()
     basic_mul(d2, d1, d2);
     basic_add(d2, d, d2);
     SYMENGINE_C_ASSERT(basic_get_type(d2) == SYMENGINE_COMPLEX_MPC);
-    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d2) == 0);
 
     basic r1;
     basic_new_stack(r1);
@@ -1205,7 +1205,7 @@ void test_eval()
     SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_MPFR);
     // With 100 bit precision, `s` and `t` are not equal in value.
     // Value of `r` is a positive quantity with value 0.000000000149734291.....
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(eval2) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(eval2) == 0);
 
     basic_free_stack(s);
     basic_free_stack(t);
@@ -1295,7 +1295,7 @@ void test_eval()
     // With 100 bit precision, `com1` and `com2` are not equal in value.
     // Value of `r1` is a positive quantity with value 0.000000000149734291.....
 
-    SYMENGINE_C_ASSERT(complex_mpc_is_zero(eval3) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(eval3) == 0);
 
     basic_free_stack(s1);
     basic_free_stack(t1);

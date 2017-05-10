@@ -151,6 +151,9 @@ char *basic_get_class_from_id(TypeID id);
 //! the string in c, thus the caller is free to use c afterwards.
 CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c);
 
+//! Returns 1 if s has value zero; 0 otherwise
+int number_is_zero(const basic s);
+
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
 //! Assign to s, a ulong.
@@ -180,13 +183,9 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_set(basic s, mpfr_srcptr m);
 CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);
-//! Returns 1 if s has value zero; 0 otherwise
-int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
 #ifdef HAVE_SYMENGINE_MPC
-//! Returns 1 if s has value zero; 0 otherwise
-int complex_mpc_is_zero(const basic s);
 //! Assign to s, the real part of com
 CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com);
 //! Assign to s, the imaginary part of com

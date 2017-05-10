@@ -232,6 +232,12 @@ CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
     CWRAPPER_END
 }
 
+int number_is_zero(const basic s)
+{
+	SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+	return (int)((down_cast<const Number &>(*(s->m))).is_zero());
+}
+
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
@@ -323,20 +329,8 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_prec();
 }
 
-int real_mpfr_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return (int)((down_cast<const RealMPFR &>(*(s->m))).is_zero());
-}
-
 #endif // HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
-int complex_mpc_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
-    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
-}
-
 CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
