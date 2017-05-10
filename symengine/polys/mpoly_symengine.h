@@ -351,7 +351,9 @@ public:
         if (this->get_vars().size() != s.get_vars().size())
             return this->get_vars().size() < s.get_vars().size() ? -1 : 1;
         if (this->get_poly().dict_.size() != s.get_poly().dict_.size())
-            return this->get_poly().dict_.size() < s.get_poly().dict_.size() ? -1 : 1;
+            return this->get_poly().dict_.size() < s.get_poly().dict_.size()
+                       ? -1
+                       : 1;
 
         int cmp = unified_compare(this->get_vars(), s.get_vars());
         if (cmp != 0)
@@ -404,7 +406,6 @@ public:
         return Container(std::move(d), numeric_cast<unsigned>(s.size()));
     }
 
-
     bool __eq__(const Basic &o) const
     {
         // TODO : fix for when vars are different, but there is an intersection
@@ -412,10 +413,13 @@ public:
             return false;
         const Poly &o_ = down_cast<const Poly &>(o);
         // compare constants without regards to vars
-        if (1 == this->get_poly().dict_.size() && 1 == o_.get_poly().dict_.size()) {
-            if (this->get_poly().dict_.begin()->second != o_.get_poly().dict_.begin()->second)
+        if (1 == this->get_poly().dict_.size()
+            && 1 == o_.get_poly().dict_.size()) {
+            if (this->get_poly().dict_.begin()->second
+                != o_.get_poly().dict_.begin()->second)
                 return false;
-            if (this->get_poly().dict_.begin()->first == o_.get_poly().dict_.begin()->first
+            if (this->get_poly().dict_.begin()->first
+                    == o_.get_poly().dict_.begin()->first
                 && unified_eq(this->get_vars(), o_.get_vars()))
                 return true;
             typename Container::vec_type v1, v2;
@@ -425,7 +429,8 @@ public:
                 || o_.get_poly().dict_.begin()->first == v2)
                 return true;
             return false;
-        } else if (0 == this->get_poly().dict_.size() && 0 == o_.get_poly().dict_.size()) {
+        } else if (0 == this->get_poly().dict_.size()
+                   && 0 == o_.get_poly().dict_.size()) {
             return true;
         } else {
             return (unified_eq(this->get_vars(), o_.get_vars())
@@ -433,8 +438,8 @@ public:
         }
     }
 
-    static set_basic get_translated_container(Container &x, Container &y, const Poly &a,
-                                       const Poly &b)
+    static set_basic get_translated_container(Container &x, Container &y,
+                                              const Poly &a, const Poly &b)
     {
         vec_uint v1, v2;
         set_basic s;

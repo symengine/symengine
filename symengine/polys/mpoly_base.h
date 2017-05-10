@@ -14,9 +14,8 @@ private:
     set_basic vars_;
 
 public:
-
-	typedef Container container_type;
-	typedef typename Container::coef_type coef_type;
+    typedef Container container_type;
+    typedef typename Container::coef_type coef_type;
 
     MPolyBase(const set_basic &vars, Container &&dict)
         : poly_{dict}, vars_{vars}
@@ -47,7 +46,6 @@ public:
         return vars_;
     }
 };
-
 }
 
 #endif
