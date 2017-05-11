@@ -258,6 +258,8 @@ public:
     virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                             const RCP<const Basic> &b);
     void bvisit(const Constant &x);
+    void bvisit(const NaN &x);
+    void bvisit(const Infty &x);
 };
 }
 
