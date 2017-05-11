@@ -244,6 +244,9 @@ if (WITH_FLINT)
     include_directories(SYSTEM ${FLINT_INCLUDE_DIRS}/flint)
 
     set(WITH_MPFR yes)
+else()
+    set(WITH_ARB no)
+    set(HAVE_SYMENGINE_ARB False)
 endif()
 
 if (WITH_ARB)
