@@ -854,7 +854,7 @@ void test_infinity()
     SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
     basic_str_free(s);
     s = basic_str_julia(ComplexInf);
-    SYMENGINE_C_ASSERT(strcmp(s, "complex(Inf,Inf)") == 0);
+    SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
     basic_str_free(s);
 
     basic_free_stack(Inf);

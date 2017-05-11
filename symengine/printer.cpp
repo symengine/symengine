@@ -907,7 +907,7 @@ void JuliaStrPrinter::bvisit(const Infty &x)
     else if (x.is_positive_infinity())
         s << "Inf";
     else
-        s << "complex(Inf,Inf)";
+        s << "zoo";
     str_ = s.str();
 }
 }
