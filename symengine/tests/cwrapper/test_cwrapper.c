@@ -841,11 +841,20 @@ void test_infinity()
     s = basic_str(Inf);
     SYMENGINE_C_ASSERT(strcmp(s, "oo") == 0);
     basic_str_free(s);
+    s = basic_str_julia(Inf);
+    SYMENGINE_C_ASSERT(strcmp(s, "Inf") == 0);
+    basic_str_free(s);
     s = basic_str(NegInf);
     SYMENGINE_C_ASSERT(strcmp(s, "-oo") == 0);
     basic_str_free(s);
+    s = basic_str_julia(NegInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "-Inf") == 0);
+    basic_str_free(s);
     s = basic_str(ComplexInf);
     SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(ComplexInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "complex(Inf,Inf)") == 0);
     basic_str_free(s);
 
     basic_free_stack(Inf);
@@ -863,6 +872,9 @@ void test_nan()
     char *s;
     s = basic_str(custom);
     SYMENGINE_C_ASSERT(strcmp(s, "nan") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(custom);
+    SYMENGINE_C_ASSERT(strcmp(s, "NaN") == 0);
     basic_str_free(s);
 
     basic_free_stack(custom);

@@ -891,4 +891,23 @@ void JuliaStrPrinter::bvisit(const Constant &x)
         std::transform(str_.begin(), str_.end(), str_.begin(), ::tolower);
     }
 }
+
+void JuliaStrPrinter::bvisit(const NaN &x)
+{
+    std::ostringstream s;
+    s << "NaN";
+    str_ = s.str();
+}
+
+void JuliaStrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-Inf";
+    else if (x.is_positive_infinity())
+        s << "Inf";
+    else
+        s << "complex(Inf,Inf)";
+    str_ = s.str();
+}
 }
