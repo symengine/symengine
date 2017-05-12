@@ -234,8 +234,8 @@ CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
 
 int number_is_zero(const basic s)
 {
-	SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-	return (int)((down_cast<const Number &>(*(s->m))).is_zero());
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_zero());
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
