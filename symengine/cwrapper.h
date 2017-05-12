@@ -153,6 +153,12 @@ CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c);
 
 //! Returns 1 if s has value zero; 0 otherwise
 int number_is_zero(const basic s);
+//! Returns 1 if s has negative value; 0 otherwise
+int number_is_negative(const basic s);
+//! Returns 1 if s has positive value; 0 otherwise
+int number_is_positive(const basic s);
+//! Returns 1 if s is complex; 0 otherwise
+int number_is_complex(const basic s);
 
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
@@ -252,8 +258,6 @@ CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
-//! Returns +1 if s (Number) is positive, 0 if 0, -1 if negative
-int basic_number_sign(const basic s);
 
 //! Expands the expr a and assigns to s.
 CWRAPPER_OUTPUT_TYPE basic_expand(basic s, const basic a);

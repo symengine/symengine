@@ -127,16 +127,25 @@ void test_cwrapper()
 
     integer_set_si(e, 0);
     SYMENGINE_C_ASSERT(integer_get_si(e) == 0);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
     integer_set_ui(e, 123);
     SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
     integer_set_si(e, -123);
     SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == -1);
     SYMENGINE_C_ASSERT(is_a_Number(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     mpz_t test;
@@ -202,6 +211,10 @@ void test_complex()
     SYMENGINE_C_ASSERT(!is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 1);
 
     basic_str_free(s);
 
@@ -253,6 +266,10 @@ void test_complex_double()
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(!is_a_Complex(e));
     SYMENGINE_C_ASSERT(is_a_ComplexDouble(e));
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 1);
 
     basic_str_free(s);
 
@@ -300,6 +317,11 @@ void test_real_double()
 
     SYMENGINE_C_ASSERT(is_a_RealDouble(d));
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
+    
     basic_str_free(s2);
 
     basic_free_stack(d);
@@ -330,9 +352,21 @@ void test_real_mpfr()
 
     real_mpfr_set_d(d, 0, 200);
     SYMENGINE_C_ASSERT(number_is_zero(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
 
     real_mpfr_set_d(d, 0.000001, 200);
     SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
+
+    real_mpfr_set_d(d, -0.000001, 200);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
 
     mpfr_clear(mp);
     basic_free_stack(d);
@@ -356,6 +390,9 @@ void test_complex_mpc()
     basic_add(d2, d, d2);
     SYMENGINE_C_ASSERT(basic_get_type(d2) == SYMENGINE_COMPLEX_MPC);
     SYMENGINE_C_ASSERT(number_is_zero(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d2) == 1);
 
     basic r1;
     basic_new_stack(r1);

@@ -238,6 +238,24 @@ int number_is_zero(const basic s)
     return (int)((down_cast<const Number &>(*(s->m))).is_zero());
 }
 
+int number_is_negative(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_negative());
+}
+
+int number_is_positive(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_positive());
+}
+
+int number_is_complex(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_complex());
+}
+
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
@@ -549,20 +567,6 @@ int basic_eq(const basic a, const basic b)
 int basic_neq(const basic a, const basic b)
 {
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
-}
-
-int basic_number_sign(const basic s)
-{
-
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-
-    if ((down_cast<const Number &>(*(s->m))).is_positive()) {
-        return 1;
-    } else if ((down_cast<const Number &>(*(s->m))).is_zero()) {
-        return 0;
-    } else {
-        return -1;
-    }
 }
 
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
