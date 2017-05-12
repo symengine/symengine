@@ -387,7 +387,7 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
 #define ONE_ARG_EXTERNAL_FUNCTION(Class, ext)                                  \
     void LLVMDoubleVisitor::bvisit(const Class &x)                             \
     {                                                                          \
-        static llvm::Function *func = get_external_function(#ext);             \
+        llvm::Function *func = get_external_function(#ext);                    \
         auto r = builder->CreateCall(func, {apply(*x.get_arg())});             \
         r->setTailCall(true);                                                  \
         result_ = r;                                                           \
