@@ -321,7 +321,7 @@ void test_real_double()
     SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
     SYMENGINE_C_ASSERT(number_is_positive(d) == 1);
     SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
-    
+
     basic_str_free(s2);
 
     basic_free_stack(d);
