@@ -39,6 +39,8 @@ using SymEngine::UIntPoly;
 using SymEngine::from_basic;
 using SymEngine::ParseError;
 using SymEngine::down_cast;
+using SymEngine::Inf;
+using SymEngine::ComplexInf;
 
 using namespace SymEngine::literals;
 
@@ -293,6 +295,18 @@ TEST_CASE("Parsing: constants", "[parser]")
     s = "(2*I +6*I)*3*I + 4*I";
     res = parse(s);
     REQUIRE(eq(*res, *Complex::from_two_nums(*integer(-24), *integer(4))));
+
+    s = "oo";
+    res = parse(s);
+    REQUIRE(eq(*res, *Inf));
+
+    s = "1/oo + 2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(2)));
+
+    s = "zoo";
+    res = parse(s);
+    REQUIRE(eq(*res, *ComplexInf));
 }
 
 TEST_CASE("Parsing: function_symbols", "[parser]")
