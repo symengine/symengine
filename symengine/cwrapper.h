@@ -184,13 +184,14 @@ mpfr_prec_t real_mpfr_get_prec(const basic s);
 int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
+//! Assign to s, the real part of com
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com);
+//! Assign to s, the imaginary part of com
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com);
+
 #ifdef HAVE_SYMENGINE_MPC
 //! Returns 1 if s has value zero; 0 otherwise
 int complex_mpc_is_zero(const basic s);
-//! Assign to s, the real part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com);
-//! Assign to s, the imaginary part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com);
 #endif // HAVE_SYMENGINE_MPC
 
 //! Returns signed long value of s.
@@ -223,14 +224,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 #endif
-//! Assign to s, a real where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com);
-//! Assign to s, an imaginary where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com);
-//! Assign to s, a real double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com);
-//! Assign to s, an imaginary double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com);
 
 //! Extract the real and imaginary doubles from the std::complex<double> stored
 //! in basic
