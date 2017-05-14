@@ -331,7 +331,7 @@ int real_mpfr_is_zero(const basic s)
 }
 
 #endif // HAVE_SYMENGINE_MPFR
-        
+
 CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
