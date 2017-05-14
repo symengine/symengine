@@ -348,7 +348,6 @@ CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-#endif // HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
 int complex_mpc_is_zero(const basic s)
 {
