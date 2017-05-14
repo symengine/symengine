@@ -335,7 +335,7 @@ int real_mpfr_is_zero(const basic s)
 CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexBase>(*(com->m)));
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
     s->m = (down_cast<const ComplexBase &>(*(com->m))).real_part();
     CWRAPPER_END
 }
@@ -343,7 +343,7 @@ CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
 CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexBase>(*(com->m)));
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
     s->m = (down_cast<const ComplexBase &>(*(com->m))).imaginary_part();
     CWRAPPER_END
 }
