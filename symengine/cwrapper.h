@@ -406,6 +406,8 @@ CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
 CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s);
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n);
 size_t vecbasic_size(CVecBasic *self);
 
 //! Assigns to s the max of the provided args.

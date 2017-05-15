@@ -815,6 +815,22 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m[n] = s->m;
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m.erase(self->m.begin() + n);
+    CWRAPPER_END
+}
+
 size_t vecbasic_size(CVecBasic *self)
 {
     return self->m.size();
