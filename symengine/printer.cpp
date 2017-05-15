@@ -377,7 +377,7 @@ void StrPrinter::bvisit(const Mul &x)
             o2 << "*";
             den++;
         } else {
-            if (eq(*(p.second), *one)) {
+            if (eq(*(p.second), *one) and neq(*(p.first), *E)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 _print_pow(o, p.first, p.second);
@@ -619,7 +619,14 @@ void StrPrinter::bvisit(const Log &x)
 
 void StrPrinter::bvisit(const Constant &x)
 {
-    str_ = x.get_name();
+    // If the constant is E then it is to
+    // be printed as exp(1), this is done
+    // to maintain consistency
+    if (x.get_name() == "E") {
+        str_ = "exp(1)";
+    } else {
+        str_ = x.get_name();
+    }
 }
 
 std::string StrPrinter::apply(const vec_basic &d)
