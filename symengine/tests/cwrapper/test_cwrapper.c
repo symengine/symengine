@@ -1647,6 +1647,50 @@ void test_matrix()
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
     basic_str_free(result);
 
+    // diff
+    basic x;
+    basic y;
+    basic e;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    integer_set_si(i2, 2);
+    dense_matrix_rows_cols(B, 2, 2);
+    dense_matrix_set_basic(B, 0, 0, x);
+    basic_mul(e, i2, x);
+    dense_matrix_set_basic(B, 0, 1, e);
+    dense_matrix_set_basic(B, 1, 0, i2);
+    basic_mul(e, x, x);
+    dense_matrix_set_basic(B, 1, 1, e);
+    dense_matrix_rows_cols(D, 2, 2);
+    dense_matrix_diff(D, B, x);
+    result = dense_matrix_str(D);
+    expected = "[1, 2]\n[0, 2*x]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+
+    // jacobian
+    dense_matrix_rows_cols(B, 2, 1);
+    basic_add(e, x, y);
+    dense_matrix_set_basic(B, 0, 0, e);
+    basic_mul(e, x, y);
+    dense_matrix_set_basic(B, 1, 0, e);
+    dense_matrix_rows_cols(C, 2, 1);
+    dense_matrix_set_basic(C, 0, 0, x);
+    dense_matrix_set_basic(C, 1, 0, y);
+    dense_matrix_rows_cols(D, 2, 2);
+    dense_matrix_jacobian(D, B, C);
+    result = dense_matrix_str(D);
+    expected = "[1, 1]\n[y, x]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(e);
+
     vecbasic_free(vec);
 
     dense_matrix_free(B);
