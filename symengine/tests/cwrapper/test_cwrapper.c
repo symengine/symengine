@@ -430,9 +430,26 @@ void test_CVecBasic()
 
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
+    vecbasic_push_back(vec, x);
+
+    SYMENGINE_C_ASSERT(vecbasic_size(vec) == 2);
+
+    vecbasic_erase(vec, 0);
+
+    SYMENGINE_C_ASSERT(vecbasic_size(vec) == 1);
+
+    basic z;
+    basic_new_stack(z);
+    symbol_set(z, "z");
+    vecbasic_set(vec, 0, z);
+    vecbasic_get(vec, 0, y);
+
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
     vecbasic_free(vec);
     basic_free_stack(x);
     basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_CSetBasic()
