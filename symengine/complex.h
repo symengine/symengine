@@ -67,18 +67,18 @@ public:
     virtual RCP<const Basic> conjugate() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return false;
     }
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return false;
     }
     //! \returns `true`
-    inline virtual bool is_complex() const
+    virtual bool is_complex() const
     {
         return true;
     }
@@ -113,7 +113,7 @@ public:
     /*! Add Complex
      * \param other of type Complex
      * */
-    inline RCP<const Number> addcomp(const Complex &other) const
+    RCP<const Number> addcomp(const Complex &other) const
     {
         return from_mpq(this->real_ + other.real_,
                         this->imaginary_ + other.imaginary_);
@@ -121,7 +121,7 @@ public:
     /*! Add Complex
      * \param other of type Rational
      * */
-    inline RCP<const Number> addcomp(const Rational &other) const
+    RCP<const Number> addcomp(const Rational &other) const
     {
         return from_mpq(this->real_ + other.as_rational_class(),
                         this->imaginary_);
@@ -129,7 +129,7 @@ public:
     /*! Add Complex
      * \param other of type Integer
      * */
-    inline RCP<const Number> addcomp(const Integer &other) const
+    RCP<const Number> addcomp(const Integer &other) const
     {
         return from_mpq(this->real_ + other.as_integer_class(),
                         this->imaginary_);
@@ -138,7 +138,7 @@ public:
     /*! Subtract Complex
      * \param other of type Complex
      * */
-    inline RCP<const Number> subcomp(const Complex &other) const
+    RCP<const Number> subcomp(const Complex &other) const
     {
         return from_mpq(this->real_ - other.real_,
                         this->imaginary_ - other.imaginary_);
@@ -146,7 +146,7 @@ public:
     /*! Subtract Complex
      * \param other of type Rational
      * */
-    inline RCP<const Number> subcomp(const Rational &other) const
+    RCP<const Number> subcomp(const Rational &other) const
     {
         return from_mpq(this->real_ - other.as_rational_class(),
                         this->imaginary_);
@@ -154,7 +154,7 @@ public:
     /*! Subtract Complex
      * \param other of type Integer
      * */
-    inline RCP<const Number> subcomp(const Integer &other) const
+    RCP<const Number> subcomp(const Integer &other) const
     {
         return from_mpq(this->real_ - other.as_integer_class(),
                         this->imaginary_);
@@ -162,7 +162,7 @@ public:
     /*! Subtract Complex from other
      * \param other of type Complex
      * */
-    inline RCP<const Number> rsubcomp(const Complex &other) const
+    RCP<const Number> rsubcomp(const Complex &other) const
     {
         return from_mpq(other.real_ - this->real_,
                         other.imaginary_ - this->imaginary_);
@@ -170,7 +170,7 @@ public:
     /*! Subtract Complex from other
      * \param other of type Rational
      * */
-    inline RCP<const Number> rsubcomp(const Rational &other) const
+    RCP<const Number> rsubcomp(const Rational &other) const
     {
         return from_mpq(other.as_rational_class() - this->real_,
                         -this->imaginary_);
@@ -178,7 +178,7 @@ public:
     /*! Subtract Complex from other
      * \param other of type Integer
      * */
-    inline RCP<const Number> rsubcomp(const Integer &other) const
+    RCP<const Number> rsubcomp(const Integer &other) const
     {
         return from_mpq(other.as_integer_class() - this->real_,
                         -this->imaginary_);
@@ -187,7 +187,7 @@ public:
     /*! Multiply Complex
      * \param other of type Complex
      * */
-    inline RCP<const Number> mulcomp(const Complex &other) const
+    RCP<const Number> mulcomp(const Complex &other) const
     {
         return from_mpq(
             this->real_ * other.real_ - this->imaginary_ * other.imaginary_,
@@ -196,7 +196,7 @@ public:
     /*! Multiply Complex
      * \param other of type Rational
      * */
-    inline RCP<const Number> mulcomp(const Rational &other) const
+    RCP<const Number> mulcomp(const Rational &other) const
     {
         return from_mpq(this->real_ * other.as_rational_class(),
                         this->imaginary_ * other.as_rational_class());
@@ -204,7 +204,7 @@ public:
     /*! Multiply Complex
      * \param other of type Integer
      * */
-    inline RCP<const Number> mulcomp(const Integer &other) const
+    RCP<const Number> mulcomp(const Integer &other) const
     {
         return from_mpq(this->real_ * other.as_integer_class(),
                         this->imaginary_ * other.as_integer_class());
@@ -213,7 +213,7 @@ public:
     /*! Divide Complex
      * \param other of type Complex
      * */
-    inline RCP<const Number> divcomp(const Complex &other) const
+    RCP<const Number> divcomp(const Complex &other) const
     {
         rational_class modulus_sq_other
             = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
@@ -239,7 +239,7 @@ public:
     /*! Divide Complex
      * \param other of type Rational
      * */
-    inline RCP<const Number> divcomp(const Rational &other) const
+    RCP<const Number> divcomp(const Rational &other) const
     {
         if (other.is_zero()) {
             rational_class modulus_sq_this
@@ -259,7 +259,7 @@ public:
     /*! Divide Complex
      * \param other of type Integer
      * */
-    inline RCP<const Number> divcomp(const Integer &other) const
+    RCP<const Number> divcomp(const Integer &other) const
     {
         if (other.is_zero()) {
             rational_class modulus_sq_this
@@ -279,7 +279,7 @@ public:
     /*! Divide other by the Complex
      * \param other of type Integer
      * */
-    inline RCP<const Number> rdivcomp(const Integer &other) const
+    RCP<const Number> rdivcomp(const Integer &other) const
     {
         rational_class modulus_sq_this
             = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;

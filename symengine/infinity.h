@@ -49,30 +49,30 @@ public:
     }
 
     //! \return `true` if `0`
-    inline bool is_zero() const
+    bool is_zero() const
     {
         return false;
     }
     //! \return `true` if `1`
-    inline bool is_one() const
+    bool is_one() const
     {
         return false;
     }
     //! \return `true` if `-1`
-    inline bool is_minus_one() const
+    bool is_minus_one() const
     {
         return false;
     }
 
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const
+    virtual bool is_exact() const
     {
         return false;
     }
     // //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const;
 
-    inline RCP<const Number> get_direction() const
+    RCP<const Number> get_direction() const
     {
         return _direction;
     }
@@ -81,17 +81,17 @@ public:
     bool is_positive_infinity() const;
     bool is_negative_infinity() const;
 
-    inline bool is_positive() const
+    bool is_positive() const
     {
         return is_positive_infinity();
     }
 
-    inline bool is_negative() const
+    bool is_negative() const
     {
         return is_negative_infinity();
     }
 
-    inline bool is_complex() const
+    bool is_complex() const
     {
         return is_unsigned_infinity();
     }

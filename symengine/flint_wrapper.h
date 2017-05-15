@@ -22,7 +22,7 @@ public:
                                           && std::is_unsigned<T>::value,
                                       int>::type
               = 0>
-    inline fmpz_wrapper(const T i)
+    fmpz_wrapper(const T i)
     {
         fmpz_init(mp);
         fmpz_set_ui(mp, i);
@@ -32,199 +32,194 @@ public:
                                           && std::is_signed<T>::value,
                                       int>::type
               = 0>
-    inline fmpz_wrapper(const T i)
+    fmpz_wrapper(const T i)
     {
         fmpz_init(mp);
         fmpz_set_si(mp, i);
     }
-    inline fmpz_wrapper()
+    fmpz_wrapper()
     {
         fmpz_init(mp);
     }
-    inline fmpz_wrapper(const mpz_t m)
+    fmpz_wrapper(const mpz_t m)
     {
         fmpz_init(mp);
         fmpz_set_mpz(mp, m);
     }
-    inline fmpz_wrapper(const fmpz_t m)
+    fmpz_wrapper(const fmpz_t m)
     {
         fmpz_init(mp);
         fmpz_set(mp, m);
     }
-    inline fmpz_wrapper(const std::string &s, unsigned base = 10)
+    fmpz_wrapper(const std::string &s, unsigned base = 10)
     {
         fmpz_init(mp);
         fmpz_set_str(mp, s.c_str(), base);
     }
-    inline fmpz_wrapper(const fmpz_wrapper &other)
+    fmpz_wrapper(const fmpz_wrapper &other)
     {
         fmpz_init(mp);
         fmpz_set(mp, other.get_fmpz_t());
     }
-    inline fmpz_wrapper(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
+    fmpz_wrapper(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpz_init(mp);
         fmpz_swap(mp, other.get_fmpz_t());
     }
-    inline fmpz_wrapper &operator=(const fmpz_wrapper &other)
+    fmpz_wrapper &operator=(const fmpz_wrapper &other)
     {
         fmpz_set(mp, other.get_fmpz_t());
         return *this;
     }
-    inline fmpz_wrapper &operator=(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
+    fmpz_wrapper &operator=(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpz_swap(mp, other.get_fmpz_t());
         return *this;
     }
-    inline ~fmpz_wrapper() SYMENGINE_NOEXCEPT
+    ~fmpz_wrapper() SYMENGINE_NOEXCEPT
     {
         fmpz_clear(mp);
     }
-    inline fmpz *get_fmpz_t()
+    fmpz *get_fmpz_t()
     {
         return mp;
     }
-    inline const fmpz *get_fmpz_t() const
+    const fmpz *get_fmpz_t() const
     {
         return mp;
     }
-    inline friend fmpz_wrapper operator+(const fmpz_wrapper &a,
-                                         const fmpz_wrapper &b)
+    friend fmpz_wrapper operator+(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_add(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
         return res;
     }
-    inline fmpz_wrapper operator+=(const fmpz_wrapper &a)
+    fmpz_wrapper operator+=(const fmpz_wrapper &a)
     {
         fmpz_add(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator-(const fmpz_wrapper &a,
-                                         const fmpz_wrapper &b)
+    friend fmpz_wrapper operator-(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_sub(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
         return res;
     }
-    inline fmpz_wrapper operator-=(const fmpz_wrapper &a)
+    fmpz_wrapper operator-=(const fmpz_wrapper &a)
     {
         fmpz_sub(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline fmpz_wrapper operator-() const
+    fmpz_wrapper operator-() const
     {
         fmpz_wrapper res;
         fmpz_neg(res.get_fmpz_t(), mp);
         return res;
     }
-    inline friend fmpz_wrapper operator*(const fmpz_wrapper &a,
-                                         const fmpz_wrapper &b)
+    friend fmpz_wrapper operator*(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_mul(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
         return res;
     }
-    inline fmpz_wrapper operator*=(const fmpz_wrapper &a)
+    fmpz_wrapper operator*=(const fmpz_wrapper &a)
     {
         fmpz_mul(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator/(const fmpz_wrapper &a,
-                                         const fmpz_wrapper &b)
+    friend fmpz_wrapper operator/(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_tdiv_q(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
         return res;
     }
-    inline fmpz_wrapper operator/=(const fmpz_wrapper &a)
+    fmpz_wrapper operator/=(const fmpz_wrapper &a)
     {
         fmpz_tdiv_q(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator%(const fmpz_wrapper &a,
-                                         const fmpz_wrapper &b)
+    friend fmpz_wrapper operator%(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         fmpz_wrapper res, tmp;
         fmpz_tdiv_qr(tmp.get_fmpz_t(), res.get_fmpz_t(), a.get_fmpz_t(),
                      b.get_fmpz_t());
         return res;
     }
-    inline fmpz_wrapper operator%=(const fmpz_wrapper &a)
+    fmpz_wrapper operator%=(const fmpz_wrapper &a)
     {
         fmpz_wrapper tmp;
         fmpz_tdiv_qr(tmp.get_fmpz_t(), mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline fmpz_wrapper operator++()
+    fmpz_wrapper operator++()
     {
         fmpz_add_ui(mp, mp, 1);
         return *this;
     }
-    inline fmpz_wrapper operator++(int)
+    fmpz_wrapper operator++(int)
     {
         fmpz_wrapper orig = *this;
         ++(*this);
         return orig;
     }
-    inline fmpz_wrapper operator--()
+    fmpz_wrapper operator--()
     {
         fmpz_sub_ui(mp, mp, 1);
         return *this;
     }
-    inline fmpz_wrapper operator--(int)
+    fmpz_wrapper operator--(int)
     {
         fmpz_wrapper orig = *this;
         --(*this);
         return orig;
     }
-    inline friend bool operator==(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator==(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_equal(a.get_fmpz_t(), b.get_fmpz_t()) == 1;
     }
-    inline friend bool operator!=(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator!=(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_equal(a.get_fmpz_t(), b.get_fmpz_t()) != 1;
     }
-    inline friend bool operator<(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator<(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_cmp(a.get_fmpz_t(), b.get_fmpz_t()) < 0;
     }
-    inline friend bool operator<=(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator<=(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_cmp(a.get_fmpz_t(), b.get_fmpz_t()) <= 0;
     }
-    inline friend bool operator>(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator>(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_cmp(a.get_fmpz_t(), b.get_fmpz_t()) > 0;
     }
-    inline friend bool operator>=(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    friend bool operator>=(const fmpz_wrapper &a, const fmpz_wrapper &b)
     {
         return fmpz_cmp(a.get_fmpz_t(), b.get_fmpz_t()) >= 0;
     }
-    inline fmpz_wrapper operator<<=(unsigned long u)
+    fmpz_wrapper operator<<=(unsigned long u)
     {
         fmpz_mul_2exp(mp, mp, u);
         return *this;
     }
-    inline fmpz_wrapper operator<<(unsigned long u) const
+    fmpz_wrapper operator<<(unsigned long u) const
     {
         fmpz_wrapper res;
         fmpz_mul_2exp(res.get_fmpz_t(), mp, u);
         return res;
     }
-    inline fmpz_wrapper operator>>=(unsigned long u)
+    fmpz_wrapper operator>>=(unsigned long u)
     {
         fmpz_tdiv_q_2exp(mp, mp, u);
         return *this;
     }
-    inline fmpz_wrapper operator>>(unsigned long u) const
+    fmpz_wrapper operator>>(unsigned long u) const
     {
         fmpz_wrapper res;
         fmpz_tdiv_q_2exp(res.get_fmpz_t(), mp, u);
         return res;
     }
-    inline fmpz_wrapper root(unsigned int n) const
+    fmpz_wrapper root(unsigned int n) const
     {
         fmpz_wrapper res;
         fmpz_root(res.get_fmpz_t(), mp, n);

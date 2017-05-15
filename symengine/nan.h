@@ -34,38 +34,38 @@ public:
     int compare(const Basic &o) const;
 
     //! \return `true` if `0`
-    inline bool is_zero() const
+    bool is_zero() const
     {
         return false;
     }
     //! \return `true` if `1`
-    inline bool is_one() const
+    bool is_one() const
     {
         return false;
     }
     //! \return `true` if `-1`
-    inline bool is_minus_one() const
+    bool is_minus_one() const
     {
         return false;
     }
 
-    inline bool is_positive() const
+    bool is_positive() const
     {
         return false;
     }
 
-    inline bool is_negative() const
+    bool is_negative() const
     {
         return false;
     }
 
-    inline bool is_complex() const
+    bool is_complex() const
     {
         return false;
     }
     //! \return the conjugate if the class is complex
     virtual RCP<const Basic> conjugate() const;
-    inline bool is_exact() const
+    bool is_exact() const
     {
         return false;
     }

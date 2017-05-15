@@ -35,7 +35,7 @@ public:
      * */
     virtual int compare(const Basic &o) const;
     //! \return name of the Symbol.
-    inline const std::string &get_name() const
+    const std::string &get_name() const
     {
         return name_;
     }

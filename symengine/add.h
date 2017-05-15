@@ -105,12 +105,12 @@ public:
     virtual vec_basic get_args() const;
 
     //! \return const reference to the coefficient of the Add
-    inline const RCP<const Number> &get_coef() const
+    const RCP<const Number> &get_coef() const
     {
         return coef_;
     }
     //! \return const reference to the dictionary of the Add
-    inline const umap_basic_num &get_dict() const
+    const umap_basic_num &get_dict() const
     {
         return dict_;
     }

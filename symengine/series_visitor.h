@@ -16,8 +16,8 @@ private:
     const unsigned prec;
 
 public:
-    inline SeriesVisitor(const Poly &var_, const std::string &varname_,
-                         const unsigned prec_)
+    SeriesVisitor(const Poly &var_, const std::string &varname_,
+                  const unsigned prec_)
         : var(var_), varname(varname_), prec(prec_)
     {
     }

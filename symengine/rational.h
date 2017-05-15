@@ -47,7 +47,7 @@ public:
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
-    inline const rational_class &as_rational_class() const
+    const rational_class &as_rational_class() const
     {
         return this->i;
     }
@@ -67,29 +67,29 @@ public:
         return this->i == -1;
     }
     //! \return `true` if denominator is `1`
-    inline bool is_int() const
+    bool is_int() const
     {
         return this->i == 1;
     }
     //! \return `true` if positive
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return i > 0;
     }
     //! \return `true` if negative
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return i < 0;
     }
     //! \returns `false`
     // False is returned because a rational cannot have an imaginary part
-    inline virtual bool is_complex() const
+    virtual bool is_complex() const
     {
         return false;
     }
 
     //! \return negative of `this`
-    inline RCP<const Rational> neg() const
+    RCP<const Rational> neg() const
     {
         return make_rcp<const Rational>(-i);
     }
@@ -102,53 +102,53 @@ public:
     /*! Add Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> addrat(const Rational &other) const
+    RCP<const Number> addrat(const Rational &other) const
     {
         return from_mpq(this->i + other.i);
     }
     /*! Add Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> addrat(const Integer &other) const
+    RCP<const Number> addrat(const Integer &other) const
     {
         return from_mpq(this->i + other.as_integer_class());
     }
     /*! Subtract Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> subrat(const Rational &other) const
+    RCP<const Number> subrat(const Rational &other) const
     {
         return from_mpq(this->i - other.i);
     }
     /*! Subtract Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> subrat(const Integer &other) const
+    RCP<const Number> subrat(const Integer &other) const
     {
         return from_mpq(this->i - other.as_integer_class());
     }
-    inline RCP<const Number> rsubrat(const Integer &other) const
+    RCP<const Number> rsubrat(const Integer &other) const
     {
         return from_mpq(other.as_integer_class() - this->i);
     }
     /*! Multiply Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> mulrat(const Rational &other) const
+    RCP<const Number> mulrat(const Rational &other) const
     {
         return from_mpq(this->i * other.i);
     }
     /*! Multiply Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> mulrat(const Integer &other) const
+    RCP<const Number> mulrat(const Integer &other) const
     {
         return from_mpq(this->i * other.as_integer_class());
     }
     /*! Divide Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> divrat(const Rational &other) const
+    RCP<const Number> divrat(const Rational &other) const
     {
         if (other.i == 0) {
             if (this->i == 0) {
@@ -163,7 +163,7 @@ public:
     /*! Divide Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> divrat(const Integer &other) const
+    RCP<const Number> divrat(const Integer &other) const
     {
         if (other.as_integer_class() == 0) {
             if (this->i == 0) {
@@ -175,7 +175,7 @@ public:
             return from_mpq(this->i / other.as_integer_class());
         }
     }
-    inline RCP<const Number> rdivrat(const Integer &other) const
+    RCP<const Number> rdivrat(const Integer &other) const
     {
         if (this->i == 0) {
             if (other.is_zero()) {
@@ -190,7 +190,7 @@ public:
     /*! Raise Rationals to power `other`
      * \param other power to be raised
      * */
-    inline RCP<const Number> powrat(const Integer &other) const
+    RCP<const Number> powrat(const Integer &other) const
     {
         bool neg = other.is_negative();
         integer_class exp_ = other.as_integer_class();

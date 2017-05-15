@@ -38,7 +38,7 @@ public:
         return true;
     };
     //! \return true if the number is equal to 0 and not an approximation
-    inline bool is_exact_zero() const
+    bool is_exact_zero() const
     {
         return is_exact() and is_zero();
     };

@@ -122,11 +122,11 @@ public:
 
     virtual vec_basic get_args() const;
 
-    inline const RCP<const Number> &get_coef() const
+    const RCP<const Number> &get_coef() const
     {
         return coef_;
     }
-    inline const map_basic_basic &get_dict() const
+    const map_basic_basic &get_dict() const
     {
         return dict_;
     }

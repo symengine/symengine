@@ -69,7 +69,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend RCP<T_> make_rcp(Args &&... args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -102,7 +102,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend RCP<T_> make_rcp(Args &&... args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -137,7 +137,7 @@ public:
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     RCP<const Set> create(const set_basic &container) const;
 
-    inline const set_basic &get_container() const
+    const set_basic &get_container() const
     {
         return this->container_;
     }
@@ -174,19 +174,19 @@ public:
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     virtual vec_basic get_args() const;
 
-    inline const RCP<const Number> &get_start() const
+    const RCP<const Number> &get_start() const
     {
         return start_;
     }
-    inline const RCP<const Number> &get_end() const
+    const RCP<const Number> &get_end() const
     {
         return end_;
     }
-    inline const bool &get_left_open() const
+    const bool &get_left_open() const
     {
         return this->left_open_;
     }
-    inline const bool &get_right_open() const
+    const bool &get_right_open() const
     {
         return this->right_open_;
     }
@@ -214,7 +214,7 @@ public:
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
-    inline const set_set &get_container() const
+    const set_set &get_container() const
     {
         return this->container_;
     }

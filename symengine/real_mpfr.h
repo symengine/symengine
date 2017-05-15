@@ -90,11 +90,11 @@ public:
     IMPLEMENT_TYPEID(REAL_MPFR)
     //! Constructor of RealMPFR class
     RealMPFR(mpfr_class i);
-    inline const mpfr_class &as_mpfr() const
+    const mpfr_class &as_mpfr() const
     {
         return i;
     }
-    inline mpfr_prec_t get_prec() const
+    mpfr_prec_t get_prec() const
     {
         return mpfr_get_prec(i.get_mpfr_t());
     }
@@ -107,17 +107,17 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return mpfr_cmp_si(i.get_mpfr_t(), 0) > 0;
     }
     //! \return `true` if negative
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return mpfr_cmp_si(i.get_mpfr_t(), 0) < 0;
     }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const
+    virtual bool is_exact() const
     {
         return false;
     }

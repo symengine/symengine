@@ -34,22 +34,22 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return i > 0;
     }
     //! \return `true` if negative
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return i < 0;
     }
     //! \return self as a double
-    inline double as_double() const
+    double as_double() const
     {
         return i;
     }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const
+    virtual bool is_exact() const
     {
         return false;
     }

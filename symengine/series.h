@@ -33,56 +33,56 @@ protected:
     const unsigned degree_;
 
 public:
-    inline SeriesBase(Poly p, std::string var, unsigned degree)
+    SeriesBase(Poly p, std::string var, unsigned degree)
         : p_(std::move(p)), var_(var), degree_(degree)
     {
     }
-    inline virtual unsigned get_degree() const
+    virtual unsigned get_degree() const
     {
         return degree_;
     }
 
-    inline virtual const std::string &get_var() const
+    virtual const std::string &get_var() const
     {
         return var_;
     }
 
-    inline const Poly &get_poly() const
+    const Poly &get_poly() const
     {
         return p_;
     }
 
-    inline virtual bool is_zero() const
+    virtual bool is_zero() const
     {
         return false;
     }
 
-    inline virtual bool is_one() const
+    virtual bool is_one() const
     {
         return false;
     }
 
-    inline virtual bool is_minus_one() const
+    virtual bool is_minus_one() const
     {
         return false;
     }
 
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return false;
     }
 
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return false;
     }
 
-    inline virtual bool is_complex() const
+    virtual bool is_complex() const
     {
         return false;
     }
 
-    inline virtual bool __eq__(const Basic &o) const
+    virtual bool __eq__(const Basic &o) const
     {
         return (is_a<Series>(o) and var_ == down_cast<const Series &>(o).var_
                 and p_ == down_cast<const Series &>(o).p_
@@ -175,7 +175,7 @@ public:
         }
     }
 
-    static inline const std::list<unsigned int> &step_list(unsigned int prec)
+    static const std::list<unsigned int> &step_list(unsigned int prec)
     {
         static std::list<unsigned int> steps;
         if (not steps.empty()) {
@@ -195,8 +195,7 @@ public:
         return steps;
     }
 
-    static inline Poly series_invert(const Poly &s, const Poly &var,
-                                     unsigned int prec)
+    static Poly series_invert(const Poly &s, const Poly &var, unsigned int prec)
     {
         if (s == 0)
             throw DivisionByZeroError(
@@ -220,8 +219,8 @@ public:
         }
     }
 
-    static inline Poly series_reverse(const Poly &s, const Poly &var,
-                                      unsigned int prec)
+    static Poly series_reverse(const Poly &s, const Poly &var,
+                               unsigned int prec)
     {
         const Coeff co = Series::find_cf(s, var, 0);
         if (co != 0)
@@ -239,8 +238,8 @@ public:
         return r;
     }
 
-    static inline Poly series_nthroot(const Poly &s, int n, const Poly &var,
-                                      unsigned int prec)
+    static Poly series_nthroot(const Poly &s, int n, const Poly &var,
+                               unsigned int prec)
     {
         if (n == 0)
             return Poly(1);
@@ -280,8 +279,7 @@ public:
             return Series::series_invert(res_p, var, prec) * ctroot;
     }
 
-    static inline Poly series_atan(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_atan(const Poly &s, const Poly &var, unsigned int prec)
     {
         Poly res_p(0);
         if (s == 0)
@@ -310,8 +308,7 @@ public:
         }
     }
 
-    static inline Poly series_tan(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_tan(const Poly &s, const Poly &var, unsigned int prec)
     {
         Poly res_p(0), ss = s;
         const Coeff c(Series::find_cf(s, var, 0));
@@ -349,14 +346,13 @@ public:
         }
     }
 
-    static inline Poly series_cot(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_cot(const Poly &s, const Poly &var, unsigned int prec)
     {
         return Series::series_invert(Series::series_tan(s, var, prec), var,
                                      prec);
     }
 
-    static inline Poly _series_sin(const Poly &s, unsigned int prec)
+    static Poly _series_sin(const Poly &s, unsigned int prec)
     {
         Poly res_p(0), monom(s);
         Poly ssquare = Series::mul(s, s, prec);
@@ -372,8 +368,7 @@ public:
         return res_p;
     }
 
-    static inline Poly series_sin(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_sin(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         if (c != 0) {
@@ -402,15 +397,13 @@ public:
         //        }
     }
 
-    static inline Poly series_csc(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_csc(const Poly &s, const Poly &var, unsigned int prec)
     {
         return Series::series_invert(Series::series_sin(s, var, prec), var,
                                      prec);
     }
 
-    static inline Poly series_asin(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_asin(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
 
@@ -427,14 +420,13 @@ public:
         }
     }
 
-    static inline Poly series_acos(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_acos(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         return Series::acos(c) - series_asin(s - c, var, prec);
     }
 
-    static inline Poly _series_cos(const Poly &s, unsigned int prec)
+    static Poly _series_cos(const Poly &s, unsigned int prec)
     {
         Poly res_p(1);
         Poly ssquare = Series::mul(s, s, prec);
@@ -451,8 +443,7 @@ public:
         return res_p;
     }
 
-    static inline Poly series_cos(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_cos(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         if (c != 0) {
@@ -482,15 +473,13 @@ public:
         //        }
     }
 
-    static inline Poly series_sec(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_sec(const Poly &s, const Poly &var, unsigned int prec)
     {
         return Series::series_invert(Series::series_cos(s, var, prec), var,
                                      prec);
     }
 
-    static inline Poly series_log(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_log(const Poly &s, const Poly &var, unsigned int prec)
     {
         Poly res_p(0);
         if (s == 1)
@@ -516,8 +505,7 @@ public:
         return res_p;
     }
 
-    static inline Poly series_exp(const Poly &s, const Poly &var,
-                                  unsigned int prec)
+    static Poly series_exp(const Poly &s, const Poly &var, unsigned int prec)
     {
         Poly res_p(1);
         if (s == 0)
@@ -553,8 +541,8 @@ public:
         }
     }
 
-    static inline Poly series_lambertw(const Poly &s, const Poly &var,
-                                       unsigned int prec)
+    static Poly series_lambertw(const Poly &s, const Poly &var,
+                                unsigned int prec)
     {
         if (Series::find_cf(s, var, 0) != 0)
             throw NotImplementedError("lambertw(const) not Implemented");
@@ -572,8 +560,7 @@ public:
         return p1;
     }
 
-    static inline Poly series_sinh(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_sinh(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         const Poly p1(Series::series_exp(s - c, var, prec));
@@ -587,8 +574,7 @@ public:
         }
     }
 
-    static inline Poly series_cosh(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_cosh(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         const Poly p1(Series::series_exp(s - c, var, prec));
@@ -602,8 +588,7 @@ public:
         }
     }
 
-    static inline Poly series_atanh(const Poly &s, const Poly &var,
-                                    unsigned int prec)
+    static Poly series_atanh(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         const Poly p(1 - Series::pow(s, 2, prec - 1));
@@ -618,8 +603,7 @@ public:
         }
     }
 
-    static inline Poly series_asinh(const Poly &s, const Poly &var,
-                                    unsigned int prec)
+    static Poly series_asinh(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
 
@@ -635,8 +619,7 @@ public:
         }
     }
 
-    static inline Poly series_tanh(const Poly &s, const Poly &var,
-                                   unsigned int prec)
+    static Poly series_tanh(const Poly &s, const Poly &var, unsigned int prec)
     {
         const Coeff c(Series::find_cf(s, var, 0));
         Poly res_p(s);
@@ -658,55 +641,55 @@ public:
         }
     }
 
-    static inline Coeff sin(const Coeff &c)
+    static Coeff sin(const Coeff &c)
     {
         throw NotImplementedError("sin(const) not implemented");
     }
-    static inline Coeff cos(const Coeff &c)
+    static Coeff cos(const Coeff &c)
     {
         throw NotImplementedError("cos(const) not implemented");
     }
-    static inline Coeff tan(const Coeff &c)
+    static Coeff tan(const Coeff &c)
     {
         throw NotImplementedError("tan(const) not implemented");
     }
-    static inline Coeff asin(const Coeff &c)
+    static Coeff asin(const Coeff &c)
     {
         throw NotImplementedError("asin(const) not implemented");
     }
-    static inline Coeff acos(const Coeff &c)
+    static Coeff acos(const Coeff &c)
     {
         throw NotImplementedError("acos(const) not implemented");
     }
-    static inline Coeff atan(const Coeff &c)
+    static Coeff atan(const Coeff &c)
     {
         throw NotImplementedError("atan(const) not implemented");
     }
-    static inline Coeff sinh(const Coeff &c)
+    static Coeff sinh(const Coeff &c)
     {
         throw NotImplementedError("sinh(const) not implemented");
     }
-    static inline Coeff cosh(const Coeff &c)
+    static Coeff cosh(const Coeff &c)
     {
         throw NotImplementedError("cosh(const) not implemented");
     }
-    static inline Coeff tanh(const Coeff &c)
+    static Coeff tanh(const Coeff &c)
     {
         throw NotImplementedError("tanh(const) not implemented");
     }
-    static inline Coeff asinh(const Coeff &c)
+    static Coeff asinh(const Coeff &c)
     {
         throw NotImplementedError("asinh(const) not implemented");
     }
-    static inline Coeff atanh(const Coeff &c)
+    static Coeff atanh(const Coeff &c)
     {
         throw NotImplementedError("atanh(const) not implemented");
     }
-    static inline Coeff exp(const Coeff &c)
+    static Coeff exp(const Coeff &c)
     {
         throw NotImplementedError("exp(const) not implemented");
     }
-    static inline Coeff log(const Coeff &c)
+    static Coeff log(const Coeff &c)
     {
         throw NotImplementedError("log(const) not implemented");
     }

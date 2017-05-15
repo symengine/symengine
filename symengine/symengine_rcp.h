@@ -37,15 +37,15 @@ template <class T>
 class Ptr
 {
 public:
-    inline explicit Ptr(T *ptr) : ptr_(ptr)
+    explicit Ptr(T *ptr) : ptr_(ptr)
     {
         SYMENGINE_ASSERT(ptr_ != nullptr)
     }
-    inline Ptr(const Ptr<T> &ptr) : ptr_(ptr.ptr_)
+    Ptr(const Ptr<T> &ptr) : ptr_(ptr.ptr_)
     {
     }
     template <class T2>
-    inline Ptr(const Ptr<T2> &ptr) : ptr_(ptr.get())
+    Ptr(const Ptr<T2> &ptr) : ptr_(ptr.get())
     {
     }
     Ptr<T> &operator=(const Ptr<T> &ptr)
@@ -54,26 +54,26 @@ public:
         return *this;
     }
 #if defined(HAVE_DEFAULT_CONSTRUCTORS)
-    inline Ptr(Ptr &&) = default;
+    Ptr(Ptr &&) = default;
     Ptr<T> &operator=(Ptr &&) = default;
 #endif
-    inline T *operator->() const
+    T *operator->() const
     {
         return ptr_;
     }
-    inline T &operator*() const
+    T &operator*() const
     {
         return *ptr_;
     }
-    inline T *get() const
+    T *get() const
     {
         return ptr_;
     }
-    inline T *getRawPtr() const
+    T *getRawPtr() const
     {
         return get();
     }
-    inline const Ptr<T> ptr() const
+    const Ptr<T> ptr() const
     {
         return *this;
     }
@@ -283,7 +283,7 @@ class EnableRCPFromThis
     // Public interface
 public:
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
-    inline RCP<T> rcp_from_this()
+    RCP<T> rcp_from_this()
     {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T *>(this));
@@ -293,7 +293,7 @@ public:
     }
 
     //! Get RCP<const T> pointer to self (it will cast the pointer to const T)
-    inline RCP<const T> rcp_from_this() const
+    RCP<const T> rcp_from_this() const
     {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T *>(this));
@@ -304,7 +304,7 @@ public:
 
     //! Get RCP<T2> pointer to self (it will cast the pointer to T2)
     template <class T2>
-    inline RCP<const T2> rcp_from_this_cast() const
+    RCP<const T2> rcp_from_this_cast() const
     {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T2 *>(this));
@@ -366,7 +366,7 @@ private:
 #endif
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend RCP<T_> make_rcp(Args &&... args);
 };
 
 template <typename T, typename... Args>

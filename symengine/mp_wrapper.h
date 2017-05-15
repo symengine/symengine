@@ -13,14 +13,14 @@
                                           && std::is_unsigned<T>::value,       \
                                       int>::type                               \
               = 0>                                                             \
-    inline friend bool operator op(const mpz_wrapper &a, const T b)            \
+    friend bool operator op(const mpz_wrapper &a, const T b)                   \
     {                                                                          \
         return SYMENGINE_UI(func)(a.get_mpz_t(), b) op val;                    \
     }                                                                          \
     template <typename T,                                                      \
               typename std::enable_if<std::is_integral<T>::value, int>::type   \
               = 0>                                                             \
-    inline friend bool operator op(const T a, const mpz_wrapper &b)            \
+    friend bool operator op(const T a, const mpz_wrapper &b)                   \
     {                                                                          \
         return b rev_op a;                                                     \
     }                                                                          \
@@ -29,17 +29,17 @@
                                           && std::is_signed<T>::value,         \
                                       int>::type                               \
               = 0>                                                             \
-    inline friend bool operator op(const mpz_wrapper &a, const T b)            \
+    friend bool operator op(const mpz_wrapper &a, const T b)                   \
     {                                                                          \
         return SYMENGINE_SI(func)(a.get_mpz_t(), b) op val;                    \
     }                                                                          \
-    inline friend bool operator op(const mpz_wrapper &a, const mpz_wrapper &b) \
+    friend bool operator op(const mpz_wrapper &a, const mpz_wrapper &b)        \
     {                                                                          \
         return func(a.get_mpz_t(), b.get_mpz_t()) op val;                      \
     }
 
 #define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_IN_PLACE(op, func)                     \
-    inline mpz_wrapper operator op(const mpz_wrapper &a)                       \
+    mpz_wrapper operator op(const mpz_wrapper &a)                              \
     {                                                                          \
         func(get_mpz_t(), get_mpz_t(), a.get_mpz_t());                         \
         return *this;                                                          \
@@ -49,7 +49,7 @@
                                           && std::is_unsigned<T>::value,       \
                                       int>::type                               \
               = 0>                                                             \
-    inline mpz_wrapper operator op(const T a)                                  \
+    mpz_wrapper operator op(const T a)                                         \
     {                                                                          \
         SYMENGINE_UI(func)(get_mpz_t(), get_mpz_t(), a);                       \
         return *this;                                                          \
@@ -61,14 +61,13 @@
                                           && std::is_unsigned<T>::value,       \
                                       int>::type                               \
               = 0>                                                             \
-    inline friend mpz_wrapper operator op(const mpz_wrapper &a, const T b)     \
+    friend mpz_wrapper operator op(const mpz_wrapper &a, const T b)            \
     {                                                                          \
         mpz_wrapper res;                                                       \
         SYMENGINE_UI(func)(res.get_mpz_t(), a.get_mpz_t(), b);                 \
         return res;                                                            \
     }                                                                          \
-    inline friend mpz_wrapper operator op(const mpz_wrapper &a,                \
-                                          const mpz_wrapper &b)                \
+    friend mpz_wrapper operator op(const mpz_wrapper &a, const mpz_wrapper &b) \
     {                                                                          \
         mpz_wrapper res;                                                       \
         func(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());                   \
@@ -81,7 +80,7 @@
     template <typename T,                                                      \
               typename std::enable_if<std::is_integral<T>::value, int>::type   \
               = 0>                                                             \
-    inline friend mpz_wrapper operator op(const T a, mpz_wrapper &b)           \
+    friend mpz_wrapper operator op(const T a, mpz_wrapper &b)                  \
     {                                                                          \
         return b op a;                                                         \
     }
@@ -119,28 +118,28 @@ public:
     {
         mpz_init_set_si(mp, i);
     }
-    inline mpz_wrapper()
+    mpz_wrapper()
     {
         mpz_init(mp);
     }
-    inline mpz_wrapper(const mpz_t m)
+    mpz_wrapper(const mpz_t m)
     {
         mpz_init_set(mp, m);
     }
-    inline mpz_wrapper(const std::string &s, unsigned base = 10)
+    mpz_wrapper(const std::string &s, unsigned base = 10)
     {
         mpz_init_set_str(mp, s.c_str(), base);
     }
-    inline mpz_wrapper(const mpz_wrapper &other)
+    mpz_wrapper(const mpz_wrapper &other)
     {
         mpz_init_set(mp, other.get_mpz_t());
     }
-    inline mpz_wrapper(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
+    mpz_wrapper(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mp->_mp_d = nullptr;
         mpz_swap(mp, other.get_mpz_t());
     }
-    inline mpz_wrapper &operator=(const mpz_wrapper &other)
+    mpz_wrapper &operator=(const mpz_wrapper &other)
     {
         if (mp->_mp_d == nullptr) {
             mpz_init_set(mp, other.get_mpz_t());
@@ -149,7 +148,7 @@ public:
         }
         return *this;
     }
-    inline mpz_wrapper &operator=(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
+    mpz_wrapper &operator=(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mpz_swap(mp, other.get_mpz_t());
         return *this;
@@ -159,7 +158,7 @@ public:
                                           && std::is_unsigned<T>::value,
                                       int>::type
               = 0>
-    inline mpz_wrapper &operator=(T other)
+    mpz_wrapper &operator=(T other)
     {
         if (mp->_mp_d == nullptr) {
             mpz_init_set_ui(mp, other);
@@ -173,7 +172,7 @@ public:
                                           && std::is_signed<T>::value,
                                       int>::type
               = 0>
-    inline mpz_wrapper &operator=(T other)
+    mpz_wrapper &operator=(T other)
     {
         if (mp->_mp_d == nullptr) {
             mpz_init_set_si(mp, other);
@@ -182,17 +181,17 @@ public:
         }
         return *this;
     }
-    inline ~mpz_wrapper() SYMENGINE_NOEXCEPT
+    ~mpz_wrapper() SYMENGINE_NOEXCEPT
     {
         if (mp->_mp_d != nullptr) {
             mpz_clear(mp);
         }
     }
-    inline mpz_ptr get_mpz_t()
+    mpz_ptr get_mpz_t()
     {
         return mp;
     }
-    inline mpz_srcptr get_mpz_t() const
+    mpz_srcptr get_mpz_t() const
     {
         return mp;
     }
@@ -209,7 +208,7 @@ public:
                                           && std::is_unsigned<T>::value,
                                       int>::type
               = 0>
-    inline friend mpz_wrapper operator-(const T b, const mpz_wrapper &a)
+    friend mpz_wrapper operator-(const T b, const mpz_wrapper &a)
     {
         mpz_wrapper res;
         mpz_ui_sub(res.get_mpz_t(), b, a.get_mpz_t());
@@ -220,30 +219,30 @@ public:
     //! % operator
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(%, mpz_tdiv_r, %=)
 
-    inline mpz_wrapper operator-() const
+    mpz_wrapper operator-() const
     {
         mpz_wrapper res;
         mpz_neg(res.get_mpz_t(), mp);
         return res;
     }
 
-    inline mpz_wrapper operator++()
+    mpz_wrapper operator++()
     {
         mpz_add_ui(mp, mp, 1);
         return *this;
     }
-    inline mpz_wrapper operator++(int)
+    mpz_wrapper operator++(int)
     {
         mpz_wrapper orig = *this;
         ++(*this);
         return orig;
     }
-    inline mpz_wrapper operator--()
+    mpz_wrapper operator--()
     {
         mpz_sub_ui(mp, mp, 1);
         return *this;
     }
-    inline mpz_wrapper operator--(int)
+    mpz_wrapper operator--(int)
     {
         mpz_wrapper orig = *this;
         --(*this);
@@ -263,45 +262,45 @@ public:
     //! != operator
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(!=, mpz_cmp, 0, !=)
 
-    inline mpz_wrapper operator<<=(unsigned long u)
+    mpz_wrapper operator<<=(unsigned long u)
     {
         mpz_mul_2exp(mp, mp, u);
         return *this;
     }
-    inline mpz_wrapper operator<<(unsigned long u) const
+    mpz_wrapper operator<<(unsigned long u) const
     {
         mpz_wrapper res;
         mpz_mul_2exp(res.get_mpz_t(), mp, u);
         return res;
     }
-    inline mpz_wrapper operator>>=(unsigned long u)
+    mpz_wrapper operator>>=(unsigned long u)
     {
         mpz_tdiv_q_2exp(mp, mp, u);
         return *this;
     }
-    inline mpz_wrapper operator>>(unsigned long u) const
+    mpz_wrapper operator>>(unsigned long u) const
     {
         mpz_wrapper res;
         mpz_tdiv_q_2exp(res.get_mpz_t(), mp, u);
         return res;
     }
-    inline unsigned long get_ui() const
+    unsigned long get_ui() const
     {
         return mpz_get_ui(mp);
     }
-    inline signed long get_si() const
+    signed long get_si() const
     {
         return mpz_get_si(mp);
     }
-    inline double long get_d() const
+    double long get_d() const
     {
         return mpz_get_d(mp);
     }
-    inline int fits_ulong_p() const
+    int fits_ulong_p() const
     {
         return mpz_fits_ulong_p(mp);
     }
-    inline int fits_slong_p() const
+    int fits_slong_p() const
     {
         return mpz_fits_slong_p(mp);
     }

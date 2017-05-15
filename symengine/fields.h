@@ -601,18 +601,18 @@ public:
         return get_poly().dict_.rend();
     }
 
-    inline integer_class get_coeff(unsigned int x) const
+    integer_class get_coeff(unsigned int x) const
     {
         return get_poly().get_coeff(x);
     }
 
     virtual vec_basic get_args() const;
-    inline const std::vector<integer_class> &get_dict() const
+    const std::vector<integer_class> &get_dict() const
     {
         return get_poly().dict_;
     }
 
-    inline int size() const
+    int size() const
     {
         if (get_poly().empty())
             return 0;

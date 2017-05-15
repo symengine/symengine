@@ -88,11 +88,11 @@ public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)
     //! Constructor of ComplexMPC class
     ComplexMPC(mpc_class i);
-    inline const mpc_class &as_mpc() const
+    const mpc_class &as_mpc() const
     {
         return i;
     }
-    inline mpfr_prec_t get_prec() const
+    mpfr_prec_t get_prec() const
     {
         return mpc_get_prec(i.get_mpc_t());
     }
@@ -111,22 +111,22 @@ public:
     //! Get the conjugate of the complex number
     virtual RCP<const Basic> conjugate() const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return false;
     }
     //! \return `true` if negative
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return false;
     }
     //! \returns `true`
-    inline virtual bool is_complex() const
+    virtual bool is_complex() const
     {
         return true;
     }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const
+    virtual bool is_exact() const
     {
         return false;
     }

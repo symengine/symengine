@@ -102,7 +102,7 @@ public:
     virtual TypeID get_type_code() const = 0;
 #else
     TypeID type_code_;
-    inline TypeID get_type_code() const
+    TypeID get_type_code() const
     {
         return type_code_;
     };

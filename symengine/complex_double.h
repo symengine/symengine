@@ -37,29 +37,29 @@ public:
     virtual RCP<const Basic> conjugate() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_positive() const
+    virtual bool is_positive() const
     {
         return false;
     }
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_negative() const
+    virtual bool is_negative() const
     {
         return false;
     }
     //! \returns `true`
-    inline virtual bool is_complex() const
+    virtual bool is_complex() const
     {
         return true;
     }
     //! \return self as a double
-    inline std::complex<double> as_complex_double() const
+    std::complex<double> as_complex_double() const
     {
         return i;
     }
     //! \returns `false`
     // False is returned because std::complex<double> is not exact
-    inline virtual bool is_exact() const
+    virtual bool is_exact() const
     {
         return false;
     }

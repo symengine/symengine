@@ -26,25 +26,25 @@ public:
     //! Constructor
     OneArgFunction(const RCP<const Basic> &arg) : arg_{arg} {};
     //! \return the hash
-    inline hash_t __hash__() const
+    hash_t __hash__() const
     {
         hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *arg_);
         return seed;
     }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const
+    RCP<const Basic> get_arg() const
     {
         return arg_;
     }
-    virtual inline vec_basic get_args() const
+    virtual vec_basic get_args() const
     {
         return {arg_};
     }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const = 0;
 
-    inline RCP<const Basic> create(const vec_basic &b) const
+    RCP<const Basic> create(const vec_basic &b) const
     {
         SYMENGINE_ASSERT(b.size() == 1);
         return create(b[0]);
@@ -54,14 +54,14 @@ public:
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    virtual inline bool __eq__(const Basic &o) const
+    virtual bool __eq__(const Basic &o) const
     {
         return is_same_type(*this, o)
                and eq(*get_arg(),
                       *down_cast<const OneArgFunction &>(o).get_arg());
     }
     //! Structural equality comparator
-    virtual inline int compare(const Basic &o) const
+    virtual int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
         return get_arg()->__cmp__(
@@ -80,7 +80,7 @@ public:
     TwoArgBasic(const RCP<const Basic> &a, const RCP<const Basic> &b)
         : a_{a}, b_{b} {};
     //! \return the hash
-    inline hash_t __hash__() const
+    hash_t __hash__() const
     {
         hash_t seed = this->get_type_code();
         hash_combine<Basic>(seed, *a_);
@@ -88,16 +88,16 @@ public:
         return seed;
     }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg1() const
+    RCP<const Basic> get_arg1() const
     {
         return a_;
     }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg2() const
+    RCP<const Basic> get_arg2() const
     {
         return b_;
     }
-    virtual inline vec_basic get_args() const
+    virtual vec_basic get_args() const
     {
         return {a_, b_};
     }
@@ -105,7 +105,7 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &a,
                                     const RCP<const Basic> &b) const = 0;
 
-    inline RCP<const Basic> create(const vec_basic &b) const
+    RCP<const Basic> create(const vec_basic &b) const
     {
         SYMENGINE_ASSERT(b.size() == 2);
         return create(b[0], b[1]);
@@ -115,7 +115,7 @@ public:
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    virtual inline bool __eq__(const Basic &o) const
+    virtual bool __eq__(const Basic &o) const
     {
         return is_same_type(*this, o)
                and eq(*get_arg1(),
@@ -124,7 +124,7 @@ public:
                       *down_cast<const TwoArgBasic &>(o).get_arg2());
     }
     //! Structural equality comparator
-    virtual inline int compare(const Basic &o) const
+    virtual int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
         const TwoArgBasic &t = down_cast<const TwoArgBasic &>(o);
@@ -149,18 +149,18 @@ public:
     //! Constructor
     MultiArgFunction(const vec_basic &arg) : arg_{arg} {};
     //! \return the hash
-    inline hash_t __hash__() const
+    hash_t __hash__() const
     {
         hash_t seed = this->get_type_code();
         for (const auto &a : arg_)
             hash_combine<Basic>(seed, *a);
         return seed;
     }
-    virtual inline vec_basic get_args() const
+    virtual vec_basic get_args() const
     {
         return arg_;
     }
-    inline const vec_basic &get_vec() const
+    const vec_basic &get_vec() const
     {
         return arg_;
     }
@@ -170,14 +170,14 @@ public:
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    virtual inline bool __eq__(const Basic &o) const
+    virtual bool __eq__(const Basic &o) const
     {
         return is_same_type(*this, o)
                and unified_eq(get_vec(),
                               down_cast<const MultiArgFunction &>(o).get_vec());
     }
     //! Structural equality comparator
-    virtual inline int compare(const Basic &o) const
+    virtual int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
         return unified_compare(
@@ -490,12 +490,12 @@ public:
     bool is_canonical(const RCP<const Basic> &num,
                       const RCP<const Basic> &den) const;
     //! \return `y` in `atan2(y, x)`
-    inline RCP<const Basic> get_num() const
+    RCP<const Basic> get_num() const
     {
         return get_arg1();
     }
     //! \return `x` in `atan2(y, x)`
-    inline RCP<const Basic> get_den() const
+    RCP<const Basic> get_den() const
     {
         return get_arg2();
     }
@@ -569,12 +569,12 @@ public:
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s);
     //! \return `s_`
-    inline RCP<const Basic> get_s() const
+    RCP<const Basic> get_s() const
     {
         return get_arg1();
     }
     //! \return `a_`
-    inline RCP<const Basic> get_a() const
+    RCP<const Basic> get_a() const
     {
         return get_arg2();
     }
@@ -598,7 +598,7 @@ public:
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
     //! \return `s`
-    inline RCP<const Basic> get_s() const
+    RCP<const Basic> get_s() const
     {
         return get_arg();
     }
@@ -633,7 +633,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `name_`
-    inline const std::string &get_name() const
+    const std::string &get_name() const
     {
         return name_;
     }
@@ -695,11 +695,11 @@ public:
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const
+    RCP<const Basic> get_arg() const
     {
         return arg_;
     }
-    inline const multiset_basic &get_symbols() const
+    const multiset_basic &get_symbols() const
     {
         return x_;
     }
@@ -736,11 +736,11 @@ public:
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline const RCP<const Basic> &get_arg() const
+    const RCP<const Basic> &get_arg() const
     {
         return arg_;
     }
-    inline const map_basic_basic &get_dict() const
+    const map_basic_basic &get_dict() const
     {
         return dict_;
     };

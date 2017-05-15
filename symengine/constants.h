@@ -38,7 +38,7 @@ public:
      * */
     virtual int compare(const Basic &o) const;
     //! \return name of the Constant.
-    inline std::string get_name() const
+    std::string get_name() const
     {
         return name_;
     }
