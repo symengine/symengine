@@ -205,7 +205,7 @@ void test_complex()
 
     basic_str_free(s);
 
-    complex_real_part(f, e);
+    complex_base_real_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
@@ -216,7 +216,7 @@ void test_complex()
 
     basic_str_free(s);
 
-    complex_imaginary_part(f, e);
+    complex_base_imaginary_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "76/59") == 0);
@@ -260,7 +260,7 @@ void test_complex_double()
     SYMENGINE_C_ASSERT(k.real == 100.47);
     SYMENGINE_C_ASSERT(k.imag == 76.59);
 
-    complex_double_real_part(f, e);
+    complex_base_real_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100.47") == 0);
@@ -272,7 +272,7 @@ void test_complex_double()
 
     basic_str_free(s);
 
-    complex_double_imaginary_part(f, e);
+    complex_base_imaginary_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "76.59") == 0);
@@ -360,10 +360,10 @@ void test_complex_mpc()
     basic r1;
     basic_new_stack(r1);
 
-    complex_mpc_real_part(r1, d2);
+    complex_base_real_part(r1, d2);
     SYMENGINE_C_ASSERT(basic_eq(r1, d));
 
-    complex_mpc_imaginary_part(r1, d2);
+    complex_base_imaginary_part(r1, d2);
     SYMENGINE_C_ASSERT(basic_eq(r1, d1));
 
     basic_free_stack(d);
@@ -1271,9 +1271,9 @@ void test_eval()
     basic_evalf(eval, n1, 53, 0);
     SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_COMPLEX_DOUBLE);
     d = -0.780872515;
-    complex_double_real_part(temp, eval);
+    complex_base_real_part(temp, eval);
     d2 = real_double_get_d(temp);
-    complex_double_imaginary_part(temp, eval);
+    complex_base_imaginary_part(temp, eval);
     double d3 = real_double_get_d(temp);
     double d4 = -0.3688890370;
     d = fabs(d - d2);
@@ -1314,9 +1314,9 @@ void test_eval()
 
     // With 53 bit precision, `com1` and `com2` have the same value.
     // Hence value of `r1` was  rounded down to `0.000000000000000`
-    complex_double_real_part(temp, eval3);
+    complex_base_real_part(temp, eval3);
     SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
-    complex_double_imaginary_part(temp, eval3);
+    complex_base_imaginary_part(temp, eval3);
     SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
 
     basic_evalf(eval3, r1, 100, 0);

@@ -22,6 +22,7 @@ using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
+using SymEngine::ComplexBase;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
@@ -330,29 +331,29 @@ int real_mpfr_is_zero(const basic s)
 }
 
 #endif // HAVE_SYMENGINE_MPFR
+
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).real_part();
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).imaginary_part();
+    CWRAPPER_END
+}
+
 #ifdef HAVE_SYMENGINE_MPC
 int complex_mpc_is_zero(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
     return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
 }
-
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
 #endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
@@ -446,38 +447,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
     CWRAPPER_END
 }
 #endif
-
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
 
 dcomplex complex_double_get(const basic s)
 {
