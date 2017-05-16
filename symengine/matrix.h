@@ -172,6 +172,12 @@ public:
                                 unsigned row_start, unsigned col_start,
                                 unsigned row_end, unsigned col_end,
                                 unsigned row_step, unsigned col_step);
+    friend void row_join(const DenseMatrix &A, const DenseMatrix &B,
+                         DenseMatrix &C);
+    friend void col_join(const DenseMatrix &A, const DenseMatrix &B,
+                         DenseMatrix &C);
+    friend void row_del(DenseMatrix &A, unsigned k);
+    friend void col_del(DenseMatrix &A, unsigned k);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
@@ -180,6 +186,9 @@ public:
     friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
                                   RCP<const Basic> &c);
     friend void permuteFwd(DenseMatrix &A, permutelist &pl);
+
+    // Column operations
+    friend void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
 
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A,

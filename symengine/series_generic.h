@@ -19,6 +19,8 @@ class UnivariateSeries
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},
     // {2, 1}} with var_ = "x" and prec_ = 5
 public:
+    using SeriesBase::pow;
+    using SeriesBase::mul;
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)

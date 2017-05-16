@@ -43,16 +43,17 @@ int RealDouble::compare(const Basic &o) const
 RCP<const RealDouble> real_double(double x)
 {
     return make_rcp<const RealDouble>(x);
-};
+}
 
 RCP<const Number> number(std::complex<double> x)
 {
     return complex_double(x);
-};
+}
+
 RCP<const Number> number(double x)
 {
     return real_double(x);
-};
+}
 
 //! Evaluate functions with double precision
 template <class T>

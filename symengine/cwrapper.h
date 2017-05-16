@@ -191,11 +191,14 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s);
 mpfr_prec_t real_mpfr_get_prec(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
-#ifdef HAVE_SYMENGINE_MPC
 //! Assign to s, the real part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com);
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com);
 //! Assign to s, the imaginary part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com);
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com);
+
+#ifdef HAVE_SYMENGINE_MPC
+//! Returns 1 if s has value zero; 0 otherwise
+int complex_mpc_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPC
 
 //! Returns signed long value of s.
@@ -228,14 +231,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 #endif
-//! Assign to s, a real where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com);
-//! Assign to s, an imaginary where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com);
-//! Assign to s, a real double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com);
-//! Assign to s, an imaginary double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com);
 
 //! Extract the real and imaginary doubles from the std::complex<double> stored
 //! in basic
@@ -409,6 +404,8 @@ CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
 CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s);
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n);
 size_t vecbasic_size(CVecBasic *self);
 
 //! Assigns to s the max of the provided args.

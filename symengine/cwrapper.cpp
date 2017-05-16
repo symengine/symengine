@@ -22,6 +22,7 @@ using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
+using SymEngine::ComplexBase;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
@@ -348,23 +349,29 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
 }
 
 #endif // HAVE_SYMENGINE_MPFR
+
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).real_part();
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).imaginary_part();
+    CWRAPPER_END
+}
+
 #ifdef HAVE_SYMENGINE_MPC
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
+int complex_mpc_is_zero(const basic s)
 {
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).real_part();
-    CWRAPPER_END
+    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
+    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
 }
-
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
 #endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
@@ -459,38 +466,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 }
 #endif
 
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
 dcomplex complex_double_get(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
@@ -577,42 +552,42 @@ int basic_neq(const basic a, const basic b)
         CWRAPPER_END                                                           \
     }
 
-IMPLEMENT_ONE_ARG_FUNC(expand);
-IMPLEMENT_ONE_ARG_FUNC(neg);
-IMPLEMENT_ONE_ARG_FUNC(abs);
-IMPLEMENT_ONE_ARG_FUNC(erf);
-IMPLEMENT_ONE_ARG_FUNC(erfc);
-IMPLEMENT_ONE_ARG_FUNC(sin);
-IMPLEMENT_ONE_ARG_FUNC(cos);
-IMPLEMENT_ONE_ARG_FUNC(tan);
-IMPLEMENT_ONE_ARG_FUNC(csc);
-IMPLEMENT_ONE_ARG_FUNC(sec);
-IMPLEMENT_ONE_ARG_FUNC(cot);
-IMPLEMENT_ONE_ARG_FUNC(asin);
-IMPLEMENT_ONE_ARG_FUNC(acos);
-IMPLEMENT_ONE_ARG_FUNC(asec);
-IMPLEMENT_ONE_ARG_FUNC(acsc);
-IMPLEMENT_ONE_ARG_FUNC(atan);
-IMPLEMENT_ONE_ARG_FUNC(acot);
-IMPLEMENT_ONE_ARG_FUNC(sinh);
-IMPLEMENT_ONE_ARG_FUNC(cosh);
-IMPLEMENT_ONE_ARG_FUNC(tanh);
-IMPLEMENT_ONE_ARG_FUNC(csch);
-IMPLEMENT_ONE_ARG_FUNC(sech);
-IMPLEMENT_ONE_ARG_FUNC(coth);
-IMPLEMENT_ONE_ARG_FUNC(asinh);
-IMPLEMENT_ONE_ARG_FUNC(acosh);
-IMPLEMENT_ONE_ARG_FUNC(asech);
-IMPLEMENT_ONE_ARG_FUNC(acsch);
-IMPLEMENT_ONE_ARG_FUNC(atanh);
-IMPLEMENT_ONE_ARG_FUNC(acoth);
-IMPLEMENT_ONE_ARG_FUNC(lambertw);
-IMPLEMENT_ONE_ARG_FUNC(zeta);
-IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
-IMPLEMENT_ONE_ARG_FUNC(gamma);
-IMPLEMENT_ONE_ARG_FUNC(sqrt);
-IMPLEMENT_ONE_ARG_FUNC(exp);
-IMPLEMENT_ONE_ARG_FUNC(log);
+IMPLEMENT_ONE_ARG_FUNC(expand)
+IMPLEMENT_ONE_ARG_FUNC(neg)
+IMPLEMENT_ONE_ARG_FUNC(abs)
+IMPLEMENT_ONE_ARG_FUNC(erf)
+IMPLEMENT_ONE_ARG_FUNC(erfc)
+IMPLEMENT_ONE_ARG_FUNC(sin)
+IMPLEMENT_ONE_ARG_FUNC(cos)
+IMPLEMENT_ONE_ARG_FUNC(tan)
+IMPLEMENT_ONE_ARG_FUNC(csc)
+IMPLEMENT_ONE_ARG_FUNC(sec)
+IMPLEMENT_ONE_ARG_FUNC(cot)
+IMPLEMENT_ONE_ARG_FUNC(asin)
+IMPLEMENT_ONE_ARG_FUNC(acos)
+IMPLEMENT_ONE_ARG_FUNC(asec)
+IMPLEMENT_ONE_ARG_FUNC(acsc)
+IMPLEMENT_ONE_ARG_FUNC(atan)
+IMPLEMENT_ONE_ARG_FUNC(acot)
+IMPLEMENT_ONE_ARG_FUNC(sinh)
+IMPLEMENT_ONE_ARG_FUNC(cosh)
+IMPLEMENT_ONE_ARG_FUNC(tanh)
+IMPLEMENT_ONE_ARG_FUNC(csch)
+IMPLEMENT_ONE_ARG_FUNC(sech)
+IMPLEMENT_ONE_ARG_FUNC(coth)
+IMPLEMENT_ONE_ARG_FUNC(asinh)
+IMPLEMENT_ONE_ARG_FUNC(acosh)
+IMPLEMENT_ONE_ARG_FUNC(asech)
+IMPLEMENT_ONE_ARG_FUNC(acsch)
+IMPLEMENT_ONE_ARG_FUNC(atanh)
+IMPLEMENT_ONE_ARG_FUNC(acoth)
+IMPLEMENT_ONE_ARG_FUNC(lambertw)
+IMPLEMENT_ONE_ARG_FUNC(zeta)
+IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta)
+IMPLEMENT_ONE_ARG_FUNC(gamma)
+IMPLEMENT_ONE_ARG_FUNC(sqrt)
+IMPLEMENT_ONE_ARG_FUNC(exp)
+IMPLEMENT_ONE_ARG_FUNC(log)
 
 char *basic_str(const basic s)
 {
@@ -810,6 +785,22 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
     SYMENGINE_ASSERT(n < self->m.size());
     result->m = self->m[n];
 
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m[n] = s->m;
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m.erase(self->m.begin() + n);
     CWRAPPER_END
 }
 

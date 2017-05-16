@@ -363,6 +363,80 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
     }
 }
 
+// ---------------------------- Joining Operations ---------------------------//
+void row_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.row_ == B.row_
+                     and (A.row_ == C.row_ and C.col_ == A.col_ + B.col_));
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * (col + B.col_) + j] = A.m_[i * col + j];
+        }
+    }
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < B.col_; j++) {
+            C.m_[i * (col + B.col_) + j + col] = B.m_[i * B.col_ + j];
+        }
+    }
+}
+
+void col_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.col_ == B.col_
+                     and (A.col_ == C.col_ and C.row_ == A.row_ + B.row_));
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * col + j] = A.m_[i * col + j];
+        }
+    }
+    for (unsigned i = 0; i < B.row_; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[(i + row) * col + j] = B.m_[i * col + j];
+        }
+    }
+}
+
+void row_del(DenseMatrix &A, unsigned k)
+{
+    SYMENGINE_ASSERT(k < A.row_)
+
+    if (A.row_ == 1)
+        A.resize(0, 0);
+    else {
+        for (unsigned i = k; i < A.row_ - 1; i++) {
+            row_exchange_dense(A, i, i + 1);
+        }
+        A.resize(A.row_ - 1, A.col_);
+    }
+}
+
+void col_del(DenseMatrix &A, unsigned k)
+{
+    SYMENGINE_ASSERT(k < A.col_)
+
+    if (A.col_ == 1)
+        A.resize(0, 0);
+    else {
+        unsigned row = A.row_, col = A.col_, m = 0;
+
+        for (unsigned i = 0; i < row; i++) {
+            for (unsigned j = 0; j < col; j++) {
+                if (j != k) {
+                    A.m_[m] = A.m_[i * col + j];
+                    m++;
+                }
+            }
+        }
+        A.resize(A.row_, A.col_ - 1);
+    }
+}
+
 // -------------------------------- Row Operations ---------------------------//
 void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
 {
@@ -400,6 +474,17 @@ void permuteFwd(DenseMatrix &A, permutelist &pl)
     for (auto &p : pl) {
         row_exchange_dense(A, p.first, p.second);
     }
+}
+
+// ----------------------------- Column Operations ---------------------------//
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
+{
+    SYMENGINE_ASSERT(i != j and i < A.col_ and j < A.col_);
+
+    unsigned col = A.col_;
+
+    for (unsigned k = 0; k < A.row_; k++)
+        std::swap(A.m_[k * col + i], A.m_[k * col + j]);
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//

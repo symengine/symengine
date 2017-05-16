@@ -101,7 +101,7 @@ hash_t vec_hash<T>::operator()(const T &v) const
     for (auto i : v)
         hash_combine<typename T::value_type>(h, i);
     return h;
-};
+}
 
 } // SymEngine
 

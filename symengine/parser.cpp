@@ -24,7 +24,9 @@ class ExpressionParser
         {"Catalan", Catalan},
         {"GoldenRatio", GoldenRatio},
         {"pi", pi},
-        {"I", I}};
+        {"I", I},
+        {"oo", Inf},
+        {"zoo", ComplexInf}};
 
     // reference :
     // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions

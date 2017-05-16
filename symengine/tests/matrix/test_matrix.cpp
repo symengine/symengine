@@ -287,6 +287,60 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
                                     integer(14), integer(15), integer(16)}));
 }
 
+TEST_CASE("test_row_join(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
+    DenseMatrix C = DenseMatrix(2, 3);
+    row_join(A, B, C);
+    REQUIRE(C == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
+                                    symbol("c"), symbol("d"), symbol("f")}));
+}
+
+TEST_CASE("test_col_join(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
+    DenseMatrix C = DenseMatrix(3, 2);
+    col_join(A, B, C);
+    REQUIRE(C == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
+                                    symbol("d"), symbol("e"), symbol("f")}));
+}
+
+TEST_CASE("test_row_del(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    row_del(A, 0);
+    REQUIRE(A == DenseMatrix(1, 2, {symbol("c"), symbol("d")}));
+    row_del(A, 0);
+    REQUIRE(A == DenseMatrix(0, 0, {}));
+}
+
+TEST_CASE("test_col_del(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    col_del(A, 0);
+    REQUIRE(A == DenseMatrix(2, 1, {symbol("b"), symbol("d")}));
+    col_del(A, 0);
+    REQUIRE(A == DenseMatrix(0, 0, {}));
+}
+
+TEST_CASE("test_column_exchange_dense(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
+                                       symbol("p"), symbol("q"), symbol("r"),
+                                       symbol("u"), symbol("v"), symbol("w")});
+    DenseMatrix B = DenseMatrix(3, 3, {symbol("c"), symbol("b"), symbol("a"),
+                                       symbol("r"), symbol("q"), symbol("p"),
+                                       symbol("w"), symbol("v"), symbol("u")});
+    column_exchange_dense(A, 0, 2);
+    REQUIRE(A == B);
+}
+
 TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
 {
     permutelist pl;
