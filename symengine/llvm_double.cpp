@@ -382,7 +382,7 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
-};
+}
 
 #define ONE_ARG_EXTERNAL_FUNCTION(Class, ext)                                  \
     void LLVMDoubleVisitor::bvisit(const Class &x)                             \
@@ -421,7 +421,7 @@ void LLVMDoubleVisitor::bvisit(const Symbol &x)
     }
     throw std::runtime_error("Symbol " + x.__str__()
                              + " not in the symbols vector.");
-};
+}
 
 llvm::Function *
 LLVMDoubleVisitor::get_external_function(const std::string &name)
@@ -458,11 +458,11 @@ LLVMDoubleVisitor::get_external_function(const std::string &name)
 void LLVMDoubleVisitor::bvisit(const Constant &x)
 {
     set_double(eval_double(x));
-};
+}
 
 void LLVMDoubleVisitor::bvisit(const Basic &)
 {
     throw std::runtime_error("Not implemented.");
-};
+}
 
 } // namespace SymEngine

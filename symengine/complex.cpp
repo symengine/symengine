@@ -73,12 +73,12 @@ int Complex::compare(const Basic &o) const
 RCP<const Number> Complex::real_part() const
 {
     return Rational::from_mpq(real_);
-};
+}
 
 RCP<const Number> Complex::imaginary_part() const
 {
     return Rational::from_mpq(imaginary_);
-};
+}
 
 RCP<const Number> Complex::from_mpq(const rational_class re,
                                     const rational_class im)
@@ -181,5 +181,5 @@ RCP<const Number> Complex::powcomp(const Integer &other) const
     } else {
         return one->div(*pow_number(*this, -1 * other.as_int()));
     }
-};
+}
 } // SymEngine

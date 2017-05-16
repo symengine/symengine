@@ -95,7 +95,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
     } else {
         throw NotImplementedError("Not Implemented");
     }
-};
+}
 
 RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
