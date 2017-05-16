@@ -196,11 +196,6 @@ CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com);
 //! Assign to s, the imaginary part of com
 CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com);
 
-#ifdef HAVE_SYMENGINE_MPC
-//! Returns 1 if s has value zero; 0 otherwise
-int complex_mpc_is_zero(const basic s);
-#endif // HAVE_SYMENGINE_MPC
-
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.

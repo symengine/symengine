@@ -366,13 +366,6 @@ CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-#ifdef HAVE_SYMENGINE_MPC
-int complex_mpc_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
-    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
-}
-#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
