@@ -402,6 +402,41 @@ void col_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     }
 }
 
+void row_del(DenseMatrix &A, unsigned k)
+{
+    SYMENGINE_ASSERT(k < A.row_)
+
+    if (A.row_ == 1)
+        A.resize(0, 0);
+    else {
+        for (unsigned i = k; i < A.row_ - 1; i++) {
+            row_exchange_dense(A, i, i + 1);
+        }
+        A.resize(A.row_ - 1, A.col_);
+    }
+}
+
+void col_del(DenseMatrix &A, unsigned k)
+{
+    SYMENGINE_ASSERT(k < A.col_)
+
+    if (A.col_ == 1)
+        A.resize(0, 0);
+    else {
+        unsigned row = A.row_, col = A.col_, m = 0;
+
+        for (unsigned i = 0; i < row; i++) {
+            for (unsigned j = 0; j < col; j++) {
+                if (j != k) {
+                    A.m_[m] = A.m_[i * col + j];
+                    m++;
+                }
+            }
+        }
+        A.resize(A.row_, A.col_ - 1);
+    }
+}
+
 // -------------------------------- Row Operations ---------------------------//
 void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
 {

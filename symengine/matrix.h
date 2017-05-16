@@ -176,6 +176,8 @@ public:
                          DenseMatrix &C);
     friend void col_join(const DenseMatrix &A, const DenseMatrix &B,
                          DenseMatrix &C);
+    friend void row_del(DenseMatrix &A, unsigned k);
+    friend void col_del(DenseMatrix &A, unsigned k);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
