@@ -512,6 +512,14 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
 //! Assign to s, a matrix of size NxM, with diagonal of 1s at offset k
 CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
                                       unsigned long int M, int k);
+//! Assign to result, elementwise derivative of A with respect to x. Returns 0
+//! on success.
+CWRAPPER_OUTPUT_TYPE dense_matrix_diff(CDenseMatrix *result,
+                                       const CDenseMatrix *A, basic const x);
+//! Assign to result, jacobian of A with respect to x. Returns 0 on success.
+CWRAPPER_OUTPUT_TYPE dense_matrix_jacobian(CDenseMatrix *result,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *x);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);

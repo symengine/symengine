@@ -1117,6 +1117,25 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE dense_matrix_diff(CDenseMatrix *result,
+                                       const CDenseMatrix *A, basic const x)
+{
+    if (not is_a_Symbol(x))
+        return SYMENGINE_RUNTIME_ERROR;
+    CWRAPPER_BEGIN
+    diff(A->m, rcp_static_cast<const Symbol>(x->m), result->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_jacobian(CDenseMatrix *result,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *x)
+{
+    CWRAPPER_BEGIN
+    jacobian(A->m, x->m, result->m);
+    CWRAPPER_END
+}
+
 int is_a_DenseMatrix(const CDenseMatrix *c)
 {
     return is_a<DenseMatrix>(c->m);
