@@ -363,6 +363,45 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
     }
 }
 
+// ---------------------------- Joining Operations ---------------------------//
+void row_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.row_ == B.row_
+                     and (A.row_ == C.row_ and C.col_ == A.col_ + B.col_));
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * (col + B.col_) + j] = A.m_[i * col + j];
+        }
+    }
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < B.col_; j++) {
+            C.m_[i * (col + B.col_) + j + col] = B.m_[i * B.col_ + j];
+        }
+    }
+}
+
+void col_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.col_ == B.col_
+                     and (A.col_ == C.col_ and C.row_ == A.row_ + B.row_));
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * col + j] = A.m_[i * col + j];
+        }
+    }
+    for (unsigned i = 0; i < B.row_; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[(i + row) * col + j] = B.m_[i * col + j];
+        }
+    }
+}
+
 // -------------------------------- Row Operations ---------------------------//
 void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
 {

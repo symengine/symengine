@@ -287,6 +287,28 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
                                     integer(14), integer(15), integer(16)}));
 }
 
+TEST_CASE("test_row_join(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
+    DenseMatrix C = DenseMatrix(2, 3);
+    row_join(A, B, C);
+    REQUIRE(C == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
+                                    symbol("c"), symbol("d"), symbol("f")}));
+}
+
+TEST_CASE("test_col_join(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
+    DenseMatrix C = DenseMatrix(3, 2);
+    col_join(A, B, C);
+    REQUIRE(C == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
+                                    symbol("d"), symbol("e"), symbol("f")}));
+}
+
 TEST_CASE("test_column_exchange_dense(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
