@@ -287,6 +287,18 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
                                     integer(14), integer(15), integer(16)}));
 }
 
+TEST_CASE("test_column_exchange_dense(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
+                                       symbol("p"), symbol("q"), symbol("r"),
+                                       symbol("u"), symbol("v"), symbol("w")});
+    DenseMatrix B = DenseMatrix(3, 3, {symbol("c"), symbol("b"), symbol("a"),
+                                       symbol("r"), symbol("q"), symbol("p"),
+                                       symbol("w"), symbol("v"), symbol("u")});
+    column_exchange_dense(A, 0, 2);
+    REQUIRE(A == B);
+}
+
 TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
 {
     permutelist pl;

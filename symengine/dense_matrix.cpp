@@ -402,6 +402,17 @@ void permuteFwd(DenseMatrix &A, permutelist &pl)
     }
 }
 
+// ----------------------------- Column Operations ---------------------------//
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
+{
+    SYMENGINE_ASSERT(i != j and i < A.col_ and j < A.col_);
+
+    unsigned col = A.col_;
+
+    for (unsigned k = 0; k < A.row_; k++)
+        std::swap(A.m_[k * col + i], A.m_[k * col + j]);
+}
+
 // ------------------------------ Gaussian Elimination -----------------------//
 void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
                                   permutelist &pl)

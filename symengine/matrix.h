@@ -181,6 +181,9 @@ public:
                                   RCP<const Basic> &c);
     friend void permuteFwd(DenseMatrix &A, permutelist &pl);
 
+    // Column operations
+    friend void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A,
                                              DenseMatrix &B,
