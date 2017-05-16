@@ -1,4 +1,4 @@
-#include <symengine/polys/msymenginepoly.h>
+#include <symengine/polys/mpoly_symengine.h>
 
 namespace SymEngine
 {

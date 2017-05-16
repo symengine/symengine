@@ -21,11 +21,11 @@ set(SRC
     pow.cpp
     functions.cpp
     monomials.cpp
-    polys/uintpoly.cpp
-    polys/uratpoly.cpp
-    polys/uexprpoly.cpp
+    polys/upoly_int_symengine.cpp
+    polys/upoly_rat_symengine.cpp
+    polys/upoly_expr_symengine.cpp
     polys/basic_conversions.cpp
-    polys/msymenginepoly.cpp
+    polys/mpoly_symengine.cpp
     series.cpp
     series_generic.cpp
     rings.cpp
@@ -72,7 +72,7 @@ endif()
 
 if (WITH_FLINT)
     set(SRC series_flint.cpp ${SRC})
-    set(SRC polys/uintpoly_flint.cpp ${SRC})
+    set(SRC polys/upoly_flint.cpp ${SRC})
 endif()
 
 if (WITH_ARB)
@@ -81,7 +81,7 @@ endif()
 
 if (WITH_PIRANHA)
     set(SRC series_piranha.cpp ${SRC})
-    set(SRC polys/uintpoly_piranha.cpp ${SRC})
+    set(SRC polys/upoly_piranha.cpp ${SRC})
 endif()
 
 if (WITH_LLVM)
@@ -128,14 +128,14 @@ set(HEADERS
     number.h
     parser.h
     polys/basic_conversions.h
-    polys/uexprpoly.h
-    polys/uintpoly_flint.h
-    polys/uintpoly.h
-    polys/uintpoly_piranha.h
-    polys/upolybase.h
-    polys/uratpoly.h
-    polys/usymenginepoly.h
-    polys/msymenginepoly.h
+    polys/upoly_expr_symengine.h
+    polys/upoly_flint.h
+    polys/upoly_int_symengine.h
+    polys/upoly_piranha.h
+    polys/upoly_base.h
+    polys/upoly_rat_symengine.h
+    polys/upoly_base_symengine.h
+    polys/mpoly_symengine.h
     pow.h
     printer.h
     rational.h

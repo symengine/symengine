@@ -1,11 +1,11 @@
 /**
- *  \file uintpoly_piranha.h
+ *  \file upoly_piranha.h
  *  Class for Polynomial: UIntPolyPiranha
  **/
 #ifndef SYMENGINE_UINTPOLY_PIRANHA_H
 #define SYMENGINE_UINTPOLY_PIRANHA_H
 
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/upoly_base.h>
 #include <symengine/expression.h>
 #include <symengine/dict.h>
 #include <memory>

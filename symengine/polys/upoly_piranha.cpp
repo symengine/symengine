@@ -1,6 +1,6 @@
 #include <symengine/symbol.h>
 #include <symengine/expression.h>
-#include <symengine/polys/uintpoly_piranha.h>
+#include <symengine/polys/upoly_piranha.h>
 
 namespace SymEngine
 {

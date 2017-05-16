@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_USYMENGINEPOLY_H
 #define SYMENGINE_USYMENGINEPOLY_H
 
-#include <symengine/polys/upolybase.h>
+#include <symengine/polys/upoly_base.h>
 
 namespace SymEngine
 {

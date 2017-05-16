@@ -1,10 +1,10 @@
 #include "catch.hpp"
 #include <chrono>
 
-#include <symengine/polys/uintpoly_flint.h>
-#include <symengine/polys/uintpoly_piranha.h>
-#include <symengine/polys/uratpoly.h>
-#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/upoly_flint.h>
+#include <symengine/polys/upoly_piranha.h>
+#include <symengine/polys/upoly_rat_symengine.h>
+#include <symengine/polys/upoly_int_symengine.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 

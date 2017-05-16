@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include <chrono>
 
-#include <symengine/polys/uexprpoly.h>
+#include <symengine/polys/upoly_expr_symengine.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Expression;
