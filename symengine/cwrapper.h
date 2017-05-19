@@ -151,6 +151,15 @@ char *basic_get_class_from_id(TypeID id);
 //! the string in c, thus the caller is free to use c afterwards.
 CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c);
 
+//! Returns 1 if s has value zero; 0 otherwise
+int number_is_zero(const basic s);
+//! Returns 1 if s has negative value; 0 otherwise
+int number_is_negative(const basic s);
+//! Returns 1 if s has positive value; 0 otherwise
+int number_is_positive(const basic s);
+//! Returns 1 if s is complex; 0 otherwise
+int number_is_complex(const basic s);
+
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
 //! Assign to s, a ulong.
@@ -180,19 +189,12 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_set(basic s, mpfr_srcptr m);
 CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);
-//! Returns 1 if s has value zero; 0 otherwise
-int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
 //! Assign to s, the real part of com
 CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com);
 //! Assign to s, the imaginary part of com
 CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com);
-
-#ifdef HAVE_SYMENGINE_MPC
-//! Returns 1 if s has value zero; 0 otherwise
-int complex_mpc_is_zero(const basic s);
-#endif // HAVE_SYMENGINE_MPC
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -246,8 +248,6 @@ CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
-//! Returns +1 if s (Number) is positive, 0 if 0, -1 if negative
-int basic_number_sign(const basic s);
 
 //! Expands the expr a and assigns to s.
 CWRAPPER_OUTPUT_TYPE basic_expand(basic s, const basic a);

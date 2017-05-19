@@ -233,6 +233,30 @@ CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
     CWRAPPER_END
 }
 
+int number_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_zero());
+}
+
+int number_is_negative(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_negative());
+}
+
+int number_is_positive(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_positive());
+}
+
+int number_is_complex(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_complex());
+}
+
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
@@ -324,12 +348,6 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_prec();
 }
 
-int real_mpfr_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return (int)((down_cast<const RealMPFR &>(*(s->m))).is_zero());
-}
-
 #endif // HAVE_SYMENGINE_MPFR
 
 CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
@@ -348,13 +366,6 @@ CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
     CWRAPPER_END
 }
 
-#ifdef HAVE_SYMENGINE_MPC
-int complex_mpc_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
-    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
-}
-#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -524,20 +535,6 @@ int basic_eq(const basic a, const basic b)
 int basic_neq(const basic a, const basic b)
 {
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
-}
-
-int basic_number_sign(const basic s)
-{
-
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-
-    if ((down_cast<const Number &>(*(s->m))).is_positive()) {
-        return 1;
-    } else if ((down_cast<const Number &>(*(s->m))).is_zero()) {
-        return 0;
-    } else {
-        return -1;
-    }
 }
 
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
