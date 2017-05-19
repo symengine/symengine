@@ -1187,6 +1187,11 @@ int setbasic_find(CSetBasic *self, basic value)
     return self->m.find(value->m) != (self->m).end() ? 1 : 0;
 }
 
+int setbasic_erase(CSetBasic *self, const basic value)
+{
+    return (self->m.erase(value->m)) ? 1 : 0;
+}
+
 size_t setbasic_size(CSetBasic *self)
 {
     return self->m.size();

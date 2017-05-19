@@ -483,6 +483,16 @@ void test_CSetBasic()
     setbasic_get(set, 0, y);
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
+    int was_erased;
+    symbol_set(y, "y");
+    was_erased = setbasic_erase(set, y);
+    SYMENGINE_C_ASSERT(was_erased == 0);
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 1);
+
+    was_erased = setbasic_erase(set, x);
+    SYMENGINE_C_ASSERT(was_erased == 1);
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 0);
+
     setbasic_free(set);
     basic_free_stack(x);
     basic_free_stack(y);

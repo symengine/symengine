@@ -551,6 +551,8 @@ int setbasic_insert(CSetBasic *self, const basic value);
 void setbasic_get(CSetBasic *self, int n, basic result);
 //! Returns 1 if value is found in the set and 0 if not
 int setbasic_find(CSetBasic *self, basic value);
+//! Returns 1 if value was erased from the set and 0 if not
+int setbasic_erase(CSetBasic *self, const basic value);
 size_t setbasic_size(CSetBasic *self);
 
 //! Wrapper for map_basic_basic
