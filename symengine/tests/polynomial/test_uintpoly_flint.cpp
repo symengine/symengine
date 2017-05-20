@@ -293,51 +293,86 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
+    auto factorcheck
+        = [](const std::vector<std::pair<RCP<const UIntPolyFlint>, long>> &fac,
+             const std::pair<RCP<const UIntPolyFlint>, long> &fac1) {
+              auto it = find_if(
+                  fac.begin(), fac.end(),
+                  [&fac1](const std::pair<RCP<const UIntPolyFlint>, long> &s) {
+                      return ((s.first->compare(*fac1.first) == 0)
+                              and (s.second == fac1.second));
+                  });
+              return (it != fac.end());
+          };
+
     auto fac = factors(
         *UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})); // 2*x + 1
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 1);
-    REQUIRE(fac.second[0].first->__str__() == "2*x + 1");
-    REQUIRE(fac.second[0].second == 1);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}}), 1)));
 
     fac = factors(*UIntPolyFlint::from_dict(
         x, {{0, 2_z}, {1, 3_z}, {2, 1_z}})); // x**2 + 3*x + 2
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 2);
-    REQUIRE(fac.second[0].first->__str__() == "x + 1");
-    REQUIRE(fac.second[0].second == 1);
-    REQUIRE(fac.second[1].first->__str__() == "x + 2");
-    REQUIRE(fac.second[1].second == 1);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 1_z}}), 1)));
 
     fac = factors(*UIntPolyFlint::from_dict(y, {{2, 4_z}})); // 4*y**2
     REQUIRE(fac.first == 4_z);
     REQUIRE(fac.second.size() == 1);
-    REQUIRE(fac.second[0].first->__str__() == "y");
-    REQUIRE(fac.second[0].second == 2);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(y, {{0, 0_z}, {1, 1_z}}), 2)));
 
     fac = factors(*UIntPolyFlint::from_dict(
         x, {{0, 3_z}, {1, 8_z}, {2, 4_z}})); // 4*x**2 + 8*x + 3
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 2);
-    REQUIRE(fac.second[0].first->__str__() == "2*x + 1");
-    REQUIRE(fac.second[0].second == 1);
-    REQUIRE(fac.second[1].first->__str__() == "2*x + 3");
-    REQUIRE(fac.second[1].second == 1);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 3_z}, {1, 2_z}}), 1)));
 
     fac = factors(*UIntPolyFlint::from_dict(
         x, {{0, 2_z}, {1, 2_z}, {2, 1_z}})); // x**2 + 2*x + 2
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 1);
-    REQUIRE(fac.second[0].first->__str__() == "x**2 + 2*x + 2");
-    REQUIRE(fac.second[0].second == 1);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(
+            UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 2_z}, {2, 1_z}}), 1)));
 
     fac = factors(*UIntPolyFlint::from_dict(
         x,
         {{0, -1_z}, {1, 3_z}, {2, -3_z}, {3, 1_z}})); // x**3 - 3*x**2 + 3*x - 1
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 1);
-    REQUIRE(fac.second[0].first->__str__() == "x - 1");
-    REQUIRE(fac.second[0].second == 3);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, -1_z}, {1, 1_z}}), 3)));
+
+    fac = factors(
+        *UIntPolyFlint::from_dict(x, {{0, -1_z}, {4, 1_z}})); // x**4 - 1
+    REQUIRE(fac.first == 1_z);
+    REQUIRE(fac.second.size() == 3);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, -1_z}, {1, 1_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {2, 1_z}}), 1)));
 
     fac = factors(*UIntPolyFlint::from_dict(
         x, {{0, -15_z},
@@ -347,14 +382,46 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
             {4, 4_z}})); // 4*x**4 + 4*x**3 - 31*x**2 - 46*x - 15
     REQUIRE(fac.first == 1_z);
     REQUIRE(fac.second.size() == 4);
-    REQUIRE(fac.second[0].first->__str__() == "2*x + 5");
-    REQUIRE(fac.second[1].first->__str__() == "x + 1");
-    REQUIRE(fac.second[2].first->__str__() == "x - 3");
-    REQUIRE(fac.second[3].first->__str__() == "2*x + 1");
-    REQUIRE(fac.second[0].second == 1);
-    REQUIRE(fac.second[1].second == 1);
-    REQUIRE(fac.second[2].second == 1);
-    REQUIRE(fac.second[3].second == 1);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, -3_z}, {1, 1_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 5_z}, {1, 2_z}}), 1)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}}), 1)));
+
+    fac = factors(*UIntPolyFlint::from_dict(
+        x, {{0, 47628_z},
+            {1, 90720_z},
+            {2, -77004_z},
+            {3, -207720_z},
+            {4, 6468_z},
+            {5, 145232_z},
+            {6, 28460_z},
+            {7, -31336_z},
+            {8, -5040_z},
+            {9, 2592_z}})); // 2592*x**9  - 5040*x**8  - 31336*x**7  +
+                            // 28460*x**6  + 145232*x**5  + 6468*x**4  -
+                            // 207720*x**3  - 77004*x**2  + 90720*x + 47628
+    REQUIRE(fac.first == 4_z);
+    REQUIRE(fac.second.size() == 4);
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, -1_z}, {1, 1_z}}), 2)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, -3_z}, {1, 1_z}}), 2)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 3_z}, {1, 2_z}}), 3)));
+    REQUIRE(factorcheck(
+        fac.second,
+        std::make_pair(UIntPolyFlint::from_dict(x, {{0, 7_z}, {1, 9_z}}), 2)));
 }
 
 TEST_CASE("UIntPolyFlint from_poly", "[UIntPolyFlint]")
