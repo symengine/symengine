@@ -22,6 +22,7 @@
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
 #include <symengine/nan.h>
+#include <symengine/relationals.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine

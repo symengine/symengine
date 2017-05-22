@@ -39,6 +39,7 @@ set(SRC
     cwrapper.cpp
     printer.cpp
     real_double.cpp
+    relationals.cpp
     complex_double.cpp
     expand.cpp
     expression.cpp
@@ -141,6 +142,7 @@ set(HEADERS
     rational.h
     real_double.h
     real_mpfr.h
+    relationals.h
     rings.h
     series_flint.h
     series_generic.h
