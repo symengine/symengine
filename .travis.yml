@@ -88,7 +88,7 @@ matrix:
           packages:
           - binutils-dev
           - g++-6
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_FLINT_DEV="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no"
       compiler: gcc
       os: linux
       addons:
