@@ -86,7 +86,8 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
 fi
 
 if [[ "${WITH_FLINT}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs libflint=2.5.2"
+    git clone https://github.com/wbhart/flint2;
+    cd flint2 && git checkout 06defcbc52efe41a8c73496ffde9fc66941e3f0d && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
 fi
 
 if [[ "${WITH_ARB}" == "yes" ]]; then
