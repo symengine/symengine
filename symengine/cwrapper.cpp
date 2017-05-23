@@ -972,6 +972,26 @@ dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_join(CDenseMatrix *C,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *B)
+{
+    CWRAPPER_BEGIN
+    C->m.resize(A->m.nrows(), A->m.ncols() + B->m.ncols());
+    row_join(A->m, B->m, C->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_join(CDenseMatrix *C,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *B)
+{
+    CWRAPPER_BEGIN
+    C->m.resize(A->m.nrows() + B->m.nrows(), A->m.ncols());
+    col_join(A->m, B->m, C->m);
+    CWRAPPER_END
+}
+
 unsigned long int dense_matrix_rows(const CDenseMatrix *s)
 {
     return s->m.nrows();

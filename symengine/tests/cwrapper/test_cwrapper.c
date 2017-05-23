@@ -1734,6 +1734,36 @@ void test_matrix()
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
     basic_str_free(result);
 
+    // row & col join
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    integer_set_si(i2, 2);
+    integer_set_si(i3, 3);
+    dense_matrix_rows_cols(B, 2, 2);
+    dense_matrix_set_basic(B, 0, 0, x);
+    dense_matrix_set_basic(B, 0, 1, y);
+    dense_matrix_set_basic(B, 1, 0, i2);
+    dense_matrix_set_basic(B, 1, 1, i3);
+    dense_matrix_rows_cols(C, 2, 2);
+    dense_matrix_set_basic(C, 0, 0, y);
+    dense_matrix_set_basic(C, 0, 1, x);
+    dense_matrix_set_basic(C, 1, 0, i2);
+    dense_matrix_set_basic(C, 1, 1, i3);
+    dense_matrix_row_join(D, B, C);
+    result = dense_matrix_str(D);
+    expected = "[x, y, y, x]\n[2, 3, 2, 3]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(D) == 2);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(D) == 4);
+    basic_str_free(result);
+    dense_matrix_col_join(D, B, C);
+    result = dense_matrix_str(D);
+    expected = "[x, y]\n[2, 3]\n[y, x]\n[2, 3]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(D) == 4);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(D) == 2);
+    basic_str_free(result);
+
     basic_free_stack(x);
     basic_free_stack(y);
     basic_free_stack(e);

@@ -462,6 +462,14 @@ dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
                        unsigned long int r1, unsigned long int c1,
                        unsigned long int r2, unsigned long int c2,
                        unsigned long int r, unsigned long int c);
+//! Assign to C, the matrix which results from joining the rows of A and B
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_join(CDenseMatrix *C,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *B);
+//! Assign to C, the matrix which results from joining the columns of A and B
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_join(CDenseMatrix *C,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *B);
 //! Return the number of columns of s
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
