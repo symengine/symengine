@@ -154,12 +154,15 @@ public:
 
 template <typename Container, template <typename X, typename Y> class BaseType,
           typename Poly>
-std::pair<integer_class, std::vector<std::pair<RCP<const Poly>, long>>>
+std::vector<std::pair<RCP<const Poly>, long>>
 factors(const UFlintPoly<Container, BaseType, Poly> &a)
 {
     auto fac_wrapper = a.get_poly().factors();
-    auto fac = fac_wrapper.get_fmpz_poly_factor_t();
+    const auto &fac = fac_wrapper.get_fmpz_poly_factor_t();
     std::vector<std::pair<RCP<const Poly>, long>> S;
+    if (fac->c != 1_z)
+        S.push_back(
+            std::make_pair(make_rcp<const Poly>(a.get_var(), fac->c), 1));
     for (long i = 0; i < fac->num; i++) {
         fzp_t z;
         SYMENGINE_ASSERT(fac->p != NULL and fac->exp != NULL)
@@ -167,7 +170,7 @@ factors(const UFlintPoly<Container, BaseType, Poly> &a)
         S.push_back(std::make_pair(
             make_rcp<const Poly>(a.get_var(), std::move(z)), fac->exp[i]));
     }
-    return {fac->c, S};
+    return S;
 }
 
 template <typename Container, template <typename X, typename Y> class BaseType,
