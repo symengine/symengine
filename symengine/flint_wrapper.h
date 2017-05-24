@@ -491,11 +491,11 @@ public:
     fmpz_poly_factor_wrapper(const fmpz_poly_factor_wrapper &other)
     {
         fmpz_poly_factor_init(fac);
-        fmpz_poly_factor_set(fac, *other.get_fmpz_poly_factor_t());
+        fmpz_poly_factor_set(fac, other.get_fmpz_poly_factor_t());
     }
     fmpz_poly_factor_wrapper &operator=(const fmpz_poly_factor_wrapper &other)
     {
-        fmpz_poly_factor_set(fac, *other.get_fmpz_poly_factor_t());
+        fmpz_poly_factor_set(fac, other.get_fmpz_poly_factor_t());
         return *this;
     }
     ~fmpz_poly_factor_wrapper()
@@ -503,13 +503,13 @@ public:
         fmpz_poly_factor_clear(fac);
     }
 
-    const fmpz_poly_factor_t *get_fmpz_poly_factor_t() const
+    const fmpz_poly_factor_t &get_fmpz_poly_factor_t() const
     {
-        return &fac;
+        return fac;
     }
-    fmpz_poly_factor_t *get_fmpz_poly_factor_t()
+    fmpz_poly_factor_t &get_fmpz_poly_factor_t()
     {
-        return &fac;
+        return fac;
     }
 };
 
@@ -670,7 +670,7 @@ public:
     fmpz_poly_factor_wrapper factors() const
     {
         fmpz_poly_factor_wrapper r;
-        fmpz_poly_factor(*r.get_fmpz_poly_factor_t(), poly);
+        fmpz_poly_factor(r.get_fmpz_poly_factor_t(), poly);
         return r;
     }
     fmpz_poly_wrapper derivative() const
