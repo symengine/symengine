@@ -670,12 +670,12 @@ public:
     fmpz_poly_factor_wrapper factors() const
     {
         fmpz_poly_factor_wrapper r;
-        std::string minversion = "2.5.2";
-        if (version > minversion)
-            fmpz_poly_factor(r.get_fmpz_poly_factor_t(), poly);
-        else
-            throw std::runtime_error(
-                "FLINT's Version must be higher than 2.5.2 to obtain factors");
+#if __FLINT_RELEASE > 20502
+        fmpz_poly_factor(r.get_fmpz_poly_factor_t(), poly);
+#else
+        throw std::runtime_error(
+            "FLINT's Version must be higher than 2.5.2 to obtain factors");
+#endif
         return r;
     }
     fmpz_poly_wrapper derivative() const

@@ -293,8 +293,7 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    std::string minversion = "2.5.2";
-    if (version <= minversion) {
+    if (__FLINT_RELEASE <= 20502) {
         CHECK_THROWS_AS(
             factors(*UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})),
             std::runtime_error);
