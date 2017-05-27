@@ -560,13 +560,13 @@ public:
         fmpz_poly_swap(poly, *other.get_fmpz_poly_t());
         return *this;
     }
+    void swap_fmpz_poly_t(fmpz_poly_struct &other)
+    {
+        fmpz_poly_swap(poly, &other);
+    }
     ~fmpz_poly_wrapper()
     {
         fmpz_poly_clear(poly);
-    }
-    void set_fmpz_poly_t(fmpz_poly_t other)
-    {
-        fmpz_poly_set(poly, other);
     }
     const fmpz_poly_t *get_fmpz_poly_t() const
     {
