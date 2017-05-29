@@ -386,7 +386,7 @@ public:
         s_len = numeric_cast<unsigned>(s.length());
         operator_end.clear();
         operator_end.resize(s_len, -1);
-        // the 'defacto' end of any operator
+        // the 'de facto' end of any operator
         // won't ever be pushed out of the stack
         op_stack.push(std::make_pair(-1, s_len));
         right_bracket.push(s_len);
@@ -404,7 +404,7 @@ public:
                     operator_end[i] = right_bracket.top();
 
                     // this should never happen, every '(' should have a
-                    // matcihng ')' in the bracket stack
+                    // matching ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
                         throw ParseError("Mismatching parantheses!");
                     right_bracket.pop();
