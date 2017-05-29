@@ -139,6 +139,7 @@ public:
     UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict);
     //! \return size of the hash
     hash_t __hash__() const;
+
 }; // UIntPolyFlint
 
 class URatPolyFlint : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
@@ -150,6 +151,27 @@ public:
     //! \return size of the hash
     hash_t __hash__() const;
 }; // URatPolyFlint
+
+template <typename Container, template <typename X, typename Y> class BaseType,
+          typename Poly>
+std::vector<std::pair<RCP<const Poly>, long>>
+factors(const UFlintPoly<Container, BaseType, Poly> &a)
+{
+    auto fac_wrapper = a.get_poly().factors();
+    auto &fac = fac_wrapper.get_fmpz_poly_factor_t();
+    std::vector<std::pair<RCP<const Poly>, long>> S;
+    if (fac->c != 1_z)
+        S.push_back(
+            std::make_pair(make_rcp<const Poly>(a.get_var(), fac->c), 1));
+    SYMENGINE_ASSERT(fac->p != NULL and fac->exp != NULL)
+    for (long i = 0; i < fac->num; i++) {
+        fzp_t z;
+        z.swap_fmpz_poly_t(fac->p[i]);
+        S.push_back(std::make_pair(
+            make_rcp<const Poly>(a.get_var(), std::move(z)), fac->exp[i]));
+    }
+    return S;
+}
 
 template <typename Container, template <typename X, typename Y> class BaseType,
           typename Poly>
