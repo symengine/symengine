@@ -168,6 +168,78 @@ public:
     const vec_boolean &get_container() const;
 };
 
+class Relational : public TwoArgBasic<Boolean>
+{
+public:
+    //! Constructor
+    Relational(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+    //! \return `true` if canonical
+    virtual bool is_canonical(const RCP<const Basic> &lhs,
+                              const RCP<const Basic> &rhs) const;
+};
+
+class Equality : public Relational
+{
+    //! Class for operator `==`.
+public:
+    IMPLEMENT_TYPEID(EQUALITY);
+    Equality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+    virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const;
+};
+
+class Unequality : public Relational
+{
+    //! Class for operator `!=`.
+public:
+    IMPLEMENT_TYPEID(UNEQUALITY);
+    Unequality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+    virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const;
+};
+
+class LessThan : public Relational
+{
+    //! Class for operator `<=`.
+public:
+    IMPLEMENT_TYPEID(LESSTHAN);
+    LessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+    virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const;
+};
+
+class StrictLessThan : public Relational
+{
+    //! Class for operator `<`.
+public:
+    IMPLEMENT_TYPEID(STRICTLESSTHAN);
+    StrictLessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+    virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const;
+};
+
+inline bool is_a_Relational(const Basic &b)
+{
+    return (b.get_type_code() == EQUALITY || b.get_type_code() == UNEQUALITY
+            || b.get_type_code() == LESSTHAN
+            || b.get_type_code() == STRICTLESSTHAN);
+}
+
+//! Returns the canonicalized Equality object from a single argument
+RCP<const Basic> Eq(const RCP<const Basic> &lhs);
+//! Returns the canonicalized Equality object from the two arguments
+RCP<const Basic> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+//! Returns the canonicalized Unequality object from the arguments
+RCP<const Basic> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+//! Convenience function returning LessThan object
+RCP<const Basic> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+//! Convenience function returning StrictLessThan object
+RCP<const Basic> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+//! Returns the canonicalized LessThan object from the arguments
+RCP<const Basic> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+//! Returns the canonicalized StrictLessThan object from the arguments
+RCP<const Basic> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+
 RCP<const Boolean> logical_and(const set_boolean &s);
 RCP<const Boolean> logical_nand(const set_boolean &s);
 RCP<const Boolean> logical_or(const set_boolean &s);

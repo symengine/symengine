@@ -478,6 +478,163 @@ RCP<const Boolean> logical_xor(const vec_boolean &s)
     }
 }
 
+Relational::Relational(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : TwoArgBasic<Boolean>(lhs, rhs)
+{
+}
+
+inline bool Relational::is_canonical(const RCP<const Basic> &lhs,
+                                     const RCP<const Basic> &rhs) const
+{
+    if (eq(*lhs, *rhs))
+        return false;
+    if (is_a_Number(*lhs) and is_a_Number(*rhs))
+        return false;
+    if (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs))
+        return false;
+    return true;
+}
+
+Equality::Equality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> Equality::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Basic> &rhs) const
+{
+    return Eq(lhs, rhs);
+}
+
+RCP<const Basic> Eq(const RCP<const Basic> &lhs)
+{
+    return Eq(lhs, zero);
+}
+
+RCP<const Basic> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        return boolean(false);
+    bool b = eq(*lhs, *rhs);
+    if (b) {
+        return boolean(true);
+    } else {
+        if ((is_a_Number(*lhs) and is_a_Number(*rhs))
+            or (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs)))
+            return boolean(false);
+        if (lhs->__cmp__(*rhs) == 1)
+            return make_rcp<const Equality>(rhs, lhs);
+        return make_rcp<Equality>(lhs, rhs);
+    }
+}
+
+Unequality::Unequality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> Unequality::create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const
+{
+    return Ne(lhs, rhs);
+}
+
+RCP<const Basic> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    RCP<const Basic> r = Eq(lhs, rhs);
+    if (is_a<BooleanAtom>(*r)) {
+        return logical_not(rcp_static_cast<const BooleanAtom>(r));
+    }
+    if (lhs->__cmp__(*rhs) == 1)
+        return make_rcp<const Unequality>(rhs, lhs);
+    return make_rcp<Unequality>(lhs, rhs);
+}
+
+LessThan::LessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> LessThan::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Basic> &rhs) const
+{
+    return Le(lhs, rhs);
+}
+
+RCP<const Basic> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
+        throw SymEngineException("Invalid comparison of complex numbers.");
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        throw SymEngineException("Invalid NaN comparison.");
+    if (eq(*lhs, *ComplexInf) or eq(*rhs, *ComplexInf))
+        throw SymEngineException("Invalid comparison of complex zoo.");
+    if (is_a<BooleanAtom>(*lhs) or is_a<BooleanAtom>(*rhs))
+        throw SymEngineException("Invalid comparison of Boolean objects.");
+    if (eq(*lhs, *rhs))
+        return boolean(true);
+    if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
+        RCP<const Number> s = down_cast<const Number &>(*lhs)
+                                  .sub(down_cast<const Number &>(*rhs));
+        if (s->is_negative())
+            return boolean(true);
+        return boolean(false);
+    }
+    return make_rcp<const LessThan>(lhs, rhs);
+}
+
+RCP<const Basic> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    return Le(rhs, lhs);
+}
+
+StrictLessThan::StrictLessThan(const RCP<const Basic> &lhs,
+                               const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> StrictLessThan::create(const RCP<const Basic> &lhs,
+                                        const RCP<const Basic> &rhs) const
+{
+    return Lt(lhs, rhs);
+}
+
+RCP<const Basic> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
+        throw SymEngineException("Invalid comparison of complex numbers.");
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        throw SymEngineException("Invalid NaN comparison.");
+    if (eq(*lhs, *ComplexInf) or eq(*rhs, *ComplexInf))
+        throw SymEngineException("Invalid comparison of complex zoo.");
+    if (is_a<BooleanAtom>(*lhs) or is_a<BooleanAtom>(*rhs))
+        throw SymEngineException("Invalid comparison of Boolean objects.");
+    if (eq(*lhs, *rhs))
+        return boolean(false);
+    if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
+        RCP<const Number> s = down_cast<const Number &>(*lhs)
+                                  .sub(down_cast<const Number &>(*rhs));
+        if (s->is_negative())
+            return boolean(true);
+        return boolean(false);
+    }
+    return make_rcp<const StrictLessThan>(lhs, rhs);
+}
+
+RCP<const Basic> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    return Lt(rhs, lhs);
+}
+
 RCP<const Boolean> logical_and(const set_boolean &s)
 {
     return and_or<And>(s, false);

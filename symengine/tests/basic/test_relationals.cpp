@@ -1,13 +1,14 @@
 #include "catch.hpp"
 #include <iostream>
-#include <symengine/basic.h>
-#include <symengine/relationals.h>
+#include <symengine/logic.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::Eq;
 using SymEngine::Ne;
+using SymEngine::Ge;
+using SymEngine::Gt;
 using SymEngine::Le;
 using SymEngine::Lt;
 using SymEngine::Equality;
@@ -32,10 +33,7 @@ TEST_CASE("Hash Size for Relationals", "[Relationals]")
     RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> a = Eq(x, y);
-    RCP<const Basic> b = Eq(x, x);
-    CHECK(a->__hash__() != b->__hash__());
-
-    b = Eq(x, y);
+    RCP<const Basic> b = Eq(x, y);
     CHECK(a->__hash__() == b->__hash__());
 
     a = Eq(one, zero);
@@ -49,16 +47,22 @@ TEST_CASE("String Printing", "[Relationals]")
     RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> a = Eq(x, y);
-    CHECK(a->__str__() == "Eq(x, y)");
+    CHECK(a->__str__() == "x == y");
 
     a = Ne(x, y);
-    CHECK(a->__str__() == "Ne(x, y)");
+    CHECK(a->__str__() == "x != y");
+
+    a = Ge(x, y);
+    CHECK(a->__str__() == "y <= x");
+
+    a = Gt(x, y);
+    CHECK(a->__str__() == "y < x");
 
     a = Le(x, y);
-    CHECK(a->__str__() == "Le(x, y)");
+    CHECK(a->__str__() == "x <= y");
 
     a = Lt(x, y);
-    CHECK(a->__str__() == "Lt(x, y)");
+    CHECK(a->__str__() == "x < y");
 }
 
 TEST_CASE("Comparing Relationals", "[Relationals]")
@@ -72,7 +76,7 @@ TEST_CASE("Comparing Relationals", "[Relationals]")
     CHECK(eq(*a, *b));
 
     b = Eq(y, x);
-    CHECK(a->compare(*b) == -1);
+    CHECK(a->compare(*b) == 0);
     CHECK(eq(*a, *b));
 
     a = Ne(x, y);
@@ -197,6 +201,12 @@ TEST_CASE("Boolean Values", "[Relationals]")
     a = Lt(one, zero);
     CHECK(eq(*a, *boolFalse));
 
+    a = Ge(zero, one);
+    CHECK(eq(*a, *boolFalse));
+
+    a = Ge(one, zero);
+    CHECK(eq(*a, *boolTrue));
+
     a = Le(zero, zero);
     CHECK(eq(*a, *boolTrue));
 
@@ -206,6 +216,14 @@ TEST_CASE("Boolean Values", "[Relationals]")
     a = Le(one, zero);
     CHECK(eq(*a, *boolFalse));
 
+    a = Gt(zero, one);
+    CHECK(eq(*a, *boolFalse));
+
+    a = Gt(one, zero);
+    CHECK(eq(*a, *boolTrue));
+
+    CHECK_THROWS_AS(Ge(I, one), SymEngineException);
+    CHECK_THROWS_AS(Gt(I, one), SymEngineException);
     CHECK_THROWS_AS(Lt(I, one), SymEngineException);
     CHECK_THROWS_AS(Le(I, one), SymEngineException);
 }
@@ -218,12 +236,16 @@ TEST_CASE("Nan Exceptions", "[Relationals]")
     a = Ne(Nan, Nan);
     CHECK(eq(*a, *boolTrue));
 
+    CHECK_THROWS_AS(Gt(Nan, one), SymEngineException);
+    CHECK_THROWS_AS(Ge(Nan, one), SymEngineException);
     CHECK_THROWS_AS(Lt(Nan, one), SymEngineException);
     CHECK_THROWS_AS(Le(Nan, one), SymEngineException);
 }
 
 TEST_CASE("Boolean Exceptions", "[Relationals]")
 {
+    CHECK_THROWS_AS(Gt(boolFalse, boolTrue), SymEngineException);
+    CHECK_THROWS_AS(Ge(boolTrue, boolTrue), SymEngineException);
     CHECK_THROWS_AS(Lt(boolFalse, boolTrue), SymEngineException);
     CHECK_THROWS_AS(Le(boolTrue, boolTrue), SymEngineException);
 }

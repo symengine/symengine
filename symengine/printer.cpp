@@ -139,28 +139,28 @@ void StrPrinter::bvisit(const ComplexDouble &x)
 void StrPrinter::bvisit(const Equality &x)
 {
     std::ostringstream s;
-    s << "Eq(" << apply(x.get_lhs()) << ", " << apply(x.get_rhs()) << ")";
+    s << apply(x.get_arg1()) << " == " << apply(x.get_arg2());
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Unequality &x)
 {
     std::ostringstream s;
-    s << "Ne(" << apply(x.get_lhs()) << ", " << apply(x.get_rhs()) << ")";
+    s << apply(x.get_arg1()) << " != " << apply(x.get_arg2());
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const LessThan &x)
 {
     std::ostringstream s;
-    s << "Le(" << apply(x.get_lhs()) << ", " << apply(x.get_rhs()) << ")";
+    s << apply(x.get_arg1()) << " <= " << apply(x.get_arg2());
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const StrictLessThan &x)
 {
     std::ostringstream s;
-    s << "Lt(" << apply(x.get_lhs()) << ", " << apply(x.get_rhs()) << ")";
+    s << apply(x.get_arg1()) << " < " << apply(x.get_arg2());
     str_ = s.str();
 }
 
