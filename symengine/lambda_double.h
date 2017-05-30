@@ -343,6 +343,34 @@ public:
         result_ = [=](const double *x) { return std::erfc(tmp(x)); };
     }
 
+    void bvisit(const Equality &x)
+    {
+        fn lhs_ = apply(*(x.get_arg1()));
+        fn rhs_ = apply(*(x.get_arg2()));
+        result_ = [=](const double *x) { return (lhs_(x) == rhs_(x)); };
+    }
+
+    void bvisit(const Unequality &x)
+    {
+        fn lhs_ = apply(*(x.get_arg1()));
+        fn rhs_ = apply(*(x.get_arg2()));
+        result_ = [=](const double *x) { return (lhs_(x) != rhs_(x)); };
+    }
+
+    void bvisit(const LessThan &x)
+    {
+        fn lhs_ = apply(*(x.get_arg1()));
+        fn rhs_ = apply(*(x.get_arg2()));
+        result_ = [=](const double *x) { return (lhs_(x) <= rhs_(x)); };
+    }
+
+    void bvisit(const StrictLessThan &x)
+    {
+        fn lhs_ = apply(*(x.get_arg1()));
+        fn rhs_ = apply(*(x.get_arg2()));
+        result_ = [=](const double *x) { return (lhs_(x) < rhs_(x)); };
+    }
+
     void bvisit(const Max &x)
     {
         std::vector<fn> applys;
