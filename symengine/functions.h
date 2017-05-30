@@ -69,14 +69,15 @@ public:
     }
 };
 
-class TwoArgFunction : public Function
+template <class BaseClass>
+class TwoArgBasic : public BaseClass
 {
 private:
-    RCP<const Basic> a_; //! `a` in `TwoArgFunction(a, b)`
-    RCP<const Basic> b_; //! `b` in `TwoArgFunction(a, b)`
+    RCP<const Basic> a_; //! `a` in `TwoArgBasic(a, b)`
+    RCP<const Basic> b_; //! `b` in `TwoArgBasic(a, b)`
 public:
     //! Constructor
-    TwoArgFunction(const RCP<const Basic> &a, const RCP<const Basic> &b)
+    TwoArgBasic(const RCP<const Basic> &a, const RCP<const Basic> &b)
         : a_{a}, b_{b} {};
     //! \return the hash
     inline hash_t __hash__() const
@@ -118,24 +119,26 @@ public:
     {
         return is_same_type(*this, o)
                and eq(*get_arg1(),
-                      *down_cast<const TwoArgFunction &>(o).get_arg1())
+                      *down_cast<const TwoArgBasic &>(o).get_arg1())
                and eq(*get_arg2(),
-                      *down_cast<const TwoArgFunction &>(o).get_arg2());
+                      *down_cast<const TwoArgBasic &>(o).get_arg2());
     }
     //! Structural equality comparator
     virtual inline int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
-        const TwoArgFunction &t = down_cast<const TwoArgFunction &>(o);
+        const TwoArgBasic &t = down_cast<const TwoArgBasic &>(o);
         if (neq(*get_arg1(), *(t.get_arg1()))) {
             return get_arg1()->__cmp__(
-                *(down_cast<const TwoArgFunction &>(o).get_arg1()));
+                *(down_cast<const TwoArgBasic &>(o).get_arg1()));
         } else {
             return get_arg2()->__cmp__(
-                *(down_cast<const TwoArgFunction &>(o).get_arg2()));
+                *(down_cast<const TwoArgBasic &>(o).get_arg2()));
         }
     }
 };
+
+typedef TwoArgBasic<Function> TwoArgFunction;
 
 class MultiArgFunction : public Function
 {

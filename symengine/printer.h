@@ -230,6 +230,10 @@ public:
     void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const ComplexDouble &x);
+    void bvisit(const Equality &x);
+    void bvisit(const Unequality &x);
+    void bvisit(const LessThan &x);
+    void bvisit(const StrictLessThan &x);
 #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x);
 #endif
