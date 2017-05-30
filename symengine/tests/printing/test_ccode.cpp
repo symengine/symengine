@@ -9,6 +9,10 @@ using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Interval;
+using SymEngine::Eq;
+using SymEngine::Ne;
+using SymEngine::Le;
+using SymEngine::Lt;
 using SymEngine::interval;
 using SymEngine::symbol;
 using SymEngine::piecewise;
@@ -34,6 +38,24 @@ TEST_CASE("Functions", "[ccode]")
     auto x = symbol("x");
     auto p = sin(x);
     REQUIRE(ccode(*p) == "sin(x)");
+}
+
+TEST_CASE("Relationals", "[ccode]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+
+    auto p = Eq(x, y);
+    CHECK(ccode(*p) == "x == y");
+
+    p = Ne(x, y);
+    CHECK(ccode(*p) == "x != y");
+
+    p = Le(x, y);
+    CHECK(ccode(*p) == "x <= y");
+
+    p = Lt(x, y);
+    CHECK(ccode(*p) == "x < y");
 }
 
 TEST_CASE("Piecewise", "[ccode]")
