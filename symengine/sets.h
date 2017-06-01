@@ -286,5 +286,104 @@ inline RCP<const Set> set_union(const set_set &in, bool solve = true)
     return combined_Rest;
 }
 
+// ! \return RCP<const Set>
+RCP<const Set> set_intersection(const set_set &in, bool solve = true)
+{
+    if (solve == false)
+        throw std::runtime_error(
+            "Not implemented"); // No intersection class yet
+
+    // Global rules
+    // If found any emptyset then return emptyset
+    for (const auto &input : in)
+        if (is_a<EmptySet>(*input))
+            return emptyset();
+    if (in.size() == 1)
+        return rcp_dynamic_cast<const Set>(*in.begin());
+
+    // Handle finite sets
+    set_set fsets, othersets;
+    for (const auto &input : in) {
+        if (is_a<FiniteSet>(*input))
+            fsets.insert(input);
+        else
+            othersets.insert(input);
+    }
+    if (fsets.size() != 0) {
+        const FiniteSet &fs = down_cast<const FiniteSet &>(**fsets.begin());
+        fsets.erase(fsets.begin());
+        set_basic finalfs;
+        for (const auto &fselement : fs.get_container()) {
+            bool present = true;
+            for (const auto &fset : fsets) {
+                present
+                    = present and eq(*(fset->contains(fselement)), *boolTrue);
+            }
+            if (!present)
+                continue;
+            for (const auto &oset : othersets) {
+                present
+                    = present and eq(*(oset->contains(fselement)), *boolTrue);
+            }
+            if (present)
+                finalfs.insert(fselement);
+        }
+        return finiteset(finalfs);
+    }
+
+    // If any of the sets is union, then return a Union of Intersections
+    for (const auto &input : in) {
+        if (is_a<Union>(*input)) {
+            set_set other_sets = in;
+            auto it = other_sets.find(input);
+            other_sets.erase(it);
+            auto other = SymEngine::set_intersection(other_sets);
+            auto &container = down_cast<const Union &>(*input).get_container();
+            set_set usets;
+            for (const auto &c : container) {
+                usets.insert(SymEngine::set_intersection({c, other}));
+            }
+            return SymEngine::set_union(usets);
+        }
+    }
+
+    // Simplify if any of the sets is a complement
+    // Not implemented as we don't have a class for complement yet.
+
+    // Pair-wise rules
+    bool shouldContinue = true;
+    auto incopy = in;
+    while (shouldContinue) {
+        for (const auto &input : incopy) {
+            shouldContinue = false;
+            set_set other_sets = incopy;
+            auto it = other_sets.find(input);
+            other_sets.erase(it);
+            set_set newinput;
+            for (const auto &oset : other_sets) {
+                // Try-Catch is a hack for now, but needs improvements
+                try {
+                    auto input_oset = input->set_intersection(oset);
+                    newinput = other_sets;
+                    it = newinput.find(oset);
+                    newinput.erase(it);
+                    shouldContinue = true;
+                    break;
+                } catch (std::runtime_error &err) {
+                    continue;
+                }
+            }
+            if (not newinput.empty()) {
+                incopy = newinput;
+                break;
+            }
+        }
+    }
+
+    if (incopy.size() == 1)
+        return *incopy.begin();
+    else
+        return SymEngine::set_intersection(incopy, false);
+}
 }
 #endif
