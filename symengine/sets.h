@@ -7,6 +7,9 @@
 
 #include <symengine/functions.h>
 #include <symengine/complex.h>
+#include <symengine/real_double.h>
+#include <symengine/real_mpfr.h>
+#include <symengine/rational.h>
 #include <symengine/symengine_casts.h>
 #include <iterator>
 namespace SymEngine
@@ -26,6 +29,7 @@ class Set : public Basic
 public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const = 0;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const = 0;
     bool is_subset(const RCP<const Set> &o) const
     {
@@ -70,6 +74,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
         return boolean(false);
@@ -102,6 +107,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
         return boolean(true);
@@ -128,6 +134,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
     inline const set_basic &get_container() const
@@ -163,6 +170,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     virtual vec_basic get_args() const;
 
@@ -202,6 +210,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
     inline const set_set &get_container() const
@@ -276,5 +285,6 @@ inline RCP<const Set> set_union(const set_set &in, bool solve = true)
     }
     return combined_Rest;
 }
+
 }
 #endif

@@ -195,6 +195,29 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
     return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
 }
 
+RCP<const Set> Interval::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<Interval>(*o)) {
+        if (o->compare(*interval(NegInf, Inf, true, true)) == 0) {
+            auto a = interval(NegInf, start_, true, not left_open_);
+            auto b = interval(end_, Inf, not right_open_, true);
+            return SymEngine::set_union({a, b});
+        }
+    } else if (is_a<FiniteSet>(*o)) {
+        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
+        set_basic container;
+        for (const auto &a : other.get_container()) {
+            if (not is_a_Number(*a))
+                throw std::runtime_error("Not implemented");
+            if (eq(*(this->contains(a)), *boolFalse))
+                container.insert(a);
+        }
+        return finiteset(container);
+    }
+    throw std::runtime_error("Not implemented");
+    // return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
+}
+
 vec_basic Interval::get_args() const
 {
     return {start_, end_, boolean(left_open_), boolean(right_open_)};
@@ -206,6 +229,11 @@ RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const
 }
 
 RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const
+{
+    return o;
+}
+
+RCP<const Set> EmptySet::set_complement(const RCP<const Set> &o) const
 {
     return o;
 }
@@ -243,6 +271,11 @@ RCP<const Set> UniversalSet::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> UniversalSet::set_union(const RCP<const Set> &o) const
 {
     return universalset();
+}
+
+RCP<const Set> UniversalSet::set_complement(const RCP<const Set> &o) const
+{
+    return emptyset();
 }
 
 hash_t UniversalSet::__hash__() const
@@ -396,6 +429,56 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
     throw std::runtime_error("Not implemented");
 }
 
+RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<FiniteSet>(*o)) {
+        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
+        set_basic container;
+        std::set_difference(other.container_.begin(), other.container_.end(),
+                            container_.begin(), container_.end(),
+                            std::inserter(container, container.begin()),
+                            RCPBasicKeyLess{});
+        return finiteset(container);
+    }
+
+    if (is_a<Interval>(*o)) {
+        if (o->compare(*interval(NegInf, Inf, true, true)) == 0) {
+            set_set intervals;
+            RCP<const Number> last = NegInf;
+            for (const auto &a : container_) {
+                if (is_a<Integer>(*a)) {
+                    auto a_int = make_rcp<const Integer>(
+                        down_cast<const Integer &>(*a).as_integer_class());
+                    intervals.insert(interval(last, a_int, true, true));
+                    last = a_int;
+                } else if (is_a<RealDouble>(*a)) {
+                    auto a_rd = make_rcp<const RealDouble>(
+                        down_cast<const RealDouble &>(*a).i);
+                    intervals.insert(interval(last, a_rd, true, true));
+                    last = a_rd;
+                } else if (is_a<RealMPFR>(*a)) {
+                    auto a_rmp = make_rcp<const RealMPFR>(
+                        down_cast<const RealMPFR &>(*a).i);
+                    intervals.insert(interval(last, a_rmp, true, true));
+                    last = a_rmp;
+                } else if (is_a<Rational>(*a)) {
+                    auto a_rat = Rational::from_mpq(
+                        down_cast<const Rational &>(*a).as_rational_class());
+                    intervals.insert(interval(last, a_rat, true, true));
+                    last = a_rat;
+                } else {
+                    // not is_a_Number(*a) or is_a<Complex>(*a)
+                    throw std::runtime_error("Not implemented");
+                }
+            }
+            intervals.insert(interval(last, Inf, true, true));
+            return SymEngine::set_union(intervals, false);
+        }
+    }
+    // SymEngine::set_complement();
+    throw std::runtime_error("Not implemented");
+}
+
 Union::Union(set_set in) : container_(in)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -449,6 +532,17 @@ RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
         container.insert(a->set_intersection(o));
     }
     return SymEngine::set_union(container);
+}
+
+RCP<const Set> Union::set_complement(const RCP<const Set> &o) const
+{
+    set_set container;
+    for (auto &a : container_) {
+        container.insert(a->set_complement(o));
+    }
+
+    throw std::runtime_error("Not implemented");
+    // return SymEngine::set_intersection(container);
 }
 
 RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
