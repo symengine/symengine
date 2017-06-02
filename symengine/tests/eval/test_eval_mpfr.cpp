@@ -4,6 +4,7 @@
 #include <symengine/eval_mpfr.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
+#include <symengine/logic.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/pow.h>
 
@@ -59,6 +60,10 @@ using SymEngine::constant;
 using SymEngine::NotImplementedError;
 using SymEngine::abs;
 using SymEngine::lambertw;
+using SymEngine::Eq;
+using SymEngine::Ne;
+using SymEngine::Lt;
+using SymEngine::Le;
 
 TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 {
@@ -67,7 +72,23 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     RCP<const Basic> s = mul(pi, integer(1963319607));
     RCP<const Basic> t = integer(integer_class("6167950454"));
     RCP<const Basic> r = sub(s, t);
+    RCP<const Basic> u = Eq(r, integer(2));
     // value of `r` is approximately 0.000000000149734291
+
+    eval_mpfr(a, *u, MPFR_RNDN);
+    CHECK(mpfr_cmp_si(a, 0) == 0);
+
+    u = Ne(r, integer(2));
+    eval_mpfr(a, *u, MPFR_RNDN);
+    CHECK(mpfr_cmp_si(a, 1) == 0);
+
+    u = Le(r, integer(2));
+    eval_mpfr(a, *u, MPFR_RNDN);
+    CHECK(mpfr_cmp_si(a, 1) == 0);
+
+    u = Lt(r, integer(2));
+    eval_mpfr(a, *u, MPFR_RNDN);
+    CHECK(mpfr_cmp_si(a, 1) == 0);
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // `eval_mpfr` was done with a precision of 53 bits (precision of `a`) and

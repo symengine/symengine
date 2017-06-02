@@ -53,6 +53,10 @@ using SymEngine::Catalan;
 using SymEngine::gamma;
 using SymEngine::loggamma;
 using SymEngine::min;
+using SymEngine::Eq;
+using SymEngine::Ne;
+using SymEngine::Lt;
+using SymEngine::Le;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -150,6 +154,17 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
         std::make_tuple(mul(acsch(x), asech(x)), 0.3, 3.59566705273267),
         std::make_tuple(acoth(x), 3.3, 0.312852949882206),
         std::make_tuple(atanh(x), 0.7, 0.867300527694053),
+        std::make_tuple(Eq(real_double(2.0), x), 2.0, 1.000000000000),
+        std::make_tuple(Eq(real_double(3.0), x), 2.0, 0.000000000000),
+        std::make_tuple(Ne(real_double(2.0), x), 2.0, 0.000000000000),
+        std::make_tuple(Ne(real_double(3.0), x), 2.0, 1.000000000000),
+        std::make_tuple(Le(real_double(2.0), x), 2.0, 1.000000000000),
+        std::make_tuple(Le(real_double(3.0), x), 2.0, 0.000000000000),
+        std::make_tuple(Le(real_double(2.0), x), 2.0000000000001,
+                        1.000000000000),
+        std::make_tuple(Lt(real_double(3.0), x), 2.0, 0.000000000000),
+        std::make_tuple(Lt(real_double(2.0), x), 2.0000000000001,
+                        1.000000000000),
         std::make_tuple(atan2(x, add(x, integer(1))), 2.1, 0.595409875478733),
         std::make_tuple(log(x), 1.2, 0.182321556793955),
         std::make_tuple(gamma(x), 1.1, 0.9513507698668),

@@ -253,6 +253,23 @@ TEST_CASE("Logical Not", "[Relationals]")
     CHECK(eq(*logical_not(a), *b));
 }
 
+TEST_CASE("Subs", "[Relationals]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+
+    RCP<const Basic> a = Eq(x, y)->subs({{x, y}, {y, z}});
+    RCP<const Basic> b = Eq(y, z);
+    CHECK(eq(*a, *b));
+
+    a = Gt(x, y)->subs({{x, integer(2)}, {y, integer(3)}});
+    CHECK(eq(*a, *boolFalse));
+
+    a = Gt(x, y)->subs({{x, integer(3)}, {y, integer(2)}});
+    CHECK(eq(*a, *boolTrue));
+}
+
 TEST_CASE("Nan Exceptions", "[Relationals]")
 {
     RCP<const Basic> a = Eq(Nan, Nan);
