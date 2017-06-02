@@ -671,7 +671,7 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
                     continue;
                 }
             }
-            if (not newinput.empty()) {
+            if (shouldContinue) {
                 incopy = newinput;
                 break;
             }
