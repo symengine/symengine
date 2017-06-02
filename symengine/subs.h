@@ -115,7 +115,8 @@ public:
         }
     }
 
-    void bvisit(const TwoArgFunction &x)
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &x)
     {
         RCP<const Basic> a = apply(x.get_arg1());
         RCP<const Basic> b = apply(x.get_arg2());

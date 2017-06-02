@@ -85,6 +85,54 @@ public:
         }
     }
 
+    void bvisit(const Equality &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_arg1()));
+        apply(result_, *(x.get_arg2()));
+        if (mpfr_equal_p(t.get_mpfr_t(), result_)) {
+            mpfr_set_ui(result_, 1, rnd_);
+        } else {
+            mpfr_set_ui(result_, 0, rnd_);
+        }
+    }
+
+    void bvisit(const Unequality &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_arg1()));
+        apply(result_, *(x.get_arg2()));
+        if (mpfr_lessgreater_p(t.get_mpfr_t(), result_)) {
+            mpfr_set_ui(result_, 1, rnd_);
+        } else {
+            mpfr_set_ui(result_, 0, rnd_);
+        }
+    }
+
+    void bvisit(const LessThan &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_arg1()));
+        apply(result_, *(x.get_arg2()));
+        if (mpfr_lessequal_p(t.get_mpfr_t(), result_)) {
+            mpfr_set_ui(result_, 1, rnd_);
+        } else {
+            mpfr_set_ui(result_, 0, rnd_);
+        }
+    }
+
+    void bvisit(const StrictLessThan &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_arg1()));
+        apply(result_, *(x.get_arg2()));
+        if (mpfr_less_p(t.get_mpfr_t(), result_)) {
+            mpfr_set_ui(result_, 1, rnd_);
+        } else {
+            mpfr_set_ui(result_, 0, rnd_);
+        }
+    }
+
     void bvisit(const Sin &x)
     {
         apply(result_, *(x.get_arg()));

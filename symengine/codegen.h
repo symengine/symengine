@@ -136,6 +136,30 @@ public:
         s << "NAN";
         str_ = s.str();
     }
+    void bvisit(const Equality &x)
+    {
+        std::ostringstream s;
+        s << apply(x.get_arg1()) << " == " << apply(x.get_arg2());
+        str_ = s.str();
+    }
+    void bvisit(const Unequality &x)
+    {
+        std::ostringstream s;
+        s << apply(x.get_arg1()) << " != " << apply(x.get_arg2());
+        str_ = s.str();
+    }
+    void bvisit(const LessThan &x)
+    {
+        std::ostringstream s;
+        s << apply(x.get_arg1()) << " <= " << apply(x.get_arg2());
+        str_ = s.str();
+    }
+    void bvisit(const StrictLessThan &x)
+    {
+        std::ostringstream s;
+        s << apply(x.get_arg1()) << " < " << apply(x.get_arg2());
+        str_ = s.str();
+    }
     void bvisit(const UnivariateSeries &x)
     {
         throw SymEngineException("Not supported");
