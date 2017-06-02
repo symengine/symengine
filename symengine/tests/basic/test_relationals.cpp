@@ -24,7 +24,10 @@ using SymEngine::NegInf;
 using SymEngine::ComplexInf;
 using SymEngine::boolTrue;
 using SymEngine::boolFalse;
+using SymEngine::Boolean;
 using SymEngine::Nan;
+using SymEngine::logical_not;
+using SymEngine::rcp_static_cast;
 using SymEngine::SymEngineException;
 
 TEST_CASE("Hash Size for Relationals", "[Relationals]")
@@ -226,6 +229,28 @@ TEST_CASE("Boolean Values", "[Relationals]")
     CHECK_THROWS_AS(Gt(I, one), SymEngineException);
     CHECK_THROWS_AS(Lt(I, one), SymEngineException);
     CHECK_THROWS_AS(Le(I, one), SymEngineException);
+}
+
+TEST_CASE("Logical Not", "[Relationals]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Boolean> a = Eq(x, zero);
+    RCP<const Boolean> b = Ne(x, zero);
+    CHECK(eq(*logical_not(a), *b));
+
+    a = Ne(x, y);
+    b = Eq(y, x);
+    CHECK(eq(*logical_not(a), *b));
+
+    a = Le(x, y);
+    b = Lt(y, x);
+    CHECK(eq(*logical_not(a), *b));
+
+    a = Lt(x, y);
+    b = Le(y, x);
+    CHECK(eq(*logical_not(a), *b));
 }
 
 TEST_CASE("Subs", "[Relationals]")

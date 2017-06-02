@@ -3,6 +3,11 @@
 namespace SymEngine
 {
 
+RCP<const Boolean> Boolean::logical_not() const
+{
+    return make_rcp<const Not>(this->rcp_from_this_cast<const Boolean>());
+}
+
 BooleanAtom::BooleanAtom(bool b) : b_{b}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -40,6 +45,11 @@ int BooleanAtom::compare(const Basic &o) const
     } else {
         return (ob) ? -1 : 0;
     }
+}
+
+RCP<const Boolean> BooleanAtom::logical_not() const
+{
+    return boolean(not this->get_val());
 }
 
 RCP<const BooleanAtom> boolTrue = make_rcp<BooleanAtom>(true);
@@ -186,7 +196,7 @@ bool And::is_canonical(const set_boolean &container_)
         for (auto &a : container_) {
             if (is_a<BooleanAtom>(*a) or is_a<And>(*a))
                 return false;
-            if (container_.find(logical_not(a)) != container_.end())
+            if (container_.find(SymEngine::logical_not(a)) != container_.end())
                 return false;
         }
         return true;
@@ -197,6 +207,16 @@ bool And::is_canonical(const set_boolean &container_)
 const set_boolean &And::get_container() const
 {
     return container_;
+}
+
+RCP<const Boolean> And::logical_not() const
+{
+    auto container = this->get_container();
+    set_boolean cont;
+    for (auto &a : container) {
+        cont.insert(SymEngine::logical_not(a));
+    }
+    return make_rcp<const Or>(cont);
 }
 
 Or::Or(const set_boolean &s) : container_{s}
@@ -238,7 +258,7 @@ bool Or::is_canonical(const set_boolean &container_)
         for (auto &a : container_) {
             if (is_a<BooleanAtom>(*a) or is_a<Or>(*a))
                 return false;
-            if (container_.find(logical_not(a)) != container_.end())
+            if (container_.find(SymEngine::logical_not(a)) != container_.end())
                 return false;
         }
         return true;
@@ -249,6 +269,16 @@ bool Or::is_canonical(const set_boolean &container_)
 const set_boolean &Or::get_container() const
 {
     return container_;
+}
+
+RCP<const Boolean> Or::logical_not() const
+{
+    auto container = this->get_container();
+    set_boolean cont;
+    for (auto &a : container) {
+        cont.insert(SymEngine::logical_not(a));
+    }
+    return make_rcp<const And>(cont);
 }
 
 Not::Not(const RCP<const Boolean> &in) : arg_{in}
@@ -292,6 +322,11 @@ bool Not::is_canonical(const RCP<const Boolean> &in)
 RCP<const Boolean> Not::get_arg() const
 {
     return arg_;
+}
+
+RCP<const Boolean> Not::logical_not() const
+{
+    return this->get_arg();
 }
 
 Xor::Xor(const vec_boolean &s) : container_{s}
@@ -338,7 +373,7 @@ bool Xor::is_canonical(const vec_boolean &container_)
             if (args.find(a) != args.end()) {
                 return false;
             }
-            if (args.find(logical_not(a)) != args.end()) {
+            if (args.find(SymEngine::logical_not(a)) != args.end()) {
                 return false;
             }
             args.insert(a);
@@ -392,29 +427,7 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
 
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
 {
-    if (is_a<BooleanAtom>(*s)) {
-        const BooleanAtom &a = down_cast<const BooleanAtom &>(*s);
-        return boolean(not a.get_val());
-    } else if (is_a<Not>(*s)) {
-        const Not &a = down_cast<const Not &>(*s);
-        return a.get_arg();
-    } else if (is_a<Or>(*s)) {
-        auto container = down_cast<const Or &>(*s).get_container();
-        set_boolean cont;
-        for (auto &a : container) {
-            cont.insert(logical_not(a));
-        }
-        return make_rcp<const And>(cont);
-    } else if (is_a<And>(*s)) {
-        auto container = down_cast<const And &>(*s).get_container();
-        set_boolean cont;
-        for (auto &a : container) {
-            cont.insert(logical_not(a));
-        }
-        return make_rcp<const Or>(cont);
-    } else {
-        return make_rcp<const Not>(s);
-    }
+    return s->logical_not();
 }
 
 RCP<const Boolean> logical_xor(const vec_boolean &s)
@@ -508,12 +521,17 @@ RCP<const Basic> Equality::create(const RCP<const Basic> &lhs,
     return Eq(lhs, rhs);
 }
 
-RCP<const Basic> Eq(const RCP<const Basic> &lhs)
+RCP<const Boolean> Equality::logical_not() const
+{
+    return make_rcp<const Unequality>(get_arg1(), get_arg2());
+}
+
+RCP<const Boolean> Eq(const RCP<const Basic> &lhs)
 {
     return Eq(lhs, zero);
 }
 
-RCP<const Basic> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
         return boolean(false);
@@ -543,7 +561,12 @@ RCP<const Basic> Unequality::create(const RCP<const Basic> &lhs,
     return Ne(lhs, rhs);
 }
 
-RCP<const Basic> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> Unequality::logical_not() const
+{
+    return make_rcp<const Equality>(get_arg1(), get_arg2());
+}
+
+RCP<const Boolean> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     RCP<const Basic> r = Eq(lhs, rhs);
     if (is_a<BooleanAtom>(*r)) {
@@ -567,7 +590,12 @@ RCP<const Basic> LessThan::create(const RCP<const Basic> &lhs,
     return Le(lhs, rhs);
 }
 
-RCP<const Basic> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> LessThan::logical_not() const
+{
+    return make_rcp<const StrictLessThan>(get_arg2(), get_arg1());
+}
+
+RCP<const Boolean> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
         throw SymEngineException("Invalid comparison of complex numbers.");
@@ -589,7 +617,7 @@ RCP<const Basic> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     return make_rcp<const LessThan>(lhs, rhs);
 }
 
-RCP<const Basic> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     return Le(rhs, lhs);
 }
@@ -608,7 +636,12 @@ RCP<const Basic> StrictLessThan::create(const RCP<const Basic> &lhs,
     return Lt(lhs, rhs);
 }
 
-RCP<const Basic> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> StrictLessThan::logical_not() const
+{
+    return make_rcp<const LessThan>(get_arg2(), get_arg1());
+}
+
+RCP<const Boolean> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
         throw SymEngineException("Invalid comparison of complex numbers.");
@@ -630,7 +663,7 @@ RCP<const Basic> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     return make_rcp<const StrictLessThan>(lhs, rhs);
 }
 
-RCP<const Basic> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+RCP<const Boolean> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
 {
     return Lt(rhs, lhs);
 }
