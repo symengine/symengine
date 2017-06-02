@@ -153,7 +153,8 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented");
+    return SymEngine::set_intersection({rcp_from_this_cast<const Set>(), o},
+                                       false);
 }
 
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
@@ -426,7 +427,8 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented");
+    return SymEngine::set_intersection({rcp_from_this_cast<const Set>(), o},
+                                       false);
 }
 
 RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
@@ -540,9 +542,7 @@ RCP<const Set> Union::set_complement(const RCP<const Set> &o) const
     for (auto &a : container_) {
         container.insert(a->set_complement(o));
     }
-
-    throw std::runtime_error("Not implemented");
-    // return SymEngine::set_intersection(container);
+    return SymEngine::set_intersection(container);
 }
 
 RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
@@ -596,17 +596,28 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
         throw std::runtime_error(
             "Not implemented"); // No intersection class yet
 
+    // https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection
+    if (in.empty())
+        return universalset();
+
     // Global rules
     // If found any emptyset then return emptyset
-    for (const auto &input : in)
+    set_set incopy;
+    for (const auto &input : in) {
         if (is_a<EmptySet>(*input))
             return emptyset();
-    if (in.size() == 1)
-        return rcp_dynamic_cast<const Set>(*in.begin());
+        else if (not is_a<UniversalSet>(*input))
+            incopy.insert(input);
+    }
+
+    if (incopy.empty())
+        return universalset();
+    if (incopy.size() == 1)
+        return rcp_dynamic_cast<const Set>(*incopy.begin());
 
     // Handle finite sets
     set_set fsets, othersets;
-    for (const auto &input : in) {
+    for (const auto &input : incopy) {
         if (is_a<FiniteSet>(*input))
             fsets.insert(input);
         else
@@ -635,13 +646,11 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
     }
 
     // If any of the sets is union, then return a Union of Intersections
-    for (const auto &input : in) {
-        if (is_a<Union>(*input)) {
-            set_set other_sets = in;
-            auto it = other_sets.find(input);
-            other_sets.erase(it);
-            auto other = SymEngine::set_intersection(other_sets);
-            auto &container = down_cast<const Union &>(*input).get_container();
+    for (auto it = incopy.begin(); it != incopy.end(); ++it) {
+        if (is_a<Union>(**it)) {
+            auto container = down_cast<const Union &>(**it).get_container();
+            incopy.erase(it);
+            auto other = SymEngine::set_intersection(incopy);
             set_set usets;
             for (const auto &c : container) {
                 usets.insert(SymEngine::set_intersection({c, other}));
@@ -655,7 +664,6 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
 
     // Pair-wise rules
     bool shouldContinue = true;
-    auto incopy = in;
     while (shouldContinue) {
         for (const auto &input : incopy) {
             shouldContinue = false;
@@ -663,13 +671,17 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
             auto it = other_sets.find(input);
             other_sets.erase(it);
             set_set newinput;
-            for (const auto &oset : other_sets) {
-                // Try-Catch is a hack for now, but needs improvements
+            for (auto &oset : other_sets) {
+                // TO-DO: needs the following improvement once Intersection
+                // class is implemented.
+                // input_oset if found to be not simplified, then skip this
+                // pair.
                 try {
                     auto input_oset = input->set_intersection(oset);
                     newinput = other_sets;
                     it = newinput.find(oset);
                     newinput.erase(it);
+                    newinput.insert(input_oset);
                     shouldContinue = true;
                     break;
                 } catch (std::runtime_error &err) {
