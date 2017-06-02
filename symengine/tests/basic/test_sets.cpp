@@ -39,6 +39,7 @@ using SymEngine::boolFalse;
 using SymEngine::Contains;
 using SymEngine::make_rcp;
 using SymEngine::set_set;
+using SymEngine::set_intersection;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -352,6 +353,7 @@ TEST_CASE("Union : Basic", "[basic]")
     RCP<const Set> i1 = interval(zero, integer(3));
     RCP<const Set> i2 = interval(integer(4), integer(5));
     RCP<const Set> i3 = interval(integer(3), integer(4));
+    RCP<const Set> reals = interval(NegInf, Inf, true, true);
     r1 = set_union({i1, i2, i3});
     REQUIRE(eq(*r1, *interval(integer(0), integer(5))));
 
@@ -369,6 +371,15 @@ TEST_CASE("Union : Basic", "[basic]")
         check_union_str(u->__str__(), {i1, interval(integer(2), integer(4))}));
 
     r2 = set_union({r1, r2});
+    REQUIRE(eq(*r1, *r2));
+
+    r2 = set_union({i1, finiteset({integer(2)})});
+    REQUIRE(is_a<Union>(*r2));
+    r1 = r2->set_complement(reals);
+    REQUIRE(is_a<Union>(*r1));
+    r2 = set_union({interval(NegInf, zero, true, true),
+                    interval(one, integer(2), true, true),
+                    interval(integer(2), Inf, true, true)});
     REQUIRE(eq(*r1, *r2));
 
     r2 = set_union({i1, i2, i3});
@@ -395,4 +406,58 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(not r2->is_proper_subset(u));
     REQUIRE(r1->is_proper_subset(u));
     REQUIRE(not u->is_proper_subset(u));
+}
+
+TEST_CASE("set_intersection : Basic", "[basic]")
+{
+    RCP<const Set> f1 = finiteset({zero, one, integer(2)});
+    RCP<const Set> f2 = finiteset({one, integer(2), integer(3)});
+    RCP<const Set> e = emptyset();
+    RCP<const Set> u = universalset();
+    RCP<const Set> interval1 = interval(zero, one);
+    RCP<const Set> r1, r2, i1, i2, i3;
+
+    CHECK_THROWS_AS(set_intersection({f1, f2}, false), std::runtime_error);
+
+    // Trivial cases
+    r1 = set_intersection({});
+    REQUIRE(eq(*r1, *u));
+
+    r1 = set_intersection({f1, f2, e});
+    REQUIRE(eq(*r1, *e));
+
+    r1 = set_intersection({u, u});
+    REQUIRE(eq(*r1, *u));
+
+    r1 = set_intersection({u, u});
+    REQUIRE(eq(*r1, *u));
+
+    r1 = set_intersection({u, f1});
+    REQUIRE(eq(*r1, *f1));
+
+    // Finitesets
+    r1 = set_intersection({f1, f2});
+    REQUIRE(eq(*r1, *finiteset({one, integer(2)})));
+
+    r1 = set_intersection({f1, f2, interval1});
+    REQUIRE(eq(*r1, *finiteset({one})));
+
+    r1 = set_intersection({f2, f1, interval1});
+    REQUIRE(eq(*r1, *finiteset({one})));
+
+    // One of the arg is Union
+    i1 = interval(zero, one);
+    i2 = interval(integer(3), integer(4));
+    r2 = set_union({i1, i2});
+    i3 = interval(integer(2), integer(3));
+    r1 = set_intersection({r2, i3});
+    REQUIRE(eq(*r1, *finiteset({integer(3)})));
+
+    i3 = interval(one, integer(3));
+    r1 = set_intersection({r2, i3});
+    REQUIRE(eq(*r1, *finiteset({one, integer(3)})));
+
+    i3 = interval(one, integer(3), true, true);
+    r1 = set_intersection({r2, i3});
+    REQUIRE(eq(*r1, *e));
 }
