@@ -268,6 +268,14 @@ void StrPrinter::bvisit(const Union &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complement &x)
+{
+    std::ostringstream s;
+    s << apply(*x.get_universe());
+    s << " \\ " << apply(*x.get_container());
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const UniversalSet &x)
 {
     str_ = "UniversalSet";
