@@ -218,6 +218,39 @@ public:
     }
 };
 
+class Complement : public Set
+{
+private:
+    // represents universe_ - container_
+    RCP<const Set> universe_;
+    RCP<const Set> container_;
+
+public:
+    IMPLEMENT_TYPEID(COMPLEMENT)
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    Complement(const RCP<const Set> &universe, const RCP<const Set> &container);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const RCP<const Set> &get_universe() const
+    {
+        return this->universe_;
+    }
+    inline const RCP<const Set> &get_container() const
+    {
+        return this->container_;
+    }
+};
+
 //! \return RCP<const EmptySet>
 inline RCP<const EmptySet> emptyset()
 {

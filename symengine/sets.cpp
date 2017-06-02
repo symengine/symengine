@@ -541,6 +541,67 @@ RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
     return boolean(false);
 }
 
+Complement::Complement(const RCP<const Set> &universe,
+                       const RCP<const Set> &container)
+    : universe_(universe), container_(container)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+}
+
+hash_t Complement::__hash__() const
+{
+    hash_t seed = COMPLEMENT;
+    hash_combine<Basic>(seed, *universe_);
+    hash_combine<Basic>(seed, *container_);
+    return seed;
+}
+
+bool Complement::__eq__(const Basic &o) const
+{
+    if (is_a<Complement>(o)) {
+        const Complement &other = down_cast<const Complement &>(o);
+        return unified_eq(universe_, other.universe_)
+               and unified_eq(container_, other.container_);
+    }
+    return false;
+}
+
+int Complement::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Complement>(o))
+    const Complement &other = down_cast<const Complement &>(o);
+    int c1 = unified_compare(universe_, other.universe_);
+    if (c1 != 0)
+        return c1;
+    else
+        return unified_compare(container_, other.container_);
+}
+
+RCP<const Boolean> Complement::contains(const RCP<const Basic> &a) const
+{
+    return logical_and({universe_->contains(a), container_->contains(a)});
+}
+
+RCP<const Set> Complement::set_union(const RCP<const Set> &o) const
+{
+    // A' U C = (A n C')'
+    RCP<const Set> ocomplement = o->set_complement(universe_);
+    RCP<const Set> intersect
+        = SymEngine::set_intersection({container_, ocomplement});
+    return intersect->set_complement(universe_);
+}
+
+RCP<const Set> Complement::set_intersection(const RCP<const Set> &o) const
+{
+    return SymEngine::set_intersection({rcp_from_this_cast<const Set>(), o});
+}
+
+RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
+{
+    auto newuniv = SymEngine::set_union({o, universe_});
+    return container_->set_complement(newuniv);
+}
+
 RCP<const Set> set_union(const set_set &in, bool solve)
 {
     set_set input;
@@ -642,8 +703,18 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
         }
     }
 
-    // Simplify if any of the sets is a complement
-    // Not implemented as we don't have a class for complement yet.
+    // Simplify and return a `Complement` if any of the sets is a complement
+    for (auto it = incopy.begin(); it != incopy.end(); ++it) {
+        if (is_a<Complement>(**it)) {
+            auto container
+                = down_cast<const Complement &>(**it).get_container();
+            auto universe = down_cast<const Complement &>(**it).get_universe();
+            incopy.erase(it);
+            incopy.insert(universe);
+            auto other = SymEngine::set_intersection(incopy);
+            return SymEngine::set_complement(other, universe);
+        }
+    }
 
     // Pair-wise rules
     bool shouldContinue = true;
@@ -720,7 +791,7 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 {
     // represents universe - container
     if (!solve)
-        std::runtime_error("Complement class Not implemented yet");
+        return make_rcp<const Complement>(universe, container);
     if (universe->is_subset(container))
         return emptyset();
     return container->set_complement(universe);
