@@ -43,6 +43,8 @@ using SymEngine::set_intersection;
 using SymEngine::real_double;
 using SymEngine::rational_class;
 using SymEngine::set_complement;
+using SymEngine::Complement;
+using SymEngine::down_cast;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -427,6 +429,41 @@ TEST_CASE("Union : Basic", "[basic]")
     REQUIRE(not r2->is_proper_subset(u));
     REQUIRE(r1->is_proper_subset(u));
     REQUIRE(not u->is_proper_subset(u));
+}
+
+TEST_CASE("Complement : Basic", "[basic]")
+{
+    RCP<const Set> f1 = finiteset({zero, one, symbol("x")});
+    RCP<const Set> f2 = finiteset({symbol("y")});
+    RCP<const Set> i1 = interval(NegInf, Inf, true, true);
+    RCP<const Set> r1, r2, r3;
+
+    r1 = set_complement(i1, f2, false);
+    REQUIRE(is_a<Complement>(*r1));
+    REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
+
+    REQUIRE(r1->get_args().size() == 2);
+    REQUIRE(eq(*r1->contains(one), *boolTrue));
+    REQUIRE(eq(*r1->contains(symbol("y")), *boolFalse));
+
+    r2 = set_complement(i1, finiteset({symbol("x")}), false);
+    REQUIRE(r1->__hash__() != r2->__hash__());
+    REQUIRE(not r1->__eq__(*r2));
+
+    r1 = set_complement(i1, finiteset({symbol("x")}), false);
+    r2 = set_complement(i1, f1, false);
+    REQUIRE(r2->compare(*r1) == 1);
+    REQUIRE(r1->compare(*r2) == -1);
+
+    r1 = r2->set_intersection(finiteset({symbol("x")}));
+    REQUIRE(eq(*r1, *emptyset()));
+    r1 = r2->set_intersection(finiteset({zero, integer(2)}));
+    REQUIRE(eq(*r1, *finiteset({integer(2)})));
+
+    r2 = set_complement(finiteset({one, zero}), i1, false);
+    r1 = r2->set_complement(finiteset({integer(2)}));
+    r3 = set_complement(finiteset({zero, one, integer(2)}), i1);
+    REQUIRE(eq(*r1, *r3));
 }
 
 TEST_CASE("set_intersection : Basic", "[basic]")

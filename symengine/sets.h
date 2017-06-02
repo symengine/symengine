@@ -232,7 +232,7 @@ public:
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
     {
-        return {};
+        return {universe_, container_};
     }
     Complement(const RCP<const Set> &universe, const RCP<const Set> &container);
 

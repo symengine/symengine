@@ -579,7 +579,8 @@ int Complement::compare(const Basic &o) const
 
 RCP<const Boolean> Complement::contains(const RCP<const Basic> &a) const
 {
-    return logical_and({universe_->contains(a), container_->contains(a)});
+    return logical_and(
+        {universe_->contains(a), logical_not(container_->contains(a))});
 }
 
 RCP<const Set> Complement::set_union(const RCP<const Set> &o) const
@@ -669,9 +670,10 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
     }
     if (fsets.size() != 0) {
         const FiniteSet &fs = down_cast<const FiniteSet &>(**fsets.begin());
+        auto cont = fs.get_container();
         fsets.erase(fsets.begin());
         set_basic finalfs;
-        for (const auto &fselement : fs.get_container()) {
+        for (const auto &fselement : cont) {
             bool present = true;
             for (const auto &fset : fsets) {
                 present
@@ -712,10 +714,9 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
             incopy.erase(it);
             incopy.insert(universe);
             auto other = SymEngine::set_intersection(incopy);
-            return SymEngine::set_complement(other, universe);
+            return SymEngine::set_complement(other, container);
         }
     }
-
     // Pair-wise rules
     bool shouldContinue = true;
     while (shouldContinue) {
@@ -792,8 +793,6 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
     // represents universe - container
     if (!solve)
         return make_rcp<const Complement>(universe, container);
-    if (universe->is_subset(container))
-        return emptyset();
     return container->set_complement(universe);
 }
 
