@@ -204,19 +204,8 @@ RCP<const Set> Interval::set_complement(const RCP<const Set> &o) const
             auto b = interval(end_, Inf, not right_open_, true);
             return SymEngine::set_union({a, b});
         }
-    } else if (is_a<FiniteSet>(*o)) {
-        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
-        set_basic container;
-        for (const auto &a : other.get_container()) {
-            if (not is_a_Number(*a))
-                throw std::runtime_error("Not implemented");
-            if (eq(*(this->contains(a)), *boolFalse))
-                container.insert(a);
-        }
-        return finiteset(container);
     }
-    throw std::runtime_error("Not implemented");
-    // return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
 vec_basic Interval::get_args() const
@@ -458,18 +447,12 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
                         down_cast<const RealDouble &>(*a).i);
                     intervals.insert(interval(last, a_rd, true, true));
                     last = a_rd;
-                } else if (is_a<RealMPFR>(*a)) {
-                    auto a_rmp = make_rcp<const RealMPFR>(
-                        down_cast<const RealMPFR &>(*a).i);
-                    intervals.insert(interval(last, a_rmp, true, true));
-                    last = a_rmp;
                 } else if (is_a<Rational>(*a)) {
                     auto a_rat = Rational::from_mpq(
                         down_cast<const Rational &>(*a).as_rational_class());
                     intervals.insert(interval(last, a_rat, true, true));
                     last = a_rat;
                 } else {
-                    // not is_a_Number(*a) or is_a<Complex>(*a)
                     throw std::runtime_error("Not implemented");
                 }
             }
@@ -477,8 +460,8 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
             return SymEngine::set_union(intervals, false);
         }
     }
-    // SymEngine::set_complement();
-    throw std::runtime_error("Not implemented");
+
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
 Union::Union(set_set in) : container_(in)
@@ -699,6 +682,48 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
         return *incopy.begin();
     else
         return SymEngine::set_intersection(incopy, false);
+}
+
+// helper to avoid redundant code
+RCP<const Set> set_complement_helper(const RCP<const Set> &container,
+                                     const RCP<const Set> &universe)
+{
+    if (is_a<Interval>(*universe)) {
+        if (is_a<Interval>(*container) or is_a<FiniteSet>(*container)) {
+            auto reals = interval(NegInf, Inf, true, true);
+            auto wrtreals = container->set_complement(reals);
+            return SymEngine::set_intersection({universe, wrtreals});
+        }
+    } else if (is_a<Union>(*universe)) {
+        auto univ = down_cast<const Union &>(*universe).get_container();
+        set_set container_;
+        for (auto &a : univ) {
+            container_.insert(container->set_complement(a));
+        }
+        return SymEngine::set_union(container_);
+    } else if (is_a<EmptySet>(*universe)) {
+        return emptyset();
+    } else if (is_a<FiniteSet>(*universe)) {
+        const FiniteSet &other = down_cast<const FiniteSet &>(*universe);
+        set_basic container_;
+        for (const auto &a : other.get_container()) {
+            if (eq(*(container->contains(a)), *boolFalse))
+                container_.insert(a);
+        }
+        return finiteset(container_);
+    }
+    return set_complement(universe, container, false);
+}
+
+RCP<const Set> set_complement(const RCP<const Set> &universe,
+                              const RCP<const Set> &container, bool solve)
+{
+    // represents universe - container
+    if (!solve)
+        std::runtime_error("Complement class Not implemented yet");
+    if (universe->is_subset(container))
+        return emptyset();
+    return container->set_complement(universe);
 }
 
 } // SymEngine

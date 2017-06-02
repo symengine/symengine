@@ -8,7 +8,6 @@
 #include <symengine/functions.h>
 #include <symengine/complex.h>
 #include <symengine/real_double.h>
-#include <symengine/real_mpfr.h>
 #include <symengine/rational.h>
 #include <symengine/symengine_casts.h>
 #include <iterator>
@@ -258,5 +257,13 @@ RCP<const Set> set_union(const set_set &in, bool solve = true);
 
 // ! \return RCP<const Set>
 RCP<const Set> set_intersection(const set_set &in, bool solve = true);
+
+RCP<const Set> set_complement_helper(const RCP<const Set> &container,
+                                     const RCP<const Set> &universe);
+
+// ! \return RCP<const Set>
+RCP<const Set> set_complement(const RCP<const Set> &universe,
+                              const RCP<const Set> &container,
+                              bool solve = true);
 }
 #endif
