@@ -86,6 +86,17 @@ TEST_CASE("Interval : Basic", "[basic]")
              ->set_union(interval(i2, Inf, false, true));
     REQUIRE(eq(*r3, *r4));
 
+    r3 = (interval(im5, i2))->set_complement(interval(im5, i2, true, true));
+    REQUIRE(eq(*r3, *emptyset()));
+
+    r3 = (interval(im5, i2, true, true))->set_complement(interval(im5, i2));
+    r4 = finiteset({im5, i2});
+    REQUIRE(eq(*r3, *r4));
+
+    r3 = (interval(im5, i2, true, false))->set_complement(interval(im5, i20));
+    r4 = finiteset({im5})->set_union(interval(i2, i20, true, false));
+    REQUIRE(eq(*r3, *r4));
+
     r3 = interval(im5, i2, true, true); // (-5, 2)
     REQUIRE(eq(*r3->contains(i2), *boolFalse));
     REQUIRE(eq(*r3->contains(im5), *boolFalse));

@@ -199,11 +199,15 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
 RCP<const Set> Interval::set_complement(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
-        if (o->compare(*interval(NegInf, Inf, true, true)) == 0) {
-            auto a = interval(NegInf, start_, true, not left_open_);
-            auto b = interval(end_, Inf, not right_open_, true);
-            return SymEngine::set_union({a, b});
-        }
+        set_set cont;
+        const Interval &other = down_cast<const Interval &>(*o);
+        if (eq(*max({start_, other.start_}), *start_))
+            cont.insert(interval(other.get_start(), start_,
+                                 other.get_left_open(), not left_open_));
+        if (eq(*min({end_, other.end_}), *end_))
+            cont.insert(interval(end_, other.get_end(), not right_open_,
+                                 other.get_right_open()));
+        return SymEngine::set_union(cont);
     }
     return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
@@ -433,32 +437,46 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
     }
 
     if (is_a<Interval>(*o)) {
-        if (o->compare(*interval(NegInf, Inf, true, true)) == 0) {
-            set_set intervals;
-            RCP<const Number> last = NegInf;
-            for (const auto &a : container_) {
-                if (is_a<Integer>(*a)) {
-                    auto a_int = make_rcp<const Integer>(
-                        down_cast<const Integer &>(*a).as_integer_class());
-                    intervals.insert(interval(last, a_int, true, true));
-                    last = a_int;
-                } else if (is_a<RealDouble>(*a)) {
-                    auto a_rd = make_rcp<const RealDouble>(
-                        down_cast<const RealDouble &>(*a).i);
-                    intervals.insert(interval(last, a_rd, true, true));
-                    last = a_rd;
-                } else if (is_a<Rational>(*a)) {
-                    auto a_rat = Rational::from_mpq(
-                        down_cast<const Rational &>(*a).as_rational_class());
-                    intervals.insert(interval(last, a_rat, true, true));
-                    last = a_rat;
-                } else {
-                    throw std::runtime_error("Not implemented");
-                }
+        set_set intervals;
+        auto &other = down_cast<const Interval &>(*o);
+        RCP<const Number> last = other.get_start();
+        bool left_open = other.get_left_open(),
+             right_open = other.get_right_open();
+        for (auto it = container_.begin(); it != container_.end(); it++) {
+            if (eq(*max({*it, other.get_start()}), *other.get_start())) {
+                if (eq(**it, *other.get_start()))
+                    left_open = true;
+                continue;
             }
-            intervals.insert(interval(last, Inf, true, true));
-            return SymEngine::set_union(intervals, false);
+            if (eq(*max({*it, other.get_end()}), **it)) {
+                if (eq(**it, *other.get_end()))
+                    right_open = true;
+                break;
+            }
+            if (is_a<Integer>(**it)) {
+                auto a_int = make_rcp<const Integer>(
+                    down_cast<const Integer &>(**it).as_integer_class());
+                intervals.insert(interval(last, a_int, left_open, true));
+                last = a_int;
+            } else if (is_a<RealDouble>(**it)) {
+                auto a_rd = make_rcp<const RealDouble>(
+                    down_cast<const RealDouble &>(**it).i);
+                intervals.insert(interval(last, a_rd, left_open, true));
+                last = a_rd;
+            } else if (is_a<Rational>(**it)) {
+                auto a_rat = Rational::from_mpq(
+                    down_cast<const Rational &>(**it).as_rational_class());
+                intervals.insert(interval(last, a_rat, left_open, true));
+                last = a_rat;
+            } else {
+                throw std::runtime_error("Not implemented");
+            }
+            left_open = true;
         }
+
+        if (eq(*max({last, other.get_end()}), *other.get_end()))
+            intervals.insert(interval(last, other.get_end(), true, right_open));
+        return SymEngine::set_union(intervals, false);
     }
 
     return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
@@ -760,13 +778,7 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
 RCP<const Set> set_complement_helper(const RCP<const Set> &container,
                                      const RCP<const Set> &universe)
 {
-    if (is_a<Interval>(*universe)) {
-        if (is_a<Interval>(*container) or is_a<FiniteSet>(*container)) {
-            auto reals = interval(NegInf, Inf, true, true);
-            auto wrtreals = container->set_complement(reals);
-            return SymEngine::set_intersection({universe, wrtreals});
-        }
-    } else if (is_a<Union>(*universe)) {
+    if (is_a<Union>(*universe)) {
         auto univ = down_cast<const Union &>(*universe).get_container();
         set_set container_;
         for (auto &a : univ) {
