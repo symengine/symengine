@@ -338,6 +338,8 @@ public:
             return rsubcomp(down_cast<const Rational &>(other));
         } else if (is_a<Integer>(other)) {
             return rsubcomp(down_cast<const Integer &>(other));
+        } else if (is_a<Complex>(other)) {
+            return rsubcomp(down_cast<const Complex &>(other));
         } else {
             throw NotImplementedError("Not Implemented");
         }
