@@ -46,18 +46,22 @@ fi
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
 
-
-if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
-else
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+if [[ ! -d $HOME/conda_root/pkgs ]]; then
+    rm -rf $HOME/conda_root
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    else
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+    bash miniconda.sh -b -p $HOME/conda_root
 fi
-bash miniconda.sh -b -p $HOME/conda_root
 export PATH="$HOME/conda_root/bin:$PATH"
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge --force
 # Useful for debugging any issues with conda
 conda info -a
+
+conda_pkgs="$conda_pkgs ccache"
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
     conda_pkgs="$conda_pkgs boost=1.62";
@@ -110,6 +114,13 @@ if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
 fi
 
 export LLVM_DIR=$our_install_dir/share/llvm/
+
+# Use ccache
+export CXX="ccache ${CXX}"
+export CC="ccache ${CC}"
+export CCACHE_DIR=$HOME/.ccache
+ccache -M 400M
+
 cd $SOURCE_DIR;
 
 # Since this script is getting sourced, remove error on exit
