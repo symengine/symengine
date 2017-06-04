@@ -3,6 +3,7 @@
 #include <symengine/sets.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/real_double.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
@@ -449,7 +450,7 @@ TEST_CASE("Complement : Basic", "[basic]")
     RCP<const Set> i1 = interval(NegInf, Inf, true, true);
     RCP<const Set> r1, r2, r3;
 
-    r1 = set_complement(i1, f2, false);
+    r1 = set_complement(i1, f2);
     REQUIRE(is_a<Complement>(*r1));
     REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
 
@@ -457,24 +458,22 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(eq(*r1->contains(one), *boolTrue));
     REQUIRE(eq(*r1->contains(symbol("y")), *boolFalse));
 
-    r2 = set_complement(i1, finiteset({symbol("x")}), false);
+    r2 = set_complement(i1, finiteset({symbol("x")}));
     REQUIRE(r1->__hash__() != r2->__hash__());
     REQUIRE(not r1->__eq__(*r2));
 
-    r1 = set_complement(i1, finiteset({symbol("x")}), false);
-    r2 = set_complement(i1, f1, false);
+    r1 = set_complement(i1, finiteset({symbol("x")}));
+    r2 = set_complement(i1, f2);
     REQUIRE(r2->compare(*r1) == 1);
     REQUIRE(r1->compare(*r2) == -1);
 
     r1 = r2->set_intersection(finiteset({symbol("x")}));
     REQUIRE(eq(*r1, *emptyset()));
     r1 = r2->set_intersection(finiteset({zero, integer(2)}));
-    REQUIRE(eq(*r1, *finiteset({integer(2)})));
+    REQUIRE(eq(*r1, *finiteset({zero, integer(2)})));
 
-    r2 = set_complement(finiteset({one, zero}), i1, false);
-    r1 = r2->set_complement(finiteset({integer(2)}));
-    r3 = set_complement(finiteset({zero, one, integer(2)}), i1);
-    REQUIRE(eq(*r1, *r3));
+    r2 = set_complement(i1, f1);
+    REQUIRE(is_a<Complement>(*r2));
 }
 
 TEST_CASE("set_intersection : Basic", "[basic]")

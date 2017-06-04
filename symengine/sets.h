@@ -7,8 +7,6 @@
 
 #include <symengine/functions.h>
 #include <symengine/complex.h>
-#include <symengine/real_double.h>
-#include <symengine/rational.h>
 #include <symengine/symengine_casts.h>
 #include <iterator>
 namespace SymEngine
@@ -296,7 +294,6 @@ RCP<const Set> set_complement_helper(const RCP<const Set> &container,
 
 // ! \return RCP<const Set>
 RCP<const Set> set_complement(const RCP<const Set> &universe,
-                              const RCP<const Set> &container,
-                              bool solve = true);
+                              const RCP<const Set> &container);
 }
 #endif

@@ -440,6 +440,8 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
         set_set intervals;
         auto &other = down_cast<const Interval &>(*o);
         RCP<const Number> last = other.get_start();
+        RCP<const Number> a_num;
+        set_basic rest;
         bool left_open = other.get_left_open(),
              right_open = other.get_right_open();
         for (auto it = container_.begin(); it != container_.end(); it++) {
@@ -453,30 +455,23 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
                     right_open = true;
                 break;
             }
-            if (is_a<Integer>(**it)) {
-                auto a_int = make_rcp<const Integer>(
-                    down_cast<const Integer &>(**it).as_integer_class());
-                intervals.insert(interval(last, a_int, left_open, true));
-                last = a_int;
-            } else if (is_a<RealDouble>(**it)) {
-                auto a_rd = make_rcp<const RealDouble>(
-                    down_cast<const RealDouble &>(**it).i);
-                intervals.insert(interval(last, a_rd, left_open, true));
-                last = a_rd;
-            } else if (is_a<Rational>(**it)) {
-                auto a_rat = Rational::from_mpq(
-                    down_cast<const Rational &>(**it).as_rational_class());
-                intervals.insert(interval(last, a_rat, left_open, true));
-                last = a_rat;
+            if (is_a_Number(**it)) {
+                a_num = rcp_static_cast<const Number>(*it);
+                intervals.insert(interval(last, a_num, left_open, true));
+                last = a_num;
             } else {
-                throw std::runtime_error("Not implemented");
+                rest.insert(*it);
             }
             left_open = true;
         }
 
         if (eq(*max({last, other.get_end()}), *other.get_end()))
             intervals.insert(interval(last, other.get_end(), true, right_open));
-        return SymEngine::set_union(intervals, false);
+        if (rest.empty())
+            return SymEngine::set_union(intervals, false);
+        else
+            return make_rcp<const Complement>(
+                SymEngine::set_union(intervals, false), finiteset(rest));
     }
 
     return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
@@ -641,14 +636,13 @@ RCP<const Set> set_union(const set_set &in, bool solve)
     if (input.empty()) {
         return finiteset(combined_FiniteSet);
     } else if (input.size() == 1 && combined_FiniteSet.empty()) {
-        return rcp_dynamic_cast<const Set>(*input.begin());
+        return *input.begin();
     }
     // Now we rely on respective containers' own rules
     // TODO: Improve it to O(log n)
     RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
     for (auto it = input.begin(); it != input.end(); ++it) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(*it);
-        combined_Rest = combined_Rest->set_union(other);
+        combined_Rest = combined_Rest->set_union(*it);
     }
     return combined_Rest;
 }
@@ -676,7 +670,7 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
     if (incopy.empty())
         return universalset();
     if (incopy.size() == 1)
-        return rcp_dynamic_cast<const Set>(*incopy.begin());
+        return *incopy.begin();
 
     // Handle finite sets
     set_set fsets, othersets;
@@ -796,15 +790,13 @@ RCP<const Set> set_complement_helper(const RCP<const Set> &container,
         }
         return finiteset(container_);
     }
-    return set_complement(universe, container, false);
+    return make_rcp<const Complement>(universe, container);
 }
 
 RCP<const Set> set_complement(const RCP<const Set> &universe,
-                              const RCP<const Set> &container, bool solve)
+                              const RCP<const Set> &container)
 {
     // represents universe - container
-    if (!solve)
-        return make_rcp<const Complement>(universe, container);
     return container->set_complement(universe);
 }
 
