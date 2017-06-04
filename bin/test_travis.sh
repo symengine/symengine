@@ -82,7 +82,7 @@ if [[ "${WITH_LLVM}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_LLVM=${WITH_LLVM} -DLLVM_DIR=${LLVM_DIR}"
 fi
 
-if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export  CXXFLAGS="-ftrapv"
     else
