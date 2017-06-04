@@ -1311,6 +1311,49 @@ TEST_CASE("test_inverse(): matrices", "[matrices]")
     REQUIRE(C == I3);
 }
 
+TEST_CASE("test_dot(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(1, 3);
+    ones(A);
+    DenseMatrix B = DenseMatrix(3, 1);
+    ones(B);
+    DenseMatrix C = DenseMatrix(1, 3);
+
+    dot(A, B, C);
+    CHECK(C == DenseMatrix(1, 1, {integer(3)}));
+
+    B = DenseMatrix(1, 3);
+    ones(B);
+    dot(A, B, C);
+    CHECK(C == DenseMatrix(1, 1, {integer(3)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    B = DenseMatrix(2, 2, {integer(5), integer(6), integer(7), integer(8)});
+    dot(A, B, C);
+    CHECK(C == DenseMatrix(
+                   1, 4, {integer(23), integer(31), integer(34), integer(46)}));
+
+    A = DenseMatrix(2, 3, {integer(1), integer(2), integer(3), integer(4),
+                           integer(5), integer(6)});
+    B = DenseMatrix(2, 1, {integer(7), integer(8)});
+    dot(A, B, C);
+    CHECK(C == DenseMatrix(1, 3, {integer(39), integer(54), integer(69)}));
+
+    A = DenseMatrix(2, 3);
+    B = DenseMatrix(4, 5);
+    CHECK_THROWS_AS(dot(A, B, C), SymEngineException);
+}
+
+TEST_CASE("test_cross(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(1, 3, {integer(1), integer(2), integer(3)});
+    DenseMatrix B = DenseMatrix(1, 3, {integer(3), integer(4), integer(5)});
+    DenseMatrix C = DenseMatrix(1, 3);
+
+    cross(A, B, C);
+    CHECK(C == DenseMatrix(1, 3, {integer(-2), integer(4), integer(-2)}));
+}
+
 TEST_CASE("test_csr_has_canonical_format(): matrices", "[matrices]")
 {
     std::vector<unsigned> p = {0, 2, 3, 6};
