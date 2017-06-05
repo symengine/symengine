@@ -730,36 +730,17 @@ RCP<const Set> set_intersection(const set_set &in, bool solve)
         }
     }
     // Pair-wise rules
-    bool shouldContinue = true;
-    while (shouldContinue) {
-        for (const auto &input : incopy) {
-            shouldContinue = false;
-            set_set other_sets = incopy;
-            auto it = other_sets.find(input);
-            other_sets.erase(it);
-            set_set newinput;
-            for (auto &oset : other_sets) {
-                // TO-DO: needs the following improvement once Intersection
-                // class is implemented.
-                // input_oset if found to be not simplified, then skip this
-                // pair.
-                try {
-                    auto input_oset = input->set_intersection(oset);
-                    newinput = other_sets;
-                    it = newinput.find(oset);
-                    newinput.erase(it);
-                    newinput.insert(input_oset);
-                    shouldContinue = true;
-                    break;
-                } catch (std::runtime_error &err) {
-                    continue;
-                }
-            }
-            if (shouldContinue) {
-                incopy = newinput;
-                break;
-            }
-        }
+    while (incopy.size() > 1) {
+        auto itA = incopy.begin();
+        auto itB = std::next(incopy.begin());
+        // TO-DO: needs the following improvement once Intersection
+        // class is implemented.
+        // input_oset if found to be not simplified, then skip this
+        // pair.
+        auto input_oset = (*itA)->set_intersection(*itB);
+        incopy.erase(itA);
+        incopy.erase(itB);
+        incopy.insert(input_oset);
     }
 
     if (incopy.size() == 1)
