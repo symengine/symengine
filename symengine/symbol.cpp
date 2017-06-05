@@ -4,6 +4,15 @@
 namespace SymEngine
 {
 
+//! workaround for MinGW bug
+template <typename T>
+std::string to_string(const T &value)
+{
+    std::ostringstream ss;
+    ss << value;
+    return ss.str();
+}
+
 Symbol::Symbol(const std::string &name) : name_{name}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -39,14 +48,14 @@ RCP<const Symbol> Symbol::as_dummy() const
 
 size_t Dummy::count_ = 0;
 
-Dummy::Dummy() : Symbol("Dummy_" + to_string(count_))
+Dummy::Dummy() : Symbol("_Dummy_" + to_string(count_))
 {
     SYMENGINE_ASSIGN_TYPEID()
     count_ += 1;
     dummy_index = count_;
 }
 
-Dummy::Dummy(const std::string &name) : Symbol(name)
+Dummy::Dummy(const std::string &name) : Symbol("_" + name)
 {
     SYMENGINE_ASSIGN_TYPEID()
     count_ += 1;
@@ -57,7 +66,6 @@ hash_t Dummy::__hash__() const
 {
     hash_t seed = 0;
     hash_combine(seed, get_name());
-    hash_combine(seed, count_);
     hash_combine(seed, dummy_index);
     return seed;
 }

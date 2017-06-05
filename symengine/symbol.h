@@ -44,7 +44,7 @@ public:
     {
         return {};
     }
-    virtual RCP<const Symbol> as_dummy() const;
+    RCP<const Symbol> as_dummy() const;
 };
 
 class Dummy : public Symbol
@@ -72,12 +72,7 @@ public:
      * \return `0` if equal, `-1` , `1` according to string compare
      * */
     virtual int compare(const Basic &o) const;
-    //! \return the object count
-    virtual size_t get_count() const
-    {
-        return count_;
-    }
-    virtual size_t get_index() const
+    size_t get_index() const
     {
         return dummy_index;
     }
@@ -90,23 +85,14 @@ inline RCP<const Symbol> symbol(const std::string &name)
 }
 
 //! inline version to return `Dummy`
-inline RCP<const Symbol> dummy()
+inline RCP<const Dummy> dummy()
 {
     return make_rcp<const Dummy>();
 }
 
-inline RCP<const Symbol> dummy(const std::string &name)
+inline RCP<const Dummy> dummy(const std::string &name)
 {
     return make_rcp<const Dummy>(name);
-}
-
-//! workaround for MinGW bug
-template <typename T>
-std::string to_string(const T &value)
-{
-    std::ostringstream ss;
-    ss << value;
-    return ss.str();
 }
 
 } // SymEngine
