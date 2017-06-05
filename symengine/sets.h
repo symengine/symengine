@@ -287,7 +287,7 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 RCP<const Set> set_union(const set_set &in, bool solve = true);
 
 // ! \return RCP<const Set>
-RCP<const Set> set_intersection(const set_set &in, bool solve = true);
+RCP<const Set> set_intersection(const set_set &in);
 
 RCP<const Set> set_complement_helper(const RCP<const Set> &container,
                                      const RCP<const Set> &universe);

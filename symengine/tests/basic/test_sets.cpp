@@ -98,6 +98,14 @@ TEST_CASE("Interval : Basic", "[basic]")
     r4 = finiteset({im5})->set_union(interval(i2, i20, true, false));
     REQUIRE(eq(*r3, *r4));
 
+    r3 = finiteset({symbol("x"), symbol("y"), symbol("z")});
+    r4 = interval(integer(5), integer(10))->set_complement(r3);
+    REQUIRE(r4->__str__() == "{x, y, z} \\ [5, 10]");
+
+    r3 = finiteset({symbol("x"), integer(7), symbol("z")});
+    r4 = interval(integer(5), integer(10))->set_complement(r3);
+    REQUIRE(r4->__str__() == "{x, z} \\ [5, 10]");
+
     r3 = interval(im5, i2, true, true); // (-5, 2)
     REQUIRE(eq(*r3->contains(i2), *boolFalse));
     REQUIRE(eq(*r3->contains(im5), *boolFalse));
@@ -319,6 +327,10 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
         eq(*r2->set_complement(interval(integer(-3), integer(3), true, true)),
            *r3));
 
+    r3 = finiteset({symbol("x"), symbol("y"), symbol("z")});
+    r2 = interval(integer(5), integer(10));
+    REQUIRE(r3->set_complement(r2)->__str__() == "[5, 10] \\ {x, y, z}");
+
     r4 = interval(zero, zero);
     r1 = finiteset({zero});
     REQUIRE(r1->is_subset(r4));
@@ -467,8 +479,8 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(r2->compare(*r1) == 1);
     REQUIRE(r1->compare(*r2) == -1);
 
-    r1 = r2->set_intersection(finiteset({symbol("x")}));
-    REQUIRE(eq(*r1, *emptyset()));
+    CHECK_THROWS_AS(r2->set_intersection(finiteset({symbol("x")})),
+                    std::runtime_error);
     r1 = r2->set_intersection(finiteset({zero, integer(2)}));
     REQUIRE(eq(*r1, *finiteset({zero, integer(2)})));
 
@@ -484,8 +496,6 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     RCP<const Set> u = universalset();
     RCP<const Set> interval1 = interval(zero, one);
     RCP<const Set> r1, r2, i1, i2, i3;
-
-    CHECK_THROWS_AS(set_intersection({f1, f2}, false), std::runtime_error);
 
     // Trivial cases
     r1 = set_intersection({});
@@ -513,6 +523,14 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     r1 = set_intersection({f2, f1, interval1});
     REQUIRE(eq(*r1, *finiteset({one})));
 
+    r2 = finiteset({zero, integer(5)});
+    r1 = set_intersection({r2, interval(integer(-10), integer(10))});
+    REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(set_intersection({finiteset({symbol("x"), symbol("y")}),
+                                      interval(integer(-10), integer(10))}),
+                    std::runtime_error);
+
     // One of the arg is Union
     i1 = interval(zero, one);
     i2 = interval(integer(3), integer(4));
@@ -539,7 +557,6 @@ TEST_CASE("set_complement : Basic", "[basic]")
     RCP<const Set> interval1 = interval(one, integer(3));
     RCP<const Set> r1, r2, i1, i2;
 
-    CHECK_THROWS_AS(set_intersection({f1, f2}, false), std::runtime_error);
     r1 = finiteset({zero, one});
     r2 = set_complement(r1, f1);
     REQUIRE(eq(*r2, *e));
