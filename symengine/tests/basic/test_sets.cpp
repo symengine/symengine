@@ -100,11 +100,17 @@ TEST_CASE("Interval : Basic", "[basic]")
 
     r3 = finiteset({symbol("x"), symbol("y"), symbol("z")});
     r4 = interval(integer(5), integer(10))->set_complement(r3);
-    REQUIRE(r4->__str__() == "{x, y, z} \\ [5, 10]");
+    REQUIRE(is_a<Complement>(*r4));
+    auto &r6 = down_cast<const Complement &>(*r4);
+    REQUIRE(eq(*r6.get_container(), *interval(integer(5), integer(10))));
+    REQUIRE(eq(*r6.get_universe(), *r3));
 
     r3 = finiteset({symbol("x"), integer(7), symbol("z")});
     r4 = interval(integer(5), integer(10))->set_complement(r3);
-    REQUIRE(r4->__str__() == "{x, z} \\ [5, 10]");
+    REQUIRE(is_a<Complement>(*r4));
+    auto &r7 = down_cast<const Complement &>(*r4);
+    REQUIRE(eq(*r7.get_container(), *interval(integer(5), integer(10))));
+    REQUIRE(eq(*r7.get_universe(), *finiteset({symbol("x"), symbol("z")})));
 
     r3 = interval(im5, i2, true, true); // (-5, 2)
     REQUIRE(eq(*r3->contains(i2), *boolFalse));
@@ -329,7 +335,12 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
 
     r3 = finiteset({symbol("x"), symbol("y"), symbol("z")});
     r2 = interval(integer(5), integer(10));
-    REQUIRE(r3->set_complement(r2)->__str__() == "[5, 10] \\ {x, y, z}");
+    r3 = r3->set_complement(r2);
+    REQUIRE(is_a<Complement>(*r3));
+    auto &r5 = down_cast<const Complement &>(*r3);
+    REQUIRE(eq(*r5.get_container(),
+               *finiteset({symbol("x"), symbol("y"), symbol("z")})));
+    REQUIRE(eq(*r5.get_universe(), *r2));
 
     r4 = interval(zero, zero);
     r1 = finiteset({zero});
@@ -464,7 +475,9 @@ TEST_CASE("Complement : Basic", "[basic]")
 
     r1 = set_complement(i1, f2);
     REQUIRE(is_a<Complement>(*r1));
-    REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
+    auto &r4 = down_cast<const Complement &>(*r1);
+    REQUIRE(eq(*r4.get_container(), *f2));
+    REQUIRE(eq(*r4.get_universe(), *i1));
 
     REQUIRE(r1->get_args().size() == 2);
     REQUIRE(eq(*r1->contains(one), *boolTrue));
