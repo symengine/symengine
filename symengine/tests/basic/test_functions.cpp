@@ -24,6 +24,7 @@ using SymEngine::multinomial_coefficients;
 using SymEngine::one;
 using SymEngine::minus_one;
 using SymEngine::zero;
+using SymEngine::sign;
 using SymEngine::sin;
 using SymEngine::Sin;
 using SymEngine::cos;
@@ -4080,4 +4081,93 @@ TEST_CASE("test_dummy", "[Dummy]")
     xdummy1 = x1->as_dummy();
     CHECK(neq(*xdummy1, *x1));
     CHECK(neq(*xdummy1, *x1->as_dummy()));
+}
+
+TEST_CASE("test_sign", "[Sign]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = sign(one);
+    RCP<const Basic> s;
+    CHECK(eq(*r, *one));
+
+    r = sign(minus_one);
+    CHECK(eq(*r, *minus_one));
+
+    r = sign(zero);
+    CHECK(eq(*r, *zero));
+
+    r = sign(minus_one);
+    CHECK(eq(*r, *minus_one));
+
+    r = sign(real_double(1.2));
+    CHECK(eq(*r, *one));
+
+    r = sign(real_double(0.0));
+    CHECK(eq(*r, *zero));
+
+    r = sign(real_double(-1.2));
+    CHECK(eq(*r, *minus_one));
+
+    r = sign(rational(-1, 2));
+    CHECK(eq(*r, *minus_one));
+
+    r = sign(rational(1, 2));
+    CHECK(eq(*r, *one));
+
+    r = sign(rational(0, 2));
+    CHECK(eq(*r, *zero));
+
+    r = sign(Inf);
+    CHECK(eq(*r, *one));
+
+    r = sign(NegInf);
+    CHECK(eq(*r, *minus_one));
+
+    r = sign(ComplexInf);
+    CHECK(r->__str__() == "sign(zoo)");
+
+    r = sign(Nan);
+    CHECK(eq(*r, *Nan));
+
+    r = sign(complex_double(std::complex<double>(0, 3)));
+    CHECK(eq(*r, *I));
+
+    r = sign(complex_double(std::complex<double>(0, -3)));
+    CHECK(eq(*r, *mul(I, minus_one)));
+
+    r = sign(pi);
+    CHECK(eq(*r, *one));
+
+    r = sign(E);
+    CHECK(eq(*r, *one));
+
+    r = sign(sign(x));
+    CHECK(eq(*r, *sign(x)));
+
+    r = sign(pow(I, rational(1, 2)));
+    s = sign(sqrt(I));
+    CHECK(eq(*r, *s));
+
+    r = mul(mul(integer(2), x), pow(y, integer(3)));
+    s = sign(mul(x, pow(y, integer(3))));
+    CHECK(eq(*sign(r), *s));
+
+    r = mul(mul(mul(integer(2), x), pow(y, integer(3))), I);
+    s = mul(sign(mul(x, pow(y, integer(3)))), I);
+    CHECK(eq(*sign(r), *s));
+
+    r = mul(mul(mul(integer(2), x), pow(y, integer(3))),
+            pow(mul(integer(3), I), integer(3)));
+    s = mul(sign(mul(x, pow(y, integer(3)))), mul(I, minus_one));
+    CHECK(eq(*sign(r), *s));
+
+    r = sign(mul(mul(pow(Complex::from_two_nums(*integer(2), *integer(3)),
+                         Rational::from_two_ints(3, 2)),
+                     x),
+                 pow(mul(integer(3), I), integer(3))));
+    s = mul(mul(I, minus_one),
+            sign(mul(x, pow(Complex::from_two_nums(*integer(2), *integer(3)),
+                            Rational::from_two_ints(3, 2)))));
+    CHECK(eq(*r, *s));
 }

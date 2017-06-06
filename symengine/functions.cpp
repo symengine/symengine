@@ -329,6 +329,84 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
     }
 }
 
+Sign::Sign(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Sign::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        if (eq(*arg, *ComplexInf)) {
+            return true;
+        }
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Sign>(*arg)) {
+        return false;
+    }
+    if (is_a<Mul>(*arg)) {
+        if (neq(*down_cast<const Mul &>(*arg).get_coef(), *one)
+            and neq(*down_cast<const Mul &>(*arg).get_coef(), *minus_one)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Sign::create(const RCP<const Basic> &arg) const
+{
+    return sign(arg);
+}
+
+RCP<const Basic> sign(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (is_a<NaN>(*arg)) {
+            return Nan;
+        }
+        if (down_cast<const Number &>(*arg).is_zero()) {
+            return zero;
+        }
+        if (down_cast<const Number &>(*arg).is_positive()) {
+            return one;
+        }
+        if (down_cast<const Number &>(*arg).is_negative()) {
+            return minus_one;
+        }
+        if (is_a_Complex(*arg)
+            and down_cast<const ComplexBase &>(*arg).is_re_zero()) {
+            RCP<const Number> r
+                = down_cast<const ComplexBase &>(*arg).imaginary_part();
+            if (down_cast<const Number &>(*r).is_positive()) {
+                return I;
+            }
+            if (down_cast<const Number &>(*r).is_negative()) {
+                return mul(minus_one, I);
+            }
+        }
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi) or eq(*arg, *E) or eq(*arg, *EulerGamma)
+            or eq(*arg, *Catalan) or eq(*arg, *GoldenRatio))
+            return one;
+    }
+    if (is_a<Sign>(*arg)) {
+        return arg;
+    }
+    if (is_a<Mul>(*arg)) {
+        RCP<const Basic> s = sign(down_cast<const Mul &>(*arg).get_coef());
+        map_basic_basic dict = down_cast<const Mul &>(*arg).get_dict();
+        return mul(s,
+                   make_rcp<const Sign>(Mul::from_dict(one, std::move(dict))));
+    }
+    return make_rcp<const Sign>(arg);
+}
+
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()

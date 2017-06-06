@@ -484,3 +484,14 @@ TEST_CASE("test_sets(): printing", "[printing]")
                         finiteset({symbol("y")}));
     REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
 }
+
+TEST_CASE("test_sign(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = sign(mul(mul(pow(Complex::from_two_nums(*integer(2), *integer(3)),
+                           Rational::from_two_ints(3, 2)),
+                       x),
+                   pow(mul(integer(3), I), integer(3))));
+    CHECK(r->__str__() == "-I*sign(x*(2 + 3*I)**(3/2))");
+}
