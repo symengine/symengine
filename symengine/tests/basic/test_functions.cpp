@@ -16,6 +16,7 @@ using SymEngine::Mul;
 using SymEngine::Pow;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::dummy;
 using SymEngine::umap_basic_num;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -4061,4 +4062,22 @@ TEST_CASE("min: functions", "[functions]")
     CHECK_THROWS_AS(min({}), SymEngineException);
 
     CHECK_THROWS_AS(min({c}), SymEngineException);
+}
+
+TEST_CASE("test_dummy", "[Dummy]")
+{
+    RCP<const Symbol> x1 = symbol("x");
+    RCP<const Symbol> x2 = symbol("x");
+    RCP<const Symbol> xdummy1 = dummy("x");
+    RCP<const Symbol> xdummy2 = dummy("x");
+
+    CHECK(eq(*x1, *x2));
+    CHECK(neq(*x1, *xdummy1));
+    CHECK(neq(*xdummy1, *xdummy2));
+    CHECK(neq(*dummy(), *dummy()));
+    CHECK(neq(*dummy("x"), *dummy("x")));
+
+    xdummy1 = x1->as_dummy();
+    CHECK(neq(*xdummy1, *x1));
+    CHECK(neq(*xdummy1, *x1->as_dummy()));
 }

@@ -149,7 +149,7 @@ TEST_CASE("And, Or : Basic", "[basic]")
     REQUIRE(eq(*s1, *s2));
     vec_basic v = s2->get_args();
     vec_basic u = {c2, c1};
-    REQUIRE(unified_eq(v, u));
+    REQUIRE(vec_basic_eq_perm(v, u));
 
     s1 = logical_or({c1, c2});
     str = s1->__str__();
@@ -161,7 +161,7 @@ TEST_CASE("And, Or : Basic", "[basic]")
     REQUIRE(eq(*s1, *s2));
     v = s2->get_args();
     u = {c2, c1};
-    REQUIRE(unified_eq(v, u));
+    REQUIRE(vec_basic_eq_perm(v, u));
 
     REQUIRE(eq(*logical_and({c1}), *c1));
     REQUIRE(eq(*logical_or({c1}), *c1));
@@ -269,7 +269,7 @@ TEST_CASE("Xor : Basic", "[basic]")
     auto p = logical_xor({c2, c1});
     vec_basic v = p->get_args();
     vec_basic u = {c2, c1};
-    REQUIRE(unified_eq(v, u));
+    REQUIRE(vec_basic_eq_perm(v, u));
 
     auto s1 = logical_xor({c1, c2});
     auto s2 = logical_xor({c2, c1});
