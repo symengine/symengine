@@ -887,6 +887,8 @@ std::vector<std::string> init_str_printer_names()
     names[DIRICHLET_ETA] = "dirichlet_eta";
     names[KRONECKERDELTA] = "kroneckerdelta";
     names[LEVICIVITA] = "levicivita";
+    names[FLOOR] = "floor";
+    names[CEILING] = "ceiling";
     names[ERF] = "erf";
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";

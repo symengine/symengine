@@ -206,6 +206,12 @@ inline void mp_fdiv_qr(integer_class &q, integer_class &r,
     mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
+inline void mp_cdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    mpz_cdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+}
+
 inline void mp_divexact(integer_class &q, const integer_class &a,
                         const integer_class &b)
 {

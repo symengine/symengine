@@ -908,6 +908,38 @@ class EvaluateMPC : public Evaluate
                 MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
+    virtual RCP<const Basic> floor(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpfr_class u(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpfr_floor(
+            t.get_mpfr_t(),
+            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
+        mpfr_floor(
+            u.get_mpfr_t(),
+            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
+        return Complex::from_two_nums(
+            *integer(numeric_cast<int>(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN))),
+            *integer(
+                numeric_cast<int>(mpfr_get_si(u.get_mpfr_t(), MPFR_RNDN))));
+    }
+    virtual RCP<const Basic> ceiling(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpfr_class u(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpfr_ceil(
+            t.get_mpfr_t(),
+            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
+        mpfr_ceil(
+            u.get_mpfr_t(),
+            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
+        return Complex::from_two_nums(
+            *integer(numeric_cast<int>(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN))),
+            *integer(
+                numeric_cast<int>(mpfr_get_si(u.get_mpfr_t(), MPFR_RNDN))));
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))

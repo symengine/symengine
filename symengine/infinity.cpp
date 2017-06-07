@@ -458,6 +458,30 @@ class EvaluateInfty : public Evaluate
             throw DomainError("exp is not defined for Complex Infinity");
         }
     }
+    virtual RCP<const Basic> floor(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return Inf;
+        } else if (s.is_negative()) {
+            return NegInf;
+        } else {
+            throw DomainError("floor is not defined for Complex Infinity");
+        }
+    }
+    virtual RCP<const Basic> ceiling(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<Infty>(x))
+        const Infty &s = down_cast<const Infty &>(x);
+        if (s.is_positive()) {
+            return Inf;
+        } else if (s.is_negative()) {
+            return NegInf;
+        } else {
+            throw DomainError("ceiling is not defined for Complex Infinity");
+        }
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))

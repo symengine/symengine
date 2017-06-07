@@ -407,6 +407,154 @@ RCP<const Basic> sign(const RCP<const Basic> &arg)
     return make_rcp<const Sign>(arg);
 }
 
+Floor::Floor(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Floor::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Floor>(*arg)) {
+        return false;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Floor::create(const RCP<const Basic> &arg) const
+{
+    return floor(arg);
+}
+
+RCP<const Basic> floor(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (down_cast<const Number &>(*arg).is_exact()) {
+            if (is_a<Rational>(*arg)) {
+                const Rational &s = down_cast<const Rational &>(*arg);
+                integer_class quotient;
+                mp_fdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
+                          SymEngine::get_den(s.as_rational_class()));
+                return integer(quotient);
+            }
+            return arg;
+        }
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        return _arg->get_eval().floor(*_arg);
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi)) {
+            return real_double(3.0);
+        }
+        if (eq(*arg, *E)) {
+            return real_double(2.0);
+        }
+        if (eq(*arg, *GoldenRatio)) {
+            return real_double(1.0);
+        }
+        if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
+            return real_double(0.0);
+        }
+    }
+    if (is_a<Floor>(*arg)) {
+        return arg;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return arg;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        throw SymEngineException(
+            "Boolean objects not allowed in this context.");
+    }
+    return make_rcp<const Floor>(arg);
+}
+
+Ceiling::Ceiling(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Ceiling::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Floor>(*arg)) {
+        return false;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Ceiling::create(const RCP<const Basic> &arg) const
+{
+    return ceiling(arg);
+}
+
+RCP<const Basic> ceiling(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (down_cast<const Number &>(*arg).is_exact()) {
+            if (is_a<Rational>(*arg)) {
+                const Rational &s = down_cast<const Rational &>(*arg);
+                integer_class quotient;
+                mp_cdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
+                          SymEngine::get_den(s.as_rational_class()));
+                return integer(quotient);
+            }
+            return arg;
+        }
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        return _arg->get_eval().ceiling(*_arg);
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi)) {
+            return real_double(4.0);
+        }
+        if (eq(*arg, *E)) {
+            return real_double(3.0);
+        }
+        if (eq(*arg, *GoldenRatio)) {
+            return real_double(2.0);
+        }
+        if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
+            return real_double(1.0);
+        }
+    }
+    if (is_a<Floor>(*arg)) {
+        return arg;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return arg;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        throw SymEngineException(
+            "Boolean objects not allowed in this context.");
+    }
+    return make_rcp<const Ceiling>(arg);
+}
+
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()

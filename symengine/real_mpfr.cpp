@@ -1033,6 +1033,23 @@ class EvaluateMPFR : public Evaluate
         mpfr_exp(t.get_mpfr_t(), x_, MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
+    virtual RCP<const Basic> floor(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_floor(t.get_mpfr_t(), x_);
+        return integer(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN));
+    }
+    virtual RCP<const Basic> ceiling(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_ceil(t.get_mpfr_t(), x_);
+        return integer(
+            numeric_cast<int>(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN)));
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
