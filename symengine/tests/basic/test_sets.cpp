@@ -5,6 +5,7 @@
 #include <symengine/infinity.h>
 #include <symengine/real_double.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/add.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -29,7 +30,6 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::is_a;
-using SymEngine::symbol;
 using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
@@ -46,6 +46,17 @@ using SymEngine::rational_class;
 using SymEngine::set_complement;
 using SymEngine::Complement;
 using SymEngine::down_cast;
+using SymEngine::ConditionSet;
+using SymEngine::conditionset;
+using SymEngine::mul;
+using SymEngine::add;
+using SymEngine::Gt;
+using SymEngine::Eq;
+using SymEngine::Le;
+using SymEngine::pi;
+using SymEngine::Symbol;
+using SymEngine::Boolean;
+using SymEngine::sin;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -611,4 +622,93 @@ TEST_CASE("set_complement : Basic", "[basic]")
     r1 = set_complement(f1, f2);
     r2 = finiteset({zero, one});
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("ConditionSet : Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Set> r1, r2;
+
+    RCP<const Set> i1 = interval(NegInf, Inf, true, true);
+    RCP<const Set> i2 = interval(one, Inf, true, true);
+    RCP<const Set> i3 = interval(zero, integer(4), false, true);
+    RCP<const Set> f1 = finiteset({zero, one, integer(2), integer(4)});
+    RCP<const Set> f2 = finiteset({zero, one, integer(-3), y});
+    RCP<const Set> f3 = finiteset({y});
+
+    RCP<const Boolean> cond1, cond2, cond3;
+    cond1 = Ge(mul(x, x), integer(9));
+    cond2 = Le(x, zero);
+    cond3 = Gt(x, zero);
+
+    r1 = conditionset({x}, i1, cond1);
+    REQUIRE(is_a<ConditionSet>(*r1));
+
+    auto &r3 = down_cast<const ConditionSet &>(*r1);
+    REQUIRE(unified_eq(r3.get_symbols(), {x}));
+    REQUIRE(eq(*r3.get_baseset(), *i1));
+    REQUIRE(eq(*r3.get_condition(), *cond1));
+
+    r1 = conditionset({x}, f1, cond1);
+    REQUIRE(eq(*r1, *finiteset({integer(4)})));
+
+    r1 = conditionset({x}, f2, cond3);
+    REQUIRE(is_a<Union>(*r1));
+    auto &r4 = down_cast<const Union &>(*r1);
+    REQUIRE(r4.get_container().size() == 2);
+    REQUIRE(r4.get_container().find(finiteset({one}))
+            != r4.get_container().end());
+    REQUIRE(r4.get_container().find(conditionset({x}, f3, cond3))
+            != r4.get_container().end());
+
+    r1 = conditionset({x}, i1, cond2);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(pi), *boolFalse));
+    REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
+    REQUIRE(eq(*r1->contains(integer(-2)), *boolTrue));
+
+    r1 = conditionset({x}, i1, Eq(zero, one));
+    REQUIRE(eq(*r1, *emptyset()));
+
+    r1 = conditionset({x}, i1, Gt(one, zero));
+    REQUIRE(eq(*r1, *i1));
+
+    cond1 = Eq(sin(x), zero);
+    r1 = conditionset({x}, i3, cond1);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(pi), *boolTrue));
+    REQUIRE(eq(*r1->contains(finiteset({pi})), *boolTrue));
+
+    cond1 = Eq(mul(x, x), integer(9));
+    r1 = conditionset({x}, i2, cond1);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*r1->contains(integer(-3)), *boolFalse));
+    REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
+    REQUIRE(eq(*r1->contains(finiteset({integer(3)})), *boolTrue));
+
+    cond1 = Eq(mul(x, x), integer(9));
+    r1 = conditionset({x}, i1, cond1);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*r1->contains(integer(-3)), *boolTrue));
+
+    r1 = conditionset({x, y}, i1, Eq(add(x, y), integer(4)));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(finiteset({integer(3), one})), *boolTrue));
+    REQUIRE(eq(*r1->contains(finiteset({integer(3), zero})), *boolFalse));
+    CHECK_THROWS_AS(r1->contains(finiteset({integer(3)})), std::runtime_error);
+
+    r2 = r1->set_intersection(interval(integer(-10), integer(10)));
+    REQUIRE(is_a<ConditionSet>(*r2));
+    REQUIRE(r1->compare(*r2) == -1);
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*r2).get_baseset(),
+               *interval(integer(-10), integer(10))));
+
+    r2 = r1->set_union(i1);
+    REQUIRE(is_a<Union>(*r2));
+
+    r2 = r1->set_complement(i1);
+    REQUIRE(is_a<Complement>(*r2));
 }

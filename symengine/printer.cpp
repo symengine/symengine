@@ -288,6 +288,23 @@ void StrPrinter::bvisit(const FiniteSet &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const ConditionSet &x)
+{
+    std::ostringstream s1, s;
+    auto xs = x.get_symbols();
+    s1 << "{";
+    for (auto p = xs.begin(); p != xs.end(); p++) {
+        if (p != xs.begin()) {
+            s1 << ", ";
+        }
+        s1 << apply(*p);
+    }
+    s1 << "}";
+    s << "{" << s1.str() << " | " << s1.str() << " in "
+      << apply(x.get_baseset()) << " and " << apply(x.get_condition()) << "}";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x)
 {

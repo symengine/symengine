@@ -249,6 +249,46 @@ public:
     }
 };
 
+class ConditionSet : public Set
+{
+private:
+    vec_sym syms_;
+    RCP<const Set> base_;
+    RCP<const Boolean> condition_;
+
+public:
+    IMPLEMENT_TYPEID(CONDITIONSET)
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    ConditionSet(const vec_sym syms, RCP<const Set> base,
+                 RCP<const Boolean> condition);
+    static bool is_canonical(const vec_sym syms, RCP<const Set> base,
+                             RCP<const Boolean> condition);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const vec_sym &get_symbols() const
+    {
+        return this->syms_;
+    }
+    inline const RCP<const Set> &get_baseset() const
+    {
+        return this->base_;
+    }
+    inline const RCP<const Boolean> &get_condition() const
+    {
+        return this->condition_;
+    }
+};
+
 //! \return RCP<const EmptySet>
 inline RCP<const EmptySet> emptyset()
 {
@@ -295,5 +335,9 @@ RCP<const Set> set_complement_helper(const RCP<const Set> &container,
 // ! \return RCP<const Set>
 RCP<const Set> set_complement(const RCP<const Set> &universe,
                               const RCP<const Set> &container);
+
+//! \return RCP<const Set>
+RCP<const Set> conditionset(const vec_sym &syms, const RCP<const Set> &base,
+                            const RCP<const Boolean> &condition);
 }
 #endif
