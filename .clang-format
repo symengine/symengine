@@ -1,9 +1,9 @@
 # version: 3.7
-# exclude: cmake/
-# exclude: symengine/utilities
-# include: .h
-# include: .hpp
-# include: .cpp
+# exclude: cmake/*
+# exclude: symengine/utilities/*
+# include: *.h
+# include: *.hpp
+# include: *.cpp
 
 Language:        Cpp
 AccessModifierOffset: -4
