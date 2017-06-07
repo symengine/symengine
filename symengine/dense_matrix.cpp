@@ -1520,6 +1520,46 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
     fraction_free_gauss_jordan_solve(A, e, B);
 }
 
+// ----------------------- Vector-specific Methods --------------------------//
+
+void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    if (A.col_ == B.row_) {
+        if (B.col_ != 1) {
+            DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
+            A.transpose(tmp1);
+            DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
+            B.transpose(tmp2);
+            C.resize(tmp1.row_, tmp2.col_);
+            mul_dense_dense(tmp1, tmp2, C);
+        } else {
+            C.resize(A.row_, B.col_);
+            mul_dense_dense(A, B, C);
+        }
+        C.resize(1, C.row_ * C.col_);
+    } else if (A.col_ == B.col_) {
+        DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
+        B.transpose(tmp2);
+        dot(A, tmp2, C);
+    } else if (A.row_ == B.row_) {
+        DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
+        A.transpose(tmp1);
+        dot(tmp1, B, C);
+    } else {
+        throw SymEngineException("Dimensions incorrect for dot product");
+    }
+}
+
+void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT((A.row_ * A.col_ == 3 and B.row_ * B.col_ == 3)
+                     and (A.row_ == C.row_ and A.col_ == C.col_));
+
+    C.m_[0] = sub(mul(A.m_[1], B.m_[2]), mul(A.m_[2], B.m_[1]));
+    C.m_[1] = sub(mul(A.m_[2], B.m_[0]), mul(A.m_[0], B.m_[2]));
+    C.m_[2] = sub(mul(A.m_[0], B.m_[1]), mul(A.m_[1], B.m_[0]));
+}
+
 // ------------------------- NumPy-like functions ----------------------------//
 
 // Mimic `eye` function in NumPy

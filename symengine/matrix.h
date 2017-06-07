@@ -247,6 +247,11 @@ public:
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
+    // Vector-specific methods
+    friend void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+    friend void cross(const DenseMatrix &A, const DenseMatrix &B,
+                      DenseMatrix &C);
+
     // NumPy-like functions
     friend void eye(DenseMatrix &A, int k);
     friend void diag(DenseMatrix &A, vec_basic &v, int k);
