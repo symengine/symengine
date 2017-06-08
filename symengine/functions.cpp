@@ -1122,8 +1122,6 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         // numbers in SymEngine sense and when num and den are positive.
         // for the remaining cases in which we just return the value from
         // the lookup table.
-        // TODO: update once is_positive() and is_negative() is implemented
-        // in `Basic`
         if (is_a_Number(*den) and is_a_Number(*num)) {
             RCP<const Number> den_new = rcp_static_cast<const Number>(den);
             RCP<const Number> num_new = rcp_static_cast<const Number>(num);
