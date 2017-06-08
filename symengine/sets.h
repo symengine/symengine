@@ -26,6 +26,7 @@ class Set : public Basic
 public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const = 0;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const = 0;
     bool is_subset(const RCP<const Set> &o) const
     {
@@ -70,6 +71,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
         return boolean(false);
@@ -102,6 +104,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const
     {
         return boolean(true);
@@ -128,6 +131,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
     inline const set_basic &get_container() const
@@ -163,6 +167,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
     virtual vec_basic get_args() const;
 
@@ -202,9 +207,43 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
     inline const set_set &get_container() const
+    {
+        return this->container_;
+    }
+};
+
+class Complement : public Set
+{
+private:
+    // represents universe_ - container_
+    RCP<const Set> universe_;
+    RCP<const Set> container_;
+
+public:
+    IMPLEMENT_TYPEID(COMPLEMENT)
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {universe_, container_};
+    }
+    Complement(const RCP<const Set> &universe, const RCP<const Set> &container);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const RCP<const Set> &get_universe() const
+    {
+        return this->universe_;
+    }
+    inline const RCP<const Set> &get_container() const
     {
         return this->container_;
     }
@@ -245,36 +284,16 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 // ! \return RCP<const Set>
-inline RCP<const Set> set_union(const set_set &in, bool solve = true)
-{
-    set_set input;
-    if (solve == false && in.size() > 1)
-        return make_rcp<const Union>(in);
-    set_basic combined_FiniteSet;
-    for (auto it = in.begin(); it != in.end(); ++it) {
-        if (is_a<FiniteSet>(**it)) {
-            const FiniteSet &other = down_cast<const FiniteSet &>(**it);
-            combined_FiniteSet.insert(other.get_container().begin(),
-                                      other.get_container().end());
-        } else if (is_a<UniversalSet>(**it)) {
-            return universalset();
-        } else if (not is_a<EmptySet>(**it)) {
-            input.insert(*it);
-        }
-    }
-    if (input.empty()) {
-        return finiteset(combined_FiniteSet);
-    } else if (input.size() == 1 && combined_FiniteSet.empty()) {
-        return rcp_dynamic_cast<const Set>(*input.begin());
-    }
-    // Now we rely on respective containers' own rules
-    // TODO: Improve it to O(log n)
-    RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
-    for (auto it = input.begin(); it != input.end(); ++it) {
-        RCP<const Set> other = rcp_dynamic_cast<const Set>(*it);
-        combined_Rest = combined_Rest->set_union(other);
-    }
-    return combined_Rest;
-}
+RCP<const Set> set_union(const set_set &in, bool solve = true);
+
+// ! \return RCP<const Set>
+RCP<const Set> set_intersection(const set_set &in);
+
+RCP<const Set> set_complement_helper(const RCP<const Set> &container,
+                                     const RCP<const Set> &universe);
+
+// ! \return RCP<const Set>
+RCP<const Set> set_complement(const RCP<const Set> &universe,
+                              const RCP<const Set> &container);
 }
 #endif

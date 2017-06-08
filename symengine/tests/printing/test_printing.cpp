@@ -40,6 +40,12 @@ using SymEngine::Infty;
 using SymEngine::infty;
 using SymEngine::down_cast;
 using SymEngine::zero;
+using SymEngine::finiteset;
+using SymEngine::set_complement;
+using SymEngine::Set;
+using SymEngine::interval;
+using SymEngine::Inf;
+using SymEngine::NegInf;
 
 using namespace SymEngine::literals;
 
@@ -469,4 +475,12 @@ TEST_CASE("test custom printing", "[printing]")
 TEST_CASE("Ascii Art", "[basic]")
 {
     std::cout << SymEngine::ascii_art() << std::endl;
+}
+
+TEST_CASE("test_sets(): printing", "[printing]")
+{
+    RCP<const Set> r1;
+    r1 = set_complement(interval(NegInf, Inf, true, true),
+                        finiteset({symbol("y")}));
+    REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
 }

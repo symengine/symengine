@@ -153,7 +153,7 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("Not implemented Intersection class");
 }
 
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
@@ -195,6 +195,24 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
     return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
 }
 
+RCP<const Set> Interval::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<Interval>(*o)) {
+        set_set cont;
+        const Interval &other = down_cast<const Interval &>(*o);
+        if (eq(*max({start_, other.start_}), *start_)) {
+            cont.insert(interval(other.get_start(), start_,
+                                 other.get_left_open(), not left_open_));
+        }
+        if (eq(*min({end_, other.end_}), *end_)) {
+            cont.insert(interval(end_, other.get_end(), not right_open_,
+                                 other.get_right_open()));
+        }
+        return SymEngine::set_union(cont);
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
 vec_basic Interval::get_args() const
 {
     return {start_, end_, boolean(left_open_), boolean(right_open_)};
@@ -206,6 +224,11 @@ RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const
 }
 
 RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const
+{
+    return o;
+}
+
+RCP<const Set> EmptySet::set_complement(const RCP<const Set> &o) const
 {
     return o;
 }
@@ -243,6 +266,11 @@ RCP<const Set> UniversalSet::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> UniversalSet::set_union(const RCP<const Set> &o) const
 {
     return universalset();
+}
+
+RCP<const Set> UniversalSet::set_complement(const RCP<const Set> &o) const
+{
+    return emptyset();
 }
 
 hash_t UniversalSet::__hash__() const
@@ -393,7 +421,63 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("Not implemented Intersection class");
+}
+
+RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<FiniteSet>(*o)) {
+        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
+        set_basic container;
+        std::set_difference(other.container_.begin(), other.container_.end(),
+                            container_.begin(), container_.end(),
+                            std::inserter(container, container.begin()),
+                            RCPBasicKeyLess{});
+        return finiteset(container);
+    }
+
+    if (is_a<Interval>(*o)) {
+        set_set intervals;
+        auto &other = down_cast<const Interval &>(*o);
+        RCP<const Number> last = other.get_start();
+        RCP<const Number> a_num;
+        set_basic rest;
+        bool left_open = other.get_left_open(),
+             right_open = other.get_right_open();
+        for (auto it = container_.begin(); it != container_.end(); it++) {
+            if (eq(*max({*it, other.get_start()}), *other.get_start())) {
+                if (eq(**it, *other.get_start()))
+                    left_open = true;
+                continue;
+            }
+            if (eq(*max({*it, other.get_end()}), **it)) {
+                if (eq(**it, *other.get_end()))
+                    right_open = true;
+                break;
+            }
+            if (is_a_Number(**it)) {
+                a_num = rcp_static_cast<const Number>(*it);
+                intervals.insert(interval(last, a_num, left_open, true));
+                last = a_num;
+                left_open = true;
+            } else {
+                rest.insert(*it);
+            }
+        }
+
+        if (eq(*max({last, other.get_end()}), *other.get_end())) {
+            intervals.insert(
+                interval(last, other.get_end(), left_open, right_open));
+        }
+        if (rest.empty()) {
+            return SymEngine::set_union(intervals, false);
+        } else {
+            return make_rcp<const Complement>(
+                SymEngine::set_union(intervals, false), finiteset(rest));
+        }
+    }
+
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
 Union::Union(set_set in) : container_(in)
@@ -451,6 +535,15 @@ RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
     return SymEngine::set_union(container);
 }
 
+RCP<const Set> Union::set_complement(const RCP<const Set> &o) const
+{
+    set_set container;
+    for (auto &a : container_) {
+        container.insert(a->set_complement(o));
+    }
+    return SymEngine::set_intersection(container);
+}
+
 RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
 {
     for (auto &a : container_) {
@@ -462,6 +555,253 @@ RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
             throw NotImplementedError("Not implemented");
     }
     return boolean(false);
+}
+
+Complement::Complement(const RCP<const Set> &universe,
+                       const RCP<const Set> &container)
+    : universe_(universe), container_(container)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+}
+
+hash_t Complement::__hash__() const
+{
+    hash_t seed = COMPLEMENT;
+    hash_combine<Basic>(seed, *universe_);
+    hash_combine<Basic>(seed, *container_);
+    return seed;
+}
+
+bool Complement::__eq__(const Basic &o) const
+{
+    if (is_a<Complement>(o)) {
+        const Complement &other = down_cast<const Complement &>(o);
+        return unified_eq(universe_, other.universe_)
+               and unified_eq(container_, other.container_);
+    }
+    return false;
+}
+
+int Complement::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Complement>(o))
+    const Complement &other = down_cast<const Complement &>(o);
+    int c1 = unified_compare(universe_, other.universe_);
+    if (c1 != 0) {
+        return c1;
+    } else {
+        return unified_compare(container_, other.container_);
+    }
+}
+
+RCP<const Boolean> Complement::contains(const RCP<const Basic> &a) const
+{
+    return logical_and(
+        {universe_->contains(a), logical_not(container_->contains(a))});
+}
+
+RCP<const Set> Complement::set_union(const RCP<const Set> &o) const
+{
+    // A' U C = (A n C')'
+    RCP<const Set> ocomplement = o->set_complement(universe_);
+    RCP<const Set> intersect
+        = SymEngine::set_intersection({container_, ocomplement});
+    return intersect->set_complement(universe_);
+}
+
+RCP<const Set> Complement::set_intersection(const RCP<const Set> &o) const
+{
+    return SymEngine::set_intersection({rcp_from_this_cast<const Set>(), o});
+}
+
+RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
+{
+    auto newuniv = SymEngine::set_union({o, universe_});
+    return container_->set_complement(newuniv);
+}
+
+RCP<const Set> set_union(const set_set &in, bool solve)
+{
+    set_set input;
+    if (solve == false && in.size() > 1)
+        return make_rcp<const Union>(in);
+    set_basic combined_FiniteSet;
+    for (auto it = in.begin(); it != in.end(); ++it) {
+        if (is_a<FiniteSet>(**it)) {
+            const FiniteSet &other = down_cast<const FiniteSet &>(**it);
+            combined_FiniteSet.insert(other.get_container().begin(),
+                                      other.get_container().end());
+        } else if (is_a<UniversalSet>(**it)) {
+            return universalset();
+        } else if (not is_a<EmptySet>(**it)) {
+            input.insert(*it);
+        }
+    }
+    if (input.empty()) {
+        return finiteset(combined_FiniteSet);
+    } else if (input.size() == 1 && combined_FiniteSet.empty()) {
+        return *input.begin();
+    }
+    // Now we rely on respective containers' own rules
+    // TODO: Improve it to O(log n)
+    RCP<const Set> combined_Rest = finiteset(combined_FiniteSet);
+    for (auto it = input.begin(); it != input.end(); ++it) {
+        combined_Rest = combined_Rest->set_union(*it);
+    }
+    return combined_Rest;
+}
+
+RCP<const Set> set_intersection(const set_set &in)
+{
+    // https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection
+    if (in.empty())
+        return universalset();
+
+    // Global rules
+    // If found any emptyset then return emptyset
+    set_set incopy;
+    for (const auto &input : in) {
+        if (is_a<EmptySet>(*input)) {
+            return emptyset();
+        } else if (not is_a<UniversalSet>(*input)) {
+            incopy.insert(input);
+        }
+    }
+
+    if (incopy.empty())
+        return universalset();
+    if (incopy.size() == 1)
+        return *incopy.begin();
+
+    // Handle finite sets
+    std::vector<RCP<const Set>> fsets, othersets;
+    for (const auto &input : incopy) {
+        if (is_a<FiniteSet>(*input)) {
+            fsets.push_back(input);
+        } else {
+            othersets.push_back(input);
+        }
+    }
+    if (fsets.size() != 0) {
+        const FiniteSet &fs = down_cast<const FiniteSet &>(**fsets.begin());
+        auto cont = fs.get_container();
+        fsets.erase(fsets.begin());
+        set_basic finalfs;
+        for (const auto &fselement : cont) {
+            bool present = true;
+            for (const auto &fset : fsets) {
+                auto contain = fset->contains(fselement);
+                if (is_a<Contains>(*contain)) {
+                    throw std::runtime_error(
+                        "Not implemented Intersection class");
+                }
+                present = present and eq(*contain, *boolTrue);
+            }
+            if (!present)
+                continue;
+            for (const auto &oset : othersets) {
+                auto contain = oset->contains(fselement);
+                if (is_a<Contains>(*contain)) {
+                    throw std::runtime_error(
+                        "Not implemented Intersection class");
+                }
+                present = present and eq(*contain, *boolTrue);
+            }
+            if (present)
+                finalfs.insert(fselement);
+        }
+        return finiteset(finalfs);
+    }
+
+    // If any of the sets is union, then return a Union of Intersections
+    for (auto it = incopy.begin(); it != incopy.end(); ++it) {
+        if (is_a<Union>(**it)) {
+            auto container = down_cast<const Union &>(**it).get_container();
+            incopy.erase(it);
+            auto other = SymEngine::set_intersection(incopy);
+            set_set usets;
+            for (const auto &c : container) {
+                usets.insert(SymEngine::set_intersection({c, other}));
+            }
+            return SymEngine::set_union(usets);
+        }
+    }
+
+    // Simplify and return a `Complement` if any of the sets is a complement
+    for (auto it = incopy.begin(); it != incopy.end(); ++it) {
+        if (is_a<Complement>(**it)) {
+            auto container
+                = down_cast<const Complement &>(**it).get_container();
+            auto universe = down_cast<const Complement &>(**it).get_universe();
+            incopy.erase(it);
+            incopy.insert(universe);
+            auto other = SymEngine::set_intersection(incopy);
+            return SymEngine::set_complement(other, container);
+        }
+    }
+
+    // Pair-wise rules
+    // TO-DO: needs the following improvement once Intersection
+    // class is implemented.
+    // input_oset if found to be not simplified, then skip this
+    // pair.
+    if (incopy.size() > 1) {
+        auto temp = *incopy.begin();
+        auto it = std::next(incopy.begin());
+        for (; it != incopy.end(); ++it) {
+            temp = temp->set_intersection(*it);
+        }
+        return temp;
+    }
+
+    if (incopy.size() == 1) {
+        return *incopy.begin();
+    } else {
+        throw std::runtime_error("Not implemented Intersection class");
+    }
+}
+
+// helper to avoid redundant code
+RCP<const Set> set_complement_helper(const RCP<const Set> &container,
+                                     const RCP<const Set> &universe)
+{
+    if (is_a<Union>(*universe)) {
+        auto univ = down_cast<const Union &>(*universe).get_container();
+        set_set container_;
+        for (auto &a : univ) {
+            container_.insert(container->set_complement(a));
+        }
+        return SymEngine::set_union(container_);
+    } else if (is_a<EmptySet>(*universe)) {
+        return emptyset();
+    } else if (is_a<FiniteSet>(*universe)) {
+        const FiniteSet &other = down_cast<const FiniteSet &>(*universe);
+        set_basic container_;
+        set_basic rest;
+        for (const auto &a : other.get_container()) {
+            auto contain = container->contains(a);
+            if (eq(*contain, *boolFalse)) {
+                container_.insert(a);
+            } else if (is_a<Contains>(*contain)) {
+                rest.insert(a);
+            }
+        }
+        if (rest.empty()) {
+            return finiteset(container_);
+        } else {
+            return SymEngine::set_union(
+                {finiteset(container_),
+                 make_rcp<const Complement>(finiteset(rest), container)});
+        }
+    }
+    return make_rcp<const Complement>(universe, container);
+}
+
+RCP<const Set> set_complement(const RCP<const Set> &universe,
+                              const RCP<const Set> &container)
+{
+    // represents universe - container
+    return container->set_complement(universe);
 }
 
 } // SymEngine
