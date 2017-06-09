@@ -50,6 +50,7 @@ using SymEngine::floor;
 using SymEngine::ceiling;
 using SymEngine::conditionset;
 using SymEngine::Boolean;
+using SymEngine::logical_and;
 
 using namespace SymEngine::literals;
 
@@ -492,13 +493,10 @@ TEST_CASE("test_sets(): printing", "[printing]")
     REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
 
     RCP<const Set> i1 = interval(integer(3), integer(10));
-    RCP<const Boolean> cond = Ge(mul(x, x), integer(9));
 
-    r1 = conditionset({x}, i1, cond);
-    REQUIRE(r1->__str__() == "{{x} | {x} in [3, 10] and 9 <= x**2}");
-
-    r1 = conditionset({x, y}, i1, Gt(mul(x, y), integer(9)));
-    REQUIRE(r1->__str__() == "{{x, y} | {x, y} in [3, 10] and 9 < x*y}");
+    r1 = conditionset(
+        {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
+    REQUIRE(r1->__str__() == "{{x} | And(9 <= x**2, Contains(x, [3, 10]))}");
 }
 
 TEST_CASE("test_sign(): printing", "[printing]")

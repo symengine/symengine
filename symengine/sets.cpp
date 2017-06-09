@@ -94,7 +94,7 @@ RCP<const Set> Interval::close() const
 
 RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 {
-    if (not is_a_Number(*a) and not is_a<Constant>(*a))
+    if (not is_a_Number(*a))
         return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
     if (eq(*start_, *a))
         return boolean(not left_open_);
@@ -336,7 +336,19 @@ int FiniteSet::compare(const Basic &o) const
 
 RCP<const Boolean> FiniteSet::contains(const RCP<const Basic> &a) const
 {
-    return boolean(container_.find(a) != container_.end());
+    set_basic rest;
+    for (const auto &elem : container_) {
+        auto cont = Eq(elem, a);
+        if (eq(*cont, *boolTrue))
+            return boolTrue;
+        if (not eq(*cont, *boolFalse))
+            rest.insert(elem);
+    }
+    if (rest.empty()) {
+        return boolFalse;
+    } else {
+        return make_rcp<Contains>(a, finiteset(rest));
+    }
 }
 
 RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
@@ -620,29 +632,41 @@ RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
     return container_->set_complement(newuniv);
 }
 
-ConditionSet::ConditionSet(const vec_sym syms, RCP<const Set> base,
-                           RCP<const Boolean> condition)
-    : syms_(syms), base_(base), condition_(condition)
+ConditionSet::ConditionSet(const vec_sym syms, RCP<const Boolean> condition)
+    : syms_(syms), condition_(condition)
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(ConditionSet::is_canonical(syms, base, condition))
+    SYMENGINE_ASSERT(ConditionSet::is_canonical(syms, condition))
 }
 
-bool ConditionSet::is_canonical(const vec_sym syms, RCP<const Set> base,
+bool ConditionSet::is_canonical(const vec_sym syms,
                                 RCP<const Boolean> condition)
 {
     if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)) {
         return false;
-    } else if (is_a<EmptySet>(*base)) {
-        return false;
-    } else if (is_a<FiniteSet>(*base)) {
+    } else if (is_a<And>(*condition)) {
         if (syms.size() == 1) {
             for (const auto &elem :
-                 down_cast<const FiniteSet &>(*base).get_container()) {
-                if (is_a_Number(*elem) or is_a<Constant>(*elem))
-                    return false;
+                 down_cast<const And &>(*condition).get_container()) {
+                if (is_a<Contains>(*elem)
+                    and eq(*down_cast<const Contains &>(*elem).get_expr(),
+                           *syms[0])
+                    and is_a<FiniteSet>(
+                            *down_cast<const Contains &>(*elem).get_set())) {
+                    auto fset
+                        = down_cast<const FiniteSet &>(
+                              *down_cast<const Contains &>(*elem).get_set())
+                              .get_container();
+                    for (const auto &a : fset) {
+                        if (is_a_Number(*a) or is_a<Constant>(*a))
+                            return false;
+                    }
+                }
             }
         }
+    } else if (is_a<Contains>(*condition)) {
+        if (syms.size() == 1)
+            return false;
     }
     return true;
 }
@@ -652,7 +676,6 @@ hash_t ConditionSet::__hash__() const
     hash_t seed = CONDITIONSET;
     for (const auto &a : syms_)
         hash_combine<Basic>(seed, *a);
-    hash_combine<Basic>(seed, *base_);
     hash_combine<Basic>(seed, *condition_);
     return seed;
 }
@@ -662,7 +685,6 @@ bool ConditionSet::__eq__(const Basic &o) const
     if (is_a<ConditionSet>(o)) {
         const ConditionSet &other = down_cast<const ConditionSet &>(o);
         return unified_eq(syms_, other.get_symbols())
-               and unified_eq(base_, other.get_baseset())
                and unified_eq(condition_, other.get_condition());
     }
     return false;
@@ -676,12 +698,7 @@ int ConditionSet::compare(const Basic &o) const
     if (c1 != 0) {
         return c1;
     } else {
-        int c2 = unified_compare(base_, other.get_baseset());
-        if (c2 != 0) {
-            return c2;
-        } else {
-            return unified_compare(condition_, other.get_condition());
-        }
+        return unified_compare(condition_, other.get_condition());
     }
 }
 
@@ -693,8 +710,12 @@ RCP<const Set> ConditionSet::set_union(const RCP<const Set> &o) const
 RCP<const Set> ConditionSet::set_intersection(const RCP<const Set> &o) const
 {
     if (not is_a<ConditionSet>(*o)) {
-        auto newbase = SymEngine::set_intersection({o, base_});
-        return conditionset(syms_, newbase, condition_);
+        auto it = syms_.begin();
+        RCP<const Boolean> newcond
+            = logical_and({condition_, o->contains(*it)});
+        for (; it != syms_.end(); it++)
+            newcond = logical_and({newcond, o->contains(*it)});
+        return conditionset(syms_, newcond);
     }
     throw std::runtime_error("Not implemented Intersection class");
 }
@@ -706,8 +727,6 @@ RCP<const Set> ConditionSet::set_complement(const RCP<const Set> &o) const
 
 RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
 {
-    if (eq(*base_->contains(o), *boolFalse))
-        return boolean(false);
     if (is_a<FiniteSet>(*o)) {
         const FiniteSet &fs = down_cast<const FiniteSet &>(*o);
         auto container = fs.get_container();
@@ -717,8 +736,6 @@ RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
         map_basic_basic d;
         int pos = 0;
         for (const auto &elem : container) {
-            if (eq(*base_->contains(elem), *boolFalse))
-                return boolean(false);
             d[syms_[pos]] = elem;
             pos++;
         }
@@ -803,7 +820,7 @@ RCP<const Set> set_intersection(const set_set &in)
             bool present = true;
             for (const auto &fset : fsets) {
                 auto contain = fset->contains(fselement);
-                if (is_a<Contains>(*contain)) {
+                if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
                     throw std::runtime_error(
                         "Not implemented Intersection class");
                 }
@@ -813,7 +830,7 @@ RCP<const Set> set_intersection(const set_set &in)
                 continue;
             for (const auto &oset : othersets) {
                 auto contain = oset->contains(fselement);
-                if (is_a<Contains>(*contain)) {
+                if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
                     throw std::runtime_error(
                         "Not implemented Intersection class");
                 }
@@ -916,38 +933,56 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
     return container->set_complement(universe);
 }
 
-RCP<const Set> conditionset(const vec_sym &syms, const RCP<const Set> &base,
+RCP<const Set> conditionset(const vec_sym &syms,
                             const RCP<const Boolean> &condition)
 {
-    if (ConditionSet::is_canonical(syms, base, condition)) {
-        return make_rcp<const ConditionSet>(syms, base, condition);
+    if (ConditionSet::is_canonical(syms, condition)) {
+        return make_rcp<const ConditionSet>(syms, condition);
     }
     if (eq(*condition, *boolean(false))) {
         return emptyset();
-    } else if (eq(*condition, *boolean(true)) or is_a<EmptySet>(*base)) {
-        return base;
+    } else if (eq(*condition, *boolean(true))) {
+        return universalset();
     }
-    if (is_a<FiniteSet>(*base)) {
-        const FiniteSet &fset = down_cast<const FiniteSet &>(*base);
-        auto &container = fset.get_container();
+    if (is_a<And>(*condition)) {
+        // Simplify if we have a single symbol.
+        const And &aset = down_cast<const And &>(*condition);
+        auto &container = aset.get_container();
         set_basic present, others;
-        for (const auto &fselement : container) {
-            map_basic_basic d;
-            d[syms[0]] = fselement;
-            auto contain = condition->subs(d);
-            if (eq(*contain, *boolean(true))) {
-                present.insert(fselement);
-            } else if (not eq(*contain, *boolean(false))) {
-                others.insert(fselement);
+        for (auto it = container.begin(); it != container.end(); it++) {
+            if (is_a<Contains>(**it)
+                and eq(*down_cast<const Contains &>(**it).get_expr(), *syms[0])
+                and is_a<FiniteSet>(
+                        *down_cast<const Contains &>(**it).get_set())) {
+                auto fset = down_cast<const FiniteSet &>(
+                                *down_cast<const Contains &>(**it).get_set())
+                                .get_container();
+                auto restCont = container;
+                restCont.erase(*it);
+                auto restCond = logical_and(restCont);
+                for (const auto &fselement : fset) {
+                    map_basic_basic d;
+                    d[syms[0]] = fselement;
+                    auto contain = restCond->subs(d);
+                    if (eq(*contain, *boolean(true))) {
+                        present.insert(fselement);
+                    } else if (not eq(*contain, *boolean(false))) {
+                        others.insert(fselement);
+                    }
+                }
+                if (others.empty()) {
+                    return finiteset(present);
+                } else {
+                    restCond = logical_and(
+                        {finiteset(others)->contains(syms[0]), restCond});
+                    return SymEngine::set_union(
+                        {finiteset(present), conditionset(syms, restCond)});
+                }
             }
         }
-        if (others.empty()) {
-            return finiteset(present);
-        } else {
-            RCP<const Set> o = finiteset(others);
-            return SymEngine::set_union(
-                {finiteset(present), conditionset(syms, o, condition)});
-        }
+    }
+    if (is_a<Contains>(*condition)) {
+        return down_cast<const Contains &>(*condition).get_set();
     }
     throw std::runtime_error("Not implemented");
 }

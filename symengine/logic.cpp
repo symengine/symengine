@@ -104,6 +104,12 @@ int Contains::compare(const Basic &o) const
     return unified_compare(get_set(), c.get_set());
 }
 
+RCP<const Basic> Contains::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Set> &rhs) const
+{
+    return contains(lhs, rhs);
+}
+
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set)
 {
@@ -207,6 +213,11 @@ bool And::is_canonical(const set_boolean &container_)
 const set_boolean &And::get_container() const
 {
     return container_;
+}
+
+RCP<const Basic> And::create(const set_boolean &a) const
+{
+    return logical_and(a);
 }
 
 RCP<const Boolean> And::logical_not() const
@@ -422,7 +433,32 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
         return *(args.begin());
     else if (args.size() == 0)
         return boolean(not op_x_notx);
-    return make_rcp<const caller>(args);
+
+    set_boolean rest;
+    std::map<RCP<const Basic>, set_set, RCPBasicKeyLess> mp;
+    for (auto &a : args) {
+        if (is_a<Contains>(*a)) {
+            mp[down_cast<const Contains &>(*a).get_expr()].insert(
+                down_cast<const Contains &>(*a).get_set());
+        } else {
+            rest.insert(a);
+        }
+    }
+
+    for (auto &elem : mp) {
+        if (op_x_notx) {
+            rest.insert(
+                contains(elem.first, SymEngine::set_union(elem.second)));
+        } else {
+            rest.insert(
+                contains(elem.first, SymEngine::set_intersection(elem.second)));
+        }
+    }
+    if (rest.size() == 1)
+        return *(rest.begin());
+    else if (rest.size() == 0)
+        return boolean(not op_x_notx);
+    return make_rcp<const caller>(rest);
 }
 
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)

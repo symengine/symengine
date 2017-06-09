@@ -65,6 +65,8 @@ public:
     RCP<const Set> get_set() const;
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
+                                    const RCP<const Set> &rhs) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
 };
@@ -113,6 +115,7 @@ public:
     //! \return the hash
     hash_t __hash__() const;
     virtual vec_basic get_args() const;
+    virtual RCP<const Basic> create(const set_boolean &a) const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;

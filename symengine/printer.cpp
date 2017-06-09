@@ -300,8 +300,7 @@ void StrPrinter::bvisit(const ConditionSet &x)
         s1 << apply(*p);
     }
     s1 << "}";
-    s << "{" << s1.str() << " | " << s1.str() << " in "
-      << apply(x.get_baseset()) << " and " << apply(x.get_condition()) << "}";
+    s << "{" << s1.str() << " | " << apply(x.get_condition()) << "}";
     str_ = s.str();
 }
 
