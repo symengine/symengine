@@ -671,8 +671,6 @@ bool ConditionSet::__eq__(const Basic &o) const
         const ConditionSet &other = down_cast<const ConditionSet &>(o);
         return unified_eq(sym, other.get_symbol())
                and unified_eq(condition_, other.get_condition());
-    }
-    return false;
 }
 
 int ConditionSet::compare(const Basic &o) const
@@ -714,6 +712,70 @@ RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
         throw SymEngineException("expected an object of type Boolean");
     }
     return rcp_static_cast<const Boolean>(cond);
+}
+
+ImageSet::ImageSet(const vec_sym &syms, const RCP<const Basic> &expr,
+                   const RCP<const Set> &base)
+    : syms_(syms), expr_(expr), base_(base)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+}
+
+hash_t ImageSet::__hash__() const
+{
+    hash_t seed = IMAGESET;
+    for (const auto &s : syms_)
+        hash_combine<Basic>(seed, *s);
+    hash_combine<Basic>(seed, *expr_);
+    hash_combine<Basic>(seed, *base_);
+    return seed;
+}
+
+bool ImageSet::__eq__(const Basic &o) const
+{
+    if (is_a<ImageSet>(o)) {
+        const ImageSet &other = down_cast<const ImageSet &>(o);
+        return unified_eq(syms_, other.syms_) and unified_eq(expr_, other.expr_)
+               and unified_eq(base_, other.base_);
+    }
+    return false;
+}
+
+int ImageSet::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<ImageSet>(o))
+    const ImageSet &other = down_cast<const ImageSet &>(o);
+    int c1 = unified_compare(syms_, other.syms_);
+    if (c1 != 0) {
+        return c1;
+    } else {
+        int c2 = unified_compare(expr_, other.expr_);
+        if (c2 != 0) {
+            return c2;
+        } else {
+            return unified_compare(base_, other.base_);
+        }
+    }
+}
+
+RCP<const Boolean> ImageSet::contains(const RCP<const Basic> &a) const
+{
+    throw std::runtime_error("Not implemented");
+}
+
+RCP<const Set> ImageSet::set_union(const RCP<const Set> &o) const
+{
+    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o});
+}
+
+RCP<const Set> ImageSet::set_intersection(const RCP<const Set> &o) const
+{
+    return SymEngine::set_intersection({rcp_from_this_cast<const Set>(), o});
+}
+
+RCP<const Set> ImageSet::set_complement(const RCP<const Set> &o) const
+{
+    return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
 }
 
 RCP<const Set> set_union(const set_set &in, bool solve)

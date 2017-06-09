@@ -267,12 +267,10 @@ public:
     ConditionSet(const RCP<const Basic> sym, RCP<const Boolean> condition);
     static bool is_canonical(const RCP<const Basic> sym,
                              RCP<const Boolean> condition);
-
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
-
     inline const RCP<const Basic> &get_symbol() const
     {
         return this->sym;
@@ -283,12 +281,51 @@ public:
     }
 };
 
+class ImageSet : public Set
+{
+private:
+    // represents {expr_ for all syms_ in base_}
+    vec_sym syms_;
+    RCP<const Basic> expr_;
+    RCP<const Set> base_; // base set for all symbols
+
+public:
+    IMPLEMENT_TYPEID(IMAGESET)
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    ImageSet(const vec_sym &syms, const RCP<const Basic> &expr,
+             const RCP<const Set> &base);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const vec_sym &get_symbols() const
+    {
+        return this->syms_;
+    }
+    inline const RCP<const Basic> &get_expr() const
+    {
+        return this->expr_;
+    }
+    inline const RCP<const Set> &get_baseset() const
+    {
+        return this->base_;
+    }
+};
+
 inline bool is_a_Set(const Basic &b)
 {
     return (b.get_type_code() == EMPTYSET || b.get_type_code() == UNIVERSALSET
             || b.get_type_code() == FINITESET || b.get_type_code() == COMPLEMENT
             || b.get_type_code() == CONDITIONSET
-            || b.get_type_code() == INTERVAL || b.get_type_code() == UNION);
+            || b.get_type_code() == INTERVAL || b.get_type_code() == UNION || b.get_type_code() == IMAGESET);
 }
 
 //! \return RCP<const EmptySet>
@@ -323,6 +360,20 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
     if (eq(*start, *end) and not(left_open or right_open))
         return finiteset({start});
     return emptyset();
+}
+
+// ! \return RCP<const Set>
+inline RCP<const Set> imageset(const vec_sym &syms,
+                               const RCP<const Basic> &expr,
+                               const RCP<const Set> &base)
+{
+    if (syms.size() == 1 and eq(*expr, *syms[0]))
+        return base;
+
+    if (is_a_Number(*expr))
+        return finiteset({expr});
+
+    return make_rcp<const ImageSet>(syms, expr, base);
 }
 
 // ! \return RCP<const Set>

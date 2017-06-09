@@ -276,6 +276,21 @@ void StrPrinter::bvisit(const Complement &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const ImageSet &x)
+{
+    std::ostringstream s;
+    s << "{" << apply(*x.get_expr()) << " | ";
+    auto xs = x.get_symbols();
+    for (auto p = xs.begin(); p != xs.end(); p++) {
+        if (p != xs.begin()) {
+            s << ", ";
+        }
+        s << apply(*p);
+    }
+    s << " in " << apply(*x.get_baseset()) << "}";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const UniversalSet &x)
 {
     str_ = "UniversalSet";
@@ -677,6 +692,7 @@ std::string StrPrinter::apply(const vec_basic &d)
     }
     return o.str();
 }
+
 void StrPrinter::bvisit(const Function &x)
 {
     std::ostringstream o;
