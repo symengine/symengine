@@ -433,32 +433,7 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
         return *(args.begin());
     else if (args.size() == 0)
         return boolean(not op_x_notx);
-
-    set_boolean rest;
-    std::map<RCP<const Basic>, set_set, RCPBasicKeyLess> mp;
-    for (auto &a : args) {
-        if (is_a<Contains>(*a)) {
-            mp[down_cast<const Contains &>(*a).get_expr()].insert(
-                down_cast<const Contains &>(*a).get_set());
-        } else {
-            rest.insert(a);
-        }
-    }
-
-    for (auto &elem : mp) {
-        if (op_x_notx) {
-            rest.insert(
-                contains(elem.first, SymEngine::set_union(elem.second)));
-        } else {
-            rest.insert(
-                contains(elem.first, SymEngine::set_intersection(elem.second)));
-        }
-    }
-    if (rest.size() == 1)
-        return *(rest.begin());
-    else if (rest.size() == 0)
-        return boolean(not op_x_notx);
-    return make_rcp<const caller>(rest);
+    return make_rcp<const caller>(args);
 }
 
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)

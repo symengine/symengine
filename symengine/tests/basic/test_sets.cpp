@@ -707,12 +707,14 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
 
     r2 = r1->set_intersection(interval(integer(-10), integer(10)));
     REQUIRE(is_a<ConditionSet>(*r2));
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(
-        eq(*down_cast<const ConditionSet &>(*r2).get_condition(),
-           *logical_and({Eq(add(x, y), integer(4)),
-                         interval(integer(-10), integer(10))->contains(x),
-                         interval(integer(-10), integer(10))->contains(y)})));
+    REQUIRE(r1->compare(*r2) == -1);
+    // Contains doesn't simplify automatically.
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*r2).get_condition(),
+               *logical_and({Eq(add(x, y), integer(4)),
+                             interval(integer(-10), integer(10))->contains(x),
+                             i1->contains(x),
+                             interval(integer(-10), integer(10))->contains(y),
+                             i1->contains(y)})));
 
     r2 = r1->set_union(i1);
     REQUIRE(is_a<Union>(*r2));
