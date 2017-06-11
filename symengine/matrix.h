@@ -407,6 +407,22 @@ void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
 
 void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
+// Additional Operations
+void row_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void col_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void row_del(DenseMatrix &A, unsigned k);
+void col_del(DenseMatrix &A, unsigned k);
+
+// Row operations
+void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+
+// Column operations
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+
+// Vector-specific methods
+void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x);
