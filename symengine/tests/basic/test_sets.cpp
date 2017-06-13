@@ -59,6 +59,8 @@ using SymEngine::Boolean;
 using SymEngine::sin;
 using SymEngine::Not;
 using SymEngine::logical_and;
+using SymEngine::ImageSet;
+using SymEngine::imageset;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -733,4 +735,47 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
     r1 = conditionset(x, cond3);
     REQUIRE(is_a<ConditionSet>(*r1));
     REQUIRE(eq(*down_cast<const ConditionSet &>(*r1).get_condition(), *cond3));
+}
+
+TEST_CASE("ImageSet : Basic", "[basic]")
+{
+    RCP<const Set> r1, r2;
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Set> i1 = interval(zero, one);
+
+    r1 = imageset({x}, mul(x, x), i1);
+    REQUIRE(is_a<ImageSet>(*r1));
+    auto &r3 = down_cast<const ImageSet &>(*r1);
+    REQUIRE(r3.get_symbols().size() == 1);
+    REQUIRE(eq(*r3.get_symbols()[0], *x));
+    REQUIRE(eq(*r3.get_expr(), *mul(x, x)));
+    REQUIRE(eq(*r3.get_baseset(), *i1));
+    CHECK_THROWS_AS(r1->contains(one), std::runtime_error);
+
+    r2 = imageset({x}, mul(x, x), interval(zero, Inf));
+    REQUIRE(r2->compare(*r1) == 1);
+
+    r2 = r1->set_complement(finiteset({one}));
+    REQUIRE(is_a<Complement>(*r2));
+    REQUIRE(eq(*r2, *set_complement(r1, finiteset({one}))));
+
+    r1 = r1->set_union(finiteset({one}));
+    REQUIRE(is_a<Union>(*r1));
+    REQUIRE(eq(*r1, *set_union({r1, finiteset({one})})));
+
+    CHECK_THROWS_AS(r1->set_intersection(i1), std::runtime_error);
+
+    r1 = imageset({x}, one, i1);
+    REQUIRE(eq(*r1, *finiteset({one})));
+
+    r1 = imageset({x}, x, i1);
+    REQUIRE(eq(*r1, *i1));
+
+    r1 = imageset({x}, mul(mul(integer(2), x), pi),
+                  interval(zero, Inf, false, true));
+    r2 = imageset({x}, mul(mul(integer(2), add(one, x)), pi),
+                  interval(zero, Inf, false, true));
+    auto r4 = down_cast<const Union &>(*r1->set_union(r2)).get_container();
+    REQUIRE(r4.find(r1) != r4.end());
+    REQUIRE(r4.find(r2) != r4.end());
 }

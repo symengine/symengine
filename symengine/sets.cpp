@@ -765,7 +765,7 @@ RCP<const Boolean> ImageSet::contains(const RCP<const Basic> &a) const
 
 RCP<const Set> ImageSet::set_union(const RCP<const Set> &o) const
 {
-    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o});
+    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
 }
 
 RCP<const Set> ImageSet::set_intersection(const RCP<const Set> &o) const
