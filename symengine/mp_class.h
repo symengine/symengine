@@ -194,10 +194,22 @@ inline void mp_fdiv_r(integer_class &res, const integer_class &a,
     mpz_fdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
+inline void mp_cdiv_r(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    mpz_cdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+}
+
 inline void mp_fdiv_q(integer_class &res, const integer_class &a,
                       const integer_class &b)
 {
     mpz_fdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+}
+
+inline void mp_cdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    mpz_cdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
 inline void mp_fdiv_qr(integer_class &q, integer_class &r,
@@ -206,10 +218,10 @@ inline void mp_fdiv_qr(integer_class &q, integer_class &r,
     mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_cdiv_q(integer_class &res, const integer_class &a,
-                      const integer_class &b)
+inline void mp_cdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b)
 {
-    mpz_cdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
 inline void mp_divexact(integer_class &q, const integer_class &a,
@@ -366,6 +378,13 @@ inline void mp_fdiv_r(piranha::integer &res, const piranha::integer &a,
     mpz_fdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
+inline void mp_cdiv_r(piranha::integer &res, const piranha::integer &a,
+                      const piranha::integer &b)
+{
+    auto _res = get_mpz_t(res);
+    mpz_cdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
+}
+
 inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a,
                       const piranha::integer &b)
 {
@@ -373,11 +392,25 @@ inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a,
     mpz_fdiv_q(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
+inline void mp_cdiv_q(piranha::integer &res, const piranha::integer &a,
+                      const piranha::integer &b)
+{
+    auto _res = get_mpz_t(res);
+    mpz_cdiv_q(_res, get_mpz_t(a), get_mpz_t(b));
+}
+
 inline void mp_fdiv_qr(piranha::integer &q, piranha::integer &r,
                        const piranha::integer &a, const piranha::integer &b)
 {
     auto _q = get_mpz_t(q);
     mpz_fdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
+}
+
+inline void mp_cdiv_qr(piranha::integer &q, piranha::integer &r,
+                       const piranha::integer &a, const piranha::integer &b)
+{
+    auto _q = get_mpz_t(q);
+    mpz_cdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_divexact(piranha::integer &q, const piranha::integer &a,
@@ -605,12 +638,19 @@ inline void mp_fdiv_q(fmpz_wrapper &res, const fmpz_wrapper &a,
     fmpz_fdiv_q(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
+inline void mp_cdiv_q(fmpz_wrapper &res, const fmpz_wrapper &a,
+                      const fmpz_wrapper &b)
+{
+    fmpz_cdiv_q(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+}
+
 inline void mp_fdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a,
                        const fmpz_wrapper &b)
 {
     fmpz_fdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(),
                  b.get_fmpz_t());
 }
+
 
 inline void mp_divexact(fmpz_wrapper &q, const fmpz_wrapper &a,
                         const fmpz_wrapper &b)
