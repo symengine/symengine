@@ -26,6 +26,7 @@ using SymEngine::one;
 using SymEngine::minus_one;
 using SymEngine::zero;
 using SymEngine::sign;
+using SymEngine::conjugate;
 using SymEngine::sin;
 using SymEngine::Sin;
 using SymEngine::cos;
@@ -151,6 +152,7 @@ using SymEngine::trigamma;
 using SymEngine::floor;
 using SymEngine::ceiling;
 using SymEngine::Eq;
+using SymEngine::Conjugate;
 
 using namespace SymEngine::literals;
 
@@ -4297,5 +4299,83 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     mpc_set_d_d(b.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
     r = ceiling(complex_mpc(std::move(b)));
     CHECK(eq(*r, *Complex::from_two_nums(*integer(11), *integer(12))));
+#endif // HAVE_SYMENGINE_MPC
+}
+
+TEST_CASE("test_conjugate", "[Conjugate]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r = conjugate(x);
+    REQUIRE(is_a<Conjugate>(*r));
+
+    r = conjugate(ComplexInf);
+    CHECK(r->__str__() == "conjugate(zoo)");
+
+    r = conjugate(integer(2));
+    CHECK(eq(*r, *integer(2)));
+
+    r = conjugate(Rational::from_two_ints(2, 4));
+    CHECK(eq(*r, *Rational::from_two_ints(2, 4)));
+
+    r = conjugate(real_double(2.3));
+    CHECK(eq(*r, *real_double(2.3)));
+
+    r = conjugate(Inf);
+    CHECK(eq(*r, *Inf));
+
+    r = conjugate(NegInf);
+    CHECK(eq(*r, *NegInf));
+
+    r = conjugate(Nan);
+    CHECK(eq(*r, *Nan));
+
+    r = conjugate(E);
+    CHECK(eq(*r, *E));
+
+    r = conjugate(Complex::from_two_nums(*integer(2), *integer(3)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(-3))));
+
+    r = conjugate(
+        pow(Complex::from_two_nums(*integer(2), *integer(3)), integer(2)));
+    CHECK(eq(*r, *pow(Complex::from_two_nums(*integer(2), *integer(-3)),
+                      integer(2))));
+
+    r = conjugate(complex_double(std::complex<double>(0.0, 1.0)));
+    CHECK(eq(*r, *complex_double(std::complex<double>(0.0, -1.0))));
+
+    r = conjugate(
+        pow(complex_double(std::complex<double>(2.0, 3.0)), integer(-2)));
+    CHECK(eq(*r, *pow(complex_double(std::complex<double>(2.0, -3.0)),
+                      integer(-2))));
+
+    r = conjugate(pow(y, integer(2)));
+    CHECK(eq(*r, *pow(conjugate(y), integer(2))));
+
+    r = conjugate(mul(mul(integer(2), x), pow(y, integer(3))));
+    RCP<const Basic> s
+        = mul(integer(2), mul(conjugate(x), pow(conjugate(y), integer(3))));
+    CHECK(eq(*r, *s));
+
+    r = conjugate(
+        mul(mul(integer(2), x), pow(y, Rational::from_two_ints(3, 2))));
+    s = mul(integer(2), mul(conjugate(x),
+                            conjugate(pow(y, Rational::from_two_ints(3, 2)))));
+    CHECK(eq(*r, *s));
+
+    r = conjugate(
+        mul(mul(complex_double(std::complex<double>(2.0, 3.0)), x), y));
+    s = mul(mul(complex_double(std::complex<double>(2.0, -3.0)), conjugate(x)),
+            conjugate(y));
+    CHECK(eq(*r, *s));
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class a(100), b(100);
+    mpc_set_d_d(a.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    mpc_set_d_d(b.get_mpc_t(), 10.65, -11.47, MPFR_RNDN);
+    r = conjugate(complex_mpc(std::move(a)));
+    s = complex_mpc(std::move(b));
+    CHECK(eq(*r, *s));
 #endif // HAVE_SYMENGINE_MPC
 }

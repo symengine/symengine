@@ -67,6 +67,13 @@ RCP<const Number> ComplexMPC::imaginary_part() const
     return real_mpfr(std::move(t));
 }
 
+RCP<const Number> ComplexMPC::conjugate() const
+{
+    mpc_class t(get_prec());
+    mpc_conj(t.get_mpc_t(), i.get_mpc_t(), MPFR_RNDN);
+    return rcp(new ComplexMPC(std::move(t)));
+}
+
 /*! Add ComplexMPCs
  * \param other of type Integer
  * */

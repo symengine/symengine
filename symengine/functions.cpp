@@ -42,6 +42,85 @@ extern umap_basic_basic inverse_cst;
 
 extern umap_basic_basic inverse_tct;
 
+Conjugate::Conjugate(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Conjugate::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        if (eq(*arg, *ComplexInf)) {
+            return true;
+        }
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Conjugate>(*arg)) {
+        return false;
+    }
+    if (is_a<Mul>(*arg)) {
+        return false;
+    }
+    if (is_a<Pow>(*arg)) {
+        if (is_a<Integer>(*down_cast<const Pow &>(*arg).get_exp())) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Conjugate::create(const RCP<const Basic> &arg) const
+{
+    return conjugate(arg);
+}
+
+RCP<const Basic> conjugate(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (not down_cast<const Number &>(*arg).is_complex()) {
+            return arg;
+        }
+        if (is_a_Complex(*arg)) {
+            return down_cast<const ComplexBase &>(*arg).conjugate();
+        }
+    }
+    if (is_a<Constant>(*arg)) {
+        return arg;
+    }
+    if (is_a<Conjugate>(*arg)) {
+        return down_cast<const Conjugate &>(*arg).get_arg();
+    }
+    if (is_a<Mul>(*arg)) {
+        const map_basic_basic &dict = down_cast<const Mul &>(*arg).get_dict();
+        map_basic_basic new_dict;
+        RCP<const Number> coef = rcp_static_cast<const Number>(
+            conjugate(down_cast<const Mul &>(*arg).get_coef()));
+        for (const auto &p : dict) {
+            if (is_a<Integer>(*p.second)) {
+                Mul::dict_add_term_new(outArg(coef), new_dict, p.second,
+                                       conjugate(p.first));
+            } else {
+                Mul::dict_add_term_new(
+                    outArg(coef), new_dict, one,
+                    conjugate(Mul::from_dict(one, {{p.first, p.second}})));
+            }
+        }
+        return Mul::from_dict(coef, std::move(new_dict));
+    }
+    if (is_a<Pow>(*arg)) {
+        RCP<const Basic> base = down_cast<const Pow &>(*arg).get_base();
+        RCP<const Basic> exp = down_cast<const Pow &>(*arg).get_exp();
+        if (is_a<Integer>(*exp)) {
+            return pow(conjugate(base), exp);
+        }
+    }
+    return make_rcp<const Conjugate>(arg);
+}
+
 bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
                   const Ptr<RCP<const Basic>> &x)
 {

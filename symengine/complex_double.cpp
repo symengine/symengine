@@ -23,6 +23,13 @@ RCP<const Number> ComplexDouble::imaginary_part() const
 {
     return real_double(i.imag());
 }
+//! Get the conjugate of the complex number
+RCP<const Number> ComplexDouble::conjugate() const
+{
+    double re = i.real();
+    double im = -i.imag();
+    return complex_double(std::complex<double>(re, im));
+}
 hash_t ComplexDouble::__hash__() const
 {
     hash_t seed = COMPLEX_DOUBLE;
