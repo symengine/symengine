@@ -137,7 +137,7 @@ TEST_CASE("And, Or : Basic", "[basic]")
     auto int1 = interval(integer(1), integer(2), false, false);
     auto int2 = interval(integer(1), integer(5), false, false);
     auto c1 = contains(x, int1);
-    auto c2 = contains(symbol("y"), int2);
+    auto c2 = contains(x, int2);
 
     auto s1 = logical_and({c1, c2});
     std::string str = s1->__str__();
@@ -237,7 +237,7 @@ TEST_CASE("Not : Basic", "[basic]")
     auto int1 = interval(integer(1), integer(2), false, false);
     auto int2 = interval(integer(1), integer(5), false, false);
     auto c1 = contains(x, int1);
-    auto c2 = contains(symbol("y"), int2);
+    auto c2 = contains(x, int2);
 
     REQUIRE(eq(*logical_not(boolTrue), *boolFalse));
     REQUIRE(eq(*logical_not(boolFalse), *boolTrue));

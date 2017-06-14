@@ -644,77 +644,70 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
     cond2 = Le(x, zero);
     cond3 = Gt(x, zero);
 
-    r1 = conditionset({x}, logical_and({cond1, i1->contains(x)}));
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
 
     auto &r3 = down_cast<const ConditionSet &>(*r1);
-    REQUIRE(unified_eq(r3.get_symbols(), {x}));
+    REQUIRE(unified_eq(r3.get_symbol(), x));
     REQUIRE(eq(*r3.get_condition(), *logical_and({cond1, i1->contains(x)})));
 
-    r1 = conditionset({x}, logical_and({cond1, f1->contains(x)}));
+    r1 = conditionset(x, logical_and({cond1, f1->contains(x)}));
     REQUIRE(eq(*r1, *finiteset({integer(4)})));
 
-    r1 = conditionset({x}, logical_and({cond3, f2->contains(x)}));
+    r1 = conditionset(x, logical_and({cond3, f2->contains(x)}));
     REQUIRE(is_a<Union>(*r1));
     auto &r4 = down_cast<const Union &>(*r1);
     REQUIRE(r4.get_container().size() == 2);
     REQUIRE(r4.get_container().find(finiteset({one}))
             != r4.get_container().end());
     REQUIRE(r4.get_container().find(
-                conditionset({x}, logical_and({cond3, f3->contains(x)})))
+                conditionset(x, logical_and({cond3, f3->contains(x)})))
             != r4.get_container().end());
 
-    r1 = conditionset({x}, logical_and({cond2, i1->contains(x)}));
+    r1 = conditionset(x, logical_and({cond2, i1->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
     REQUIRE(eq(*r1->contains(pi), *boolFalse));
     REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
 
     REQUIRE(eq(*r1->contains(integer(-2)), *boolTrue));
 
-    r1 = conditionset({x}, logical_and({Eq(zero, one), i1->contains(x)}));
+    r1 = conditionset(x, logical_and({Eq(zero, one), i1->contains(x)}));
     REQUIRE(eq(*r1, *emptyset()));
 
-    r1 = conditionset({x}, logical_and({Gt(one, zero), i1->contains(x)}));
+    r1 = conditionset(x, logical_and({Gt(one, zero), i1->contains(x)}));
     REQUIRE(eq(*r1, *i1));
 
     cond1 = Eq(sin(x), zero);
-    r1 = conditionset({x}, logical_and({cond1, i3->contains(x)}));
+    r1 = conditionset(x, logical_and({cond1, i3->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
     // following doesn't work because we can't compare pi with number as of now.
     // REQUIRE(eq(*r1->contains(pi), *boolTrue));
     // REQUIRE(eq(*r1->contains(finiteset({pi})), *boolTrue));
 
     cond1 = Eq(mul(x, x), integer(9));
-    r1 = conditionset({x}, logical_and({cond1, i2->contains(x)}));
+    r1 = conditionset(x, logical_and({cond1, i2->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
     REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
     REQUIRE(eq(*r1->contains(integer(-3)), *boolFalse));
     REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
     REQUIRE(eq(*r1->contains(finiteset({integer(3)})), *boolTrue));
+    REQUIRE(
+        eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolFalse));
 
     cond1 = Eq(mul(x, x), integer(9));
-    r1 = conditionset({x}, logical_and({cond1, i1->contains(x)}));
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
     REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
     REQUIRE(eq(*r1->contains(integer(-3)), *boolTrue));
-
-    r1 = conditionset({x, y}, logical_and({Eq(add(x, y), integer(4)),
-                                           i1->contains(x), i1->contains(y)}));
-    REQUIRE(is_a<ConditionSet>(*r1));
-    REQUIRE(eq(*r1->contains(finiteset({integer(3), one})), *boolTrue));
-    REQUIRE(eq(*r1->contains(finiteset({integer(3), zero})), *boolFalse));
-    CHECK_THROWS_AS(r1->contains(finiteset({integer(3)})), std::runtime_error);
+    REQUIRE(eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolTrue));
 
     r2 = r1->set_intersection(interval(integer(-10), integer(10)));
     REQUIRE(is_a<ConditionSet>(*r2));
     REQUIRE(r1->compare(*r2) == -1);
-    // Contains doesn't simplify automatically.
     REQUIRE(eq(*down_cast<const ConditionSet &>(*r2).get_condition(),
-               *logical_and({Eq(add(x, y), integer(4)),
+               *logical_and({Eq(mul(x, x), integer(9)),
                              interval(integer(-10), integer(10))->contains(x),
-                             i1->contains(x),
-                             interval(integer(-10), integer(10))->contains(y),
-                             i1->contains(y)})));
+                             i1->contains(x)})));
 
     r2 = r1->set_union(i1);
     REQUIRE(is_a<Union>(*r2));

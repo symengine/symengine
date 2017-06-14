@@ -496,7 +496,7 @@ TEST_CASE("test_sets(): printing", "[printing]")
 
     r1 = conditionset(
         {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
-    REQUIRE(r1->__str__() == "{{x} | And(9 <= x**2, Contains(x, [3, 10]))}");
+    REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
 }
 
 TEST_CASE("test_sign(): printing", "[printing]")

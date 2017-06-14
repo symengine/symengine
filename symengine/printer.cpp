@@ -290,17 +290,9 @@ void StrPrinter::bvisit(const FiniteSet &x)
 
 void StrPrinter::bvisit(const ConditionSet &x)
 {
-    std::ostringstream s1, s;
-    auto xs = x.get_symbols();
-    s1 << "{";
-    for (auto p = xs.begin(); p != xs.end(); p++) {
-        if (p != xs.begin()) {
-            s1 << ", ";
-        }
-        s1 << apply(*p);
-    }
-    s1 << "}";
-    s << "{" << s1.str() << " | " << apply(x.get_condition()) << "}";
+    std::ostringstream s;
+    s << "{" << apply(*x.get_symbol());
+    s << " | " << apply(x.get_condition()) << "}";
     str_ = s.str();
 }
 

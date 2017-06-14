@@ -252,7 +252,7 @@ public:
 class ConditionSet : public Set
 {
 private:
-    vec_sym syms_;
+    RCP<const Basic> sym;
     RCP<const Boolean> condition_;
 
 public:
@@ -264,17 +264,18 @@ public:
     {
         return {};
     }
-    ConditionSet(const vec_sym syms, RCP<const Boolean> condition);
-    static bool is_canonical(const vec_sym syms, RCP<const Boolean> condition);
+    ConditionSet(const RCP<const Basic> sym, RCP<const Boolean> condition);
+    static bool is_canonical(const RCP<const Basic> sym,
+                             RCP<const Boolean> condition);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
-    inline const vec_sym &get_symbols() const
+    inline const RCP<const Basic> &get_symbol() const
     {
-        return this->syms_;
+        return this->sym;
     }
     inline const RCP<const Boolean> &get_condition() const
     {
@@ -330,7 +331,7 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
                               const RCP<const Set> &container);
 
 //! \return RCP<const Set>
-RCP<const Set> conditionset(const vec_sym &syms,
+RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition);
 }
 #endif
