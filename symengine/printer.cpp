@@ -280,13 +280,7 @@ void StrPrinter::bvisit(const ImageSet &x)
 {
     std::ostringstream s;
     s << "{" << apply(*x.get_expr()) << " | ";
-    auto xs = x.get_symbols();
-    for (auto p = xs.begin(); p != xs.end(); p++) {
-        if (p != xs.begin()) {
-            s << ", ";
-        }
-        s << apply(*p);
-    }
+    s << apply(*x.get_symbol());
     s << " in " << apply(*x.get_baseset()) << "}";
     str_ = s.str();
 }

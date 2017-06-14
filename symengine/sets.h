@@ -284,8 +284,8 @@ public:
 class ImageSet : public Set
 {
 private:
-    // represents {expr_ for all syms_ in base_}
-    vec_sym syms_;
+    // represents {expr_ for sym_ in base_}
+    RCP<const Basic> sym_;
     RCP<const Basic> expr_;
     RCP<const Set> base_; // base set for all symbols
 
@@ -298,7 +298,7 @@ public:
     {
         return {};
     }
-    ImageSet(const vec_sym &syms, const RCP<const Basic> &expr,
+    ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
              const RCP<const Set> &base);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
@@ -306,9 +306,9 @@ public:
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 
-    inline const vec_sym &get_symbols() const
+    inline const RCP<const Basic> &get_symbol() const
     {
-        return this->syms_;
+        return this->sym_;
     }
     inline const RCP<const Basic> &get_expr() const
     {
@@ -363,17 +363,17 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 // ! \return RCP<const Set>
-inline RCP<const Set> imageset(const vec_sym &syms,
+inline RCP<const Set> imageset(const RCP<const Basic> &sym,
                                const RCP<const Basic> &expr,
                                const RCP<const Set> &base)
 {
-    if (syms.size() == 1 and eq(*expr, *syms[0]))
+    if (eq(*expr, *sym))
         return base;
 
     if (is_a_Number(*expr))
         return finiteset({expr});
 
-    return make_rcp<const ImageSet>(syms, expr, base);
+    return make_rcp<const ImageSet>(sym, expr, base);
 }
 
 // ! \return RCP<const Set>

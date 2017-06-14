@@ -714,9 +714,9 @@ RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
     return rcp_static_cast<const Boolean>(cond);
 }
 
-ImageSet::ImageSet(const vec_sym &syms, const RCP<const Basic> &expr,
+ImageSet::ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
                    const RCP<const Set> &base)
-    : syms_(syms), expr_(expr), base_(base)
+    : sym_(sym), expr_(expr), base_(base)
 {
     SYMENGINE_ASSIGN_TYPEID()
 }
@@ -724,8 +724,7 @@ ImageSet::ImageSet(const vec_sym &syms, const RCP<const Basic> &expr,
 hash_t ImageSet::__hash__() const
 {
     hash_t seed = IMAGESET;
-    for (const auto &s : syms_)
-        hash_combine<Basic>(seed, *s);
+    hash_combine<Basic>(seed, *sym_);
     hash_combine<Basic>(seed, *expr_);
     hash_combine<Basic>(seed, *base_);
     return seed;
@@ -735,7 +734,7 @@ bool ImageSet::__eq__(const Basic &o) const
 {
     if (is_a<ImageSet>(o)) {
         const ImageSet &other = down_cast<const ImageSet &>(o);
-        return unified_eq(syms_, other.syms_) and unified_eq(expr_, other.expr_)
+        return unified_eq(sym_, other.sym_) and unified_eq(expr_, other.expr_)
                and unified_eq(base_, other.base_);
     }
     return false;
@@ -745,7 +744,7 @@ int ImageSet::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<ImageSet>(o))
     const ImageSet &other = down_cast<const ImageSet &>(o);
-    int c1 = unified_compare(syms_, other.syms_);
+    int c1 = unified_compare(sym_, other.sym_);
     if (c1 != 0) {
         return c1;
     } else {

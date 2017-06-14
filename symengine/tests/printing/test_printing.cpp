@@ -500,7 +500,7 @@ TEST_CASE("test_sets(): printing", "[printing]")
         {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
     REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
 
-    r1 = imageset({x}, mul(x, x), interval(zero, one));
+    r1 = imageset(x, mul(x, x), interval(zero, one));
     REQUIRE(r1->__str__() == "{x**2 | x in [0, 1]}");
 }
 
