@@ -56,6 +56,23 @@ void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
     }
 }
 
+void mp_cdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
+                const integer_class &b)
+{
+    integer_class a_cpy = a, b_cpy = b;
+    bool pos_quotient = ((a < 0 && b < 0) || (a > 0 && b > 0)) ? true : false;
+    boost::multiprecision::divide_qr(a_cpy, b_cpy, q, r);
+    // ceil the quotient if necessary
+    if (pos_quotient && r != 0) {
+        q += 1;
+    }
+    // remainder should have opposite sign as divisor
+    if ((b_cpy > 0 && r > 0) || (b_cpy < 0 && r < 0)) {
+        r -= b_cpy;
+        return;
+    }
+}
+
 void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
                const integer_class &a, const integer_class &b)
 {

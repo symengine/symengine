@@ -447,7 +447,7 @@ RCP<const Basic> floor(const RCP<const Basic> &arg)
                 integer_class quotient;
                 mp_fdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
                           SymEngine::get_den(s.as_rational_class()));
-                return integer(quotient);
+                return integer(std::move(quotient));
             }
             return arg;
         }
@@ -456,16 +456,16 @@ RCP<const Basic> floor(const RCP<const Basic> &arg)
     }
     if (is_a<Constant>(*arg)) {
         if (eq(*arg, *pi)) {
-            return real_double(3.0);
+            return integer(3);
         }
         if (eq(*arg, *E)) {
-            return real_double(2.0);
+            return integer(2);
         }
         if (eq(*arg, *GoldenRatio)) {
-            return real_double(1.0);
+            return integer(1);
         }
         if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
-            return real_double(0.0);
+            return integer(0);
         }
     }
     if (is_a<Floor>(*arg)) {
@@ -521,7 +521,7 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg)
                 integer_class quotient;
                 mp_cdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
                           SymEngine::get_den(s.as_rational_class()));
-                return integer(quotient);
+                return integer(std::move(quotient));
             }
             return arg;
         }
@@ -530,16 +530,16 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg)
     }
     if (is_a<Constant>(*arg)) {
         if (eq(*arg, *pi)) {
-            return real_double(4.0);
+            return integer(4);
         }
         if (eq(*arg, *E)) {
-            return real_double(3.0);
+            return integer(3);
         }
         if (eq(*arg, *GoldenRatio)) {
-            return real_double(2.0);
+            return integer(2);
         }
         if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
-            return real_double(1.0);
+            return integer(1);
         }
     }
     if (is_a<Floor>(*arg)) {

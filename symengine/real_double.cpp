@@ -251,14 +251,16 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
     virtual RCP<const Basic> floor(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return integer(
-            numeric_cast<int>(std::floor(down_cast<const RealDouble &>(x).i)));
+        integer_class i;
+        mp_set_d(i, std::floor(down_cast<const RealDouble &>(x).i));
+        return integer(std::move(i));
     }
     virtual RCP<const Basic> ceiling(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return integer(
-            numeric_cast<int>(std::ceil(down_cast<const RealDouble &>(x).i)));
+        integer_class i;
+        mp_set_d(i, std::ceil(down_cast<const RealDouble &>(x).i));
+        return integer(std::move(i));
     }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
@@ -327,20 +329,20 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> floor(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return Complex::from_two_nums(
-            *integer(numeric_cast<int>(
-                std::floor(down_cast<const ComplexDouble &>(x).i.real()))),
-            *integer(numeric_cast<int>(
-                std::floor(down_cast<const ComplexDouble &>(x).i.imag()))));
+        integer_class re, im;
+        mp_set_d(re, std::floor(down_cast<const ComplexDouble &>(x).i.real()));
+        mp_set_d(im, std::floor(down_cast<const ComplexDouble &>(x).i.imag()));
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
     }
     virtual RCP<const Basic> ceiling(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return Complex::from_two_nums(
-            *integer(numeric_cast<int>(
-                std::ceil(down_cast<const ComplexDouble &>(x).i.real()))),
-            *integer(numeric_cast<int>(
-                std::ceil(down_cast<const ComplexDouble &>(x).i.imag()))));
+        integer_class re, im;
+        mp_set_d(re, std::ceil(down_cast<const ComplexDouble &>(x).i.real()));
+        mp_set_d(im, std::ceil(down_cast<const ComplexDouble &>(x).i.imag()));
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
     }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {

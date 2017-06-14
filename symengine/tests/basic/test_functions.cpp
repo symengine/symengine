@@ -4210,10 +4210,10 @@ TEST_CASE("test_floor", "[Floor]")
     CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(2))));
 
     r = floor(pi);
-    CHECK(eq(*r, *real_double(3.0)));
+    CHECK(eq(*r, *integer(3)));
 
     r = floor(E);
-    CHECK(eq(*r, *real_double(2.0)));
+    CHECK(eq(*r, *integer(2)));
 
     r = floor(floor(x));
     CHECK(eq(*r, *floor(x)));
@@ -4222,6 +4222,20 @@ TEST_CASE("test_floor", "[Floor]")
     CHECK(eq(*r, *ceiling(x)));
 
     CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 10.65, MPFR_RNDN);
+    r = floor(real_mpfr(std::move(a)));
+    CHECK(eq(*r, *integer(10)));
+#endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class c(100);
+    mpc_set_d_d(c.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    r = floor(complex_mpc(std::move(c)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(10), *integer(11))));
+#endif // HAVE_SYMENGINE_MPC
 }
 
 TEST_CASE("test_ceiling", "[Ceiling]")
@@ -4258,10 +4272,10 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     CHECK(eq(*r, *Complex::from_two_nums(*integer(3), *integer(3))));
 
     r = ceiling(pi);
-    CHECK(eq(*r, *real_double(4.0)));
+    CHECK(eq(*r, *integer(4)));
 
     r = ceiling(E);
-    CHECK(eq(*r, *real_double(3.0)));
+    CHECK(eq(*r, *integer(3)));
 
     r = ceiling(floor(x));
     CHECK(eq(*r, *floor(x)));
@@ -4270,4 +4284,18 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     CHECK(eq(*r, *ceiling(x)));
 
     CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 10.65, MPFR_RNDN);
+    r = ceiling(real_mpfr(std::move(a)));
+    CHECK(eq(*r, *integer(11)));
+#endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class b(100);
+    mpc_set_d_d(b.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    r = ceiling(complex_mpc(std::move(b)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(11), *integer(12))));
+#endif // HAVE_SYMENGINE_MPC
 }

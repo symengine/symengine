@@ -110,6 +110,11 @@ inline double mp_get_d(const integer_class &i)
     return static_cast<double>(i.get_d());
 }
 
+inline void mp_set_d(integer_class &i, double a)
+{
+    mpz_set_d(i.get_mpz_t(), a);
+}
+
 inline void mp_demote(integer_class &i)
 {
 }
@@ -194,12 +199,6 @@ inline void mp_fdiv_r(integer_class &res, const integer_class &a,
     mpz_fdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_cdiv_r(integer_class &res, const integer_class &a,
-                      const integer_class &b)
-{
-    mpz_cdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
-}
-
 inline void mp_fdiv_q(integer_class &res, const integer_class &a,
                       const integer_class &b)
 {
@@ -216,12 +215,6 @@ inline void mp_fdiv_qr(integer_class &q, integer_class &r,
                        const integer_class &a, const integer_class &b)
 {
     mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
-}
-
-inline void mp_cdiv_qr(integer_class &q, integer_class &r,
-                       const integer_class &a, const integer_class &b)
-{
-    mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
 inline void mp_divexact(integer_class &q, const integer_class &a,
@@ -378,13 +371,6 @@ inline void mp_fdiv_r(piranha::integer &res, const piranha::integer &a,
     mpz_fdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_cdiv_r(piranha::integer &res, const piranha::integer &a,
-                      const piranha::integer &b)
-{
-    auto _res = get_mpz_t(res);
-    mpz_cdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
-}
-
 inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a,
                       const piranha::integer &b)
 {
@@ -404,13 +390,6 @@ inline void mp_fdiv_qr(piranha::integer &q, piranha::integer &r,
 {
     auto _q = get_mpz_t(q);
     mpz_fdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
-}
-
-inline void mp_cdiv_qr(piranha::integer &q, piranha::integer &r,
-                       const piranha::integer &a, const piranha::integer &b)
-{
-    auto _q = get_mpz_t(q);
-    mpz_cdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_divexact(piranha::integer &q, const piranha::integer &a,
@@ -450,6 +429,11 @@ inline unsigned long mp_get_ui(const piranha::integer &i)
 inline double mp_get_d(const piranha::integer &i)
 {
     return mpz_get_d(i.get_mpz_view());
+}
+
+inline void mp_set_d(piranha::integer &i, double a)
+{
+    i = a;
 }
 
 inline bool mp_fits_ulong_p(const piranha::integer &i)
@@ -563,6 +547,11 @@ inline double mp_get_d(const fmpz_wrapper &i)
     return fmpz_get_d(i.get_fmpz_t());
 }
 
+inline void mp_set_d(fmpz_wrapper &i, double a)
+{
+    return fmpz_set_d(i.get_fmpz_t(), a);
+}
+
 inline fmpz_wrapper mp_abs(const fmpz_wrapper &i)
 {
     fmpz_wrapper res;
@@ -650,7 +639,6 @@ inline void mp_fdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a,
     fmpz_fdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(),
                  b.get_fmpz_t());
 }
-
 
 inline void mp_divexact(fmpz_wrapper &q, const fmpz_wrapper &a,
                         const fmpz_wrapper &b)
@@ -757,6 +745,11 @@ inline double mp_get_d(const integer_class &i)
     return i.convert_to<double>();
 }
 
+inline void mp_set_d(integer_class &i, double a)
+{
+    i.assign(a);
+}
+
 inline unsigned long mp_get_ui(const integer_class &i)
 {
     return mp_abs(i).convert_to<unsigned long>();
@@ -799,6 +792,9 @@ inline void mp_gcd(integer_class &res, const integer_class &a,
 void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
                 const integer_class &b);
 
+void mp_cdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
+                const integer_class &b);
+
 inline void mp_fdiv_r(integer_class &res, const integer_class &a,
                       const integer_class &b)
 {
@@ -813,6 +809,14 @@ inline void mp_fdiv_q(integer_class &res, const integer_class &a,
     // TODO:  benchmark this speed
     integer_class rem;
     mp_fdiv_qr(res, rem, a, b);
+}
+
+inline void mp_cdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
+{
+    // TODO:  benchmark this speed
+    integer_class rem;
+    mp_cdiv_qr(res, rem, a, b);
 }
 
 inline void mp_tdiv_qr(integer_class &q, integer_class &r,

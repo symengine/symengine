@@ -911,34 +911,36 @@ class EvaluateMPC : public Evaluate
     virtual RCP<const Basic> floor(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
-        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
-        mpfr_class u(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
-        mpfr_floor(
-            t.get_mpfr_t(),
-            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
-        mpfr_floor(
-            u.get_mpfr_t(),
-            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
-        return Complex::from_two_nums(
-            *integer(numeric_cast<int>(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN))),
-            *integer(
-                numeric_cast<int>(mpfr_get_si(u.get_mpfr_t(), MPFR_RNDN))));
+        integer_class re, im;
+        mpfr_get_z(
+            get_mpz_t(re),
+            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDD);
+        mpfr_get_z(
+            get_mpz_t(im),
+            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDD);
+        mp_demote(re);
+        mp_demote(im);
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
     }
     virtual RCP<const Basic> ceiling(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
-        mpfr_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
-        mpfr_class u(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
-        mpfr_ceil(
-            t.get_mpfr_t(),
-            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
-        mpfr_ceil(
-            u.get_mpfr_t(),
-            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()));
-        return Complex::from_two_nums(
-            *integer(numeric_cast<int>(mpfr_get_si(t.get_mpfr_t(), MPFR_RNDN))),
-            *integer(
-                numeric_cast<int>(mpfr_get_si(u.get_mpfr_t(), MPFR_RNDN))));
+        integer_class re, im;
+        mpfr_get_z(
+            get_mpz_t(re),
+            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDU);
+        mpfr_get_z(
+            get_mpz_t(im),
+            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDU);
+        mp_demote(re);
+        mp_demote(im);
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
     }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
