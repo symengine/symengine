@@ -1,0 +1,19 @@
+/**
+ *  \file solve.h
+ *  Solvers
+ *
+ **/
+
+#ifndef SYMENGINE_SOLVE_H
+#define SYMENGINE_SOLVE_H
+
+#include <symengine/sets.h>
+
+namespace SymEngine
+{
+
+RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym, const RCP<const Set> &domain); 
+
+} // namespace SymEngine
+
+#endif // SYMENGINE_SOLVE_H
