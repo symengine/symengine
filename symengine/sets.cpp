@@ -671,6 +671,8 @@ bool ConditionSet::__eq__(const Basic &o) const
         const ConditionSet &other = down_cast<const ConditionSet &>(o);
         return unified_eq(sym, other.get_symbol())
                and unified_eq(condition_, other.get_condition());
+    }
+    return false;
 }
 
 int ConditionSet::compare(const Basic &o) const
@@ -719,6 +721,7 @@ ImageSet::ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
     : sym_(sym), expr_(expr), base_(base)
 {
     SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(ImageSet::is_canonical(sym, expr, base));
 }
 
 hash_t ImageSet::__hash__() const
@@ -757,9 +760,18 @@ int ImageSet::compare(const Basic &o) const
     }
 }
 
+bool ImageSet::is_canonical(const RCP<const Basic> &sym,
+                            const RCP<const Basic> &expr,
+                            const RCP<const Set> &base)
+{
+    if (not is_a<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr))
+        return false;
+    return true;
+}
+
 RCP<const Boolean> ImageSet::contains(const RCP<const Basic> &a) const
 {
-    throw std::runtime_error("Not implemented");
+    throw SymEngineException("Not implemented");
 }
 
 RCP<const Set> ImageSet::set_union(const RCP<const Set> &o) const
