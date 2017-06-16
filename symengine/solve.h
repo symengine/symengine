@@ -12,7 +12,17 @@
 namespace SymEngine
 {
 
-RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym, const RCP<const Set> &domain); 
+RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
+                     const RCP<const Set> &domain = universalset());
+RCP<const Set> solve_rational(const RCP<const Basic> &f,
+                              const RCP<const Symbol> &sym,
+                              const RCP<const Set> &domain = universalset());
+RCP<const Set> solve_poly(const RCP<const Basic> &f,
+                          const RCP<const Symbol> &sym,
+                          const RCP<const Set> &domain = universalset());
+RCP<const Set> solve_poly_linear(const RCP<const Basic> &f,
+                                 const RCP<const Symbol> &sym,
+                                 const RCP<const Set> &domain = universalset());
 
 } // namespace SymEngine
 

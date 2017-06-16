@@ -9,6 +9,7 @@
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/solve.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -146,6 +147,13 @@ using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 using SymEngine::digamma;
 using SymEngine::trigamma;
+using SymEngine::solve;
+using SymEngine::solve_poly_linear;
+using SymEngine::interval;
+using SymEngine::Interval;
+using SymEngine::emptyset;
+using SymEngine::finiteset;
+using SymEngine::Set;
 
 using namespace SymEngine::literals;
 
@@ -4080,4 +4088,44 @@ TEST_CASE("test_dummy", "[Dummy]")
     xdummy1 = x1->as_dummy();
     CHECK(neq(*xdummy1, *x1));
     CHECK(neq(*xdummy1, *x1->as_dummy()));
+}
+
+TEST_CASE("test_solve", "[Solve]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> poly;
+    RCP<const Set> reals = interval(NegInf, Inf, true, true);
+    RCP<const Set> soln;
+
+    // constants
+    poly = one;
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *emptyset()));
+
+    poly = zero;
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *reals));
+
+    // linear
+    poly = add(x, integer(3));
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({integer(-3)})));
+
+    poly = add(mul(integer(2), x), integer(3));
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({rational(-3, 2)})));
+
+    poly = add(mul(integer(2), x), integer(3));
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({rational(-3, 2)})));
+
+    soln = solve(poly, x, interval(zero, Inf, false, true));
+    REQUIRE(eq(*soln, *emptyset()));
+
+    poly = x;
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
+
+    poly = mul(x, x);
+    CHECK_THROWS_AS(solve_poly_linear(poly, x, reals), SymEngineException);
 }

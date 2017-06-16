@@ -52,6 +52,7 @@ set(SRC
     logic.cpp
     finitediff.cpp
     nan.cpp
+    solve.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -156,6 +157,7 @@ set(HEADERS
     symengine_rcp.h
     type_codes.inc
     visitor.h
+    solve.h
 )
 
 # Configure SymEngine using our CMake options:
