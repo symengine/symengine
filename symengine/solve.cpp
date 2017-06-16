@@ -15,9 +15,37 @@ RCP<const Set> solve_poly_linear(const RCP<const Basic> &f,
         throw SymEngineException("Expected a polynomial of degree 1. Try with "
                                  "solve() or solve_poly()");
     }
-    auto root = divnum(integer(-upf->get_poly().get_coeff(0)),
-                       integer(upf->get_poly().get_coeff(1)));
+    auto root = div(integer(-upf->get_poly().get_coeff(0)),
+                    integer(upf->get_poly().get_coeff(1)));
     return set_intersection({domain, finiteset({root})});
+}
+
+RCP<const Set> solve_poly_quadratic(const RCP<const Basic> &f,
+                                    const RCP<const Symbol> &sym,
+                                    const RCP<const Set> &domain)
+{
+    auto upf = from_basic<UIntPoly>(f, sym);
+    if (upf->get_poly().degree() != 2) {
+        throw SymEngineException("Expected a polynomial of degree 2. Try with "
+                                 "solve() or solve_poly()");
+    }
+
+    auto a = integer(upf->get_poly().get_coeff(2)),
+         b = integer(upf->get_poly().get_coeff(1)),
+         c = integer(upf->get_poly().get_coeff(0));
+    RCP<const Basic> root1, root2;
+    if (eq(*c, *zero)) {
+        root1 = div(neg(b), a);
+        root2 = zero;
+    } else if (eq(*b, *zero)) {
+        root1 = sqrt(div(neg(c), a));
+        root2 = neg(root1);
+    } else {
+        auto discriminant = sub(mul(b, b), mul(mul(integer(4), a), c));
+        root1 = add(div(neg(b), mul(integer(2), a)), discriminant);
+        root2 = sub(div(neg(b), mul(integer(2), a)), discriminant);
+    }
+    return set_intersection({domain, finiteset({root1, root2})});
 }
 
 RCP<const Set> solve_poly(const RCP<const Basic> &f,
@@ -35,7 +63,8 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
         }
         case 1:
             return solve_poly_linear(f, sym, domain);
-        // case 2 : return solve_poly_quadratic(f,sym,domain);
+        case 2:
+            return solve_poly_quadratic(f, sym, domain);
         // case 3 : return solve_poly_cubic(f,sym,domain);
         // case 4 : return solve_poly_quartic(f,sym,domain);
         default: {

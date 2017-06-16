@@ -4097,6 +4097,8 @@ TEST_CASE("test_solve", "[Solve]")
     RCP<const Set> reals = interval(NegInf, Inf, true, true);
     RCP<const Set> soln;
 
+    auto sqx = mul(x,x),cubx = mul(sqx,x),qx = mul(cubx,x);
+
     // constants
     poly = one;
     soln = solve(poly, x, reals);
@@ -4126,6 +4128,15 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x, reals);
     REQUIRE(eq(*soln, *finiteset({zero})));
 
-    poly = mul(x, x);
+    poly = sqx;
     CHECK_THROWS_AS(solve_poly_linear(poly, x, reals), SymEngineException);
+
+    // Quadratic
+    poly = add(sqx, one);
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({neg(I), I})));
+
+    poly = add(sqx,mul(x,integer(2)));
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({zero,integer(-2)})));    
 }
