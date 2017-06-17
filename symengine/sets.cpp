@@ -920,15 +920,12 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition)
 {
-    if (ConditionSet::is_canonical(sym, condition)) {
-        return make_rcp<const ConditionSet>(sym, condition);
-    }
     if (eq(*condition, *boolean(false))) {
         return emptyset();
     } else if (eq(*condition, *boolean(true))) {
         return universalset();
     }
-    if (is_a<And>(*condition)) {
+    if (is_a<And>(*condition) and is_a<Symbol>(*sym)) {
         // Simplify if we have a single symbol.
         const And &aset = down_cast<const And &>(*condition);
         auto &container = aset.get_container();
@@ -938,9 +935,23 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
                 and eq(*down_cast<const Contains &>(**it).get_expr(), *sym)
                 and is_a<FiniteSet>(
                         *down_cast<const Contains &>(**it).get_set())) {
+                // iterate through container and check for the condition that
+                // defines the domain of sym.
+                // Simplify if that set is a FiniteSet.
                 auto fset = down_cast<const FiniteSet &>(
                                 *down_cast<const Contains &>(**it).get_set())
                                 .get_container();
+                // If there exists atleast one number/constant, then only we can
+                // simplify.
+                bool check = false;
+                for (const auto &elem : fset) {
+                    if (is_a_Number(*elem) or is_a<Constant>(*elem)) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check)
+                    break;
                 auto restCont = container;
                 restCont.erase(*it);
                 auto restCond = logical_and(restCont);
@@ -969,7 +980,7 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
     if (is_a<Contains>(*condition)) {
         return down_cast<const Contains &>(*condition).get_set();
     }
-    throw std::runtime_error("Not implemented");
+    return make_rcp<const ConditionSet>(sym, condition);
 }
 
 } // SymEngine

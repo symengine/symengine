@@ -147,7 +147,7 @@ public:
     void bvisit(const Contains &x)
     {
         RCP<const Basic> a = apply(x.get_expr());
-        RCP<const Set> b = rcp_static_cast<const Set>(apply(x.get_set()));
+        RCP<const Basic> b = apply(x.get_set());
         if (a == x.get_expr() and b == x.get_set())
             result_ = x.rcp_from_this();
         else
@@ -156,9 +156,9 @@ public:
 
     void bvisit(const And &x)
     {
-        set_boolean v;
+        vec_basic v;
         for (const auto &elem : x.get_container()) {
-            v.insert(rcp_static_cast<const Boolean>(apply(elem)));
+            v.push_back(apply(elem));
         }
         result_ = x.create(v);
     }

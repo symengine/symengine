@@ -105,9 +105,9 @@ int Contains::compare(const Basic &o) const
 }
 
 RCP<const Basic> Contains::create(const RCP<const Basic> &lhs,
-                                  const RCP<const Set> &rhs) const
+                                  const RCP<const Basic> &rhs) const
 {
-    return contains(lhs, rhs);
+    return contains(lhs, rcp_static_cast<const Set>(rhs));
 }
 
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
@@ -215,9 +215,13 @@ const set_boolean &And::get_container() const
     return container_;
 }
 
-RCP<const Basic> And::create(const set_boolean &a) const
+RCP<const Basic> And::create(const vec_basic &a) const
 {
-    return logical_and(a);
+    set_boolean s;
+    for (const auto &elem : a) {
+        s.insert(rcp_static_cast<const Boolean>(elem));
+    }
+    return logical_and(s);
 }
 
 RCP<const Boolean> And::logical_not() const
