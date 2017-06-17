@@ -66,7 +66,7 @@ public:
     virtual vec_basic get_args() const;
     virtual bool __eq__(const Basic &o) const;
     RCP<const Basic> create(const RCP<const Basic> &lhs,
-                            const RCP<const Basic> &rhs) const;
+                            const RCP<const Set> &rhs) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
 };
@@ -115,7 +115,7 @@ public:
     //! \return the hash
     hash_t __hash__() const;
     virtual vec_basic get_args() const;
-    RCP<const Basic> create(const vec_basic &a) const;
+    RCP<const Basic> create(const set_boolean &a) const;
     virtual bool __eq__(const Basic &o) const;
     //! Structural equality comparator
     virtual int compare(const Basic &o) const;
@@ -236,6 +236,14 @@ inline bool is_a_Relational(const Basic &b)
     return (b.get_type_code() == EQUALITY || b.get_type_code() == UNEQUALITY
             || b.get_type_code() == LESSTHAN
             || b.get_type_code() == STRICTLESSTHAN);
+}
+
+inline bool is_a_Boolean(const Basic &b)
+{
+    return (b.get_type_code() == BOOLEAN_ATOM || b.get_type_code() == CONTAINS
+            || b.get_type_code() == AND || b.get_type_code() == OR
+            || b.get_type_code() == NOT || b.get_type_code() == XOR
+            || is_a_Relational(b));
 }
 
 //! Returns the canonicalized Equality object from a single argument
