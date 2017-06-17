@@ -28,6 +28,10 @@ RCP<const Set>
 solve_poly_quadratic(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                      const RCP<const Set> &domain = universalset());
 
+RCP<const Set> solve_poly_cubic(const RCP<const Basic> &f,
+                                const RCP<const Symbol> &sym,
+                                const RCP<const Set> &domain = universalset());
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_SOLVE_H
