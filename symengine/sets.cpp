@@ -632,6 +632,16 @@ RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
     return container_->set_complement(newuniv);
 }
 
+bool has_all_numbers(const set_basic &fcont)
+{
+    for (const auto &elem : fcont) {
+        if (not(is_a_Number(*elem) or is_a<Constant>(*elem))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 ConditionSet::ConditionSet(const RCP<const Basic> sym,
                            RCP<const Boolean> condition)
     : sym(sym), condition_(condition)
@@ -646,22 +656,6 @@ bool ConditionSet::is_canonical(const RCP<const Basic> sym,
     if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)
         or not is_a<Symbol>(*sym)) {
         return false;
-    } else if (is_a<And>(*condition)) {
-        for (const auto &elem :
-             down_cast<const And &>(*condition).get_container()) {
-            if (is_a<Contains>(*elem)
-                and eq(*down_cast<const Contains &>(*elem).get_expr(), *sym)
-                and is_a<FiniteSet>(
-                        *down_cast<const Contains &>(*elem).get_set())) {
-                auto fset = down_cast<const FiniteSet &>(
-                                *down_cast<const Contains &>(*elem).get_set())
-                                .get_container();
-                for (const auto &a : fset) {
-                    if (is_a_Number(*a) or is_a<Constant>(*a))
-                        return false;
-                }
-            }
-        }
     } else if (is_a<Contains>(*condition)) {
         return false;
     }
@@ -925,56 +919,32 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
     } else if (eq(*condition, *boolean(true))) {
         return universalset();
     }
-    if (is_a<And>(*condition) and is_a<Symbol>(*sym)) {
-        // Simplify if we have a single symbol.
-        const And &aset = down_cast<const And &>(*condition);
-        auto &container = aset.get_container();
-        set_basic present, others;
-        for (auto it = container.begin(); it != container.end(); it++) {
+    if (is_a<And>(*condition)) {
+        auto cont = down_cast<const And &>(*condition).get_container();
+        set_boolean newcont;
+        set_set temp;
+        for (auto it = cont.begin(); it != cont.end(); it++) {
             if (is_a<Contains>(**it)
                 and eq(*down_cast<const Contains &>(**it).get_expr(), *sym)
                 and is_a<FiniteSet>(
                         *down_cast<const Contains &>(**it).get_set())) {
-                // iterate through container and check for the condition that
-                // defines the domain of sym.
-                // Simplify if that set is a FiniteSet.
-                auto fset = down_cast<const FiniteSet &>(
-                                *down_cast<const Contains &>(**it).get_set())
-                                .get_container();
-                // If there exists atleast one number/constant, then only we can
-                // simplify.
-                bool check = false;
-                for (const auto &elem : fset) {
-                    if (is_a_Number(*elem) or is_a<Constant>(*elem)) {
-                        check = true;
-                        break;
-                    }
-                }
-                if (!check)
-                    break;
-                auto restCont = container;
-                restCont.erase(*it);
-                auto restCond = logical_and(restCont);
-                map_basic_basic d;
-                for (const auto &fselement : fset) {
-                    d[sym] = fselement;
-                    auto contain = restCond->subs(d);
-                    if (eq(*contain, *boolean(true))) {
-                        present.insert(fselement);
-                    } else if (not eq(*contain, *boolean(false))) {
-                        others.insert(fselement);
-                    }
-                    d.clear();
-                }
-                if (others.empty()) {
-                    return finiteset(present);
+                auto fset = down_cast<const Contains &>(**it).get_set();
+                auto fcont
+                    = down_cast<const FiniteSet &>(*fset).get_container();
+                // use the result of simplification done in `logical_and()`
+                if (has_all_numbers(fcont)) {
+                    temp.insert(fset);
                 } else {
-                    restCond = logical_and(
-                        {finiteset(others)->contains(sym), restCond});
-                    return SymEngine::set_union(
-                        {finiteset(present), conditionset(sym, restCond)});
+                    newcont.insert(*it);
                 }
+            } else {
+                newcont.insert(*it);
             }
+        }
+        if (not temp.empty()) {
+            return SymEngine::set_union(
+                {SymEngine::set_union(temp),
+                 conditionset(sym, logical_and(newcont))});
         }
     }
     if (is_a<Contains>(*condition)) {

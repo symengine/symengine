@@ -433,6 +433,56 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
         if (args.find(logical_not(a)) != args.end())
             return boolean(op_x_notx);
     }
+    if (not op_x_notx) {
+        for (auto it = args.begin(); it != args.end(); it++) {
+            if (is_a<Contains>(**it)
+                and is_a<Symbol>(*down_cast<const Contains &>(**it).get_expr())
+                and is_a<FiniteSet>(
+                        *down_cast<const Contains &>(**it).get_set())) {
+                auto sym = down_cast<const Contains &>(**it).get_expr();
+                // iterate through args and check for the condition that
+                // defines the domain of sym.
+                // Simplify if that set is a FiniteSet.
+                set_basic present, others;
+                auto fset = down_cast<const FiniteSet &>(
+                                *down_cast<const Contains &>(**it).get_set())
+                                .get_container();
+                // If there exists atleast one number/constant, then only we can
+                // simplify.
+                bool check = false;
+                for (const auto &elem : fset) {
+                    if (is_a_Number(*elem) or is_a<Constant>(*elem)) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check)
+                    break;
+                auto restCont = args;
+                restCont.erase(*it);
+                auto restCond = logical_and(restCont);
+                map_basic_basic d;
+                for (const auto &fselement : fset) {
+                    d[sym] = fselement;
+                    auto contain = restCond->subs(d);
+                    if (eq(*contain, *boolean(true))) {
+                        present.insert(fselement);
+                    } else if (not eq(*contain, *boolean(false))) {
+                        others.insert(fselement);
+                    }
+                    d.clear();
+                }
+                if (others.empty()) {
+                    return finiteset(present)->contains(sym);
+                } else {
+                    restCond = logical_and({finiteset(present)->contains(sym),
+                                            finiteset(others)->contains(sym),
+                                            restCond});
+                    return restCond;
+                }
+            }
+        }
+    }
     if (args.size() == 1)
         return *(args.begin());
     else if (args.size() == 0)
