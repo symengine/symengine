@@ -666,9 +666,17 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
 
     r1 = conditionset(x, logical_and({cond2, i1->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
-    REQUIRE(eq(*r1->contains(pi), *boolFalse));
+    REQUIRE(eq(*r1->contains(pi),
+               *logical_and({Le(pi, zero), i1->contains(pi)}))); // pi can't be
+                                                                 // compared
+                                                                 // with zero
+                                                                 // now. remains
+                                                                 // unevaluated
+                                                                 // as And(pi <=
+                                                                 // 0,
+                                                                 // Contains(pi,
+                                                                 // (-oo, oo)))
     REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
-
     REQUIRE(eq(*r1->contains(integer(-2)), *boolTrue));
 
     r1 = conditionset(x, logical_and({Eq(zero, one), i1->contains(x)}));
@@ -690,16 +698,22 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
     REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
     REQUIRE(eq(*r1->contains(integer(-3)), *boolFalse));
     REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
-    REQUIRE(eq(*r1->contains(finiteset({integer(3)})), *boolTrue));
+    REQUIRE(eq(*r1->contains(finiteset({integer(3)})), *boolFalse));
     REQUIRE(
         eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolFalse));
+
+    cond1 = Le(sin(x), y);
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(5)), *Le(sin(integer(5)), y)));
 
     cond1 = Eq(mul(x, x), integer(9));
     r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
     REQUIRE(is_a<ConditionSet>(*r1));
     REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
     REQUIRE(eq(*r1->contains(integer(-3)), *boolTrue));
-    REQUIRE(eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolTrue));
+    REQUIRE(
+        eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolFalse));
 
     r2 = r1->set_intersection(interval(integer(-10), integer(10)));
     REQUIRE(is_a<ConditionSet>(*r2));

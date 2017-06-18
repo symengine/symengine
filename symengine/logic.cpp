@@ -439,7 +439,7 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
                 // iterate through args and check for the condition that
                 // defines the domain of sym.
                 // Simplify if that set is a FiniteSet.
-                set_basic present, others;
+                set_basic present;
                 auto fset = down_cast<const FiniteSet &>(
                                 *down_cast<const Contains &>(**it).get_set())
                                 .get_container();
@@ -458,23 +458,30 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
                 restCont.erase(*it);
                 auto restCond = logical_and(restCont);
                 map_basic_basic d;
+                bool symexists = false;
                 for (const auto &fselement : fset) {
                     d[sym] = fselement;
                     auto contain = restCond->subs(d);
                     if (eq(*contain, *boolean(true))) {
                         present.insert(fselement);
                     } else if (not eq(*contain, *boolean(false))) {
-                        others.insert(fselement);
+                        present.insert(fselement);
+                        symexists = true;
                     }
                     d.clear();
                 }
-                if (others.empty()) {
+                if (not symexists) {
+                    // if there are no symbols, then this reduces to a
+                    // Contains(sym,finiteset())
                     return finiteset(present)->contains(sym);
-                } else {
-                    restCond = logical_and({finiteset(present)->contains(sym),
-                                            finiteset(others)->contains(sym),
-                                            restCond});
+                } else if (present.size() != fset.size()) {
+                    restCond = logical_and(
+                        {finiteset(present)->contains(sym), restCond});
                     return restCond;
+                } else {
+                    // if present is same as fset, then return object of type
+                    // `And`.
+                    break;
                 }
             }
         }

@@ -713,18 +713,12 @@ RCP<const Set> ConditionSet::set_complement(const RCP<const Set> &o) const
 RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
 {
     map_basic_basic d;
-    if (is_a<FiniteSet>(*o)) {
-        auto &cont = down_cast<const FiniteSet &>(*o).get_container();
-        for (const auto &c : cont) {
-            d[sym] = c;
-            if (not(eq(*condition_->subs(d), *boolTrue)))
-                return boolean(false);
-            d.clear();
-        }
-        return boolean(true);
-    }
     d[sym] = o;
-    return boolean(eq(*condition_->subs(d), *boolTrue));
+    auto cond = condition_->subs(d);
+    if (not is_a_Boolean(*cond)) {
+        throw std::runtime_error("expected an object of type Boolean");
+    }
+    return rcp_static_cast<const Boolean>(cond);
 }
 
 RCP<const Set> set_union(const set_set &in, bool solve)
@@ -922,7 +916,7 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
     if (is_a<And>(*condition)) {
         auto cont = down_cast<const And &>(*condition).get_container();
         set_boolean newcont;
-        set_set temp;
+        set_basic present, others;
         for (auto it = cont.begin(); it != cont.end(); it++) {
             if (is_a<Contains>(**it)
                 and eq(*down_cast<const Contains &>(**it).get_expr(), *sym)
@@ -932,19 +926,21 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
                 auto fcont
                     = down_cast<const FiniteSet &>(*fset).get_container();
                 // use the result of simplification done in `logical_and()`
-                if (has_all_numbers(fcont)) {
-                    temp.insert(fset);
-                } else {
-                    newcont.insert(*it);
+                for (const auto &elem : fcont) {
+                    if (not(is_a_Number(*elem) or is_a<Constant>(*elem))) {
+                        others.insert(elem);
+                    } else {
+                        present.insert(elem);
+                    }
                 }
             } else {
                 newcont.insert(*it);
             }
         }
-        if (not temp.empty()) {
+        if (not present.empty()) {
+            newcont.insert(finiteset(others)->contains(sym));
             return SymEngine::set_union(
-                {SymEngine::set_union(temp),
-                 conditionset(sym, logical_and(newcont))});
+                {finiteset(present), conditionset(sym, logical_and(newcont))});
         }
     }
     if (is_a<Contains>(*condition)) {
