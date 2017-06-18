@@ -70,9 +70,8 @@ RCP<const Set> solve_poly_cubic(const RCP<const Basic> &f,
     auto i2 = integer(2), i3 = integer(3), i4 = integer(4), i9 = integer(9),
          i27 = integer(27);
     auto delta0 = sub(mul(b, b), mul(mul(i3, a), c));
-    auto delta1
-        = add(sub(mul(mul(b, b), mul(i2, b)), mul(mul(i9, a), mul(b, c))),
-              mul(mul(i27, d), mul(a, a)));
+    auto delta1 = add(sub(mul(pow(b, i3), i2), mul(mul(i9, a), mul(b, c))),
+                      mul(mul(i27, d), mul(a, a)));
     auto delta = div(sub(mul(i4, pow(delta0, i3)), pow(delta1, i2)),
                      mul(i27, pow(a, i2)));
     RCP<const Basic> root1, root2, root3;
@@ -87,9 +86,13 @@ RCP<const Set> solve_poly_cubic(const RCP<const Basic> &f,
                         mul(delta0, a));
         }
     } else {
-        auto C = pow(
-            div(add(delta1, sqrt(mul(mul(neg(i27), delta), mul(a, a)))), i2),
-            div(one, i3));
+        auto Cexpr
+            = div(add(delta1, sqrt(mul(mul(neg(i27), delta), mul(a, a)))), i2);
+        if (eq(*Cexpr, *zero)) {
+            Cexpr = div(sub(delta1, sqrt(mul(mul(neg(i27), delta), mul(a, a)))),
+                        i2);
+        }
+        auto C = pow(Cexpr, div(one, i3));
         root1 = neg(div(add(b, add(C, div(delta0, C))), mul(i3, a)));
         auto coef = div(mul(I, sqrt(i3)), i2);
         auto cbrt1 = add(neg(div(one, i2)), coef);

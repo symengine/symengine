@@ -4,6 +4,7 @@
 #include <symengine/solve.h>
 #include <symengine/mul.h>
 #include <symengine/add.h>
+#include <symengine/pow.h>
 
 using SymEngine::solve;
 using SymEngine::RCP;
@@ -27,6 +28,7 @@ using SymEngine::SymEngineException;
 using SymEngine::neg;
 using SymEngine::one;
 using SymEngine::zero;
+using SymEngine::pow;
 
 TEST_CASE("test_solve", "[Solve]")
 {
@@ -105,5 +107,41 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({one})));
 
-    // std::cout << *soln <<"::\n";
+    poly = mul(cbx, integer(3));
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
+
+    poly = add(cbx, sub(add(mul(sqx, integer(3)), mul(integer(3), x)), one));
+    soln = solve(poly, x);
+    auto r1 = neg(div(add(integer(3), pow(integer(-54), div(one, integer(3)))),
+                      integer(3)));
+    auto r2 = neg(
+        div(add(integer(3), mul(add(div(one, integer(-2)),
+                                    div(mul(I, sqrt(integer(3))), integer(2))),
+                                pow(integer(-54), div(one, integer(3))))),
+            integer(3)));
+    auto r3 = neg(
+        div(add(integer(3), mul(sub(div(one, integer(-2)),
+                                    div(mul(I, sqrt(integer(3))), integer(2))),
+                                pow(integer(-54), div(one, integer(3))))),
+            integer(3)));
+    REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
+
+    poly = sub(add(cbx, mul(integer(201), x)),
+               add(integer(288), mul(sqx, integer(38))));
+    soln = solve(poly, x);
+    r1 = integer(3);
+    r2 = integer(32);
+    REQUIRE(eq(*soln, *finiteset({r1, r2})));
+
+    poly = add(cbx, one);
+    soln = solve(poly, x);
+    r1 = neg(one);
+    r2 = add(div(one, integer(2)), div(mul(I, sqrt(integer(3))), integer(2)));
+    r3 = sub(div(one, integer(2)), div(mul(I, sqrt(integer(3))), integer(2)));
+    // Should we expand and then return roots ? this might slow down things
+    // REQUIRE(eq(*soln, *finiteset({r1,r2,r3})));
+
+    poly = sqx;
+    CHECK_THROWS_AS(solve_poly_cubic(poly, x, reals), SymEngineException);
 }
