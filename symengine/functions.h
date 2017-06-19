@@ -185,6 +185,21 @@ public:
     }
 };
 
+class Sign : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SIGN);
+    //! Sign constructor
+    Sign(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized sign
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Sign
+RCP<const Basic> sign(const RCP<const Basic> &arg);
+
 class TrigFunction : public OneArgFunction
 {
 public:
