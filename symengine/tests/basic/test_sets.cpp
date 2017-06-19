@@ -506,9 +506,9 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(r1->compare(*r2) == -1);
 
     CHECK_THROWS_AS(r2->set_intersection(finiteset({symbol("x")})),
-                    std::runtime_error);
+                    SymEngineException);
     CHECK_THROWS_AS(r2->set_intersection(finiteset({zero, integer(2)})),
-                    std::runtime_error);
+                    SymEngineException);
 
     r2 = set_complement(i1, f1);
     REQUIRE(is_a<Complement>(*r2));
@@ -555,7 +555,7 @@ TEST_CASE("set_intersection : Basic", "[basic]")
 
     CHECK_THROWS_AS(set_intersection({finiteset({symbol("x"), symbol("y")}),
                                       interval(integer(-10), integer(10))}),
-                    std::runtime_error);
+                    SymEngineException);
 
     // One of the arg is Union
     i1 = interval(zero, one);
@@ -728,4 +728,9 @@ TEST_CASE("ConditionSet : Basic", "[basic]")
 
     r2 = r1->set_complement(i1);
     REQUIRE(is_a<Complement>(*r2));
+
+    cond3 = logical_and({Eq(y, x), f1->contains(x)});
+    r1 = conditionset(x, cond3);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*r1).get_condition(), *cond3));
 }
