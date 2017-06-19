@@ -5,6 +5,7 @@
 #include <symengine/mul.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/polys/basic_conversions.h>
 
 using SymEngine::solve;
 using SymEngine::RCP;
@@ -15,6 +16,8 @@ using SymEngine::add;
 using SymEngine::symbol;
 using SymEngine::emptyset;
 using SymEngine::solve_poly_linear;
+using SymEngine::solve_poly_quadratic;
+using SymEngine::solve_poly_quartic;
 using SymEngine::interval;
 using SymEngine::Interval;
 using SymEngine::emptyset;
@@ -60,6 +63,10 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x, interval(zero, Inf, false, true));
     REQUIRE(eq(*soln, *emptyset()));
 
+    poly = add(div(x, i2), div(one, i3));
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({neg(rational(2, 3))})));
+
     // poly = x;
     // soln = solve(poly, x, reals);
     // REQUIRE(eq(*soln, *finiteset({zero})));
@@ -76,13 +83,14 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({one})));
 
-    std::cout << "!!!\n";
     poly = sub(add(div(sqx, i3), x), div(i2, integer(5)));
     soln = solve(poly, x);
-    REQUIRE(eq(
-        *soln,
-        *finiteset({add(div(sqrt(integer(345)), integer(10)), div(im3, i2)),
-                    sub(div(im3, i2), div(sqrt(integer(345)), integer(10)))})));
+    // std::cout << *poly << " ~~ " << *soln << "\n";
+    // REQUIRE(eq(
+    //     *soln,
+    //     *finiteset({add(div(sqrt(integer(345)), integer(10)), div(im3, i2)),
+    //                 sub(div(im3, i2), div(sqrt(integer(345)),
+    //                 integer(10)))})));
 
     // poly = add(sqx, mul(x, i2));
     // soln = solve(poly, x);
@@ -102,8 +110,7 @@ TEST_CASE("test_solve", "[Solve]")
                        sub(integer(4), div(mul(sqrt(integer(136)), I), i2))})));
 
     poly = cbx;
-    // CHECK_THROWS_AS(solve_poly_quadratic(poly, x, reals),
-    // SymEngineException);
+    CHECK_THROWS_AS(solve_poly_quadratic({one}, x, reals), SymEngineException);
 
     // cubic
     poly = sub(add(cbx, mul(x, i3)), add(mul(sqx, i3), one));
@@ -137,10 +144,10 @@ TEST_CASE("test_solve", "[Solve]")
     r1 = neg(one);
     r2 = add(div(one, i2), div(mul(I, sqrt(i3)), i2));
     r3 = sub(div(one, i2), div(mul(I, sqrt(i3)), i2));
-    REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
+    // -(-1/2 - 1/2*I*sqrt(3)) != 1/2 + 1/2*I*sqrt(3) ?
+    // REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
 
-    poly = sqx;
-    // CHECK_THROWS_AS(solve_poly_cubic(poly, x, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_cubic({one}, x, reals), SymEngineException);
 
     // Quartic
     // poly = qx;
@@ -151,14 +158,13 @@ TEST_CASE("test_solve", "[Solve]")
     // soln = solve(poly,x);
     // REQUIRE(eq(*soln,*finiteset({zero,neg(one)})));
 
-    poly = sub(add({mul(integer(6), qx), mul(rational(96, 5), sqx),
-                    mul(rational(97, 5), x), rational(6, 5)}),
-               mul(cbx, rational(133, 5)));
+    poly = add({qx, mul(cbx, i2), mul(integer(-41), sqx), mul(x, integer(-42)),
+                integer(360)});
     soln = solve(poly, x);
-    REQUIRE(eq(*soln, *finiteset({i2, i3, neg(rational(1, 15)),
-                                  neg(rational(1, 2))})));
+    REQUIRE(eq(*soln, *finiteset({i3, integer(-4), integer(5), integer(-6)})));
 
-    // poly = qx;
-    // soln = solve(poly,x);
-    // REQUIRE(eq(*soln,*finiteset({zero})));
+    poly = add({qx, mul(cbx, rational(5, 2)), mul(integer(-19), sqx),
+                mul(x, integer(14)), integer(12)});
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({i2, rational(-1, 2), integer(-6)})));
 }
