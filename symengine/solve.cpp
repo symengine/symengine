@@ -187,7 +187,7 @@ RCP<const Set> solve_poly_heuristics(const RCP<const URatPoly> &f,
     auto degree = f->get_poly().degree();
 
     vec_basic coeffs;
-    if (degree <= 4) {
+    if (degree != 0 and degree <= 4) {
         for (unsigned i = 0; i <= degree; i++)
             coeffs.push_back(Rational::from_mpq(f->get_poly().get_coeff(i)));
         // make poly as monic
@@ -280,8 +280,8 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
     if (is_a<Mul>(*f)) {
         auto args = f->get_args();
         set_set solns;
-        for (auto & a: args) {
-            solns.insert(solve(a,sym,domain));
+        for (auto &a : args) {
+            solns.insert(solve(a, sym, domain));
         }
         return SymEngine::set_union(solns);
     }
