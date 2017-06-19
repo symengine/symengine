@@ -113,7 +113,7 @@ RCP<const Basic> Contains::create(const RCP<const Basic> &lhs,
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set)
 {
-    if (is_a_Number(*expr)) {
+    if (is_a_Number(*expr) or is_a_Set(*expr)) {
         return set->contains(expr);
     } else {
         return make_rcp<Contains>(expr, set);

@@ -94,8 +94,13 @@ RCP<const Set> Interval::close() const
 
 RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 {
-    if (not is_a_Number(*a))
-        return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    }
     if (eq(*start_, *a))
         return boolean(not left_open_);
     if (eq(*end_, *a))
