@@ -625,6 +625,10 @@ public:
     ContainerForIter(RCP<const T> ptr, long x)
         : ContainerBaseIter<T, Int>(ptr, x)
     {
+        if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_)) == 0
+            and this->i_ < this->ptr_->size()) {
+            ++(*this);
+        }
     }
 
     ContainerForIter operator++()

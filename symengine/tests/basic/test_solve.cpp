@@ -73,9 +73,9 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(rational(2, 3))})));
 
-    // poly = x;
-    // soln = solve(poly, x, reals);
-    // REQUIRE(eq(*soln, *finiteset({zero}))); // Bug in `from_dict`
+    poly = x;
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
 
     CHECK_THROWS_AS(solve_poly_linear({one, zero}, x, reals),
                     SymEngineException);
@@ -97,9 +97,9 @@ TEST_CASE("test_solve", "[Solve]")
     //                 sub(div(im3, i2), div(sqrt(integer(345)),
     //                 integer(10)))})));
 
-    // poly = add(sqx, mul(x, i2));
-    // soln = solve(poly, x);
-    // REQUIRE(eq(*soln, *finiteset({zero, im2})));
+    poly = add(sqx, mul(x, i2));
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({zero, im2})));
 
     poly = add(sqx, sub(mul(integer(8), x), integer(5)));
     soln = solve(poly, x);
@@ -134,9 +134,9 @@ TEST_CASE("test_solve", "[Solve]")
     // ConditionSet&>(*soln).get_condition(),*Ge(add(cbx, mul(x, i3)),
     // add(mul(sqx, i3), one))));
 
-    // poly = mul(cbx, i3);
-    // soln = solve(poly, x, reals);
-    // REQUIRE(eq(*soln, *finiteset({zero})));
+    poly = mul(cbx, i3);
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
 
     poly = add(cbx, sub(add(mul(sqx, i3), mul(i3, x)), one));
     soln = solve(poly, x);
@@ -167,13 +167,13 @@ TEST_CASE("test_solve", "[Solve]")
     CHECK_THROWS_AS(solve_poly_cubic({one}, x, reals), SymEngineException);
 
     // Quartic
-    // poly = qx;
-    // soln = solve(poly,x);
-    // REQUIRE(eq(*soln,*finiteset({zero})));
+    poly = qx;
+    soln = solve(poly,x);
+    REQUIRE(eq(*soln,*finiteset({zero})));
 
-    // poly = add(qx,cbx);
-    // soln = solve(poly,x);
-    // REQUIRE(eq(*soln,*finiteset({zero,neg(one)})));
+    poly = add(qx,cbx);
+    soln = solve(poly,x);
+    REQUIRE(eq(*soln,*finiteset({zero,neg(one)})));
 
     poly = add({qx, mul(cbx, i2), mul(integer(-41), sqx), mul(x, integer(-42)),
                 integer(360)});
