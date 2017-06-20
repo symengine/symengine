@@ -185,6 +185,51 @@ public:
     }
 };
 
+class Sign : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SIGN);
+    //! Sign constructor
+    Sign(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized sign
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Sign
+RCP<const Basic> sign(const RCP<const Basic> &arg);
+
+class Floor : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(FLOOR)
+    //! Floor Constructor
+    Floor(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized floor
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Floor:
+RCP<const Basic> floor(const RCP<const Basic> &arg);
+
+class Ceiling : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(CEILING)
+    //! Ceiling Constructor
+    Ceiling(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized ceiling
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Ceiling:
+RCP<const Basic> ceiling(const RCP<const Basic> &arg);
+
 class TrigFunction : public OneArgFunction
 {
 public:
@@ -217,6 +262,7 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
+
 class Sin : public TrigFunction
 {
 

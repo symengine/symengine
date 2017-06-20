@@ -46,6 +46,11 @@ using SymEngine::Set;
 using SymEngine::interval;
 using SymEngine::Inf;
 using SymEngine::NegInf;
+using SymEngine::floor;
+using SymEngine::ceiling;
+using SymEngine::conditionset;
+using SymEngine::Boolean;
+using SymEngine::logical_and;
 
 using namespace SymEngine::literals;
 
@@ -480,7 +485,43 @@ TEST_CASE("Ascii Art", "[basic]")
 TEST_CASE("test_sets(): printing", "[printing]")
 {
     RCP<const Set> r1;
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
     r1 = set_complement(interval(NegInf, Inf, true, true),
                         finiteset({symbol("y")}));
     REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
+
+    RCP<const Set> i1 = interval(integer(3), integer(10));
+
+    r1 = conditionset(
+        {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
+    REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
+}
+
+TEST_CASE("test_sign(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = sign(mul(mul(pow(Complex::from_two_nums(*integer(2), *integer(3)),
+                           Rational::from_two_ints(3, 2)),
+                       x),
+                   pow(mul(integer(3), I), integer(3))));
+    CHECK(r->__str__() == "-I*sign(x*(2 + 3*I)**(3/2))");
+}
+
+TEST_CASE("test_floor(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = floor(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "floor(x**3*y)");
+}
+
+TEST_CASE("test_ceiling(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = ceiling(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "ceiling(x**3*y)");
 }

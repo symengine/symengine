@@ -249,6 +249,48 @@ public:
     }
 };
 
+class ConditionSet : public Set
+{
+private:
+    RCP<const Basic> sym;
+    RCP<const Boolean> condition_;
+
+public:
+    IMPLEMENT_TYPEID(CONDITIONSET)
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+    ConditionSet(const RCP<const Basic> sym, RCP<const Boolean> condition);
+    static bool is_canonical(const RCP<const Basic> sym,
+                             RCP<const Boolean> condition);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+
+    inline const RCP<const Basic> &get_symbol() const
+    {
+        return this->sym;
+    }
+    inline const RCP<const Boolean> &get_condition() const
+    {
+        return this->condition_;
+    }
+};
+
+inline bool is_a_Set(const Basic &b)
+{
+    return (b.get_type_code() == EMPTYSET || b.get_type_code() == UNIVERSALSET
+            || b.get_type_code() == FINITESET || b.get_type_code() == COMPLEMENT
+            || b.get_type_code() == CONDITIONSET
+            || b.get_type_code() == INTERVAL || b.get_type_code() == UNION);
+}
+
 //! \return RCP<const EmptySet>
 inline RCP<const EmptySet> emptyset()
 {
@@ -295,5 +337,9 @@ RCP<const Set> set_complement_helper(const RCP<const Set> &container,
 // ! \return RCP<const Set>
 RCP<const Set> set_complement(const RCP<const Set> &universe,
                               const RCP<const Set> &container);
+
+//! \return RCP<const Set>
+RCP<const Set> conditionset(const RCP<const Basic> &sym,
+                            const RCP<const Boolean> &condition);
 }
 #endif

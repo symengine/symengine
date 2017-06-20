@@ -288,6 +288,14 @@ void StrPrinter::bvisit(const FiniteSet &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const ConditionSet &x)
+{
+    std::ostringstream s;
+    s << "{" << apply(*x.get_symbol());
+    s << " | " << apply(x.get_condition()) << "}";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x)
 {
@@ -887,6 +895,8 @@ std::vector<std::string> init_str_printer_names()
     names[DIRICHLET_ETA] = "dirichlet_eta";
     names[KRONECKERDELTA] = "kroneckerdelta";
     names[LEVICIVITA] = "levicivita";
+    names[FLOOR] = "floor";
+    names[CEILING] = "ceiling";
     names[ERF] = "erf";
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";
@@ -898,6 +908,7 @@ std::vector<std::string> init_str_printer_names()
     names[ABS] = "abs";
     names[MAX] = "max";
     names[MIN] = "min";
+    names[SIGN] = "sign";
     return names;
 }
 

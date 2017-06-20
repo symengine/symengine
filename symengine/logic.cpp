@@ -104,10 +104,16 @@ int Contains::compare(const Basic &o) const
     return unified_compare(get_set(), c.get_set());
 }
 
+RCP<const Basic> Contains::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Set> &rhs) const
+{
+    return contains(lhs, rhs);
+}
+
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set)
 {
-    if (is_a_Number(*expr)) {
+    if (is_a_Number(*expr) or is_a_Set(*expr)) {
         return set->contains(expr);
     } else {
         return make_rcp<Contains>(expr, set);
@@ -207,6 +213,11 @@ bool And::is_canonical(const set_boolean &container_)
 const set_boolean &And::get_container() const
 {
     return container_;
+}
+
+RCP<const Basic> And::create(const set_boolean &a) const
+{
+    return logical_and(a);
 }
 
 RCP<const Boolean> And::logical_not() const
@@ -417,6 +428,63 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
     for (auto &a : args) {
         if (args.find(logical_not(a)) != args.end())
             return boolean(op_x_notx);
+    }
+    if (not op_x_notx) {
+        for (auto it = args.begin(); it != args.end(); it++) {
+            if (is_a<Contains>(**it)
+                and is_a<Symbol>(*down_cast<const Contains &>(**it).get_expr())
+                and is_a<FiniteSet>(
+                        *down_cast<const Contains &>(**it).get_set())) {
+                auto sym = down_cast<const Contains &>(**it).get_expr();
+                // iterate through args and check for the condition that
+                // defines the domain of sym.
+                // Simplify if that set is a FiniteSet.
+                set_basic present;
+                auto fset = down_cast<const FiniteSet &>(
+                                *down_cast<const Contains &>(**it).get_set())
+                                .get_container();
+                // If there exists atleast one number/constant, then only we can
+                // simplify.
+                bool check = false;
+                for (const auto &elem : fset) {
+                    if (is_a_Number(*elem) or is_a<Constant>(*elem)) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check)
+                    break;
+                auto restCont = args;
+                restCont.erase(*it);
+                auto restCond = logical_and(restCont);
+                map_basic_basic d;
+                bool symexists = false;
+                for (const auto &fselement : fset) {
+                    d[sym] = fselement;
+                    auto contain = restCond->subs(d);
+                    if (eq(*contain, *boolean(true))) {
+                        present.insert(fselement);
+                    } else if (not eq(*contain, *boolean(false))) {
+                        present.insert(fselement);
+                        symexists = true;
+                    }
+                    d.clear();
+                }
+                if (not symexists) {
+                    // if there are no symbols, then this reduces to a
+                    // Contains(sym,finiteset())
+                    return finiteset(present)->contains(sym);
+                } else if (present.size() != fset.size()) {
+                    restCond = logical_and(
+                        {finiteset(present)->contains(sym), restCond});
+                    return restCond;
+                } else {
+                    // if present is same as fset, then return object of type
+                    // `And`.
+                    break;
+                }
+            }
+        }
     }
     if (args.size() == 1)
         return *(args.begin());

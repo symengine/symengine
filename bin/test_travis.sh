@@ -95,7 +95,7 @@ cmake $cmake_line ${SOURCE_DIR}
 
 echo "Current directory:"
 pwd
-echo "Running make:"
+echo "Running make" $MAKEFLAGS ":"
 make
 echo "Running make install:"
 make install

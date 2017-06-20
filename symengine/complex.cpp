@@ -4,6 +4,11 @@
 namespace SymEngine
 {
 
+bool ComplexBase::is_re_zero() const
+{
+    return this->real_part()->is_zero();
+}
+
 Complex::Complex(rational_class real, rational_class imaginary)
     : real_{real}, imaginary_{imaginary}
 {

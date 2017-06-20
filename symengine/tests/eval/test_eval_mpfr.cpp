@@ -163,6 +163,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(erf(integer(2)), 0.995322265017, 0.995322265019),
         std::make_tuple(erf(div(E, pi)), 0.778918254986, 0.778918254988),
         std::make_tuple(erfc(integer(2)), 0.004677734981, 0.004677734983),
+        std::make_tuple(floor(arg2), -0.000000000001, 0.000000000001),
+        std::make_tuple(ceiling(arg2), 0.999999999999, 1.000000000001),
         std::make_tuple(sin(arg1), 0.90929742682568, 0.90929742682569),
         std::make_tuple(cos(arg1), -0.41614683654715, -0.41614683654714),
         std::make_tuple(tan(arg1), -2.1850398632616, -2.1850398632615),
