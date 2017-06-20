@@ -46,6 +46,8 @@ using SymEngine::Set;
 using SymEngine::interval;
 using SymEngine::Inf;
 using SymEngine::NegInf;
+using SymEngine::floor;
+using SymEngine::ceiling;
 
 using namespace SymEngine::literals;
 
@@ -494,4 +496,20 @@ TEST_CASE("test_sign(): printing", "[printing]")
                        x),
                    pow(mul(integer(3), I), integer(3))));
     CHECK(r->__str__() == "-I*sign(x*(2 + 3*I)**(3/2))");
+}
+
+TEST_CASE("test_floor(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = floor(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "floor(x**3*y)");
+}
+
+TEST_CASE("test_ceiling(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = ceiling(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "ceiling(x**3*y)");
 }

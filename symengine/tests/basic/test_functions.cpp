@@ -8,6 +8,7 @@
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/logic.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
@@ -147,6 +148,9 @@ using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 using SymEngine::digamma;
 using SymEngine::trigamma;
+using SymEngine::floor;
+using SymEngine::ceiling;
+using SymEngine::Eq;
 
 using namespace SymEngine::literals;
 
@@ -4170,4 +4174,128 @@ TEST_CASE("test_sign", "[Sign]")
             sign(mul(x, pow(Complex::from_two_nums(*integer(2), *integer(3)),
                             Rational::from_two_ints(3, 2)))));
     CHECK(eq(*r, *s));
+}
+
+TEST_CASE("test_floor", "[Floor]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> r = floor(integer(1));
+    CHECK(eq(*r, *one));
+
+    r = floor(Complex::from_two_nums(*integer(2), *integer(1)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(1))));
+
+    r = floor(Nan);
+    CHECK(eq(*r, *Nan));
+
+    r = floor(Inf);
+    CHECK(eq(*r, *Inf));
+
+    r = floor(NegInf);
+    CHECK(eq(*r, *NegInf));
+
+    r = floor(Rational::from_two_ints(3, 1));
+    CHECK(eq(*r, *integer(3)));
+
+    r = floor(Rational::from_two_ints(3, 2));
+    CHECK(eq(*r, *integer(1)));
+
+    r = floor(Rational::from_two_ints(-3, 2));
+    CHECK(eq(*r, *integer(-2)));
+
+    r = floor(real_double(2.65));
+    CHECK(eq(*r, *integer(2)));
+
+    r = floor(complex_double(std::complex<double>(2.86, 2.79)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(2))));
+
+    r = floor(pi);
+    CHECK(eq(*r, *integer(3)));
+
+    r = floor(E);
+    CHECK(eq(*r, *integer(2)));
+
+    r = floor(floor(x));
+    CHECK(eq(*r, *floor(x)));
+
+    r = floor(ceiling(x));
+    CHECK(eq(*r, *ceiling(x)));
+
+    CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 10.65, MPFR_RNDN);
+    r = floor(real_mpfr(std::move(a)));
+    CHECK(eq(*r, *integer(10)));
+#endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class c(100);
+    mpc_set_d_d(c.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    r = floor(complex_mpc(std::move(c)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(10), *integer(11))));
+#endif // HAVE_SYMENGINE_MPC
+}
+
+TEST_CASE("test_ceiling", "[Ceiling]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> r = ceiling(integer(1));
+    CHECK(eq(*r, *one));
+
+    r = ceiling(Complex::from_two_nums(*integer(2), *integer(1)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(1))));
+
+    r = ceiling(Nan);
+    CHECK(eq(*r, *Nan));
+
+    r = ceiling(Inf);
+    CHECK(eq(*r, *Inf));
+
+    r = ceiling(NegInf);
+    CHECK(eq(*r, *NegInf));
+
+    r = ceiling(Rational::from_two_ints(3, 1));
+    CHECK(eq(*r, *integer(3)));
+
+    r = ceiling(Rational::from_two_ints(3, 2));
+    CHECK(eq(*r, *integer(2)));
+
+    r = ceiling(Rational::from_two_ints(-3, 2));
+    CHECK(eq(*r, *integer(-1)));
+
+    r = ceiling(real_double(2.65));
+    CHECK(eq(*r, *integer(3)));
+
+    r = ceiling(complex_double(std::complex<double>(2.86, 2.79)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(3), *integer(3))));
+
+    r = ceiling(pi);
+    CHECK(eq(*r, *integer(4)));
+
+    r = ceiling(E);
+    CHECK(eq(*r, *integer(3)));
+
+    r = ceiling(floor(x));
+    CHECK(eq(*r, *floor(x)));
+
+    r = ceiling(ceiling(x));
+    CHECK(eq(*r, *ceiling(x)));
+
+    CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 10.65, MPFR_RNDN);
+    r = ceiling(real_mpfr(std::move(a)));
+    CHECK(eq(*r, *integer(11)));
+#endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class b(100);
+    mpc_set_d_d(b.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    r = ceiling(complex_mpc(std::move(b)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(11), *integer(12))));
+#endif // HAVE_SYMENGINE_MPC
 }
