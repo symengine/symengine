@@ -94,8 +94,13 @@ RCP<const Set> Interval::close() const
 
 RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
 {
-    if (not is_a_Number(*a))
-        return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    }
     if (eq(*start_, *a))
         return boolean(not left_open_);
     if (eq(*end_, *a))
@@ -153,7 +158,7 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented Intersection class");
+    throw SymEngineException("Not implemented Intersection class");
 }
 
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
@@ -336,7 +341,19 @@ int FiniteSet::compare(const Basic &o) const
 
 RCP<const Boolean> FiniteSet::contains(const RCP<const Basic> &a) const
 {
-    return boolean(container_.find(a) != container_.end());
+    set_basic rest;
+    for (const auto &elem : container_) {
+        auto cont = Eq(elem, a);
+        if (eq(*cont, *boolTrue))
+            return boolTrue;
+        if (not eq(*cont, *boolFalse))
+            rest.insert(elem);
+    }
+    if (rest.empty()) {
+        return boolFalse;
+    } else {
+        return make_rcp<Contains>(a, finiteset(rest));
+    }
 }
 
 RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
@@ -369,7 +386,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                     }
                 container.insert(a);
             } else if (is_a<Contains>(*contain)) {
-                std::runtime_error("Not implemented");
+                SymEngineException("Not implemented");
             }
         }
         if (not container.empty()) {
@@ -414,14 +431,14 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
             if (eq(*contain, *boolTrue))
                 container.insert(a);
             if (is_a<Contains>(*contain))
-                throw std::runtime_error("Not implemented");
+                throw SymEngineException("Not implemented");
         }
         return finiteset(container);
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw std::runtime_error("Not implemented Intersection class");
+    throw SymEngineException("Not implemented Intersection class");
 }
 
 RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
@@ -620,6 +637,85 @@ RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
     return container_->set_complement(newuniv);
 }
 
+ConditionSet::ConditionSet(const RCP<const Basic> sym,
+                           RCP<const Boolean> condition)
+    : sym(sym), condition_(condition)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(ConditionSet::is_canonical(sym, condition))
+}
+
+bool ConditionSet::is_canonical(const RCP<const Basic> sym,
+                                RCP<const Boolean> condition)
+{
+    if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)
+        or not is_a<Symbol>(*sym)) {
+        return false;
+    } else if (is_a<Contains>(*condition)) {
+        return false;
+    }
+    return true;
+}
+
+hash_t ConditionSet::__hash__() const
+{
+    hash_t seed = CONDITIONSET;
+    hash_combine<Basic>(seed, *sym);
+    hash_combine<Basic>(seed, *condition_);
+    return seed;
+}
+
+bool ConditionSet::__eq__(const Basic &o) const
+{
+    if (is_a<ConditionSet>(o)) {
+        const ConditionSet &other = down_cast<const ConditionSet &>(o);
+        return unified_eq(sym, other.get_symbol())
+               and unified_eq(condition_, other.get_condition());
+    }
+    return false;
+}
+
+int ConditionSet::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<ConditionSet>(o))
+    const ConditionSet &other = down_cast<const ConditionSet &>(o);
+    int c1 = unified_compare(sym, other.get_symbol());
+    if (c1 != 0) {
+        return c1;
+    } else {
+        return unified_compare(condition_, other.get_condition());
+    }
+}
+
+RCP<const Set> ConditionSet::set_union(const RCP<const Set> &o) const
+{
+    return SymEngine::set_union({o, rcp_from_this_cast<const Set>()}, false);
+}
+
+RCP<const Set> ConditionSet::set_intersection(const RCP<const Set> &o) const
+{
+    if (not is_a<ConditionSet>(*o)) {
+        return conditionset(sym, logical_and({condition_, o->contains(sym)}));
+    }
+    throw SymEngineException("Not implemented Intersection class");
+}
+
+RCP<const Set> ConditionSet::set_complement(const RCP<const Set> &o) const
+{
+    return make_rcp<const Complement>(o, rcp_from_this_cast<const Set>());
+}
+
+RCP<const Boolean> ConditionSet::contains(const RCP<const Basic> &o) const
+{
+    map_basic_basic d;
+    d[sym] = o;
+    auto cond = condition_->subs(d);
+    if (not is_a_Boolean(*cond)) {
+        throw SymEngineException("expected an object of type Boolean");
+    }
+    return rcp_static_cast<const Boolean>(cond);
+}
+
 RCP<const Set> set_union(const set_set &in, bool solve)
 {
     set_set input;
@@ -691,8 +787,8 @@ RCP<const Set> set_intersection(const set_set &in)
             bool present = true;
             for (const auto &fset : fsets) {
                 auto contain = fset->contains(fselement);
-                if (is_a<Contains>(*contain)) {
-                    throw std::runtime_error(
+                if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
+                    throw SymEngineException(
                         "Not implemented Intersection class");
                 }
                 present = present and eq(*contain, *boolTrue);
@@ -701,8 +797,8 @@ RCP<const Set> set_intersection(const set_set &in)
                 continue;
             for (const auto &oset : othersets) {
                 auto contain = oset->contains(fselement);
-                if (is_a<Contains>(*contain)) {
-                    throw std::runtime_error(
+                if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
+                    throw SymEngineException(
                         "Not implemented Intersection class");
                 }
                 present = present and eq(*contain, *boolTrue);
@@ -757,7 +853,7 @@ RCP<const Set> set_intersection(const set_set &in)
     if (incopy.size() == 1) {
         return *incopy.begin();
     } else {
-        throw std::runtime_error("Not implemented Intersection class");
+        throw SymEngineException("Not implemented Intersection class");
     }
 }
 
@@ -802,6 +898,70 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 {
     // represents universe - container
     return container->set_complement(universe);
+}
+
+RCP<const Set> conditionset(const RCP<const Basic> &sym,
+                            const RCP<const Boolean> &condition)
+{
+    if (eq(*condition, *boolean(false))) {
+        return emptyset();
+    } else if (eq(*condition, *boolean(true))) {
+        return universalset();
+    }
+    if (is_a<And>(*condition)) {
+        auto cont = down_cast<const And &>(*condition).get_container();
+        set_boolean newcont;
+        set_basic present, others;
+        for (auto it = cont.begin(); it != cont.end(); it++) {
+            if (is_a<Contains>(**it)
+                and eq(*down_cast<const Contains &>(**it).get_expr(), *sym)
+                and is_a<FiniteSet>(
+                        *down_cast<const Contains &>(**it).get_set())) {
+                auto fset = down_cast<const Contains &>(**it).get_set();
+                auto fcont
+                    = down_cast<const FiniteSet &>(*fset).get_container();
+                // use the result of simplification done in `logical_and()`
+                for (const auto &elem : fcont) {
+                    if (not(is_a_Number(*elem) or is_a<Constant>(*elem))) {
+                        others.insert(elem);
+                    } else {
+                        // logical_and() doesn't guarantee that if element of a
+                        // finiteset is a number, then it satisfies other
+                        // conditions
+                        // it only assures that there doesn't exist any such
+                        // element of finiteset that surely fails in other
+                        // conditions.
+                        auto restCont = cont;
+                        restCont.erase(*it);
+                        auto restCond = logical_and(restCont);
+                        map_basic_basic d;
+                        d[sym] = elem;
+                        auto contain = restCond->subs(d);
+                        if (eq(*contain, *boolean(true))) {
+                            present.insert(elem);
+                        } else if (not eq(*contain, *boolean(false))) {
+                            others.insert(elem);
+                        } else {
+                            throw SymEngineException("element should have "
+                                                     "been removed within "
+                                                     "logical_and()");
+                        }
+                    }
+                }
+            } else {
+                newcont.insert(*it);
+            }
+        }
+        if (not present.empty()) {
+            newcont.insert(finiteset(others)->contains(sym));
+            return SymEngine::set_union(
+                {finiteset(present), conditionset(sym, logical_and(newcont))});
+        }
+    }
+    if (is_a<Contains>(*condition)) {
+        return down_cast<const Contains &>(*condition).get_set();
+    }
+    return make_rcp<const ConditionSet>(sym, condition);
 }
 
 } // SymEngine

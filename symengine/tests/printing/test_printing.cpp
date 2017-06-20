@@ -48,6 +48,9 @@ using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::floor;
 using SymEngine::ceiling;
+using SymEngine::conditionset;
+using SymEngine::Boolean;
+using SymEngine::logical_and;
 
 using namespace SymEngine::literals;
 
@@ -482,9 +485,18 @@ TEST_CASE("Ascii Art", "[basic]")
 TEST_CASE("test_sets(): printing", "[printing]")
 {
     RCP<const Set> r1;
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
     r1 = set_complement(interval(NegInf, Inf, true, true),
                         finiteset({symbol("y")}));
     REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
+
+    RCP<const Set> i1 = interval(integer(3), integer(10));
+
+    r1 = conditionset(
+        {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
+    REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
 }
 
 TEST_CASE("test_sign(): printing", "[printing]")

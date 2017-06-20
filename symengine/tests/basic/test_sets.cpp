@@ -5,6 +5,7 @@
 #include <symengine/infinity.h>
 #include <symengine/real_double.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/add.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -29,7 +30,6 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::is_a;
-using SymEngine::symbol;
 using SymEngine::boolean;
 using SymEngine::Inf;
 using SymEngine::NegInf;
@@ -46,6 +46,19 @@ using SymEngine::rational_class;
 using SymEngine::set_complement;
 using SymEngine::Complement;
 using SymEngine::down_cast;
+using SymEngine::ConditionSet;
+using SymEngine::conditionset;
+using SymEngine::mul;
+using SymEngine::add;
+using SymEngine::Gt;
+using SymEngine::Eq;
+using SymEngine::Le;
+using SymEngine::pi;
+using SymEngine::Symbol;
+using SymEngine::Boolean;
+using SymEngine::sin;
+using SymEngine::Not;
+using SymEngine::logical_and;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -480,7 +493,7 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(eq(*r4.get_universe(), *i1));
 
     REQUIRE(r1->get_args().size() == 2);
-    REQUIRE(eq(*r1->contains(one), *boolTrue));
+    REQUIRE(is_a<Not>(*r1->contains(one)));
     REQUIRE(eq(*r1->contains(symbol("y")), *boolFalse));
 
     r2 = set_complement(i1, finiteset({symbol("x")}));
@@ -493,9 +506,9 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(r1->compare(*r2) == -1);
 
     CHECK_THROWS_AS(r2->set_intersection(finiteset({symbol("x")})),
-                    std::runtime_error);
-    r1 = r2->set_intersection(finiteset({zero, integer(2)}));
-    REQUIRE(eq(*r1, *finiteset({zero, integer(2)})));
+                    SymEngineException);
+    CHECK_THROWS_AS(r2->set_intersection(finiteset({zero, integer(2)})),
+                    SymEngineException);
 
     r2 = set_complement(i1, f1);
     REQUIRE(is_a<Complement>(*r2));
@@ -542,7 +555,7 @@ TEST_CASE("set_intersection : Basic", "[basic]")
 
     CHECK_THROWS_AS(set_intersection({finiteset({symbol("x"), symbol("y")}),
                                       interval(integer(-10), integer(10))}),
-                    std::runtime_error);
+                    SymEngineException);
 
     // One of the arg is Union
     i1 = interval(zero, one);
@@ -611,4 +624,113 @@ TEST_CASE("set_complement : Basic", "[basic]")
     r1 = set_complement(f1, f2);
     r2 = finiteset({zero, one});
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("ConditionSet : Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Set> r1, r2;
+
+    RCP<const Set> i1 = interval(NegInf, Inf, true, true);
+    RCP<const Set> i2 = interval(one, Inf, true, true);
+    RCP<const Set> i3 = interval(zero, integer(4), false, true);
+    RCP<const Set> f1 = finiteset({zero, one, integer(2), integer(4)});
+    RCP<const Set> f2 = finiteset({zero, one, integer(-3), y});
+    RCP<const Set> f3 = finiteset({y});
+
+    RCP<const Boolean> cond1, cond2, cond3;
+    cond1 = Ge(mul(x, x), integer(9));
+    cond2 = Le(x, zero);
+    cond3 = Gt(x, zero);
+
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+
+    auto &r3 = down_cast<const ConditionSet &>(*r1);
+    REQUIRE(unified_eq(r3.get_symbol(), x));
+    REQUIRE(eq(*r3.get_condition(), *logical_and({cond1, i1->contains(x)})));
+
+    r1 = conditionset(x, logical_and({cond1, f1->contains(x)}));
+    REQUIRE(eq(*r1, *finiteset({integer(4)})));
+
+    r1 = conditionset(x, logical_and({cond3, f2->contains(x)}));
+    REQUIRE(is_a<Union>(*r1));
+    auto &r4 = down_cast<const Union &>(*r1);
+    REQUIRE(r4.get_container().size() == 2);
+    REQUIRE(r4.get_container().find(finiteset({one}))
+            != r4.get_container().end());
+    REQUIRE(r4.get_container().find(
+                conditionset(x, logical_and({cond3, f3->contains(x)})))
+            != r4.get_container().end());
+
+    r1 = conditionset(x, logical_and({cond2, i1->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(pi),
+               *logical_and({Le(pi, zero), i1->contains(pi)}))); // pi can't be
+                                                                 // compared
+                                                                 // with zero
+                                                                 // now. remains
+                                                                 // unevaluated
+                                                                 // as And(pi <=
+                                                                 // 0,
+                                                                 // Contains(pi,
+                                                                 // (-oo, oo)))
+    REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
+    REQUIRE(eq(*r1->contains(integer(-2)), *boolTrue));
+
+    r1 = conditionset(x, logical_and({Eq(zero, one), i1->contains(x)}));
+    REQUIRE(eq(*r1, *emptyset()));
+
+    r1 = conditionset(x, logical_and({Gt(one, zero), i1->contains(x)}));
+    REQUIRE(eq(*r1, *i1));
+
+    cond1 = Eq(sin(x), zero);
+    r1 = conditionset(x, logical_and({cond1, i3->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    // following doesn't work because we can't compare pi with number as of now.
+    // REQUIRE(eq(*r1->contains(pi), *boolTrue));
+    // REQUIRE(eq(*r1->contains(finiteset({pi})), *boolTrue));
+
+    cond1 = Eq(mul(x, x), integer(9));
+    r1 = conditionset(x, logical_and({cond1, i2->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*r1->contains(integer(-3)), *boolFalse));
+    REQUIRE(eq(*r1->contains(integer(2)), *boolFalse));
+    REQUIRE(eq(*r1->contains(finiteset({integer(3)})), *boolFalse));
+    REQUIRE(
+        eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolFalse));
+
+    cond1 = Le(sin(x), y);
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(5)), *Le(sin(integer(5)), y)));
+
+    cond1 = Eq(mul(x, x), integer(9));
+    r1 = conditionset(x, logical_and({cond1, i1->contains(x)}));
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*r1->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*r1->contains(integer(-3)), *boolTrue));
+    REQUIRE(
+        eq(*r1->contains(finiteset({integer(3), integer(-3)})), *boolFalse));
+
+    r2 = r1->set_intersection(interval(integer(-10), integer(10)));
+    REQUIRE(is_a<ConditionSet>(*r2));
+    REQUIRE(r1->compare(*r2) == -1);
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*r2).get_condition(),
+               *logical_and({Eq(mul(x, x), integer(9)),
+                             interval(integer(-10), integer(10))->contains(x),
+                             i1->contains(x)})));
+
+    r2 = r1->set_union(i1);
+    REQUIRE(is_a<Union>(*r2));
+
+    r2 = r1->set_complement(i1);
+    REQUIRE(is_a<Complement>(*r2));
+
+    cond3 = logical_and({Eq(y, x), f1->contains(x)});
+    r1 = conditionset(x, cond3);
+    REQUIRE(is_a<ConditionSet>(*r1));
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*r1).get_condition(), *cond3));
 }

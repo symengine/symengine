@@ -144,6 +144,31 @@ public:
         result_ = x.create(v);
     }
 
+    void bvisit(const Contains &x)
+    {
+        RCP<const Basic> a = apply(x.get_expr());
+        auto c = apply(x.get_set());
+        if (not is_a_Set(*c))
+            throw SymEngineException("expected an object of type Set");
+        RCP<const Set> b = rcp_static_cast<const Set>(c);
+        if (a == x.get_expr() and b == x.get_set())
+            result_ = x.rcp_from_this();
+        else
+            result_ = x.create(a, b);
+    }
+
+    void bvisit(const And &x)
+    {
+        set_boolean v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Boolean(*a))
+                throw SymEngineException("expected an object of type Boolean");
+            v.insert(rcp_static_cast<const Boolean>(a));
+        }
+        result_ = x.create(v);
+    }
+
     void bvisit(const Derivative &x)
     {
         RCP<const Symbol> s;
