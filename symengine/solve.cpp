@@ -187,13 +187,12 @@ RCP<const Set> solve_poly_heuristics(const RCP<const URatPoly> &f,
     auto degree = f->get_poly().degree();
 
     vec_basic coeffs;
-    if (degree != 0 and degree <= 4) {
-        for (unsigned i = 0; i <= degree; i++)
-            coeffs.push_back(Rational::from_mpq(f->get_poly().get_coeff(i)));
+    if (degree > 0 and degree <= 4) {
+        auto lc = Rational::from_mpq(f->get_poly().get_coeff(degree));
         // make poly as monic
         for (unsigned i = 0; i < degree; i++)
-            coeffs[i] = div(coeffs[i], coeffs[degree]);
-        coeffs.pop_back(); // ignore leading coeff as it is always 1.
+            coeffs.push_back(
+                div(Rational::from_mpq(f->get_poly().get_coeff(i)), lc));
     }
 
     switch (degree) {
@@ -213,7 +212,8 @@ RCP<const Set> solve_poly_heuristics(const RCP<const URatPoly> &f,
         case 4:
             return solve_poly_quartic(coeffs, sym, domain);
         default: {
-            // return conditionset(sym,Eq(f,zero),domain);
+            return conditionset(sym, logical_and({Eq(f->as_symbolic(), zero),
+                                                  domain->contains(sym)}));
         }
     }
 }
@@ -222,9 +222,8 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Symbol> &sym,
                           const RCP<const Set> &domain)
 {
-#ifdef HAVE_SYMENGINE_FLINT
 
-#if __FLINT_RELEASE > 20502
+#if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
 
     auto poly = from_basic<UIntPolyFlint>(f, sym);
     auto fac = factors(*poly);
@@ -234,9 +233,8 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
         solns.insert(solve_poly_heuristics(uip, sym, domain));
     }
     return SymEngine::set_union(solns);
-#endif // __FLINT_RELEASE
 
-#endif // HAVE_SYMENGINE_FLINT
+#endif
 
     auto uip = from_basic<URatPoly>(f, sym);
     return solve_poly_heuristics(uip, sym, domain);
@@ -274,7 +272,8 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
         return set_complement(domain, soln);
     } else if (is_a_Relational(*f)) {
         // Solving inequalities is not implemented yet.
-        // return conditionset(sym,f,domain);
+        return conditionset(sym, logical_and({rcp_static_cast<const Boolean>(f),
+                                              domain->contains(sym)}));
     }
     RCP<const Basic> newf = f;
     if (is_a<Mul>(*f)) {

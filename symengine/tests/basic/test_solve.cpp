@@ -36,18 +36,18 @@ using SymEngine::Ge;
 using SymEngine::boolTrue;
 using SymEngine::boolFalse;
 using SymEngine::down_cast;
+using SymEngine::ConditionSet;
+using SymEngine::is_a;
+using SymEngine::logical_and;
+using SymEngine::Union;
+using SymEngine::mul;
 
-TEST_CASE("test_solve", "[Solve]")
+TEST_CASE("Trivial cases", "[Solve]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
-
     RCP<const Basic> poly;
     RCP<const Set> reals = interval(NegInf, Inf, true, true);
     RCP<const Set> soln;
-
-    auto sqx = mul(x, x), cbx = mul(sqx, x), qx = mul(cbx, x);
-    auto i2 = integer(2), i3 = integer(3), im2 = integer(-2), im3 = integer(-3);
 
     REQUIRE(eq(*solve(boolTrue, x, reals), *reals));
     REQUIRE(eq(*solve(boolFalse, x, reals), *emptyset()));
@@ -60,6 +60,17 @@ TEST_CASE("test_solve", "[Solve]")
     poly = zero;
     soln = solve(poly, x, reals);
     REQUIRE(eq(*soln, *reals));
+}
+
+TEST_CASE("linear and quadratic polynomials", "[Solve]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> poly;
+    RCP<const Set> reals = interval(NegInf, Inf, true, true);
+    RCP<const Set> soln;
+
+    auto i2 = integer(2), i3 = integer(3), im2 = integer(-2), im3 = integer(-3);
+    auto sqx = mul(x, x);
 
     // linear
     poly = add(x, i3);
@@ -77,6 +88,10 @@ TEST_CASE("test_solve", "[Solve]")
     soln = solve(poly, x, reals);
     REQUIRE(eq(*soln, *finiteset({zero})));
 
+    auto y = symbol("y");
+    soln = solve_poly_linear({y}, x);
+    REQUIRE(eq(*soln, *finiteset({neg(y)})));
+
     CHECK_THROWS_AS(solve_poly_linear({one, zero}, x, reals),
                     SymEngineException);
 
@@ -91,11 +106,16 @@ TEST_CASE("test_solve", "[Solve]")
 
     poly = sub(add(div(sqx, i3), x), div(i2, integer(5)));
     soln = solve(poly, x);
-    // REQUIRE(eq(
-    //     *soln,
-    //     *finiteset({add(div(sqrt(integer(345)), integer(10)), div(im3, i2)),
-    //                 sub(div(im3, i2), div(sqrt(integer(345)),
-    //                 integer(10)))})));
+    REQUIRE(
+        eq(*soln,
+           *finiteset(
+               {add(div(mul(sqrt(integer(69)), sqrt(integer(5))), integer(10)),
+                    div(im3, i2)),
+                sub(div(im3, i2), div(mul(sqrt(integer(69)), sqrt(integer(5))),
+                                      integer(10)))}))); // Shouldn't
+                                                         // sqrt(69)*sqrt(5)
+                                                         // simplify into
+                                                         // sqrt(345) ?
 
     poly = add(sqx, mul(x, i2));
     soln = solve(poly, x);
@@ -114,25 +134,42 @@ TEST_CASE("test_solve", "[Solve]")
            *finiteset({add(integer(4), div(mul(sqrt(integer(136)), I), i2)),
                        sub(integer(4), div(mul(sqrt(integer(136)), I), i2))})));
 
-    poly = cbx;
+    auto b = symbol("b"), c = symbol("c");
+    soln = solve_poly_quadratic({c, b}, x);
+    REQUIRE(soln->__str__() == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
+                               "+ (-1/2)*sqrt(-4*c + b**2)}");
+
     CHECK_THROWS_AS(solve_poly_quadratic({one}, x, reals), SymEngineException);
+}
+
+TEST_CASE("cubic and quartic polynomials", "[Solve]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> poly;
+    RCP<const Set> reals = interval(NegInf, Inf, true, true);
+    RCP<const Set> soln;
+
+    auto sqx = mul(x, x), cbx = mul(sqx, x), qx = mul(cbx, x);
+    auto i2 = integer(2), i3 = integer(3), im2 = integer(-2);
 
     // cubic
-    poly = Eq(add(cbx, mul(x, i3)), add(mul(sqx, i3), one));
+    poly = Eq(add({cbx, mul(x, i3), mul(sqx, i3)}), neg(one));
     soln = solve(poly, x, reals);
-    REQUIRE(eq(*soln, *finiteset({one})));
+    REQUIRE(eq(*soln, *finiteset({neg(one)})));
 
-    poly = Ne(add(cbx, mul(x, i3)), add(mul(sqx, i3), one));
+    poly = Ne(add({cbx, mul(x, i3), mul(sqx, i3)}), neg(one));
     soln = solve(poly, x, reals);
-    REQUIRE(eq(*soln, *SymEngine::set_union({interval(NegInf, one, true, true),
-                                             interval(one, Inf, true, true)})));
+    REQUIRE(eq(*soln, *SymEngine::set_union(
+                          {interval(NegInf, integer(-1), true, true),
+                           interval(integer(-1), Inf, true, true)})));
 
-    // poly = Ge(add(cbx, mul(x, i3)), add(mul(sqx, i3), one));
-    // soln = solve(poly, x, reals);
-    // REQUIRE(is_a<ConditionSet>(*soln));
-    // REQUIRE(eq(*down_cast<const
-    // ConditionSet&>(*soln).get_condition(),*Ge(add(cbx, mul(x, i3)),
-    // add(mul(sqx, i3), one))));
+    poly = Ge(add({cbx, mul(x, i3), mul(sqx, i3)}), one);
+    soln = solve(poly, x, reals);
+    REQUIRE(is_a<ConditionSet>(*soln));
+
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*soln).get_condition(),
+               *logical_and({Ge(add({cbx, mul(x, i3), mul(sqx, i3)}), one),
+                             reals->contains(x)})));
 
     poly = mul(cbx, i3);
     soln = solve(poly, x, reals);
@@ -168,12 +205,12 @@ TEST_CASE("test_solve", "[Solve]")
 
     // Quartic
     poly = qx;
-    soln = solve(poly,x);
-    REQUIRE(eq(*soln,*finiteset({zero})));
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({zero})));
 
-    poly = add(qx,cbx);
-    soln = solve(poly,x);
-    REQUIRE(eq(*soln,*finiteset({zero,neg(one)})));
+    poly = add(qx, cbx);
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({zero, neg(one)})));
 
     poly = add({qx, mul(cbx, i2), mul(integer(-41), sqx), mul(x, integer(-42)),
                 integer(360)});
@@ -188,11 +225,19 @@ TEST_CASE("test_solve", "[Solve]")
     poly = mul(add(x, i2), add(x, i3));
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(i2), neg(i3)})));
+}
 
-// Higher order >=5
-#ifdef HAVE_SYMENGINE_FLINT
+TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> poly;
+    RCP<const Set> soln;
 
-#if __FLINT_RELEASE > 20502
+    auto sqx = mul(x, x), cbx = mul(sqx, x), qx = mul(cbx, x);
+    auto i2 = integer(2), i3 = integer(3);
+
+#if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
+
     poly = add({mul(qx, x), mul(qx, rational(-538, 15)),
                 mul(cbx, rational(1003, 3)), mul(sqx, rational(-13436, 15)),
                 mul(x, rational(740, 3)), rational(4784, 5)});
@@ -200,19 +245,48 @@ TEST_CASE("test_solve", "[Solve]")
     REQUIRE(eq(*soln, *finiteset({i2, i3, rational(26, 3), rational(-4, 5),
                                   integer(23)})));
 
-#else
-// poly =
-// add({mul(qx,x),mul(qx,rational(-538,15)),mul(cbx,rational(1003,3)),mul(sqx,rational(-13436,15)),mul(x,rational(740,3)),rational(4784,5)});
-// soln = solve(poly,x);
-// REQUIRE(eq(is_a<ConditionSet>(*soln)));
-#endif // __FLINT_RELEASE
+    poly = add({mul(qx, qx), mul({i3, qx, cbx}), mul({i2, qx, sqx}), mul(qx, x),
+                mul(i3, qx), mul(i2, cbx), sqx, mul(i3, x), i2});
+    soln = solve(poly, x);
+    REQUIRE(is_a<Union>(*soln));
+    auto &temp = down_cast<const Union &>(*soln).get_container();
+    REQUIRE(temp.size() == 2);
+    REQUIRE(temp.find(finiteset({neg(one), neg(i2)})) != temp.end());
+    REQUIRE(temp.find(conditionset(x, Eq(add({mul(cbx, cbx), cbx, one}), zero)))
+            != temp.end());
 
 #else
-// poly =
-// add({mul(qx,x),mul(qx,rational(-538,15)),mul(cbx,rational(1003,3)),mul(sqx,rational(-13436,15)),mul(x,rational(740,3)),rational(4784,5)});
-// soln = solve(poly,x);
-// REQUIRE(eq(is_a<ConditionSet>(*soln)));
-#endif // HAVE_SYMENGINE_FLINT
+
+    poly = add({mul(qx, x), mul(qx, rational(-538, 15)),
+                mul(cbx, rational(1003, 3)), mul(sqx, rational(-13436, 15)),
+                mul(x, rational(740, 3)), rational(4784, 5)});
+    soln = solve(poly, x);
+    REQUIRE(is_a<ConditionSet>(*soln));
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*soln).get_condition(),
+               *Eq(poly, zero)));
+
+    poly = add({mul(qx, qx), mul({i3, qx, cbx}), mul({i2, qx, sqx}), mul(qx, x),
+                mul(i3, qx), mul(i2, cbx), sqx, mul(i3, x), i2});
+    soln = solve(poly, x);
+    REQUIRE(is_a<ConditionSet>(*soln));
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*soln).get_condition(),
+               *Eq(poly, zero)));
+
+#endif
+
+    poly = add({mul(cbx, cbx), cbx, one});
+    soln = solve(poly, x);
+    REQUIRE(is_a<ConditionSet>(*soln));
+    REQUIRE(eq(*down_cast<const ConditionSet &>(*soln).get_condition(),
+               *Eq(poly, zero)));
+}
+
+TEST_CASE("solve_poly_rational", "[Solve]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> poly;
+    RCP<const Set> soln;
+    auto i2 = integer(2), i3 = integer(3);
 
     poly = div(add(x, i2), add(x, i3));
     soln = solve(poly, x);
@@ -221,12 +295,4 @@ TEST_CASE("test_solve", "[Solve]")
     poly = div(mul(add(x, i2), add(x, i3)), add(x, i2));
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(i3)})));
-
-    soln = solve_poly_linear({y}, x);
-    REQUIRE(eq(*soln, *finiteset({neg(y)})));
-
-    auto b = symbol("b"), c = symbol("c");
-    soln = solve_poly_quadratic({c, b}, x);
-    REQUIRE(soln->__str__() == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
-                               "+ (-1/2)*sqrt(-4*c + b**2)}");
 }
