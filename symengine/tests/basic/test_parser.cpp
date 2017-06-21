@@ -41,6 +41,12 @@ using SymEngine::ParseError;
 using SymEngine::down_cast;
 using SymEngine::Inf;
 using SymEngine::ComplexInf;
+using SymEngine::Eq;
+using SymEngine::Ne;
+using SymEngine::Ge;
+using SymEngine::Gt;
+using SymEngine::Le;
+using SymEngine::Lt;
 
 using namespace SymEngine::literals;
 
@@ -259,6 +265,30 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "sin(max(log(x, y), min(x, y)))";
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
+
+    s = "Eq(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Eq(x, y)));
+
+    s = "Ne(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Ne(x, y)));
+
+    s = "Ge(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Le(y, x)));
+
+    s = "Gt(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(y, x)));
+
+    s = "Le(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Le(x, y)));
+
+    s = "Lt(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(x, y)));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")

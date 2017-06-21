@@ -26,7 +26,8 @@ class ExpressionParser
         {"pi", pi},
         {"I", I},
         {"oo", Inf},
-        {"zoo", ComplexInf}};
+        {"zoo", ComplexInf},
+        {"nan", Nan}};
 
     // reference :
     // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
@@ -104,6 +105,15 @@ class ExpressionParser
             {"uppergamma", uppergamma},
             {"polygamma", polygamma},
             {"kronecker_delta", kronecker_delta}};
+
+    // maps string to corresponding double argument boolean function
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Basic> &,
+                                              const RCP<const Basic> &)>>
+        double_arg_boolean_functions = {
+
+            {"Eq", Eq}, {"Ne", Ne}, {"Ge", Ge},
+            {"Gt", Gt}, {"Le", Le}, {"Lt", Lt}};
 
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
@@ -240,13 +250,19 @@ class ExpressionParser
         }
 
         if (params.size() == 1) {
-            if (single_arg_functions.find(expr) != single_arg_functions.end())
+            if (single_arg_functions.find(expr) != single_arg_functions.end()) {
                 return single_arg_functions[expr](params[0]);
+            }
         }
 
         if (params.size() == 2) {
-            if (double_arg_functions.find(expr) != double_arg_functions.end())
+            if (double_arg_functions.find(expr) != double_arg_functions.end()) {
                 return double_arg_functions[expr](params[0], params[1]);
+            }
+            if (double_arg_boolean_functions.find(expr)
+                != double_arg_boolean_functions.end()) {
+                return double_arg_boolean_functions[expr](params[0], params[1]);
+            }
         }
 
         if (multi_arg_functions.find(expr) != multi_arg_functions.end()) {
