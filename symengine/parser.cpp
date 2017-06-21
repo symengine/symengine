@@ -34,7 +34,7 @@ class ExpressionParser
     typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic> &,
                                                 const RCP<const Basic> &);
 
-    // cast overlaoded functions below to single_arg, double_arg before they can
+    // cast overloaded functions below to single_arg, double_arg before they can
     // be used in the map
     single_arg_func single_casted_log = log;
     single_arg_func single_casted_zeta = zeta;
@@ -119,7 +119,7 @@ class ExpressionParser
     // the string to be parsed, obtained after removing all spaces from input
     // string
     std::string s;
-    // it's length
+    // its length
     unsigned int s_len;
 
     std::string get_string(int start, int end)
@@ -406,14 +406,14 @@ public:
                     // this should never happen, every '(' should have a
                     // matching ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
-                        throw ParseError("Mismatching parantheses!");
+                        throw ParseError("Mismatching parentheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
                 } else if (x == ')' or x == ',') {
                     // ',' acts as a pseudo ')', for the intended '('
                     if (x == ',') {
-                        // it's end is the actual ')'
+                        // its end is the actual ')'
                         operator_end[i] = right_bracket.top();
                         right_bracket.pop();
                     }
@@ -455,7 +455,7 @@ public:
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
-            throw ParseError("Mismatching parantheses!");
+            throw ParseError("Mismatching parentheses!");
 
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);
