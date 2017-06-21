@@ -12,9 +12,11 @@ class ExpressionParser
 {
 
     // OPERATORS and op_precedence used internally, for parsing
-    std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')', ','};
-    std::map<char, int> op_precedence = {{')', 0}, {',', 0}, {'-', 1}, {'+', 1},
-                                         {'*', 3}, {'/', 4}, {'^', 5}};
+    std::set<char> OPERATORS
+        = {'-', '+', '*', '/', '^', '(', ')', ',', '=', '>', '<'};
+    std::map<char, int> op_precedence
+        = {{')', 0}, {',', 0}, {'=', 1}, {'>', 2}, {'<', 2},
+           {'-', 3}, {'+', 3}, {'*', 5}, {'/', 6}, {'^', 7}};
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -34,14 +36,20 @@ class ExpressionParser
     typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic> &);
     typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic> &,
                                                 const RCP<const Basic> &);
+    typedef RCP<const Boolean> (*single_arg_boolean_func)(
+        const RCP<const Basic> &);
+    typedef RCP<const Boolean> (*double_arg_boolean_func)(
+        const RCP<const Basic> &, const RCP<const Basic> &);
 
     // cast overloaded functions below to single_arg, double_arg before they can
     // be used in the map
     single_arg_func single_casted_log = log;
     single_arg_func single_casted_zeta = zeta;
+    single_arg_boolean_func single_casted_Eq = Eq;
 
     double_arg_func double_casted_log = log;
     double_arg_func double_casted_zeta = zeta;
+    double_arg_boolean_func double_casted_Eq = Eq;
 
     // maps string to corresponding single argument function
     std::map<std::string,
@@ -106,14 +114,25 @@ class ExpressionParser
             {"polygamma", polygamma},
             {"kronecker_delta", kronecker_delta}};
 
+    // maps string to corresponding single argument boolean function
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
+        single_arg_boolean_functions = {
+
+            {"Eq", single_casted_Eq}};
+
     // maps string to corresponding double argument boolean function
     std::map<std::string,
              std::function<RCP<const Boolean>(const RCP<const Basic> &,
                                               const RCP<const Basic> &)>>
         double_arg_boolean_functions = {
 
-            {"Eq", Eq}, {"Ne", Ne}, {"Ge", Ge},
-            {"Gt", Gt}, {"Le", Le}, {"Lt", Lt}};
+            {"Eq", double_casted_Eq},
+            {"Ne", Ne},
+            {"Ge", Ge},
+            {"Gt", Gt},
+            {"Le", Le},
+            {"Lt", Lt}};
 
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
@@ -206,6 +225,31 @@ class ExpressionParser
                                  parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
+                } else if (s[iter] == '=') {
+                    result = Eq(result,
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '<' and s[iter + 1] == '=') {
+                    result = Le(result,
+                                parse_string(iter + 2, operator_end[iter + 1]));
+                    iter = operator_end[iter + 1] - 1;
+
+                } else if (s[iter] == '>' and s[iter + 1] == '=') {
+                    result = Ge(result,
+                                parse_string(iter + 2, operator_end[iter] + 1));
+                    iter = operator_end[iter + 1] - 1;
+
+                } else if (s[iter] == '<') {
+                    result = Lt(result,
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '>') {
+                    result = Gt(result,
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
                 } else if (s[iter] == '(') {
                     result = functionify(iter, get_string(expr_start, iter));
                     expr_start = -1;
@@ -252,6 +296,10 @@ class ExpressionParser
         if (params.size() == 1) {
             if (single_arg_functions.find(expr) != single_arg_functions.end()) {
                 return single_arg_functions[expr](params[0]);
+            }
+            if (single_arg_boolean_functions.find(expr)
+                != single_arg_boolean_functions.end()) {
+                return single_arg_boolean_functions[expr](params[0]);
             }
         }
 

@@ -266,29 +266,53 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
 
+    s = "Eq(x)";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(x, integer(0))));
+
     s = "Eq(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Eq(x, y)));
+    CHECK(eq(*res, *Eq(x, y)));
 
     s = "Ne(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Ne(x, y)));
+    CHECK(eq(*res, *Ne(x, y)));
 
     s = "Ge(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Le(y, x)));
+    CHECK(eq(*res, *Le(y, x)));
 
     s = "Gt(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Lt(y, x)));
+    CHECK(eq(*res, *Lt(y, x)));
 
     s = "Le(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Le(x, y)));
+    CHECK(eq(*res, *Le(x, y)));
 
     s = "Lt(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *Lt(x, y)));
+    CHECK(eq(*res, *Lt(x, y)));
+
+    s = "x = y";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(x, y)));
+
+    s = "x >= y";
+    // res = parse(s);
+    // CHECK(eq(*res, *Le(y, x)));
+
+    s = "x > y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(y, x)));
+
+    s = "x <= y";
+    // res = parse(s);
+    // CHECK(eq(*res, *Le(x, y)));
+
+    s = "x < y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(x, y)));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
