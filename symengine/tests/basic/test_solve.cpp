@@ -89,7 +89,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     REQUIRE(eq(*soln, *finiteset({zero})));
 
     auto y = symbol("y");
-    soln = solve_poly_linear({y}, x);
+    soln = solve(add(x, y), x);
     REQUIRE(eq(*soln, *finiteset({neg(y)})));
 
     CHECK_THROWS_AS(solve_poly_linear({one, zero}, x, reals),
@@ -135,9 +135,17 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
                        sub(integer(4), div(mul(sqrt(integer(136)), I), i2))})));
 
     auto b = symbol("b"), c = symbol("c");
-    soln = solve_poly_quadratic({c, b}, x);
+    soln = solve(add({sqx, mul(b, x), c}), x);
     REQUIRE(soln->__str__() == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
                                "+ (-1/2)*sqrt(-4*c + b**2)}");
+
+    soln = solve(add({sqx, mul(i3, x), c}), x);
+    REQUIRE(soln->__str__()
+            == "{-3/2 + (-1/2)*sqrt(9 - 4*c), -3/2 + (1/2)*sqrt(9 - 4*c)}");
+
+    soln = solve(add({sqx, mul({i3, b, x}), c}), x);
+    REQUIRE(soln->__str__() == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
+                               "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
     CHECK_THROWS_AS(solve_poly_quadratic({one}, x, reals), SymEngineException);
 }
@@ -238,9 +246,9 @@ TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")
 
 #if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
 
-    poly = add({mul(qx, x), mul(qx, rational(-538, 15)),
-                mul(cbx, rational(1003, 3)), mul(sqx, rational(-13436, 15)),
-                mul(x, rational(740, 3)), rational(4784, 5)});
+    poly = add({mul({qx, x, integer(15)}), mul(qx, integer(-538)),
+                mul(cbx, integer(5015)), mul(sqx, integer(-13436)),
+                mul(x, integer(3700)), integer(14352)});
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({i2, i3, rational(26, 3), rational(-4, 5),
                                   integer(23)})));
@@ -257,9 +265,9 @@ TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")
 
 #else
 
-    poly = add({mul(qx, x), mul(qx, rational(-538, 15)),
-                mul(cbx, rational(1003, 3)), mul(sqx, rational(-13436, 15)),
-                mul(x, rational(740, 3)), rational(4784, 5)});
+    poly = add({mul({qx, x, integer(15)}), mul(qx, integer(-538)),
+                mul(cbx, integer(5015)), mul(sqx, integer(-13436)),
+                mul(x, integer(3700)), integer(14352)});
     soln = solve(poly, x);
     REQUIRE(is_a<ConditionSet>(*soln));
     REQUIRE(eq(*down_cast<const ConditionSet &>(*soln).get_condition(),
