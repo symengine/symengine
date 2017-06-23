@@ -14,6 +14,7 @@ namespace SymEngine
 class Set;
 class BooleanAtom;
 class Boolean;
+inline bool is_a_Boolean(const Basic &b);
 RCP<const BooleanAtom> boolean(bool b);
 }
 #include <symengine/logic.h>
@@ -24,6 +25,7 @@ typedef std::set<RCP<const Set>, RCPBasicKeyLess> set_set;
 class Set : public Basic
 {
 public:
+    virtual vec_basic get_args() const = 0;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const = 0;
@@ -123,7 +125,7 @@ public:
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
     {
-        return {};
+        return vec_basic(container_.begin(), container_.end());
     }
 
     FiniteSet(const set_basic container);
@@ -262,7 +264,7 @@ public:
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
     {
-        return {};
+        return {sym, condition_};
     }
     ConditionSet(const RCP<const Basic> sym, RCP<const Boolean> condition);
     static bool is_canonical(const RCP<const Basic> sym,
@@ -296,7 +298,7 @@ public:
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const
     {
-        return {};
+        return {sym_, expr_, base_};
     }
     ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
              const RCP<const Set> &base);
@@ -374,11 +376,20 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
     if (not is_a<Symbol>(*sym))
         throw SymEngineException("first arg is expected to be a symbol");
 
-    if (eq(*expr, *sym))
+    if (eq(*expr, *sym) or eq(*base, *emptyset()))
         return base;
 
     if (is_a_Number(*expr))
         return finiteset({expr});
+    if (is_a_Set(*expr)) {
+        for (const auto &s : static_cast<const Set &>(*expr).get_args()) {
+            if (not(is_a_Number(*s) or is_a<Constant>(*s)
+                    or is_a_Boolean(*s))) {
+                return make_rcp<const ImageSet>(sym, expr, base);
+            }
+        }
+        return finiteset({expr});
+    }
 
     return make_rcp<const ImageSet>(sym, expr, base);
 }

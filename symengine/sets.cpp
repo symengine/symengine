@@ -764,7 +764,8 @@ bool ImageSet::is_canonical(const RCP<const Basic> &sym,
                             const RCP<const Basic> &expr,
                             const RCP<const Set> &base)
 {
-    if (not is_a<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr))
+    if (not is_a<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr)
+        or eq(*base, *emptyset()))
         return false;
     return true;
 }

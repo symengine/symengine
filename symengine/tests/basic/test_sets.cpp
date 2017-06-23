@@ -304,7 +304,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(eq(*r3->contains(integer(3)), *boolFalse));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
-    REQUIRE(r1->get_args().empty());
+    REQUIRE(r1->get_args().size() == 3);
 
     r1 = finiteset({zero, one});
     REQUIRE(r1->__str__() == "{0, 1}");
@@ -413,7 +413,7 @@ TEST_CASE("Union : Basic", "[basic]")
     };
     RCP<const Set> f1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r1 = set_union({f1, emptyset()});
-    REQUIRE(r1->get_args().empty());
+    REQUIRE(r1->get_args().size() == 3);
     REQUIRE(eq(*r1, *f1));
     r1 = set_union({emptyset()});
     REQUIRE(eq(*r1, *emptyset()));
@@ -780,4 +780,30 @@ TEST_CASE("ImageSet : Basic", "[basic]")
     auto r4 = down_cast<const Union &>(*r1->set_union(r2)).get_container();
     REQUIRE(r4.find(r1) != r4.end());
     REQUIRE(r4.find(r2) != r4.end());
+
+    r1 = imageset(x, mul(x, x), emptyset());
+    REQUIRE(eq(*r1, *emptyset()));
+
+    auto y = symbol("y"), z = symbol("z");
+    r1 = imageset(x, add({mul(x, x), mul(y, y), mul(z, z)}), i1);
+    REQUIRE(is_a<ImageSet>(*r1));
+    auto &r5 = down_cast<const ImageSet &>(*r1);
+    REQUIRE(eq(*r5.get_symbol(), *x));
+    REQUIRE(eq(*r5.get_expr(), *add({mul(x, x), mul(y, y), mul(z, z)})));
+    REQUIRE(eq(*r5.get_baseset(), *i1));
+
+    auto f1 = finiteset({one, integer(2), y});
+    r1 = imageset(x, f1, i1);
+    REQUIRE(is_a<ImageSet>(*r1));
+    REQUIRE(eq(*down_cast<const ImageSet &>(*r1).get_baseset(), *i1));
+    REQUIRE(eq(*down_cast<const ImageSet &>(*r1).get_expr(), *f1));
+    REQUIRE(eq(*down_cast<const ImageSet &>(*r1).get_symbol(), *x));
+
+    f1 = finiteset({one, integer(2)});
+    r1 = imageset(x, f1, i1);
+    REQUIRE(eq(*r1, *finiteset({f1})));
+
+    auto i2 = interval(one, integer(2));
+    r1 = imageset(x, i2, i1);
+    REQUIRE(eq(*r1, *finiteset({i2})));
 }
