@@ -148,6 +148,15 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
                                "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
     CHECK_THROWS_AS(solve_poly_quadratic({one}, x, reals), SymEngineException);
+
+    auto onebyx = div(one, x);
+    poly = add(onebyx, one);
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one)})));
+
+    poly = mul(onebyx, onebyx);
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *emptyset()));
 }
 
 TEST_CASE("cubic and quartic polynomials", "[Solve]")

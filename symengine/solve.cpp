@@ -173,34 +173,18 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
     return set_intersection({domain, finiteset(roots)});
 }
 
-RCP<const Set> solve_poly_heuristics(const RCP<const UIntPoly> &f,
+RCP<const Set> solve_poly_heuristics(const RCP<const UExprPoly> &f,
                                      const RCP<const Symbol> &sym,
                                      const RCP<const Set> &domain)
 {
     auto degree = f->get_poly().degree();
+    auto lc = f->get_poly().find_cf(degree).get_basic();
     vec_basic coeffs;
 
-    if (degree >= 0 and degree <= 4) {
-        for (unsigned i = 0; i <= degree; i++)
-            coeffs.push_back(integer(f->get_poly().get_coeff(i)));
-        ;
-        return solve_poly_heuristics(coeffs, sym, domain);
-    } else {
-        throw SymEngineException(
-            "expected a polynomial of order between 0 to 4");
+    if (degree > 0 and degree <= 4) {
+        for (int i = 0; i < degree; i++)
+            coeffs.push_back(div(f->get_poly().find_cf(i).get_basic(), lc));
     }
-}
-
-RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
-                                     const RCP<const Symbol> &sym,
-                                     const RCP<const Set> &domain)
-{
-    auto degree = coeffs.size() - 1;
-    auto lc = coeffs[degree];
-    vec_basic ncoeffs;
-
-    for (unsigned i = 0; i < degree; i++)
-        ncoeffs.push_back(div(coeffs[i], lc));
 
     switch (degree) {
         case 0: {
@@ -211,13 +195,13 @@ RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
             }
         }
         case 1:
-            return solve_poly_linear(ncoeffs, sym, domain);
+            return solve_poly_linear(coeffs, sym, domain);
         case 2:
-            return solve_poly_quadratic(ncoeffs, sym, domain);
+            return solve_poly_quadratic(coeffs, sym, domain);
         case 3:
-            return solve_poly_cubic(ncoeffs, sym, domain);
+            return solve_poly_cubic(coeffs, sym, domain);
         case 4:
-            return solve_poly_quartic(ncoeffs, sym, domain);
+            return solve_poly_quartic(coeffs, sym, domain);
         default:
             throw SymEngineException(
                 "expected a polynomial of order between 0 to 4");
@@ -236,14 +220,14 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
         set_set solns;
 
         for (const auto &elem : fac) {
-            auto uip = UIntPoly::from_poly(*elem.first);
-            auto degree = uip->get_poly().degree();
+            auto uexp = UExprPoly::from_poly(*elem.first);
+            auto degree = uexp->get_poly().degree();
             if (degree >= 0 and degree <= 4) {
-                solns.insert(solve_poly_heuristics(uip, sym, domain));
+                solns.insert(solve_poly_heuristics(uexp, sym, domain));
             } else {
-                solns.insert(
-                    conditionset(sym, logical_and({Eq(uip->as_symbolic(), zero),
-                                                   domain->contains(sym)})));
+                solns.insert(conditionset(
+                    sym, logical_and({Eq(uexp->as_symbolic(), zero),
+                                      domain->contains(sym)})));
             }
         }
         return SymEngine::set_union(solns);
@@ -251,22 +235,13 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
         // Try next
     }
 #endif
-
-    try {
-        auto uip = from_basic<UIntPoly>(f, sym);
-        return solve_poly_heuristics(uip, sym, domain);
-    } catch (SymEngineException &x) {
-        auto uexp = from_basic<UExprPoly>(f, sym);
-        auto degree = uexp->get_poly().degree();
-        if (degree >= 0 and degree <= 4) {
-            vec_basic coeffs;
-            for (unsigned i = 0; i <= degree; i++)
-                coeffs.push_back(uexp->get_poly().find_cf(i).get_basic());
-            return solve_poly_heuristics(coeffs, sym, domain);
-        } else {
-            return conditionset(
-                sym, logical_and({Eq(f, zero), domain->contains(sym)}));
-        }
+    auto uexp = from_basic<UExprPoly>(f, sym);
+    auto degree = uexp->get_poly().degree();
+    if (degree >= 0 and degree <= 4) {
+        return solve_poly_heuristics(uexp, sym, domain);
+    } else {
+        return conditionset(sym,
+                            logical_and({Eq(f, zero), domain->contains(sym)}));
     }
 }
 
