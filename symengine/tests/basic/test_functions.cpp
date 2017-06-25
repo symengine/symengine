@@ -315,6 +315,10 @@ TEST_CASE("Sin: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = sin(x)->expand_as_exp();
+    r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))), mul(integer(2), I));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -436,6 +440,10 @@ TEST_CASE("Cos: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = cos(x)->expand_as_exp();
+    r2 = div(add(exp(mul(I, x)), exp(mul(neg(I), x))), integer(2));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Tan: functions", "[functions]")
@@ -557,6 +565,11 @@ TEST_CASE("Tan: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = tan(x)->expand_as_exp();
+    r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))),
+             mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -674,6 +687,11 @@ TEST_CASE("Cot: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = cot(x)->expand_as_exp();
+    r2 = div(mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I),
+             sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -793,6 +811,10 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = csc(x)->expand_as_exp();
+    r2 = div(mul(integer(2), I), sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -914,6 +936,10 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(mul(pi, i2))));
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
+
+    r1 = sec(x)->expand_as_exp();
+    r2 = div(integer(2), add(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")

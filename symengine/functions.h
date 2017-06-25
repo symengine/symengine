@@ -289,6 +289,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands sin in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sin:
@@ -305,6 +307,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands cos in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Cos:
@@ -321,6 +325,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands tan in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -336,6 +342,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands cot in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -351,6 +359,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands csc in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -366,6 +376,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands sec in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);

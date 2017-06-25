@@ -715,6 +715,14 @@ bool Sin::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
+RCP<const Basic> Sin::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(sub(a, b), mul(integer(2), I));
+}
+
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -783,6 +791,14 @@ bool Cos::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
+RCP<const Basic> Cos::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(add(a, b), integer(2));
+}
+
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -846,6 +862,14 @@ bool Tan::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
+}
+
+RCP<const Basic> Tan::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(sub(a, b), mul(I, add(a, b)));
 }
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
@@ -914,6 +938,14 @@ bool Cot::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
+RCP<const Basic> Cot::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(mul(I, add(a, b)), sub(a, b));
+}
+
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -979,6 +1011,14 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
+RCP<const Basic> Csc::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(mul(I, integer(2)), sub(a, b));
+}
+
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1041,6 +1081,14 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
+}
+
+RCP<const Basic> Sec::expand_as_exp() const
+{
+    auto expo = mul(I, get_arg());
+    RCP<const Basic> a = exp(expo);
+    RCP<const Basic> b = exp(mul(minus_one, expo));
+    return div(integer(2), add(a, b));
 }
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
