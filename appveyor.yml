@@ -14,6 +14,9 @@ environment:
       PLATFORM: x64
       LIB_TYPE: dll
       CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+      WITH_MPFR: yes
+      WITH_MPC: yes
+      WITH_LLVM: yes
     - BUILD_TYPE: Release
       COMPILER: MinGW-w64
       PLATFORM: x64
@@ -22,6 +25,8 @@ environment:
       PLATFORM: Win32
       CONDA_INSTALL_LOCN: C:\\Miniconda35
       LIB_TYPE: dll
+      WITH_MPFR: yes
+      WITH_MPC: yes
     - BUILD_TYPE: Release
       COMPILER: MinGW
       PLATFORM: Win32
@@ -51,7 +56,9 @@ install:
 - if [%COMPILER%]==[MSVC15] conda config --add channels conda-forge
 - if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] conda config --add channels symengine/label/debug
 - if [%COMPILER%]==[MSVC15] conda install --yes mpir=3.0.0
-- if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Release] conda install --yes mpc=1.0.3 mpfr=3.1.5 llvmdev=3.9
+- if [%COMPILER%]==[MSVC15] if [%WITH_MPFR%]==[yes] conda install --yes mpfr=3.1.5
+- if [%COMPILER%]==[MSVC15] if [%WITH_MPC%]==[yes] conda install --yes mpc=1.0.3
+- if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] conda install --yes llvmdev=3.9
 - if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] rm %CONDA_INSTALL_LOCN%\Library\lib\gmp.lib
 - if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] move %CONDA_INSTALL_LOCN%\Library\lib\gmp_static.lib %CONDA_INSTALL_LOCN%\Library\lib\gmp.lib
 
@@ -86,8 +93,7 @@ build_script:
 
 - if [%WITH_MPFR%]==[yes] cmake -DWITH_MPFR=yes ..
 - if [%WITH_MPC%]==[yes] cmake -DWITH_MPC=yes ..
-
-- if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Release] cmake -DWITH_MPC=yes -DWITH_LLVM=yes -DMSVC_USE_MT=no ..
+- if [%WITH_LLVM%]==[yes] cmake -DWITH_LLVM=yes -DMSVC_USE_MT=no ..
 
 - cmake -DCMAKE_INSTALL_PREFIX=C:\symengine ..
 - cmake --build . --config %BUILD_TYPE% --target install
