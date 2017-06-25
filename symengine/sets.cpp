@@ -161,6 +161,14 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
     throw SymEngineException("Not implemented Intersection class");
 }
 
+RCP<const Set> make_set_union(const set_set &in)
+{
+    if (in.size() > 1) {
+        return make_rcp<const Union>(in);
+    }
+    return *in.begin();
+}
+
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
@@ -175,17 +183,19 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
              and ((eq(*end_end, *this->end_) and this->right_open_)
                   or (eq(*end_end, *other.end_) and other.right_open_)))
             or (eq(*end_end, *m) and not eq(*end_end, *start_start))) {
-            return SymEngine::set_union({rcp_from_this_cast<const Set>(), o},
-                                        false);
+            return SymEngine::make_set_union(
+                {rcp_from_this_cast<const Set>(), o});
         } else {
-            if (eq(*min({this->start_, other.start_}), *this->start_))
+            if (eq(*min({this->start_, other.start_}), *this->start_)) {
                 start = this->start_;
-            else
+            } else {
                 start = other.start_;
-            if (eq(*max({this->end_, other.end_}), *this->end_))
+            }
+            if (eq(*max({this->end_, other.end_}), *this->end_)) {
                 end = this->end_;
-            else
+            } else {
                 end = other.end_;
+            }
             left_open = ((neq(*this->start_, *start) or this->left_open_)
                          and (neq(*other.start_, *start) or other.left_open_));
             right_open = ((neq(*this->end_, *end) or this->right_open_)
@@ -197,7 +207,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
         or is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
-    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
+    return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> Interval::set_complement(const RCP<const Set> &o) const
@@ -391,26 +401,28 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
         }
         if (not container.empty()) {
             if (left == other.get_left_open()
-                and right == other.get_right_open())
-                return SymEngine::set_union({finiteset(container), o}, false);
-            else
-                return SymEngine::set_union(
-                    {finiteset(container),
-                     interval(other.get_start(), other.get_end(), left, right)},
-                    false);
+                and right == other.get_right_open()) {
+                return SymEngine::make_set_union({finiteset(container), o});
+            } else {
+                return SymEngine::make_set_union(
+                    set_set({finiteset(container),
+                             interval(other.get_start(), other.get_end(), left,
+                                      right)}));
+            }
         } else {
             if (left == other.get_left_open()
-                and right == other.get_right_open())
+                and right == other.get_right_open()) {
                 return o;
-            else
+            } else {
                 return interval(other.get_start(), other.get_end(), left,
                                 right);
+            }
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
-    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
+    return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
@@ -487,10 +499,10 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
                 interval(last, other.get_end(), left_open, right_open));
         }
         if (rest.empty()) {
-            return SymEngine::set_union(intervals, false);
+            return SymEngine::make_set_union(intervals);
         } else {
             return make_rcp<const Complement>(
-                SymEngine::set_union(intervals, false), finiteset(rest));
+                SymEngine::make_set_union(intervals), finiteset(rest));
         }
     }
 
@@ -500,6 +512,7 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
 Union::Union(set_set in) : container_(in)
 {
     SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(Union::is_canonical(in))
 }
 
 hash_t Union::__hash__() const
@@ -519,6 +532,21 @@ bool Union::__eq__(const Basic &o) const
     return false;
 }
 
+bool Union::is_canonical(set_set in)
+{
+    if (in.size() <= 1)
+        return false;
+    int count = 0;
+    for (const auto &s : in) {
+        if (is_a<FiniteSet>(*s)) {
+            count++;
+        }
+        if (count >= 2)
+            return false;
+    }
+    return true;
+}
+
 int Union::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Union>(o))
@@ -533,14 +561,15 @@ RCP<const Set> Union::set_union(const RCP<const Set> &o) const
         auto temp = o->set_union(*iter);
         // If we are able to do union with `*iter`, we replace `*iter` with
         // the result of union.
-        if (not eq(*temp, *SymEngine::set_union({o, *iter}, false))) {
+        auto un = SymEngine::make_set_union({o, *iter});
+        if (not eq(*temp, *un)) {
             iter = container.erase(iter);
             container.insert(temp);
             return SymEngine::set_union(container);
         }
     }
     container.insert(o);
-    return SymEngine::set_union(container, false);
+    return SymEngine::make_set_union(container);
 }
 
 RCP<const Set> Union::set_intersection(const RCP<const Set> &o) const
@@ -689,7 +718,7 @@ int ConditionSet::compare(const Basic &o) const
 
 RCP<const Set> ConditionSet::set_union(const RCP<const Set> &o) const
 {
-    return SymEngine::set_union({o, rcp_from_this_cast<const Set>()}, false);
+    return SymEngine::make_set_union({o, rcp_from_this_cast<const Set>()});
 }
 
 RCP<const Set> ConditionSet::set_intersection(const RCP<const Set> &o) const
@@ -777,7 +806,7 @@ RCP<const Boolean> ImageSet::contains(const RCP<const Basic> &a) const
 
 RCP<const Set> ImageSet::set_union(const RCP<const Set> &o) const
 {
-    return SymEngine::set_union({rcp_from_this_cast<const Set>(), o}, false);
+    return make_set_union({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> ImageSet::set_intersection(const RCP<const Set> &o) const
@@ -790,11 +819,9 @@ RCP<const Set> ImageSet::set_complement(const RCP<const Set> &o) const
     return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
 }
 
-RCP<const Set> set_union(const set_set &in, bool solve)
+RCP<const Set> set_union(const set_set &in)
 {
     set_set input;
-    if (solve == false && in.size() > 1)
-        return make_rcp<const Union>(in);
     set_basic combined_FiniteSet;
     for (auto it = in.begin(); it != in.end(); ++it) {
         if (is_a<FiniteSet>(**it)) {

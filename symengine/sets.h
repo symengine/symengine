@@ -206,6 +206,7 @@ public:
         return {};
     }
     Union(set_set in);
+    static bool is_canonical(set_set in);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -395,7 +396,7 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
 }
 
 // ! \return RCP<const Set>
-RCP<const Set> set_union(const set_set &in, bool solve = true);
+RCP<const Set> set_union(const set_set &in);
 
 // ! \return RCP<const Set>
 RCP<const Set> set_intersection(const set_set &in);
