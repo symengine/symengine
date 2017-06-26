@@ -2,7 +2,6 @@
 #include <symengine/pow.h>
 #include <symengine/rings.h>
 #include <symengine/monomials.h>
-#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

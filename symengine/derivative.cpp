@@ -1,6 +1,5 @@
 #include <symengine/visitor.h>
 #include <symengine/subs.h>
-#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {

@@ -1,7 +1,4 @@
 #include <symengine/diophantine.h>
-#include <symengine/constants.h>
-#include <symengine/add.h>
-#include <symengine/mul.h>
 
 namespace SymEngine
 {

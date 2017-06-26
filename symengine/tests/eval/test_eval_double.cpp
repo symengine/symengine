@@ -4,7 +4,6 @@
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/eval_mpc.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::constant;

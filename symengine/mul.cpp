@@ -1,7 +1,6 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex.h>
-#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

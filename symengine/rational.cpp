@@ -1,6 +1,5 @@
 #include <symengine/rational.h>
 #include <symengine/pow.h>
-#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

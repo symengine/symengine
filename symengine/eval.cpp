@@ -1,9 +1,7 @@
-#include <exception>
 #include <symengine/eval.h>
 #include <symengine/eval_double.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
-#include <symengine/symengine_rcp.h>
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #include <symengine/real_mpfr.h>

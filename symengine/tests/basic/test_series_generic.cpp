@@ -3,7 +3,6 @@
 
 #include <symengine/sets.h>
 #include <symengine/series_generic.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::UExprDict;
 using SymEngine::UnivariateSeries;

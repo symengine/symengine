@@ -4,7 +4,6 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;

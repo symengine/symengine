@@ -1,9 +1,5 @@
 #include <symengine/matrix.h>
-#include <symengine/add.h>
-#include <symengine/pow.h>
 #include <symengine/subs.h>
-#include <symengine/symengine_exception.h>
-#include <symengine/polys/uexprpoly.h>
 #include <symengine/solve.h>
 
 namespace SymEngine

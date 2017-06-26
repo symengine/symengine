@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <cstring>
 
 #include <symengine/symbol.h>

@@ -2,7 +2,6 @@
 #include <chrono>
 
 #include <symengine/lambda_double.h>
-#include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>

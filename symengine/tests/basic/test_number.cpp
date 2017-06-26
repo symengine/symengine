@@ -5,7 +5,6 @@
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;

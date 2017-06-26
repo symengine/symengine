@@ -4,7 +4,6 @@
  *
  **/
 #include <symengine/complex_double.h>
-#include <symengine/eval_double.h>
 
 namespace SymEngine
 {

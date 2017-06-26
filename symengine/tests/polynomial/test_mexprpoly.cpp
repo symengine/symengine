@@ -2,7 +2,6 @@
 #include <chrono>
 
 #include <symengine/printer.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::Expression;
 using SymEngine::Symbol;

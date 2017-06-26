@@ -1,7 +1,6 @@
 #include "catch.hpp"
 
 #include <symengine/integer.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;

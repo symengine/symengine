@@ -1,6 +1,4 @@
 #include <symengine/logic.h>
-#include <symengine/symengine_casts.h>
-#include <iterator>
 
 namespace SymEngine
 {
