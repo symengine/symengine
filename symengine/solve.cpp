@@ -72,16 +72,18 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
                         delta0);
         }
     } else {
-        auto Cexpr = div(add(delta1, sqrt(mul(neg(i27), delta))), i2);
+        auto temp = sqrt(mul(neg(i27), delta));
+        auto Cexpr = div(add(delta1, temp), i2);
         if (eq(*Cexpr, *zero)) {
-            Cexpr = div(sub(delta1, sqrt(mul(neg(i27), delta))), i2);
+            Cexpr = div(sub(delta1, temp), i2);
         }
         auto C = pow(Cexpr, div(one, i3));
         root1 = neg(div(add(b, add(C, div(delta0, C))), i3));
 
         auto coef = div(mul(I, sqrt(i3)), i2);
-        auto cbrt1 = add(neg(div(one, i2)), coef);
-        auto cbrt2 = sub(neg(div(one, i2)), coef);
+        temp = neg(div(one, i2));
+        auto cbrt1 = add(temp, coef);
+        auto cbrt2 = sub(temp, coef);
         root2 = neg(
             div(add(b, add(mul(cbrt1, C), div(delta0, mul(cbrt1, C)))), i3));
         root3 = neg(
@@ -131,8 +133,9 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             newcoeffs[0] = ff, newcoeffs[1] = e, newcoeffs[2] = zero;
             auto rcubic = solve_poly_cubic(newcoeffs, sym, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
-            for (auto &r :
-                 down_cast<const FiniteSet &>(*rcubic).get_container()) {
+            auto rtemp = down_cast<const FiniteSet &>(*rcubic).get_container();
+            SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 3);
+            for (auto &r : rtemp) {
                 roots.insert(sub(r, aby4));
             }
             roots.insert(aby4);
@@ -142,6 +145,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             auto rquad = solve_poly_quadratic(newcoeffs, sym, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rquad));
             auto rtemp = down_cast<const FiniteSet &>(*rquad).get_container();
+            SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 2);
             for (auto &r : rtemp) {
                 auto sqrtr = sqrt(r);
                 roots.insert(sub(sqrtr, aby4));
@@ -157,9 +161,10 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             auto rcubic = solve_poly_cubic(newcoeffs, sym);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
             roots = down_cast<const FiniteSet &>(*rcubic).get_container();
+            SYMENGINE_ASSERT(roots.size() > 0 and roots.size() <= 3);
             auto p = sqrt(*roots.begin());
             auto q = p;
-            if (roots.size() != 1) {
+            if (roots.size() > 1) {
                 q = sqrt(*std::next(roots.begin()));
             }
             auto r = div(neg(ff), mul({i8, p, q}));
