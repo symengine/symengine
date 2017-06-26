@@ -85,7 +85,7 @@ RCP<const Number> Complex::imaginary_part() const
     return Rational::from_mpq(imaginary_);
 }
 
-RCP<const Number> Complex::conjugate() const
+RCP<const Basic> Complex::conjugate() const
 {
     return Complex::from_mpq(real_, -imaginary_);
 }

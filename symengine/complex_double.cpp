@@ -24,7 +24,7 @@ RCP<const Number> ComplexDouble::imaginary_part() const
     return real_double(i.imag());
 }
 //! Get the conjugate of the complex number
-RCP<const Number> ComplexDouble::conjugate() const
+RCP<const Basic> ComplexDouble::conjugate() const
 {
     double re = i.real();
     double im = -i.imag();

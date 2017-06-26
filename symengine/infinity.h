@@ -95,6 +95,8 @@ public:
     {
         return is_unsigned_infinity();
     }
+    //! \return the conjugate if the class is complex
+    virtual RCP<const Basic> conjugate() const;
 
     // Think about it again
     RCP<const Number> add(const Number &other) const;

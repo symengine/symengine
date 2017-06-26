@@ -109,7 +109,7 @@ public:
     //! Get the imaginary part of the complex number
     virtual RCP<const Number> imaginary_part() const;
     //! Get the conjugate of the complex number
-    virtual RCP<const Number> conjugate() const;
+    virtual RCP<const Basic> conjugate() const;
     //! \return `true` if positive
     inline virtual bool is_positive() const
     {

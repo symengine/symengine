@@ -29,6 +29,11 @@ int NaN::compare(const Basic &o) const
     return 0;
 }
 
+RCP<const Basic> NaN::conjugate() const
+{
+    return Nan;
+}
+
 RCP<const Number> NaN::add(const Number &other) const
 {
     return rcp_from_this_cast<Number>();

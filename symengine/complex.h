@@ -17,7 +17,6 @@ class ComplexBase : public Number
 public:
     virtual RCP<const Number> real_part() const = 0;
     virtual RCP<const Number> imaginary_part() const = 0;
-    virtual RCP<const Number> conjugate() const = 0;
     bool is_re_zero() const;
 };
 
@@ -65,7 +64,7 @@ public:
     //! Get the imaginary part of the complex number
     virtual RCP<const Number> imaginary_part() const;
     //! Get the conjugate of the complex number
-    virtual RCP<const Number> conjugate() const;
+    virtual RCP<const Basic> conjugate() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const

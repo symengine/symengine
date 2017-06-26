@@ -102,12 +102,7 @@ RCP<const Basic> Conjugate::create(const RCP<const Basic> &arg) const
 RCP<const Basic> conjugate(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg)) {
-        if (not down_cast<const Number &>(*arg).is_complex()) {
-            return arg;
-        }
-        if (is_a_Complex(*arg)) {
-            return down_cast<const ComplexBase &>(*arg).conjugate();
-        }
+        return down_cast<const Number &>(*arg).conjugate();
     }
     if (is_a<Constant>(*arg) or is_a<Abs>(*arg) or is_a<KroneckerDelta>(*arg)
         or is_a<LeviCivita>(*arg)) {

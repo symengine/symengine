@@ -34,7 +34,7 @@ public:
     //! Get the imaginary part of the complex number
     virtual RCP<const Number> imaginary_part() const;
     //! Get the conjugate of the complex number
-    virtual RCP<const Number> conjugate() const;
+    virtual RCP<const Basic> conjugate() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const
