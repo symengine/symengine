@@ -170,7 +170,7 @@ public:
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
-    SYMENGINE_INCLUDE_METHODS(= 0)
+    SYMENGINE_INCLUDE_METHODS(= 0;)
 };
 
 //! Our hash:
@@ -286,12 +286,12 @@ struct hash<SymEngine::Basic>;
     {                                                                          \
         return type_code_id;                                                   \
     };                                                                         \
-    SYMENGINE_INCLUDE_METHODS()
+    SYMENGINE_INCLUDE_METHODS(;)
 #else
 #define IMPLEMENT_TYPEID(ID)                                                   \
     /*! Type_code_id shared by all instances */                                \
     const static TypeID type_code_id = ID;                                     \
-    SYMENGINE_INCLUDE_METHODS()
+    SYMENGINE_INCLUDE_METHODS(;)
 #endif
 
 #ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
