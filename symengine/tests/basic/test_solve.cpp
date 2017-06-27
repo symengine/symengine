@@ -41,6 +41,18 @@ using SymEngine::is_a;
 using SymEngine::logical_and;
 using SymEngine::Union;
 using SymEngine::mul;
+using SymEngine::UIntPoly;
+using SymEngine::URatPoly;
+using SymEngine::rational_class;
+#ifdef HAVE_SYMENGINE_FLINT
+using SymEngine::UIntPolyFlint;
+using SymEngine::URatPolyFlint;
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+using SymEngine::UIntPolyPiranha;
+using SymEngine::URatPolyPiranha;
+#endif
+using namespace SymEngine::literals;
 
 TEST_CASE("Trivial cases", "[Solve]")
 {
@@ -92,8 +104,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     soln = solve(add(x, y), x);
     REQUIRE(eq(*soln, *finiteset({neg(y)})));
 
-    CHECK_THROWS_AS(solve_poly_linear({one, zero}, x, reals),
-                    SymEngineException);
+    CHECK_THROWS_AS(solve_poly_linear({one}, x, reals), SymEngineException);
 
     // Quadratic
     poly = add(sqx, one);
@@ -312,4 +323,46 @@ TEST_CASE("solve_poly_rational", "[Solve]")
     poly = div(mul(add(x, i2), add(x, i3)), add(x, i2));
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(i3)})));
+}
+
+TEST_CASE("solve_upoly", "[Solve]")
+{
+    auto x = symbol("x");
+    RCP<const Set> soln;
+
+    auto p1 = UIntPoly::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 1_z}});
+    soln = SymEngine::solve_upoly(p1, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+
+    auto p2 = URatPoly::from_dict(x, {{0, 2_q}, {1, 3_q}, {2, 1_q}});
+    soln = solve_upoly(p2, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+
+    auto P = uexpr_poly(x, {{0, integer(2)}, {1, integer(3)}, {2, integer(1)}});
+    soln = solve_upoly(P, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+
+#ifdef HAVE_SYMENGINE_FLINT
+    auto p3 = UIntPolyFlint::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 1_z}});
+    soln = solve_upoly(p3, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+
+    auto P3 = URatPolyFlint::from_dict(x, {{0, 1_q},
+                                           {1, rational_class(3_z, 2_z)},
+                                           {2, rational_class(1_z, 2_z)}});
+    soln = solve_upoly(P3, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    auto p4 = UIntPolyPiranha::from_dict(x, {{0, 2_z}, {1, 3_z}, {2, 1_z}});
+    soln = solve_upoly(p4, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+
+    auto P4 = URatPolyPiranha::from_dict(x, {{0, 1_q},
+                                             {1, rational_class(3_z, 2_z)},
+                                             {2, rational_class(1_z, 2_z)}});
+    soln = solve_upoly(P4, x);
+    REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
+#endif
 }

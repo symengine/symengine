@@ -9,11 +9,11 @@ RCP<const Set> solve_poly_linear(const vec_basic &coeffs,
                                  const RCP<const Symbol> &sym,
                                  const RCP<const Set> &domain)
 {
-    if (coeffs.size() != 1) {
+    if (coeffs.size() != 2) {
         throw SymEngineException("Expected a polynomial of degree 1. Try with "
                                  "solve() or solve_poly()");
     }
-    auto root = neg(coeffs[0]);
+    auto root = neg(div(coeffs[0], coeffs[1]));
     return set_intersection({domain, finiteset({root})});
 }
 
@@ -21,12 +21,13 @@ RCP<const Set> solve_poly_quadratic(const vec_basic &coeffs,
                                     const RCP<const Symbol> &sym,
                                     const RCP<const Set> &domain)
 {
-    if (coeffs.size() != 2) {
+    if (coeffs.size() != 3) {
         throw SymEngineException("Expected a polynomial of degree 2. Try with "
                                  "solve() or solve_poly()");
     }
 
-    auto b = coeffs[1], c = coeffs[0];
+    auto a = coeffs[2];
+    auto b = div(coeffs[1], a), c = div(coeffs[0], a);
     RCP<const Basic> root1, root2;
     if (eq(*c, *zero)) {
         root1 = neg(b);
@@ -48,12 +49,13 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
                                 const RCP<const Symbol> &sym,
                                 const RCP<const Set> &domain)
 {
-    if (coeffs.size() != 3) {
+    if (coeffs.size() != 4) {
         throw SymEngineException("Expected a polynomial of degree 3. Try with "
                                  "solve() or solve_poly()");
     }
 
-    auto b = coeffs[2], c = coeffs[1], d = coeffs[0];
+    auto a = coeffs[3];
+    auto b = div(coeffs[2], a), c = div(coeffs[1], a), d = div(coeffs[0], a);
 
     // ref :
     // https://en.wikipedia.org/wiki/Cubic_function#General_solution_to_the_cubic_equation_with_real_coefficients
@@ -97,7 +99,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
                                   const RCP<const Symbol> &sym,
                                   const RCP<const Set> &domain)
 {
-    if (coeffs.size() != 4) {
+    if (coeffs.size() != 5) {
         throw SymEngineException("Expected a polynomial of degree 4. Try with "
                                  "solve() or solve_poly()");
     }
@@ -106,12 +108,15 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
          i16 = integer(16), i64 = integer(64), i256 = integer(256);
 
     // ref : http://mathforum.org/dr.math/faq/faq.cubic.equations.html
-    auto a = coeffs[3], b = coeffs[2], c = coeffs[1], d = coeffs[0];
+    auto lc = coeffs[4];
+    auto a = div(coeffs[3], lc), b = div(coeffs[2], lc), c = div(coeffs[1], lc),
+         d = div(coeffs[0], lc);
     set_basic roots;
 
     if (eq(*d, *zero)) {
-        vec_basic newcoeffs(3);
-        newcoeffs[0] = c, newcoeffs[1] = b, newcoeffs[2] = a;
+        vec_basic newcoeffs(4);
+        newcoeffs[0] = c, newcoeffs[1] = b, newcoeffs[2] = a,
+        newcoeffs[3] = one;
         auto rcubic = solve_poly_cubic(newcoeffs, sym, domain);
         SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
         roots = down_cast<const FiniteSet &>(*rcubic).get_container();
@@ -129,8 +134,9 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
 
         // two special cases
         if (eq(*g, *zero)) {
-            vec_basic newcoeffs(3);
-            newcoeffs[0] = ff, newcoeffs[1] = e, newcoeffs[2] = zero;
+            vec_basic newcoeffs(4);
+            newcoeffs[0] = ff, newcoeffs[1] = e, newcoeffs[2] = zero,
+            newcoeffs[3] = one;
             auto rcubic = solve_poly_cubic(newcoeffs, sym, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
             auto rtemp = down_cast<const FiniteSet &>(*rcubic).get_container();
@@ -140,8 +146,8 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             }
             roots.insert(aby4);
         } else if (eq(*ff, *zero)) {
-            vec_basic newcoeffs(2);
-            newcoeffs[0] = g, newcoeffs[1] = e;
+            vec_basic newcoeffs(3);
+            newcoeffs[0] = g, newcoeffs[1] = e, newcoeffs[2] = one;
             auto rquad = solve_poly_quadratic(newcoeffs, sym, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rquad));
             auto rtemp = down_cast<const FiniteSet &>(*rquad).get_container();
@@ -153,10 +159,11 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             }
         } else {
             // Leonhard Euler's method
-            vec_basic newcoeffs(3);
+            vec_basic newcoeffs(4);
             newcoeffs[0] = neg(div(mul(ff, ff), i64)),
             newcoeffs[1] = div(sub(mul(e, e), mul(i4, g)), i16),
             newcoeffs[2] = div(e, i2);
+            newcoeffs[3] = one;
 
             auto rcubic = solve_poly_cubic(newcoeffs, sym);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
@@ -178,22 +185,14 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
     return set_intersection({domain, finiteset(roots)});
 }
 
-RCP<const Set> solve_poly_heuristics(const RCP<const UExprPoly> &f,
+RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
                                      const RCP<const Symbol> &sym,
                                      const RCP<const Set> &domain)
 {
-    auto degree = f->get_poly().degree();
-    auto lc = f->get_poly().find_cf(degree).get_basic();
-    vec_basic coeffs;
-
-    if (degree > 0 and degree <= 4) {
-        for (int i = 0; i < degree; i++)
-            coeffs.push_back(div(f->get_poly().find_cf(i).get_basic(), lc));
-    }
-
+    auto degree = coeffs.size() - 1;
     switch (degree) {
         case 0: {
-            if (eq(*lc, *zero)) {
+            if (eq(*coeffs[0], *zero)) {
                 return domain;
             } else {
                 return emptyset();
@@ -221,33 +220,13 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
 #if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
     try {
         auto poly = from_basic<UIntPolyFlint>(f, sym);
-        auto fac = factors(*poly);
-        set_set solns;
-
-        for (const auto &elem : fac) {
-            auto uexp = UExprPoly::from_poly(*elem.first);
-            auto degree = uexp->get_poly().degree();
-            if (degree >= 0 and degree <= 4) {
-                solns.insert(solve_poly_heuristics(uexp, sym, domain));
-            } else {
-                solns.insert(conditionset(
-                    sym, logical_and({Eq(uexp->as_symbolic(), zero),
-                                      domain->contains(sym)})));
-            }
-        }
-        return SymEngine::set_union(solns);
+        return solve_upoly(poly, sym, domain);
     } catch (SymEngineException &x) {
         // Try next
     }
 #endif
     auto uexp = from_basic<UExprPoly>(f, sym);
-    auto degree = uexp->get_poly().degree();
-    if (degree >= 0 and degree <= 4) {
-        return solve_poly_heuristics(uexp, sym, domain);
-    } else {
-        return conditionset(sym,
-                            logical_and({Eq(f, zero), domain->contains(sym)}));
-    }
+    return solve_upoly(uexp, sym, domain);
 }
 
 RCP<const Set> solve_rational(const RCP<const Basic> &f,
