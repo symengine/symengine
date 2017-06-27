@@ -12,11 +12,12 @@ class ExpressionParser
 {
 
     // OPERATORS and op_precedence used internally, for parsing
+    // Currently `#` and `$` represent `<=` and `>=` respectively.
     std::set<char> OPERATORS
-        = {'-', '+', '*', '/', '^', '(', ')', ',', '=', '>', '<'};
+        = {'-', '+', '*', '/', '^', '(', ')', ',', '=', '>', '<', '#', '$'};
     std::map<char, int> op_precedence
-        = {{')', 0}, {',', 0}, {'=', 1}, {'>', 2}, {'<', 2},
-           {'-', 3}, {'+', 3}, {'*', 5}, {'/', 6}, {'^', 7}};
+        = {{')', 0}, {',', 0}, {'=', 1}, {'>', 2}, {'<', 2}, {'#', 2},
+           {'$', 2}, {'-', 3}, {'+', 3}, {'*', 5}, {'/', 6}, {'^', 7}};
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -230,15 +231,15 @@ class ExpressionParser
                                 parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '<' and s[iter + 1] == '=') {
+                } else if (s[iter] == '#') {
                     result = Le(result,
-                                parse_string(iter + 2, operator_end[iter + 1]));
-                    iter = operator_end[iter + 1] - 1;
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '>' and s[iter + 1] == '=') {
+                } else if (s[iter] == '$') {
                     result = Ge(result,
-                                parse_string(iter + 2, operator_end[iter] + 1));
-                    iter = operator_end[iter + 1] - 1;
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '<') {
                     result = Lt(result,
@@ -438,10 +439,26 @@ public:
         s.clear();
         s.reserve(in.length());
 
-        // Replacing ** with ^
+        // TODO: Implement multi-character operator parsing support
         for (unsigned int i = 0; i < in.length(); ++i) {
             if (in[i] == '*' and i + 1 < in.length() and in[i + 1] == '*') {
+                // Replacing ** with ^
                 s += '^';
+                i++;
+            } else if (in[i] == '=' and i + 1 < in.length()
+                       and in[i + 1] == '=') {
+                // Replacing == with =.
+                s += '=';
+                i++;
+            } else if (in[i] == '<' and i + 1 < in.length()
+                       and in[i + 1] == '=') {
+                // Replacing <= with #. This is a frugal fix for Le objects.
+                s += '#';
+                i++;
+            } else if (in[i] == '>' and i + 1 < in.length()
+                       and in[i + 1] == '=') {
+                // Replacing >= with $. This is a frugal fix for Ge objects.
+                s += '$';
                 i++;
             } else {
                 s += in[i];

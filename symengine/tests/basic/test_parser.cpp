@@ -47,6 +47,9 @@ using SymEngine::Ge;
 using SymEngine::Gt;
 using SymEngine::Le;
 using SymEngine::Lt;
+using SymEngine::boolTrue;
+using SymEngine::boolFalse;
+using SymEngine::minus_one;
 
 using namespace SymEngine::literals;
 
@@ -294,25 +297,61 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     CHECK(eq(*res, *Lt(x, y)));
 
-    s = "x = y";
+    s = "x == y";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, y)));
 
     s = "x >= y";
-    // res = parse(s);
-    // CHECK(eq(*res, *Le(y, x)));
+    res = parse(s);
+    CHECK(eq(*res, *Le(y, x)));
 
     s = "x > y";
     res = parse(s);
     CHECK(eq(*res, *Lt(y, x)));
 
     s = "x <= y";
-    // res = parse(s);
-    // CHECK(eq(*res, *Le(x, y)));
+    res = parse(s);
+    CHECK(eq(*res, *Le(x, y)));
 
     s = "x < y";
     res = parse(s);
     CHECK(eq(*res, *Lt(x, y)));
+
+    s = "x + y < x*y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(add(x, y), mul(x, y))));
+
+    s = "x + y >= x*y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(mul(x, y), add(x, y))));
+
+    s = "x - y == x/y";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(sub(x, y), div(x, y))));
+
+    s = "x - y <= x/y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(sub(x, y), div(x, y))));
+
+    s = "(2pi) > x";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(x, mul(integer(2), pi))));
+
+    s = "sin(pi/2) == 1";
+    res = parse(s);
+    REQUIRE(eq(*res, *boolTrue));
+
+    s = "log(e) > 2";
+    res = parse(s);
+    REQUIRE(eq(*res, *boolFalse));
+
+    s = "ln(e/e) + sin(pi*2/2) + 3*x == -1";
+    res = parse(s);
+    REQUIRE(eq(*res, *Eq(mul(integer(3), x), minus_one)));
+
+    s = "3*y/(1+x) > y/x*x";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(y, div(mul(y, integer(3)), add(x, integer(1))))));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
