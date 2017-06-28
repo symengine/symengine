@@ -202,6 +202,7 @@ public:
     void bvisit(const Not &x);
     void bvisit(const Union &x);
     void bvisit(const Complement &x);
+    void bvisit(const ImageSet &x);
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);

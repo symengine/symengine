@@ -40,6 +40,7 @@ using SymEngine::Infty;
 using SymEngine::infty;
 using SymEngine::down_cast;
 using SymEngine::zero;
+using SymEngine::one;
 using SymEngine::finiteset;
 using SymEngine::set_complement;
 using SymEngine::Set;
@@ -51,6 +52,7 @@ using SymEngine::ceiling;
 using SymEngine::conditionset;
 using SymEngine::Boolean;
 using SymEngine::logical_and;
+using SymEngine::imageset;
 
 using namespace SymEngine::literals;
 
@@ -497,6 +499,9 @@ TEST_CASE("test_sets(): printing", "[printing]")
     r1 = conditionset(
         {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
     REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
+
+    r1 = imageset(x, mul(x, x), interval(zero, one));
+    REQUIRE(r1->__str__() == "{x**2 | x in [0, 1]}");
 }
 
 TEST_CASE("test_sign(): printing", "[printing]")
