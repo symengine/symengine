@@ -430,6 +430,12 @@ bool Floor::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         return false;
     }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        if (neq(*zero, *s) and is_a<Integer>(*s)) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -478,6 +484,14 @@ RCP<const Basic> floor(const RCP<const Basic> &arg)
         throw SymEngineException(
             "Boolean objects not allowed in this context.");
     }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
+        if (is_a<Integer>(*s)) {
+            return add(
+                s, make_rcp<const Floor>(Add::from_dict(zero, std::move(d))));
+        }
+    }
     return make_rcp<const Floor>(arg);
 }
 
@@ -503,6 +517,12 @@ bool Ceiling::is_canonical(const RCP<const Basic> &arg) const
     }
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         return false;
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        if (neq(*zero, *s) and is_a<Integer>(*s)) {
+            return false;
+        }
     }
     return true;
 }
@@ -551,6 +571,14 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg)
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         throw SymEngineException(
             "Boolean objects not allowed in this context.");
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
+        if (is_a<Integer>(*s)) {
+            return add(
+                s, make_rcp<const Ceiling>(Add::from_dict(zero, std::move(d))));
+        }
     }
     return make_rcp<const Ceiling>(arg);
 }

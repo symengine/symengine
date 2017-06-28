@@ -521,6 +521,9 @@ TEST_CASE("test_floor(): printing", "[printing]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> r = floor(mul(pow(x, integer(3)), y));
     CHECK(r->__str__() == "floor(x**3*y)");
+
+    r = floor(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(r->__str__() == "2 + floor(2*x + 3*y)");
 }
 
 TEST_CASE("test_ceiling(): printing", "[printing]")
@@ -529,4 +532,7 @@ TEST_CASE("test_ceiling(): printing", "[printing]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> r = ceiling(mul(pow(x, integer(3)), y));
     CHECK(r->__str__() == "ceiling(x**3*y)");
+
+    r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(r->__str__() == "2 + ceiling(2*x + 3*y)");
 }

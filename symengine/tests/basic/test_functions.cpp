@@ -4179,6 +4179,7 @@ TEST_CASE("test_sign", "[Sign]")
 TEST_CASE("test_floor", "[Floor]")
 {
     RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     RCP<const Basic> r = floor(integer(1));
     CHECK(eq(*r, *one));
 
@@ -4221,6 +4222,15 @@ TEST_CASE("test_floor", "[Floor]")
     r = floor(ceiling(x));
     CHECK(eq(*r, *ceiling(x)));
 
+    r = floor(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(eq(*r, *add(integer(2),
+                      floor(add(mul(integer(2), x), mul(integer(3), y))))));
+
+    r = floor(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
+                  mul(integer(3), y)));
+    CHECK(eq(*r, *floor(add(add(mul(integer(2), x), mul(integer(3), y)),
+                            Rational::from_two_ints(2, 3)))));
+
     CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException);
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -4241,6 +4251,7 @@ TEST_CASE("test_floor", "[Floor]")
 TEST_CASE("test_ceiling", "[Ceiling]")
 {
     RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     RCP<const Basic> r = ceiling(integer(1));
     CHECK(eq(*r, *one));
 
@@ -4282,6 +4293,15 @@ TEST_CASE("test_ceiling", "[Ceiling]")
 
     r = ceiling(ceiling(x));
     CHECK(eq(*r, *ceiling(x)));
+
+    r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(eq(*r, *add(integer(2),
+                      ceiling(add(mul(integer(2), x), mul(integer(3), y))))));
+
+    r = ceiling(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
+                    mul(integer(3), y)));
+    CHECK(eq(*r, *ceiling(add(add(mul(integer(2), x), mul(integer(3), y)),
+                              Rational::from_two_ints(2, 3)))));
 
     CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException);
 
