@@ -611,10 +611,11 @@ public:
         return std::make_pair(i_, ptr_->get_coeff_ref(i_));
     }
 
-    std::shared_ptr<std::pair<long, Int>> operator->()
+    std::shared_ptr<std::pair<unsigned, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(
-            i_, ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
+        return std::make_shared<std::pair<unsigned, Int>>(
+            numeric_cast<unsigned>(i_),
+            ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
     }
 };
 

@@ -230,6 +230,7 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     // REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
 
     CHECK_THROWS_AS(solve_poly_cubic({one}, x, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_quartic({one}, x, reals), SymEngineException);
 
     // Quartic
     poly = qx;
@@ -253,6 +254,9 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     poly = mul(add(x, i2), add(x, i3));
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(i2), neg(i3)})));
+
+    soln = solve_poly_quartic({rational(51, 256), one, one, one, one}, x);
+    REQUIRE(eq(*soln->contains(rational(-1, 4)), *boolTrue));
 }
 
 TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")

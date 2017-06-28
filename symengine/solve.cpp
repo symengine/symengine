@@ -144,7 +144,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             for (auto &r : rtemp) {
                 roots.insert(sub(r, aby4));
             }
-            roots.insert(aby4);
+            roots.insert(neg(aby4));
         } else if (eq(*ff, *zero)) {
             vec_basic newcoeffs(3);
             newcoeffs[0] = g, newcoeffs[1] = e, newcoeffs[2] = one;
