@@ -133,6 +133,18 @@ public:
         dict = P::container_from_dict(gen, {{0, typename P::coef_type(i)}});
     }
 
+    template <typename Poly,
+              typename
+              = enable_if_t<
+              ((std::is_same<P,UIntPoly>::value and std::is_base_of<UIntPolyBase<typename P::container_type, Poly>, Poly>::value) or
+              (std::is_same<P,URatPoly>::value and (std::is_base_of<UIntPolyBase<typename P::container_type, Poly>, Poly>::value or std::is_base_of<URatPolyBase<typename P::container_type, Poly>, Poly>::value)) or
+              (std::is_same<P, UExprPoly>::value and std::is_base_of<UPolyBase<typename Poly::container_type, Poly>, Poly>::value)) and not std::is_same<Poly, GaloisField>::value
+              >>
+    void bvisit(const Poly &x)
+    {
+        dict = (P::from_poly(x))->get_dict();
+    }
+
     void bvisit(const Basic &x)
     {
         RCP<const Basic> genpow = one, genbase = gen, powr;

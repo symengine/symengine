@@ -212,6 +212,26 @@ RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
     }
 }
 
+inline RCP<const Basic> get_coeff_basic(const integer_class &i)
+{
+    return integer(i);
+}
+
+inline RCP<const Basic> get_coeff_basic(const Expression &i)
+{
+    return i.get_basic();
+}
+
+template <typename Poly>
+inline vec_basic extract_coeffs(const RCP<const Poly> &f)
+{
+    int degree = f->get_degree();
+    vec_basic coeffs;
+    for (int i = 0; i <= degree; i++)
+        coeffs.push_back(get_coeff_basic(f->get_coeff(i)));
+    return coeffs;
+}
+
 RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Symbol> &sym,
                           const RCP<const Set> &domain)
@@ -220,13 +240,33 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
 #if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
     try {
         auto poly = from_basic<UIntPolyFlint>(f, sym);
-        return solve_upoly(poly, sym, domain);
+        auto fac = factors(*poly);
+        set_set solns;
+        for (const auto &elem : fac) {
+            auto uip = UIntPoly::from_poly(*elem.first);
+            auto degree = uip->get_poly().degree();
+            if (degree <= 4) {
+                solns.insert(
+                    solve_poly_heuristics(extract_coeffs(uip), sym, domain));
+            } else {
+                solns.insert(
+                    conditionset(sym, logical_and({Eq(uip->as_symbolic(), zero),
+                                                   domain->contains(sym)})));
+            }
+        }
+        return SymEngine::set_union(solns);
     } catch (SymEngineException &x) {
         // Try next
     }
 #endif
     auto uexp = from_basic<UExprPoly>(f, sym);
-    return solve_upoly(uexp, sym, domain);
+    auto degree = uexp->get_degree();
+    if (degree <= 4) {
+        return solve_poly_heuristics(extract_coeffs(uexp), sym, domain);
+    } else {
+        return conditionset(sym,
+                            logical_and({Eq(f, zero), domain->contains(sym)}));
+    }
 }
 
 RCP<const Set> solve_rational(const RCP<const Basic> &f,
