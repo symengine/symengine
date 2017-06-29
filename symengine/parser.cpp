@@ -115,12 +115,26 @@ class ExpressionParser
             {"polygamma", polygamma},
             {"kronecker_delta", kronecker_delta}};
 
+    // maps string to corresponding multi argument function
+    std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
+        multi_arg_functions = {
+
+            {"max", max}, {"min", min}, {"levi_civita", levi_civita}};
+
     // maps string to corresponding single argument boolean function
     std::map<std::string,
              std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
 
             {"Eq", single_casted_Eq}};
+
+    // maps string to corresponding single argument boolean function (accepting
+    // Boolean objects)
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Boolean> &)>>
+        single_arg_boolean_boolean_functions = {
+
+            {"Not", logical_not}};
 
     // maps string to corresponding double argument boolean function
     std::map<std::string,
@@ -135,11 +149,20 @@ class ExpressionParser
             {"Le", Le},
             {"Lt", Lt}};
 
-    // maps string to corresponding multi argument function
-    std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
-        multi_arg_functions = {
+    // maps string to corresponding multi argument vec_boolean function
+    std::map<std::string, std::function<RCP<const Boolean>(vec_boolean &)>>
+        multi_arg_vec_boolean_functions = {
 
-            {"max", max}, {"min", min}, {"levi_civita", levi_civita}};
+            {"Xor", logical_xor}, {"Xnor", logical_xnor}};
+
+    // maps string to corresponding multi argument set_boolean function
+    std::map<std::string, std::function<RCP<const Boolean>(set_boolean &)>>
+        multi_arg_set_boolean_functions = {
+
+            {"And", logical_and},
+            {"Or", logical_or},
+            {"Nand", logical_nand},
+            {"Nor", logical_nor}};
 
     // vector which stores where parsing 'ends' for a particular index
     // eg. for a '(', it stores where the next ',' or ')' occurs, so as to know
@@ -302,6 +325,11 @@ class ExpressionParser
                 != single_arg_boolean_functions.end()) {
                 return single_arg_boolean_functions[expr](params[0]);
             }
+            if (single_arg_boolean_boolean_functions.find(expr)
+                != single_arg_boolean_boolean_functions.end()) {
+                return single_arg_boolean_boolean_functions[expr](
+                    rcp_static_cast<const Boolean>(params[0]));
+            }
         }
 
         if (params.size() == 2) {
@@ -316,6 +344,24 @@ class ExpressionParser
 
         if (multi_arg_functions.find(expr) != multi_arg_functions.end()) {
             return multi_arg_functions[expr](params);
+        }
+
+        if (multi_arg_vec_boolean_functions.find(expr)
+            != multi_arg_vec_boolean_functions.end()) {
+            vec_boolean p;
+            for (auto &v : params) {
+                p.push_back(rcp_static_cast<const Boolean>(v));
+            }
+            return multi_arg_vec_boolean_functions[expr](p);
+        }
+
+        if (multi_arg_set_boolean_functions.find(expr)
+            != multi_arg_set_boolean_functions.end()) {
+            set_boolean s;
+            for (auto &v : params) {
+                s.insert(rcp_static_cast<const Boolean>(v));
+            }
+            return multi_arg_set_boolean_functions[expr](s);
         }
 
         return function_symbol(expr, params);

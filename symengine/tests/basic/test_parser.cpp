@@ -50,6 +50,13 @@ using SymEngine::Lt;
 using SymEngine::boolTrue;
 using SymEngine::boolFalse;
 using SymEngine::minus_one;
+using SymEngine::logical_and;
+using SymEngine::logical_not;
+using SymEngine::logical_nand;
+using SymEngine::logical_nor;
+using SymEngine::logical_or;
+using SymEngine::logical_xor;
+using SymEngine::logical_xnor;
 
 using namespace SymEngine::literals;
 
@@ -201,6 +208,8 @@ TEST_CASE("Parsing: functions", "[parser]")
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> z = symbol("z");
 
     s = "sin(x)";
     res = parse(s);
@@ -352,6 +361,34 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "3*y/(1+x) > y/x*x";
     res = parse(s);
     REQUIRE(eq(*res, *Lt(y, div(mul(y, integer(3)), add(x, integer(1))))));
+
+    s = "And(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_and({Lt(x, y), Le(z, w)})));
+
+    s = "Or(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_or({Lt(x, y), Le(z, w)})));
+
+    s = "Nor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_nor({Lt(x, y), Le(z, w)})));
+
+    s = "Nand(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_nand({Lt(x, y), Le(z, w)})));
+
+    s = "Xor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
+
+    s = "Xnor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xnor({Lt(x, y), Le(z, w)})));
+
+    s = "Not(x < y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_not(Lt(x, y))));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
