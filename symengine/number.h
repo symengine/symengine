@@ -29,6 +29,8 @@ public:
     virtual bool is_positive() const = 0;
     //! \return true if a complex number
     virtual bool is_complex() const = 0;
+    //! \return the conjugate if the class is complex
+    virtual RCP<const Basic> conjugate() const;
     //! return true if the number is an exact representation
     //  false if the number is an approximation
     virtual bool is_exact() const

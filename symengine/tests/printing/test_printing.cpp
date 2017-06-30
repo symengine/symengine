@@ -536,3 +536,15 @@ TEST_CASE("test_ceiling(): printing", "[printing]")
     r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
     CHECK(r->__str__() == "2 + ceiling(2*x + 3*y)");
 }
+
+TEST_CASE("test_conjugate(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = conjugate(
+        mul(mul(complex_double(std::complex<double>(2.0, 3.0)), x), y));
+    CHECK(r->__str__() == "(2.0 - 3.0*I)*conjugate(y)*conjugate(x)");
+
+    r = conjugate(pow(y, Rational::from_two_ints(3, 2)));
+    CHECK(r->__str__() == "conjugate(y**(3/2))");
+}

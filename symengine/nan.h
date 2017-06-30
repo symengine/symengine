@@ -63,6 +63,8 @@ public:
     {
         return false;
     }
+    //! \return the conjugate if the class is complex
+    virtual RCP<const Basic> conjugate() const;
     inline bool is_exact() const
     {
         return false;

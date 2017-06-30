@@ -42,6 +42,117 @@ extern umap_basic_basic inverse_cst;
 
 extern umap_basic_basic inverse_tct;
 
+Conjugate::Conjugate(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Conjugate::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        if (eq(*arg, *ComplexInf)) {
+            return true;
+        }
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Mul>(*arg)) {
+        return false;
+    }
+    if (is_a<Pow>(*arg)) {
+        if (is_a<Integer>(*down_cast<const Pow &>(*arg).get_exp())) {
+            return false;
+        }
+    }
+    // OneArgFunction classes
+    if (is_a<Sign>(*arg) or is_a<Conjugate>(*arg) or is_a<Erf>(*arg)
+        or is_a<Erfc>(*arg) or is_a<Gamma>(*arg) or is_a<LogGamma>(*arg)
+        or is_a<Abs>(*arg)) {
+        return false;
+    }
+    if (is_a<Sin>(*arg) or is_a<Cos>(*arg) or is_a<Tan>(*arg) or is_a<Cot>(*arg)
+        or is_a<Sec>(*arg) or is_a<Csc>(*arg)) {
+        return false;
+    }
+    if (is_a<Sinh>(*arg) or is_a<Cosh>(*arg) or is_a<Tanh>(*arg)
+        or is_a<Coth>(*arg) or is_a<Sech>(*arg) or is_a<Csch>(*arg)) {
+        return false;
+    }
+    // TwoArgFunction classes
+    if (is_a<KroneckerDelta>(*arg) or is_a<ATan2>(*arg)
+        or is_a<LowerGamma>(*arg) or is_a<UpperGamma>(*arg)
+        or is_a<Beta>(*arg)) {
+        return false;
+    }
+    // MultiArgFunction class
+    if (is_a<LeviCivita>(*arg)) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Conjugate::create(const RCP<const Basic> &arg) const
+{
+    return conjugate(arg);
+}
+
+RCP<const Basic> conjugate(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        return down_cast<const Number &>(*arg).conjugate();
+    }
+    if (is_a<Constant>(*arg) or is_a<Abs>(*arg) or is_a<KroneckerDelta>(*arg)
+        or is_a<LeviCivita>(*arg)) {
+        return arg;
+    }
+    if (is_a<Mul>(*arg)) {
+        const map_basic_basic &dict = down_cast<const Mul &>(*arg).get_dict();
+        map_basic_basic new_dict;
+        RCP<const Number> coef = rcp_static_cast<const Number>(
+            conjugate(down_cast<const Mul &>(*arg).get_coef()));
+        for (const auto &p : dict) {
+            if (is_a<Integer>(*p.second)) {
+                Mul::dict_add_term_new(outArg(coef), new_dict, p.second,
+                                       conjugate(p.first));
+            } else {
+                Mul::dict_add_term_new(
+                    outArg(coef), new_dict, one,
+                    conjugate(Mul::from_dict(one, {{p.first, p.second}})));
+            }
+        }
+        return Mul::from_dict(coef, std::move(new_dict));
+    }
+    if (is_a<Pow>(*arg)) {
+        RCP<const Basic> base = down_cast<const Pow &>(*arg).get_base();
+        RCP<const Basic> exp = down_cast<const Pow &>(*arg).get_exp();
+        if (is_a<Integer>(*exp)) {
+            return pow(conjugate(base), exp);
+        }
+    }
+    if (is_a<Conjugate>(*arg)) {
+        return down_cast<const Conjugate &>(*arg).get_arg();
+    }
+    if (is_a<Sign>(*arg) or is_a<Erf>(*arg) or is_a<Erfc>(*arg)
+        or is_a<Gamma>(*arg) or is_a<LogGamma>(*arg) or is_a<Sin>(*arg)
+        or is_a<Cos>(*arg) or is_a<Tan>(*arg) or is_a<Cot>(*arg)
+        or is_a<Sec>(*arg) or is_a<Csc>(*arg) or is_a<Sinh>(*arg)
+        or is_a<Cosh>(*arg) or is_a<Tanh>(*arg) or is_a<Coth>(*arg)
+        or is_a<Sech>(*arg) or is_a<Csch>(*arg)) {
+        const OneArgFunction &func = down_cast<const OneArgFunction &>(*arg);
+        return func.create(conjugate(func.get_arg()));
+    }
+    if (is_a<ATan2>(*arg) or is_a<LowerGamma>(*arg) or is_a<UpperGamma>(*arg)
+        or is_a<Beta>(*arg)) {
+        const TwoArgFunction &func = down_cast<const TwoArgFunction &>(*arg);
+        return func.create(conjugate(func.get_arg1()),
+                           conjugate(func.get_arg2()));
+    }
+    return make_rcp<const Conjugate>(arg);
+}
+
 bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
                   const Ptr<RCP<const Basic>> &x)
 {

@@ -87,6 +87,14 @@ bool Infty::is_negative_infinity() const
     return _direction->is_negative();
 }
 
+RCP<const Basic> Infty::conjugate() const
+{
+    if (is_positive_infinity() or is_negative_infinity()) {
+        return infty(_direction);
+    }
+    return make_rcp<const Conjugate>(ComplexInf);
+}
+
 RCP<const Number> Infty::add(const Number &other) const
 {
     if (not is_a<Infty>(other))

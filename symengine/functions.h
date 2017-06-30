@@ -230,6 +230,21 @@ public:
 //! Canonicalize Ceiling:
 RCP<const Basic> ceiling(const RCP<const Basic> &arg);
 
+class Conjugate : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(CONJUGATE);
+    //! Conjugate constructor
+    Conjugate(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized conjugate
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Conjugate
+RCP<const Basic> conjugate(const RCP<const Basic> &arg);
+
 class TrigFunction : public OneArgFunction
 {
 public:
