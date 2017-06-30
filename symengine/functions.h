@@ -962,6 +962,26 @@ public:
 //! Canonicalize ASech:
 RCP<const Basic> asech(const RCP<const Basic> &arg);
 
+inline bool is_a_TrigFunction(const Basic &b)
+{
+    return (b.get_type_code() == SIN || b.get_type_code() == COS
+            || b.get_type_code() == TAN || b.get_type_code() == CSC
+            || b.get_type_code() == SEC || b.get_type_code() == COT
+            || b.get_type_code() == ASIN || b.get_type_code() == ACOS
+            || b.get_type_code() == ATAN || b.get_type_code() == ACSC
+            || b.get_type_code() == ASEC || b.get_type_code() == ACOT);
+}
+
+inline bool is_a_HyperbolicFunction(const Basic &b)
+{
+    return (b.get_type_code() == SINH || b.get_type_code() == COSH
+            || b.get_type_code() == TANH || b.get_type_code() == CSCH
+            || b.get_type_code() == SECH || b.get_type_code() == COTH
+            || b.get_type_code() == ASINH || b.get_type_code() == ACOSH
+            || b.get_type_code() == ATANH || b.get_type_code() == ACSCH
+            || b.get_type_code() == ASECH || b.get_type_code() == ACOTH);
+}
+
 class KroneckerDelta : public TwoArgFunction
 {
     /*! The discrete, or Kronecker, delta function.
@@ -1264,8 +1284,26 @@ public:
 //! Canonicalize Min:
 RCP<const Basic> min(const vec_basic &arg);
 
+inline bool is_a_OneArgFunction(const Basic &b)
+{
+    return (b.get_type_code() == ERF || b.get_type_code() == ERFC
+            || b.get_type_code() == SIGN || b.get_type_code() == FLOOR
+            || b.get_type_code() == LOG || b.get_type_code() == CEILING
+            || b.get_type_code() == ABS || b.get_type_code() == GAMMA
+            || b.get_type_code() == LOGGAMMA || b.get_type_code() == LAMBERTW
+            || b.get_type_code() == DIRICHLET_ETA || is_a_HyperbolicFunction(b)
+            || is_a_TrigFunction(b));
+}
+
+inline bool is_a_Function(const Basic &b)
+{
+    return is_a_OneArgFunction(b); // TODO : Add more functions
+}
+
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
+
+RCP<const Basic> expand_as_exp(const RCP<const Basic> &self);
 
 } // SymEngine
 

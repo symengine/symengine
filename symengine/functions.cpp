@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -3617,6 +3618,25 @@ RCP<const Basic> min(const vec_basic &arg)
     } else {
         throw SymEngineException("Empty vec_basic passed to min!");
     }
+}
+
+RCP<const Basic> expand_as_exp(const RCP<const Basic> &self)
+{
+    map_basic_basic mp_args;
+    for (const auto &a : self->get_args()) {
+        mp_args[a] = expand_as_exp(a);
+    }
+
+    if (is_a<Sin>(*self) or is_a<Cos>(*self) or is_a<Tan>(*self)
+        or is_a<Cot>(*self) or is_a<Sec>(*self) or is_a<Csc>(*self)
+        or is_a<Sinh>(*self) or is_a<Cosh>(*self) or is_a<Tanh>(*self)
+        or is_a<Coth>(*self) or is_a<Sech>(*self)
+        or is_a<Csch>(*self)) // expandables
+    {
+        const OneArgFunction &func = down_cast<const OneArgFunction &>(*self);
+        return func.expand_as_exp()->subs(mp_args);
+    }
+    return self->subs(mp_args);
 }
 
 } // SymEngine
