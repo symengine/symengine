@@ -6,7 +6,6 @@ namespace SymEngine
 {
 
 RCP<const Set> solve_poly_linear(const vec_basic &coeffs,
-                                 const RCP<const Symbol> &sym,
                                  const RCP<const Set> &domain)
 {
     if (coeffs.size() != 2) {
@@ -18,7 +17,6 @@ RCP<const Set> solve_poly_linear(const vec_basic &coeffs,
 }
 
 RCP<const Set> solve_poly_quadratic(const vec_basic &coeffs,
-                                    const RCP<const Symbol> &sym,
                                     const RCP<const Set> &domain)
 {
     if (coeffs.size() != 3) {
@@ -46,7 +44,6 @@ RCP<const Set> solve_poly_quadratic(const vec_basic &coeffs,
 }
 
 RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
-                                const RCP<const Symbol> &sym,
                                 const RCP<const Set> &domain)
 {
     if (coeffs.size() != 4) {
@@ -61,42 +58,56 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
     // https://en.wikipedia.org/wiki/Cubic_function#General_solution_to_the_cubic_equation_with_real_coefficients
     auto i2 = integer(2), i3 = integer(3), i4 = integer(4), i9 = integer(9),
          i27 = integer(27);
-    auto delta0 = sub(mul(b, b), mul(i3, c));
-    auto delta1 = add(sub(mul(pow(b, i3), i2), mul({i9, b, c})), mul(i27, d));
-    auto delta = div(sub(mul(i4, pow(delta0, i3)), pow(delta1, i2)), i27);
     RCP<const Basic> root1, root2, root3;
-    if (eq(*delta, *zero)) {
-        if (eq(*delta0, *zero)) {
-            root1 = root2 = root3 = div(neg(b), i3);
+    if (eq(*d, *zero)) {
+        root1 = zero;
+        auto fset = solve_poly_quadratic({c, b, one}, domain);
+        SYMENGINE_ASSERT(is_a<FiniteSet>(*fset));
+        auto cont = down_cast<const FiniteSet &>(*fset).get_container();
+        if (cont.size() == 2) {
+            root2 = *cont.begin();
+            root3 = *std::next(cont.begin());
         } else {
-            root1 = root2 = div(sub(mul(i9, d), mul(b, c)), mul(i2, delta0));
-            root3 = div(sub(mul({i4, b, c}), add(mul(d, i9), pow(b, i3))),
-                        delta0);
+            root2 = root3 = *cont.begin();
         }
     } else {
-        auto temp = sqrt(mul(neg(i27), delta));
-        auto Cexpr = div(add(delta1, temp), i2);
-        if (eq(*Cexpr, *zero)) {
-            Cexpr = div(sub(delta1, temp), i2);
-        }
-        auto C = pow(Cexpr, div(one, i3));
-        root1 = neg(div(add(b, add(C, div(delta0, C))), i3));
+        auto delta0 = sub(mul(b, b), mul(i3, c));
+        auto delta1
+            = add(sub(mul(pow(b, i3), i2), mul({i9, b, c})), mul(i27, d));
+        auto delta = div(sub(mul(i4, pow(delta0, i3)), pow(delta1, i2)), i27);
+        if (eq(*delta, *zero)) {
+            if (eq(*delta0, *zero)) {
+                root1 = root2 = root3 = div(neg(b), i3);
+            } else {
+                root1 = root2
+                    = div(sub(mul(i9, d), mul(b, c)), mul(i2, delta0));
+                root3 = div(sub(mul({i4, b, c}), add(mul(d, i9), pow(b, i3))),
+                            delta0);
+            }
+        } else {
+            auto temp = sqrt(mul(neg(i27), delta));
+            auto Cexpr = div(add(delta1, temp), i2);
+            if (eq(*Cexpr, *zero)) {
+                Cexpr = div(sub(delta1, temp), i2);
+            }
+            auto C = pow(Cexpr, div(one, i3));
+            root1 = neg(div(add(b, add(C, div(delta0, C))), i3));
 
-        auto coef = div(mul(I, sqrt(i3)), i2);
-        temp = neg(div(one, i2));
-        auto cbrt1 = add(temp, coef);
-        auto cbrt2 = sub(temp, coef);
-        root2 = neg(
-            div(add(b, add(mul(cbrt1, C), div(delta0, mul(cbrt1, C)))), i3));
-        root3 = neg(
-            div(add(b, add(mul(cbrt2, C), div(delta0, mul(cbrt2, C)))), i3));
+            auto coef = div(mul(I, sqrt(i3)), i2);
+            temp = neg(div(one, i2));
+            auto cbrt1 = add(temp, coef);
+            auto cbrt2 = sub(temp, coef);
+            root2 = neg(div(
+                add(b, add(mul(cbrt1, C), div(delta0, mul(cbrt1, C)))), i3));
+            root3 = neg(div(
+                add(b, add(mul(cbrt2, C), div(delta0, mul(cbrt2, C)))), i3));
+        }
     }
 
     return set_intersection({domain, finiteset({root1, root2, root3})});
 }
 
 RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
-                                  const RCP<const Symbol> &sym,
                                   const RCP<const Set> &domain)
 {
     if (coeffs.size() != 5) {
@@ -117,7 +128,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
         vec_basic newcoeffs(4);
         newcoeffs[0] = c, newcoeffs[1] = b, newcoeffs[2] = a,
         newcoeffs[3] = one;
-        auto rcubic = solve_poly_cubic(newcoeffs, sym, domain);
+        auto rcubic = solve_poly_cubic(newcoeffs, domain);
         SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
         roots = down_cast<const FiniteSet &>(*rcubic).get_container();
         roots.insert(zero);
@@ -137,7 +148,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             vec_basic newcoeffs(4);
             newcoeffs[0] = ff, newcoeffs[1] = e, newcoeffs[2] = zero,
             newcoeffs[3] = one;
-            auto rcubic = solve_poly_cubic(newcoeffs, sym, domain);
+            auto rcubic = solve_poly_cubic(newcoeffs, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
             auto rtemp = down_cast<const FiniteSet &>(*rcubic).get_container();
             SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 3);
@@ -148,7 +159,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
         } else if (eq(*ff, *zero)) {
             vec_basic newcoeffs(3);
             newcoeffs[0] = g, newcoeffs[1] = e, newcoeffs[2] = one;
-            auto rquad = solve_poly_quadratic(newcoeffs, sym, domain);
+            auto rquad = solve_poly_quadratic(newcoeffs, domain);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rquad));
             auto rtemp = down_cast<const FiniteSet &>(*rquad).get_container();
             SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 2);
@@ -165,7 +176,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             newcoeffs[2] = div(e, i2);
             newcoeffs[3] = one;
 
-            auto rcubic = solve_poly_cubic(newcoeffs, sym);
+            auto rcubic = solve_poly_cubic(newcoeffs);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
             roots = down_cast<const FiniteSet &>(*rcubic).get_container();
             SYMENGINE_ASSERT(roots.size() > 0 and roots.size() <= 3);
@@ -186,7 +197,6 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
 }
 
 RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
-                                     const RCP<const Symbol> &sym,
                                      const RCP<const Set> &domain)
 {
     auto degree = coeffs.size() - 1;
@@ -199,13 +209,13 @@ RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
             }
         }
         case 1:
-            return solve_poly_linear(coeffs, sym, domain);
+            return solve_poly_linear(coeffs, domain);
         case 2:
-            return solve_poly_quadratic(coeffs, sym, domain);
+            return solve_poly_quadratic(coeffs, domain);
         case 3:
-            return solve_poly_cubic(coeffs, sym, domain);
+            return solve_poly_cubic(coeffs, domain);
         case 4:
-            return solve_poly_quartic(coeffs, sym, domain);
+            return solve_poly_quartic(coeffs, domain);
         default:
             throw SymEngineException(
                 "expected a polynomial of order between 0 to 4");
@@ -247,7 +257,7 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
             auto degree = uip->get_poly().degree();
             if (degree <= 4) {
                 solns.insert(
-                    solve_poly_heuristics(extract_coeffs(uip), sym, domain));
+                    solve_poly_heuristics(extract_coeffs(uip), domain));
             } else {
                 solns.insert(
                     conditionset(sym, logical_and({Eq(uip->as_symbolic(), zero),
@@ -262,7 +272,7 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
     auto uexp = from_basic<UExprPoly>(f, sym);
     auto degree = uexp->get_degree();
     if (degree <= 4) {
-        return solve_poly_heuristics(extract_coeffs(uexp), sym, domain);
+        return solve_poly_heuristics(extract_coeffs(uexp), domain);
     } else {
         return conditionset(sym,
                             logical_and({Eq(f, zero), domain->contains(sym)}));

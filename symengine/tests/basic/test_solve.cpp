@@ -44,6 +44,7 @@ using SymEngine::mul;
 using SymEngine::UIntPoly;
 using SymEngine::URatPoly;
 using SymEngine::rational_class;
+using SymEngine::solve_poly_quartic;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -104,7 +105,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     soln = solve(add(x, y), x);
     REQUIRE(eq(*soln, *finiteset({neg(y)})));
 
-    CHECK_THROWS_AS(solve_poly_linear({one}, x, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_linear({one}, reals), SymEngineException);
 
     // Quadratic
     poly = add(sqx, one);
@@ -158,7 +159,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     REQUIRE(soln->__str__() == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
                                "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
-    CHECK_THROWS_AS(solve_poly_quadratic({one}, x, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_quadratic({one}, reals), SymEngineException);
 
     auto onebyx = div(one, x);
     poly = add(onebyx, one);
@@ -221,6 +222,10 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     r2 = integer(32);
     REQUIRE(eq(*soln, *finiteset({r1, r2})));
 
+    poly = sub(cbx, x);
+    soln = solve(poly, x);
+    REQUIRE(eq(*soln, *finiteset({zero, one, neg(one)})));
+
     poly = Eq(cbx, neg(one));
     soln = solve(poly, x);
     r1 = neg(one);
@@ -229,8 +234,8 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     // -(-1/2 - 1/2*I*sqrt(3)) != 1/2 + 1/2*I*sqrt(3) ?
     // REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
 
-    CHECK_THROWS_AS(solve_poly_cubic({one}, x, reals), SymEngineException);
-    CHECK_THROWS_AS(solve_poly_quartic({one}, x, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_cubic({one}, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_quartic({one}, reals), SymEngineException);
 
     // Quartic
     poly = qx;
@@ -255,7 +260,7 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     soln = solve(poly, x);
     REQUIRE(eq(*soln, *finiteset({neg(i2), neg(i3)})));
 
-    soln = solve_poly_quartic({rational(51, 256), one, one, one, one}, x);
+    soln = solve_poly_quartic({rational(51, 256), one, one, one, one});
     REQUIRE(eq(*soln->contains(rational(-1, 4)), *boolTrue));
 }
 
