@@ -12,12 +12,13 @@ class ExpressionParser
 {
 
     // OPERATORS and op_precedence used internally, for parsing
-    // Currently `#` and `$` represent `<=` and `>=` respectively.
-    std::set<char> OPERATORS
-        = {'-', '+', '*', '/', '^', '(', ')', ',', '=', '>', '<', '#', '$'};
-    std::map<char, int> op_precedence
-        = {{')', 0}, {',', 0}, {'=', 1}, {'>', 2}, {'<', 2}, {'#', 2},
-           {'$', 2}, {'-', 3}, {'+', 3}, {'*', 5}, {'/', 6}, {'^', 7}};
+    std::set<std::string> OPERATORS
+        = {"-", "+", "*",  "/",  "**", "(", ")", ",", "==",
+           ">", "<", ">=", "<=", "&",  "|", "~", "^"};
+    std::map<std::string, int> op_precedence
+        = {{")", 0}, {",", 0}, {"|", 1},   {"^", 2},  {"&", 3}, {"==", 4},
+           {">", 5}, {"<", 5}, {"<=", 5},  {">=", 5}, {"-", 6}, {"+", 6},
+           {"*", 8}, {"/", 9}, {"**", 10}, {"~", 11}};
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -202,7 +203,8 @@ class ExpressionParser
             throw ParseError("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
-            if (is_operator(iter)) {
+            if (is_single_character_operator(iter)
+                or (iter + 1 < h and is_dual_character_operator(iter + 1))) {
 
                 if (s[iter] == '+' or s[iter] == '-') {
                     if (iter > l + 1 and iter < h - 1 and s[iter - 1] == 'e'
@@ -229,6 +231,12 @@ class ExpressionParser
                                  parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
+                } else if (s[iter] == '*' and iter + 1 < h
+                           and s[iter + 1] == '*') {
+                    result = pow(result,
+                                 parse_string(iter + 2, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
                 } else if (s[iter] == '*') {
                     result = mul(result,
                                  parse_string(iter + 1, operator_end[iter]));
@@ -244,24 +252,22 @@ class ExpressionParser
                                  parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '^') {
-                    result = pow(result,
-                                 parse_string(iter + 1, operator_end[iter]));
-                    iter = operator_end[iter] - 1;
-
-                } else if (s[iter] == '=') {
+                } else if (s[iter] == '=' and iter + 1 < h
+                           and s[iter + 1] == '=') {
                     result = Eq(result,
-                                parse_string(iter + 1, operator_end[iter]));
+                                parse_string(iter + 2, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '#') {
+                } else if (s[iter] == '<' and iter + 1 < h
+                           and s[iter + 1] == '=') {
                     result = Le(result,
-                                parse_string(iter + 1, operator_end[iter]));
+                                parse_string(iter + 2, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '$') {
+                } else if (s[iter] == '>' and iter + 1 < h
+                           and s[iter + 1] == '=') {
                     result = Ge(result,
-                                parse_string(iter + 1, operator_end[iter]));
+                                parse_string(iter + 2, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '<') {
@@ -272,6 +278,35 @@ class ExpressionParser
                 } else if (s[iter] == '>') {
                     result = Gt(result,
                                 parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '&') {
+                    set_boolean s;
+                    s.insert(rcp_static_cast<const Boolean>(result));
+                    s.insert(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_and(s);
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '|') {
+                    set_boolean s;
+                    s.insert(rcp_static_cast<const Boolean>(result));
+                    s.insert(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_or(s);
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '^') {
+                    vec_boolean s;
+                    s.push_back(rcp_static_cast<const Boolean>(result));
+                    s.push_back(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_xor(s);
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '~') {
+                    result = logical_not(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '(') {
@@ -298,11 +333,25 @@ class ExpressionParser
     }
 
     // returns true if the s[iter] is an operator
-    bool is_operator(int iter)
+    bool is_single_character_operator(int iter)
     {
-        if (iter >= 0 and iter < (int)s_len)
-            if (OPERATORS.find(s[iter]) != OPERATORS.end())
+        if (iter >= 0 and iter < (int)s_len) {
+            std::string x;
+            x = s[iter];
+            if (OPERATORS.find(x) != OPERATORS.end())
                 return true;
+        }
+        return false;
+    }
+
+    bool is_dual_character_operator(int iter)
+    {
+        if (iter >= 1 and iter < (int)s_len) {
+            std::string x;
+            x = s.substr(iter - 1, 2);
+            if (OPERATORS.find(x) != OPERATORS.end())
+                return true;
+        }
         return false;
     }
 
@@ -455,15 +504,15 @@ class ExpressionParser
         }
     }
 
-    bool operator_error(char prev, char current)
+    bool operator_error(std::string prev, std::string current)
     {
-        if (prev == '(') {
-            if (current == ')')
+        if (prev == "(") {
+            if (current == ")")
                 return true;
 
-        } else if (prev == '-' or prev == '+') {
+        } else if (prev == "-" or prev == "+") {
         } else {
-            if (current != ')')
+            if (current != ")")
                 return true;
         }
         return false;
@@ -481,34 +530,12 @@ public:
         std::stack<std::pair<int, unsigned int>> op_stack;
 
         bool last_char_was_op = false;
-        char last_char = 'x';
+        std::string last_char = "x";
         s.clear();
         s.reserve(in.length());
 
-        // TODO: Implement multi-character operator parsing support
         for (unsigned int i = 0; i < in.length(); ++i) {
-            if (in[i] == '*' and i + 1 < in.length() and in[i + 1] == '*') {
-                // Replacing ** with ^
-                s += '^';
-                i++;
-            } else if (in[i] == '=' and i + 1 < in.length()
-                       and in[i + 1] == '=') {
-                // Replacing == with =.
-                s += '=';
-                i++;
-            } else if (in[i] == '<' and i + 1 < in.length()
-                       and in[i + 1] == '=') {
-                // Replacing <= with #. This is a frugal fix for Le objects.
-                s += '#';
-                i++;
-            } else if (in[i] == '>' and i + 1 < in.length()
-                       and in[i + 1] == '=') {
-                // Replacing >= with $. This is a frugal fix for Ge objects.
-                s += '$';
-                i++;
-            } else {
-                s += in[i];
-            }
+            s += in[i];
         }
         s_len = numeric_cast<unsigned>(s.length());
         operator_end.clear();
@@ -519,10 +546,17 @@ public:
         right_bracket.push(s_len);
 
         for (int i = s_len - 1; i >= 0; i--) {
-            if (is_operator(i)) {
-                char x = s[i];
+            if (is_single_character_operator(i)
+                or is_dual_character_operator(i)) {
+                std::string x;
+                x = s[i];
 
-                if (x == '(') {
+                if (is_dual_character_operator(i)) {
+                    i--;
+                    x = s[i] + x;
+                }
+
+                if (x == "(") {
                     // find the matching right bracket in op_stack
                     while (op_stack.top().second != right_bracket.top())
                         op_stack.pop();
@@ -537,9 +571,9 @@ public:
                     right_bracket.pop();
                     op_stack.pop();
 
-                } else if (x == ')' or x == ',') {
+                } else if (x == ")" or x == ",") {
                     // ',' acts as a pseudo ')', for the intended '('
-                    if (x == ',') {
+                    if (x == ",") {
                         // its end is the actual ')'
                         operator_end[i] = right_bracket.top();
                         right_bracket.pop();
@@ -548,7 +582,7 @@ public:
                     right_bracket.push(i);
 
                 } else {
-                    if (x == '+' or x == '-') {
+                    if (x == "+" or x == "-") {
                         if (i > 1 and i < (int)s_len - 1 and s[i - 1] == 'e'
                             and s[i - 2] >= '0' and s[i - 2] <= '9'
                             and s[i + 1] >= '0' and s[i + 1] <= '9') {
@@ -558,7 +592,7 @@ public:
                         }
                     }
                     if (last_char_was_op
-                        and (last_char == '-' or last_char == '+'))
+                        and (last_char == "-" or last_char == "+"))
                         op_stack.pop();
                     // if it's a normal operator, remove operators with higher
                     // precedence
@@ -579,6 +613,9 @@ public:
             }
 
             last_char = s[i];
+            if (i + 1 < (int)s_len and is_dual_character_operator(i + 1)) {
+                last_char = last_char + s[i + 1];
+            }
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
