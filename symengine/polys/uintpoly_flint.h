@@ -161,8 +161,8 @@ factors(const UFlintPoly<Container, BaseType, Poly> &a)
     auto &fac = fac_wrapper.get_fmpz_poly_factor_t();
     std::vector<std::pair<RCP<const Poly>, long>> S;
     if (fac->c != 1_z)
-        S.push_back(
-            std::make_pair(make_rcp<const Poly>(a.get_var(), fac->c), 1));
+        S.push_back(std::make_pair(
+            make_rcp<const Poly>(a.get_var(), numeric_cast<int>(fac->c)), 1));
     SYMENGINE_ASSERT(fac->p != NULL and fac->exp != NULL)
     for (long i = 0; i < fac->num; i++) {
         fzp_t z;

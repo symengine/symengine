@@ -133,6 +133,39 @@ public:
         dict = P::container_from_dict(gen, {{0, typename P::coef_type(i)}});
     }
 
+    template <
+        typename Poly,
+        typename
+        = enable_if_t<((std::is_base_of<UIntPolyBase<typename P::container_type,
+                                                     P>,
+                                        P>::value
+                        and std::is_base_of<UIntPolyBase<
+                                                typename Poly::container_type,
+                                                Poly>,
+                                            Poly>::value)
+                       or (std::is_base_of<URatPolyBase<
+                                               typename P::container_type, P>,
+                                           P>::value
+                           and (std::is_base_of<UIntPolyBase<typename Poly::
+                                                                 container_type,
+                                                             Poly>,
+                                                Poly>::value
+                                or std::is_base_of<URatPolyBase<
+                                                       typename Poly::
+                                                           container_type,
+                                                       Poly>,
+                                                   Poly>::value))
+                       or (std::is_same<P, UExprPoly>::value
+                           and std::is_base_of<UPolyBase<typename Poly::
+                                                             container_type,
+                                                         Poly>,
+                                               Poly>::value))
+                      and not std::is_same<Poly, GaloisField>::value>>
+    void bvisit(const Poly &x)
+    {
+        dict = (P::from_poly(x))->get_poly();
+    }
+
     void bvisit(const Basic &x)
     {
         RCP<const Basic> genpow = one, genbase = gen, powr;
@@ -235,7 +268,7 @@ public:
                 this->gen,
                 {{pow, static_cast<const Rational &>(x).as_rational_class()}});
         else
-            throw std::runtime_error("Non-rational found");
+            throw SymEngineException("Non-rational found");
     }
 };
 

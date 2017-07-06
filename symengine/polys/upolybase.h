@@ -611,10 +611,11 @@ public:
         return std::make_pair(i_, ptr_->get_coeff_ref(i_));
     }
 
-    std::shared_ptr<std::pair<long, Int>> operator->()
+    std::shared_ptr<std::pair<unsigned, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(
-            i_, ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
+        return std::make_shared<std::pair<unsigned, Int>>(
+            numeric_cast<unsigned>(i_),
+            ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
     }
 };
 
@@ -625,6 +626,10 @@ public:
     ContainerForIter(RCP<const T> ptr, long x)
         : ContainerBaseIter<T, Int>(ptr, x)
     {
+        if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_)) == 0
+            and this->i_ < this->ptr_->size()) {
+            ++(*this);
+        }
     }
 
     ContainerForIter operator++()

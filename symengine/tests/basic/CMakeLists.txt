@@ -84,6 +84,10 @@ add_executable(test_nan test_nan.cpp)
 target_link_libraries(test_nan symengine catch)
 add_test(test_nan ${PROJECT_BINARY_DIR}/test_nan)
 
+add_executable(test_solve test_solve.cpp)
+target_link_libraries(test_solve symengine catch)
+add_test(test_solve ${PROJECT_BINARY_DIR}/test_solve)
+
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
 	add_executable(test_integer_class test_integer_class.cpp)
 	target_link_libraries(test_integer_class symengine catch)
