@@ -82,8 +82,11 @@ int Dummy::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Dummy>(o))
     const Dummy &s = down_cast<const Dummy &>(o);
-    if (get_name() == s.get_name())
+    if (get_name() == s.get_name()) {
+        if (dummy_index == s.get_index())
+            return 0;
         return dummy_index < s.get_index() ? -1 : 1;
+    }
     return get_name() < s.get_name() ? -1 : 1;
 }
 
