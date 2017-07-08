@@ -4087,6 +4087,8 @@ TEST_CASE("test_dummy", "[Dummy]")
     xdummy1 = x1->as_dummy();
     CHECK(neq(*xdummy1, *x1));
     CHECK(neq(*xdummy1, *x1->as_dummy()));
+
+    REQUIRE(xdummy1->compare(*xdummy1) == 0);
 }
 
 TEST_CASE("test_sign", "[Sign]")
