@@ -239,6 +239,11 @@ void as_numer_denom(const RCP<const Basic> &x,
 void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
                   const Ptr<RCP<const Basic>> &imag);
 
+template <typename Func>
+RCP<const Basic> bottom_up(const RCP<const Basic> &x, const Func &f);
+
+RCP<const Basic> expand_as_exp(const RCP<const Basic> &x);
+
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any
    Basic
     type to be printed.

@@ -153,7 +153,7 @@ using SymEngine::floor;
 using SymEngine::ceiling;
 using SymEngine::Eq;
 using SymEngine::Conjugate;
-using SymEngine::expand_as_exp;
+// using SymEngine::expand_as_exp;
 using SymEngine::mul;
 
 using namespace SymEngine::literals;
@@ -4509,7 +4509,6 @@ TEST_CASE("test expand_as_exp", "[Functions]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> r1, r2;
-
     r1 = expand_as_exp(sin(x));
     r2 = mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))});
     REQUIRE(eq(*r1, *r2));
@@ -4534,6 +4533,4 @@ TEST_CASE("test expand_as_exp", "[Functions]")
             exp(mul(neg(I), mul(rational(1, 2),
                                 add(exp(mul(I, x)), exp(mul(neg(I), x))))))));
     REQUIRE(eq(*r1, *r2));
-
-    // TODO : Add more tests.
 }

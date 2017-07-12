@@ -293,46 +293,6 @@ RCP<const Set> solve_rational(const RCP<const Basic> &f,
     return solve_poly(num, sym, domain);
 }
 
-bool is_a_linear_trigFunction(const RCP<const Basic> &f,
-                              const RCP<const Symbol> &sym)
-{
-    if (is_a<Mul>(*f) or is_a<Add>(*f)) {
-        for (const auto &e : f->get_args()) {
-            if (not is_a_linear_trigFunction(e, sym))
-                return false;
-        }
-        return true;
-    }
-
-    if (is_a<Pow>(*f)) {
-        if (has_symbol(*down_cast<const Pow &>(*f).get_exp(), *sym)) {
-            return false;
-        } else {
-            return is_a_linear_trigFunction(
-                down_cast<const Pow &>(*f).get_base(), sym);
-        }
-    }
-
-    if (not has_symbol(*f, *sym))
-        return true;
-
-    if (is_a<Sin>(*f) or is_a<Cos>(*f) or is_a<Tan>(*f) or is_a<Cot>(*f)
-        or is_a<Sec>(*f) or is_a<Csc>(*f) or is_a<Sinh>(*f) or is_a<Cosh>(*f)
-        or is_a<Tanh>(*f) or is_a<Coth>(*f) or is_a<Sech>(*f)
-        or is_a<Csch>(*f)) {
-        return (from_basic<UExprPoly>(f, sym)->get_poly().size() <= 1);
-    }
-    return false;
-}
-
-RCP<const Set> solve_trig(const RCP<const Basic> &f,
-                          const RCP<const Symbol> &sym,
-                          const RCP<const Set> &domain)
-{
-    // first simplify f using `fu`.
-    return domain;
-}
-
 RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                      const RCP<const Set> &domain)
 {
@@ -372,11 +332,7 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
     }
     if (not has_symbol(*newf, *sym))
         return emptyset();
-
-    if (is_a_linear_trigFunction(newf, sym)) {
-        return solve_trig(newf, sym, domain);
-    }
-
+    // TODO - Trig solver
     return solve_rational(newf, sym, domain);
 }
 }
