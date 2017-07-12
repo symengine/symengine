@@ -6,6 +6,7 @@ compiler:
 os:
   - linux
   - osx
+dist: trusty
 cache:
   directories:
   - $HOME/.ccache
