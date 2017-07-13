@@ -236,9 +236,8 @@ void as_numer_denom(const RCP<const Basic> &x,
                     const Ptr<RCP<const Basic>> &numer,
                     const Ptr<RCP<const Basic>> &denom);
 
-void as_real_imag(const RCP<const Basic> &x,
-                    const Ptr<RCP<const Basic>> &real,
-                    const Ptr<RCP<const Basic>> &imag);
+void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
+                  const Ptr<RCP<const Basic>> &imag);
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any
    Basic
