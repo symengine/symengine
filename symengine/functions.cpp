@@ -1472,9 +1472,9 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         if (is_a_Number(*num)) {
             RCP<const Number> num_new = rcp_static_cast<const Number>(num);
             if (num_new->is_negative())
-                return div(pi, i2);
-            else
                 return div(pi, im2);
+            else
+                return div(pi, i2);
         }
     }
     RCP<const Basic> index;

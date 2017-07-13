@@ -2163,11 +2163,11 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *pi));
 
     r1 = atan2(i2, zero);
-    r2 = mul(div(pi, i2), minus_one);
+    r2 = div(pi, i2);
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(im2, zero);
-    r2 = div(pi, i2);
+    r2 = mul(div(pi, i2), minus_one);
     REQUIRE(eq(*r1, *r2));
 
     RCP<const ATan2> r4 = make_rcp<ATan2>(i2, i3);
