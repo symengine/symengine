@@ -106,6 +106,7 @@ symengine/tests/basic/test_integer_class
 symengine/tests/basic/test_nan
 symengine/tests/basic/test_relationals
 symengine/tests/basic/test_solve
+symengine/tests/basic/test_as_real_imag
 
 # Benchmarks executables
 benchmarks/add1
