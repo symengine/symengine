@@ -720,7 +720,7 @@ RCP<const Basic> Sin::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(sub(a, b), mul(integer(2), I));
 }
 
@@ -796,7 +796,7 @@ RCP<const Basic> Cos::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(add(a, b), integer(2));
 }
 
@@ -869,7 +869,7 @@ RCP<const Basic> Tan::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(sub(a, b), mul(I, add(a, b)));
 }
 
@@ -943,7 +943,7 @@ RCP<const Basic> Cot::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(mul(I, add(a, b)), sub(a, b));
 }
 
@@ -1016,7 +1016,7 @@ RCP<const Basic> Csc::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(mul(I, integer(2)), sub(a, b));
 }
 
@@ -1088,7 +1088,7 @@ RCP<const Basic> Sec::expand_as_exp() const
 {
     auto expo = mul(I, get_arg());
     RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(mul(minus_one, expo));
+    RCP<const Basic> b = exp(neg(expo));
     return div(integer(2), add(a, b));
 }
 
@@ -1230,7 +1230,7 @@ RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg)
 }
 
 /* ---------------------------- */
-ASin::ASin(const RCP<const Basic> &arg) : TrigFunction(arg)
+ASin::ASin(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1272,7 +1272,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     }
 }
 
-ACos::ACos(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACos::ACos(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1314,7 +1314,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     }
 }
 
-ASec::ASec(const RCP<const Basic> &arg) : TrigFunction(arg)
+ASec::ASec(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1354,7 +1354,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
     }
 }
 
-ACsc::ACsc(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACsc::ACsc(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1394,7 +1394,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
     }
 }
 
-ATan::ATan(const RCP<const Basic> &arg) : TrigFunction(arg)
+ATan::ATan(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1436,7 +1436,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     }
 }
 
-ACot::ACot(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACot::ACot(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2289,7 +2289,7 @@ RCP<const Basic> Coth::expand_as_exp() const
     return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
 }
 
-ASinh::ASinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ASinh::ASinh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2335,7 +2335,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     return make_rcp<const ASinh>(d);
 }
 
-ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACsch::ACsch(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2379,7 +2379,7 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
     return make_rcp<const ACsch>(d);
 }
 
-ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACosh::ACosh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2407,7 +2407,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
     return make_rcp<const ACosh>(arg);
 }
 
-ATanh::ATanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ATanh::ATanh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2449,7 +2449,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     return make_rcp<const ATanh>(d);
 }
 
-ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACoth::ACoth(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2487,7 +2487,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     return make_rcp<const ACoth>(d);
 }
 
-ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ASech::ASech(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))

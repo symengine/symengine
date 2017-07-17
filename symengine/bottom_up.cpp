@@ -33,7 +33,7 @@ public:
 
     void bvisit(const Basic &x)
     {
-        result_ = x.rcp_from_this();
+        result_ = f(x.rcp_from_this());
     }
 
     void bvisit(const Add &x)
@@ -42,7 +42,7 @@ public:
         for (const auto &a : x.get_args()) {
             newargs.push_back(apply(a));
         }
-        result_ = f(add(newargs));
+        result_ = add(newargs);
     }
 
     void bvisit(const Mul &x)
@@ -51,7 +51,7 @@ public:
         for (const auto &a : x.get_args()) {
             newargs.push_back(apply(a));
         }
-        result_ = f(mul(newargs));
+        result_ = mul(newargs);
     }
 
     void bvisit(const Pow &x)
@@ -59,9 +59,9 @@ public:
         auto base_ = x.get_base(), exp_ = x.get_exp();
         auto newarg1 = apply(base_), newarg2 = apply(exp_);
         if (base_ != newarg1 or exp_ != newarg2)
-            result_ = f(pow(newarg1, newarg2));
+            result_ = pow(newarg1, newarg2);
         else
-            result_ = f(x.rcp_from_this());
+            result_ = x.rcp_from_this();
     }
 
     void bvisit(const OneArgFunction &x)
@@ -69,9 +69,9 @@ public:
         auto farg = x.get_arg();
         auto newarg = apply(farg);
         if (eq(*newarg, *farg))
-            result_ = f(x.rcp_from_this());
+            result_ = x.rcp_from_this();
         else
-            result_ = f(x.create(newarg));
+            result_ = x.create(newarg);
     }
 
     template <class T>
@@ -80,9 +80,9 @@ public:
         auto farg1 = x.get_arg1(), farg2 = x.get_arg2();
         auto newarg1 = apply(farg1), newarg2 = apply(farg2);
         if (farg1 != newarg1 or farg2 != newarg2)
-            result_ = f(x.create(newarg1, newarg2));
+            result_ = x.create(newarg1, newarg2);
         else
-            result_ = f(x.rcp_from_this());
+            result_ = x.rcp_from_this();
     }
 
     void bvisit(const MultiArgFunction &x)
@@ -93,7 +93,7 @@ public:
             newargs.push_back(apply(a));
         }
         auto nbarg = x.create(newargs);
-        result_ = f(nbarg);
+        result_ = nbarg;
     }
 };
 
@@ -110,18 +110,9 @@ public:
     }
 
     template <typename T,
-              typename = enable_if_t<std::is_same<Sin, T>::value
-                                     or std::is_same<Cos, T>::value
-                                     or std::is_same<Tan, T>::value
-                                     or std::is_same<Cot, T>::value
-                                     or std::is_same<Csc, T>::value
-                                     or std::is_same<Sec, T>::value
-                                     or std::is_same<Sinh, T>::value
-                                     or std::is_same<Cosh, T>::value
-                                     or std::is_same<Tanh, T>::value
-                                     or std::is_same<Coth, T>::value
-                                     or std::is_same<Csch, T>::value
-                                     or std::is_same<Sech, T>::value>>
+              typename
+              = enable_if_t<std::is_base_of<TrigFunction, T>::value
+                            or std::is_base_of<HyperbolicFunction, T>::value>>
     void bvisit(const T &x)
     {
         auto farg = x.get_arg();

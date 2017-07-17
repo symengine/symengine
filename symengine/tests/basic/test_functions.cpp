@@ -153,7 +153,7 @@ using SymEngine::floor;
 using SymEngine::ceiling;
 using SymEngine::Eq;
 using SymEngine::Conjugate;
-// using SymEngine::expand_as_exp;
+using SymEngine::expand_as_exp;
 using SymEngine::mul;
 
 using namespace SymEngine::literals;
