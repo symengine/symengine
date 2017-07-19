@@ -12,9 +12,13 @@ class ExpressionParser
 {
 
     // OPERATORS and op_precedence used internally, for parsing
-    std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')', ','};
-    std::map<char, int> op_precedence = {{')', 0}, {',', 0}, {'-', 1}, {'+', 1},
-                                         {'*', 3}, {'/', 4}, {'^', 5}};
+    std::set<std::string> OPERATORS
+        = {"-", "+", "*",  "/",  "**", "(", ")", ",", "==",
+           ">", "<", ">=", "<=", "&",  "|", "~", "^"};
+    std::map<std::string, int> op_precedence
+        = {{")", 0}, {",", 0}, {"|", 1},   {"^", 2},  {"&", 3}, {"==", 4},
+           {">", 5}, {"<", 5}, {"<=", 5},  {">=", 5}, {"-", 6}, {"+", 6},
+           {"*", 8}, {"/", 9}, {"**", 10}, {"~", 11}};
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -26,21 +30,28 @@ class ExpressionParser
         {"pi", pi},
         {"I", I},
         {"oo", Inf},
-        {"zoo", ComplexInf}};
+        {"zoo", ComplexInf},
+        {"nan", Nan}};
 
     // reference :
     // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
     typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic> &);
     typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic> &,
                                                 const RCP<const Basic> &);
+    typedef RCP<const Boolean> (*single_arg_boolean_func)(
+        const RCP<const Basic> &);
+    typedef RCP<const Boolean> (*double_arg_boolean_func)(
+        const RCP<const Basic> &, const RCP<const Basic> &);
 
-    // cast overlaoded functions below to single_arg, double_arg before they can
+    // cast overloaded functions below to single_arg, double_arg before they can
     // be used in the map
     single_arg_func single_casted_log = log;
     single_arg_func single_casted_zeta = zeta;
+    single_arg_boolean_func single_casted_Eq = Eq;
 
     double_arg_func double_casted_log = log;
     double_arg_func double_casted_zeta = zeta;
+    double_arg_boolean_func double_casted_Eq = Eq;
 
     // maps string to corresponding single argument function
     std::map<std::string,
@@ -111,6 +122,49 @@ class ExpressionParser
 
             {"max", max}, {"min", min}, {"levi_civita", levi_civita}};
 
+    // maps string to corresponding single argument boolean function
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
+        single_arg_boolean_functions = {
+
+            {"Eq", single_casted_Eq}};
+
+    // maps string to corresponding single argument boolean function (accepting
+    // Boolean objects)
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Boolean> &)>>
+        single_arg_boolean_boolean_functions = {
+
+            {"Not", logical_not}};
+
+    // maps string to corresponding double argument boolean function
+    std::map<std::string,
+             std::function<RCP<const Boolean>(const RCP<const Basic> &,
+                                              const RCP<const Basic> &)>>
+        double_arg_boolean_functions = {
+
+            {"Eq", double_casted_Eq},
+            {"Ne", Ne},
+            {"Ge", Ge},
+            {"Gt", Gt},
+            {"Le", Le},
+            {"Lt", Lt}};
+
+    // maps string to corresponding multi argument vec_boolean function
+    std::map<std::string, std::function<RCP<const Boolean>(vec_boolean &)>>
+        multi_arg_vec_boolean_functions = {
+
+            {"Xor", logical_xor}, {"Xnor", logical_xnor}};
+
+    // maps string to corresponding multi argument set_boolean function
+    std::map<std::string, std::function<RCP<const Boolean>(set_boolean &)>>
+        multi_arg_set_boolean_functions = {
+
+            {"And", logical_and},
+            {"Or", logical_or},
+            {"Nand", logical_nand},
+            {"Nor", logical_nor}};
+
     // vector which stores where parsing 'ends' for a particular index
     // eg. for a '(', it stores where the next ',' or ')' occurs, so as to know
     // what part of the string is to be parsed 'together'
@@ -119,7 +173,7 @@ class ExpressionParser
     // the string to be parsed, obtained after removing all spaces from input
     // string
     std::string s;
-    // it's length
+    // its length
     unsigned int s_len;
 
     std::string get_string(int start, int end)
@@ -149,7 +203,8 @@ class ExpressionParser
             throw ParseError("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
-            if (is_operator(iter)) {
+            if (is_single_character_operator(iter)
+                or (iter + 1 < h and is_dual_character_operator(iter + 1))) {
 
                 if (s[iter] == '+' or s[iter] == '-') {
                     if (iter > l + 1 and iter < h - 1 and s[iter - 1] == 'e'
@@ -176,6 +231,12 @@ class ExpressionParser
                                  parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
+                } else if (s[iter] == '*' and iter + 1 < h
+                           and s[iter + 1] == '*') {
+                    result = pow(result,
+                                 parse_string(iter + 2, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
                 } else if (s[iter] == '*') {
                     result = mul(result,
                                  parse_string(iter + 1, operator_end[iter]));
@@ -191,9 +252,61 @@ class ExpressionParser
                                  parse_string(iter + 1, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
+                } else if (s[iter] == '=' and iter + 1 < h
+                           and s[iter + 1] == '=') {
+                    result = Eq(result,
+                                parse_string(iter + 2, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '<' and iter + 1 < h
+                           and s[iter + 1] == '=') {
+                    result = Le(result,
+                                parse_string(iter + 2, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '>' and iter + 1 < h
+                           and s[iter + 1] == '=') {
+                    result = Ge(result,
+                                parse_string(iter + 2, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '<') {
+                    result = Lt(result,
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '>') {
+                    result = Gt(result,
+                                parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '&') {
+                    set_boolean s;
+                    s.insert(rcp_static_cast<const Boolean>(result));
+                    s.insert(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_and(s);
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '|') {
+                    set_boolean s;
+                    s.insert(rcp_static_cast<const Boolean>(result));
+                    s.insert(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_or(s);
+                    iter = operator_end[iter] - 1;
+
                 } else if (s[iter] == '^') {
-                    result = pow(result,
-                                 parse_string(iter + 1, operator_end[iter]));
+                    vec_boolean s;
+                    s.push_back(rcp_static_cast<const Boolean>(result));
+                    s.push_back(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_xor(s);
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '~') {
+                    result = logical_not(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '(') {
@@ -220,11 +333,25 @@ class ExpressionParser
     }
 
     // returns true if the s[iter] is an operator
-    bool is_operator(int iter)
+    bool is_single_character_operator(int iter)
     {
-        if (iter >= 0 and iter < (int)s_len)
-            if (OPERATORS.find(s[iter]) != OPERATORS.end())
+        if (iter >= 0 and iter < (int)s_len) {
+            std::string x;
+            x = s[iter];
+            if (OPERATORS.find(x) != OPERATORS.end())
                 return true;
+        }
+        return false;
+    }
+
+    bool is_dual_character_operator(int iter)
+    {
+        if (iter >= 1 and iter < (int)s_len) {
+            std::string x;
+            x = s.substr(iter - 1, 2);
+            if (OPERATORS.find(x) != OPERATORS.end())
+                return true;
+        }
         return false;
     }
 
@@ -240,17 +367,50 @@ class ExpressionParser
         }
 
         if (params.size() == 1) {
-            if (single_arg_functions.find(expr) != single_arg_functions.end())
+            if (single_arg_functions.find(expr) != single_arg_functions.end()) {
                 return single_arg_functions[expr](params[0]);
+            }
+            if (single_arg_boolean_functions.find(expr)
+                != single_arg_boolean_functions.end()) {
+                return single_arg_boolean_functions[expr](params[0]);
+            }
+            if (single_arg_boolean_boolean_functions.find(expr)
+                != single_arg_boolean_boolean_functions.end()) {
+                return single_arg_boolean_boolean_functions[expr](
+                    rcp_static_cast<const Boolean>(params[0]));
+            }
         }
 
         if (params.size() == 2) {
-            if (double_arg_functions.find(expr) != double_arg_functions.end())
+            if (double_arg_functions.find(expr) != double_arg_functions.end()) {
                 return double_arg_functions[expr](params[0], params[1]);
+            }
+            if (double_arg_boolean_functions.find(expr)
+                != double_arg_boolean_functions.end()) {
+                return double_arg_boolean_functions[expr](params[0], params[1]);
+            }
         }
 
         if (multi_arg_functions.find(expr) != multi_arg_functions.end()) {
             return multi_arg_functions[expr](params);
+        }
+
+        if (multi_arg_vec_boolean_functions.find(expr)
+            != multi_arg_vec_boolean_functions.end()) {
+            vec_boolean p;
+            for (auto &v : params) {
+                p.push_back(rcp_static_cast<const Boolean>(v));
+            }
+            return multi_arg_vec_boolean_functions[expr](p);
+        }
+
+        if (multi_arg_set_boolean_functions.find(expr)
+            != multi_arg_set_boolean_functions.end()) {
+            set_boolean s;
+            for (auto &v : params) {
+                s.insert(rcp_static_cast<const Boolean>(v));
+            }
+            return multi_arg_set_boolean_functions[expr](s);
         }
 
         return function_symbol(expr, params);
@@ -344,15 +504,15 @@ class ExpressionParser
         }
     }
 
-    bool operator_error(char prev, char current)
+    bool operator_error(std::string prev, std::string current)
     {
-        if (prev == '(') {
-            if (current == ')')
+        if (prev == "(") {
+            if (current == ")")
                 return true;
 
-        } else if (prev == '-' or prev == '+') {
+        } else if (prev == "-" or prev == "+") {
         } else {
-            if (current != ')')
+            if (current != ")")
                 return true;
         }
         return false;
@@ -370,18 +530,12 @@ public:
         std::stack<std::pair<int, unsigned int>> op_stack;
 
         bool last_char_was_op = false;
-        char last_char = 'x';
+        std::string last_char = "x";
         s.clear();
         s.reserve(in.length());
 
-        // Replacing ** with ^
         for (unsigned int i = 0; i < in.length(); ++i) {
-            if (in[i] == '*' and i + 1 < in.length() and in[i + 1] == '*') {
-                s += '^';
-                i++;
-            } else {
-                s += in[i];
-            }
+            s += in[i];
         }
         s_len = numeric_cast<unsigned>(s.length());
         operator_end.clear();
@@ -392,10 +546,17 @@ public:
         right_bracket.push(s_len);
 
         for (int i = s_len - 1; i >= 0; i--) {
-            if (is_operator(i)) {
-                char x = s[i];
+            if (is_single_character_operator(i)
+                or is_dual_character_operator(i)) {
+                std::string x;
+                x = s[i];
 
-                if (x == '(') {
+                if (is_dual_character_operator(i)) {
+                    i--;
+                    x = s[i] + x;
+                }
+
+                if (x == "(") {
                     // find the matching right bracket in op_stack
                     while (op_stack.top().second != right_bracket.top())
                         op_stack.pop();
@@ -406,14 +567,14 @@ public:
                     // this should never happen, every '(' should have a
                     // matching ')' in the bracket stack
                     if (operator_end[i] == (int)s_len)
-                        throw ParseError("Mismatching parantheses!");
+                        throw ParseError("Mismatching parentheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
-                } else if (x == ')' or x == ',') {
+                } else if (x == ")" or x == ",") {
                     // ',' acts as a pseudo ')', for the intended '('
-                    if (x == ',') {
-                        // it's end is the actual ')'
+                    if (x == ",") {
+                        // its end is the actual ')'
                         operator_end[i] = right_bracket.top();
                         right_bracket.pop();
                     }
@@ -421,7 +582,7 @@ public:
                     right_bracket.push(i);
 
                 } else {
-                    if (x == '+' or x == '-') {
+                    if (x == "+" or x == "-") {
                         if (i > 1 and i < (int)s_len - 1 and s[i - 1] == 'e'
                             and s[i - 2] >= '0' and s[i - 2] <= '9'
                             and s[i + 1] >= '0' and s[i + 1] <= '9') {
@@ -431,7 +592,7 @@ public:
                         }
                     }
                     if (last_char_was_op
-                        and (last_char == '-' or last_char == '+'))
+                        and (last_char == "-" or last_char == "+"))
                         op_stack.pop();
                     // if it's a normal operator, remove operators with higher
                     // precedence
@@ -452,10 +613,13 @@ public:
             }
 
             last_char = s[i];
+            if (i + 1 < (int)s_len and is_dual_character_operator(i + 1)) {
+                last_char = last_char + s[i + 1];
+            }
         }
         // extra right_brackets in the string
         if (right_bracket.top() != s_len)
-            throw ParseError("Mismatching parantheses!");
+            throw ParseError("Mismatching parentheses!");
 
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);

@@ -41,6 +41,22 @@ using SymEngine::ParseError;
 using SymEngine::down_cast;
 using SymEngine::Inf;
 using SymEngine::ComplexInf;
+using SymEngine::Eq;
+using SymEngine::Ne;
+using SymEngine::Ge;
+using SymEngine::Gt;
+using SymEngine::Le;
+using SymEngine::Lt;
+using SymEngine::boolTrue;
+using SymEngine::boolFalse;
+using SymEngine::minus_one;
+using SymEngine::logical_and;
+using SymEngine::logical_not;
+using SymEngine::logical_nand;
+using SymEngine::logical_nor;
+using SymEngine::logical_or;
+using SymEngine::logical_xor;
+using SymEngine::logical_xnor;
 
 using namespace SymEngine::literals;
 
@@ -81,7 +97,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *integer(42)));
 
-    s = "(5^3)/8 + 12";
+    s = "(5**3)/8 + 12";
     res = parse(s);
     REQUIRE(eq(*res, *add(div(integer(125), integer(8)), integer(12))));
 
@@ -89,7 +105,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *integer(5)));
 
-    s = "4^2/2+2";
+    s = "4**2/2+2";
     res = parse(s);
     REQUIRE(eq(*res, *integer(10)));
 
@@ -146,7 +162,7 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *add(pow(x, add(integer(3), w)), div(integer(-2), y))));
 
-    s = "l0ngn4me - w1*y + 2^(x)";
+    s = "l0ngn4me - w1*y + 2**(x)";
     res = parse(s);
     REQUIRE(eq(*res, *add(add(l, neg(mul(w, y))), pow(integer(2), x))));
 
@@ -170,7 +186,7 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *mul(x, mul(y, integer(-1)))));
 
-    s = "x ^ --y";
+    s = "x ** --y";
     res = parse(s);
     REQUIRE(eq(*res, *pow(x, y)));
 
@@ -192,6 +208,8 @@ TEST_CASE("Parsing: functions", "[parser]")
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> z = symbol("z");
 
     s = "sin(x)";
     res = parse(s);
@@ -217,12 +235,12 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *add(erfc(mul(x, y)), erfc(sin(x)))));
 
-    s = "beta(sin(x+3), gamma(2^y+sin(y)))";
+    s = "beta(sin(x+3), gamma(2**y+sin(y)))";
     res = parse(s);
     REQUIRE(eq(*res, *beta(sin(add(x, integer(3))),
                            gamma(add(sin(y), pow(integer(2), y))))));
 
-    s = "y^(abs(sin(3) + x)) + sinh(2)";
+    s = "y**(abs(sin(3) + x)) + sinh(2)";
     res = parse(s);
     REQUIRE(
         eq(*res, *add(pow(y, abs(add(sin(integer(3)), x))), sinh(integer(2)))));
@@ -259,6 +277,166 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "sin(max(log(x, y), min(x, y)))";
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
+
+    s = "Eq(x)";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(x, integer(0))));
+
+    s = "Eq(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(x, y)));
+
+    s = "Ne(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Ne(x, y)));
+
+    s = "Ge(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Le(y, x)));
+
+    s = "Gt(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(y, x)));
+
+    s = "Le(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Le(x, y)));
+
+    s = "Lt(x, y)";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(x, y)));
+
+    s = "x == y";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(x, y)));
+
+    s = "x >= y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(y, x)));
+
+    s = "x > y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(y, x)));
+
+    s = "x <= y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(x, y)));
+
+    s = "x < y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(x, y)));
+
+    s = "x + y < x*y";
+    res = parse(s);
+    CHECK(eq(*res, *Lt(add(x, y), mul(x, y))));
+
+    s = "x + y >= x*y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(mul(x, y), add(x, y))));
+
+    s = "x - y == x/y";
+    res = parse(s);
+    CHECK(eq(*res, *Eq(sub(x, y), div(x, y))));
+
+    s = "x - y <= x/y";
+    res = parse(s);
+    CHECK(eq(*res, *Le(sub(x, y), div(x, y))));
+
+    s = "(2pi) > x";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(x, mul(integer(2), pi))));
+
+    s = "sin(pi/2) == 1";
+    res = parse(s);
+    REQUIRE(eq(*res, *boolTrue));
+
+    s = "log(e) > 2";
+    res = parse(s);
+    REQUIRE(eq(*res, *boolFalse));
+
+    s = "ln(e/e) + sin(pi*2/2) + 3*x == -1";
+    res = parse(s);
+    REQUIRE(eq(*res, *Eq(mul(integer(3), x), minus_one)));
+
+    s = "3*y/(1+x) > y/x*x";
+    res = parse(s);
+    REQUIRE(eq(*res, *Lt(y, div(mul(y, integer(3)), add(x, integer(1))))));
+
+    s = "(x < y) & (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_and({Lt(x, y), Le(z, w)})));
+
+    s = "(x < y) | (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_or({Lt(x, y), Le(z, w)})));
+
+    s = "~(x < y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_not(Lt(x, y))));
+
+    s = "(x < y) ^ (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
+
+    s = "(x < y) & (w >= z) | (y == z)";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *logical_or({logical_and({Lt(x, y), Le(z, w)}), Eq(y, z)})));
+
+    s = "(x < y) & ((w >= z) | (y == z))";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *logical_and({logical_or({Eq(y, z), Le(z, w)}), Lt(x, y)})));
+
+    s = "~ (x < y) & (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_and({logical_not(Lt(x, y)), Le(z, w)})));
+
+    s = "~ (x < y) | (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_or({logical_not(Lt(x, y)), Le(z, w)})));
+
+    s = "~ (x < y) ^ (w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xor({logical_not(Lt(x, y)), Le(z, w)})));
+
+    s = "(x < y) | (w >= z) ^ (y == z)";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *logical_or({Lt(x, y), logical_xor({Le(z, w), Eq(y, z)})})));
+
+    s = "(x < y) & (w >= z) ^ (y == z)";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *logical_xor({logical_and({Lt(x, y), Le(z, w)}), Eq(y, z)})));
+
+    s = "And(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_and({Lt(x, y), Le(z, w)})));
+
+    s = "Or(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_or({Lt(x, y), Le(z, w)})));
+
+    s = "Nor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_nor({Lt(x, y), Le(z, w)})));
+
+    s = "Nand(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_nand({Lt(x, y), Le(z, w)})));
+
+    s = "Xor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
+
+    s = "Xnor(x < y, w >= z)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_xnor({Lt(x, y), Le(z, w)})));
+
+    s = "Not(x < y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *logical_not(Lt(x, y))));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
@@ -331,7 +509,7 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
     REQUIRE(eq(*res, *add(function_symbol("func", {x, y, z}),
                           function_symbol("f", sin(x)))));
 
-    s = "f(g(2^x))";
+    s = "f(g(2**x))";
     res = parse(s);
     REQUIRE(eq(
         *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
