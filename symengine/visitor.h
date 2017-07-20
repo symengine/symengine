@@ -185,6 +185,40 @@ RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
 
+class TransformVisitor : public BaseVisitor<TransformVisitor>
+{
+protected:
+    RCP<const Basic> result_;
+
+public:
+    TransformVisitor()
+    {
+    }
+
+    RCP<const Basic> apply(const Basic &x);
+    RCP<const Basic> apply(const RCP<const Basic> &x);
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const OneArgFunction &x);
+
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &x)
+    {
+        auto farg1 = x.get_arg1(), farg2 = x.get_arg2();
+        auto newarg1 = apply(farg1), newarg2 = apply(farg2);
+        if (farg1 != newarg1 or farg2 != newarg2) {
+            result_ = x.create(newarg1, newarg2);
+        } else {
+            result_ = x.rcp_from_this();
+        }
+    }
+
+    void bvisit(const MultiArgFunction &x);
+};
+
 } // SymEngine
 
 #endif

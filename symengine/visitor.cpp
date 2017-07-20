@@ -109,4 +109,70 @@ set_basic free_symbols(const Basic &b)
     return visitor.apply(b);
 }
 
+RCP<const Basic> TransformVisitor::apply(const Basic &x)
+{
+    return apply(x.rcp_from_this());
+}
+
+RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)
+{
+    x->accept(*this);
+    return result_;
+}
+
+void TransformVisitor::bvisit(const Basic &x)
+{
+    result_ = x.rcp_from_this();
+}
+
+void TransformVisitor::bvisit(const Add &x)
+{
+    vec_basic newargs;
+    for (const auto &a : x.get_args()) {
+        newargs.push_back(apply(a));
+    }
+    result_ = add(newargs);
+}
+
+void TransformVisitor::bvisit(const Mul &x)
+{
+    vec_basic newargs;
+    for (const auto &a : x.get_args()) {
+        newargs.push_back(apply(a));
+    }
+    result_ = mul(newargs);
+}
+
+void TransformVisitor::bvisit(const Pow &x)
+{
+    auto base_ = x.get_base(), exp_ = x.get_exp();
+    auto newarg1 = apply(base_), newarg2 = apply(exp_);
+    if (base_ != newarg1 or exp_ != newarg2) {
+        result_ = pow(newarg1, newarg2);
+    } else {
+        result_ = x.rcp_from_this();
+    }
+}
+
+void TransformVisitor::bvisit(const OneArgFunction &x)
+{
+    auto farg = x.get_arg();
+    auto newarg = apply(farg);
+    if (eq(*newarg, *farg)) {
+        result_ = x.rcp_from_this();
+    } else {
+        result_ = x.create(newarg);
+    }
+}
+
+void TransformVisitor::bvisit(const MultiArgFunction &x)
+{
+    auto fargs = x.get_args();
+    vec_basic newargs;
+    for (const auto &a : fargs) {
+        newargs.push_back(apply(a));
+    }
+    auto nbarg = x.create(newargs);
+    result_ = nbarg;
+}
 } // SymEngine

@@ -245,19 +245,25 @@ public:
 //! Canonicalize Conjugate
 RCP<const Basic> conjugate(const RCP<const Basic> &arg);
 
-class TrigFunction : public OneArgFunction
+class TrigBase : public OneArgFunction
 {
 public:
     //! Constructor
-    TrigFunction(RCP<const Basic> arg) : OneArgFunction(arg){};
-    virtual RCP<const Basic> expand_as_exp() const = 0;
+    TrigBase(RCP<const Basic> arg) : OneArgFunction(arg){};
 };
 
-class InverseTrigFunction : public OneArgFunction
+class TrigFunction : public TrigBase
 {
 public:
     //! Constructor
-    InverseTrigFunction(RCP<const Basic> arg) : OneArgFunction(arg){};
+    TrigFunction(RCP<const Basic> arg) : TrigBase(arg){};
+};
+
+class InverseTrigFunction : public TrigBase
+{
+public:
+    //! Constructor
+    InverseTrigFunction(RCP<const Basic> arg) : TrigBase(arg){};
 };
 
 /*! \return `true` if `arg` is of form `m + n*pi` where `n` is a rational
@@ -297,8 +303,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sin in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sin:
@@ -315,8 +319,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands cos in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Cos:
@@ -333,8 +335,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands tan in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -350,8 +350,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands cot in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -367,8 +365,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands csc in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -384,8 +380,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sec in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
@@ -759,19 +753,25 @@ public:
                       const map_basic_basic &x) const;
 };
 
-class HyperbolicFunction : public OneArgFunction
+class HyperbolicBase : public OneArgFunction
 {
 public:
     //! Constructor
-    HyperbolicFunction(RCP<const Basic> arg) : OneArgFunction{arg} {};
-    virtual RCP<const Basic> expand_as_exp() const = 0;
+    HyperbolicBase(RCP<const Basic> arg) : OneArgFunction{arg} {};
 };
 
-class InverseHyperbolicFunction : public OneArgFunction
+class HyperbolicFunction : public HyperbolicBase
 {
 public:
     //! Constructor
-    InverseHyperbolicFunction(RCP<const Basic> arg) : OneArgFunction{arg} {};
+    HyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
+};
+
+class InverseHyperbolicFunction : public HyperbolicBase
+{
+public:
+    //! Constructor
+    InverseHyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
 };
 
 class Sinh : public HyperbolicFunction
@@ -785,8 +785,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sinh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sinh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sinh:
@@ -803,8 +801,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csch
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands csch in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Csch:
@@ -821,8 +817,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cosh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands cosh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Cosh:
@@ -839,8 +833,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sech
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sech in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sech:
@@ -857,8 +849,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tanh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands tanh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Tanh:
@@ -875,8 +865,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized coth
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands coth in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Coth:

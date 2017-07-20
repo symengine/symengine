@@ -716,14 +716,6 @@ bool Sin::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-RCP<const Basic> Sin::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(sub(a, b), mul(integer(2), I));
-}
-
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -792,14 +784,6 @@ bool Cos::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-RCP<const Basic> Cos::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(add(a, b), integer(2));
-}
-
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -863,14 +847,6 @@ bool Tan::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-RCP<const Basic> Tan::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(sub(a, b), mul(I, add(a, b)));
 }
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
@@ -939,14 +915,6 @@ bool Cot::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-RCP<const Basic> Cot::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(mul(I, add(a, b)), sub(a, b));
-}
-
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1012,14 +980,6 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-RCP<const Basic> Csc::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(mul(I, integer(2)), sub(a, b));
-}
-
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1082,14 +1042,6 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-RCP<const Basic> Sec::expand_as_exp() const
-{
-    auto expo = mul(I, get_arg());
-    RCP<const Basic> a = exp(expo);
-    RCP<const Basic> b = exp(neg(expo));
-    return div(integer(2), add(a, b));
 }
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
@@ -2044,11 +1996,6 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     return make_rcp<const Sinh>(d);
 }
 
-RCP<const Basic> Sinh::expand_as_exp() const
-{
-    return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
-}
-
 Csch::Csch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -2092,13 +2039,6 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
     return make_rcp<const Csch>(d);
 }
 
-RCP<const Basic> Csch::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(i2, sub(pos_exp, neg_exp));
-}
-
 Cosh::Cosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -2138,11 +2078,6 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
     return make_rcp<const Cosh>(d);
 }
 
-RCP<const Basic> Cosh::expand_as_exp() const
-{
-    return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
-}
-
 Sech::Sech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -2180,13 +2115,6 @@ RCP<const Basic> sech(const RCP<const Basic> &arg)
     RCP<const Basic> d;
     handle_minus(arg, outArg(d));
     return make_rcp<const Sech>(d);
-}
-
-RCP<const Basic> Sech::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(i2, add(pos_exp, neg_exp));
 }
 
 Tanh::Tanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -2232,13 +2160,6 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
     return make_rcp<const Tanh>(d);
 }
 
-RCP<const Basic> Tanh::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
-}
-
 Coth::Coth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -2280,13 +2201,6 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
         return neg(coth(d));
     }
     return make_rcp<const Coth>(d);
-}
-
-RCP<const Basic> Coth::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
 }
 
 ASinh::ASinh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)

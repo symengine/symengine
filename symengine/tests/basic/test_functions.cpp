@@ -153,7 +153,7 @@ using SymEngine::floor;
 using SymEngine::ceiling;
 using SymEngine::Eq;
 using SymEngine::Conjugate;
-using SymEngine::expand_as_exp;
+using SymEngine::rewrite_as_exp;
 using SymEngine::mul;
 
 using namespace SymEngine::literals;
@@ -318,7 +318,7 @@ TEST_CASE("Sin: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = sin(x)->expand_as_exp();
+    r1 = rewrite_as_exp(sin(x));
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))), mul(integer(2), I));
     REQUIRE(eq(*r1, *r2));
 }
@@ -443,7 +443,7 @@ TEST_CASE("Cos: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = cos(x)->expand_as_exp();
+    r1 = rewrite_as_exp(cos(x));
     r2 = div(add(exp(mul(I, x)), exp(mul(neg(I), x))), integer(2));
     REQUIRE(eq(*r1, *r2));
 }
@@ -568,7 +568,7 @@ TEST_CASE("Tan: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = tan(x)->expand_as_exp();
+    r1 = rewrite_as_exp(tan(x));
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))),
              mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I));
     REQUIRE(eq(*r1, *r2));
@@ -690,7 +690,7 @@ TEST_CASE("Cot: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = cot(x)->expand_as_exp();
+    r1 = rewrite_as_exp(cot(x));
     r2 = div(mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I),
              sub(exp(mul(I, x)), exp(mul(neg(I), x))));
     REQUIRE(eq(*r1, *r2));
@@ -814,7 +814,7 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = csc(x)->expand_as_exp();
+    r1 = rewrite_as_exp(csc(x));
     r2 = div(mul(integer(2), I), sub(exp(mul(I, x)), exp(mul(neg(I), x))));
     REQUIRE(eq(*r1, *r2));
 }
@@ -939,7 +939,7 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(add(mul(pi, i2), div(pi, i2)))));
     REQUIRE(not(r4->is_canonical(real_double(2.0))));
 
-    r1 = sec(x)->expand_as_exp();
+    r1 = rewrite_as_exp(sec(x));
     r2 = div(integer(2), add(exp(mul(I, x)), exp(mul(neg(I), x))));
     REQUIRE(eq(*r1, *r2));
 }
@@ -2266,7 +2266,7 @@ TEST_CASE("Sinh: functions", "[functions]")
     r2 = mul(im1, sinh(one));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = sinh(x)->expand_as_exp();
+    r1 = rewrite_as_exp(sinh(x));
     r2 = div(add(exp(x), mul(im1, exp(mul(im1, x)))), i2);
     REQUIRE(eq(*r1, *r2));
     // tests cosh(-x) = cosh(x) and sinh(x)->diff(x) = cosh(x)
@@ -2305,7 +2305,7 @@ TEST_CASE("Csch: functions", "[functions]")
     r2 = mul(im1, csch(one));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = csch(x)->expand_as_exp();
+    r1 = rewrite_as_exp(csch(x));
     r2 = div(i2, add(exp(x), mul(im1, exp(mul(im1, x)))));
     REQUIRE(eq(*r1, *r2));
     r1 = csch(mul(im1, x))->diff(x);
@@ -2349,7 +2349,7 @@ TEST_CASE("Cosh: functions", "[functions]")
     r2 = cosh(one);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = cosh(x)->expand_as_exp();
+    r1 = rewrite_as_exp(cosh(x));
     r2 = div(add(exp(x), exp(mul(im1, x))), i2);
     REQUIRE(eq(*r1, *r2));
     // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
@@ -2391,7 +2391,7 @@ TEST_CASE("Sech: functions", "[functions]")
     r2 = sech(one);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = sech(x)->expand_as_exp();
+    r1 = rewrite_as_exp(sech(x));
     r2 = div(i2, add(exp(x), exp(mul(im1, x))));
     REQUIRE(eq(*r1, *r2));
 
@@ -2433,7 +2433,7 @@ TEST_CASE("Tanh: functions", "[functions]")
     r2 = mul(im1, tanh(one));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = tanh(x)->expand_as_exp();
+    r1 = rewrite_as_exp(tanh(x));
     r2 = div(sub(exp(x), exp(mul(im1, x))), add(exp(x), exp(mul(im1, x))));
     REQUIRE(eq(*r1, *r2));
 
@@ -2475,7 +2475,7 @@ TEST_CASE("Coth: functions", "[functions]")
     r2 = mul(im1, coth(one));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = coth(x)->expand_as_exp();
+    r1 = rewrite_as_exp(coth(x));
     r2 = div(add(exp(x), exp(mul(im1, x))), sub(exp(x), exp(mul(im1, x))));
     REQUIRE(eq(*r1, *r2));
 
@@ -4505,32 +4505,54 @@ TEST_CASE("test_conjugate", "[Conjugate]")
 #endif // HAVE_SYMENGINE_MPC
 }
 
-TEST_CASE("test expand_as_exp", "[Functions]")
+TEST_CASE("test rewrite_as_exp", "[Functions]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> r1, r2;
-    r1 = expand_as_exp(sin(x));
+    r1 = rewrite_as_exp(sin(x));
     r2 = mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))});
     REQUIRE(eq(*r1, *r2));
 
-    r1 = expand_as_exp(add(sin(x), cos(x)));
+    r1 = rewrite_as_exp(add(sin(x), cos(x)));
     r2 = add(
         mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
         mul(rational(1, 2), add(exp(mul(I, x)), exp(mul(neg(I), x)))));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = expand_as_exp(add(sin(x), mul(integer(2), cos(x))));
+    r1 = rewrite_as_exp(add(sin(x), mul(integer(2), cos(x))));
     r2 = add(
         mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
         add(exp(mul(I, x)), exp(mul(neg(I), x))));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = expand_as_exp(cos(cos(x)));
+    r1 = rewrite_as_exp(cos(cos(x)));
     r2 = mul(
         rational(1, 2),
         add(exp(mul(I, mul(rational(1, 2),
                            add(exp(mul(I, x)), exp(mul(neg(I), x)))))),
             exp(mul(neg(I), mul(rational(1, 2),
                                 add(exp(mul(I, x)), exp(mul(neg(I), x))))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_exp(pow(cos(x), integer(2)));
+    r2 = mul(rational(1, 4),
+             pow(add(exp(mul(I, x)), exp(mul(neg(I), x))), integer(2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_exp(log(sin(x)));
+    r2 = log(
+        mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_exp(zeta(sin(x), cos(x)));
+    r2 = zeta(
+        mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
+        mul(rational(1, 2), add(exp(mul(I, x)), exp(mul(neg(I), x)))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_exp(levi_civita({sin(x), symbol("y"), symbol("z")}));
+    r2 = levi_civita(
+        {mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
+         symbol("y"), symbol("z")});
     REQUIRE(eq(*r1, *r2));
 }
