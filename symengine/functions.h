@@ -245,11 +245,25 @@ public:
 //! Canonicalize Conjugate
 RCP<const Basic> conjugate(const RCP<const Basic> &arg);
 
-class TrigFunction : public OneArgFunction
+class TrigBase : public OneArgFunction
 {
 public:
     //! Constructor
-    TrigFunction(RCP<const Basic> arg) : OneArgFunction(arg){};
+    TrigBase(RCP<const Basic> arg) : OneArgFunction(arg){};
+};
+
+class TrigFunction : public TrigBase
+{
+public:
+    //! Constructor
+    TrigFunction(RCP<const Basic> arg) : TrigBase(arg){};
+};
+
+class InverseTrigFunction : public TrigBase
+{
+public:
+    //! Constructor
+    InverseTrigFunction(RCP<const Basic> arg) : TrigBase(arg){};
 };
 
 /*! \return `true` if `arg` is of form `m + n*pi` where `n` is a rational
@@ -370,7 +384,7 @@ public:
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
 
-class ASin : public TrigFunction
+class ASin : public InverseTrigFunction
 {
 
 public:
@@ -386,7 +400,7 @@ public:
 //! Canonicalize ASin:
 RCP<const Basic> asin(const RCP<const Basic> &arg);
 
-class ACos : public TrigFunction
+class ACos : public InverseTrigFunction
 {
 
 public:
@@ -402,7 +416,7 @@ public:
 //! Canonicalize ACos:
 RCP<const Basic> acos(const RCP<const Basic> &arg);
 
-class ASec : public TrigFunction
+class ASec : public InverseTrigFunction
 {
 
 public:
@@ -418,7 +432,7 @@ public:
 //! Canonicalize ASec:
 RCP<const Basic> asec(const RCP<const Basic> &arg);
 
-class ACsc : public TrigFunction
+class ACsc : public InverseTrigFunction
 {
 
 public:
@@ -434,7 +448,7 @@ public:
 //! Canonicalize ACsc:
 RCP<const Basic> acsc(const RCP<const Basic> &arg);
 
-class ATan : public TrigFunction
+class ATan : public InverseTrigFunction
 {
 
 public:
@@ -450,7 +464,7 @@ public:
 //! Canonicalize ATan:
 RCP<const Basic> atan(const RCP<const Basic> &arg);
 
-class ACot : public TrigFunction
+class ACot : public InverseTrigFunction
 {
 
 public:
@@ -739,11 +753,25 @@ public:
                       const map_basic_basic &x) const;
 };
 
-class HyperbolicFunction : public OneArgFunction
+class HyperbolicBase : public OneArgFunction
 {
 public:
     //! Constructor
-    HyperbolicFunction(RCP<const Basic> arg) : OneArgFunction{arg} {};
+    HyperbolicBase(RCP<const Basic> arg) : OneArgFunction{arg} {};
+};
+
+class HyperbolicFunction : public HyperbolicBase
+{
+public:
+    //! Constructor
+    HyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
+};
+
+class InverseHyperbolicFunction : public HyperbolicBase
+{
+public:
+    //! Constructor
+    InverseHyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
 };
 
 class Sinh : public HyperbolicFunction
@@ -757,8 +785,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sinh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sinh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sinh:
@@ -775,8 +801,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csch
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands csch in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Csch:
@@ -793,8 +817,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cosh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands cosh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Cosh:
@@ -811,8 +833,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sech
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands sech in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Sech:
@@ -829,8 +849,6 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tanh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands tanh in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Tanh:
@@ -847,14 +865,12 @@ public:
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized coth
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! expands coth in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Coth:
 RCP<const Basic> coth(const RCP<const Basic> &arg);
 
-class ASinh : public HyperbolicFunction
+class ASinh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic sine function.
 public:
@@ -870,7 +886,7 @@ public:
 //! Canonicalize ASinh:
 RCP<const Basic> asinh(const RCP<const Basic> &arg);
 
-class ACsch : public HyperbolicFunction
+class ACsch : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosecant function.
 public:
@@ -886,7 +902,7 @@ public:
 //! Canonicalize ACsch:
 RCP<const Basic> acsch(const RCP<const Basic> &arg);
 
-class ACosh : public HyperbolicFunction
+class ACosh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosine function.
 public:
@@ -902,7 +918,7 @@ public:
 //! Canonicalize ACosh:
 RCP<const Basic> acosh(const RCP<const Basic> &arg);
 
-class ATanh : public HyperbolicFunction
+class ATanh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic tangent function.
 public:
@@ -918,7 +934,7 @@ public:
 //! Canonicalize ATanh:
 RCP<const Basic> atanh(const RCP<const Basic> &arg);
 
-class ACoth : public HyperbolicFunction
+class ACoth : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cotangent function.
 public:
@@ -934,7 +950,7 @@ public:
 //! Canonicalize ACoth:
 RCP<const Basic> acoth(const RCP<const Basic> &arg);
 
-class ASech : public HyperbolicFunction
+class ASech : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic secant function.
 public:

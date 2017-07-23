@@ -296,17 +296,11 @@ protected:
     bool needs_;
 
 public:
-    void bvisit(const TrigFunction &f)
-    {
-        auto arg = f.get_arg();
-        map_basic_basic subsx0{{x_, integer(0)}};
-        if (arg->subs(subsx0)->__neq__(*integer(0))) {
-            needs_ = true;
-            stop_ = true;
-        }
-    }
-
-    void bvisit(const HyperbolicFunction &f)
+    template <typename T,
+              typename
+              = enable_if_t<std::is_base_of<TrigBase, T>::value
+                            or std::is_base_of<HyperbolicBase, T>::value>>
+    void bvisit(const T &f)
     {
         auto arg = f.get_arg();
         map_basic_basic subsx0{{x_, integer(0)}};
