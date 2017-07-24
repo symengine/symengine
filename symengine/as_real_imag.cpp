@@ -25,8 +25,6 @@ public:
     {
         RCP<const Basic> rest = one;
         RCP<const Basic> fre_ = one, fim_ = zero;
-        RCP<const Basic> coef = one;
-        bool is_imag = false;
 
         for (const auto &arg : x.get_args()) {
             apply(*arg);

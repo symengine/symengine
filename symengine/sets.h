@@ -128,8 +128,8 @@ public:
         return vec_basic(container_.begin(), container_.end());
     }
 
-    FiniteSet(const set_basic container);
-    static bool is_canonical(const set_basic container);
+    FiniteSet(const set_basic &container);
+    static bool is_canonical(const set_basic &container);
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
@@ -205,8 +205,8 @@ public:
     {
         return {};
     }
-    Union(set_set in);
-    static bool is_canonical(set_set in);
+    Union(const set_set &in);
+    static bool is_canonical(const set_set &in);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -267,9 +267,10 @@ public:
     {
         return {sym, condition_};
     }
-    ConditionSet(const RCP<const Basic> sym, RCP<const Boolean> condition);
-    static bool is_canonical(const RCP<const Basic> sym,
-                             RCP<const Boolean> condition);
+    ConditionSet(const RCP<const Basic> &sym,
+                 const RCP<const Boolean> &condition);
+    static bool is_canonical(const RCP<const Basic> &sym,
+                             const RCP<const Boolean> &condition);
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
@@ -374,7 +375,7 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
                                const RCP<const Basic> &expr,
                                const RCP<const Set> &base)
 {
-    if (not is_a<Symbol>(*sym))
+    if (not is_a_sub<Symbol>(*sym))
         throw SymEngineException("first arg is expected to be a symbol");
 
     if (eq(*expr, *sym) or eq(*base, *emptyset()))
@@ -390,6 +391,26 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
             }
         }
         return finiteset({expr});
+    }
+
+    if (is_a<FiniteSet>(*base)) {
+        map_basic_basic d;
+        set_basic temp;
+        for (const auto &s :
+             down_cast<const FiniteSet &>(*base).get_container()) {
+            d[sym] = s;
+            temp.insert(expr->subs(d));
+            d.clear();
+        }
+        return finiteset(temp);
+    }
+
+    if (is_a<ImageSet>(*base)) {
+        const ImageSet &imbase = down_cast<const ImageSet &>(*base);
+        map_basic_basic d;
+        d[sym] = imbase.get_expr();
+        return imageset(imbase.get_symbol(), expand(expr->subs(d)),
+                        imbase.get_baseset());
     }
 
     return make_rcp<const ImageSet>(sym, expr, base);
