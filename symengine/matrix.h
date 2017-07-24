@@ -172,12 +172,12 @@ public:
                                 unsigned row_start, unsigned col_start,
                                 unsigned row_end, unsigned col_end,
                                 unsigned row_step, unsigned col_step);
-    friend void row_join(const DenseMatrix &A, const DenseMatrix &B,
-                         DenseMatrix &C);
-    friend void col_join(const DenseMatrix &A, const DenseMatrix &B,
-                         DenseMatrix &C);
-    friend void row_del(DenseMatrix &A, unsigned k);
-    friend void col_del(DenseMatrix &A, unsigned k);
+    void row_join(const DenseMatrix &B);
+    void col_join(const DenseMatrix &B);
+    void row_insert(const DenseMatrix &B, unsigned pos);
+    void col_insert(const DenseMatrix &B, unsigned pos);
+    void row_del(unsigned k);
+    void col_del(unsigned k);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
