@@ -217,6 +217,8 @@ public:
     {
         return this->container_;
     }
+
+    RCP<const Set> create(const set_set &in) const;
 };
 
 class Complement : public Set
@@ -325,6 +327,10 @@ public:
     {
         return this->base_;
     }
+
+    RCP<const Set> create(const RCP<const Basic> &sym,
+                          const RCP<const Basic> &expr,
+                          const RCP<const Set> &base) const;
 };
 
 inline bool is_a_Set(const Basic &b)

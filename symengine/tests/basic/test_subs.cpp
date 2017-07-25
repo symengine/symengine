@@ -28,6 +28,11 @@ using SymEngine::msubs;
 using SymEngine::function_symbol;
 using SymEngine::gamma;
 using SymEngine::ComplexInf;
+using SymEngine::interval;
+using SymEngine::imageset;
+using SymEngine::dummy;
+using SymEngine::Set;
+using SymEngine::set_union;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -454,6 +459,33 @@ TEST_CASE("Beta: subs", "[subs]")
     d[z] = i2;
     d[y] = i2;
     REQUIRE(eq(*r1->subs(d), *beta(i2, add(i2, x))));
+}
+
+TEST_CASE("Sets: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    auto n = dummy("n");
+    RCP<const Basic> i2 = integer(2);
+    auto interval1 = interval(integer(-2), integer(2));
+
+    RCP<const Set> r1 = imageset(x, mul(x, x), interval1);
+    RCP<const Set> r2 = imageset(y, mul(y, y), interval1);
+    RCP<const Set> r3 = imageset(n, mul(n, n), interval1);
+
+    map_basic_basic d;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[n] = x;
+    REQUIRE(eq(*r3->subs(d), *r1));
+
+    d.clear();
+    d[x] = y;
+    r1 = set_union({r1, imageset(x, add(x, i2), interval1)});
+    r2 = set_union({r2, imageset(y, add(y, i2), interval1)});
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("MSubs: subs", "[subs]")

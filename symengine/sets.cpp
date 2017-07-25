@@ -603,6 +603,11 @@ RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
     return boolean(false);
 }
 
+RCP<const Set> Union::create(const set_set &in) const
+{
+    return SymEngine::set_union(in);
+}
+
 Complement::Complement(const RCP<const Set> &universe,
                        const RCP<const Set> &container)
     : universe_(universe), container_(container)
@@ -817,6 +822,13 @@ RCP<const Set> ImageSet::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> ImageSet::set_complement(const RCP<const Set> &o) const
 {
     return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Set> ImageSet::create(const RCP<const Basic> &sym,
+                                const RCP<const Basic> &expr,
+                                const RCP<const Set> &base) const
+{
+    return imageset(sym, expr, base);
 }
 
 RCP<const Set> set_union(const set_set &in)
