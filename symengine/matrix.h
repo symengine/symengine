@@ -180,15 +180,13 @@ public:
     void col_del(unsigned k);
 
     // Row operations
-    friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
-    friend void row_mul_scalar_dense(DenseMatrix &A, unsigned i,
-                                     RCP<const Basic> &c);
-    friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
-                                  RCP<const Basic> &c);
+    void row_exchange_dense(unsigned i, unsigned j);
+    void row_mul_scalar_dense(unsigned i, RCP<const Basic> &c);
+    void row_add_row_dense(unsigned i, unsigned j, RCP<const Basic> &c);
     friend void permuteFwd(DenseMatrix &A, permutelist &pl);
 
     // Column operations
-    friend void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+    void column_exchange_dense(unsigned i, unsigned j);
 
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A,
@@ -248,9 +246,8 @@ public:
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
     // Vector-specific methods
-    friend void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
-    friend void cross(const DenseMatrix &A, const DenseMatrix &B,
-                      DenseMatrix &C);
+    void dot(const DenseMatrix &B, DenseMatrix &C);
+    void cross(const DenseMatrix &B, DenseMatrix &C);
 
     // NumPy-like functions
     friend void eye(DenseMatrix &A, int k);
