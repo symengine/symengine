@@ -375,7 +375,7 @@ TEST_CASE("test_column_exchange_dense(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(3, 3, {symbol("c"), symbol("b"), symbol("a"),
                                        symbol("r"), symbol("q"), symbol("p"),
                                        symbol("w"), symbol("v"), symbol("u")});
-    column_exchange_dense(A, 0, 2);
+    A.column_exchange_dense(0, 2);
     REQUIRE(A == B);
 }
 
@@ -1357,29 +1357,29 @@ TEST_CASE("test_dot(): matrices", "[matrices]")
     ones(B);
     DenseMatrix C = DenseMatrix(1, 3);
 
-    dot(A, B, C);
+    A.dot(B, C);
     CHECK(C == DenseMatrix(1, 1, {integer(3)}));
 
     B = DenseMatrix(1, 3);
     ones(B);
-    dot(A, B, C);
+    A.dot(B, C);
     CHECK(C == DenseMatrix(1, 1, {integer(3)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     B = DenseMatrix(2, 2, {integer(5), integer(6), integer(7), integer(8)});
-    dot(A, B, C);
+    A.dot(B, C);
     CHECK(C == DenseMatrix(
                    1, 4, {integer(23), integer(31), integer(34), integer(46)}));
 
     A = DenseMatrix(2, 3, {integer(1), integer(2), integer(3), integer(4),
                            integer(5), integer(6)});
     B = DenseMatrix(2, 1, {integer(7), integer(8)});
-    dot(A, B, C);
+    A.dot(B, C);
     CHECK(C == DenseMatrix(1, 3, {integer(39), integer(54), integer(69)}));
 
     A = DenseMatrix(2, 3);
     B = DenseMatrix(4, 5);
-    CHECK_THROWS_AS(dot(A, B, C), SymEngineException);
+    CHECK_THROWS_AS(A.dot(B, C), SymEngineException);
 }
 
 TEST_CASE("test_cross(): matrices", "[matrices]")
@@ -1388,7 +1388,7 @@ TEST_CASE("test_cross(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(1, 3, {integer(3), integer(4), integer(5)});
     DenseMatrix C = DenseMatrix(1, 3);
 
-    cross(A, B, C);
+    A.cross(B, C);
     CHECK(C == DenseMatrix(1, 3, {integer(-2), integer(4), integer(-2)}));
 }
 

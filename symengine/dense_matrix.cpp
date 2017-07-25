@@ -427,7 +427,7 @@ void DenseMatrix::row_del(unsigned k)
         this->resize(0, 0);
     else {
         for (unsigned i = k; i < row_ - 1; i++) {
-            row_exchange_dense(*this, i, i + 1);
+            this->row_exchange_dense(i, i + 1);
         }
         this->resize(row_ - 1, col_);
     }
@@ -455,53 +455,53 @@ void DenseMatrix::col_del(unsigned k)
 }
 
 // -------------------------------- Row Operations ---------------------------//
-void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
+void DenseMatrix::row_exchange_dense(unsigned i, unsigned j)
 {
-    SYMENGINE_ASSERT(i != j and i < A.row_ and j < A.row_);
+    SYMENGINE_ASSERT(i != j and i < row_ and j < row_);
 
-    unsigned col = A.col_;
+    unsigned col = col_;
 
-    for (unsigned k = 0; k < A.col_; k++)
-        std::swap(A.m_[i * col + k], A.m_[j * col + k]);
+    for (unsigned k = 0; k < col; k++)
+        std::swap(this->m_[i * col + k], this->m_[j * col + k]);
 }
 
-void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
+void DenseMatrix::row_mul_scalar_dense(unsigned i, RCP<const Basic> &c)
 {
-    SYMENGINE_ASSERT(i < A.row_);
+    SYMENGINE_ASSERT(i < row_);
 
-    unsigned col = A.col_;
+    unsigned col = col_;
 
-    for (unsigned j = 0; j < A.col_; j++)
-        A.m_[i * col + j] = mul(c, A.m_[i * col + j]);
+    for (unsigned j = 0; j < col; j++)
+        this->m_[i * col + j] = mul(c, this->m_[i * col + j]);
 }
 
-void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
-                       RCP<const Basic> &c)
+void DenseMatrix::row_add_row_dense(unsigned i, unsigned j, RCP<const Basic> &c)
 {
-    SYMENGINE_ASSERT(i != j and i < A.row_ and j < A.row_);
+    SYMENGINE_ASSERT(i != j and i < row_ and j < row_);
 
-    unsigned col = A.col_;
+    unsigned col = col_;
 
-    for (unsigned k = 0; k < A.col_; k++)
-        A.m_[i * col + k] = add(A.m_[i * col + k], mul(c, A.m_[j * col + k]));
+    for (unsigned k = 0; k < col; k++)
+        this->m_[i * col + k]
+            = add(this->m_[i * col + k], mul(c, this->m_[j * col + k]));
 }
 
 void permuteFwd(DenseMatrix &A, permutelist &pl)
 {
     for (auto &p : pl) {
-        row_exchange_dense(A, p.first, p.second);
+        A.row_exchange_dense(p.first, p.second);
     }
 }
 
 // ----------------------------- Column Operations ---------------------------//
-void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
+void DenseMatrix::column_exchange_dense(unsigned i, unsigned j)
 {
-    SYMENGINE_ASSERT(i != j and i < A.col_ and j < A.col_);
+    SYMENGINE_ASSERT(i != j and i < col_ and j < col_);
 
-    unsigned col = A.col_;
+    unsigned col = col_;
 
-    for (unsigned k = 0; k < A.row_; k++)
-        std::swap(A.m_[k * col + i], A.m_[k * col + j]);
+    for (unsigned k = 0; k < row_; k++)
+        std::swap(this->m_[k * col + i], this->m_[k * col + j]);
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
@@ -524,12 +524,12 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
         if (k == row)
             continue;
         if (k != index) {
-            row_exchange_dense(B, k, index);
+            B.row_exchange_dense(k, index);
             pl.push_back({k, index});
         }
 
         scale = div(one, B.m_[index * col + i]);
-        row_mul_scalar_dense(B, index, scale);
+        B.row_mul_scalar_dense(index, scale);
 
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++)
@@ -585,7 +585,7 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
         if (k == row)
             continue;
         if (k != index) {
-            row_exchange_dense(B, k, index);
+            B.row_exchange_dense(k, index);
             pl.push_back({k, index});
         }
 
@@ -623,19 +623,19 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
         if (k == row)
             continue;
         if (k != index) {
-            row_exchange_dense(B, k, index);
+            B.row_exchange_dense(k, index);
             pl.push_back({k, index});
         }
 
         scale = div(one, B.m_[index * col + i]);
-        row_mul_scalar_dense(B, index, scale);
+        B.row_mul_scalar_dense(index, scale);
 
         for (j = 0; j < row; j++) {
             if (j == index)
                 continue;
 
             scale = mul(minus_one, B.m_[j * col + i]);
-            row_add_row_dense(B, j, index, scale);
+            B.row_add_row_dense(j, index, scale);
         }
 
         index++;
@@ -696,7 +696,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         if (k == row)
             continue;
         if (k != index) {
-            row_exchange_dense(B, k, index);
+            B.row_exchange_dense(k, index);
             pl.push_back({k, index});
         }
 
@@ -1050,7 +1050,7 @@ void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
         if (pivot == -1)
             throw SymEngineException("Matrix is rank deficient");
         if (pivot - j != 0) { // row must be swapped
-            row_exchange_dense(LU, pivot, j);
+            LU.row_exchange_dense(pivot, j);
             pl.push_back({pivot, j});
         }
         scale = div(one, LU.m_[j * n + j]);
@@ -1308,7 +1308,7 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
             if (eq(*(B.m_[k * n + k]), *zero)) {
                 for (i = k + 1; i < n; i++)
                     if (neq(*(B.m_[i * n + k]), *zero)) {
-                        row_exchange_dense(B, i, k);
+                        B.row_exchange_dense(i, k);
                         sign *= -1;
                         break;
                     }
@@ -1539,42 +1539,42 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
 
 // ----------------------- Vector-specific Methods --------------------------//
 
-void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+void DenseMatrix::dot(const DenseMatrix &B, DenseMatrix &C)
 {
-    if (A.col_ == B.row_) {
+    if (col_ == B.row_) {
         if (B.col_ != 1) {
-            DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
-            A.transpose(tmp1);
+            DenseMatrix tmp1 = DenseMatrix(col_, row_);
+            this->transpose(tmp1);
             DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
             B.transpose(tmp2);
             C.resize(tmp1.row_, tmp2.col_);
             mul_dense_dense(tmp1, tmp2, C);
         } else {
-            C.resize(A.row_, B.col_);
-            mul_dense_dense(A, B, C);
+            C.resize(row_, B.col_);
+            mul_dense_dense(*this, B, C);
         }
         C.resize(1, C.row_ * C.col_);
-    } else if (A.col_ == B.col_) {
+    } else if (col_ == B.col_) {
         DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
         B.transpose(tmp2);
-        dot(A, tmp2, C);
-    } else if (A.row_ == B.row_) {
-        DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
-        A.transpose(tmp1);
-        dot(tmp1, B, C);
+        this->dot(tmp2, C);
+    } else if (row_ == B.row_) {
+        DenseMatrix tmp1 = DenseMatrix(col_, row_);
+        this->transpose(tmp1);
+        tmp1.dot(B, C);
     } else {
         throw SymEngineException("Dimensions incorrect for dot product");
     }
 }
 
-void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+void DenseMatrix::cross(const DenseMatrix &B, DenseMatrix &C)
 {
-    SYMENGINE_ASSERT((A.row_ * A.col_ == 3 and B.row_ * B.col_ == 3)
-                     and (A.row_ == C.row_ and A.col_ == C.col_));
+    SYMENGINE_ASSERT((row_ * col_ == 3 and B.row_ * B.col_ == 3)
+                     and (row_ == C.row_ and col_ == C.col_));
 
-    C.m_[0] = sub(mul(A.m_[1], B.m_[2]), mul(A.m_[2], B.m_[1]));
-    C.m_[1] = sub(mul(A.m_[2], B.m_[0]), mul(A.m_[0], B.m_[2]));
-    C.m_[2] = sub(mul(A.m_[0], B.m_[1]), mul(A.m_[1], B.m_[0]));
+    C.m_[0] = sub(mul(this->m_[1], B.m_[2]), mul(this->m_[2], B.m_[1]));
+    C.m_[1] = sub(mul(this->m_[2], B.m_[0]), mul(this->m_[0], B.m_[2]));
+    C.m_[2] = sub(mul(this->m_[0], B.m_[1]), mul(this->m_[1], B.m_[0]));
 }
 
 // ------------------------- NumPy-like functions ----------------------------//
