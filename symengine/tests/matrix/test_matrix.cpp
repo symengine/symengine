@@ -292,9 +292,8 @@ TEST_CASE("test_row_join(): matrices", "[matrices]")
     DenseMatrix A = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
-    DenseMatrix C = DenseMatrix(2, 3);
-    row_join(A, B, C);
-    REQUIRE(C == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
+    A.row_join(B);
+    REQUIRE(A == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
                                     symbol("c"), symbol("d"), symbol("f")}));
 }
 
@@ -303,19 +302,58 @@ TEST_CASE("test_col_join(): matrices", "[matrices]")
     DenseMatrix A = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
-    DenseMatrix C = DenseMatrix(3, 2);
-    col_join(A, B, C);
-    REQUIRE(C == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
+    A.col_join(B);
+    REQUIRE(A == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
                                     symbol("d"), symbol("e"), symbol("f")}));
+}
+
+TEST_CASE("test_row_insert(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
+    A.row_insert(B, 0);
+    CHECK(A == DenseMatrix(3, 2, {symbol("e"), symbol("f"), symbol("a"),
+                                  symbol("b"), symbol("c"), symbol("d")}));
+    DenseMatrix C = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    C.row_insert(B, 1);
+    CHECK(C == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("e"),
+                                  symbol("f"), symbol("c"), symbol("d")}));
+    DenseMatrix D = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    D.row_insert(B, 2);
+    CHECK(D == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
+                                  symbol("d"), symbol("e"), symbol("f")}));
+}
+
+TEST_CASE("test_col_insert(): matrices", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
+    A.col_insert(B, 0);
+    CHECK(A == DenseMatrix(2, 3, {symbol("e"), symbol("a"), symbol("b"),
+                                  symbol("f"), symbol("c"), symbol("d")}));
+    DenseMatrix C = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    C.col_insert(B, 1);
+    CHECK(C == DenseMatrix(2, 3, {symbol("a"), symbol("e"), symbol("b"),
+                                  symbol("c"), symbol("f"), symbol("d")}));
+    DenseMatrix D = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    D.col_insert(B, 2);
+    CHECK(D == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
+                                  symbol("c"), symbol("d"), symbol("f")}));
 }
 
 TEST_CASE("test_row_del(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    row_del(A, 0);
+    A.row_del(0);
     REQUIRE(A == DenseMatrix(1, 2, {symbol("c"), symbol("d")}));
-    row_del(A, 0);
+    A.row_del(0);
     REQUIRE(A == DenseMatrix(0, 0, {}));
 }
 
@@ -323,9 +361,9 @@ TEST_CASE("test_col_del(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    col_del(A, 0);
+    A.col_del(0);
     REQUIRE(A == DenseMatrix(2, 1, {symbol("b"), symbol("d")}));
-    col_del(A, 0);
+    A.col_del(0);
     REQUIRE(A == DenseMatrix(0, 0, {}));
 }
 

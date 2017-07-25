@@ -364,76 +364,93 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
 }
 
 // ---------------------------- Joining Operations ---------------------------//
-void row_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+void DenseMatrix::row_join(const DenseMatrix &B)
 {
-    SYMENGINE_ASSERT(A.row_ == B.row_
-                     and (A.row_ == C.row_ and C.col_ == A.col_ + B.col_));
-
-    unsigned row = A.row_, col = A.col_;
-
-    for (unsigned i = 0; i < row; i++) {
-        for (unsigned j = 0; j < col; j++) {
-            C.m_[i * (col + B.col_) + j] = A.m_[i * col + j];
-        }
-    }
-    for (unsigned i = 0; i < row; i++) {
-        for (unsigned j = 0; j < B.col_; j++) {
-            C.m_[i * (col + B.col_) + j + col] = B.m_[i * B.col_ + j];
-        }
-    }
+    this->col_insert(B, col_);
 }
 
-void col_join(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+void DenseMatrix::col_join(const DenseMatrix &B)
 {
-    SYMENGINE_ASSERT(A.col_ == B.col_
-                     and (A.col_ == C.col_ and C.row_ == A.row_ + B.row_));
+    this->row_insert(B, row_);
+}
 
-    unsigned row = A.row_, col = A.col_;
+void DenseMatrix::row_insert(const DenseMatrix &B, unsigned pos)
+{
+    SYMENGINE_ASSERT(col_ == B.col_ and pos <= row_)
 
-    for (unsigned i = 0; i < row; i++) {
-        for (unsigned j = 0; j < col; j++) {
-            C.m_[i * col + j] = A.m_[i * col + j];
+    unsigned row = row_, col = col_;
+    this->resize(row_ + B.row_, col_);
+
+    for (unsigned i = row; i-- > pos;) {
+        for (unsigned j = col; j-- > 0;) {
+            this->m_[(i + B.row_) * col + j] = this->m_[i * col + j];
         }
     }
+
     for (unsigned i = 0; i < B.row_; i++) {
         for (unsigned j = 0; j < col; j++) {
-            C.m_[(i + row) * col + j] = B.m_[i * col + j];
+            this->m_[(i + pos) * col + j] = B.m_[i * col + j];
         }
     }
 }
 
-void row_del(DenseMatrix &A, unsigned k)
+void DenseMatrix::col_insert(const DenseMatrix &B, unsigned pos)
 {
-    SYMENGINE_ASSERT(k < A.row_)
+    SYMENGINE_ASSERT(row_ == B.row_ and pos <= col_)
 
-    if (A.row_ == 1)
-        A.resize(0, 0);
-    else {
-        for (unsigned i = k; i < A.row_ - 1; i++) {
-            row_exchange_dense(A, i, i + 1);
+    unsigned row = row_, col = col_;
+    this->resize(row_, col_ + B.col_);
+
+    for (unsigned i = row; i-- > 0;) {
+        for (unsigned j = col; j-- > 0;) {
+            if (j >= pos) {
+                this->m_[i * (col + B.col_) + j + B.col_]
+                    = this->m_[i * col + j];
+            } else {
+                this->m_[i * (col + B.col_) + j] = this->m_[i * col + j];
+            }
         }
-        A.resize(A.row_ - 1, A.col_);
+    }
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < B.col_; j++) {
+            this->m_[i * (col + B.col_) + j + pos] = B.m_[i * B.col_ + j];
+        }
     }
 }
 
-void col_del(DenseMatrix &A, unsigned k)
+void DenseMatrix::row_del(unsigned k)
 {
-    SYMENGINE_ASSERT(k < A.col_)
+    SYMENGINE_ASSERT(k < row_)
 
-    if (A.col_ == 1)
-        A.resize(0, 0);
+    if (row_ == 1)
+        this->resize(0, 0);
     else {
-        unsigned row = A.row_, col = A.col_, m = 0;
+        for (unsigned i = k; i < row_ - 1; i++) {
+            row_exchange_dense(*this, i, i + 1);
+        }
+        this->resize(row_ - 1, col_);
+    }
+}
+
+void DenseMatrix::col_del(unsigned k)
+{
+    SYMENGINE_ASSERT(k < col_)
+
+    if (col_ == 1)
+        this->resize(0, 0);
+    else {
+        unsigned row = row_, col = col_, m = 0;
 
         for (unsigned i = 0; i < row; i++) {
             for (unsigned j = 0; j < col; j++) {
                 if (j != k) {
-                    A.m_[m] = A.m_[i * col + j];
+                    this->m_[m] = this->m_[i * col + j];
                     m++;
                 }
             }
         }
-        A.resize(A.row_, A.col_ - 1);
+        this->resize(row_, col_ - 1);
     }
 }
 
