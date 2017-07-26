@@ -509,6 +509,11 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
     return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
+RCP<const Set> FiniteSet::create(const set_basic &container) const
+{
+    return finiteset(container);
+}
+
 Union::Union(const set_set &in) : container_(in)
 {
     SYMENGINE_ASSIGN_TYPEID()

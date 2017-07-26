@@ -33,6 +33,7 @@ using SymEngine::imageset;
 using SymEngine::dummy;
 using SymEngine::Set;
 using SymEngine::set_union;
+using SymEngine::finiteset;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -485,6 +486,12 @@ TEST_CASE("Sets: subs", "[subs]")
     d[x] = y;
     r1 = set_union({r1, imageset(x, add(x, i2), interval1)});
     r2 = set_union({r2, imageset(y, add(y, i2), interval1)});
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[x] = n;
+    r1 = finiteset({x, y});
+    r2 = finiteset({n, y});
     REQUIRE(eq(*r1->subs(d), *r2));
 }
 

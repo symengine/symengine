@@ -169,6 +169,15 @@ public:
         result_ = x.create(v);
     }
 
+    void bvisit(const FiniteSet &x)
+    {
+        set_basic v;
+        for (const auto &elem : x.get_container()) {
+            v.insert(apply(elem));
+        }
+        result_ = x.create(v);
+    }
+
     void bvisit(const ImageSet &x)
     {
         RCP<const Basic> s = apply(x.get_symbol());

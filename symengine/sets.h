@@ -135,6 +135,7 @@ public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+    RCP<const Set> create(const set_basic &container) const;
 
     inline const set_basic &get_container() const
     {
