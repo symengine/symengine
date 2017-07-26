@@ -397,6 +397,19 @@ void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
                      unsigned col_start, unsigned row_end, unsigned col_end,
                      unsigned row_step = 1, unsigned col_step = 1);
 
+// Row operations
+void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+                       RCP<const Basic> &c);
+
+// Column operations
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+
+// Vector-specific methods
+void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
