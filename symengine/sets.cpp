@@ -313,13 +313,13 @@ const RCP<const UniversalSet> &UniversalSet::getInstance()
     return a;
 }
 
-FiniteSet::FiniteSet(const set_basic container) : container_(container)
+FiniteSet::FiniteSet(const set_basic &container) : container_(container)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(FiniteSet::is_canonical(container_));
 }
 
-bool FiniteSet::is_canonical(const set_basic container)
+bool FiniteSet::is_canonical(const set_basic &container)
 {
     return container.size() != 0;
 }
@@ -509,7 +509,12 @@ RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
     return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
-Union::Union(set_set in) : container_(in)
+RCP<const Set> FiniteSet::create(const set_basic &container) const
+{
+    return finiteset(container);
+}
+
+Union::Union(const set_set &in) : container_(in)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(Union::is_canonical(in))
@@ -532,7 +537,7 @@ bool Union::__eq__(const Basic &o) const
     return false;
 }
 
-bool Union::is_canonical(set_set in)
+bool Union::is_canonical(const set_set &in)
 {
     if (in.size() <= 1)
         return false;
@@ -603,6 +608,11 @@ RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
     return boolean(false);
 }
 
+RCP<const Set> Union::create(const set_set &in) const
+{
+    return SymEngine::set_union(in);
+}
+
 Complement::Complement(const RCP<const Set> &universe,
                        const RCP<const Set> &container)
     : universe_(universe), container_(container)
@@ -666,16 +676,16 @@ RCP<const Set> Complement::set_complement(const RCP<const Set> &o) const
     return container_->set_complement(newuniv);
 }
 
-ConditionSet::ConditionSet(const RCP<const Basic> sym,
-                           RCP<const Boolean> condition)
+ConditionSet::ConditionSet(const RCP<const Basic> &sym,
+                           const RCP<const Boolean> &condition)
     : sym(sym), condition_(condition)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(ConditionSet::is_canonical(sym, condition))
 }
 
-bool ConditionSet::is_canonical(const RCP<const Basic> sym,
-                                RCP<const Boolean> condition)
+bool ConditionSet::is_canonical(const RCP<const Basic> &sym,
+                                const RCP<const Boolean> &condition)
 {
     if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)
         or not is_a<Symbol>(*sym)) {
@@ -793,7 +803,7 @@ bool ImageSet::is_canonical(const RCP<const Basic> &sym,
                             const RCP<const Basic> &expr,
                             const RCP<const Set> &base)
 {
-    if (not is_a<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr)
+    if (not is_a_sub<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr)
         or eq(*base, *emptyset()))
         return false;
     return true;
@@ -817,6 +827,13 @@ RCP<const Set> ImageSet::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> ImageSet::set_complement(const RCP<const Set> &o) const
 {
     return SymEngine::set_complement(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Set> ImageSet::create(const RCP<const Basic> &sym,
+                                const RCP<const Basic> &expr,
+                                const RCP<const Set> &base) const
+{
+    return imageset(sym, expr, base);
 }
 
 RCP<const Set> set_union(const set_set &in)

@@ -61,6 +61,7 @@ using SymEngine::Not;
 using SymEngine::logical_and;
 using SymEngine::ImageSet;
 using SymEngine::imageset;
+using SymEngine::dummy;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -806,4 +807,15 @@ TEST_CASE("ImageSet : Basic", "[basic]")
     auto i2 = interval(one, integer(2));
     r1 = imageset(x, i2, i1);
     REQUIRE(eq(*r1, *finiteset({i2})));
+
+    f1 = finiteset({one, y});
+    r1 = imageset(x, add(x, integer(2)), f1);
+    REQUIRE(eq(*r1, *finiteset({integer(3), add(y, integer(2))})));
+
+    r1 = imageset(x, div(x, pi), imageset(x, mul({integer(2), x, pi}), i1));
+    r2 = imageset(x, mul(integer(2), x), i1);
+    REQUIRE(eq(*r1, *r2));
+
+    auto xD = dummy("x");
+    REQUIRE(is_a<ImageSet>(*imageset(xD, mul(xD, xD), i1)));
 }

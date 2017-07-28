@@ -169,6 +169,43 @@ public:
         result_ = x.create(v);
     }
 
+    void bvisit(const FiniteSet &x)
+    {
+        set_basic v;
+        for (const auto &elem : x.get_container()) {
+            v.insert(apply(elem));
+        }
+        result_ = x.create(v);
+    }
+
+    void bvisit(const ImageSet &x)
+    {
+        RCP<const Basic> s = apply(x.get_symbol());
+        RCP<const Basic> expr = apply(x.get_expr());
+        auto bs_ = apply(x.get_baseset());
+        if (not is_a_Set(*bs_))
+            throw SymEngineException("expected an object of type Set");
+        RCP<const Set> bs = rcp_static_cast<const Set>(bs_);
+        if (s == x.get_symbol() and expr == x.get_expr()
+            and bs == x.get_baseset()) {
+            result_ = x.rcp_from_this();
+        } else {
+            result_ = x.create(s, expr, bs);
+        }
+    }
+
+    void bvisit(const Union &x)
+    {
+        set_set v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Set(*a))
+                throw SymEngineException("expected an object of type Set");
+            v.insert(rcp_static_cast<const Set>(a));
+        }
+        result_ = x.create(v);
+    }
+
     void bvisit(const Derivative &x)
     {
         RCP<const Symbol> s;
