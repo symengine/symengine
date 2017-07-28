@@ -2,6 +2,7 @@
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/logic.h>
 #include <symengine/mul.h>
+#include <symengine/as_real_imag.cpp>
 
 namespace SymEngine
 {
@@ -59,6 +60,7 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
     // https://en.wikipedia.org/wiki/Cubic_function#General_solution_to_the_cubic_equation_with_real_coefficients
     auto i2 = integer(2), i3 = integer(3), i4 = integer(4), i9 = integer(9),
          i27 = integer(27);
+
     RCP<const Basic> root1, root2, root3;
     if (eq(*d, *zero)) {
         root1 = zero;
@@ -93,7 +95,6 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
             }
             auto C = pow(Cexpr, div(one, i3));
             root1 = neg(div(add(b, add(C, div(delta0, C))), i3));
-
             auto coef = div(mul(I, sqrt(i3)), i2);
             temp = neg(div(one, i2));
             auto cbrt1 = add(temp, coef);
@@ -104,7 +105,6 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
                 add(b, add(mul(cbrt2, C), div(delta0, mul(cbrt2, C)))), i3));
         }
     }
-
     return set_intersection({domain, finiteset({root1, root2, root3})});
 }
 
@@ -294,6 +294,51 @@ RCP<const Set> solve_rational(const RCP<const Basic> &f,
     return solve_poly(num, sym, domain);
 }
 
+RCP<const Set> solve_trig(const RCP<const Basic> &f,
+                          const RCP<const Symbol> &sym,
+                          const RCP<const Set> &domain)
+{
+    // TODO : first simplify f using `fu`.
+    auto exp_f = rewrite_as_exp(f);
+    RCP<const Basic> num, den;
+    as_numer_denom(exp_f, outArg(num), outArg(den));
+
+    auto xD = dummy("x");
+    map_basic_basic d;
+    auto temp = exp(mul(I, sym));
+    d[temp] = xD;
+    num = expand(num), den = expand(den);
+    num = num->subs(d);
+    den = den->subs(d);
+
+    if (has_symbol(*num, *sym) or has_symbol(*den, *sym)) {
+        return conditionset(sym, logical_and({Eq(f, zero)}));
+    }
+
+    auto soln = set_complement(solve(num, xD), solve(den, xD));
+    if (eq(*soln, *emptyset()))
+        return emptyset();
+    else if (is_a<FiniteSet>(*soln)) {
+        set_set res;
+        auto nD
+            = dummy("n"); // use the same dummy for finding every solution set.
+        auto n = symbol(
+            "n"); // replaces the above dummy in final set of solutions.
+        map_basic_basic d;
+        d[nD] = n;
+        for (const auto &elem :
+             down_cast<const FiniteSet &>(*soln).get_container()) {
+            res.insert(
+                invertComplex(exp(mul(I, sym)), finiteset({elem}), sym, nD));
+        }
+        auto ans = set_union(res)->subs(d);
+        if (not is_a_Set(*ans))
+            throw SymEngineException("Expected an object of type Set");
+        return set_intersection({rcp_static_cast<const Set>(ans), domain});
+    }
+    return conditionset(sym, logical_and({Eq(f, zero), domain->contains(sym)}));
+}
+
 RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                      const RCP<const Set> &domain)
 {
@@ -316,7 +361,21 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                                               domain->contains(sym)}));
     }
 
-    RCP<const Basic> newf = f;
+    if (is_a_Number(*f)) {
+        if (eq(*f, *zero)) {
+            return domain;
+        } else {
+            return emptyset();
+        }
+    }
+
+    if (not has_symbol(*f, *sym))
+        return emptyset();
+
+    if (is_a_LinearArgTrigEquation(*f, *sym)) {
+        return solve_trig(f, sym, domain);
+    }
+
     if (is_a<Mul>(*f)) {
         auto args = f->get_args();
         set_set solns;
@@ -325,17 +384,8 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
         }
         return SymEngine::set_union(solns);
     }
-    if (is_a_Number(*newf)) {
-        if (eq(*newf, *zero)) {
-            return domain;
-        } else {
-            return emptyset();
-        }
-    }
-    if (not has_symbol(*newf, *sym))
-        return emptyset();
-    // TODO - Trig solver
-    return solve_rational(newf, sym, domain);
+
+    return solve_rational(f, sym, domain);
 }
 
 vec_basic linsolve_helper(const DenseMatrix &A, const DenseMatrix &b)

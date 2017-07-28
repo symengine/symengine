@@ -25,6 +25,10 @@ RCP<const Set> solve_rational(const RCP<const Basic> &f,
                               const RCP<const Symbol> &sym,
                               const RCP<const Set> &domain = universalset());
 
+RCP<const Set> solve_trig(const RCP<const Basic> &f,
+                          const RCP<const Symbol> &sym,
+                          const RCP<const Set> &domain = universalset());
+
 RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Symbol> &sym,
                           const RCP<const Set> &domain = universalset());
@@ -59,7 +63,6 @@ vec_basic linsolve(const vec_basic &system, const vec_sym &syms);
 // first Matrix is for `A` and second one is for `b`.
 std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms);
-
 } // namespace SymEngine
 
 #endif // SYMENGINE_SOLVE_H

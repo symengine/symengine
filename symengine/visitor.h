@@ -219,6 +219,14 @@ public:
     void bvisit(const MultiArgFunction &x);
 };
 
+RCP<const Set> invertComplex(const RCP<const Basic> &fX,
+                             const RCP<const Set> &gY,
+                             const RCP<const Symbol> &sym,
+                             const RCP<const Dummy> &nD = dummy("n"),
+                             const RCP<const Set> &domain = universalset());
+
+bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x);
+
 } // SymEngine
 
 #endif

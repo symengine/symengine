@@ -1,4 +1,6 @@
 #include <symengine/visitor.h>
+#include <symengine/polys/basic_conversions.h>
+#include <symengine/sets.h>
 
 #define ACCEPT(CLASS)                                                          \
     void CLASS::accept(Visitor &v) const                                       \
@@ -175,4 +177,165 @@ void TransformVisitor::bvisit(const MultiArgFunction &x)
     auto nbarg = x.create(newargs);
     result_ = nbarg;
 }
+
+class IsALinearArgTrigVisitor
+    : public BaseVisitor<IsALinearArgTrigVisitor, StopVisitor>
+{
+protected:
+    Ptr<const Symbol> x_;
+    bool is_;
+
+public:
+    IsALinearArgTrigVisitor(Ptr<const Symbol> x) : x_(x)
+    {
+    }
+
+    void bvisit(const Basic &x)
+    {
+    }
+
+    void bvisit(const Symbol &x)
+    {
+        if (x_->__eq__(x)) {
+            is_ = false;
+            stop_ = true;
+        }
+    }
+
+    template <typename T,
+              typename
+              = enable_if_t<std::is_base_of<TrigFunction, T>::value
+                            or std::is_base_of<HyperbolicFunction, T>::value>>
+    void bvisit(const T &x)
+    {
+        is_ = (from_basic<UExprPoly>(x.get_args()[0], (*x_).rcp_from_this())
+                   ->get_degree()
+               <= 1);
+        stop_ = true;
+    }
+
+    bool apply(const Basic &b)
+    {
+        is_ = true;
+        stop_ = false;
+        preorder_traversal_stop(b, *this);
+        return is_;
+    }
+};
+
+bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x)
+{
+    IsALinearArgTrigVisitor v(ptrFromRef(x));
+    return v.apply(b);
+}
+
+class InvertComplexVisitor : public BaseVisitor<InvertComplexVisitor>
+{
+protected:
+    RCP<const Set> result_;
+    RCP<const Set> gY_;
+    RCP<const Dummy> nD_;
+    RCP<const Symbol> sym_;
+    RCP<const Set> domain_;
+
+public:
+    InvertComplexVisitor(RCP<const Set> gY, RCP<const Dummy> nD,
+                         RCP<const Symbol> sym, RCP<const Set> domain)
+        : gY_(gY), nD_(nD), sym_(sym), domain_(domain)
+    {
+    }
+
+    void bvisit(const Basic &x)
+    {
+        result_ = gY_;
+    }
+
+    void bvisit(const Add &x)
+    {
+        vec_basic f1X, f2X;
+        for (auto &elem : x.get_args()) {
+            if (has_symbol(*elem, *sym_)) {
+                f1X.push_back(elem);
+            } else {
+                f2X.push_back(elem);
+            }
+        }
+        auto depX = add(f1X), indepX = add(f2X);
+        if (not eq(*indepX, *zero)) {
+            gY_ = imageset(nD_, sub(nD_, indepX), gY_);
+            result_ = apply(*depX);
+        } else {
+            result_ = gY_;
+        }
+    }
+
+    void bvisit(const Mul &x)
+    {
+        vec_basic f1X, f2X;
+        for (auto &elem : x.get_args()) {
+            if (has_symbol(*elem, *sym_)) {
+                f1X.push_back(elem);
+            } else {
+                f2X.push_back(elem);
+            }
+        }
+        auto depX = mul(f1X), indepX = mul(f2X);
+        if (not eq(*indepX, *one)) {
+            if (eq(*indepX, *NegInf) or eq(*indepX, *Inf)
+                or eq(*indepX, *ComplexInf)) {
+                result_ = emptyset();
+            } else {
+                gY_ = imageset(nD_, div(nD_, indepX), gY_);
+                result_ = apply(*depX);
+            }
+        } else {
+            result_ = gY_;
+        }
+    }
+
+    void bvisit(const Pow &x)
+    {
+        if (eq(*x.get_base(), *E) and is_a<FiniteSet>(*gY_)) {
+            set_set inv;
+            for (const auto &elem :
+                 down_cast<const FiniteSet &>(*gY_).get_container()) {
+                if (eq(*elem, *zero))
+                    continue;
+                RCP<const Basic> re, im;
+                as_real_imag(elem, outArg(re), outArg(im));
+                auto logabs = log(add(mul(re, re), mul(im, im)));
+                auto logarg = atan2(im, re);
+                inv.insert(imageset(
+                    nD_, add(mul(add(mul({integer(2), nD_, pi}), logarg), I),
+                             div(logabs, integer(2))),
+                    interval(NegInf, Inf, true,
+                             true))); // TODO : replace interval(-oo,oo) with
+                                      // Set of // Integers once Class for
+                // Range is implemented.
+            }
+            gY_ = set_union(inv);
+            apply(*x.get_exp());
+            return;
+        }
+        result_ = gY_;
+    }
+
+    RCP<const Set> apply(const Basic &b)
+    {
+        result_ = gY_;
+        b.accept(*this);
+        return set_intersection({domain_, result_});
+    }
+};
+
+RCP<const Set> invertComplex(const RCP<const Basic> &fX,
+                             const RCP<const Set> &gY,
+                             const RCP<const Symbol> &sym,
+                             const RCP<const Dummy> &nD,
+                             const RCP<const Set> &domain)
+{
+    InvertComplexVisitor v(gY, nD, sym, domain);
+    return v.apply(*fX);
+}
+
 } // SymEngine
