@@ -178,8 +178,7 @@ void TransformVisitor::bvisit(const MultiArgFunction &x)
     result_ = nbarg;
 }
 
-class IsALinearArgTrigVisitor
-    : public BaseVisitor<IsALinearArgTrigVisitor, StopVisitor>
+class IsALinearArgTrigVisitor : public BaseVisitor<IsALinearArgTrigVisitor>
 {
 protected:
     Ptr<const Symbol> x_;
@@ -190,16 +189,56 @@ public:
     {
     }
 
+    bool apply(const Basic &b)
+    {
+        return apply(b.rcp_from_this());
+    }
+
+    bool apply(const RCP<const Basic> &b)
+    {
+        is_ = true;
+        b->accept(*this);
+        return is_;
+    }
+
     void bvisit(const Basic &x)
     {
     }
 
+    void bvisit(const Add &x)
+    {
+        for (const auto &a : x.get_args()) {
+            if (not apply(a)) {
+                is_ = false;
+                return;
+            }
+        }
+    }
+
+    void bvisit(const Mul &x)
+    {
+        for (const auto &a : x.get_args()) {
+            if (not apply(a)) {
+                is_ = false;
+                return;
+            }
+        }
+    }
+
+    void bvisit(const Pow &x)
+    {
+        for (const auto &a : x.get_args()) {
+            if (not apply(a)) {
+                is_ = false;
+                return;
+            }
+        }
+    }
+
     void bvisit(const Symbol &x)
     {
-        if (x_->__eq__(x)) {
+        if (x_->__eq__(x))
             is_ = false;
-            stop_ = true;
-        }
     }
 
     template <typename T,
@@ -211,15 +250,6 @@ public:
         is_ = (from_basic<UExprPoly>(x.get_args()[0], (*x_).rcp_from_this())
                    ->get_degree()
                <= 1);
-        stop_ = true;
-    }
-
-    bool apply(const Basic &b)
-    {
-        is_ = true;
-        stop_ = false;
-        preorder_traversal_stop(b, *this);
-        return is_;
     }
 };
 
