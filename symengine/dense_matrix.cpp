@@ -3,6 +3,7 @@
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/polys/uexprpoly.h>
 
 namespace SymEngine
 {
@@ -1575,6 +1576,18 @@ void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     C.m_[0] = sub(mul(A.m_[1], B.m_[2]), mul(A.m_[2], B.m_[1]));
     C.m_[1] = sub(mul(A.m_[2], B.m_[0]), mul(A.m_[0], B.m_[2]));
     C.m_[2] = sub(mul(A.m_[0], B.m_[1]), mul(A.m_[1], B.m_[0]));
+}
+
+RCP<const Set> eigen_values(const DenseMatrix &A)
+{
+    DenseMatrix B = DenseMatrix(A.nrows() + 1, 1);
+    char_poly(A, B);
+    map_int_Expr coeffs;
+    auto nr = A.nrows();
+    for (unsigned i = 0; i <= nr; i++)
+        insert(coeffs, nr - i, B.get(i, 0));
+    auto lambda = symbol("lambda");
+    return solve_poly(uexpr_poly(lambda, coeffs), lambda);
 }
 
 // ------------------------- NumPy-like functions ----------------------------//

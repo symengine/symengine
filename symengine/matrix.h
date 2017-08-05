@@ -2,6 +2,7 @@
 #define SYMENGINE_MATRIX_H
 
 #include <symengine/basic.h>
+#include <symengine/solve.h>
 
 namespace SymEngine
 {
@@ -440,6 +441,9 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x**2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// returns a finiteset of eigenvalues of a matrix
+RCP<const Set> eigen_values(const DenseMatrix &A);
 
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, int k = 0);
