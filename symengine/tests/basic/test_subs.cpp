@@ -34,6 +34,9 @@ using SymEngine::dummy;
 using SymEngine::Set;
 using SymEngine::set_union;
 using SymEngine::finiteset;
+using SymEngine::E;
+using SymEngine::is_a;
+using SymEngine::down_cast;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -206,6 +209,31 @@ TEST_CASE("Pow: subs", "[subs]")
     r1 = pow(x, y);
     r2 = z;
     REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[pow(E, x)] = z;
+    r1 = pow(E, mul(x, x));
+    r2 = r1->subs(d);
+    REQUIRE(is_a<Pow>(*r2));
+    REQUIRE(eq(*down_cast<const Pow &>(*r2).get_base(), *E));
+    REQUIRE(eq(*down_cast<const Pow &>(*r2).get_exp(), *mul(x, x)));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(E, mul(i2, x));
+    r2 = pow(z, i2);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(E, add(i2, x));
+    r2 = r1->subs(d); // TODO : Ideally, `r1->subs(d)` should be (E**2)*z.
+    REQUIRE(eq(*r1, *r2));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Erf: subs", "[subs]")
