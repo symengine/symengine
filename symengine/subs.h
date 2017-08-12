@@ -16,11 +16,10 @@ class XReplaceVisitor : public BaseVisitor<XReplaceVisitor>
 
 protected:
     RCP<const Basic> result_;
-    const map_basic_basic &xreplace_dict_;
+    const map_basic_basic &subs_dict_;
 
 public:
-    XReplaceVisitor(const map_basic_basic &xreplace_dict)
-        : xreplace_dict_(xreplace_dict)
+    XReplaceVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
     {
     }
     // TODO : Polynomials, Series, Sets
@@ -34,8 +33,8 @@ public:
         SymEngine::umap_basic_num d;
         RCP<const Number> coef;
 
-        auto it = xreplace_dict_.find(x.get_coef());
-        if (it != xreplace_dict_.end()) {
+        auto it = subs_dict_.find(x.get_coef());
+        if (it != subs_dict_.end()) {
             coef = zero;
             Add::coef_dict_add_term(outArg(coef), d, one, it->second);
         } else {
@@ -43,13 +42,13 @@ public:
         }
 
         for (const auto &p : x.get_dict()) {
-            auto it = xreplace_dict_.find(
-                Add::from_dict(zero, {{p.first, p.second}}));
-            if (it != xreplace_dict_.end()) {
+            auto it
+                = subs_dict_.find(Add::from_dict(zero, {{p.first, p.second}}));
+            if (it != subs_dict_.end()) {
                 Add::coef_dict_add_term(outArg(coef), d, one, it->second);
             } else {
-                it = xreplace_dict_.find(p.second);
-                if (it != xreplace_dict_.end()) {
+                it = subs_dict_.find(p.second);
+                if (it != subs_dict_.end()) {
                     Add::coef_dict_add_term(outArg(coef), d, one,
                                             mul(it->second, apply(p.first)));
                 } else {
@@ -215,7 +214,7 @@ public:
         map_basic_basic m, n;
         bool subs;
 
-        for (const auto &p : xreplace_dict_) {
+        for (const auto &p : subs_dict_) {
             // If the derivative arg is to be replaced in its entirety, allow
             // it.
             if (eq(*x.get_arg(), *p.first)) {
@@ -230,7 +229,7 @@ public:
                 return;
             }
         }
-        for (const auto &p : xreplace_dict_) {
+        for (const auto &p : subs_dict_) {
             subs = true;
             if (eq(*x.get_arg()->subs({{p.first, p.second}}), *x.get_arg()))
                 continue;
@@ -255,8 +254,8 @@ public:
                         break;
                     }
                 } else {
-                    result_ = make_rcp<const Subs>(x.rcp_from_this(),
-                                                   xreplace_dict_);
+                    result_
+                        = make_rcp<const Subs>(x.rcp_from_this(), subs_dict_);
                     return;
                 }
             }
@@ -284,7 +283,7 @@ public:
     void bvisit(const Subs &x)
     {
         map_basic_basic m, n;
-        for (const auto &p : xreplace_dict_) {
+        for (const auto &p : subs_dict_) {
             bool found = false;
             for (const auto &s : x.get_dict()) {
                 if (neq(*(s.first->subs({{p.first, p.second}})), *(s.first))) {
@@ -319,8 +318,8 @@ public:
 
     RCP<const Basic> apply(const RCP<const Basic> &x)
     {
-        auto it = xreplace_dict_.find(x);
-        if (it != xreplace_dict_.end()) {
+        auto it = subs_dict_.find(x);
+        if (it != subs_dict_.end()) {
             result_ = it->second;
         } else {
             x->accept(*this);
@@ -329,11 +328,11 @@ public:
     }
 };
 
-//! Mappings in the `xreplace_dict` are applied to the expression tree of `x`
+//! Mappings in the `subs_dict` are applied to the expression tree of `x`
 inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
-                                 const map_basic_basic &xreplace_dict)
+                                 const map_basic_basic &subs_dict)
 {
-    XReplaceVisitor s(xreplace_dict);
+    XReplaceVisitor s(subs_dict);
     return s.apply(x);
 }
 
@@ -355,7 +354,7 @@ public:
     void bvisit(const Subs &x)
     {
         map_basic_basic m = x.get_dict();
-        for (const auto &p : xreplace_dict_) {
+        for (const auto &p : subs_dict_) {
             m[p.first] = p.second;
         }
         result_ = msubs(x.get_arg(), m);
@@ -387,7 +386,7 @@ public:
     void bvisit(const Subs &x)
     {
         map_basic_basic m = x.get_dict();
-        for (const auto &p : xreplace_dict_) {
+        for (const auto &p : subs_dict_) {
             m[p.first] = p.second;
         }
         result_ = ssubs(x.get_arg(), m);
@@ -415,8 +414,8 @@ class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
 public:
     using XReplaceVisitor::bvisit;
 
-    SubsVisitor(const map_basic_basic &xreplace_dict_)
-        : BaseVisitor<SubsVisitor, XReplaceVisitor>(xreplace_dict_)
+    SubsVisitor(const map_basic_basic &subs_dict_)
+        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
     {
     }
 
@@ -424,17 +423,16 @@ public:
     {
         RCP<const Basic> base_new = apply(x.get_base());
         RCP<const Basic> exp_new = apply(x.get_exp());
-        if (xreplace_dict_.size() == 1
-            and is_a<Pow>(*((*xreplace_dict_.begin()).first))
+        if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
             and not is_a<Add>(
-                    *down_cast<const Pow &>(*(*xreplace_dict_.begin()).first)
+                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
                          .get_exp())) {
             auto &subs_first
-                = down_cast<const Pow &>(*(*xreplace_dict_.begin()).first);
+                = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
             if (eq(*subs_first.get_base(), *base_new)) {
                 auto newexpo = div(exp_new, subs_first.get_exp());
                 if (is_a_Number(*newexpo) or is_a<Constant>(*newexpo)) {
-                    result_ = pow((*xreplace_dict_.begin()).second, newexpo);
+                    result_ = pow((*subs_dict_.begin()).second, newexpo);
                     return;
                 }
             }
