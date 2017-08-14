@@ -30,6 +30,11 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
     return SymEngine::subs(this->rcp_from_this(), subs_dict);
 }
 
+RCP<const Basic> Basic::xreplace(const map_basic_basic &xreplace_dict) const
+{
+    return SymEngine::xreplace(this->rcp_from_this(), xreplace_dict);
+}
+
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 {
     return Derivative::create(rcp_from_this(), {x});

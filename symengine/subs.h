@@ -11,14 +11,15 @@ RCP<const Basic> msubs(const RCP<const Basic> &x,
 RCP<const Basic> ssubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict);
 
-class SubsVisitor : public BaseVisitor<SubsVisitor>
+class XReplaceVisitor : public BaseVisitor<XReplaceVisitor>
 {
+
 protected:
     RCP<const Basic> result_;
     const map_basic_basic &subs_dict_;
 
 public:
-    SubsVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
+    XReplaceVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
     {
     }
     // TODO : Polynomials, Series, Sets
@@ -99,10 +100,11 @@ public:
     {
         RCP<const Basic> base_new = apply(x.get_base());
         RCP<const Basic> exp_new = apply(x.get_exp());
-        if (base_new == x.get_base() and exp_new == x.get_exp())
+        if (base_new == x.get_base() and exp_new == x.get_exp()) {
             result_ = x.rcp_from_this();
-        else
+        } else {
             result_ = pow(base_new, exp_new);
+        }
     }
 
     void bvisit(const OneArgFunction &x)
@@ -326,13 +328,21 @@ public:
     }
 };
 
-class MSubsVisitor : public BaseVisitor<MSubsVisitor, SubsVisitor>
+//! Mappings in the `subs_dict` are applied to the expression tree of `x`
+inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
+                                 const map_basic_basic &subs_dict)
+{
+    XReplaceVisitor s(subs_dict);
+    return s.apply(x);
+}
+
+class MSubsVisitor : public BaseVisitor<MSubsVisitor, XReplaceVisitor>
 {
 public:
-    using SubsVisitor::bvisit;
+    using XReplaceVisitor::bvisit;
 
     MSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<MSubsVisitor, SubsVisitor>(d)
+        : BaseVisitor<MSubsVisitor, XReplaceVisitor>(d)
     {
     }
 
@@ -351,13 +361,13 @@ public:
     }
 };
 
-class SSubsVisitor : public BaseVisitor<SSubsVisitor, SubsVisitor>
+class SSubsVisitor : public BaseVisitor<SSubsVisitor, XReplaceVisitor>
 {
 public:
-    using SubsVisitor::bvisit;
+    using XReplaceVisitor::bvisit;
 
     SSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<SSubsVisitor, SubsVisitor>(d)
+        : BaseVisitor<SSubsVisitor, XReplaceVisitor>(d)
     {
     }
 
@@ -383,14 +393,6 @@ public:
     }
 };
 
-//! Mappings in the `subs_dict` are applied to the expression tree of `x`
-inline RCP<const Basic> subs(const RCP<const Basic> &x,
-                             const map_basic_basic &subs_dict)
-{
-    SubsVisitor s(subs_dict);
-    return s.apply(x);
-}
-
 //! Subs which treat f(t) and Derivative(f(t), t) as separate variables
 inline RCP<const Basic> msubs(const RCP<const Basic> &x,
                               const map_basic_basic &subs_dict)
@@ -405,6 +407,49 @@ inline RCP<const Basic> ssubs(const RCP<const Basic> &x,
 {
     SSubsVisitor s(subs_dict);
     return s.apply(x);
+}
+
+class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
+{
+public:
+    using XReplaceVisitor::bvisit;
+
+    SubsVisitor(const map_basic_basic &subs_dict_)
+        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
+    {
+    }
+
+    void bvisit(const Pow &x)
+    {
+        RCP<const Basic> base_new = apply(x.get_base());
+        RCP<const Basic> exp_new = apply(x.get_exp());
+        if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
+            and not is_a<Add>(
+                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
+                         .get_exp())) {
+            auto &subs_first
+                = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
+            if (eq(*subs_first.get_base(), *base_new)) {
+                auto newexpo = div(exp_new, subs_first.get_exp());
+                if (is_a_Number(*newexpo) or is_a<Constant>(*newexpo)) {
+                    result_ = pow((*subs_dict_.begin()).second, newexpo);
+                    return;
+                }
+            }
+        }
+        if (base_new == x.get_base() and exp_new == x.get_exp()) {
+            result_ = x.rcp_from_this();
+        } else {
+            result_ = pow(base_new, exp_new);
+        }
+    }
+};
+
+inline RCP<const Basic> subs(const RCP<const Basic> &x,
+                             const map_basic_basic &subs_dict)
+{
+    SubsVisitor b(subs_dict);
+    return b.apply(x);
 }
 
 } // namespace SymEngine
