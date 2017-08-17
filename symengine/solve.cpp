@@ -396,7 +396,7 @@ linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
                 Add::dict_add_term(d, coef, mul(sym, tmp));
             }
         }
-        bvec.push_back(expand(sub(neqn, Add::from_dict(zero, std::move(d)))));
+        bvec.push_back(expand(sub(Add::from_dict(zero, std::move(d)), neqn)));
         A.row_insert(DenseMatrix(1, size, coeffs), ++row);
     }
     A.row_del(0);

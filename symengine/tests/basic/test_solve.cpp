@@ -408,6 +408,25 @@ TEST_CASE("linsolve", "[Solve]")
                          mul(integer(7), z), mul(integer(6), t), integer(30)})},
                    {x, y, z, t});
     REQUIRE(solns.size() == 4);
+    REQUIRE(eq(*solns[0], *integer(-1)));
+    REQUIRE(eq(*solns[1], *integer(-1)));
+    REQUIRE(eq(*solns[2], *integer(-1)));
+    REQUIRE(eq(*solns[3], *integer(-1)));
+
+    solns = linsolve({Eq(add({x, mul(integer(2), y), mul(integer(3), z),
+                              mul(integer(4), t)}),
+                         integer(10)),
+                      Eq(add({mul(integer(2), x), mul(integer(2), y),
+                              mul(integer(3), z), mul(integer(4), t)}),
+                         integer(11)),
+                      Eq(add({mul(integer(3), x), mul(integer(3), y),
+                              mul(integer(3), z), mul(integer(4), t)}),
+                         integer(13)),
+                      Eq(add({mul(integer(9), x), mul(integer(8), y),
+                              mul(integer(7), z), mul(integer(6), t)}),
+                         integer(30))},
+                     {x, y, z, t});
+    REQUIRE(solns.size() == 4);
     REQUIRE(eq(*solns[0], *integer(1)));
     REQUIRE(eq(*solns[1], *integer(1)));
     REQUIRE(eq(*solns[2], *integer(1)));
@@ -430,12 +449,12 @@ TEST_CASE("linsolve", "[Solve]")
         {add({mul(a, x), mul(b, y), e}), add({mul(c, x), mul(d, y), f})},
         {x, y});
     REQUIRE(solns.size() == 2);
-    // solns[0] is in unsimplified form as `(-b*(a*f - c*e) + e*(a*d -
-    // b*c))/(a*(a*d - b*c))` instead of `(d*e - b*f)/(a*d - b*c)`
+    // solns[0] is in unsimplified form as `(-b*(-a*f + c*e) - e*(a*d -
+    // b*c))/(a*(a*d - b*c))` instead of `(-d*e + b*f)/(a*d - b*c)`
     // REQUIRE(eq(*solns[0], *div(sub(mul(d, e), mul(b,f)), sub(mul(d, a),
     // mul(b,c)))));
     REQUIRE(eq(*solns[1],
-               *div(sub(mul(a, f), mul(c, e)), sub(mul(d, a), mul(b, c)))));
+               *div(sub(mul(c, e), mul(a, f)), sub(mul(d, a), mul(b, c)))));
 }
 
 TEST_CASE("linear_eqns_to_matrix", "[Solve]")
