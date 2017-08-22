@@ -47,11 +47,14 @@ include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 add_library(teuchos STATIC ${SRC})
 
+
+include(GNUInstallDirs)
+
 install(TARGETS teuchos
             EXPORT SymEngineTargets
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
 
 if (NOT WITH_SYMENGINE_RCP)
