@@ -198,11 +198,13 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 target_link_libraries(symengine ${LIBS})
 
+include(GNUInstallDirs)
+
 install(TARGETS symengine
             EXPORT SymEngineTargets
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
 install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     "${symengine_BINARY_DIR}/symengine/symengine_export.h"
