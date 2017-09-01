@@ -202,8 +202,7 @@ public:
     {
     }
 
-    RCP<const Basic> apply(const Basic &x);
-    RCP<const Basic> apply(const RCP<const Basic> &x);
+    virtual RCP<const Basic> apply(const RCP<const Basic> &x);
 
     void bvisit(const Basic &x);
     void bvisit(const Add &x);

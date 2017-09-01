@@ -54,6 +54,7 @@ set(SRC
     nan.cpp
     solve.cpp
     rewrite.cpp
+    cse.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
