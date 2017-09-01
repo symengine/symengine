@@ -525,6 +525,10 @@ TEST_CASE("is_a_LinearArgTrigEquation", "[Solve]")
     REQUIRE(is_a_LinearArgTrigEquation(*tan(x), *x));
     REQUIRE(is_a_LinearArgTrigEquation(*sub(tan(x), one), *x));
     REQUIRE(is_a_LinearArgTrigEquation(*add(sin(x), tan(x)), *x));
+    REQUIRE(
+        is_a_LinearArgTrigEquation(*add(sin(add(x, symbol("y"))), sin(x)), *x));
+    REQUIRE(
+        is_a_LinearArgTrigEquation(*add(sin(x), sin(add(x, symbol("y")))), *x));
     REQUIRE(not is_a_LinearArgTrigEquation(*add(tan(x), x), *x));
     REQUIRE(not is_a_LinearArgTrigEquation(*add(x, tan(x)), *x));
     REQUIRE(not is_a_LinearArgTrigEquation(*mul(x, tan(x)), *x));

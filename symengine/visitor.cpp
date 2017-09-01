@@ -178,7 +178,20 @@ void TransformVisitor::bvisit(const MultiArgFunction &x)
     result_ = nbarg;
 }
 
-class IsALinearArgTrigVisitor : public BaseVisitor<IsALinearArgTrigVisitor>
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
+{
+    b.accept(v);
+    if (v.stop_ or v.local_stop_)
+        return;
+    for (const auto &p : b.get_args()) {
+        preorder_traversal_local_stop(*p, v);
+        if (v.stop_)
+            return;
+    }
+}
+
+class IsALinearArgTrigVisitor
+    : public BaseVisitor<IsALinearArgTrigVisitor, LocalStopVisitor>
 {
 protected:
     Ptr<const Symbol> x_;
@@ -191,54 +204,28 @@ public:
 
     bool apply(const Basic &b)
     {
-        return apply(b.rcp_from_this());
+        stop_ = false;
+        is_ = true;
+        preorder_traversal_local_stop(b, *this);
+        return is_;
     }
 
     bool apply(const RCP<const Basic> &b)
     {
-        is_ = true;
-        b->accept(*this);
-        return is_;
+        return apply(*b);
     }
 
     void bvisit(const Basic &x)
     {
-    }
-
-    void bvisit(const Add &x)
-    {
-        for (const auto &a : x.get_args()) {
-            if (not apply(a)) {
-                is_ = false;
-                return;
-            }
-        }
-    }
-
-    void bvisit(const Mul &x)
-    {
-        for (const auto &a : x.get_args()) {
-            if (not apply(a)) {
-                is_ = false;
-                return;
-            }
-        }
-    }
-
-    void bvisit(const Pow &x)
-    {
-        for (const auto &a : x.get_args()) {
-            if (not apply(a)) {
-                is_ = false;
-                return;
-            }
-        }
+        local_stop_ = false;
     }
 
     void bvisit(const Symbol &x)
     {
-        if (x_->__eq__(x))
-            is_ = false;
+        if (x_->__eq__(x)) {
+            is_ = 0;
+            stop_ = true;
+        }
     }
 
     template <typename T,
@@ -250,6 +237,9 @@ public:
         is_ = (from_basic<UExprPoly>(x.get_args()[0], (*x_).rcp_from_this())
                    ->get_degree()
                <= 1);
+        if (not is_)
+            stop_ = true;
+        local_stop_ = true;
     }
 };
 
