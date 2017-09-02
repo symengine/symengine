@@ -25,6 +25,10 @@ using SymEngine::vec_basic;
 using SymEngine::function_symbol;
 using SymEngine::permutelist;
 using SymEngine::SymEngineException;
+using SymEngine::eigen_values;
+using SymEngine::finiteset;
+using SymEngine::one;
+using SymEngine::mul;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -1390,6 +1394,39 @@ TEST_CASE("test_cross(): matrices", "[matrices]")
 
     cross(A, B, C);
     CHECK(C == DenseMatrix(1, 3, {integer(-2), integer(4), integer(-2)}));
+}
+
+TEST_CASE("test_eigen_values(): matrices", "[matrices]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> t = symbol("t");
+
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+                                       integer(0), integer(1), integer(0),
+                                       integer(0), integer(0), integer(1)});
+    auto vals = eigen_values(A);
+    REQUIRE(eq(*vals, *finiteset({one})));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(0)});
+    vals = eigen_values(A);
+    REQUIRE(eq(*vals, *finiteset({integer(3), integer(-2)})));
+
+    A = DenseMatrix(2, 2, {integer(2), integer(1), integer(-1), integer(0)});
+    vals = eigen_values(A);
+    REQUIRE(eq(*vals, *finiteset({one})));
+
+    A = DenseMatrix(2, 2, {one, x, y, integer(0)});
+    vals = eigen_values(A);
+    REQUIRE(
+        eq(*vals,
+           *finiteset({add(div(one, integer(2)),
+                           mul(div(one, integer(2)),
+                               sqrt(add(one, mul({integer(4), x, y}))))),
+                       sub(div(one, integer(2)),
+                           mul(div(one, integer(2)),
+                               sqrt(add(one, mul({integer(4), x, y})))))})));
 }
 
 TEST_CASE("test_csr_has_canonical_format(): matrices", "[matrices]")

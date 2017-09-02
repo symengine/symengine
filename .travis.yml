@@ -83,7 +83,7 @@ matrix:
         - echo "nothing to install"
       script:
         - bin/travis_clang.sh
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2"
       compiler: gcc
       os: linux
       addons:
@@ -93,7 +93,7 @@ matrix:
           packages:
           - binutils-dev
           - g++-6
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_FLINT_DEV="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no" MAKEFLAGS="-j2"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_FLINT_DEV="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no" MAKEFLAGS="-j2"
       compiler: gcc
       os: linux
       addons:
@@ -102,7 +102,7 @@ matrix:
           - ubuntu-toolchain-r-test
           packages:
           - binutils-dev
-          - g++-4.8
+          - g++-4.7
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha" MAKEFLAGS="-j2"
       compiler: gcc
       os: linux
