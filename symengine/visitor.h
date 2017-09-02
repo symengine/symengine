@@ -85,6 +85,7 @@ public:
 
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 void postorder_traversal_stop(const Basic &b, StopVisitor &v);
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
@@ -224,14 +225,6 @@ public:
 
     void bvisit(const MultiArgFunction &x);
 };
-
-RCP<const Set> invertComplex(const RCP<const Basic> &fX,
-                             const RCP<const Set> &gY,
-                             const RCP<const Symbol> &sym,
-                             const RCP<const Dummy> &nD = dummy("n"),
-                             const RCP<const Set> &domain = universalset());
-
-bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x);
 
 } // SymEngine
 

@@ -63,6 +63,14 @@ vec_basic linsolve(const vec_basic &system, const vec_sym &syms);
 // first Matrix is for `A` and second one is for `b`.
 std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms);
+
+bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x);
+
+RCP<const Set> invertComplex(const RCP<const Basic> &fX,
+                             const RCP<const Set> &gY,
+                             const RCP<const Symbol> &sym,
+                             const RCP<const Dummy> &nD = dummy("n"),
+                             const RCP<const Set> &domain = universalset());
 } // namespace SymEngine
 
 #endif // SYMENGINE_SOLVE_H
