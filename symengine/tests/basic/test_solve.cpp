@@ -45,6 +45,10 @@ using SymEngine::UIntPoly;
 using SymEngine::URatPoly;
 using SymEngine::rational_class;
 using SymEngine::solve_poly_quartic;
+using SymEngine::DenseMatrix;
+using SymEngine::linear_eqns_to_matrix;
+using SymEngine::linsolve;
+using SymEngine::vec_basic;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -374,4 +378,140 @@ TEST_CASE("solve_poly", "[Solve]")
     soln = solve_poly(P4, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 #endif
+}
+
+TEST_CASE("linsolve", "[Solve]")
+{
+    auto x = symbol("x"), y = symbol("y"), z = symbol("z"), t = symbol("t");
+    // Augmented Matrix as input
+    auto aug = DenseMatrix(
+        4, 5, {integer(1), integer(2), integer(3), integer(4), integer(10),
+               integer(2), integer(2), integer(3), integer(4), integer(11),
+               integer(3), integer(3), integer(3), integer(4), integer(13),
+               integer(9), integer(8), integer(7), integer(6), integer(30)});
+    vec_basic solns = linsolve(aug, {x, y, z, t});
+    REQUIRE(solns.size() == 4);
+    REQUIRE(eq(*solns[0], *integer(1)));
+    REQUIRE(eq(*solns[1], *integer(1)));
+    REQUIRE(eq(*solns[2], *integer(1)));
+    REQUIRE(eq(*solns[3], *integer(1)));
+
+    // vector of equations as input
+    solns
+        = linsolve({add({x, mul(integer(2), y), mul(integer(3), z),
+                         mul(integer(4), t), integer(10)}),
+                    add({mul(integer(2), x), mul(integer(2), y),
+                         mul(integer(3), z), mul(integer(4), t), integer(11)}),
+                    add({mul(integer(3), x), mul(integer(3), y),
+                         mul(integer(3), z), mul(integer(4), t), integer(13)}),
+                    add({mul(integer(9), x), mul(integer(8), y),
+                         mul(integer(7), z), mul(integer(6), t), integer(30)})},
+                   {x, y, z, t});
+    REQUIRE(solns.size() == 4);
+    REQUIRE(eq(*solns[0], *integer(-1)));
+    REQUIRE(eq(*solns[1], *integer(-1)));
+    REQUIRE(eq(*solns[2], *integer(-1)));
+    REQUIRE(eq(*solns[3], *integer(-1)));
+
+    solns = linsolve({Eq(add({x, mul(integer(2), y), mul(integer(3), z),
+                              mul(integer(4), t)}),
+                         integer(10)),
+                      Eq(add({mul(integer(2), x), mul(integer(2), y),
+                              mul(integer(3), z), mul(integer(4), t)}),
+                         integer(11)),
+                      Eq(add({mul(integer(3), x), mul(integer(3), y),
+                              mul(integer(3), z), mul(integer(4), t)}),
+                         integer(13)),
+                      Eq(add({mul(integer(9), x), mul(integer(8), y),
+                              mul(integer(7), z), mul(integer(6), t)}),
+                         integer(30))},
+                     {x, y, z, t});
+    REQUIRE(solns.size() == 4);
+    REQUIRE(eq(*solns[0], *integer(1)));
+    REQUIRE(eq(*solns[1], *integer(1)));
+    REQUIRE(eq(*solns[2], *integer(1)));
+    REQUIRE(eq(*solns[3], *integer(1)));
+
+    solns = linsolve(
+        {add({x, mul(integer(2), y), mul(integer(3), z)}),
+         add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z)}),
+         add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
+        {x, y, z});
+
+    REQUIRE(solns.size() == 3);
+    REQUIRE(eq(*solns[0], *zero));
+    REQUIRE(eq(*solns[1], *zero));
+    REQUIRE(eq(*solns[2], *zero));
+
+    auto a = symbol("a"), b = symbol("b"), c = symbol("c"), d = symbol("d"),
+         e = symbol("e"), f = symbol("f");
+    solns = linsolve(
+        {add({mul(a, x), mul(b, y), e}), add({mul(c, x), mul(d, y), f})},
+        {x, y});
+    REQUIRE(solns.size() == 2);
+    // solns[0] is in unsimplified form as `(-b*(-a*f + c*e) - e*(a*d -
+    // b*c))/(a*(a*d - b*c))` instead of `(-d*e + b*f)/(a*d - b*c)`
+    // REQUIRE(eq(*solns[0], *div(sub(mul(d, e), mul(b,f)), sub(mul(d, a),
+    // mul(b,c)))));
+    REQUIRE(eq(*solns[1],
+               *div(sub(mul(c, e), mul(a, f)), sub(mul(d, a), mul(b, c)))));
+
+    solns = linsolve({Eq(y, mul({integer(4), x, x}))}, {y});
+    REQUIRE(solns.size() == 1);
+    REQUIRE(eq(*solns[0], *mul({integer(4), x, x})));
+
+    CHECK_THROWS_AS(
+        linsolve({Eq(y, mul({integer(4), x, x})), add({x, y, integer(-10)})},
+                 {x, y}),
+        SymEngineException);
+}
+
+TEST_CASE("linear_eqns_to_matrix", "[Solve]")
+{
+    auto x = symbol("x"), y = symbol("y"), z = symbol("z"), t = symbol("t");
+    std::pair<DenseMatrix, DenseMatrix> solns = linear_eqns_to_matrix(
+        {add({x, mul(integer(2), y), mul(integer(3), z)}),
+         add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z)}),
+         add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
+        {x, y, z});
+    REQUIRE(solns.first
+            == DenseMatrix(3, 3, {integer(1), integer(2), integer(3),
+                                  integer(2), integer(2), integer(3),
+                                  integer(3), integer(3), integer(3)}));
+    REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
+
+    solns = linear_eqns_to_matrix(
+        {Eq(add({x, mul(integer(2), y), mul(integer(3), z)}), zero),
+         add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z)}),
+         add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
+        {y, x, z});
+
+    REQUIRE(solns.first
+            == DenseMatrix(3, 3, {integer(2), integer(1), integer(3),
+                                  integer(2), integer(2), integer(3),
+                                  integer(3), integer(3), integer(3)}));
+    REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
+
+    solns = linear_eqns_to_matrix(
+        {Eq(add({x, mul(integer(2), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(10)),
+         Eq(add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(11)),
+         Eq(add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(13)),
+         Eq(add({mul(integer(9), x), mul(integer(8), y), mul(integer(7), z),
+                 mul(integer(6), t)}),
+            integer(30))},
+        {y, z, t, x});
+    REQUIRE(
+        solns.first
+        == DenseMatrix(4, 4, {integer(2), integer(3), integer(4), integer(1),
+                              integer(2), integer(3), integer(4), integer(2),
+                              integer(3), integer(3), integer(4), integer(3),
+                              integer(8), integer(7), integer(6), integer(9)}));
+    REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
+                                               integer(13), integer(30)}));
 }

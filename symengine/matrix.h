@@ -2,7 +2,7 @@
 #define SYMENGINE_MATRIX_H
 
 #include <symengine/basic.h>
-#include <symengine/solve.h>
+#include <symengine/sets.h>
 
 namespace SymEngine
 {

@@ -2,6 +2,7 @@
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/logic.h>
 #include <symengine/mul.h>
+
 namespace SymEngine
 {
 
@@ -314,6 +315,7 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
         return conditionset(sym, logical_and({rcp_static_cast<const Boolean>(f),
                                               domain->contains(sym)}));
     }
+
     RCP<const Basic> newf = f;
     if (is_a<Mul>(*f)) {
         auto args = f->get_args();
@@ -334,5 +336,94 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
         return emptyset();
     // TODO - Trig solver
     return solve_rational(newf, sym, domain);
+}
+
+vec_basic linsolve_helper(const DenseMatrix &A, const DenseMatrix &b)
+{
+    DenseMatrix res(A.nrows(), 1);
+    fraction_free_gauss_jordan_solve(A, b, res);
+    vec_basic fs;
+    for (unsigned i = 0; i < res.nrows(); i++) {
+        fs.push_back(res.get(i, 0));
+    }
+    return fs;
+}
+
+vec_basic linsolve(const DenseMatrix &system, const vec_sym &syms)
+{
+    DenseMatrix A(system.nrows(), system.ncols() - 1), b(system.nrows(), 1);
+    system.submatrix(A, 0, 0, system.nrows() - 1, system.ncols() - 2);
+    system.submatrix(b, 0, system.ncols() - 1, system.nrows() - 1,
+                     system.ncols() - 1);
+    return linsolve_helper(A, b);
+}
+
+vec_basic linsolve(const vec_basic &system, const vec_sym &syms)
+{
+    DenseMatrix A, b;
+    auto mat = linear_eqns_to_matrix(system, syms);
+    A = mat.first;
+    b = mat.second;
+    return linsolve_helper(A, b);
+}
+
+set_basic get_set_from_vec(const vec_sym &syms)
+{
+    set_basic sb;
+    for (auto &s : syms)
+        sb.insert(s);
+    return sb;
+}
+
+std::pair<DenseMatrix, DenseMatrix>
+linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
+{
+    auto size = numeric_cast<unsigned int>(syms.size());
+    DenseMatrix A(1, size);
+    vec_basic coeffs, bvec;
+
+    int row = 0;
+    auto gens = get_set_from_vec(syms);
+    umap_basic_uint index_of_sym;
+    for (unsigned int i = 0; i < size; i++) {
+        index_of_sym[syms[i]] = i;
+    }
+    for (const auto &eqn : equations) {
+        coeffs.clear();
+        coeffs.resize(size);
+        auto neqn = eqn;
+        if (is_a<Equality>(*eqn)) {
+            neqn = sub(down_cast<const Equality &>(*eqn).get_arg2(),
+                       down_cast<const Equality &>(*eqn).get_arg1());
+        }
+
+        auto mpoly = from_basic<MExprPoly>(neqn, gens);
+        RCP<const Basic> rem = zero;
+        for (const auto &p : mpoly->get_poly().dict_) {
+            RCP<const Basic> res = (p.second.get_basic());
+            int whichvar = 0, non_zero = 0;
+            RCP<const Basic> cursim;
+            for (auto &sym : gens) {
+                if (0 != p.first[whichvar]) {
+                    non_zero++;
+                    cursim = sym;
+                    if (p.first[whichvar] != 1 or non_zero == 2) {
+                        throw SymEngineException("Expected a linear equation.");
+                    }
+                }
+                whichvar++;
+            }
+            if (not non_zero) {
+                rem = res;
+            } else {
+                coeffs[index_of_sym[cursim]] = res;
+            }
+        }
+        bvec.push_back(neg(rem));
+        A.row_insert(DenseMatrix(1, size, coeffs), ++row);
+    }
+    A.row_del(0);
+    return std::make_pair(
+        A, DenseMatrix(numeric_cast<unsigned int>(equations.size()), 1, bvec));
 }
 }
