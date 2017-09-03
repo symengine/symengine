@@ -455,11 +455,20 @@ TEST_CASE("linsolve", "[Solve]")
     // mul(b,c)))));
     REQUIRE(eq(*solns[1],
                *div(sub(mul(c, e), mul(a, f)), sub(mul(d, a), mul(b, c)))));
+
+    solns = linsolve({Eq(y, mul({integer(4), x, x}))}, {y});
+    REQUIRE(solns.size() == 1);
+    REQUIRE(eq(*solns[0], *mul({integer(4), x, x})));
+
+    CHECK_THROWS_AS(
+        linsolve({Eq(y, mul({integer(4), x, x})), add({x, y, integer(-10)})},
+                 {x, y}),
+        SymEngineException);
 }
 
 TEST_CASE("linear_eqns_to_matrix", "[Solve]")
 {
-    auto x = symbol("x"), y = symbol("y"), z = symbol("z");
+    auto x = symbol("x"), y = symbol("y"), z = symbol("z"), t = symbol("t");
     std::pair<DenseMatrix, DenseMatrix> solns = linear_eqns_to_matrix(
         {add({x, mul(integer(2), y), mul(integer(3), z)}),
          add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z)}),
@@ -482,4 +491,27 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
                                   integer(2), integer(2), integer(3),
                                   integer(3), integer(3), integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
+
+    solns = linear_eqns_to_matrix(
+        {Eq(add({x, mul(integer(2), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(10)),
+         Eq(add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(11)),
+         Eq(add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z),
+                 mul(integer(4), t)}),
+            integer(13)),
+         Eq(add({mul(integer(9), x), mul(integer(8), y), mul(integer(7), z),
+                 mul(integer(6), t)}),
+            integer(30))},
+        {y, z, t, x});
+    REQUIRE(
+        solns.first
+        == DenseMatrix(4, 4, {integer(2), integer(3), integer(4), integer(1),
+                              integer(2), integer(3), integer(4), integer(2),
+                              integer(3), integer(3), integer(4), integer(3),
+                              integer(8), integer(7), integer(6), integer(9)}));
+    REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
+                                               integer(13), integer(30)}));
 }

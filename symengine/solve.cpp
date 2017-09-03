@@ -367,36 +367,59 @@ vec_basic linsolve(const vec_basic &system, const vec_sym &syms)
     return linsolve_helper(A, b);
 }
 
+set_basic get_set_from_vec(const vec_sym &syms)
+{
+    set_basic sb;
+    for (auto &s : syms)
+        sb.insert(s);
+    return sb;
+}
+
 std::pair<const DenseMatrix, const DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
 {
     auto size = numeric_cast<unsigned int>(syms.size());
     DenseMatrix A(1, size);
     vec_basic coeffs, bvec;
-    RCP<const Basic> tmp;
-    RCP<const Number> coef;
-    umap_basic_num d;
 
     int row = 0;
+    auto gens = get_set_from_vec(syms);
+    umap_basic_uint index_of_sym;
+    for (unsigned int i = 0; i < size; i++) {
+        index_of_sym[syms[i]] = i;
+    }
     for (const auto &eqn : equations) {
         coeffs.clear();
-        d.clear();
-        coef = zero;
-
+        coeffs.resize(size);
         auto neqn = eqn;
         if (is_a<Equality>(*eqn)) {
             neqn = sub(down_cast<const Equality &>(*eqn).get_arg2(),
                        down_cast<const Equality &>(*eqn).get_arg1());
         }
-        for (const auto &sym : syms) {
-            auto nc = coeff(*neqn, *sym, *one);
-            coeffs.push_back(nc);
-            if (not eq(*nc, *zero)) {
-                Add::as_coef_term(nc, outArg(coef), outArg(tmp));
-                Add::dict_add_term(d, coef, mul(sym, tmp));
+
+        auto mpoly = from_basic<MExprPoly>(neqn, gens);
+        RCP<const Basic> rem = zero;
+        for (const auto &p : mpoly->get_poly().dict_) {
+            RCP<const Basic> res = (p.second.get_basic());
+            int whichvar = 0, non_zero = 0;
+            RCP<const Basic> cursim;
+            for (auto &sym : gens) {
+                if (0 != p.first[whichvar]) {
+                    non_zero++;
+                    cursim = sym;
+                    if (p.first[whichvar] != 1 or non_zero == 2) {
+                        throw SymEngineException("Expected a linear equation.");
+                    }
+                }
+                whichvar++;
+            }
+            if (not non_zero) {
+                rem = res;
+            } else {
+                coeffs[index_of_sym[cursim]] = res;
             }
         }
-        bvec.push_back(expand(sub(Add::from_dict(zero, std::move(d)), neqn)));
+        bvec.push_back(neg(rem));
         A.row_insert(DenseMatrix(1, size, coeffs), ++row);
     }
     A.row_del(0);
