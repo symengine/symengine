@@ -375,7 +375,7 @@ set_basic get_set_from_vec(const vec_sym &syms)
     return sb;
 }
 
-std::pair<const DenseMatrix, const DenseMatrix>
+std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
 {
     auto size = numeric_cast<unsigned int>(syms.size());

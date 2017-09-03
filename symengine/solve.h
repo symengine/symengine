@@ -57,7 +57,7 @@ vec_basic linsolve(const vec_basic &system, const vec_sym &syms);
 
 // converts system of linear equations into Matrix form.
 // first Matrix is for `A` and second one is for `b`.
-std::pair<const DenseMatrix, const DenseMatrix>
+std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms);
 
 } // namespace SymEngine
