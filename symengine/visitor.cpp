@@ -1,4 +1,6 @@
 #include <symengine/visitor.h>
+#include <symengine/polys/basic_conversions.h>
+#include <symengine/sets.h>
 
 #define ACCEPT(CLASS)                                                          \
     void CLASS::accept(Visitor &v) const                                       \
@@ -175,4 +177,17 @@ void TransformVisitor::bvisit(const MultiArgFunction &x)
     auto nbarg = x.create(newargs);
     result_ = nbarg;
 }
+
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
+{
+    b.accept(v);
+    if (v.stop_ or v.local_stop_)
+        return;
+    for (const auto &p : b.get_args()) {
+        preorder_traversal_local_stop(*p, v);
+        if (v.stop_)
+            return;
+    }
+}
+
 } // SymEngine

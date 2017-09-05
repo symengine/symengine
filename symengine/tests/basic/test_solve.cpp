@@ -49,6 +49,11 @@ using SymEngine::DenseMatrix;
 using SymEngine::linear_eqns_to_matrix;
 using SymEngine::linsolve;
 using SymEngine::vec_basic;
+using SymEngine::pi;
+using SymEngine::dummy;
+using SymEngine::set_union;
+using SymEngine::imageset;
+using SymEngine::add;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -128,10 +133,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
                {add(div(mul(sqrt(integer(69)), sqrt(integer(5))), integer(10)),
                     div(im3, i2)),
                 sub(div(im3, i2), div(mul(sqrt(integer(69)), sqrt(integer(5))),
-                                      integer(10)))}))); // Shouldn't
-                                                         // sqrt(69)*sqrt(5)
-                                                         // simplify into
-                                                         // sqrt(345) ?
+                                      integer(10)))})));
 
     poly = add(sqx, mul(x, i2));
     soln = solve(poly, x);
@@ -192,9 +194,8 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
 
     poly = Ne(add({cbx, mul(x, i3), mul(sqx, i3)}), neg(one));
     soln = solve(poly, x, reals);
-    REQUIRE(eq(*soln, *SymEngine::set_union(
-                          {interval(NegInf, integer(-1), true, true),
-                           interval(integer(-1), Inf, true, true)})));
+    REQUIRE(eq(*soln, *set_union({interval(NegInf, integer(-1), true, true),
+                                  interval(integer(-1), Inf, true, true)})));
 
     poly = Ge(add({cbx, mul(x, i3), mul(sqx, i3)}), one);
     soln = solve(poly, x, reals);
@@ -514,4 +515,159 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
                               integer(8), integer(7), integer(6), integer(9)}));
     REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
                                                integer(13), integer(30)}));
+}
+
+TEST_CASE("is_a_LinearArgTrigEquation", "[Solve]")
+{
+    auto x = symbol("x");
+    RCP<const Basic> r;
+
+    REQUIRE(is_a_LinearArgTrigEquation(*tan(x), *x));
+    REQUIRE(is_a_LinearArgTrigEquation(*sub(tan(x), one), *x));
+    REQUIRE(is_a_LinearArgTrigEquation(*add(sin(x), tan(x)), *x));
+    REQUIRE(
+        is_a_LinearArgTrigEquation(*add(sin(add(x, symbol("y"))), sin(x)), *x));
+    REQUIRE(
+        is_a_LinearArgTrigEquation(*add(sin(x), sin(add(x, symbol("y")))), *x));
+    REQUIRE(not is_a_LinearArgTrigEquation(*add(tan(x), x), *x));
+    REQUIRE(not is_a_LinearArgTrigEquation(*add(x, tan(x)), *x));
+    REQUIRE(not is_a_LinearArgTrigEquation(*mul(x, tan(x)), *x));
+    REQUIRE(is_a_LinearArgTrigEquation(*mul(tan(x), tan(x)), *x));
+    REQUIRE(not is_a_LinearArgTrigEquation(*tan(mul(x, x)), *x));
+}
+
+TEST_CASE("invertComplex", "[Solve]")
+{
+    auto x = symbol("x"), y = symbol("y");
+    RCP<const Basic> r, fX;
+    RCP<const Set> gY;
+    auto i2 = integer(2);
+
+    r = invertComplex(add(x, i2), finiteset({y}), x);
+    REQUIRE(eq(*r, *finiteset({sub(y, i2)})));
+
+    r = invertComplex(mul(x, i2), finiteset({y}), x);
+    REQUIRE(eq(*r, *finiteset({div(y, i2)})));
+}
+
+TEST_CASE("trigonometric equations", "[Solve]")
+{
+    auto x = symbol("x");
+    auto n = symbol("n");
+    RCP<const Set> soln;
+    RCP<const Basic> eqn;
+    auto i2 = integer(2);
+
+    eqn = sin(x);
+    soln = solve(eqn, x);
+    auto req = set_union(
+        {imageset(n, add(mul({i2, n, pi}), pi),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n, mul({i2, n, pi}), interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = cos(x);
+    soln = solve(eqn, x);
+    req = set_union({imageset(n, sub(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = tan(x);
+    soln = solve(eqn, x);
+    req = set_union(
+        {imageset(n, add(mul({i2, n, pi}), pi),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n, mul({i2, n, pi}), interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = csc(x);
+    soln = solve(eqn, x);
+    REQUIRE(eq(*soln, *emptyset()));
+
+    eqn = sec(x);
+    soln = solve(eqn, x);
+    REQUIRE(eq(*soln, *emptyset()));
+
+    eqn = cot(x);
+    soln = solve(eqn, x);
+    req = set_union({imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, sub(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = Eq(sin(x), one);
+    soln = solve(eqn, x);
+    req = imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                   interval(NegInf, Inf, true, true));
+    REQUIRE(eq(*soln, *req));
+
+    eqn = add(sin(x), cos(x));
+    soln = solve(eqn, x);
+    req = set_union({imageset(n, sub(mul({i2, n, pi}), div(pi, integer(4))),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, add(mul({i2, n, pi}),
+                                     div(mul(integer(3), pi), integer(4))),
+                              interval(NegInf, Inf, true, true))});
+    // REQUIRE(eq(*soln, *req)); // atan2(sqrt(2)/2, -sqrt(2)/2) is wrongly
+    // computed as it can't idenfity `-sqrt(2)/2` as negative(should pass once
+    // assumptions are implemented).
+
+    eqn = Eq(add(sin(x), cos(x)), one);
+    soln = solve(eqn, x);
+    req = set_union(
+        {imageset(n, mul({i2, n, pi}), interval(NegInf, Inf, true, true)),
+         imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                  interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = add(mul(sin(x), sin(x)), mul(cos(x), cos(x)));
+    soln = solve(eqn, x);
+    REQUIRE(eq(*soln, *emptyset()));
+
+    eqn = sub(cos(x), div(one, i2));
+    soln = solve(eqn, x);
+    req = set_union({imageset(n, add(mul({i2, n, pi}), div(pi, integer(3))),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, sub(mul({i2, n, pi}), div(pi, integer(3))),
+                              interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    auto y = symbol("y");
+    eqn = sub(sin(add(x, y)), sin(x));
+    soln = solve(eqn, y);
+    req = conditionset(y, Eq(eqn, zero));
+    REQUIRE(
+        eq(*soln,
+           *req)); // expand(exp(x + I*y)) stays as `exp(x + I*y)`. It should be
+    // `exp(x)*exp(I*y)`.
+
+    eqn = mul(sin(x), cos(x));
+    soln = solve(eqn, x);
+    req = set_union(
+        {imageset(n, sub(mul({i2, n, pi}), div(pi, i2)),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n, add(mul({i2, n, pi}), pi),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n, mul({i2, n, pi}), interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = add(mul(cos(x), cos(x)), cos(x));
+    soln = solve(eqn, x);
+    req = set_union({imageset(n, add(mul({i2, n, pi}), pi),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, add(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true)),
+                     imageset(n, sub(mul({i2, n, pi}), div(pi, i2)),
+                              interval(NegInf, Inf, true, true))});
+    REQUIRE(eq(*soln, *req));
+
+    eqn = add({mul(i2, cos(x)), cot(x), sin(x), mul(sin(x), cos(x))});
+    soln = solve(eqn, x);
+    req = conditionset(x, Eq(eqn, zero));
+    REQUIRE(eq(*soln, *req));
 }

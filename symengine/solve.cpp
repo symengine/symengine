@@ -2,6 +2,7 @@
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/logic.h>
 #include <symengine/mul.h>
+#include <symengine/as_real_imag.cpp>
 
 namespace SymEngine
 {
@@ -59,6 +60,7 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
     // https://en.wikipedia.org/wiki/Cubic_function#General_solution_to_the_cubic_equation_with_real_coefficients
     auto i2 = integer(2), i3 = integer(3), i4 = integer(4), i9 = integer(9),
          i27 = integer(27);
+
     RCP<const Basic> root1, root2, root3;
     if (eq(*d, *zero)) {
         root1 = zero;
@@ -93,7 +95,6 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
             }
             auto C = pow(Cexpr, div(one, i3));
             root1 = neg(div(add(b, add(C, div(delta0, C))), i3));
-
             auto coef = div(mul(I, sqrt(i3)), i2);
             temp = neg(div(one, i2));
             auto cbrt1 = add(temp, coef);
@@ -104,7 +105,6 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
                 add(b, add(mul(cbrt2, C), div(delta0, mul(cbrt2, C)))), i3));
         }
     }
-
     return set_intersection({domain, finiteset({root1, root2, root3})});
 }
 
@@ -294,6 +294,220 @@ RCP<const Set> solve_rational(const RCP<const Basic> &f,
     return solve_poly(num, sym, domain);
 }
 
+/* Helper Visitors for solve_trig */
+
+class IsALinearArgTrigVisitor
+    : public BaseVisitor<IsALinearArgTrigVisitor, LocalStopVisitor>
+{
+protected:
+    Ptr<const Symbol> x_;
+    bool is_;
+
+public:
+    IsALinearArgTrigVisitor(Ptr<const Symbol> x) : x_(x)
+    {
+    }
+
+    bool apply(const Basic &b)
+    {
+        stop_ = false;
+        is_ = true;
+        preorder_traversal_local_stop(b, *this);
+        return is_;
+    }
+
+    bool apply(const RCP<const Basic> &b)
+    {
+        return apply(*b);
+    }
+
+    void bvisit(const Basic &x)
+    {
+        local_stop_ = false;
+    }
+
+    void bvisit(const Symbol &x)
+    {
+        if (x_->__eq__(x)) {
+            is_ = 0;
+            stop_ = true;
+        }
+    }
+
+    template <typename T,
+              typename
+              = enable_if_t<std::is_base_of<TrigFunction, T>::value
+                            or std::is_base_of<HyperbolicFunction, T>::value>>
+    void bvisit(const T &x)
+    {
+        is_ = (from_basic<UExprPoly>(x.get_args()[0], (*x_).rcp_from_this())
+                   ->get_degree()
+               <= 1);
+        if (not is_)
+            stop_ = true;
+        local_stop_ = true;
+    }
+};
+
+bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x)
+{
+    IsALinearArgTrigVisitor v(ptrFromRef(x));
+    return v.apply(b);
+}
+
+class InvertComplexVisitor : public BaseVisitor<InvertComplexVisitor>
+{
+protected:
+    RCP<const Set> result_;
+    RCP<const Set> gY_;
+    RCP<const Dummy> nD_;
+    RCP<const Symbol> sym_;
+    RCP<const Set> domain_;
+
+public:
+    InvertComplexVisitor(RCP<const Set> gY, RCP<const Dummy> nD,
+                         RCP<const Symbol> sym, RCP<const Set> domain)
+        : gY_(gY), nD_(nD), sym_(sym), domain_(domain)
+    {
+    }
+
+    void bvisit(const Basic &x)
+    {
+        result_ = gY_;
+    }
+
+    void bvisit(const Add &x)
+    {
+        vec_basic f1X, f2X;
+        for (auto &elem : x.get_args()) {
+            if (has_symbol(*elem, *sym_)) {
+                f1X.push_back(elem);
+            } else {
+                f2X.push_back(elem);
+            }
+        }
+        auto depX = add(f1X), indepX = add(f2X);
+        if (not eq(*indepX, *zero)) {
+            gY_ = imageset(nD_, sub(nD_, indepX), gY_);
+            result_ = apply(*depX);
+        } else {
+            result_ = gY_;
+        }
+    }
+
+    void bvisit(const Mul &x)
+    {
+        vec_basic f1X, f2X;
+        for (auto &elem : x.get_args()) {
+            if (has_symbol(*elem, *sym_)) {
+                f1X.push_back(elem);
+            } else {
+                f2X.push_back(elem);
+            }
+        }
+        auto depX = mul(f1X), indepX = mul(f2X);
+        if (not eq(*indepX, *one)) {
+            if (eq(*indepX, *NegInf) or eq(*indepX, *Inf)
+                or eq(*indepX, *ComplexInf)) {
+                result_ = emptyset();
+            } else {
+                gY_ = imageset(nD_, div(nD_, indepX), gY_);
+                result_ = apply(*depX);
+            }
+        } else {
+            result_ = gY_;
+        }
+    }
+
+    void bvisit(const Pow &x)
+    {
+        if (eq(*x.get_base(), *E) and is_a<FiniteSet>(*gY_)) {
+            set_set inv;
+            for (const auto &elem :
+                 down_cast<const FiniteSet &>(*gY_).get_container()) {
+                if (eq(*elem, *zero))
+                    continue;
+                RCP<const Basic> re, im;
+                as_real_imag(elem, outArg(re), outArg(im));
+                auto logabs = log(add(mul(re, re), mul(im, im)));
+                auto logarg = atan2(im, re);
+                inv.insert(imageset(
+                    nD_, add(mul(add(mul({integer(2), nD_, pi}), logarg), I),
+                             div(logabs, integer(2))),
+                    interval(NegInf, Inf, true,
+                             true))); // TODO : replace interval(-oo,oo) with
+                // Set of Integers once Class for Range is implemented.
+            }
+            gY_ = set_union(inv);
+            apply(*x.get_exp());
+            return;
+        }
+        result_ = gY_;
+    }
+
+    RCP<const Set> apply(const Basic &b)
+    {
+        result_ = gY_;
+        b.accept(*this);
+        return set_intersection({domain_, result_});
+    }
+};
+
+RCP<const Set> invertComplex(const RCP<const Basic> &fX,
+                             const RCP<const Set> &gY,
+                             const RCP<const Symbol> &sym,
+                             const RCP<const Dummy> &nD,
+                             const RCP<const Set> &domain)
+{
+    InvertComplexVisitor v(gY, nD, sym, domain);
+    return v.apply(*fX);
+}
+
+RCP<const Set> solve_trig(const RCP<const Basic> &f,
+                          const RCP<const Symbol> &sym,
+                          const RCP<const Set> &domain)
+{
+    // TODO : first simplify f using `fu`.
+    auto exp_f = rewrite_as_exp(f);
+    RCP<const Basic> num, den;
+    as_numer_denom(exp_f, outArg(num), outArg(den));
+
+    auto xD = dummy("x");
+    map_basic_basic d;
+    auto temp = exp(mul(I, sym));
+    d[temp] = xD;
+    num = expand(num), den = expand(den);
+    num = num->subs(d);
+    den = den->subs(d);
+
+    if (has_symbol(*num, *sym) or has_symbol(*den, *sym)) {
+        return conditionset(sym, logical_and({Eq(f, zero)}));
+    }
+
+    auto soln = set_complement(solve(num, xD), solve(den, xD));
+    if (eq(*soln, *emptyset()))
+        return emptyset();
+    else if (is_a<FiniteSet>(*soln)) {
+        set_set res;
+        auto nD
+            = dummy("n"); // use the same dummy for finding every solution set.
+        auto n = symbol(
+            "n"); // replaces the above dummy in final set of solutions.
+        map_basic_basic d;
+        d[nD] = n;
+        for (const auto &elem :
+             down_cast<const FiniteSet &>(*soln).get_container()) {
+            res.insert(
+                invertComplex(exp(mul(I, sym)), finiteset({elem}), sym, nD));
+        }
+        auto ans = set_union(res)->subs(d);
+        if (not is_a_Set(*ans))
+            throw SymEngineException("Expected an object of type Set");
+        return set_intersection({rcp_static_cast<const Set>(ans), domain});
+    }
+    return conditionset(sym, logical_and({Eq(f, zero), domain->contains(sym)}));
+}
+
 RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                      const RCP<const Set> &domain)
 {
@@ -316,7 +530,21 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                                               domain->contains(sym)}));
     }
 
-    RCP<const Basic> newf = f;
+    if (is_a_Number(*f)) {
+        if (eq(*f, *zero)) {
+            return domain;
+        } else {
+            return emptyset();
+        }
+    }
+
+    if (not has_symbol(*f, *sym))
+        return emptyset();
+
+    if (is_a_LinearArgTrigEquation(*f, *sym)) {
+        return solve_trig(f, sym, domain);
+    }
+
     if (is_a<Mul>(*f)) {
         auto args = f->get_args();
         set_set solns;
@@ -325,17 +553,8 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
         }
         return SymEngine::set_union(solns);
     }
-    if (is_a_Number(*newf)) {
-        if (eq(*newf, *zero)) {
-            return domain;
-        } else {
-            return emptyset();
-        }
-    }
-    if (not has_symbol(*newf, *sym))
-        return emptyset();
-    // TODO - Trig solver
-    return solve_rational(newf, sym, domain);
+
+    return solve_rational(f, sym, domain);
 }
 
 vec_basic linsolve_helper(const DenseMatrix &A, const DenseMatrix &b)

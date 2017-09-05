@@ -77,8 +77,15 @@ public:
     bool stop_;
 };
 
+class LocalStopVisitor : public StopVisitor
+{
+public:
+    bool local_stop_;
+};
+
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 void postorder_traversal_stop(const Basic &b, StopVisitor &v);
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {

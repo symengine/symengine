@@ -688,7 +688,7 @@ bool ConditionSet::is_canonical(const RCP<const Basic> &sym,
                                 const RCP<const Boolean> &condition)
 {
     if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)
-        or not is_a<Symbol>(*sym)) {
+        or not is_a_sub<Symbol>(*sym)) {
         return false;
     } else if (is_a<Contains>(*condition)) {
         return false;
