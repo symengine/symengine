@@ -210,6 +210,84 @@ public:
 
     void bvisit(const Derivative &x)
     {
+        auto expr = apply(x.get_arg());
+        for (const auto &sym : x.get_symbols()) {
+            expr = expr.diff(apply(sym));
+        }
+        return expr;
+    }
+
+    void bvisit(const Subs &x)
+    {
+        auto expr = apply(x.get_arg());
+        for (const auto &sym : x.get_dict()) {
+            expr = expr.subs({{apply(sym.first), apply(sym.second)}});
+        }
+        return expr;
+    }
+
+    RCP<const Basic> apply(const Basic &x)
+    {
+        return apply(x.rcp_from_this());
+    }
+
+    RCP<const Basic> apply(const RCP<const Basic> &x)
+    {
+        auto it = subs_dict_.find(x);
+        if (it != subs_dict_.end()) {
+            result_ = it->second;
+        } else {
+            x->accept(*this);
+        }
+        return result_;
+    }
+};
+
+//! Mappings in the `subs_dict` are applied to the expression tree of `x`
+inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
+                                 const map_basic_basic &subs_dict)
+{
+    XReplaceVisitor s(subs_dict);
+    return s.apply(x);
+}
+
+class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
+{
+public:
+    using XReplaceVisitor::bvisit;
+
+    SubsVisitor(const map_basic_basic &subs_dict_)
+        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
+    {
+    }
+
+    void bvisit(const Pow &x)
+    {
+        RCP<const Basic> base_new = apply(x.get_base());
+        RCP<const Basic> exp_new = apply(x.get_exp());
+        if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
+            and not is_a<Add>(
+                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
+                         .get_exp())) {
+            auto &subs_first
+                = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
+            if (eq(*subs_first.get_base(), *base_new)) {
+                auto newexpo = div(exp_new, subs_first.get_exp());
+                if (is_a_Number(*newexpo) or is_a<Constant>(*newexpo)) {
+                    result_ = pow((*subs_dict_.begin()).second, newexpo);
+                    return;
+                }
+            }
+        }
+        if (base_new == x.get_base() and exp_new == x.get_exp()) {
+            result_ = x.rcp_from_this();
+        } else {
+            result_ = pow(base_new, exp_new);
+        }
+    }
+
+    void bvisit(const Derivative &x)
+    {
         RCP<const Symbol> s;
         map_basic_basic m, n;
         bool subs;
@@ -310,31 +388,7 @@ public:
             result_ = presub->subs(m);
         }
     }
-
-    RCP<const Basic> apply(const Basic &x)
-    {
-        return apply(x.rcp_from_this());
-    }
-
-    RCP<const Basic> apply(const RCP<const Basic> &x)
-    {
-        auto it = subs_dict_.find(x);
-        if (it != subs_dict_.end()) {
-            result_ = it->second;
-        } else {
-            x->accept(*this);
-        }
-        return result_;
-    }
 };
-
-//! Mappings in the `subs_dict` are applied to the expression tree of `x`
-inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
-                                 const map_basic_basic &subs_dict)
-{
-    XReplaceVisitor s(subs_dict);
-    return s.apply(x);
-}
 
 class MSubsVisitor : public BaseVisitor<MSubsVisitor, XReplaceVisitor>
 {
@@ -361,7 +415,7 @@ public:
     }
 };
 
-class SSubsVisitor : public BaseVisitor<SSubsVisitor, XReplaceVisitor>
+class SSubsVisitor : public BaseVisitor<SSubsVisitor, SubsVisitor>
 {
 public:
     using XReplaceVisitor::bvisit;
@@ -408,42 +462,6 @@ inline RCP<const Basic> ssubs(const RCP<const Basic> &x,
     SSubsVisitor s(subs_dict);
     return s.apply(x);
 }
-
-class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
-{
-public:
-    using XReplaceVisitor::bvisit;
-
-    SubsVisitor(const map_basic_basic &subs_dict_)
-        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
-    {
-    }
-
-    void bvisit(const Pow &x)
-    {
-        RCP<const Basic> base_new = apply(x.get_base());
-        RCP<const Basic> exp_new = apply(x.get_exp());
-        if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
-            and not is_a<Add>(
-                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
-                         .get_exp())) {
-            auto &subs_first
-                = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
-            if (eq(*subs_first.get_base(), *base_new)) {
-                auto newexpo = div(exp_new, subs_first.get_exp());
-                if (is_a_Number(*newexpo) or is_a<Constant>(*newexpo)) {
-                    result_ = pow((*subs_dict_.begin()).second, newexpo);
-                    return;
-                }
-            }
-        }
-        if (base_new == x.get_base() and exp_new == x.get_exp()) {
-            result_ = x.rcp_from_this();
-        } else {
-            result_ = pow(base_new, exp_new);
-        }
-    }
-};
 
 inline RCP<const Basic> subs(const RCP<const Basic> &x,
                              const map_basic_basic &subs_dict)
