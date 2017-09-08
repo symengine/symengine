@@ -6,6 +6,10 @@
 
 namespace SymEngine
 {
+RCP<const Basic> xreplace(const RCP<const Basic> &x,
+                          const map_basic_basic &subs_dict);
+RCP<const Basic> subs(const RCP<const Basic> &x,
+                      const map_basic_basic &subs_dict);
 RCP<const Basic> msubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict);
 RCP<const Basic> ssubs(const RCP<const Basic> &x,
@@ -212,18 +216,23 @@ public:
     {
         auto expr = apply(x.get_arg());
         for (const auto &sym : x.get_symbols()) {
-            expr = expr.diff(apply(sym));
+            auto s = apply(sym);
+            if (not is_a<Symbol>(*s)) {
+                throw SymEngineException("expected an object of type Symbol");
+            }
+            expr = expr->diff(rcp_static_cast<const Symbol>(s));
         }
-        return expr;
+        result_ = expr;
     }
 
     void bvisit(const Subs &x)
     {
         auto expr = apply(x.get_arg());
+        map_basic_basic new_subs_dict;
         for (const auto &sym : x.get_dict()) {
-            expr = expr.subs({{apply(sym.first), apply(sym.second)}});
+            insert(new_subs_dict, apply(sym.first), apply(sym.second));
         }
-        return expr;
+        result_ = subs(expr, new_subs_dict);
     }
 
     RCP<const Basic> apply(const Basic &x)
@@ -421,7 +430,7 @@ public:
     using XReplaceVisitor::bvisit;
 
     SSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<SSubsVisitor, XReplaceVisitor>(d)
+        : BaseVisitor<SSubsVisitor, SubsVisitor>(d)
     {
     }
 

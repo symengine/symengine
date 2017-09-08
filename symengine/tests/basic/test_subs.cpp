@@ -180,8 +180,8 @@ TEST_CASE("Mul: subs", "[subs]")
 
 TEST_CASE("Pow: subs", "[subs]")
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> w = symbol("w");
     RCP<const Basic> i2 = integer(2);
@@ -234,6 +234,12 @@ TEST_CASE("Pow: subs", "[subs]")
 
     r2 = r1->xreplace(d);
     REQUIRE(eq(*r1, *r2));
+
+    d.clear();
+    d[x] = y;
+    r1 = function_symbol("f", mul(i2, x))->diff(x);
+    r2 = function_symbol("f", mul(i2, y))->diff(y);
+    REQUIRE(eq(*r1->xreplace(d), *r2));
 }
 
 TEST_CASE("Erf: subs", "[subs]")
