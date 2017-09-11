@@ -54,7 +54,11 @@ public:
         iaddnum(outArg(coeff), _mulnum(multiply, self.get_coef()));
         for (auto &p : self.get_dict()) {
             multiply = _mulnum(_multiply, p.second);
-            p.first->accept(*this);
+            if (deep) {
+                p.first->accept(*this);
+            } else {
+                Add::dict_add_term(d_, multiply, p.first);
+            }
         }
         multiply = _multiply;
     }
