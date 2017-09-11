@@ -1357,7 +1357,6 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     r1 = add(x, mul(i2, add(y, z)));
     r2 = expand(r1, false);
-    std::cout << *r1 << " " << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
 }
 
