@@ -3,7 +3,6 @@
 #include <symengine/mul.h>
 #include <symengine/functions.h>
 #include <symengine/visitor.h>
-#include <symengine/cse.h>
 
 #include <queue>
 

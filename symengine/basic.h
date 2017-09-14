@@ -243,6 +243,12 @@ void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
 
 RCP<const Basic> rewrite_as_exp(const RCP<const Basic> &x);
 
+// Common subexpression elimination of symbolic expressions
+// Return a vector of replacement pairs and a vector of reduced exprs
+typedef std::vector<std::pair<RCP<const Basic>, RCP<const Basic>>> vec_pair;
+void cse(vec_pair &replacements, vec_basic &reduced_exprs,
+         const vec_basic &exprs);
+
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any
    Basic
     type to be printed.
