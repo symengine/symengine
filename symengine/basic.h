@@ -233,7 +233,7 @@ bool is_a_sub(const Basic &b);
 bool is_same_type(const Basic &a, const Basic &b);
 
 //! Expands `self`
-RCP<const Basic> expand(const RCP<const Basic> &self);
+RCP<const Basic> expand(const RCP<const Basic> &self, bool deep = true);
 void as_numer_denom(const RCP<const Basic> &x,
                     const Ptr<RCP<const Basic>> &numer,
                     const Ptr<RCP<const Basic>> &denom);

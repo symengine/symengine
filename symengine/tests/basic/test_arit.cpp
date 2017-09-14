@@ -1349,6 +1349,15 @@ TEST_CASE("Expand2: arit", "[arit]")
         sub(pow(x, i3), mul(pow(y, i3), I)),
         sub(mul(mul(i3, I), mul(pow(x, i2), y)), mul(i3, mul(pow(y, i2), x))));
     REQUIRE(eq(*r1, *r2));
+
+    // Test that deep=False doesn't expand expression two levels deep.
+    r1 = expand(mul(i2, add(x, mul(i2, add(y, z)))), false);
+    r2 = add(mul(i2, x), mul(i4, add(y, z)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = add(x, mul(i2, add(y, z)));
+    r2 = expand(r1, false);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Expand3: arit", "[arit]")
