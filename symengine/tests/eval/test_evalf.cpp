@@ -1,5 +1,4 @@
 #include "catch.hpp"
-#include <cmath>
 #include <iostream>
 
 #include <symengine/basic.h>
@@ -8,18 +7,10 @@
 #include <symengine/integer.h>
 #include <symengine/rational.h>
 #include <symengine/complex.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/functions.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
-#include <symengine/eval_mpfr.h>
-#include <symengine/eval_mpc.h>
 #include <symengine/eval.h>
-#include <symengine/symengine_rcp.h>
-#include <symengine/real_double.h>
-#include <symengine/complex_double.h>
-#include <symengine/symengine_casts.h>
 #ifdef HAVE_SYMENGINE_MPFR
 #include <symengine/real_mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR

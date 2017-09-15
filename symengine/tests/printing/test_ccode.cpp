@@ -3,7 +3,6 @@
 #include <symengine/logic.h>
 #include <symengine/add.h>
 #include <symengine/codegen.h>
-#include <symengine/sets.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;

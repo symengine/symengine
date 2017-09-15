@@ -1,10 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/sets.h>
-#include <symengine/logic.h>
-#include <symengine/infinity.h>
 #include <symengine/real_double.h>
-#include <symengine/symengine_exception.h>
 #include <symengine/add.h>
 
 using SymEngine::Basic;

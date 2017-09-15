@@ -1,9 +1,7 @@
 #include <symengine/visitor.h>
 #include <symengine/parser.h>
 #include <stack>
-#include <symengine/symengine_exception.h>
 #include <cctype>
-#include <cerrno>
 
 namespace SymEngine
 {

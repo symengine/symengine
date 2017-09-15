@@ -3,7 +3,6 @@
 #include <symengine/logic.h>
 #include <symengine/add.h>
 #include <symengine/real_double.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::Basic;

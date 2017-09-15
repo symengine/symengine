@@ -5,7 +5,6 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/series.h>
-#include <symengine/symengine_casts.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;

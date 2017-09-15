@@ -1,9 +1,4 @@
 #include <symengine/fields.h>
-#include <symengine/add.h>
-#include <symengine/constants.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/symengine_exception.h>
 
 namespace SymEngine
 {

@@ -5,7 +5,6 @@
 #include <symengine/pow.h>
 #include <symengine/rational.h>
 #include <symengine/polys/basic_conversions.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::symbol;

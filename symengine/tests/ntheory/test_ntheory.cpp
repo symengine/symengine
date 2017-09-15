@@ -4,7 +4,6 @@
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
 #include <symengine/real_double.h>
 
 using SymEngine::Basic;

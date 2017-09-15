@@ -1,5 +1,4 @@
 #include <symengine/constants.h>
-#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {

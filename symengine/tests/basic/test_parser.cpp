@@ -4,7 +4,6 @@
 #include <symengine/eval_double.h>
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;

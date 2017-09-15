@@ -1,4 +1,3 @@
-#include <limits>
 #include <symengine/printer.h>
 
 namespace SymEngine

@@ -1,7 +1,6 @@
 #include "catch.hpp"
 
 #include <symengine/rational.h>
-#include <symengine/symengine_exception.h>
 #include <symengine/real_double.h>
 
 using SymEngine::print_stack_on_segfault;

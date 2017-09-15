@@ -1,9 +1,6 @@
 #include <symengine/complex.h>
 #include <symengine/complex_double.h>
-#include <symengine/constants.h>
-#include <symengine/infinity.h>
 #include <symengine/functions.h>
-#include <symengine/symengine_exception.h>
 #include <symengine/complex_mpc.h>
 
 using SymEngine::ComplexMPC;

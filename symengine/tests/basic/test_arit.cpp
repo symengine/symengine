@@ -4,8 +4,6 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
-#include <symengine/symengine_exception.h>
-#include <symengine/symengine_casts.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;

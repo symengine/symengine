@@ -1,8 +1,6 @@
 #include <symengine/complex.h>
 #include <symengine/add.h>
-#include <symengine/infinity.h>
 #include <symengine/pow.h>
-#include <symengine/nan.h>
 
 namespace SymEngine
 {

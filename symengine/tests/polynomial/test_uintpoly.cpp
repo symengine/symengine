@@ -4,8 +4,6 @@
 #include <symengine/mul.h>
 #include <symengine/add.h>
 #include <symengine/polys/uintpoly.h>
-#include <symengine/pow.h>
-#include <symengine/symengine_exception.h>
 #include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uintpoly_flint.h>
 

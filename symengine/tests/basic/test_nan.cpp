@@ -2,7 +2,6 @@
 #include <iostream>
 #include <symengine/basic.h>
 #include <symengine/nan.h>
-#include <symengine/symengine_rcp.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
 #include <symengine/pow.h>

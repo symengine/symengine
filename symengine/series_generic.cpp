@@ -1,7 +1,4 @@
-#include <exception>
-#include <iterator>
 #include <symengine/series_visitor.h>
-#include <symengine/symengine_exception.h>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
