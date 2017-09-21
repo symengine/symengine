@@ -16,7 +16,7 @@ namespace SymEngine
    of an Add is a numeric coefficient `coef_` and a dictionary `dict_` of
    key-value pairs.
 
-        Add(coef_, { key1 : value1, key2 : value2, ... })
+        Add(coef_, {{key1, value1}, {key2, value2}, ... })
 
    This represents the following expression,
 
@@ -29,15 +29,15 @@ namespace SymEngine
 
    For example, the following are valid representations
 
-        Add(1, {x : 2, y : 5})
-        Add(0, {x : 1, y : 4, z : 3})
+        Add(1, {{x, 2}, {y, 5}})
+        Add(0, {{x, 1}, {y, 4}, {z, 3}})
 
    Following are invalid representations. (valid equivalent is shown next to
    them)
 
-        Add(1, {x : 1, 2*y : 3})   -> Add(1, {x : 1, y: 6})
-        Add(0, {x : 2})            -> Mul(2, {x : 1})
-        Add(1, {x : 2, 4 : 6})     -> Add(25, {x : 2})
+        Add(1, {{x, 1}, {2*y, 3})   -> Add(1, {{x, 1}, {y, 6}})
+        Add(0, {{x, 2}})             -> Mul(2, {{x, 1}})
+        Add(1, {{x, 2}, {4, 6}})    -> Add(25, {{x, 2}})
 */
 class Add : public Basic
 {
@@ -90,15 +90,15 @@ public:
         Returns the arguments of the Add.
         For an Add of the form,
 
-            Add(coef_, { key1 : value1, key2 : value2, ... })
+            Add(coef_, {{key1, value1}, {key2, value2}, ... })
 
         if coef_ is non-zero it returns,
 
-            [coef_, key1*value1, key2*value2, ... ]
+            {coef_, key1*value1, key2*value2, ... }
 
         otherwise it returns,
 
-            [key1*value1, key2*value2, ... ]
+            {key1*value1, key2*value2, ... }
 
         \return list of arguments
     */
