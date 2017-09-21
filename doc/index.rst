@@ -11,19 +11,19 @@ Contents:
 .. toctree::
    :maxdepth: 2
  
-   src/basic  
-   src/dict
-   src/functions
-   src/number
-   src/integer
-   src/rational
-   src/add
-   src/mul
-   src/ntheory
-   src/pow
-   src/symbol
-   src/monomials
-   src/rings  
+   symengine/basic
+   symengine/dict
+   symengine/functions
+   symengine/number
+   symengine/integer
+   symengine/rational
+   symengine/add
+   symengine/mul
+   symengine/ntheory
+   symengine/pow
+   symengine/symbol
+   symengine/monomials
+   symengine/rings
 
 
 Indices and tables
