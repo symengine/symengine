@@ -80,9 +80,6 @@ RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b);
 //! Negation
 RCP<const Basic> neg(const RCP<const Basic> &a);
 
-//! Expand `self`
-RCP<const Basic> mul_expand(const RCP<const Mul> &self);
-
 } // SymEngine
 
 #endif
