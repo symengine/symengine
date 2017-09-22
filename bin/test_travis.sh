@@ -81,8 +81,8 @@ fi
 if [[ "${WITH_LLVM}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_LLVM=${WITH_LLVM} -DLLVM_DIR=${LLVM_DIR}"
 fi
-if [[ "${BUILD_DOCS}" != "" ]]; then
-    cmake_line="$cmake_line -DBUILD_DOCS=${BUILD_DOCS}"
+if [[ "${BUILD_DOXYGEN}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
 
 if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then

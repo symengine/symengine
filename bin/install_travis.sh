@@ -105,7 +105,7 @@ if [[ "${WITH_ECM}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs ecm=7.0.4"
 fi
 
-if [[ "${BUILD_DOCS}" == "yes" ]]; then
+if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs doxygen=1.8.13"
 fi
 
