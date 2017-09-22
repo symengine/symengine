@@ -18,6 +18,9 @@ addons:
     packages:
     - binutils-dev
     - g++-4.7
+branches:
+  except:
+  - gh-pages
 
 env:
   global:
@@ -38,7 +41,7 @@ env:
   # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_PRIMESIEVE="yes" WITH_MPC="yes"
   # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" BUILD_DOCS="yes"
   # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
   # Debug build (with BFD and INTEGER_CLASS from boostmp)
@@ -157,3 +160,13 @@ script:
   - bin/trigger_feedstock.sh
 notifications:
   email: false
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: $SOURCE_DIR/build/html
+  github_token:
+    secure: "Vbokv8awN/6e+qHunZUPKQtBuyzUFPDhb6ysHJzYNpGBB5RgC+IwZmXTXp5CHbHsXQ/J5/gBrFA3cdM0YWbJgGaaMugxhVPJP7+h8t2WiX3V3VorsIzPdcQOk/G9/VH+S7VOyp/TdXfmbgANW2NcRWPmaDcNZ7OwfQajxe8pP+w="
+  on:
+    branch: master
+    condition: $BUILD_DOCS = yes
