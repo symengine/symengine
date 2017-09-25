@@ -1,6 +1,6 @@
 /**
  * \file add.h
- * Class Add
+ * Header containing definition of Add and related functions add, sub
  *
  **/
 
@@ -11,7 +11,7 @@
 
 namespace SymEngine
 {
-/*!
+/*! \class Add
    Add class keeps an addition of symbolic expressions. Internal representation
    of an Add is a numeric coefficient `coef_` and a dictionary `dict_` of
    key-value pairs.
@@ -125,7 +125,7 @@ public:
         x + x will return a Mul (2*x)
 
     \return `a + b`
-    \see Add
+    \see Add, Mul
 */
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
 /*!

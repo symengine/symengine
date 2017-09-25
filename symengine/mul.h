@@ -1,6 +1,6 @@
 /**
- *  \file mul.h
- *  Multiplication class
+ * \file mul.h
+ * Header containing definition of Mul and related functions mul, div, neg
  *
  **/
 #ifndef SYMENGINE_MUL_H
@@ -11,6 +11,65 @@
 namespace SymEngine
 {
 
+/*! \class Mul
+   Mul class keeps a product of symbolic expressions. Internal representation
+   of an Mul is a numeric coefficient `coef_` and a dictionary `dict_` of
+   key-value pairs.
+
+        Mul(coef_, {{key1, value1}, {key2, value2}, ... })
+
+   This represents the following expression,
+
+        coef_ * key1^value1 * key2^value2 * ...
+
+   `coef_` is an objecct of type Number, i.e. a numeric coefficient like
+   Integer,
+   RealDouble, Complex.
+
+   For example, the following are valid representations
+
+        Mul(2, {{x, 2}, {y, 5}})
+        Mul(3, {{x, 1}, {y, 4}, {z, 3}})
+
+   Following are invalid representations. (valid equivalent is shown next to
+   them)
+
+    * When key is a numeric and value is an integers,
+
+       Mul(2, {{3, 2}, {x, 2}})     -> Mul(18, {{x, 2}})
+       Mul(2, {{I, 3}, {x, 2}})     -> Mul(-2*I, {{x, 2}})
+
+    * When key is an integer and value is a Rational not in the range (0, 1)
+
+       Mul(2, {{3, 3/2}, {x, 2}})   -> Mul(6, {{3, 1/2}, {x, 2}})
+       Mul(2, {{3, -1/2}, {x, 2}})  -> Mul(2/3, {{3, 1/2}, {x, 2}})
+
+    * When the value is zero
+
+       Mul(3, {{x, 0}, {y, 2}})     -> Mul(3, {{y, 2}})
+
+    * When key and value are numeric and one of them is inexact
+
+       Mul(2, {{3, 0.5}, {x, 2}})   -> Mul(3.464..., {x, 2}})
+
+    * When `coef_` is one and the dictionary is of size 1
+
+       Mul(1, {{x, 2}})             -> Pow(x, 2)
+
+    * When `coef_` is zero
+
+       Mul(0, {{x, 2}})             -> Integer(0)
+       Mul(0.0, {{x, 2}})           -> RealDouble(0.0)
+
+    * When key is 1
+
+       Mul(2, {{1, x}, {x, 2}})     -> Mul(2, {{x, 2}})
+
+    * When value is zero
+
+       Mul(2, {{1, x}, {x, 2}})     -> Mul(2, {{x, 2}})
+
+*/
 class Mul : public Basic
 {
 private:

@@ -31,6 +31,7 @@
 
 #include <symengine/dict.h>
 
+//! Main namespace for SymEngine package
 namespace SymEngine
 {
 
@@ -282,9 +283,9 @@ const char *get_version();
 
 } // SymEngine
 
-//! Specialise `std::hash` for Basic.
 namespace std
 {
+//! Specialise `std::hash` for Basic.
 template <>
 struct hash<SymEngine::Basic>;
 }

@@ -88,6 +88,8 @@ typedef struct CRCPBasic basic_struct;
 typedef struct CRCPBasic_C basic_struct;
 #endif
 
+//! Basic is a struct to store the symbolic expressions
+//! It is declared as an array of size 1 to force reference semantics
 typedef basic_struct basic[1];
 
 //! Initialize a new basic instance. 's' is allocated on stack using the
