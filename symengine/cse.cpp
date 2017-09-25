@@ -469,6 +469,7 @@ public:
             subs[orig_expr] = sym;
             replacements.push_back(
                 std::pair<RCP<const Basic>, RCP<const Basic>>(sym, new_expr));
+            return sym;
         }
         return new_expr;
     }
