@@ -53,6 +53,7 @@ typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_uint;
+typedef std::vector<std::pair<RCP<const Basic>, RCP<const Basic>>> vec_pair;
 
 template <typename T>
 struct vec_hash {
@@ -309,6 +310,7 @@ std::ostream &operator<<(std::ostream &out,
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
+std::ostream &operator<<(std::ostream &out, const SymEngine::vec_pair &d);
 
 } // SymEngine
 

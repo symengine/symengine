@@ -359,7 +359,6 @@ public:
             for (const auto &p : x.get_args()) {
                 p->accept(*this);
             }
-            adds.insert(x.rcp_from_this());
             if (x.get_coef()->is_negative()) {
                 auto neg_expr = neg(x.rcp_from_this());
                 if (neg_expr->get_args().size() > 0) {
