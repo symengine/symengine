@@ -143,20 +143,12 @@ public:
             indices.push_back(f);
         }
         std::vector<unsigned> intersect_result;
-        bool first = true;
         for (const auto &arg : argset) {
-            if (first && indices.size() == 0) {
-                for (auto &a : arg_to_funcset[arg]) {
-                    indices.push_back(a);
-                }
-            } else {
-                std::set_intersection(indices.begin(), indices.end(),
-                                      arg_to_funcset[arg].begin(),
-                                      arg_to_funcset[arg].end(),
-                                      std::back_inserter(intersect_result));
-                intersect_result.swap(indices);
-            }
-            first = false;
+            std::set_intersection(indices.begin(), indices.end(),
+                                  arg_to_funcset[arg].begin(),
+                                  arg_to_funcset[arg].end(),
+                                  std::back_inserter(intersect_result));
+            intersect_result.swap(indices);
         }
         return indices;
     }
@@ -478,11 +470,6 @@ public:
     void bvisit(const FunctionSymbol &x)
     {
         auto fargs = x.get_args();
-        if (fargs.size() == 1
-            && (x.get_name() == "add" || x.get_name() == "mul")) {
-            result_ = fargs[0];
-            return;
-        }
         vec_basic newargs;
         for (const auto &a : fargs) {
             newargs.push_back(apply(a));
