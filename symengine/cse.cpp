@@ -39,7 +39,7 @@ public:
     }
 
     template <typename Container>
-    vec_basic get_args_in_value_order(Container argset)
+    vec_basic get_args_in_value_order(Container &argset)
     {
         vec_basic v;
         for (unsigned i : argset) {
@@ -50,14 +50,16 @@ public:
 
     unsigned get_or_add_value_number(RCP<const Basic> value)
     {
-        unsigned nvalues = value_numbers.size();
-        unsigned value_number
-            = value_numbers.insert(std::make_pair(value, nvalues)).second;
-        if (value_number == nvalues) {
+        unsigned nvalues = numeric_cast<unsigned>(value_numbers.size());
+        auto ret = value_numbers.insert(std::make_pair(value, nvalues));
+        bool inserted = ret.second;
+        if (inserted) {
             value_number_to_value.push_back(value);
             arg_to_funcset.push_back(std::set<unsigned>());
+            return nvalues;
+        } else {
+            return ret.first->second;
         }
-        return value_number;
     }
 
     void stop_arg_tracking(unsigned func_i)
@@ -68,15 +70,12 @@ public:
     }
 
     /*
-        Return a dict whose keys are function numbers. The entries of the dict
-       are
-        the number of arguments said function has in common with `argset`.
-       Entries
-        have at least `threshold` items in common.
+       Return a dict whose keys are function numbers. The entries of the dict
+       are the number of arguments said function has in common with `argset`.
+       Entries have at least 2 items in common.
     */
     std::map<unsigned, unsigned>
-    get_common_arg_candidates(std::set<unsigned> argset, unsigned min_func_i,
-                              unsigned threshold = 2)
+    get_common_arg_candidates(std::set<unsigned> &argset, unsigned min_func_i)
     {
         std::map<unsigned, unsigned> count_map;
         std::vector<std::set<unsigned>> funcsets;
@@ -89,7 +88,7 @@ public:
                       return a.size() < b.size();
                   });
 
-        for (unsigned i = 0; i < funcsets.size() - threshold + 1; i++) {
+        for (unsigned i = 0; i < funcsets.size(); i++) {
             auto &funcset = funcsets[i];
             for (unsigned func_i : funcset) {
                 if (func_i >= min_func_i) {
@@ -97,41 +96,35 @@ public:
                 }
             }
         }
-        for (unsigned i = 0; i < funcsets.size() - threshold + 1; i++) {
-            auto &funcset = funcsets[i];
-            // When looking at the tail end of the funcsets list, items below
-            // this threshold in the count_map don't have to be considered
-            // because they can't possibly be in the output.
-            unsigned count_map_threshold = i + 1;
 
-            // We pick the smaller of the two containers to iterate over to
-            // reduce the number of items we have to look at.
+        auto &largest_funcset = funcsets[funcsets.size() - 1];
 
-            if (funcset.size() < count_map.size()) {
-                for (unsigned func_i : funcset) {
-                    if (count_map[func_i] < count_map_threshold) {
-                        continue;
-                    }
-                    if (count_map.find(func_i) != count_map.end()) {
-                        count_map[func_i] += 1;
-                    }
+        // We pick the smaller of the two containers to iterate over to
+        // reduce the number of items we have to look at.
+        /*
+        if (largest_funcset.size() < count_map.size()) {
+            for (unsigned func_i : largest_funcset) {
+                if (count_map[func_i] < 1) {
+                    continue;
                 }
-            } else {
-                for (auto &count_map_pair : count_map) {
-                    unsigned func_i = count_map_pair.second;
-                    if (count_map[func_i] < count_map_threshold) {
-                        continue;
-                    }
-                    if (funcset.find(func_i) != funcset.end()) {
-                        count_map[func_i] += 1;
-                    }
+                if (count_map.find(func_i) != count_map.end()) {
+                    count_map[func_i] += 1;
                 }
             }
-        }
-
+        } else {
+            for (auto &count_map_pair : count_map) {
+                unsigned func_i = count_map_pair.first;
+                if (count_map[func_i] < 1) {
+                    continue;
+                }
+                if (largest_funcset.find(func_i) != largest_funcset.end()) {
+                    count_map[func_i] += 1;
+                }
+            }
+        }*/
         auto iter = count_map.begin();
         for (; iter != count_map.end();) {
-            if (iter->second >= threshold) {
+            if (iter->second >= 2) {
                 ++iter;
             } else {
                 count_map.erase(iter++);
@@ -145,7 +138,6 @@ public:
     get_subset_candidates(const Container1 &argset,
                           const Container2 &restrict_to_funcset)
     {
-
         std::vector<unsigned> indices;
         for (auto f : restrict_to_funcset) {
             indices.push_back(f);
@@ -223,9 +215,7 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
               });
     auto arg_tracker = FuncArgTracker(funcs);
 
-    std::vector<unsigned> changed;
-    std::set<unsigned> changed_set;
-
+    std::set<unsigned> changed;
     std::map<unsigned, unsigned> common_arg_candidates_counts;
 
     for (unsigned i = 0; i < funcs.size(); i++) {
@@ -280,7 +270,8 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                 com_func_number = arg_tracker.get_or_add_value_number(com_func);
                 add_to_sorted_vec(diff_i, com_func_number);
                 arg_tracker.update_func_argset(i, diff_i);
-                changed.push_back(i);
+                changed.insert(i);
+
             } else {
                 // Treat the whole expression as a CSE.
                 //
@@ -297,18 +288,18 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                 = set_diff(arg_tracker.func_to_argset[j], com_args);
             add_to_sorted_vec(diff_j, com_func_number);
             arg_tracker.update_func_argset(j, diff_j);
-            changed.push_back(j);
+            changed.insert(j);
 
             for (unsigned k : arg_tracker.get_subset_candidates(
                      com_args, common_arg_candidates)) {
                 std::vector<unsigned> diff_k
-                    = set_diff(arg_tracker.func_to_argset[j], com_args);
+                    = set_diff(arg_tracker.func_to_argset[k], com_args);
                 add_to_sorted_vec(diff_k, com_func_number);
                 arg_tracker.update_func_argset(k, diff_k);
-                changed.push_back(k);
+                changed.insert(k);
             }
         }
-        if (std::find(changed.begin(), changed.end(), i) != changed.begin()) {
+        if (std::find(changed.begin(), changed.end(), i) != changed.end()) {
             opt_subs[funcs[i]] = function_symbol(
                 func_class, arg_tracker.get_args_in_value_order(
                                 arg_tracker.func_to_argset[i]));
@@ -452,7 +443,8 @@ public:
     virtual RCP<const Basic> apply(const RCP<const Basic> &orig_expr)
     {
         RCP<const Basic> expr = orig_expr;
-        if (expr->get_args().size() == 0)
+        auto args = expr->get_args();
+        if (args.size() == 0)
             return expr;
         auto iter = subs.find(expr);
         if (iter != subs.end()) {
@@ -486,6 +478,11 @@ public:
     void bvisit(const FunctionSymbol &x)
     {
         auto fargs = x.get_args();
+        if (fargs.size() == 1
+            && (x.get_name() == "add" || x.get_name() == "mul")) {
+            result_ = fargs[0];
+            return;
+        }
         vec_basic newargs;
         for (const auto &a : fargs) {
             newargs.push_back(apply(a));
