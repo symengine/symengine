@@ -458,7 +458,7 @@ public:
     }
     RCP<const Basic> next_symbol()
     {
-        RCP<const Basic> sym = symbol("x" + std::to_string(next_symbol_index));
+        RCP<const Basic> sym = symbol("x" + to_string(next_symbol_index));
         next_symbol_index++;
         if (excluded_symbols.find(sym) == excluded_symbols.end()) {
             return sym;
