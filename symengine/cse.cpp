@@ -97,11 +97,11 @@ public:
             }
         }
 
-        auto &largest_funcset = funcsets[funcsets.size() - 1];
+        /*auto &largest_funcset = funcsets[funcsets.size() - 1];
 
         // We pick the smaller of the two containers to iterate over to
         // reduce the number of items we have to look at.
-        /*
+
         if (largest_funcset.size() < count_map.size()) {
             for (unsigned func_i : largest_funcset) {
                 if (count_map[func_i] < 1) {
