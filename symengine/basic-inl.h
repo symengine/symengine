@@ -103,6 +103,15 @@ hash_t vec_hash<T>::operator()(const T &v) const
     return h;
 }
 
+//! workaround for MinGW bug
+template <typename T>
+std::string to_string(const T &value)
+{
+    std::ostringstream ss;
+    ss << value;
+    return ss.str();
+}
+
 } // SymEngine
 
 // std namespace functions

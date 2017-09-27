@@ -95,6 +95,11 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d)
     return SymEngine::print_map(out, d);
 }
 
+std::ostream &operator<<(std::ostream &out, const SymEngine::vec_pair &d)
+{
+    return SymEngine::print_map_rcp(out, d);
+}
+
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:

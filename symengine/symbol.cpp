@@ -4,15 +4,6 @@
 namespace SymEngine
 {
 
-//! workaround for MinGW bug
-template <typename T>
-std::string to_string(const T &value)
-{
-    std::ostringstream ss;
-    ss << value;
-    return ss.str();
-}
-
 Symbol::Symbol(const std::string &name) : name_{name}
 {
     SYMENGINE_ASSIGN_TYPEID()

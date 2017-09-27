@@ -111,11 +111,6 @@ set_basic free_symbols(const Basic &b)
     return visitor.apply(b);
 }
 
-RCP<const Basic> TransformVisitor::apply(const Basic &x)
-{
-    return apply(x.rcp_from_this());
-}
-
 RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)
 {
     x->accept(*this);

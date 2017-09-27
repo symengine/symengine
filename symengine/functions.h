@@ -618,7 +618,6 @@ class FunctionSymbol : public MultiArgFunction
 {
 protected:
     std::string name_; //! The `f` in `f(x+y, z)`
-    vec_basic arg_;    //! The `x+y`, `z` in `f(x+y, z)`
 
 public:
     IMPLEMENT_TYPEID(FUNCTIONSYMBOL)
