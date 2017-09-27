@@ -987,6 +987,36 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = pow(mul(sqrt(mul(y, x)), x), i2);
     r2 = mul(pow(x, i3), y);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = exp(mul(I, x));
+    r2 = pow(E, mul(I, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = exp(mul(I, pi));
+    r2 = pow(E, mul(I, pi));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = exp(mul(I, pi));
+    REQUIRE(eq(*r1, *minus_one));
+
+    r1 = exp(mul(mul(I, minus_one), pi));
+    REQUIRE(eq(*r1, *minus_one));
+
+    r1 = exp(div(mul(I, pi), integer(2)));
+    REQUIRE(eq(*r1, *I));
+
+    r1 = exp(mul(div(mul(I, pi), integer(2)), minus_one));
+    REQUIRE(eq(*r1, *mul(I, minus_one)));
+
+    r1 = div(exp(mul(mul(I, pi), x)), exp(x));
+    REQUIRE(r1->__str__() == "exp(-x + I*x*pi)");
+
+    r1 = exp(add(div(mul(I, pi), integer(2)), x));
+    r2 = mul(I, exp(x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = exp(add(div(mul(I, pi), integer(10)), x));
+    REQUIRE(r1->__str__() == "exp(x)*(I*sin((1/10)*pi) + cos((1/10)*pi))");
 }
 
 TEST_CASE("Log: arit", "[arit]")
