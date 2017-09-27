@@ -204,8 +204,10 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
     }
 
+    // r = add(add(x, y), pow(add(x, y), integer(2)));
+
     LLVMDoubleVisitor v;
-    v.init({x, y, z}, *r);
+    v.init({x, y, z}, *r, true);
 
     LambdaRealDoubleVisitor v2;
     v2.init({x, y, z}, *r);

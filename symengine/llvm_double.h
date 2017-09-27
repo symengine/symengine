@@ -24,6 +24,8 @@ class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
 protected:
     vec_basic symbols;
     std::vector<llvm::Value *> symbol_ptrs;
+    std::map<RCP<const Basic>, llvm::Value *, RCPBasicKeyLess>
+        replacement_symbol_ptrs;
     llvm::Value *result_;
     intptr_t func;
 
@@ -33,8 +35,9 @@ protected:
 
 public:
     llvm::Value *apply(const Basic &b);
-    void init(const vec_basic &x, const Basic &b);
-    void init(const vec_basic &inputs, const vec_basic &outputs);
+    void init(const vec_basic &x, const Basic &b, bool cse = false);
+    void init(const vec_basic &inputs, const vec_basic &outputs,
+              bool cse = false);
 
     double call(const std::vector<double> &vec);
     void call(double *outs, const double *inps);
