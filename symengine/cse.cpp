@@ -23,13 +23,13 @@ public:
     std::vector<std::set<unsigned>> func_to_argset;
 
 public:
-    FuncArgTracker(const vec_basic &funcs)
+    FuncArgTracker(
+        const std::vector<std::pair<RCP<const Basic>, vec_basic>> &funcs)
     {
         arg_to_funcset.resize(funcs.size());
         for (unsigned func_i = 0; func_i < funcs.size(); func_i++) {
-            const auto &func = funcs[func_i];
             std::set<unsigned> func_argset;
-            for (auto &func_arg : func->get_args()) {
+            for (auto &func_arg : funcs[func_i].second) {
                 unsigned arg_number = get_or_add_value_number(func_arg);
                 func_argset.insert(arg_number);
                 arg_to_funcset[arg_number].insert(func_i);
@@ -200,27 +200,22 @@ void add_to_sorted_vec(std::vector<unsigned> &vec, unsigned number)
 void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                        umap_basic_basic &opt_subs)
 {
-    std::vector<std::pair<RCP<const Basic>, unsigned>> funcs2;
+    std::vector<std::pair<RCP<const Basic>, vec_basic>> funcs2;
     for (auto &b : funcs_) {
-        funcs2.push_back(std::make_pair(b, b->get_args().size()));
+        funcs2.push_back(std::make_pair(b, b->get_args()));
     }
     std::sort(funcs2.begin(), funcs2.end(),
-              [](const std::pair<RCP<const Basic>, unsigned> &a,
-                 const std::pair<RCP<const Basic>, unsigned> &b) {
-                  return a.second < b.second;
+              [](const std::pair<RCP<const Basic>, vec_basic> &a,
+                 const std::pair<RCP<const Basic>, vec_basic> &b) {
+                  return a.second.size() < b.second.size();
               });
 
-    vec_basic funcs;
-    for (auto &b : funcs2) {
-        funcs.push_back(b.first);
-    }
-
-    auto arg_tracker = FuncArgTracker(funcs);
+    auto arg_tracker = FuncArgTracker(funcs2);
 
     std::set<unsigned> changed;
     std::map<unsigned, unsigned> common_arg_candidates_counts;
 
-    for (unsigned i = 0; i < funcs.size(); i++) {
+    for (unsigned i = 0; i < funcs2.size(); i++) {
         common_arg_candidates_counts = arg_tracker.get_common_arg_candidates(
             arg_tracker.func_to_argset[i], i + 1);
 
@@ -283,7 +278,8 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                 // do not compare equal to the evaluated equivalent. So
                 // tree_cse() won't mark funcs[i] as a CSE if we use an
                 // unevaluated version.
-                com_func_number = arg_tracker.get_or_add_value_number(funcs[i]);
+                com_func_number
+                    = arg_tracker.get_or_add_value_number(funcs2[i].first);
             }
 
             std::vector<unsigned> diff_j
@@ -302,7 +298,7 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
             }
         }
         if (std::find(changed.begin(), changed.end(), i) != changed.end()) {
-            opt_subs[funcs[i]] = function_symbol(
+            opt_subs[funcs2[i].first] = function_symbol(
                 func_class, arg_tracker.get_args_in_value_order(
                                 arg_tracker.func_to_argset[i]));
         }
