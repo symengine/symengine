@@ -200,11 +200,21 @@ void add_to_sorted_vec(std::vector<unsigned> &vec, unsigned number)
 void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                        umap_basic_basic &opt_subs)
 {
-    vec_basic funcs = funcs_;
-    std::sort(funcs.begin(), funcs.end(),
-              [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
-                  return a->get_args().size() < b->get_args().size();
+    std::vector<std::pair<RCP<const Basic>, unsigned>> funcs2;
+    for (auto &b : funcs_) {
+        funcs2.push_back(std::make_pair(b, b->get_args().size()));
+    }
+    std::sort(funcs2.begin(), funcs2.end(),
+              [](const std::pair<RCP<const Basic>, unsigned> &a,
+                 const std::pair<RCP<const Basic>, unsigned> &b) {
+                  return a.second < b.second;
               });
+
+    vec_basic funcs;
+    for (auto &b : funcs2) {
+        funcs.push_back(b.first);
+    }
+
     auto arg_tracker = FuncArgTracker(funcs);
 
     std::set<unsigned> changed;
