@@ -331,7 +331,11 @@ vec_basic Add::get_args() const
         args.reserve(dict_.size());
     }
     for (const auto &p : dict_) {
-        args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+        if (eq(*p.second, *one)) {
+            args.push_back(p.first);
+        } else {
+            args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+        }
     }
     return args;
 }

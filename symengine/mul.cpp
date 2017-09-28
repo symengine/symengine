@@ -508,7 +508,11 @@ vec_basic Mul::get_args() const
         args.reserve(dict_.size());
     }
     for (const auto &p : dict_) {
-        args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
+        if (eq(*p.second, *one)) {
+            args.push_back(p.first);
+        } else {
+            args.push_back(make_rcp<const Pow>(p.first, p.second));
+        }
     }
     return args;
 }
