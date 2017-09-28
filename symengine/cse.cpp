@@ -367,7 +367,7 @@ public:
             }
             if (x.get_coef()->is_negative()) {
                 auto neg_expr = neg(x.rcp_from_this());
-                if (neg_expr->get_args().size() > 0) {
+                if (not is_a<Symbol>(*neg_expr)) {
                     opt_subs[expr]
                         = function_symbol("mul", {integer(-1), neg_expr});
                     seen_subexp.insert(neg_expr);
@@ -440,9 +440,6 @@ public:
     virtual RCP<const Basic> apply(const RCP<const Basic> &orig_expr)
     {
         RCP<const Basic> expr = orig_expr;
-        auto args = expr->get_args();
-        if (args.size() == 0)
-            return expr;
         auto iter = subs.find(expr);
         if (iter != subs.end()) {
             return iter->second;
@@ -474,7 +471,7 @@ public:
     };
     void bvisit(const FunctionSymbol &x)
     {
-        auto fargs = x.get_args();
+        auto &fargs = x.get_vec();
         vec_basic newargs;
         for (const auto &a : fargs) {
             newargs.push_back(apply(a));
