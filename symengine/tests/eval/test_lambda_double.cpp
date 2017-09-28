@@ -188,7 +188,7 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 {
     RCP<const Basic> x, y, z, r;
-    double d, d2;
+    double d, d2, d3;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
@@ -206,11 +206,14 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 
     // r = add(add(x, y), pow(add(x, y), integer(2)));
 
-    LLVMDoubleVisitor v;
-    v.init({x, y, z}, *r, true);
+    LambdaRealDoubleVisitor v;
+    v.init({x, y, z}, *r);
 
-    LambdaRealDoubleVisitor v2;
+    LLVMDoubleVisitor v2;
     v2.init({x, y, z}, *r);
+
+    LLVMDoubleVisitor v3;
+    v3.init({x, y, z}, *r, true);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {
@@ -229,7 +232,18 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
                      .count()
               << "us" << std::endl;
-    std::cout << d << " " << d2 << std::endl;
+
+    t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 500; i++) {
+        d3 = v3.call({0.4, 2.0, 3.0});
+    }
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    std::cout << d << " " << d2 << " " << d3 << std::endl;
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
+    REQUIRE(::fabs((d - d3) / d) < 1e-12);
 }
 #endif

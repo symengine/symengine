@@ -177,12 +177,12 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
             // Store the replacement symbol values in a dictionary
             replacement_symbol_ptrs[rep.first] = apply(*(rep.second));
         }
-        // Generate Ir for all the reduced exprs and save references
+        // Generate IR for all the reduced exprs and save references
         for (unsigned i = 0; i < outputs.size(); i++) {
             output_vals.push_back(apply(*reduced_exprs[i]));
         }
     } else {
-        // Generate Ir for all the output exprs and save references
+        // Generate IR for all the output exprs and save references
         for (unsigned i = 0; i < outputs.size(); i++) {
             output_vals.push_back(apply(*outputs[i]));
         }
