@@ -14,12 +14,15 @@ inline hash_t Basic::hash() const
 //! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
-    return not(this->__eq__(o));
+    return not(eq(*this, o));
 }
 
 //! \return true if  `a` equal `b`
 inline bool eq(const Basic &a, const Basic &b)
 {
+    if (&a == &b) {
+        return true;
+    }
     return a.__eq__(b);
 }
 //! \return true if  `a` not equal `b`

@@ -189,7 +189,7 @@ struct RCPBasicKeyEq {
     //! Comparison Operator `==`
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
-        return x->__eq__(*y);
+        return eq(*x, *y);
     }
 };
 
@@ -201,7 +201,7 @@ struct RCPBasicKeyLess {
         hash_t xh = x->hash(), yh = y->hash();
         if (xh != yh)
             return xh < yh;
-        if (x->__eq__(*y))
+        if (eq(*x, *y))
             return false;
         return x->__cmp__(*y) == -1;
     }
