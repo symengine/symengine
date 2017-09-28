@@ -200,22 +200,22 @@ void add_to_sorted_vec(std::vector<unsigned> &vec, unsigned number)
 void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                        umap_basic_basic &opt_subs)
 {
-    std::vector<std::pair<RCP<const Basic>, vec_basic>> funcs2;
+    std::vector<std::pair<RCP<const Basic>, vec_basic>> funcs;
     for (auto &b : funcs_) {
-        funcs2.push_back(std::make_pair(b, b->get_args()));
+        funcs.push_back(std::make_pair(b, b->get_args()));
     }
-    std::sort(funcs2.begin(), funcs2.end(),
+    std::sort(funcs.begin(), funcs.end(),
               [](const std::pair<RCP<const Basic>, vec_basic> &a,
                  const std::pair<RCP<const Basic>, vec_basic> &b) {
                   return a.second.size() < b.second.size();
               });
 
-    auto arg_tracker = FuncArgTracker(funcs2);
+    auto arg_tracker = FuncArgTracker(funcs);
 
     std::set<unsigned> changed;
     std::map<unsigned, unsigned> common_arg_candidates_counts;
 
-    for (unsigned i = 0; i < funcs2.size(); i++) {
+    for (unsigned i = 0; i < funcs.size(); i++) {
         common_arg_candidates_counts = arg_tracker.get_common_arg_candidates(
             arg_tracker.func_to_argset[i], i + 1);
 
@@ -279,7 +279,7 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                 // tree_cse() won't mark funcs[i] as a CSE if we use an
                 // unevaluated version.
                 com_func_number
-                    = arg_tracker.get_or_add_value_number(funcs2[i].first);
+                    = arg_tracker.get_or_add_value_number(funcs[i].first);
             }
 
             std::vector<unsigned> diff_j
@@ -298,7 +298,7 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
             }
         }
         if (std::find(changed.begin(), changed.end(), i) != changed.end()) {
-            opt_subs[funcs2[i].first] = function_symbol(
+            opt_subs[funcs[i].first] = function_symbol(
                 func_class, arg_tracker.get_args_in_value_order(
                                 arg_tracker.func_to_argset[i]));
         }
