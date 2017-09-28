@@ -110,9 +110,13 @@ hash_t vec_hash<T>::operator()(const T &v) const
 template <typename T>
 std::string to_string(const T &value)
 {
+#ifdef HAVE_SYMENGINE_STD_TO_STRING
+    return std::to_string(value);
+#else
     std::ostringstream ss;
     ss << value;
     return ss.str();
+#endif
 }
 
 } // SymEngine
