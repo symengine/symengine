@@ -440,6 +440,10 @@ public:
     virtual RCP<const Basic> apply(const RCP<const Basic> &orig_expr)
     {
         RCP<const Basic> expr = orig_expr;
+        if (is_a_Atom(*expr)) {
+            return expr;
+        }
+
         auto iter = subs.find(expr);
         if (iter != subs.end()) {
             return iter->second;

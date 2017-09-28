@@ -220,6 +220,9 @@ bool neq(const Basic &a, const Basic &b);
 template <class T>
 bool is_a(const Basic &b);
 
+//! Returns true if `b` is an atom. i.e. b.get_args returns an empty vector
+bool is_a_Atom(const Basic &b);
+
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
 
