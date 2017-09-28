@@ -501,8 +501,12 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
 vec_basic Mul::get_args() const
 {
     vec_basic args;
-    if (not coef_->is_one())
+    if (not coef_->is_one()) {
+        args.reserve(dict_.size() + 1);
         args.push_back(coef_);
+    } else {
+        args.reserve(dict_.size());
+    }
     for (const auto &p : dict_) {
         args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
     }
