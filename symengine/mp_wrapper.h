@@ -2,6 +2,7 @@
 #define SYMENGINE_MP_WRAPPER_H
 
 #include <symengine/symengine_rcp.h>
+#include <symengine/symengine_casts.h>
 #include <gmp.h>
 
 #define SYMENGINE_UI(f) f##_ui
@@ -127,9 +128,9 @@ public:
     {
         mpz_init_set(mp, m);
     }
-    inline mpz_wrapper(const std::string &s, int base = 10)
+    inline mpz_wrapper(const std::string &s, unsigned base = 10)
     {
-        mpz_init_set_str(mp, s.c_str(), base);
+        mpz_init_set_str(mp, s.c_str(), numeric_cast<int>(base));
     }
     inline mpz_wrapper(const mpz_wrapper &other)
     {

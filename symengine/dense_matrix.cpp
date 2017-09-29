@@ -492,8 +492,7 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
 void permuteFwd(DenseMatrix &A, permutelist &pl)
 {
     for (auto &p : pl) {
-        row_exchange_dense(A, numeric_cast<unsigned>(p.first),
-                           numeric_cast<unsigned>(p.second));
+        row_exchange_dense(A, p.first, p.second);
     }
 }
 
@@ -814,54 +813,42 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
     SYMENGINE_ASSERT(x.col_ == b.col_);
 
-    int i, j, k, col = numeric_cast<int>(A.col_),
-                 bcol = numeric_cast<int>(b.col_);
+    unsigned long i, j, k, col = A.col_, bcol = b.col_;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
     DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
             for (k = 0; k < bcol; k++) {
-                b_.m_[numeric_cast<unsigned long>(j * bcol + k)] = sub(
-                    mul(A_.m_[numeric_cast<unsigned long>(i * col + i)],
-                        b_.m_[numeric_cast<unsigned long>(j * bcol + k)]),
-                    mul(A_.m_[numeric_cast<unsigned long>(j * col + i)],
-                        b_.m_[numeric_cast<unsigned long>(i * bcol + k)]));
+                b_.m_[j * bcol + k]
+                    = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]),
+                          mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
                 if (i > 0)
-                    b_.m_[numeric_cast<unsigned long>(j * bcol + k)]
-                        = div(b_.m_[numeric_cast<unsigned long>(j * bcol + k)],
-                              A_.m_[numeric_cast<unsigned long>(i * col - col
-                                                                + i - 1)]);
+                    b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k],
+                                              A_.m_[i * col - col + i - 1]);
             }
 
             for (k = i + 1; k < col; k++) {
-                A_.m_[numeric_cast<unsigned long>(j * col + k)]
-                    = sub(mul(A_.m_[numeric_cast<unsigned long>(i * col + i)],
-                              A_.m_[numeric_cast<unsigned long>(j * col + k)]),
-                          mul(A_.m_[numeric_cast<unsigned long>(j * col + i)],
-                              A_.m_[numeric_cast<unsigned long>(i * col + k)]));
+                A_.m_[j * col + k]
+                    = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]),
+                          mul(A_.m_[j * col + i], A_.m_[i * col + k]));
                 if (i > 0)
                     A_.m_[numeric_cast<unsigned long>(j * col + k)]
-                        = div(A_.m_[numeric_cast<unsigned long>(j * col + k)],
-                              A_.m_[numeric_cast<unsigned long>(i * col - col
-                                                                + i - 1)]);
+                        = div(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);
             }
-            A_.m_[numeric_cast<unsigned long>(j * col + i)] = zero;
+            A_.m_[j * col + i] = zero;
         }
 
     for (i = 0; i < col * bcol; i++)
-        x.m_[numeric_cast<unsigned long>(i)] = zero; // Integer zero;
+        x.m_[i] = zero; // Integer zero;
 
     for (k = 0; k < bcol; k++) {
-        for (i = col - 1; i >= 0; i--) {
+        for (i = col; i-- > 0;) {
             for (j = i + 1; j < col; j++)
-                b_.m_[numeric_cast<unsigned long>(i * bcol + k)]
-                    = sub(b_.m_[numeric_cast<unsigned long>(i * bcol + k)],
-                          mul(A_.m_[numeric_cast<unsigned long>(i * col + j)],
-                              x.m_[numeric_cast<unsigned long>(j * bcol + k)]));
-            x.m_[numeric_cast<unsigned long>(i * bcol + k)]
-                = div(b_.m_[numeric_cast<unsigned long>(i * bcol + k)],
-                      A_.m_[numeric_cast<unsigned long>(i * col + i)]);
+                b_.m_[i * bcol + k]
+                    = sub(b_.m_[i * bcol + k],
+                          mul(A_.m_[i * col + j], x.m_[j * bcol + k]));
+            x.m_[i * bcol + k] = div(b_.m_[i * bcol + k], A_.m_[i * col + i]);
         }
     }
 }
@@ -1615,11 +1602,15 @@ RCP<const Set> eigen_values(const DenseMatrix &A)
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, int k)
 {
-    if ((k >= 0 and (unsigned)k >= A.col_) or k + A.row_ <= 0) {
+    if ((k >= 0 and (unsigned)k >= A.col_)
+        or k + numeric_cast<int>(A.row_) <= 0) {
         zeros(A);
     }
 
-    vec_basic v = vec_basic(k > 0 ? A.col_ - k : A.row_ + k, one);
+    vec_basic v = vec_basic(
+        k > 0 ? A.col_ - numeric_cast<unsigned>(k)
+              : numeric_cast<unsigned>(numeric_cast<int>(A.row_) + k),
+        one);
 
     diag(A, v, k);
 }

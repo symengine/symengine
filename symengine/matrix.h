@@ -73,7 +73,7 @@ public:
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 };
 
-typedef std::vector<std::pair<int, int>> permutelist;
+typedef std::vector<std::pair<unsigned, unsigned>> permutelist;
 
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase

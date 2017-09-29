@@ -389,7 +389,7 @@ void vectorint_placement_free(CVectorInt *self);
 
 void vectorint_free(CVectorInt *self);
 void vectorint_push_back(CVectorInt *self, int value);
-int vectorint_get(CVectorInt *self, long unsigned n);
+int vectorint_get(CVectorInt *self, unsigned long n);
 
 //! Wrapper for vec_basic
 

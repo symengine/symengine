@@ -571,9 +571,9 @@ inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
     fmpz_pow_ui(res.get_fmpz_t(), i.get_fmpz_t(), n);
 }
 
-inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, long n)
+inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, unsigned long n)
 {
-    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), n);
+    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), numeric_cast<long>(n));
 }
 
 inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,
@@ -910,7 +910,7 @@ void mp_rootrem(integer_class &a, integer_class &b, const integer_class &i,
 
 void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i);
 
-int mp_probab_prime_p(const integer_class &i, int retries);
+int mp_probab_prime_p(const integer_class &i, unsigned retries);
 
 void mp_nextprime(integer_class &res, const integer_class &i);
 

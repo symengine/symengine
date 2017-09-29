@@ -2,6 +2,7 @@
 #define SYMENGINE_FLINT_WRAPPER_H
 
 #include <symengine/symengine_rcp.h>
+#include <symengine/symengine_casts.h>
 #include <gmp.h>
 
 #include <flint/fmpz.h>
@@ -51,10 +52,10 @@ public:
         fmpz_init(mp);
         fmpz_set(mp, m);
     }
-    inline fmpz_wrapper(const std::string &s, int base = 10)
+    inline fmpz_wrapper(const std::string &s, unsigned base = 10)
     {
         fmpz_init(mp);
-        fmpz_set_str(mp, s.c_str(), base);
+        fmpz_set_str(mp, s.c_str(), numeric_cast<int>(base));
     }
     inline fmpz_wrapper(const fmpz_wrapper &other)
     {

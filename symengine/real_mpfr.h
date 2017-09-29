@@ -7,6 +7,7 @@
 #define SYMENGINE_REAL_MPFR_H
 
 #include <symengine/complex_double.h>
+#include <symengine/symengine_casts.h>
 #include <symengine/symengine_exception.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -38,10 +39,10 @@ public:
     {
         mpfr_init2(mp, prec);
     }
-    mpfr_class(std::string s, mpfr_prec_t prec = 53, int base = 10)
+    mpfr_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10)
     {
         mpfr_init2(mp, prec);
-        mpfr_set_str(mp, s.c_str(), base, MPFR_RNDN);
+        mpfr_set_str(mp, s.c_str(), numeric_cast<int>(base), MPFR_RNDN);
     }
     mpfr_class(const mpfr_class &other)
     {

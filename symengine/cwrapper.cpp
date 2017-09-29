@@ -741,7 +741,7 @@ void vectorint_push_back(CVectorInt *self, int value)
     self->m.push_back(value);
 }
 
-int vectorint_get(CVectorInt *self, long unsigned n)
+int vectorint_get(CVectorInt *self, unsigned long n)
 {
     return self->m[n];
 }

@@ -10,7 +10,8 @@ hash_t Integer::__hash__() const
 {
     // only the least significant bits that fit into "long long int" are
     // hashed:
-    return ((hash_t)numeric_cast<long int>(mp_get_ui(this->i))) * (hash_t)(mp_sign(this->i));
+    return ((hash_t)numeric_cast<long int>(mp_get_ui(this->i)))
+           * (hash_t)(mp_sign(this->i));
 }
 
 bool Integer::__eq__(const Basic &o) const

@@ -161,7 +161,7 @@ bool divides(const Integer &a, const Integer &b)
 }
 
 // Prime functions
-int probab_prime_p(const Integer &a, unsigned reps)
+int probab_prime_p(const Integer &a, int reps)
 {
     return mp_probab_prime_p(a.as_integer_class(), reps);
 }

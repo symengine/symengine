@@ -190,8 +190,7 @@ RCP<const Number> Complex::powcomp(const Integer &other) const
         return pow_number(*this, other.as_uint());
     } else {
         return one->div(*pow_number(
-            *this,
-            down_cast<const Integer &>(*other.mul(*minus_one)).as_uint()));
+            *this, numeric_cast<unsigned long>(-1 * other.as_int())));
     }
 }
 } // SymEngine

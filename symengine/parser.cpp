@@ -561,15 +561,15 @@ public:
         op_stack.push(std::make_pair(-1, s_len));
         right_bracket.push(s_len);
 
-        for (int i = numeric_cast<int>(s_len - 1); i >= 0; i--) {
-            if (is_single_character_operator(numeric_cast<unsigned>(i))
-                or is_dual_character_operator(numeric_cast<unsigned>(i))) {
+        for (unsigned i = s_len; i-- > 0;) {
+            if (is_single_character_operator(i)
+                or is_dual_character_operator(i)) {
                 std::string x;
-                x = s[numeric_cast<unsigned>(i)];
+                x = s[i];
 
-                if (is_dual_character_operator(numeric_cast<unsigned>(i))) {
+                if (is_dual_character_operator(i)) {
                     i--;
-                    x = s[numeric_cast<unsigned>(i)] + x;
+                    x = s[i] + x;
                 }
 
                 if (x == "(") {
@@ -578,12 +578,11 @@ public:
                         op_stack.pop();
                     // it's end is the index of the ')' (maybe pseudo created by
                     // a ',')
-                    operator_end[numeric_cast<unsigned>(i)]
-                        = numeric_cast<int>(right_bracket.top());
+                    operator_end[i] = numeric_cast<int>(right_bracket.top());
 
                     // this should never happen, every '(' should have a
                     // matching ')' in the bracket stack
-                    if (operator_end[numeric_cast<unsigned>(i)] == (int)s_len)
+                    if (operator_end[i] == (int)s_len)
                         throw ParseError("Mismatching parentheses!");
                     right_bracket.pop();
                     op_stack.pop();
@@ -592,21 +591,18 @@ public:
                     // ',' acts as a pseudo ')', for the intended '('
                     if (x == ",") {
                         // its end is the actual ')'
-                        operator_end[numeric_cast<unsigned>(i)]
+                        operator_end[i]
                             = numeric_cast<int>(right_bracket.top());
                         right_bracket.pop();
                     }
                     op_stack.push(std::make_pair(op_precedence[x], i));
-                    right_bracket.push(numeric_cast<unsigned>(i));
+                    right_bracket.push(i);
 
                 } else {
                     if (x == "+" or x == "-") {
-                        if (i > 1 and i < (int)s_len - 1
-                            and s[numeric_cast<unsigned>(i - 1)] == 'e'
-                            and s[numeric_cast<unsigned>(i - 2)] >= '0'
-                            and s[numeric_cast<unsigned>(i - 2)] <= '9'
-                            and s[numeric_cast<unsigned>(i + 1)] >= '0'
-                            and s[numeric_cast<unsigned>(i + 1)] <= '9') {
+                        if (i > 1 and i < s_len - 1 and s[i - 1] == 'e'
+                            and s[i - 2] >= '0' and s[i - 2] <= '9'
+                            and s[i + 1] >= '0' and s[i + 1] <= '9') {
                             // numeric like 1e-10
                             last_char_was_op = false;
                             continue;
@@ -620,24 +616,22 @@ public:
                     while (op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
                     // whatever is on the top now, it's the 'end'
-                    operator_end[numeric_cast<unsigned>(i)]
-                        = numeric_cast<int>(op_stack.top().second);
+                    operator_end[i] = numeric_cast<int>(op_stack.top().second);
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
                 if (last_char_was_op and operator_error(last_char, x))
                     throw ParseError("Operator inconsistency!");
                 last_char_was_op = true;
 
-            } else if (s[numeric_cast<unsigned>(i)] == ' ') {
+            } else if (s[i] == ' ') {
                 continue;
             } else {
                 last_char_was_op = false;
             }
 
-            last_char = s[numeric_cast<unsigned>(i)];
-            if (i + 1 < (int)s_len
-                and is_dual_character_operator(numeric_cast<unsigned>(i + 1))) {
-                last_char = last_char + s[numeric_cast<unsigned>(i + 1)];
+            last_char = s[i];
+            if (i + 1 < s_len and is_dual_character_operator(i + 1)) {
+                last_char = last_char + s[i + 1];
             }
         }
         // extra right_brackets in the string
