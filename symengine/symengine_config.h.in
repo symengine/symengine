@@ -66,6 +66,9 @@
 /* Define if the C++ compiler supports std::unordered_map<>::reserve() */
 #cmakedefine HAVE_SYMENGINE_RESERVE
 
+/* Define if the C++ compiler has std::to_string */
+#cmakedefine HAVE_SYMENGINE_STD_TO_STRING
+
 /* Define to use as a static library */
 #cmakedefine SYMENGINE_STATIC_DEFINE
 

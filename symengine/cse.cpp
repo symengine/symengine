@@ -23,13 +23,13 @@ public:
     std::vector<std::set<unsigned>> func_to_argset;
 
 public:
-    FuncArgTracker(const vec_basic &funcs)
+    FuncArgTracker(
+        const std::vector<std::pair<RCP<const Basic>, vec_basic>> &funcs)
     {
         arg_to_funcset.resize(funcs.size());
         for (unsigned func_i = 0; func_i < funcs.size(); func_i++) {
-            const auto &func = funcs[func_i];
             std::set<unsigned> func_argset;
-            for (auto &func_arg : func->get_args()) {
+            for (auto &func_arg : funcs[func_i].second) {
                 unsigned arg_number = get_or_add_value_number(func_arg);
                 func_argset.insert(arg_number);
                 arg_to_funcset[arg_number].insert(func_i);
@@ -200,11 +200,16 @@ void add_to_sorted_vec(std::vector<unsigned> &vec, unsigned number)
 void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                        umap_basic_basic &opt_subs)
 {
-    vec_basic funcs = funcs_;
+    std::vector<std::pair<RCP<const Basic>, vec_basic>> funcs;
+    for (auto &b : funcs_) {
+        funcs.push_back(std::make_pair(b, b->get_args()));
+    }
     std::sort(funcs.begin(), funcs.end(),
-              [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
-                  return a->get_args().size() < b->get_args().size();
+              [](const std::pair<RCP<const Basic>, vec_basic> &a,
+                 const std::pair<RCP<const Basic>, vec_basic> &b) {
+                  return a.second.size() < b.second.size();
               });
+
     auto arg_tracker = FuncArgTracker(funcs);
 
     std::set<unsigned> changed;
@@ -273,7 +278,8 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
                 // do not compare equal to the evaluated equivalent. So
                 // tree_cse() won't mark funcs[i] as a CSE if we use an
                 // unevaluated version.
-                com_func_number = arg_tracker.get_or_add_value_number(funcs[i]);
+                com_func_number
+                    = arg_tracker.get_or_add_value_number(funcs[i].first);
             }
 
             std::vector<unsigned> diff_j
@@ -292,7 +298,7 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
             }
         }
         if (std::find(changed.begin(), changed.end(), i) != changed.end()) {
-            opt_subs[funcs[i]] = function_symbol(
+            opt_subs[funcs[i].first] = function_symbol(
                 func_class, arg_tracker.get_args_in_value_order(
                                 arg_tracker.func_to_argset[i]));
         }
@@ -361,7 +367,7 @@ public:
             }
             if (x.get_coef()->is_negative()) {
                 auto neg_expr = neg(x.rcp_from_this());
-                if (neg_expr->get_args().size() > 0) {
+                if (not is_a<Symbol>(*neg_expr)) {
                     opt_subs[expr]
                         = function_symbol("mul", {integer(-1), neg_expr});
                     seen_subexp.insert(neg_expr);
@@ -434,9 +440,10 @@ public:
     virtual RCP<const Basic> apply(const RCP<const Basic> &orig_expr)
     {
         RCP<const Basic> expr = orig_expr;
-        auto args = expr->get_args();
-        if (args.size() == 0)
+        if (is_a_Atom(*expr)) {
             return expr;
+        }
+
         auto iter = subs.find(expr);
         if (iter != subs.end()) {
             return iter->second;
@@ -468,7 +475,7 @@ public:
     };
     void bvisit(const FunctionSymbol &x)
     {
-        auto fargs = x.get_args();
+        auto &fargs = x.get_vec();
         vec_basic newargs;
         for (const auto &a : fargs) {
             newargs.push_back(apply(a));

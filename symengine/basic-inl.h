@@ -14,12 +14,15 @@ inline hash_t Basic::hash() const
 //! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
-    return not(this->__eq__(o));
+    return not(eq(*this, o));
 }
 
 //! \return true if  `a` equal `b`
 inline bool eq(const Basic &a, const Basic &b)
 {
+    if (&a == &b) {
+        return true;
+    }
     return a.__eq__(b);
 }
 //! \return true if  `a` not equal `b`
@@ -107,9 +110,13 @@ hash_t vec_hash<T>::operator()(const T &v) const
 template <typename T>
 std::string to_string(const T &value)
 {
+#ifdef HAVE_SYMENGINE_STD_TO_STRING
+    return std::to_string(value);
+#else
     std::ostringstream ss;
     ss << value;
     return ss.str();
+#endif
 }
 
 } // SymEngine

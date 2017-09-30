@@ -324,10 +324,18 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 vec_basic Add::get_args() const
 {
     vec_basic args;
-    if (not coef_->is_exact_zero())
+    if (not coef_->is_exact_zero()) {
+        args.reserve(dict_.size() + 1);
         args.push_back(coef_);
+    } else {
+        args.reserve(dict_.size());
+    }
     for (const auto &p : dict_) {
-        args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+        if (eq(*p.second, *one)) {
+            args.push_back(p.first);
+        } else {
+            args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+        }
     }
     return args;
 }

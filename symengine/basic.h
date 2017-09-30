@@ -189,7 +189,7 @@ struct RCPBasicKeyEq {
     //! Comparison Operator `==`
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
-        return x->__eq__(*y);
+        return eq(*x, *y);
     }
 };
 
@@ -201,7 +201,7 @@ struct RCPBasicKeyLess {
         hash_t xh = x->hash(), yh = y->hash();
         if (xh != yh)
             return xh < yh;
-        if (x->__eq__(*y))
+        if (eq(*x, *y))
             return false;
         return x->__cmp__(*y) == -1;
     }
@@ -219,6 +219,9 @@ bool neq(const Basic &a, const Basic &b);
 */
 template <class T>
 bool is_a(const Basic &b);
+
+//! Returns true if `b` is an atom. i.e. b.get_args returns an empty vector
+bool is_a_Atom(const Basic &b);
 
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
