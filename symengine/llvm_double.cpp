@@ -51,12 +51,13 @@ llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
     return result_;
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b)
+void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b, bool cse)
 {
-    init(x, {b.rcp_from_this()});
+    init(x, {b.rcp_from_this()}, cse);
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs)
+void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
+                             bool cse)
 {
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -167,9 +168,24 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs)
     auto out = &(*it);
     std::vector<llvm::Value *> output_vals;
 
-    // Generate Ir for all the output exprs and save references
-    for (unsigned i = 0; i < outputs.size(); i++) {
-        output_vals.push_back(apply(*outputs[i]));
+    if (cse) {
+        vec_basic reduced_exprs;
+        vec_pair replacements;
+        // cse the outputs
+        SymEngine::cse(replacements, reduced_exprs, outputs);
+        for (auto &rep : replacements) {
+            // Store the replacement symbol values in a dictionary
+            replacement_symbol_ptrs[rep.first] = apply(*(rep.second));
+        }
+        // Generate IR for all the reduced exprs and save references
+        for (unsigned i = 0; i < outputs.size(); i++) {
+            output_vals.push_back(apply(*reduced_exprs[i]));
+        }
+    } else {
+        // Generate IR for all the output exprs and save references
+        for (unsigned i = 0; i < outputs.size(); i++) {
+            output_vals.push_back(apply(*outputs[i]));
+        }
     }
 
     // Store all the output exprs at the end
@@ -266,35 +282,46 @@ void LLVMDoubleVisitor::bvisit(const Add &x)
 
     if (eq(*x.get_coef(), *zero)) {
         // `x + 0.0` is not optimized out
-        tmp1 = apply(*(it->first));
-        tmp2 = apply(*(it->second));
-        tmp = builder->CreateFMul(tmp1, tmp2);
+        if (eq(*one, *(it->second))) {
+            tmp = apply(*(it->first));
+        } else {
+            tmp1 = apply(*(it->first));
+            tmp2 = apply(*(it->second));
+            tmp = builder->CreateFMul(tmp1, tmp2);
+        }
         ++it;
     } else {
         tmp = apply(*x.get_coef());
     }
 
     for (; it != x.get_dict().end(); ++it) {
-        tmp1 = apply(*(it->first));
-        tmp2 = apply(*(it->second));
-        // if (eq(*it->second, *one)) {
-        tmp = builder->CreateFAdd(tmp, builder->CreateFMul(tmp1, tmp2));
-        //} else {
-        //    std::vector<llvm::Value *> args({tmp1, tmp2, tmp});
-        //    tmp =
-        //    builder->CreateCall(get_double_intrinsic(llvm::Intrinsic::fma,
-        //    3, context), args);
-        //}
+        if (eq(*one, *(it->second))) {
+            tmp1 = apply(*(it->first));
+            tmp = builder->CreateFAdd(tmp, tmp1);
+        } else {
+            //    std::vector<llvm::Value *> args({tmp1, tmp2, tmp});
+            //    tmp =
+            //    builder->CreateCall(get_double_intrinsic(llvm::Intrinsic::fma,
+            //    3, context), args);
+            tmp1 = apply(*(it->first));
+            tmp2 = apply(*(it->second));
+            tmp = builder->CreateFAdd(tmp, builder->CreateFMul(tmp1, tmp2));
+        }
     }
     result_ = tmp;
 }
 
 void LLVMDoubleVisitor::bvisit(const Mul &x)
 {
-    set_double(1.0);
-    llvm::Value *tmp = result_;
+    llvm::Value *tmp = nullptr;
+    bool first = true;
     for (const auto &p : x.get_args()) {
-        tmp = builder->CreateFMul(tmp, apply(*p));
+        if (first) {
+            tmp = apply(*p);
+        } else {
+            tmp = builder->CreateFMul(tmp, apply(*p));
+        }
+        first = false;
     }
     result_ = tmp;
 }
@@ -418,6 +445,11 @@ void LLVMDoubleVisitor::bvisit(const Symbol &x)
             return;
         }
         ++i;
+    }
+    auto it = replacement_symbol_ptrs.find(x.rcp_from_this());
+    if (it != replacement_symbol_ptrs.end()) {
+        result_ = it->second;
+        return;
     }
     throw std::runtime_error("Symbol " + x.__str__()
                              + " not in the symbols vector.");
