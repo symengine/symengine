@@ -164,9 +164,11 @@ notifications:
 deploy:
   provider: pages
   skip_cleanup: true
+  repo: symengine/symengine.github.io
+  target_branch: gh-pages
   local_dir: $SOURCE_DIR/doc/html
   github_token:
-    secure: "Vbokv8awN/6e+qHunZUPKQtBuyzUFPDhb6ysHJzYNpGBB5RgC+IwZmXTXp5CHbHsXQ/J5/gBrFA3cdM0YWbJgGaaMugxhVPJP7+h8t2WiX3V3VorsIzPdcQOk/G9/VH+S7VOyp/TdXfmbgANW2NcRWPmaDcNZ7OwfQajxe8pP+w="
+    secure: "nA/geBch3kWX4aURwe52JZNEG/JDR4RRkMvWqoqKTbnma54ohOokwaBlwmSc7lcmiq6YP8nI7uSCtK7EtqatJZewxNTNP8JXcuPb1IRuCXIvusakmk4iEqveEun5Igfge/6e6K/ujUiZchDT9ucEkxGNIAYDwrW0MPQ3ZG0Tla0="
   on:
     branch: master
     condition: $BUILD_DOXYGEN = yes
