@@ -105,6 +105,10 @@ if [[ "${WITH_ECM}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs ecm=7.0.4"
 fi
 
+if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs doxygen=1.8.13"
+fi
+
 conda create -q -p $our_install_dir ${conda_pkgs};
 source activate $our_install_dir;
 
