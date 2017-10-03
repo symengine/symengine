@@ -32,6 +32,7 @@ using SymEngine::sub;
 using SymEngine::exp;
 using SymEngine::E;
 using SymEngine::Rational;
+using SymEngine::rational;
 using SymEngine::Complex;
 using SymEngine::Number;
 using SymEngine::I;
@@ -1000,6 +1001,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *minus_one));
 
     r1 = exp(mul(mul(I, minus_one), pi));
+    std::cout << *r1 << std::endl;
     REQUIRE(eq(*r1, *minus_one));
 
     r1 = exp(div(mul(I, pi), integer(2)));
@@ -1009,14 +1011,20 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *mul(I, minus_one)));
 
     r1 = div(exp(mul(mul(I, pi), x)), exp(x));
-    REQUIRE(r1->__str__() == "exp(-x + I*x*pi)");
+    REQUIRE(is_a<Pow>(*r1));
+    REQUIRE(eq(*down_cast<const Pow &>(*r1).get_base(), *E));
+    REQUIRE(eq(*down_cast<const Pow &>(*r1).get_exp(),
+               *add(mul(minus_one, x), mul(x, mul(I, pi)))));
 
     r1 = exp(add(div(mul(I, pi), integer(2)), x));
     r2 = mul(I, exp(x));
     REQUIRE(eq(*r1, *r2));
 
     r1 = exp(add(div(mul(I, pi), integer(10)), x));
-    REQUIRE(r1->__str__() == "exp(x)*(I*sin((1/10)*pi) + cos((1/10)*pi))");
+    REQUIRE(is_a<Pow>(*r1));
+    REQUIRE(eq(*down_cast<const Pow &>(*r1).get_base(), *E));
+    REQUIRE(eq(*down_cast<const Pow &>(*r1).get_exp(),
+               *add(x, mul(rational(1, 10), mul(I, pi)))));
 }
 
 TEST_CASE("Log: arit", "[arit]")

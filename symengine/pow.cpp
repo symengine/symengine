@@ -87,6 +87,25 @@ int Pow::compare(const Basic &o) const
         return base_cmp;
 }
 
+bool exp_mul_helper(const RCP<const Basic> &b)
+{
+    if (is_a_Complex(*down_cast<const Mul &>(*b).get_coef())) {
+        const Mul &s = down_cast<const Mul &>(*b);
+        const map_basic_basic &dict = s.get_dict();
+        RCP<const Number> coef
+            = down_cast<const ComplexBase &>(*s.get_coef()).imaginary_part();
+        RCP<const Basic> arg = mul(coef, integer(2));
+        if (dict.size() == 1 and is_a<Integer>(*arg)) {
+            for (const auto &p : dict) {
+                if (eq(*p.first, *pi) and eq(*p.second, *one)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
@@ -165,16 +184,20 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         return pow(A->get_base(), mul(A->get_exp(), b));
     }
     if (eq(*a, *E)) {
-        if (is_a<Mul>(*b)
-            and is_a_Complex(*down_cast<const Mul &>(*b).get_coef())) {
-            const map_basic_basic &dict = down_cast<const Mul &>(*b).get_dict();
-            if (dict.size() == 1) {
-                for (const auto &p : dict) {
-                    if (eq(*p.first, *pi) and eq(*p.second, *one)) {
-                        return add(cos(mul(mul(I, minus_one), b)),
-                                   mul(I, sin(mul(mul(I, minus_one), b))));
-                    }
-                }
+        if (is_a<Mul>(*b) and exp_mul_helper(b)) {
+            RCP<const Number> coef = down_cast<const ComplexBase &>(
+                                         *down_cast<const Mul &>(*b).get_coef())
+                                         .imaginary_part();
+            RCP<const Basic> arg = mul(coef, integer(2));
+            long n = ((down_cast<const Integer &>(*arg).as_int() % 4) + 4) % 4;
+            if (!n) {
+                return one;
+            } else if (n == 1) {
+                return I;
+            } else if (n == 2) {
+                return minus_one;
+            } else {
+                return Complex::from_two_nums(*zero, *minus_one);
             }
         } else if (is_a<Add>(*b)) {
             const umap_basic_num &dict = down_cast<const Add &>(*b).get_dict();
@@ -182,7 +205,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             RCP<const Number> coef = down_cast<const Add &>(*b).get_coef();
             RCP<const Basic> s = one;
             for (const auto &p : dict) {
-                if (eq(*p.first, *pi) and is_a_Complex(*p.second)) {
+                if (eq(*p.first, *pi)
+                    and exp_mul_helper(mul(p.first, p.second))) {
                     s = exp(mul(p.first, p.second));
                 } else {
                     Add::dict_add_term(new_dict, p.second, p.first);
