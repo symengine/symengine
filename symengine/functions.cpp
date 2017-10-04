@@ -3270,6 +3270,53 @@ RCP<const Basic> trigamma(const RCP<const Basic> &x)
     return polygamma(one, x);
 }
 
+Factorial::Factorial(const RCP<const Basic> &s) : OneArgFunction(s)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(s))
+}
+
+bool Factorial::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<NaN>(*arg)) {
+        return false;
+    } else if (is_a<Infty>(*arg)) {
+        if (down_cast<const Infty &>(*arg).is_positive()) {
+            return false;
+        }
+    } else if (is_a<Integer>(*arg)
+               or (is_a_Number(*arg)
+                   and not down_cast<const Number &>(*arg).is_exact())) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Factorial::create(const RCP<const Basic> &arg) const
+{
+    return factorial(arg);
+}
+
+RCP<const Basic> factorial(const RCP<const Basic> &arg)
+{
+    if (is_a<NaN>(*arg)) {
+        return Nan;
+    } else if (is_a<Infty>(*arg)) {
+        if (down_cast<const Infty &>(*arg).is_positive()) {
+            return Inf;
+        }
+    } else if (is_a<Integer>(*arg)
+               or (is_a_Number(*arg)
+                   and not down_cast<const Number &>(*arg).is_exact())) {
+        if (not(is_a<Rational>(*arg)
+                and neq(*down_cast<const Rational &>(*arg).get_den(),
+                        *integer(2)))) {
+            return gamma(add(arg, one));
+        }
+    }
+    return make_rcp<const Factorial>(arg);
+}
+
 Abs::Abs(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()

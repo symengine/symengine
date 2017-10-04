@@ -57,6 +57,13 @@ void StrPrinter::bvisit(const NaN &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Factorial &x)
+{
+    std::ostringstream s;
+    s << "(" << apply(x.get_arg()) << ")!";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
