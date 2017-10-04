@@ -104,6 +104,9 @@ using SymEngine::gamma;
 using SymEngine::Gamma;
 using SymEngine::Factorial;
 using SymEngine::factorial;
+using SymEngine::Binomial;
+using SymEngine::binomial;
+using SymEngine::emptyset;
 using SymEngine::loggamma;
 using SymEngine::LogGamma;
 using SymEngine::polygamma;
@@ -4562,7 +4565,7 @@ TEST_CASE("test rewrite_as_exp", "[Functions]")
 TEST_CASE("Factorial: functions", "[functions]")
 {
     RCP<const Basic> n = symbol("n");
-    RCP<const Basic> r1, r2;
+    RCP<const Basic> r1;
 
     r1 = factorial(zero);
     REQUIRE(eq(*r1, *one));
@@ -4606,4 +4609,51 @@ TEST_CASE("Factorial: functions", "[functions]")
 
     CHECK_THROWS_AS(factorial(complex_double(std::complex<double>(2.0, 3.0))),
                     NotImplementedError);
+}
+
+TEST_CASE("Binomial: functions", "[functions]")
+{
+    RCP<const Basic> n = symbol("n");
+    RCP<const Basic> r1, r2;
+
+    r1 = binomial(zero, one);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(3), one);
+    REQUIRE(eq(*r1, *integer(3)));
+
+    r1 = binomial(Inf, NegInf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(n, zero);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = binomial(n, n);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = binomial(Nan, integer(3));
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = binomial(Inf, integer(3));
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = binomial(NegInf, integer(3));
+    REQUIRE(eq(*r1, *NegInf));
+
+    r1 = binomial(integer(3), Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(-3), integer(-2));
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(Rational::from_two_ints(3, 2), Rational::from_two_ints(7, 2));
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(-2), Inf);
+    REQUIRE(is_a<Binomial>(*r1));
+    REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_n(), *integer(-2)));
+    REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_k(), *Inf));
+
+    r2 = emptyset();
+    CHECK_THROWS_AS(binomial(r2, r2), SymEngineException);
 }

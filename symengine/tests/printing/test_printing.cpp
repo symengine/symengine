@@ -56,6 +56,7 @@ using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::imageset;
 using SymEngine::factorial;
+using SymEngine::binomial;
 
 using namespace SymEngine::literals;
 
@@ -574,4 +575,16 @@ TEST_CASE("test_factorial(): printing", "[printing]")
 
     r = factorial(Rational::from_two_ints(3, 2));
     CHECK(r->__str__() == "(3/2)!");
+}
+
+TEST_CASE("test_binomial(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = binomial(Complex::from_two_nums(*integer(2), *integer(3)),
+                   Complex::from_two_nums(*integer(3), *integer(2)));
+    CHECK(r->__str__() == "binomial(2 + 3*I, 3 + 2*I)");
+
+    r = binomial(Rational::from_two_ints(3, 2), integer(2));
+    CHECK(r->__str__() == "binomial(3/2, 2)");
 }
