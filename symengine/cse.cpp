@@ -149,6 +149,7 @@ public:
                                   arg_to_funcset[arg].end(),
                                   std::back_inserter(intersect_result));
             intersect_result.swap(indices);
+            intersect_result.clear();
         }
         return indices;
     }
