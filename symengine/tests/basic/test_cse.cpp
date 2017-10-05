@@ -42,6 +42,15 @@ TEST_CASE("CSE: simple", "[cse]")
     RCP<const Basic> i4 = integer(4);
 
     {
+        auto e = add({mul({i2, x, y}), mul({i2, x, z}), mul({i2, y, z})});
+        vec_pair substs;
+        vec_basic reduced;
+        cse(substs, reduced, {e});
+        REQUIRE(unified_eq(substs, {{x0, mul(x, i2)}}));
+        REQUIRE(unified_eq(reduced,
+                           {add({mul(x0, y), mul(x0, z), mul({i2, y, z})})}));
+    }
+    {
         auto e = add(pow(add(x, y), i2), sqrt(add(x, y)));
         vec_pair substs;
         vec_basic reduced;
