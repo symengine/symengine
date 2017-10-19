@@ -6,6 +6,7 @@
 #include <symengine/sets.h>
 
 using SymEngine::Basic;
+using SymEngine::E;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Interval;
@@ -38,6 +39,12 @@ TEST_CASE("Functions", "[ccode]")
     auto x = symbol("x");
     auto p = sin(x);
     REQUIRE(ccode(*p) == "sin(x)");
+
+    p = function_symbol("f", x);
+    REQUIRE(ccode(*p) == "f(x)");
+
+    p = function_symbol("f", pow(integer(2), x));
+    REQUIRE(ccode(*p) == "f(pow(2, x))");
 }
 
 TEST_CASE("Relationals", "[ccode]")
