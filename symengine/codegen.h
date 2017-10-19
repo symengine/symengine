@@ -164,10 +164,6 @@ public:
     {
         throw SymEngineException("Not supported");
     }
-    void bvisit(const FunctionSymbol &x)
-    {
-        throw SymEngineException("Not supported");
-    }
     void bvisit(const Derivative &x)
     {
         throw SymEngineException("Not supported");
