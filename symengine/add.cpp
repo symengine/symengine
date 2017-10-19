@@ -21,7 +21,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
         return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
-        if (coef->is_exact_zero())
+        if (coef->is_zero())
             return false;
     }
     // Check that each term in 'dict' is in canonical form
@@ -102,7 +102,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
 {
     if (d.size() == 0) {
         return coef;
-    } else if (d.size() == 1 and coef->is_exact_zero()) {
+    } else if (d.size() == 1 and coef->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (down_cast<const Integer &>(*(p->second)).is_zero()) {
@@ -263,7 +263,9 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
         coef = (down_cast<const Add &>(*a)).get_coef();
         d = (down_cast<const Add &>(*a)).get_dict();
         if (is_a_Number(*b)) {
-            iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
+            if (not down_cast<const Number &>(*b).is_zero()) {
+                iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
+            }
         } else {
             RCP<const Number> coef2;
             Add::as_coef_term(b, outArg(coef2), outArg(t));
@@ -273,7 +275,9 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
         coef = (down_cast<const Add &>(*b)).get_coef();
         d = (down_cast<const Add &>(*b)).get_dict();
         if (is_a_Number(*a)) {
-            iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
+            if (not down_cast<const Number &>(*a).is_zero()) {
+                iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
+            }
         } else {
             RCP<const Number> coef2;
             Add::as_coef_term(a, outArg(coef2), outArg(t));
@@ -324,7 +328,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 vec_basic Add::get_args() const
 {
     vec_basic args;
-    if (not coef_->is_exact_zero()) {
+    if (not coef_->is_zero()) {
         args.reserve(dict_.size() + 1);
         args.push_back(coef_);
     } else {
