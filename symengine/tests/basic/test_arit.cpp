@@ -145,6 +145,9 @@ TEST_CASE("Add: arit", "[arit]")
 
     r1 = add({i2});
     REQUIRE(eq(*r1, *i2));
+
+    r1 = add(x, real_double(0.0));
+    REQUIRE(eq(*r1, *x));
 }
 
 TEST_CASE("Mul: arit", "[arit]")
@@ -556,6 +559,9 @@ TEST_CASE("Sub: arit", "[arit]")
     r1 = expand(r1);
     r2 = im1;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = add(add(x, y), real_double(0.0));
+    REQUIRE(eq(*sub(r1, y), *x));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
     rc1 = Rational::from_two_ints(*integer(1), *integer(2));

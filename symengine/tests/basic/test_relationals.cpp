@@ -1,10 +1,13 @@
 #include "catch.hpp"
 #include <iostream>
 #include <symengine/logic.h>
+#include <symengine/add.h>
+#include <symengine/real_double.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
+using SymEngine::real_double;
 using SymEngine::Eq;
 using SymEngine::Ne;
 using SymEngine::Ge;
@@ -112,10 +115,20 @@ TEST_CASE("Canonicalization", "[Relationals]")
 TEST_CASE("Eq", "[Relationals]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> a = Eq(x);
     RCP<const Basic> b = Eq(x, zero);
     CHECK(eq(*a, *b));
+
+    a = add(x, y);
+    b = add(a, zero);
+    CHECK(eq(*Eq(a, b), *boolTrue));
+
+    b = add(a, real_double(0.0));
+    CHECK(eq(*Eq(a, b), *boolTrue));
+    CHECK(eq(*Eq(sub(b, y), x), *boolTrue));
+    CHECK(eq(*Eq(add(x, real_double(0.0)), x), *boolTrue));
 }
 
 TEST_CASE("Infinity", "[Relationals]")
