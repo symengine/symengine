@@ -26,11 +26,13 @@ struct RCPIntegerKeyLess;
 bool eq(const Basic &, const Basic &);
 typedef uint64_t hash_t;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_num;
+                           RCPBasicKeyEq>
+    umap_basic_num;
 typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<int, RCP<const Basic>> umap_int_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_basic;
+                           RCPBasicKeyEq>
+    umap_basic_basic;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
@@ -52,7 +54,8 @@ typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_uint;
+                           RCPBasicKeyEq>
+    umap_basic_uint;
 typedef std::vector<std::pair<RCP<const Basic>, RCP<const Basic>>> vec_pair;
 
 template <typename T>

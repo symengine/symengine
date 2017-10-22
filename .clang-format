@@ -1,4 +1,4 @@
-# version: 3.7
+# version: 3.8
 # exclude: cmake/*
 # exclude: symengine/utilities/*
 # include: *.h
@@ -53,6 +53,7 @@ PenaltyBreakString: 2123
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Right
+SortIncludes: false
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements

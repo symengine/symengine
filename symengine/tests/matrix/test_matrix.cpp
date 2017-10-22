@@ -1134,29 +1134,30 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
     REQUIRE(eq(*det_berkowitz(M), *integer(275)));
 
     M = DenseMatrix(
-        5, 5, {integer(1), integer(0), integer(1), integer(2), integer(12),
-               integer(2), integer(0), integer(1), integer(1), integer(4),
-               integer(2), integer(1), integer(1), integer(-1), integer(3),
-               integer(3), integer(2), integer(-1), integer(1), integer(8),
-               integer(1), integer(1), integer(1), integer(0), integer(6)});
+        5, 5, {integer(1), integer(0), integer(1),  integer(2),  integer(12),
+               integer(2), integer(0), integer(1),  integer(1),  integer(4),
+               integer(2), integer(1), integer(1),  integer(-1), integer(3),
+               integer(3), integer(2), integer(-1), integer(1),  integer(8),
+               integer(1), integer(1), integer(1),  integer(0),  integer(6)});
     REQUIRE(eq(*det_bareis(M), *integer(-55)));
     REQUIRE(eq(*det_berkowitz(M), *integer(-55)));
 
-    M = DenseMatrix(
-        5, 5, {integer(-5), integer(2), integer(3), integer(4), integer(5),
-               integer(1), integer(-4), integer(3), integer(4), integer(5),
-               integer(1), integer(2), integer(-3), integer(4), integer(5),
-               integer(1), integer(2), integer(3), integer(-2), integer(5),
-               integer(1), integer(2), integer(3), integer(4), integer(-1)});
+    M = DenseMatrix(5, 5, {integer(-5), integer(2), integer(3),  integer(4),
+                           integer(5),  integer(1), integer(-4), integer(3),
+                           integer(4),  integer(5), integer(1),  integer(2),
+                           integer(-3), integer(4), integer(5),  integer(1),
+                           integer(2),  integer(3), integer(-2), integer(5),
+                           integer(1),  integer(2), integer(3),  integer(4),
+                           integer(-1)});
     REQUIRE(eq(*det_bareis(M), *integer(11664)));
     REQUIRE(eq(*det_berkowitz(M), *integer(11664)));
 
     M = DenseMatrix(
-        5, 5, {integer(2), integer(7), integer(-1), integer(3), integer(2),
-               integer(0), integer(0), integer(1), integer(0), integer(1),
-               integer(-2), integer(0), integer(7), integer(0), integer(2),
-               integer(-3), integer(-2), integer(4), integer(5), integer(3),
-               integer(1), integer(0), integer(0), integer(0), integer(1)});
+        5, 5, {integer(2),  integer(7),  integer(-1), integer(3), integer(2),
+               integer(0),  integer(0),  integer(1),  integer(0), integer(1),
+               integer(-2), integer(0),  integer(7),  integer(0), integer(2),
+               integer(-3), integer(-2), integer(4),  integer(5), integer(3),
+               integer(1),  integer(0),  integer(0),  integer(0), integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(123)));
     REQUIRE(eq(*det_berkowitz(M), *integer(123)));
 }

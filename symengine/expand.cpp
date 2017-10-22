@@ -234,8 +234,8 @@ public:
                     if (is_a<Integer>(*base)) {
                         _imulnum(outArg(overall_coeff),
                                  rcp_static_cast<const Number>(
-                                     down_cast<const Integer &>(*base)
-                                         .powint(*exp)));
+                                     down_cast<const Integer &>(*base).powint(
+                                         *exp)));
                     } else if (is_a<Symbol>(*base)) {
                         Mul::dict_add_term(d, exp, base);
                     } else {

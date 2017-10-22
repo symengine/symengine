@@ -45,8 +45,7 @@ public:
     {
     }
     template <class T2>
-    inline Ptr(const Ptr<T2> &ptr)
-        : ptr_(ptr.get())
+    inline Ptr(const Ptr<T2> &ptr) : ptr_(ptr.get())
     {
     }
     Ptr<T> &operator=(const Ptr<T> &ptr)
@@ -125,8 +124,7 @@ public:
     }
     // Copy constructor
     template <class T2>
-    RCP(const RCP<T2> &r_ptr)
-        : ptr_(r_ptr.get())
+    RCP(const RCP<T2> &r_ptr) : ptr_(r_ptr.get())
     {
         if (not is_null())
             (ptr_->refcount_)++;

@@ -121,27 +121,27 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (is_a_Number(*b)) {
         if (is_a_Number(*a)) {
             if (is_a<Integer>(*b)) {
-                return down_cast<const Number &>(*a)
-                    .pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a).pow(
+                    *rcp_static_cast<const Number>(b));
             } else if (is_a<Rational>(*b)) {
                 if (is_a<Rational>(*a)) {
-                    return down_cast<const Rational &>(*a)
-                        .powrat(down_cast<const Rational &>(*b));
+                    return down_cast<const Rational &>(*a).powrat(
+                        down_cast<const Rational &>(*b));
                 } else if (is_a<Integer>(*a)) {
-                    return down_cast<const Rational &>(*b)
-                        .rpowrat(down_cast<const Integer &>(*a));
+                    return down_cast<const Rational &>(*b).rpowrat(
+                        down_cast<const Integer &>(*a));
                 } else if (is_a<Complex>(*a)) {
                     return make_rcp<const Pow>(a, b);
                 } else {
-                    return down_cast<const Number &>(*a)
-                        .pow(*rcp_static_cast<const Number>(b));
+                    return down_cast<const Number &>(*a).pow(
+                        *rcp_static_cast<const Number>(b));
                 }
             } else if (is_a<Complex>(*b)
                        and down_cast<const Number &>(*a).is_exact()) {
                 return make_rcp<const Pow>(a, b);
             } else {
-                return down_cast<const Number &>(*a)
-                    .pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a).pow(
+                    *rcp_static_cast<const Number>(b));
             }
         } else if (eq(*a, *E)) {
             RCP<const Number> p = rcp_static_cast<const Number>(b);
@@ -153,8 +153,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             // Expand (x*y)**b = x**b*y**b
             map_basic_basic d;
             RCP<const Number> coef = one;
-            down_cast<const Mul &>(*a)
-                .power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+            down_cast<const Mul &>(*a).power_num(
+                outArg(coef), d, rcp_static_cast<const Number>(b));
             return Mul::from_dict(coef, std::move(d));
         }
     }

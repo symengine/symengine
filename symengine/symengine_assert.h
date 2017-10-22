@@ -12,7 +12,8 @@
         if (!(cond)) {                                                         \
             std::cerr << "SYMENGINE_ASSERT failed: " << __FILE__               \
                       << "\nfunction " << __func__ << "(), line number "       \
-                      << __LINE__ << " at \n" << XSTR(cond) << "\n";           \
+                      << __LINE__ << " at \n"                                  \
+                      << XSTR(cond) << "\n";                                   \
             abort();                                                           \
         }                                                                      \
     }

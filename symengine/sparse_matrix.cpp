@@ -527,8 +527,8 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
 // same. C will be in canonical format as well.
 void csr_binop_csr_canonical(
     const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
-    RCP<const Basic>(&bin_op)(const RCP<const Basic> &,
-                              const RCP<const Basic> &))
+    RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
+                               const RCP<const Basic> &))
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_
                      and C.col_ == A.col_);
