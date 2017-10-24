@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "symengine/symengine_config.h"
+
 #ifdef HAVE_SYMENGINE_GMP
 #include <gmp.h>
 #endif
-
-#include "symengine/symengine_config.h"
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
