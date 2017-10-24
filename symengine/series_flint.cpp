@@ -63,7 +63,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc.get_fmpq_t());
             RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
-            map[n] = basic;
+            map[numeric_cast<int>(n)] = basic;
         }
     }
     mpq_clear(gc);
@@ -72,7 +72,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
 
 RCP<const Basic> URatPSeriesFlint::get_coeff(int n) const
 {
-    const fmpq_wrapper fc(p_.get_coeff(n));
+    const fmpq_wrapper fc(p_.get_coeff(numeric_cast<unsigned>(n)));
     mpq_t gc;
     mpq_init(gc);
     fmpq_get_mpq(gc, fc.get_fmpq_t());
@@ -136,8 +136,8 @@ fqp_t URatPSeriesFlint::pow(const fqp_t &s, int n, unsigned prec)
 
 unsigned URatPSeriesFlint::ldegree(const fqp_t &s)
 {
-    int i = 0;
-    while (i <= numeric_cast<int>(s.degree()))
+    unsigned i = 0;
+    while (i <= s.degree())
         if (not s.get_coeff(i++).is_zero())
             return numeric_cast<unsigned>(i - 1);
     return 0;

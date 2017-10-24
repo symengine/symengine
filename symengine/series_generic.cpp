@@ -25,7 +25,7 @@ hash_t UnivariateSeries::__hash__() const
     hash_combine(seed, get_degree());
     for (const auto &it : p_.dict_) {
         hash_t temp = UEXPRPOLY;
-        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<unsigned int>(temp, numeric_cast<unsigned>(it.first));
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }

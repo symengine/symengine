@@ -187,9 +187,10 @@ RCP<const Number> Complex::powcomp(const Integer &other) const
         }
         return mulnum(im->pow(other), res);
     } else if (other.is_positive()) {
-        return pow_number(*this, other.as_int());
+        return pow_number(*this, other.as_uint());
     } else {
-        return one->div(*pow_number(*this, -1 * other.as_int()));
+        return one->div(*pow_number(
+            *this, numeric_cast<unsigned long>(-1 * other.as_int())));
     }
 }
 } // SymEngine

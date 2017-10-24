@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/symengine_casts.h>
 
 namespace SymEngine
 {
@@ -2582,12 +2583,11 @@ RCP<const Basic> LeviCivita::create(const vec_basic &a) const
     return levi_civita(a);
 }
 
-RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
+RCP<const Basic> eval_levicivita(const vec_basic &arg, unsigned len)
 {
-    int i, j;
     RCP<const Basic> res = one;
-    for (i = 0; i < len; i++) {
-        for (j = i + 1; j < len; j++) {
+    for (unsigned i = 0; i < len; i++) {
+        for (unsigned j = i + 1; j < len; j++) {
             res = mul(sub(arg[j], arg[i]), res);
         }
         res = div(res, factorial(i));
@@ -2598,7 +2598,7 @@ RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
 RCP<const Basic> levi_civita(const vec_basic &arg)
 {
     bool are_int = true;
-    int len = 0;
+    unsigned len = 0;
     for (const auto &p : arg) {
         if (not(is_a_Number(*p))) {
             are_int = false;
@@ -2663,19 +2663,23 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
             RCP<const Basic> zeta;
             if (s_ < 0) {
                 RCP<const Number> res = (s_ % 2 == 0) ? one : minus_one;
-                zeta
-                    = mulnum(res, divnum(bernoulli(-s_ + 1), integer(-s_ + 1)));
+                zeta = mulnum(
+                    res, divnum(bernoulli(numeric_cast<unsigned long>(-s_) + 1),
+                                integer(-s_ + 1)));
             } else if (s_ % 2 == 0) {
-                RCP<const Number> b = bernoulli(s_);
-                RCP<const Number> f = factorial(s_);
+                RCP<const Number> b
+                    = bernoulli(numeric_cast<unsigned long>(s_));
+                RCP<const Number> f
+                    = factorial(numeric_cast<unsigned long>(s_));
                 zeta = divnum(pownum(integer(2), integer(s_ - 1)), f);
                 zeta = mul(zeta, mul(pow(pi, s), abs(b)));
             } else {
                 return make_rcp<const Zeta>(s, a);
             }
             if (a_ < 0)
-                return add(zeta, harmonic(-a_, s_));
-            return sub(zeta, harmonic(a_ - 1, s_));
+                return add(zeta,
+                           harmonic(numeric_cast<unsigned long>(-a_), s_));
+            return sub(zeta, harmonic(numeric_cast<unsigned long>(a_ - 1), s_));
         }
     }
     return make_rcp<const Zeta>(s, a);
@@ -2828,7 +2832,7 @@ RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
     RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
     SYMENGINE_ASSERT(arg_->is_positive())
-    return factorial((arg_->subint(*one))->as_int());
+    return factorial((arg_->subint(*one))->as_uint());
 }
 
 RCP<const Basic> gamma_multiple_2(const RCP<const Basic> &arg)
@@ -3191,9 +3195,9 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
         return rcp_from_this();
     }
     if ((n->as_int() & 1) == 0) {
-        return neg(mul(factorial(n->as_int()), zeta(add(n, one), get_arg2())));
+        return neg(mul(factorial(n->as_uint()), zeta(add(n, one), get_arg2())));
     } else {
-        return mul(factorial(n->as_int()), zeta(add(n, one), get_arg2()));
+        return mul(factorial(n->as_uint()), zeta(add(n, one), get_arg2()));
     }
 }
 
@@ -3212,8 +3216,8 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
         return ComplexInf;
     }
     if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
-        auto n = down_cast<const Integer &>(*n_).as_int();
-        auto x = down_cast<const Integer &>(*x_).as_int();
+        auto n = down_cast<const Integer &>(*n_).as_uint();
+        auto x = down_cast<const Integer &>(*x_).as_uint();
         if (n == 0) {
             return sub(harmonic(x - 1, 1), EulerGamma);
         } else if (n % 2 == 1) {

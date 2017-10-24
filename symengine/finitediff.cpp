@@ -36,7 +36,8 @@ vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
     for (unsigned idx = 1; idx < len_w; ++idx)
         weights[idx] = zero; // clear weights
     for (unsigned i = 1; i < len_g; ++i) {
-        const int mn = (i < max_deriv) ? i : max_deriv; // min(i, max_deriv)
+        const unsigned mn
+            = (i < max_deriv) ? i : max_deriv; // min(i, max_deriv)
         RCP<const Basic> c2 = one;
         c5 = c4;
         c4 = sub(grid[i], around);
@@ -44,7 +45,7 @@ vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
             const RCP<const Basic> c3 = sub(grid[i], grid[j]);
             c2 = mul(c2, c3);
             if (j == i - 1) {
-                for (int k = mn; k >= 1; --k) {
+                for (unsigned k = mn; k >= 1; --k) {
                     weights[i + k * len_g]
                         = div(mul(c1, sub(mul(integer(k),
                                               weights[i - 1 + (k - 1) * len_g]),
@@ -54,7 +55,7 @@ vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
                 weights[i]
                     = mul(minus_one, div(mul(c1, mul(c5, weights[i - 1])), c2));
             }
-            for (int k = mn; k >= 1; --k) {
+            for (unsigned k = mn; k >= 1; --k) {
                 weights[j + k * len_g]
                     = div(sub(mul(c4, weights[j + k * len_g]),
                               mul(integer(k), weights[j + (k - 1) * len_g])),

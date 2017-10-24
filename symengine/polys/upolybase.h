@@ -271,7 +271,7 @@ public:
     {
         Wrapper t;
         for (auto it = p.begin(); it != p.end(); ++it)
-            t.dict_[it->first] = it->second;
+            t.dict_[numeric_cast<int>(it->first)] = it->second;
         return t;
     }
 

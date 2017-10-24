@@ -573,7 +573,7 @@ inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
 
 inline void mp_pow_ui(fmpq_wrapper &res, const fmpq_wrapper &i, unsigned long n)
 {
-    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), n);
+    fmpq_pow_si(res.get_fmpq_t(), i.get_fmpq_t(), numeric_cast<long>(n));
 }
 
 inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,
@@ -1076,7 +1076,7 @@ inline bool mp_perfect_square_p(const integer_class &i)
     return mpz_perfect_square_p(get_mpz_t(i)) != 0;
 }
 
-inline int mp_probab_prime_p(const integer_class &i, unsigned retries)
+inline int mp_probab_prime_p(const integer_class &i, int retries)
 {
     return mpz_probab_prime_p(get_mpz_t(i), retries);
 }
@@ -1128,7 +1128,7 @@ public:
     mp_randstate()
     {
         gmp_randinit_default(_state);
-        gmp_randseed_ui(_state, std::rand());
+        gmp_randseed_ui(_state, numeric_cast<long unsigned>(std::rand()));
     }
 
     ~mp_randstate()

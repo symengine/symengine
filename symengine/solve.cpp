@@ -601,7 +601,7 @@ linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
     DenseMatrix A(1, size);
     vec_basic coeffs, bvec;
 
-    int row = 0;
+    unsigned row = 0;
     auto gens = get_set_from_vec(syms);
     umap_basic_uint index_of_sym;
     for (unsigned int i = 0; i < size; i++) {
@@ -620,7 +620,7 @@ linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
         RCP<const Basic> rem = zero;
         for (const auto &p : mpoly->get_poly().dict_) {
             RCP<const Basic> res = (p.second.get_basic());
-            int whichvar = 0, non_zero = 0;
+            unsigned whichvar = 0, non_zero = 0;
             RCP<const Basic> cursim;
             for (auto &sym : gens) {
                 if (0 != p.first[whichvar]) {

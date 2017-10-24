@@ -60,13 +60,12 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = numeric_cast<int>(
-                down_cast<const Integer &>(*x.get_exp()).as_int());
+            long i = down_cast<const Integer &>(*x.get_exp()).as_int();
             if (i > 0) {
                 dict
                     = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
                                                             x.get_base(), gen)),
-                                i)
+                                numeric_cast<unsigned>(i))
                           ->get_poly();
                 return;
             }
@@ -92,13 +91,13 @@ public:
                 expos.insert(x.get_exp());
             }
 
-            int powr = 0;
+            unsigned powr = 0;
             for (auto const &it : expos) {
                 tmp = div(it, genpow);
                 if (is_a<const Integer>(*tmp)) {
                     RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
                     if (i->is_positive()) {
-                        powr = static_cast<int>(i->as_int());
+                        powr = numeric_cast<unsigned>(i->as_uint());
                         continue;
                     }
                 }
@@ -344,7 +343,7 @@ public:
     BasicToMPolyBase(const set_basic &gens_)
     {
         gens = gens_;
-        dict.vec_size = static_cast<int>(gens.size());
+        dict.vec_size = numeric_cast<unsigned>(gens.size());
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -379,10 +378,10 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = numeric_cast<int>(
-                down_cast<const Integer &>(*x.get_exp()).as_int());
+            long i = down_cast<const Integer &>(*x.get_exp()).as_int();
             if (i > 0) {
-                dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
+                dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens),
+                                 numeric_cast<unsigned>(i));
                 return;
             }
         }

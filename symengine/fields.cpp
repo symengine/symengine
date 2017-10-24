@@ -32,7 +32,7 @@ hash_t GaloisField::__hash__() const
     seed += get_var()->hash();
     for (const auto &it : get_poly().dict_) {
         hash_t temp = GALOISFIELD;
-        hash_combine<hash_t>(temp, mp_get_si(it));
+        hash_combine<hash_t>(temp, mp_get_ui(it));
         seed += temp;
     }
     return seed;
@@ -280,9 +280,11 @@ void GaloisFieldDict::gf_rshift(const integer_class n,
     *quo = GaloisFieldDict::from_vec(dict_quo, modulo_);
     auto n_val = mp_get_ui(n);
     if (n_val < dict_.size()) {
-        quo->dict_.insert(quo->dict_.end(), dict_.begin() + n_val, dict_.end());
-        std::vector<integer_class> dict_rem(dict_.begin(),
-                                            dict_.begin() + n_val);
+        quo->dict_.insert(quo->dict_.end(),
+                          dict_.begin() + numeric_cast<long>(n_val),
+                          dict_.end());
+        std::vector<integer_class> dict_rem(
+            dict_.begin(), dict_.begin() + numeric_cast<long>(n_val));
         *rem = GaloisFieldDict::from_vec(dict_rem, modulo_);
     } else {
         *rem = down_cast<const GaloisFieldDict &>(*this);
@@ -703,7 +705,7 @@ GaloisFieldDict::gf_edf_zassenhaus(const unsigned &n) const
         GaloisFieldDict g;
         if (modulo_ == 2_z) {
             GaloisFieldDict h = r;
-            unsigned ub = 1 << (n * N - 1);
+            unsigned ub = numeric_cast<unsigned>(1 << (n * N - 1));
             for (unsigned i = 0; i < ub; ++i) {
                 r = gf_pow_mod(r, 2);
                 h += r;

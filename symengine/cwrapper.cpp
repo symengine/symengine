@@ -741,7 +741,7 @@ void vectorint_push_back(CVectorInt *self, int value)
     self->m.push_back(value);
 }
 
-int vectorint_get(CVectorInt *self, int n)
+int vectorint_get(CVectorInt *self, unsigned long n)
 {
     return self->m[n];
 }
@@ -793,7 +793,7 @@ CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(n < self->m.size());
-    self->m.erase(self->m.begin() + n);
+    self->m.erase(self->m.begin() + numeric_cast<long>(n));
     CWRAPPER_END
 }
 

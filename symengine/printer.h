@@ -79,7 +79,7 @@ public:
             precedence = PrecedenceEnum::Atom;
             bool first = true; // true if there are no nonzero exponents, false
                                // otherwise
-            for (unsigned int exp : iter->first) {
+            for (auto exp : iter->first) {
                 if (exp > 0) {
                     if (first && exp > 1)
                         precedence = PrecedenceEnum::Pow;
