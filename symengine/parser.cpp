@@ -12,13 +12,26 @@ class ExpressionParser
 {
 
     // OPERATORS and op_precedence used internally, for parsing
+public:
+    std::map<std::string, int> op_precedence
+        = {{")", 0}, {",", 0}, {"|", 1},   {"^", 2},  {"&", 3}, {"==", 4},
+           {">", 5}, {"<", 5}, {"<=", 5},  {">=", 5}, {"-", 6}, {"+", 6},
+           {"*", 8}, {"/", 9}, {"**", 10}, {"~", 11}};
+    bool convert_xor_;
+
+    ExpressionParser(bool convert_xor)
+    {
+        if (convert_xor) {
+            op_precedence["^"] = op_precedence["**"];
+        }
+        convert_xor_ = convert_xor;
+    }
+
+private:
     std::set<std::string> OPERATORS
         = {"-", "+", "*",  "/",  "**", "(", ")", ",", "==",
            ">", "<", ">=", "<=", "&",  "|", "~", "^"};
-    std::map<std::string, int> op_precedence
-        = {{")", 0}, {",", 0},  {"|", 1},  {"&", 2}, {"==", 3}, {">", 4},
-           {"<", 4}, {"<=", 4}, {">=", 4}, {"-", 5}, {"+", 5},  {"*", 7},
-           {"/", 8}, {"**", 9}, {"^", 9},  {"~", 10}};
+
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -237,9 +250,17 @@ class ExpressionParser
                                  parse_string(iter + 2, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
-                } else if (s[iter] == '^') {
+                } else if (s[iter] == '^' and convert_xor_) {
                     result = pow(result,
                                  parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
+                } else if (s[iter] == '^' and !convert_xor_) {
+                    vec_boolean s;
+                    s.push_back(rcp_static_cast<const Boolean>(result));
+                    s.push_back(rcp_static_cast<const Boolean>(
+                        parse_string(iter + 1, operator_end[iter])));
+                    result = logical_xor(s);
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '*') {
@@ -623,9 +644,9 @@ public:
     }
 };
 
-RCP<const Basic> parse(const std::string &s)
+RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
-    ExpressionParser p;
+    ExpressionParser p(convert_xor);
     return p.parse_expr(s);
 }
 

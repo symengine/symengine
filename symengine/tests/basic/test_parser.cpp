@@ -391,6 +391,10 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *logical_not(Lt(x, y))));
 
+    s = "(x < y) ^ (w >= z)";
+    res = parse(s, false);
+    REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
+
     s = "(x < y) & (w >= z) | (y == z)";
     res = parse(s);
     REQUIRE(
@@ -408,6 +412,20 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "~ (x < y) | (w >= z)";
     res = parse(s);
     REQUIRE(eq(*res, *logical_or({logical_not(Lt(x, y)), Le(z, w)})));
+
+    s = "~ (x < y) ^ (w >= z)";
+    res = parse(s, false);
+    REQUIRE(eq(*res, *logical_xor({logical_not(Lt(x, y)), Le(z, w)})));
+
+    s = "(x < y) | (w >= z) ^ (y == z)";
+    res = parse(s, false);
+    REQUIRE(
+        eq(*res, *logical_or({Lt(x, y), logical_xor({Le(z, w), Eq(y, z)})})));
+
+    s = "(x < y) & (w >= z) ^ (y == z)";
+    res = parse(s, false);
+    REQUIRE(
+        eq(*res, *logical_xor({logical_and({Lt(x, y), Le(z, w)}), Eq(y, z)})));
 
     s = "And(x < y, w >= z)";
     res = parse(s);

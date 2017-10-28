@@ -138,8 +138,11 @@ void basic_const_nan(basic s);
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);
 
-//! Parse str and assign value to b
+//! Parse str and assign value to b.
 CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str);
+//! Parse str and assign value to b, set convert_xor to > 0 for default usage,
+//! <= 0 otherwise.
+CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor);
 
 //! Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
