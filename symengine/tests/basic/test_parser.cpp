@@ -97,7 +97,15 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *integer(42)));
 
+    s = "2^(3+2)+ 10";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(42)));
+
     s = "(5**3)/8 + 12";
+    res = parse(s);
+    REQUIRE(eq(*res, *add(div(integer(125), integer(8)), integer(12))));
+
+    s = "(5^3)/8 + 12";
     res = parse(s);
     REQUIRE(eq(*res, *add(div(integer(125), integer(8)), integer(12))));
 
@@ -106,6 +114,10 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     REQUIRE(eq(*res, *integer(5)));
 
     s = "4**2/2+2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(10)));
+
+    s = "4^2/2+2";
     res = parse(s);
     REQUIRE(eq(*res, *integer(10)));
 
@@ -245,6 +257,11 @@ TEST_CASE("Parsing: functions", "[parser]")
     REQUIRE(
         eq(*res, *add(pow(y, abs(add(sin(integer(3)), x))), sinh(integer(2)))));
 
+    s = "y^(abs(sin(3) + x)) + sinh(2)";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *add(pow(y, abs(add(sin(integer(3)), x))), sinh(integer(2)))));
+
     s = "2 + zeta(2, x) + zeta(ln(3))";
     res = parse(s);
     REQUIRE(eq(*res, *add(integer(2),
@@ -374,10 +391,6 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *logical_not(Lt(x, y))));
 
-    s = "(x < y) ^ (w >= z)";
-    res = parse(s);
-    REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
-
     s = "(x < y) & (w >= z) | (y == z)";
     res = parse(s);
     REQUIRE(
@@ -395,20 +408,6 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "~ (x < y) | (w >= z)";
     res = parse(s);
     REQUIRE(eq(*res, *logical_or({logical_not(Lt(x, y)), Le(z, w)})));
-
-    s = "~ (x < y) ^ (w >= z)";
-    res = parse(s);
-    REQUIRE(eq(*res, *logical_xor({logical_not(Lt(x, y)), Le(z, w)})));
-
-    s = "(x < y) | (w >= z) ^ (y == z)";
-    res = parse(s);
-    REQUIRE(
-        eq(*res, *logical_or({Lt(x, y), logical_xor({Le(z, w), Eq(y, z)})})));
-
-    s = "(x < y) & (w >= z) ^ (y == z)";
-    res = parse(s);
-    REQUIRE(
-        eq(*res, *logical_xor({logical_and({Lt(x, y), Le(z, w)}), Eq(y, z)})));
 
     s = "And(x < y, w >= z)";
     res = parse(s);
@@ -510,6 +509,11 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
                           function_symbol("f", sin(x)))));
 
     s = "f(g(2**x))";
+    res = parse(s);
+    REQUIRE(eq(
+        *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
+
+    s = "f(g(2^x))";
     res = parse(s);
     REQUIRE(eq(
         *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));

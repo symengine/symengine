@@ -16,9 +16,9 @@ class ExpressionParser
         = {"-", "+", "*",  "/",  "**", "(", ")", ",", "==",
            ">", "<", ">=", "<=", "&",  "|", "~", "^"};
     std::map<std::string, int> op_precedence
-        = {{")", 0}, {",", 0}, {"|", 1},   {"^", 2},  {"&", 3}, {"==", 4},
-           {">", 5}, {"<", 5}, {"<=", 5},  {">=", 5}, {"-", 6}, {"+", 6},
-           {"*", 8}, {"/", 9}, {"**", 10}, {"~", 11}};
+        = {{")", 0}, {",", 0},  {"|", 1},  {"&", 2}, {"==", 3}, {">", 4},
+           {"<", 4}, {"<=", 4}, {">=", 4}, {"-", 5}, {"+", 5},  {"*", 7},
+           {"/", 8}, {"**", 9}, {"^", 9},  {"~", 10}};
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -237,6 +237,11 @@ class ExpressionParser
                                  parse_string(iter + 2, operator_end[iter]));
                     iter = operator_end[iter] - 1;
 
+                } else if (s[iter] == '^') {
+                    result = pow(result,
+                                 parse_string(iter + 1, operator_end[iter]));
+                    iter = operator_end[iter] - 1;
+
                 } else if (s[iter] == '*') {
                     result = mul(result,
                                  parse_string(iter + 1, operator_end[iter]));
@@ -294,14 +299,6 @@ class ExpressionParser
                     s.insert(rcp_static_cast<const Boolean>(
                         parse_string(iter + 1, operator_end[iter])));
                     result = logical_or(s);
-                    iter = operator_end[iter] - 1;
-
-                } else if (s[iter] == '^') {
-                    vec_boolean s;
-                    s.push_back(rcp_static_cast<const Boolean>(result));
-                    s.push_back(rcp_static_cast<const Boolean>(
-                        parse_string(iter + 1, operator_end[iter])));
-                    result = logical_xor(s);
                     iter = operator_end[iter] - 1;
 
                 } else if (s[iter] == '~') {
