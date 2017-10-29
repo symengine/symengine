@@ -185,8 +185,9 @@ vec_basic And::get_args() const
 
 bool And::__eq__(const Basic &o) const
 {
-    return is_a<And>(o) and unified_eq(container_, down_cast<const And &>(o)
-                                                       .get_container());
+    return is_a<And>(o)
+           and unified_eq(container_,
+                          down_cast<const And &>(o).get_container());
 }
 
 int And::compare(const Basic &o) const
@@ -362,8 +363,9 @@ vec_basic Xor::get_args() const
 
 bool Xor::__eq__(const Basic &o) const
 {
-    return is_a<Xor>(o) and unified_eq(container_, down_cast<const Xor &>(o)
-                                                       .get_container());
+    return is_a<Xor>(o)
+           and unified_eq(container_,
+                          down_cast<const Xor &>(o).get_container());
 }
 
 int Xor::compare(const Basic &o) const
@@ -676,8 +678,8 @@ RCP<const Boolean> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     if (eq(*lhs, *rhs))
         return boolean(true);
     if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
-        RCP<const Number> s = down_cast<const Number &>(*lhs)
-                                  .sub(down_cast<const Number &>(*rhs));
+        RCP<const Number> s = down_cast<const Number &>(*lhs).sub(
+            down_cast<const Number &>(*rhs));
         if (s->is_negative())
             return boolean(true);
         return boolean(false);
@@ -722,8 +724,8 @@ RCP<const Boolean> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     if (eq(*lhs, *rhs))
         return boolean(false);
     if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
-        RCP<const Number> s = down_cast<const Number &>(*lhs)
-                                  .sub(down_cast<const Number &>(*rhs));
+        RCP<const Number> s = down_cast<const Number &>(*lhs).sub(
+            down_cast<const Number &>(*rhs));
         if (s->is_negative())
             return boolean(true);
         return boolean(false);

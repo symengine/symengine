@@ -58,7 +58,7 @@ class ExpressionParser
              std::function<RCP<const Basic>(const RCP<const Basic> &)>>
         single_arg_functions = {
 
-            {"", [](const RCP<const Basic> &x) {return x; }},
+            {"", [](const RCP<const Basic> &x) { return x; }},
 
             {"sin", sin},
             {"cos", cos},

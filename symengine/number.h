@@ -143,6 +143,7 @@ public:
     }
 
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+
     virtual std::string __str__() const
     {
         throw NotImplementedError("Not Implemented.");

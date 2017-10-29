@@ -1596,7 +1596,7 @@ RCP<const Set> eigen_values(const DenseMatrix &A)
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, int k)
 {
-    if ((k >= 0 and (unsigned)k >= A.col_) or k + A.row_ <= 0) {
+    if ((k >= 0 and (unsigned) k >= A.col_) or k + A.row_ <= 0) {
         zeros(A);
     }
 

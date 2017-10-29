@@ -198,11 +198,11 @@ public:
     }
 
     //! + operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(+, mpz_add, += )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(+, mpz_add, +=)
     //! * operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(*, mpz_mul, *= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(*, mpz_mul, *=)
     //! - operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(-, mpz_sub, -= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(-, mpz_sub, -=)
 
     template <typename T,
               typename std::enable_if<std::is_integral<T>::value
@@ -216,9 +216,9 @@ public:
         return res;
     }
     //! / operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(/, mpz_tdiv_q, /= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(/, mpz_tdiv_q, /=)
     //! % operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(%, mpz_tdiv_r, %= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(%, mpz_tdiv_r, %=)
 
     inline mpz_wrapper operator-() const
     {
@@ -253,15 +253,15 @@ public:
     //! < operator
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(<, mpz_cmp, 0, >)
     //! <= operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(<=, mpz_cmp, 0, >= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(<=, mpz_cmp, 0, >=)
     //! > operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(>, mpz_cmp, 0, < )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(>, mpz_cmp, 0, <)
     //! >= operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(>=, mpz_cmp, 0, <= )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(>=, mpz_cmp, 0, <=)
     //! == operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(==, mpz_cmp, 0, == )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(==, mpz_cmp, 0, ==)
     //! != operator
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(!=, mpz_cmp, 0, != )
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(!=, mpz_cmp, 0, !=)
 
     inline mpz_wrapper operator<<=(unsigned long u)
     {

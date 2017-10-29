@@ -603,11 +603,11 @@ TEST_CASE("GaloisFieldDict distinct degree factorization : Basic", "[basic]")
     REQUIRE(b[2].second == 3_z);
     REQUIRE(b[3].first
             == GaloisFieldDict::from_vec(
-                   {1_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z,
-                    1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z, 1_z, 0_z,
-                    1_z, 1_z, 0_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 1_z, 0_z, 0_z,
-                    0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z, 1_z, 0_z, 1_z, 1_z, 0_z,
-                    1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 1_z},
+                   {1_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 0_z, 1_z, 1_z, 0_z,
+                    1_z, 1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z,
+                    1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z,
+                    1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z, 1_z,
+                    0_z, 1_z, 1_z, 0_z, 1_z, 0_z, 1_z, 1_z, 0_z, 1_z, 1_z},
                    2_z));
     REQUIRE(b[3].second == 6_z);
     c = d1.gf_ddf_shoup();

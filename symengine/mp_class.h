@@ -52,7 +52,8 @@ typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>,
     integer_class;
 typedef boost::multiprecision::
     number<boost::multiprecision::cpp_rational_backend,
-           boost::multiprecision::et_off> rational_class;
+           boost::multiprecision::et_off>
+        rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
 typedef piranha::rational rational_class;

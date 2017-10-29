@@ -3067,10 +3067,11 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
         or (is_a<Rational>(*x)
             and (get_den(down_cast<const Rational &>(*x).as_rational_class()))
                     == 2)) {
-        if (is_a<Integer>(*y) or (is_a<Rational>(*y)
-                                  and (get_den(down_cast<const Rational &>(*y)
-                                                   .as_rational_class()))
-                                          == 2)) {
+        if (is_a<Integer>(*y)
+            or (is_a<Rational>(*y)
+                and (get_den(
+                        down_cast<const Rational &>(*y).as_rational_class()))
+                        == 2)) {
             return false;
         }
     }
@@ -3393,8 +3394,8 @@ RCP<const Basic> max(const vec_basic &arg)
                         max_number = rcp_static_cast<const Number>(l);
 
                     } else {
-                        difference = rcp_static_cast<const Number>(l)
-                                         ->sub(*max_number);
+                        difference = rcp_static_cast<const Number>(l)->sub(
+                            *max_number);
 
                         if (difference->is_zero()
                             and not difference->is_exact()) {
