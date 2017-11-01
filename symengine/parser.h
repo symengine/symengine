@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-RCP<const Basic> parse(const std::string &s);
+RCP<const Basic> parse(const std::string &s, bool convert_xor = true);
 
 } // SymEngine
 
