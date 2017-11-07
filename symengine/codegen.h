@@ -85,7 +85,7 @@ public:
         std::ostringstream o;
         double n = mp_get_d(get_num(x.as_rational_class()));
         double d = mp_get_d(get_den(x.as_rational_class()));
-        o << n << "/" << d;
+        o << print_double(n) << "/" << print_double(d);
         str_ = o.str();
     }
     void bvisit(const EmptySet &x)
