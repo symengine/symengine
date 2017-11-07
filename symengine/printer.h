@@ -7,6 +7,7 @@ namespace SymEngine
 {
 
 std::string ascii_art();
+std::string print_double(double d);
 
 enum class PrecedenceEnum { Add, Mul, Pow, Atom };
 
