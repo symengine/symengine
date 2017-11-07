@@ -37,10 +37,10 @@ TEST_CASE("Arithmetic", "[ccode]")
 
 TEST_CASE("Rational", "[ccode]")
 {
-    auto p = rational(1,3);
+    auto p = rational(1, 3);
     REQUIRE(ccode(*p) == "1.0/3.0");
 
-    p = rational(1,-3);
+    p = rational(1, -3);
     REQUIRE(ccode(*p) == "-1.0/3.0");
 }
 
