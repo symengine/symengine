@@ -100,6 +100,28 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
 }
 
+TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
+{
+    RCP<const Basic> x, y, z, r, s;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+
+    r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
+    s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
+
+    LambdaRealDoubleVisitor v;
+    v.init({x, y, z}, {r, s});
+
+    double d[2];
+    double inps[] = {1.5, 2.0, 3.0};
+    v.call(d, inps);
+    std::cout << d[0] << std::endl;
+    std::cout << d[1] << std::endl;
+    REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+    REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+}
+
 TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
 {
     RCP<const Basic> x, y, z, r;
