@@ -210,7 +210,8 @@ unsigned long integer_get_ui(const basic s);
 CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s);
 #endif
 
-//! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
+//! Assign to s, a rational i/j.
+//! Returns SYMENGINE_RUNTIME_ERROR if either i or j is not an integer.
 CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
 //! Assign to s, a rational i/j, where i and j are signed longs.
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long i, long j);
@@ -246,8 +247,8 @@ CWRAPPER_OUTPUT_TYPE basic_mul(basic s, const basic a, const basic b);
 CWRAPPER_OUTPUT_TYPE basic_div(basic s, const basic a, const basic b);
 //! Assigns s = a ** b.
 CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b);
-//! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not
-//! a symbol.
+//! Assign to s, derivative of expr with respect to sym.
+//! Returns SYMENGINE_RUNTIME_ERROR if sym is not a symbol.
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
