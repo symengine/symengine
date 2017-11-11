@@ -1,9 +1,9 @@
 #ifndef SYMENGINE_LAMBDA_DOUBLE_H
 #define SYMENGINE_LAMBDA_DOUBLE_H
 
-#include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -22,22 +22,54 @@ protected:
 
     typedef std::function<T(const T *x)> fn;
     std::vector<fn> results;
+    std::vector<T> cse_intermediate_results;
+
+    std::map<RCP<const Basic>, unsigned, RCPBasicKeyLess>
+        cse_intermediate_fns_map;
+    std::vector<fn> cse_intermediate_fns;
     fn result_;
     vec_basic symbols;
 
 public:
-    void init(const vec_basic &x, const Basic &b)
+    void init(const vec_basic &x, const Basic &b, bool cse = false)
     {
-        symbols = x;
-        apply(b);
+        vec_basic outputs = {b.rcp_from_this()};
+        init(x, outputs, cse);
     }
 
-    void init(const vec_basic &inputs, const vec_basic &outputs)
+    void init(const vec_basic &inputs, const vec_basic &outputs,
+              bool cse = false)
     {
+        results.clear();
+        cse_intermediate_fns.clear();
         symbols = inputs;
-        for (auto &p : outputs) {
-            apply(*p);
-            results.push_back(result_);
+        if (not cse) {
+            for (auto &p : outputs) {
+                results.push_back(apply(*p));
+            }
+        } else {
+            vec_basic reduced_exprs;
+            vec_pair replacements;
+            // cse the outputs
+            SymEngine::cse(replacements, reduced_exprs, outputs);
+            for (auto &rep : replacements) {
+                auto res = apply(*(rep.second));
+                // Store the replacement symbol values in a dictionary for
+                // faster
+                // lookup for initialization
+                cse_intermediate_fns_map[rep.first]
+                    = cse_intermediate_fns.size();
+                // Store it in a vector for faster use in call
+                cse_intermediate_fns.push_back(res);
+            }
+            cse_intermediate_results.resize(cse_intermediate_fns.size());
+            // Generate functions for all the reduced exprs and save it
+            for (unsigned i = 0; i < outputs.size(); i++) {
+                results.push_back(apply(*reduced_exprs[i]));
+            }
+            // We don't need the cse_intermediate_fns_map anymore
+            cse_intermediate_fns_map.clear();
+            symbols.clear();
         }
     }
 
@@ -49,15 +81,41 @@ public:
 
     T call(const std::vector<T> &vec)
     {
-        return result_(vec.data());
+        T res;
+        call(&res, vec.data());
+        return res;
     }
 
     void call(T *outs, const T *inps)
     {
+        if (cse_intermediate_fns.size() > 0) {
+            for (unsigned i = 0; i < cse_intermediate_fns.size(); ++i) {
+                cse_intermediate_results[i] = cse_intermediate_fns[i](inps);
+            }
+        }
         for (unsigned i = 0; i < results.size(); ++i) {
             outs[i] = results[i](inps);
         }
+        return;
     }
+
+    void bvisit(const Symbol &x)
+    {
+        for (unsigned i = 0; i < symbols.size(); ++i) {
+            if (eq(x, *symbols[i])) {
+                result_ = [=](const T *x) { return x[i]; };
+                return;
+            }
+        }
+        auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
+        if (it != cse_intermediate_fns_map.end()) {
+            unsigned index = it->second;
+            result_
+                = [=](const T *x) { return cse_intermediate_results[index]; };
+            return;
+        }
+        throw SymEngineException("Symbol not in the symbols vector.");
+    };
 
     void bvisit(const Integer &x)
     {
@@ -139,17 +197,6 @@ public:
         fn tmp = apply(*(x.get_arg()));
         result_ = [=](const T *x) { return std::tan(tmp(x)); };
     }
-
-    void bvisit(const Symbol &x)
-    {
-        for (unsigned i = 0; i < symbols.size(); ++i) {
-            if (eq(x, *symbols[i])) {
-                result_ = [=](const T *x) { return x[i]; };
-                return;
-            }
-        }
-        throw SymEngineException("Symbol not in the symbols vector.");
-    };
 
     void bvisit(const Log &x)
     {
