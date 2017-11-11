@@ -111,13 +111,11 @@ TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
     s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
 
     LambdaRealDoubleVisitor v;
-    v.init({x, y, z}, {r, s});
+    v.init({x, y, z}, {r, s}, true);
 
     double d[2];
     double inps[] = {1.5, 2.0, 3.0};
     v.call(d, inps);
-    std::cout << d[0] << std::endl;
-    std::cout << d[1] << std::endl;
     REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
     REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
 }
