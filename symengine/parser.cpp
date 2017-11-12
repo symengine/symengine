@@ -16,7 +16,7 @@ public:
     std::map<std::string, int> op_precedence
         = {{")", 0}, {",", 0}, {"|", 1},   {"^", 2},  {"&", 3}, {"==", 4},
            {">", 5}, {"<", 5}, {"<=", 5},  {">=", 5}, {"-", 6}, {"+", 6},
-           {"*", 8}, {"/", 9}, {"**", 10}, {"~", 11}};
+           {"*", 8}, {"/", 9}, {"**", 10}, {"U", 11}, {"~", 12}};
     bool convert_xor_;
 
     ExpressionParser(bool convert_xor)
@@ -31,6 +31,10 @@ private:
     std::set<std::string> OPERATORS
         = {"-", "+", "*",  "/",  "**", "(", ")", ",", "==",
            ">", "<", ">=", "<=", "&",  "|", "~", "^"};
+
+    std::set<std::string> UNARY_PRECEDORS
+        = {"-", "+",  "*",  "/", "**", "==", ">",
+           "<", ">=", "<=", "&", "|",  "^",  "("};
 
     // symengine supported constants
     std::map<const std::string, const RCP<const Basic>> constants = {
@@ -373,6 +377,21 @@ private:
         return false;
     }
 
+    bool is_unary_precedor(int iter)
+    {
+        std::string x;
+        x = s[iter];
+        if (UNARY_PRECEDORS.find(x) != UNARY_PRECEDORS.end())
+            return true;
+
+        if (iter >= 1)
+            if (UNARY_PRECEDORS.find(s.substr(iter - 1, 2))
+                != UNARY_PRECEDORS.end())
+                return true;
+
+        return false;
+    }
+
     // is called on detecting a "func(", thus "func" must be a type of
     // function and everything inside arguments of the function
     RCP<const Basic> functionify(unsigned int &iter, const std::string &expr)
@@ -528,7 +547,7 @@ private:
             if (current == ")")
                 return true;
 
-        } else if (prev == "-" or prev == "+") {
+        } else if (prev == "U") {
         } else {
             if (current != ")")
                 return true;
@@ -538,8 +557,11 @@ private:
 
 public:
     // does all the preprocessing related to parsing
-    RCP<const Basic> parse_expr(const std::string &in)
+    RCP<const Basic> parse_expr(std::string in)
     {
+        auto end_pos = std::remove(in.begin(), in.end(), ' ');
+        in.erase(end_pos, in.end());
+
         // stack to maintain right brackets, to match with corresponding left
         // brackets
         std::stack<unsigned int> right_bracket;
@@ -609,11 +631,15 @@ public:
                             continue;
                         }
                     }
-                    if (last_char_was_op
-                        and (last_char == "-" or last_char == "+"))
+                    if (last_char_was_op and last_char == "U")
                         op_stack.pop();
                     // if it's a normal operator, remove operators with higher
                     // precedence
+
+                    if ((x == "+" or x == "-")
+                        and (i == 0 or is_unary_precedor(i - 1)))
+                        x = "U";
+
                     while (op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
                     // whatever is on the top now, it's the 'end'
@@ -623,14 +649,12 @@ public:
                 if (last_char_was_op and operator_error(last_char, x))
                     throw ParseError("Operator inconsistency!");
                 last_char_was_op = true;
-
-            } else if (s[i] == ' ') {
-                continue;
+                last_char = x;
             } else {
                 last_char_was_op = false;
+                last_char = s[i];
             }
 
-            last_char = s[i];
             if (i + 1 < (int)s_len and is_dual_character_operator(i + 1)) {
                 last_char = last_char + s[i + 1];
             }

@@ -129,6 +129,10 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *integer(-1)));
 
+    s = "2**-3*2";
+    res = parse(s);
+    REQUIRE(eq(*res, *div(one, integer(4))));
+
     s = "10000000000000000000000000";
     res = parse(s);
     REQUIRE(eq(*res, *pow(integer(10), integer(25))));
@@ -622,9 +626,6 @@ TEST_CASE("Parsing: errors", "[parser]")
     CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "(2)(3)";
-    CHECK_THROWS_AS(parse(s), ParseError);
-
-    s = "sin(x y)";
     CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "max(,3,2)";
