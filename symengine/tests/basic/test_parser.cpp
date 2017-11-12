@@ -628,6 +628,9 @@ TEST_CASE("Parsing: errors", "[parser]")
     s = "(2)(3)";
     CHECK_THROWS_AS(parse(s), ParseError);
 
+    s = "sin(x y)";
+    CHECK_THROWS_AS(parse(s), ParseError);
+
     s = "max(,3,2)";
     CHECK_THROWS_AS(parse(s), ParseError);
 }

@@ -557,11 +557,8 @@ private:
 
 public:
     // does all the preprocessing related to parsing
-    RCP<const Basic> parse_expr(std::string in)
+    RCP<const Basic> parse_expr(const std::string &in)
     {
-        auto end_pos = std::remove(in.begin(), in.end(), ' ');
-        in.erase(end_pos, in.end());
-
         // stack to maintain right brackets, to match with corresponding left
         // brackets
         std::stack<unsigned int> right_bracket;
@@ -636,9 +633,15 @@ public:
                     // if it's a normal operator, remove operators with higher
                     // precedence
 
-                    if ((x == "+" or x == "-")
-                        and (i == 0 or is_unary_precedor(i - 1)))
-                        x = "U";
+                    if (x == "+" or x == "-") {
+                        // TODO : can be optimized to set i = j (as we've
+                        // already skipped spaces)
+                        int j = i - 1;
+                        while (j >= 0 and s[j] == ' ')
+                            j--;
+                        if (j == -1 or is_unary_precedor(j))
+                            x = "U";
+                    }
 
                     while (op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
@@ -650,6 +653,9 @@ public:
                     throw ParseError("Operator inconsistency!");
                 last_char_was_op = true;
                 last_char = x;
+
+            } else if (s[i] == ' ') {
+                continue;
             } else {
                 last_char_was_op = false;
                 last_char = s[i];
