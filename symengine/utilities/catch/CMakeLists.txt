@@ -4,5 +4,5 @@ set(SRC
     catch.cpp
 )
 
-add_library(catch STATIC ${SRC})
-target_link_libraries(catch symengine)
+add_library(catch ${SRC})
+#target_link_libraries(catch symengine)
