@@ -5,4 +5,4 @@ set(SRC
 )
 
 add_library(catch ${SRC})
-target_link_libraries(catch symengine)
+#target_link_libraries(catch symengine)
