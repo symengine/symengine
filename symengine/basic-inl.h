@@ -33,12 +33,27 @@ inline bool neq(const Basic &a, const Basic &b)
 
 //! Templatised version to check is_a type
 template <class T>
+inline bool
+is_a_impl(const Basic &b,
+          typename std::enable_if<T::type_code_id
+                                  != TypeID::NUMBER_WRAPPER>::type * = nullptr)
+{
+    return T::type_code_id == b.get_type_code();
+}
+
+template <class T>
+inline bool
+is_a_impl(const Basic &b,
+          typename std::enable_if<T::type_code_id
+                                  == TypeID::NUMBER_WRAPPER>::type * = nullptr)
+{
+    return is_a_sub<T>(b);
+}
+
+template <class T>
 inline bool is_a(const Basic &b)
 {
-    if (T::type_code_id != TypeID::NUMBER_WRAPPER)
-        return T::type_code_id == b.get_type_code();
-    else
-        return is_a_sub<T>(b);
+    return is_a_impl<T>(b);
 }
 
 template <class T>
