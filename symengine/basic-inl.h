@@ -35,7 +35,10 @@ inline bool neq(const Basic &a, const Basic &b)
 template <class T>
 inline bool is_a(const Basic &b)
 {
-    return T::type_code_id == b.get_type_code();
+    if (T::type_code_id != TypeID::NUMBER_WRAPPER)
+        return T::type_code_id == b.get_type_code();
+    else
+        return is_a_sub<T>(b);
 }
 
 template <class T>
