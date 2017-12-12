@@ -52,6 +52,8 @@ using SymEngine::ceiling;
 using SymEngine::conditionset;
 using SymEngine::Boolean;
 using SymEngine::logical_and;
+using SymEngine::logical_or;
+using SymEngine::logical_xor;
 using SymEngine::imageset;
 
 using namespace SymEngine::literals;
@@ -547,4 +549,17 @@ TEST_CASE("test_conjugate(): printing", "[printing]")
 
     r = conjugate(pow(y, Rational::from_two_ints(3, 2)));
     CHECK(r->__str__() == "conjugate(y**(3/2))");
+}
+
+TEST_CASE("test_logical(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r1;
+    r1 = logical_and({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "And(2 <= y, 9 <= x**2)");
+    r1 = logical_or({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "Or(2 <= y, 9 <= x**2)");
+    r1 = logical_xor({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "Xor(2 <= y, 9 <= x**2)");
 }
