@@ -23,6 +23,8 @@ using SymEngine::make_rcp;
 using SymEngine::has_symbol;
 using SymEngine::is_a;
 using SymEngine::as_numer_denom;
+using SymEngine::neg;
+using SymEngine::one;
 
 TEST_CASE("NumerDenom: Basic", "[as_numer_denom]")
 {
@@ -76,6 +78,11 @@ TEST_CASE("NumerDenom: Mul", "[as_numer_denom]")
     as_numer_denom(r1, outArg(num), outArg(den));
     REQUIRE(eq(*num, *mul(x, integer(-6))));
     REQUIRE(eq(*den, *integer(5)));
+
+    r1 = div(exp(neg(x)), pow(add(one, exp(neg(x))), integer(2)));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *exp(x)));
+    REQUIRE(eq(*den, *pow(add(one, exp(x)), integer(2))));
 }
 
 TEST_CASE("NumerDenom: Pow", "[as_numer_denom]")
