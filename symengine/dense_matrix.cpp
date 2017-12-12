@@ -65,7 +65,7 @@ void DenseMatrix::inv(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = down_cast<DenseMatrix &>(result);
-        inverse_LU(*this, r);
+        inverse_pivoted_LU(*this, r);
     }
 }
 
@@ -1478,43 +1478,18 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
                      and B.row_ == A.row_);
+    DenseMatrix e = DenseMatrix(A.row_, A.col_);
+    eye(e);
+    LU_solve(A, e, B);
+}
 
-    unsigned n = A.row_, i;
-    DenseMatrix L = DenseMatrix(n, n);
-    DenseMatrix U = DenseMatrix(n, n);
-    DenseMatrix e = DenseMatrix(n, 1);
-    DenseMatrix x = DenseMatrix(n, 1);
-    DenseMatrix x_ = DenseMatrix(n, 1);
-
-    // Initialize matrices
-    for (i = 0; i < n * n; i++) {
-        L.m_[i] = zero;
-        U.m_[i] = zero;
-        B.m_[i] = zero;
-    }
-
-    for (i = 0; i < n; i++) {
-        e.m_[i] = zero;
-        x.m_[i] = zero;
-        x_.m_[i] = zero;
-    }
-
-    LU(A, L, U);
-
-    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the column vectors
-    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
-    // elements of the standard basis.
-    for (unsigned j = 0; j < n; j++) {
-        e.m_[j] = one;
-
-        forward_substitution(L, e, x_);
-        back_substitution(U, x_, x);
-
-        for (i = 0; i < n; i++)
-            B.m_[i * n + j] = x.m_[i];
-
-        e.m_[j] = zero;
-    }
+void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
+                     and B.row_ == A.row_);
+    DenseMatrix e = DenseMatrix(A.row_, A.col_);
+    eye(e);
+    pivoted_LU_solve(A, e, B);
 }
 
 void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)

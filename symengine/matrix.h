@@ -246,6 +246,7 @@ public:
     // Inverse
     friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix &B);
+    friend void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
     // Vector-specific methods
