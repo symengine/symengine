@@ -18,10 +18,9 @@ export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
     brew update
-    brew install gcc48
-    export CC=gcc-4.8
-    export CXX=g++-4.8
-    export GCOV_EXECUTABLE=gcov-4.8
+    brew install gcc
+    export CC=gcc
+    export CXX=g++
 fi
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
