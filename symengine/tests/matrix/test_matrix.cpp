@@ -1301,16 +1301,14 @@ TEST_CASE("test_char_poly(): matrices", "[matrices]")
 
 TEST_CASE("test_inverse(): matrices", "[matrices]")
 {
-    DenseMatrix I3 = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                        integer(0), integer(1), integer(0),
-                                        integer(0), integer(0), integer(1)});
+    DenseMatrix I3 = DenseMatrix(3, 3);
+    DenseMatrix I2 = DenseMatrix(2, 2);
+    eye(I3);
+    eye(I2);
 
-    DenseMatrix A
-        = DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
-                             integer(0), integer(1), integer(0), integer(0),
-                             integer(0), integer(0), integer(1), integer(0),
-                             integer(0), integer(0), integer(0), integer(1)});
+    DenseMatrix A = DenseMatrix(4, 4);
     DenseMatrix B = DenseMatrix(4, 4);
+    eye(A);
 
     inverse_fraction_free_LU(A, B);
     REQUIRE(A == B);
@@ -1352,6 +1350,13 @@ TEST_CASE("test_inverse(): matrices", "[matrices]")
     inverse_gauss_jordan(A, B);
     mul_dense_dense(A, B, C);
     REQUIRE(C == I3);
+
+    A = DenseMatrix(2, 2, {integer(0), integer(1), integer(1), integer(1)});
+    B = DenseMatrix(2, 2);
+    C = DenseMatrix(2, 2);
+    inverse_pivoted_LU(A, B);
+    mul_dense_dense(A, B, C);
+    REQUIRE(C == I2);
 }
 
 TEST_CASE("test_dot(): matrices", "[matrices]")
