@@ -7,6 +7,7 @@ os:
   - linux
   - osx
 dist: trusty
+osx_image: xcode6.4
 cache:
   directories:
   - $HOME/.ccache
@@ -149,6 +150,12 @@ matrix:
       compiler: gcc
       os: osx
 
+before_install:
+- |
+   if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+     command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
+     rvm get head || true
+   fi
 install:
   - source bin/install_travis.sh
 script:
