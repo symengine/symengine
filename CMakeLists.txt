@@ -355,6 +355,14 @@ if (WITH_LLVM)
     set(PKGS ${PKGS} "LLVM")
 endif()
 
+# TODO: Detect this automatically
+set(SYMENGINE_LINK_LLVM_STATIC no
+    CACHE BOOL "If set to yes, make LLVM a private dependency.")
+
+if (SYMENGINE_LINK_LLVM_STATIC)
+    unset(SYMENGINE_LLVM_COMPONENTS)
+endif ()
+
 # BENCHMARKS
 set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
