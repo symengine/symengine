@@ -214,6 +214,19 @@ void StrPrinter::bvisit(const Or &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Xor &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "Xor(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Not &x)
 {
     std::ostringstream s;

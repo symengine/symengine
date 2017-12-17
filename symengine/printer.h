@@ -200,6 +200,7 @@ public:
     void bvisit(const BooleanAtom &x);
     void bvisit(const And &x);
     void bvisit(const Or &x);
+    void bvisit(const Xor &x);
     void bvisit(const Not &x);
     void bvisit(const Union &x);
     void bvisit(const Complement &x);
