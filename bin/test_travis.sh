@@ -84,6 +84,9 @@ fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
+if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
+fi
 
 if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
