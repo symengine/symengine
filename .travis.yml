@@ -114,7 +114,7 @@ matrix:
           packages:
           - binutils-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_MSAN="yes"
       compiler: clang
       os: linux
       addons:
@@ -126,6 +126,28 @@ matrix:
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
+    - env: BUILD_TYPE="Debug" WITH_ASAN="yes"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
+    - env: BUILD_TYPE="Debug" WITH_TSAN="yes"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
