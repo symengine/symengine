@@ -50,7 +50,7 @@ if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Cl
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS "-Wno-unused-parameter ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 endif()
 
 # Check c++11 support
