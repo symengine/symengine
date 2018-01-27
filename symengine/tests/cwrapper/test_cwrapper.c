@@ -1816,16 +1816,16 @@ void test_lambda_double()
     CVecBasic *args = vecbasic_new();
     CVecBasic *exprs = vecbasic_new();
 
-    vecbasic_push_back(args, x);
-    vecbasic_push_back(args, y);
-    vecbasic_push_back(args, z);
-
     integer_set_si(two, 2);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
     symbol_set(r, "r");
     symbol_set(s, "s");
+
+    vecbasic_push_back(args, x);
+    vecbasic_push_back(args, y);
+    vecbasic_push_back(args, z);
 
     // r = x + y*z + (y*z)**2
     // s = 2*x + y*z + (y*z)**2
