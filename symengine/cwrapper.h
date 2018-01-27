@@ -658,6 +658,17 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
 CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
                                           const basic x);
 
+//! Wrapper for LambdaRealDoubleVisitor
+typedef struct CLambdaRealDoubleVisitor CLambdaRealDoubleVisitor;
+CLambdaRealDoubleVisitor *lambda_real_double_visitor_new();
+void lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
+                                     const CVecBasic *args,
+                                     const CVecBasic *exprs, int perform_cse);
+void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
+                                     double *const outs,
+                                     const double *const inps);
+void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
 
