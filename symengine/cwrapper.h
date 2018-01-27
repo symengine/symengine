@@ -669,6 +669,17 @@ void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
                                      const double *const inps);
 void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 
+//! Wrapper for LambdaRealDoubleVisitor
+#ifdef HAVE_SYMENGINE_LLVM
+typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
+CLLVMDoubleVisitor *llvm_double_visitor_new();
+void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
+                              const CVecBasic *exprs, int perform_cse);
+void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
+                              const double *const inps);
+void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
+#endif
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
 

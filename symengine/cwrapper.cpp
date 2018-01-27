@@ -8,6 +8,11 @@
 #include <symengine/eval.h>
 #include <symengine/parser.h>
 #include <symengine/lambda_double.h>
+#ifdef HAVE_SYMENGINE_LLVM
+#include <symengine/llvm_double.h>
+using SymEngine::LLVMDoubleVisitor;
+#endif
+
 #define xstr(s) str(s)
 #define str(s) #s
 
@@ -1547,6 +1552,33 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
     delete self;
 }
 
+#ifdef HAVE_SYMENGINE_LLVM
+struct CLLVMDoubleVisitor {
+    SymEngine::LLVMDoubleVisitor m;
+};
+
+CLLVMDoubleVisitor *llvm_double_visitor_new()
+{
+    return new CLLVMDoubleVisitor();
+}
+
+void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
+                              const CVecBasic *exprs, int perform_cse)
+{
+    self->m.init(args->m, exprs->m, perform_cse);
+}
+
+void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
+                              const double *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
+{
+    delete self;
+}
+#endif
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault()
 {

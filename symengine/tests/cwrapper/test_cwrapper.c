@@ -1846,6 +1846,14 @@ void test_lambda_double()
         lambda_real_double_visitor_free(vis);
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#ifdef HAVE_SYMENGINE_LLVM
+        CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
+        llvm_double_visitor_init(vis2, args, exprs, perform_cse);
+        llvm_double_visitor_call(vis2, outs, inps);
+        llvm_double_visitor_free(vis2);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#endif
     }
     basic_free_stack(two);
     basic_free_stack(x);
