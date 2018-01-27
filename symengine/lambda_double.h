@@ -24,7 +24,7 @@ protected:
     std::vector<fn> results;
     std::vector<T> cse_intermediate_results;
 
-    std::map<RCP<const Basic>, unsigned, RCPBasicKeyLess>
+    std::map<RCP<const Basic>, size_t, RCPBasicKeyLess>
         cse_intermediate_fns_map;
     std::vector<fn> cse_intermediate_fns;
     fn result_;
