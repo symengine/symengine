@@ -161,7 +161,6 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
 
-    basic_new_stack(p);
     basic_parse2(p, str, 1);
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
@@ -1840,7 +1839,7 @@ void test_lambda_double()
 
     double outs[2];
     double inps[3] = {1.5, 2.0, 3.0};
-    for (int perform_cse=0; perform_cse<=1; ++perform_cse) {
+    for (int perform_cse = 0; perform_cse <= 1; ++perform_cse) {
         CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
         lambda_real_double_visitor_init(vis, args, exprs, perform_cse);
         lambda_real_double_visitor_call(vis, outs, inps);
@@ -1857,7 +1856,6 @@ void test_lambda_double()
     vecbasic_free(args);
     vecbasic_free(exprs);
 }
-
 
 int main(int argc, char *argv[])
 {
