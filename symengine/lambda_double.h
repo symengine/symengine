@@ -109,7 +109,7 @@ public:
         }
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
-            unsigned index = it->second;
+            auto index = it->second;
             result_
                 = [=](const T *x) { return cse_intermediate_results[index]; };
             return;
