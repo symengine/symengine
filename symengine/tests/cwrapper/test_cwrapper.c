@@ -1805,6 +1805,10 @@ void test_matrix()
 
 void test_lambda_double()
 {
+    int perform_cse;
+    double outs[2];
+    double inps[3] = {1.5, 2.0, 3.0};
+
     basic two, x, y, z, r, s;
     basic_new_stack(two);
     basic_new_stack(x);
@@ -1837,9 +1841,7 @@ void test_lambda_double()
     vecbasic_push_back(exprs, r);
     vecbasic_push_back(exprs, s);
 
-    double outs[2];
-    double inps[3] = {1.5, 2.0, 3.0};
-    for (int perform_cse = 0; perform_cse <= 1; ++perform_cse) {
+    for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
         CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
         lambda_real_double_visitor_init(vis, args, exprs, perform_cse);
         lambda_real_double_visitor_call(vis, outs, inps);
