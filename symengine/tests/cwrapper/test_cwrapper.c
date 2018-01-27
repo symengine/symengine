@@ -1859,6 +1859,7 @@ void test_lambda_double()
 
 int main(int argc, char *argv[])
 {
+    symengine_print_stack_on_segfault();
     test_version();
     test_cwrapper();
     test_complex();
@@ -1889,7 +1890,6 @@ int main(int argc, char *argv[])
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
 #endif // HAVE_SYMENGINE_MPC
-    symengine_print_stack_on_segfault();
     test_matrix();
     test_lambda_double();
     return 0;
