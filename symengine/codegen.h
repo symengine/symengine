@@ -109,6 +109,70 @@ public:
             o << "pow(" << apply(a) << ", " << apply(b) << ")";
         }
     }
+    void bvisit(const Abs &x)
+    {
+        std::ostringstream s;
+        s << "fabs(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Ceiling &x)
+    {
+        std::ostringstream s;
+        s << "ceil(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Gamma &x)
+    {
+        std::ostringstream s;
+        s << "tgamma(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const LogGamma &x)
+    {
+        std::ostringstream s;
+        s << "lgamma(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Max &x)
+    {
+        std::ostringstream s;
+        const auto &args = x.get_args();
+        switch (args.size()) {
+            case 0:
+            case 1:
+                throw SymEngineException("Impossible");
+            case 2:
+                s << "fmax(" << apply(args[0]) << ", " << apply(args[1]) << ")";
+                break;
+            default: {
+                vec_basic inner_args(args.begin() + 1, args.end());
+                auto inner = max(inner_args);
+                s << "fmax(" << apply(args[0]) << ", " << apply(inner) << ")";
+                break;
+            }
+        }
+        str_ = s.str();
+    }
+    void bvisit(const Min &x)
+    {
+        std::ostringstream s;
+        const auto &args = x.get_args();
+        switch (args.size()) {
+            case 0:
+            case 1:
+                throw SymEngineException("Impossible");
+            case 2:
+                s << "fmin(" << apply(args[0]) << ", " << apply(args[1]) << ")";
+                break;
+            default: {
+                vec_basic inner_args(args.begin() + 1, args.end());
+                auto inner = min(inner_args);
+                s << "fmin(" << apply(args[0]) << ", " << apply(inner) << ")";
+                break;
+            }
+        }
+        str_ = s.str();
+    }
     void bvisit(const Constant &x)
     {
         if (eq(x, *E)) {
