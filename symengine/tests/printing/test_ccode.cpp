@@ -18,7 +18,6 @@ using SymEngine::interval;
 using SymEngine::symbol;
 using SymEngine::piecewise;
 using SymEngine::add;
-using SymEngine::ccode;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::boolTrue;
@@ -47,7 +46,20 @@ using SymEngine::loggamma;
 using SymEngine::min;
 using SymEngine::max;
 using SymEngine::sqrt;
+using SymEngine::cbrt;
 using SymEngine::rational;
+using SymEngine::C89CodePrinter;
+using SymEngine::C99CodePrinter;
+using SymEngine::ccode;
+using SymEngine::jscode;
+
+TEST_CASE("C-code printers", "[CodePrinter]")
+{
+    C89CodePrinter c89;
+    C99CodePrinter c99;
+    REQUIRE(c89.apply(Inf) == "HUGE_VAL");
+    REQUIRE(c99.apply(Inf) == "INFINITY");
+}
 
 TEST_CASE("Arithmetic", "[ccode]")
 {
@@ -154,4 +166,32 @@ TEST_CASE("Piecewise", "[ccode]")
 
     REQUIRE(ccode(*p) == "((x <= 2) ? (\n   x\n)\n: ((x > 2 && x <= 5) ? (\n   "
                          "y\n)\n: (\n   x + y\n)))");
+}
+
+TEST_CASE("JavaScript math functions", "[jscode]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto z = symbol("z");
+    auto p = function_symbol("f", x);
+
+    REQUIRE(jscode(*p) == "f(x)");
+
+    p = function_symbol("f", pow(integer(2), x));
+    REQUIRE(jscode(*p) == "f(Math.pow(2, x))");
+
+    p = sqrt(x);
+    REQUIRE(jscode(*p) == "Math.sqrt(x)");
+    p = cbrt(x);
+    REQUIRE(jscode(*p) == "Math.cbrt(x)");
+    p = abs(x);
+    REQUIRE(jscode(*p) == "Math.abs(x)");
+    p = sin(x);
+    REQUIRE(jscode(*p) == "Math.sin(x)");
+    p = cos(x);
+    REQUIRE(jscode(*p) == "Math.cos(x)");
+    p = max({x, y, z});
+    REQUIRE(jscode(*p) == "Math.max(x, y, z)");
+    p = min({x, y, z});
+    REQUIRE(jscode(*p) == "Math.min(x, y, z)");
 }
