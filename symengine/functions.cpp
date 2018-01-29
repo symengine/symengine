@@ -3327,45 +3327,31 @@ Binomial::Binomial(const RCP<const Basic> &n, const RCP<const Basic> &k)
 bool Binomial::is_canonical(const RCP<const Basic> &n,
                             const RCP<const Basic> &k) const
 {
-    if (is_a_Number(*k) and down_cast<const Number &>(*k).is_zero()) {
+    if (is_a<Integer>(*k) and down_cast<const Integer &>(*k).is_zero()) {
         return false;
-    } else if (is_a_Boolean(*n) or is_a_Boolean(*k) or is_a_Set(*n)
-               or is_a_Set(*k)) {
-        return false;
-    } else if (eq(*n, *k) and not(is_a<NaN>(*n) or is_a<Infty>(*n))) {
-        return false;
-    } else if (is_a_Number(*k) and is_a_Number(*n)
+    } else if (is_a_Number(*k)
                and down_cast<const Number &>(*k).is_negative()) {
-        if (eq(*k, *NegInf)) {
-            if (not(eq(*n, *ComplexInf) or eq(*n, *NegInf))) {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    } else if (is_a<NaN>(*n)) {
-        if ((is_a<Integer>(*k)
-             and down_cast<const Number &>(*k).is_positive())) {
-            return false;
-        }
-    } else if (is_a<Infty>(*n)
-               and (is_a<Integer>(*k)
-                    and down_cast<const Number &>(*k).is_positive())) {
-        if (neq(*n, *ComplexInf)) {
-            return false;
-        }
-    } else if (eq(*k, *Inf)
-               and (is_a<Integer>(*n)
-                    and not down_cast<const Number &>(*n).is_negative())) {
         return false;
-    } else if (is_same_type(*n, *k)) {
-        if (is_a<Integer>(*n)) {
+    } else if (is_a<Integer>(*n) and is_a<Integer>(*k)) {
+        return false;
+    } else if (is_a<NaN>(*n) or is_a<NaN>(*k)) {
+        return false;
+    } else if (eq(*n, *k) and not is_a<Infty>(*n)) {
+        return false;
+    } else if (is_a_Number(*k) and is_a_Number(*n)) {
+        if (is_same_type(*n, *k)
+            and down_cast<const Number &>(*sub(n, k)).is_negative()) {
             return false;
-        }
-        if (is_a<Rational>(*n) or is_a<RealDouble>(*n)) {
-            if (down_cast<const Number &>(*sub(n, k)).is_negative()) {
+        } else if (is_a<Infty>(*n)
+                   and (is_a<Integer>(*k)
+                        and down_cast<const Number &>(*k).is_positive())) {
+            if (neq(*n, *ComplexInf)) {
                 return false;
             }
+        } else if (eq(*k, *Inf)
+                   and (is_a<Integer>(*n)
+                        and not down_cast<const Number &>(*n).is_negative())) {
+            return false;
         }
     }
     return true;
@@ -3379,47 +3365,32 @@ RCP<const Basic> Binomial::create(const RCP<const Basic> &n,
 
 RCP<const Basic> binomial(const RCP<const Basic> &n, const RCP<const Basic> &k)
 {
-    if (is_a_Number(*k) and down_cast<const Number &>(*k).is_zero()) {
+    if (is_a<Integer>(*k) and down_cast<const Integer &>(*k).is_zero()) {
         return one;
-    } else if (is_a_Boolean(*n) or is_a_Boolean(*k) or is_a_Set(*n)
-               or is_a_Set(*k)) {
-        throw SymEngineException(
-            "Boolean and Set objects not allowed in this context.");
-    } else if (eq(*n, *k) and not(is_a<NaN>(*n) or is_a<Infty>(*n))) {
-        return one;
-    } else if (is_a<NaN>(*n)) {
-        if ((is_a<Integer>(*k)
-             and down_cast<const Number &>(*k).is_positive())) {
-            return Nan;
-        }
-    } else if (is_a_Number(*k) and is_a_Number(*n)
+    } else if (is_a_Number(*k)
                and down_cast<const Number &>(*k).is_negative()) {
-        if (eq(*k, *NegInf)) {
-            if (not(eq(*n, *ComplexInf) or eq(*n, *NegInf))) {
-                return zero;
-            }
-        } else {
-            return zero;
-        }
-    } else if (is_a<Infty>(*n)
-               and (is_a<Integer>(*k)
-                    and down_cast<const Number &>(*k).is_positive())) {
-        if (neq(*n, *ComplexInf)) {
-            return n;
-        }
-    } else if (eq(*k, *Inf)
-               and (is_a<Integer>(*n)
-                    and not down_cast<const Number &>(*n).is_negative())) {
         return zero;
-    } else if (is_same_type(*n, *k)) {
-        if (is_a<Integer>(*n)) {
-            return binomial(down_cast<const Integer &>(*n),
-                            down_cast<const Integer &>(*k).as_uint());
-        }
-        if (is_a<Rational>(*n) or is_a<RealDouble>(*n)) {
-            if (down_cast<const Number &>(*sub(n, k)).is_negative()) {
-                return zero;
+    } else if (is_a<Integer>(*n) and is_a<Integer>(*k)) {
+        return binomial(down_cast<const Integer &>(*n),
+                        down_cast<const Integer &>(*k).as_uint());
+    } else if (is_a<NaN>(*n) or is_a<NaN>(*k)) {
+        return Nan;
+    } else if (eq(*n, *k) and not is_a<Infty>(*n)) {
+        return one;
+    } else if (is_a_Number(*k) and is_a_Number(*n)) {
+        if (is_same_type(*n, *k)
+            and down_cast<const Number &>(*sub(n, k)).is_negative()) {
+            return zero;
+        } else if (is_a<Infty>(*n)
+                   and (is_a<Integer>(*k)
+                        and down_cast<const Number &>(*k).is_positive())) {
+            if (neq(*n, *ComplexInf)) {
+                return n;
             }
+        } else if (eq(*k, *Inf)
+                   and (is_a<Integer>(*n)
+                        and not down_cast<const Number &>(*n).is_negative())) {
+            return zero;
         }
     }
     return make_rcp<const Binomial>(n, k);

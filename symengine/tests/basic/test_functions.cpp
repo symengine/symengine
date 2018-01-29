@@ -4568,44 +4568,44 @@ TEST_CASE("Factorial: functions", "[functions]")
     RCP<const Basic> r1;
 
     r1 = factorial(zero);
-    REQUIRE(eq(*r1, *one));
+    CHECK(eq(*r1, *one));
 
     r1 = factorial(one);
-    REQUIRE(eq(*r1, *one));
+    CHECK(eq(*r1, *one));
 
     r1 = factorial(minus_one);
-    REQUIRE(eq(*r1, *ComplexInf));
+    CHECK(eq(*r1, *ComplexInf));
 
     r1 = factorial(integer(-10));
-    REQUIRE(eq(*r1, *ComplexInf));
+    CHECK(eq(*r1, *ComplexInf));
 
     r1 = factorial(integer(10));
-    REQUIRE(eq(*r1, *integer(3628800)));
+    CHECK(eq(*r1, *integer(3628800)));
 
     r1 = factorial(Nan);
-    REQUIRE(eq(*r1, *Nan));
+    CHECK(eq(*r1, *Nan));
 
     r1 = factorial(Inf);
-    REQUIRE(eq(*r1, *Inf));
+    CHECK(eq(*r1, *Inf));
 
     r1 = factorial(n);
-    REQUIRE(is_a<Factorial>(*r1));
-    REQUIRE(eq(*down_cast<const Factorial &>(*r1).get_arg(), *n));
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(), *n));
 
     r1 = factorial(Rational::from_two_ints(3, 2));
-    REQUIRE(is_a<Factorial>(*r1));
-    REQUIRE(eq(*down_cast<const Factorial &>(*r1).get_arg(),
-               *Rational::from_two_ints(3, 2)));
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(),
+             *Rational::from_two_ints(3, 2)));
 
     r1 = factorial(Complex::from_two_nums(*integer(3), *integer(2)));
-    REQUIRE(is_a<Factorial>(*r1));
-    REQUIRE(eq(*down_cast<const Factorial &>(*r1).get_arg(),
-               *Complex::from_two_nums(*integer(3), *integer(2))));
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(),
+             *Complex::from_two_nums(*integer(3), *integer(2))));
 
     r1 = factorial(real_double(3.3));
-    REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 8.85534336045403)
-            < 1e-12);
+    CHECK(is_a<RealDouble>(*r1));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 8.85534336045403)
+          < 1e-12);
 
     CHECK_THROWS_AS(factorial(complex_double(std::complex<double>(2.0, 3.0))),
                     NotImplementedError);
@@ -4653,7 +4653,4 @@ TEST_CASE("Binomial: functions", "[functions]")
     REQUIRE(is_a<Binomial>(*r1));
     REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_n(), *integer(-2)));
     REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_k(), *Inf));
-
-    r2 = emptyset();
-    CHECK_THROWS_AS(binomial(r2, r2), SymEngineException);
 }

@@ -221,7 +221,6 @@ public:
     void bvisit(const Infty &x);
     void bvisit(const NaN &x);
     void bvisit(const Factorial &x);
-    void bvisit(const Binomial &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);

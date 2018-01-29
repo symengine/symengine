@@ -64,14 +64,6 @@ void StrPrinter::bvisit(const Factorial &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const Binomial &x)
-{
-    std::ostringstream s;
-    s << "binomial(" << apply(x.get_arg1()) << ", " << apply(x.get_arg2())
-      << ")";
-    str_ = s.str();
-}
-
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
@@ -948,6 +940,7 @@ std::vector<std::string> init_str_printer_names()
     names[MIN] = "min";
     names[SIGN] = "sign";
     names[CONJUGATE] = "conjugate";
+    names[BINOMIAL] = "binomial";
     return names;
 }
 
