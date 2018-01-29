@@ -161,7 +161,6 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
 
-    basic_new_stack(p);
     basic_parse2(p, str, 1);
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
@@ -1804,8 +1803,73 @@ void test_matrix()
     basic_free_stack(i4);
 }
 
+void test_lambda_double()
+{
+    int perform_cse;
+    double outs[2];
+    double inps[3] = {1.5, 2.0, 3.0};
+
+    basic two, x, y, z, r, s;
+    basic_new_stack(two);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(r);
+    basic_new_stack(s);
+    CVecBasic *args = vecbasic_new();
+    CVecBasic *exprs = vecbasic_new();
+
+    integer_set_si(two, 2);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+    symbol_set(r, "r");
+    symbol_set(s, "s");
+
+    vecbasic_push_back(args, x);
+    vecbasic_push_back(args, y);
+    vecbasic_push_back(args, z);
+
+    // r = x + y*z + (y*z)**2
+    // s = 2*x + y*z + (y*z)**2
+    basic_mul(y, y, z);
+    basic_pow(z, y, two);
+    basic_add(z, z, y);
+    basic_add(r, x, z);
+    basic_mul(x, two, x);
+    basic_add(s, x, z);
+    vecbasic_push_back(exprs, r);
+    vecbasic_push_back(exprs, s);
+
+    for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
+        CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
+        lambda_real_double_visitor_init(vis, args, exprs, perform_cse);
+        lambda_real_double_visitor_call(vis, outs, inps);
+        lambda_real_double_visitor_free(vis);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#ifdef HAVE_SYMENGINE_LLVM
+        CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
+        llvm_double_visitor_init(vis2, args, exprs, perform_cse);
+        llvm_double_visitor_call(vis2, outs, inps);
+        llvm_double_visitor_free(vis2);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#endif
+    }
+    basic_free_stack(two);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+    basic_free_stack(r);
+    basic_free_stack(s);
+    vecbasic_free(args);
+    vecbasic_free(exprs);
+}
+
 int main(int argc, char *argv[])
 {
+    symengine_print_stack_on_segfault();
     test_version();
     test_cwrapper();
     test_complex();
@@ -1836,7 +1900,7 @@ int main(int argc, char *argv[])
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
 #endif // HAVE_SYMENGINE_MPC
-    symengine_print_stack_on_segfault();
     test_matrix();
+    test_lambda_double();
     return 0;
 }

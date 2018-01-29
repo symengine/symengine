@@ -24,7 +24,7 @@ protected:
     std::vector<fn> results;
     std::vector<T> cse_intermediate_results;
 
-    std::map<RCP<const Basic>, unsigned, RCPBasicKeyLess>
+    std::map<RCP<const Basic>, size_t, RCPBasicKeyLess>
         cse_intermediate_fns_map;
     std::vector<fn> cse_intermediate_fns;
     fn result_;
@@ -109,7 +109,7 @@ public:
         }
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
-            unsigned index = it->second;
+            auto index = it->second;
             result_
                 = [=](const T *x) { return cse_intermediate_results[index]; };
             return;
