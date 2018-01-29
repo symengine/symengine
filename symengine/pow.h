@@ -62,6 +62,11 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x)
 {
     return pow(x, div(one, integer(2)));
 }
+//! \return cube root of `x`
+inline RCP<const Basic> cbrt(const RCP<const Basic> &x)
+{
+    return pow(x, div(one, integer(3)));
+}
 
 } // SymEngine
 

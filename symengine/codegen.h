@@ -100,14 +100,57 @@ public:
     {
         throw SymEngineException("Not supported");
     }
-    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                    const RCP<const Basic> &b)
+    void bvisit(const Abs &x)
     {
-        if (eq(*b, *rational(1, 2))) {
-            o << "sqrt(" << apply(a) << ")";
-        } else {
-            o << "pow(" << apply(a) << ", " << apply(b) << ")";
+        std::ostringstream s;
+        s << "fabs(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Ceiling &x)
+    {
+        std::ostringstream s;
+        s << "ceil(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Max &x)
+    {
+        std::ostringstream s;
+        const auto &args = x.get_args();
+        switch (args.size()) {
+            case 0:
+            case 1:
+                throw SymEngineException("Impossible");
+            case 2:
+                s << "fmax(" << apply(args[0]) << ", " << apply(args[1]) << ")";
+                break;
+            default: {
+                vec_basic inner_args(args.begin() + 1, args.end());
+                auto inner = max(inner_args);
+                s << "fmax(" << apply(args[0]) << ", " << apply(inner) << ")";
+                break;
+            }
         }
+        str_ = s.str();
+    }
+    void bvisit(const Min &x)
+    {
+        std::ostringstream s;
+        const auto &args = x.get_args();
+        switch (args.size()) {
+            case 0:
+            case 1:
+                throw SymEngineException("Impossible");
+            case 2:
+                s << "fmin(" << apply(args[0]) << ", " << apply(args[1]) << ")";
+                break;
+            default: {
+                vec_basic inner_args(args.begin() + 1, args.end());
+                auto inner = min(inner_args);
+                s << "fmin(" << apply(args[0]) << ", " << apply(inner) << ")";
+                break;
+            }
+        }
+        str_ = s.str();
     }
     void bvisit(const Constant &x)
     {
@@ -118,17 +161,6 @@ public:
         } else {
             str_ = x.get_name();
         }
-    }
-    void bvisit(const Infty &x)
-    {
-        std::ostringstream s;
-        if (x.is_negative_infinity())
-            s << "-HUGE_VAL";
-        else if (x.is_positive_infinity())
-            s << "HUGE_VAL";
-        else
-            throw SymEngineException("Not supported");
-        str_ = s.str();
     }
     void bvisit(const NaN &x)
     {
@@ -178,10 +210,156 @@ public:
     }
 };
 
+class C89CodePrinter : public BaseVisitor<C89CodePrinter, CodePrinter>
+{
+public:
+    using CodePrinter::str_;
+    using CodePrinter::apply;
+    using CodePrinter::bvisit;
+    void bvisit(const Infty &x)
+    {
+        std::ostringstream s;
+        if (x.is_negative_infinity())
+            s << "-HUGE_VAL";
+        else if (x.is_positive_infinity())
+            s << "HUGE_VAL";
+        else
+            throw SymEngineException("Not supported");
+        str_ = s.str();
+    }
+    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                    const RCP<const Basic> &b)
+    {
+        if (eq(*b, *rational(1, 2))) {
+            o << "sqrt(" << apply(a) << ")";
+        } else {
+            o << "pow(" << apply(a) << ", " << apply(b) << ")";
+        }
+    }
+};
+
+class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
+{
+public:
+    using C89CodePrinter::str_;
+    using C89CodePrinter::apply;
+    using C89CodePrinter::bvisit;
+    void bvisit(const Infty &x)
+    {
+        std::ostringstream s;
+        if (x.is_negative_infinity())
+            s << "-INFINITY";
+        else if (x.is_positive_infinity())
+            s << "INFINITY";
+        else
+            throw SymEngineException("Not supported");
+        str_ = s.str();
+    }
+    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                    const RCP<const Basic> &b)
+    {
+        if (eq(*b, *rational(1, 2))) {
+            o << "sqrt(" << apply(a) << ")";
+        } else if (eq(*b, *rational(1, 3))) {
+            o << "cbrt(" << apply(a) << ")";
+        } else {
+            o << "pow(" << apply(a) << ", " << apply(b) << ")";
+        }
+    }
+    void bvisit(const Gamma &x)
+    {
+        std::ostringstream s;
+        s << "tgamma(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const LogGamma &x)
+    {
+        std::ostringstream s;
+        s << "lgamma(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+};
+
+class JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
+{
+public:
+    using CodePrinter::str_;
+    using CodePrinter::apply;
+    using CodePrinter::bvisit;
+    void bvisit(const Constant &x)
+    {
+        if (eq(x, *E)) {
+            str_ = "Math.E";
+        } else if (eq(x, *pi)) {
+            str_ = "Math.PI";
+        } else {
+            str_ = x.get_name();
+        }
+    }
+    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                    const RCP<const Basic> &b)
+    {
+        if (eq(*b, *rational(1, 2))) {
+            o << "Math.sqrt(" << apply(a) << ")";
+        } else if (eq(*b, *rational(1, 3))) {
+            o << "Math.cbrt(" << apply(a) << ")";
+
+        } else {
+            o << "Math.pow(" << apply(a) << ", " << apply(b) << ")";
+        }
+    }
+    void bvisit(const Abs &x)
+    {
+        std::ostringstream s;
+        s << "Math.abs(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Sin &x)
+    {
+        std::ostringstream s;
+        s << "Math.sin(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Cos &x)
+    {
+        std::ostringstream s;
+        s << "Math.cos(" << apply(x.get_arg()) << ")";
+        str_ = s.str();
+    }
+    void bvisit(const Max &x)
+    {
+        const auto &args = x.get_args();
+        std::ostringstream s;
+        s << "Math.max(";
+        for (size_t i = 0; i < args.size(); ++i) {
+            s << apply(args[i]);
+            s << ((i == args.size() - 1) ? ")" : ", ");
+        }
+        str_ = s.str();
+    }
+    void bvisit(const Min &x)
+    {
+        const auto &args = x.get_args();
+        std::ostringstream s;
+        s << "Math.min(";
+        for (size_t i = 0; i < args.size(); ++i) {
+            s << apply(args[i]);
+            s << ((i == args.size() - 1) ? ")" : ", ");
+        }
+        str_ = s.str();
+    }
+};
+
 std::string ccode(const Basic &x)
 {
-    CodePrinter c;
+    C99CodePrinter c;
     return c.apply(x);
+}
+
+std::string jscode(const Basic &x)
+{
+    JSCodePrinter p;
+    return p.apply(x);
 }
 }
 

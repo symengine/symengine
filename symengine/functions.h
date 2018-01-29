@@ -292,6 +292,9 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 
+//! \return `cbrt` of the `arg`
+RCP<const Basic> cbrt(const RCP<const Basic> &arg);
+
 class Sin : public TrigFunction
 {
 

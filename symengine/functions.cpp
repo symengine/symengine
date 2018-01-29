@@ -15,6 +15,10 @@ RCP<const Basic> sqrt(RCP<const Basic> &arg)
 {
     return pow(arg, div(one, i2));
 }
+RCP<const Basic> cbrt(RCP<const Basic> &arg)
+{
+    return pow(arg, div(one, i3));
+}
 
 extern RCP<const Basic> sq3;
 extern RCP<const Basic> sq2;
