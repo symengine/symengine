@@ -993,6 +993,18 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = pow(mul(sqrt(mul(y, x)), x), i2);
     r2 = mul(pow(x, i3), y);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(one, Inf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, NegInf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, ComplexInf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, Nan);
+    REQUIRE(eq(*r1, *Nan));
 }
 
 TEST_CASE("Log: arit", "[arit]")

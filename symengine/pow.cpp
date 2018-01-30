@@ -108,7 +108,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         }
     }
 
-    if (eq(*a, *one))
+    if (eq(*a, *one) and not is_a_Number(*b))
         return one;
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
