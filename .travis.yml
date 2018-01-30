@@ -170,7 +170,7 @@ deploy:
   skip_cleanup: true
   repo: symengine/symengine.github.io
   target_branch: master
-  local_dir: $SOURCE_DIR/doc/html
+  local_dir: doc/html
   github_token:
     secure: "nA/geBch3kWX4aURwe52JZNEG/JDR4RRkMvWqoqKTbnma54ohOokwaBlwmSc7lcmiq6YP8nI7uSCtK7EtqatJZewxNTNP8JXcuPb1IRuCXIvusakmk4iEqveEun5Igfge/6e6K/ujUiZchDT9ucEkxGNIAYDwrW0MPQ3ZG0Tla0="
   on:
