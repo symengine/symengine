@@ -193,4 +193,6 @@ TEST_CASE("JavaScript math functions", "[jscode]")
     REQUIRE(jscode(*p) == "Math.max(x, y, z)");
     p = min({x, y, z});
     REQUIRE(jscode(*p) == "Math.min(x, y, z)");
+    p = exp(x);
+    REQUIRE(jscode(*p) == "Math.exp(x)");
 }
