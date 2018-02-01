@@ -221,6 +221,12 @@ public:
         *imag_ = neg(div(mul(sin_im, cos(*imag_)), den));
     }
 
+    void bvisit(const Abs &x)
+    {
+        *real_ = x.rcp_from_this();
+        *imag_ = zero;
+    }
+
     void bvisit(const Function &x)
     {
         throw SymEngineException(

@@ -11,6 +11,7 @@ using SymEngine::Symbol;
 using SymEngine::I;
 using SymEngine::sqrt;
 using SymEngine::RCP;
+using SymEngine::Abs;
 using SymEngine::zero;
 using SymEngine::neg;
 using SymEngine::integer;
@@ -258,4 +259,27 @@ TEST_CASE("RealImag: Trigonometric functions", "[as_real_imag]")
                     SymEngineException);
     CHECK_THROWS_AS(as_real_imag(asinh(i2), outArg(re), outArg(im)),
                     SymEngineException);
+}
+
+TEST_CASE("RealImag: Absolute Value Function", "[as_real_imag]")
+{
+    RCP<const Basic> re, im;
+    auto x = symbol("x");
+    auto i2 = integer(2), i3 = integer(3);
+
+    as_real_imag(abs(add(add(i2, I), add(i3, I))), outArg(re), outArg(im));
+    REQUIRE(eq(*re, *sqrt(add(pow(add(i2, i3), i2), pow(i2, i2)))));
+    REQUIRE(eq(*im, *zero));
+
+    as_real_imag(abs(neg(i2)), outArg(re), outArg(im));
+    REQUIRE(eq(*re, *abs(neg(i2))));
+    REQUIRE(eq(*im, *zero));
+
+    as_real_imag(abs(add(x, neg(i2))), outArg(re), outArg(im));
+    REQUIRE(eq(*re, *abs(add(x, neg(i2)))));
+    REQUIRE(eq(*im, *zero));
+
+    as_real_imag(abs(add(x, pow(I, i2))), outArg(re), outArg(im));
+    REQUIRE(eq(*re, *abs(add(x, neg(one)))));
+    REQUIRE(eq(*im, *zero));
 }
