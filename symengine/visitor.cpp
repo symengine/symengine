@@ -103,7 +103,23 @@ public:
         b.accept(*this);
         return s;
     }
+
+    set_basic apply(const MatrixBase &m)
+    {
+        for (unsigned i = 0; i < m.nrows(); i++) {
+            for (unsigned j = 0; j < m.ncols(); j++) {
+                m.get(i, j)->accept(*this);
+            }
+        }
+        return s;
+    }
 };
+
+set_basic free_symbols(const MatrixBase &m)
+{
+    FreeSymbolsVisitor visitor;
+    return visitor.apply(m);
+}
 
 set_basic free_symbols(const Basic &b)
 {

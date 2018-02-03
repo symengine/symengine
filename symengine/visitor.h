@@ -22,6 +22,7 @@
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
 #include <symengine/nan.h>
+#include <symengine/matrix.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine
@@ -190,6 +191,8 @@ public:
 RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
+
+set_basic free_symbols(const MatrixBase &m);
 
 class TransformVisitor : public BaseVisitor<TransformVisitor>
 {
