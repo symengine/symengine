@@ -139,9 +139,9 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         F->setAttributes(llvm::AttributeSet::get(mod->getContext(), attrs));
     }
 #else
-    F->addParamAttr(1, llvm::Attribute::ReadOnly);
+    F->addParamAttr(0, llvm::Attribute::ReadOnly);
+    F->addParamAttr(0, llvm::Attribute::NoCapture);
     F->addParamAttr(1, llvm::Attribute::NoCapture);
-    F->addParamAttr(2, llvm::Attribute::NoCapture);
     F->addFnAttr(llvm::Attribute::NoUnwind);
     F->addFnAttr(llvm::Attribute::UWTable);
 #endif
