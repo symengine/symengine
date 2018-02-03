@@ -5,6 +5,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -14,6 +15,7 @@ using SymEngine::Basic;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::is_a;
+using SymEngine::set_basic;
 using SymEngine::Add;
 using SymEngine::minus_one;
 using SymEngine::CSRMatrix;
@@ -1706,4 +1708,35 @@ TEST_CASE("Test Diff", "[matrices]")
         2, 2, {add(f, z), mul(f, x), add(mul(z, f), add(y, t)), add(f, y)});
     sdiff(A, f, J);
     REQUIRE(J == DenseMatrix(2, 2, {integer(1), x, z, integer(1)}));
+}
+
+TEST_CASE("free_symbols: MatrixBase", "[matrices]")
+{
+    DenseMatrix A;
+    CSRMatrix B;
+    set_basic s;
+    RCP<const Symbol> x = symbol("x");
+
+    A = DenseMatrix(2, 2, {integer(2), symbol("s"), integer(5), integer(6)});
+    s = free_symbols(A);
+    REQUIRE(s.size() == 1);
+
+    A = DenseMatrix(2, 2, {integer(2), mul(symbol("s"), integer(3)),
+                           sub(symbol("x"), symbol("y")), integer(4)});
+    s = free_symbols(A);
+    REQUIRE(s.size() == 3);
+
+    A = DenseMatrix(2, 2, {integer(2), mul(symbol("x"), integer(3)),
+                           sub(symbol("x"), symbol("y")), integer(4)});
+    s = free_symbols(A);
+    REQUIRE(s.size() == 2);
+    REQUIRE(s.count(symbol("x")) == 1);
+    REQUIRE(s.count(symbol("y")) == 1);
+
+    B = CSRMatrix::from_coo(3, 3, {0, 0, 1, 2, 2, 2}, {0, 2, 2, 0, 1, 2},
+                            {integer(1), integer(2), integer(3), integer(4),
+                             symbol("x"), symbol("x")});
+    s = free_symbols(B);
+    REQUIRE(s.size() == 1);
+    REQUIRE(s.count(symbol("x")) == 1);
 }
