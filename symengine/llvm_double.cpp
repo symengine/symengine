@@ -4,6 +4,7 @@
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/MCJIT.h"
 #include "llvm/IR/Argument.h"
+#include "llvm/IR/Attributes.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
@@ -31,7 +32,7 @@
 #include <vector>
 
 #if (LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 9)                       \
-    || (LLVM_VERSION_MAJOR == 4)
+    || (LLVM_VERSION_MAJOR > 3)
 #include <llvm/Transforms/Scalar/GVN.h>
 #endif
 
@@ -86,7 +87,9 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     // Simplify the control flow graph (deleting unreachable blocks, etc).
     fpm->add(llvm::createCFGSimplificationPass());
     fpm->add(llvm::createPartiallyInlineLibCallsPass());
+#if (LLVM_VERSION_MAJOR < 5)
     fpm->add(llvm::createLoadCombinePass());
+#endif
     fpm->add(llvm::createInstructionSimplifierPass());
     fpm->add(llvm::createMemCpyOptPass());
     fpm->add(llvm::createMergedLoadStoreMotionPass());
@@ -100,11 +103,12 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         inp.push_back(
             llvm::PointerType::get(llvm::Type::getDoubleTy(*context), 0));
     }
-    llvm::FunctionType *function_type
-        = llvm::FunctionType::get(llvm::Type::getVoidTy(*context), inp, false);
+    llvm::FunctionType *function_type = llvm::FunctionType::get(
+        llvm::Type::getVoidTy(*context), inp, /*isVarArgs=*/false);
     auto F = llvm::Function::Create(function_type,
                                     llvm::Function::InternalLinkage, "", mod);
     F->setCallingConv(llvm::CallingConv::C);
+#if (LLVM_VERSION_MAJOR < 5)
     {
         llvm::SmallVector<llvm::AttributeSet, 4> attrs;
         llvm::AttributeSet PAS;
@@ -134,6 +138,13 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
         F->setAttributes(llvm::AttributeSet::get(mod->getContext(), attrs));
     }
+#else
+    F->addParamAttr(1, llvm::Attribute::ReadOnly);
+    F->addParamAttr(1, llvm::Attribute::NoCapture);
+    F->addParamAttr(2, llvm::Attribute::NoCapture);
+    F->addFnAttr(llvm::Attribute::NoUnwind);
+    F->addFnAttr(llvm::Attribute::UWTable);
+#endif
 
     // Add a basic block to the function. As before, it automatically
     // inserts
@@ -164,8 +175,12 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         symbol_ptrs.push_back(result_);
     }
 
-    auto it = ++(F->args().begin());
-    auto out = &(*it);
+    auto it = F->args().begin();
+#if (LLVM_VERSION_MAJOR < 5)
+    auto out = &(*(++it));
+#else
+    auto out = &(*(it + 1));
+#endif
     std::vector<llvm::Value *> output_vals;
 
     if (cse) {
@@ -460,8 +475,9 @@ LLVMDoubleVisitor::get_external_function(const std::string &name)
 {
     std::vector<llvm::Type *> func_args;
     func_args.push_back(llvm::Type::getDoubleTy(mod->getContext()));
-    llvm::FunctionType *func_type = llvm::FunctionType::get(
-        llvm::Type::getDoubleTy(mod->getContext()), func_args, false);
+    llvm::FunctionType *func_type
+        = llvm::FunctionType::get(llvm::Type::getDoubleTy(mod->getContext()),
+                                  func_args, /*isVarArgs=*/false);
 
     llvm::Function *func = mod->getFunction(name);
     if (!func) {
@@ -469,6 +485,7 @@ LLVMDoubleVisitor::get_external_function(const std::string &name)
             func_type, llvm::GlobalValue::ExternalLinkage, name, mod);
         func->setCallingConv(llvm::CallingConv::C);
     }
+#if (LLVM_VERSION_MAJOR < 5)
     llvm::AttributeSet func_attr_set;
     {
         llvm::SmallVector<llvm::AttributeSet, 4> attrs;
@@ -484,6 +501,9 @@ LLVMDoubleVisitor::get_external_function(const std::string &name)
         func_attr_set = llvm::AttributeSet::get(mod->getContext(), attrs);
     }
     func->setAttributes(func_attr_set);
+#else
+    func->addFnAttr(llvm::Attribute::NoUnwind);
+#endif
     return func;
 }
 
