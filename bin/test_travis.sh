@@ -79,7 +79,7 @@ if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
 if [[ "${WITH_LLVM}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_LLVM=${WITH_LLVM} -DLLVM_DIR=${LLVM_DIR}"
+    cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
 fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"

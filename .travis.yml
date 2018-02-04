@@ -60,7 +60,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="5.0"
       compiler: gcc
       os: linux
       addons:
@@ -114,7 +114,7 @@ matrix:
           packages:
           - binutils-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="3.8" WITH_BENCHMARKS_NONIUS="yes"
       compiler: clang
       os: linux
       addons:
@@ -137,10 +137,10 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Debug"
+    - env: BUILD_TYPE="Debug" WITH_LLVM="3.8"
       compiler: clang
       os: osx
-    - env: BUILD_TYPE="Release"
+    - env: BUILD_TYPE="Release" WITH_LLVM="5.0"
       compiler: clang
       os: osx
     - env: BUILD_TYPE="Debug"
