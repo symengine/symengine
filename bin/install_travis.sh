@@ -73,7 +73,7 @@ if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs piranha=0.8 cmake=3.6.2"
+    conda_pkgs="$conda_pkgs piranha=0.8 cmake=3.10.0"
 fi
 
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
@@ -96,8 +96,8 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs arb=2.8.1"
 fi
 
-if [[ "${WITH_LLVM}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=3.8 cmake=3.6.2"
+if [[ ! -z "${WITH_LLVM}" ]]; then
+    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then
