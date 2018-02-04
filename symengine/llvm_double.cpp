@@ -42,9 +42,12 @@
 namespace SymEngine
 {
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmismatched-tags"
 class IRBuilder : public llvm::IRBuilder<>
 {
 };
+#pragma clang diagnostic pop
 
 llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
 {

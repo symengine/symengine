@@ -7,12 +7,15 @@
 #ifdef HAVE_SYMENGINE_LLVM
 
 // Forward declare llvm types
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmismatched-tags"
 namespace llvm
 {
 struct Module;
 struct Value;
 struct Function;
 }
+#pragma clang diagnostic pop
 
 namespace SymEngine
 {
