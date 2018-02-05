@@ -51,6 +51,12 @@ void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     m_[i * col_ + j] = e;
 }
 
+// Flat (row major) view of Matrix
+vec_basic DenseMatrix::as_vec_basic() const
+{
+    return m_;
+}
+
 unsigned DenseMatrix::rank() const
 {
     throw NotImplementedError("Not Implemented");

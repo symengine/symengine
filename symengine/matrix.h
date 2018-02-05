@@ -93,6 +93,7 @@ public:
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
+    virtual vec_basic as_vec_basic() const;
 
     virtual unsigned nrows() const
     {
