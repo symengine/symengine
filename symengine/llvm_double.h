@@ -14,6 +14,8 @@ namespace llvm
 struct Module;
 struct Value;
 struct Function;
+struct ExecutionEngine;
+class MemoryBufferRef;
 }
 #pragma clang diagnostic pop
 
@@ -30,11 +32,13 @@ protected:
     std::map<RCP<const Basic>, llvm::Value *, RCPBasicKeyLess>
         replacement_symbol_ptrs;
     llvm::Value *result_;
+    llvm::ExecutionEngine *executionengine;
     intptr_t func;
 
     // Following are invalid after the init call.
     IRBuilder *builder;
     llvm::Module *mod;
+    llvm::MemoryBufferRef *membuffer;
 
 public:
     llvm::Value *apply(const Basic &b);

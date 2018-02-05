@@ -26,10 +26,14 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
+#include "llvm/ExecutionEngine/ObjectCache.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/Path.h"
 #include <algorithm>
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <chrono>
 
 #if (LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 9)                       \
     || (LLVM_VERSION_MAJOR > 3)
@@ -76,6 +80,7 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     module->setDataLayout("");
     mod = module.get();
 
+    auto t1 = std::chrono::high_resolution_clock::now();
     // Create a new pass manager attached to it.
     auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
 
@@ -230,6 +235,10 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Optimize the function.
     fpm->run(*F);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
 
     // std::cout << "Optimized LLVM IR" << std::endl;
     // module->dump();
@@ -242,6 +251,75 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                                .setErrorStr(&error)
                                .create();
 
+    class MCJITObjectCache : public llvm::ObjectCache
+    {
+    public:
+        MCJITObjectCache()
+        {
+            // Set IR cache directory
+            llvm::sys::fs::current_path(CacheDir);
+            llvm::sys::path::append(CacheDir, "toy_object_cache");
+        }
+
+        virtual ~MCJITObjectCache()
+        {
+        }
+
+        virtual void notifyObjectCompiled(const llvm::Module *M,
+                                          llvm::MemoryBufferRef obj)
+        {
+            membuffer = obj;
+            // Get the ModuleID
+            const std::string ModuleID = M->getModuleIdentifier();
+
+            std::string IRFileName = "asd";
+            llvm::SmallString<128> IRCacheFile = CacheDir;
+            llvm::sys::path::append(IRCacheFile, IRFileName);
+            if (!llvm::sys::fs::exists(CacheDir.str())
+                && llvm::sys::fs::create_directory(CacheDir.str())) {
+                fprintf(stderr, "Unable to create cache directory\n");
+                return;
+            }
+            std::error_code ErrStr;
+            llvm::raw_fd_ostream IRObjectFile(IRCacheFile.c_str(), ErrStr,
+                                              llvm::sys::fs::F_None);
+            IRObjectFile << Obj.getBuffer();
+        }
+
+        // MCJIT will call this function before compiling any module
+        // MCJIT takes ownership of both the MemoryBuffer object and the memory
+        // to which it refers.
+        virtual std::unique_ptr<llvm::MemoryBuffer>
+        getObject(const llvm::Module *M)
+        {
+            // Get the ModuleID
+            const std::string ModuleID = M->getModuleIdentifier();
+
+            std::string IRFileName = "asd";
+            llvm::SmallString<128> IRCacheFile = CacheDir;
+            llvm::sys::path::append(IRCacheFile, IRFileName);
+            if (!llvm::sys::fs::exists(IRCacheFile.str())) {
+                // This file isn't in our cache
+                return NULL;
+            }
+            std::cout << "loaded " << ModuleID << " from disk" << std::endl;
+            auto IRObjectBuffer
+                = llvm::MemoryBuffer::getFile(IRCacheFile.c_str(), -1, false);
+            // MCJIT will want to write into this buffer, and we don't want that
+            // because the file has probably just been mmapped.  Instead we make
+            // a copy.  The filed-based buffer will be released when it goes
+            // out of scope.
+            return llvm::MemoryBuffer::getMemBufferCopy(
+                (*IRObjectBuffer)->getBuffer());
+
+            return NULL;
+        }
+
+    private:
+        llvm::SmallString<128> CacheDir;
+    };
+    MCJITObjectCache OurObjectCache;
+    executionengine->setObjectCache(&OurObjectCache);
     // std::cout << error << std::endl;
     executionengine->finalizeObject();
 
