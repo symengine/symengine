@@ -266,4 +266,51 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
     REQUIRE(::fabs((d - d3) / d) < 1e-12);
 }
+
+TEST_CASE("Check llvm save and load", "[llvm_double]")
+{
+    RCP<const Basic> x, y, z, r;
+    double d, d2, d3;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+
+    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                        pow(sin(x), integer(2))));
+
+    for (int i = 0; i < 4; ++i) {
+        r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
+    }
+
+    LLVMDoubleVisitor v;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    v.init({x, y, z}, *r);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Initializing "
+              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    LLVMDoubleVisitor v2;
+
+    t1 = std::chrono::high_resolution_clock::now();
+    v.save("tmp_test_lambda_double");
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Saving "
+              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    t1 = std::chrono::high_resolution_clock::now();
+    v2.load("tmp_test_lambda_double");
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "Loading "
+              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
+    d = v.call({0.4, 2.0, 3.0});
+    d2 = v2.call({0.4, 2.0, 3.0});
+    REQUIRE(::fabs((d - d2) / d) < 1e-12);
+}
 #endif

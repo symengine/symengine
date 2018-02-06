@@ -26,10 +26,14 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
+#include "llvm/ExecutionEngine/ObjectCache.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/Path.h"
 #include <algorithm>
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <fstream>
 
 #if (LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 9)                       \
     || (LLVM_VERSION_MAJOR > 3)
@@ -42,12 +46,9 @@
 namespace SymEngine
 {
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmismatched-tags"
 class IRBuilder : public llvm::IRBuilder<>
 {
 };
-#pragma clang diagnostic pop
 
 llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
 {
@@ -60,47 +61,8 @@ void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b, bool cse)
     init(x, {b.rcp_from_this()}, cse);
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                             bool cse)
+llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
 {
-    llvm::InitializeNativeTarget();
-    llvm::InitializeNativeTargetAsmPrinter();
-    llvm::InitializeNativeTargetAsmParser();
-    std::unique_ptr<llvm::LLVMContext> context
-        = llvm::make_unique<llvm::LLVMContext>();
-    symbols = inputs;
-
-    // Create some module to put our function into it.
-    std::unique_ptr<llvm::Module> module
-        = llvm::make_unique<llvm::Module>("SymEngine", *context);
-    module->setDataLayout("");
-    mod = module.get();
-
-    // Create a new pass manager attached to it.
-    auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
-
-    // Provide basic AliasAnalysis support for GVN.
-    // fpm->add(llvm::createBasicAliasAnalysisPass());
-    // Do simple "peephole" optimizations and bit-twiddling optzns.
-    fpm->add(llvm::createInstructionCombiningPass());
-    // Reassociate expressions.
-    fpm->add(llvm::createReassociatePass());
-    // Eliminate Common SubExpressions.
-    fpm->add(llvm::createGVNPass());
-    // Simplify the control flow graph (deleting unreachable blocks, etc).
-    fpm->add(llvm::createCFGSimplificationPass());
-    fpm->add(llvm::createPartiallyInlineLibCallsPass());
-#if (LLVM_VERSION_MAJOR < 5)
-    fpm->add(llvm::createLoadCombinePass());
-#endif
-    fpm->add(llvm::createInstructionSimplifierPass());
-    fpm->add(llvm::createMemCpyOptPass());
-    fpm->add(llvm::createMergedLoadStoreMotionPass());
-    fpm->add(llvm::createBitTrackingDCEPass());
-    fpm->add(llvm::createAggressiveDCEPass());
-
-    fpm->doInitialization();
-
     std::vector<llvm::Type *> inp;
     for (int i = 0; i < 2; i++) {
         inp.push_back(
@@ -148,6 +110,51 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     F->addFnAttr(llvm::Attribute::NoUnwind);
     F->addFnAttr(llvm::Attribute::UWTable);
 #endif
+    return F;
+}
+
+void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
+                             bool cse)
+{
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+    llvm::InitializeNativeTargetAsmParser();
+    std::unique_ptr<llvm::LLVMContext> context
+        = llvm::make_unique<llvm::LLVMContext>();
+    symbols = inputs;
+
+    // Create some module to put our function into it.
+    std::unique_ptr<llvm::Module> module
+        = llvm::make_unique<llvm::Module>("SymEngine", *context);
+    module->setDataLayout("");
+    mod = module.get();
+
+    // Create a new pass manager attached to it.
+    auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
+
+    // Provide basic AliasAnalysis support for GVN.
+    // fpm->add(llvm::createBasicAliasAnalysisPass());
+    // Do simple "peephole" optimizations and bit-twiddling optzns.
+    fpm->add(llvm::createInstructionCombiningPass());
+    // Reassociate expressions.
+    fpm->add(llvm::createReassociatePass());
+    // Eliminate Common SubExpressions.
+    fpm->add(llvm::createGVNPass());
+    // Simplify the control flow graph (deleting unreachable blocks, etc).
+    fpm->add(llvm::createCFGSimplificationPass());
+    fpm->add(llvm::createPartiallyInlineLibCallsPass());
+#if (LLVM_VERSION_MAJOR < 5)
+    fpm->add(llvm::createLoadCombinePass());
+#endif
+    fpm->add(llvm::createInstructionSimplifierPass());
+    fpm->add(llvm::createMemCpyOptPass());
+    fpm->add(llvm::createMergedLoadStoreMotionPass());
+    fpm->add(llvm::createBitTrackingDCEPass());
+    fpm->add(llvm::createAggressiveDCEPass());
+
+    fpm->doInitialization();
+
+    auto F = get_function_type(context.get());
 
     // Add a basic block to the function. As before, it automatically
     // inserts
@@ -242,6 +249,32 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                                .setErrorStr(&error)
                                .create();
 
+    // This is a hack to get the MemoryBuffer of a compiled object.
+    class MemoryBufferRefCallback : public llvm::ObjectCache
+    {
+    public:
+        std::string &ss_;
+        MemoryBufferRefCallback(std::string &ss) : ss_(ss)
+        {
+        }
+
+        virtual void notifyObjectCompiled(const llvm::Module *M,
+                                          llvm::MemoryBufferRef obj)
+        {
+            const char *c = obj.getBufferStart();
+            // Saving the object code in a std::string
+            ss_.assign(c, obj.getBufferSize());
+        }
+
+        virtual std::unique_ptr<llvm::MemoryBuffer>
+        getObject(const llvm::Module *M)
+        {
+            return NULL;
+        }
+    };
+
+    MemoryBufferRefCallback callback(membuffer);
+    executionengine->setObjectCache(&callback);
     // std::cout << error << std::endl;
     executionengine->finalizeObject();
 
@@ -522,6 +555,72 @@ void LLVMDoubleVisitor::bvisit(const Constant &x)
 void LLVMDoubleVisitor::bvisit(const Basic &)
 {
     throw std::runtime_error("Not implemented.");
+}
+
+void LLVMDoubleVisitor::save(const std::string &filename)
+{
+    std::ofstream fs(filename, std::ios::binary);
+    fs.write(membuffer.c_str(), membuffer.size());
+    fs.close();
+};
+
+void LLVMDoubleVisitor::load(const std::string &filename)
+{
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+    llvm::InitializeNativeTargetAsmParser();
+    std::unique_ptr<llvm::LLVMContext> context
+        = llvm::make_unique<llvm::LLVMContext>();
+
+    // Create some module to put our function into it.
+    std::unique_ptr<llvm::Module> module
+        = llvm::make_unique<llvm::Module>("SymEngine", *context);
+    module->setDataLayout("");
+    mod = module.get();
+
+    // Only defining the prototype for the function here.
+    // Since we know where the function is stored that's enough
+    // llvm::ObjectCache is designed for caching objects, but it
+    // is used here for loading one specific object.
+    auto F = get_function_type(context.get());
+
+    std::string error;
+    auto executionengine = llvm::EngineBuilder(std::move(module))
+                               .setEngineKind(llvm::EngineKind::Kind::JIT)
+                               .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+                               .setErrorStr(&error)
+                               .create();
+
+    class MCJITObjectLoader : public llvm::ObjectCache
+    {
+        const std::string &filename_;
+
+    public:
+        MCJITObjectLoader(const std::string &filename) : filename_(filename)
+        {
+        }
+        virtual void notifyObjectCompiled(const llvm::Module *M,
+                                          llvm::MemoryBufferRef obj)
+        {
+        }
+
+        // No need to check M because there is only one function
+        // Return it after reading from the file.
+        virtual std::unique_ptr<llvm::MemoryBuffer>
+        getObject(const llvm::Module *M)
+        {
+            auto IRObjectBuffer
+                = llvm::MemoryBuffer::getFile(filename_, -1, false);
+            return llvm::MemoryBuffer::getMemBufferCopy(
+                (*IRObjectBuffer)->getBuffer());
+        }
+    };
+
+    MCJITObjectLoader loader(filename);
+    executionengine->setObjectCache(&loader);
+    executionengine->finalizeObject();
+    // Set func to compiled function pointer
+    func = (intptr_t)executionengine->getPointerToFunction(F);
 }
 
 } // namespace SymEngine
