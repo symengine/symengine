@@ -294,7 +294,7 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
     LLVMDoubleVisitor v2;
 
     t1 = std::chrono::high_resolution_clock::now();
-    v.save("tmp_test_lambda_double");
+    auto &s = v.dumps();
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << "Saving "
               << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
@@ -302,7 +302,7 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
               << "us" << std::endl;
 
     t1 = std::chrono::high_resolution_clock::now();
-    v2.load("tmp_test_lambda_double");
+    v2.loads(s);
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << "Loading "
               << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
