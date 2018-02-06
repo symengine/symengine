@@ -7,22 +7,20 @@
 #ifdef HAVE_SYMENGINE_LLVM
 
 // Forward declare llvm types
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmismatched-tags"
 namespace llvm
 {
-struct Module;
-struct Value;
-struct Function;
-struct ExecutionEngine;
+class Module;
+class Value;
+class Function;
+class ExecutionEngine;
 class MemoryBufferRef;
+class LLVMContext;
 }
-#pragma clang diagnostic pop
 
 namespace SymEngine
 {
 
-struct IRBuilder;
+class IRBuilder;
 
 class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
 {
@@ -38,7 +36,8 @@ protected:
     // Following are invalid after the init call.
     IRBuilder *builder;
     llvm::Module *mod;
-    llvm::MemoryBufferRef *membuffer;
+    std::string membuffer;
+    llvm::Function *get_function_type(llvm::LLVMContext *);
 
 public:
     llvm::Value *apply(const Basic &b);
@@ -84,6 +83,8 @@ public:
     void bvisit(const LogGamma &x);
     void bvisit(const Erf &x);
     void bvisit(const Erfc &x);
+    void save(const std::string &filename);
+    void load(const std::string &filename);
 };
 }
 #endif
