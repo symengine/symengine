@@ -83,8 +83,11 @@ public:
     void bvisit(const LogGamma &x);
     void bvisit(const Erf &x);
     void bvisit(const Erfc &x);
-    void save(const std::string &filename);
-    void load(const std::string &filename);
+    // Return the compiled function as a binary string which can be loaded using
+    // `load`
+    const std::string &dumps();
+    // Load a previously compiled function from a string
+    void loads(const std::string &s);
 };
 }
 #endif

@@ -557,14 +557,12 @@ void LLVMDoubleVisitor::bvisit(const Basic &)
     throw std::runtime_error("Not implemented.");
 }
 
-void LLVMDoubleVisitor::save(const std::string &filename)
+const std::string &LLVMDoubleVisitor::dumps()
 {
-    std::ofstream fs(filename, std::ios::binary);
-    fs.write(membuffer.c_str(), membuffer.size());
-    fs.close();
+    return membuffer;
 };
 
-void LLVMDoubleVisitor::load(const std::string &filename)
+void LLVMDoubleVisitor::loads(const std::string &s)
 {
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -593,10 +591,10 @@ void LLVMDoubleVisitor::load(const std::string &filename)
 
     class MCJITObjectLoader : public llvm::ObjectCache
     {
-        const std::string &filename_;
+        const std::string &s_;
 
     public:
-        MCJITObjectLoader(const std::string &filename) : filename_(filename)
+        MCJITObjectLoader(const std::string &s) : s_(s)
         {
         }
         virtual void notifyObjectCompiled(const llvm::Module *M,
@@ -609,14 +607,11 @@ void LLVMDoubleVisitor::load(const std::string &filename)
         virtual std::unique_ptr<llvm::MemoryBuffer>
         getObject(const llvm::Module *M)
         {
-            auto IRObjectBuffer
-                = llvm::MemoryBuffer::getFile(filename_, -1, false);
-            return llvm::MemoryBuffer::getMemBufferCopy(
-                (*IRObjectBuffer)->getBuffer());
+            return llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));
         }
     };
 
-    MCJITObjectLoader loader(filename);
+    MCJITObjectLoader loader(s);
     executionengine->setObjectCache(&loader);
     executionengine->finalizeObject();
     // Set func to compiled function pointer
