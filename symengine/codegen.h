@@ -155,7 +155,7 @@ public:
     void bvisit(const Constant &x)
     {
         if (eq(x, *E)) {
-            str_ = "M_E";
+            str_ = "exp(1)";
         } else if (eq(x, *pi)) {
             str_ = "M_PI";
         } else {
