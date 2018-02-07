@@ -33,7 +33,7 @@ typedef std::unordered_map<int, RCP<const Basic>> umap_int_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
                            RCPBasicKeyEq>
     umap_basic_basic;
-typedef std::unordered_set<RCP<const Basic>, RCPBasicHash, RCPBasicKeyLess>
+typedef std::unordered_set<RCP<const Basic>, RCPBasicHash, RCPBasicKeyEq>
     uset_basic;
 
 typedef std::vector<int> vec_int;
