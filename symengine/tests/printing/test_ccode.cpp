@@ -59,6 +59,8 @@ TEST_CASE("C-code printers", "[CodePrinter]")
     C99CodePrinter c99;
     REQUIRE(c89.apply(Inf) == "HUGE_VAL");
     REQUIRE(c99.apply(Inf) == "INFINITY");
+    REQUIRE(c89.apply(E) == "exp(1)");
+    REQUIRE(c99.apply(E) == "exp(1)");
 }
 
 TEST_CASE("Arithmetic", "[ccode]")
