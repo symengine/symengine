@@ -73,6 +73,7 @@ class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor>
 {
 public:
     set_basic s;
+    uset_basic v;
 
     void bvisit(const Symbol &x)
     {
@@ -87,14 +88,20 @@ public:
         }
         s.insert(set_.begin(), set_.end());
         for (const auto &p : x.get_point()) {
-            p->accept(*this);
+            auto iter = v.insert(p->rcp_from_this());
+            if (iter.second) {
+                p->accept(*this);
+            }
         }
     }
 
     void bvisit(const Basic &x)
     {
         for (const auto &p : x.get_args()) {
-            p->accept(*this);
+            auto iter = v.insert(p->rcp_from_this());
+            if (iter.second) {
+                p->accept(*this);
+            }
         }
     }
 
