@@ -155,7 +155,7 @@ public:
     void bvisit(const Constant &x)
     {
         if (eq(x, *E)) {
-            str_ = "M_E";
+            str_ = "exp(1)";
         } else if (eq(x, *pi)) {
             str_ = "M_PI";
         } else {
@@ -230,7 +230,9 @@ public:
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b)
     {
-        if (eq(*b, *rational(1, 2))) {
+        if (eq(*a, *E)) {
+            o << "exp(" << apply(b) << ")";
+        } else if (eq(*b, *rational(1, 2))) {
             o << "sqrt(" << apply(a) << ")";
         } else {
             o << "pow(" << apply(a) << ", " << apply(b) << ")";
@@ -258,7 +260,9 @@ public:
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b)
     {
-        if (eq(*b, *rational(1, 2))) {
+        if (eq(*a, *E)) {
+            o << "exp(" << apply(b) << ")";
+        } else if (eq(*b, *rational(1, 2))) {
             o << "sqrt(" << apply(a) << ")";
         } else if (eq(*b, *rational(1, 3))) {
             o << "cbrt(" << apply(a) << ")";
@@ -299,11 +303,12 @@ public:
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b)
     {
-        if (eq(*b, *rational(1, 2))) {
+        if (eq(*a, *E)) {
+            o << "Math.exp(" << apply(b) << ")";
+        } else if (eq(*b, *rational(1, 2))) {
             o << "Math.sqrt(" << apply(a) << ")";
         } else if (eq(*b, *rational(1, 3))) {
             o << "Math.cbrt(" << apply(a) << ")";
-
         } else {
             o << "Math.pow(" << apply(a) << ", " << apply(b) << ")";
         }
