@@ -51,6 +51,7 @@ using SymEngine::cbrt;
 using SymEngine::rational;
 using SymEngine::C89CodePrinter;
 using SymEngine::C99CodePrinter;
+using SymEngine::JSCodePrinter;
 using SymEngine::ccode;
 using SymEngine::jscode;
 
@@ -200,4 +201,6 @@ TEST_CASE("JavaScript math functions", "[jscode]")
     REQUIRE(jscode(*p) == "Math.min(x, y, z)");
     p = exp(x);
     REQUIRE(jscode(*p) == "Math.exp(x)");
+    JSCodePrinter JS;
+    REQUIRE(JS.apply(pi) == "Math.PI");
 }
