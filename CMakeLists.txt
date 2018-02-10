@@ -32,7 +32,7 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb -fsanitize=address")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
     if (NOT BUILD_FOR_DISTRIBUTION)
