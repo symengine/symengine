@@ -7,34 +7,35 @@
 #
 # This file is up-to-date if the command git log --format="%aN <%aE>" | sort -u
 # gives no duplicates.
-Ondřej Čertík <ondrej.certik@gmail.com> Ondrej Certik <ondrej.certik@gmail.com>
-Sushant Hiray <hiraysushant@gmail.com> sushant <hiraysushant@gmail.com>
-Sushant Hiray <hiraysushant@gmail.com> Sushant <hiraysushant@gmail.com>
-Thilina Bandara Rathnayake <thilinarmtb@gmail.com> thilinarmtb <thilinarmtb@gmail.com>
-Thilina Bandara Rathnayake <thilinarmtb@gmail.com> Thilina Bandara Rathanyake <thilinarmtb@gmail.com>
-Peter Brady <petertbrady@gmail.com> Peter Brady <ptb@lanl.gov>
-Isuru Fernando <isuruf@gmail.com> Isuru Fernando <isuru.11@cse.mrt.ac.lk>
-Shivam Vats <shivamvats.iitkgp@gmail.com> Shivam Vats <shivamvats@users.noreply.github.com>
-Shivam Vats <shivamvats.iitkgp@gmail.com> Shivam Vats <shivamhzb@gmail.com>
-Sanka Rasnayaka <nuwan.ras@gmail.com> SankaGIT <nuwan.ras@gmail.com>
-AMiT Kumar <dtu.amit@gmail.com> Amit Kumar <dtu.amit@gmail.com>
-Abhinav Agarwal <abhinavagarwal1996@gmail.com> abhinavagarwal07 <abhinavagarwal1996@gmail.com>
-Abhinav Agarwal <abhinavagarwal1996@gmail.com> Abhinav Agarwal <abhinavagarwal07@users.noreply.github.com>
-Abhimanyu Siwach <siwachabhi@gmail.com> abhimanyu-siwach <siwachabhi@gmail.com>
-Zhang Yuning <codeworm96@outlook.com> codeworm96 <codeworm96@outlook.com>
-Kunal Singh <kunalsingh.iitkgp@gmail.com> kunal-iitkgp <kunalsingh.iitkgp@gmail.com>
-Sumith Kulal <sumith1896@gmail.com> Sumith1896 <sumith1896@gmail.com>
-Sumith Kulal <sumith1896@gmail.com> Sumith <sumith1896@gmail.com>
-Iris Lui <irislui66@gmail.com> Iris Lui <iwlui@ucdavis.edu> 
-Charles Chen <charlesyychen@gmail.com> Charles Chen <cyuchen@ucdavis.edu>
-Nishant Nikhil <nishantiam@gmail.com> Nishant <nishantiam@gmail.com>
-Arihant Parsoya <parsoyaarihant@gmail.com> arihant parsoya <parsoyaarihant@gmail.com>
-Shikhar Jaiswal <jaiswalshikhar87@gmail.com> ShikharJ <jaiswalshikhar87@gmail.com>
-Vishu Sidana <vishusidana95@gmail.com> vishusidana95 <vishusidana95@gmail.com>
-Ritesh Kumar <babarwal.ritesh@gmail.com> comperror <babarwal.ritesh@gmail.com>
-Siddharth Bhat <siddu.druid@gmail.com> bollu <siddu.druid@gmail.com>
-Tao He <sighingnow@gmail.com> sighingnow <sighingnow@gmail.com>
-Ranjith Kumar <ranjith.dakshana2015@gmail.com> ranjithkumar007 <ranjith.dakshana2015@gmail.com>
-Kv Manohar <kvmanohar22@gmail.com> kvmanohar22 <kvmanohar22@gmail.com>
-Kanchana Ruwanpathirana <kanchana.ruwanpathirana@gmail.com> kanchanarp <kanchana.ruwanpathirana@gmail.com>
+Ondřej Čertík <ondrej.certik@gmail.com>
+Ondřej Čertík <ondrej.certik@gmail.com> <ondrej@certik.us>
+Sushant Hiray <hiraysushant@gmail.com>
+Thilina Bandara Rathnayake <thilinarmtb@gmail.com>
+Peter Brady <petertbrady@gmail.com> <ptb@lanl.gov>
+Isuru Fernando <isuruf@gmail.com> <isuru.11@cse.mrt.ac.lk>
+Shivam Vats <shivamvats.iitkgp@gmail.com> <shivamvats@users.noreply.github.com>
+Shivam Vats <shivamvats.iitkgp@gmail.com> <shivamhzb@gmail.com>
+Sanka Rasnayaka <nuwan.ras@gmail.com>
+AMiT Kumar <dtu.amit@gmail.com>
+Abhinav Agarwal <abhinavagarwal1996@gmail.com>
+Abhinav Agarwal <abhinavagarwal1996@gmail.com> <abhinavagarwal07@users.noreply.github.com>
+Abhimanyu Siwach <siwachabhi@gmail.com>
+Zhang Yuning <codeworm96@outlook.com>
+Kunal Singh <kunalsingh.iitkgp@gmail.com>
+Sumith Kulal <sumith1896@gmail.com>
+Iris Lui <irislui66@gmail.com> <iwlui@ucdavis.edu>
+Charles Chen <charlesyychen@gmail.com> <cyuchen@ucdavis.edu>
+Nishant Nikhil <nishantiam@gmail.com>
+Arihant Parsoya <parsoyaarihant@gmail.com>
+Shikhar Jaiswal <jaiswalshikhar87@gmail.com>
+Vishu Sidana <vishusidana95@gmail.com>
+Ritesh Kumar <babarwal.ritesh@gmail.com>
+Siddharth Bhat <siddu.druid@gmail.com>
+Tao He <sighingnow@gmail.com>
+Ranjith Kumar <ranjith.dakshana2015@gmail.com>
+Kv Manohar <kvmanohar22@gmail.com>
+Kanchana Ruwanpathirana <kanchana.ruwanpathirana@gmail.com>
 Dirk Reusch <lists@kybdr.de> rdbyk <rdbyk@users.noreply.github.com>
+Nilay Pochhi <pochhi.nilay@gmail.com>
+Jialin Ma <marlin-@gmx.cn>
+Gerrit Ansmann <wrzlrpmft@users.noreply.github.com> <bla@example.com> Gerrit Ansmann
