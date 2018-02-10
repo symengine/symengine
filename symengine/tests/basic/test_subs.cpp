@@ -130,9 +130,14 @@ TEST_CASE("Mul: subs", "[subs]")
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i15 = integer(15);
+    RCP<const Basic> i16 = integer(16);
 
     RCP<const Basic> r1 = mul(x, y);
     RCP<const Basic> r2 = pow(y, i2);
@@ -247,6 +252,34 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = div(one, mul(x, y));
     d[x] = zero;
     REQUIRE(eq(*r1->subs(d), *div(ComplexInf, y)));
+
+    d.clear();
+    d[mul(x, y)] = i2;
+    d[mul(z, w)] = i4;
+    r1 = mul(mul(mul(mul(x, y), z), w), i2);
+    r2 = i16;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[mul(x, y)] = i2;
+    d[z] = i1;
+    r1 = mul(mul(mul(mul(x, y), z), w), i2);
+    r2 = mul(w, i4);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[mul(mul(x, y), i2)] = i5;
+    d[mul(mul(z, w), i2)] = i3;
+    r1 = mul(mul(mul(mul(x, y), z), w), i2);
+    r2 = mul(mul(z, w), i5);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[mul(mul(x, y), i2)] = i5;
+    d[mul(z, w)] = i3;
+    r1 = mul(mul(mul(mul(x, y), z), w), i2);
+    r2 = i15;
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("Pow: subs", "[subs]")

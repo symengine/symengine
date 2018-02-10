@@ -313,7 +313,7 @@ public:
                 Mul::dict_add_term_new(outArg(coef), d, exp, t);
             }
         }
-        if (fast_exec) {
+        if (fast_exec and subs_dict_.size() == 1) {
             result_ = Mul::from_dict(coef, std::move(d));
             return;
         }
@@ -324,23 +324,32 @@ public:
             auto rep = iter.second;
             if (is_a<Mul>(*sub1)) {
                 RCP<const Mul> subst = rcp_static_cast<const Mul>(sub1);
-                for (auto &p : subst->get_dict()) {
-                    auto it = dict.find(p.first);
-                    RCP<const Basic> diff_;
-                    if (it != dict.end())
-                        diff_ = sub(it->second, p.second);
-                    if (it == dict.end()
-                        || down_cast<const Number &>(*diff_).is_negative()) {
-                        exists = false;
-                        break;
-                    } else {
-                        if (!down_cast<const Number &>(*diff_).is_zero())
-                            Mul::dict_add_term_new(outArg(coef), d,
-                                                   sub(it->second, p.second),
-                                                   p.first);
+                auto sub_coef = subst->get_coef();
+                if (not eq(*mod(*rcp_static_cast<const Integer>(coef),
+                                *rcp_static_cast<const Integer>(sub_coef)),
+                           *zero))
+                    exists = false;
+                else {
+                    for (auto &p : subst->get_dict()) {
+                        auto it = dict.find(p.first);
+                        RCP<const Basic> diff_;
+                        if (it != dict.end())
+                            diff_ = sub(it->second, p.second);
+                        if (it == dict.end()
+                            || down_cast<const Number &>(*diff_)
+                                   .is_negative()) {
+                            exists = false;
+                            break;
+                        } else {
+                            if (!down_cast<const Number &>(*diff_).is_zero())
+                                Mul::dict_add_term_new(
+                                    outArg(coef), d, sub(it->second, p.second),
+                                    p.first);
+                        }
                     }
                 }
                 if (exists) {
+                    idivnum(outArg(coef), sub_coef);
                     for (const auto &p : dict) {
                         auto it = subst->get_dict().find(p.first);
                         if (it == subst->get_dict().end())
@@ -367,7 +376,7 @@ public:
                         Mul::dict_add_term_new(outArg(coef), d, exp, t);
                     }
                 } else
-                    d = x.get_dict();
+                    d = dict;
             } else if (is_a<Pow>(*sub1)) {
                 RCP<const Pow> subst = rcp_static_cast<const Pow>(sub1);
                 auto sub1_exp = subst->get_exp();
