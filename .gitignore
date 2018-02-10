@@ -70,6 +70,7 @@ symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
 symengine/tests/basic/test_as_numer_denom
 symengine/tests/basic/test_parser
+symengine/tests/basic/test_cse
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
 symengine/tests/ntheory/test_diophantine
