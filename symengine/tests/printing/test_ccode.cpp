@@ -7,6 +7,7 @@
 
 using SymEngine::Basic;
 using SymEngine::E;
+using SymEngine::pi;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Interval;
@@ -61,6 +62,8 @@ TEST_CASE("C-code printers", "[CodePrinter]")
     REQUIRE(c99.apply(Inf) == "INFINITY");
     REQUIRE(c89.apply(E) == "exp(1)");
     REQUIRE(c99.apply(E) == "exp(1)");
+    REQUIRE(c89.apply(pi) == "acos(-1)");
+    REQUIRE(c99.apply(pi) == "acos(-1)");
 }
 
 TEST_CASE("Arithmetic", "[ccode]")

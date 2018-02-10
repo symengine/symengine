@@ -157,7 +157,7 @@ public:
         if (eq(x, *E)) {
             str_ = "exp(1)";
         } else if (eq(x, *pi)) {
-            str_ = "M_PI";
+            str_ = "acos(-1)";
         } else {
             str_ = x.get_name();
         }
