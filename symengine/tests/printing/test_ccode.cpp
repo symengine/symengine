@@ -7,6 +7,7 @@
 
 using SymEngine::Basic;
 using SymEngine::E;
+using SymEngine::pi;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Interval;
@@ -50,6 +51,7 @@ using SymEngine::cbrt;
 using SymEngine::rational;
 using SymEngine::C89CodePrinter;
 using SymEngine::C99CodePrinter;
+using SymEngine::JSCodePrinter;
 using SymEngine::ccode;
 using SymEngine::jscode;
 
@@ -61,6 +63,8 @@ TEST_CASE("C-code printers", "[CodePrinter]")
     REQUIRE(c99.apply(Inf) == "INFINITY");
     REQUIRE(c89.apply(E) == "exp(1)");
     REQUIRE(c99.apply(E) == "exp(1)");
+    REQUIRE(c89.apply(pi) == "acos(-1)");
+    REQUIRE(c99.apply(pi) == "acos(-1)");
 }
 
 TEST_CASE("Arithmetic", "[ccode]")
@@ -197,4 +201,6 @@ TEST_CASE("JavaScript math functions", "[jscode]")
     REQUIRE(jscode(*p) == "Math.min(x, y, z)");
     p = exp(x);
     REQUIRE(jscode(*p) == "Math.exp(x)");
+    JSCodePrinter JS;
+    REQUIRE(JS.apply(pi) == "Math.PI");
 }
