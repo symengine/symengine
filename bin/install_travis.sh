@@ -11,8 +11,13 @@ set -x
 git clean -dfx
 
 if [[ "${CC}" == "" ]]; then
-    export CC=gcc
-    export CXX=g++
+    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+        export CC=clang
+        export CXX=clang++
+    else
+        export CC=gcc
+        export CXX=g++
+    fi
 fi
 export GCOV_EXECUTABLE=gcov
 
