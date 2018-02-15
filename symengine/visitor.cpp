@@ -18,24 +18,33 @@ namespace SymEngine
 void preorder_traversal(const Basic &b, Visitor &v)
 {
     b.accept(v);
-    for (const auto &p : b.get_args())
-        preorder_traversal(*p, v);
+    for (const auto &p : b.get_args()) {
+        auto iter = v.has_visited.insert(p->rcp_from_this());
+        if (iter.second)
+            preorder_traversal(*p, v);
+    }
 }
 
 void postorder_traversal(const Basic &b, Visitor &v)
 {
-    for (const auto &p : b.get_args())
-        postorder_traversal(*p, v);
+    for (const auto &p : b.get_args()) {
+        auto iter = v.has_visited.insert(p->rcp_from_this());
+        if (iter.second)
+            postorder_traversal(*p, v);
+    }
     b.accept(v);
 }
 
 void preorder_traversal_stop(const Basic &b, StopVisitor &v)
 {
+
     b.accept(v);
     if (v.stop_)
         return;
     for (const auto &p : b.get_args()) {
-        preorder_traversal_stop(*p, v);
+        auto iter = v.has_visited.insert(p->rcp_from_this());
+        if (iter.second)
+            preorder_traversal_stop(*p, v);
         if (v.stop_)
             return;
     }
@@ -44,7 +53,9 @@ void preorder_traversal_stop(const Basic &b, StopVisitor &v)
 void postorder_traversal_stop(const Basic &b, StopVisitor &v)
 {
     for (const auto &p : b.get_args()) {
-        postorder_traversal_stop(*p, v);
+        auto iter = v.has_visited.insert(p->rcp_from_this());
+        if (iter.second)
+            postorder_traversal_stop(*p, v);
         if (v.stop_)
             return;
     }
@@ -73,7 +84,6 @@ class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor>
 {
 public:
     set_basic s;
-    uset_basic v;
 
     void bvisit(const Symbol &x)
     {
@@ -88,7 +98,7 @@ public:
         }
         s.insert(set_.begin(), set_.end());
         for (const auto &p : x.get_point()) {
-            auto iter = v.insert(p->rcp_from_this());
+            auto iter = has_visited.insert(p->rcp_from_this());
             if (iter.second) {
                 p->accept(*this);
             }
@@ -98,7 +108,7 @@ public:
     void bvisit(const Basic &x)
     {
         for (const auto &p : x.get_args()) {
-            auto iter = v.insert(p->rcp_from_this());
+            auto iter = has_visited.insert(p->rcp_from_this());
             if (iter.second) {
                 p->accept(*this);
             }
@@ -202,7 +212,9 @@ void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
     if (v.stop_ or v.local_stop_)
         return;
     for (const auto &p : b.get_args()) {
-        preorder_traversal_local_stop(*p, v);
+        auto iter = v.has_visited.insert(p->rcp_from_this());
+        if (iter.second)
+            preorder_traversal_local_stop(*p, v);
         if (v.stop_)
             return;
     }
