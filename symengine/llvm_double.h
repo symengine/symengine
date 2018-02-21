@@ -85,7 +85,7 @@ public:
     void bvisit(const Erfc &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
-    const std::string &dumps();
+    const std::string &dumps() const;
     // Load a previously compiled function from a string
     void loads(const std::string &s);
 };
