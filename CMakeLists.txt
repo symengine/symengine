@@ -40,6 +40,11 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
     set(CMAKE_CXX_FLAGS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__ ${CMAKE_CXX_FLAGS}")
 endif ()
 
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+endif ()
+
 set(CMAKE_POSITION_INDEPENDENT_CODE yes CACHE BOOL "Build all libraries as position independent")
 
 #Boost.multiprecision build segfaults if -O3 optimization is on
@@ -49,7 +54,13 @@ if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Cl
     string(REPLACE "-O2" "" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 endif()
 
+set(BUILD_FOR_DISTRIBUTION yes CACHE BOOL "Building SymEngine for a distribution")
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    if (NOT BUILD_FOR_DISTRIBUTION)
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+    endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 endif()
 
