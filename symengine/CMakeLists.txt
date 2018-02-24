@@ -28,6 +28,7 @@ set(SRC
     infinity.cpp
     integer.cpp
     logic.cpp
+    mathml.cpp
     matrix.cpp
     monomials.cpp
     mul.cpp
@@ -121,6 +122,7 @@ set(HEADERS
     lambda_double.h
     llvm_double.h
     logic.h
+    mathml.h
     matrix.h
     monomials.h
     mp_class.h
@@ -151,6 +153,7 @@ set(HEADERS
     series_piranha.h
     series_visitor.h
     sets.h
+    solve.h
     subs.h
     symbol.h
     symengine_assert.h
@@ -159,7 +162,6 @@ set(HEADERS
     symengine_rcp.h
     type_codes.inc
     visitor.h
-    solve.h
 )
 
 # Configure SymEngine using our CMake options:
