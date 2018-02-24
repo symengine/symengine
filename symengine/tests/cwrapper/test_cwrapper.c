@@ -647,7 +647,7 @@ void test_function_symbols()
 
     CVecBasic *vec2 = vecbasic_new();
     vecbasic_push_back(vec2, g);
-    function_symbol_set(h, "h", vec2);  
+    function_symbol_set(h, "h", vec2);
 
     CVecBasic *vec = vecbasic_new();
     basic_add(e, x, y);
@@ -657,7 +657,7 @@ void test_function_symbols()
 
     function_symbol_set(f, "f", vec);
 
-    basic_add(z, z, f);    
+    basic_add(z, z, f);
 
     s = basic_str(z);
     SYMENGINE_C_ASSERT(strcmp(s, "z + f(x + y, g(x), h(g(x)))") == 0);
@@ -666,7 +666,7 @@ void test_function_symbols()
     basic_function_symbols(f, symbols);
     SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
     setbasic_free(symbols);
-    
+
     basic_free_stack(e);
     basic_free_stack(x);
     basic_free_stack(y);
