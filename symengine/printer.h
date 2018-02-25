@@ -8,6 +8,7 @@ namespace SymEngine
 
 std::string ascii_art();
 std::string print_double(double d);
+std::vector<std::string> init_str_printer_names();
 
 enum class PrecedenceEnum { Add, Mul, Pow, Atom };
 

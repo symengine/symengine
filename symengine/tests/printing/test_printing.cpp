@@ -5,7 +5,10 @@
 #include <symengine/printer.h>
 #include <symengine/mathml.h>
 #include <symengine/parser.h>
+#include <symengine/logic.h>
 
+using SymEngine::rcp_static_cast;
+using SymEngine::piecewise;
 using SymEngine::parse;
 using SymEngine::RCP;
 using SymEngine::Basic;
@@ -585,4 +588,6 @@ TEST_CASE("test_mathml()", "[mathml]")
     REQUIRE(mathml(*v) == "<apply><plus/><cn>1</cn><apply><times/><cn>-1</"
                           "cn><ci>y</ci></apply><apply><times/><cn>4</"
                           "cn><ci>x</ci></apply></apply>");
+    RCP<const Basic> u = parse("sin(x)");
+    REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
