@@ -89,6 +89,40 @@ void MathMLPrinter::bvisit(const Piecewise &x)
     s << "</piecewise>";
 }
 
+void MathMLPrinter::bvisit(const EmptySet &x)
+{
+    s << "<emptyset/>";
+}
+
+void MathMLPrinter::bvisit(const FiniteSet &x)
+{
+    s << "<set>";
+    const auto& args = x.get_args();
+    for (const auto& arg : args) {
+        arg->accept(*this);
+    }
+    s << "</set>";
+}
+
+void MathMLPrinter::bvisit(const ConditionSet &x)
+{
+    s << "<set><bvar>";
+    x.get_symbol()->accept(*this);
+    s << "</bvar><condition>";
+    x.get_condition()->accept(*this);
+    s << "</condition>";
+    x.get_symbol()->accept(*this);
+    s << "</set>";
+}
+
+void MathMLPrinter::bvisit(const Contains &x)
+{
+    s << "<apply><in/>";
+    x.get_expr()->accept(*this);
+    x.get_set()->accept(*this);
+    s << "</apply>";
+}
+
 void MathMLPrinter::bvisit(const BooleanAtom &x)
 {
     if (x.get_val()) {
@@ -133,6 +167,36 @@ void MathMLPrinter::bvisit(const Not &x)
     s << "<apply><not/>";
     x.get_arg()->accept(*this);
     s << "</apply>";
+}
+
+void MathMLPrinter::bvisit(const Union &x)
+{
+    s << "<apply><union/>";
+    const auto &sets = x.get_args();
+    for (const auto &set : sets) {
+        set->accept(*this);
+    }
+    s << "</apply>";
+}
+
+void MathMLPrinter::bvisit(const Complement &x)
+{
+    s << "<apply><setdiff/>";
+    x.get_universe()->accept(*this);
+    x.get_container()->accept(*this);
+    s << "</apply>";
+}
+
+void MathMLPrinter::bvisit(const ImageSet &x)
+{
+    s << "<set><bvar>";
+    x.get_expr()->accept(*this);
+    s << "</bvar><condition><apply><in/>";
+    x.get_symbol()->accept(*this);
+    x.get_baseset()->accept(*this);
+    s << "</apply></condition>";
+    x.get_symbol()->accept(*this);
+    s << "</set>";
 }
 
 void MathMLPrinter::bvisit(const Add &x)
