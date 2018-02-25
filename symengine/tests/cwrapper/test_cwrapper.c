@@ -756,7 +756,7 @@ void test_coeff()
     basic_new_stack(n1);
     basic_new_stack(c1);
     basic_new_stack(c2);
-    basic_new_stack(c3);    
+    basic_new_stack(c3);
     integer_set_si(n1, 1);
     basic_coeff(c1, e, x, n1);
     basic_coeff(c2, e, y, n1);
