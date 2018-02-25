@@ -678,11 +678,6 @@ void StrPrinter::bvisit(const UPSeriesPiranha &x)
 }
 #endif
 
-void StrPrinter::bvisit(const Log &x)
-{
-    str_ = "log(" + this->apply(x.get_arg()) + ")";
-}
-
 void StrPrinter::bvisit(const Constant &x)
 {
     str_ = x.get_name();
@@ -913,6 +908,7 @@ std::vector<std::string> init_str_printer_names()
     names[ATANH] = "atanh";
     names[ACOTH] = "acoth";
     names[ASECH] = "asech";
+    names[LOG] = "log";
     names[LAMBERTW] = "lambertw";
     names[ZETA] = "zeta";
     names[DIRICHLET_ETA] = "dirichlet_eta";
