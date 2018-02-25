@@ -62,10 +62,10 @@ bool has_symbol(const Basic &b, const Symbol &x)
 
 RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n)
 {
-    if (!is_a<Symbol>(x)) {
-        throw NotImplementedError("Not implemented for non Symbols.");
+    if (!(is_a<Symbol>(x) || is_a<FunctionSymbol>(x))) {
+        throw NotImplementedError("Not implemented for non (Function)Symbols.");
     }
-    CoeffVisitor v(ptrFromRef(down_cast<const Symbol &>(x)), ptrFromRef(n));
+    CoeffVisitor v(ptrFromRef(x), ptrFromRef(n));
     return v.apply(b);
 }
 
