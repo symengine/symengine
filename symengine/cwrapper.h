@@ -607,6 +607,9 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
+//! Returns the coefficient of x^n in b
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n);
 
 //! Wrapper for ascii_art()
 

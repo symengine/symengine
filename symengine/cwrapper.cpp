@@ -1317,6 +1317,14 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n)
+{
+    CWRAPPER_BEGIN
+    c->m = SymEngine::coeff(*(b->m), *(x->m), *(n->m));
+    CWRAPPER_END
+}
+
 // ----------------------
 
 char *ascii_art_str()
