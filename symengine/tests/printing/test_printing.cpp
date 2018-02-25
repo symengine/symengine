@@ -5,6 +5,7 @@
 #include <symengine/printer.h>
 #include <symengine/mathml.h>
 #include <symengine/parser.h>
+#include <symengine/latex.h>
 #include <symengine/logic.h>
 
 using SymEngine::rcp_static_cast;
@@ -61,6 +62,7 @@ using SymEngine::logical_and;
 using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::imageset;
+using SymEngine::latex;
 
 using namespace SymEngine::literals;
 
@@ -617,4 +619,43 @@ TEST_CASE("test_relational(): printing", "[printing]")
     REQUIRE(r1->__str__() == "x*(y < z)");
     r1 = mul(Lt(y, z), x);
     REQUIRE(r1->__str__() == "x*(y < z)");
+}
+
+TEST_CASE("test_latex_printing()", "[latex]")
+{
+    RCP<const Basic> l1 = parse("3/2");
+    RCP<const Basic> l2 = parse("3/2 + 4*I/2");
+    RCP<const Basic> l3 = parse("1.123123123123 + 1.123123123123*I");
+    RCP<const Basic> l4 = parse("Eq(x, y)");
+    RCP<const Basic> l5 = parse("Ne(x, y)");
+    RCP<const Basic> l6 = parse("a <= 6");
+    RCP<const Set> l7 = interval(integer(-3), integer(3), true, true);
+    RCP<const Set> l8 = interval(integer(-3), integer(3), true, false);
+    RCP<const Set> l9 = interval(integer(-3), integer(3), false, true);
+    RCP<const Set> l10 = interval(integer(-3), integer(3), false, false);
+    RCP<const Basic> l11 = parse("5 == 5");
+    RCP<const Basic> l12 = parse("5 == 6");
+    RCP<const Symbol> s1 = symbol("a");
+    RCP<const Symbol> s2 = symbol("b");
+    RCP<const Symbol> s3 = symbol("c");
+    RCP<const Basic> l13
+        = logical_and({Ge(s1, integer(2)), Ge(s2, integer(5))});
+    RCP<const Basic> l14
+        = logical_and({logical_or({Eq(s1, s2), Ne(s1, s3)}), {Ge(s1, s2)}});
+
+    REQUIRE(latex(*l1) == "\\frac{3}{2}");
+    REQUIRE(latex(*l2) == "\\frac{3}{2} + 2j");
+    REQUIRE(latex(*l3) == "1.123123123123 + 1.123123123123j");
+    REQUIRE(latex(*l4) == "x = y");
+    REQUIRE(latex(*l5) == "x \\neq y");
+    REQUIRE(latex(*l6) == "a \\leq 6");
+    REQUIRE(latex(*l7) == "\\left(-3, 3\\right)");
+    REQUIRE(latex(*l8) == "\\left(-3, 3\\right]");
+    REQUIRE(latex(*l9) == "\\left[-3, 3\\right)");
+    REQUIRE(latex(*l10) == "\\left[-3, 3\\right]");
+    REQUIRE(latex(*l11) == "\\mathrm{True}");
+    REQUIRE(latex(*l12) == "\\mathrm{False}");
+    REQUIRE(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
+    REQUIRE(latex(*l14)
+            == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
 }

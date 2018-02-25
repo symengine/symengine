@@ -41,6 +41,7 @@ set(SRC
     functions.cpp
     infinity.cpp
     integer.cpp
+    latex.cpp
     logic.cpp
     mathml.cpp
     matrix.cpp
@@ -136,6 +137,7 @@ set(HEADERS
     infinity.h
     integer.h
     lambda_double.h
+    latex.h
     llvm_double.h
     logic.h
     mathml.h
