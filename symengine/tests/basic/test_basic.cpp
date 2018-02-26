@@ -973,6 +973,22 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.count(x) == 1);
 }
 
+TEST_CASE("function_symbols: Basic", "[basic]")
+{
+    RCP<const Basic> r1, r2;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = function_symbol("f", mul(x, integer(2)));
+    set_basic s = function_symbols(*r1);
+    REQUIRE(s.size() == 1);
+
+    r2= function_symbol("g", add(r1, y));    
+    s = function_symbols(*r2);
+    REQUIRE(s.size() == 2);
+}
+
 TEST_CASE("args: Basic", "[basic]")
 {
     RCP<const Basic> r1;
