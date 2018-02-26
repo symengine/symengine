@@ -681,6 +681,40 @@ void test_function_symbols()
     basic_str_free(s);
 }
 
+void test_function_symbol_get_name()
+{
+    char *s1, *s2;
+    basic x;
+    basic_new_stack(x);
+    symbol_set(x, "x");
+
+    basic f, g;
+    basic_new_stack(f);
+    basic_new_stack(g);
+
+    CVecBasic *vec1 = vecbasic_new();
+    vecbasic_push_back(vec1, x);
+    function_symbol_set(g, "g", vec1);
+
+    CVecBasic *vec2 = vecbasic_new();
+    vecbasic_push_back(vec2, g);
+    function_symbol_set(f, "f", vec2);
+
+    s1 = function_symbol_get_name(g);
+    SYMENGINE_C_ASSERT(strcmp(s1, "g") == 0);
+
+    s2 = function_symbol_get_name(f);
+    SYMENGINE_C_ASSERT(strcmp(s2, "f") == 0);
+
+    basic_free_stack(x);
+    basic_free_stack(f);
+    basic_free_stack(g);
+    vecbasic_free(vec1);
+    vecbasic_free(vec2);
+    basic_str_free(s1);
+    basic_str_free(s2);
+}
+
 void test_get_type()
 {
     basic x, y;
@@ -1940,6 +1974,7 @@ int main(int argc, char *argv[])
     test_get_args();
     test_free_symbols();
     test_function_symbols();
+    test_function_symbol_get_name();
     test_get_type();
     test_hash();
     test_subs();

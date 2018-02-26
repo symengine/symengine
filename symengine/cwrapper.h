@@ -610,6 +610,8 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
+//! Returns the name of the given FunctionSymbol
+char *function_symbol_get_name(const basic b);
 
 //! Wrapper for ascii_art()
 

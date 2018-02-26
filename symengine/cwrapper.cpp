@@ -22,6 +22,7 @@ using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
 using SymEngine::Symbol;
+using SymEngine::FunctionSymbol;
 using SymEngine::function_symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
@@ -1323,6 +1324,15 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
     CWRAPPER_BEGIN
     s->m = function_symbol(c, arg->m);
     CWRAPPER_END
+}
+
+char *function_symbol_get_name(const basic b)
+{
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(*(b->m)));
+    std::string str = down_cast<const FunctionSymbol &>(*(b->m)).get_name();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
 }
 
 // ----------------------
