@@ -742,6 +742,7 @@ void test_coeff()
     basic_new_stack(y);
     basic_new_stack(z);
     basic_new_stack(e);
+    basic_new_stack(n4);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
