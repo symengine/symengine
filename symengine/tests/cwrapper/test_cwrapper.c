@@ -735,6 +735,49 @@ void test_subs()
     basic_free_stack(z);
 }
 
+void test_coeff()
+{
+    basic x, y, z, e, n4;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
+    basic_new_stack(n4);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    integer_set_si(n4, 4);
+    basic_mul(e, n4, x);
+    basic_add(e, e, y);
+    basic_add(e, e, z);
+
+    basic n1;
+    basic c1, c2, c3;
+    basic_new_stack(n1);
+    basic_new_stack(c1);
+    basic_new_stack(c2);
+    basic_new_stack(c3);
+    integer_set_si(n1, 1);
+    basic_coeff(c1, e, x, n1);
+    basic_coeff(c2, e, y, n1);
+    basic_coeff(c3, e, z, n1);
+
+    SYMENGINE_C_ASSERT(basic_eq(c1, n4));
+    SYMENGINE_C_ASSERT(basic_eq(c2, n1));
+    SYMENGINE_C_ASSERT(basic_eq(c3, n1));
+
+    basic_free_stack(c3);
+    basic_free_stack(c2);
+    basic_free_stack(c1);
+    basic_free_stack(n1);
+    basic_free_stack(n4);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 void test_constants()
 {
     basic z, o, mo, i;
@@ -1886,6 +1929,7 @@ int main(int argc, char *argv[])
     test_hash();
     test_subs();
     test_subs2();
+    test_coeff();
     test_constants();
     test_infinity();
     test_nan();

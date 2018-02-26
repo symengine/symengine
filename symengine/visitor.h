@@ -122,12 +122,12 @@ bool has_symbol(const Basic &b, const Symbol &x);
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
 protected:
-    Ptr<const Symbol> x_;
+    Ptr<const Basic> x_;
     Ptr<const Basic> n_;
     RCP<const Basic> coeff_;
 
 public:
-    CoeffVisitor(Ptr<const Symbol> x, Ptr<const Basic> n) : x_(x), n_(n)
+    CoeffVisitor(Ptr<const Basic> x, Ptr<const Basic> n) : x_(x), n_(n)
     {
     }
 
@@ -167,6 +167,15 @@ public:
     }
 
     void bvisit(const Symbol &x)
+    {
+        if (eq(x, *x_) and eq(*one, *n_)) {
+            coeff_ = one;
+        } else {
+            coeff_ = zero;
+        }
+    }
+
+    void bvisit(const FunctionSymbol &x)
     {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;

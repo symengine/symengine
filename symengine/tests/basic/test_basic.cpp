@@ -10,6 +10,7 @@ using SymEngine::Add;
 using SymEngine::Mul;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::FunctionSymbol;
 using SymEngine::umap_basic_num;
 using SymEngine::map_basic_num;
 using SymEngine::map_basic_basic;
@@ -922,13 +923,17 @@ TEST_CASE("has_symbol: Basic", "[basic]")
 
 TEST_CASE("coeff: Basic", "[basic]")
 {
-    RCP<const Basic> r1, r2;
+    RCP<const Basic> r1, r2, r3;
     RCP<const Symbol> x, y, z;
+    RCP<const Basic> f1, f2;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
+    f1 = function_symbol("f", x);
+    f2 = function_symbol("f", y);
     r1 = add(x, pow(y, integer(2)));
     r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
+    r3 = add(add(add(add(r2, mul(x, z)), f1), f2), mul(f1, integer(3)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
@@ -944,6 +949,10 @@ TEST_CASE("coeff: Basic", "[basic]")
     REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
+
+    REQUIRE(eq(*coeff(*r3, *z, *integer(1)), *add(x, integer(2))));
+    REQUIRE(eq(*coeff(*r3, *f1, *integer(1)), *integer(4)));
+    REQUIRE(eq(*coeff(*r3, *f2, *integer(1)), *integer(1)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
