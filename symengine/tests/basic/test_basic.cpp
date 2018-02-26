@@ -984,7 +984,7 @@ TEST_CASE("function_symbols: Basic", "[basic]")
     set_basic s = function_symbols(*r1);
     REQUIRE(s.size() == 1);
 
-    r2= function_symbol("g", add(r1, y));    
+    r2 = function_symbol("g", add(r1, y));
     s = function_symbols(*r2);
     REQUIRE(s.size() == 2);
 }
