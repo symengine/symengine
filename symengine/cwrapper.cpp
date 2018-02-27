@@ -1335,6 +1335,14 @@ char *function_symbol_get_name(const basic b)
     return cc;
 }
 
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n)
+{
+    CWRAPPER_BEGIN
+    c->m = SymEngine::coeff(*(b->m), *(x->m), *(n->m));
+    CWRAPPER_END
+}
+
 // ----------------------
 
 char *ascii_art_str()

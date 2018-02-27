@@ -7,54 +7,54 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 set(SRC
-    symengine_rcp.cpp
-    basic.cpp
-    dict.cpp
-    symbol.cpp
-    number.cpp
-    integer.cpp
-    rational.cpp
-    complex.cpp
-    constants.cpp
     add.cpp
-    mul.cpp
-    pow.cpp
-    functions.cpp
-    monomials.cpp
-    polys/uintpoly.cpp
-    polys/uratpoly.cpp
-    polys/uexprpoly.cpp
-    polys/basic_conversions.cpp
-    polys/msymenginepoly.cpp
-    series.cpp
-    series_generic.cpp
-    rings.cpp
-    ntheory.cpp
-    dense_matrix.cpp
-    sparse_matrix.cpp
-    matrix.cpp
-    visitor.cpp
-    eval_double.cpp
-    diophantine.cpp
-    cwrapper.cpp
-    printer.cpp
-    real_double.cpp
+    basic.cpp
+    complex.cpp
     complex_double.cpp
+    constants.cpp
+    cse.cpp
+    cwrapper.cpp
+    dense_matrix.cpp
+    derivative.cpp
+    dict.cpp
+    diophantine.cpp
+    eval.cpp
+    eval_double.cpp
     expand.cpp
     expression.cpp
-    numer_denom.cpp
-    derivative.cpp
-    parser.cpp
-    sets.cpp
-    eval.cpp
     fields.cpp
-    infinity.cpp
-    logic.cpp
     finitediff.cpp
+    functions.cpp
+    infinity.cpp
+    integer.cpp
+    logic.cpp
+    matrix.cpp
+    monomials.cpp
+    mul.cpp
     nan.cpp
-    solve.cpp
+    ntheory.cpp
+    number.cpp
+    numer_denom.cpp
+    parser.cpp
+    polys/basic_conversions.cpp
+    polys/msymenginepoly.cpp
+    polys/uexprpoly.cpp
+    polys/uintpoly.cpp
+    polys/uratpoly.cpp
+    pow.cpp
+    printer.cpp
+    rational.cpp
+    real_double.cpp
     rewrite.cpp
-    cse.cpp
+    rings.cpp
+    series.cpp
+    series_generic.cpp
+    sets.cpp
+    solve.cpp
+    sparse_matrix.cpp
+    symbol.cpp
+    symengine_rcp.cpp
+    visitor.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")

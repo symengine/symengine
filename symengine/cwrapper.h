@@ -612,6 +612,9 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
 //! Returns the name of the given FunctionSymbol
 char *function_symbol_get_name(const basic b);
+//! Returns the coefficient of x^n in b
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n);
 
 //! Wrapper for ascii_art()
 
