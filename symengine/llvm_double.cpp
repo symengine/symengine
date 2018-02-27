@@ -557,7 +557,7 @@ void LLVMDoubleVisitor::bvisit(const Basic &)
     throw std::runtime_error("Not implemented.");
 }
 
-const std::string &LLVMDoubleVisitor::dumps()
+const std::string &LLVMDoubleVisitor::dumps() const
 {
     return membuffer;
 };
