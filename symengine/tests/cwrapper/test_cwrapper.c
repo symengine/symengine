@@ -794,12 +794,12 @@ void test_linsolve()
     basic_new_stack(i3);
     basic_new_stack(i4);
     basic_new_stack(i9);
-    
+
     integer_set_si(i2, -2);
     integer_set_si(i3, 3);
     integer_set_si(i4, -4);
     integer_set_si(i9, 9);
-    
+
     basic_new_stack(e1);
     basic_new_stack(e2);
 
@@ -854,7 +854,7 @@ void test_solve_poly()
 
     symbol_set(x, "x");
     symbol_set(a, "a");
-    
+
     basic_new_stack(m1);
     basic_new_stack(i2);
 
