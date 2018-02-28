@@ -844,6 +844,39 @@ void test_linsolve()
     basic_free_stack(i9);
 }
 
+void test_solve_poly()
+{
+    basic x, a;
+    basic m1, i2;
+
+    basic_new_stack(x);
+    basic_new_stack(a);
+
+    symbol_set(x, "x");
+    symbol_set(a, "a");
+    
+    basic_new_stack(m1);
+    basic_new_stack(i2);
+
+    basic_const_minus_one(m1);
+    integer_set_si(i2, 2);
+
+    // x^2 - 1
+    basic_pow(a, x, i2);
+    basic_add(a, a, m1);
+
+    CSetBasic *r = setbasic_new();
+    basic_solve_poly(a, x, r);
+    SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
+
+    setbasic_free(r);
+
+    basic_free_stack(m1);
+    basic_free_stack(a);
+    basic_free_stack(x);
+    basic_free_stack(i2);
+}
+
 void test_constants()
 {
     basic z, o, mo, i;
@@ -1997,6 +2030,7 @@ int main(int argc, char *argv[])
     test_subs2();
     test_coeff();
     test_linsolve();
+    test_solve_poly();
     test_constants();
     test_infinity();
     test_nan();

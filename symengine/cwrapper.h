@@ -616,6 +616,9 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
 //! Solves the system of linear equations given by sys
 CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
                                        const CVecBasic *sym, CVecBasic *sol);
+//! Solves polynomial equation f if the set of solutions is finite
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(const basic f, const basic s,
+                                      CSetBasic *r);
 
 //! Wrapper for ascii_art()
 
