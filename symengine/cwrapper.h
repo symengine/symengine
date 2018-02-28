@@ -613,8 +613,8 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
 
 //! Wrapper for solve.h
 
-//! Solves the system of linear equations given by system
-CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *system,
+//! Solves the system of linear equations given by sys
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
                                        const CVecBasic *sym, CVecBasic *sol);
 
 //! Wrapper for ascii_art()
