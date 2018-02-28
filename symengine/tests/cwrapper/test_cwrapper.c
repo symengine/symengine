@@ -1892,8 +1892,10 @@ void test_lambda_double()
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
 #ifdef HAVE_SYMENGINE_LLVM
+        CLLVMOptimizationSettings *settings = llvm_optimization_settings_new();
+        llvm_optimization_settings_set(settings, "symbolic_cse", 1);
         CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
-        llvm_double_visitor_init(vis2, args, exprs, perform_cse);
+        llvm_double_visitor_init(vis2, args, exprs, settings);
         llvm_double_visitor_call(vis2, outs, inps);
         llvm_double_visitor_free(vis2);
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);

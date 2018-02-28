@@ -6,6 +6,7 @@
 
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
+using SymEngine::LLVMOptimizationSettings;
 using SymEngine::LLVMDoubleVisitor;
 #endif
 
@@ -233,7 +234,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     v2.init({x, y, z}, *r);
 
     LLVMDoubleVisitor v3;
-    v3.init({x, y, z}, *r, true);
+    LLVMOptimizationSettings settings{};
+    settings.symbolic_cse = true;
+    v3.init({x, y, z}, *r, settings);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {

@@ -26,6 +26,7 @@
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Vectorize.h"
 #include "llvm/ExecutionEngine/ObjectCache.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Path.h"
@@ -56,9 +57,10 @@ llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
     return result_;
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b, bool cse)
+void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b,
+                             const LLVMOptimizationSettings &settings)
 {
-    init(x, {b.rcp_from_this()}, cse);
+    init(x, {b.rcp_from_this()}, settings);
 }
 
 llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
@@ -114,7 +116,7 @@ llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
 }
 
 void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                             bool cse)
+                             const LLVMOptimizationSettings &settings)
 {
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -132,26 +134,53 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     // Create a new pass manager attached to it.
     auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
 
-    // Provide basic AliasAnalysis support for GVN.
-    // fpm->add(llvm::createBasicAliasAnalysisPass());
-    // Do simple "peephole" optimizations and bit-twiddling optzns.
-    fpm->add(llvm::createInstructionCombiningPass());
-    // Reassociate expressions.
-    fpm->add(llvm::createReassociatePass());
-    // Eliminate Common SubExpressions.
-    fpm->add(llvm::createGVNPass());
-    // Simplify the control flow graph (deleting unreachable blocks, etc).
-    fpm->add(llvm::createCFGSimplificationPass());
-    fpm->add(llvm::createPartiallyInlineLibCallsPass());
+    if (settings.instruction_combining) {
+        fpm->add(llvm::createInstructionCombiningPass(
+            settings.instruction_combining > 1));
+    }
+    if (settings.dead_inst_elimination) {
+        fpm->add(llvm::createDeadInstEliminationPass());
+    }
+    if (settings.promote_memory_to_register) {
+        fpm->add(llvm::createPromoteMemoryToRegisterPass());
+    }
+    if (settings.reassociate) {
+        fpm->add(llvm::createReassociatePass());
+    }
+    if (settings.gvn) {
+        fpm->add(llvm::createGVNPass());
+    }
+    if (settings.cfg_simplification) {
+        fpm->add(llvm::createCFGSimplificationPass());
+    }
+    if (settings.partially_inline_lib_calls) {
+        fpm->add(llvm::createPartiallyInlineLibCallsPass());
+    }
 #if (LLVM_VERSION_MAJOR < 5)
     fpm->add(llvm::createLoadCombinePass());
 #endif
-    fpm->add(llvm::createInstructionSimplifierPass());
-    fpm->add(llvm::createMemCpyOptPass());
-    fpm->add(llvm::createMergedLoadStoreMotionPass());
-    fpm->add(llvm::createBitTrackingDCEPass());
-    fpm->add(llvm::createAggressiveDCEPass());
-
+    if (settings.instruction_simplifier) {
+        fpm->add(llvm::createInstructionSimplifierPass());
+    }
+    if (settings.memcpy_opt) {
+        fpm->add(llvm::createMemCpyOptPass());
+    }
+    if (settings.sroa) {
+        fpm->add(llvm::createSROAPass());
+    }
+    if (settings.merged_load_store_motion) {
+        fpm->add(llvm::createMergedLoadStoreMotionPass());
+    }
+    if (settings.bit_tracking_dce) {
+        fpm->add(llvm::createBitTrackingDCEPass());
+    }
+    if (settings.aggressive_dce) {
+        fpm->add(llvm::createAggressiveDCEPass());
+    }
+    if (settings.slp_vectorize) {
+        fpm->add(llvm::createSLPVectorizerPass());
+        fpm->add(llvm::createInstructionSimplifierPass());
+    }
     fpm->doInitialization();
 
     auto F = get_function_type(context.get());
@@ -193,7 +222,7 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 #endif
     std::vector<llvm::Value *> output_vals;
 
-    if (cse) {
+    if (settings.symbolic_cse) {
         vec_basic reduced_exprs;
         vec_pair replacements;
         // cse the outputs

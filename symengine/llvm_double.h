@@ -22,6 +22,38 @@ namespace SymEngine
 
 class IRBuilder;
 
+struct LLVMOptimizationSettings {
+    bool symbolic_cse{false};
+
+    // LLVM optimization passes:
+    int instruction_combining{2}; // 0: no instcombine, 1: instcombine, 2:
+                                  // instcombine with expensive combines
+    bool dead_inst_elimination{
+        true}; // quickly removes trivially dead instructions
+    bool promote_memory_to_register{
+        true}; // promote memory references to be register references
+    bool reassociate{true}; // reassociates commutative expressions
+    bool gvn{true}; // global value numbering & redundant load elimination
+    bool cfg_simplification{true}; // Simplifies Control Flow Graph (dead code
+                                   // elimination, basic block merging)
+    bool partially_inline_lib_calls{
+        true}; // Tries to inline library calls such as sqrt
+    bool instruction_simplifier{true}; // Remove redundant instructions.
+    bool memcpy_opt{true};             // Combines multiple stores into memset
+    bool sroa{true}; // Replace aggregates or pieces of aggregates with scalar
+                     // SSA values.
+    bool merged_load_store_motion{true}; // merges loads and stores in diamonds
+    bool bit_tracking_dce{true};         // bit-tracking dead code elimination
+    bool aggressive_dce{true}; // aggressive dead code elimination based on
+    bool slp_vectorize{
+        true}; // superword-level paralellism vectorizer, (also run instcombine)
+};
+
+namespace
+{
+const LLVMOptimizationSettings default_settings{};
+}
+
 class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
 {
 protected:
@@ -41,9 +73,10 @@ protected:
 
 public:
     llvm::Value *apply(const Basic &b);
-    void init(const vec_basic &x, const Basic &b, bool cse = false);
+    void init(const vec_basic &x, const Basic &b,
+              const LLVMOptimizationSettings &settings = default_settings);
     void init(const vec_basic &inputs, const vec_basic &outputs,
-              bool cse = false);
+              const LLVMOptimizationSettings &settings = default_settings);
 
     double call(const std::vector<double> &vec);
     void call(double *outs, const double *inps);
