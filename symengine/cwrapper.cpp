@@ -1339,9 +1339,9 @@ CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
     vec_basic vb = sym->m;
     SYMENGINE_ASSERT(
         std::all_of(vb.cbegin(), vb.cend(),
-                    [](RCP<const Basic> b){ return is_a<const Symbol>(*b); }));
+                    [](RCP<const Basic> b) { return is_a<const Symbol>(*b); }));
     vec_sym vs(vb.size());
-    for(unsigned i = 0; i < vb.size(); i++)
+    for (unsigned i = 0; i < vb.size(); i++)
         vs[i] = rcp_static_cast<const Symbol>(vb[i]);
     sol->m = SymEngine::linsolve(sys->m, vs);
     CWRAPPER_END
@@ -1352,7 +1352,7 @@ CWRAPPER_OUTPUT_TYPE basic_solve_poly(const basic f, const basic s,
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
-    RCP<const Set> set 
+    RCP<const Set> set
         = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
     SYMENGINE_ASSERT(is_a<FiniteSet>(*set));
     r->m = down_cast<const FiniteSet &>(*set).get_container();
