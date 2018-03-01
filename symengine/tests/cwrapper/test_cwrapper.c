@@ -825,7 +825,7 @@ void test_linsolve()
     vecbasic_push_back(sys, e2);
 
     CVecBasic *sol = vecbasic_new();
-    vecbasic_linsolve(sys, sym, sol);
+    vecbasic_linsolve(sol, sys, sym);
     SYMENGINE_C_ASSERT(vecbasic_size(sol) == 2);
 
     vecbasic_free(sym);
@@ -866,7 +866,7 @@ void test_solve_poly()
     basic_add(a, a, m1);
 
     CSetBasic *r = setbasic_new();
-    basic_solve_poly(a, x, r);
+    basic_solve_poly(r, a, x);
     SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
 
     setbasic_free(r);

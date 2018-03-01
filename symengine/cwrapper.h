@@ -614,11 +614,11 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
 //! Wrapper for solve.h
 
 //! Solves the system of linear equations given by sys
-CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
-                                       const CVecBasic *sym, CVecBasic *sol);
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym);
 //! Solves polynomial equation f if the set of solutions is finite
-CWRAPPER_OUTPUT_TYPE basic_solve_poly(const basic f, const basic s,
-                                      CSetBasic *r);
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s);
 
 //! Wrapper for ascii_art()
 

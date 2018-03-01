@@ -1332,8 +1332,8 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
 
 // ----------------------
 
-CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
-                                       const CVecBasic *sym, CVecBasic *sol)
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym)
 {
     CWRAPPER_BEGIN
     vec_basic vb = sym->m;
@@ -1347,8 +1347,8 @@ CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(const CVecBasic *sys,
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_solve_poly(const basic f, const basic s,
-                                      CSetBasic *r)
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
