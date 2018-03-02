@@ -487,7 +487,8 @@ private:
                 } else {
                     num = integer(integer_class(lexpr));
                 }
-            } else {
+            } else if (expr[0] == '.' or expr[0] == '-'
+                       or (expr[0] >= '0' and expr[0] <= '9')) {
 #ifdef HAVE_SYMENGINE_MPFR
                 unsigned digits = 0;
                 for (size_t i = 0; i < length; ++i) {
@@ -511,6 +512,8 @@ private:
 #else
                 num = real_double(d);
 #endif
+            } else {
+                length = 0;
             }
             // Expression is numeric
             if (*endptr == '\0') {
@@ -519,7 +522,7 @@ private:
         }
 
         // get the rest of the string
-        lexpr = std::string(endptr, expr.length() - length);
+        lexpr = std::string(startptr + length, expr.length() - length);
         // if the expr is not numeric, it's either a constant, or a user
         // declared symbol
         auto c = constants.find(lexpr);
