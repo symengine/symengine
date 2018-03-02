@@ -47,6 +47,7 @@ private:
         {"pi", pi},
         {"I", I},
         {"oo", Inf},
+        {"inf", Inf},
         {"zoo", ComplexInf},
         {"nan", Nan}};
 
@@ -516,7 +517,7 @@ private:
                 length = 0;
             }
             // Expression is numeric
-            if (*endptr == '\0') {
+            if (length == expr.length()) {
                 return num;
             }
         }

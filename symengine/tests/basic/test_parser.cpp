@@ -582,6 +582,14 @@ TEST_CASE("Parsing: doubles", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *symbol("nano")));
 
+    s = "inf";
+    res = parse(s);
+    REQUIRE(eq(*res, *Inf));
+
+    s = "nan";
+    res = parse(s);
+    REQUIRE(eq(*res, *SymEngine::Nan));
+
     s = "-0.12x";
     res = parse(s);
     REQUIRE(eq(*res, *mul(real_double(-0.12), x)));
