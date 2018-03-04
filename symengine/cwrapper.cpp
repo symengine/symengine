@@ -10,7 +10,6 @@
 #include <symengine/lambda_double.h>
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
-using SymEngine::LLVMOptimizationSettings;
 using SymEngine::LLVMDoubleVisitor;
 #endif
 
@@ -1563,59 +1562,6 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
-struct CLLVMOptimizationSettings {
-    LLVMOptimizationSettings m;
-};
-
-CLLVMOptimizationSettings *llvm_optimization_settings_new()
-{
-    return new CLLVMOptimizationSettings();
-}
-CWRAPPER_OUTPUT_TYPE
-llvm_optimization_settings_set(CLLVMOptimizationSettings *self,
-                               const char *name, int value)
-{
-    std::string n(name);
-    if (n == "symbolic_cse") {
-        self->m.symbolic_cse = value;
-    } else if (n == "instruction_combining") {
-        self->m.instruction_combining = value;
-    } else if (n == "dead_inst_elimination") {
-        self->m.dead_inst_elimination = value;
-    } else if (n == "promote_memory_to_register") {
-        self->m.promote_memory_to_register = value;
-    } else if (n == "reassociate") {
-        self->m.reassociate = value;
-    } else if (n == "gvn") {
-        self->m.gvn = value;
-    } else if (n == "cfg_simplification") {
-        self->m.cfg_simplification = value;
-    } else if (n == "partially_inline_lib_calls") {
-        self->m.partially_inline_lib_calls = value;
-    } else if (n == "instruction_simplifier") {
-        self->m.instruction_simplifier = value;
-    } else if (n == "memcpy_opt") {
-        self->m.memcpy_opt = value;
-    } else if (n == "sroa") {
-        self->m.sroa = value;
-    } else if (n == "merged_load_store_motion") {
-        self->m.merged_load_store_motion = value;
-    } else if (n == "bit_tracking_dce") {
-        self->m.bit_tracking_dce = value;
-    } else if (n == "aggressive_dce") {
-        self->m.aggressive_dce = value;
-    } else if (n == "slp_vectorize") {
-        self->m.slp_vectorize = value;
-    } else {
-        return SYMENGINE_RUNTIME_ERROR;
-    }
-    return SYMENGINE_NO_EXCEPTION;
-}
-
-void llvm_optimization_settings_free(CLLVMOptimizationSettings *self)
-{
-    delete self;
-}
 struct CLLVMDoubleVisitor {
     SymEngine::LLVMDoubleVisitor m;
 };
@@ -1626,10 +1572,9 @@ CLLVMDoubleVisitor *llvm_double_visitor_new()
 }
 
 void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs,
-                              const CLLVMOptimizationSettings *settings)
+                              const CVecBasic *exprs, int perform_cse)
 {
-    self->m.init(args->m, exprs->m, settings->m);
+    self->m.init(args->m, exprs->m, perform_cse);
 }
 
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,

@@ -15,6 +15,7 @@ class Function;
 class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
+class Pass;
 }
 
 namespace SymEngine
@@ -49,11 +50,6 @@ struct LLVMOptimizationSettings {
         true}; // superword-level paralellism vectorizer, (also run instcombine)
 };
 
-namespace
-{
-const LLVMOptimizationSettings default_settings{};
-}
-
 class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
 {
 protected:
@@ -74,9 +70,13 @@ protected:
 public:
     llvm::Value *apply(const Basic &b);
     void init(const vec_basic &x, const Basic &b,
-              const LLVMOptimizationSettings &settings = default_settings);
+              const bool symbolic_cse = false,
+              const std::vector<llvm::Pass *> &passes = {});
     void init(const vec_basic &inputs, const vec_basic &outputs,
-              const LLVMOptimizationSettings &settings = default_settings);
+              const bool symbolic_cse = false,
+              const std::vector<llvm::Pass *> &passes = {});
+
+    static std::vector<llvm::Pass *> create_default_passes(int optlevel);
 
     double call(const std::vector<double> &vec);
     void call(double *outs, const double *inps);

@@ -676,18 +676,10 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 
 //! Wrapper for LambdaRealDoubleVisitor
 #ifdef HAVE_SYMENGINE_LLVM
-typedef struct CLLVMOptimizationSettings CLLVMOptimizationSettings;
-CLLVMOptimizationSettings *llvm_optimization_settings_new();
-CWRAPPER_OUTPUT_TYPE
-llvm_optimization_settings_set(CLLVMOptimizationSettings *self,
-                               const char *name, int value);
-void llvm_optimization_settings_free(CLLVMOptimizationSettings *self);
-
 typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
 CLLVMDoubleVisitor *llvm_double_visitor_new();
 void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs,
-                              const CLLVMOptimizationSettings *settings);
+                              const CVecBasic *exprs, int perform_cse);
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
                               const double *const inps);
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);

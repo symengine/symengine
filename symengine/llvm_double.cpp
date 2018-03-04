@@ -58,9 +58,10 @@ llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
 }
 
 void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b,
-                             const LLVMOptimizationSettings &settings)
+                             bool symbolic_cse,
+                             const std::vector<llvm::Pass *> &passes)
 {
-    init(x, {b.rcp_from_this()}, settings);
+    init(x, {b.rcp_from_this()}, symbolic_cse, passes);
 }
 
 llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
@@ -115,8 +116,42 @@ llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
     return F;
 }
 
+std::vector<llvm::Pass *> LLVMDoubleVisitor::create_default_passes(int optlevel)
+{
+    std::vector<llvm::Pass *> passes;
+    if (optlevel == 0) {
+        return passes;
+    }
+#if (LLVM_VERSION_MAJOR < 4)
+    passes.push_back(llvm::createInstructionCombiningPass());
+#else
+    passes.push_back(llvm::createInstructionCombiningPass(optlevel > 1));
+#endif
+    passes.push_back(llvm::createDeadInstEliminationPass());
+    passes.push_back(llvm::createPromoteMemoryToRegisterPass());
+    passes.push_back(llvm::createReassociatePass());
+    passes.push_back(llvm::createGVNPass());
+    passes.push_back(llvm::createCFGSimplificationPass());
+    passes.push_back(llvm::createPartiallyInlineLibCallsPass());
+#if (LLVM_VERSION_MAJOR < 5)
+    passes.push_back(llvm::createLoadCombinePass());
+#endif
+    passes.push_back(llvm::createInstructionSimplifierPass());
+    passes.push_back(llvm::createMemCpyOptPass());
+    passes.push_back(llvm::createSROAPass());
+    passes.push_back(llvm::createMergedLoadStoreMotionPass());
+    passes.push_back(llvm::createBitTrackingDCEPass());
+    passes.push_back(llvm::createAggressiveDCEPass());
+    if (optlevel > 2) {
+        passes.push_back(llvm::createSLPVectorizerPass());
+        passes.push_back(llvm::createInstructionSimplifierPass());
+    }
+    return passes;
+}
+
 void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                             const LLVMOptimizationSettings &settings)
+                             const bool symbolic_cse,
+                             const std::vector<llvm::Pass *> &passes)
 {
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
@@ -133,53 +168,8 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Create a new pass manager attached to it.
     auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
-
-    if (settings.instruction_combining) {
-        fpm->add(llvm::createInstructionCombiningPass(
-            settings.instruction_combining > 1));
-    }
-    if (settings.dead_inst_elimination) {
-        fpm->add(llvm::createDeadInstEliminationPass());
-    }
-    if (settings.promote_memory_to_register) {
-        fpm->add(llvm::createPromoteMemoryToRegisterPass());
-    }
-    if (settings.reassociate) {
-        fpm->add(llvm::createReassociatePass());
-    }
-    if (settings.gvn) {
-        fpm->add(llvm::createGVNPass());
-    }
-    if (settings.cfg_simplification) {
-        fpm->add(llvm::createCFGSimplificationPass());
-    }
-    if (settings.partially_inline_lib_calls) {
-        fpm->add(llvm::createPartiallyInlineLibCallsPass());
-    }
-#if (LLVM_VERSION_MAJOR < 5)
-    fpm->add(llvm::createLoadCombinePass());
-#endif
-    if (settings.instruction_simplifier) {
-        fpm->add(llvm::createInstructionSimplifierPass());
-    }
-    if (settings.memcpy_opt) {
-        fpm->add(llvm::createMemCpyOptPass());
-    }
-    if (settings.sroa) {
-        fpm->add(llvm::createSROAPass());
-    }
-    if (settings.merged_load_store_motion) {
-        fpm->add(llvm::createMergedLoadStoreMotionPass());
-    }
-    if (settings.bit_tracking_dce) {
-        fpm->add(llvm::createBitTrackingDCEPass());
-    }
-    if (settings.aggressive_dce) {
-        fpm->add(llvm::createAggressiveDCEPass());
-    }
-    if (settings.slp_vectorize) {
-        fpm->add(llvm::createSLPVectorizerPass());
-        fpm->add(llvm::createInstructionSimplifierPass());
+    for (auto pass : passes) {
+        fpm->add(pass);
     }
     fpm->doInitialization();
 
@@ -222,7 +212,7 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 #endif
     std::vector<llvm::Value *> output_vals;
 
-    if (settings.symbolic_cse) {
+    if (symbolic_cse) {
         vec_basic reduced_exprs;
         vec_pair replacements;
         // cse the outputs
