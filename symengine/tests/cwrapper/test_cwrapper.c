@@ -778,6 +778,105 @@ void test_coeff()
     basic_free_stack(z);
 }
 
+void test_linsolve()
+{
+    basic x, y;
+    basic i2, i3, i4, i9;
+    basic e1, e2;
+
+    basic_new_stack(x);
+    basic_new_stack(y);
+
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+
+    basic_new_stack(i2);
+    basic_new_stack(i3);
+    basic_new_stack(i4);
+    basic_new_stack(i9);
+
+    integer_set_si(i2, -2);
+    integer_set_si(i3, 3);
+    integer_set_si(i4, -4);
+    integer_set_si(i9, 9);
+
+    basic_new_stack(e1);
+    basic_new_stack(e2);
+
+    symbol_set(e1, "e1");
+    symbol_set(e2, "e2");
+
+    // -2x - 4 + y
+    basic_mul(e1, i2, x);
+    basic_add(e1, e1, i4);
+    basic_add(e1, e1, y);
+
+    // 3x + y - 9
+    basic_mul(e2, i3, x);
+    basic_add(e2, e2, y);
+    basic_add(e2, e2, i9);
+
+    CVecBasic *sym = vecbasic_new();
+    vecbasic_push_back(sym, x);
+    vecbasic_push_back(sym, y);
+
+    CVecBasic *sys = vecbasic_new();
+    vecbasic_push_back(sys, e1);
+    vecbasic_push_back(sys, e2);
+
+    CVecBasic *sol = vecbasic_new();
+    vecbasic_linsolve(sol, sys, sym);
+    SYMENGINE_C_ASSERT(vecbasic_size(sol) == 2);
+
+    vecbasic_free(sym);
+    vecbasic_free(sys);
+    vecbasic_free(sol);
+
+    basic_free_stack(e1);
+    basic_free_stack(e2);
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+
+    basic_free_stack(i2);
+    basic_free_stack(i3);
+    basic_free_stack(i4);
+    basic_free_stack(i9);
+}
+
+void test_solve_poly()
+{
+    basic x, a;
+    basic m1, i2;
+
+    basic_new_stack(x);
+    basic_new_stack(a);
+
+    symbol_set(x, "x");
+    symbol_set(a, "a");
+
+    basic_new_stack(m1);
+    basic_new_stack(i2);
+
+    basic_const_minus_one(m1);
+    integer_set_si(i2, 2);
+
+    // x^2 - 1
+    basic_pow(a, x, i2);
+    basic_add(a, a, m1);
+
+    CSetBasic *r = setbasic_new();
+    basic_solve_poly(r, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
+
+    setbasic_free(r);
+
+    basic_free_stack(m1);
+    basic_free_stack(a);
+    basic_free_stack(x);
+    basic_free_stack(i2);
+}
+
 void test_constants()
 {
     basic z, o, mo, i;
@@ -1931,6 +2030,8 @@ int main(int argc, char *argv[])
     test_subs();
     test_subs2();
     test_coeff();
+    test_linsolve();
+    test_solve_poly();
     test_constants();
     test_infinity();
     test_nan();

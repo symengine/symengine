@@ -8,6 +8,7 @@
 #include <symengine/eval.h>
 #include <symengine/parser.h>
 #include <symengine/lambda_double.h>
+#include <symengine/solve.h>
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
 using SymEngine::LLVMDoubleVisitor;
@@ -45,6 +46,10 @@ using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
+using SymEngine::vec_basic;
+using SymEngine::vec_sym;
+using SymEngine::Set;
+using SymEngine::FiniteSet;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 using SymEngine::get_mpq_t;
@@ -1322,6 +1327,35 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
 {
     CWRAPPER_BEGIN
     c->m = SymEngine::coeff(*(b->m), *(x->m), *(n->m));
+    CWRAPPER_END
+}
+
+// ----------------------
+
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym)
+{
+    CWRAPPER_BEGIN
+    vec_basic vb = sym->m;
+    SYMENGINE_ASSERT(
+        std::all_of(vb.cbegin(), vb.cend(),
+                    [](RCP<const Basic> b) { return is_a<const Symbol>(*b); }));
+    vec_sym vs(vb.size());
+    for (unsigned i = 0; i < vb.size(); i++)
+        vs[i] = rcp_static_cast<const Symbol>(vb[i]);
+    sol->m = SymEngine::linsolve(sys->m, vs);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
+    RCP<const Set> set
+        = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
+    SYMENGINE_ASSERT(is_a<FiniteSet>(*set));
+    r->m = down_cast<const FiniteSet &>(*set).get_container();
     CWRAPPER_END
 }
 
