@@ -232,10 +232,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     v2.init({x, y, z}, *r);
 
     LLVMDoubleVisitor v3;
-    const int opt_level = 2;
-    auto passes = LLVMDoubleVisitor::create_default_passes(opt_level);
     bool symbolic_cse = true;
-    v3.init({x, y, z}, *r, symbolic_cse, passes);
+    int opt_level = 3;
+    v3.init({x, y, z}, *r, symbolic_cse, opt_level);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {
