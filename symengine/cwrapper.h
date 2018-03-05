@@ -679,7 +679,8 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
 CLLVMDoubleVisitor *llvm_double_visitor_new();
 void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse);
+                              const CVecBasic *exprs, int perform_cse,
+                              int opt_level);
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
                               const double *const inps);
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
