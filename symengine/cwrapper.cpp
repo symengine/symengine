@@ -1294,8 +1294,8 @@ CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols)
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_function_symbols(const basic self,
-                                            CSetBasic *symbols)
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self)
 {
     CWRAPPER_BEGIN
     symbols->m = SymEngine::function_symbols(*(self->m));

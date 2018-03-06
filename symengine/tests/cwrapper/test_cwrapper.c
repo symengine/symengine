@@ -663,7 +663,7 @@ void test_function_symbols()
     SYMENGINE_C_ASSERT(strcmp(s, "z + f(x + y, g(x), h(g(x)))") == 0);
 
     CSetBasic *symbols = setbasic_new();
-    basic_function_symbols(f, symbols);
+    basic_function_symbols(symbols, f);
     SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
     setbasic_free(symbols);
 

@@ -593,8 +593,8 @@ CWRAPPER_OUTPUT_TYPE basic_get_args(const basic self, CVecBasic *args);
 //! Returns a CSetBasic of set_basic given by free_symbols
 CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols);
 //! Returns a CSetBasic of set_basic given by function_symbols
-CWRAPPER_OUTPUT_TYPE basic_function_symbols(const basic self,
-                                            CSetBasic *symbols);
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self);
 //! returns the hash of the Basic object
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
