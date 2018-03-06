@@ -15,6 +15,7 @@ class Function;
 class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
+class Pass;
 }
 
 namespace SymEngine
@@ -41,9 +42,16 @@ protected:
 
 public:
     llvm::Value *apply(const Basic &b);
-    void init(const vec_basic &x, const Basic &b, bool cse = false);
+    void init(const vec_basic &x, const Basic &b,
+              const bool symbolic_cse = false, int opt_level = 2);
+    void init(const vec_basic &x, const Basic &b, const bool symbolic_cse,
+              const std::vector<llvm::Pass *> &passes);
     void init(const vec_basic &inputs, const vec_basic &outputs,
-              bool cse = false);
+              const bool symbolic_cse = false, int opt_level = 2);
+    void init(const vec_basic &inputs, const vec_basic &outputs,
+              const bool symbolic_cse, const std::vector<llvm::Pass *> &passes);
+
+    static std::vector<llvm::Pass *> create_default_passes(int optlevel);
 
     double call(const std::vector<double> &vec);
     void call(double *outs, const double *inps);

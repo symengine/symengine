@@ -616,6 +616,15 @@ char *function_symbol_get_name(const basic b);
 CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
                                  const basic n);
 
+//! Wrapper for solve.h
+
+//! Solves the system of linear equations given by sys
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym);
+//! Solves polynomial equation f if the set of solutions is finite
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s);
+
 //! Wrapper for ascii_art()
 
 //! Returns a new char pointer to the ascii_art string
@@ -684,7 +693,8 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
 CLLVMDoubleVisitor *llvm_double_visitor_new();
 void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse);
+                              const CVecBasic *exprs, int perform_cse,
+                              int opt_level);
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
                               const double *const inps);
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);

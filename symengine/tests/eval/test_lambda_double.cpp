@@ -204,7 +204,6 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
-
 TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 {
     RCP<const Basic> x, y, z, r;
@@ -233,7 +232,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     v2.init({x, y, z}, *r);
 
     LLVMDoubleVisitor v3;
-    v3.init({x, y, z}, *r, true);
+    bool symbolic_cse = true;
+    int opt_level = 3;
+    v3.init({x, y, z}, *r, symbolic_cse, opt_level);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 500; i++) {
@@ -312,5 +313,39 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
     d = v.call({0.4, 2.0, 3.0});
     d2 = v2.call({0.4, 2.0, 3.0});
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
+}
+
+TEST_CASE("Check that our default LLVM passes give correct results",
+          "[llvm_double]")
+{
+    RCP<const Basic> x, y, z, r;
+    double d, d2;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+
+    vec_basic vec = {log(x),   abs(x),      tan(x),   sinh(x), cosh(x), tanh(x),
+                     asinh(y), acosh(y),    atanh(x), asin(x), acos(x), atan(x),
+                     gamma(x), loggamma(x), erf(x),   erfc(x)};
+
+    r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                            pow(sin(x), integer(2)))),
+            add(vec));
+    for (int i = 0; i < 4; ++i) {
+        r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
+    }
+
+    // r = add(add(x, y), pow(add(x, y), integer(2)));
+
+    LambdaRealDoubleVisitor v;
+    v.init({x, y, z}, *r);
+    for (int opt_level = 0; opt_level < 4; ++opt_level) {
+        LLVMDoubleVisitor v2;
+        v2.init({x, y, z}, *r, false,
+                LLVMDoubleVisitor::create_default_passes(opt_level));
+        d = v.call({0.4, 2.0, 3.0});
+        d2 = v2.call({0.4, 2.0, 3.0});
+        REQUIRE(::fabs((d - d2) / d) < 1e-12);
+    }
 }
 #endif

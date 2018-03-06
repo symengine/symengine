@@ -355,13 +355,13 @@ public:
     }
 };
 
-std::string ccode(const Basic &x)
+std::string inline ccode(const Basic &x)
 {
     C99CodePrinter c;
     return c.apply(x);
 }
 
-std::string jscode(const Basic &x)
+std::string inline jscode(const Basic &x)
 {
     JSCodePrinter p;
     return p.apply(x);

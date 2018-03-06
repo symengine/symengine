@@ -571,6 +571,32 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
+
+    // Test that https://github.com/symengine/symengine/issues/1413 is fixed
+
+    s = "inflation";
+    res = parse(s);
+    REQUIRE(eq(*res, *symbol("inflation")));
+
+    s = "nano";
+    res = parse(s);
+    REQUIRE(eq(*res, *symbol("nano")));
+
+    s = "inf";
+    res = parse(s);
+    REQUIRE(eq(*res, *Inf));
+
+    s = "nan";
+    res = parse(s);
+    REQUIRE(eq(*res, *SymEngine::Nan));
+
+    s = "-0.12x";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(real_double(-0.12), x)));
+
+    s = "-.12x";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(real_double(-0.12), x)));
 }
 
 TEST_CASE("Parsing: polys", "[parser]")
