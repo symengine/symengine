@@ -984,7 +984,7 @@ TEST_CASE("free_symbols: Basic", "[basic]")
 
 TEST_CASE("function_symbols: Basic", "[basic]")
 {
-    RCP<const Basic> r1, r2;
+    RCP<const Basic> r1, r2, r3;
     RCP<const Symbol> x, y;
     x = symbol("x");
     y = symbol("y");
@@ -996,6 +996,18 @@ TEST_CASE("function_symbols: Basic", "[basic]")
     r2 = function_symbol("g", add(r1, y));
     s = function_symbols(*r2);
     REQUIRE(s.size() == 2);
+
+    r3 = add(r1, add(r2, x));
+    map_basic_basic d;
+    d[x] = r1;
+    r3 = r3->subs(d);
+    s = function_symbols(*r3);
+    set_basic t({r1, r1->subs(d), r2->subs(d)});
+    REQUIRE(unified_eq(s, t));
+
+    r3 = r2->diff(x);
+    s = function_symbols(*r3);
+    REQUIRE(s.size() == 3);
 }
 
 TEST_CASE("args: Basic", "[basic]")
