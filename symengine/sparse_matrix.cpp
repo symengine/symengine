@@ -368,6 +368,34 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     return B;
 }
 
+CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    unsigned nrows = A.row_, ncols = x.row_;
+    std::vector<unsigned> p, j;
+    vec_basic elems;
+    for (unsigned ci = 0; ci < ncols; ++ci) {
+        p.push_back(0);
+        if (is_a<Symbol>(*x.m_[ci])) {
+            const RCP<const Symbol> dx
+                = rcp_static_cast<const Symbol>(x.m_[ci]);
+            for (unsigned ri = 0; ri < nrows; ++ri) {
+                const auto &elem = A.m_[ri]->diff(dx);
+                if (neq(*elem, *zero)) {
+                    p.back()++;
+                    j.push_back(ri);
+                    elems.emplace_back(std::move(elem));
+                }
+            }
+        } else {
+            throw SymEngineException("'x' must contain Symbols only");
+        }
+    }
+    return CSRMatrix(nrows, ncols, std::move(p), std::move(j),
+                     std::move(elems));
+}
+
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 {
     // method that uses O(n) temp storage

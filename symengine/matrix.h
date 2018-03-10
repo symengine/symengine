@@ -75,6 +75,8 @@ public:
 
 typedef std::vector<std::pair<int, int>> permutelist;
 
+class CSRMatrix;
+
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase
 {
@@ -261,6 +263,8 @@ public:
     friend void ones(DenseMatrix &A);
     friend void zeros(DenseMatrix &A);
 
+    friend CSRMatrix;
+
 private:
     // Matrix elements are stored in row-major order
     vec_basic m_;
@@ -360,6 +364,7 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
+    static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
                                  CSRMatrix &C);
@@ -373,6 +378,12 @@ public:
         const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
         RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
                                    const RCP<const Basic> &));
+
+    std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+    as_vectors() const
+    {
+        return std::make_tuple(p_, j_, x_);
+    }
 
 private:
     std::vector<unsigned> p_;
