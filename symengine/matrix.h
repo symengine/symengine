@@ -279,6 +279,8 @@ class CSRMatrix : public MatrixBase
 public:
     CSRMatrix();
     CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, const std::vector<unsigned> &p,
+              const std::vector<unsigned> &j, const vec_basic &x);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
               std::vector<unsigned> &&j, vec_basic &&x);
 

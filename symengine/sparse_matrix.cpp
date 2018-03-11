@@ -5,19 +5,6 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
 
-namespace
-{
-template <typename Cont>
-bool container_has_symbol(const Cont &c, const SymEngine::Symbol &s)
-{
-    return std::find_if(c.begin(), c.end(),
-                        [&](const SymEngine::RCP<const SymEngine::Basic> &b) {
-                            return b->__eq__(s);
-                        })
-           != c.end();
-}
-}
-
 namespace SymEngine
 {
 // ----------------------------- CSRMatrix ------------------------------------
@@ -28,6 +15,13 @@ CSRMatrix::CSRMatrix()
 CSRMatrix::CSRMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
     p_ = std::vector<unsigned>(row + 1, 0);
+    SYMENGINE_ASSERT(is_canonical());
+}
+
+CSRMatrix::CSRMatrix(unsigned row, unsigned col, const std::vector<unsigned> &p,
+                     const std::vector<unsigned> &j, const vec_basic &x)
+    : p_{p}, j_{j}, x_{x}, row_(row), col_(col)
+{
     SYMENGINE_ASSERT(is_canonical());
 }
 
@@ -389,27 +383,26 @@ CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
     unsigned nrows = A.row_, ncols = x.row_;
     std::vector<unsigned> p, j;
     vec_basic elems;
-    std::vector<set_basic> per_row_free_symbols;
-    for (const auto &e : A.m_) {
-        per_row_free_symbols.emplace_back(free_symbols(*e));
+    p.reserve(nrows + 1);
+    j.reserve(nrows);
+    elems.reserve(nrows);
+    p.push_back(0);
+    for (const auto &dx : x.m_) {
+        if (!is_a<Symbol>(*dx)) {
+            throw SymEngineException("'x' must contain Symbols only");
+        }
     }
-    for (unsigned ci = 0; ci < ncols; ++ci) {
-        p.push_back(0);
-        if (is_a<Symbol>(*x.m_[ci])) {
+    for (unsigned ri = 0; ri < nrows; ++ri) {
+        p.push_back(p.back());
+        for (unsigned ci = 0; ci < ncols; ++ci) {
             const RCP<const Symbol> dx
                 = rcp_static_cast<const Symbol>(x.m_[ci]);
-            for (unsigned ri = 0; ri < nrows; ++ri) {
-                if (container_has_symbol(per_row_free_symbols[ri], *dx)) {
-                    const auto &elem = A.m_[ri]->diff(dx);
-                    if (neq(*elem, *zero)) {
-                        p.back()++;
-                        j.push_back(ri);
-                        elems.emplace_back(std::move(elem));
-                    }
-                }
+            auto elem = A.m_[ri]->diff(dx);
+            if (neq(*elem, *zero)) {
+                p.back()++;
+                j.push_back(ci);
+                elems.emplace_back(std::move(elem));
             }
-        } else {
-            throw SymEngineException("'x' must contain Symbols only");
         }
     }
     return CSRMatrix(nrows, ncols, std::move(p), std::move(j),

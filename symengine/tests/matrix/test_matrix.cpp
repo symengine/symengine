@@ -63,7 +63,7 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     vec_basic x1{{integer(1), integer(2), integer(3), integer(4), integer(5),
                   integer(6)}},
         x2;
-    CSRMatrix B = CSRMatrix(3, 3, std::move(p1), std::move(j1), std::move(x1));
+    CSRMatrix B = CSRMatrix(3, 3, p1, j1, x1);
     std::tie(p2, j2, x2) = B.as_vectors();
     REQUIRE(p1 == p2);
     REQUIRE(j1 == j2);
