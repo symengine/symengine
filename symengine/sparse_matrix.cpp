@@ -3,6 +3,20 @@
 #include <symengine/mul.h>
 #include <symengine/constants.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor.h>
+
+namespace
+{
+template <typename Cont>
+bool container_has_symbol(const Cont &c, const SymEngine::Symbol &s)
+{
+    return std::find_if(c.begin(), c.end(),
+                        [&](const SymEngine::RCP<const SymEngine::Basic> &b) {
+                            return b->__eq__(s);
+                        })
+           != c.end();
+}
+}
 
 namespace SymEngine
 {
@@ -375,17 +389,23 @@ CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
     unsigned nrows = A.row_, ncols = x.row_;
     std::vector<unsigned> p, j;
     vec_basic elems;
+    std::vector<set_basic> per_row_free_symbols;
+    for (const auto &e : A.m_) {
+        per_row_free_symbols.emplace_back(free_symbols(*e));
+    }
     for (unsigned ci = 0; ci < ncols; ++ci) {
         p.push_back(0);
         if (is_a<Symbol>(*x.m_[ci])) {
             const RCP<const Symbol> dx
                 = rcp_static_cast<const Symbol>(x.m_[ci]);
             for (unsigned ri = 0; ri < nrows; ++ri) {
-                const auto &elem = A.m_[ri]->diff(dx);
-                if (neq(*elem, *zero)) {
-                    p.back()++;
-                    j.push_back(ri);
-                    elems.emplace_back(std::move(elem));
+                if (container_has_symbol(per_row_free_symbols[ri], *dx)) {
+                    const auto &elem = A.m_[ri]->diff(dx);
+                    if (neq(*elem, *zero)) {
+                        p.back()++;
+                        j.push_back(ri);
+                        elems.emplace_back(std::move(elem));
+                    }
                 }
             }
         } else {
