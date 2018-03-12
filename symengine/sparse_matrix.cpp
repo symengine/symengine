@@ -43,6 +43,14 @@ CSRMatrix &CSRMatrix::operator=(CSRMatrix &&other)
     return *this;
 }
 
+std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+CSRMatrix::as_vectors() const
+{
+    auto p = p_, j = j_;
+    auto x = x_;
+    return std::make_tuple(std::move(p), std::move(j), std::move(x));
+}
+
 bool CSRMatrix::eq(const MatrixBase &other) const
 {
     unsigned row = this->nrows();

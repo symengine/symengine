@@ -285,6 +285,9 @@ public:
               std::vector<unsigned> &&j, vec_basic &&x);
     CSRMatrix &operator=(CSRMatrix &&other);
     CSRMatrix(const CSRMatrix &) = default;
+    std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+    as_vectors() const;
+
     bool is_canonical() const;
 
     virtual bool eq(const MatrixBase &other) const;
@@ -382,12 +385,6 @@ public:
         const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
         RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
                                    const RCP<const Basic> &));
-
-    std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
-    as_vectors() const
-    {
-        return std::make_tuple(p_, j_, x_);
-    }
 
 private:
     std::vector<unsigned> p_;
