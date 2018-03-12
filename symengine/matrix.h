@@ -283,7 +283,8 @@ public:
               const std::vector<unsigned> &j, const vec_basic &x);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
               std::vector<unsigned> &&j, vec_basic &&x);
-
+    CSRMatrix &operator=(CSRMatrix &&other);
+    CSRMatrix(const CSRMatrix &) = default;
     bool is_canonical() const;
 
     virtual bool eq(const MatrixBase &other) const;
@@ -320,6 +321,7 @@ public:
 
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const;
+    CSRMatrix transpose() const;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,

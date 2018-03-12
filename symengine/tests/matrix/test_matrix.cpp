@@ -70,7 +70,7 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     REQUIRE(std::equal(x1.begin(), x1.end(), x2.begin(),
                        [](const RCP<const Basic> &a,
                           const RCP<const Basic> &b) { return eq(*a, *b); }));
-
+    REQUIRE(B == B.transpose().transpose());
     REQUIRE(eq(*B.get(0, 0), *integer(1)));
     REQUIRE(eq(*B.get(1, 2), *integer(3)));
     REQUIRE(eq(*B.get(2, 1), *integer(5)));
@@ -1474,6 +1474,9 @@ TEST_CASE("test_csr_eq(): matrices", "[matrices]")
                              integer(5), integer(6)});
 
     REQUIRE(not(A == C));
+
+    A.transpose(C);
+    REQUIRE(B.transpose() == C);
 }
 
 TEST_CASE("test_from_coo(): matrices", "[matrices]")
@@ -1499,7 +1502,8 @@ TEST_CASE("test_from_coo(): matrices", "[matrices]")
          integer(60), integer(70), integer(80)});
 
     REQUIRE(A == B);
-
+    REQUIRE(A.transpose() == B.transpose());
+    REQUIRE(A.transpose().transpose() == B);
     // Check for duplicate removal
     // Here duplicates are summed to create one element
     A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
