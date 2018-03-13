@@ -1686,7 +1686,18 @@ TEST_CASE("Test Jacobian", "[matrices]")
                integer(0), z, integer(1), x, integer(1), integer(1), integer(1),
                integer(0), integer(0)});
     REQUIRE(J == ref1);
-    REQUIRE(CSRMatrix::jacobian(A, X) == ref1);
+    CSRMatrix Js = CSRMatrix::jacobian(A, X);
+    std::vector<unsigned> Js_p1, Js_p2{{0, 2, 4, 8, 10}};
+    std::vector<unsigned> Js_j1, Js_j2{{0, 2, 1, 2, 0, 1, 2, 3, 0, 1}};
+    vec_basic Js_x1, Js_x2{{integer(1), integer(1), z, y, z, integer(1), x,
+                            integer(1), integer(1), integer(1)}};
+    std::tie(Js_p1, Js_j1, Js_x1) = Js.as_vectors();
+    REQUIRE(Js_p1 == Js_p2);
+    REQUIRE(Js_j1 == Js_j2);
+    REQUIRE(std::equal(Js_x1.begin(), Js_x1.end(), Js_x2.begin(),
+                       [](const RCP<const Basic> &a,
+                          const RCP<const Basic> &b) { return eq(*a, *b); }));
+    REQUIRE(Js == ref1);
 
     X = DenseMatrix(4, 1, {f, y, z, t});
     CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException);
