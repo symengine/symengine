@@ -95,7 +95,11 @@ if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         export CXXFLAGS=""
     fi
 else
-    export CXXFLAGS="-Werror"
+    if [[ "${CC}" == *"gcc"* ]] && [[ "${BUILD_TYPE}" == "Debug" ]]; then
+        export CXXFLAGS="-Werror -D_GLIBCXX_DEBUG"
+    else
+        export CXXFLAGS="-Werror"
+    fi
 fi
 cmake $cmake_line ${SOURCE_DIR}
 
