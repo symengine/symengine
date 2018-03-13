@@ -59,10 +59,18 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
                      2, 2, {integer(0), integer(-2), integer(0), integer(-2)}));
 
     // Test for CSRMatrix
-    CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                            {integer(1), integer(2), integer(3), integer(4),
-                             integer(5), integer(6)});
-
+    std::vector<unsigned> p1{{0, 2, 3, 6}}, j1{{0, 2, 2, 0, 1, 2}}, p2, j2;
+    vec_basic x1{{integer(1), integer(2), integer(3), integer(4), integer(5),
+                  integer(6)}},
+        x2;
+    CSRMatrix B = CSRMatrix(3, 3, p1, j1, x1);
+    std::tie(p2, j2, x2) = B.as_vectors();
+    REQUIRE(p1 == p2);
+    REQUIRE(j1 == j2);
+    REQUIRE(std::equal(x1.begin(), x1.end(), x2.begin(),
+                       [](const RCP<const Basic> &a,
+                          const RCP<const Basic> &b) { return eq(*a, *b); }));
+    REQUIRE(B == B.transpose().transpose());
     REQUIRE(eq(*B.get(0, 0), *integer(1)));
     REQUIRE(eq(*B.get(1, 2), *integer(3)));
     REQUIRE(eq(*B.get(2, 1), *integer(5)));
@@ -1466,6 +1474,9 @@ TEST_CASE("test_csr_eq(): matrices", "[matrices]")
                              integer(5), integer(6)});
 
     REQUIRE(not(A == C));
+
+    A.transpose(C);
+    REQUIRE(B.transpose() == C);
 }
 
 TEST_CASE("test_from_coo(): matrices", "[matrices]")
@@ -1491,7 +1502,8 @@ TEST_CASE("test_from_coo(): matrices", "[matrices]")
          integer(60), integer(70), integer(80)});
 
     REQUIRE(A == B);
-
+    REQUIRE(A.transpose() == B.transpose());
+    REQUIRE(A.transpose().transpose() == B);
     // Check for duplicate removal
     // Here duplicates are summed to create one element
     A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
@@ -1669,22 +1681,38 @@ TEST_CASE("Test Jacobian", "[matrices]")
     X = DenseMatrix(4, 1, {x, y, z, t});
     J = DenseMatrix(4, 4);
     jacobian(A, X, J);
-    REQUIRE(J == DenseMatrix(4, 4, {integer(1), integer(0), integer(1),
-                                    integer(0), integer(0), z, y, integer(0), z,
-                                    integer(1), x, integer(1), integer(1),
-                                    integer(1), integer(0), integer(0)}));
+    const auto ref1 = DenseMatrix(
+        4, 4, {integer(1), integer(0), integer(1), integer(0), integer(0), z, y,
+               integer(0), z, integer(1), x, integer(1), integer(1), integer(1),
+               integer(0), integer(0)});
+    REQUIRE(J == ref1);
+    CSRMatrix Js = CSRMatrix::jacobian(A, X);
+    std::vector<unsigned> Js_p1, Js_p2{{0, 2, 4, 8, 10}};
+    std::vector<unsigned> Js_j1, Js_j2{{0, 2, 1, 2, 0, 1, 2, 3, 0, 1}};
+    vec_basic Js_x1, Js_x2{{integer(1), integer(1), z, y, z, integer(1), x,
+                            integer(1), integer(1), integer(1)}};
+    std::tie(Js_p1, Js_j1, Js_x1) = Js.as_vectors();
+    REQUIRE(Js_p1 == Js_p2);
+    REQUIRE(Js_j1 == Js_j2);
+    REQUIRE(std::equal(Js_x1.begin(), Js_x1.end(), Js_x2.begin(),
+                       [](const RCP<const Basic> &a,
+                          const RCP<const Basic> &b) { return eq(*a, *b); }));
+    REQUIRE(Js == ref1);
 
     X = DenseMatrix(4, 1, {f, y, z, t});
     CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException);
+    CHECK_THROWS_AS(CSRMatrix::jacobian(A, X), SymEngineException);
 
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
     X = DenseMatrix(3, 1, {x, y, z});
     J = DenseMatrix(4, 3);
     jacobian(A, X, J);
-    REQUIRE(J == DenseMatrix(4, 3, {integer(1), integer(0), integer(1),
-                                    integer(0), z, y, z, integer(1), x,
-                                    integer(1), integer(1), integer(0)}));
+    const auto ref2 = DenseMatrix(4, 3, {integer(1), integer(0), integer(1),
+                                         integer(0), z, y, z, integer(1), x,
+                                         integer(1), integer(1), integer(0)});
+    REQUIRE(J == ref2);
+    REQUIRE(CSRMatrix::jacobian(A, X) == ref2);
 
     A = DenseMatrix(2, 1, {mul(f, y), pow(y, integer(2))});
     X = DenseMatrix(2, 1, {f, y});

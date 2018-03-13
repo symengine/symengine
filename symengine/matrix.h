@@ -75,6 +75,8 @@ public:
 
 typedef std::vector<std::pair<int, int>> permutelist;
 
+class CSRMatrix;
+
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase
 {
@@ -261,6 +263,8 @@ public:
     friend void ones(DenseMatrix &A);
     friend void zeros(DenseMatrix &A);
 
+    friend CSRMatrix;
+
 private:
     // Matrix elements are stored in row-major order
     vec_basic m_;
@@ -275,8 +279,14 @@ class CSRMatrix : public MatrixBase
 public:
     CSRMatrix();
     CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, const std::vector<unsigned> &p,
+              const std::vector<unsigned> &j, const vec_basic &x);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
               std::vector<unsigned> &&j, vec_basic &&x);
+    CSRMatrix &operator=(CSRMatrix &&other);
+    CSRMatrix(const CSRMatrix &) = default;
+    std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+    as_vectors() const;
 
     bool is_canonical() const;
 
@@ -314,6 +324,7 @@ public:
 
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const;
+    CSRMatrix transpose() const;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,
@@ -360,6 +371,7 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
+    static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
                                  CSRMatrix &C);
