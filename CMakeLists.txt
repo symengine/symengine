@@ -349,6 +349,18 @@ if (WITH_LLVM)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
+
+    set(SYMENGINE_LLVM_SHARED_DEFAULT False)
+    foreach(LLVM_LIB ${llvm_libs})
+        get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
+        if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
+            if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES ".a$|.lib$")
+                set(SYMENGINE_LLVM_SHARED_DEFAULT True)
+            endif()
+        endif()
+    endforeach()
+    set(SYMENGINE_LLVM_SHARED ${SYMENGINE_LLVM_SHARED_DEFAULT}
+        CACHE INTERNAL "Link to llvm in SymEngineConfig.cmake")
     set(LIBS ${LIBS} ${llvm_libs})
     include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_LLVM yes)
