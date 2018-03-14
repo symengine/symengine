@@ -95,7 +95,12 @@ if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         export CXXFLAGS=""
     fi
 else
-    export CXXFLAGS="-Werror"
+    if [[ "${CC}" == *"gcc"* ]] && [[ "${BUILD_TYPE}" == "Debug" ]] && [[ "${BUILD_SHARED_LIBS}" == "yes" ]] && [[ "${WITH_GCC_6}" == "yes" ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        rm -r /home/travis/.ccache  # remove this line before merge
+        export CXXFLAGS="-Werror -D_GLIBCXX_DEBUG"
+    else
+        export CXXFLAGS="-Werror"
+    fi
 fi
 cmake $cmake_line ${SOURCE_DIR}
 
