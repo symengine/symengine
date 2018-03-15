@@ -95,7 +95,7 @@ if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         export CXXFLAGS=""
     fi
 else
-    if [[ "${CC}" == *"gcc"* ]] && [[ "${BUILD_TYPE}" == "Debug" ]] && [[ "${BUILD_SHARED_LIBS}" == "yes" ]] && [[ "${WITH_GCC_6}" == "yes" ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
         export CXXFLAGS="-Werror -D_GLIBCXX_DEBUG"
     else
         export CXXFLAGS="-Werror"
