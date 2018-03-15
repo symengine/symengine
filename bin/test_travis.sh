@@ -90,13 +90,15 @@ fi
 
 if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
-        export  CXXFLAGS="-ftrapv"
-    else
-        export CXXFLAGS=""
+        export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
 else
-    export CXXFLAGS="-Werror"
+    export CXXFLAGS="$CXXFLAGS -Werror"
 fi
+if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
+    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG"
+fi
+
 cmake $cmake_line ${SOURCE_DIR}
 
 echo "Current directory:"

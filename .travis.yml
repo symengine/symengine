@@ -84,7 +84,7 @@ matrix:
         - echo "nothing to install"
       script:
         - bin/travis_clang.sh
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes" USE_GLIBCXX_DEBUG="yes"
       compiler: gcc
       os: linux
       addons:
