@@ -277,6 +277,7 @@ TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
     transpose_dense(A, B);
 
     REQUIRE(B == DenseMatrix(3, 1, {x, y, z}));
+    REQUIRE(B == DenseMatrix({x, y, z}));
 }
 
 TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
@@ -1674,8 +1675,9 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
 TEST_CASE("Test Jacobian", "[matrices]")
 {
     DenseMatrix A, X, J;
-    RCP<const Basic> x = symbol("x"), y = symbol("y"), z = symbol("z"),
-                     t = symbol("t"), f = function_symbol("f", x);
+    RCP<const Symbol> x = symbol("x"), y = symbol("y"), z = symbol("z"),
+                      t = symbol("t");
+    RCP<const Basic> f = function_symbol("f", x);
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
     X = DenseMatrix(4, 1, {x, y, z, t});
@@ -1719,6 +1721,10 @@ TEST_CASE("Test Jacobian", "[matrices]")
     J = DenseMatrix(2, 2);
     sjacobian(A, X, J);
     REQUIRE(J == DenseMatrix(2, 2, {y, f, integer(0), mul(integer(2), y)}));
+
+    REQUIRE(
+        CSRMatrix::jacobian({add(x, mul(integer(-1), y)), mul(x, y)}, {x, y})
+        == DenseMatrix(2, 2, {integer(1), integer(-1), y, x}));
 }
 
 TEST_CASE("Test Diff", "[matrices]")

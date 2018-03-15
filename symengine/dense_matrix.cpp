@@ -30,6 +30,12 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
     SYMENGINE_ASSERT(m_.size() == row * col)
 }
 
+DenseMatrix::DenseMatrix(const vec_basic &column_elements)
+    : m_(column_elements), row_(static_cast<unsigned>(column_elements.size())),
+      col_(1)
+{
+}
+
 // Resize the Matrix
 void DenseMatrix::resize(unsigned row, unsigned col)
 {
