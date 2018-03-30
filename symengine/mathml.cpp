@@ -23,7 +23,8 @@ std::vector<std::string> init_mathml_printer_names()
     names[ASECH] = "arcsech";
     return names;
 }
-const std::vector<std::string> MathMLPrinter::names_ = init_mathml_printer_names();
+const std::vector<std::string> MathMLPrinter::names_
+    = init_mathml_printer_names();
 
 void MathMLPrinter::bvisit(const Basic &x)
 {
@@ -37,7 +38,7 @@ void MathMLPrinter::bvisit(const Symbol &x)
 
 void MathMLPrinter::bvisit(const Integer &x)
 {
-    s << "<cn>" << x.as_integer_class() << "</cn>";
+    s << "<cn type=\"integer\">" << x.as_integer_class() << "</cn>";
 }
 
 void MathMLPrinter::bvisit(const Rational &x)
@@ -47,12 +48,25 @@ void MathMLPrinter::bvisit(const Rational &x)
       << get_den(rational) << "</cn>";
 }
 
-void MathMLPrinter::bvisit(const Complex &x)
+void MathMLPrinter::bvisit(const RealDouble &x)
 {
-    s << "<cn type=\"complex-cartesian\">";
+    s << "<cn type=\"real\">" << x << "</cn>";
+}
+
+#ifdef HAVE_SYMENGINE_MPFR
+void MathMLPrinter::bvisit(const RealMPFR &x)
+{
+    // TODO: Use bigfloat here
+    s << "<cn type=\"real\">" << x << "</cn>";
+}
+#endif
+
+void MathMLPrinter::bvisit(const ComplexBase &x)
+{
+    s << "<apply><csymbol cd=\"nums1\">complex_cartesian</csymbol>";
     x.real_part()->accept(*this);
     x.imaginary_part()->accept(*this);
-    s << "</cn>";
+    s << "</apply>";
 }
 
 void MathMLPrinter::bvisit(const Interval &x)
@@ -97,8 +111,8 @@ void MathMLPrinter::bvisit(const EmptySet &x)
 void MathMLPrinter::bvisit(const FiniteSet &x)
 {
     s << "<set>";
-    const auto& args = x.get_args();
-    for (const auto& arg : args) {
+    const auto &args = x.get_args();
+    for (const auto &arg : args) {
         arg->accept(*this);
     }
     s << "</set>";
@@ -292,6 +306,17 @@ void MathMLPrinter::bvisit(const StrictLessThan &x)
     s << "<apply><lt/>";
     x.get_arg1()->accept(*this);
     x.get_arg2()->accept(*this);
+    s << "</apply>";
+}
+
+void MathMLPrinter::bvisit(const Derivative &x)
+{
+    s << "<apply><partialdiff/><bvar>";
+    for (const auto &elem : x.get_symbols()) {
+        elem->accept(*this);
+    }
+    s << "</bvar>";
+    x.get_arg()->accept(*this);
     s << "</apply>";
 }
 
