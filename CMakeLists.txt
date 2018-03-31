@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.5)
 
+set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
+
 project(symengine)
 set(SYMENGINE_MAJOR_VERSION 0)
 set(SYMENGINE_MINOR_VERSION 3)
@@ -57,11 +59,10 @@ endif()
 set(BUILD_FOR_DISTRIBUTION no CACHE BOOL "Building SymEngine for a distribution")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    if (NOT BUILD_FOR_DISTRIBUTION)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+    if (BUILD_FOR_DISTRIBUTION)
+        string(REPLACE "-march=native -ffast-math -funroll-loops" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
     endif()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -funroll-loops -ffast-math")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 endif()
 
 # Check c++11 support
