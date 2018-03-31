@@ -17,7 +17,7 @@ public:
     void bvisit(const Symbol &x);
     void bvisit(const Integer &x);
     void bvisit(const Rational &x);
-    void bvisit(const Complex &x);
+    void bvisit(const ComplexBase &x);
     void bvisit(const Interval &x);
     void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
@@ -41,16 +41,12 @@ public:
     void bvisit(const Derivative &x);
     // void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
-    void bvisit(const ComplexDouble &x);
     void bvisit(const Equality &x);
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
 #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x);
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-    void bvisit(const ComplexMPC &x);
 #endif
     // void bvisit(const NumberWrapper &x);
     std::string apply(const Basic &b);

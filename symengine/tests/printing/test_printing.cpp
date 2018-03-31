@@ -573,7 +573,8 @@ TEST_CASE("test_logical(): printing", "[printing]")
 TEST_CASE("test_mathml()", "[mathml]")
 {
     RCP<const Basic> x = parse("x^2");
-    REQUIRE(mathml(*x) == "<apply><power/><ci>x</ci><cn>2</cn></apply>");
+    REQUIRE(mathml(*x)
+            == "<apply><power/><ci>x</ci><cn type=\"integer\">2</cn></apply>");
     RCP<const Basic> y = parse("3/2 * y");
     REQUIRE(mathml(*y) == "<apply><times/><cn "
                           "type=\"rational\">3<sep/>2</cn><ci>y</ci></apply>");
@@ -582,12 +583,14 @@ TEST_CASE("test_mathml()", "[mathml]")
                           "ci><cn "
                           "type=\"rational\">5<sep/>3</cn></apply></apply>");
     RCP<const Basic> w = parse("1 + 4 * x * y");
-    REQUIRE(mathml(*w) == "<apply><plus/><cn>1</cn><apply><times/><cn>4</"
-                          "cn><ci>x</ci><ci>y</ci></apply></apply>");
+    REQUIRE(mathml(*w)
+            == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
+               "type=\"integer\">4</cn><ci>x</ci><ci>y</ci></apply></apply>");
     RCP<const Basic> v = parse("1 + 4 * x - y");
-    REQUIRE(mathml(*v) == "<apply><plus/><cn>1</cn><apply><times/><cn>-1</"
-                          "cn><ci>y</ci></apply><apply><times/><cn>4</"
-                          "cn><ci>x</ci></apply></apply>");
+    REQUIRE(mathml(*v)
+            == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
+               "type=\"integer\">-1</cn><ci>y</ci></apply><apply><times/><cn "
+               "type=\"integer\">4</cn><ci>x</ci></apply></apply>");
     RCP<const Basic> u = parse("sin(x)");
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
