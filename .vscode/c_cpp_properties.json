@@ -36,6 +36,7 @@
                 "/usr/include"
             ],
             "defines": [],
+            "compileCommands": "${workspaceFolder}/compile_commands.json",
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
