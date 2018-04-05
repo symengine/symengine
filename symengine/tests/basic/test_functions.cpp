@@ -271,6 +271,11 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = sin(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(-3*pi - y) = sin(y)
+    r1 = sin(sub(mul(neg(i3), pi), y));
+    r2 = sin(y);
+    REQUIRE(eq(*r1, *r2));
+
     // sin(pi/2 + y) = cos(y)
     r1 = sin(add(div(pi, i2), y));
     r2 = cos(y);
