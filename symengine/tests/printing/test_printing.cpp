@@ -587,10 +587,16 @@ TEST_CASE("test_mathml()", "[mathml]")
             == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
                "type=\"integer\">4</cn><ci>x</ci><ci>y</ci></apply></apply>");
     RCP<const Basic> v = parse("1 + 4 * x - y");
-    REQUIRE(mathml(*v)
-            == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
-               "type=\"integer\">-1</cn><ci>y</ci></apply><apply><times/><cn "
-               "type=\"integer\">4</cn><ci>x</ci></apply></apply>");
+
+    std::string s1 = "<apply><plus/><cn "
+                     "type=\"integer\">1</cn><apply><times/><cn "
+                     "type=\"integer\">4</cn><ci>x</ci></apply><apply><times/"
+                     "><cn type=\"integer\">-1</cn><ci>y</ci></apply></apply>";
+    std::string s2 = "<apply><plus/><cn "
+                     "type=\"integer\">1</cn><apply><times/><cn "
+                     "type=\"integer\">-1</cn><ci>y</ci></apply><apply><times/"
+                     "><cn type=\"integer\">4</cn><ci>x</ci></apply></apply>";
+    auto m = mathml(*v) REQUIRE(m == s1 or m == s2);
     RCP<const Basic> u = parse("sin(x)");
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
