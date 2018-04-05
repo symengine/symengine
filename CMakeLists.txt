@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.5)
 
-set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
+set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
 set(SYMENGINE_MAJOR_VERSION 0)
@@ -16,34 +16,58 @@ if (NOT CMAKE_BUILD_TYPE)
         CACHE STRING "Build type (Debug, Release)" FORCE)
 endif ()
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-        CMAKE_BUILD_TYPE STREQUAL "Release"))
-    message("${CMAKE_BUILD_TYPE}")
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be one of: Debug, Release (current value: '${CMAKE_BUILD_TYPE}')")
+        CMAKE_BUILD_TYPE STREQUAL "Release" OR
+        CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR
+        CMAKE_BUILD_TYPE STREQUAL "MinSizeRel"))
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be one of: Debug, Release, RelWithDebInfo, MinSizeRel (current value: '${CMAKE_BUILD_TYPE}')")
 endif ()
 
-set(BUILD_FOR_DISTRIBUTION no
-    CACHE BOOL "Building SymEngine for a distribution")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # g++
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -fno-common ${CMAKE_CXX_FLAGS} ")
+    if (MINGW)
+        set(CMAKE_CXX_FLAGS "-D_hypot=hypot -Doff64_t=_off64_t ${CMAKE_CXX_FLAGS} ")
+        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+            set(CMAKE_CXX_FLAGS "-DMS_WIN64 ${CMAKE_CXX_FLAGS}")
+        endif()
+    endif()
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    # icpc
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -fno-common ${CMAKE_CXX_FLAGS}")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+    # clang
+    set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra ${CMAKE_CXX_FLAGS}")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    # pgcpp
+    set(CMAKE_CXX_FLAGS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__ ${CMAKE_CXX_FLAGS}")
+endif ()
+
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+endif ()
+
+set(CMAKE_POSITION_INDEPENDENT_CODE yes CACHE BOOL "Build all libraries as position independent")
 
 #Boost.multiprecision build segfaults if -O3 optimization is on
 #which it is by default for cmake Release mode. Remove -O3 from flags.
 if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    string(REPLACE "-O2" "" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 endif()
 
+set(BUILD_FOR_DISTRIBUTION no CACHE BOOL "Building SymEngine for a distribution")
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
-    if (NOT BUILD_FOR_DISTRIBUTION)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+    if (BUILD_FOR_DISTRIBUTION)
+        string(REPLACE "-march=native -ffast-math -funroll-loops" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
     endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 endif()
 
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
-	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
+	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
 if (NOT ${CXX11})
 	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
 		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
@@ -84,12 +108,13 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
 endif()
 
 try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkstdtostring.cpp"
-	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}")
+	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (NOT CMAKE_BUILD_TYPE STREQUAL "Debug"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
     if (NOT ${CHECK_CLANG})
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D__extern_always_inline=inline" )
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-D__extern_always_inline=inline ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" )
+        set(CMAKE_CXX_FLAGS_RELEASE "-D__extern_always_inline=inline ${CMAKE_CXX_FLAGS_RELEASE}" )
     endif()
 endif()
 
@@ -151,7 +176,7 @@ if (HAVE_SYMENGINE_GMP)
     # Check gmpxx
     if (NOT(MSVC) AND WITH_GMPXX)
         try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-            CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+            CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}"
             CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
             CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
             OUTPUT_VARIABLE GMPXX_ERROR_LOG)
@@ -163,28 +188,32 @@ if (HAVE_SYMENGINE_GMP)
     endif()
 endif()
 
+set(BUILD_SHARED_LIBS no CACHE BOOL "Build shared libraries")
+set(BUILD_STATIC_LIBS no)
+if (NOT ${BUILD_SHARED_LIBS})
+    set(BUILD_STATIC_LIBS yes)
+endif()
 
-set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+set(MSVC_USE_MT ${BUILD_STATIC_LIBS} CACHE BOOL "Use MT flags when compiling in MSVC")
 set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
 
 if (MSVC)
     if (MSVC_USE_MT)
-	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS_MINSIZEREL)
 	      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
 	    endforeach()
     endif()
-    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
-    endforeach()
+    set(CMAKE_CXX_FLAGS "/W${MSVC_WARNING_LEVEL} ${CMAKE_CXX_FLAGS}")
 endif()
 
 if (BUILD_SHARED_LIBS)
     if (WIN32)
         if (MSVC)
             # Use CMake 3.4 feature
+            cmake_minimum_required(VERSION 3.4)
             set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
         else()
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
+            set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols ${CMAKE_SHARED_LINKER_FLAGS}")
         endif()
     endif()
     set(SYMENGINE_STATIC_DEFINE no)
@@ -285,8 +314,6 @@ CACHE BOOL "Build with PTHREAD")
 if (WITH_PIRANHA)
     set(WITH_PTHREAD yes)
     set(WITH_MPFR yes)
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(PIRANHA REQUIRED)
     include_directories(SYSTEM ${PIRANHA_INCLUDE_DIRS})
@@ -316,20 +343,6 @@ endif()
 set(WITH_PTHREAD no
     CACHE BOOL "Build with PTHREAD")
 
-if (WITH_PIRANHA)
-    set(WITH_PTHREAD yes)
-    set(WITH_MPFR yes)
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
-
-    find_package(PIRANHA REQUIRED)
-    include_directories(SYSTEM ${PIRANHA_INCLUDE_DIRS})
-    set(HAVE_SYMENGINE_PIRANHA yes)
-    set(PKGS ${PKGS} "PIRANHA")
-    set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
-    set(WITH_BOOST yes)
-endif()
-
 # LLVM
 set(WITH_LLVM no
     CACHE BOOL "Build with LLVM")
@@ -343,10 +356,8 @@ if (WITH_LLVM)
                              Require at least ${LLVM_MINIMUM_REQUIRED_VERSION}")
     endif()
     foreach(LLVM_FLAG ${LLVM_DEFINITIONS})
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${LLVM_FLAG}")
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${LLVM_FLAG}")
+        set(CMAKE_CXX_FLAGS "${LLVM_FLAG} ${CMAKE_CXX_FLAGS}")
     endforeach()
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
 
@@ -426,10 +437,8 @@ if (WITH_TCMALLOC)
     set(LIBS ${LIBS} ${TCMALLOC_TARGETS})
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS_DEBUG
-            "${CMAKE_CXX_FLAGS_DEBUG} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+        set(CMAKE_CXX_FLAGS
+            "-fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free ${CMAKE_CXX_FLAGS}")
     endif()
     set(PKGS ${PKGS} "TCMALLOC")
 
@@ -479,17 +488,11 @@ set(WITH_OPENMP no
 if (WITH_OPENMP)
     find_package(OpenMP REQUIRED)
     if(OPENMP_FOUND)
-        set(CMAKE_CXX_FLAGS_DEBUG
-            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
         set(WITH_SYMENGINE_THREAD_SAFE yes)
     endif()
 elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unknown-pragmas")
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unknown-pragmas")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -503,7 +506,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if (WITH_COVERAGE)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
+    set(CMAKE_CXX_FLAGS_DEBUG "--coverage ${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
 
 if ((NOT WITH_SYMENGINE_RCP) OR HAVE_TEUCHOS_BFD)
@@ -619,8 +622,10 @@ message("CMAKE_C_COMPILER:   ${CMAKE_C_COMPILER}")
 message("CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message("CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
-message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
-message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_CXX_FLAGS:                   ${CMAKE_CXX_FLAGS}")
+message("CMAKE_CXX_FLAGS_DEBUG:             ${CMAKE_CXX_FLAGS_DEBUG}")
+message("CMAKE_CXX_FLAGS_RELEASE:           ${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_CXX_FLAGS_RELWITHDEBINFO:    ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message("BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
