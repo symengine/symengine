@@ -201,7 +201,7 @@ void CSRMatrix::transpose(MatrixBase &result) const
 {
     if (is_a<CSRMatrix>(result)) {
         auto &r = down_cast<CSRMatrix &>(result);
-        r = std::move(this->transpose());
+        r = this->transpose();
     } else {
         throw NotImplementedError("Not Implemented");
     }
