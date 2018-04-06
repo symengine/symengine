@@ -50,6 +50,7 @@ using SymEngine::NotImplementedError;
 using SymEngine::ComplexInf;
 using SymEngine::Nan;
 using SymEngine::EulerGamma;
+using SymEngine::atoms;
 
 using namespace SymEngine::literals;
 
@@ -982,7 +983,7 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.count(x) == 1);
 }
 
-TEST_CASE("function_symbols: Basic", "[basic]")
+TEST_CASE("atoms: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2, r3;
     RCP<const Symbol> x, y;
@@ -990,23 +991,32 @@ TEST_CASE("function_symbols: Basic", "[basic]")
     y = symbol("y");
 
     r1 = function_symbol("f", mul(x, integer(2)));
-    set_basic s = function_symbols(*r1);
+    set_basic s = atoms<FunctionSymbol>(*r1);
+    REQUIRE(s.size() == 1);
+
+    s = atoms<FunctionSymbol, Symbol>(*r1);
+    REQUIRE(s.size() == 2);
+
+    s = atoms<FunctionSymbol, Symbol, Mul>(*r1);
+    REQUIRE(s.size() == 3);
+
+    s = atoms<Number>(*r1);
     REQUIRE(s.size() == 1);
 
     r2 = function_symbol("g", add(r1, y));
-    s = function_symbols(*r2);
+    s = atoms<FunctionSymbol>(*r2);
     REQUIRE(s.size() == 2);
 
     r3 = add(r1, add(r2, x));
     map_basic_basic d;
     d[x] = r1;
     r3 = r3->subs(d);
-    s = function_symbols(*r3);
+    s = atoms<FunctionSymbol>(*r3);
     set_basic t({r1, r1->subs(d), r2->subs(d)});
     REQUIRE(unified_eq(s, t));
 
     r3 = r2->diff(x);
-    s = function_symbols(*r3);
+    s = atoms<FunctionSymbol>(*r3);
     REQUIRE(s.size() == 3);
 }
 

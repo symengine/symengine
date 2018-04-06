@@ -134,53 +134,6 @@ set_basic free_symbols(const Basic &b)
     return visitor.apply(b);
 }
 
-class FunctionSymbolsVisitor : public BaseVisitor<FunctionSymbolsVisitor>
-{
-public:
-    set_basic s;
-    uset_basic v;
-
-    void bvisit(const Subs &x)
-    {
-        set_basic set_ = function_symbols(*x.get_arg());
-        for (const auto &p : x.get_variables()) {
-            set_.erase(p);
-        }
-        s.insert(set_.begin(), set_.end());
-        for (const auto &p : x.get_point()) {
-            auto iter = v.insert(p->rcp_from_this());
-            if (iter.second) {
-                p->accept(*this);
-            }
-        }
-    }
-
-    void bvisit(const Basic &x)
-    {
-        if (is_a<FunctionSymbol>(x)) {
-            s.insert(x.rcp_from_this());
-        }
-        for (const auto &p : x.get_args()) {
-            auto iter = v.insert(p->rcp_from_this());
-            if (iter.second) {
-                p->accept(*this);
-            }
-        }
-    }
-
-    set_basic apply(const Basic &b)
-    {
-        b.accept(*this);
-        return s;
-    }
-};
-
-set_basic function_symbols(const Basic &b)
-{
-    FunctionSymbolsVisitor visitor;
-    return visitor.apply(b);
-}
-
 RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)
 {
     x->accept(*this);

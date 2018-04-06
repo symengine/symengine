@@ -1298,7 +1298,7 @@ CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
                                             const basic self)
 {
     CWRAPPER_BEGIN
-    symbols->m = SymEngine::function_symbols(*(self->m));
+    symbols->m = SymEngine::atoms<SymEngine::FunctionSymbol>(*(self->m));
     CWRAPPER_END
 }
 
