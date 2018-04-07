@@ -24,22 +24,29 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    if (BUILD_FOR_DISTRIBUTION)
+        string(REPLACE "-march=native" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    endif()
+endif()
+
 #Boost.multiprecision build segfaults if -O3 optimization is on
 #which it is by default for cmake Release mode. Remove -O3 from flags.
 if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
-    if (NOT BUILD_FOR_DISTRIBUTION)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
-    endif()
-endif()
+# Enable C++11 support in all compilers. SymEngine will not compile unless
+# the C++11 support is enabled.
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel")
+    set(CXX11_OPTIONS "-std=c++11")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    # pgcpp
+    set(CXX11_OPTIONS "--gnu --c++11")
+endif ()
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CXX11_OPTIONS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CXX11_OPTIONS}")
+
 
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
