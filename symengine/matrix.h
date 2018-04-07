@@ -86,6 +86,7 @@ public:
     DenseMatrix(const DenseMatrix &);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
+    DenseMatrix(const vec_basic &column_elements);
     // Resize
     void resize(unsigned i, unsigned j);
 
@@ -371,6 +372,7 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
+    static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x);
     static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,

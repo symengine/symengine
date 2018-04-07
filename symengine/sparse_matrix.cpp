@@ -201,7 +201,7 @@ void CSRMatrix::transpose(MatrixBase &result) const
 {
     if (is_a<CSRMatrix>(result)) {
         auto &r = down_cast<CSRMatrix &>(result);
-        r = std::move(this->transpose());
+        r = this->transpose();
     } else {
         throw NotImplementedError("Not Implemented");
     }
@@ -422,27 +422,19 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     return B;
 }
 
-CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
 {
-    SYMENGINE_ASSERT(A.col_ == 1);
-    SYMENGINE_ASSERT(x.col_ == 1);
-    unsigned nrows = A.row_, ncols = x.row_;
+    const unsigned nrows = static_cast<unsigned>(exprs.size());
+    const unsigned ncols = static_cast<unsigned>(x.size());
     std::vector<unsigned> p(1, 0), j;
     vec_basic elems;
     p.reserve(nrows + 1);
     j.reserve(nrows);
     elems.reserve(nrows);
-    for (const auto &dx : x.m_) {
-        if (!is_a<Symbol>(*dx)) {
-            throw SymEngineException("'x' must contain Symbols only");
-        }
-    }
     for (unsigned ri = 0; ri < nrows; ++ri) {
         p.push_back(p.back());
         for (unsigned ci = 0; ci < ncols; ++ci) {
-            const RCP<const Symbol> dx
-                = rcp_static_cast<const Symbol>(x.m_[ci]);
-            auto elem = A.m_[ri]->diff(dx);
+            auto elem = exprs[ri]->diff(x[ci]);
             if (neq(*elem, *zero)) {
                 p.back()++;
                 j.push_back(ci);
@@ -452,6 +444,21 @@ CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
     }
     return CSRMatrix(nrows, ncols, std::move(p), std::move(j),
                      std::move(elems));
+}
+
+CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    vec_sym syms;
+    syms.reserve(x.row_);
+    for (const auto &dx : x.m_) {
+        if (!is_a<Symbol>(*dx)) {
+            throw SymEngineException("'x' must contain Symbols only");
+        }
+        syms.push_back(rcp_static_cast<const Symbol>(dx));
+    }
+    return CSRMatrix::jacobian(A.m_, syms);
 }
 
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
