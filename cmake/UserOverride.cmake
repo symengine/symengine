@@ -31,7 +31,4 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g -ggdb")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
     # pgcpp
-    set(common "-D__GXX_EXPERIMENTAL_CXX0X__")
-    set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common}")
-    set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common}")
 endif ()
