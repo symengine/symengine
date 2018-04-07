@@ -47,6 +47,19 @@ endif ()
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CXX11_OPTIONS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CXX11_OPTIONS}")
 
+# Add proper -fPIC and MINGW handling
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if (NOT MINGW)
+        set(common "-fPIC")
+    else()
+        set(common "-D_hypot=hypot -Doff64_t=_off64_t")
+        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+            set(common "${common} -DMS_WIN64")
+        endif()
+    endif()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common}")
+endif ()
 
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
