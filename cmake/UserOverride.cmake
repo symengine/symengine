@@ -18,7 +18,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g -O0")
 elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     # clang
-    set(common "-Wall -Wextra -Wno-unused-parameter -fPIC")
+    set(common "-Wall -Wextra -Wno-unused-parameter")
     set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -O3 -march=native -ffast-math -funroll-loops")
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g -ggdb")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
