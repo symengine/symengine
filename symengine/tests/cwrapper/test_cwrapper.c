@@ -624,6 +624,97 @@ void test_free_symbols()
     basic_free_stack(z);
 }
 
+void test_function_symbols()
+{
+    char *s;
+    basic x, y, z, e;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    basic f, g, h;
+    basic_new_stack(f);
+    basic_new_stack(g);
+    basic_new_stack(h);
+
+    CVecBasic *vec1 = vecbasic_new();
+    vecbasic_push_back(vec1, x);
+    function_symbol_set(g, "g", vec1);
+
+    CVecBasic *vec2 = vecbasic_new();
+    vecbasic_push_back(vec2, g);
+    function_symbol_set(h, "h", vec2);
+
+    CVecBasic *vec = vecbasic_new();
+    basic_add(e, x, y);
+    vecbasic_push_back(vec, e);
+    vecbasic_push_back(vec, g);
+    vecbasic_push_back(vec, h);
+
+    function_symbol_set(f, "f", vec);
+
+    basic_add(z, z, f);
+
+    s = basic_str(z);
+    SYMENGINE_C_ASSERT(strcmp(s, "z + f(x + y, g(x), h(g(x)))") == 0);
+
+    CSetBasic *symbols = setbasic_new();
+    basic_function_symbols(symbols, f);
+    SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
+    setbasic_free(symbols);
+
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+
+    basic_free_stack(f);
+    basic_free_stack(g);
+    basic_free_stack(h);
+    vecbasic_free(vec);
+    vecbasic_free(vec1);
+    vecbasic_free(vec2);
+    basic_str_free(s);
+}
+
+void test_function_symbol_get_name()
+{
+    char *s1, *s2;
+    basic x;
+    basic_new_stack(x);
+    symbol_set(x, "x");
+
+    basic f, g;
+    basic_new_stack(f);
+    basic_new_stack(g);
+
+    CVecBasic *vec1 = vecbasic_new();
+    vecbasic_push_back(vec1, x);
+    function_symbol_set(g, "g", vec1);
+
+    CVecBasic *vec2 = vecbasic_new();
+    vecbasic_push_back(vec2, g);
+    function_symbol_set(f, "f", vec2);
+
+    s1 = function_symbol_get_name(g);
+    SYMENGINE_C_ASSERT(strcmp(s1, "g") == 0);
+
+    s2 = function_symbol_get_name(f);
+    SYMENGINE_C_ASSERT(strcmp(s2, "f") == 0);
+
+    basic_free_stack(x);
+    basic_free_stack(f);
+    basic_free_stack(g);
+    vecbasic_free(vec1);
+    vecbasic_free(vec2);
+    basic_str_free(s1);
+    basic_str_free(s2);
+}
+
 void test_get_type()
 {
     basic x, y;
@@ -2025,6 +2116,8 @@ int main(int argc, char *argv[])
     test_CMapBasicBasic();
     test_get_args();
     test_free_symbols();
+    test_function_symbols();
+    test_function_symbol_get_name();
     test_get_type();
     test_hash();
     test_subs();

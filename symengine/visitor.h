@@ -203,6 +203,8 @@ set_basic free_symbols(const Basic &b);
 
 set_basic free_symbols(const MatrixBase &m);
 
+set_basic function_symbols(const Basic &b);
+
 class TransformVisitor : public BaseVisitor<TransformVisitor>
 {
 protected:
@@ -235,6 +237,57 @@ public:
 
     void bvisit(const MultiArgFunction &x);
 };
+
+template <typename Derived, typename First, typename... Rest>
+struct is_base_of_multiple {
+    static const bool value = std::is_base_of<First, Derived>::value
+                              or is_base_of_multiple<Derived, Rest...>::value;
+};
+
+template <typename Derived, typename First>
+struct is_base_of_multiple<Derived, First> {
+    static const bool value = std::is_base_of<First, Derived>::value;
+};
+
+template <typename... Args>
+class AtomsVisitor : public BaseVisitor<AtomsVisitor<Args...>>
+{
+public:
+    set_basic s;
+    uset_basic visited;
+
+    template <typename T,
+              typename = enable_if_t<is_base_of_multiple<T, Args...>::value>>
+    void bvisit(const T &x)
+    {
+        s.insert(x.rcp_from_this());
+        visited.insert(x.rcp_from_this());
+        bvisit((const Basic &)x);
+    }
+
+    void bvisit(const Basic &x)
+    {
+        for (const auto &p : x.get_args()) {
+            auto iter = visited.insert(p->rcp_from_this());
+            if (iter.second) {
+                p->accept(*this);
+            }
+        }
+    }
+
+    set_basic apply(const Basic &b)
+    {
+        b.accept(*this);
+        return s;
+    }
+};
+
+template <typename... Args>
+inline set_basic atoms(const Basic &b)
+{
+    AtomsVisitor<Args...> visitor;
+    return visitor.apply(b);
+}
 
 } // SymEngine
 
