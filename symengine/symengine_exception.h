@@ -1,6 +1,10 @@
 #ifndef SYMENGINE_EXCEPTION_H
 #define SYMENGINE_EXCEPTION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     SYMENGINE_NO_EXCEPTION = 0,
     SYMENGINE_RUNTIME_ERROR = 1,
@@ -11,6 +15,13 @@ typedef enum {
 } symengine_exceptions_t;
 
 #ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+
+#include <exception>
+#include <string>
 
 namespace SymEngine
 {

@@ -13,6 +13,8 @@
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
 
+#include "symengine/symengine_exception.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,8 +29,6 @@ extern "C" {
             abort();                                                           \
         }                                                                      \
     }
-
-#include "symengine/symengine_exception.h"
 
 typedef symengine_exceptions_t CWRAPPER_OUTPUT_TYPE;
 
