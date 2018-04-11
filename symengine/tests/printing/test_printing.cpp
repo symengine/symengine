@@ -596,7 +596,8 @@ TEST_CASE("test_mathml()", "[mathml]")
                      "type=\"integer\">1</cn><apply><times/><cn "
                      "type=\"integer\">-1</cn><ci>y</ci></apply><apply><times/"
                      "><cn type=\"integer\">4</cn><ci>x</ci></apply></apply>";
-    auto m = mathml(*v) REQUIRE(m == s1 or m == s2);
+    auto m = mathml(*v);
+    REQUIRE(m == s1 or m == s2);
     RCP<const Basic> u = parse("sin(x)");
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
