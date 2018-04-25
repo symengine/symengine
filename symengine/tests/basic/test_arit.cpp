@@ -327,8 +327,8 @@ TEST_CASE("Mul: arit", "[arit]")
     s.insert(rc1);
     REQUIRE(s.size() == 2);
 
-    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));
-                    , SymEngineException);
+    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0)),
+                    SymEngineException);
 
     r1 = mul({});
     REQUIRE(eq(*r1, *one));
