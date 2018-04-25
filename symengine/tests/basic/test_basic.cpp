@@ -199,6 +199,9 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     REQUIRE(unified_compare(adict, bdict) == -unified_compare(bdict, adict));
     bdict = {{0, 1}, {1, 3}};
     REQUIRE(unified_compare(adict, bdict) == 1);
+    buffer.str("");
+    buffer << bdict;
+    REQUIRE(check_map_str(buffer.str(), {"0", "1"}, {"1", "3"}));
 
     multiset_basic msba, msbb;
     msba.insert(x);

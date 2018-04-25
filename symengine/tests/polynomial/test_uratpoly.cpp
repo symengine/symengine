@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include <chrono>
+#include <sstream>
 
 #include <symengine/polys/uratpoly.h>
 #include <symengine/polys/uintpoly.h>
@@ -53,6 +54,10 @@ TEST_CASE("Constructor of URatPoly", "[URatPoly]")
 
     RCP<const URatPoly> T = URatPoly::from_dict(x, map_uint_mpq{});
     REQUIRE(T->__str__() == "0");
+
+    std::stringstream ss;
+    ss << *T;
+    REQUIRE(ss.str() == "0");
 }
 
 TEST_CASE("Adding two URatPoly", "[URatPoly]")
