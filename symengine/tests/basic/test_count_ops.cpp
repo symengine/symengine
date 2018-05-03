@@ -38,6 +38,9 @@ TEST_CASE("CountOps", "[count_ops]")
 
     r1 = add(I, pi);
     REQUIRE(count_ops({r1}) == 1);
+    
+    r1 = pow(pi, pi);
+    REQUIRE(count_ops({r1}) == 1);
 
     REQUIRE(count_ops({x, y}) == 0);
 }
