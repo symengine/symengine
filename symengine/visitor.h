@@ -287,7 +287,24 @@ inline set_basic atoms(const Basic &b)
 {
     AtomsVisitor<Args...> visitor;
     return visitor.apply(b);
-}
+};
+
+class CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
+{
+public:
+    unsigned count = 0;
+    void apply(const Basic &b);
+    void bvisit(const Mul &x);
+    void bvisit(const Add &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Number &x);
+    void bvisit(const ComplexBase &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+};
+
+unsigned count_ops(const vec_basic &a);
 
 } // SymEngine
 
