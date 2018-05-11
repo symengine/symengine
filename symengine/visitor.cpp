@@ -208,4 +208,94 @@ void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
     }
 }
 
+void CountOpsVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+}
+
+void CountOpsVisitor::bvisit(const Mul &x)
+{
+    if (neq(*(x.get_coef()), *one)) {
+        count++;
+        apply(*x.get_coef());
+    }
+
+    for (const auto &p : x.get_dict()) {
+        if (neq(*p.second, *one)) {
+            count++;
+            apply(*p.second);
+        }
+        apply(*p.first);
+        count++;
+    }
+    count--;
+}
+
+void CountOpsVisitor::bvisit(const Add &x)
+{
+    if (neq(*(x.get_coef()), *zero)) {
+        count++;
+        apply(*x.get_coef());
+    }
+
+    unsigned i = 0;
+    for (const auto &p : x.get_dict()) {
+        if (neq(*p.second, *one)) {
+            count++;
+            apply(*p.second);
+        }
+        apply(*p.first);
+        count++;
+        i++;
+    }
+    count--;
+}
+
+void CountOpsVisitor::bvisit(const Pow &x)
+{
+    count++;
+    apply(*x.get_exp());
+    apply(*x.get_base());
+}
+
+void CountOpsVisitor::bvisit(const Number &x)
+{
+}
+
+void CountOpsVisitor::bvisit(const ComplexBase &x)
+{
+    if (neq(*x.real_part(), *zero)) {
+        count++;
+    }
+
+    if (neq(*x.imaginary_part(), *one)) {
+        count++;
+    }
+}
+
+void CountOpsVisitor::bvisit(const Symbol &x)
+{
+}
+
+void CountOpsVisitor::bvisit(const Constant &x)
+{
+}
+
+void CountOpsVisitor::bvisit(const Basic &x)
+{
+    count++;
+    for (const auto &p : x.get_args()) {
+        apply(*p);
+    }
+}
+
+unsigned count_ops(const vec_basic &a)
+{
+    CountOpsVisitor v;
+    for (auto &p : a) {
+        v.apply(*p);
+    }
+    return v.count;
+}
+
 } // SymEngine
