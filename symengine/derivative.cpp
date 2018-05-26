@@ -515,6 +515,25 @@ public:
                        arg->diff(x)));
     }
 
+    static RCP<const Basic> diff(const Erfinv &self, const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(
+            div(mul(sqrt(pi), exp(pow(self.rcp_from_this(), integer(2)))),
+                integer(2)),
+            arg->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Erfcinv &self,
+                                 const RCP<const Symbol> &x)
+    {
+        RCP<const Basic> arg = self.get_args()[0];
+        return neg(
+            mul(div(mul(sqrt(pi), exp(pow(self.rcp_from_this(), integer(2)))),
+                    integer(2)),
+                arg->diff(x)));
+    }
+
     static RCP<const Basic> diff(const Gamma &self, const RCP<const Symbol> &x)
     {
         RCP<const Basic> gamma_arg = self.get_args()[0];

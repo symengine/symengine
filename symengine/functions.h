@@ -1065,6 +1065,49 @@ public:
 //! Canonicalize Erfc:
 RCP<const Basic> erfc(const RCP<const Basic> &arg);
 
+class Erfinv : public OneArgFunction
+{
+    /*   Inverse Error Function. The erfinv function is defined as:
+
+    .. math ::
+        \mathrm{erf}(x) = y \quad \Rightarrow \quad \mathrm{erfinv}(y) = x
+     **/
+public:
+    IMPLEMENT_TYPEID(ERFINV)
+    Erfinv(const RCP<const Basic> &arg) : OneArgFunction(arg)
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+        SYMENGINE_ASSERT(is_canonical(arg))
+    }
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> erfinv(const RCP<const Basic> &arg);
+
+class Erfcinv : public OneArgFunction
+{
+    /*   Inverse Complementary Error Function. The erfcinv function is defined
+    as:
+
+    .. math ::
+        \mathrm{erfc}(x) = y \quad \Rightarrow \quad \mathrm{erfcinv}(y) = x
+     **/
+public:
+    IMPLEMENT_TYPEID(ERFCINV)
+    Erfcinv(const RCP<const Basic> &arg) : OneArgFunction(arg)
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+        SYMENGINE_ASSERT(is_canonical(arg))
+    }
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> erfcinv(const RCP<const Basic> &arg);
+
+RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b);
+
 class Gamma : public OneArgFunction
 {
     /*!    The gamma function

@@ -922,6 +922,8 @@ std::vector<std::string> init_str_printer_names()
     names[CEILING] = "ceiling";
     names[ERF] = "erf";
     names[ERFC] = "erfc";
+    names[ERFINV] = "erfinv";
+    names[ERFCINV] = "erfcinv";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
     names[UPPERGAMMA] = "beta";

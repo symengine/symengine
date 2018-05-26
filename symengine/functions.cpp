@@ -2802,6 +2802,87 @@ RCP<const Basic> erfc(const RCP<const Basic> &arg)
     return make_rcp<const Erfc>(d);
 }
 
+bool Erfinv::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (eq(*arg, *zero) or eq(*arg, *one))
+        return false;
+    if (is_a<Erf>(*arg)) {
+        return false;
+    }
+    if (could_extract_minus(*arg))
+        return false;
+    return true;
+}
+
+RCP<const Basic> Erfinv::create(const RCP<const Basic> &arg) const
+{
+    return erfinv(arg);
+}
+
+RCP<const Basic> erfinv(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) {
+        return zero;
+    }
+    if (eq(*arg, *one)) {
+        return Inf;
+    }
+    if (eq(*arg, *minus_one)) {
+        return NegInf;
+    }
+    if (is_a<Erf>(*arg)) {
+        return down_cast<const Erf &>(*arg).get_arg();
+    }
+
+    RCP<const Basic> d;
+    bool b = handle_minus(arg, outArg(d));
+    if (b) {
+        return neg(erfinv(d));
+    }
+    return make_rcp<const Erfinv>(d);
+}
+
+bool Erfcinv::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (eq(*arg, *one) or eq(*arg, *integer(2)) or eq(*arg, *zero)) {
+        return false;
+    }
+    if (is_a<Erfc>(*arg)) {
+        return false;
+    }
+    if (could_extract_minus(*arg))
+        return false;
+    return true;
+}
+
+RCP<const Basic> Erfcinv::create(const RCP<const Basic> &arg) const
+{
+    return erfcinv(arg);
+}
+
+RCP<const Basic> erfcinv(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) {
+        return Inf;
+    }
+    if (eq(*arg, *one)) {
+        return zero;
+    }
+    if (eq(*arg, *integer(2))) {
+        return NegInf;
+    }
+    if (is_a<Erfc>(*arg)) {
+        return down_cast<const Erfc &>(*arg).get_arg();
+    }
+
+    return make_rcp<const Erfcinv>(arg);
+}
+
+RCP<const Basic> erf2(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    return sub(erf(b), erf(a));
+}
+
 Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSIGN_TYPEID()
