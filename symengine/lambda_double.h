@@ -452,6 +452,28 @@ public:
         };
     };
 
+    void bvisit(const Infty &x)
+    {
+        if (x.is_negative_infinity()) {
+            result_ = [=](const double * /* x */) {
+                return -std::numeric_limits<double>::infinity();
+            };
+        } else if (x.is_positive_infinity()) {
+            result_ = [=](const double * /* x */) {
+                return std::numeric_limits<double>::infinity();
+            };
+        } else {
+            throw SymEngineException(
+                "LambdaDouble can only represent real valued infinity");
+        }
+    }
+
+    void bvisit(const Contains &x)
+    {
+        x.get_expr()->accept(*this);
+        x.get_set()->accept(*this);
+    }
+
     void bvisit(const Piecewise &pw)
     {
         if (neq(*pw.get_vec().back().second, *boolTrue)) {
@@ -460,7 +482,7 @@ public:
         }
         std::vector<fn> applys;
         std::vector<fn> preds;
-        for (const auto& expr_pred : pw.get_vec()) {
+        for (const auto &expr_pred : pw.get_vec()) {
             applys.push_back(apply(*expr_pred.first));
             preds.push_back(apply(*expr_pred.second));
         }

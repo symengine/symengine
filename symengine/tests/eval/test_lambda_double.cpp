@@ -19,6 +19,8 @@ using SymEngine::pow;
 using SymEngine::integer;
 using SymEngine::vec_basic;
 using SymEngine::complex_double;
+using SymEngine::NegInf;
+using SymEngine::boolTrue;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
@@ -103,10 +105,10 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
     auto int2 = interval(integer(2), integer(5), true, false);
-    auto r = piecewise({{x, contains(x, int1)},
-                        {y, contains(x, int2)},
-                        {add(x, y), boolTrue}});
-    v.init({x, y}, *r)
+    r = piecewise({{x, contains(x, int1)},
+                   {y, contains(x, int2)},
+                   {add(x, y), boolTrue}});
+    v.init({x, y}, *r);
     d = v.call({1.1, 3.3});
     REQUIRE(::fabs(d - 1.1) < 1e-12);
     d = v.call({2.2, 3.3});
