@@ -451,6 +451,27 @@ public:
             return result;
         };
     };
+
+    void bvisit(const Piecewise &pw)
+    {
+        if (neq(*pw.get_vec().back().second, *boolTrue)) {
+            throw SymEngineException(
+                "LambdaDouble requires a (Expr, True) at the end of Piecewise");
+        }
+        std::vector<fn> applys;
+        std::vector<fn> preds;
+        for (const auto& expr_pred : pw.get_vec()) {
+            applys.push_back(apply(*expr_pred.first));
+            preds.push_back(apply(*expr_pred.second));
+        }
+        result_ = [=](const double *x) {
+            for (size_t i = 0;; ++i) {
+                if (preds[i](x)) {
+                    return applys[i](x);
+                }
+            }
+        };
+    }
 };
 
 class LambdaComplexDoubleVisitor
