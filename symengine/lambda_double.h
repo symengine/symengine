@@ -525,7 +525,7 @@ public:
         }
         result_ = [=](const double *x) {
             for (size_t i = 0;; ++i) {
-                if (preds[i](x)) {
+                if (preds[i](x) == 1.0) {
                     return applys[i](x);
                 }
             }
