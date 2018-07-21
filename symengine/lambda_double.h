@@ -497,13 +497,18 @@ public:
                     right_ok = (right_open) ? (val_expr < val_end)
                                             : (val_expr <= val_end);
                 }
-                return left_ok && right_ok; // this will return 0.0 or 1.0, not
-                                            // a true boolean
+                return (left_ok && right_ok) ? 1.0 : 0.0;
             };
         } else {
-            throw SymEngineException("LambdaDoubleVisitor only ``Interval`` "
+            throw SymEngineException("LambdaDoubleVisitor: only ``Interval`` "
                                      "implemented for ``Contains``.");
         }
+    }
+
+    void bvisit(const BooleanAtom &ba)
+    {
+        const bool val = ba.get_val();
+        result_ = [=](const double * /* x */) { return (val) ? 1.0 : 0.0; };
     }
 
     void bvisit(const Piecewise &pw)

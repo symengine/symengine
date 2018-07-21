@@ -113,8 +113,8 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     REQUIRE(::fabs(d - 1.1) < 1e-12);
     d = v.call({2.2, 3.3});
     REQUIRE(::fabs(d - 3.3) < 1e-12);
-    d = v.call({2.2, 5.5});
-    REQUIRE(::fabs(d - 7.7) < 1e-12);
+    d = v.call({5.5, 3.3});
+    REQUIRE(::fabs(d - 8.8) < 1e-12);
 }
 
 TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
