@@ -10,7 +10,7 @@ hash_t Integer::__hash__() const
 {
     // only the least significant bits that fit into "long long int" are
     // hashed:
-    return ((hash_t)mp_get_ui(this->i)) * mp_sign(this->i);
+    return ((hash_t)mp_get_ui(this->i)) * (hash_t)(mp_sign(this->i));
 }
 
 bool Integer::__eq__(const Basic &o) const
@@ -40,6 +40,21 @@ signed long int Integer::as_int() const
         throw SymEngineException("as_int: Integer larger than int");
     }
     return mp_get_si(this->i);
+}
+
+unsigned long int Integer::as_uint() const
+{
+    // mp_get_ui() returns "unsigned long int", so that's what we return from
+    // "as_uint()" and we leave it to the user to do any possible further
+    // integer
+    // conversions.
+    if (this->i < 0u) {
+        throw SymEngineException("as_uint: negative Integer");
+    }
+    if (not(mp_fits_ulong_p(this->i))) {
+        throw SymEngineException("as_uint: Integer larger than uint");
+    }
+    return mp_get_ui(this->i);
 }
 
 RCP<const Number> Integer::divint(const Integer &other) const
@@ -80,7 +95,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
     } else {
         throw NotImplementedError("Not Implemented");
     }
-};
+}
 
 RCP<const Number> Integer::pow_negint(const Integer &other) const
 {

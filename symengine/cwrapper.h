@@ -3,15 +3,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "symengine/symengine_config.h"
+
 #ifdef HAVE_SYMENGINE_GMP
 #include <gmp.h>
 #endif
 
-#include "symengine/symengine_config.h"
-
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
+
+#include "symengine/symengine_exception.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,8 +29,6 @@ extern "C" {
             abort();                                                           \
         }                                                                      \
     }
-
-#include "symengine/symengine_exception.h"
 
 typedef symengine_exceptions_t CWRAPPER_OUTPUT_TYPE;
 
@@ -88,6 +88,8 @@ typedef struct CRCPBasic basic_struct;
 typedef struct CRCPBasic_C basic_struct;
 #endif
 
+//! Basic is a struct to store the symbolic expressions
+//! It is declared as an array of size 1 to force reference semantics
 typedef basic_struct basic[1];
 
 //! Initialize a new basic instance. 's' is allocated on stack using the
@@ -124,11 +126,23 @@ void basic_const_EulerGamma(basic s);
 void basic_const_Catalan(basic s);
 void basic_const_GoldenRatio(basic s);
 
+//! Use these functions to get the use of positive, negative or unsigned
+//! infinity as basic.
+void basic_const_infinity(basic s);
+void basic_const_neginfinity(basic s);
+void basic_const_complex_infinity(basic s);
+
+//! Use this function to get the use of Nan as basic.
+void basic_const_nan(basic s);
+
 //! Assign value of b to a.
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b);
 
-//! Parse str and assign value to b
+//! Parse str and assign value to b.
 CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str);
+//! Parse str and assign value to b, set convert_xor to > 0 for default usage,
+//! <= 0 otherwise.
+CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor);
 
 //! Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
@@ -141,6 +155,15 @@ char *basic_get_class_from_id(TypeID id);
 //! This function creates a new SymEngine::Symbol from a copy of
 //! the string in c, thus the caller is free to use c afterwards.
 CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c);
+
+//! Returns 1 if s has value zero; 0 otherwise
+int number_is_zero(const basic s);
+//! Returns 1 if s has negative value; 0 otherwise
+int number_is_negative(const basic s);
+//! Returns 1 if s has positive value; 0 otherwise
+int number_is_positive(const basic s);
+//! Returns 1 if s is complex; 0 otherwise
+int number_is_complex(const basic s);
 
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
@@ -171,18 +194,12 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_set(basic s, mpfr_srcptr m);
 CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);
-//! Returns 1 if s has value zero; 0 otherwise
-int real_mpfr_is_zero(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
-#ifdef HAVE_SYMENGINE_MPC
-//! Returns 1 if s has value zero; 0 otherwise
-int complex_mpc_is_zero(const basic s);
 //! Assign to s, the real part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com);
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com);
 //! Assign to s, the imaginary part of com
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com);
-#endif // HAVE_SYMENGINE_MPC
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -193,7 +210,8 @@ unsigned long integer_get_ui(const basic s);
 CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s);
 #endif
 
-//! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
+//! Assign to s, a rational i/j.
+//! Returns SYMENGINE_RUNTIME_ERROR if either i or j is not an integer.
 CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic i, const basic j);
 //! Assign to s, a rational i/j, where i and j are signed longs.
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long i, long j);
@@ -214,14 +232,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 #endif
-//! Assign to s, a real where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com);
-//! Assign to s, an imaginary where com is a complex
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com);
-//! Assign to s, a real double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com);
-//! Assign to s, an imaginary double where com is a complex double
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com);
 
 //! Extract the real and imaginary doubles from the std::complex<double> stored
 //! in basic
@@ -237,15 +247,13 @@ CWRAPPER_OUTPUT_TYPE basic_mul(basic s, const basic a, const basic b);
 CWRAPPER_OUTPUT_TYPE basic_div(basic s, const basic a, const basic b);
 //! Assigns s = a ** b.
 CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b);
-//! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not
-//! a symbol.
+//! Assign to s, derivative of expr with respect to sym.
+//! Returns SYMENGINE_RUNTIME_ERROR if sym is not a symbol.
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
-//! Returns +1 if s (Number) is positive, 0 if 0, -1 if negative
-int basic_number_sign(const basic s);
 
 //! Expands the expr a and assigns to s.
 CWRAPPER_OUTPUT_TYPE basic_expand(basic s, const basic a);
@@ -254,6 +262,11 @@ CWRAPPER_OUTPUT_TYPE basic_neg(basic s, const basic a);
 
 //! Assigns s = abs(a).
 CWRAPPER_OUTPUT_TYPE basic_abs(basic s, const basic a);
+
+//! Assigns s = erf(a).
+CWRAPPER_OUTPUT_TYPE basic_erf(basic s, const basic a);
+//! Assigns s = erfc(a).
+CWRAPPER_OUTPUT_TYPE basic_erfc(basic s, const basic a);
 
 //! Assigns s = sin(a).
 CWRAPPER_OUTPUT_TYPE basic_sin(basic s, const basic a);
@@ -319,9 +332,20 @@ CWRAPPER_OUTPUT_TYPE basic_zeta(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_dirichlet_eta(basic s, const basic a);
 //! Assigns s = gamma(a).
 CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
+//! Assigns s = sqrt(a).
+CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
+//! Assigns s = cbrt(a).
+CWRAPPER_OUTPUT_TYPE basic_cbrt(basic s, const basic a);
+//! Assigns s = exp(a).
+CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
+//! Assigns s = log(a).
+CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
+//! Returns a new char pointer to the string representation of s.
+//! Compatible with Julia
+char *basic_str_julia(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
@@ -383,7 +407,14 @@ CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
 CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value);
 CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result);
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s);
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n);
 size_t vecbasic_size(CVecBasic *self);
+
+//! Assigns to s the max of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d);
+//! Assigns to s the min of the provided args.
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d);
 
 //! Wrappers for Matrices
 
@@ -439,6 +470,17 @@ dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
                        unsigned long int r1, unsigned long int c1,
                        unsigned long int r2, unsigned long int c2,
                        unsigned long int r, unsigned long int c);
+//! The matrix which results from joining the rows of A and B
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_join(CDenseMatrix *A,
+                                           const CDenseMatrix *B);
+//! The matrix which results from joining the columns of A and B
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_join(CDenseMatrix *A,
+                                           const CDenseMatrix *B);
+//! Delete a specific row of the matrix
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_del(CDenseMatrix *C, unsigned k);
+//! Delete a specific column of the matrix
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_del(CDenseMatrix *C, unsigned k);
+
 //! Return the number of columns of s
 unsigned long int dense_matrix_cols(const CDenseMatrix *s);
 //! Return the number of rows of s
@@ -489,6 +531,14 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
 //! Assign to s, a matrix of size NxM, with diagonal of 1s at offset k
 CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
                                       unsigned long int M, int k);
+//! Assign to result, elementwise derivative of A with respect to x. Returns 0
+//! on success.
+CWRAPPER_OUTPUT_TYPE dense_matrix_diff(CDenseMatrix *result,
+                                       const CDenseMatrix *A, basic const x);
+//! Assign to result, jacobian of A with respect to x. Returns 0 on success.
+CWRAPPER_OUTPUT_TYPE dense_matrix_jacobian(CDenseMatrix *result,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *x);
 
 //! Assign to s, a CSRMatrix
 void sparse_matrix_init(CSparseMatrix *s);
@@ -520,6 +570,8 @@ int setbasic_insert(CSetBasic *self, const basic value);
 void setbasic_get(CSetBasic *self, int n, basic result);
 //! Returns 1 if value is found in the set and 0 if not
 int setbasic_find(CSetBasic *self, basic value);
+//! Returns 1 if value was erased from the set and 0 if not
+int setbasic_erase(CSetBasic *self, const basic value);
 size_t setbasic_size(CSetBasic *self);
 
 //! Wrapper for map_basic_basic
@@ -540,6 +592,9 @@ size_t mapbasicbasic_size(CMapBasicBasic *self);
 CWRAPPER_OUTPUT_TYPE basic_get_args(const basic self, CVecBasic *args);
 //! Returns a CSetBasic of set_basic given by free_symbols
 CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols);
+//! Returns a CSetBasic of set_basic given by function_symbols
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self);
 //! returns the hash of the Basic object
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
@@ -555,6 +610,20 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
+//! Returns the name of the given FunctionSymbol
+char *function_symbol_get_name(const basic b);
+//! Returns the coefficient of x^n in b
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n);
+
+//! Wrapper for solve.h
+
+//! Solves the system of linear equations given by sys
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym);
+//! Solves polynomial equation f if the set of solutions is finite
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s);
 
 //! Wrapper for ascii_art()
 
@@ -607,6 +676,29 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
 //! Wrapper for as_numer_denom
 CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
                                           const basic x);
+
+//! Wrapper for LambdaRealDoubleVisitor
+typedef struct CLambdaRealDoubleVisitor CLambdaRealDoubleVisitor;
+CLambdaRealDoubleVisitor *lambda_real_double_visitor_new();
+void lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
+                                     const CVecBasic *args,
+                                     const CVecBasic *exprs, int perform_cse);
+void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
+                                     double *const outs,
+                                     const double *const inps);
+void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
+
+//! Wrapper for LambdaRealDoubleVisitor
+#ifdef HAVE_SYMENGINE_LLVM
+typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
+CLLVMDoubleVisitor *llvm_double_visitor_new();
+void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
+                              const CVecBasic *exprs, int perform_cse,
+                              int opt_level);
+void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
+                              const double *const inps);
+void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
+#endif
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();

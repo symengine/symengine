@@ -22,53 +22,56 @@ if (WITH_SYMENGINE_PARSER)
 endif()
 
 set(SRC
-    symengine_rcp.cpp
-    parser/scanner.cpp
-    parser/parser.cpp
-    basic.cpp
-    dict.cpp
-    symbol.cpp
-    number.cpp
-    integer.cpp
-    rational.cpp
-    complex.cpp
-    constants.cpp
     add.cpp
-    mul.cpp
-    pow.cpp
-    functions.cpp
-    monomials.cpp
-    polys/uintpoly.cpp
-    polys/uratpoly.cpp
-    polys/uexprpoly.cpp
-    polys/basic_conversions.cpp
-    polys/msymenginepoly.cpp
-    series.cpp
-    series_generic.cpp
-    rings.cpp
-    ntheory.cpp
-    dense_matrix.cpp
-    sparse_matrix.cpp
-    matrix.cpp
-    visitor.cpp
-    eval_double.cpp
-    diophantine.cpp
-    cwrapper.cpp
-    printer.cpp
-    real_double.cpp
+    basic.cpp
+    complex.cpp
     complex_double.cpp
+    constants.cpp
+    cse.cpp
+    cwrapper.cpp
+    dense_matrix.cpp
+    derivative.cpp
+    dict.cpp
+    diophantine.cpp
+    eval.cpp
+    eval_double.cpp
     expand.cpp
     expression.cpp
-    numer_denom.cpp
-    derivative.cpp
-    parser/parser_old.cpp
-    sets.cpp
-    eval.cpp
     fields.cpp
-    infinity.cpp
-    logic.cpp
     finitediff.cpp
+    functions.cpp
+    infinity.cpp
+    integer.cpp
+    logic.cpp
+    matrix.cpp
+    monomials.cpp
+    mul.cpp
     nan.cpp
+    ntheory.cpp
+    number.cpp
+    numer_denom.cpp
+    parser/parser.cpp
+    parser/parser_old.cpp
+    parser/scanner.cpp
+    polys/basic_conversions.cpp
+    polys/msymenginepoly.cpp
+    polys/uexprpoly.cpp
+    polys/uintpoly.cpp
+    polys/uratpoly.cpp
+    pow.cpp
+    printer.cpp
+    rational.cpp
+    real_double.cpp
+    rewrite.cpp
+    rings.cpp
+    series.cpp
+    series_generic.cpp
+    sets.cpp
+    solve.cpp
+    sparse_matrix.cpp
+    symbol.cpp
+    symengine_rcp.cpp
+    visitor.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -99,6 +102,10 @@ endif()
 if (WITH_PIRANHA)
     set(SRC series_piranha.cpp ${SRC})
     set(SRC polys/uintpoly_piranha.cpp ${SRC})
+endif()
+
+if (WITH_LLVM)
+    set(SRC ${SRC} llvm_double.cpp)
 endif()
 
 # Needed for "make install"
@@ -169,6 +176,7 @@ set(HEADERS
     symengine_rcp.h
     type_codes.inc
     visitor.h
+    solve.h
 )
 
 # Configure SymEngine using our CMake options:
@@ -179,6 +187,8 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+
+
 if (WITH_COTIRE)
     # throws if CMAKE_VERSION < 2.8.12
     include(cotire)
@@ -188,17 +198,31 @@ endif()
 include(GenerateExportHeader)
 generate_export_header(symengine)
 set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+if (BUILD_SHARED_LIBS)
+    set_target_properties(
+        symengine
+        PROPERTIES
+        VERSION ${SYMENGINE_VERSION}
+        SOVERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
+    )
+endif()
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
+endif()
 
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()
 target_link_libraries(symengine ${LIBS})
 
+include(GNUInstallDirs)
+
 install(TARGETS symengine
             EXPORT SymEngineTargets
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
 install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     "${symengine_BINARY_DIR}/symengine/symengine_export.h"

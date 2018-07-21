@@ -2,6 +2,7 @@
 #define SYMENGINE_MATRIX_H
 
 #include <symengine/basic.h>
+#include <symengine/sets.h>
 
 namespace SymEngine
 {
@@ -74,6 +75,8 @@ public:
 
 typedef std::vector<std::pair<int, int>> permutelist;
 
+class CSRMatrix;
+
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase
 {
@@ -83,6 +86,7 @@ public:
     DenseMatrix(const DenseMatrix &);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
+    DenseMatrix(const vec_basic &column_elements);
     // Resize
     void resize(unsigned i, unsigned j);
 
@@ -92,6 +96,7 @@ public:
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
+    virtual vec_basic as_vec_basic() const;
 
     virtual unsigned nrows() const
     {
@@ -172,6 +177,12 @@ public:
                                 unsigned row_start, unsigned col_start,
                                 unsigned row_end, unsigned col_end,
                                 unsigned row_step, unsigned col_step);
+    void row_join(const DenseMatrix &B);
+    void col_join(const DenseMatrix &B);
+    void row_insert(const DenseMatrix &B, unsigned pos);
+    void col_insert(const DenseMatrix &B, unsigned pos);
+    void row_del(unsigned k);
+    void col_del(unsigned k);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
@@ -180,6 +191,9 @@ public:
     friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
                                   RCP<const Basic> &c);
     friend void permuteFwd(DenseMatrix &A, permutelist &pl);
+
+    // Column operations
+    friend void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
 
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A,
@@ -236,13 +250,21 @@ public:
     // Inverse
     friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix &B);
+    friend void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
+    // Vector-specific methods
+    friend void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+    friend void cross(const DenseMatrix &A, const DenseMatrix &B,
+                      DenseMatrix &C);
 
     // NumPy-like functions
     friend void eye(DenseMatrix &A, int k);
     friend void diag(DenseMatrix &A, vec_basic &v, int k);
     friend void ones(DenseMatrix &A);
     friend void zeros(DenseMatrix &A);
+
+    friend CSRMatrix;
 
 private:
     // Matrix elements are stored in row-major order
@@ -258,8 +280,14 @@ class CSRMatrix : public MatrixBase
 public:
     CSRMatrix();
     CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, const std::vector<unsigned> &p,
+              const std::vector<unsigned> &j, const vec_basic &x);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
               std::vector<unsigned> &&j, vec_basic &&x);
+    CSRMatrix &operator=(CSRMatrix &&other);
+    CSRMatrix(const CSRMatrix &) = default;
+    std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+    as_vectors() const;
 
     bool is_canonical() const;
 
@@ -297,6 +325,7 @@ public:
 
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const;
+    CSRMatrix transpose() const;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,
@@ -343,6 +372,8 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
+    static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x);
+    static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
                                  CSRMatrix &C);
@@ -354,8 +385,8 @@ public:
 
     friend void csr_binop_csr_canonical(
         const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
-        RCP<const Basic>(&bin_op)(const RCP<const Basic> &,
-                                  const RCP<const Basic> &));
+        RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
+                                   const RCP<const Basic> &));
 
 private:
     std::vector<unsigned> p_;
@@ -382,6 +413,19 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
 void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
                      unsigned col_start, unsigned row_end, unsigned col_end,
                      unsigned row_step = 1, unsigned col_step = 1);
+
+// Row operations
+void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+                       RCP<const Basic> &c);
+
+// Column operations
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+
+// Vector-specific methods
+void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
@@ -413,6 +457,9 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x**2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// returns a finiteset of eigenvalues of a matrix
+RCP<const Set> eigen_values(const DenseMatrix &A);
 
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, int k = 0);

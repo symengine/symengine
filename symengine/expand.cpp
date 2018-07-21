@@ -25,8 +25,12 @@ private:
     umap_basic_num d_;
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
+    bool deep;
 
 public:
+    ExpandVisitor(bool deep_ = true) : deep(deep_)
+    {
+    }
     RCP<const Basic> apply(const Basic &b)
     {
         b.accept(*this);
@@ -50,7 +54,11 @@ public:
         iaddnum(outArg(coeff), _mulnum(multiply, self.get_coef()));
         for (auto &p : self.get_dict()) {
             multiply = _mulnum(_multiply, p.second);
-            p.first->accept(*this);
+            if (deep) {
+                p.first->accept(*this);
+            } else {
+                Add::dict_add_term(d_, multiply, p.first);
+            }
         }
         multiply = _multiply;
     }
@@ -61,8 +69,8 @@ public:
             if (!is_a<Symbol>(*p.first)) {
                 RCP<const Basic> a, b;
                 self.as_two_terms(outArg(a), outArg(b));
-                a = expand(a);
-                b = expand(b);
+                a = expand_if_deep(a);
+                b = expand_if_deep(b);
                 mul_expand_two(a, b);
                 return;
             }
@@ -204,10 +212,10 @@ public:
         }
     }
 
-    void pow_expand(umap_basic_num &base_dict, unsigned long n)
+    void pow_expand(umap_basic_num &base_dict, unsigned n)
     {
         map_vec_mpz r;
-        long m = base_dict.size();
+        unsigned m = numeric_cast<unsigned>(base_dict.size());
         multinomial_coefficients_mpz(m, n, r);
 // This speeds up overall expansion. For example for the benchmark
 // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
@@ -226,8 +234,8 @@ public:
                     if (is_a<Integer>(*base)) {
                         _imulnum(outArg(overall_coeff),
                                  rcp_static_cast<const Number>(
-                                     down_cast<const Integer &>(*base)
-                                         .powint(*exp)));
+                                     down_cast<const Integer &>(*base).powint(
+                                         *exp)));
                     } else if (is_a<Symbol>(*base)) {
                         Mul::dict_add_term(d, exp, base);
                     } else {
@@ -282,19 +290,19 @@ public:
 
     void bvisit(const Pow &self)
     {
-        RCP<const Basic> _base = expand(self.get_base());
+        RCP<const Basic> _base = expand_if_deep(self.get_base());
         // TODO add all types of polys
         if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
-            unsigned long q
-                = down_cast<const Integer &>(*self.get_exp()).as_int();
+            unsigned q = numeric_cast<unsigned>(
+                down_cast<const Integer &>(*self.get_exp()).as_uint());
             RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
             RCP<const UExprPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);
             return;
         }
         if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
-            unsigned long q
-                = down_cast<const Integer &>(*self.get_exp()).as_int();
+            unsigned q = numeric_cast<unsigned>(
+                down_cast<const Integer &>(*self.get_exp()).as_uint());
             RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
             RCP<const UIntPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);
@@ -314,7 +322,7 @@ public:
             = down_cast<const Integer &>(*self.get_exp()).as_integer_class();
         if (n < 0)
             return _coef_dict_add_term(
-                multiply, div(one, expand(pow(_base, integer(-n)))));
+                multiply, div(one, expand_if_deep(pow(_base, integer(-n)))));
         RCP<const Add> base = rcp_static_cast<const Add>(_base);
         umap_basic_num base_dict = base->get_dict();
         if (!(base->get_coef()->is_zero())) {
@@ -326,7 +334,7 @@ public:
         if (n == 2)
             return square_expand(base_dict);
         else
-            return pow_expand(base_dict, mp_get_ui(n));
+            return pow_expand(base_dict, numeric_cast<unsigned>(mp_get_ui(n)));
     }
 
     inline void _coef_dict_add_term(const RCP<const Number> &c,
@@ -346,12 +354,22 @@ public:
             Add::dict_add_term(d_, _mulnum(c, coef2), t);
         }
     }
+
+private:
+    RCP<const Basic> expand_if_deep(const RCP<const Basic> &expr)
+    {
+        if (deep) {
+            return expand(expr);
+        } else {
+            return expr;
+        }
+    }
 };
 
 //! Expands `self`
-RCP<const Basic> expand(const RCP<const Basic> &self)
+RCP<const Basic> expand(const RCP<const Basic> &self, bool deep)
 {
-    ExpandVisitor v;
+    ExpandVisitor v(deep);
     return v.apply(*self);
 }
 

@@ -291,5 +291,13 @@ TEST_CASE("UIntPoly from_poly flint", "[UIntPoly]")
         = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     RCP<const UIntPoly> b = UIntPoly::from_poly(*a);
     REQUIRE(b->__str__() == "x**2 + 2*x + 1");
+
+    a = UIntPolyFlint::from_dict(x, {{0, 0_z}, {1, 1_z}});
+    b = UIntPoly::from_poly(*a);
+    REQUIRE(b->__str__() == "x");
+
+    a = UIntPolyFlint::from_dict(x, {{2, 1_z}});
+    b = UIntPoly::from_poly(*a);
+    REQUIRE(b->__str__() == "x**2");
 }
 #endif

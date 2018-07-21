@@ -50,8 +50,8 @@ TEST_CASE("Arithmetic of Expression", "[Expression]")
     auto t1 = std::chrono::high_resolution_clock::now();
     auto res = expand(pow_ex(z, 45) * pow_ex(z, 45));
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1)
-                     .count()
-              << "ns" << std::endl;
+    std::cout
+        << std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count()
+        << "ns" << std::endl;
     std::cout << res << std::endl;
 }

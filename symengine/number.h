@@ -29,6 +29,8 @@ public:
     virtual bool is_positive() const = 0;
     //! \return true if a complex number
     virtual bool is_complex() const = 0;
+    //! \return the conjugate if the class is complex
+    virtual RCP<const Basic> conjugate() const;
     //! return true if the number is an exact representation
     //  false if the number is an approximation
     virtual bool is_exact() const
@@ -141,6 +143,7 @@ public:
     }
 
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+
     virtual std::string __str__() const
     {
         throw NotImplementedError("Not Implemented.");
@@ -183,6 +186,8 @@ public:
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;
     virtual RCP<const Basic> exp(const Basic &) const = 0;
+    virtual RCP<const Basic> floor(const Basic &) const = 0;
+    virtual RCP<const Basic> ceiling(const Basic &) const = 0;
     virtual RCP<const Basic> erf(const Basic &) const = 0;
     virtual RCP<const Basic> erfc(const Basic &) const = 0;
 };

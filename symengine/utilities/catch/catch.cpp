@@ -15,7 +15,7 @@
 #include <arb.h>
 #endif // HAVE_SYMENGINE_ARB
 
-int main(int argc, char* const argv[])
+int main(int argc, char* argv[])
 {
 	int result = Catch::Session().run( argc, argv );
 

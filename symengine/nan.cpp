@@ -29,6 +29,11 @@ int NaN::compare(const Basic &o) const
     return 0;
 }
 
+RCP<const Basic> NaN::conjugate() const
+{
+    return Nan;
+}
+
 RCP<const Number> NaN::add(const Number &other) const
 {
     return rcp_from_this_cast<Number>();
@@ -192,6 +197,16 @@ class EvaluateNaN : public Evaluate
         return Nan;
     }
     virtual RCP<const Basic> exp(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> floor(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    virtual RCP<const Basic> ceiling(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<NaN>(x))
         return Nan;

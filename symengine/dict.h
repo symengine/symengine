@@ -26,20 +26,26 @@ struct RCPIntegerKeyLess;
 bool eq(const Basic &, const Basic &);
 typedef uint64_t hash_t;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_num;
+                           RCPBasicKeyEq>
+    umap_basic_num;
 typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<int, RCP<const Basic>> umap_int_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_basic;
+                           RCPBasicKeyEq>
+    umap_basic_basic;
+typedef std::unordered_set<RCP<const Basic>, RCPBasicHash, RCPBasicKeyEq>
+    uset_basic;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::vector<unsigned int> vec_uint;
+typedef std::vector<integer_class> vec_integer_class;
 typedef std::vector<RCP<const Symbol>> vec_sym;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
-typedef std::map<vec_int, long long int> map_vec_int;
-typedef std::map<vec_int, integer_class> map_vec_mpz;
+typedef std::map<vec_uint, unsigned long long int> map_vec_uint;
+typedef std::map<vec_uint, integer_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLess>
     map_basic_num;
 typedef std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLess>
@@ -49,10 +55,10 @@ typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
 typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<unsigned, rational_class> map_uint_mpq;
 typedef std::map<int, Expression> map_int_Expr;
-typedef std::vector<integer_class> vec_integer_class;
-typedef std::vector<unsigned int> vec_uint;
 typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
-                           RCPBasicKeyEq> umap_basic_uint;
+                           RCPBasicKeyEq>
+    umap_basic_uint;
+typedef std::vector<std::pair<RCP<const Basic>, RCP<const Basic>>> vec_pair;
 
 template <typename T>
 struct vec_hash {
@@ -309,6 +315,7 @@ std::ostream &operator<<(std::ostream &out,
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
+std::ostream &operator<<(std::ostream &out, const SymEngine::vec_pair &d);
 
 } // SymEngine
 

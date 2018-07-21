@@ -1,8 +1,10 @@
+#include <numeric>
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/constants.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -17,11 +19,36 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col) : row_(row), col_(col)
     SYMENGINE_ASSERT(is_canonical());
 }
 
+CSRMatrix::CSRMatrix(unsigned row, unsigned col, const std::vector<unsigned> &p,
+                     const std::vector<unsigned> &j, const vec_basic &x)
+    : p_{p}, j_{j}, x_{x}, row_(row), col_(col)
+{
+    SYMENGINE_ASSERT(is_canonical());
+}
+
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
                      std::vector<unsigned> &&j, vec_basic &&x)
     : p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}, row_(row), col_(col)
 {
     SYMENGINE_ASSERT(is_canonical());
+}
+
+CSRMatrix &CSRMatrix::operator=(CSRMatrix &&other)
+{
+    col_ = other.col_;
+    row_ = other.row_;
+    p_ = std::move(other.p_);
+    j_ = std::move(other.j_);
+    x_ = std::move(other.x_);
+    return *this;
+}
+
+std::tuple<std::vector<unsigned>, std::vector<unsigned>, vec_basic>
+CSRMatrix::as_vectors() const
+{
+    auto p = p_, j = j_;
+    auto x = x_;
+    return std::make_tuple(std::move(p), std::move(j), std::move(x));
 }
 
 bool CSRMatrix::eq(const MatrixBase &other) const
@@ -73,14 +100,14 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
         return zero;
     }
 
-    while (row_start <= row_end) {
+    while (row_start < row_end) {
         k = (row_start + row_end) / 2;
         if (j_[k] == j) {
             return x_[k];
         } else if (j_[k] < j) {
             row_start = k + 1;
         } else {
-            row_end = k - 1;
+            row_end = k;
         }
     }
 
@@ -172,7 +199,34 @@ void CSRMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
 // Matrix transpose
 void CSRMatrix::transpose(MatrixBase &result) const
 {
-    throw NotImplementedError("Not Implemented");
+    if (is_a<CSRMatrix>(result)) {
+        auto &r = down_cast<CSRMatrix &>(result);
+        r = this->transpose();
+    } else {
+        throw NotImplementedError("Not Implemented");
+    }
+}
+
+CSRMatrix CSRMatrix::transpose() const
+{
+    const auto nnz = j_.size();
+    std::vector<unsigned> p(col_ + 1, 0), j(nnz), tmp(col_, 0);
+    vec_basic x(nnz);
+
+    for (unsigned i = 0; i < nnz; ++i)
+        p[j_[i] + 1]++;
+    std::partial_sum(p.begin(), p.end(), p.begin());
+
+    for (unsigned ri = 0; ri < row_; ++ri) {
+        for (unsigned i = p_[ri]; i < p_[ri + 1]; ++i) {
+            const auto ci = j_[i];
+            const unsigned k = p[ci] + tmp[ci];
+            j[k] = ri;
+            x[k] = x_[i];
+            tmp[ci]++;
+        }
+    }
+    return CSRMatrix(col_, row_, std::move(p), std::move(j), std::move(x));
 }
 
 // Extract out a submatrix
@@ -323,7 +377,8 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
                               const std::vector<unsigned> &j,
                               const vec_basic &x)
 {
-    unsigned nnz = x.size();
+    // cast is okay, because CSRMatrix indices are unsigned.
+    unsigned nnz = numeric_cast<unsigned>(x.size());
     std::vector<unsigned> p_ = std::vector<unsigned>(row + 1, 0);
     std::vector<unsigned> j_ = std::vector<unsigned>(nnz);
     vec_basic x_ = vec_basic(nnz);
@@ -365,6 +420,45 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     CSRMatrix B
         = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));
     return B;
+}
+
+CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
+{
+    const unsigned nrows = static_cast<unsigned>(exprs.size());
+    const unsigned ncols = static_cast<unsigned>(x.size());
+    std::vector<unsigned> p(1, 0), j;
+    vec_basic elems;
+    p.reserve(nrows + 1);
+    j.reserve(nrows);
+    elems.reserve(nrows);
+    for (unsigned ri = 0; ri < nrows; ++ri) {
+        p.push_back(p.back());
+        for (unsigned ci = 0; ci < ncols; ++ci) {
+            auto elem = exprs[ri]->diff(x[ci]);
+            if (neq(*elem, *zero)) {
+                p.back()++;
+                j.push_back(ci);
+                elems.emplace_back(std::move(elem));
+            }
+        }
+    }
+    return CSRMatrix(nrows, ncols, std::move(p), std::move(j),
+                     std::move(elems));
+}
+
+CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    vec_sym syms;
+    syms.reserve(x.row_);
+    for (const auto &dx : x.m_) {
+        if (!is_a<Symbol>(*dx)) {
+            throw SymEngineException("'x' must contain Symbols only");
+        }
+        syms.push_back(rcp_static_cast<const Symbol>(dx));
+    }
+    return CSRMatrix::jacobian(A.m_, syms);
 }
 
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
@@ -526,8 +620,8 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
 // same. C will be in canonical format as well.
 void csr_binop_csr_canonical(
     const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
-    RCP<const Basic>(&bin_op)(const RCP<const Basic> &,
-                              const RCP<const Basic> &))
+    RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
+                               const RCP<const Basic> &))
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_
                      and C.col_ == A.col_);

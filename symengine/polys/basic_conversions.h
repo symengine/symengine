@@ -29,6 +29,10 @@ template <typename T, typename P>
 enable_if_t<std::is_base_of<UIntPolyBase<T, P>, P>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
 
+template <typename T, typename P>
+enable_if_t<std::is_base_of<URatPolyBase<T, P>, P>::value, T>
+_basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen);
+
 template <typename P, typename V>
 class BasicToUPolyBase : public BaseVisitor<V>
 {
@@ -56,7 +60,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict
                     = pow_upoly(*P::from_container(gen, _basic_to_upoly<D, P>(
@@ -93,7 +98,7 @@ public:
                 if (is_a<const Integer>(*tmp)) {
                     RCP<const Integer> i = rcp_static_cast<const Integer>(tmp);
                     if (i->is_positive()) {
-                        powr = i->as_int();
+                        powr = static_cast<int>(i->as_int());
                         continue;
                     }
                 }
@@ -125,7 +130,40 @@ public:
     void bvisit(const Integer &x)
     {
         integer_class i = x.as_integer_class();
-        dict = P::container_from_dict(gen, {{0, i}});
+        dict = P::container_from_dict(gen, {{0, typename P::coef_type(i)}});
+    }
+
+    template <
+        typename Poly,
+        typename
+        = enable_if_t<((std::is_base_of<UIntPolyBase<typename P::container_type,
+                                                     P>,
+                                        P>::value
+                        and std::is_base_of<UIntPolyBase<
+                                                typename Poly::container_type,
+                                                Poly>,
+                                            Poly>::value)
+                       or (std::is_base_of<URatPolyBase<
+                                               typename P::container_type, P>,
+                                           P>::value
+                           and (std::is_base_of<UIntPolyBase<typename Poly::
+                                                                 container_type,
+                                                             Poly>,
+                                                Poly>::value
+                                or std::is_base_of<URatPolyBase<
+                                                       typename Poly::
+                                                           container_type,
+                                                       Poly>,
+                                                   Poly>::value))
+                       or (std::is_same<P, UExprPoly>::value
+                           and std::is_base_of<UPolyBase<typename Poly::
+                                                             container_type,
+                                                         Poly>,
+                                               Poly>::value))
+                      and not std::is_same<Poly, GaloisField>::value>>
+    void bvisit(const Poly &x)
+    {
+        dict = (P::from_poly(x))->get_poly();
     }
 
     void bvisit(const Basic &x)
@@ -139,7 +177,8 @@ public:
         if (eq(*genbase, x)) {
             powr = div(one, genpow);
             if (is_a<const Integer>(*powr)) {
-                int i = down_cast<const Integer &>(*powr).as_int();
+                int i = numeric_cast<int>(
+                    down_cast<const Integer &>(*powr).as_int());
                 if (i > 0) {
                     dict = P::container_from_dict(
                         gen, {{i, typename P::coef_type(1)}});
@@ -201,6 +240,38 @@ public:
     }
 };
 
+template <typename Poly>
+class BasicToURatPoly : public BasicToUPolyBase<Poly, BasicToURatPoly<Poly>>
+{
+public:
+    using BasicToUPolyBase<Poly, BasicToURatPoly>::bvisit;
+    using BasicToUPolyBase<Poly, BasicToURatPoly>::apply;
+
+    BasicToURatPoly(const RCP<const Basic> &gen)
+        : BasicToUPolyBase<Poly, BasicToURatPoly<Poly>>(gen)
+    {
+    }
+
+    void bvisit(const Rational &x)
+    {
+        this->dict = URatDict(x.as_rational_class());
+    }
+
+    void dict_set(unsigned int pow, const Basic &x)
+    {
+        if (is_a<const Integer>(x))
+            this->dict = Poly::container_from_dict(
+                this->gen, {{pow, rational_class(static_cast<const Integer &>(x)
+                                                     .as_integer_class())}});
+        else if (is_a<const Rational>(x))
+            this->dict = Poly::container_from_dict(
+                this->gen,
+                {{pow, static_cast<const Rational &>(x).as_rational_class()}});
+        else
+            throw SymEngineException("Non-rational found");
+    }
+};
+
 template <typename T, typename P>
 enable_if_t<std::is_same<T, UExprDict>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
@@ -214,6 +285,14 @@ enable_if_t<std::is_base_of<UIntPolyBase<T, P>, P>::value, T>
 _basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
 {
     BasicToUIntPoly<P> v(gen);
+    return v.apply(*basic);
+}
+
+template <typename T, typename P>
+enable_if_t<std::is_base_of<URatPolyBase<T, P>, P>::value, T>
+_basic_to_upoly(const RCP<const Basic> &basic, const RCP<const Basic> &gen)
+{
+    BasicToURatPoly<P> v(gen);
     return v.apply(*basic);
 }
 
@@ -265,7 +344,7 @@ public:
     BasicToMPolyBase(const set_basic &gens_)
     {
         gens = gens_;
-        dict.vec_size = gens.size();
+        dict.vec_size = static_cast<int>(gens.size());
 
         RCP<const Basic> genpow, genbase;
         unsigned int i = 0;
@@ -300,7 +379,8 @@ public:
     void bvisit(const Pow &x)
     {
         if (is_a<const Integer>(*x.get_exp())) {
-            int i = down_cast<const Integer &>(*x.get_exp()).as_int();
+            int i = numeric_cast<int>(
+                down_cast<const Integer &>(*x.get_exp()).as_int());
             if (i > 0) {
                 dict = Dict::pow(_basic_to_mpoly<P>(x.get_base(), gens), i);
                 return;
@@ -337,7 +417,7 @@ public:
                         i = rcp_static_cast<const Integer>(tmp);
                         if (i->is_positive()) {
                             zero_v[gens_map[pow(ite->first, powr)]]
-                                = i->as_int();
+                                = static_cast<int>(i->as_int());
                             found = true;
                             break;
                         }
@@ -388,7 +468,8 @@ public:
             for (auto pows : it->second) {
                 powr = div(one, pows);
                 if (is_a<const Integer>(*powr)) {
-                    int i = down_cast<const Integer &>(*powr).as_int();
+                    int i = numeric_cast<int>(
+                        down_cast<const Integer &>(*powr).as_int());
                     if (i > 0) {
                         // can be optimized
                         zero_v[gens_map[pow(it->first, pows)]] = i;

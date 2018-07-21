@@ -3,6 +3,8 @@
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/polys/uexprpoly.h>
+#include <symengine/solve.h>
 
 namespace SymEngine
 {
@@ -28,6 +30,12 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
     SYMENGINE_ASSERT(m_.size() == row * col)
 }
 
+DenseMatrix::DenseMatrix(const vec_basic &column_elements)
+    : m_(column_elements), row_(static_cast<unsigned>(column_elements.size())),
+      col_(1)
+{
+}
+
 // Resize the Matrix
 void DenseMatrix::resize(unsigned row, unsigned col)
 {
@@ -49,6 +57,12 @@ void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     m_[i * col_ + j] = e;
 }
 
+// Flat (row major) view of Matrix
+vec_basic DenseMatrix::as_vec_basic() const
+{
+    return m_;
+}
+
 unsigned DenseMatrix::rank() const
 {
     throw NotImplementedError("Not Implemented");
@@ -63,7 +77,7 @@ void DenseMatrix::inv(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = down_cast<DenseMatrix &>(result);
-        inverse_LU(*this, r);
+        inverse_pivoted_LU(*this, r);
     }
 }
 
@@ -332,14 +346,20 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
     unsigned row = A.row_, col = B.col_;
 
-    for (unsigned r = 0; r < row; r++) {
-        for (unsigned c = 0; c < col; c++) {
-            C.m_[r * col + c] = zero; // Integer Zero
-            for (unsigned k = 0; k < A.col_; k++)
-                C.m_[r * col + c]
-                    = add(C.m_[r * col + c],
-                          mul(A.m_[r * A.col_ + k], B.m_[k * col + c]));
+    if (&A != &C and &B != &C) {
+        for (unsigned r = 0; r < row; r++) {
+            for (unsigned c = 0; c < col; c++) {
+                C.m_[r * col + c] = zero; // Integer Zero
+                for (unsigned k = 0; k < A.col_; k++)
+                    C.m_[r * col + c]
+                        = add(C.m_[r * col + c],
+                              mul(A.m_[r * A.col_ + k], B.m_[k * col + c]));
+            }
         }
+    } else {
+        DenseMatrix tmp = DenseMatrix(A.row_, B.col_);
+        mul_dense_dense(A, B, tmp);
+        C = tmp;
     }
 }
 
@@ -354,6 +374,97 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         for (unsigned j = 0; j < col; j++) {
             B.m_[i * col + j] = mul(A.m_[i * col + j], k);
         }
+    }
+}
+
+// ---------------------------- Joining Operations ---------------------------//
+void DenseMatrix::row_join(const DenseMatrix &B)
+{
+    this->col_insert(B, col_);
+}
+
+void DenseMatrix::col_join(const DenseMatrix &B)
+{
+    this->row_insert(B, row_);
+}
+
+void DenseMatrix::row_insert(const DenseMatrix &B, unsigned pos)
+{
+    SYMENGINE_ASSERT(col_ == B.col_ and pos <= row_)
+
+    unsigned row = row_, col = col_;
+    this->resize(row_ + B.row_, col_);
+
+    for (unsigned i = row; i-- > pos;) {
+        for (unsigned j = col; j-- > 0;) {
+            this->m_[(i + B.row_) * col + j] = this->m_[i * col + j];
+        }
+    }
+
+    for (unsigned i = 0; i < B.row_; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            this->m_[(i + pos) * col + j] = B.m_[i * col + j];
+        }
+    }
+}
+
+void DenseMatrix::col_insert(const DenseMatrix &B, unsigned pos)
+{
+    SYMENGINE_ASSERT(row_ == B.row_ and pos <= col_)
+
+    unsigned row = row_, col = col_;
+    this->resize(row_, col_ + B.col_);
+
+    for (unsigned i = row; i-- > 0;) {
+        for (unsigned j = col; j-- > 0;) {
+            if (j >= pos) {
+                this->m_[i * (col + B.col_) + j + B.col_]
+                    = this->m_[i * col + j];
+            } else {
+                this->m_[i * (col + B.col_) + j] = this->m_[i * col + j];
+            }
+        }
+    }
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < B.col_; j++) {
+            this->m_[i * (col + B.col_) + j + pos] = B.m_[i * B.col_ + j];
+        }
+    }
+}
+
+void DenseMatrix::row_del(unsigned k)
+{
+    SYMENGINE_ASSERT(k < row_)
+
+    if (row_ == 1)
+        this->resize(0, 0);
+    else {
+        for (unsigned i = k; i < row_ - 1; i++) {
+            row_exchange_dense(*this, i, i + 1);
+        }
+        this->resize(row_ - 1, col_);
+    }
+}
+
+void DenseMatrix::col_del(unsigned k)
+{
+    SYMENGINE_ASSERT(k < col_)
+
+    if (col_ == 1)
+        this->resize(0, 0);
+    else {
+        unsigned row = row_, col = col_, m = 0;
+
+        for (unsigned i = 0; i < row; i++) {
+            for (unsigned j = 0; j < col; j++) {
+                if (j != k) {
+                    this->m_[m] = this->m_[i * col + j];
+                    m++;
+                }
+            }
+        }
+        this->resize(row_, col_ - 1);
     }
 }
 
@@ -394,6 +505,17 @@ void permuteFwd(DenseMatrix &A, permutelist &pl)
     for (auto &p : pl) {
         row_exchange_dense(A, p.first, p.second);
     }
+}
+
+// ----------------------------- Column Operations ---------------------------//
+void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
+{
+    SYMENGINE_ASSERT(i != j and i < A.col_ and j < A.col_);
+
+    unsigned col = A.col_;
+
+    for (unsigned k = 0; k < A.row_; k++)
+        std::swap(A.m_[k * col + i], A.m_[k * col + j]);
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
@@ -1368,43 +1490,18 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
                      and B.row_ == A.row_);
+    DenseMatrix e = DenseMatrix(A.row_, A.col_);
+    eye(e);
+    LU_solve(A, e, B);
+}
 
-    unsigned n = A.row_, i;
-    DenseMatrix L = DenseMatrix(n, n);
-    DenseMatrix U = DenseMatrix(n, n);
-    DenseMatrix e = DenseMatrix(n, 1);
-    DenseMatrix x = DenseMatrix(n, 1);
-    DenseMatrix x_ = DenseMatrix(n, 1);
-
-    // Initialize matrices
-    for (i = 0; i < n * n; i++) {
-        L.m_[i] = zero;
-        U.m_[i] = zero;
-        B.m_[i] = zero;
-    }
-
-    for (i = 0; i < n; i++) {
-        e.m_[i] = zero;
-        x.m_[i] = zero;
-        x_.m_[i] = zero;
-    }
-
-    LU(A, L, U);
-
-    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the column vectors
-    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
-    // elements of the standard basis.
-    for (unsigned j = 0; j < n; j++) {
-        e.m_[j] = one;
-
-        forward_substitution(L, e, x_);
-        back_substitution(U, x_, x);
-
-        for (i = 0; i < n; i++)
-            B.m_[i * n + j] = x.m_[i];
-
-        e.m_[j] = zero;
-    }
+void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
+                     and B.row_ == A.row_);
+    DenseMatrix e = DenseMatrix(A.row_, A.col_);
+    eye(e);
+    pivoted_LU_solve(A, e, B);
 }
 
 void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
@@ -1429,12 +1526,64 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
     fraction_free_gauss_jordan_solve(A, e, B);
 }
 
+// ----------------------- Vector-specific Methods --------------------------//
+
+void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    if (A.col_ == B.row_) {
+        if (B.col_ != 1) {
+            DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
+            A.transpose(tmp1);
+            DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
+            B.transpose(tmp2);
+            C.resize(tmp1.row_, tmp2.col_);
+            mul_dense_dense(tmp1, tmp2, C);
+        } else {
+            C.resize(A.row_, B.col_);
+            mul_dense_dense(A, B, C);
+        }
+        C.resize(1, C.row_ * C.col_);
+    } else if (A.col_ == B.col_) {
+        DenseMatrix tmp2 = DenseMatrix(B.col_, B.row_);
+        B.transpose(tmp2);
+        dot(A, tmp2, C);
+    } else if (A.row_ == B.row_) {
+        DenseMatrix tmp1 = DenseMatrix(A.col_, A.row_);
+        A.transpose(tmp1);
+        dot(tmp1, B, C);
+    } else {
+        throw SymEngineException("Dimensions incorrect for dot product");
+    }
+}
+
+void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
+{
+    SYMENGINE_ASSERT((A.row_ * A.col_ == 3 and B.row_ * B.col_ == 3)
+                     and (A.row_ == C.row_ and A.col_ == C.col_));
+
+    C.m_[0] = sub(mul(A.m_[1], B.m_[2]), mul(A.m_[2], B.m_[1]));
+    C.m_[1] = sub(mul(A.m_[2], B.m_[0]), mul(A.m_[0], B.m_[2]));
+    C.m_[2] = sub(mul(A.m_[0], B.m_[1]), mul(A.m_[1], B.m_[0]));
+}
+
+RCP<const Set> eigen_values(const DenseMatrix &A)
+{
+    DenseMatrix B = DenseMatrix(A.nrows() + 1, 1);
+    char_poly(A, B);
+    map_int_Expr coeffs;
+    auto nr = A.nrows();
+    for (unsigned i = 0; i <= nr; i++)
+        insert(coeffs, nr - i, B.get(i, 0));
+    auto lambda = symbol("lambda");
+    return solve_poly(uexpr_poly(lambda, coeffs), lambda);
+}
+
 // ------------------------- NumPy-like functions ----------------------------//
 
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, int k)
 {
-    if ((k >= 0 and (unsigned)k >= A.col_) or k + A.row_ <= 0) {
+    if ((k >= 0 and (unsigned) k >= A.col_) or k + A.row_ <= 0) {
         zeros(A);
     }
 

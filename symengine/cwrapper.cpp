@@ -7,6 +7,13 @@
 #include <symengine/matrix.h>
 #include <symengine/eval.h>
 #include <symengine/parser.h>
+#include <symengine/lambda_double.h>
+#include <symengine/solve.h>
+#ifdef HAVE_SYMENGINE_LLVM
+#include <symengine/llvm_double.h>
+using SymEngine::LLVMDoubleVisitor;
+#endif
+
 #define xstr(s) str(s)
 #define str(s) #s
 
@@ -16,15 +23,18 @@ using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
 using SymEngine::Symbol;
+using SymEngine::FunctionSymbol;
 using SymEngine::function_symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
+using SymEngine::ComplexBase;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
+using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::down_cast;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::RealMPFR;
@@ -37,6 +47,10 @@ using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
+using SymEngine::vec_basic;
+using SymEngine::vec_sym;
+using SymEngine::Set;
+using SymEngine::FiniteSet;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 using SymEngine::get_mpq_t;
@@ -49,6 +63,8 @@ using SymEngine::ones;
 using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
+using SymEngine::numeric_cast;
+using SymEngine::JuliaStrPrinter;
 
 namespace SymEngine
 {
@@ -161,15 +177,31 @@ void basic_const_GoldenRatio(basic s)
     s->m = SymEngine::GoldenRatio;
 }
 
+void basic_const_infinity(basic s)
+{
+    s->m = SymEngine::Inf;
+}
+
+void basic_const_neginfinity(basic s)
+{
+    s->m = SymEngine::NegInf;
+}
+
+void basic_const_complex_infinity(basic s)
+{
+    s->m = SymEngine::ComplexInf;
+}
+
+void basic_const_nan(basic s)
+{
+    s->m = SymEngine::Nan;
+}
+
 TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class)                                            \
-    {                                                                          \
-        xstr(Class), SYMENGINE_##type                                          \
-    }                                                                          \
-    ,
+#define SYMENGINE_ENUM(type, Class) {xstr(Class), SYMENGINE_##type},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -182,11 +214,7 @@ char *basic_get_class_from_id(TypeID id)
 {
     static std::map<TypeID, std::string> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class)                                            \
-    {                                                                          \
-        SYMENGINE_##type, xstr(Class)                                          \
-    }                                                                          \
-    ,
+#define SYMENGINE_ENUM(type, Class) {SYMENGINE_##type, xstr(Class)},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -208,6 +236,30 @@ CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
     CWRAPPER_BEGIN
     s->m = SymEngine::symbol(std::string(c));
     CWRAPPER_END
+}
+
+int number_is_zero(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_zero());
+}
+
+int number_is_negative(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_negative());
+}
+
+int number_is_positive(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_positive());
+}
+
+int number_is_complex(const basic s)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
+    return (int)((down_cast<const Number &>(*(s->m))).is_complex());
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
@@ -301,37 +353,24 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
     return ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_prec();
 }
 
-int real_mpfr_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return (int)((down_cast<const RealMPFR &>(*(s->m))).is_zero());
-}
-
 #endif // HAVE_SYMENGINE_MPFR
-#ifdef HAVE_SYMENGINE_MPC
-int complex_mpc_is_zero(const basic s)
-{
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(s->m)));
-    return (int)((down_cast<const ComplexMPC &>(*(s->m))).is_zero());
-}
 
-CWRAPPER_OUTPUT_TYPE complex_mpc_real_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).real_part();
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).real_part();
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE complex_mpc_imaginary_part(basic s, const basic com)
+CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexMPC>(*(com->m)));
-    s->m = (down_cast<const ComplexMPC &>(*(com->m))).imaginary_part();
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
+    s->m = (down_cast<const ComplexBase &>(*(com->m))).imaginary_part();
     CWRAPPER_END
 }
 
-#endif // HAVE_SYMENGINE_MPC
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -425,38 +464,6 @@ CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 }
 #endif
 
-CWRAPPER_OUTPUT_TYPE complex_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
-    s->m = (down_cast<const Complex &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_real_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).real_part();
-    CWRAPPER_END
-}
-
-CWRAPPER_OUTPUT_TYPE complex_double_imaginary_part(basic s, const basic com)
-{
-    CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
-    s->m = (down_cast<const ComplexDouble &>(*(com->m))).imaginary_part();
-    CWRAPPER_END
-}
-
 dcomplex complex_double_get(const basic s)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
@@ -487,6 +494,17 @@ CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str)
 {
     CWRAPPER_BEGIN
     b->m = SymEngine::parse(str);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor)
+{
+    CWRAPPER_BEGIN
+    if (convert_xor > 0) {
+        b->m = SymEngine::parse(str);
+    } else {
+        b->m = SymEngine::parse(str, false);
+    }
     CWRAPPER_END
 }
 
@@ -535,20 +553,6 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
-int basic_number_sign(const basic s)
-{
-
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-
-    if ((down_cast<const Number &>(*(s->m))).is_positive()) {
-        return 1;
-    } else if ((down_cast<const Number &>(*(s->m))).is_zero()) {
-        return 0;
-    } else {
-        return -1;
-    }
-}
-
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
     CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a)                  \
     {                                                                          \
@@ -557,41 +561,56 @@ int basic_number_sign(const basic s)
         CWRAPPER_END                                                           \
     }
 
-IMPLEMENT_ONE_ARG_FUNC(expand);
-IMPLEMENT_ONE_ARG_FUNC(neg);
-IMPLEMENT_ONE_ARG_FUNC(abs);
-IMPLEMENT_ONE_ARG_FUNC(sin);
-IMPLEMENT_ONE_ARG_FUNC(cos);
-IMPLEMENT_ONE_ARG_FUNC(tan);
-IMPLEMENT_ONE_ARG_FUNC(csc);
-IMPLEMENT_ONE_ARG_FUNC(sec);
-IMPLEMENT_ONE_ARG_FUNC(cot);
-IMPLEMENT_ONE_ARG_FUNC(asin);
-IMPLEMENT_ONE_ARG_FUNC(acos);
-IMPLEMENT_ONE_ARG_FUNC(asec);
-IMPLEMENT_ONE_ARG_FUNC(acsc);
-IMPLEMENT_ONE_ARG_FUNC(atan);
-IMPLEMENT_ONE_ARG_FUNC(acot);
-IMPLEMENT_ONE_ARG_FUNC(sinh);
-IMPLEMENT_ONE_ARG_FUNC(cosh);
-IMPLEMENT_ONE_ARG_FUNC(tanh);
-IMPLEMENT_ONE_ARG_FUNC(csch);
-IMPLEMENT_ONE_ARG_FUNC(sech);
-IMPLEMENT_ONE_ARG_FUNC(coth);
-IMPLEMENT_ONE_ARG_FUNC(asinh);
-IMPLEMENT_ONE_ARG_FUNC(acosh);
-IMPLEMENT_ONE_ARG_FUNC(asech);
-IMPLEMENT_ONE_ARG_FUNC(acsch);
-IMPLEMENT_ONE_ARG_FUNC(atanh);
-IMPLEMENT_ONE_ARG_FUNC(acoth);
-IMPLEMENT_ONE_ARG_FUNC(lambertw);
-IMPLEMENT_ONE_ARG_FUNC(zeta);
-IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
-IMPLEMENT_ONE_ARG_FUNC(gamma);
+IMPLEMENT_ONE_ARG_FUNC(expand)
+IMPLEMENT_ONE_ARG_FUNC(neg)
+IMPLEMENT_ONE_ARG_FUNC(abs)
+IMPLEMENT_ONE_ARG_FUNC(erf)
+IMPLEMENT_ONE_ARG_FUNC(erfc)
+IMPLEMENT_ONE_ARG_FUNC(sin)
+IMPLEMENT_ONE_ARG_FUNC(cos)
+IMPLEMENT_ONE_ARG_FUNC(tan)
+IMPLEMENT_ONE_ARG_FUNC(csc)
+IMPLEMENT_ONE_ARG_FUNC(sec)
+IMPLEMENT_ONE_ARG_FUNC(cot)
+IMPLEMENT_ONE_ARG_FUNC(asin)
+IMPLEMENT_ONE_ARG_FUNC(acos)
+IMPLEMENT_ONE_ARG_FUNC(asec)
+IMPLEMENT_ONE_ARG_FUNC(acsc)
+IMPLEMENT_ONE_ARG_FUNC(atan)
+IMPLEMENT_ONE_ARG_FUNC(acot)
+IMPLEMENT_ONE_ARG_FUNC(sinh)
+IMPLEMENT_ONE_ARG_FUNC(cosh)
+IMPLEMENT_ONE_ARG_FUNC(tanh)
+IMPLEMENT_ONE_ARG_FUNC(csch)
+IMPLEMENT_ONE_ARG_FUNC(sech)
+IMPLEMENT_ONE_ARG_FUNC(coth)
+IMPLEMENT_ONE_ARG_FUNC(asinh)
+IMPLEMENT_ONE_ARG_FUNC(acosh)
+IMPLEMENT_ONE_ARG_FUNC(asech)
+IMPLEMENT_ONE_ARG_FUNC(acsch)
+IMPLEMENT_ONE_ARG_FUNC(atanh)
+IMPLEMENT_ONE_ARG_FUNC(acoth)
+IMPLEMENT_ONE_ARG_FUNC(lambertw)
+IMPLEMENT_ONE_ARG_FUNC(zeta)
+IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta)
+IMPLEMENT_ONE_ARG_FUNC(gamma)
+IMPLEMENT_ONE_ARG_FUNC(sqrt)
+IMPLEMENT_ONE_ARG_FUNC(cbrt)
+IMPLEMENT_ONE_ARG_FUNC(exp)
+IMPLEMENT_ONE_ARG_FUNC(log)
 
 char *basic_str(const basic s)
 {
     std::string str = s->m->__str__();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_julia(const basic s)
+{
+    JuliaStrPrinter p;
+    std::string str = p.apply(s->m);
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
@@ -779,9 +798,39 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m[n] = s->m;
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(n < self->m.size());
+    self->m.erase(self->m.begin() + n);
+    CWRAPPER_END
+}
+
 size_t vecbasic_size(CVecBasic *self)
 {
     return self->m.size();
+}
+
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::max(d->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::min(d->m);
+    CWRAPPER_END
 }
 
 // C wrapper for Matrix
@@ -832,7 +881,8 @@ void sparse_matrix_init(CSparseMatrix *s)
 void sparse_matrix_rows_cols(CSparseMatrix *s, unsigned long int rows,
                              unsigned long int cols)
 {
-    s->m = SymEngine::CSRMatrix(rows, cols);
+    s->m = SymEngine::CSRMatrix(numeric_cast<unsigned>(rows),
+                                numeric_cast<unsigned>(cols));
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d)
@@ -871,7 +921,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
                                             unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(r, c);
+    s->m = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
     CWRAPPER_END
 }
 
@@ -880,7 +930,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat,
                                             unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(r, c, s->m);
+    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c), s->m);
     CWRAPPER_END
 }
 
@@ -889,7 +939,7 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
                                              unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(r, c);
+    s->m = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
     CWRAPPER_END
 }
 
@@ -898,7 +948,7 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat,
                                              unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(r, c, s->m);
+    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c), s->m);
     CWRAPPER_END
 }
 
@@ -930,8 +980,42 @@ dense_matrix_submatrix(CDenseMatrix *s, const CDenseMatrix *mat,
                        unsigned long int r, unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r2 - r1 + 1, c2 - c1 + 1);
-    mat->m.submatrix(s->m, r1, c1, r2, c2, r, c);
+    dense_matrix_rows_cols(s, numeric_cast<unsigned>(r2 - r1 + 1),
+                           numeric_cast<unsigned>(c2 - c1 + 1));
+    mat->m.submatrix(s->m, numeric_cast<unsigned>(r1),
+                     numeric_cast<unsigned>(c1), numeric_cast<unsigned>(r2),
+                     numeric_cast<unsigned>(c2), numeric_cast<unsigned>(r),
+                     numeric_cast<unsigned>(c));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_join(CDenseMatrix *A,
+                                           const CDenseMatrix *B)
+{
+    CWRAPPER_BEGIN
+    A->m.row_join(B->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_join(CDenseMatrix *A,
+                                           const CDenseMatrix *B)
+{
+    CWRAPPER_BEGIN
+    A->m.col_join(B->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_row_del(CDenseMatrix *A, unsigned k)
+{
+    CWRAPPER_BEGIN
+    A->m.row_del(k);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_col_del(CDenseMatrix *A, unsigned k)
+{
+    CWRAPPER_BEGIN
+    A->m.col_del(k);
     CWRAPPER_END
 }
 
@@ -1040,7 +1124,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_ones(CDenseMatrix *s, unsigned long int r,
                                        unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r, c);
+    dense_matrix_rows_cols(s, numeric_cast<unsigned>(r),
+                           numeric_cast<unsigned>(c));
     ones(s->m);
     CWRAPPER_END
 }
@@ -1049,7 +1134,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_zeros(CDenseMatrix *s, unsigned long int r,
                                         unsigned long int c)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, r, c);
+    dense_matrix_rows_cols(s, numeric_cast<unsigned>(r),
+                           numeric_cast<unsigned>(c));
     zeros(s->m);
     CWRAPPER_END
 }
@@ -1057,10 +1143,11 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diag(CDenseMatrix *s, CVecBasic *d,
                                        long int k)
 {
     CWRAPPER_BEGIN
-    int vec_size = vecbasic_size(d);
-    dense_matrix_rows_cols(s, vec_size + (k >= 0 ? k : -k),
-                           vec_size + (k >= 0 ? k : -k));
-    diag(s->m, d->m, k);
+    unsigned int vec_size = numeric_cast<unsigned>(vecbasic_size(d));
+    dense_matrix_rows_cols(
+        s, numeric_cast<unsigned>(vec_size + (k >= 0 ? k : -k)),
+        numeric_cast<unsigned>(vec_size + (k >= 0 ? k : -k)));
+    diag(s->m, d->m, numeric_cast<int>(k));
     CWRAPPER_END
 }
 
@@ -1068,8 +1155,28 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_eye(CDenseMatrix *s, unsigned long int N,
                                       unsigned long int M, int k)
 {
     CWRAPPER_BEGIN
-    dense_matrix_rows_cols(s, N, M);
+    dense_matrix_rows_cols(s, numeric_cast<unsigned>(N),
+                           numeric_cast<unsigned>(M));
     eye(s->m, k);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_diff(CDenseMatrix *result,
+                                       const CDenseMatrix *A, basic const x)
+{
+    if (not is_a_Symbol(x))
+        return SYMENGINE_RUNTIME_ERROR;
+    CWRAPPER_BEGIN
+    diff(A->m, rcp_static_cast<const Symbol>(x->m), result->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE dense_matrix_jacobian(CDenseMatrix *result,
+                                           const CDenseMatrix *A,
+                                           const CDenseMatrix *x)
+{
+    CWRAPPER_BEGIN
+    jacobian(A->m, x->m, result->m);
     CWRAPPER_END
 }
 
@@ -1122,6 +1229,11 @@ void setbasic_get(CSetBasic *self, int n, basic result)
 int setbasic_find(CSetBasic *self, basic value)
 {
     return self->m.find(value->m) != (self->m).end() ? 1 : 0;
+}
+
+int setbasic_erase(CSetBasic *self, const basic value)
+{
+    return (self->m.erase(value->m)) ? 1 : 0;
 }
 
 size_t setbasic_size(CSetBasic *self)
@@ -1182,6 +1294,14 @@ CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self)
+{
+    CWRAPPER_BEGIN
+    symbols->m = SymEngine::atoms<SymEngine::FunctionSymbol>(*(self->m));
+    CWRAPPER_END
+}
+
 size_t basic_hash(const basic self)
 {
     return self->m->hash();
@@ -1208,6 +1328,52 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
 {
     CWRAPPER_BEGIN
     s->m = function_symbol(c, arg->m);
+    CWRAPPER_END
+}
+
+char *function_symbol_get_name(const basic b)
+{
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(*(b->m)));
+    std::string str = down_cast<const FunctionSymbol &>(*(b->m)).get_name();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
+                                 const basic n)
+{
+    CWRAPPER_BEGIN
+    c->m = SymEngine::coeff(*(b->m), *(x->m), *(n->m));
+    CWRAPPER_END
+}
+
+// ----------------------
+
+CWRAPPER_OUTPUT_TYPE vecbasic_linsolve(CVecBasic *sol, const CVecBasic *sys,
+                                       const CVecBasic *sym)
+{
+    CWRAPPER_BEGIN
+    vec_basic vb = sym->m;
+    SYMENGINE_ASSERT(
+        std::all_of(vb.cbegin(), vb.cend(),
+                    [](RCP<const Basic> b) { return is_a<const Symbol>(*b); }));
+    vec_sym vs(vb.size());
+    for (unsigned i = 0; i < vb.size(); i++)
+        vs[i] = rcp_static_cast<const Symbol>(vb[i]);
+    sol->m = SymEngine::linsolve(sys->m, vs);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
+                                      const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
+    RCP<const Set> set
+        = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
+    SYMENGINE_ASSERT(is_a<FiniteSet>(*set));
+    r->m = down_cast<const FiniteSet &>(*set).get_container();
     CWRAPPER_END
 }
 
@@ -1419,6 +1585,62 @@ CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
     CWRAPPER_END
 }
 
+struct CLambdaRealDoubleVisitor {
+    SymEngine::LambdaRealDoubleVisitor m;
+};
+
+CLambdaRealDoubleVisitor *lambda_real_double_visitor_new()
+{
+    return new CLambdaRealDoubleVisitor();
+}
+
+void lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
+                                     const CVecBasic *args,
+                                     const CVecBasic *exprs, int perform_cse)
+{
+    self->m.init(args->m, exprs->m, perform_cse);
+}
+
+void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
+                                     double *const outs,
+                                     const double *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
+{
+    delete self;
+}
+
+#ifdef HAVE_SYMENGINE_LLVM
+struct CLLVMDoubleVisitor {
+    SymEngine::LLVMDoubleVisitor m;
+};
+
+CLLVMDoubleVisitor *llvm_double_visitor_new()
+{
+    return new CLLVMDoubleVisitor();
+}
+
+void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
+                              const CVecBasic *exprs, int perform_cse,
+                              int opt_level)
+{
+    self->m.init(args->m, exprs->m, perform_cse, opt_level);
+}
+
+void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
+                              const double *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
+{
+    delete self;
+}
+#endif
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault()
 {

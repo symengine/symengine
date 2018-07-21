@@ -56,7 +56,7 @@ public:
             const Integer &ii = (down_cast<const Integer &>(*exp));
             if (not mp_fits_slong_p(ii.as_integer_class()))
                 throw SymEngineException("series power exponent size");
-            const int sh = mp_get_si(ii.as_integer_class());
+            const int sh = numeric_cast<int>(mp_get_si(ii.as_integer_class()));
             base->accept(*this);
             if (sh == 1) {
                 return;
@@ -77,8 +77,8 @@ public:
             const integer_class &expdenz = get_den(rat.as_rational_class());
             if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw SymEngineException("series rational power exponent size");
-            const int num = mp_get_si(expnumz);
-            const int den = mp_get_si(expdenz);
+            const int num = numeric_cast<int>(mp_get_si(expnumz));
+            const int den = numeric_cast<int>(mp_get_si(expdenz));
             base->accept(*this);
             const Poly proot(
                 Series::series_nthroot(apply(base), den, var, prec));
@@ -296,17 +296,11 @@ protected:
     bool needs_;
 
 public:
-    void bvisit(const TrigFunction &f)
-    {
-        auto arg = f.get_arg();
-        map_basic_basic subsx0{{x_, integer(0)}};
-        if (arg->subs(subsx0)->__neq__(*integer(0))) {
-            needs_ = true;
-            stop_ = true;
-        }
-    }
-
-    void bvisit(const HyperbolicFunction &f)
+    template <typename T,
+              typename
+              = enable_if_t<std::is_base_of<TrigBase, T>::value
+                            or std::is_base_of<HyperbolicBase, T>::value>>
+    void bvisit(const T &f)
     {
         auto arg = f.get_arg();
         map_basic_basic subsx0{{x_, integer(0)}};

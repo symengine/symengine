@@ -316,6 +316,34 @@ public:
         result_ = std::erfc(tmp);
     }
 
+    void bvisit(const Equality &x)
+    {
+        double lhs_ = apply(*(x.get_arg1()));
+        double rhs_ = apply(*(x.get_arg2()));
+        result_ = (lhs_ == rhs_);
+    }
+
+    void bvisit(const Unequality &x)
+    {
+        double lhs_ = apply(*(x.get_arg1()));
+        double rhs_ = apply(*(x.get_arg2()));
+        result_ = (lhs_ != rhs_);
+    }
+
+    void bvisit(const LessThan &x)
+    {
+        double lhs_ = apply(*(x.get_arg1()));
+        double rhs_ = apply(*(x.get_arg2()));
+        result_ = (lhs_ <= rhs_);
+    }
+
+    void bvisit(const StrictLessThan &x)
+    {
+        double lhs_ = apply(*(x.get_arg1()));
+        double rhs_ = apply(*(x.get_arg2()));
+        result_ = (lhs_ < rhs_);
+    }
+
     void bvisit(const Max &x)
     {
         auto d = x.get_args();
@@ -593,6 +621,34 @@ std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(
             *(down_cast<const Erfc &>(x)).get_args()[0]);
         return ::erfc(tmp);
+    };
+    table[EQUALITY] = [](const Basic &x) {
+        double lhs = eval_double_single_dispatch(
+            *(down_cast<const Equality &>(x)).get_arg1());
+        double rhs = eval_double_single_dispatch(
+            *(down_cast<const Equality &>(x)).get_arg2());
+        return (lhs == rhs);
+    };
+    table[UNEQUALITY] = [](const Basic &x) {
+        double lhs = eval_double_single_dispatch(
+            *(down_cast<const Unequality &>(x)).get_arg1());
+        double rhs = eval_double_single_dispatch(
+            *(down_cast<const Unequality &>(x)).get_arg2());
+        return (lhs != rhs);
+    };
+    table[LESSTHAN] = [](const Basic &x) {
+        double lhs = eval_double_single_dispatch(
+            *(down_cast<const LessThan &>(x)).get_arg1());
+        double rhs = eval_double_single_dispatch(
+            *(down_cast<const LessThan &>(x)).get_arg2());
+        return (lhs <= rhs);
+    };
+    table[STRICTLESSTHAN] = [](const Basic &x) {
+        double lhs = eval_double_single_dispatch(
+            *(down_cast<const StrictLessThan &>(x)).get_arg1());
+        double rhs = eval_double_single_dispatch(
+            *(down_cast<const StrictLessThan &>(x)).get_arg2());
+        return (lhs < rhs);
     };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {

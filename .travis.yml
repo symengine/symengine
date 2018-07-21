@@ -6,6 +6,12 @@ compiler:
 os:
   - linux
   - osx
+dist: trusty
+osx_image: xcode6.4
+cache:
+  directories:
+  - $HOME/.ccache
+  - $HOME/conda_root
 addons:
   apt:
     sources:
@@ -33,7 +39,7 @@ env:
   # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_PRIMESIEVE="yes" WITH_MPC="yes"
   # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" BUILD_DOXYGEN="yes" TEST_IN_TREE="yes"
   # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
   # Debug build (with BFD and INTEGER_CLASS from boostmp)
@@ -54,7 +60,17 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" TEST_CLANG_FORMAT="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="5.0"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-5
+    - env: TEST_CLANG_FORMAT="yes"
       compiler: gcc
       os: linux
       addons:
@@ -63,10 +79,12 @@ matrix:
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.7
           packages:
-          - binutils-dev
-          - g++-5
-          - clang-format-3.7
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes"
+          - clang-format-3.8
+      install:
+        - echo "nothing to install"
+      script:
+        - bin/travis_clang.sh
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes" USE_GLIBCXX_DEBUG="yes"
       compiler: gcc
       os: linux
       addons:
@@ -76,7 +94,17 @@ matrix:
           packages:
           - binutils-dev
           - g++-6
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_FLINT_DEV="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no" MAKEFLAGS="-j2"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-4.7
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha" MAKEFLAGS="-j2"
       compiler: gcc
       os: linux
       addons:
@@ -86,17 +114,7 @@ matrix:
           packages:
           - binutils-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha"
-      compiler: gcc
-      os: linux
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - binutils-dev
-          - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="3.8" WITH_BENCHMARKS_NONIUS="yes"
       compiler: clang
       os: linux
       addons:
@@ -119,10 +137,10 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Debug"
+    - env: BUILD_TYPE="Debug" WITH_LLVM="3.8"
       compiler: clang
       os: osx
-    - env: BUILD_TYPE="Release"
+    - env: BUILD_TYPE="Release" WITH_LLVM="5.0"
       compiler: clang
       os: osx
     - env: BUILD_TYPE="Debug"
@@ -132,6 +150,12 @@ matrix:
       compiler: gcc
       os: osx
 
+before_install:
+- |
+   if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+     command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
+     rvm get head || true
+   fi
 install:
   - source bin/install_travis.sh
 script:
@@ -140,3 +164,16 @@ script:
   - bin/trigger_feedstock.sh
 notifications:
   email: false
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  repo: symengine/symengine.github.io
+  target_branch: master
+  local_dir: doc/html
+  github_token:
+    secure: "nA/geBch3kWX4aURwe52JZNEG/JDR4RRkMvWqoqKTbnma54ohOokwaBlwmSc7lcmiq6YP8nI7uSCtK7EtqatJZewxNTNP8JXcuPb1IRuCXIvusakmk4iEqveEun5Igfge/6e6K/ujUiZchDT9ucEkxGNIAYDwrW0MPQ3ZG0Tla0="
+  on:
+    branch: master
+    repo: symengine/symengine
+    condition: $BUILD_DOXYGEN = yes

@@ -1,10 +1,9 @@
-#include <symengine/symengine_config.h>
+#include <symengine/cwrapper.h>
 
 #if defined(HAVE_C_FUNCTION_NOT_FUNC)
 #define __func__ __FUNCTION__
 #endif
 
-#include <symengine/cwrapper.h>
 #include <string.h>
 #include <math.h>
 
@@ -76,6 +75,9 @@ void test_cwrapper()
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z**2") == 0);
     basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z^2") == 0);
+    basic_str_free(s);
 
     rational_set_ui(e, 100, 47);
     s = basic_str(e);
@@ -84,6 +86,18 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    basic_str_free(s);
+
+    integer_set_ui(e, 123);
+    basic_sqrt(e, e);
+    basic_exp(e, e);
+
+    s = basic_str(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
+    basic_str_free(s);
+
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
     basic_str_free(s);
 
     rational_set_si(e, 100, 47);
@@ -112,16 +126,25 @@ void test_cwrapper()
 
     integer_set_si(e, 0);
     SYMENGINE_C_ASSERT(integer_get_si(e) == 0);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
     integer_set_ui(e, 123);
     SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
     integer_set_si(e, -123);
     SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
-    SYMENGINE_C_ASSERT(basic_number_sign(e) == -1);
     SYMENGINE_C_ASSERT(is_a_Number(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 1);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 0);
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     mpz_t test;
@@ -135,6 +158,10 @@ void test_cwrapper()
     basic p;
     basic_new_stack(p);
     basic_parse(p, str);
+    SYMENGINE_C_ASSERT(is_a_Integer(p));
+    SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
+
+    basic_parse2(p, str, 1);
     SYMENGINE_C_ASSERT(is_a_Integer(p));
     SYMENGINE_C_ASSERT(integer_get_si(p) == 444);
 
@@ -187,10 +214,14 @@ void test_complex()
     SYMENGINE_C_ASSERT(!is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 1);
 
     basic_str_free(s);
 
-    complex_real_part(f, e);
+    complex_base_real_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
@@ -201,7 +232,7 @@ void test_complex()
 
     basic_str_free(s);
 
-    complex_imaginary_part(f, e);
+    complex_base_imaginary_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "76/59") == 0);
@@ -238,6 +269,10 @@ void test_complex_double()
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(!is_a_Complex(e));
     SYMENGINE_C_ASSERT(is_a_ComplexDouble(e));
+    SYMENGINE_C_ASSERT(number_is_zero(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(e) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(e) == 1);
 
     basic_str_free(s);
 
@@ -245,7 +280,7 @@ void test_complex_double()
     SYMENGINE_C_ASSERT(k.real == 100.47);
     SYMENGINE_C_ASSERT(k.imag == 76.59);
 
-    complex_double_real_part(f, e);
+    complex_base_real_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100.47") == 0);
@@ -257,7 +292,7 @@ void test_complex_double()
 
     basic_str_free(s);
 
-    complex_double_imaginary_part(f, e);
+    complex_base_imaginary_part(f, e);
     s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "76.59") == 0);
@@ -285,6 +320,11 @@ void test_real_double()
 
     SYMENGINE_C_ASSERT(is_a_RealDouble(d));
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
+
     basic_str_free(s2);
 
     basic_free_stack(d);
@@ -314,10 +354,22 @@ void test_real_mpfr()
     SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
 
     real_mpfr_set_d(d, 0, 200);
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
 
     real_mpfr_set_d(d, 0.000001, 200);
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
+
+    real_mpfr_set_d(d, -0.000001, 200);
+    SYMENGINE_C_ASSERT(number_is_zero(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d) == 1);
+    SYMENGINE_C_ASSERT(number_is_positive(d) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d) == 0);
 
     mpfr_clear(mp);
     basic_free_stack(d);
@@ -340,15 +392,18 @@ void test_complex_mpc()
     basic_mul(d2, d1, d2);
     basic_add(d2, d, d2);
     SYMENGINE_C_ASSERT(basic_get_type(d2) == SYMENGINE_COMPLEX_MPC);
-    SYMENGINE_C_ASSERT(complex_mpc_is_zero(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_negative(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_positive(d2) == 0);
+    SYMENGINE_C_ASSERT(number_is_complex(d2) == 1);
 
     basic r1;
     basic_new_stack(r1);
 
-    complex_mpc_real_part(r1, d2);
+    complex_base_real_part(r1, d2);
     SYMENGINE_C_ASSERT(basic_eq(r1, d));
 
-    complex_mpc_imaginary_part(r1, d2);
+    complex_base_imaginary_part(r1, d2);
     SYMENGINE_C_ASSERT(basic_eq(r1, d1));
 
     basic_free_stack(d);
@@ -415,9 +470,26 @@ void test_CVecBasic()
 
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
+    vecbasic_push_back(vec, x);
+
+    SYMENGINE_C_ASSERT(vecbasic_size(vec) == 2);
+
+    vecbasic_erase(vec, 0);
+
+    SYMENGINE_C_ASSERT(vecbasic_size(vec) == 1);
+
+    basic z;
+    basic_new_stack(z);
+    symbol_set(z, "z");
+    vecbasic_set(vec, 0, z);
+    vecbasic_get(vec, 0, y);
+
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
     vecbasic_free(vec);
     basic_free_stack(x);
     basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_CSetBasic()
@@ -450,6 +522,16 @@ void test_CSetBasic()
 
     setbasic_get(set, 0, y);
     SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    int was_erased;
+    symbol_set(y, "y");
+    was_erased = setbasic_erase(set, y);
+    SYMENGINE_C_ASSERT(was_erased == 0);
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 1);
+
+    was_erased = setbasic_erase(set, x);
+    SYMENGINE_C_ASSERT(was_erased == 1);
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 0);
 
     setbasic_free(set);
     basic_free_stack(x);
@@ -540,6 +622,97 @@ void test_free_symbols()
     basic_free_stack(x);
     basic_free_stack(y);
     basic_free_stack(z);
+}
+
+void test_function_symbols()
+{
+    char *s;
+    basic x, y, z, e;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    basic f, g, h;
+    basic_new_stack(f);
+    basic_new_stack(g);
+    basic_new_stack(h);
+
+    CVecBasic *vec1 = vecbasic_new();
+    vecbasic_push_back(vec1, x);
+    function_symbol_set(g, "g", vec1);
+
+    CVecBasic *vec2 = vecbasic_new();
+    vecbasic_push_back(vec2, g);
+    function_symbol_set(h, "h", vec2);
+
+    CVecBasic *vec = vecbasic_new();
+    basic_add(e, x, y);
+    vecbasic_push_back(vec, e);
+    vecbasic_push_back(vec, g);
+    vecbasic_push_back(vec, h);
+
+    function_symbol_set(f, "f", vec);
+
+    basic_add(z, z, f);
+
+    s = basic_str(z);
+    SYMENGINE_C_ASSERT(strcmp(s, "z + f(x + y, g(x), h(g(x)))") == 0);
+
+    CSetBasic *symbols = setbasic_new();
+    basic_function_symbols(symbols, f);
+    SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
+    setbasic_free(symbols);
+
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+
+    basic_free_stack(f);
+    basic_free_stack(g);
+    basic_free_stack(h);
+    vecbasic_free(vec);
+    vecbasic_free(vec1);
+    vecbasic_free(vec2);
+    basic_str_free(s);
+}
+
+void test_function_symbol_get_name()
+{
+    char *s1, *s2;
+    basic x;
+    basic_new_stack(x);
+    symbol_set(x, "x");
+
+    basic f, g;
+    basic_new_stack(f);
+    basic_new_stack(g);
+
+    CVecBasic *vec1 = vecbasic_new();
+    vecbasic_push_back(vec1, x);
+    function_symbol_set(g, "g", vec1);
+
+    CVecBasic *vec2 = vecbasic_new();
+    vecbasic_push_back(vec2, g);
+    function_symbol_set(f, "f", vec2);
+
+    s1 = function_symbol_get_name(g);
+    SYMENGINE_C_ASSERT(strcmp(s1, "g") == 0);
+
+    s2 = function_symbol_get_name(f);
+    SYMENGINE_C_ASSERT(strcmp(s2, "f") == 0);
+
+    basic_free_stack(x);
+    basic_free_stack(f);
+    basic_free_stack(g);
+    vecbasic_free(vec1);
+    vecbasic_free(vec2);
+    basic_str_free(s1);
+    basic_str_free(s2);
 }
 
 void test_get_type()
@@ -653,6 +826,148 @@ void test_subs()
     basic_free_stack(z);
 }
 
+void test_coeff()
+{
+    basic x, y, z, e, n4;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
+    basic_new_stack(n4);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    integer_set_si(n4, 4);
+    basic_mul(e, n4, x);
+    basic_add(e, e, y);
+    basic_add(e, e, z);
+
+    basic n1;
+    basic c1, c2, c3;
+    basic_new_stack(n1);
+    basic_new_stack(c1);
+    basic_new_stack(c2);
+    basic_new_stack(c3);
+    integer_set_si(n1, 1);
+    basic_coeff(c1, e, x, n1);
+    basic_coeff(c2, e, y, n1);
+    basic_coeff(c3, e, z, n1);
+
+    SYMENGINE_C_ASSERT(basic_eq(c1, n4));
+    SYMENGINE_C_ASSERT(basic_eq(c2, n1));
+    SYMENGINE_C_ASSERT(basic_eq(c3, n1));
+
+    basic_free_stack(c3);
+    basic_free_stack(c2);
+    basic_free_stack(c1);
+    basic_free_stack(n1);
+    basic_free_stack(n4);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
+void test_linsolve()
+{
+    basic x, y;
+    basic i2, i3, i4, i9;
+    basic e1, e2;
+
+    basic_new_stack(x);
+    basic_new_stack(y);
+
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+
+    basic_new_stack(i2);
+    basic_new_stack(i3);
+    basic_new_stack(i4);
+    basic_new_stack(i9);
+
+    integer_set_si(i2, -2);
+    integer_set_si(i3, 3);
+    integer_set_si(i4, -4);
+    integer_set_si(i9, 9);
+
+    basic_new_stack(e1);
+    basic_new_stack(e2);
+
+    symbol_set(e1, "e1");
+    symbol_set(e2, "e2");
+
+    // -2x - 4 + y
+    basic_mul(e1, i2, x);
+    basic_add(e1, e1, i4);
+    basic_add(e1, e1, y);
+
+    // 3x + y - 9
+    basic_mul(e2, i3, x);
+    basic_add(e2, e2, y);
+    basic_add(e2, e2, i9);
+
+    CVecBasic *sym = vecbasic_new();
+    vecbasic_push_back(sym, x);
+    vecbasic_push_back(sym, y);
+
+    CVecBasic *sys = vecbasic_new();
+    vecbasic_push_back(sys, e1);
+    vecbasic_push_back(sys, e2);
+
+    CVecBasic *sol = vecbasic_new();
+    vecbasic_linsolve(sol, sys, sym);
+    SYMENGINE_C_ASSERT(vecbasic_size(sol) == 2);
+
+    vecbasic_free(sym);
+    vecbasic_free(sys);
+    vecbasic_free(sol);
+
+    basic_free_stack(e1);
+    basic_free_stack(e2);
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+
+    basic_free_stack(i2);
+    basic_free_stack(i3);
+    basic_free_stack(i4);
+    basic_free_stack(i9);
+}
+
+void test_solve_poly()
+{
+    basic x, a;
+    basic m1, i2;
+
+    basic_new_stack(x);
+    basic_new_stack(a);
+
+    symbol_set(x, "x");
+    symbol_set(a, "a");
+
+    basic_new_stack(m1);
+    basic_new_stack(i2);
+
+    basic_const_minus_one(m1);
+    integer_set_si(i2, 2);
+
+    // x^2 - 1
+    basic_pow(a, x, i2);
+    basic_add(a, a, m1);
+
+    CSetBasic *r = setbasic_new();
+    basic_solve_poly(r, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
+
+    setbasic_free(r);
+
+    basic_free_stack(m1);
+    basic_free_stack(a);
+    basic_free_stack(x);
+    basic_free_stack(i2);
+}
+
 void test_constants()
 {
     basic z, o, mo, i;
@@ -715,6 +1030,12 @@ void test_constants()
     basic_str_free(s);
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "exp(1)") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(catalan);
+    SYMENGINE_C_ASSERT(strcmp(s, "catalan") == 0);
     basic_str_free(s);
     s = basic_str(euler_gamma);
     SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);
@@ -805,6 +1126,60 @@ void test_constants()
     basic_free_stack(catalan);
 }
 
+void test_infinity()
+{
+    basic Inf, NegInf, ComplexInf;
+    basic_new_stack(Inf);
+    basic_new_stack(NegInf);
+    basic_new_stack(ComplexInf);
+
+    basic_const_infinity(Inf);
+    basic_const_neginfinity(NegInf);
+    basic_const_complex_infinity(ComplexInf);
+
+    char *s;
+    s = basic_str(Inf);
+    SYMENGINE_C_ASSERT(strcmp(s, "oo") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(Inf);
+    SYMENGINE_C_ASSERT(strcmp(s, "Inf") == 0);
+    basic_str_free(s);
+    s = basic_str(NegInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "-oo") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(NegInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "-Inf") == 0);
+    basic_str_free(s);
+    s = basic_str(ComplexInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(ComplexInf);
+    SYMENGINE_C_ASSERT(strcmp(s, "zoo") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(Inf);
+    basic_free_stack(NegInf);
+    basic_free_stack(ComplexInf);
+}
+
+void test_nan()
+{
+    basic custom;
+    basic_new_stack(custom);
+
+    basic_const_nan(custom);
+
+    char *s;
+    s = basic_str(custom);
+    SYMENGINE_C_ASSERT(strcmp(s, "nan") == 0);
+    basic_str_free(s);
+    s = basic_str_julia(custom);
+    SYMENGINE_C_ASSERT(strcmp(s, "NaN") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(custom);
+}
+
 void test_ascii_art()
 {
     char *s = ascii_art_str();
@@ -815,15 +1190,17 @@ void test_ascii_art()
 void test_functions()
 {
     basic pi, e;
-    basic minus_one, minus_half, zero, one, two, four;
+    basic minus_one, minus_half, zero, one, two, three, four;
     basic pi_div_two, pi_div_four;
     basic e_minus_one;
-    basic ans;
+    basic ans, res;
 
     basic_new_stack(pi);
     basic_new_stack(e);
     basic_new_stack(ans);
+    basic_new_stack(res);
     basic_new_stack(two);
+    basic_new_stack(three);
     basic_new_stack(pi_div_two);
     basic_new_stack(four);
     basic_new_stack(pi_div_four);
@@ -837,9 +1214,17 @@ void test_functions()
     basic_const_E(e);
     integer_set_si(two, 2);
     integer_set_si(four, 4);
+    integer_set_si(three, 3);
     integer_set_si(one, 1);
     integer_set_si(minus_one, -1);
     integer_set_si(zero, 0);
+
+    CVecBasic *vec = vecbasic_new();
+
+    vecbasic_push_back(vec, four);
+    vecbasic_push_back(vec, two);
+    vecbasic_push_back(vec, three);
+    vecbasic_push_back(vec, one);
 
     basic_div(pi_div_two, pi, two);
     basic_div(pi_div_four, pi, four);
@@ -848,6 +1233,12 @@ void test_functions()
     basic_div(minus_half, minus_one, two);
 
     char *s;
+
+    basic_erf(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_erfc(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
     basic_sin(ans, pi);
     SYMENGINE_C_ASSERT(basic_eq(ans, zero));
@@ -942,21 +1333,34 @@ void test_functions()
     SYMENGINE_C_ASSERT(strcmp(s, "log(2)") == 0);
     basic_str_free(s);
 
+    integer_set_ui(res, 2);
+    basic_log(res, res);
+    SYMENGINE_C_ASSERT(basic_eq(res, ans));
+
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
+    basic_max(ans, vec);
+    SYMENGINE_C_ASSERT(basic_eq(ans, four));
+
+    basic_min(ans, vec);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
     basic_free_stack(ans);
+    basic_free_stack(res);
     basic_free_stack(pi);
     basic_free_stack(two);
     basic_free_stack(pi_div_two);
     basic_free_stack(four);
     basic_free_stack(pi_div_four);
     basic_free_stack(one);
+    basic_free_stack(three);
     basic_free_stack(minus_one);
     basic_free_stack(zero);
     basic_free_stack(e);
     basic_free_stack(e_minus_one);
     basic_free_stack(minus_half);
+    vecbasic_free(vec);
 }
 
 void test_ntheory()
@@ -1113,7 +1517,7 @@ void test_eval()
     SYMENGINE_C_ASSERT(basic_get_type(eval2) == SYMENGINE_REAL_MPFR);
     // With 100 bit precision, `s` and `t` are not equal in value.
     // Value of `r` is a positive quantity with value 0.000000000149734291.....
-    SYMENGINE_C_ASSERT(real_mpfr_is_zero(eval2) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(eval2) == 0);
 
     basic_free_stack(s);
     basic_free_stack(t);
@@ -1150,9 +1554,9 @@ void test_eval()
     basic_evalf(eval, n1, 53, 0);
     SYMENGINE_C_ASSERT(basic_get_type(eval) == SYMENGINE_COMPLEX_DOUBLE);
     d = -0.780872515;
-    complex_double_real_part(temp, eval);
+    complex_base_real_part(temp, eval);
     d2 = real_double_get_d(temp);
-    complex_double_imaginary_part(temp, eval);
+    complex_base_imaginary_part(temp, eval);
     double d3 = real_double_get_d(temp);
     double d4 = -0.3688890370;
     d = fabs(d - d2);
@@ -1193,9 +1597,9 @@ void test_eval()
 
     // With 53 bit precision, `com1` and `com2` have the same value.
     // Hence value of `r1` was  rounded down to `0.000000000000000`
-    complex_double_real_part(temp, eval3);
+    complex_base_real_part(temp, eval3);
     SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
-    complex_double_imaginary_part(temp, eval3);
+    complex_base_imaginary_part(temp, eval3);
     SYMENGINE_C_ASSERT(real_double_get_d(temp) == 0.0);
 
     basic_evalf(eval3, r1, 100, 0);
@@ -1203,7 +1607,7 @@ void test_eval()
     // With 100 bit precision, `com1` and `com2` are not equal in value.
     // Value of `r1` is a positive quantity with value 0.000000000149734291.....
 
-    SYMENGINE_C_ASSERT(complex_mpc_is_zero(eval3) == 0);
+    SYMENGINE_C_ASSERT(number_is_zero(eval3) == 0);
 
     basic_free_stack(s1);
     basic_free_stack(t1);
@@ -1526,6 +1930,99 @@ void test_matrix()
     SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
     basic_str_free(result);
 
+    // diff
+    basic x;
+    basic y;
+    basic e;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    integer_set_si(i2, 2);
+    dense_matrix_rows_cols(B, 2, 2);
+    dense_matrix_set_basic(B, 0, 0, x);
+    basic_mul(e, i2, x);
+    dense_matrix_set_basic(B, 0, 1, e);
+    dense_matrix_set_basic(B, 1, 0, i2);
+    basic_mul(e, x, x);
+    dense_matrix_set_basic(B, 1, 1, e);
+    dense_matrix_rows_cols(D, 2, 2);
+    dense_matrix_diff(D, B, x);
+    result = dense_matrix_str(D);
+    expected = "[1, 2]\n[0, 2*x]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+
+    // jacobian
+    dense_matrix_rows_cols(B, 2, 1);
+    basic_add(e, x, y);
+    dense_matrix_set_basic(B, 0, 0, e);
+    basic_mul(e, x, y);
+    dense_matrix_set_basic(B, 1, 0, e);
+    dense_matrix_rows_cols(C, 2, 1);
+    dense_matrix_set_basic(C, 0, 0, x);
+    dense_matrix_set_basic(C, 1, 0, y);
+    dense_matrix_rows_cols(D, 2, 2);
+    dense_matrix_jacobian(D, B, C);
+    result = dense_matrix_str(D);
+    expected = "[1, 1]\n[y, x]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    basic_str_free(result);
+
+    // row & col join
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    integer_set_si(i2, 2);
+    integer_set_si(i3, 3);
+    dense_matrix_rows_cols(B, 2, 2);
+    dense_matrix_set_basic(B, 0, 0, x);
+    dense_matrix_set_basic(B, 0, 1, y);
+    dense_matrix_set_basic(B, 1, 0, i2);
+    dense_matrix_set_basic(B, 1, 1, i3);
+    dense_matrix_rows_cols(C, 2, 2);
+    dense_matrix_set_basic(C, 0, 0, y);
+    dense_matrix_set_basic(C, 0, 1, x);
+    dense_matrix_set_basic(C, 1, 0, i2);
+    dense_matrix_set_basic(C, 1, 1, i3);
+    dense_matrix_row_join(B, C);
+    result = dense_matrix_str(B);
+    expected = "[x, y, y, x]\n[2, 3, 2, 3]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(B) == 2);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(B) == 4);
+    basic_str_free(result);
+    dense_matrix_rows_cols(D, 2, 2);
+    dense_matrix_set_basic(D, 0, 0, x);
+    dense_matrix_set_basic(D, 0, 1, y);
+    dense_matrix_set_basic(D, 1, 0, i2);
+    dense_matrix_set_basic(D, 1, 1, i3);
+    dense_matrix_col_join(D, C);
+    result = dense_matrix_str(D);
+    expected = "[x, y]\n[2, 3]\n[y, x]\n[2, 3]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(D) == 4);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(D) == 2);
+    basic_str_free(result);
+    dense_matrix_row_del(B, 1);
+    result = dense_matrix_str(B);
+    expected = "[x, y, y, x]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(B) == 1);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(B) == 4);
+    basic_str_free(result);
+    dense_matrix_col_del(D, 1);
+    result = dense_matrix_str(D);
+    expected = "[x]\n[2]\n[y]\n[2]\n";
+    SYMENGINE_C_ASSERT(strcmp(result, expected) == 0);
+    SYMENGINE_C_ASSERT(dense_matrix_rows(D) == 4);
+    SYMENGINE_C_ASSERT(dense_matrix_cols(D) == 1);
+    basic_str_free(result);
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(e);
+
     vecbasic_free(vec);
 
     dense_matrix_free(B);
@@ -1539,8 +2036,74 @@ void test_matrix()
     basic_free_stack(i4);
 }
 
+void test_lambda_double()
+{
+    int perform_cse;
+    double outs[2];
+    double inps[3] = {1.5, 2.0, 3.0};
+
+    basic two, x, y, z, r, s;
+    basic_new_stack(two);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(r);
+    basic_new_stack(s);
+    CVecBasic *args = vecbasic_new();
+    CVecBasic *exprs = vecbasic_new();
+
+    integer_set_si(two, 2);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+    symbol_set(r, "r");
+    symbol_set(s, "s");
+
+    vecbasic_push_back(args, x);
+    vecbasic_push_back(args, y);
+    vecbasic_push_back(args, z);
+
+    // r = x + y*z + (y*z)**2
+    // s = 2*x + y*z + (y*z)**2
+    basic_mul(y, y, z);
+    basic_pow(z, y, two);
+    basic_add(z, z, y);
+    basic_add(r, x, z);
+    basic_mul(x, two, x);
+    basic_add(s, x, z);
+    vecbasic_push_back(exprs, r);
+    vecbasic_push_back(exprs, s);
+
+    for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
+        CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
+        lambda_real_double_visitor_init(vis, args, exprs, perform_cse);
+        lambda_real_double_visitor_call(vis, outs, inps);
+        lambda_real_double_visitor_free(vis);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#ifdef HAVE_SYMENGINE_LLVM
+        int symbolic_cse = 1, opt_level = 2;
+        CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
+        llvm_double_visitor_init(vis2, args, exprs, symbolic_cse, opt_level);
+        llvm_double_visitor_call(vis2, outs, inps);
+        llvm_double_visitor_free(vis2);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+#endif
+    }
+    basic_free_stack(two);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+    basic_free_stack(r);
+    basic_free_stack(s);
+    vecbasic_free(args);
+    vecbasic_free(exprs);
+}
+
 int main(int argc, char *argv[])
 {
+    symengine_print_stack_on_segfault();
     test_version();
     test_cwrapper();
     test_complex();
@@ -1553,11 +2116,18 @@ int main(int argc, char *argv[])
     test_CMapBasicBasic();
     test_get_args();
     test_free_symbols();
+    test_function_symbols();
+    test_function_symbol_get_name();
     test_get_type();
     test_hash();
     test_subs();
     test_subs2();
+    test_coeff();
+    test_linsolve();
+    test_solve_poly();
     test_constants();
+    test_infinity();
+    test_nan();
     test_ascii_art();
     test_functions();
     test_ntheory();
@@ -1569,7 +2139,7 @@ int main(int argc, char *argv[])
 #ifdef HAVE_SYMENGINE_MPC
     test_complex_mpc();
 #endif // HAVE_SYMENGINE_MPC
-    symengine_print_stack_on_segfault();
     test_matrix();
+    test_lambda_double();
     return 0;
 }

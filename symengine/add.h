@@ -1,6 +1,6 @@
 /**
  * \file add.h
- * Class Add
+ * Header containing definition of Add and related functions add, sub
  *
  **/
 
@@ -11,7 +11,34 @@
 
 namespace SymEngine
 {
+/*! \class Add
+   Add class keeps an addition of symbolic expressions. Internal representation
+   of an Add is a numeric coefficient `coef_` and a dictionary `dict_` of
+   key-value pairs.
 
+        Add(coef_, {{key1, value1}, {key2, value2}, ... })
+
+   This represents the following expression,
+
+        coef_ + key1*value1 + key2*value2 + ...
+
+   `coef_` and the values of dictionary are numeric coefficients like Integer,
+   RealDouble, Complex
+   `key`s can be any symbolic expression except numeric coefficients and `Mul`
+   objects with coefficient != 1.
+
+   For example, the following are valid representations
+
+        Add(1, {{x, 2}, {y, 5}})
+        Add(0, {{x, 1}, {y, 4}, {z, 3}})
+
+   Following are invalid representations. (valid equivalent is shown next to
+   them)
+
+        Add(1, {{x, 1}, {2*y, 3})   -> Add(1, {{x, 1}, {y, 6}})
+        Add(0, {{x, 2}})             -> Mul(2, {{x, 1}})
+        Add(1, {{x, 2}, {4, 6}})    -> Add(25, {{x, 2}})
+*/
 class Add : public Basic
 {
 private:
@@ -21,20 +48,11 @@ private:
 public:
     IMPLEMENT_TYPEID(ADD)
     /*! Constructs Add from a dictionary by copying the contents of the
-        dictionary
+        dictionary. Assumes that the input is in canonical form
     */
     Add(const RCP<const Number> &coef, umap_basic_num &&dict);
-    //! \return Size of the hash
     virtual hash_t __hash__() const;
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
     virtual bool __eq__(const Basic &o) const;
-    /*! Comparison operator
-     * \param o - Object to be compared with
-     * \return `0` if equal, `-1` , `1` according to string compare
-     * */
     virtual int compare(const Basic &o) const;
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
     * Mul) depending on the size of dictionary `d`.
@@ -56,36 +74,69 @@ public:
                                    umap_basic_num &d,
                                    const RCP<const Number> &c,
                                    const RCP<const Basic> &term);
-    //! Converts the add dict into two appropriate instances
+    //! Converts the Add into a sum of two Basic objects and returns them.
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
                       const Ptr<RCP<const Basic>> &b) const;
-    //! Converts into the form of coefficient and term
+    //! Converts a Basic `self` into the form of `coefficient * term`
     static void as_coef_term(const RCP<const Basic> &self,
                              const Ptr<RCP<const Number>> &coef,
                              const Ptr<RCP<const Basic>> &term);
-    //! \return `true` if it is in canonical form
+    //! \return `true` if a given dictionary and a coefficient is in canonical
+    //! form
     bool is_canonical(const RCP<const Number> &coef,
                       const umap_basic_num &dict) const;
 
+    /*!
+        Returns the arguments of the Add.
+        For an Add of the form,
+
+            Add(coef_, {{key1, value1}, {key2, value2}, ... })
+
+        if coef_ is non-zero it returns,
+
+            {coef_, key1*value1, key2*value2, ... }
+
+        otherwise it returns,
+
+            {key1*value1, key2*value2, ... }
+
+        \return list of arguments
+    */
     virtual vec_basic get_args() const;
 
+    //! \return const reference to the coefficient of the Add
     inline const RCP<const Number> &get_coef() const
     {
         return coef_;
     }
+    //! \return const reference to the dictionary of the Add
     inline const umap_basic_num &get_dict() const
     {
         return dict_;
     }
 };
 
-//! \return Add made from `a + b`
+/*!
+    Add the Basic classes `a` and `b`
+    This'll return the most appropriate type.
+    For example if `x` and `y` are symbols,
+
+        x + y will return an Add
+        x + x will return a Mul (2*x)
+
+    \return `a + b`
+    \see Add, Mul
+*/
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
+/*!
+    Sums the elements of a vector. For `n` elements, this method should be
+    faster than doing `n-1` adds.
+    \return Sum of the elements of vector `a`
+*/
 RCP<const Basic> add(const vec_basic &a);
-//! \return Add made from `a - b`
+//! Subtracts `b` from `a`
+//! \return `a - b`
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b);
-//! \return expanded version of Add
-RCP<const Basic> add_expand(const RCP<const Add> &self);
 
 } // SymEngine
 

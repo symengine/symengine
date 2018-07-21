@@ -8,6 +8,7 @@
 #include <symengine/pow.h>
 #include <symengine/eval_arb.h>
 #include <symengine/eval_mpfr.h>
+#include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::SymEngineException;
@@ -34,6 +35,14 @@ using SymEngine::atan;
 using SymEngine::acsc;
 using SymEngine::asec;
 using SymEngine::acot;
+using SymEngine::asinh;
+using SymEngine::acosh;
+using SymEngine::atanh;
+using SymEngine::acoth;
+using SymEngine::asech;
+using SymEngine::gamma;
+using SymEngine::zeta;
+using SymEngine::abs;
 using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::eval_arb;
@@ -41,7 +50,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::min;
 using SymEngine::max;
 using SymEngine::loggamma;
-using SymEngine::gamma;
+using SymEngine::eval_double;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {
@@ -753,6 +762,189 @@ TEST_CASE("Min/Max: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
 
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Asinh: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asinh(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, asinh(0.5), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = asinh(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asinh(1), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Acosh: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acosh(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acosh(2), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = acosh(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acosh(1), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Atanh: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = atanh(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atanh(0.5), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = atanh(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atanh(1), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("ACoth: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acoth(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atanh(1.0 / -34), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = acoth(integer(591));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atanh(1.0 / 591), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = acoth(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atanh(1.0 / 16), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Asech: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asech(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acosh(1.0), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = asech(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acosh(2.0), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Abs: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = abs(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, abs(-34), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = abs(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, abs(16), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Zeta: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = zeta(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, eval_double(*integer(0)), MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = zeta(div(integer(1), integer(678)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, -0.501357552105367, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    r1 = zeta(div(integer(1), integer(-247)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, -0.496295978053852, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
     arb_clear(a);
 }

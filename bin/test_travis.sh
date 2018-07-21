@@ -79,23 +79,31 @@ if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
 if [[ "${WITH_LLVM}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_LLVM=${WITH_LLVM} -DLLVM_DIR=${LLVM_DIR}"
+    cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
+fi
+if [[ "${BUILD_DOXYGEN}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
+fi
+if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 
-if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
-        export  CXXFLAGS="-ftrapv"
-    else
-        export CXXFLAGS=""
+        export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
 else
-    export CXXFLAGS="-Werror"
+    export CXXFLAGS="$CXXFLAGS -Werror"
 fi
+if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
+    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG"
+fi
+
 cmake $cmake_line ${SOURCE_DIR}
 
 echo "Current directory:"
 pwd
-echo "Running make:"
+echo "Running make" $MAKEFLAGS ":"
 make
 echo "Running make install:"
 make install
@@ -125,4 +133,4 @@ export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
 
 echo "Checking whether all header files are installed:"
-python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
+python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine

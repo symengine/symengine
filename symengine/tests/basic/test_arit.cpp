@@ -15,7 +15,7 @@ using SymEngine::Log;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
-using SymEngine::map_vec_int;
+using SymEngine::map_vec_uint;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
@@ -52,6 +52,7 @@ using SymEngine::down_cast;
 using SymEngine::pi;
 using SymEngine::minus_one;
 using SymEngine::Nan;
+using SymEngine::make_rcp;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -144,6 +145,9 @@ TEST_CASE("Add: arit", "[arit]")
 
     r1 = add({i2});
     REQUIRE(eq(*r1, *i2));
+
+    r1 = add(x, real_double(0.0));
+    REQUIRE(eq(*r1, *x));
 }
 
 TEST_CASE("Mul: arit", "[arit]")
@@ -323,8 +327,8 @@ TEST_CASE("Mul: arit", "[arit]")
     s.insert(rc1);
     REQUIRE(s.size() == 2);
 
-    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));
-                    , SymEngineException);
+    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0)),
+                    SymEngineException);
 
     r1 = mul({});
     REQUIRE(eq(*r1, *one));
@@ -501,6 +505,10 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(std::abs(down_cast<const ComplexDouble &>(*s3).i.imag()
                      - down_cast<const ComplexDouble &>(*s2).i.imag())
             < 1e-12);
+
+    s2 = complex_double(std::complex<double>(0.0, 0.0));
+    s3 = complex_double(std::complex<double>(1.0, 0.0));
+    REQUIRE(eq(*exp(s2), *s3));
 }
 
 TEST_CASE("Sub: arit", "[arit]")
@@ -552,6 +560,9 @@ TEST_CASE("Sub: arit", "[arit]")
     r2 = im1;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = add(add(x, y), real_double(0.0));
+    REQUIRE(eq(*sub(r1, y), *x));
+
     RCP<const Number> rc1, rc2, rc3, c1, c2;
     rc1 = Rational::from_two_ints(*integer(1), *integer(2));
     rc2 = Rational::from_two_ints(*integer(3), *integer(4));
@@ -568,9 +579,9 @@ TEST_CASE("Sub: arit", "[arit]")
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
-    r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
+    r2 = sub(r1, sub(sub(sub(r1, r2), integer(3)), real_double(0.2)));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i + 3.6) < 1e-12);
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 3.7) < 1e-12);
 
     r1 = real_double(0.1);
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
@@ -982,6 +993,18 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = pow(mul(sqrt(mul(y, x)), x), i2);
     r2 = mul(pow(x, i3), y);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(one, Inf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, NegInf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, ComplexInf);
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = pow(one, Nan);
+    REQUIRE(eq(*r1, *Nan));
 }
 
 TEST_CASE("Log: arit", "[arit]")
@@ -1064,11 +1087,39 @@ TEST_CASE("Log: arit", "[arit]")
     r1 = r1->subs({{x, E}});
     r2 = one;
     REQUIRE(eq(*r1, *r2));
+
+    r1 = log(real_double(2.0));
+    REQUIRE(is_a<RealDouble>(*r1));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 0.693147180559945)
+            < 1e-12);
+
+    r1 = log(complex_double(std::complex<double>(1, 2)));
+    r2 = log(real_double(-3.0));
+    REQUIRE(is_a<ComplexDouble>(*r1));
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r1).i)
+                     - 1.36870408847499)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(down_cast<const ComplexDouble &>(*r2).i)
+                     - 3.32814563411849)
+            < 1e-12);
+
+    // Test is_canonical()
+    RCP<const Log> r4 = make_rcp<Log>(i2);
+    REQUIRE(not(r4->is_canonical(zero)));
+    REQUIRE(not(r4->is_canonical(one)));
+    REQUIRE(not(r4->is_canonical(E)));
+    REQUIRE(not(r4->is_canonical(minus_one)));
+    REQUIRE(not(r4->is_canonical(im3)));
+    REQUIRE(not(r4->is_canonical(c1)));
+    REQUIRE(r4->is_canonical(i2));
+    REQUIRE(not(r4->is_canonical(real_double(2.0))));
+    REQUIRE(not(r4->is_canonical(div(one, i2))));
 }
 
 TEST_CASE("Multinomial: arit", "[arit]")
 {
-    map_vec_int r;
+    map_vec_uint r;
     auto t1 = std::chrono::high_resolution_clock::now();
     multinomial_coefficients(4, 20, r);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -1315,6 +1366,15 @@ TEST_CASE("Expand2: arit", "[arit]")
     r2 = add(
         sub(pow(x, i3), mul(pow(y, i3), I)),
         sub(mul(mul(i3, I), mul(pow(x, i2), y)), mul(i3, mul(pow(y, i2), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    // Test that deep=False doesn't expand expression two levels deep.
+    r1 = expand(mul(i2, add(x, mul(i2, add(y, z)))), false);
+    r2 = add(mul(i2, x), mul(i4, add(y, z)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = add(x, mul(i2, add(y, z)));
+    r2 = expand(r1, false);
     REQUIRE(eq(*r1, *r2));
 }
 

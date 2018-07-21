@@ -190,11 +190,11 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
             } else if (is_a<Rational>(*exp)) {
                 RCP<const Basic> res;
                 if (is_a<Integer>(*t)) {
-                    res = down_cast<const Rational &>(*exp)
-                              .rpowrat(down_cast<const Integer &>(*t));
+                    res = down_cast<const Rational &>(*exp).rpowrat(
+                        down_cast<const Integer &>(*t));
                 } else {
-                    res = down_cast<const Rational &>(*t)
-                              .powrat(down_cast<const Rational &>(*exp));
+                    res = down_cast<const Rational &>(*t).powrat(
+                        down_cast<const Rational &>(*exp));
                 }
                 if (is_a_Number(*res)) {
                     imulnum(outArg(*coef), rcp_static_cast<const Number>(res));
@@ -261,8 +261,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
                     res = down_cast<const Rational &>(*it->second)
                               .rpowrat(down_cast<const Integer &>(*t));
                 } else {
-                    res = down_cast<const Rational &>(*t)
-                              .powrat(down_cast<const Rational &>(*it->second));
+                    res = down_cast<const Rational &>(*t).powrat(
+                        down_cast<const Rational &>(*it->second));
                 }
                 if (is_a_Number(*res)) {
                     d.erase(it);
@@ -455,8 +455,8 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
         for (const auto &p : dict_) {
             new_exp = mul(p.second, exp);
             if (is_a<Integer>(*new_exp) and is_a<Mul>(*p.first)) {
-                down_cast<const Mul &>(*p.first)
-                    .power_num(coef, d, rcp_static_cast<const Number>(new_exp));
+                down_cast<const Mul &>(*p.first).power_num(
+                    coef, d, rcp_static_cast<const Number>(new_exp));
             } else {
                 // No need for additional dict checks here.
                 // The dict should be of standard form before this is
@@ -501,10 +501,18 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
 vec_basic Mul::get_args() const
 {
     vec_basic args;
-    if (not coef_->is_one())
+    if (not coef_->is_one()) {
+        args.reserve(dict_.size() + 1);
         args.push_back(coef_);
+    } else {
+        args.reserve(dict_.size());
+    }
     for (const auto &p : dict_) {
-        args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
+        if (eq(*p.second, *one)) {
+            args.push_back(p.first);
+        } else {
+            args.push_back(make_rcp<const Pow>(p.first, p.second));
+        }
     }
     return args;
 }

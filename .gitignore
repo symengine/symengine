@@ -70,6 +70,7 @@ symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
 symengine/tests/basic/test_as_numer_denom
 symengine/tests/basic/test_parser
+symengine/tests/basic/test_cse
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
 symengine/tests/ntheory/test_diophantine
@@ -104,6 +105,9 @@ symengine/tests/printing/test_ccode
 symengine/tests/finitediff/test_finitediff
 symengine/tests/basic/test_integer_class
 symengine/tests/basic/test_nan
+symengine/tests/basic/test_relationals
+symengine/tests/basic/test_solve
+symengine/tests/basic/test_as_real_imag
 
 # Benchmarks executables
 benchmarks/add1

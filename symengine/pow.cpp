@@ -90,7 +90,8 @@ int Pow::compare(const Basic &o) const
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
-        return pownum(rcp_static_cast<const Number>(b), zero);
+        // addnum is used for converting to the type of `b`.
+        return addnum(one, rcp_static_cast<const Number>(b));
     }
     if (eq(*b, *one))
         return a;
@@ -107,7 +108,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         }
     }
 
-    if (eq(*a, *one))
+    if (eq(*a, *one) and not is_a_Number(*b))
         return one;
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
@@ -120,27 +121,27 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (is_a_Number(*b)) {
         if (is_a_Number(*a)) {
             if (is_a<Integer>(*b)) {
-                return down_cast<const Number &>(*a)
-                    .pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a).pow(
+                    *rcp_static_cast<const Number>(b));
             } else if (is_a<Rational>(*b)) {
                 if (is_a<Rational>(*a)) {
-                    return down_cast<const Rational &>(*a)
-                        .powrat(down_cast<const Rational &>(*b));
+                    return down_cast<const Rational &>(*a).powrat(
+                        down_cast<const Rational &>(*b));
                 } else if (is_a<Integer>(*a)) {
-                    return down_cast<const Rational &>(*b)
-                        .rpowrat(down_cast<const Integer &>(*a));
+                    return down_cast<const Rational &>(*b).rpowrat(
+                        down_cast<const Integer &>(*a));
                 } else if (is_a<Complex>(*a)) {
                     return make_rcp<const Pow>(a, b);
                 } else {
-                    return down_cast<const Number &>(*a)
-                        .pow(*rcp_static_cast<const Number>(b));
+                    return down_cast<const Number &>(*a).pow(
+                        *rcp_static_cast<const Number>(b));
                 }
             } else if (is_a<Complex>(*b)
                        and down_cast<const Number &>(*a).is_exact()) {
                 return make_rcp<const Pow>(a, b);
             } else {
-                return down_cast<const Number &>(*a)
-                    .pow(*rcp_static_cast<const Number>(b));
+                return down_cast<const Number &>(*a).pow(
+                    *rcp_static_cast<const Number>(b));
             }
         } else if (eq(*a, *E)) {
             RCP<const Number> p = rcp_static_cast<const Number>(b);
@@ -152,8 +153,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             // Expand (x*y)**b = x**b*y**b
             map_basic_basic d;
             RCP<const Number> coef = one;
-            down_cast<const Mul &>(*a)
-                .power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+            down_cast<const Mul &>(*a).power_num(
+                outArg(coef), d, rcp_static_cast<const Number>(b));
             return Mul::from_dict(coef, std::move(d));
         }
     }
@@ -169,15 +170,13 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 // This function can overflow, but it is fast.
 // TODO: figure out condition for (m, n) when it overflows and raise an
 // exception.
-void multinomial_coefficients(int m, int n, map_vec_int &r)
+void multinomial_coefficients(unsigned m, unsigned n, map_vec_uint &r)
 {
-    vec_int t;
-    int j, tj, start, k;
-    long long int v;
+    vec_uint t;
+    unsigned j, tj, start, k;
+    unsigned long long int v;
     if (m < 2)
         throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
-    if (n < 0)
-        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
@@ -214,15 +213,13 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
 }
 
 // Slower, but returns exact (possibly large) integers (as mpz)
-void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
+void multinomial_coefficients_mpz(unsigned m, unsigned n, map_vec_mpz &r)
 {
-    vec_int t;
-    int j, tj, start, k;
+    vec_uint t;
+    unsigned j, tj, start, k;
     integer_class v;
     if (m < 2)
         throw SymEngineException("multinomial_coefficients: m >= 2 must hold.");
-    if (n < 0)
-        throw SymEngineException("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;

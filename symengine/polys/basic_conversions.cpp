@@ -37,8 +37,9 @@ public:
                 = down_cast<const Rational &>(*exp).get_den();
             if (is_a<const Rational>(*it->second))
                 gen_set[base] = divnum(
-                    one, lcm(*den, *down_cast<const Rational &>(*it->second)
-                                        .get_den()));
+                    one,
+                    lcm(*den,
+                        *down_cast<const Rational &>(*it->second).get_den()));
             else
                 gen_set[base] = divnum(one, den);
         }

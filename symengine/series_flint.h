@@ -174,7 +174,7 @@ public:
         if (n == -1)
             return series_invert(s, var, prec);
 
-        const short ldeg = ldegree(s);
+        const unsigned ldeg = ldegree(s);
         if (ldeg % n != 0) {
             throw NotImplementedError("Puiseux series not implemented.");
         }

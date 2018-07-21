@@ -129,6 +129,20 @@ public:
         }
     }
 
+    ODictWrapper(std::map<Key, Value> &&p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0)) {
+                auto erase = iter;
+                iter++;
+                p.erase(erase);
+            } else {
+                iter++;
+            }
+        }
+        dict_ = p;
+    }
+
     ODictWrapper(const Value &p)
     {
         if (p != Value(0))
@@ -305,7 +319,7 @@ public:
         return dict_;
     }
 
-    unsigned int size() const
+    size_t size() const
     {
         return dict_.size();
     }
@@ -360,7 +374,7 @@ public:
     virtual hash_t __hash__() const = 0;
 
     // return `degree` + 1. `0` returned for zero poly.
-    virtual unsigned int size() const = 0;
+    virtual int size() const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
@@ -469,9 +483,9 @@ public:
         return res;
     }
 
-    inline unsigned int get_degree() const
+    inline int get_degree() const
     {
-        return this->get_poly().degree();
+        return numeric_cast<int>(this->get_poly().degree());
     }
 
     Cf get_lc() const
@@ -597,10 +611,11 @@ public:
         return std::make_pair(i_, ptr_->get_coeff_ref(i_));
     }
 
-    std::shared_ptr<std::pair<long, Int>> operator->()
+    std::shared_ptr<std::pair<unsigned, Int>> operator->()
     {
-        return std::make_shared<std::pair<long, Int>>(i_,
-                                                      ptr_->get_coeff_ref(i_));
+        return std::make_shared<std::pair<unsigned, Int>>(
+            numeric_cast<unsigned>(i_),
+            ptr_->get_coeff_ref(numeric_cast<unsigned>(i_)));
     }
 };
 
@@ -611,13 +626,18 @@ public:
     ContainerForIter(RCP<const T> ptr, long x)
         : ContainerBaseIter<T, Int>(ptr, x)
     {
+        if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_)) == 0
+            and this->i_ < this->ptr_->size()) {
+            ++(*this);
+        }
     }
 
     ContainerForIter operator++()
     {
         this->i_++;
         while (this->i_ < this->ptr_->size()) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_++;
         }
@@ -638,7 +658,8 @@ public:
     {
         this->i_--;
         while (this->i_ >= 0) {
-            if (this->ptr_->get_coeff_ref(this->i_) != 0)
+            if (this->ptr_->get_coeff_ref(numeric_cast<unsigned>(this->i_))
+                != 0)
                 break;
             this->i_--;
         }
@@ -690,13 +711,6 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
-    return Poly::from_container(a.get_var(), std::move(dict));
-}
-
-template <typename Poly>
-RCP<const Poly> pow_upoly(const Poly &a, unsigned int p)
-{
-    auto dict = Poly::container_type::pow(a.get_poly(), p);
     return Poly::from_container(a.get_var(), std::move(dict));
 }
 

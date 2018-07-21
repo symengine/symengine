@@ -182,7 +182,7 @@ int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
     unsigned long limit = mp_get_ui(sqrtN);
     if (limit > std::numeric_limits<unsigned>::max())
         throw SymEngineException("N too large to factor");
-    Sieve::iterator pi(limit);
+    Sieve::iterator pi(numeric_cast<unsigned>(limit));
     unsigned p;
     while ((p = pi.next_prime()) <= limit) {
         if (N % p == 0) {
@@ -204,7 +204,7 @@ int _factor_lehman_method(integer_class &rop, const integer_class &n)
     mp_root(u_bound, n, 3);
     u_bound = u_bound + 1;
 
-    Sieve::iterator pi(mp_get_ui(u_bound));
+    Sieve::iterator pi(numeric_cast<unsigned>(mp_get_ui(u_bound)));
     unsigned p;
     while ((p = pi.next_prime()) <= mp_get_ui(u_bound)) {
         if (n % p == 0) {
@@ -440,7 +440,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list,
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
         throw SymEngineException("N too large to factor");
-    Sieve::iterator pi(limit);
+    Sieve::iterator pi(numeric_cast<unsigned>(limit));
     unsigned p;
 
     while ((p = pi.next_prime()) <= limit) {
@@ -470,7 +470,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     if (not mp_fits_ulong_p(sqrtN)
         or limit > std::numeric_limits<unsigned>::max())
         throw SymEngineException("N too large to factor");
-    Sieve::iterator pi(limit);
+    Sieve::iterator pi(numeric_cast<unsigned>(limit));
 
     unsigned p;
     while ((p = pi.next_prime()) <= limit) {
@@ -518,7 +518,8 @@ void Sieve::_extend(unsigned limit)
     if (_primes.back() < limit)
         primesieve::generate_primes(_primes.back() + 1, limit, &_primes);
 #else
-    const unsigned sqrt_limit = implicit_cast<unsigned>(std::sqrt(limit));
+    const unsigned sqrt_limit
+        = static_cast<unsigned>(std::floor(std::sqrt(limit)));
     unsigned start = _primes.back() + 1;
     if (limit <= start)
         return;
@@ -649,7 +650,7 @@ RCP<const Number> harmonic(unsigned long n, long m)
                 res += t;
             } else {
                 integer_class t(i);
-                mp_pow_ui(t, t, -m);
+                mp_pow_ui(t, t, static_cast<unsigned long>(-m));
                 res += t;
             }
         }
@@ -1003,7 +1004,7 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
     integer_class n, y, b, q, pm1, t(1);
     pm1 = p - 1;
     unsigned e, m;
-    e = mp_scan1(pm1);
+    e = numeric_cast<unsigned>(mp_scan1(pm1));
     q = pm1 >> e; // p - 1 = 2**e*q
 
     while (t != -1) {
@@ -1287,7 +1288,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
         if (p == 2) {
             integer_class r = n, t, s, pc, pj;
             pk = integer_class(1) << k;
-            unsigned c = mp_scan1(n);
+            unsigned c = numeric_cast<unsigned>(mp_scan1(n));
             r = n >> c; // n = 2**c * r where r is odd.
 
             // Handle special cases of k = 1 and k = 2.
@@ -1372,7 +1373,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
             if (n >= k)
                 m = k - 1;
             else
-                m = k - 1 - (k - 1) / mp_get_ui(n);
+                m = numeric_cast<unsigned>(k - 1 - (k - 1) / mp_get_ui(n));
             mp_pow_ui(pm, p, m);
         } else {
             unsigned r = 1;
@@ -1386,7 +1387,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
                                                 all_roots)) {
                 return false;
             }
-            m = r / mp_get_ui(n);
+            m = numeric_cast<unsigned>(r / mp_get_ui(n));
             mp_pow_ui(pm, p, m);
             if (not all_roots) {
                 roots.push_back(
@@ -1396,7 +1397,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
             for (auto &it : _roots) {
                 it = integer(it->as_integer_class() * pm);
             }
-            m = r - r / mp_get_ui(n);
+            m = numeric_cast<unsigned>(r - r / mp_get_ui(n));
             mp_pow_ui(pm, p, m);
         }
         integer_class pkm;
@@ -1422,7 +1423,7 @@ bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n,
     if (a % p != 0) {
         if (p == 2) {
             integer_class t;
-            unsigned c = mp_scan1(n);
+            unsigned c = numeric_cast<unsigned>(mp_scan1(n));
 
             // Handle special cases of k = 1 and k = 2.
             if (k == 1) {
@@ -1719,7 +1720,7 @@ int mobius(const Integer &a)
     map_integer_uint prime_mul;
     bool is_square_free = true;
     prime_factor_multiplicities(prime_mul, a);
-    int num_prime_factors = prime_mul.size();
+    unsigned long num_prime_factors = prime_mul.size();
     for (const auto &it : prime_mul) {
         int p_freq = it.second;
         if (p_freq > 1) {

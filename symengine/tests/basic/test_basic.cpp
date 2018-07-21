@@ -10,6 +10,7 @@ using SymEngine::Add;
 using SymEngine::Mul;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::FunctionSymbol;
 using SymEngine::umap_basic_num;
 using SymEngine::map_basic_num;
 using SymEngine::map_basic_basic;
@@ -48,6 +49,8 @@ using SymEngine::down_cast;
 using SymEngine::NotImplementedError;
 using SymEngine::ComplexInf;
 using SymEngine::Nan;
+using SymEngine::EulerGamma;
+using SymEngine::atoms;
 
 using namespace SymEngine::literals;
 
@@ -196,6 +199,9 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     REQUIRE(unified_compare(adict, bdict) == -unified_compare(bdict, adict));
     bdict = {{0, 1}, {1, 3}};
     REQUIRE(unified_compare(adict, bdict) == 1);
+    buffer.str("");
+    buffer << bdict;
+    REQUIRE(check_map_str(buffer.str(), {"0", "1"}, {"1", "3"}));
 
     multiset_basic msba, msbb;
     msba.insert(x);
@@ -319,6 +325,8 @@ TEST_CASE("Integer: Basic", "[basic]")
     std::cout << *k << std::endl;
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
+
+    REQUIRE(not i->is_complex());
 
     i = integer(0);
     j = integer(0);
@@ -647,6 +655,12 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r2->compare(*r1) == 1);
     CHECK(r1->compare(*r1) == 0);
 
+    r1 = real_double(1.0);
+    r2 = real_double(2.0);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r1) == 0);
+
     // These are specific to the order in the declaration of enum TypeID,
     // so we just make sure that if x < y, then y > x.
     r1 = add(x, z);
@@ -691,6 +705,11 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r1->__cmp__(*r1) == 0);
 
     CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
+
+    r1 = pi;
+    r2 = EulerGamma;
+    CHECK(r1->__cmp__(*r2) > 0);
+    CHECK(r1->__cmp__(*r1) == 0);
 }
 
 TEST_CASE("Complex: Basic", "[basic]")
@@ -908,13 +927,17 @@ TEST_CASE("has_symbol: Basic", "[basic]")
 
 TEST_CASE("coeff: Basic", "[basic]")
 {
-    RCP<const Basic> r1, r2;
+    RCP<const Basic> r1, r2, r3;
     RCP<const Symbol> x, y, z;
+    RCP<const Basic> f1, f2;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
+    f1 = function_symbol("f", x);
+    f2 = function_symbol("f", y);
     r1 = add(x, pow(y, integer(2)));
     r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
+    r3 = add(add(add(add(r2, mul(x, z)), f1), f2), mul(f1, integer(3)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
@@ -930,6 +953,10 @@ TEST_CASE("coeff: Basic", "[basic]")
     REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
+
+    REQUIRE(eq(*coeff(*r3, *z, *integer(1)), *add(x, integer(2))));
+    REQUIRE(eq(*coeff(*r3, *f1, *integer(1)), *integer(4)));
+    REQUIRE(eq(*coeff(*r3, *f2, *integer(1)), *integer(1)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
@@ -957,6 +984,43 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     s = free_symbols(*r1);
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
+}
+
+TEST_CASE("atoms: Basic", "[basic]")
+{
+    RCP<const Basic> r1, r2, r3;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = function_symbol("f", mul(x, integer(2)));
+    set_basic s = atoms<FunctionSymbol>(*r1);
+    REQUIRE(s.size() == 1);
+
+    s = atoms<FunctionSymbol, Symbol>(*r1);
+    REQUIRE(s.size() == 2);
+
+    s = atoms<FunctionSymbol, Symbol, Mul>(*r1);
+    REQUIRE(s.size() == 3);
+
+    s = atoms<Number>(*r1);
+    REQUIRE(s.size() == 1);
+
+    r2 = function_symbol("g", add(r1, y));
+    s = atoms<FunctionSymbol>(*r2);
+    REQUIRE(s.size() == 2);
+
+    r3 = add(r1, add(r2, x));
+    map_basic_basic d;
+    d[x] = r1;
+    r3 = r3->subs(d);
+    s = atoms<FunctionSymbol>(*r3);
+    set_basic t({r1, r1->subs(d), r2->subs(d)});
+    REQUIRE(unified_eq(s, t));
+
+    r3 = r2->diff(x);
+    s = atoms<FunctionSymbol>(*r3);
+    REQUIRE(s.size() == 3);
 }
 
 TEST_CASE("args: Basic", "[basic]")

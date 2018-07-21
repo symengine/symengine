@@ -17,7 +17,6 @@ using SymEngine::Mul;
 using SymEngine::Pow;
 using SymEngine::Symbol;
 using SymEngine::umap_basic_num;
-using SymEngine::map_vec_int;
 using SymEngine::Integer;
 using SymEngine::multinomial_coefficients;
 using SymEngine::RCP;
@@ -42,12 +41,11 @@ int main(int argc, char *argv[])
     //  std::cout << "Evaluating: " << *e << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 500; i++)
+    int num = 500;
+    for (int i = 0; i < num; i++)
         r = eval_double(*e);
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
-                         .count()
-                     / 500.
+    std::cout << std::chrono::duration<double>(t2 - t1).count() * 1000 / num
               << "ms" << std::endl;
     /*
     In SymPy for few iterations:

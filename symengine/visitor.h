@@ -22,6 +22,7 @@
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
 #include <symengine/nan.h>
+#include <symengine/matrix.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine
@@ -50,8 +51,7 @@ public:
     template <typename... Args,
               typename
               = enable_if_t<std::is_constructible<Base, Args...>::value>>
-    BaseVisitor(Args &&... args)
-        : Base(std::forward<Args>(args)...)
+    BaseVisitor(Args &&... args) : Base(std::forward<Args>(args)...)
     {
     }
 
@@ -77,8 +77,15 @@ public:
     bool stop_;
 };
 
+class LocalStopVisitor : public StopVisitor
+{
+public:
+    bool local_stop_;
+};
+
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 void postorder_traversal_stop(const Basic &b, StopVisitor &v);
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
@@ -115,12 +122,12 @@ bool has_symbol(const Basic &b, const Symbol &x);
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
 protected:
-    Ptr<const Symbol> x_;
+    Ptr<const Basic> x_;
     Ptr<const Basic> n_;
     RCP<const Basic> coeff_;
 
 public:
-    CoeffVisitor(Ptr<const Symbol> x, Ptr<const Basic> n) : x_(x), n_(n)
+    CoeffVisitor(Ptr<const Basic> x, Ptr<const Basic> n) : x_(x), n_(n)
     {
     }
 
@@ -168,6 +175,15 @@ public:
         }
     }
 
+    void bvisit(const FunctionSymbol &x)
+    {
+        if (eq(x, *x_) and eq(*one, *n_)) {
+            coeff_ = one;
+        } else {
+            coeff_ = zero;
+        }
+    }
+
     void bvisit(const Basic &x)
     {
         coeff_ = zero;
@@ -184,6 +200,111 @@ public:
 RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
+
+set_basic free_symbols(const MatrixBase &m);
+
+set_basic function_symbols(const Basic &b);
+
+class TransformVisitor : public BaseVisitor<TransformVisitor>
+{
+protected:
+    RCP<const Basic> result_;
+
+public:
+    TransformVisitor()
+    {
+    }
+
+    virtual RCP<const Basic> apply(const RCP<const Basic> &x);
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const OneArgFunction &x);
+
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &x)
+    {
+        auto farg1 = x.get_arg1(), farg2 = x.get_arg2();
+        auto newarg1 = apply(farg1), newarg2 = apply(farg2);
+        if (farg1 != newarg1 or farg2 != newarg2) {
+            result_ = x.create(newarg1, newarg2);
+        } else {
+            result_ = x.rcp_from_this();
+        }
+    }
+
+    void bvisit(const MultiArgFunction &x);
+};
+
+template <typename Derived, typename First, typename... Rest>
+struct is_base_of_multiple {
+    static const bool value = std::is_base_of<First, Derived>::value
+                              or is_base_of_multiple<Derived, Rest...>::value;
+};
+
+template <typename Derived, typename First>
+struct is_base_of_multiple<Derived, First> {
+    static const bool value = std::is_base_of<First, Derived>::value;
+};
+
+template <typename... Args>
+class AtomsVisitor : public BaseVisitor<AtomsVisitor<Args...>>
+{
+public:
+    set_basic s;
+    uset_basic visited;
+
+    template <typename T,
+              typename = enable_if_t<is_base_of_multiple<T, Args...>::value>>
+    void bvisit(const T &x)
+    {
+        s.insert(x.rcp_from_this());
+        visited.insert(x.rcp_from_this());
+        bvisit((const Basic &)x);
+    }
+
+    void bvisit(const Basic &x)
+    {
+        for (const auto &p : x.get_args()) {
+            auto iter = visited.insert(p->rcp_from_this());
+            if (iter.second) {
+                p->accept(*this);
+            }
+        }
+    }
+
+    set_basic apply(const Basic &b)
+    {
+        b.accept(*this);
+        return s;
+    }
+};
+
+template <typename... Args>
+inline set_basic atoms(const Basic &b)
+{
+    AtomsVisitor<Args...> visitor;
+    return visitor.apply(b);
+};
+
+class CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
+{
+public:
+    unsigned count = 0;
+    void apply(const Basic &b);
+    void bvisit(const Mul &x);
+    void bvisit(const Add &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Number &x);
+    void bvisit(const ComplexBase &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+};
+
+unsigned count_ops(const vec_basic &a);
 
 } // SymEngine
 

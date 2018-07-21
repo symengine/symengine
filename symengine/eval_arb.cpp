@@ -126,12 +126,12 @@ public:
         arb_tan(result_, result_, prec_);
     }
 
-    void bvisit(const Symbol &x)
+    void bvisit(const Symbol &)
     {
         throw SymEngineException("Symbol cannot be evaluated as an arb type.");
     }
 
-    void bvisit(const UIntPoly &x)
+    void bvisit(const UIntPoly &)
     {
         throw NotImplementedError("Not Implemented");
     }
@@ -141,12 +141,12 @@ public:
         throw NotImplementedError("Not Implemented");
     }
 
-    void bvisit(const ComplexDouble &x)
+    void bvisit(const ComplexDouble &)
     {
         throw NotImplementedError("Not Implemented");
     }
 
-    void bvisit(const RealMPFR &x)
+    void bvisit(const RealMPFR &)
     {
         throw NotImplementedError("Not Implemented");
     }
@@ -154,7 +154,7 @@ public:
     void bvisit(const ComplexMPC &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
 #endif
     void bvisit(const Log &x)
     {
@@ -257,7 +257,7 @@ public:
     void bvisit(const Csch &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
 
     void bvisit(const Cosh &x)
     {
@@ -268,7 +268,7 @@ public:
     void bvisit(const Sech &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
 
     void bvisit(const Tanh &x)
     {
@@ -322,64 +322,91 @@ public:
         arb_clear(t);
     }
 
-    void bvisit(const ASinh &)
-    {
-        throw NotImplementedError("Not Implemented");
-    };
     void bvisit(const ACsch &)
     {
         throw NotImplementedError("Not Implemented");
-    };
-    void bvisit(const ACosh &)
+    }
+
+    void bvisit(const ASinh &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
-    void bvisit(const ATanh &)
+        apply(result_, *(x.get_arg()));
+        arb_asinh(result_, result_, prec_);
+    }
+
+    void bvisit(const ACosh &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
-    void bvisit(const ACoth &)
+        apply(result_, *(x.get_arg()));
+        arb_acosh(result_, result_, prec_);
+    }
+
+    void bvisit(const ATanh &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
-    void bvisit(const ASech &)
+        apply(result_, *(x.get_arg()));
+        arb_atanh(result_, result_, prec_);
+    }
+
+    void bvisit(const ACoth &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
+        apply(result_, *(x.get_arg()));
+        arb_inv(result_, result_, prec_);
+        arb_atanh(result_, result_, prec_);
+    }
+
+    void bvisit(const ASech &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_inv(result_, result_, prec_);
+        arb_acosh(result_, result_, prec_);
+    }
+
     void bvisit(const KroneckerDelta &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
+
     void bvisit(const LeviCivita &)
     {
         throw NotImplementedError("Not Implemented");
-    };
-    void bvisit(const Zeta &)
+    }
+
+    void bvisit(const Zeta &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
+        arb_t t_;
+        arb_init(t_);
+
+        apply(t_, *(x.get_arg1()));
+        apply(result_, *(x.get_arg2()));
+        arb_hurwitz_zeta(result_, t_, result_, prec_);
+
+        arb_clear(t_);
+    }
+
     void bvisit(const Dirichlet_eta &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
+
     void bvisit(const Gamma &x)
     {
         apply(result_, *(x.get_args())[0]);
         arb_gamma(result_, result_, prec_);
-    };
+    }
+
     void bvisit(const LogGamma &x)
     {
         apply(result_, *(x.get_args())[0]);
         arb_lgamma(result_, result_, prec_);
     }
+
     void bvisit(const LowerGamma &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
+
     void bvisit(const UpperGamma &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
 
     void bvisit(const Constant &x)
     {
@@ -401,15 +428,16 @@ public:
         }
     }
 
-    void bvisit(const Abs &)
+    void bvisit(const Abs &x)
     {
-        throw NotImplementedError("Not Implemented");
-    };
+        apply(result_, *(x.get_arg()));
+        arb_abs(result_, result_);
+    }
 
     void bvisit(const Basic &)
     {
         throw NotImplementedError("Not Implemented");
-    };
+    }
 
     void bvisit(const NumberWrapper &x)
     {

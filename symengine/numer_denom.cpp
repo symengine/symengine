@@ -25,10 +25,19 @@ public:
 
         RCP<const Basic> curr_num = one;
         RCP<const Basic> curr_den = one;
-        RCP<const Basic> arg_num, arg_den;
+        RCP<const Basic> arg_num, arg_den, t;
 
         for (const auto &arg : x.get_args()) {
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
+            // TODO: This is naive and slow. Fix it
+            t = div(curr_num, arg_den);
+            if (neq(*t, x)) {
+                as_numer_denom(t, outArg(curr_num), outArg(arg_den));
+            }
+            t = div(curr_den, arg_num);
+            if (neq(*t, x)) {
+                as_numer_denom(t, outArg(curr_den), outArg(arg_num));
+            }
             curr_num = mul(curr_num, arg_num);
             curr_den = mul(curr_den, arg_den);
         }
@@ -46,6 +55,7 @@ public:
         RCP<const Basic> divx_num, divx_den;
 
         for (const auto &arg : x.get_args()) {
+            // TODO: This is naive and slow. Fix it
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
 
             divx = div(arg_den, curr_den);

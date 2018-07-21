@@ -10,7 +10,6 @@ using SymEngine::Pow;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
-using SymEngine::map_vec_int;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
@@ -29,6 +28,15 @@ using SymEngine::msubs;
 using SymEngine::function_symbol;
 using SymEngine::gamma;
 using SymEngine::ComplexInf;
+using SymEngine::interval;
+using SymEngine::imageset;
+using SymEngine::dummy;
+using SymEngine::Set;
+using SymEngine::set_union;
+using SymEngine::finiteset;
+using SymEngine::E;
+using SymEngine::is_a;
+using SymEngine::down_cast;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -172,8 +180,8 @@ TEST_CASE("Mul: subs", "[subs]")
 
 TEST_CASE("Pow: subs", "[subs]")
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> w = symbol("w");
     RCP<const Basic> i2 = integer(2);
@@ -201,6 +209,37 @@ TEST_CASE("Pow: subs", "[subs]")
     r1 = pow(x, y);
     r2 = z;
     REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[pow(E, x)] = z;
+    r1 = pow(E, mul(x, x));
+    r2 = r1->subs(d);
+    REQUIRE(is_a<Pow>(*r2));
+    REQUIRE(eq(*down_cast<const Pow &>(*r2).get_base(), *E));
+    REQUIRE(eq(*down_cast<const Pow &>(*r2).get_exp(), *mul(x, x)));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(E, mul(i2, x));
+    r2 = pow(z, i2);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(E, add(i2, x));
+    r2 = r1->subs(d); // TODO : Ideally, `r1->subs(d)` should be (E**2)*z.
+    REQUIRE(eq(*r1, *r2));
+
+    r2 = r1->xreplace(d);
+    REQUIRE(eq(*r1, *r2));
+
+    d.clear();
+    d[x] = y;
+    r1 = function_symbol("f", mul(i2, x))->diff(x);
+    r2 = function_symbol("f", mul(i2, y))->diff(y);
+    REQUIRE(eq(*r1->xreplace(d), *r2));
 }
 
 TEST_CASE("Erf: subs", "[subs]")
@@ -348,6 +387,16 @@ TEST_CASE("LowerGamma: subs", "[subs]")
     REQUIRE(eq(*r1->subs(d), *r2));
 }
 
+TEST_CASE("FunctionSymbol: subs", "[subs]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> f = function_symbol("f", x);
+
+    auto t = subs(f->diff(x), {{f, mul(x, x)}});
+    REQUIRE(eq(*t, *mul(integer(2), x)));
+}
+
 TEST_CASE("UpperGamma: subs", "[subs]")
 {
     RCP<const Basic> x = symbol("x");
@@ -445,6 +494,39 @@ TEST_CASE("Beta: subs", "[subs]")
     d[z] = i2;
     d[y] = i2;
     REQUIRE(eq(*r1->subs(d), *beta(i2, add(i2, x))));
+}
+
+TEST_CASE("Sets: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    auto n = dummy("n");
+    RCP<const Basic> i2 = integer(2);
+    auto interval1 = interval(integer(-2), integer(2));
+
+    RCP<const Set> r1 = imageset(x, mul(x, x), interval1);
+    RCP<const Set> r2 = imageset(y, mul(y, y), interval1);
+    RCP<const Set> r3 = imageset(n, mul(n, n), interval1);
+
+    map_basic_basic d;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[n] = x;
+    REQUIRE(eq(*r3->subs(d), *r1));
+
+    d.clear();
+    d[x] = y;
+    r1 = set_union({r1, imageset(x, add(x, i2), interval1)});
+    r2 = set_union({r2, imageset(y, add(y, i2), interval1)});
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[x] = n;
+    r1 = finiteset({x, y});
+    r2 = finiteset({n, y});
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("MSubs: subs", "[subs]")

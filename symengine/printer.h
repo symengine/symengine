@@ -7,6 +7,7 @@ namespace SymEngine
 {
 
 std::string ascii_art();
+std::string print_double(double d);
 
 enum class PrecedenceEnum { Add, Mul, Pow, Atom };
 
@@ -194,12 +195,16 @@ public:
     void bvisit(const EmptySet &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const UniversalSet &x);
+    void bvisit(const ConditionSet &x);
     void bvisit(const Contains &x);
     void bvisit(const BooleanAtom &x);
     void bvisit(const And &x);
     void bvisit(const Or &x);
+    void bvisit(const Xor &x);
     void bvisit(const Not &x);
     void bvisit(const Union &x);
+    void bvisit(const Complement &x);
+    void bvisit(const ImageSet &x);
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
@@ -230,6 +235,10 @@ public:
     void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const ComplexDouble &x);
+    void bvisit(const Equality &x);
+    void bvisit(const Unequality &x);
+    void bvisit(const LessThan &x);
+    void bvisit(const StrictLessThan &x);
 #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x);
 #endif
@@ -249,6 +258,17 @@ public:
     std::string apply(const RCP<const Basic> &b);
     std::string apply(const vec_basic &v);
     std::string apply(const Basic &b);
+};
+
+class JuliaStrPrinter : public BaseVisitor<JuliaStrPrinter, StrPrinter>
+{
+public:
+    using StrPrinter::bvisit;
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
+    void bvisit(const Constant &x);
+    void bvisit(const NaN &x);
+    void bvisit(const Infty &x);
 };
 }
 

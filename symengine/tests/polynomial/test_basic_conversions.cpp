@@ -29,13 +29,16 @@ using SymEngine::rcp_static_cast;
 using SymEngine::sin;
 using SymEngine::eq;
 using SymEngine::UIntPoly;
+using SymEngine::URatPoly;
 using SymEngine::UExprPoly;
 using SymEngine::from_basic;
 using SymEngine::set_basic;
 using SymEngine::MIntPoly;
 using SymEngine::MExprPoly;
+using SymEngine::rational_class;
 
 using namespace SymEngine::literals;
+using rc = rational_class;
 
 TEST_CASE("find_gen_poly", "[b2poly]")
 {
@@ -242,6 +245,39 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     poly2 = UIntPoly::from_vec(gen, {{3_z, 1_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
+    poly1 = from_basic<UIntPoly>(poly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPoly>(URatPoly::from_vec(gen, {{3_q, 1_q, 1_q}}), gen),
+        SymEngineException); // Rat->Int
+    CHECK_THROWS_AS(
+        from_basic<UIntPoly>(
+            UExprPoly::from_vec(gen, {{symbol("y"), one, one}}), gen),
+        SymEngineException); // Expr->Int
+
+#ifdef HAVE_SYMENGINE_FLINT
+    auto fpoly = SymEngine::UIntPolyFlint::from_vec(gen, {{3_z, 1_z, 1_z}});
+    poly1 = from_basic<UIntPoly>(fpoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPoly>(
+            SymEngine::URatPolyFlint::from_vec(gen, {{3_q, 1_q, 1_q}}), gen),
+        SymEngineException);
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    auto ppoly = SymEngine::UIntPolyPiranha::from_vec(gen, {{3_z, 1_z, 1_z}});
+    poly1 = from_basic<UIntPoly>(ppoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPoly>(
+            SymEngine::URatPolyPiranha::from_vec(gen, {{3_q, 1_q, 1_q}}), gen),
+        SymEngineException);
+#endif
+
     // 0
     basic = zero;
     gen = x;
@@ -293,6 +329,81 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
     basic = pow(i9, add(div(one, i3), x));
     gen = pow(i9, x);
     CHECK_THROWS_AS(from_basic<UIntPoly>(basic, gen), SymEngineException);
+}
+
+TEST_CASE("basic_to_poly URat", "[b2poly]")
+{
+    RCP<const Basic> basic, gen;
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> minus_one = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> hf = div(one, i2);
+    RCP<const Basic> i2bi3 = div(i2, i3);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> xb2 = div(x, i2);
+    RCP<const Basic> yb2 = div(x, i3);
+    RCP<const URatPoly> poly1, poly2, poly3;
+
+    // x/2
+    basic = xb2;
+    gen = x;
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {0_q, rc(1_z, 2_z)});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // 3x + 2
+    basic = add(mul(x, i3), i2);
+    gen = x;
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {2_q, 3_q});
+    REQUIRE(eq(*poly1, *poly2));
+
+    poly1 = from_basic<URatPoly>(poly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<URatPoly>(
+            UExprPoly::from_vec(gen, {{symbol("y"), one, one}}), gen),
+        SymEngineException); // Expr->Rat
+
+#ifdef HAVE_SYMENGINE_FLINT
+    auto fpoly = SymEngine::UIntPolyFlint::from_vec(gen, {{2_z, 3_z}});
+    poly1 = from_basic<URatPoly>(fpoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    auto fpoly2 = SymEngine::URatPolyFlint::from_vec(gen, {{2_q, 3_q}});
+    poly1 = from_basic<URatPoly>(fpoly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    auto ppoly = SymEngine::UIntPolyPiranha::from_vec(gen, {{2_z, 3_z}});
+    poly1 = from_basic<URatPoly>(ppoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    auto ppoly2 = SymEngine::URatPolyPiranha::from_vec(gen, {{2_q, 3_q}});
+    poly1 = from_basic<URatPoly>(ppoly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+#endif
+
+    // 3/2 * (2**x)
+    basic = mul(div(i3, i2), pow(i2, x));
+    gen = pow(i2, x);
+    poly1 = from_basic<URatPoly>(basic, gen);
+    poly2 = URatPoly::from_vec(gen, {0_q, rc(3_z, 2_z)});
+    REQUIRE(eq(*poly1, *poly2));
+
+    // x + y
+    basic = add(x, y);
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), SymEngineException);
+
+    // x + 1/x
+    basic = add(x, div(one, x));
+    CHECK_THROWS_AS(from_basic<URatPoly>(basic), SymEngineException);
 }
 
 TEST_CASE("basic_to_poly UExpr", "[b2poly]")
@@ -374,6 +485,39 @@ TEST_CASE("basic_to_poly UExpr", "[b2poly]")
     poly1 = from_basic<UExprPoly>(basic, gen);
     poly2 = UExprPoly::from_vec(gen, {{zero, E, one}});
     REQUIRE(eq(*poly1, *poly2));
+
+    poly1 = from_basic<UExprPoly>(poly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    gen = x;
+    poly2 = UExprPoly::from_vec(gen, {{one, integer(2), integer(3)}});
+    auto ipoly1 = UIntPoly::from_vec(gen, {{1_z, 2_z, 3_z}});
+    poly1 = from_basic<UExprPoly>(ipoly1, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    auto ratpoly1 = URatPoly::from_vec(gen, {{1_q, 2_q, 3_q}});
+    poly1 = from_basic<UExprPoly>(ratpoly1, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+#ifdef HAVE_SYMENGINE_FLINT
+    auto fpoly = SymEngine::UIntPolyFlint::from_vec(gen, {{1_z, 2_z, 3_z}});
+    poly1 = from_basic<UExprPoly>(fpoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    auto fpoly2 = SymEngine::URatPolyFlint::from_vec(gen, {{1_q, 2_q, 3_q}});
+    poly1 = from_basic<UExprPoly>(fpoly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    auto ppoly = SymEngine::UIntPolyPiranha::from_vec(gen, {{1_z, 2_z, 3_z}});
+    poly1 = from_basic<UExprPoly>(ppoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    auto ppoly2 = SymEngine::URatPolyPiranha::from_vec(gen, {{1_q, 2_q, 3_q}});
+    poly1 = from_basic<UExprPoly>(ppoly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+#endif
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
@@ -444,6 +588,13 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
     poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 1_z, 0_z, 0_z, 1_z}});
     REQUIRE(eq(*poly1, *poly2));
 
+    poly1 = from_basic<UIntPolyFlint>(poly2, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(from_basic<UIntPolyFlint>(
+                        URatPoly::from_vec(gen, {{1_q, 2_q, 0_q, 4_q}}), x),
+                    SymEngineException);
+
     // (x**(1/2)+1)**3 + (x+2)**6
     basic = add(pow(add(pow(x, hf), one), i3), pow(add(x, i2), i6));
     gen = pow(x, hf);
@@ -459,6 +610,35 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
     poly1 = from_basic<UIntPolyFlint>(basic, gen);
     poly2 = UIntPolyFlint::from_vec(gen, {{0_z, 0_z, 1_z, 0_z, 0_z, 4_z}});
     REQUIRE(eq(*poly1, *poly2));
+
+    gen = x;
+    poly1 = UIntPolyFlint::from_vec(gen, {{1_z, 2_z, 0_z, 4_z}});
+    auto ipoly = UIntPoly::from_vec(gen, {{1_z, 2_z, 0_z, 4_z}});
+    poly2 = from_basic<UIntPolyFlint>(ipoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPolyFlint>(
+            SymEngine::URatPolyFlint::from_vec(gen, {{1_q, 2_q, 0_q, 4_q}}), x),
+        SymEngineException);
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    auto ppoly
+        = SymEngine::UIntPolyPiranha::from_vec(gen, {{1_z, 2_z, 0_z, 4_z}});
+    poly2 = from_basic<UIntPolyFlint>(ppoly, gen);
+    REQUIRE(eq(*poly1, *poly2));
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPolyFlint>(
+            SymEngine::URatPolyPiranha::from_vec(gen, {{1_q, 2_q, 0_q, 4_q}}),
+            x),
+        SymEngineException);
+#endif
+
+    CHECK_THROWS_AS(
+        from_basic<UIntPolyFlint>(
+            UExprPoly::from_vec(gen, {{one, integer(2), zero, integer(4)}}), x),
+        SymEngineException);
 }
 #endif
 

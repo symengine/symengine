@@ -104,39 +104,64 @@ void StrPrinter::bvisit(const Complex &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const RealDouble &x)
+std::string print_double(double d)
 {
     std::ostringstream s;
     s.precision(std::numeric_limits<double>::digits10);
-    s << x.i;
-    str_ = s.str();
+    s << d;
+    auto str_ = s.str();
     if (str_.find(".") == std::string::npos
         and str_.find("e") == std::string::npos) {
-        s << ".";
-        str_ = s.str();
+        if (std::numeric_limits<double>::digits10 - str_.size() > 0) {
+            str_ += ".0";
+        } else {
+            str_ += ".";
+        }
     }
+    return str_;
+}
+
+void StrPrinter::bvisit(const RealDouble &x)
+{
+    str_ = print_double(x.i);
 }
 
 void StrPrinter::bvisit(const ComplexDouble &x)
 {
-    std::ostringstream s;
-    s.precision(std::numeric_limits<double>::digits10);
-    s << x.i.real();
-    if (s.str().find(".") == std::string::npos
-        and str_.find("e") == std::string::npos) {
-        s << ".";
-    }
+    str_ = print_double(x.i.real());
     if (x.i.imag() < 0) {
-        s << " - " << -x.i.imag();
+        str_ += " - " + print_double(-x.i.imag()) + "*I";
     } else {
-        s << " + " << x.i.imag();
+        str_ += " + " + print_double(x.i.imag()) + "*I";
     }
+}
+
+void StrPrinter::bvisit(const Equality &x)
+{
+    std::ostringstream s;
+    s << apply(x.get_arg1()) << " == " << apply(x.get_arg2());
     str_ = s.str();
-    if (str_.find(".") == str_.find_last_of(".")) {
-        str_ += ".*I";
-    } else {
-        str_ += "*I";
-    }
+}
+
+void StrPrinter::bvisit(const Unequality &x)
+{
+    std::ostringstream s;
+    s << apply(x.get_arg1()) << " != " << apply(x.get_arg2());
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const LessThan &x)
+{
+    std::ostringstream s;
+    s << apply(x.get_arg1()) << " <= " << apply(x.get_arg2());
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const StrictLessThan &x)
+{
+    std::ostringstream s;
+    s << apply(x.get_arg1()) << " < " << apply(x.get_arg2());
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Interval &x)
@@ -181,6 +206,19 @@ void StrPrinter::bvisit(const Or &x)
     std::ostringstream s;
     auto container = x.get_container();
     s << "Or(";
+    s << apply(*container.begin());
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        s << ", " << apply(*it);
+    }
+    s << ")";
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const Xor &x)
+{
+    std::ostringstream s;
+    auto container = x.get_container();
+    s << "Xor(";
     s << apply(*container.begin());
     for (auto it = ++(container.begin()); it != container.end(); ++it) {
         s << ", " << apply(*it);
@@ -243,6 +281,23 @@ void StrPrinter::bvisit(const Union &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complement &x)
+{
+    std::ostringstream s;
+    s << apply(*x.get_universe());
+    s << " \\ " << apply(*x.get_container());
+    str_ = s.str();
+}
+
+void StrPrinter::bvisit(const ImageSet &x)
+{
+    std::ostringstream s;
+    s << "{" << apply(*x.get_expr()) << " | ";
+    s << apply(*x.get_symbol());
+    s << " in " << apply(*x.get_baseset()) << "}";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const UniversalSet &x)
 {
     str_ = "UniversalSet";
@@ -255,13 +310,23 @@ void StrPrinter::bvisit(const FiniteSet &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const ConditionSet &x)
+{
+    std::ostringstream s;
+    s << "{" << apply(*x.get_symbol());
+    s << " | " << apply(x.get_condition()) << "}";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x)
 {
     mpfr_exp_t ex;
     // mpmath.libmp.libmpf.prec_to_dps
-    long digits = std::max(
-        long(1), std::lround(x.i.get_prec() / 3.3219280948873626) - 1);
+    long digits
+        = std::max(long(1), std::lround(static_cast<double>(x.i.get_prec())
+                                        / 3.3219280948873626)
+                                - 1);
     char *c
         = mpfr_get_str(nullptr, &ex, 10, digits, x.i.get_mpfr_t(), MPFR_RNDN);
     std::ostringstream s;
@@ -634,6 +699,7 @@ std::string StrPrinter::apply(const vec_basic &d)
     }
     return o.str();
 }
+
 void StrPrinter::bvisit(const Function &x)
 {
     std::ostringstream o;
@@ -852,6 +918,8 @@ std::vector<std::string> init_str_printer_names()
     names[DIRICHLET_ETA] = "dirichlet_eta";
     names[KRONECKERDELTA] = "kroneckerdelta";
     names[LEVICIVITA] = "levicivita";
+    names[FLOOR] = "floor";
+    names[CEILING] = "ceiling";
     names[ERF] = "erf";
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";
@@ -863,8 +931,54 @@ std::vector<std::string> init_str_printer_names()
     names[ABS] = "abs";
     names[MAX] = "max";
     names[MIN] = "min";
+    names[SIGN] = "sign";
+    names[CONJUGATE] = "conjugate";
     return names;
 }
 
 const std::vector<std::string> StrPrinter::names_ = init_str_printer_names();
+
+void JuliaStrPrinter::_print_pow(std::ostringstream &o,
+                                 const RCP<const Basic> &a,
+                                 const RCP<const Basic> &b)
+{
+    if (eq(*a, *E)) {
+        o << "exp(" << apply(b) << ")";
+    } else if (eq(*b, *rational(1, 2))) {
+        o << "sqrt(" << apply(a) << ")";
+    } else {
+        o << parenthesizeLE(a, PrecedenceEnum::Pow);
+        o << "^";
+        o << parenthesizeLE(b, PrecedenceEnum::Pow);
+    }
+}
+
+void JuliaStrPrinter::bvisit(const Constant &x)
+{
+    if (eq(x, *E)) {
+        str_ = "exp(1)";
+    } else {
+        str_ = x.get_name();
+        std::transform(str_.begin(), str_.end(), str_.begin(), ::tolower);
+    }
+}
+
+void JuliaStrPrinter::bvisit(const NaN &x)
+{
+    std::ostringstream s;
+    s << "NaN";
+    str_ = s.str();
+}
+
+void JuliaStrPrinter::bvisit(const Infty &x)
+{
+    std::ostringstream s;
+    if (x.is_negative_infinity())
+        s << "-Inf";
+    else if (x.is_positive_infinity())
+        s << "Inf";
+    else
+        s << "zoo";
+    str_ = s.str();
+}
 }

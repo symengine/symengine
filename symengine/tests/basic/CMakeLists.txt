@@ -52,6 +52,10 @@ add_executable(test_rational test_rational.cpp)
 target_link_libraries(test_rational symengine catch)
 add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
 
+add_executable(test_relationals test_relationals.cpp)
+target_link_libraries(test_relationals symengine catch)
+add_test(test_relationals ${PROJECT_BINARY_DIR}/test_relationals)
+
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)
 add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
@@ -80,8 +84,25 @@ add_executable(test_nan test_nan.cpp)
 target_link_libraries(test_nan symengine catch)
 add_test(test_nan ${PROJECT_BINARY_DIR}/test_nan)
 
+add_executable(test_solve test_solve.cpp)
+target_link_libraries(test_solve symengine catch)
+add_test(test_solve ${PROJECT_BINARY_DIR}/test_solve)
+
+add_executable(test_as_real_imag test_as_real_imag.cpp)
+target_link_libraries(test_as_real_imag symengine catch)
+add_test(test_as_real_imag ${PROJECT_BINARY_DIR}/test_as_real_imag)
+
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
 	add_executable(test_integer_class test_integer_class.cpp)
 	target_link_libraries(test_integer_class symengine catch)
 	add_test(test_integer_class ${PROJECT_BINARY_DIR}/test_integer_class)
 endif()
+
+add_executable(test_cse test_cse.cpp)
+target_link_libraries(test_cse symengine catch)
+add_test(test_cse ${PROJECT_BINARY_DIR}/test_cse)
+
+
+add_executable(test_count_ops test_count_ops.cpp)
+target_link_libraries(test_count_ops symengine catch)
+add_test(test_count_ops ${PROJECT_BINARY_DIR}/test_count_ops)

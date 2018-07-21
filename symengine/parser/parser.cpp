@@ -79,14 +79,14 @@ enum StateType // modify statetype/data.cc when this enum changes
   ERR_REQ_DEF // ERR_ITEM | REQ_TOKEN | DEF_RED
 };
 struct PI__ // Production Info
-    {
+{
     size_t d_nonTerm; // identification number of this production's
                       // non-terminal
     size_t d_size;    // number of elements in this production
 };
 
 struct SR__ // Shift Reduce info, see its description above
-    {
+{
     union {
         int _field_1_; // initializer, allowing initializations
                        // of the SR s_[] arrays
@@ -478,74 +478,74 @@ void Parser::executeAction(int production) try {
 
         case 1:
 #line 35 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
             res = d_val__.get<Tag__::basic>();
         } break;
 
         case 2:
 #line 43 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = add(d_vsp__[-2].data<Tag__::basic>(),
                                               d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 3:
 #line 46 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = sub(d_vsp__[-2].data<Tag__::basic>(),
                                               d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 4:
 #line 49 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = mul(d_vsp__[-2].data<Tag__::basic>(),
                                               d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 5:
 #line 52 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = div(d_vsp__[-2].data<Tag__::basic>(),
                                               d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 6:
 #line 55 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = pow(d_vsp__[-2].data<Tag__::basic>(),
                                               d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 7:
 #line 58 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = d_vsp__[-1].data<Tag__::basic>();
         } break;
 
         case 8:
 #line 61 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = neg(d_vsp__[0].data<Tag__::basic>());
         } break;
 
         case 9:
 #line 64 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
         } break;
 
         case 10:
 #line 69 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>()
                 = SymEngine::symbol(d_vsp__[0].data<Tag__::string>());
         } break;
 
         case 11:
 #line 74 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>()
                 = SymEngine::integer(SymEngine::integer_class(
                     d_vsp__[0].data<Tag__::string>().c_str()));
@@ -553,14 +553,14 @@ void Parser::executeAction(int production) try {
 
         case 12:
 #line 79 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>()
                 = constants[d_vsp__[0].data<Tag__::string>()];
         } break;
 
         case 13:
 #line 84 "parser.yy"
-            {
+        {
             char *endptr = 0;
             double d = std::strtod(d_vsp__[0].data<Tag__::string>().c_str(),
                                    &endptr);
@@ -594,13 +594,13 @@ void Parser::executeAction(int production) try {
 
         case 14:
 #line 112 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
         } break;
 
         case 15:
 #line 119 "parser.yy"
-            {
+        {
             bool found = false;
             if (d_vsp__[-1].data<Tag__::basic_vec>().size() == 1) {
                 if (single_arg_functions.find(d_vsp__[-3].data<Tag__::string>())
@@ -642,7 +642,7 @@ void Parser::executeAction(int production) try {
 
         case 16:
 #line 149 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic_vec>()
                 = d_vsp__[-2].data<Tag__::basic_vec>();
             d_val__.get<Tag__::basic_vec>().push_back(
@@ -651,7 +651,7 @@ void Parser::executeAction(int production) try {
 
         case 17:
 #line 155 "parser.yy"
-            {
+        {
             d_val__.get<Tag__::basic_vec>() = {d_vsp__[0].data<Tag__::basic>()};
         } break;
     }
@@ -729,7 +729,7 @@ int Parser::lookup(bool recovery)
 // (i.e., parsing terminates)
 void Parser::errorRecovery() try {
     if (d_acceptedTokens__ >= d_requiredTokens__) // only generate an error-
-        {                                         // message if enough tokens
+    {                                             // message if enough tokens
         ++d_nErrors__;                            // were accepted. Otherwise
         error("Syntax error");                    // simply skip input
     }
@@ -769,7 +769,7 @@ void Parser::errorRecovery() try {
             int action = lookup(true);
 
             if (action > 0) // push a new state
-                {
+            {
                 push__(action);
                 popToken__();
 
@@ -797,7 +797,7 @@ void Parser::errorRecovery() try {
         }
     }
 } catch (ErrorRecovery__) // This is: DEFAULT_RECOVERY_MODE
-    {
+{
     ABORT();
 }
 
@@ -841,11 +841,11 @@ int Parser::parse() try {
             int action = lookup(false); // lookup d_token__ in d_state__
 
             if (action > 0) // SHIFT: push a new state
-                {
+            {
                 push__(action);
                 popToken__();      // token processed
             } else if (action < 0) // REDUCE: execute and pop.
-                {
+            {
                 executeAction(-action);
                 // next token is the rule's LHS
                 reduce__(s_productionInfo[-action]);

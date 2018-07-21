@@ -17,6 +17,7 @@ class ComplexBase : public Number
 public:
     virtual RCP<const Number> real_part() const = 0;
     virtual RCP<const Number> imaginary_part() const = 0;
+    bool is_re_zero() const;
 };
 
 //! \return true if 'b' is any of the subclasses of ComplexBase
@@ -62,6 +63,8 @@ public:
     virtual RCP<const Number> real_part() const;
     //! Get the imaginary part of the complex number
     virtual RCP<const Number> imaginary_part() const;
+    //! Get the conjugate of the complex number
+    virtual RCP<const Basic> conjugate() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const
@@ -105,12 +108,6 @@ public:
     virtual bool is_minus_one() const
     {
         return false;
-    }
-    // This is needed while printing inside `mul`.
-    //! \return `true` if `real_`  is zero
-    inline bool is_re_zero() const
-    {
-        return (this->real_ == 0);
     }
 
     /*! Add Complex

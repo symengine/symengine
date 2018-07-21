@@ -476,6 +476,43 @@ private:
     mpq_t m;
 };
 
+class fmpz_poly_factor_wrapper
+{
+private:
+    fmpz_poly_factor_t fac;
+
+public:
+    typedef fmpz_wrapper internal_coef_type;
+
+    fmpz_poly_factor_wrapper()
+    {
+        fmpz_poly_factor_init(fac);
+    }
+    fmpz_poly_factor_wrapper(const fmpz_poly_factor_wrapper &other)
+    {
+        fmpz_poly_factor_init(fac);
+        fmpz_poly_factor_set(fac, other.get_fmpz_poly_factor_t());
+    }
+    fmpz_poly_factor_wrapper &operator=(const fmpz_poly_factor_wrapper &other)
+    {
+        fmpz_poly_factor_set(fac, other.get_fmpz_poly_factor_t());
+        return *this;
+    }
+    ~fmpz_poly_factor_wrapper()
+    {
+        fmpz_poly_factor_clear(fac);
+    }
+
+    const fmpz_poly_factor_t &get_fmpz_poly_factor_t() const
+    {
+        return fac;
+    }
+    fmpz_poly_factor_t &get_fmpz_poly_factor_t()
+    {
+        return fac;
+    }
+};
+
 class fmpz_poly_wrapper
 {
 private:
@@ -523,11 +560,14 @@ public:
         fmpz_poly_swap(poly, *other.get_fmpz_poly_t());
         return *this;
     }
+    void swap_fmpz_poly_t(fmpz_poly_struct &other)
+    {
+        fmpz_poly_swap(poly, &other);
+    }
     ~fmpz_poly_wrapper()
     {
         fmpz_poly_clear(poly);
     }
-
     const fmpz_poly_t *get_fmpz_poly_t() const
     {
         return &poly;
@@ -626,6 +666,17 @@ public:
     {
         return fmpz_poly_divrem(*q.get_fmpz_poly_t(), *r.get_fmpz_poly_t(),
                                 *get_fmpz_poly_t(), *b.get_fmpz_poly_t());
+    }
+    fmpz_poly_factor_wrapper factors() const
+    {
+        fmpz_poly_factor_wrapper r;
+#if __FLINT_RELEASE > 20502
+        fmpz_poly_factor(r.get_fmpz_poly_factor_t(), poly);
+#else
+        throw std::runtime_error(
+            "FLINT's Version must be higher than 2.5.2 to obtain factors");
+#endif
+        return r;
     }
     fmpz_poly_wrapper derivative() const
     {

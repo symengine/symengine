@@ -6,19 +6,31 @@
 
 namespace SymEngine
 {
+// xreplace replaces subtrees of a node in the expression tree
+// with a new subtree
+RCP<const Basic> xreplace(const RCP<const Basic> &x,
+                          const map_basic_basic &subs_dict);
+// subs substitutes expressions similar to xreplace, but keeps
+// the mathematical equivalence for derivatives and subs
+RCP<const Basic> subs(const RCP<const Basic> &x,
+                      const map_basic_basic &subs_dict);
+// port of sympy.physics.mechanics.msubs where f'(x) and f(x)
+// are considered independent
 RCP<const Basic> msubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict);
+// port of sympy's subs where subs inside derivatives are done
 RCP<const Basic> ssubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict);
 
-class SubsVisitor : public BaseVisitor<SubsVisitor>
+class XReplaceVisitor : public BaseVisitor<XReplaceVisitor>
 {
+
 protected:
     RCP<const Basic> result_;
     const map_basic_basic &subs_dict_;
 
 public:
-    SubsVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
+    XReplaceVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
     {
     }
     // TODO : Polynomials, Series, Sets
@@ -99,10 +111,11 @@ public:
     {
         RCP<const Basic> base_new = apply(x.get_base());
         RCP<const Basic> exp_new = apply(x.get_exp());
-        if (base_new == x.get_base() and exp_new == x.get_exp())
+        if (base_new == x.get_base() and exp_new == x.get_exp()) {
             result_ = x.rcp_from_this();
-        else
+        } else {
             result_ = pow(base_new, exp_new);
+        }
     }
 
     void bvisit(const OneArgFunction &x)
@@ -115,7 +128,8 @@ public:
         }
     }
 
-    void bvisit(const TwoArgFunction &x)
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &x)
     {
         RCP<const Basic> a = apply(x.get_arg1());
         RCP<const Basic> b = apply(x.get_arg2());
@@ -143,15 +157,177 @@ public:
         result_ = x.create(v);
     }
 
+    void bvisit(const Contains &x)
+    {
+        RCP<const Basic> a = apply(x.get_expr());
+        auto c = apply(x.get_set());
+        if (not is_a_Set(*c))
+            throw SymEngineException("expected an object of type Set");
+        RCP<const Set> b = rcp_static_cast<const Set>(c);
+        if (a == x.get_expr() and b == x.get_set())
+            result_ = x.rcp_from_this();
+        else
+            result_ = x.create(a, b);
+    }
+
+    void bvisit(const And &x)
+    {
+        set_boolean v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Boolean(*a))
+                throw SymEngineException("expected an object of type Boolean");
+            v.insert(rcp_static_cast<const Boolean>(a));
+        }
+        result_ = x.create(v);
+    }
+
+    void bvisit(const FiniteSet &x)
+    {
+        set_basic v;
+        for (const auto &elem : x.get_container()) {
+            v.insert(apply(elem));
+        }
+        result_ = x.create(v);
+    }
+
+    void bvisit(const ImageSet &x)
+    {
+        RCP<const Basic> s = apply(x.get_symbol());
+        RCP<const Basic> expr = apply(x.get_expr());
+        auto bs_ = apply(x.get_baseset());
+        if (not is_a_Set(*bs_))
+            throw SymEngineException("expected an object of type Set");
+        RCP<const Set> bs = rcp_static_cast<const Set>(bs_);
+        if (s == x.get_symbol() and expr == x.get_expr()
+            and bs == x.get_baseset()) {
+            result_ = x.rcp_from_this();
+        } else {
+            result_ = x.create(s, expr, bs);
+        }
+    }
+
+    void bvisit(const Union &x)
+    {
+        set_set v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Set(*a))
+                throw SymEngineException("expected an object of type Set");
+            v.insert(rcp_static_cast<const Set>(a));
+        }
+        result_ = x.create(v);
+    }
+
+    void bvisit(const Derivative &x)
+    {
+        auto expr = apply(x.get_arg());
+        for (const auto &sym : x.get_symbols()) {
+            auto s = apply(sym);
+            if (not is_a<Symbol>(*s)) {
+                throw SymEngineException("expected an object of type Symbol");
+            }
+            expr = expr->diff(rcp_static_cast<const Symbol>(s));
+        }
+        result_ = expr;
+    }
+
+    void bvisit(const Subs &x)
+    {
+        auto expr = apply(x.get_arg());
+        map_basic_basic new_subs_dict;
+        for (const auto &sym : x.get_dict()) {
+            insert(new_subs_dict, apply(sym.first), apply(sym.second));
+        }
+        result_ = subs(expr, new_subs_dict);
+    }
+
+    RCP<const Basic> apply(const Basic &x)
+    {
+        return apply(x.rcp_from_this());
+    }
+
+    RCP<const Basic> apply(const RCP<const Basic> &x)
+    {
+        auto it = subs_dict_.find(x);
+        if (it != subs_dict_.end()) {
+            result_ = it->second;
+        } else {
+            x->accept(*this);
+        }
+        return result_;
+    }
+};
+
+//! Mappings in the `subs_dict` are applied to the expression tree of `x`
+inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
+                                 const map_basic_basic &subs_dict)
+{
+    XReplaceVisitor s(subs_dict);
+    return s.apply(x);
+}
+
+class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
+{
+public:
+    using XReplaceVisitor::bvisit;
+
+    SubsVisitor(const map_basic_basic &subs_dict_)
+        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
+    {
+    }
+
+    void bvisit(const Pow &x)
+    {
+        RCP<const Basic> base_new = apply(x.get_base());
+        RCP<const Basic> exp_new = apply(x.get_exp());
+        if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
+            and not is_a<Add>(
+                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
+                         .get_exp())) {
+            auto &subs_first
+                = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
+            if (eq(*subs_first.get_base(), *base_new)) {
+                auto newexpo = div(exp_new, subs_first.get_exp());
+                if (is_a_Number(*newexpo) or is_a<Constant>(*newexpo)) {
+                    result_ = pow((*subs_dict_.begin()).second, newexpo);
+                    return;
+                }
+            }
+        }
+        if (base_new == x.get_base() and exp_new == x.get_exp()) {
+            result_ = x.rcp_from_this();
+        } else {
+            result_ = pow(base_new, exp_new);
+        }
+    }
+
     void bvisit(const Derivative &x)
     {
         RCP<const Symbol> s;
         map_basic_basic m, n;
         bool subs;
+
+        for (const auto &p : subs_dict_) {
+            // If the derivative arg is to be replaced in its entirety, allow
+            // it.
+            if (eq(*x.get_arg(), *p.first)) {
+                RCP<const Basic> t = p.second;
+                for (auto &sym : x.get_symbols()) {
+                    if (not is_a<Symbol>(*sym)) {
+                        throw SymEngineException("Error, expected a Symbol.");
+                    }
+                    t = t->diff(rcp_static_cast<const Symbol>(sym));
+                }
+                result_ = t;
+                return;
+            }
+        }
         for (const auto &p : subs_dict_) {
             subs = true;
             if (eq(*x.get_arg()->subs({{p.first, p.second}}), *x.get_arg()))
                 continue;
+
             // If p.first and p.second are symbols and arg_ is
             // independent of p.second, p.first can be replaced
             if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)
@@ -228,31 +404,15 @@ public:
             result_ = presub->subs(m);
         }
     }
-
-    RCP<const Basic> apply(const Basic &x)
-    {
-        return apply(x.rcp_from_this());
-    }
-
-    RCP<const Basic> apply(const RCP<const Basic> &x)
-    {
-        auto it = subs_dict_.find(x);
-        if (it != subs_dict_.end()) {
-            result_ = it->second;
-        } else {
-            x->accept(*this);
-        }
-        return result_;
-    }
 };
 
-class MSubsVisitor : public BaseVisitor<MSubsVisitor, SubsVisitor>
+class MSubsVisitor : public BaseVisitor<MSubsVisitor, XReplaceVisitor>
 {
 public:
-    using SubsVisitor::bvisit;
+    using XReplaceVisitor::bvisit;
 
     MSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<MSubsVisitor, SubsVisitor>(d)
+        : BaseVisitor<MSubsVisitor, XReplaceVisitor>(d)
     {
     }
 
@@ -274,7 +434,7 @@ public:
 class SSubsVisitor : public BaseVisitor<SSubsVisitor, SubsVisitor>
 {
 public:
-    using SubsVisitor::bvisit;
+    using XReplaceVisitor::bvisit;
 
     SSubsVisitor(const map_basic_basic &d)
         : BaseVisitor<SSubsVisitor, SubsVisitor>(d)
@@ -303,14 +463,6 @@ public:
     }
 };
 
-//! Mappings in the `subs_dict` are applied to the expression tree of `x`
-inline RCP<const Basic> subs(const RCP<const Basic> &x,
-                             const map_basic_basic &subs_dict)
-{
-    SubsVisitor s(subs_dict);
-    return s.apply(x);
-}
-
 //! Subs which treat f(t) and Derivative(f(t), t) as separate variables
 inline RCP<const Basic> msubs(const RCP<const Basic> &x,
                               const map_basic_basic &subs_dict)
@@ -325,6 +477,13 @@ inline RCP<const Basic> ssubs(const RCP<const Basic> &x,
 {
     SSubsVisitor s(subs_dict);
     return s.apply(x);
+}
+
+inline RCP<const Basic> subs(const RCP<const Basic> &x,
+                             const map_basic_basic &subs_dict)
+{
+    SubsVisitor b(subs_dict);
+    return b.apply(x);
 }
 
 } // namespace SymEngine

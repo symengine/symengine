@@ -4,7 +4,7 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
 set(SYMENGINE_MAJOR_VERSION 0)
-set(SYMENGINE_MINOR_VERSION 2)
+set(SYMENGINE_MINOR_VERSION 3)
 set(SYMENGINE_PATCH_VERSION 0)
 set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
@@ -24,22 +24,47 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    if (BUILD_FOR_DISTRIBUTION)
+        string(REPLACE "-march=native" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    endif()
+endif()
+
 #Boost.multiprecision build segfaults if -O3 optimization is on
 #which it is by default for cmake Release mode. Remove -O3 from flags.
 if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
-    if (NOT BUILD_FOR_DISTRIBUTION)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+# Enable C++11 support in all compilers. SymEngine will not compile unless
+# the C++11 support is enabled.
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel")
+    set(CXX11_OPTIONS "-std=c++11")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    # pgcpp
+    set(CXX11_OPTIONS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
+endif ()
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CXX11_OPTIONS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CXX11_OPTIONS}")
+
+# Add proper -fPIC and MINGW handling
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if (NOT MINGW)
+        set(common "-fPIC")
+    else()
+        set(common "-D_hypot=hypot -Doff64_t=_off64_t")
+        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+            set(common "${common} -DMS_WIN64")
+        endif()
     endif()
-endif()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common}")
+endif ()
+if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+    set(common "-fPIC")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common}")
+endif ()
 
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
@@ -82,6 +107,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
     set(HAVE_DEFAULT_CONSTRUCTORS no)
     set(HAVE_SYMENGINE_RESERVE no)
 endif()
+
+try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkstdtostring.cpp"
+	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}")
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
@@ -141,7 +169,7 @@ endif()
 # GMP
 if (HAVE_SYMENGINE_GMP)
     find_package(GMP REQUIRED)
-    include_directories(${GMP_INCLUDE_DIRS})
+    include_directories(SYSTEM ${GMP_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${GMP_TARGETS})
     set(PKGS ${PKGS} "GMP")
 
@@ -195,7 +223,7 @@ set(WITH_ECM no
 
 if (WITH_ECM)
     find_package(ECM REQUIRED)
-    include_directories(${ECM_INCLUDE_DIRS})
+    include_directories(SYSTEM ${ECM_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ECM_TARGETS})
     set(HAVE_SYMENGINE_ECM yes)
     set(PKGS ${PKGS} "ECM")
@@ -207,7 +235,7 @@ set(WITH_PRIMESIEVE no
 
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
-    include_directories(${PRIMESIEVE_INCLUDE_DIRS})
+    include_directories(SYSTEM ${PRIMESIEVE_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
     set(PKGS ${PKGS} "PRIMESIEVE")
@@ -252,32 +280,32 @@ endif()
 
 if (WITH_FLINT)
     find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
+    include_directories(SYSTEM ${FLINT_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${FLINT_TARGETS})
     set(HAVE_SYMENGINE_FLINT True)
     set(PKGS ${PKGS} "FLINT")
 
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+    include_directories(SYSTEM ${FLINT_INCLUDE_DIRS}/flint)
 
     set(WITH_MPFR yes)
 endif()
 
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
+    include_directories(SYSTEM ${FLINT_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${FLINT_TARGETS})
     set(PKGS ${PKGS} "FLINT")
 
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+    include_directories(SYSTEM ${FLINT_INCLUDE_DIRS}/flint)
 
     set(WITH_FLINT yes)
     set(HAVE_SYMENGINE_FLINT True)
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
-    include_directories(${ARB_INCLUDE_DIRS})
+    include_directories(SYSTEM ${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_TARGETS})
     set(HAVE_SYMENGINE_ARB True)
     set(PKGS ${PKGS} "ARB")
@@ -285,7 +313,7 @@ endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
-    include_directories(${MPC_INCLUDE_DIRS})
+    include_directories(SYSTEM ${MPC_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPC_TARGETS})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
@@ -303,7 +331,7 @@ if (WITH_PIRANHA)
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(PIRANHA REQUIRED)
-    include_directories(${PIRANHA_INCLUDE_DIRS})
+    include_directories(SYSTEM ${PIRANHA_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_PIRANHA yes)
     set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
@@ -312,7 +340,7 @@ endif()
 
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
-    include_directories(${PTHREAD_INCLUDE_DIRS})
+    include_directories(SYSTEM ${PTHREAD_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${PTHREAD_TARGETS})
     set(HAVE_SYMENGINE_PTHREAD yes)
     set(PKGS ${PKGS} "PTHREAD")
@@ -320,7 +348,7 @@ endif()
 
 if (WITH_MPFR)
     find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
+    include_directories(SYSTEM ${MPFR_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPFR_TARGETS})
     set(HAVE_SYMENGINE_MPFR True)
     set(PKGS ${PKGS} "MPFR")
@@ -337,7 +365,7 @@ if (WITH_PIRANHA)
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(PIRANHA REQUIRED)
-    include_directories(${PIRANHA_INCLUDE_DIRS})
+    include_directories(SYSTEM ${PIRANHA_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_PIRANHA yes)
     set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
@@ -349,7 +377,7 @@ set(WITH_LLVM no
     CACHE BOOL "Build with LLVM")
 
 if (WITH_LLVM)
-    set(SYMENGINE_LLVM_COMPONENTS core mcjit native)
+    set(SYMENGINE_LLVM_COMPONENTS asmparser core executionengine instcombine mcjit native nativecodegen scalaropts vectorize support transformutils)
     find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
     set(LLVM_MINIMUM_REQUIRED_VERSION "3.8")
     if (LLVM_PACKAGE_VERSION LESS ${LLVM_MINIMUM_REQUIRED_VERSION})
@@ -363,11 +391,31 @@ if (WITH_LLVM)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
+
+    set(SYMENGINE_LLVM_SHARED_DEFAULT False)
+    foreach(LLVM_LIB ${llvm_libs})
+        get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
+        if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
+            if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES ".a$|.lib$")
+                set(SYMENGINE_LLVM_SHARED_DEFAULT True)
+            endif()
+        endif()
+    endforeach()
+    set(SYMENGINE_LLVM_SHARED ${SYMENGINE_LLVM_SHARED_DEFAULT}
+        CACHE INTERNAL "Link to llvm in SymEngineConfig.cmake")
     set(LIBS ${LIBS} ${llvm_libs})
-    include_directories(${LLVM_INCLUDE_DIRS})
+    include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_LLVM yes)
     set(PKGS ${PKGS} "LLVM")
 endif()
+
+# TODO: Detect this automatically
+set(SYMENGINE_LINK_LLVM_STATIC no
+    CACHE BOOL "If set to yes, make LLVM a private dependency.")
+
+if (SYMENGINE_LINK_LLVM_STATIC)
+    unset(SYMENGINE_LLVM_COMPONENTS)
+endif ()
 
 # BENCHMARKS
 set(BUILD_BENCHMARKS yes
@@ -387,7 +435,7 @@ endif()
 
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-    include_directories(${Boost_INCLUDE_DIRS})
+    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
 endif()
@@ -399,14 +447,14 @@ set(WITH_BFD no
 if (WITH_BFD)
     find_package(BFD REQUIRED)
     find_package(LINKH REQUIRED)
-    include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
+    include_directories(SYSTEM ${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${BFD_TARGETS})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
     find_package(EXECINFO REQUIRED)
-    include_directories(${EXECINFO_INCLUDE_DIRS})
+    include_directories(SYSTEM ${EXECINFO_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${EXECINFO_TARGETS})
     set(PKGS ${PKGS} "BFD" "LINKH" "EXECINFO")
 endif()
@@ -635,6 +683,7 @@ message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")
 message("HAVE_SYMENGINE_NOEXCEPT: ${HAVE_SYMENGINE_NOEXCEPT}")
 message("HAVE_SYMENGINE_IS_CONSTRUCTIBLE: ${HAVE_SYMENGINE_IS_CONSTRUCTIBLE}")
 message("HAVE_SYMENGINE_RESERVE: ${HAVE_SYMENGINE_RESERVE}")
+message("HAVE_SYMENGINE_STD_TO_STRING: ${HAVE_SYMENGINE_STD_TO_STRING}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")

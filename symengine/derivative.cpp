@@ -692,7 +692,7 @@ public:
     RCP<const Basic> CLASS::diff(const RCP<const Symbol> &x) const             \
     {                                                                          \
         return DiffImplementation::diff(*this, x);                             \
-    };
+    }
 
 #define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
 #include "symengine/type_codes.inc"

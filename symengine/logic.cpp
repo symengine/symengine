@@ -3,6 +3,11 @@
 namespace SymEngine
 {
 
+RCP<const Boolean> Boolean::logical_not() const
+{
+    return make_rcp<const Not>(this->rcp_from_this_cast<const Boolean>());
+}
+
 BooleanAtom::BooleanAtom(bool b) : b_{b}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -40,6 +45,11 @@ int BooleanAtom::compare(const Basic &o) const
     } else {
         return (ob) ? -1 : 0;
     }
+}
+
+RCP<const Boolean> BooleanAtom::logical_not() const
+{
+    return boolean(not this->get_val());
 }
 
 RCP<const BooleanAtom> boolTrue = make_rcp<BooleanAtom>(true);
@@ -94,10 +104,16 @@ int Contains::compare(const Basic &o) const
     return unified_compare(get_set(), c.get_set());
 }
 
+RCP<const Basic> Contains::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Set> &rhs) const
+{
+    return contains(lhs, rhs);
+}
+
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set)
 {
-    if (is_a_Number(*expr)) {
+    if (is_a_Number(*expr) or is_a_Set(*expr)) {
         return set->contains(expr);
     } else {
         return make_rcp<Contains>(expr, set);
@@ -169,8 +185,9 @@ vec_basic And::get_args() const
 
 bool And::__eq__(const Basic &o) const
 {
-    return is_a<And>(o) and unified_eq(container_, down_cast<const And &>(o)
-                                                       .get_container());
+    return is_a<And>(o)
+           and unified_eq(container_,
+                          down_cast<const And &>(o).get_container());
 }
 
 int And::compare(const Basic &o) const
@@ -186,7 +203,7 @@ bool And::is_canonical(const set_boolean &container_)
         for (auto &a : container_) {
             if (is_a<BooleanAtom>(*a) or is_a<And>(*a))
                 return false;
-            if (container_.find(logical_not(a)) != container_.end())
+            if (container_.find(SymEngine::logical_not(a)) != container_.end())
                 return false;
         }
         return true;
@@ -197,6 +214,21 @@ bool And::is_canonical(const set_boolean &container_)
 const set_boolean &And::get_container() const
 {
     return container_;
+}
+
+RCP<const Basic> And::create(const set_boolean &a) const
+{
+    return logical_and(a);
+}
+
+RCP<const Boolean> And::logical_not() const
+{
+    auto container = this->get_container();
+    set_boolean cont;
+    for (auto &a : container) {
+        cont.insert(SymEngine::logical_not(a));
+    }
+    return make_rcp<const Or>(cont);
 }
 
 Or::Or(const set_boolean &s) : container_{s}
@@ -238,7 +270,7 @@ bool Or::is_canonical(const set_boolean &container_)
         for (auto &a : container_) {
             if (is_a<BooleanAtom>(*a) or is_a<Or>(*a))
                 return false;
-            if (container_.find(logical_not(a)) != container_.end())
+            if (container_.find(SymEngine::logical_not(a)) != container_.end())
                 return false;
         }
         return true;
@@ -249,6 +281,16 @@ bool Or::is_canonical(const set_boolean &container_)
 const set_boolean &Or::get_container() const
 {
     return container_;
+}
+
+RCP<const Boolean> Or::logical_not() const
+{
+    auto container = this->get_container();
+    set_boolean cont;
+    for (auto &a : container) {
+        cont.insert(SymEngine::logical_not(a));
+    }
+    return make_rcp<const And>(cont);
 }
 
 Not::Not(const RCP<const Boolean> &in) : arg_{in}
@@ -294,6 +336,11 @@ RCP<const Boolean> Not::get_arg() const
     return arg_;
 }
 
+RCP<const Boolean> Not::logical_not() const
+{
+    return this->get_arg();
+}
+
 Xor::Xor(const vec_boolean &s) : container_{s}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -316,8 +363,9 @@ vec_basic Xor::get_args() const
 
 bool Xor::__eq__(const Basic &o) const
 {
-    return is_a<Xor>(o) and unified_eq(container_, down_cast<const Xor &>(o)
-                                                       .get_container());
+    return is_a<Xor>(o)
+           and unified_eq(container_,
+                          down_cast<const Xor &>(o).get_container());
 }
 
 int Xor::compare(const Basic &o) const
@@ -338,7 +386,7 @@ bool Xor::is_canonical(const vec_boolean &container_)
             if (args.find(a) != args.end()) {
                 return false;
             }
-            if (args.find(logical_not(a)) != args.end()) {
+            if (args.find(SymEngine::logical_not(a)) != args.end()) {
                 return false;
             }
             args.insert(a);
@@ -383,6 +431,63 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
         if (args.find(logical_not(a)) != args.end())
             return boolean(op_x_notx);
     }
+    if (not op_x_notx) {
+        for (auto it = args.begin(); it != args.end(); it++) {
+            if (is_a<Contains>(**it)
+                and is_a<Symbol>(*down_cast<const Contains &>(**it).get_expr())
+                and is_a<FiniteSet>(
+                        *down_cast<const Contains &>(**it).get_set())) {
+                auto sym = down_cast<const Contains &>(**it).get_expr();
+                // iterate through args and check for the condition that
+                // defines the domain of sym.
+                // Simplify if that set is a FiniteSet.
+                set_basic present;
+                auto fset = down_cast<const FiniteSet &>(
+                                *down_cast<const Contains &>(**it).get_set())
+                                .get_container();
+                // If there exists atleast one number/constant, then only we can
+                // simplify.
+                bool check = false;
+                for (const auto &elem : fset) {
+                    if (is_a_Number(*elem) or is_a<Constant>(*elem)) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (!check)
+                    break;
+                auto restCont = args;
+                restCont.erase(*it);
+                auto restCond = logical_and(restCont);
+                map_basic_basic d;
+                bool symexists = false;
+                for (const auto &fselement : fset) {
+                    d[sym] = fselement;
+                    auto contain = restCond->subs(d);
+                    if (eq(*contain, *boolean(true))) {
+                        present.insert(fselement);
+                    } else if (not eq(*contain, *boolean(false))) {
+                        present.insert(fselement);
+                        symexists = true;
+                    }
+                    d.clear();
+                }
+                if (not symexists) {
+                    // if there are no symbols, then this reduces to a
+                    // Contains(sym,finiteset())
+                    return finiteset(present)->contains(sym);
+                } else if (present.size() != fset.size()) {
+                    restCond = logical_and(
+                        {finiteset(present)->contains(sym), restCond});
+                    return restCond;
+                } else {
+                    // if present is same as fset, then return object of type
+                    // `And`.
+                    break;
+                }
+            }
+        }
+    }
     if (args.size() == 1)
         return *(args.begin());
     else if (args.size() == 0)
@@ -392,29 +497,7 @@ RCP<const Boolean> and_or(const set_boolean &s, const bool &op_x_notx)
 
 RCP<const Boolean> logical_not(const RCP<const Boolean> &s)
 {
-    if (is_a<BooleanAtom>(*s)) {
-        const BooleanAtom &a = down_cast<const BooleanAtom &>(*s);
-        return boolean(not a.get_val());
-    } else if (is_a<Not>(*s)) {
-        const Not &a = down_cast<const Not &>(*s);
-        return a.get_arg();
-    } else if (is_a<Or>(*s)) {
-        auto container = down_cast<const Or &>(*s).get_container();
-        set_boolean cont;
-        for (auto &a : container) {
-            cont.insert(logical_not(a));
-        }
-        return make_rcp<const And>(cont);
-    } else if (is_a<And>(*s)) {
-        auto container = down_cast<const And &>(*s).get_container();
-        set_boolean cont;
-        for (auto &a : container) {
-            cont.insert(logical_not(a));
-        }
-        return make_rcp<const Or>(cont);
-    } else {
-        return make_rcp<const Not>(s);
-    }
+    return s->logical_not();
 }
 
 RCP<const Boolean> logical_xor(const vec_boolean &s)
@@ -476,6 +559,183 @@ RCP<const Boolean> logical_xor(const vec_boolean &s)
                 make_rcp<const Xor>(get_vec_from_set(args)));
         }
     }
+}
+
+Relational::Relational(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : TwoArgBasic<Boolean>(lhs, rhs)
+{
+}
+
+inline bool Relational::is_canonical(const RCP<const Basic> &lhs,
+                                     const RCP<const Basic> &rhs) const
+{
+    if (eq(*lhs, *rhs))
+        return false;
+    if (is_a_Number(*lhs) and is_a_Number(*rhs))
+        return false;
+    if (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs))
+        return false;
+    return true;
+}
+
+Equality::Equality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> Equality::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Basic> &rhs) const
+{
+    return Eq(lhs, rhs);
+}
+
+RCP<const Boolean> Equality::logical_not() const
+{
+    return make_rcp<const Unequality>(get_arg1(), get_arg2());
+}
+
+RCP<const Boolean> Eq(const RCP<const Basic> &lhs)
+{
+    return Eq(lhs, zero);
+}
+
+RCP<const Boolean> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        return boolean(false);
+    bool b = eq(*lhs, *rhs);
+    if (b) {
+        return boolean(true);
+    } else {
+        if ((is_a_Number(*lhs) and is_a_Number(*rhs))
+            or (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs)))
+            return boolean(false);
+        if (lhs->__cmp__(*rhs) == 1)
+            return make_rcp<const Equality>(rhs, lhs);
+        return make_rcp<Equality>(lhs, rhs);
+    }
+}
+
+Unequality::Unequality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> Unequality::create(const RCP<const Basic> &lhs,
+                                    const RCP<const Basic> &rhs) const
+{
+    return Ne(lhs, rhs);
+}
+
+RCP<const Boolean> Unequality::logical_not() const
+{
+    return make_rcp<const Equality>(get_arg1(), get_arg2());
+}
+
+RCP<const Boolean> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    RCP<const Basic> r = Eq(lhs, rhs);
+    if (is_a<BooleanAtom>(*r)) {
+        return logical_not(rcp_static_cast<const BooleanAtom>(r));
+    }
+    if (lhs->__cmp__(*rhs) == 1)
+        return make_rcp<const Unequality>(rhs, lhs);
+    return make_rcp<Unequality>(lhs, rhs);
+}
+
+LessThan::LessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> LessThan::create(const RCP<const Basic> &lhs,
+                                  const RCP<const Basic> &rhs) const
+{
+    return Le(lhs, rhs);
+}
+
+RCP<const Boolean> LessThan::logical_not() const
+{
+    return make_rcp<const StrictLessThan>(get_arg2(), get_arg1());
+}
+
+RCP<const Boolean> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
+        throw SymEngineException("Invalid comparison of complex numbers.");
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        throw SymEngineException("Invalid NaN comparison.");
+    if (eq(*lhs, *ComplexInf) or eq(*rhs, *ComplexInf))
+        throw SymEngineException("Invalid comparison of complex zoo.");
+    if (is_a<BooleanAtom>(*lhs) or is_a<BooleanAtom>(*rhs))
+        throw SymEngineException("Invalid comparison of Boolean objects.");
+    if (eq(*lhs, *rhs))
+        return boolean(true);
+    if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
+        RCP<const Number> s = down_cast<const Number &>(*lhs).sub(
+            down_cast<const Number &>(*rhs));
+        if (s->is_negative())
+            return boolean(true);
+        return boolean(false);
+    }
+    return make_rcp<const LessThan>(lhs, rhs);
+}
+
+RCP<const Boolean> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    return Le(rhs, lhs);
+}
+
+StrictLessThan::StrictLessThan(const RCP<const Basic> &lhs,
+                               const RCP<const Basic> &rhs)
+    : Relational(lhs, rhs)
+{
+    SYMENGINE_ASSIGN_TYPEID();
+    SYMENGINE_ASSERT(is_canonical(lhs, rhs));
+}
+
+RCP<const Basic> StrictLessThan::create(const RCP<const Basic> &lhs,
+                                        const RCP<const Basic> &rhs) const
+{
+    return Lt(lhs, rhs);
+}
+
+RCP<const Boolean> StrictLessThan::logical_not() const
+{
+    return make_rcp<const LessThan>(get_arg2(), get_arg1());
+}
+
+RCP<const Boolean> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    if (is_a_Complex(*lhs) or is_a_Complex(*rhs))
+        throw SymEngineException("Invalid comparison of complex numbers.");
+    if (is_a<NaN>(*lhs) or is_a<NaN>(*rhs))
+        throw SymEngineException("Invalid NaN comparison.");
+    if (eq(*lhs, *ComplexInf) or eq(*rhs, *ComplexInf))
+        throw SymEngineException("Invalid comparison of complex zoo.");
+    if (is_a<BooleanAtom>(*lhs) or is_a<BooleanAtom>(*rhs))
+        throw SymEngineException("Invalid comparison of Boolean objects.");
+    if (eq(*lhs, *rhs))
+        return boolean(false);
+    if (is_a_Number(*lhs) and is_a_Number(*rhs)) {
+        RCP<const Number> s = down_cast<const Number &>(*lhs).sub(
+            down_cast<const Number &>(*rhs));
+        if (s->is_negative())
+            return boolean(true);
+        return boolean(false);
+    }
+    return make_rcp<const StrictLessThan>(lhs, rhs);
+}
+
+RCP<const Boolean> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
+{
+    return Lt(rhs, lhs);
 }
 
 RCP<const Boolean> logical_and(const set_boolean &s)

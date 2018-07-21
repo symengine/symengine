@@ -5,6 +5,14 @@
 namespace SymEngine
 {
 
+RCP<const Basic> Number::conjugate() const
+{
+    if (not is_complex()) {
+        return this->rcp_from_this();
+    }
+    throw NotImplementedError("Not Implemented.");
+}
+
 RCP<const Number> Number::sub(const Number &other) const
 {
     return add(*other.mul(*integer(-1)));

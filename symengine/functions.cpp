@@ -15,6 +15,10 @@ RCP<const Basic> sqrt(RCP<const Basic> &arg)
 {
     return pow(arg, div(one, i2));
 }
+RCP<const Basic> cbrt(RCP<const Basic> &arg)
+{
+    return pow(arg, div(one, i3));
+}
 
 extern RCP<const Basic> sq3;
 extern RCP<const Basic> sq2;
@@ -42,13 +46,124 @@ extern umap_basic_basic inverse_cst;
 
 extern umap_basic_basic inverse_tct;
 
+Conjugate::Conjugate(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Conjugate::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        if (eq(*arg, *ComplexInf)) {
+            return true;
+        }
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Mul>(*arg)) {
+        return false;
+    }
+    if (is_a<Pow>(*arg)) {
+        if (is_a<Integer>(*down_cast<const Pow &>(*arg).get_exp())) {
+            return false;
+        }
+    }
+    // OneArgFunction classes
+    if (is_a<Sign>(*arg) or is_a<Conjugate>(*arg) or is_a<Erf>(*arg)
+        or is_a<Erfc>(*arg) or is_a<Gamma>(*arg) or is_a<LogGamma>(*arg)
+        or is_a<Abs>(*arg)) {
+        return false;
+    }
+    if (is_a<Sin>(*arg) or is_a<Cos>(*arg) or is_a<Tan>(*arg) or is_a<Cot>(*arg)
+        or is_a<Sec>(*arg) or is_a<Csc>(*arg)) {
+        return false;
+    }
+    if (is_a<Sinh>(*arg) or is_a<Cosh>(*arg) or is_a<Tanh>(*arg)
+        or is_a<Coth>(*arg) or is_a<Sech>(*arg) or is_a<Csch>(*arg)) {
+        return false;
+    }
+    // TwoArgFunction classes
+    if (is_a<KroneckerDelta>(*arg) or is_a<ATan2>(*arg)
+        or is_a<LowerGamma>(*arg) or is_a<UpperGamma>(*arg)
+        or is_a<Beta>(*arg)) {
+        return false;
+    }
+    // MultiArgFunction class
+    if (is_a<LeviCivita>(*arg)) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Conjugate::create(const RCP<const Basic> &arg) const
+{
+    return conjugate(arg);
+}
+
+RCP<const Basic> conjugate(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        return down_cast<const Number &>(*arg).conjugate();
+    }
+    if (is_a<Constant>(*arg) or is_a<Abs>(*arg) or is_a<KroneckerDelta>(*arg)
+        or is_a<LeviCivita>(*arg)) {
+        return arg;
+    }
+    if (is_a<Mul>(*arg)) {
+        const map_basic_basic &dict = down_cast<const Mul &>(*arg).get_dict();
+        map_basic_basic new_dict;
+        RCP<const Number> coef = rcp_static_cast<const Number>(
+            conjugate(down_cast<const Mul &>(*arg).get_coef()));
+        for (const auto &p : dict) {
+            if (is_a<Integer>(*p.second)) {
+                Mul::dict_add_term_new(outArg(coef), new_dict, p.second,
+                                       conjugate(p.first));
+            } else {
+                Mul::dict_add_term_new(
+                    outArg(coef), new_dict, one,
+                    conjugate(Mul::from_dict(one, {{p.first, p.second}})));
+            }
+        }
+        return Mul::from_dict(coef, std::move(new_dict));
+    }
+    if (is_a<Pow>(*arg)) {
+        RCP<const Basic> base = down_cast<const Pow &>(*arg).get_base();
+        RCP<const Basic> exp = down_cast<const Pow &>(*arg).get_exp();
+        if (is_a<Integer>(*exp)) {
+            return pow(conjugate(base), exp);
+        }
+    }
+    if (is_a<Conjugate>(*arg)) {
+        return down_cast<const Conjugate &>(*arg).get_arg();
+    }
+    if (is_a<Sign>(*arg) or is_a<Erf>(*arg) or is_a<Erfc>(*arg)
+        or is_a<Gamma>(*arg) or is_a<LogGamma>(*arg) or is_a<Sin>(*arg)
+        or is_a<Cos>(*arg) or is_a<Tan>(*arg) or is_a<Cot>(*arg)
+        or is_a<Sec>(*arg) or is_a<Csc>(*arg) or is_a<Sinh>(*arg)
+        or is_a<Cosh>(*arg) or is_a<Tanh>(*arg) or is_a<Coth>(*arg)
+        or is_a<Sech>(*arg) or is_a<Csch>(*arg)) {
+        const OneArgFunction &func = down_cast<const OneArgFunction &>(*arg);
+        return func.create(conjugate(func.get_arg()));
+    }
+    if (is_a<ATan2>(*arg) or is_a<LowerGamma>(*arg) or is_a<UpperGamma>(*arg)
+        or is_a<Beta>(*arg)) {
+        const TwoArgFunction &func = down_cast<const TwoArgFunction &>(*arg);
+        return func.create(conjugate(func.get_arg1()),
+                           conjugate(func.get_arg2()));
+    }
+    return make_rcp<const Conjugate>(arg);
+}
+
 bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
                   const Ptr<RCP<const Basic>> &x)
 {
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.get_coef();
-        int size = s.get_dict().size();
+        long unsigned size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
@@ -238,8 +353,9 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
         RCP<const Number> t = mulnum(n, integer(12));
         sign = 1;
         if (is_a<Integer>(*t)) {
-            int m = mod_f(down_cast<const Integer &>(*t), *integer(12 * period))
-                        ->as_int();
+            int m = numeric_cast<int>(
+                mod_f(down_cast<const Integer &>(*t), *integer(12 * period))
+                    ->as_int());
             if (eq(*r, *zero)) {
                 index = m;
                 *rarg = zero;
@@ -256,7 +372,8 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 
         rational_class m;
         if (is_a<Integer>(*n)) {
-            m = down_cast<const Integer &>(*n).as_integer_class();
+            // 2*pi periodic => f(r + pi * n) = f(r - pi * n)
+            m = mp_abs(down_cast<const Integer &>(*n).as_integer_class());
             m /= period;
         } else {
             SYMENGINE_ASSERT(is_a<Rational>(*n));
@@ -326,6 +443,260 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
         *index = (it->second);
         return true;
     }
+}
+
+Sign::Sign(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Sign::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        if (eq(*arg, *ComplexInf)) {
+            return true;
+        }
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Sign>(*arg)) {
+        return false;
+    }
+    if (is_a<Mul>(*arg)) {
+        if (neq(*down_cast<const Mul &>(*arg).get_coef(), *one)
+            and neq(*down_cast<const Mul &>(*arg).get_coef(), *minus_one)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Sign::create(const RCP<const Basic> &arg) const
+{
+    return sign(arg);
+}
+
+RCP<const Basic> sign(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (is_a<NaN>(*arg)) {
+            return Nan;
+        }
+        if (down_cast<const Number &>(*arg).is_zero()) {
+            return zero;
+        }
+        if (down_cast<const Number &>(*arg).is_positive()) {
+            return one;
+        }
+        if (down_cast<const Number &>(*arg).is_negative()) {
+            return minus_one;
+        }
+        if (is_a_Complex(*arg)
+            and down_cast<const ComplexBase &>(*arg).is_re_zero()) {
+            RCP<const Number> r
+                = down_cast<const ComplexBase &>(*arg).imaginary_part();
+            if (down_cast<const Number &>(*r).is_positive()) {
+                return I;
+            }
+            if (down_cast<const Number &>(*r).is_negative()) {
+                return mul(minus_one, I);
+            }
+        }
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi) or eq(*arg, *E) or eq(*arg, *EulerGamma)
+            or eq(*arg, *Catalan) or eq(*arg, *GoldenRatio))
+            return one;
+    }
+    if (is_a<Sign>(*arg)) {
+        return arg;
+    }
+    if (is_a<Mul>(*arg)) {
+        RCP<const Basic> s = sign(down_cast<const Mul &>(*arg).get_coef());
+        map_basic_basic dict = down_cast<const Mul &>(*arg).get_dict();
+        return mul(s,
+                   make_rcp<const Sign>(Mul::from_dict(one, std::move(dict))));
+    }
+    return make_rcp<const Sign>(arg);
+}
+
+Floor::Floor(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Floor::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Floor>(*arg)) {
+        return false;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        return false;
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        if (neq(*zero, *s) and is_a<Integer>(*s)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Floor::create(const RCP<const Basic> &arg) const
+{
+    return floor(arg);
+}
+
+RCP<const Basic> floor(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (down_cast<const Number &>(*arg).is_exact()) {
+            if (is_a<Rational>(*arg)) {
+                const Rational &s = down_cast<const Rational &>(*arg);
+                integer_class quotient;
+                mp_fdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
+                          SymEngine::get_den(s.as_rational_class()));
+                return integer(std::move(quotient));
+            }
+            return arg;
+        }
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        return _arg->get_eval().floor(*_arg);
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi)) {
+            return integer(3);
+        }
+        if (eq(*arg, *E)) {
+            return integer(2);
+        }
+        if (eq(*arg, *GoldenRatio)) {
+            return integer(1);
+        }
+        if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
+            return integer(0);
+        }
+    }
+    if (is_a<Floor>(*arg)) {
+        return arg;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return arg;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        throw SymEngineException(
+            "Boolean objects not allowed in this context.");
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
+        if (is_a<Integer>(*s)) {
+            return add(
+                s, make_rcp<const Floor>(Add::from_dict(zero, std::move(d))));
+        }
+    }
+    return make_rcp<const Floor>(arg);
+}
+
+Ceiling::Ceiling(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Ceiling::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Floor>(*arg)) {
+        return false;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        return false;
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        if (neq(*zero, *s) and is_a<Integer>(*s)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Ceiling::create(const RCP<const Basic> &arg) const
+{
+    return ceiling(arg);
+}
+
+RCP<const Basic> ceiling(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (down_cast<const Number &>(*arg).is_exact()) {
+            if (is_a<Rational>(*arg)) {
+                const Rational &s = down_cast<const Rational &>(*arg);
+                integer_class quotient;
+                mp_cdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
+                          SymEngine::get_den(s.as_rational_class()));
+                return integer(std::move(quotient));
+            }
+            return arg;
+        }
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        return _arg->get_eval().ceiling(*_arg);
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi)) {
+            return integer(4);
+        }
+        if (eq(*arg, *E)) {
+            return integer(3);
+        }
+        if (eq(*arg, *GoldenRatio)) {
+            return integer(2);
+        }
+        if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
+            return integer(1);
+        }
+    }
+    if (is_a<Floor>(*arg)) {
+        return arg;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return arg;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        throw SymEngineException(
+            "Boolean objects not allowed in this context.");
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
+        if (is_a<Integer>(*s)) {
+            return add(
+                s, make_rcp<const Ceiling>(Add::from_dict(zero, std::move(d))));
+        }
+    }
+    return make_rcp<const Ceiling>(arg);
 }
 
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)
@@ -815,7 +1186,7 @@ RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg)
 }
 
 /* ---------------------------- */
-ASin::ASin(const RCP<const Basic> &arg) : TrigFunction(arg)
+ASin::ASin(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -857,7 +1228,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     }
 }
 
-ACos::ACos(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACos::ACos(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -899,7 +1270,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     }
 }
 
-ASec::ASec(const RCP<const Basic> &arg) : TrigFunction(arg)
+ASec::ASec(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -939,7 +1310,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
     }
 }
 
-ACsc::ACsc(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACsc::ACsc(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -979,7 +1350,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
     }
 }
 
-ATan::ATan(const RCP<const Basic> &arg) : TrigFunction(arg)
+ATan::ATan(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1021,7 +1392,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     }
 }
 
-ACot::ACot(const RCP<const Basic> &arg) : TrigFunction(arg)
+ACot::ACot(const RCP<const Basic> &arg) : InverseTrigFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1106,12 +1477,9 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         if (is_a_Number(*num)) {
             RCP<const Number> num_new = rcp_static_cast<const Number>(num);
             if (num_new->is_negative())
-                return div(pi, i2);
-            else if (num_new->is_positive())
                 return div(pi, im2);
-            else {
-                return Nan;
-            }
+            else
+                return div(pi, i2);
         }
     }
     RCP<const Basic> index;
@@ -1216,33 +1584,33 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(*arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Log::is_canonical(const Basic &arg) const
+bool Log::is_canonical(const RCP<const Basic> &arg) const
 {
     //  log(0)
-    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_zero())
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(arg) and down_cast<const Integer &>(arg).is_one())
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_one())
         return false;
     // log(E)
-    if (eq(arg, *E))
+    if (eq(*arg, *E))
         return false;
 
-    if (is_a_Number(arg) and down_cast<const Number &>(arg).is_negative())
+    if (is_a_Number(*arg) and down_cast<const Number &>(*arg).is_negative())
         return false;
 
     // log(Inf) is also handled here.
-    if (is_a_Number(arg) and not down_cast<const Number &>(arg).is_exact())
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
         return false;
 
     // log(3I) should be expanded to log(3) + I*pi/2
-    if (is_a<Complex>(arg) and down_cast<const Complex &>(arg).is_re_zero())
+    if (is_a<Complex>(*arg) and down_cast<const Complex &>(*arg).is_re_zero())
         return false;
     // log(num/den) = log(num) - log(den)
-    if (is_a<Rational>(arg))
+    if (is_a<Rational>(*arg))
         return false;
     return true;
 }
@@ -1632,11 +2000,6 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     return make_rcp<const Sinh>(d);
 }
 
-RCP<const Basic> Sinh::expand_as_exp() const
-{
-    return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
-}
-
 Csch::Csch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1680,13 +2043,6 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
     return make_rcp<const Csch>(d);
 }
 
-RCP<const Basic> Csch::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(i2, sub(pos_exp, neg_exp));
-}
-
 Cosh::Cosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1726,11 +2082,6 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
     return make_rcp<const Cosh>(d);
 }
 
-RCP<const Basic> Cosh::expand_as_exp() const
-{
-    return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
-}
-
 Sech::Sech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1768,13 +2119,6 @@ RCP<const Basic> sech(const RCP<const Basic> &arg)
     RCP<const Basic> d;
     handle_minus(arg, outArg(d));
     return make_rcp<const Sech>(d);
-}
-
-RCP<const Basic> Sech::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(i2, add(pos_exp, neg_exp));
 }
 
 Tanh::Tanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
@@ -1820,13 +2164,6 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
     return make_rcp<const Tanh>(d);
 }
 
-RCP<const Basic> Tanh::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
-}
-
 Coth::Coth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1870,14 +2207,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
     return make_rcp<const Coth>(d);
 }
 
-RCP<const Basic> Coth::expand_as_exp() const
-{
-    RCP<const Basic> pos_exp = exp(get_arg());
-    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
-    return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
-}
-
-ASinh::ASinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ASinh::ASinh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1923,7 +2253,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     return make_rcp<const ASinh>(d);
 }
 
-ACsch::ACsch(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACsch::ACsch(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1967,7 +2297,7 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
     return make_rcp<const ACsch>(d);
 }
 
-ACosh::ACosh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACosh::ACosh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1995,7 +2325,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
     return make_rcp<const ACosh>(arg);
 }
 
-ATanh::ATanh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ATanh::ATanh(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2037,7 +2367,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     return make_rcp<const ATanh>(d);
 }
 
-ACoth::ACoth(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ACoth::ACoth(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2075,7 +2405,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     return make_rcp<const ACoth>(d);
 }
 
-ASech::ASech(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
+ASech::ASech(const RCP<const Basic> &arg) : InverseHyperbolicFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -2742,10 +3072,11 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
         or (is_a<Rational>(*x)
             and (get_den(down_cast<const Rational &>(*x).as_rational_class()))
                     == 2)) {
-        if (is_a<Integer>(*y) or (is_a<Rational>(*y)
-                                  and (get_den(down_cast<const Rational &>(*y)
-                                                   .as_rational_class()))
-                                          == 2)) {
+        if (is_a<Integer>(*y)
+            or (is_a<Rational>(*y)
+                and (get_den(
+                        down_cast<const Rational &>(*y).as_rational_class()))
+                        == 2)) {
             return false;
         }
     }
@@ -2755,7 +3086,7 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
     return div(mul(gamma(get_arg1()), gamma(get_arg2())),
-               add(get_arg1(), get_arg2()));
+               gamma(add(get_arg1(), get_arg2())));
 }
 
 RCP<const Basic> Beta::create(const RCP<const Basic> &a,
@@ -3068,8 +3399,8 @@ RCP<const Basic> max(const vec_basic &arg)
                         max_number = rcp_static_cast<const Number>(l);
 
                     } else {
-                        difference = rcp_static_cast<const Number>(l)
-                                         ->sub(*max_number);
+                        difference = rcp_static_cast<const Number>(l)->sub(
+                            *max_number);
 
                         if (difference->is_zero()
                             and not difference->is_exact()) {

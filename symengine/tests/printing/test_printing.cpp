@@ -40,6 +40,21 @@ using SymEngine::Infty;
 using SymEngine::infty;
 using SymEngine::down_cast;
 using SymEngine::zero;
+using SymEngine::one;
+using SymEngine::finiteset;
+using SymEngine::set_complement;
+using SymEngine::Set;
+using SymEngine::interval;
+using SymEngine::Inf;
+using SymEngine::NegInf;
+using SymEngine::floor;
+using SymEngine::ceiling;
+using SymEngine::conditionset;
+using SymEngine::Boolean;
+using SymEngine::logical_and;
+using SymEngine::logical_or;
+using SymEngine::logical_xor;
+using SymEngine::imageset;
 
 using namespace SymEngine::literals;
 
@@ -374,6 +389,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = pow(p, x);
     REQUIRE(p->__str__() == "11111.11**x");
 
+    p = real_double(123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456.0**x");
+
+    p = real_double(123456789123456.0);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "123456789123456.**x");
+
     p = real_double(0.00001);
     p = pow(p, x);
     bool pr = p->__str__() == "1e-05**x" or p->__str__() == "1e-005**x";
@@ -390,11 +413,28 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(123);
     p = sub(p, x);
-    REQUIRE(p->__str__() == "123. - x");
+    REQUIRE(p->__str__() == "123.0 - x");
 
     p = complex_double(std::complex<double>(1, 2));
     p = add(p, x);
-    REQUIRE(p->__str__() == "1. + 2.*I + x");
+    REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
+
+    p = complex_double(std::complex<double>(1, -2));
+    p = add(p, x);
+    REQUIRE(p->__str__() == "1.0 - 2.0*I + x");
+
+    p = complex_double(std::complex<double>(1, 0.00000000000000001));
+    p = add(p, x);
+    pr = (p->__str__() == "1.0 + 1e-17*I + x")
+         or (p->__str__() == "1.0 + 1e-017*I + x");
+    REQUIRE(pr == true);
+
+    p = complex_double(
+        std::complex<double>(0.00000000000000001, 0.00000000000000001));
+    p = add(p, x);
+    pr = (p->__str__() == "1e-17 + 1e-17*I + x")
+         or (p->__str__() == "1e-017 + 1e-017*I + x");
+    REQUIRE(pr == true);
 
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
@@ -444,4 +484,82 @@ TEST_CASE("test custom printing", "[printing]")
 TEST_CASE("Ascii Art", "[basic]")
 {
     std::cout << SymEngine::ascii_art() << std::endl;
+}
+
+TEST_CASE("test_sets(): printing", "[printing]")
+{
+    RCP<const Set> r1;
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    r1 = set_complement(interval(NegInf, Inf, true, true),
+                        finiteset({symbol("y")}));
+    REQUIRE(r1->__str__() == "(-oo, oo) \\ {y}");
+
+    RCP<const Set> i1 = interval(integer(3), integer(10));
+
+    r1 = conditionset(
+        {x}, logical_and({i1->contains(x), Ge(mul(x, x), integer(9))}));
+    REQUIRE(r1->__str__() == "{x | And(9 <= x**2, Contains(x, [3, 10]))}");
+
+    r1 = imageset(x, mul(x, x), interval(zero, one));
+    REQUIRE(r1->__str__() == "{x**2 | x in [0, 1]}");
+}
+
+TEST_CASE("test_sign(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = sign(mul(mul(pow(Complex::from_two_nums(*integer(2), *integer(3)),
+                           Rational::from_two_ints(3, 2)),
+                       x),
+                   pow(mul(integer(3), I), integer(3))));
+    CHECK(r->__str__() == "-I*sign(x*(2 + 3*I)**(3/2))");
+}
+
+TEST_CASE("test_floor(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = floor(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "floor(x**3*y)");
+
+    r = floor(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(r->__str__() == "2 + floor(2*x + 3*y)");
+}
+
+TEST_CASE("test_ceiling(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = ceiling(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "ceiling(x**3*y)");
+
+    r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(r->__str__() == "2 + ceiling(2*x + 3*y)");
+}
+
+TEST_CASE("test_conjugate(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = conjugate(
+        mul(mul(complex_double(std::complex<double>(2.0, 3.0)), x), y));
+    CHECK(r->__str__() == "(2.0 - 3.0*I)*conjugate(y)*conjugate(x)");
+
+    r = conjugate(pow(y, Rational::from_two_ints(3, 2)));
+    CHECK(r->__str__() == "conjugate(y**(3/2))");
+}
+
+TEST_CASE("test_logical(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r1;
+    r1 = logical_and({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "And(2 <= y, 9 <= x**2)");
+    r1 = logical_or({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "Or(2 <= y, 9 <= x**2)");
+    r1 = logical_xor({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
+    REQUIRE(r1->__str__() == "Xor(2 <= y, 9 <= x**2)");
 }

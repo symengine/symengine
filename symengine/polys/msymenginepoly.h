@@ -401,14 +401,15 @@ public:
             mptr++;
         }
 
-        Container x(std::move(d), s.size());
-        return Poly::from_container(s, std::move(x.translate(trans, s.size())));
+        Container x(std::move(d), numeric_cast<unsigned>(s.size()));
+        return Poly::from_container(
+            s, std::move(x.translate(trans, numeric_cast<unsigned>(s.size()))));
     }
 
     static Container container_from_dict(const set_basic &s,
                                          typename Container::dict_type &&d)
     {
-        return Container(std::move(d), s.size());
+        return Container(std::move(d), numeric_cast<unsigned>(s.size()));
     }
 
     inline vec_basic get_args() const
@@ -464,7 +465,8 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(MINTPOLY);
+    IMPLEMENT_TYPEID(MINTPOLY)
+
     hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;
 
@@ -481,7 +483,8 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(MEXPRPOLY);
+    IMPLEMENT_TYPEID(MEXPRPOLY)
+
     hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;
     Expression

@@ -14,12 +14,15 @@ inline hash_t Basic::hash() const
 //! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
-    return not(this->__eq__(o));
+    return not(eq(*this, o));
 }
 
 //! \return true if  `a` equal `b`
 inline bool eq(const Basic &a, const Basic &b)
 {
+    if (&a == &b) {
+        return true;
+    }
     return a.__eq__(b);
 }
 //! \return true if  `a` not equal `b`
@@ -67,19 +70,25 @@ inline void hash_combine_impl(
     hash_t &seed, const T &v,
     typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
 {
-    seed ^= v + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
+    seed ^= hash_t(v) + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
 }
 
 inline void hash_combine_impl(hash_t &seed, const std::string &s)
 {
     for (const char &c : s) {
-        hash_combine<hash_t>(seed, c);
+        hash_combine<hash_t>(seed, static_cast<hash_t>(c));
     }
 }
 
 inline void hash_combine_impl(hash_t &seed, const double &s)
 {
-    hash_combine(seed, static_cast<hash_t>(s));
+    union {
+        hash_t h;
+        double d;
+    } u;
+    u.h = 0u;
+    u.d = s;
+    hash_combine(seed, u.h);
 }
 
 template <class T>
@@ -95,7 +104,20 @@ hash_t vec_hash<T>::operator()(const T &v) const
     for (auto i : v)
         hash_combine<typename T::value_type>(h, i);
     return h;
-};
+}
+
+//! workaround for MinGW bug
+template <typename T>
+std::string to_string(const T &value)
+{
+#ifdef HAVE_SYMENGINE_STD_TO_STRING
+    return std::to_string(value);
+#else
+    std::ostringstream ss;
+    ss << value;
+    return ss.str();
+#endif
+}
 
 } // SymEngine
 
