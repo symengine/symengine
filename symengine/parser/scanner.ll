@@ -10,7 +10,6 @@ pows      ("**"|"^")
 
 
 %%
-//ADD YOUR CODE HERE
 
 {constants}                         {
                                         *dval = std::string(matched());

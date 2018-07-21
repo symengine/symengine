@@ -7,21 +7,24 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 if (WITH_SYMENGINE_PARSER)
-    add_custom_command(OUTPUT parser.cpp parserbase.h
+    add_custom_command(OUTPUT parser/parser.cpp
                       COMMAND bisonc++ parser.yy
-                      DEPENDS parser.yy parser.h
+                      COMMAND ${CMAKE_COMMAND} -E remove parser.h
+                      DEPENDS parser/parser.yy parser/parser.ih
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
-    add_custom_command(OUTPUT scanner.cpp scannerbase.h
+    add_custom_command(OUTPUT parser/scanner.cpp
                       COMMAND flexc++ --namespace=SymEngine scanner.ll
-                      DEPENDS scanner.ll scanner.h
+                      DEPENDS parser/scanner.ll parser/scanner.h
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
                      )
 endif()
 
 set(SRC
     symengine_rcp.cpp
-    scanner.cpp
-    parser.cpp
+    parser/scanner.cpp
+    parser/parser.cpp
     basic.cpp
     dict.cpp
     symbol.cpp
@@ -58,7 +61,7 @@ set(SRC
     expression.cpp
     numer_denom.cpp
     derivative.cpp
-    parser_old.cpp
+    parser/parser_old.cpp
     sets.cpp
     eval.cpp
     fields.cpp
@@ -137,9 +140,6 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
-    parserbase.h
-    scanner.h
-    scannerbase.h
     polys/basic_conversions.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h

@@ -130,7 +130,6 @@ func:
                 found = true;
             }
         }
-
         if (not found) {
             if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
                 $$ = multi_arg_functions[$1]($3);
