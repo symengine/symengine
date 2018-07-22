@@ -150,6 +150,9 @@ RCP<const Basic> Parser::parse_implicit_mul(const std::string &expr)
 
     // get the rest of the string
     lexpr = std::string(startptr + length, expr.length() - length);
+    if (lexpr.length() == 0) {
+        return num;
+    }
     sym = parse_identifier(lexpr);
     return mul(num, sym);
 }
