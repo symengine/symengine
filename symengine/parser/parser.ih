@@ -139,14 +139,13 @@ RCP<const Basic> Parser::parse_implicit_mul(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;
-    double d = std::strtod(startptr, &endptr);
+    std::strtod(startptr, &endptr);
 
     RCP<const Basic> num = one, sym;
 
     // Numerical part of the result of e.g. "100x";
     size_t length = endptr - startptr;
     std::string lexpr = std::string(startptr, length);
-    bool has_numeric_part = endptr != startptr;
     num = parse_numeric(lexpr);
 
     // get the rest of the string
