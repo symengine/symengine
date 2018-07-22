@@ -262,19 +262,16 @@ if (WITH_VIRTUAL_TYPEID)
 endif()
 
 # Parser
-set(WITH_GENERATE_PARSER False CACHE BOOL "Generate parser files")
-set(WITH_SYMENGINE_PARSER False)
+set(WITH_GENERATE_PARSER no CACHE BOOL "Generate parser files")
 if (WITH_GENERATE_PARSER)
-    unset(BISONCPP_EXECUTABLE CACHE)
-    unset(FLEXCPP_EXECUTABLE CACHE)
+    find_program(BISONCPP_EXECUTABLE bisonc++)
+    find_program(FLEXCPP_EXECUTABLE flexc++)
 
-    FIND_PROGRAM(BISONCPP_EXECUTABLE bisonc++)
-    FIND_PROGRAM(FLEXCPP_EXECUTABLE flexc++)
-
-    if (BISONCPP_EXECUTABLE AND FLEXCPP_EXECUTABLE)
-        set(WITH_SYMENGINE_PARSER True)
-    else()
-        message(FATAL_ERROR "bisonc++/flexc++ not found!")
+    if ("${BISONCPP_EXECUTABLE}" STREQUAL "BISONCPP_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "bisonc++ not found!")
+    endif()
+    if ("${FLEXCPP_EXECUTABLE}" STREQUAL "FLEXCPP_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "flexc++ not found!")
     endif()
 endif()
 

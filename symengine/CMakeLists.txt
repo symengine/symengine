@@ -6,15 +6,15 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
-if (WITH_SYMENGINE_PARSER)
+if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT parser/parser.cpp
-                      COMMAND bisonc++ parser.yy
+                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
                       DEPENDS parser/parser.yy parser/parser.ih
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
     add_custom_command(OUTPUT parser/scanner.cpp
-                      COMMAND flexc++ --namespace=SymEngine scanner.ll
+                      COMMAND ${FLEXCPP_EXECUTABLE} --namespace=SymEngine scanner.ll
                       DEPENDS parser/scanner.ll parser/scanner.h
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
                      )
