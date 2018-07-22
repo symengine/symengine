@@ -34,3 +34,22 @@ EOF`
         fi
     fi
 done
+
+FILES=`git ls-files | grep -E "symengine/parser"`
+UNAME=`uname`
+for FILE in $FILES; do
+    staged_file=`git show :$FILE`
+    actual_file=`cat $FILE`
+    if [ "$actual_file" == "$staged_file" ]; then
+        if [ "$UNAME" == "Linux" ]; then
+            sed -i 's|^// Generated .*|// Automatically generated|g' $FILE
+            sed -i '/^char const author/d' $FILE
+            git add $FILE
+        else
+            sed -i'' 's|^// Generated .*|// Automatically generated|g' $FILE
+            sed -i'' '/^char const author/d' $FILE
+            git add $FILE
+        fi
+    fi
+done
+
