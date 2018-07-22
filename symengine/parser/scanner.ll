@@ -2,49 +2,49 @@
 %lex-source="scanner.cpp"
 
 dig [0-9]
-char  [a-zA-Z_]
-operators ("-"|"+"|"/"|"("|")"|"*"|",")
-// TODO : cannot have function symbols havinig the same name as constants
-constants ("e"|"E"|"EulerGamma"|"Catalan"|"GoldenRatio"|"pi"|"I")
-pows      ("**"|"^")
+char  [\x80-\xff]|[a-zA-Z_]
+operators ("-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|")
 
+pows      ("**"|"@")
+le  ("<=")
+ge  (">=")
+eqs  ("==")
+ident ({char}({char}|{dig})*)
+numeric ({dig}*\.?{dig}+([eE][-+]?{dig}+)?)|({dig}+\.)
+implicitmul ({numeric}{ident})
 
 %%
 
-{constants}                         {
-                                        *dval = std::string(matched());
-                                        return Parser::CONSTANT;
-                                    }
-
-{dig}+                              {
-                                        *dval = std::string(matched());
-                                        return Parser::INTEGER;
-                                    }
-
-{dig}+[eE][+-]?{dig}+             |
-{dig}+\.{dig}*([eE][+-]?{dig}+)?  |
-{dig}*\.{dig}+([eE][+-]?{dig}+)?    {
-                                        *dval = std::string(matched());
-                                        return Parser::DOUBLE;
-                                    }
-
-{operators}                         {
-                                        return matched()[0];
-                                    }
-
-{pows}                              {
-                                        return Parser::POW;
-                                    }
-
-{char}({char}|{dig})*               {
-                                        *dval = std::string(matched());
-                                        return Parser::IDENTIFIER;
-                                    }
-
+{operators}         {
+                        return matched()[0];
+                    }
+{pows}              {
+                        return Parser::POW;
+                    }
+{le}                {
+                        return Parser::LE;
+                    }
+{ge}                {
+                        return Parser::GE;
+                    }
+{eqs}               {
+                        return Parser::EQ;
+                    }
+{ident}             {
+                        *dval = std::string(matched());
+                        return Parser::IDENTIFIER;
+                    }
+{implicitmul}       {
+                        *dval = std::string(matched());
+                        return Parser::IMPLICIT_MUL;
+                    }
+{numeric}           {
+                        *dval = std::string(matched());
+                        return Parser::NUMERIC;
+                    }
 \n              |
 \t              |
-" "                                 {
-                                    }
-
-.                                   {
-                                    }
+" "                 {
+                    }
+.                   {
+                    }

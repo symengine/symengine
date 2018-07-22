@@ -10,15 +10,23 @@
              basic_vec : vec_basic;
              string : std::string;
 
-%token <string> INTEGER
 %token <string> IDENTIFIER
-%token <string> CONSTANT
-%token <string> DOUBLE
+%token <string> NUMERIC
+%token <string> IMPLICIT_MUL
 
-%left '+' '-'
+%left '|'
+%left '^'
+%left '&'
+%left EQ
+%left '>'
+%left '<'
+%left LE
+%left GE
+%left '-' '+'
 %left '*' '/'
 %right POW
 %right UMINUS
+%right NOT
 %nonassoc '('
 
 %type <basic> st_expr
@@ -54,11 +62,53 @@ expr:
         expr POW expr
         { $$ = pow($1, $3); }
 |
+        expr '<' expr
+        { $$ = Lt($1, $3); }
+|
+        expr '>' expr
+        { $$ = Gt($1, $3); }
+|
+        expr LE expr
+        { $$ = Le($1, $3); }
+|
+        expr GE expr
+        { $$ = Ge($1, $3); }
+|
+        expr EQ expr
+        { $$ = Eq($1, $3); }
+|
+        expr '|' expr
+        { 
+            set_boolean s;
+            s.insert(rcp_static_cast<const Boolean>($1));
+            s.insert(rcp_static_cast<const Boolean>($3));
+            $$ = logical_or(s);
+        }
+|
+        expr '&' expr
+        { 
+            set_boolean s;
+            s.insert(rcp_static_cast<const Boolean>($1));
+            s.insert(rcp_static_cast<const Boolean>($3));
+            $$ = logical_and(s);
+        }
+|
+        expr '^' expr
+        {
+            vec_boolean s;
+            s.push_back(rcp_static_cast<const Boolean>($1));
+            s.push_back(rcp_static_cast<const Boolean>($3));
+            $$ = logical_xor(s);
+        }
+|
         '(' expr ')'
         { $$ = $2; }
 |
         '-' expr %prec UMINUS
         { $$ = neg($2); }
+|
+        '~' expr %prec NOT
+        { $$ = logical_not(rcp_static_cast<const Boolean>($2)); }
 |
         leaf
         { $$ = $1; }
@@ -67,45 +117,17 @@ expr:
 leaf:
     IDENTIFIER
     {
-        $$ = SymEngine::symbol($1);
+        $$ = parse_identifier($1);
     }
 |
-    INTEGER
+    IMPLICIT_MUL
     {
-        $$ = SymEngine::integer(SymEngine::integer_class($1 .c_str()));
+        $$ = parse_implicit_mul($1);
     }
 |
-    CONSTANT
+    NUMERIC
     {
-        $$ = constants[$1];
-    }
-|
-    DOUBLE
-    {
-        char *endptr = 0;
-        double d = std::strtod($1 .c_str(), &endptr);
-
-#ifdef HAVE_SYMENGINE_MPFR
-        unsigned digits = 0;
-        for (unsigned i = 0; i < $1 .length(); ++i) {
-            if ($1[i] == '.' or $1[i] == '-')
-                continue;
-            if ($1[i] == 'E' or $1[i] == 'e')
-                break;
-            if (digits != 0 or $1[i] != '0') {
-                ++digits;
-            }
-        }
-        if (digits <= 15) {
-            $$ = SymEngine::real_double(d);
-        } else {
-            // mpmath.libmp.libmpf.dps_to_prec
-            long prec = std::max(long(1), std::lround((digits + 1) * 3.3219280948873626));
-            $$ = SymEngine::real_mpfr(mpfr_class($1, prec));
-        }
-#else
-        $$ = SymEngine::real_double(d);
-#endif
+        $$ = parse_numeric($1);
     }
 |
     func
@@ -117,29 +139,7 @@ leaf:
 func:
     IDENTIFIER '(' expr_list ')'
     {
-        bool found = false;
-
-        if ($3 .size() == 1) {
-            if (single_arg_functions.find($1) != single_arg_functions.end()) {
-                $$ = single_arg_functions[$1]($3[0]);
-                found = true;
-            }
-        } else if ($3 .size() == 2) {
-            if (double_arg_functions.find($1) != double_arg_functions.end()) {
-                $$ = double_arg_functions[$1]($3[0], $3[1]);
-                found = true;
-            }
-        }
-        if (not found) {
-            if (multi_arg_functions.find($1) != multi_arg_functions.end()) {
-                $$ = multi_arg_functions[$1]($3);
-                found = true;
-            }
-        }
-        
-        if (not found) {
-            $$ = function_symbol($1, $3);
-        }
+        $$ = functionify($1, $3);
     }
 ;
 

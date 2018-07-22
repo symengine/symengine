@@ -9,7 +9,6 @@ endif()
 if (WITH_SYMENGINE_PARSER)
     add_custom_command(OUTPUT parser/parser.cpp
                       COMMAND bisonc++ parser.yy
-                      COMMAND ${CMAKE_COMMAND} -E remove parser.h
                       DEPENDS parser/parser.yy parser/parser.ih
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
