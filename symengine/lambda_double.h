@@ -1,6 +1,8 @@
 #ifndef SYMENGINE_LAMBDA_DOUBLE_H
 #define SYMENGINE_LAMBDA_DOUBLE_H
 
+#include <cmath>
+#include <limits>
 #include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
@@ -451,6 +453,84 @@ public:
             return result;
         };
     };
+
+    void bvisit(const Infty &x)
+    {
+        if (x.is_negative_infinity()) {
+            result_ = [=](const double * /* x */) {
+                return -std::numeric_limits<double>::infinity();
+            };
+        } else if (x.is_positive_infinity()) {
+            result_ = [=](const double * /* x */) {
+                return std::numeric_limits<double>::infinity();
+            };
+        } else {
+            throw SymEngineException(
+                "LambdaDouble can only represent real valued infinity");
+        }
+    }
+
+    void bvisit(const Contains &cts)
+    {
+        const auto fn_expr = apply(*cts.get_expr());
+        const auto set = cts.get_set();
+        if (is_a<Interval>(*set)) {
+            const auto &interv = down_cast<const Interval &>(*set);
+            const auto fn_start = apply(*interv.get_start());
+            const auto fn_end = apply(*interv.get_end());
+            const bool left_open = interv.get_left_open();
+            const bool right_open = interv.get_right_open();
+            result_ = [=](const double *x) {
+                const auto val_expr = fn_expr(x);
+                const auto val_start = fn_start(x);
+                const auto val_end = fn_end(x);
+                bool left_ok, right_ok;
+                if (val_start == -std::numeric_limits<double>::infinity()) {
+                    left_ok = !std::isnan(val_expr);
+                } else {
+                    left_ok = (left_open) ? (val_start < val_expr)
+                                          : (val_start <= val_expr);
+                }
+                if (val_end == std::numeric_limits<double>::infinity()) {
+                    right_ok = !std::isnan(val_expr);
+                } else {
+                    right_ok = (right_open) ? (val_expr < val_end)
+                                            : (val_expr <= val_end);
+                }
+                return (left_ok && right_ok) ? 1.0 : 0.0;
+            };
+        } else {
+            throw SymEngineException("LambdaDoubleVisitor: only ``Interval`` "
+                                     "implemented for ``Contains``.");
+        }
+    }
+
+    void bvisit(const BooleanAtom &ba)
+    {
+        const bool val = ba.get_val();
+        result_ = [=](const double * /* x */) { return (val) ? 1.0 : 0.0; };
+    }
+
+    void bvisit(const Piecewise &pw)
+    {
+        if (neq(*pw.get_vec().back().second, *boolTrue)) {
+            throw SymEngineException(
+                "LambdaDouble requires a (Expr, True) at the end of Piecewise");
+        }
+        std::vector<fn> applys;
+        std::vector<fn> preds;
+        for (const auto &expr_pred : pw.get_vec()) {
+            applys.push_back(apply(*expr_pred.first));
+            preds.push_back(apply(*expr_pred.second));
+        }
+        result_ = [=](const double *x) {
+            for (size_t i = 0;; ++i) {
+                if (preds[i](x) == 1.0) {
+                    return applys[i](x);
+                }
+            }
+        };
+    }
 };
 
 class LambdaComplexDoubleVisitor

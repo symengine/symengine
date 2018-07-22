@@ -19,6 +19,8 @@ using SymEngine::pow;
 using SymEngine::integer;
 using SymEngine::vec_basic;
 using SymEngine::complex_double;
+using SymEngine::NegInf;
+using SymEngine::boolTrue;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
@@ -53,6 +55,7 @@ using SymEngine::Catalan;
 using SymEngine::gamma;
 using SymEngine::loggamma;
 using SymEngine::min;
+using SymEngine::piecewise;
 using SymEngine::Eq;
 using SymEngine::Ne;
 using SymEngine::Lt;
@@ -98,6 +101,20 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
 
     // Undefined symbols raise an exception
     CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
+
+    // Piecewise
+    auto int1 = interval(NegInf, integer(2), true, false);
+    auto int2 = interval(integer(2), integer(5), true, false);
+    r = piecewise({{x, contains(x, int1)},
+                   {y, contains(x, int2)},
+                   {add(x, y), boolTrue}});
+    v.init({x, y}, *r);
+    d = v.call({1.1, 3.3});
+    REQUIRE(::fabs(d - 1.1) < 1e-12);
+    d = v.call({2.2, 3.3});
+    REQUIRE(::fabs(d - 3.3) < 1e-12);
+    d = v.call({5.5, 3.3});
+    REQUIRE(::fabs(d - 8.8) < 1e-12);
 }
 
 TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
