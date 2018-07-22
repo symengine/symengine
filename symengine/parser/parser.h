@@ -19,9 +19,9 @@ public:
         if (convert_xor_) {
             std::string s = input;
             std::replace(s.begin(), s.end(), '^', '@');
-            inp = std::istringstream(s);
+            inp.str(s);
         } else {
-            inp = std::istringstream(input);
+            inp.str(input);
         }
         d_scanner.switchStreams(inp, std::cout);
         d_scanner.dval = &d_val__;

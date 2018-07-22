@@ -107,7 +107,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
     } else {
 #ifdef HAVE_SYMENGINE_MPFR
         unsigned digits = 0;
-        for (size_t i = 0; i < length; ++i) {
+        for (size_t i = 0; i < expr.length(); ++i) {
             if (expr[i] == '.' or expr[i] == '-')
                 continue;
             if (expr[i] == 'E' or expr[i] == 'e')
