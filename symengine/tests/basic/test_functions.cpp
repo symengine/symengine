@@ -102,6 +102,11 @@ using SymEngine::dirichlet_eta;
 using SymEngine::Dirichlet_eta;
 using SymEngine::gamma;
 using SymEngine::Gamma;
+using SymEngine::Factorial;
+using SymEngine::factorial;
+using SymEngine::Binomial;
+using SymEngine::binomial;
+using SymEngine::emptyset;
 using SymEngine::loggamma;
 using SymEngine::LogGamma;
 using SymEngine::polygamma;
@@ -4560,4 +4565,97 @@ TEST_CASE("test rewrite_as_exp", "[Functions]")
         {mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
          symbol("y"), symbol("z")});
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Factorial: functions", "[functions]")
+{
+    RCP<const Basic> n = symbol("n");
+    RCP<const Basic> r1;
+
+    r1 = factorial(zero);
+    CHECK(eq(*r1, *one));
+
+    r1 = factorial(one);
+    CHECK(eq(*r1, *one));
+
+    r1 = factorial(minus_one);
+    CHECK(eq(*r1, *ComplexInf));
+
+    r1 = factorial(integer(-10));
+    CHECK(eq(*r1, *ComplexInf));
+
+    r1 = factorial(integer(10));
+    CHECK(eq(*r1, *integer(3628800)));
+
+    r1 = factorial(Nan);
+    CHECK(eq(*r1, *Nan));
+
+    r1 = factorial(Inf);
+    CHECK(eq(*r1, *Inf));
+
+    r1 = factorial(n);
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(), *n));
+
+    r1 = factorial(Rational::from_two_ints(3, 2));
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(),
+             *Rational::from_two_ints(3, 2)));
+
+    r1 = factorial(Complex::from_two_nums(*integer(3), *integer(2)));
+    CHECK(is_a<Factorial>(*r1));
+    CHECK(eq(*down_cast<const Factorial &>(*r1).get_arg(),
+             *Complex::from_two_nums(*integer(3), *integer(2))));
+
+    r1 = factorial(real_double(3.3));
+    CHECK(is_a<RealDouble>(*r1));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r1).i - 8.85534336045403)
+          < 1e-12);
+
+    CHECK_THROWS_AS(factorial(complex_double(std::complex<double>(2.0, 3.0))),
+                    NotImplementedError);
+}
+
+TEST_CASE("Binomial: functions", "[functions]")
+{
+    RCP<const Basic> n = symbol("n");
+    RCP<const Basic> r1, r2;
+
+    r1 = binomial(zero, one);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(3), one);
+    REQUIRE(eq(*r1, *integer(3)));
+
+    r1 = binomial(Inf, NegInf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(n, zero);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = binomial(n, n);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = binomial(Nan, integer(3));
+    REQUIRE(eq(*r1, *Nan));
+
+    r1 = binomial(Inf, integer(3));
+    REQUIRE(eq(*r1, *Inf));
+
+    r1 = binomial(NegInf, integer(3));
+    REQUIRE(eq(*r1, *NegInf));
+
+    r1 = binomial(integer(3), Inf);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(-3), integer(-2));
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(Rational::from_two_ints(3, 2), Rational::from_two_ints(7, 2));
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = binomial(integer(-2), Inf);
+    REQUIRE(is_a<Binomial>(*r1));
+    REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_n(), *integer(-2)));
+    REQUIRE(eq(*down_cast<const Binomial &>(*r1).get_k(), *Inf));
 }

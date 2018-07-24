@@ -3275,6 +3275,132 @@ RCP<const Basic> trigamma(const RCP<const Basic> &x)
     return polygamma(one, x);
 }
 
+Factorial::Factorial(const RCP<const Basic> &s) : OneArgFunction(s)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(s))
+}
+
+bool Factorial::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<NaN>(*arg)) {
+        return false;
+    } else if (is_a<Infty>(*arg)) {
+        if (down_cast<const Infty &>(*arg).is_positive()) {
+            return false;
+        }
+    } else if (is_a<Integer>(*arg)
+               or (is_a_Number(*arg)
+                   and not down_cast<const Number &>(*arg).is_exact())) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const Basic> Factorial::create(const RCP<const Basic> &arg) const
+{
+    return factorial(arg);
+}
+
+RCP<const Basic> factorial(const RCP<const Basic> &arg)
+{
+    if (is_a<NaN>(*arg)) {
+        return Nan;
+    } else if (is_a<Infty>(*arg)) {
+        if (down_cast<const Infty &>(*arg).is_positive()) {
+            return Inf;
+        }
+    } else if (is_a<Integer>(*arg)
+               or (is_a_Number(*arg)
+                   and not down_cast<const Number &>(*arg).is_exact())) {
+        if (not(is_a<Rational>(*arg)
+                and neq(*down_cast<const Rational &>(*arg).get_den(),
+                        *integer(2)))) {
+            return gamma(add(arg, one));
+        }
+    }
+    return make_rcp<const Factorial>(arg);
+}
+
+Binomial::Binomial(const RCP<const Basic> &n, const RCP<const Basic> &k)
+    : TwoArgFunction(n, k)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(n, k))
+}
+
+bool Binomial::is_canonical(const RCP<const Basic> &n,
+                            const RCP<const Basic> &k) const
+{
+    if (is_a<Integer>(*k) and down_cast<const Integer &>(*k).is_zero()) {
+        return false;
+    } else if (is_a_Number(*k)
+               and down_cast<const Number &>(*k).is_negative()) {
+        return false;
+    } else if (is_a<Integer>(*n) and is_a<Integer>(*k)) {
+        return false;
+    } else if (is_a<NaN>(*n) or is_a<NaN>(*k)) {
+        return false;
+    } else if (eq(*n, *k) and not is_a<Infty>(*n)) {
+        return false;
+    } else if (is_a_Number(*k) and is_a_Number(*n)) {
+        if (is_same_type(*n, *k)
+            and down_cast<const Number &>(*sub(n, k)).is_negative()) {
+            return false;
+        } else if (is_a<Infty>(*n)
+                   and (is_a<Integer>(*k)
+                        and down_cast<const Number &>(*k).is_positive())) {
+            if (neq(*n, *ComplexInf)) {
+                return false;
+            }
+        } else if (eq(*k, *Inf)
+                   and (is_a<Integer>(*n)
+                        and not down_cast<const Number &>(*n).is_negative())) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Binomial::create(const RCP<const Basic> &n,
+                                  const RCP<const Basic> &k) const
+{
+    return binomial(n, k);
+}
+
+RCP<const Basic> binomial(const RCP<const Basic> &n, const RCP<const Basic> &k)
+{
+    if (is_a<Integer>(*k) and down_cast<const Integer &>(*k).is_zero()) {
+        return one;
+    } else if (is_a_Number(*k)
+               and down_cast<const Number &>(*k).is_negative()) {
+        return zero;
+    } else if (is_a<Integer>(*n) and is_a<Integer>(*k)) {
+        return binomial(down_cast<const Integer &>(*n),
+                        down_cast<const Integer &>(*k).as_uint());
+    } else if (is_a<NaN>(*n) or is_a<NaN>(*k)) {
+        return Nan;
+    } else if (eq(*n, *k) and not is_a<Infty>(*n)) {
+        return one;
+    } else if (is_a_Number(*k) and is_a_Number(*n)) {
+        if (is_same_type(*n, *k)
+            and down_cast<const Number &>(*sub(n, k)).is_negative()) {
+            return zero;
+        } else if (is_a<Infty>(*n)
+                   and (is_a<Integer>(*k)
+                        and down_cast<const Number &>(*k).is_positive())) {
+            if (neq(*n, *ComplexInf)) {
+                return n;
+            }
+        } else if (eq(*k, *Inf)
+                   and (is_a<Integer>(*n)
+                        and not down_cast<const Number &>(*n).is_negative())) {
+            return zero;
+        }
+    }
+    return make_rcp<const Binomial>(n, k);
+}
+
 Abs::Abs(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSIGN_TYPEID()

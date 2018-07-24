@@ -617,6 +617,49 @@ public:
 //! Create a new Dirichlet_eta instance:
 RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
+class Factorial : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(FACTORIAL)
+    //! Factorial Constructor
+    Factorial(const RCP<const Basic> &s);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return canonicalized `factorial`
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Create a new Factorial instance:
+RCP<const Basic> factorial(const RCP<const Basic> &arg);
+
+class Binomial : public TwoArgFunction
+{
+public:
+    using TwoArgFunction::create;
+    IMPLEMENT_TYPEID(BINOMIAL)
+    //! Binomial Constructor
+    Binomial(const RCP<const Basic> &n, const RCP<const Basic> &k);
+    //! \return `n_`
+    inline RCP<const Basic> get_n() const
+    {
+        return get_arg1();
+    }
+    //! \return `k_`
+    inline RCP<const Basic> get_k() const
+    {
+        return get_arg2();
+    }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &n,
+                      const RCP<const Basic> &k) const;
+    //! \return canonicalized `binomial`
+    virtual RCP<const Basic> create(const RCP<const Basic> &n,
+                                    const RCP<const Basic> &k) const;
+};
+
+//! Create a new Binomial instance:
+RCP<const Basic> binomial(const RCP<const Basic> &n, const RCP<const Basic> &k);
+
 class FunctionSymbol : public MultiArgFunction
 {
 protected:

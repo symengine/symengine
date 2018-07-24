@@ -55,6 +55,8 @@ using SymEngine::logical_and;
 using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::imageset;
+using SymEngine::factorial;
+using SymEngine::binomial;
 
 using namespace SymEngine::literals;
 
@@ -562,4 +564,27 @@ TEST_CASE("test_logical(): printing", "[printing]")
     REQUIRE(r1->__str__() == "Or(2 <= y, 9 <= x**2)");
     r1 = logical_xor({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
     REQUIRE(r1->__str__() == "Xor(2 <= y, 9 <= x**2)");
+}
+
+TEST_CASE("test_factorial(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = factorial(Complex::from_two_nums(*integer(2), *integer(3)));
+    CHECK(r->__str__() == "(2 + 3*I)!");
+
+    r = factorial(Rational::from_two_ints(3, 2));
+    CHECK(r->__str__() == "(3/2)!");
+}
+
+TEST_CASE("test_binomial(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r
+        = binomial(Complex::from_two_nums(*integer(2), *integer(3)),
+                   Complex::from_two_nums(*integer(3), *integer(2)));
+    CHECK(r->__str__() == "binomial(2 + 3*I, 3 + 2*I)");
+
+    r = binomial(Rational::from_two_ints(3, 2), integer(2));
+    CHECK(r->__str__() == "binomial(3/2, 2)");
 }
