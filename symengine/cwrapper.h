@@ -341,6 +341,9 @@ CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
 //! Assigns s = log(a).
 CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
+//! Assigns s = atan2(a, b).
+CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
+
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
