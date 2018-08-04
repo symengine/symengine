@@ -1340,6 +1340,10 @@ void test_functions()
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
+    basic_atan2(ans, one, one);
+    basic_mul(ans, ans, four);
+    SYMENGINE_C_ASSERT(basic_eq(ans, pi));
+
     basic_max(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, four));
 

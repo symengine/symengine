@@ -599,6 +599,13 @@ IMPLEMENT_ONE_ARG_FUNC(cbrt)
 IMPLEMENT_ONE_ARG_FUNC(exp)
 IMPLEMENT_ONE_ARG_FUNC(log)
 
+CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::atan2(a->m, b->m);
+    CWRAPPER_END
+}
+
 char *basic_str(const basic s)
 {
     std::string str = s->m->__str__();
