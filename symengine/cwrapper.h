@@ -703,6 +703,11 @@ void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
 #endif
 
+CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,
+                               CVecBasic *replacement_exprs,
+                               CVecBasic *reduced_exprs,
+                               const CVecBasic *exprs);
+
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
 

@@ -2105,6 +2105,50 @@ void test_lambda_double()
     vecbasic_free(exprs);
 }
 
+void test_cse()
+{
+    basic x, y, z, r, s;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(r);
+    basic_new_stack(s);
+
+    symbol_set(x, "x");
+    basic_sqrt(y, x);
+    basic_sin(r, y);
+    basic_cos(s, y);
+
+    CVecBasic *exprs = vecbasic_new();
+    CVecBasic *replacement_syms = vecbasic_new();
+    CVecBasic *replacement_exprs = vecbasic_new();
+    CVecBasic *reduced_exprs = vecbasic_new();
+    vecbasic_push_back(exprs, r);
+    vecbasic_push_back(exprs, s);
+
+    basic_cse(replacement_syms, replacement_exprs, reduced_exprs, exprs);
+    SYMENGINE_C_ASSERT(vecbasic_size(replacement_syms) == 1);
+    vecbasic_get(replacement_exprs, 0, z);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+    vecbasic_get(replacement_syms, 0, z);
+    basic_sin(r, z);
+    vecbasic_get(reduced_exprs, 0, s);
+    SYMENGINE_C_ASSERT(basic_eq(r, s));
+    basic_cos(r, z);
+    vecbasic_get(reduced_exprs, 1, s);
+    SYMENGINE_C_ASSERT(basic_eq(r, s));
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+    basic_free_stack(r);
+    basic_free_stack(s);
+    vecbasic_free(exprs);
+    vecbasic_free(replacement_syms);
+    vecbasic_free(replacement_exprs);
+    vecbasic_free(reduced_exprs);
+}
+
 int main(int argc, char *argv[])
 {
     symengine_print_stack_on_segfault();
@@ -2145,5 +2189,6 @@ int main(int argc, char *argv[])
 #endif // HAVE_SYMENGINE_MPC
     test_matrix();
     test_lambda_double();
+    test_cse();
     return 0;
 }
