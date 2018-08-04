@@ -48,6 +48,7 @@ using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
 using SymEngine::vec_basic;
+using SymEngine::vec_pair;
 using SymEngine::vec_sym;
 using SymEngine::Set;
 using SymEngine::FiniteSet;
@@ -1648,6 +1649,20 @@ void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
     delete self;
 }
 #endif
+
+CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,
+                               CVecBasic *replacement_exprs,
+                               CVecBasic *reduced_exprs, const CVecBasic *exprs)
+{
+    CWRAPPER_BEGIN
+    vec_pair replacements;
+    SymEngine::cse(replacements, reduced_exprs->m, exprs->m);
+    for (auto &p : replacements) {
+        replacement_syms->m.push_back(p.first);
+        replacement_exprs->m.push_back(p.second);
+    }
+    CWRAPPER_END
+}
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault()
 {
