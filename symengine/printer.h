@@ -27,6 +27,11 @@ public:
         precedence = PrecedenceEnum::Mul;
     }
 
+    void bvisit(const Relational &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
+
     void bvisit(const Pow &x)
     {
         precedence = PrecedenceEnum::Pow;
