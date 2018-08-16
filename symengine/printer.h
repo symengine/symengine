@@ -9,7 +9,7 @@ namespace SymEngine
 std::string ascii_art();
 std::string print_double(double d);
 
-enum class PrecedenceEnum { Add, Mul, Pow, Atom };
+enum class PrecedenceEnum { Relational, Add, Mul, Pow, Atom };
 
 class Precedence : public BaseVisitor<Precedence>
 {
@@ -25,6 +25,11 @@ public:
     void bvisit(const Mul &x)
     {
         precedence = PrecedenceEnum::Mul;
+    }
+
+    void bvisit(const Relational &x)
+    {
+        precedence = PrecedenceEnum::Relational;
     }
 
     void bvisit(const Pow &x)
