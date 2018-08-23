@@ -62,7 +62,8 @@ endif()
 
 set(SYMENGINE_LLVM_COMPONENTS @SYMENGINE_LLVM_COMPONENTS@)
 
-if ("@SYMENGINE_LLVM_SHARED@" STREQUAL "True" AND NOT "${SYMENGINE_LLVM_COMPONENTS}" STREQUAL "")
+# If symengine is static or llvm is shared, need llvm for downstream projects
+if ((@SYMENGINE_STATIC_DEFINE@ OR "@SYMENGINE_LLVM_SHARED@" STREQUAL "True") AND NOT "${SYMENGINE_LLVM_COMPONENTS}" STREQUAL "")
     find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
     llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
     set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} ${llvm_libs})
