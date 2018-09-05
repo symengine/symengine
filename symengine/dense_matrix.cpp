@@ -748,6 +748,25 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
     return k;
 }
 
+void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b, vec_int &pivot_cols, bool normalize_last)
+{
+    permutelist pl;
+    if (normalize_last) {
+        pivoted_fraction_free_gauss_jordan_elimination(A, b, pl);
+        RCP<const Basic> m = div(one, b.get(0, 0));
+        b.mul_scalar(m, b);
+    } else {
+        pivoted_gauss_jordan_elimination(A, b, pl);
+    }
+    unsigned col = 0;
+    for (unsigned row = 0; row < b.row_; row++) {
+        if (neq(*zero, A.get(row, col))) {
+            pivot_cols.push_back(col);
+            col++;
+        }
+    }
+}
+
 // --------------------------- Solve Ax = b  ---------------------------------//
 // Assuming A is a diagonal square matrix
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
