@@ -715,13 +715,16 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         }
 
         for (j = 0; j < row; j++) {
-            if (j == index) continue;
+            if (j == index)
+                continue;
             for (k = 0; k < col; k++) {
-                if (k == i) continue;
+                if (k == i)
+                    continue;
                 B.m_[j * col + k]
                     = sub(mul(B.m_[index * col + i], B.m_[j * col + k]),
                           mul(B.m_[j * col + i], B.m_[index * col + k]));
-                if (i == 0) continue;
+                if (i == 0)
+                    continue;
                 B.m_[j * col + k] = div(B.m_[j * col + k], d);
             }
         }
@@ -729,7 +732,8 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         d = B.m_[index * col + i];
 
         for (j = 0; j < row; j++) {
-            if (j == index) continue;
+            if (j == index)
+                continue;
             B.m_[j * col + i] = zero;
         }
         index++;
