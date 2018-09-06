@@ -761,12 +761,12 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
     } else {
         pivoted_gauss_jordan_elimination(A, b, pl);
     }
-    unsigned col = 0;
-    for (unsigned row = 0; row < b.row_; row++) {
-        if (neq(*zero, *A.get(row, col))) {
-            pivot_cols.push_back(col);
-            col++;
-        }
+    unsigned row = 0;
+    for (unsigned col = 0; col < b.col_ && row < b.row_; col++) {
+        if (eq(*zero, *b.get(row, col)))
+            continue;
+        pivot_cols.push_back(col);
+        row++;
     }
 }
 
