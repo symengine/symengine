@@ -212,6 +212,10 @@ public:
         const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
+    friend void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
+                                         vec_uint &pivot_cols,
+                                         bool normalize_last);
+
     // Ax = b
     friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
                                DenseMatrix &x);
@@ -472,6 +476,11 @@ void ones(DenseMatrix &A);
 
 // Create a matrix filled with zeros
 void zeros(DenseMatrix &A);
+
+// Reduced row echelon form and returns the cols with pivots
+void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
+                              vec_uint &pivot_cols,
+                              bool normalize_last = false);
 
 // Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.

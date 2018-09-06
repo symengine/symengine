@@ -714,38 +714,60 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
             pl.push_back({k, index});
         }
 
-        if (i > 0)
-            d = B.m_[i * col - col + i - 1];
         for (j = 0; j < row; j++) {
-            if (j != i)
-                for (k = 0; k < col; k++) {
-                    if (k != i) {
-                        B.m_[j * col + k]
-                            = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
-                                  mul(B.m_[j * col + i], B.m_[i * col + k]));
-                        if (i > 0)
-                            B.m_[j * col + k] = div(B.m_[j * col + k], d);
-                    }
-                }
+            if (j == index)
+                continue;
+            for (k = 0; k < col; k++) {
+                if (k == i)
+                    continue;
+                B.m_[j * col + k]
+                    = sub(mul(B.m_[index * col + i], B.m_[j * col + k]),
+                          mul(B.m_[j * col + i], B.m_[index * col + k]));
+                if (i == 0)
+                    continue;
+                B.m_[j * col + k] = div(B.m_[j * col + k], d);
+            }
         }
 
-        for (j = 0; j < row; j++)
-            if (j != i)
-                B.m_[j * col + i] = zero;
+        d = B.m_[index * col + i];
 
+        for (j = 0; j < row; j++) {
+            if (j == index)
+                continue;
+            B.m_[j * col + i] = zero;
+        }
         index++;
     }
 }
 
 unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
-    unsigned k = r;
+    for (unsigned k = r; k < B.row_; k++) {
+        if (neq(*(B.m_[k * B.col_ + c]), *zero)) {
+            return k;
+        }
+    }
+    return B.row_;
+}
 
-    if (eq(*(B.m_[r * B.col_ + c]), *zero))
-        for (k = r; k < B.row_; k++)
-            if (neq(*(B.m_[k * B.col_ + c]), *zero))
-                break;
-    return k;
+void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
+                              vec_uint &pivot_cols, bool normalize_last)
+{
+    permutelist pl;
+    if (normalize_last) {
+        pivoted_fraction_free_gauss_jordan_elimination(A, b, pl);
+        RCP<const Basic> m = div(one, b.get(0, 0));
+        b.mul_scalar(m, b);
+    } else {
+        pivoted_gauss_jordan_elimination(A, b, pl);
+    }
+    unsigned row = 0;
+    for (unsigned col = 0; col < b.col_ && row < b.row_; col++) {
+        if (eq(*zero, *b.get(row, col)))
+            continue;
+        pivot_cols.push_back(col);
+        row++;
+    }
 }
 
 // --------------------------- Solve Ax = b  ---------------------------------//
