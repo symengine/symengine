@@ -749,7 +749,7 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 }
 
 void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
-                              vec_int &pivot_cols, bool normalize_last)
+                              vec_uint &pivot_cols, bool normalize_last)
 {
     permutelist pl;
     if (normalize_last) {
@@ -761,7 +761,7 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
     }
     unsigned col = 0;
     for (unsigned row = 0; row < b.row_; row++) {
-        if (neq(*zero, A.get(row, col))) {
+        if (neq(*zero, *A.get(row, col))) {
             pivot_cols.push_back(col);
             col++;
         }

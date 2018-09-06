@@ -97,12 +97,6 @@ std::vector<typename M::key_type> sorted_keys(const M &d)
 template <bool B, class T = void>
 using enable_if_t = typename std::enable_if<B, T>::type;
 
-template <typename T>
-inline bool unified_eq(const std::vector<T> &a, const std::vector<T> &b)
-{
-    return ordered_eq(a, b);
-}
-
 template <typename T, typename U>
 inline bool unified_eq(const std::pair<T, U> &a, const std::pair<T, U> &b)
 {
@@ -154,7 +148,7 @@ inline bool unified_eq(const T &a, const T &b)
 //! eq function base
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false
 template <class T>
-bool unordered_eq(const T &a, const T &b)
+inline bool unordered_eq(const T &a, const T &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -176,7 +170,7 @@ bool unordered_eq(const T &a, const T &b)
 }
 
 template <class T>
-bool ordered_eq(const T &A, const T &B)
+inline bool ordered_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
@@ -189,6 +183,12 @@ bool ordered_eq(const T &A, const T &B)
             return false; // values not equal
     }
     return true;
+}
+
+template <typename T>
+inline bool unified_eq(const std::vector<T> &a, const std::vector<T> &b)
+{
+    return ordered_eq(a, b);
 }
 
 //! compare functions base

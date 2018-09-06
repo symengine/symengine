@@ -213,7 +213,7 @@ public:
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     friend void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
-                                         vec_int &pivot_cols,
+                                         vec_uint &pivot_cols,
                                          bool normalize_last = false);
 
     // Ax = b
