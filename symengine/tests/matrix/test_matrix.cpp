@@ -752,7 +752,6 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
                            integer(4), integer(6), integer(8), integer(18)});
     B = DenseMatrix(3, 4);
     pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
-    std::cout << B << std::endl;
     REQUIRE(B == DenseMatrix(3, 4, {integer(4), integer(0), integer(-4),
                                     integer(0), integer(0), integer(4),
                                     integer(8), integer(0), integer(0),

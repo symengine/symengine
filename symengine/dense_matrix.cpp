@@ -715,37 +715,35 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         }
 
         for (j = 0; j < row; j++) {
-            if (j != index)
-                for (k = 0; k < col; k++) {
-                    if (k != i) {
-                        B.m_[j * col + k]
-                            = sub(mul(B.m_[index * col + i], B.m_[j * col + k]),
-                                  mul(B.m_[j * col + i], B.m_[index * col + k]));
-                        if (i > 0)
-                            B.m_[j * col + k] = div(B.m_[j * col + k], d);
-                    }
-                }
+            if (j == index) continue;
+            for (k = 0; k < col; k++) {
+                if (k == i) continue;
+                B.m_[j * col + k]
+                    = sub(mul(B.m_[index * col + i], B.m_[j * col + k]),
+                          mul(B.m_[j * col + i], B.m_[index * col + k]));
+                if (i == 0) continue;
+                B.m_[j * col + k] = div(B.m_[j * col + k], d);
+            }
         }
 
         d = B.m_[index * col + i];
 
-        for (j = 0; j < row; j++)
-            if (j != index) {
-                B.m_[j * col + i] = zero;
-            }
+        for (j = 0; j < row; j++) {
+            if (j == index) continue;
+            B.m_[j * col + i] = zero;
+        }
         index++;
     }
 }
 
 unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
-    unsigned k = r;
-
-    if (eq(*(B.m_[r * B.col_ + c]), *zero))
-        for (k = r; k < B.row_; k++)
-            if (neq(*(B.m_[k * B.col_ + c]), *zero))
-                break;
-    return k;
+    for (unsigned k = r; k < B.row_; k++) {
+        if (neq(*(B.m_[k * B.col_ + c]), *zero)) {
+            return k;
+        }
+    }
+    return B.row_;
 }
 
 void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
