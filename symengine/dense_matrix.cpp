@@ -723,7 +723,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
                 B.m_[j * col + k]
                     = sub(mul(B.m_[index * col + i], B.m_[j * col + k]),
                           mul(B.m_[j * col + i], B.m_[index * col + k]));
-                if (i == 0)
+                if (index == 0)
                     continue;
                 B.m_[j * col + k] = div(B.m_[j * col + k], d);
             }
@@ -756,8 +756,6 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
     permutelist pl;
     if (normalize_last) {
         pivoted_fraction_free_gauss_jordan_elimination(A, b, pl);
-        RCP<const Basic> m = div(one, b.get(0, 0));
-        b.mul_scalar(m, b);
     } else {
         pivoted_gauss_jordan_elimination(A, b, pl);
     }
@@ -766,6 +764,10 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
         if (eq(*zero, *b.get(row, col)))
             continue;
         pivot_cols.push_back(col);
+        if (row == 0 and normalize_last) {
+            RCP<const Basic> m = div(one, b.get(row, col));
+            b.mul_scalar(m, b);
+        }
         row++;
     }
 }
