@@ -782,6 +782,19 @@ TEST_CASE("reduced_row_echelon_form(): matrices", "[matrices]")
                               integer(0), integer(0), integer(0), integer(1)}));
 
     REQUIRE(SymEngine::unified_eq(pivots, {0, 1, 3}));
+    pivots.clear();
+
+    A = DenseMatrix(3, 4, {integer(0), integer(1), integer(1), integer(6),
+                           integer(0), integer(1), integer(1), integer(8),
+                           integer(0), integer(6), integer(8), integer(18)});
+    B = DenseMatrix(3, 4);
+    reduced_row_echelon_form(A, B, pivots);
+    REQUIRE(B == DenseMatrix(3, 4,
+                             {integer(0), integer(1), integer(0), integer(0),
+                              integer(0), integer(0), integer(1), integer(0),
+                              integer(0), integer(0), integer(0), integer(1)}));
+
+    REQUIRE(SymEngine::unified_eq(pivots, {1, 2, 3}));
 }
 
 TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices",
