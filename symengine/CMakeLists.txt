@@ -163,7 +163,11 @@ set(HEADERS
 )
 
 # Configure SymEngine using our CMake options:
+set(SYMENGINE_CLING_LIBRARY_DIR "\"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"")
+
 configure_file(symengine_config.h.in symengine_config.h)
+configure_file(symengine_config_cling.h.in symengine_config_cling.h)
+
 # Include the config file:
 include_directories(BEFORE ${symengine_BINARY_DIR})
 # Include the source directory
@@ -207,9 +211,12 @@ install(TARGETS symengine
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
-install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+install(FILES
+    "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+    "${symengine_BINARY_DIR}/symengine/symengine_config_cling.h"
     "${symengine_BINARY_DIR}/symengine/symengine_export.h"
-    DESTINATION include/symengine)
+        DESTINATION
+    include/symengine)
 
 # make install
 macro(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)
