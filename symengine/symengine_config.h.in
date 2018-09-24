@@ -1,3 +1,6 @@
+#ifndef SYMENGINE_CONFIG_HPP
+#define SYMENGINE_CONFIG_HPP
+
 #define SYMENGINE_MAJOR_VERSION ${SYMENGINE_MAJOR_VERSION}
 #define SYMENGINE_MINOR_VERSION ${SYMENGINE_MINOR_VERSION}
 #define SYMENGINE_PATCH_VERSION ${SYMENGINE_PATCH_VERSION}
@@ -87,3 +90,9 @@
 #endif
 
 #include <symengine/symengine_export.h>
+
+#ifdef __CLING__
+#include "symengine/symengine_config_cling.h"
+#endif
+
+#endif
