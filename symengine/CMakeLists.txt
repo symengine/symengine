@@ -6,6 +6,20 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
+if (WITH_GENERATE_PARSER)
+    add_custom_command(OUTPUT parser/parser.cpp
+                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
+                      DEPENDS parser/parser.yy parser/parser.ih
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
+                     )
+
+    add_custom_command(OUTPUT parser/scanner.cpp
+                      COMMAND ${FLEXCPP_EXECUTABLE} --namespace=SymEngine scanner.ll
+                      DEPENDS parser/scanner.ll parser/scanner.h
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
+                     )
+endif()
+
 set(SRC
     add.cpp
     basic.cpp
@@ -35,7 +49,9 @@ set(SRC
     ntheory.cpp
     number.cpp
     numer_denom.cpp
-    parser.cpp
+    parser/parser.cpp
+    parser/parser_old.cpp
+    parser/scanner.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
@@ -196,6 +212,7 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
+    set_source_files_properties(parser/parser.cpp parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)

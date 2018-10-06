@@ -541,6 +541,22 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
         *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
 }
 
+TEST_CASE("Parsing: multi-arg functions", "[parser]")
+{
+    std::string s;
+    RCP<const Basic> res;
+    RCP<const Basic> x1 = symbol("x1");
+    RCP<const Basic> x2 = symbol("x2");
+
+    s = "x1*pow(x2,-1)";
+    res = parse(s);
+    REQUIRE(eq(*res, *div(x1, x2)));
+
+    s = "z + f(x + y, g(x), h(g(x)))";
+    res = parse(s);
+    REQUIRE(res->__str__() == s);
+}
+
 TEST_CASE("Parsing: doubles", "[parser]")
 {
     std::string s;

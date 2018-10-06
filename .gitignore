@@ -124,6 +124,7 @@ benchmarks/matrix_add1_ginac
 benchmarks/matrix_add2_ginac
 benchmarks/matrix_mul1_ginac
 benchmarks/matrix_mul2_ginac
+benchmarks/parsing
 benchmarks/series
 benchmarks/series_expansion_sincos
 benchmarks/symbench

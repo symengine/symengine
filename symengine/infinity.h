@@ -8,6 +8,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/number.h>
+#include <symengine/integer.h>
 #include <symengine/mul.h>
 
 namespace SymEngine
