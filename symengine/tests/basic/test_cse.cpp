@@ -324,8 +324,10 @@ TEST_CASE("CSE: regression test gh-1463", "[cse]")
 
         auto e1 = div(mul(neg(x1), z32), z_x2y);
         auto e3 = div(mul(i2, mul(x1, z32)), z_x2y);
-        auto e4 = add(div(mul(x1w, z32), pow(z_x2y, i2)), div(mul(m3_2, x1wSQRTz), z_x2y));
-        auto e6 = add(div(mul(im2, mul(x1w, z32)), pow(z_x2y, i2)), mul(i3, div(x1wSQRTz, z_x2y)));
+        auto e4 = add(div(mul(x1w, z32), pow(z_x2y, i2)),
+                      div(mul(m3_2, x1wSQRTz), z_x2y));
+        auto e6 = add(div(mul(im2, mul(x1w, z32)), pow(z_x2y, i2)),
+                      mul(i3, div(x1wSQRTz, z_x2y)));
         auto e7 = div(mul(x2, mul(x1w, z32)), pow(z_x2y, i2));
         auto e9 = div(mul(im2, mul(x2, mul(x1w, z32))), pow(z_x2y, i2));
         vec_pair substs;
