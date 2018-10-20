@@ -140,7 +140,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     // Symbol must raise an exception
     CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException &);
     CHECK_THROWS_AS(eval_double_single_dispatch(*symbol("x")),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     // TODO: this is not implemented yet, so we check that it raises an
     // exception for now
@@ -152,7 +152,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     CHECK_THROWS_AS(eval_double_single_dispatch(*zeta(r1, r2)),
                     NotImplementedError &);
 
-    CHECK_THROWS_AS(eval_double(*constant("dummy")), NotImplementedError);
+    CHECK_THROWS_AS(eval_double(*constant("dummy")), NotImplementedError &);
     CHECK_THROWS_AS(eval_double_single_dispatch(*constant("dummy")),
                     NotImplementedError &);
     // ... we don't test the rest of functions that are not implemented.

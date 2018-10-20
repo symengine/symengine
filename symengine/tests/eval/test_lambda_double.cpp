@@ -97,7 +97,7 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(
         v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)),
-        NotImplementedError);
+        NotImplementedError &);
 
     // Undefined symbols raise an exception
     CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
