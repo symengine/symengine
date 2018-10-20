@@ -117,7 +117,8 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    bash <(curl -s https://codecov.io/bash) -x $GCOV_EXECUTABLE | grep -v "has arcs to entry block"
+    curl -L https://codecov.io/bash -o codecov.sh
+    bash codecov.sh -x $GCOV_EXECUTABLE | grep -v "has arcs to entry block"
     exit 0;
 fi
 
