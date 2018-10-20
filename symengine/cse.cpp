@@ -142,7 +142,7 @@ public:
         for (auto f : restrict_to_funcset) {
             indices.push_back(f);
         }
-        std::sort(std::begin(indices), std::end(indices));
+        //std::sort(std::begin(indices), std::end(indices));  // <-- should fail without this (_GLIBCXX_DEBUG)
         std::vector<unsigned> intersect_result;
         for (const auto &arg : argset) {
             std::set_intersection(indices.begin(), indices.end(),

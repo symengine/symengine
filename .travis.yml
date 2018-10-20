@@ -60,7 +60,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="5.0"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="5.0" USE_GLIBCXX_DEBUG="yes"
       compiler: gcc
       os: linux
       addons:
@@ -69,7 +69,7 @@ matrix:
           - ubuntu-toolchain-r-test
           packages:
           - binutils-dev
-          - g++-5
+          - g++-8
     - env: TEST_CLANG_FORMAT="yes"
       compiler: gcc
       os: linux
@@ -84,7 +84,7 @@ matrix:
         - echo "nothing to install"
       script:
         - bin/travis_clang.sh
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes" USE_GLIBCXX_DEBUG="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes"
       compiler: gcc
       os: linux
       addons:

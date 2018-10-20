@@ -96,7 +96,7 @@ else
     export CXXFLAGS="$CXXFLAGS -Werror"
 fi
 if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
-    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG"
+    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 fi
 
 cmake $cmake_line ${SOURCE_DIR}
