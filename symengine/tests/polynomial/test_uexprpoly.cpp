@@ -79,7 +79,7 @@ TEST_CASE("Adding two UExprPoly", "[UExprPoly]")
     REQUIRE(add_upoly(*d, a)->__str__() == "a*x**2 + 2*x + 3");
 
     d = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(add_upoly(a, *d), SymEngineException&);
+    CHECK_THROWS_AS(add_upoly(a, *d), SymEngineException &);
 }
 
 TEST_CASE("Negative of a UExprPoly", "[UExprPoly]")
@@ -134,7 +134,7 @@ TEST_CASE("Subtracting two UExprPoly", "[UExprPoly]")
     REQUIRE(sub_upoly(*d, a)->__str__() == "-x**2 - 2*x + 1");
 
     d = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(sub_upoly(a, *d), SymEngineException&);
+    CHECK_THROWS_AS(sub_upoly(a, *d), SymEngineException &);
 }
 
 TEST_CASE("Multiplication of two UExprPoly", "[UExprPoly]")
@@ -161,7 +161,7 @@ TEST_CASE("Multiplication of two UExprPoly", "[UExprPoly]")
     REQUIRE(mul_upoly(*f, *a)->__str__() == "2*a*x**2 + 2*b*x + 2");
 
     f = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(mul_upoly(*a, *f), SymEngineException&);
+    CHECK_THROWS_AS(mul_upoly(*a, *f), SymEngineException &);
 
     f = uexpr_poly(x, map_int_Expr{});
     REQUIRE(mul_upoly(*a, *f)->__str__() == "0");

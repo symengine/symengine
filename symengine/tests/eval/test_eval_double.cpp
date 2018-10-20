@@ -138,7 +138,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     }
 
     // Symbol must raise an exception
-    CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException&);
+    CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException &);
     CHECK_THROWS_AS(eval_double_single_dispatch(*symbol("x")),
                     NotImplementedError);
 

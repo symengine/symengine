@@ -100,7 +100,7 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
         NotImplementedError);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException&);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
 
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
@@ -163,7 +163,7 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
     REQUIRE(::fabs(d.imag() - 0.0) < 1e-12);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException&);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
 }
 
 TEST_CASE("Evaluate functions", "[lambda_gamma]")

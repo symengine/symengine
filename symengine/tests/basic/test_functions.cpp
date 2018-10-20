@@ -3989,8 +3989,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException&);
-    CHECK_THROWS_AS(asech(real_mpfr(a)), SymEngineException&);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException &);
+    CHECK_THROWS_AS(asech(real_mpfr(a)), SymEngineException &);
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }
@@ -4049,9 +4049,9 @@ TEST_CASE("max: functions", "[functions]")
     REQUIRE(eq(
         *res, *max({x, i2, y}))); // max(max(2, x), max(2/5, y)) == max(x, 2, y)
 
-    CHECK_THROWS_AS(min({}), SymEngineException&);
+    CHECK_THROWS_AS(min({}), SymEngineException &);
 
-    CHECK_THROWS_AS(min({c}), SymEngineException&);
+    CHECK_THROWS_AS(min({c}), SymEngineException &);
 }
 
 TEST_CASE("min: functions", "[functions]")
@@ -4099,9 +4099,9 @@ TEST_CASE("min: functions", "[functions]")
         *res,
         *min({x, r2_5, y}))); // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
 
-    CHECK_THROWS_AS(min({}), SymEngineException&);
+    CHECK_THROWS_AS(min({}), SymEngineException &);
 
-    CHECK_THROWS_AS(min({c}), SymEngineException&);
+    CHECK_THROWS_AS(min({c}), SymEngineException &);
 }
 
 TEST_CASE("test_dummy", "[Dummy]")
@@ -4268,7 +4268,7 @@ TEST_CASE("test_floor", "[Floor]")
     CHECK(eq(*r, *floor(add(add(mul(integer(2), x), mul(integer(3), y)),
                             Rational::from_two_ints(2, 3)))));
 
-    CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException&);
+    CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException &);
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class a(100);
@@ -4340,7 +4340,7 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     CHECK(eq(*r, *ceiling(add(add(mul(integer(2), x), mul(integer(3), y)),
                               Rational::from_two_ints(2, 3)))));
 
-    CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException&);
+    CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException &);
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class a(100);

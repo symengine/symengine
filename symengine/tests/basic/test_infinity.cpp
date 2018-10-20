@@ -327,9 +327,9 @@ TEST_CASE("Powers to Infinity", "[Infinity]")
 
     RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
     CHECK_THROWS_AS(integer(-10)->pow(*a), NotImplementedError);
-    CHECK_THROWS_AS(integer(0)->pow(*b), SymEngineException&);
-    CHECK_THROWS_AS(integer(10)->pow(*c), SymEngineException&);
-    CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException&);
+    CHECK_THROWS_AS(integer(0)->pow(*b), SymEngineException &);
+    CHECK_THROWS_AS(integer(10)->pow(*c), SymEngineException &);
+    CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException &);
     CHECK_THROWS_AS(cx->pow(*c), NotImplementedError);
 }
 

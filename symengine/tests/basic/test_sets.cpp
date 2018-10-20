@@ -219,7 +219,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[3], *boolean(r5->get_right_open())));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
-    CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException&);
+    CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException &);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
@@ -248,7 +248,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(r1->compare(*emptyset()) == 0);
     REQUIRE(eq(*r1->contains(zero), *boolFalse));
     REQUIRE(r1->get_args().empty());
-    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException&);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException &);
 }
 
 TEST_CASE("UniversalSet : Basic", "[basic]")
@@ -287,7 +287,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*universalset()) == 0);
     REQUIRE(r1->get_args().empty());
-    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException&);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException &);
 }
 
 TEST_CASE("FiniteSet : Basic", "[basic]")
@@ -509,9 +509,9 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(r1->compare(*r2) == -1);
 
     CHECK_THROWS_AS(r2->set_intersection(finiteset({symbol("x")})),
-                    SymEngineException&);
+                    SymEngineException &);
     CHECK_THROWS_AS(r2->set_intersection(finiteset({zero, integer(2)})),
-                    SymEngineException&);
+                    SymEngineException &);
 
     r2 = set_complement(i1, f1);
     REQUIRE(is_a<Complement>(*r2));
@@ -558,7 +558,7 @@ TEST_CASE("set_intersection : Basic", "[basic]")
 
     CHECK_THROWS_AS(set_intersection({finiteset({symbol("x"), symbol("y")}),
                                       interval(integer(-10), integer(10))}),
-                    SymEngineException&);
+                    SymEngineException &);
 
     // One of the arg is Union
     i1 = interval(zero, one);
@@ -751,7 +751,7 @@ TEST_CASE("ImageSet : Basic", "[basic]")
     REQUIRE(eq(*r3.get_symbol(), *x));
     REQUIRE(eq(*r3.get_expr(), *mul(x, x)));
     REQUIRE(eq(*r3.get_baseset(), *i1));
-    CHECK_THROWS_AS(r1->contains(one), SymEngineException&);
+    CHECK_THROWS_AS(r1->contains(one), SymEngineException &);
 
     r2 = imageset(x, mul(x, x), interval(zero, Inf));
     REQUIRE(r2->compare(*r1) == 1);
@@ -764,12 +764,12 @@ TEST_CASE("ImageSet : Basic", "[basic]")
     REQUIRE(is_a<Union>(*r1));
     REQUIRE(eq(*r1, *set_union({r1, finiteset({one})})));
 
-    CHECK_THROWS_AS(r1->set_intersection(i1), SymEngineException&);
+    CHECK_THROWS_AS(r1->set_intersection(i1), SymEngineException &);
 
     r1 = imageset(x, one, i1);
     REQUIRE(eq(*r1, *finiteset({one})));
 
-    CHECK_THROWS_AS(imageset(sin(x), x, i1), SymEngineException&);
+    CHECK_THROWS_AS(imageset(sin(x), x, i1), SymEngineException &);
 
     r1 = imageset(x, x, i1);
     REQUIRE(eq(*r1, *i1));
