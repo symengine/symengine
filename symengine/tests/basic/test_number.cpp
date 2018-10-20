@@ -6,6 +6,7 @@
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/pow.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;

@@ -6,6 +6,7 @@
 #include <symengine/real_double.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/add.h>
+#include <symengine/pow.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
