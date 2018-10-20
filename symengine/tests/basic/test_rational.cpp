@@ -47,7 +47,7 @@ TEST_CASE("Rational", "[rational]")
     r1 = q->div(*r2);
     REQUIRE(eq(*r1, *ComplexInf));
 
-    CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError);
+    CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError &);
 }
 
 TEST_CASE("Rational compare", "[rational compare]")

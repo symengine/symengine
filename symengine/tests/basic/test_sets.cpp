@@ -218,7 +218,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[2], *boolean(r5->get_left_open())));
     REQUIRE(eq(*r5->get_args()[3], *boolean(r5->get_right_open())));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
-    CHECK_THROWS_AS(interval(c1, one), NotImplementedError);
+    CHECK_THROWS_AS(interval(c1, one), NotImplementedError &);
     CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException &);
 }
 

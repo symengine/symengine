@@ -3113,7 +3113,7 @@ TEST_CASE("Erf: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(erf(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = erf(mul(i2, x));
     r2 = exp(mul(integer(-4), (mul(x, x))));
@@ -3156,7 +3156,7 @@ TEST_CASE("Erfc: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(erfc(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = erfc(mul(i3, x));
     r2 = exp(mul(integer(-9), (mul(x, x))));
@@ -3215,7 +3215,7 @@ TEST_CASE("Gamma: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(gamma(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = gamma(div(integer(-15), i2));
     r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
@@ -3863,7 +3863,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
             == 0);
 
     mpfr_set_si(a.get_mpfr_t(), -3, MPFR_RNDN);
-    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError);
+    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError &);
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         r1 = std::get<0>(testvec[i]);
@@ -3984,9 +3984,9 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     }
 
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
-    CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError);
-    CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError);
-    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError);
+    CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError &);
+    CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError &);
+    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError &);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException &);
