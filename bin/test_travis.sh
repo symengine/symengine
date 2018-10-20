@@ -118,7 +118,7 @@ ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     curl -L https://codecov.io/bash -o codecov.sh
-    bash codecov.sh -x $GCOV_EXECUTABLE | grep -v "has arcs to entry block"
+    bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block"
     exit 0;
 fi
 
