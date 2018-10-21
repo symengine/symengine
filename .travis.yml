@@ -155,9 +155,9 @@ matrix:
       addons:
         apt:
           sources:
+	  - ubuntu-toolchain-r-test
           - llvm-toolchain-trusty-7
           packages:
-          - libstdc++-6-dev
           - clang-7
           - llvm-7
     - env: BUILD_TYPE="Debug" WITH_SANITIZE="undefined"
@@ -166,9 +166,9 @@ matrix:
       addons:
         apt:
           sources:
+	  - ubuntu-toolchain-r-test
           - llvm-toolchain-trusty-7
           packages:
-          - libstdc++-6-dev
           - clang-7
           - llvm-7
 
