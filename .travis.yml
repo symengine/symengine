@@ -83,7 +83,7 @@ matrix:
       install:
         - echo "nothing to install"
       script:
-        - bin/travis_clang.sh
+        - bin/travis_clang_format.sh
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes"
       compiler: gcc
       os: linux
@@ -159,7 +159,7 @@ before_install:
 install:
   - source bin/install_travis.sh
 script:
-  - bin/travis_clang.sh
+  - bin/travis_clang_format.sh
   - bin/test_travis.sh
   - bin/trigger_feedstock.sh
 notifications:
