@@ -47,7 +47,7 @@ TEST_CASE("Rational", "[rational]")
     r1 = q->div(*r2);
     REQUIRE(eq(*r1, *ComplexInf));
 
-    CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError);
+    CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError &);
 }
 
 TEST_CASE("Rational compare", "[rational compare]")
@@ -70,7 +70,7 @@ TEST_CASE("Rational compare", "[rational compare]")
     REQUIRE(qm1_27->compare(*i0) == -1);
     REQUIRE(qm1_27->compare(*i2) == -1);
 
-    CHECK_THROWS_AS(q2_5->compare(*r), SymEngineException);
+    CHECK_THROWS_AS(q2_5->compare(*r), SymEngineException &);
 }
 
 TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
@@ -90,5 +90,5 @@ TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
     REQUIRE(res->__eq__(*qm1_3));
     REQUIRE(q9_25->nth_root(outArg(res), 2));
     REQUIRE(res->__eq__(*q3_5));
-    CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), SymEngineException);
+    CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), SymEngineException &);
 }

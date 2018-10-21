@@ -3113,7 +3113,7 @@ TEST_CASE("Erf: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(erf(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = erf(mul(i2, x));
     r2 = exp(mul(integer(-4), (mul(x, x))));
@@ -3156,7 +3156,7 @@ TEST_CASE("Erfc: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(erfc(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = erfc(mul(i3, x));
     r2 = exp(mul(integer(-9), (mul(x, x))));
@@ -3215,7 +3215,7 @@ TEST_CASE("Gamma: functions", "[functions]")
             < 1e-12);
 
     CHECK_THROWS_AS(gamma(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
+                    NotImplementedError &);
 
     r1 = gamma(div(integer(-15), i2));
     r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
@@ -3863,7 +3863,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
             == 0);
 
     mpfr_set_si(a.get_mpfr_t(), -3, MPFR_RNDN);
-    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError);
+    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError &);
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         r1 = std::get<0>(testvec[i]);
@@ -3984,13 +3984,13 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     }
 
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
-    CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError);
-    CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError);
-    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError);
+    CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError &);
+    CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError &);
+    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError &);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);
-    CHECK_THROWS_AS(asech(real_mpfr(a)), SymEngineException);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException &);
+    CHECK_THROWS_AS(asech(real_mpfr(a)), SymEngineException &);
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }
@@ -4049,9 +4049,9 @@ TEST_CASE("max: functions", "[functions]")
     REQUIRE(eq(
         *res, *max({x, i2, y}))); // max(max(2, x), max(2/5, y)) == max(x, 2, y)
 
-    CHECK_THROWS_AS(min({}), SymEngineException);
+    CHECK_THROWS_AS(min({}), SymEngineException &);
 
-    CHECK_THROWS_AS(min({c}), SymEngineException);
+    CHECK_THROWS_AS(min({c}), SymEngineException &);
 }
 
 TEST_CASE("min: functions", "[functions]")
@@ -4099,9 +4099,9 @@ TEST_CASE("min: functions", "[functions]")
         *res,
         *min({x, r2_5, y}))); // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
 
-    CHECK_THROWS_AS(min({}), SymEngineException);
+    CHECK_THROWS_AS(min({}), SymEngineException &);
 
-    CHECK_THROWS_AS(min({c}), SymEngineException);
+    CHECK_THROWS_AS(min({c}), SymEngineException &);
 }
 
 TEST_CASE("test_dummy", "[Dummy]")
@@ -4268,7 +4268,7 @@ TEST_CASE("test_floor", "[Floor]")
     CHECK(eq(*r, *floor(add(add(mul(integer(2), x), mul(integer(3), y)),
                             Rational::from_two_ints(2, 3)))));
 
-    CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException);
+    CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException &);
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class a(100);
@@ -4340,7 +4340,7 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     CHECK(eq(*r, *ceiling(add(add(mul(integer(2), x), mul(integer(3), y)),
                               Rational::from_two_ints(2, 3)))));
 
-    CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException);
+    CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException &);
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class a(100);
