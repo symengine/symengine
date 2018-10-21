@@ -78,7 +78,7 @@ fi
 if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
-if [[ "${WITH_LLVM}" != "" ]]; then
+if [[ "${LLVM_DIR}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
 fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
@@ -91,6 +91,17 @@ fi
 if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
+    fi
+    if [[ -z "${WITH_SANITIZE}" ]]; then
+	export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
+	if [[ "{WITH_SANITIZE}" == "address" ]]; then
+	    export ASAN_OPTIONS=symbolize=1,detect_leaks=0,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
+	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	else
+	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
+	    exit 1
+	fi
     fi
 else
     export CXXFLAGS="$CXXFLAGS -Werror"

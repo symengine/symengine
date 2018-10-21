@@ -103,6 +103,9 @@ fi
 
 if [[ ! -z "${WITH_LLVM}" ]]; then
     conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
+    export LLVM_DIR=$our_install_dir/share/llvm/
+elif [[ ! -z "${WITH_SANITIZE}" ]]; then
+    export LLVM_DIR=/usr/lib/llvm-7
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then
@@ -120,8 +123,6 @@ if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
     git clone https://github.com/wbhart/flint2;
     cd flint2 && git checkout 06defcbc52efe41a8c73496ffde9fc66941e3f0d && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j8 install && cd ..;
 fi
-
-export LLVM_DIR=$our_install_dir/share/llvm/
 
 # Use ccache
 export CXX="ccache ${CXX}"
