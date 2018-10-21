@@ -96,7 +96,7 @@ else
     export CXXFLAGS="$CXXFLAGS -Werror"
 fi
 if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
-    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG"
+    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 fi
 
 cmake $cmake_line ${SOURCE_DIR}
@@ -117,7 +117,8 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    bash <(curl -s https://codecov.io/bash) -x $GCOV_EXECUTABLE
+    curl -L https://codecov.io/bash -o codecov.sh
+    bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
     exit 0;
 fi
 

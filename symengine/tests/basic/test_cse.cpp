@@ -303,3 +303,35 @@ TEST_CASE("CSE: simple", "[cse]")
         REQUIRE(unified_eq(reduced, {x0, add(i2, x0), x1, add(i3, x1)}));
     }
 }
+
+TEST_CASE("CSE: regression test gh-1463", "[cse]")
+{
+    RCP<const Basic> x1 = symbol("x1");
+    RCP<const Basic> x2 = symbol("x2");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    {
+        auto z32 = pow(z, div(i3, i2));
+        auto x1w = mul(x1, w);
+        auto x2x1w = mul(x2, x1w);
+        auto z_x2y = add(z, mul(x2, y));
+        auto x1wSQRTz = mul(x1, mul(w, sqrt(z)));
+        auto m3_2 = div(neg(i3), i2);
+
+        auto e1 = div(mul(neg(x1), z32), z_x2y);
+        auto e3 = div(mul(i2, mul(x1, z32)), z_x2y);
+        auto e4 = add(div(mul(x1w, z32), pow(z_x2y, i2)),
+                      div(mul(m3_2, x1wSQRTz), z_x2y));
+        auto e6 = add(div(mul(im2, mul(x1w, z32)), pow(z_x2y, i2)),
+                      mul(i3, div(x1wSQRTz, z_x2y)));
+        auto e7 = div(mul(x2, mul(x1w, z32)), pow(z_x2y, i2));
+        auto e9 = div(mul(im2, mul(x2, mul(x1w, z32))), pow(z_x2y, i2));
+        vec_pair substs;
+        vec_basic reduced;
+        cse(substs, reduced, {e1, e1, e3, e4, e4, e6, e7, e7, e9});
+    }
+}

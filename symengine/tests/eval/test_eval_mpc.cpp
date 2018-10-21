@@ -160,14 +160,15 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     REQUIRE(mpc_cmp(a, b) == 0);
 
     CHECK_THROWS_AS(eval_mpc(a, *constant("dummy_constant"), MPFR_RNDN),
-                    NotImplementedError);
-    CHECK_THROWS_AS(eval_mpc(a, *gamma(arg1), MPFR_RNDN), NotImplementedError);
+                    NotImplementedError &);
+    CHECK_THROWS_AS(eval_mpc(a, *gamma(arg1), MPFR_RNDN),
+                    NotImplementedError &);
 
     r = erf(add(one, mul(integer(2), I)));
-    CHECK_THROWS_AS(eval_mpc(a, *r, MPFR_RNDN), NotImplementedError);
+    CHECK_THROWS_AS(eval_mpc(a, *r, MPFR_RNDN), NotImplementedError &);
 
     r = erfc(add(one, mul(integer(2), I)));
-    CHECK_THROWS_AS(eval_mpc(a, *r, MPFR_RNDN), NotImplementedError);
+    CHECK_THROWS_AS(eval_mpc(a, *r, MPFR_RNDN), NotImplementedError &);
 
     mpfr_clear(real);
     mpfr_clear(imag);

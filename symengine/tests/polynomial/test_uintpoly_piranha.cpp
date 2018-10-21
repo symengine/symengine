@@ -83,7 +83,7 @@ TEST_CASE("Adding two UIntPolyPiranha", "[UIntPolyPiranha]")
 
     RCP<const UIntPolyPiranha> g
         = UIntPolyPiranha::from_dict(y, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException);
+    CHECK_THROWS_AS(add_upoly(*a, *g), SymEngineException &);
 }
 
 TEST_CASE("Negative of a UIntPolyPiranha", "[UIntPolyPiranha]")
@@ -117,7 +117,7 @@ TEST_CASE("Subtracting two UIntPolyPiranha", "[UIntPolyPiranha]")
     REQUIRE(d->__str__() == "-x**2 - 2*x + 1");
     d = sub_upoly(*a, *c);
     REQUIRE(d->__str__() == "x**2 + 2*x - 1");
-    CHECK_THROWS_AS(sub_upoly(*a, *f), SymEngineException);
+    CHECK_THROWS_AS(sub_upoly(*a, *f), SymEngineException &);
 }
 
 TEST_CASE("Multiplication of two UIntPolyPiranha", "[UIntPolyPiranha]")
@@ -157,7 +157,7 @@ TEST_CASE("Multiplication of two UIntPolyPiranha", "[UIntPolyPiranha]")
     REQUIRE(mul_upoly(*c, *a)->__str__() == "-x**2 - 2*x - 1");
 
     c = UIntPolyPiranha::from_dict(y, {{0, -1_z}});
-    CHECK_THROWS_AS(mul_upoly(*a, *c), SymEngineException);
+    CHECK_THROWS_AS(mul_upoly(*a, *c), SymEngineException &);
 }
 
 TEST_CASE("Evaluation of UIntPolyPiranha", "[UIntPolyPiranha]")
