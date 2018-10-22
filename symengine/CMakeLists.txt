@@ -218,6 +218,10 @@ if (NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
     set_source_files_properties(parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-implicit-fallthrough")
 endif()
 
+if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_SHARED)
+    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--exclude-libs,ALL")
+endif()
+
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()
