@@ -1,4 +1,4 @@
-name: xeus-cling
+name: symengine
 channels:
   - QuantStack
   - conda-forge
