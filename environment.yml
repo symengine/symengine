@@ -7,7 +7,6 @@ dependencies:
   - gmp
   - mpfr
   - mpc
-  - llvmdev
   - cmake
   - arb
   - notebook
