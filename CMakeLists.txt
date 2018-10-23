@@ -87,11 +87,11 @@ if (NOT(MSVC))
         CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
         CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,--exclude-libs,ALL"
         OUTPUT_VARIABLE EXCLUDE_LIBS_ERROR_LOG)
-    if (${EXCLUDE_LIBS})
-        message(STATUS "Linker supports --exclude-libs")
-    else()
-        message(STATUS "Linker does not support --exclude-libs ${EXCLUDE_LIBS_ERROR_LOG}")
-    endif()
+endif()
+if (${EXCLUDE_LIBS})
+    message(STATUS "Linker supports --exclude-libs")
+else()
+    message(STATUS "Linker does not support --exclude-libs ${EXCLUDE_LIBS_ERROR_LOG}")
 endif()
 
 set(HAVE_GCC_ABI_DEMANGLE yes
