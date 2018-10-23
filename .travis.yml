@@ -159,7 +159,7 @@ matrix:
           - llvm-toolchain-trusty-7
           packages:
           - clang-7
-          - llvm-7
+          - llvm-7-dev
     - env: BUILD_TYPE="Debug" WITH_SANITIZE="undefined"
       compiler: clang
       os: linux
@@ -170,7 +170,7 @@ matrix:
           - llvm-toolchain-trusty-7
           packages:
           - clang-7
-          - llvm-7
+          - llvm-7-dev
 
 before_install:
 - |
