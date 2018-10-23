@@ -107,7 +107,7 @@ if [[ ! -z "${WITH_LLVM}" ]]; then
     exit 1 # DEBUG, DO-NOT-MERGE!
 elif [[ ! -z "${WITH_SANITIZE}" ]]; then
     export LLVM_DIR=/usr/lib/llvm-7/share/llvm/
-    ls /usr/lib/llvm-7  # DEBUG PRINT STATEMENT, DO-NOT-MERGE!
+    ls /usr/lib/llvm-7/share  # DEBUG PRINT STATEMENT, DO-NOT-MERGE!
     exit 1 # DEBUG, DO-NOT-MERGE!
     export CMAKE_PREFIX_PATH=/usr/lib/llvm-7
     export CC=clang-7
