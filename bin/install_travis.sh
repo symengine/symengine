@@ -104,13 +104,8 @@ fi
 if [[ ! -z "${WITH_LLVM}" ]]; then
     conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
     export LLVM_DIR=$our_install_dir/share/llvm/
-    exit 1 # DEBUG, DO-NOT-MERGE!
 elif [[ ! -z "${WITH_SANITIZE}" ]]; then
     export LLVM_DIR=/usr/lib/llvm-7/share/llvm/
-    ls /usr/lib/llvm-7/share  # DEBUG PRINT STATEMENT, DO-NOT-MERGE!
-    ls /usr/lib/llvm-7/lib  # DEBUG PRINT STATEMENT, DO-NOT-MERGE!
-    exit 1 # DEBUG, DO-NOT-MERGE!
-    export CMAKE_PREFIX_PATH=/usr/lib/llvm-7
     export CC=clang-7
     export CXX=clang++-7
 fi
