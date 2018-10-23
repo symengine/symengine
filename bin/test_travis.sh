@@ -20,7 +20,7 @@ pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir:${CMAKE_PREFIX_PATH}"
+cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
@@ -78,7 +78,7 @@ fi
 if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
-if [[ "${LLVM_DIR}" != "" ]]; then
+if [[ "${WITH_LLVM}" != ""]] || [[ "${WITH_ASAN}" != "" ]] ; then
     cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
 fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
