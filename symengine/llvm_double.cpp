@@ -43,6 +43,7 @@
 
 #if (LLVM_VERSION_MAJOR >= 7)
 #include <llvm/Transforms/InstCombine/InstCombine.h>
+#include <llvm/Transforms/Scalar/InstSimplifyPass.h>
 #include <llvm/Transforms/Utils.h>
 #endif
 
@@ -148,7 +149,9 @@ std::vector<llvm::Pass *> LLVMDoubleVisitor::create_default_passes(int optlevel)
 #if (LLVM_VERSION_MAJOR < 5)
     passes.push_back(llvm::createLoadCombinePass());
 #endif
-#if (LLVM_VERSION_MAJOR < 7)
+#if LLVM_VERSION_MAJOR >= 7
+    passes.push_back(llvm::createInstSimplifyLegacyPass());
+#else
     passes.push_back(llvm::createInstructionSimplifierPass());
 #endif
     passes.push_back(llvm::createMemCpyOptPass());
@@ -158,7 +161,9 @@ std::vector<llvm::Pass *> LLVMDoubleVisitor::create_default_passes(int optlevel)
     passes.push_back(llvm::createAggressiveDCEPass());
     if (optlevel > 2) {
         passes.push_back(llvm::createSLPVectorizerPass());
-#if (LLVM_VERSION_MAJOR < 7)
+#if LLVM_VERSION_MAJOR >= 7
+        passes.push_back(llvm::createInstSimplifyLegacyPass());
+#else
         passes.push_back(llvm::createInstructionSimplifierPass());
 #endif
     }
