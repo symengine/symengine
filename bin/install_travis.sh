@@ -106,6 +106,7 @@ if [[ ! -z "${WITH_LLVM}" ]]; then
     export LLVM_DIR=$our_install_dir/share/llvm/
 elif [[ ! -z "${WITH_SANITIZE}" ]]; then
     export LLVM_DIR=/usr/lib/llvm-7/share/llvm/
+    export CMAKE_PREFIX_PATH=/usr/lib/llvm-7
     export CC=clang-7
     export CXX=clang++-7
 fi
