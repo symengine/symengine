@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Entering travis_clang.sh"
+echo "Entering $(basename $0)"
 echo "TEST_CLANG_FORMAT=${TEST_CLANG_FORMAT}"
 
 if [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
