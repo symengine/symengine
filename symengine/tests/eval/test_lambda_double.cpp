@@ -166,8 +166,12 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
     CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
 }
 
+volatile double foo[2] = {0.0, 0.0};
+
 TEST_CASE("Evaluate functions", "[lambda_gamma]")
 {
+    REQUIRE( foo[0]*foo[2] == 0.0 ); //  <-- out of bounds access (test asan)
+
     RCP<const Basic> x, y, z, r;
     double d;
     x = symbol("x");
