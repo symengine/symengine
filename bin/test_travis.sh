@@ -92,7 +92,13 @@ if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
-    if [[ -z "${WITH_SANITIZE}" ]]; then
+else
+    export CXXFLAGS="$CXXFLAGS -Werror"
+fi
+if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
+    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
+fi
+if [[ "${WITH_SANITIZE}" != "" ]]; then
 	export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
 	if [[ "{WITH_SANITIZE}" == "address" ]]; then
 	    export ASAN_OPTIONS=symbolize=1,detect_leaks=0,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
@@ -102,12 +108,6 @@ if [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
 	fi
-    fi
-else
-    export CXXFLAGS="$CXXFLAGS -Werror"
-fi
-if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
-    export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 fi
 
 cmake $cmake_line ${SOURCE_DIR}
