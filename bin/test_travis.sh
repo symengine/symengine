@@ -100,7 +100,6 @@ if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
 fi
 if [[ "${WITH_SANITIZE}" != "" ]]; then
 	export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
-	export LD_LIBRARY_PATH="/usr/lib/llvm-7/lib"
 	if [[ "${WITH_SANITIZE}" == "address" ]]; then
 	    export ASAN_OPTIONS=symbolize=1,detect_leaks=0,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
@@ -131,6 +130,11 @@ ctest --output-on-failure
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     curl -L https://codecov.io/bash -o codecov.sh
     bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
+    exit 0;
+fi
+
+if [[ "${WITH_SANITIZE}" != "" ]]; then
+    # currently compile_flags and link_flags below won't pick up -fsanitize=...
     exit 0;
 fi
 
