@@ -78,7 +78,7 @@ fi
 if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
-if [[ "${WITH_LLVM}" != "" ]]; then
+if [[ "${WITH_LLVM}" != "" || "${WITH_SANITIZE}" != "" ]] ; then
     cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
 fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
@@ -97,6 +97,17 @@ else
 fi
 if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
     export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
+fi
+if [[ "${WITH_SANITIZE}" != "" ]]; then
+	export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
+	if [[ "${WITH_SANITIZE}" == "address" ]]; then
+	    export ASAN_OPTIONS=symbolize=1,detect_leaks=0,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
+	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	else
+	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
+	    exit 1
+	fi
 fi
 
 cmake $cmake_line ${SOURCE_DIR}
@@ -119,6 +130,11 @@ ctest --output-on-failure
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     curl -L https://codecov.io/bash -o codecov.sh
     bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
+    exit 0;
+fi
+
+if [[ "${WITH_SANITIZE}" != "" ]]; then
+    # currently compile_flags and link_flags below won't pick up -fsanitize=...
     exit 0;
 fi
 
