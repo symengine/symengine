@@ -80,6 +80,20 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     CHECK_CXX_COMPILER_FLAG("-Wno-implicit-fallthrough" NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
 endif()
 
+# check if linker supports exclude-libs
+if (NOT(MSVC))
+    try_compile(EXCLUDE_LIBS "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,--exclude-libs,ALL"
+        OUTPUT_VARIABLE EXCLUDE_LIBS_ERROR_LOG)
+endif()
+if (${EXCLUDE_LIBS})
+    message(STATUS "Linker supports --exclude-libs")
+else()
+    message(STATUS "Linker does not support --exclude-libs ${EXCLUDE_LIBS_ERROR_LOG}")
+endif()
+
 set(HAVE_GCC_ABI_DEMANGLE yes
     CACHE BOOL "Build with C++ name demangling support")
 
