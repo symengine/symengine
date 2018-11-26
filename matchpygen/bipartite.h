@@ -21,16 +21,16 @@ const int RIGHT = 1;
 
 typedef map<tuple<int, int>, tuple<int, int>> Matching;
 
-//(Generic[TLeft, TRight, TEdgeValue], MutableMapping[Tuple[TLeft, TRight], TEdgeValue])
+//(Generic[TLeft, TRight, TEdgeValue], MutableMapping[Tuple[TLeft, TRight],
+//TEdgeValue])
 /*
  * A bipartite graph representation.
  */
-template<typename TEdgeValue>
+template <typename TEdgeValue>
 class BipartiteGraph
 {
 public:
-
-    //Node = Tuple[int, Union[TLeft, TRight]]
+    // Node = Tuple[int, Union[TLeft, TRight]]
     // typedef tuple<int, variant<TLeft, TRight>> Node; ???
     typedef tuple<int, TItem> Node;
     typedef vector<Node> NodeList;
@@ -51,7 +51,7 @@ public:
 
     void __setitem__(Edge key, TEdgeValue value)
     {
-        //if not isinstance(key, tuple) or len(key) != 2:
+        // if not isinstance(key, tuple) or len(key) != 2:
         //    raise TypeError("The edge must be a 2-tuple")
         _edges[key] = value;
         _left.insert(get<0>(key));
@@ -80,7 +80,7 @@ public:
     void __delitem__(Edge key)
     {
         _edges.erase(key);
-        //if all(l != key[0] for (l, _) in self._edges):
+        // if all(l != key[0] for (l, _) in self._edges):
         //    self._left.remove(key[0])
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TLeft l = get<0>(p.first);
@@ -89,7 +89,7 @@ public:
                 break;
             }
         }
-        //if all(r != key[1] for (_, r) in self._edges):
+        // if all(r != key[1] for (_, r) in self._edges):
         //    self._right.remove(key[1])
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TRight l = get<1>(p.first);
@@ -98,19 +98,19 @@ public:
                 break;
             }
         }
-        //self._graph[(LEFT, key[0])].remove((RIGHT, key[1]))
+        // self._graph[(LEFT, key[0])].remove((RIGHT, key[1]))
         _graph[make_tuple(LEFT, get<0>(key))].erase(
-                make_tuple(RIGHT, get<1>(key)));
-        //self._graph[(RIGHT, key[1])].remove((LEFT, key[0]))
+            make_tuple(RIGHT, get<1>(key)));
+        // self._graph[(RIGHT, key[1])].remove((LEFT, key[0]))
         _graph[make_tuple(RIGHT, get<1>(key))].erase(
-                make_tuple(LEFT, get<0>(key)));
+            make_tuple(LEFT, get<0>(key)));
     }
 
-    //def edges_with_labels(self):
+    // def edges_with_labels(self):
     //    """Returns a view on the edges with labels."""
     //    return self._edges.items()
 
-    //def edges(self):
+    // def edges(self):
     //    return self._edges.keys()
 
     void clear()
@@ -120,16 +120,13 @@ public:
         _right.clear();
         _graph.clear();
     }
-
 };
 
-template<typename TEdgeType>
+template <typename TEdgeType>
 class HopcroftKarp
 {
 public:
-
-    HopcroftKarp(BipartiteGraph<TEdgeType> &bipartite) :
-            bipartite(bipartite)
+    HopcroftKarp(BipartiteGraph<TEdgeType> &bipartite) : bipartite(bipartite)
     {
         reference_distance = -1;
     }
@@ -146,7 +143,7 @@ public:
                 break;
             for (const TLeft &left : bipartite._left) {
                 if ((pair_left.find(left) == pair_left.end())
-                        && _dfs_hopcroft_karp(left)) {
+                    && _dfs_hopcroft_karp(left)) {
                     matching++;
                 }
             }
@@ -195,8 +192,8 @@ private:
             vertex_queue.pop_front();
             if (dist_left.find(left_vertex) == dist_left.end())
                 continue;
-            for (const tuple<int, TRight> &p : bipartite._graph[make_tuple(LEFT,
-                    left_vertex)]) {
+            for (const tuple<int, TRight> &p :
+                 bipartite._graph[make_tuple(LEFT, left_vertex)]) {
                 if (get<0>(p) == LEFT) {
                     // not a left vertex, continue
                     throw("inconsistent graph");
@@ -213,7 +210,6 @@ private:
                         vertex_queue.push_back(other_left);
                     }
                 }
-
             }
         }
         return reference_distance != -1;
@@ -221,8 +217,8 @@ private:
 
     bool _dfs_hopcroft_karp(const TLeft &left)
     {
-        for (const tuple<int, TRight> &p : bipartite._graph[make_tuple(LEFT,
-                left)]) {
+        for (const tuple<int, TRight> &p :
+             bipartite._graph[make_tuple(LEFT, left)]) {
             const TRight &right = get<1>(p);
             int distance;
 
@@ -241,12 +237,10 @@ private:
                 pair_right[right] = left;
                 return true;
             }
-
         }
         dist_left.erase(left);
         return false;
     }
-
 };
 
 int get0(tuple<int, int> a)

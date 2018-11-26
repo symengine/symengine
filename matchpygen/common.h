@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 
-typedef std::map<std::string, SymEngine::RCP<const SymEngine::Basic> > Substitution2;
+typedef std::map<std::string, SymEngine::RCP<const SymEngine::Basic>>
+    Substitution2;
 
 #endif
