@@ -8,6 +8,8 @@
 #include <symengine/basic.h>
 #include <symengine/pow.h>
 
+#include "generator_trick.h"
+
 using namespace std;
 using namespace SymEngine;
 
@@ -63,11 +65,9 @@ Deque get_deque(RCP<const Basic> expr)
     return d;
 }
 
-class match_root
+class match_root : public GeneratorTrick<tuple<int, Substitution2>>
 {
 public:
-    typedef tuple<int, Substitution2> YieldType;
-    void (match_root::*current)();
     Deque subjects;
     Deque subjects2;
     Substitution2 subst0;
@@ -78,34 +78,17 @@ public:
     RCP<const Basic> tmp6;
     Substitution2 tmp_subst;
 
-    deque<tuple<int, Substitution2>> yield_queue;
-
-    void yield(int a, Substitution2 b)
-    {
-        yield_queue.push_back(make_tuple(a, b));
-    }
-
-    shared_ptr<YieldType> next()
-    {
-        while (true) {
-            if (current == NULL) {
-                break;
-            }
-            (*this.*current)();
-            if (yield_queue.size() > 0) {
-                shared_ptr<YieldType> front
-                    = make_shared<YieldType>(yield_queue.front());
-                yield_queue.pop_front();
-                return front;
-            }
-        }
-        return NULL;
-    }
-
     match_root(RCP<const Basic> &subject)
     {
         subjects.push_back(subject);
-        current = &match_root::state2200;
+    }
+
+    virtual ~match_root(){};
+
+private:
+    virtual void start()
+    {
+        current = std::bind(&match_root::state2200, this);
     }
 
     void state2200()
@@ -116,9 +99,9 @@ public:
             tmp1 = subjects.front();
             subjects.pop_front();
             subjects2 = get_deque(tmp1);
-            current = &match_root::state2201;
+            current = std::bind(&match_root::state2201, this);
         } else {
-            current = &match_root::state2200part003;
+            current = std::bind(&match_root::state2200part003, this);
         }
     }
 
@@ -129,16 +112,16 @@ public:
         if (subjects2.size() >= 1 && subjects2[0]->__eq__(*symbol("x"))) {
             tmp3 = subjects2.front();
             subjects2.pop_front();
-            current = &match_root::state2202;
+            current = std::bind(&match_root::state2202, this);
         } else {
-            current = &match_root::state2201part002;
+            current = std::bind(&match_root::state2201part002, this);
         }
     }
 
     void state2201part002()
     {
         subjects2.push_front(tmp3);
-        current = &match_root::state2200part002;
+        current = std::bind(&match_root::state2200part002, this);
     }
 
     void state2202()
@@ -150,17 +133,17 @@ public:
             subjects2.pop_front();
             subst1 = subst0;
             if (!try_add_variable(subst1, "i2", tmp4)) {
-                current = &match_root::state2203;
+                current = std::bind(&match_root::state2203, this);
             }
         } else {
-            current = &match_root::state2202part002;
+            current = std::bind(&match_root::state2202part002, this);
         }
     }
 
     void state2202part002()
     {
         subjects2.push_front(tmp4);
-        current = &match_root::state2201part002;
+        current = std::bind(&match_root::state2201part002, this);
     }
 
     void state2203()
@@ -168,9 +151,9 @@ public:
         // state 2203;
         cout << "State 2203" << endl;
         if (subjects2.size() == 0) {
-            current = &match_root::state2204;
+            current = std::bind(&match_root::state2204, this);
         } else {
-            current = &match_root::state2202part002;
+            current = std::bind(&match_root::state2202part002, this);
         }
     }
 
@@ -181,15 +164,15 @@ public:
         if (subjects.size() == 0) {
             tmp_subst["w"] = subst1["i2"];
             // 0: x**w;
-            yield(0, tmp_subst);
+            yield(make_tuple(0, tmp_subst));
         }
-        current = &match_root::state2202part002;
+        current = std::bind(&match_root::state2202part002, this);
     }
 
     void state2200part002()
     {
         subjects.push_front(tmp1);
-        current = &match_root::state2200part003;
+        current = std::bind(&match_root::state2200part003, this);
     }
 
     void state2200part003()
@@ -197,9 +180,9 @@ public:
         if (subjects.size() >= 1 && subjects[0]->__eq__(*symbol("y"))) {
             tmp6 = subjects.front();
             subjects.pop_front();
-            current = &match_root::state2205;
+            current = std::bind(&match_root::state2205, this);
         } else {
-            current = &match_root::state2200part004;
+            current = std::bind(&match_root::state2200part004, this);
         }
     }
 
@@ -209,20 +192,20 @@ public:
         cout << "State 2205" << endl;
         if (subjects.size() == 0) {
             // 1: y;
-            yield(1, subst0);
+            yield(make_tuple(1, subst0));
         }
-        current = &match_root::state2205part002;
+        current = std::bind(&match_root::state2205part002, this);
     }
 
     void state2205part002()
     {
         subjects.push_front(tmp6);
-        current = &match_root::state2200part002;
+        current = std::bind(&match_root::state2200part002, this);
     }
 
     void state2200part004()
     {
-        current = NULL;
+        generator_stop = true;
     }
 };
 
