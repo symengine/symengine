@@ -56,7 +56,8 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (is_a<Mul>(*p.first)) {
             if (is_a<Integer>(*p.second))
                 return false;
-            if (is_a_Number(*p.second) and neq(*down_cast<const Mul &>(*p.first).coef_, *one)
+            if (is_a_Number(*p.second)
+                and neq(*down_cast<const Mul &>(*p.first).coef_, *one)
                 and neq(*down_cast<const Mul &>(*p.first).coef_, *minus_one))
                 return false;
         }
