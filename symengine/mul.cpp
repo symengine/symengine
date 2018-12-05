@@ -466,13 +466,13 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
         }
     } else {
         if (coef_->is_negative()) {
-            // (3*x*y)**(1/2) -> 3**(1/2)*(x*y)**(1/2)
+            // (-3*x*y)**(1/2) -> 3**(1/2)*(-x*y)**(1/2)
             new_coef = pow(coef_->mul(*minus_one), exp);
             map_basic_basic d1 = dict_;
             Mul::dict_add_term_new(coef, d, exp,
                                    Mul::from_dict(minus_one, std::move(d1)));
-        } else if (coef_->is_positive()) {
-            // (-3*x*y)**(1/2) -> 3**(1/2)*(-x*y)**(1/2)
+        } else if (coef_->is_positive() and not coef_->is_one()) {
+            // (3*x*y)**(1/2) -> 3**(1/2)*(x*y)**(1/2)
             new_coef = pow(coef_, exp);
             map_basic_basic d1 = dict_;
             Mul::dict_add_term_new(coef, d, exp,
