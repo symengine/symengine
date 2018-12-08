@@ -403,8 +403,8 @@ public:
  * December 17-19, 1997 Proceedings"
  * See http://dx.doi.org/10.1007/3-540-63890-3_11
  */
-template <typename TEdgeValue>
-class _enum_maximum_matchings_iter : public GeneratorTrick<map<TLeft, TRight>>
+template <typename TLeft, typename TRight, typename TEdgeValue>
+class _enum_maximum_matchings_iter : public virtual GeneratorTrick<map<TLeft, TRight>>
 {
 private:
     BipartiteGraph<TEdgeValue> graph;
@@ -433,7 +433,7 @@ private:
 
     BipartiteGraph<TEdgeValue> graph_plus, graph_minus;
     _DirectedMatchGraph<TEdgeValue> dgm_plus, dgm_minus;
-    _enum_maximum_matchings_iter<TEdgeValue> iter_enum;
+    _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue> iter_enum;
 
     TLeft *left1, *left2;
     TRight *right;
@@ -441,7 +441,7 @@ private:
 
     virtual void start()
     {
-        current = bind(&_enum_maximum_matchings_iter::step1, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step1, this);
     }
 
     void step1()
@@ -450,9 +450,9 @@ private:
         // if len(graph) == 0:
         //    return
         if (graph.empty()) {
-            generator_stop = true;
+            this->generator_stop = true;
         } else {
-            current = bind(&_enum_maximum_matchings_iter::step2, this);
+            this->current = bind(&_enum_maximum_matchings_iter::step2, this);
         }
     }
 
@@ -486,9 +486,9 @@ private:
             } else {
                 cycle = NodeList(raw_cycle.begin() + 1, raw_cycle.end());
             }
-            current = bind(&_enum_maximum_matchings_iter::step3, this);
+            this->current = bind(&_enum_maximum_matchings_iter::step3, this);
         } else {
-            current = bind(&_enum_maximum_matchings_iter::step8, this);
+            this->current = bind(&_enum_maximum_matchings_iter::step8, this);
         }
     }
     void step3()
@@ -496,13 +496,13 @@ private:
         //# Step 3 - TODO: Properly find right edge? (to get complexity bound)
         // edge = cast(Edge, cycle[:2])
         edge = make_tuple(cycle[0], cycle[1]);
-        current = bind(&_enum_maximum_matchings_iter::step4, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step4, this);
     }
     void step4()
     {
         //# Step 4
         //# already done because we are not really finding the optimal edge
-        current = bind(&_enum_maximum_matchings_iter::step5, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step5, this);
     }
     void step5()
     {
@@ -526,7 +526,7 @@ private:
         yield(new_match);
         old_value = graph._graph.at(edge);
         graph.__delitem__(edge);
-        current = bind(&_enum_maximum_matchings_iter::step7, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step7, this);
     }
 
     void step7()
@@ -541,9 +541,9 @@ private:
         // graph[edge] = old_value
         directed_match_graph_minus
             = _DirectedMatchGraph<TEdgeValue>(graph, new_match);
-        iter_enum = _enum_maximum_matchings_iter<TEdgeValue>(
+        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
             graph, new_match, directed_match_graph_minus);
-        current = bind(&_enum_maximum_matchings_iter::step7part002, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step7part002, this);
     }
 
     void step7part002()
@@ -556,7 +556,7 @@ private:
             yield(*v);
             return;
         }
-        current = bind(&_enum_maximum_matchings_iter::step6, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step6, this);
     }
 
     void step6()
@@ -589,9 +589,9 @@ private:
             = _DirectedMatchGraph<TEdgeValue>(graph_plus, matching);
         // yield from _enum_maximum_matchings_iter(graph_plus, matching,
         // directed_match_graph_plus)
-        iter_enum = _enum_maximum_matchings_iter<TEdgeValue>(
+        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
             graph_plus, matching, directed_match_graph_plus);
-        current = bind(&_enum_maximum_matchings_iter::step6part002, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step6part002, this);
     }
 
     void step6part002()
@@ -604,7 +604,7 @@ private:
             yield(*v);
             return;
         }
-        current = bind(&_enum_maximum_matchings_iter::step6part003, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step6part003, this);
     }
 
     void step6part003()
@@ -615,7 +615,7 @@ private:
             Node node(get<0>(p), get<1>(p));
             graph_plus[node] = get<2>(p);
         }
-        generator_stop = true;
+        this->generator_stop = true;
     }
 
     void step8()
@@ -671,7 +671,7 @@ private:
         // if left2 is None:
         //    return
         if (left2 == nullptr) {
-            generator_stop = true;
+            this->generator_stop = true;
             return;
         }
         //# Construct M'
@@ -696,7 +696,7 @@ private:
 
         dgm_plus = _DirectedMatchGraph<TEdgeValue>(graph_plus, new_match);
         dgm_minus = _DirectedMatchGraph<TEdgeValue>(graph_minus, matching);
-        current = bind(&_enum_maximum_matchings_iter::step9, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step9, this);
     }
 
     void step9()
@@ -704,9 +704,9 @@ private:
         //# Step 9
         // yield from _enum_maximum_matchings_iter(graph_plus, new_match,
         // dgm_plus)
-        iter_enum = _enum_maximum_matchings_iter<TEdgeValue>(
+        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
             graph_plus, new_match, dgm_plus);
-        current = bind(&_enum_maximum_matchings_iter::step9part002, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step9part002, this);
     }
 
     void step9part002()
@@ -719,7 +719,7 @@ private:
             yield(*v);
             return;
         }
-        current = bind(&_enum_maximum_matchings_iter::step10, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step10, this);
     }
 
     void step10()
@@ -727,9 +727,9 @@ private:
         //# Step 10
         // yield from _enum_maximum_matchings_iter(graph_minus, matching,
         // dgm_minus)
-        iter_enum = _enum_maximum_matchings_iter<TEdgeValue>(
+        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
             graph_minus, matching, dgm_minus);
-        current = bind(&_enum_maximum_matchings_iter::step10part002, this);
+        this->current = bind(&_enum_maximum_matchings_iter::step10part002, this);
     }
 
     void step10part002()
@@ -742,7 +742,7 @@ private:
             yield(*v);
             return;
         }
-        generator_stop = true;
+        this->generator_stop = true;
     }
 };
 
