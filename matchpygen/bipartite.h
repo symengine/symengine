@@ -4,6 +4,7 @@
 #include <deque>
 #include <map>
 #include <set>
+#include <variant>
 
 #include <symengine/basic.h>
 #include <symengine/pow.h>
@@ -14,15 +15,6 @@
 
 using namespace std;
 
-typedef tuple<int, int> TItem; // either TLeft or TRight, use <variant> instead?
-typedef TItem TRight;
-typedef TItem TLeft;
-// Node = Tuple[int, Union[TLeft, TRight]]
-// typedef tuple<int, variant<TLeft, TRight>> Node; ???
-typedef tuple<int, TItem> Node;
-typedef vector<Node> NodeList;
-typedef set<Node> NodeSet;
-typedef tuple<TLeft, TRight> Edge;
 
 const int LEFT = 0;
 const int RIGHT = 1;
@@ -34,17 +26,23 @@ typedef map<tuple<int, int>, tuple<int, int>> Matching;
 /*
  * A bipartite graph representation.
  */
-template <typename TEdgeValue>
+template <typename TLeft, typename TRight, typename TEdgeValue>
 class BipartiteGraph
 {
 public:
+    //typedef std::variant<TLeft, TRight> Node;
+    //typedef vector<Node> NodeList;
+    //typedef set<Node> NodeSet;
+    typedef tuple<TLeft, TRight> Edge;
     map<Edge, TEdgeValue> _edges;
-    map<int, int> _matching;
+    map<TLeft, TRight> _matching;
     vector<int> _dfs_paths;
     map<int, int> _dfs_parent;
     set<TLeft> _left;
     set<TRight> _right;
-    map<Node, set<Node>> _graph;
+    //map<Node, set<Node>> _graph;
+    map<TLeft, set<TRight>> _graph_left;
+    map<TRight, set<TLeft>> _graph_right;
 
     BipartiteGraph()
     {
@@ -59,18 +57,18 @@ public:
         _right.insert(get<1>(key));
 
         //_graph.setdefault((LEFT, key[0]), set()).add((RIGHT, key[1]));
-        tuple<int, TLeft> k1 = make_tuple(LEFT, get<0>(key));
-        if (_graph.find(k1) == _graph.end()) {
-            _graph[k1] = set<tuple<int, TRight>>();
+        TLeft k1 = get<0>(key);
+        if (_graph_left.find(k1) == _graph_left.end()) {
+	    _graph_left[k1] = set<TRight>();
         }
-        _graph[k1].insert(make_tuple(RIGHT, get<1>(key)));
+        _graph_left[k1].insert(get<1>(key));
 
         //_graph.setdefault((RIGHT, key[1]), set()).add((LEFT, key[0]));
-        tuple<int, TRight> k2 = make_tuple(RIGHT, get<1>(key));
-        if (_graph.find(k2) == _graph.end()) {
-            _graph[k2] = set<tuple<int, TLeft>>();
+	TRight k2 = get<1>(key);
+        if (_graph_right.find(k2) == _graph_right.end()) {
+            _graph_right[k2] = set<TLeft>();
         }
-        _graph[k2].insert(make_tuple(LEFT, get<0>(key)));
+        _graph_right[k2].insert(get<0>(key));
     }
 
     TEdgeValue &__getitem__(Edge key)
@@ -100,11 +98,9 @@ public:
             }
         }
         // self._graph[(LEFT, key[0])].remove((RIGHT, key[1]))
-        _graph[make_tuple(LEFT, get<0>(key))].erase(
-            make_tuple(RIGHT, get<1>(key)));
+        _graph_right[get<0>(key)].erase(get<1>(key));
         // self._graph[(RIGHT, key[1])].remove((LEFT, key[0]))
-        _graph[make_tuple(RIGHT, get<1>(key))].erase(
-            make_tuple(LEFT, get<0>(key)));
+        _graph_left[get<1>(key)].erase(get<0>(key));
     }
 
     // def without_nodes(self, edge: Edge) -> 'BipartiteGraph[TLeft, TRight,
@@ -113,13 +109,13 @@ public:
     //    adjacent nodes removed."""
     //    return BipartiteGraph(((n1, n2), v) for (n1, n2), v in
     //    self._edges.items() if n1 != edge[0] and n2 != edge[1])
-    BipartiteGraph<TEdgeValue> without_nodes(Edge &edge)
+    BipartiteGraph<TLeft, TRight, TEdgeValue> without_nodes(Edge &edge)
     {
         //((n1, n2), v) for (n1, n2), v in self._edges.items() if n1 != edge[0]
         // and n2 != edge[1])
-        BipartiteGraph<TEdgeValue> new_graph;
+        BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
-            Node &node = p.first;
+            Edge &node = p.first;
             TEdgeValue &v = p.second;
             TLeft &n1 = get<0>(node);
             TRight &n2 = get<1>(node);
@@ -137,12 +133,12 @@ public:
     //    removed."""
     //    return BipartiteGraph((e2, v) for e2, v in self._edges.items() if edge
     //    != e2)
-    BipartiteGraph<TEdgeValue> without_edge(Edge &edge)
+    BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(Edge &edge)
     {
         //((e2, v) for e2, v in self._edges.items() if edge != e2)
-        BipartiteGraph<TEdgeValue> new_graph;
+        BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
-            Node &e2 = p.first;
+            Edge &e2 = p.first;
             TEdgeValue &v = p.second;
             if (edge == e2) {
                 continue;
@@ -164,15 +160,16 @@ public:
         _edges.clear();
         _left.clear();
         _right.clear();
-        _graph.clear();
+        _graph_left.clear();
+        _graph_right.clear();
     }
 };
 
-template <typename TEdgeType>
+template <typename TLeft, typename TRight, typename TEdgeType>
 class HopcroftKarp
 {
 public:
-    HopcroftKarp(BipartiteGraph<TEdgeType> &bipartite) : bipartite(bipartite)
+    HopcroftKarp(BipartiteGraph<TLeft, TRight, TEdgeType> &bipartite) : bipartite(bipartite)
     {
         reference_distance = -1;
     }
@@ -215,7 +212,7 @@ public:
 private:
     map<TLeft, TRight> pair_left;
     map<TRight, TLeft> pair_right;
-    BipartiteGraph<TEdgeType> &bipartite;
+    BipartiteGraph<TLeft, TRight, TEdgeType> &bipartite;
     deque<TLeft> vertex_queue;
     map<TLeft, int> dist_left;
     int reference_distance;
@@ -238,13 +235,8 @@ private:
             vertex_queue.pop_front();
             if (dist_left.find(left_vertex) == dist_left.end())
                 continue;
-            for (const tuple<int, TRight> &p :
-                 bipartite._graph[make_tuple(LEFT, left_vertex)]) {
-                if (get<0>(p) == LEFT) {
-                    // not a left vertex, continue
-                    throw("inconsistent graph");
-                }
-                const TRight &right_vertex = get<1>(p);
+            for (const TRight &right_vertex :
+                 bipartite._graph_left[left_vertex]) {
                 if (pair_right.find(right_vertex) == pair_right.end()) {
                     if (reference_distance == -1) {
                         reference_distance = dist_left[left_vertex] + 1;
@@ -263,9 +255,8 @@ private:
 
     bool _dfs_hopcroft_karp(const TLeft &left)
     {
-        for (const tuple<int, TRight> &p :
-             bipartite._graph[make_tuple(LEFT, left)]) {
-            const TRight &right = get<1>(p);
+        for (const TRight &right :
+             bipartite._graph_left[left]) {
             int distance;
 
             if (pair_right.find(right) == pair_right.end()) {
@@ -298,15 +289,17 @@ int get1(tuple<int, int> a)
     return get<1>(a);
 }
 
-template <typename TEdgeValue>
+template <typename TLeft, typename TRight, typename TEdgeValue>
 class _DirectedMatchGraph
 {
 public:
-    //  map<TLeft, TRight> _map_left;
-    //  map<TRight, TLeft> _map_right;
-    map<Node, set<Node>> _map;
+    map<TLeft, set<TRight>> _map_left;
+    map<TRight, set<TLeft>> _map_right;
 
-    _DirectedMatchGraph(BipartiteGraph<TEdgeValue> graph,
+    _DirectedMatchGraph() {
+    }
+
+    _DirectedMatchGraph(BipartiteGraph<TLeft, TRight, TEdgeValue> graph,
                         map<TLeft, TRight> matching)
     {
         //        for (tail, head) in graph:
@@ -319,17 +312,17 @@ public:
                 && (matching.at(tail) == head)) {
                 set<TRight> s;
                 s.insert(head);
-                _map[make_tuple(LEFT, tail)] = s;
+                _map_left[tail] = s;
             } else {
                 // if (RIGHT, head) not in self:
                 //    self[(RIGHT, head)] = set()
                 // self[(RIGHT, head)].add((LEFT, tail))
-                Node head_node = make_tuple(RIGHT, head);
-                if (_map.find(head_node) == _map.end()) {
-                    _map[head_node] = set<Node>();
+                //Node head_node = make_tuple(RIGHT, head);
+                if (_map_right.find(head) == _map_right.end()) {
+                    _map_right[head] = set<TLeft>();
                 }
-                Node tail_node = make_tuple(LEFT, tail);
-                _map[head_node].insert(tail_node);
+                //Node tail_node = make_tuple(LEFT, tail);
+                _map_right[head].insert(tail);
             }
         }
     }
@@ -337,16 +330,22 @@ public:
     // def find_cycle(self) -> NodeList:
     //    visited = cast(NodeSet, set())
     //    for n in self:
-    //	cycle = self._find_cycle(n, cast(NodeList, []), visited)
-    //	if cycle:
-    //	    return cycle
+    //    cycle = self._find_cycle(n, cast(NodeList, []), visited)
+    //    if cycle:
+    //        return cycle
     //    return cast(NodeList, [])
+
+    typedef vector<variant<TLeft, TRight>> NodeList;
+    //typedef vector<pair<TLeft, TRight>> NodeList;
+
     NodeList find_cycle()
     {
-        NodeSet visited = set<Node>();
-        for (pair<Node, set<Node>> &n : _map) {
+        //set<variant<TLeft, TRight>> visited;
+        set<TLeft> visited_left;
+        set<TRight> visited_right;
+        for (const pair<TLeft, set<TRight>> &n : _map_left) {
             NodeList node_list;
-            NodeList &cycle = _find_cycle(n.first, node_list, visited);
+            NodeList cycle = _find_cycle_left(n.first, node_list, visited_left, visited_right);
             if (cycle.size() > 0) {
                 return cycle;
             }
@@ -354,16 +353,55 @@ public:
         return NodeList();
     }
 
-    NodeList _find_cycle(const Node &node, NodeList &path, NodeSet &visited)
+    NodeList _find_cycle_left(const TLeft &node, NodeList &path, set<TLeft> &visited_left, set<TRight> &visited_right)
     {
         // if node in visited:
-        //	try:
-        //	    index = path.index(node)
-        //	    return path[index:]
-        //	except ValueError:
-        //	    return cast(NodeList, [])
-        if (visited.find(node) != visited.end()) {
-            NodeList::iterator &found_end
+        //    try:
+        //        index = path.index(node)
+        //        return path[index:]
+        //    except ValueError:
+        //        return cast(NodeList, [])
+        if (visited_left.find(node) != visited_left.end()) {
+            typename NodeList::iterator found_end;
+            found_end = find(path.begin(), path.end(), node);
+            if (found_end != path.end()) {
+                return NodeList(path.begin(), found_end);
+            } else {
+                return NodeList();
+            }
+        }
+        // visited.add(node)
+        visited_left.insert(node);
+        // if node not in self:
+        //    return cast(NodeList, [])
+        if (_map_left.find(node) == _map_left.end()) {
+            return NodeList();
+        }
+        // for other in self[node]:
+        //    cycle = self._find_cycle(other, path + [node], visited)
+        //    if cycle:
+        //        return cycle
+		for (const TRight &other : _map_left[node]) {
+			NodeList new_path(path.begin(), path.end());
+			variant<TLeft, TRight> v(in_place_index<0>, node);
+			new_path.push_back(v);
+			NodeList cycle = _find_cycle_right(other, new_path, visited_left, visited_right);
+			if (cycle.size() > 0) {
+				return cycle;
+			}
+		}
+		return NodeList();
+	}
+
+    NodeList _find_cycle_right(const TRight &node, NodeList &path, set<TLeft> &visited_left, set<TRight> &visited_right) {
+        // if node in visited:
+        //    try:
+        //        index = path.index(node)
+        //        return path[index:]
+        //    except ValueError:
+        //        return cast(NodeList, [])
+        if (visited_right.find(node) != visited_right.end()) {
+            typename NodeList::iterator found_end
                 = find(path.begin(), path.end(), node);
             if (found_end != path.end()) {
                 return NodeList(path.begin(), found_end);
@@ -372,24 +410,25 @@ public:
             }
         }
         // visited.add(node)
-        visited.insert(node);
+        visited_right.insert(node);
         // if node not in self:
-        //	return cast(NodeList, [])
-        if (_map.find(node) == _map.end()) {
+        //    return cast(NodeList, [])
+        if (_map_left.find(node) == _map_left.end()) {
             return NodeList();
         }
         // for other in self[node]:
-        //	cycle = self._find_cycle(other, path + [node], visited)
-        //	if cycle:
-        //	    return cycle
-        for (const Node &other : _map[node]) {
-            NodeList new_path(path.begin(), path.end());
-            new_path.push_back(node);
-            NodeList &cycle = _find_cycle(other, new_path, visited);
-            if (cycle.size() > 0) {
-                return cycle;
-            }
-        }
+        //    cycle = self._find_cycle(other, path + [node], visited)
+        //    if cycle:
+        //        return cycle
+		for (const TLeft &other : _map_right[node]) {
+			NodeList new_path(path.begin(), path.end());
+			variant<TLeft, TRight> v(in_place_index<1>, node);
+			new_path.push_back(v);
+			NodeList cycle = _find_cycle_left(other, new_path, visited_left, visited_right);
+			if (cycle.size() > 0) {
+				return cycle;
+			}
+		}
         // return cast(NodeList, [])
         return NodeList();
     }
@@ -407,14 +446,14 @@ template <typename TLeft, typename TRight, typename TEdgeValue>
 class _enum_maximum_matchings_iter : public virtual GeneratorTrick<map<TLeft, TRight>>
 {
 private:
-    BipartiteGraph<TEdgeValue> graph;
+    BipartiteGraph<TLeft, TRight, TEdgeValue> graph;
     map<TLeft, TRight> matching;
-    _DirectedMatchGraph<TEdgeValue> directed_match_graph;
+    _DirectedMatchGraph<TLeft, TRight, TEdgeValue> directed_match_graph;
 
 public:
     _enum_maximum_matchings_iter(
-        BipartiteGraph<TEdgeValue> graph, map<TLeft, TRight> matching,
-        _DirectedMatchGraph<TEdgeValue> directed_match_graph)
+        BipartiteGraph<TLeft, TRight, TEdgeValue> graph, map<TLeft, TRight> matching,
+        _DirectedMatchGraph<TLeft, TRight, TEdgeValue> directed_match_graph)
         : graph(graph), matching(matching),
           directed_match_graph(directed_match_graph)
     {
@@ -425,14 +464,17 @@ public:
 
 private:
     map<TLeft, TRight> new_match;
+    typedef tuple<TLeft, TRight> Edge;
+    typedef variant<TLeft, TRight> Node;
+    typedef vector<Node> NodeList;
     Edge edge;
     NodeList cycle;
-    _DirectedMatchGraph<TEdgeValue> directed_match_graph_minus,
+    _DirectedMatchGraph<TLeft, TRight, TEdgeValue> directed_match_graph_minus,
         directed_match_graph_plus;
     set<Node> old_value;
 
-    BipartiteGraph<TEdgeValue> graph_plus, graph_minus;
-    _DirectedMatchGraph<TEdgeValue> dgm_plus, dgm_minus;
+    BipartiteGraph<TLeft, TRight, TEdgeValue> graph_plus, graph_minus;
+    _DirectedMatchGraph<TLeft, TRight, TEdgeValue> dgm_plus, dgm_minus;
     _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue> iter_enum;
 
     TLeft *left1, *left2;
@@ -540,7 +582,7 @@ private:
         //
         // graph[edge] = old_value
         directed_match_graph_minus
-            = _DirectedMatchGraph<TEdgeValue>(graph, new_match);
+            = _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, new_match);
         iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
             graph, new_match, directed_match_graph_minus);
         this->current = bind(&_enum_maximum_matchings_iter::step7part002, this);
@@ -586,7 +628,7 @@ private:
         }
         // directed_match_graph_plus = _DirectedMatchGraph(graph_plus, matching)
         directed_match_graph_plus
-            = _DirectedMatchGraph<TEdgeValue>(graph_plus, matching);
+            = _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph_plus, matching);
         // yield from _enum_maximum_matchings_iter(graph_plus, matching,
         // directed_match_graph_plus)
         iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
@@ -694,8 +736,8 @@ private:
         graph_plus = graph.without_nodes(edge);
         graph_minus = graph.without_edge(edge);
 
-        dgm_plus = _DirectedMatchGraph<TEdgeValue>(graph_plus, new_match);
-        dgm_minus = _DirectedMatchGraph<TEdgeValue>(graph_minus, matching);
+        dgm_plus = _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph_plus, new_match);
+        dgm_minus = _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph_minus, matching);
         this->current = bind(&_enum_maximum_matchings_iter::step9, this);
     }
 
