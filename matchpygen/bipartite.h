@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <variant>
+#include <any>
 
 #include <symengine/basic.h>
 #include <symengine/pow.h>
@@ -47,6 +48,31 @@ public:
     BipartiteGraph()
     {
     }
+
+    /*
+    def __init__(self, *args, **kwargs):
+        self._edges = dict(*args, **kwargs)
+        self._left = set(l for (l, _) in self._edges.keys())
+        self._right = set(r for (_, r) in self._edges.keys())
+        self._graph = {}
+        for l, r in self._edges:
+            self._graph.setdefault((LEFT, l), set()).add((RIGHT, r))
+            self._graph.setdefault((RIGHT, r), set()).add((LEFT, l))
+
+        self._matching = {}
+        self._dfs_paths = []
+        self._dfs_parent = {}
+    */
+    BipartiteGraph(map<Edge, TEdgeValue> edges) {
+        _edges = edges;
+        for (const pair<Edge, TEdgeValue> &p : edges) {
+           _left.insert(p.first);
+           _right.insert(p.second);
+           _graph_left[p.first].insert(p.second);
+           _graph_right[p.second].insert(p.first);
+        }
+    }
+
 
     void __setitem__(Edge key, TEdgeValue value)
     {
@@ -335,8 +361,8 @@ public:
     //        return cycle
     //    return cast(NodeList, [])
 
-    typedef vector<variant<TLeft, TRight>> NodeList;
-    //typedef vector<pair<TLeft, TRight>> NodeList;
+    //typedef vector<any> NodeList;
+    typedef vector<pair<TLeft, TRight>> NodeList;
 
     NodeList find_cycle()
     {
@@ -345,7 +371,8 @@ public:
         set<TRight> visited_right;
         for (const pair<TLeft, set<TRight>> &n : _map_left) {
             NodeList node_list;
-            NodeList cycle = _find_cycle_left(n.first, node_list, visited_left, visited_right);
+            NodeList cycle;
+            cycle = _find_cycle_left(n.first, node_list, visited_left, visited_right);
             if (cycle.size() > 0) {
                 return cycle;
             }
@@ -363,9 +390,10 @@ public:
         //        return cast(NodeList, [])
         if (visited_left.find(node) != visited_left.end()) {
             typename NodeList::iterator found_end;
-            found_end = find(path.begin(), path.end(), node);
+            found_end = find_if(path.begin(), path.end(),
+				[&node](const pair<TLeft, TRight> &p){ return p.first == node; });
             if (found_end != path.end()) {
-                return NodeList(path.begin(), found_end);
+                return NodeList(path.begin(), found_end+1);
             } else {
                 return NodeList();
             }
@@ -381,16 +409,15 @@ public:
         //    cycle = self._find_cycle(other, path + [node], visited)
         //    if cycle:
         //        return cycle
-		for (const TRight &other : _map_left[node]) {
-			NodeList new_path(path.begin(), path.end());
-			variant<TLeft, TRight> v(in_place_index<0>, node);
-			new_path.push_back(v);
-			NodeList cycle = _find_cycle_right(other, new_path, visited_left, visited_right);
-			if (cycle.size() > 0) {
-				return cycle;
-			}
+	for (const TRight &other : _map_left[node]) {
+		NodeList new_path(path.begin(), path.end());
+		new_path.push_back(make_pair(node, other));
+		NodeList cycle = _find_cycle_right(other, new_path, visited_left, visited_right);
+		if (cycle.size() > 0) {
+			return cycle;
 		}
-		return NodeList();
+	}
+	return NodeList();
 	}
 
     NodeList _find_cycle_right(const TRight &node, NodeList &path, set<TLeft> &visited_left, set<TRight> &visited_right) {
@@ -401,10 +428,11 @@ public:
         //    except ValueError:
         //        return cast(NodeList, [])
         if (visited_right.find(node) != visited_right.end()) {
-            typename NodeList::iterator found_end
-                = find(path.begin(), path.end(), node);
+            typename NodeList::iterator found_end;
+            found_end = find_if(path.begin(), path.end(),
+				[&node](const pair<TLeft, TRight> &p){ return p.second == node; });
             if (found_end != path.end()) {
-                return NodeList(path.begin(), found_end);
+                return NodeList(path.begin(), found_end+1);
             } else {
                 return NodeList();
             }
@@ -413,22 +441,20 @@ public:
         visited_right.insert(node);
         // if node not in self:
         //    return cast(NodeList, [])
-        if (_map_left.find(node) == _map_left.end()) {
+        if (_map_right.find(node) == _map_right.end()) {
             return NodeList();
         }
         // for other in self[node]:
         //    cycle = self._find_cycle(other, path + [node], visited)
         //    if cycle:
         //        return cycle
-		for (const TLeft &other : _map_right[node]) {
-			NodeList new_path(path.begin(), path.end());
-			variant<TLeft, TRight> v(in_place_index<1>, node);
-			new_path.push_back(v);
-			NodeList cycle = _find_cycle_left(other, new_path, visited_left, visited_right);
-			if (cycle.size() > 0) {
-				return cycle;
-			}
+	for (const TLeft &other : _map_right[node]) {
+		NodeList new_path(path.begin(), path.end());
+		NodeList cycle = _find_cycle_left(other, new_path, visited_left, visited_right);
+		if (cycle.size() > 0) {
+			return cycle;
 		}
+	}
         // return cast(NodeList, [])
         return NodeList();
     }

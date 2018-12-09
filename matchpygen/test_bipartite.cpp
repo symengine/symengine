@@ -76,23 +76,6 @@ void test_hopcroft_karp_bipartite2()
 }
 
 /*
-@pytest.mark.parametrize(
-    '   graph,                      expected_cycle',
-    [
-        ({},                        []),
-        ({0: {1}},                  []),
-        ({0: {1}, 1: {2}},          []),
-        ({0: {1}, 1: {0}},          [0, 1]),
-        ({0: {1}, 1: {0}},          [1, 0]),
-        ({0: {1}, 1: {0, 2}},       [0, 1]),
-        ({0: {1, 2}, 1: {0, 2}},    [0, 1]),
-        ({0: {1, 2}, 1: {0}},       [0, 1]),
-        ({0: {1}, 1: {2}, 2: {0}},  [0, 1, 2]),
-        ({0: {2}, 1: {2}},          []),
-        ({0: {2}, 1: {2}, 2: {0}},  [0, 2]),
-        ({0: {2}, 1: {2}, 2: {1}},  [1, 2]),
-    ]
-)  # yapf: disable
 def test_directed_graph_find_cycle(graph, expected_cycle):
     dmg = _DirectedMatchGraph({}, {})
     dmg.update(graph)
@@ -103,48 +86,81 @@ def test_directed_graph_find_cycle(graph, expected_cycle):
         cycle = cycle[start:] + cycle[:start]
     assert cycle == expected_cycle
 */
-
 template<typename T1, typename T2>
-void test_directed_graph_find_cycle(map<T1, set<T2>> graph, vector<int> expected_cycle) {
+void test_directed_graph_find_cycle(map<T1, set<T2>> graph, vector<T1> expected_cycle) {
 	_DirectedMatchGraph<T1, T2, int> dmg;
 	for (const pair<T1, set<T2>> &p : graph) {
-		dmg._map_left[p.first] = p.second;
+	    if (p.first % 2 == 0)
+	      dmg._map_left[p.first] = p.second;
+	    else
+	      dmg._map_right[p.first] = p.second;
 	}
-	vector<variant<T1, T2>> node_list_v = dmg.find_cycle();
-	vector<T1> node_list;
-	for (auto &i : node_list_v) {
-		node_list.push_back(get<0>(i));
-	}
-	cout << "Size dmg: " << dmg._map_left.size() << endl;
-	cout << "Size graph: " << graph.size() << endl;
-	cout << "Size: " << node_list.size() << endl;
+	vector<pair<T1, T2>> node_list = dmg.find_cycle();
+//	cout << "Size dmg: " << dmg._map_left.size() << endl;
+//	cout << "Size graph: " << graph.size() << endl;
+//	cout << "Size: " << node_list.size() << endl;
+	cout << "Found cycle ";
 	for (auto &i : node_list) {
-		cout << i << " ";
+		cout << i.first << " " << i.second << " ";
 	}
-	cout << endl;
+	cout << endl << "Expected cycle: ";
+	for (auto &i : expected_cycle) {
+	    cout << i << " ";
+	}
+	cout << endl << endl;
 }
 
 void run_test_directed_graph_find_cycle() {
-	map<int, set<double>> graph;
+	map<int, set<int>> graph;
 	vector<int> expected_cycle;
-	set<double> node_set;
-        //({0: {1}, 1: {2}, 2: {0}},  [0, 1, 2]),
-	node_set.insert(1);
-	graph[0] = node_set;
-	node_set.clear();
-	node_set.insert(2);
-	graph[1] = node_set;
-	node_set.clear();
-	node_set.insert(0);
-	graph[2] = node_set;
-	node_set.clear();
-	for (auto &i : graph) {
-		cout << "set size " << i.second.size() << endl;
-		for (auto &j : i.second)
-			cout << j << " ";
-		cout << endl;
-	}
-	test_directed_graph_find_cycle<int, double>(graph, expected_cycle);
+
+	graph = {};
+	expected_cycle = {};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}},                  []),
+	graph = {{0, {1}}};
+	expected_cycle = {};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}, 1: {2}},          []),
+	graph = {{0, {1}}, {1, {2}}};
+	expected_cycle = {};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}, 1: {0}},          [0, 1]),
+	graph = {{0, {1}}, {1, {0}}};
+	expected_cycle = {0, 1};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}, 1: {0}},          [1, 0]),
+	graph = {{0, {1}}, {1, {0}}};
+	expected_cycle = {1, 0};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}, 1: {0, 2}},       [0, 1]),
+	graph = {{0, {1}}, {1, {0, 2}}};
+	expected_cycle = {0, 1};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1, 2}, 1: {0, 2}},    [0, 1]),
+	graph = {{0, {1, 2}}, {1, {0, 2}}};
+	expected_cycle = {0, 1};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1, 2}, 1: {0}},       [0, 1]),
+	graph = {{0, {1, 2}}, {1, {0}}};
+	expected_cycle = {0, 1};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {1}, 1: {2}, 2: {0}},  [0, 1, 2]),
+	graph = {{0, {1}}, {1, {2}}, {2, {0}}};
+	expected_cycle = {0, 1, 2};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {2}, 1: {2}},          []),
+	graph = {{0, {2}}, {1, {2}}};
+	expected_cycle = {};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {2}, 1: {2}, 2: {0}},  [0, 2]),
+	graph = {{0, {2}}, {1, {2}}, {2, {0}}};
+	expected_cycle = {0, 2};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
+	//	        ({0: {2}, 1: {2}, 2: {1}},  [1, 2]),
+	graph = {{0, {2}}, {1, {2}}, {2, {1}}};
+	expected_cycle = {1, 2};
+	test_directed_graph_find_cycle<int, int>(graph, expected_cycle);
 }
 
 int main(int argc, char **argv)
