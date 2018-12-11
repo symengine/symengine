@@ -513,6 +513,54 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
     result_ = r;
 }
 
+void LLVMDoubleVisitor::bvisit(const Equality &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg1()));
+    args.push_back(apply(*x.get_arg2()));
+    fun = get_double_intrinsic(llvm::Intrinsic::equal_to, 2, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMDoubleVisitor::bvisit(const Unequality &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg1()));
+    args.push_back(apply(*x.get_arg2()));
+    fun = get_double_intrinsic(llvm::Intrinsic::not_equal_to, 2, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMDoubleVisitor::bvisit(const LessThan &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg1()));
+    args.push_back(apply(*x.get_arg2()));
+    fun = get_double_intrinsic(llvm::Intrinsic::less_equal, 2, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMDoubleVisitor::bvisit(const StrictLessThan &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg1()));
+    args.push_back(apply(*x.get_arg2()));
+    fun = get_double_intrinsic(llvm::Intrinsic::less, 2, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
 #define ONE_ARG_EXTERNAL_FUNCTION(Class, ext)                                  \
     void LLVMDoubleVisitor::bvisit(const Class &x)                             \
     {                                                                          \

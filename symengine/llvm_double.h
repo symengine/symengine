@@ -89,6 +89,10 @@ public:
     void bvisit(const ATanh &x);
     void bvisit(const Gamma &x);
     void bvisit(const LogGamma &x);
+    void bvisit(const Equality &x);
+    void bvisit(const Unequality &x);
+    void bvisit(const LessThan &x);
+    void bvisit(const StrictLessThan &x);
     void bvisit(const Erf &x);
     void bvisit(const Erfc &x);
     // Return the compiled function as a binary string which can be loaded using
