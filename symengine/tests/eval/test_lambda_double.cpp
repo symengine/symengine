@@ -236,9 +236,16 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
                             pow(sin(x), integer(2)))),
             add(vec));
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 1; ++i) {
         r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
     }
+
+    // Piecewise
+    auto int1 = interval(NegInf, integer(2), true, false);
+    auto int2 = interval(integer(2), integer(5), true, false);
+    r = add(r, piecewise({{x, contains(x, int1)},
+                          {y, contains(x, int2)},
+                          {add(x, y), boolTrue}}));
 
     // r = add(add(x, y), pow(add(x, y), integer(2)));
 

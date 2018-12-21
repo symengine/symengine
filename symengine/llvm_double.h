@@ -91,6 +91,9 @@ public:
     void bvisit(const LogGamma &x);
     void bvisit(const Erf &x);
     void bvisit(const Erfc &x);
+    void bvisit(const Piecewise &x);
+    void bvisit(const Contains &x);
+    void bvisit(const Infty &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
     const std::string &dumps() const;

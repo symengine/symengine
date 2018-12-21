@@ -502,6 +502,118 @@ void LLVMDoubleVisitor::bvisit(const Cos &x)
     result_ = r;
 }
 
+void LLVMDoubleVisitor::bvisit(const Piecewise &x)
+{
+    std::vector<llvm::BasicBlock> blocks;
+
+    RCP<const Piecewise> pw = x.rcp_from_this_cast<const Piecewise>();
+
+    if (neq(*pw->get_vec().back().second, *boolTrue)) {
+        throw SymEngineException(
+            "LLVMDouble requires a (Expr, True) at the end of Piecewise");
+    }
+
+    if (pw->get_vec().size() > 2) {
+        PiecewiseVec rest = pw->get_vec();
+        rest.erase(rest.begin());
+        auto rest_pw = piecewise(std::move(rest));
+        PiecewiseVec new_pw;
+        new_pw.push_back(*pw->get_vec().begin());
+        new_pw.push_back({rest_pw, pw->get_vec().back().second});
+        pw = piecewise(std::move(new_pw))
+                 ->rcp_from_this_cast<const Piecewise>();
+    } else if (pw->get_vec().size() < 2) {
+        throw SymEngineException("Invalid Piecewise object");
+    }
+
+    auto cond_basic = pw->get_vec().front().second;
+    llvm::Value *cond = apply(*cond_basic);
+    // check if cond != 0.0
+    cond = builder->CreateFCmpONE(
+        cond,
+        llvm::ConstantFP::get(llvm::Type::getDoubleTy(mod->getContext()), 0.0),
+        "ifcond");
+    llvm::Function *function = builder->GetInsertBlock()->getParent();
+    // Create blocks for the then and else cases.  Insert the 'then' block at
+    // the
+    // end of the function.
+    llvm::BasicBlock *then_bb
+        = llvm::BasicBlock::Create(mod->getContext(), "then", function);
+    llvm::BasicBlock *else_bb
+        = llvm::BasicBlock::Create(mod->getContext(), "else");
+    llvm::BasicBlock *merge_bb
+        = llvm::BasicBlock::Create(mod->getContext(), "ifcont");
+    builder->CreateCondBr(cond, then_bb, else_bb);
+
+    // Emit then value.
+    builder->SetInsertPoint(then_bb);
+    llvm::Value *then_value = apply(*pw->get_vec().front().first);
+    builder->CreateBr(merge_bb);
+
+    // Codegen of 'then_value' can change the current block, update then_bb for
+    // the PHI.
+    then_bb = builder->GetInsertBlock();
+
+    // Emit else block.
+    function->getBasicBlockList().push_back(else_bb);
+    builder->SetInsertPoint(else_bb);
+    llvm::Value *else_value = apply(*pw->get_vec().back().first);
+    builder->CreateBr(merge_bb);
+
+    // Codegen of 'else_value' can change the current block, update else_bb for
+    // the PHI.
+    else_bb = builder->GetInsertBlock();
+
+    // Emit merge block.
+    function->getBasicBlockList().push_back(merge_bb);
+    builder->SetInsertPoint(merge_bb);
+    llvm::PHINode *phi_node
+        = builder->CreatePHI(llvm::Type::getDoubleTy(mod->getContext()), 2);
+
+    phi_node->addIncoming(then_value, then_bb);
+    phi_node->addIncoming(else_value, else_bb);
+    result_ = phi_node;
+}
+
+void LLVMDoubleVisitor::bvisit(const Contains &cts)
+{
+    llvm::Value *expr = apply(*cts.get_expr());
+    const auto set = cts.get_set();
+    if (is_a<Interval>(*set)) {
+        const auto &interv = down_cast<const Interval &>(*set);
+        llvm::Value *start = apply(*interv.get_start());
+        llvm::Value *end = apply(*interv.get_end());
+        const bool left_open = interv.get_left_open();
+        const bool right_open = interv.get_right_open();
+        llvm::Value *left_ok;
+        llvm::Value *right_ok;
+        left_ok = (left_open) ? builder->CreateFCmpOLT(start, expr)
+                              : builder->CreateFCmpOLE(start, expr);
+        right_ok = (right_open) ? builder->CreateFCmpOLT(expr, end)
+                                : builder->CreateFCmpOLE(expr, end);
+        result_ = builder->CreateAnd(left_ok, right_ok);
+        result_ = builder->CreateUIToFP(
+            result_, llvm::Type::getDoubleTy(mod->getContext()));
+    } else {
+        throw SymEngineException("LLVMDoubleVisitor: only ``Interval`` "
+                                 "implemented for ``Contains``.");
+    }
+}
+
+void LLVMDoubleVisitor::bvisit(const Infty &x)
+{
+    if (x.is_negative_infinity()) {
+        result_ = llvm::ConstantFP::getInfinity(
+            llvm::Type::getDoubleTy(mod->getContext()), true);
+    } else if (x.is_positive_infinity()) {
+        result_ = llvm::ConstantFP::getInfinity(
+            llvm::Type::getDoubleTy(mod->getContext()), false);
+    } else {
+        throw SymEngineException(
+            "LLVMDouble can only represent real valued infinity");
+    }
+}
+
 void LLVMDoubleVisitor::bvisit(const Log &x)
 {
     std::vector<llvm::Value *> args;
