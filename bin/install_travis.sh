@@ -22,7 +22,7 @@ fi
 export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
-    brew update
+    # brew update
     export CC=gcc-4.9
     export CXX=g++-4.9
 fi
@@ -65,7 +65,7 @@ conda config --add channels conda-forge --force
 # Useful for debugging any issues with conda
 conda info -a
 
-conda_pkgs="$conda_pkgs ccache"
+# conda_pkgs="$conda_pkgs ccache"
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
     conda_pkgs="$conda_pkgs boost=1.62";
@@ -127,10 +127,10 @@ if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
 fi
 
 # Use ccache
-export CXX="ccache ${CXX}"
-export CC="ccache ${CC}"
-export CCACHE_DIR=$HOME/.ccache
-ccache -M 400M
+# export CXX="ccache ${CXX}"
+# export CC="ccache ${CC}"
+# export CCACHE_DIR=$HOME/.ccache
+# ccache -M 400M
 
 cd $SOURCE_DIR;
 

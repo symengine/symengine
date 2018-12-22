@@ -8,10 +8,6 @@ os:
   - osx
 dist: trusty
 osx_image: xcode6.4
-cache:
-  directories:
-  - $HOME/.ccache
-  - $HOME/conda_root
 addons:
   apt:
     sources:
