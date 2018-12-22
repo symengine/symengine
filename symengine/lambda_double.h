@@ -429,11 +429,11 @@ public:
 
         result_ = [=](const double *x) {
 
-            double result = applys[0](x);
+            bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result && applys[i](x);
+                result = result && bool(applys[i](x));
             }
-            return result;
+            return double(result);
         };
     }
 
@@ -446,11 +446,11 @@ public:
 
         result_ = [=](const double *x) {
 
-            double result = applys[0](x);
+            bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result || applys[i](x);
+                result = result || bool(applys[i](x));
             }
-            return result;
+            return double(result);
         };
     }
 
@@ -463,18 +463,18 @@ public:
 
         result_ = [=](const double *x) {
 
-            double result = applys[0](x);
+            bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result != applys[i](x);
+                result = result != bool(applys[i](x));
             }
-            return result;
+            return double(result);
         };
     }
 
     void bvisit(const Not &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return (not tmp(x)); };
+        result_ = [=](const double *x) { return double(not bool(tmp(x))); };
     }
 
     void bvisit(const Max &x)
