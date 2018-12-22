@@ -60,6 +60,7 @@ using SymEngine::Eq;
 using SymEngine::Ne;
 using SymEngine::Lt;
 using SymEngine::Le;
+using SymEngine::logical_and;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -234,9 +235,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     b = add(y, z);
 
     vec_basic exprs
-        = {log(a),   abs(a),      tan(a),   sinh(a), cosh(a), tanh(a),
-           asinh(b), acosh(b),    atanh(a), asin(a), acos(a), atan(a),
-           gamma(a), loggamma(a), erf(a),   erfc(a)};
+        = {log(a),   abs(a),      tan(a),   sinh(a), cosh(a),     tanh(a),
+           asinh(b), acosh(b),    atanh(a), asin(a), acos(a),     atan(a),
+           gamma(a), loggamma(a), erf(a),   erfc(a), max({a, b}), min({a, b})};
 
     for (unsigned i = 0; i < exprs.size(); i++) {
         exprs[i] = add(exprs[i], z);
@@ -249,8 +250,12 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
     auto int2 = interval(integer(2), integer(5), true, false);
+
+    SymEngine::set_boolean s = {Lt(x, integer(6)), Gt(x, integer(5))};
     r = add(z, piecewise({{x, contains(x, int1)},
                           {y, contains(x, int2)},
+                          {z, Ge(x, integer(7))},
+                          {a, logical_and(s)},
                           {add(x, y), boolTrue}}));
     exprs.push_back(r);
 

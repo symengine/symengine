@@ -614,6 +614,12 @@ void LLVMDoubleVisitor::bvisit(const Infty &x)
     }
 }
 
+void LLVMDoubleVisitor::bvisit(const BooleanAtom &x)
+{
+    const bool val = x.get_val();
+    set_double(val ? 1.0 : 0.0);
+}
+
 void LLVMDoubleVisitor::bvisit(const Log &x)
 {
     std::vector<llvm::Value *> args;
@@ -624,6 +630,49 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
     r->setTailCall(true);
     result_ = r;
 }
+
+#define SYMENGINE_LOGIC_FUNCTION(Class, method)                                \
+    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+    {                                                                          \
+        llvm::Value *value = nullptr;                                          \
+        llvm::Value *tmp;                                                      \
+        set_double(0.0);                                                       \
+        llvm::Value *zero_val = result_;                                       \
+        for (auto &p : x.get_container()) {                                    \
+            tmp = builder->CreateFCmpONE(apply(*p), zero_val);                 \
+            if (value == nullptr) {                                            \
+                value = tmp;                                                   \
+            } else {                                                           \
+                value = builder->method(value, tmp);                           \
+            }                                                                  \
+        }                                                                      \
+        result_ = builder->CreateUIToFP(                                       \
+            value, llvm::Type::getDoubleTy(mod->getContext()));                \
+    }
+
+SYMENGINE_LOGIC_FUNCTION(And, CreateAnd);
+SYMENGINE_LOGIC_FUNCTION(Or, CreateOr);
+SYMENGINE_LOGIC_FUNCTION(Xor, CreateXor);
+
+void LLVMDoubleVisitor::bvisit(const Not &x)
+{
+    builder->CreateNot(apply(*x.get_arg()));
+}
+
+#define SYMENGINE_RELATIONAL_FUNCTION(Class, method)                           \
+    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+    {                                                                          \
+        llvm::Value *left = apply(*x.get_arg1());                              \
+        llvm::Value *right = apply(*x.get_arg2());                             \
+        result_ = builder->method(left, right);                                \
+        result_ = builder->CreateUIToFP(                                       \
+            result_, llvm::Type::getDoubleTy(mod->getContext()));              \
+    }
+
+SYMENGINE_RELATIONAL_FUNCTION(Equality, CreateFCmpOEQ);
+SYMENGINE_RELATIONAL_FUNCTION(Unequality, CreateFCmpONE);
+SYMENGINE_RELATIONAL_FUNCTION(LessThan, CreateFCmpOLE);
+SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
 
 #define ONE_ARG_EXTERNAL_FUNCTION(Class, ext)                                  \
     void LLVMDoubleVisitor::bvisit(const Class &x)                             \
@@ -649,6 +698,46 @@ ONE_ARG_EXTERNAL_FUNCTION(Gamma, tgamma)
 ONE_ARG_EXTERNAL_FUNCTION(LogGamma, lgamma)
 ONE_ARG_EXTERNAL_FUNCTION(Erf, erf)
 ONE_ARG_EXTERNAL_FUNCTION(Erfc, erfc)
+
+void LLVMDoubleVisitor::bvisit(const Min &x)
+{
+    llvm::Value *value = nullptr;
+    llvm::Function *fun;
+    fun = get_double_intrinsic(llvm::Intrinsic::minnum, 2, mod);
+    for (auto &arg : x.get_vec()) {
+        if (value != nullptr) {
+            std::vector<llvm::Value *> args;
+            args.push_back(value);
+            args.push_back(apply(*arg));
+            auto r = builder->CreateCall(fun, args);
+            r->setTailCall(true);
+            value = r;
+        } else {
+            value = apply(*arg);
+        }
+    }
+    result_ = value;
+}
+
+void LLVMDoubleVisitor::bvisit(const Max &x)
+{
+    llvm::Value *value = nullptr;
+    llvm::Function *fun;
+    fun = get_double_intrinsic(llvm::Intrinsic::maxnum, 2, mod);
+    for (auto &arg : x.get_vec()) {
+        if (value != nullptr) {
+            std::vector<llvm::Value *> args;
+            args.push_back(value);
+            args.push_back(apply(*arg));
+            auto r = builder->CreateCall(fun, args);
+            r->setTailCall(true);
+            value = r;
+        } else {
+            value = apply(*arg);
+        }
+    }
+    result_ = value;
+}
 
 void LLVMDoubleVisitor::bvisit(const Symbol &x)
 {

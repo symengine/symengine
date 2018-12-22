@@ -420,6 +420,63 @@ public:
         result_ = [=](const double *x) { return (lhs_(x) < rhs_(x)); };
     }
 
+    void bvisit(const And &x)
+    {
+        std::vector<fn> applys;
+        for (const auto &p : x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const double *x) {
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = result && applys[i](x);
+            }
+            return result;
+        };
+    }
+
+    void bvisit(const Or &x)
+    {
+        std::vector<fn> applys;
+        for (const auto &p : x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const double *x) {
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = result || applys[i](x);
+            }
+            return result;
+        };
+    }
+
+    void bvisit(const Xor &x)
+    {
+        std::vector<fn> applys;
+        for (const auto &p : x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const double *x) {
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = result != applys[i](x);
+            }
+            return result;
+        };
+    }
+
+    void bvisit(const Not &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const double *x) { return (not tmp(x)); };
+    }
+
     void bvisit(const Max &x)
     {
         std::vector<fn> applys;
