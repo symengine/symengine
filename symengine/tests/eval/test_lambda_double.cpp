@@ -60,6 +60,7 @@ using SymEngine::Eq;
 using SymEngine::Ne;
 using SymEngine::Lt;
 using SymEngine::Le;
+using SymEngine::logical_and;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -223,66 +224,60 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 #ifdef HAVE_SYMENGINE_LLVM
 TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 {
-    RCP<const Basic> x, y, z, r;
+
+    RCP<const Basic> x, y, z, r, a, b;
     double d, d2, d3;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
 
-    vec_basic vec = {log(x),   abs(x),      tan(x),   sinh(x), cosh(x), tanh(x),
-                     asinh(y), acosh(y),    atanh(x), asin(x), acos(x), atan(x),
-                     gamma(x), loggamma(x), erf(x),   erfc(x)};
+    a = add(x, z);
+    b = add(y, z);
 
-    r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
-                            pow(sin(x), integer(2)))),
-            add(vec));
-    for (int i = 0; i < 4; ++i) {
-        r = mul(add(pow(integer(2), E), add(r, pow(x, pow(E, cos(x))))), r);
+    vec_basic exprs
+        = {log(a),   abs(a),      tan(a),   sinh(a), cosh(a),     tanh(a),
+           asinh(b), acosh(b),    atanh(a), asin(a), acos(a),     atan(a),
+           gamma(a), loggamma(a), erf(a),   erfc(a), max({a, b}), min({a, b})};
+
+    for (unsigned i = 0; i < exprs.size(); i++) {
+        exprs[i] = add(exprs[i], z);
     }
 
-    // r = add(add(x, y), pow(add(x, y), integer(2)));
+    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                        pow(sin(x), integer(2))));
+    exprs.push_back(r);
 
-    LambdaRealDoubleVisitor v;
-    v.init({x, y, z}, *r);
+    // Piecewise
+    auto int1 = interval(NegInf, integer(2), true, false);
+    auto int2 = interval(integer(2), integer(5), true, false);
 
-    LLVMDoubleVisitor v2;
-    v2.init({x, y, z}, *r);
+    SymEngine::set_boolean s = {Lt(x, integer(6)), Gt(x, integer(5))};
+    r = add(z, piecewise({{x, contains(x, int1)},
+                          {y, contains(x, int2)},
+                          {z, Ge(x, integer(7))},
+                          {a, logical_and(s)},
+                          {add(x, y), boolTrue}}));
+    exprs.push_back(r);
 
-    LLVMDoubleVisitor v3;
-    bool symbolic_cse = true;
-    int opt_level = 3;
-    v3.init({x, y, z}, *r, symbolic_cse, opt_level);
+    for (auto &expr : exprs) {
+        LambdaRealDoubleVisitor v;
+        v.init({x, y, z}, *expr);
 
-    auto t1 = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 500; i++) {
-        d = v.call({0.4, 2.0, 3.0});
+        LLVMDoubleVisitor v2;
+        v2.init({x, y, z}, *expr);
+
+        LLVMDoubleVisitor v3;
+        bool symbolic_cse = true;
+        int opt_level = 3;
+        v3.init({x, y, z}, *expr, symbolic_cse, opt_level);
+
+        d = v.call({1.4, 3.0, -1.0});
+        d2 = v2.call({1.4, 3.0, -1.0});
+        d3 = v3.call({1.4, 3.0, -1.0});
+
+        REQUIRE(::fabs((d - d2) / d) < 1e-12);
+        REQUIRE(::fabs((d - d3) / d) < 1e-12);
     }
-    auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                     .count()
-              << "us" << std::endl;
-
-    t1 = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 500; i++) {
-        d2 = v2.call({0.4, 2.0, 3.0});
-    }
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                     .count()
-              << "us" << std::endl;
-
-    t1 = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 500; i++) {
-        d3 = v3.call({0.4, 2.0, 3.0});
-    }
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                     .count()
-              << "us" << std::endl;
-
-    std::cout << d << " " << d2 << " " << d3 << std::endl;
-    REQUIRE(::fabs((d - d2) / d) < 1e-12);
-    REQUIRE(::fabs((d - d3) / d) < 1e-12);
 }
 
 TEST_CASE("Check llvm save and load", "[llvm_double]")
