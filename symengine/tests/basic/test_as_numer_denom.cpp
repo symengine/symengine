@@ -83,6 +83,11 @@ TEST_CASE("NumerDenom: Mul", "[as_numer_denom]")
     as_numer_denom(r1, outArg(num), outArg(den));
     REQUIRE(eq(*num, *exp(x)));
     REQUIRE(eq(*den, *pow(add(one, exp(x)), integer(2))));
+
+    r1 = neg(sqrt(div(integer(1), integer(2))));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *neg(sqrt(integer(2)))));
+    REQUIRE(eq(*den, *integer(2)));
 }
 
 TEST_CASE("NumerDenom: Pow", "[as_numer_denom]")
