@@ -79,3 +79,6 @@ if (BUILD_BENCHMARKS_NONIUS)
     add_executable(bench_eval_double bench_eval_double.cpp)
     target_link_libraries(bench_eval_double symengine)
 endif()
+
+add_executable(parsing parsing.cpp)
+target_link_libraries(parsing symengine)

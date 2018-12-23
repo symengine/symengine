@@ -277,6 +277,7 @@ TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
     transpose_dense(A, B);
 
     REQUIRE(B == DenseMatrix(3, 1, {x, y, z}));
+    REQUIRE(B == DenseMatrix({x, y, z}));
 }
 
 TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
@@ -744,6 +745,56 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
     REQUIRE(B == DenseMatrix(3, 3, {integer(6), integer(0), integer(0),
                                     integer(0), integer(6), integer(0),
                                     integer(0), integer(0), integer(6)}));
+
+    A = DenseMatrix(3, 4, {integer(1), integer(1), integer(1), integer(6),
+                           integer(1), integer(1), integer(1), integer(8),
+                           integer(4), integer(6), integer(8), integer(18)});
+    B = DenseMatrix(3, 4);
+    pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
+    REQUIRE(B == DenseMatrix(3, 4,
+                             {integer(4), integer(0), integer(-4), integer(0),
+                              integer(0), integer(4), integer(8), integer(0),
+                              integer(0), integer(0), integer(0), integer(4)}));
+}
+
+TEST_CASE("reduced_row_echelon_form(): matrices", "[matrices]")
+{
+    SymEngine::vec_uint pivots;
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
+                                       integer(2), integer(2), integer(2),
+                                       integer(3), integer(4), integer(3)});
+    DenseMatrix B = DenseMatrix(3, 3);
+    reduced_row_echelon_form(A, B, pivots);
+
+    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
+                                    integer(0), integer(1), integer(0),
+                                    integer(0), integer(0), integer(0)}));
+    pivots.clear();
+
+    A = DenseMatrix(3, 4, {integer(1), integer(1), integer(1), integer(6),
+                           integer(1), integer(1), integer(1), integer(8),
+                           integer(4), integer(6), integer(8), integer(18)});
+    B = DenseMatrix(3, 4);
+    reduced_row_echelon_form(A, B, pivots);
+    REQUIRE(B == DenseMatrix(3, 4,
+                             {integer(1), integer(0), integer(-1), integer(0),
+                              integer(0), integer(1), integer(2), integer(0),
+                              integer(0), integer(0), integer(0), integer(1)}));
+
+    REQUIRE(SymEngine::unified_eq(pivots, {0, 1, 3}));
+    pivots.clear();
+
+    A = DenseMatrix(3, 4, {integer(0), integer(1), integer(1), integer(6),
+                           integer(0), integer(1), integer(1), integer(8),
+                           integer(0), integer(6), integer(8), integer(18)});
+    B = DenseMatrix(3, 4);
+    reduced_row_echelon_form(A, B, pivots);
+    REQUIRE(B == DenseMatrix(3, 4,
+                             {integer(0), integer(1), integer(0), integer(0),
+                              integer(0), integer(0), integer(1), integer(0),
+                              integer(0), integer(0), integer(0), integer(1)}));
+
+    REQUIRE(SymEngine::unified_eq(pivots, {1, 2, 3}));
 }
 
 TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices",
@@ -967,7 +1018,7 @@ TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
     A = DenseMatrix(3, 3,
                     {integer(0), integer(0), integer(0), integer(0), integer(0),
                      integer(0), integer(8), integer(3), integer(1)});
-    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), SymEngineException);
+    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), SymEngineException &);
 }
 
 TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
@@ -1400,7 +1451,7 @@ TEST_CASE("test_dot(): matrices", "[matrices]")
 
     A = DenseMatrix(2, 3);
     B = DenseMatrix(4, 5);
-    CHECK_THROWS_AS(dot(A, B, C), SymEngineException);
+    CHECK_THROWS_AS(dot(A, B, C), SymEngineException &);
 }
 
 TEST_CASE("test_cross(): matrices", "[matrices]")
@@ -1552,7 +1603,7 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
                             integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
 }
 
 TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
@@ -1569,7 +1620,7 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
                             integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
 }
 
 TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
@@ -1674,8 +1725,9 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
 TEST_CASE("Test Jacobian", "[matrices]")
 {
     DenseMatrix A, X, J;
-    RCP<const Basic> x = symbol("x"), y = symbol("y"), z = symbol("z"),
-                     t = symbol("t"), f = function_symbol("f", x);
+    RCP<const Symbol> x = symbol("x"), y = symbol("y"), z = symbol("z"),
+                      t = symbol("t");
+    RCP<const Basic> f = function_symbol("f", x);
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
     X = DenseMatrix(4, 1, {x, y, z, t});
@@ -1700,8 +1752,8 @@ TEST_CASE("Test Jacobian", "[matrices]")
     REQUIRE(Js == ref1);
 
     X = DenseMatrix(4, 1, {f, y, z, t});
-    CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException);
-    CHECK_THROWS_AS(CSRMatrix::jacobian(A, X), SymEngineException);
+    CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException &);
+    CHECK_THROWS_AS(CSRMatrix::jacobian(A, X), SymEngineException &);
 
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
@@ -1719,6 +1771,10 @@ TEST_CASE("Test Jacobian", "[matrices]")
     J = DenseMatrix(2, 2);
     sjacobian(A, X, J);
     REQUIRE(J == DenseMatrix(2, 2, {y, f, integer(0), mul(integer(2), y)}));
+
+    REQUIRE(
+        CSRMatrix::jacobian({add(x, mul(integer(-1), y)), mul(x, y)}, {x, y})
+        == DenseMatrix(2, 2, {integer(1), integer(-1), y, x}));
 }
 
 TEST_CASE("Test Diff", "[matrices]")

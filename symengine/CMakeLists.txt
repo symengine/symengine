@@ -6,6 +6,20 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
+if (WITH_GENERATE_PARSER)
+    add_custom_command(OUTPUT parser/parser.cpp
+                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
+                      DEPENDS parser/parser.yy parser/parser.ih
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
+                     )
+
+    add_custom_command(OUTPUT parser/scanner.cpp
+                      COMMAND ${FLEXCPP_EXECUTABLE} --namespace=SymEngine scanner.ll
+                      DEPENDS parser/scanner.ll parser/scanner.h
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
+                     )
+endif()
+
 set(SRC
     add.cpp
     basic.cpp
@@ -36,7 +50,9 @@ set(SRC
     ntheory.cpp
     number.cpp
     numer_denom.cpp
-    parser.cpp
+    parser/parser.cpp
+    parser/parser_old.cpp
+    parser/scanner.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
@@ -165,7 +181,11 @@ set(HEADERS
 )
 
 # Configure SymEngine using our CMake options:
+set(SYMENGINE_CLING_LIBRARY_DIR "\"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"")
+
 configure_file(symengine_config.h.in symengine_config.h)
+configure_file(symengine_config_cling.h.in symengine_config_cling.h)
+
 # Include the config file:
 include_directories(BEFORE ${symengine_BINARY_DIR})
 # Include the source directory
@@ -194,6 +214,14 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
+    set_source_files_properties(parser/parser.cpp parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion")
+endif()
+if (NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
+    set_source_files_properties(parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-implicit-fallthrough")
+endif()
+
+if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_SHARED)
+    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--exclude-libs,ALL")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)
@@ -209,9 +237,12 @@ install(TARGETS symengine
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
-install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+install(FILES
+    "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+    "${symengine_BINARY_DIR}/symengine/symengine_config_cling.h"
     "${symengine_BINARY_DIR}/symengine/symengine_export.h"
-    DESTINATION include/symengine)
+        DESTINATION
+    include/symengine)
 
 # make install
 macro(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)

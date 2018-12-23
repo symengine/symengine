@@ -6,6 +6,7 @@
 #include <symengine/eval_mpc.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/pow.h>
 
 using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;
@@ -141,9 +142,9 @@ TEST_CASE("RealMPFR: arithmetic", "[number]")
     REQUIRE(is_a<ComplexMPC>(*pownum(mulnum(minus_one, r1), r5)));
 
 #else
-    CHECK_THROWS_AS(addnum(r1, c1), SymEngineException);
-    CHECK_THROWS_AS(pownum(r5, half), SymEngineException);
-    CHECK_THROWS_AS(pownum(integer(-2), r1), SymEngineException);
+    CHECK_THROWS_AS(addnum(r1, c1), SymEngineException &);
+    CHECK_THROWS_AS(pownum(r5, half), SymEngineException &);
+    CHECK_THROWS_AS(pownum(integer(-2), r1), SymEngineException &);
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }

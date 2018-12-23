@@ -1,0 +1,12 @@
+name: symengine
+channels:
+  - QuantStack
+  - conda-forge
+dependencies:
+  - xeus-cling=0.4.7
+  - gmp
+  - mpfr
+  - mpc
+  - cmake
+  - arb
+  - notebook

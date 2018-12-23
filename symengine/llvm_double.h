@@ -91,6 +91,20 @@ public:
     void bvisit(const LogGamma &x);
     void bvisit(const Erf &x);
     void bvisit(const Erfc &x);
+    void bvisit(const Piecewise &x);
+    void bvisit(const BooleanAtom &x);
+    void bvisit(const And &x);
+    void bvisit(const Or &x);
+    void bvisit(const Xor &x);
+    void bvisit(const Not &x);
+    void bvisit(const Equality &x);
+    void bvisit(const Unequality &x);
+    void bvisit(const LessThan &x);
+    void bvisit(const StrictLessThan &x);
+    void bvisit(const Max &x);
+    void bvisit(const Min &x);
+    void bvisit(const Contains &x);
+    void bvisit(const Infty &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
     const std::string &dumps() const;

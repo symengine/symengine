@@ -164,6 +164,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->get_base(), mul(A->get_exp(), b));
     }
+    if (is_a<Pow>(*a)
+        and eq(*down_cast<const Pow &>(*a).get_exp(), *minus_one)) {
+        // Convert (x**-1)**b = x**(-b)
+        RCP<const Pow> A = rcp_static_cast<const Pow>(a);
+        return pow(A->get_base(), neg(b));
+    }
     return make_rcp<const Pow>(a, b);
 }
 

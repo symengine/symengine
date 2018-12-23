@@ -175,8 +175,8 @@ TEST_CASE("Infinity", "[Relationals]")
     a = Le(NegInf, one);
     CHECK(eq(*a, *boolTrue));
 
-    CHECK_THROWS_AS(Lt(ComplexInf, zero), SymEngineException);
-    CHECK_THROWS_AS(Le(ComplexInf, zero), SymEngineException);
+    CHECK_THROWS_AS(Lt(ComplexInf, zero), SymEngineException &);
+    CHECK_THROWS_AS(Le(ComplexInf, zero), SymEngineException &);
 }
 
 TEST_CASE("Boolean Values", "[Relationals]")
@@ -238,10 +238,10 @@ TEST_CASE("Boolean Values", "[Relationals]")
     a = Gt(one, zero);
     CHECK(eq(*a, *boolTrue));
 
-    CHECK_THROWS_AS(Ge(I, one), SymEngineException);
-    CHECK_THROWS_AS(Gt(I, one), SymEngineException);
-    CHECK_THROWS_AS(Lt(I, one), SymEngineException);
-    CHECK_THROWS_AS(Le(I, one), SymEngineException);
+    CHECK_THROWS_AS(Ge(I, one), SymEngineException &);
+    CHECK_THROWS_AS(Gt(I, one), SymEngineException &);
+    CHECK_THROWS_AS(Lt(I, one), SymEngineException &);
+    CHECK_THROWS_AS(Le(I, one), SymEngineException &);
 }
 
 TEST_CASE("Logical Not", "[Relationals]")
@@ -291,16 +291,16 @@ TEST_CASE("Nan Exceptions", "[Relationals]")
     a = Ne(Nan, Nan);
     CHECK(eq(*a, *boolTrue));
 
-    CHECK_THROWS_AS(Gt(Nan, one), SymEngineException);
-    CHECK_THROWS_AS(Ge(Nan, one), SymEngineException);
-    CHECK_THROWS_AS(Lt(Nan, one), SymEngineException);
-    CHECK_THROWS_AS(Le(Nan, one), SymEngineException);
+    CHECK_THROWS_AS(Gt(Nan, one), SymEngineException &);
+    CHECK_THROWS_AS(Ge(Nan, one), SymEngineException &);
+    CHECK_THROWS_AS(Lt(Nan, one), SymEngineException &);
+    CHECK_THROWS_AS(Le(Nan, one), SymEngineException &);
 }
 
 TEST_CASE("Boolean Exceptions", "[Relationals]")
 {
-    CHECK_THROWS_AS(Gt(boolFalse, boolTrue), SymEngineException);
-    CHECK_THROWS_AS(Ge(boolTrue, boolTrue), SymEngineException);
-    CHECK_THROWS_AS(Lt(boolFalse, boolTrue), SymEngineException);
-    CHECK_THROWS_AS(Le(boolTrue, boolTrue), SymEngineException);
+    CHECK_THROWS_AS(Gt(boolFalse, boolTrue), SymEngineException &);
+    CHECK_THROWS_AS(Ge(boolTrue, boolTrue), SymEngineException &);
+    CHECK_THROWS_AS(Lt(boolFalse, boolTrue), SymEngineException &);
+    CHECK_THROWS_AS(Le(boolTrue, boolTrue), SymEngineException &);
 }

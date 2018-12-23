@@ -678,7 +678,7 @@ public:
     }
 };
 
-RCP<const Basic> parse(const std::string &s, bool convert_xor)
+RCP<const Basic> parse_old(const std::string &s, bool convert_xor)
 {
     ExpressionParser p(convert_xor);
     return p.parse_expr(s);

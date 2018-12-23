@@ -86,6 +86,7 @@ public:
     DenseMatrix(const DenseMatrix &);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
+    DenseMatrix(const vec_basic &column_elements);
     // Resize
     void resize(unsigned i, unsigned j);
 
@@ -210,6 +211,10 @@ public:
     friend void pivoted_fraction_free_gauss_jordan_elimination(
         const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
+
+    friend void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
+                                         vec_uint &pivot_cols,
+                                         bool normalize_last);
 
     // Ax = b
     friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
@@ -371,6 +376,7 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
+    static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x);
     static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
@@ -470,6 +476,11 @@ void ones(DenseMatrix &A);
 
 // Create a matrix filled with zeros
 void zeros(DenseMatrix &A);
+
+// Reduced row echelon form and returns the cols with pivots
+void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
+                              vec_uint &pivot_cols,
+                              bool normalize_last = false);
 
 // Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.

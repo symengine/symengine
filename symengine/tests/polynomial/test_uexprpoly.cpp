@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include <chrono>
+#include <sstream>
 
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/symengine_exception.h>
@@ -78,7 +79,7 @@ TEST_CASE("Adding two UExprPoly", "[UExprPoly]")
     REQUIRE(add_upoly(*d, a)->__str__() == "a*x**2 + 2*x + 3");
 
     d = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(add_upoly(a, *d), SymEngineException);
+    CHECK_THROWS_AS(add_upoly(a, *d), SymEngineException &);
 }
 
 TEST_CASE("Negative of a UExprPoly", "[UExprPoly]")
@@ -86,6 +87,25 @@ TEST_CASE("Negative of a UExprPoly", "[UExprPoly]")
     RCP<const Symbol> x = symbol("x");
     UExprDict adict_({{0, 1}, {1, symbol("a")}, {2, symbol("c")}});
     const UExprPoly a(x, std::move(adict_));
+    {
+        auto check_map_str
+            = [](std::string to_chk, std::vector<std::string> key,
+                 std::vector<std::string> val) {
+                  if (key.size() != val.size())
+                      return false;
+                  for (unsigned i = 0; i < key.size(); i++) {
+                      if (to_chk.find(key[i] + std::string(": " + val[i]))
+                          == std::string::npos)
+                          return false;
+                  }
+                  return true;
+              };
+        std::stringstream buffer;
+        buffer << adict_;
+        bool buffer_check
+            = check_map_str(buffer.str(), {"0", "1", "2"}, {"1", "a", "c"});
+        REQUIRE(buffer_check);
+    }
 
     RCP<const UExprPoly> b = neg_upoly(a);
     REQUIRE(b->__str__() == "-c*x**2 - a*x - 1");
@@ -114,7 +134,7 @@ TEST_CASE("Subtracting two UExprPoly", "[UExprPoly]")
     REQUIRE(sub_upoly(*d, a)->__str__() == "-x**2 - 2*x + 1");
 
     d = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(sub_upoly(a, *d), SymEngineException);
+    CHECK_THROWS_AS(sub_upoly(a, *d), SymEngineException &);
 }
 
 TEST_CASE("Multiplication of two UExprPoly", "[UExprPoly]")
@@ -141,7 +161,7 @@ TEST_CASE("Multiplication of two UExprPoly", "[UExprPoly]")
     REQUIRE(mul_upoly(*f, *a)->__str__() == "2*a*x**2 + 2*b*x + 2");
 
     f = uexpr_poly(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(mul_upoly(*a, *f), SymEngineException);
+    CHECK_THROWS_AS(mul_upoly(*a, *f), SymEngineException &);
 
     f = uexpr_poly(x, map_int_Expr{});
     REQUIRE(mul_upoly(*a, *f)->__str__() == "0");

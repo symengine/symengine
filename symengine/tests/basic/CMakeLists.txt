@@ -101,3 +101,8 @@ endif()
 add_executable(test_cse test_cse.cpp)
 target_link_libraries(test_cse symengine catch)
 add_test(test_cse ${PROJECT_BINARY_DIR}/test_cse)
+
+
+add_executable(test_count_ops test_count_ops.cpp)
+target_link_libraries(test_count_ops symengine catch)
+add_test(test_count_ops ${PROJECT_BINARY_DIR}/test_count_ops)

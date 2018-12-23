@@ -23,6 +23,7 @@ using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
 using SymEngine::Symbol;
+using SymEngine::FunctionSymbol;
 using SymEngine::function_symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
@@ -47,6 +48,7 @@ using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
 using SymEngine::vec_basic;
+using SymEngine::vec_pair;
 using SymEngine::vec_sym;
 using SymEngine::Set;
 using SymEngine::FiniteSet;
@@ -597,6 +599,13 @@ IMPLEMENT_ONE_ARG_FUNC(sqrt)
 IMPLEMENT_ONE_ARG_FUNC(cbrt)
 IMPLEMENT_ONE_ARG_FUNC(exp)
 IMPLEMENT_ONE_ARG_FUNC(log)
+
+CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::atan2(a->m, b->m);
+    CWRAPPER_END
+}
 
 char *basic_str(const basic s)
 {
@@ -1293,6 +1302,14 @@ CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self)
+{
+    CWRAPPER_BEGIN
+    symbols->m = SymEngine::atoms<SymEngine::FunctionSymbol>(*(self->m));
+    CWRAPPER_END
+}
+
 size_t basic_hash(const basic self)
 {
     return self->m->hash();
@@ -1320,6 +1337,15 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
     CWRAPPER_BEGIN
     s->m = function_symbol(c, arg->m);
     CWRAPPER_END
+}
+
+char *function_symbol_get_name(const basic b)
+{
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(*(b->m)));
+    std::string str = down_cast<const FunctionSymbol &>(*(b->m)).get_name();
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
 }
 
 CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
@@ -1623,6 +1649,20 @@ void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
     delete self;
 }
 #endif
+
+CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,
+                               CVecBasic *replacement_exprs,
+                               CVecBasic *reduced_exprs, const CVecBasic *exprs)
+{
+    CWRAPPER_BEGIN
+    vec_pair replacements;
+    SymEngine::cse(replacements, reduced_exprs->m, exprs->m);
+    for (auto &p : replacements) {
+        replacement_syms->m.push_back(p.first);
+        replacement_exprs->m.push_back(p.second);
+    }
+    CWRAPPER_END
+}
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault()
 {

@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 2.8.5)
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
+
 set(SYMENGINE_MAJOR_VERSION 0)
 set(SYMENGINE_MINOR_VERSION 3)
 set(SYMENGINE_PATCH_VERSION 0)
 set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+include(CheckCXXCompilerFlag)
 
 # Make sure that CMAKE_BUILD_TYPE is either Debug or Release:
 if (NOT CMAKE_BUILD_TYPE)
@@ -24,22 +26,47 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    if (BUILD_FOR_DISTRIBUTION)
+        string(REPLACE "-march=native" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+    endif()
+endif()
+
 #Boost.multiprecision build segfaults if -O3 optimization is on
 #which it is by default for cmake Release mode. Remove -O3 from flags.
 if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 endif()
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
-    set(CMAKE_CXX_FLAGS_RELEASE
-        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
-    if (NOT BUILD_FOR_DISTRIBUTION)
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
+# Enable C++11 support in all compilers. SymEngine will not compile unless
+# the C++11 support is enabled.
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel")
+    set(CXX11_OPTIONS "-std=c++11")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    # pgcpp
+    set(CXX11_OPTIONS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
+endif ()
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CXX11_OPTIONS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CXX11_OPTIONS}")
+
+# Add proper -fPIC and MINGW handling
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if (NOT MINGW)
+        set(common "-fPIC")
+    else()
+        set(common "-D_hypot=hypot -Doff64_t=_off64_t")
+        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+            set(common "${common} -DMS_WIN64")
+        endif()
     endif()
-endif()
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common}")
+endif ()
+if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+    set(common "-fPIC")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${common}")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${common}")
+endif ()
 
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
@@ -47,6 +74,24 @@ try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/c
 if (NOT ${CXX11})
 	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
 		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    CHECK_CXX_COMPILER_FLAG("-Wno-implicit-fallthrough" NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
+endif()
+
+# check if linker supports exclude-libs
+if (NOT(MSVC))
+    try_compile(EXCLUDE_LIBS "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,--exclude-libs,ALL"
+        OUTPUT_VARIABLE EXCLUDE_LIBS_ERROR_LOG)
+endif()
+if (${EXCLUDE_LIBS})
+    message(STATUS "Linker supports --exclude-libs")
+else()
+    message(STATUS "Linker does not support --exclude-libs ${EXCLUDE_LIBS_ERROR_LOG}")
 endif()
 
 set(HAVE_GCC_ABI_DEMANGLE yes
@@ -234,6 +279,20 @@ set(HAVE_SYMENGINE_MPC False)
 # Virtual TypeID
 if (WITH_VIRTUAL_TYPEID)
     set(WITH_SYMENGINE_VIRTUAL_TYPEID True)
+endif()
+
+# Parser
+set(WITH_GENERATE_PARSER no CACHE BOOL "Generate parser files")
+if (WITH_GENERATE_PARSER)
+    find_program(BISONCPP_EXECUTABLE bisonc++)
+    find_program(FLEXCPP_EXECUTABLE flexc++)
+
+    if ("${BISONCPP_EXECUTABLE}" STREQUAL "BISONCPP_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "bisonc++ not found!")
+    endif()
+    if ("${FLEXCPP_EXECUTABLE}" STREQUAL "FLEXCPP_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "flexc++ not found!")
+    endif()
 endif()
 
 if (WITH_FLINT)
@@ -619,6 +678,8 @@ message("CMAKE_C_COMPILER:   ${CMAKE_C_COMPILER}")
 message("CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message("CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
+message("CMAKE_C_FLAGS:           ${CMAKE_C_FLAGS}")
+message("CMAKE_CXX_FLAGS:         ${CMAKE_CXX_FLAGS}")
 message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
@@ -634,6 +695,7 @@ if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()
 message("WITH_COTIRE: ${WITH_COTIRE}")
+message("WITH_GENERATE_PARSER: ${WITH_GENERATE_PARSER}")
 message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
 message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
 message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")

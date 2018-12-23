@@ -13,6 +13,8 @@
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
 
+#include "symengine/symengine_exception.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,8 +29,6 @@ extern "C" {
             abort();                                                           \
         }                                                                      \
     }
-
-#include "symengine/symengine_exception.h"
 
 typedef symengine_exceptions_t CWRAPPER_OUTPUT_TYPE;
 
@@ -341,6 +341,9 @@ CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
 //! Assigns s = log(a).
 CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
+//! Assigns s = atan2(a, b).
+CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
+
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
@@ -592,6 +595,9 @@ size_t mapbasicbasic_size(CMapBasicBasic *self);
 CWRAPPER_OUTPUT_TYPE basic_get_args(const basic self, CVecBasic *args);
 //! Returns a CSetBasic of set_basic given by free_symbols
 CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols);
+//! Returns a CSetBasic of set_basic given by function_symbols
+CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
+                                            const basic self);
 //! returns the hash of the Basic object
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
@@ -607,6 +613,8 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
+//! Returns the name of the given FunctionSymbol
+char *function_symbol_get_name(const basic b);
 //! Returns the coefficient of x^n in b
 CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
                                  const basic n);
@@ -694,6 +702,11 @@ void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
                               const double *const inps);
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
 #endif
+
+CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,
+                               CVecBasic *replacement_exprs,
+                               CVecBasic *reduced_exprs,
+                               const CVecBasic *exprs);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();

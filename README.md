@@ -14,6 +14,10 @@ wrappers allow usage of the library from other languages, e.g.:
 * Haskell wrappers (the [symengine.hs](https://github.com/symengine/symengine.hs) repository)
 * ...
 
+## Try SymEngine
+
+Run an interactive C++ session with SymEngine using [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/symengine/symengine/master?filepath=notebooks%2Fsymengine.ipynb).
+
 ## License
 
 All files are licensed under MIT license, see the [LICENSE](LICENSE) for more

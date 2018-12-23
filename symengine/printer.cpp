@@ -382,7 +382,7 @@ void StrPrinter::bvisit(const Add &x)
     for (const auto &p : dict) {
         std::string t;
         if (eq(*(p.second), *one)) {
-            t = this->apply(p.first);
+            t = parenthesizeLT(p.first, PrecedenceEnum::Add);
         } else if (eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {

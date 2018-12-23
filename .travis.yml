@@ -8,10 +8,6 @@ os:
   - osx
 dist: trusty
 osx_image: xcode6.4
-cache:
-  directories:
-  - $HOME/.ccache
-  - $HOME/conda_root
 addons:
   apt:
     sources:
@@ -60,7 +56,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="5.0"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="7.0" USE_GLIBCXX_DEBUG="yes"
       compiler: gcc
       os: linux
       addons:
@@ -69,7 +65,7 @@ matrix:
           - ubuntu-toolchain-r-test
           packages:
           - binutils-dev
-          - g++-5
+          - g++-8
     - env: TEST_CLANG_FORMAT="yes"
       compiler: gcc
       os: linux
@@ -83,8 +79,8 @@ matrix:
       install:
         - echo "nothing to install"
       script:
-        - bin/travis_clang.sh
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes" USE_GLIBCXX_DEBUG="yes"
+        - bin/travis_clang_format.sh
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes"
       compiler: gcc
       os: linux
       addons:
@@ -149,6 +145,28 @@ matrix:
     - env: BUILD_TYPE="Release"
       compiler: gcc
       os: osx
+    - env: BUILD_TYPE="Debug" WITH_SANITIZE="address"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-7
+          packages:
+          - clang-7
+          - llvm-7-dev
+    - env: BUILD_TYPE="Debug" WITH_SANITIZE="undefined"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-7
+          packages:
+          - clang-7
+          - llvm-7-dev
 
 before_install:
 - |
@@ -159,7 +177,7 @@ before_install:
 install:
   - source bin/install_travis.sh
 script:
-  - bin/travis_clang.sh
+  - bin/travis_clang_format.sh
   - bin/test_travis.sh
   - bin/trigger_feedstock.sh
 notifications:

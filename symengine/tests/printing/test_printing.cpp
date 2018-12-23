@@ -602,3 +602,19 @@ TEST_CASE("test_mathml()", "[mathml]")
     RCP<const Basic> u = parse("sin(x)");
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
+
+TEST_CASE("test_relational(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> r1;
+    r1 = add(x, Lt(y, z));
+    REQUIRE(r1->__str__() == "x + (y < z)");
+    r1 = add(Lt(y, z), x);
+    REQUIRE(r1->__str__() == "x + (y < z)");
+    r1 = mul(x, Lt(y, z));
+    REQUIRE(r1->__str__() == "x*(y < z)");
+    r1 = mul(Lt(y, z), x);
+    REQUIRE(r1->__str__() == "x*(y < z)");
+}

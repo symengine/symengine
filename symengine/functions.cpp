@@ -372,7 +372,8 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 
         rational_class m;
         if (is_a<Integer>(*n)) {
-            m = down_cast<const Integer &>(*n).as_integer_class();
+            // 2*pi periodic => f(r + pi * n) = f(r - pi * n)
+            m = mp_abs(down_cast<const Integer &>(*n).as_integer_class());
             m /= period;
         } else {
             SYMENGINE_ASSERT(is_a<Rational>(*n));

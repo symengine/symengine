@@ -22,7 +22,7 @@ fi
 export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
-    brew update
+    # brew update
     export CC=gcc-4.9
     export CXX=g++-4.9
 fi
@@ -33,9 +33,9 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CXX=g++-4.8
         export GCOV_EXECUTABLE=gcov-4.8
     elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-        export CC=gcc-5
-        export CXX=g++-5
-        export GCOV_EXECUTABLE=gcov-5
+        export CC=gcc-8
+        export CXX=g++-8
+        export GCOV_EXECUTABLE=gcov-8
     elif [[ "${WITH_GCC_6}" == "yes" ]]; then
         export CC=gcc-6
         export CXX=g++-6
@@ -65,7 +65,7 @@ conda config --add channels conda-forge --force
 # Useful for debugging any issues with conda
 conda info -a
 
-conda_pkgs="$conda_pkgs ccache"
+# conda_pkgs="$conda_pkgs ccache"
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
     conda_pkgs="$conda_pkgs boost=1.62";
@@ -103,6 +103,11 @@ fi
 
 if [[ ! -z "${WITH_LLVM}" ]]; then
     conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
+    export LLVM_DIR=$our_install_dir/share/llvm/
+elif [[ ! -z "${WITH_SANITIZE}" ]]; then
+    export LLVM_DIR=/usr/lib/llvm-7/share/llvm/
+    export CC=clang-7
+    export CXX=clang++-7
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then
@@ -121,13 +126,11 @@ if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
     cd flint2 && git checkout 06defcbc52efe41a8c73496ffde9fc66941e3f0d && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j8 install && cd ..;
 fi
 
-export LLVM_DIR=$our_install_dir/share/llvm/
-
 # Use ccache
-export CXX="ccache ${CXX}"
-export CC="ccache ${CC}"
-export CCACHE_DIR=$HOME/.ccache
-ccache -M 400M
+# export CXX="ccache ${CXX}"
+# export CC="ccache ${CC}"
+# export CCACHE_DIR=$HOME/.ccache
+# ccache -M 400M
 
 cd $SOURCE_DIR;
 

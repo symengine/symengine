@@ -50,6 +50,7 @@ using SymEngine::NotImplementedError;
 using SymEngine::ComplexInf;
 using SymEngine::Nan;
 using SymEngine::EulerGamma;
+using SymEngine::atoms;
 
 using namespace SymEngine::literals;
 
@@ -198,6 +199,9 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     REQUIRE(unified_compare(adict, bdict) == -unified_compare(bdict, adict));
     bdict = {{0, 1}, {1, 3}};
     REQUIRE(unified_compare(adict, bdict) == 1);
+    buffer.str("");
+    buffer << bdict;
+    REQUIRE(check_map_str(buffer.str(), {"0", "1"}, {"1", "3"}));
 
     multiset_basic msba, msbb;
     msba.insert(x);
@@ -552,6 +556,10 @@ TEST_CASE("Diff: Basic", "[basic]")
     r1 = sdiff(add(pow(x, i2), x), x);
     r2 = diff(add(pow(x, i2), x), x);
     REQUIRE(eq(*r1, *r2));
+
+    // Test that this doesn't segfault
+    r1 = pow(sqrt(div(x, i3)), real_double(2.0));
+    r1 = diff(r1, x);
 }
 
 TEST_CASE("compare: Basic", "[basic]")
@@ -700,7 +708,7 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r1->__cmp__(*r2) != 0);
     CHECK(r1->__cmp__(*r1) == 0);
 
-    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
+    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError &);
 
     r1 = pi;
     r2 = EulerGamma;
@@ -896,11 +904,11 @@ TEST_CASE("Complex: Basic", "[basic]")
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = Rational::from_two_ints(4, 5);
-    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError);
+    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError &);
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = integer(3);
-    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError);
+    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError &);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")
@@ -980,6 +988,43 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     s = free_symbols(*r1);
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
+}
+
+TEST_CASE("atoms: Basic", "[basic]")
+{
+    RCP<const Basic> r1, r2, r3;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = function_symbol("f", mul(x, integer(2)));
+    set_basic s = atoms<FunctionSymbol>(*r1);
+    REQUIRE(s.size() == 1);
+
+    s = atoms<FunctionSymbol, Symbol>(*r1);
+    REQUIRE(s.size() == 2);
+
+    s = atoms<FunctionSymbol, Symbol, Mul>(*r1);
+    REQUIRE(s.size() == 3);
+
+    s = atoms<Number>(*r1);
+    REQUIRE(s.size() == 1);
+
+    r2 = function_symbol("g", add(r1, y));
+    s = atoms<FunctionSymbol>(*r2);
+    REQUIRE(s.size() == 2);
+
+    r3 = add(r1, add(r2, x));
+    map_basic_basic d;
+    d[x] = r1;
+    r3 = r3->subs(d);
+    s = atoms<FunctionSymbol>(*r3);
+    set_basic t({r1, r1->subs(d), r2->subs(d)});
+    REQUIRE(unified_eq(s, t));
+
+    r3 = r2->diff(x);
+    s = atoms<FunctionSymbol>(*r3);
+    REQUIRE(s.size() == 3);
 }
 
 TEST_CASE("args: Basic", "[basic]")

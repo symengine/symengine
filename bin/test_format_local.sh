@@ -10,6 +10,7 @@ fi
 CLANG_FORMAT="clang-format"
 
 which "clang-format-3.8" > /dev/null && CLANG_FORMAT="clang-format-3.8"
+which "clang-format-3.9" > /dev/null && CLANG_FORMAT="clang-format-3.9"
 
 FILES=`git ls-files | grep -E "\.(cpp|h|hpp|c)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
@@ -34,3 +35,26 @@ EOF`
         fi
     fi
 done
+
+FILES="symengine/parser/parser.cpp
+symengine/parser/parserbase.h
+symengine/parser/scanner.cpp
+symengine/parser/scannerbase.h
+"
+UNAME=`uname`
+for FILE in $FILES; do
+    staged_file=`git show :$FILE`
+    actual_file=`cat $FILE`
+    if [ "$NAME" != "pre-commit" ] || [ "$actual_file" == "$staged_file" ]; then
+        if [ "$UNAME" == "Linux" ]; then
+            sed -i 's|^// Generated .*|// Automatically generated|g' $FILE
+            sed -i '/^char const author/d' $FILE
+            git add $FILE
+        else
+            sed -i'' 's|^// Generated .*|// Automatically generated|g' $FILE
+            sed -i'' '/^char const author/d' $FILE
+            git add $FILE
+        fi
+    fi
+done
+
