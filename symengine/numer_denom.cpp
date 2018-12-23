@@ -22,22 +22,22 @@ public:
 
     void bvisit(const Mul &x)
     {
-
-        RCP<const Basic> curr_num = one;
-        RCP<const Basic> curr_den = one;
+        RCP<const Basic> curr = one;
         RCP<const Basic> arg_num, arg_den, t;
 
         for (const auto &arg : x.get_args()) {
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
-            // TODO: This is naive and slow. Fix it
-            t = div(curr_num, arg_den);
-            if (neq(*t, x)) {
-                as_numer_denom(t, outArg(curr_num), outArg(arg_den));
-            }
-            t = div(curr_den, arg_num);
-            if (neq(*t, x)) {
-                as_numer_denom(t, outArg(curr_den), outArg(arg_num));
-            }
+            curr = div(mul(curr, arg_num), arg_den);
+        }
+
+        if (not is_a<Mul>(*curr)) {
+            apply(*curr);
+            return;
+        }
+
+        RCP<const Basic> curr_num = one, curr_den = one;
+        for (const auto &arg : curr->get_args()) {
+            as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
             curr_num = mul(curr_num, arg_num);
             curr_den = mul(curr_den, arg_den);
         }
