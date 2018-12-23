@@ -643,19 +643,19 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l14
         = logical_and({logical_or({Eq(s1, s2), Ne(s1, s3)}), {Ge(s1, s2)}});
 
-    REQUIRE(latex(*l1) == "\\frac{3}{2}");
-    REQUIRE(latex(*l2) == "\\frac{3}{2} + 2j");
-    REQUIRE(latex(*l3) == "1.123123123123 + 1.123123123123j");
-    REQUIRE(latex(*l4) == "x = y");
-    REQUIRE(latex(*l5) == "x \\neq y");
-    REQUIRE(latex(*l6) == "a \\leq 6");
-    REQUIRE(latex(*l7) == "\\left(-3, 3\\right)");
-    REQUIRE(latex(*l8) == "\\left(-3, 3\\right]");
-    REQUIRE(latex(*l9) == "\\left[-3, 3\\right)");
-    REQUIRE(latex(*l10) == "\\left[-3, 3\\right]");
-    REQUIRE(latex(*l11) == "\\mathrm{True}");
-    REQUIRE(latex(*l12) == "\\mathrm{False}");
-    REQUIRE(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
-    REQUIRE(latex(*l14)
-            == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
+    CHECK(latex(*l1) == "\\frac{3}{2}");
+    CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
+    CHECK(latex(*l3) == "1.123123123123 + 1.123123123123j");
+    CHECK(latex(*l4) == "x = y");
+    CHECK(latex(*l5) == "x \\neq y");
+    CHECK(latex(*l6) == "a \\leq 6");
+    CHECK(latex(*l7) == "\\left(-3, 3\\right)");
+    CHECK(latex(*l8) == "\\left(-3, 3\\right]");
+    CHECK(latex(*l9) == "\\left[-3, 3\\right)");
+    CHECK(latex(*l10) == "\\left[-3, 3\\right]");
+    CHECK(latex(*l11) == "\\mathrm{True}");
+    CHECK(latex(*l12) == "\\mathrm{False}");
+    CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
+    CHECK(latex(*l14)
+          == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
 }

@@ -613,6 +613,12 @@ RCP<const Set> Union::create(const set_set &in) const
     return SymEngine::set_union(in);
 }
 
+vec_basic Union::get_args() const
+{
+    vec_basic v(container_.begin(), container_.end());
+    return v;
+}
+
 Complement::Complement(const RCP<const Set> &universe,
                        const RCP<const Set> &container)
     : universe_(universe), container_(container)

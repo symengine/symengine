@@ -202,10 +202,7 @@ public:
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual vec_basic get_args() const
-    {
-        return {};
-    }
+    virtual vec_basic get_args() const;
     Union(const set_set &in);
     static bool is_canonical(const set_set &in);
 
