@@ -3,7 +3,13 @@
 
 #include <symengine/matrix.h>
 #include <symengine/printer.h>
+#include <symengine/mathml.h>
+#include <symengine/parser.h>
+#include <symengine/logic.h>
 
+using SymEngine::rcp_static_cast;
+using SymEngine::piecewise;
+using SymEngine::parse;
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::div;
@@ -562,6 +568,39 @@ TEST_CASE("test_logical(): printing", "[printing]")
     REQUIRE(r1->__str__() == "Or(2 <= y, 9 <= x**2)");
     r1 = logical_xor({Ge(y, integer(2)), Ge(mul(x, x), integer(9))});
     REQUIRE(r1->__str__() == "Xor(2 <= y, 9 <= x**2)");
+}
+
+TEST_CASE("test_mathml()", "[mathml]")
+{
+    RCP<const Basic> x = parse("x^2");
+    REQUIRE(mathml(*x)
+            == "<apply><power/><ci>x</ci><cn type=\"integer\">2</cn></apply>");
+    RCP<const Basic> y = parse("3/2 * y");
+    REQUIRE(mathml(*y) == "<apply><times/><cn "
+                          "type=\"rational\">3<sep/>2</cn><ci>y</ci></apply>");
+    RCP<const Basic> z = parse("x^(y^(5/3))");
+    REQUIRE(mathml(*z) == "<apply><power/><ci>x</ci><apply><power/><ci>y</"
+                          "ci><cn "
+                          "type=\"rational\">5<sep/>3</cn></apply></apply>");
+    RCP<const Basic> w = parse("1 + 4 * x * y");
+    REQUIRE(mathml(*w)
+            == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
+               "type=\"integer\">4</cn><ci>x</ci><ci>y</ci></apply></apply>");
+    RCP<const Basic> v = parse("1 + 4 * x - y");
+
+    std::string s1 = "<apply><plus/><cn "
+                     "type=\"integer\">1</cn><apply><times/><cn "
+                     "type=\"integer\">4</cn><ci>x</ci></apply><apply><times/"
+                     "><cn type=\"integer\">-1</cn><ci>y</ci></apply></apply>";
+    std::string s2 = "<apply><plus/><cn "
+                     "type=\"integer\">1</cn><apply><times/><cn "
+                     "type=\"integer\">-1</cn><ci>y</ci></apply><apply><times/"
+                     "><cn type=\"integer\">4</cn><ci>x</ci></apply></apply>";
+    auto m = mathml(*v);
+    auto b = (m == s1 or m == s2);
+    REQUIRE(b);
+    RCP<const Basic> u = parse("sin(x)");
+    REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
 }
 
 TEST_CASE("test_relational(): printing", "[printing]")

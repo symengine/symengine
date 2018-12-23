@@ -8,6 +8,7 @@ namespace SymEngine
 
 std::string ascii_art();
 std::string print_double(double d);
+std::vector<std::string> init_str_printer_names();
 
 enum class PrecedenceEnum { Relational, Add, Mul, Pow, Atom };
 
@@ -232,7 +233,6 @@ public:
     void bvisit(const UIntPolyPiranha &x);
     void bvisit(const URatPolyPiranha &x);
 #endif
-    void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);
     void bvisit(const FunctionSymbol &x);
