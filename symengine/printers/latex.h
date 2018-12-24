@@ -61,7 +61,6 @@ protected:
     virtual std::string print_div(const std::string &num,
                                   const std::string &den, bool paren);
 };
-
 }
 
 #endif // LATEX_H
