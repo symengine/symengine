@@ -43,7 +43,6 @@ set(SRC
     integer.cpp
     latex.cpp
     logic.cpp
-    mathml.cpp
     matrix.cpp
     monomials.cpp
     mul.cpp
@@ -60,7 +59,9 @@ set(SRC
     polys/uintpoly.cpp
     polys/uratpoly.cpp
     pow.cpp
-    printer.cpp
+    printers/codegen.cpp
+    printers/mathml.cpp
+    printers/strprinter.cpp
     rational.cpp
     real_double.cpp
     rewrite.cpp
@@ -115,7 +116,6 @@ set(HEADERS
     basic.h
     basic-inl.h
     basic-methods.inc
-    codegen.h
     complex_double.h
     complex.h
     complex_mpc.h
@@ -140,7 +140,6 @@ set(HEADERS
     latex.h
     llvm_double.h
     logic.h
-    mathml.h
     matrix.h
     monomials.h
     mp_class.h
@@ -160,7 +159,10 @@ set(HEADERS
     polys/usymenginepoly.h
     polys/msymenginepoly.h
     pow.h
-    printer.h
+    printers/codegen.h
+    printers/mathml.h
+    printers/strprinter.h
+    printers.h
     rational.h
     real_double.h
     real_mpfr.h

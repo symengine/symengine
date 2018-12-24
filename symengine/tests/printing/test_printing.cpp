@@ -2,8 +2,8 @@
 #include <chrono>
 
 #include <symengine/matrix.h>
-#include <symengine/printer.h>
-#include <symengine/mathml.h>
+#include <symengine/printers/strprinter.h>
+#include <symengine/printers/mathml.h>
 #include <symengine/parser.h>
 #include <symengine/latex.h>
 #include <symengine/logic.h>

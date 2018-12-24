@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include <chrono>
 
-#include <symengine/printer.h>
+#include <symengine/printers/strprinter.h>
 
 using SymEngine::Expression;
 using SymEngine::UIntPoly;

@@ -1,4 +1,4 @@
-#include <symengine/printer.h>
+#include <symengine/printers/strprinter.h>
 
 namespace SymEngine
 {
