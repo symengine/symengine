@@ -89,6 +89,8 @@ using SymEngine::min;
 using SymEngine::min;
 using SymEngine::rcp_static_cast;
 using SymEngine::down_cast;
+using SymEngine::symbol;
+using SymEngine::sub;
 
 TEST_CASE("evalf: real_double", "[evalf]")
 {
@@ -98,6 +100,21 @@ TEST_CASE("evalf: real_double", "[evalf]")
     REQUIRE(r2->get_type_code() == SymEngine::REAL_DOUBLE);
     double d1 = 0.909297;
     double d2 = (down_cast<const RealDouble &>(*r2)).as_double();
+    d1 = fabs(d1 - d2);
+    d2 = 0.000001;
+    REQUIRE(d1 < d2);
+}
+
+TEST_CASE("evalf: symbols", "[evalf]")
+{
+    RCP<const Basic> r1, r2, r3, x;
+    x = symbol("x");
+    r1 = add(add(sin(integer(2)), pi), x);
+    r2 = evalf(*r1, 53, true);
+    r3 = sub(r2, x);
+    REQUIRE(r3->get_type_code() == SymEngine::REAL_DOUBLE);
+    double d1 = 4.05089;
+    double d2 = (down_cast<const RealDouble &>(*r3)).as_double();
     d1 = fabs(d1 - d2);
     d2 = 0.000001;
     REQUIRE(d1 < d2);

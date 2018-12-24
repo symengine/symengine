@@ -4,6 +4,7 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/symengine_rcp.h>
+#include <symengine/visitor.h>
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #include <symengine/real_mpfr.h>
@@ -19,7 +20,7 @@
 namespace SymEngine
 {
 
-RCP<const Number> evalf(const Basic &b, unsigned long bits, bool real)
+RCP<const Number> _evalf(const Basic &b, unsigned long bits, bool real)
 {
     if (bits <= 53 && real) { // double
         double d = eval_double(b);
@@ -49,4 +50,57 @@ RCP<const Number> evalf(const Basic &b, unsigned long bits, bool real)
 #endif // HAVE_SYMENGINE_MPC
     }
 }
+
+class EvalVisitor : public BaseVisitor<EvalVisitor, TransformVisitor>
+{
+protected:
+    unsigned long bits;
+    bool real;
+
+public:
+    EvalVisitor(unsigned long bits, bool real) : bits(bits), real(real)
+    {
+    }
+    using TransformVisitor::apply;
+    using TransformVisitor::bvisit;
+    void bvisit(const Number &x)
+    {
+        result_ = _evalf(x, bits, real);
+    }
+    void bvisit(const Constant &x)
+    {
+        result_ = _evalf(x, bits, real);
+    }
+    void bvisit(const NumberWrapper &x)
+    {
+        result_ = x.eval(bits)->rcp_from_this();
+    }
+    void bvisit(const FunctionWrapper &x)
+    {
+        result_ = x.eval(bits)->rcp_from_this();
+    }
+};
+
+RCP<const Basic> evalf(const Basic &b, unsigned long bits, bool real)
+{
+#ifndef HAVE_SYMENGINE_MPFR
+    if (bits > 53 and real) {
+        throw std::invalid_argument(
+            "For multiple bit precision, MPFR is needed");
+    }
+#endif
+#ifndef HAVE_SYMENGINE_MPC
+    if (bits > 53 and not real) {
+        throw std::invalid_argument(
+            "For multiple bit precision, MPC is needed");
+    }
+#endif
+    try {
+        return _evalf(b, bits, real);
+    } catch (SymEngineException &e) {
+        EvalVisitor v(bits, real);
+        return v.apply(b.rcp_from_this());
+    }
+}
+
 } // SymEngine
