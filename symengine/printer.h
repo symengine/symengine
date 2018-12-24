@@ -184,13 +184,28 @@ public:
     }
 };
 
+std::vector<std::string> init_str_printer_names();
+
 class StrPrinter : public BaseVisitor<StrPrinter>
 {
+private:
+    static const std::vector<std::string> names_;
+
 protected:
     std::string str_;
+    virtual std::string print_mul();
+    virtual bool split_mul_coef();
+    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                            const RCP<const Basic> &b);
+    virtual std::string print_div(const std::string &num,
+                                  const std::string &den, bool paren);
+    virtual std::string parenthesize(const std::string &expr);
+    std::string parenthesizeLT(const RCP<const Basic> &x,
+                               PrecedenceEnum precedenceEnum);
+    std::string parenthesizeLE(const RCP<const Basic> &x,
+                               PrecedenceEnum precedenceEnum);
 
 public:
-    static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
     void bvisit(const Integer &x);
@@ -251,14 +266,6 @@ public:
     void bvisit(const ComplexMPC &x);
 #endif
     void bvisit(const NumberWrapper &x);
-
-    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                            const RCP<const Basic> &b);
-
-    std::string parenthesizeLT(const RCP<const Basic> &x,
-                               PrecedenceEnum precedenceEnum);
-    std::string parenthesizeLE(const RCP<const Basic> &x,
-                               PrecedenceEnum precedenceEnum);
 
     std::string apply(const RCP<const Basic> &b);
     std::string apply(const vec_basic &v);

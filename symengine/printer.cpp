@@ -85,14 +85,14 @@ void StrPrinter::bvisit(const Complex &x)
         // If imaginary_ is not 1 or -1, print the absolute value
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << mp_abs(x.imaginary_);
-            s << "*I";
+            s << print_mul() << "I";
         } else {
             s << "I";
         }
     } else {
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
-            s << "*I";
+            s << print_mul() << "I";
         } else {
             if (mp_sign(x.imaginary_) == 1) {
                 s << "I";
@@ -130,9 +130,9 @@ void StrPrinter::bvisit(const ComplexDouble &x)
 {
     str_ = print_double(x.i.real());
     if (x.i.imag() < 0) {
-        str_ += " - " + print_double(-x.i.imag()) + "*I";
+        str_ += " - " + print_double(-x.i.imag()) + print_mul() + "I";
     } else {
-        str_ += " + " + print_double(x.i.imag()) + "*I";
+        str_ += " + " + print_double(x.i.imag()) + print_mul() + "I";
     }
 }
 
@@ -362,9 +362,10 @@ void StrPrinter::bvisit(const ComplexMPC &x)
     if (imag->is_negative()) {
         std::string str = this->apply(imag);
         str = str.substr(1, str.length() - 1);
-        str_ = this->apply(x.real_part()) + " - " + str + "*I";
+        str_ = this->apply(x.real_part()) + " - " + str + print_mul() + "I";
     } else {
-        str_ = this->apply(x.real_part()) + " + " + this->apply(imag) + "*I";
+        str_ = this->apply(x.real_part()) + " + " + this->apply(imag)
+               + print_mul() + "I";
     }
 }
 #endif
@@ -386,7 +387,7 @@ void StrPrinter::bvisit(const Add &x)
         } else if (eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
-            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*"
+            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + print_mul()
                 + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         }
 
@@ -427,8 +428,22 @@ void StrPrinter::bvisit(const Mul &x)
     if (eq(*(x.get_coef()), *minus_one)) {
         o << "-";
     } else if (neq(*(x.get_coef()), *one)) {
-        o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul) << "*";
-        num = true;
+        if (not split_mul_coef()) {
+            o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul)
+              << print_mul();
+            num = true;
+        } else {
+            RCP<const Basic> numer, denom;
+            as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));
+            if (neq(*numer, *one)) {
+                num = true;
+                o << parenthesizeLT(numer, PrecedenceEnum::Mul) << print_mul();
+            }
+            if (neq(*denom, *one)) {
+                den++;
+                o2 << parenthesizeLT(denom, PrecedenceEnum::Mul) << print_mul();
+            }
+        }
     }
 
     for (const auto &p : x.get_dict()) {
@@ -440,7 +455,7 @@ void StrPrinter::bvisit(const Mul &x)
             } else {
                 _print_pow(o2, p.first, neg(p.second));
             }
-            o2 << "*";
+            o2 << print_mul();
             den++;
         } else {
             if (eq(*(p.second), *one)) {
@@ -448,13 +463,13 @@ void StrPrinter::bvisit(const Mul &x)
             } else {
                 _print_pow(o, p.first, p.second);
             }
-            o << "*";
+            o << print_mul();
             num = true;
         }
     }
 
     if (not num) {
-        o << "1*";
+        o << "1" << print_mul();
     }
 
     std::string s = o.str();
@@ -464,13 +479,28 @@ void StrPrinter::bvisit(const Mul &x)
         std::string s2 = o2.str();
         s2 = s2.substr(0, s2.size() - 1);
         if (den > 1) {
-            str_ = s + "/(" + s2 + ")";
+            str_ = print_div(s, s2, true);
         } else {
-            str_ = s + "/" + s2;
+            str_ = print_div(s, s2, false);
         }
     } else {
         str_ = s;
     }
+}
+
+std::string StrPrinter::print_div(const std::string &num,
+                                  const std::string &den, bool paren)
+{
+    if (paren) {
+        return num + "/" + parenthesize(den);
+    } else {
+        return num + "/" + den;
+    }
+}
+
+bool StrPrinter::split_mul_coef()
+{
+    return false;
 }
 
 void StrPrinter::bvisit(const Pow &x)
@@ -699,9 +729,8 @@ void StrPrinter::bvisit(const Function &x)
 {
     std::ostringstream o;
     o << names_[x.get_type_code()];
-    o << "(";
     vec_basic vec = x.get_args();
-    o << this->apply(vec) << ")";
+    o << parenthesize(apply(vec));
     str_ = o.str();
 }
 
@@ -709,9 +738,8 @@ void StrPrinter::bvisit(const FunctionSymbol &x)
 {
     std::ostringstream o;
     o << x.get_name();
-    o << "(";
     vec_basic vec = x.get_args();
-    o << this->apply(vec) << ")";
+    o << parenthesize(apply(vec));
     str_ = o.str();
 }
 
@@ -850,9 +878,9 @@ std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
 {
     Precedence prec;
     if (prec.getPrecedence(x) < precedenceEnum) {
-        return "(" + this->apply(x) + ")";
+        return parenthesize(apply(x));
     } else {
-        return this->apply(x);
+        return apply(x);
     }
 }
 
@@ -861,10 +889,15 @@ std::string StrPrinter::parenthesizeLE(const RCP<const Basic> &x,
 {
     Precedence prec;
     if (prec.getPrecedence(x) <= precedenceEnum) {
-        return "(" + this->apply(x) + ")";
+        return parenthesize(apply(x));
     } else {
-        return this->apply(x);
+        return apply(x);
     }
+}
+
+std::string StrPrinter::parenthesize(const std::string &x)
+{
+    return "(" + x + ")";
 }
 
 std::string StrPrinter::apply(const RCP<const Basic> &b)
@@ -920,8 +953,9 @@ std::vector<std::string> init_str_printer_names()
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
-    names[UPPERGAMMA] = "beta";
+    names[BETA] = "beta";
     names[LOGGAMMA] = "loggamma";
+    names[LOG] = "log";
     names[POLYGAMMA] = "polygamma";
     names[GAMMA] = "gamma";
     names[ABS] = "abs";
@@ -933,6 +967,11 @@ std::vector<std::string> init_str_printer_names()
 }
 
 const std::vector<std::string> StrPrinter::names_ = init_str_printer_names();
+
+std::string StrPrinter::print_mul()
+{
+    return "*";
+}
 
 void JuliaStrPrinter::_print_pow(std::ostringstream &o,
                                  const RCP<const Basic> &a,
