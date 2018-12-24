@@ -194,10 +194,11 @@ private:
 protected:
     std::string str_;
     virtual std::string print_mul();
+    virtual bool split_mul_coef();
     virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                             const RCP<const Basic> &b);
     virtual std::string print_div(const std::string &num,
-                                  const std::string &den);
+                                  const std::string &den, bool paren);
     virtual std::string parenthesize(const std::string &expr);
     std::string parenthesizeLT(const RCP<const Basic> &x,
                                PrecedenceEnum precedenceEnum);

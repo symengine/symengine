@@ -63,6 +63,7 @@ using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::imageset;
 using SymEngine::latex;
+using SymEngine::diff;
 
 using namespace SymEngine::literals;
 
@@ -635,13 +636,19 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Set> l10 = interval(integer(-3), integer(3), false, false);
     RCP<const Basic> l11 = parse("5 == 5");
     RCP<const Basic> l12 = parse("5 == 6");
-    RCP<const Symbol> s1 = symbol("a");
-    RCP<const Symbol> s2 = symbol("b");
-    RCP<const Symbol> s3 = symbol("c");
-    RCP<const Basic> l13
-        = logical_and({Ge(s1, integer(2)), Ge(s2, integer(5))});
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Basic> l13 = logical_and({Ge(a, integer(2)), Ge(b, integer(5))});
     RCP<const Basic> l14
-        = logical_and({logical_or({Eq(s1, s2), Ne(s1, s3)}), {Ge(s1, s2)}});
+        = logical_and({logical_or({Eq(a, b), Ne(a, c)}), {Ge(a, b)}});
+    RCP<const Basic> l15 = parse("f(a, b)")->diff(a);
+    RCP<const Basic> l16 = parse("f(a, 2)")->diff(a);
+    RCP<const Basic> l17 = parse("f(a, 2)")->diff(a)->diff(a)->diff(a);
+    RCP<const Basic> l18 = parse("f(a, b)")->diff(a)->diff(a)->diff(b);
+    RCP<const Basic> l19 = parse("pi^2 + e*2 + asin(sqrt(2)) + sin(2^(1/10))");
+    RCP<const Basic> l20 = parse("f(2*a, 2*b)")->diff(a)->diff(b);
+    RCP<const Basic> l21 = parse("alpha + _xi_1 + xi2");
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -658,4 +665,17 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
     CHECK(latex(*l14)
           == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
+    CHECK(latex(*l15) == "\\frac{\\partial}{\\partial a} f\\left(a, b\\right)");
+    CHECK(latex(*l16) == "\\frac{d}{d a} f\\left(a, 2\\right)");
+    CHECK(latex(*l17)
+          == "\\frac{\\partial^3}{\\partial a^3 } f\\left(a, 2\\right)");
+    CHECK(latex(*l18) == "\\frac{\\partial^3}{\\partial a^2 \\partial b } "
+                         "f\\left(a, b\\right)");
+    CHECK(latex(*l19) == "\\pi^2 + 2 e + \\sin{\\left(\\sqrt[10]{2}\\right)} + "
+                         "\\operatorname{asin}{\\left(\\sqrt{2}\\right)}");
+    CHECK(latex(*l20) == "4 \\left. \\frac{\\partial^2}{\\partial \\xi_1 "
+                         "\\partial \\xi_2 } f\\left(\\xi_1, "
+                         "\\xi_2\\right)\\right|_{\\substack{\\xi_1=2 a \\\\ "
+                         "\\xi_2=2 b}}");
+    CHECK(latex(*l21) == "\\xi_1 + \\alpha + xi2");
 }

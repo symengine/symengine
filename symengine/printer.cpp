@@ -428,8 +428,22 @@ void StrPrinter::bvisit(const Mul &x)
     if (eq(*(x.get_coef()), *minus_one)) {
         o << "-";
     } else if (neq(*(x.get_coef()), *one)) {
-        o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul) << print_mul();
-        num = true;
+        if (not split_mul_coef()) {
+            o << parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul)
+              << print_mul();
+            num = true;
+        } else {
+            RCP<const Basic> numer, denom;
+            as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));
+            if (neq(*numer, *one)) {
+                num = true;
+                o << parenthesizeLT(numer, PrecedenceEnum::Mul) << print_mul();
+            }
+            if (neq(*denom, *one)) {
+                den++;
+                o2 << parenthesizeLT(denom, PrecedenceEnum::Mul) << print_mul();
+            }
+        }
     }
 
     for (const auto &p : x.get_dict()) {
@@ -465,9 +479,9 @@ void StrPrinter::bvisit(const Mul &x)
         std::string s2 = o2.str();
         s2 = s2.substr(0, s2.size() - 1);
         if (den > 1) {
-            str_ = print_div(s, parenthesize(s2));
+            str_ = print_div(s, s2, true);
         } else {
-            str_ = print_div(s, s2);
+            str_ = print_div(s, s2, false);
         }
     } else {
         str_ = s;
@@ -475,9 +489,18 @@ void StrPrinter::bvisit(const Mul &x)
 }
 
 std::string StrPrinter::print_div(const std::string &num,
-                                  const std::string &den)
+                                  const std::string &den, bool paren)
 {
-    return num + "/" + den;
+    if (paren) {
+        return num + "/" + parenthesize(den);
+    } else {
+        return num + "/" + den;
+    }
+}
+
+bool StrPrinter::split_mul_coef()
+{
+    return false;
 }
 
 void StrPrinter::bvisit(const Pow &x)
@@ -930,7 +953,7 @@ std::vector<std::string> init_str_printer_names()
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
-    names[UPPERGAMMA] = "beta";
+    names[BETA] = "beta";
     names[LOGGAMMA] = "loggamma";
     names[LOG] = "log";
     names[POLYGAMMA] = "polygamma";

@@ -20,6 +20,39 @@ void print_rational_class(const rational_class &r, std::ostringstream &s)
     }
 }
 
+void LatexPrinter::bvisit(const Symbol &x)
+{
+    std::string name = x.get_name();
+
+    if (name.find('\\') != std::string::npos
+        or name.find('{') != std::string::npos) {
+        str_ = name;
+        return;
+    }
+    if (name[0] == '_') {
+        name = name.substr(1, name.size());
+    }
+    std::vector<std::string> greeks
+        = {"alpha",  "beta",  "gamma", "Gamma", "delta",   "Delta",   "epsilon",
+           "zeta",   "eta",   "theta", "Theta", "iota",    "kappa",   "lambda",
+           "Lambda", "mu",    "nu",    "xi",    "omicron", "pi",      "Pi",
+           "rho",    "sigma", "Sigma", "tau",   "upsilon", "Upsilon", "phi",
+           "Phi",    "chi",   "psi",   "Psi",   "omega",   "Omega"};
+
+    for (auto &letter : greeks) {
+        if (name == letter) {
+            str_ = "\\" + name;
+            return;
+        }
+        if (name.size() > letter.size() and name.find(letter + "_") == 0) {
+            str_ = "\\" + name;
+            return;
+        }
+    }
+    str_ = name;
+    return;
+}
+
 void LatexPrinter::bvisit(const Rational &x)
 {
     const auto &rational = x.as_rational_class();
@@ -83,6 +116,94 @@ void LatexPrinter::bvisit(const ComplexMPC &x)
     bvisit(static_cast<const ComplexBase &>(x));
 }
 #endif
+
+void LatexPrinter::bvisit(const Infty &x)
+{
+    if (x.is_negative_infinity()) {
+        str_ = "-\\infty";
+    } else if (x.is_positive_infinity()) {
+        str_ = "\\infty";
+    } else {
+        str_ = "\\tilde{\\infty}";
+    }
+}
+
+void LatexPrinter::bvisit(const NaN &x)
+{
+    str_ = "\\mathrm{NaN}";
+}
+
+void LatexPrinter::bvisit(const Constant &x)
+{
+    if (eq(x, *pi)) {
+        str_ = "\\pi";
+    } else if (eq(x, *E)) {
+        str_ = "e";
+    } else if (eq(x, *EulerGamma)) {
+        str_ = "\\gamma";
+    } else if (eq(x, *Catalan)) {
+        str_ = "G";
+    } else if (eq(x, *GoldenRatio)) {
+        str_ = "\\phi";
+    } else {
+        throw NotImplementedError("Constant " + x.get_name()
+                                  + " is not implemented.");
+    }
+}
+
+void LatexPrinter::bvisit(const Derivative &x)
+{
+    const auto &symbols = x.get_symbols();
+    std::ostringstream s;
+    if (symbols.size() == 1) {
+        if (free_symbols(*x.get_arg()).size() == 1) {
+            s << "\\frac{d}{d " << apply(*symbols.begin());
+        } else {
+            s << "\\frac{\\partial}{\\partial " << apply(*symbols.begin());
+        }
+    } else {
+        s << "\\frac{\\partial^" << symbols.size() << "}{";
+        unsigned count = 1;
+        auto it = symbols.begin();
+        RCP<const Basic> prev = *it;
+        ++it;
+        for (; it != symbols.end(); ++it) {
+            if (neq(*prev, **it)) {
+                if (count == 1) {
+                    s << "\\partial " << apply(*prev) << " ";
+                } else {
+                    s << "\\partial " << apply(*prev) << "^" << count << " ";
+                }
+                count = 1;
+            } else {
+                count++;
+            }
+            prev = *it;
+        }
+        if (count == 1) {
+            s << "\\partial " << apply(*prev) << " ";
+        } else {
+            s << "\\partial " << apply(*prev) << "^" << count << " ";
+        }
+    }
+    s << "} " << apply(x.get_arg());
+    str_ = s.str();
+}
+
+void LatexPrinter::bvisit(const Subs &x)
+{
+    std::ostringstream o;
+    o << "\\left. " << apply(x.get_arg()) << "\\right|_{\\substack{";
+    for (auto p = x.get_dict().begin(); p != x.get_dict().end(); p++) {
+        if (p != x.get_dict().begin()) {
+            o << " \\\\ ";
+        }
+        o << apply(p->first) << "=" << apply(p->second);
+    }
+    o << "}}";
+    str_ = o.str();
+}
+
 void LatexPrinter::bvisit(const Equality &x)
 {
     std::ostringstream s;
@@ -237,26 +358,76 @@ void LatexPrinter::bvisit(const ImageSet &x)
     str_ = s.str();
 }
 
+void LatexPrinter::bvisit(const ConditionSet &x)
+{
+    std::ostringstream s;
+    s << "\\left\\{" << apply(*x.get_symbol()) << "\\; |\\; ";
+    s << apply(x.get_condition()) << "\\right\\}";
+    str_ = s.str();
+}
+
+void LatexPrinter::bvisit(const EmptySet &x)
+{
+    str_ = "\\emptyset";
+}
+
+void LatexPrinter::bvisit(const FiniteSet &x)
+{
+    std::ostringstream s;
+    s << "\\left{";
+    print_with_args(x, ",", s);
+    s << "\\right}";
+    str_ = s.str();
+}
+
+void LatexPrinter::bvisit(const Contains &x)
+{
+    std::ostringstream s;
+    s << apply(x.get_expr()) << " \\in " << apply(x.get_set());
+    str_ = s.str();
+}
+
 std::string LatexPrinter::print_mul()
 {
     return " ";
 }
 
+bool LatexPrinter::split_mul_coef()
+{
+    return true;
+}
+
 std::vector<std::string> init_latex_printer_names()
 {
     std::vector<std::string> names = init_str_printer_names();
-    names[ASIN] = "arcsin";
-    names[ACOS] = "arccos";
-    names[ASEC] = "arcsec";
-    names[ACSC] = "arccsc";
-    names[ATAN] = "arctan";
-    names[ACOT] = "arccot";
-    names[ASINH] = "arcsinh";
-    names[ACSCH] = "arccsch";
-    names[ACOSH] = "arccosh";
-    names[ATANH] = "arctanh";
-    names[ACOTH] = "arccoth";
-    names[ASECH] = "arcsech";
+
+    for (unsigned i = 0; i < names.size(); i++) {
+        if (names[i] != "") {
+            names[i] = "\\operatorname{" + names[i] + "}";
+        }
+    }
+    names[SIN] = "\\sin";
+    names[COS] = "\\cos";
+    names[TAN] = "\\tan";
+    names[COT] = "\\cot";
+    names[CSC] = "\\csc";
+    names[SEC] = "\\sec";
+    names[ATAN2] = "\\operatorname{atan_2}";
+    names[SINH] = "\\sinh";
+    names[COSH] = "\\cosh";
+    names[TANH] = "\\tanh";
+    names[COTH] = "\\coth";
+    names[LOG] = "\\log";
+    names[ZETA] = "\\zeta";
+    names[LAMBERTW] = "\\operatorname{W}";
+    names[DIRICHLET_ETA] = "\\eta";
+    names[KRONECKERDELTA] = "\\delta_";
+    names[LEVICIVITA] = "\\varepsilon_";
+    names[LOWERGAMMA] = "\\gamma";
+    names[UPPERGAMMA] = "\\Gamma";
+    names[BETA] = "\\operatorname{B}";
+    names[LOG] = "\\log";
+    names[GAMMA] = "\\Gamma";
     return names;
 }
 
@@ -266,9 +437,30 @@ const std::vector<std::string> LatexPrinter::names_
 void LatexPrinter::bvisit(const Function &x)
 {
     std::ostringstream o;
-    o << names_[x.get_type_code()];
+    o << names_[x.get_type_code()] << "{";
     vec_basic vec = x.get_args();
-    o << parenthesize(apply(vec));
+    o << parenthesize(apply(vec)) << "}";
+    str_ = o.str();
+}
+
+void LatexPrinter::bvisit(const Floor &x)
+{
+    std::ostringstream o;
+    o << "\\lfloor{" << apply(x.get_arg()) << "}\\rfloor";
+    str_ = o.str();
+}
+
+void LatexPrinter::bvisit(const Ceiling &x)
+{
+    std::ostringstream o;
+    o << "\\lceil{" << apply(x.get_arg()) << "}\\rceil";
+    str_ = o.str();
+}
+
+void LatexPrinter::bvisit(const Abs &x)
+{
+    std::ostringstream o;
+    o << "\\left|" << apply(x.get_arg()) << "}\\right|";
     str_ = o.str();
 }
 
@@ -281,27 +473,54 @@ void LatexPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                               const RCP<const Basic> &b)
 {
     if (eq(*a, *E)) {
-        o << "e^\\{" << apply(b) << "}";
+        o << "e^\\{" << apply(a) << "}";
     } else if (eq(*b, *rational(1, 2))) {
-        o << "\\sqrt{" << apply(b) << "}";
+        o << "\\sqrt{" << apply(a) << "}";
     } else if (is_a<Rational>(*b)
                and eq(*static_cast<const Rational &>(*b).get_num(), *one)) {
-        o << "\\sqrt[" << apply(static_cast<const Rational &>(*b).get_num())
-          << "]{" << apply(b) << "}";
+        o << "\\sqrt[" << apply(static_cast<const Rational &>(*b).get_den())
+          << "]{" << apply(a) << "}";
     } else {
         o << parenthesizeLE(a, PrecedenceEnum::Pow);
         Precedence prec;
         if (prec.getPrecedence(b) <= PrecedenceEnum::Pow) {
-            o << "{" << apply(b) << "}";
+            o << "^{" << apply(b) << "}";
         } else {
-            o << apply(b);
+            o << "^" << apply(b);
         }
     }
 }
 
 std::string LatexPrinter::print_div(const std::string &num,
-                                    const std::string &den)
+                                    const std::string &den, bool paren)
 {
     return "\\frac{" + num + "}{" + den + "}";
+}
+
+void LatexPrinter::bvisit(const Piecewise &x)
+{
+    std::ostringstream s;
+    s << "\\begin{cases} ";
+    const auto &vec = x.get_vec();
+    auto it = vec.begin();
+    auto it_last = --vec.end();
+    while (it != vec.end()) {
+        s << apply(it->first);
+        if (it == it_last) {
+            if (eq(*it->second, *boolTrue)) {
+                s << " & \\text{otherwise} \\end{cases}";
+            } else {
+                s << " & \\text{for}\\: ";
+                s << apply(it->second);
+                s << " \\end{cases}";
+            }
+        } else {
+            s << " & \\text{for}\\: ";
+            s << apply(it->second);
+            s << "\\\\";
+        }
+        it++;
+    }
+    str_ = s.str();
 }
 }
