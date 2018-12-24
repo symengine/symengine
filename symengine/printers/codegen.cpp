@@ -211,8 +211,9 @@ void C89CodePrinter::bvisit(const Infty &x)
         throw SymEngineException("Not supported");
     str_ = s.str();
 }
-void C89CodePrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                const RCP<const Basic> &b)
+void C89CodePrinter::_print_pow(std::ostringstream &o,
+                                const RCP<const Basic> &a,
+                                const RCP<const Basic> &b)
 {
     if (eq(*a, *E)) {
         o << "exp(" << apply(b) << ")";
@@ -234,8 +235,9 @@ void C99CodePrinter::bvisit(const Infty &x)
         throw SymEngineException("Not supported");
     str_ = s.str();
 }
-void C99CodePrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                const RCP<const Basic> &b)
+void C99CodePrinter::_print_pow(std::ostringstream &o,
+                                const RCP<const Basic> &a,
+                                const RCP<const Basic> &b)
 {
     if (eq(*a, *E)) {
         o << "exp(" << apply(b) << ")";
@@ -271,7 +273,7 @@ void JSCodePrinter::bvisit(const Constant &x)
     }
 }
 void JSCodePrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                const RCP<const Basic> &b)
+                               const RCP<const Basic> &b)
 {
     if (eq(*a, *E)) {
         o << "Math.exp(" << apply(b) << ")";

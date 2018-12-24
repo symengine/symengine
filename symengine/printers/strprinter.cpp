@@ -40,7 +40,6 @@ void Precedence::bvisit(const Relational &x)
     precedence = PrecedenceEnum::Relational;
 }
 
-
 void Precedence::bvisit(const Pow &x)
 {
     precedence = PrecedenceEnum::Pow;
@@ -1134,5 +1133,4 @@ std::string julia_str(const Basic &x)
     JuliaStrPrinter strPrinter;
     return strPrinter.apply(x);
 }
-
 }
