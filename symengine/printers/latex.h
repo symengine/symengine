@@ -1,8 +1,7 @@
 #ifndef LATEX_H
 #define LATEX_H
 
-#include <symengine/visitor.h>
-#include <symengine/printer.h>
+#include <symengine/printers/strprinter.h>
 
 namespace SymEngine
 {
@@ -63,7 +62,6 @@ protected:
                                   const std::string &den, bool paren);
 };
 
-std::string latex(const Basic &x);
 }
 
 #endif // LATEX_H

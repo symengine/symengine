@@ -3,9 +3,8 @@
 
 #include <symengine/matrix.h>
 #include <symengine/printers/strprinter.h>
-#include <symengine/printers/mathml.h>
+#include <symengine/printers.h>
 #include <symengine/parser.h>
-#include <symengine/latex.h>
 #include <symengine/logic.h>
 
 using SymEngine::rcp_static_cast;

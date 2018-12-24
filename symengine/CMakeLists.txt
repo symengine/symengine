@@ -41,7 +41,6 @@ set(SRC
     functions.cpp
     infinity.cpp
     integer.cpp
-    latex.cpp
     logic.cpp
     matrix.cpp
     monomials.cpp
@@ -62,6 +61,7 @@ set(SRC
     printers/codegen.cpp
     printers/mathml.cpp
     printers/strprinter.cpp
+    printers/latex.cpp
     rational.cpp
     real_double.cpp
     rewrite.cpp
@@ -137,7 +137,6 @@ set(HEADERS
     infinity.h
     integer.h
     lambda_double.h
-    latex.h
     llvm_double.h
     logic.h
     matrix.h
@@ -162,6 +161,7 @@ set(HEADERS
     printers/codegen.h
     printers/mathml.h
     printers/strprinter.h
+    printers/latex.h
     printers.h
     rational.h
     real_double.h

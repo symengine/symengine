@@ -11,6 +11,8 @@ std::string ascii_art();
 
 std::string mathml(const Basic &x);
 
+std::string latex(const Basic &x);
+
 std::string ccode(const Basic &x);
 std::string c89code(const Basic &x);
 std::string c99code(const Basic &x);
