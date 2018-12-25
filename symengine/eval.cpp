@@ -20,7 +20,7 @@
 namespace SymEngine
 {
 
-RCP<const Number> _evalf(const Basic &b, unsigned long bits, bool real)
+RCP<const Number> evalf_numeric(const Basic &b, unsigned long bits, bool real)
 {
     if (bits <= 53 && real) { // double
         double d = eval_double(b);
@@ -55,21 +55,24 @@ class EvalVisitor : public BaseVisitor<EvalVisitor, TransformVisitor>
 {
 protected:
     unsigned long bits;
-    bool real;
 
 public:
-    EvalVisitor(unsigned long bits, bool real) : bits(bits), real(real)
+    EvalVisitor(unsigned long bits) : bits(bits)
     {
     }
     using TransformVisitor::apply;
     using TransformVisitor::bvisit;
     void bvisit(const Number &x)
     {
-        result_ = _evalf(x, bits, real);
+        result_ = evalf_numeric(x, bits, true);
+    }
+    void bvisit(const ComplexBase &x)
+    {
+        result_ = evalf_numeric(x, bits, false);
     }
     void bvisit(const Constant &x)
     {
-        result_ = _evalf(x, bits, real);
+        result_ = evalf_numeric(x, bits, true);
     }
     void bvisit(const NumberWrapper &x)
     {
@@ -81,26 +84,38 @@ public:
     }
 };
 
-RCP<const Basic> evalf(const Basic &b, unsigned long bits, bool real)
+RCP<const Basic> evalf(const Basic &b, unsigned long bits, EvalfDomain domain)
 {
 #ifndef HAVE_SYMENGINE_MPFR
-    if (bits > 53 and real) {
+    if (bits > 53) {
         throw std::invalid_argument(
             "For multiple bit precision, MPFR is needed");
     }
 #endif
 #ifndef HAVE_SYMENGINE_MPC
-    if (bits > 53 and not real) {
+    if (bits > 53 and domain == EvalfDomain::Complex) {
         throw std::invalid_argument(
             "For multiple bit precision, MPC is needed");
     }
 #endif
-    try {
-        return _evalf(b, bits, real);
-    } catch (SymEngineException &e) {
-        EvalVisitor v(bits, real);
-        return v.apply(b.rcp_from_this());
+    if (domain == EvalfDomain::Real) {
+        return evalf_numeric(b, bits, true);
+    } else if (domain == EvalfDomain::Complex) {
+        return evalf_numeric(b, bits, false);
     }
+
+    try {
+        return evalf_numeric(b, bits, true);
+    } catch (SymEngineException &e) {
+    }
+
+    try {
+        return evalf_numeric(b, bits, false);
+    } catch (SymEngineException &e) {
+    }
+
+    EvalVisitor v(bits);
+    return v.apply(b.rcp_from_this());
 }
 
 } // SymEngine
