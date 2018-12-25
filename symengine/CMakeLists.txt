@@ -222,14 +222,23 @@ if (NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
     set_source_files_properties(parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-implicit-fallthrough")
 endif()
 
-if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_SHARED)
-    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--exclude-libs,ALL")
-endif()
-
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()
 target_link_libraries(symengine ${LIBS})
+
+if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_SHARED)
+    get_target_property(OUT symengine INTERFACE_LINK_LIBRARIES)
+    message(STATUS ${OUT})
+    set(EXCLUDE_LIBS_FLAGS "")
+    foreach(LLVM_LIB ${llvm_libs})
+        get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
+        if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
+            set(EXCLUDE_LIBS_FLAGS "${EXCLUDE_LIBS_FLAGS} -Wl,--exclude-libs,${${LLVM_LIB}_IMPORT_LOCATION}")
+        endif()
+    endforeach()
+    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "${EXCLUDE_LIBS_FLAGS}")
+endif()
 
 include(GNUInstallDirs)
 

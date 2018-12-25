@@ -407,7 +407,8 @@ if (WITH_LLVM)
     endforeach()
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
-    llvm_map_components_to_libnames(llvm_libs ${SYMENGINE_LLVM_COMPONENTS})
+    llvm_map_components_to_libnames(llvm_libs_direct ${SYMENGINE_LLVM_COMPONENTS})
+    llvm_expand_dependencies(llvm_libs ${llvm_libs_direct})
 
     set(SYMENGINE_LLVM_SHARED_DEFAULT False)
     foreach(LLVM_LIB ${llvm_libs})
