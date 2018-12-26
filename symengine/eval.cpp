@@ -104,16 +104,6 @@ RCP<const Basic> evalf(const Basic &b, unsigned long bits, EvalfDomain domain)
         return evalf_numeric(b, bits, false);
     }
 
-    try {
-        return evalf_numeric(b, bits, true);
-    } catch (SymEngineException &e) {
-    }
-
-    try {
-        return evalf_numeric(b, bits, false);
-    } catch (SymEngineException &e) {
-    }
-
     EvalVisitor v(bits);
     return v.apply(b.rcp_from_this());
 }
