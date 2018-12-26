@@ -21,11 +21,18 @@ namespace SymEngine
 {
 
 /*
- * Evaluates basic b, according to the number of significant bits, and the
- * complex / real nature of the number
+ * Evaluates basic b, according to the number of significant bits
+ * in the given domain
  */
 
-RCP<const Number> evalf(const Basic &b, unsigned long bits, bool real);
+enum class EvalfDomain {
+    Complex = 0,
+    Real = 1,
+    Symbolic = 2,
+};
+
+RCP<const Basic> evalf(const Basic &b, unsigned long bits,
+                       EvalfDomain domain = EvalfDomain::Symbolic);
 
 } // SymEngine
 

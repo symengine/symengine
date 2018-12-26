@@ -1579,7 +1579,7 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
 {
 
     CWRAPPER_BEGIN
-    s->m = SymEngine::evalf(*(b->m), bits, (bool)real);
+    s->m = SymEngine::evalf(*(b->m), bits, (SymEngine::EvalfDomain)real);
     CWRAPPER_END
 }
 
