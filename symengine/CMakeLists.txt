@@ -184,6 +184,8 @@ set(HEADERS
     visitor.h
 )
 
+include(GNUInstallDirs)
+
 # Configure SymEngine using our CMake options:
 set(SYMENGINE_CLING_LIBRARY_DIR "\"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}\"")
 
@@ -229,20 +231,9 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 target_link_libraries(symengine ${LIBS})
 
-if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_SHARED)
-    get_target_property(OUT symengine INTERFACE_LINK_LIBRARIES)
-    message(STATUS ${OUT})
-    set(EXCLUDE_LIBS_FLAGS "")
-    foreach(LLVM_LIB ${llvm_libs})
-        get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
-        if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
-            set(EXCLUDE_LIBS_FLAGS "${EXCLUDE_LIBS_FLAGS} -Wl,--exclude-libs,${${LLVM_LIB}_IMPORT_LOCATION}")
-        endif()
-    endforeach()
-    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "${EXCLUDE_LIBS_FLAGS}")
+if (WITH_LLVM AND EXCLUDE_LIBS AND NOT SYMENGINE_LLVM_LINK_DOWNSTREAM AND NOT WITH_SYMENGINE_TEUCHOS)
+    set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--exclude-libs,ALL")
 endif()
-
-include(GNUInstallDirs)
 
 install(TARGETS symengine
             EXPORT SymEngineTargets
