@@ -1,5 +1,5 @@
 #include <limits>
-#include <symengine/printer.h>
+#include <symengine/printers/strprinter.h>
 
 namespace SymEngine
 {
@@ -23,6 +23,111 @@ std::string ascii_art()
                     "|_____|_  |_|_|_|_____|_|_|_  |_|_|_|___|\n"
                     "      |___|               |___|          \n";
     return a;
+}
+
+void Precedence::bvisit(const Add &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+
+void Precedence::bvisit(const Mul &x)
+{
+    precedence = PrecedenceEnum::Mul;
+}
+
+void Precedence::bvisit(const Relational &x)
+{
+    precedence = PrecedenceEnum::Relational;
+}
+
+void Precedence::bvisit(const Pow &x)
+{
+    precedence = PrecedenceEnum::Pow;
+}
+
+void Precedence::bvisit(const GaloisField &x)
+{
+    // iterators need to be implemented
+    // bvisit_upoly(x);
+}
+
+void Precedence::bvisit(const Rational &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+
+void Precedence::bvisit(const Complex &x)
+{
+    if (x.is_re_zero()) {
+        if (x.imaginary_ == 1) {
+            precedence = PrecedenceEnum::Atom;
+        } else {
+            precedence = PrecedenceEnum::Mul;
+        }
+    } else {
+        precedence = PrecedenceEnum::Add;
+    }
+}
+
+void Precedence::bvisit(const Integer &x)
+{
+    if (x.is_negative()) {
+        precedence = PrecedenceEnum::Mul;
+    } else {
+        precedence = PrecedenceEnum::Atom;
+    }
+}
+
+void Precedence::bvisit(const RealDouble &x)
+{
+    if (x.is_negative()) {
+        precedence = PrecedenceEnum::Mul;
+    } else {
+        precedence = PrecedenceEnum::Atom;
+    }
+}
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+void Precedence::bvisit(const URatPSeriesPiranha &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+
+void Precedence::bvisit(const UPSeriesPiranha &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+#endif
+void Precedence::bvisit(const ComplexDouble &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+#ifdef HAVE_SYMENGINE_MPFR
+void Precedence::bvisit(const RealMPFR &x)
+{
+    if (x.is_negative()) {
+        precedence = PrecedenceEnum::Mul;
+    } else {
+        precedence = PrecedenceEnum::Atom;
+    }
+}
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+void Precedence::bvisit(const ComplexMPC &x)
+{
+    precedence = PrecedenceEnum::Add;
+}
+#endif
+
+void Precedence::bvisit(const Basic &x)
+{
+    precedence = PrecedenceEnum::Atom;
+}
+
+PrecedenceEnum Precedence::getPrecedence(const RCP<const Basic> &x)
+{
+    (*x).accept(*this);
+    return precedence;
 }
 
 void StrPrinter::bvisit(const Basic &x)
@@ -1015,5 +1120,17 @@ void JuliaStrPrinter::bvisit(const Infty &x)
     else
         s << "zoo";
     str_ = s.str();
+}
+
+std::string str(const Basic &x)
+{
+    StrPrinter strPrinter;
+    return strPrinter.apply(x);
+}
+
+std::string julia_str(const Basic &x)
+{
+    JuliaStrPrinter strPrinter;
+    return strPrinter.apply(x);
 }
 }

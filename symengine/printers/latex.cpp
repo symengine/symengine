@@ -1,6 +1,4 @@
-#include <limits>
-#include <symengine/latex.h>
-#include <symengine/basic-inl.h>
+#include <symengine/printers/latex.h>
 
 namespace SymEngine
 {

@@ -3,7 +3,7 @@
 
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
-#include <symengine/printer.h>
+#include <symengine/printers.h>
 #include <symengine/matrix.h>
 #include <symengine/eval.h>
 #include <symengine/parser.h>
@@ -65,7 +65,7 @@ using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
 using SymEngine::numeric_cast;
-using SymEngine::JuliaStrPrinter;
+using SymEngine::julia_str;
 
 namespace SymEngine
 {
@@ -617,8 +617,7 @@ char *basic_str(const basic s)
 
 char *basic_str_julia(const basic s)
 {
-    JuliaStrPrinter p;
-    std::string str = p.apply(s->m);
+    std::string str = julia_str(*s->m);
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
