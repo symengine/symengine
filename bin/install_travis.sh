@@ -121,7 +121,7 @@ fi
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then
     conda create -q -p $our_install_dir ${conda_pkgs};
 else
-    conda create -q -p $our_install_dir ${CONDA_ENV_FILE};
+    conda create -q -p $our_install_dir --file ${CONDA_ENV_FILE};
 fi
 source activate $our_install_dir;
 
