@@ -167,6 +167,11 @@ matrix:
           packages:
           - clang-7
           - llvm-7-dev
+    - env: CONDA_ENV_FILE="binder/environment.yml"
+      compiler: gcc
+      os: linux
+      script:
+        - bin/test_cling_notebook.sh
 
 before_install:
 - |
@@ -177,7 +182,6 @@ before_install:
 install:
   - source bin/install_travis.sh
 script:
-  - bin/travis_clang_format.sh
   - bin/test_travis.sh
   - bin/trigger_feedstock.sh
 notifications:
