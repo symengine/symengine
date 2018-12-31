@@ -79,7 +79,7 @@ is to use the Debug mode with `BFD` support on:
 
     cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes .
 
-This `BFD` support turns on nice Python like stacktraces on exceptions, assert
+This `BFD` support turns on nice Python like stack traces on exceptions, assert
 errors or segfaults, and the Debug mode automatically turns on
 `WITH_SYMENGINE_RCP=no` (which uses `Teuchos::RCP` with full Debug time
 checking) and `WITH_SYMENGINE_ASSERT=yes`, so the code cannot segfault in Debug
@@ -88,7 +88,7 @@ which is easy to check by visual inspection of a given Pull Request. In Release
 mode, which is the default, the code is as performing as manual reference
 counting and raw pointers (and if there is a bug, it could segfault, in which
 case all you have to do is to turn Debug mode on and get a nice exception with
-a stacktrace).
+a stack trace).
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
@@ -132,7 +132,7 @@ their default values indicated below:
         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built
         .
 
-If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
+If `OpenMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
 irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
 
 `CMake` prints the value of its options at the end of the run.
@@ -148,7 +148,7 @@ dependency and all the code would be under permissive licenses, namely, MIT,
 BSD 3-clause and Boost License.
 
 The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
-(`WITH_PIRANHA`) depend on Boost, so they are off by default. The bechmarked
+(`WITH_PIRANHA`) depend on Boost, so they are off by default. The benchmarked
 code (both with and without Nonius) seems to depend on the order of which you
 execute the benchmarks in a given executable, due to internal malloc
 implementation. We have found that this order dependence is reduced by enabling
