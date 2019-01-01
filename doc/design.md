@@ -139,7 +139,7 @@ The function signature of `add` is:
 
 For more complicated expressions, instead of `add`, we might also consider
 using the naming scheme proposed in [1]. Another advantage of this approach is
-that compiler errors are much easier to understand since it is either finds
+that compiler errors are much easier to understand since it is either finding
 our function or it does not, while when overloading operators of our templated
 classes (and RCP), any mistake typically results in pages of compiler errors in
 gcc.
