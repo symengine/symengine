@@ -232,9 +232,6 @@ if (BUILD_SHARED_LIBS)
             set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
         endif()
     endif()
-    set(SYMENGINE_STATIC_DEFINE no)
-else()
-    set(SYMENGINE_STATIC_DEFINE yes)
 endif()
 
 # ECM
@@ -410,30 +407,29 @@ if (WITH_LLVM)
     llvm_map_components_to_libnames(llvm_libs_direct ${SYMENGINE_LLVM_COMPONENTS})
     llvm_expand_dependencies(llvm_libs ${llvm_libs_direct})
 
-    set(SYMENGINE_LLVM_SHARED_DEFAULT False)
-    foreach(LLVM_LIB ${llvm_libs})
-        get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
-        if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
-            if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES ".a$|.lib$")
-                set(SYMENGINE_LLVM_SHARED_DEFAULT True)
+    if (BUILD_SHARED_LIBS)
+        set(SYMENGINE_LLVM_LINK_DOWNSTREAM_DEFAULT False)
+        foreach(LLVM_LIB ${llvm_libs})
+            get_target_property(${LLVM_LIB}_IMPORT_LOCATION ${LLVM_LIB} LOCATION)
+            if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES "NOTFOUND")
+                if (NOT "${${LLVM_LIB}_IMPORT_LOCATION}" MATCHES ".a$|.lib$")
+                    set(SYMENGINE_LLVM_LINK_DOWNSTREAM_DEFAULT True)
+                endif()
             endif()
-        endif()
-    endforeach()
-    set(SYMENGINE_LLVM_SHARED ${SYMENGINE_LLVM_SHARED_DEFAULT}
+        endforeach()
+    else()
+        set(SYMENGINE_LLVM_LINK_DOWNSTREAM_DEFAULT True)
+    endif()
+    set(SYMENGINE_LLVM_LINK_DOWNSTREAM ${SYMENGINE_LLVM_LINK_DOWNSTREAM_DEFAULT}
         CACHE INTERNAL "Link to llvm in SymEngineConfig.cmake")
+    if (NOT SYMENGINE_LLVM_LINK_DOWNSTREAM)
+        unset(SYMENGINE_LLVM_COMPONENTS)
+    endif ()
     set(LIBS ${LIBS} ${llvm_libs})
     include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_LLVM yes)
     set(PKGS ${PKGS} "LLVM")
 endif()
-
-# TODO: Detect this automatically
-set(SYMENGINE_LINK_LLVM_STATIC no
-    CACHE BOOL "If set to yes, make LLVM a private dependency.")
-
-if (SYMENGINE_LINK_LLVM_STATIC)
-    unset(SYMENGINE_LLVM_COMPONENTS)
-endif ()
 
 # BENCHMARKS
 set(BUILD_BENCHMARKS yes

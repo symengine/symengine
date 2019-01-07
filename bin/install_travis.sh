@@ -118,7 +118,11 @@ if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs doxygen=1.8.13"
 fi
 
-conda create -q -p $our_install_dir ${conda_pkgs};
+if [[ "${CONDA_ENV_FILE}" == "" ]]; then
+    conda create -q -p $our_install_dir ${conda_pkgs};
+else
+    conda env create -q -p $our_install_dir --file ${CONDA_ENV_FILE};
+fi
 source activate $our_install_dir;
 
 if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
