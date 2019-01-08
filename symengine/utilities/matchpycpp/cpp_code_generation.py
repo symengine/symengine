@@ -9,6 +9,8 @@ from matchpy.matching.syntactic import OPERATION_END, is_operation
 from matchpy.matching.many_to_one import _EPS
 from matchpy.utils import get_short_lambda_source
 
+from symengine_printer import symengine_print
+
 COLLAPSE_IF_RE = re.compile(
     r'\n(?P<indent1>\s*)if (?P<cond1>[^\n]+):\n+\1(?P<indent2>\s+)'
     r'(?P<comment>(?:\#[^\n]*\n+\1\3)*)'
@@ -50,6 +52,9 @@ class CppCodeGenerator:
         self._var_number += 1
         return prefix + str(self._var_number)
 
+    def prepend_code(self):
+        code = """
+"""
     def generate_code(self, func_name='match_root', add_imports=True):
         self._imports.add('#include <deque>')
         self._imports.add('#include <iostream>')
@@ -62,41 +67,8 @@ class CppCodeGenerator:
         self._imports.add('#include <symengine/basic.h>')
         self._imports.add('#include <symengine/pow.h>')
 
-        self._imports.add('#include "generator_trick.h"')
+        self._imports.add('#include "common.h"')
 
-        self.add_line('')
-        self.add_line('using namespace std;')
-        self.add_line('using namespace SymEngine;')
-        self.add_line('typedef map<string, RCP<const Basic>> Substitution;')
-        self.add_line('typedef deque<RCP<const Basic>> Deque;')
-        self.add_line('')
-
-        self._code += """
-int try_add_variable(Substitution &subst, string variable_name,
-                     RCP<const Basic> &replacement)
-{
-    if (subst.find(variable_name) == subst.end()) {
-        subst[variable_name] = replacement;
-    } else {
-    }
-    return 0;
-}
-
-Deque get_deque(RCP<const Basic> expr)
-{
-    Deque d;
-    for (RCP<const Basic> i : expr->get_args()) {
-        d.push_back(i);
-    }
-    return d;
-}
-
-RCP<const Basic> x = symbol("x");
-RCP<const Basic> y = symbol("y");
-RCP<const Basic> z = symbol("z");
-RCP<const Basic> w = symbol("w");
-
-"""
         self.add_line('tuple<int, Substitution> {}(RCP<const Basic> subject)'.format(func_name))
         self.indent()
         self.add_line('Deque {};'.format(self._subjects[-1]))
@@ -121,7 +93,7 @@ RCP<const Basic> w = symbol("w");
             self._imports.add('#include "bipartite.h"')
             self._imports.add('#include "common.h"')
             generator = type(self)(state.matcher.automaton)
-            generator.indent()
+            generator.indent(bracket=False)
             global_code, code = generator.generate_code(func_name='get_match_iter', add_imports=False)
             self._global_code.append(global_code)
             patterns = self.commutative_patterns(state.matcher.patterns)
@@ -136,50 +108,62 @@ class CommutativeMatcher{0} : public CommutativeMatcher
 {{
 public:
 {8}static CommutativeMatcher{0} *_instance = NULL;
-{8}patterns = {1};
-{8}Deque subjects = {2};
-{8}subjects_by_id = {7};
-{8}BipartiteGraph bipartite;
-{8}associative = {3};
-{8}int max_optional_count = {4};
-{8}{5} anonymous_patterns;
+{8}static patterns;
+{8}static Deque subjects;
+{8}static subjects_by_id;
+{8}static BipartiteGraph bipartite;
+{8}static associative;
+{8}static int max_optional_count;
+{8}static anonymous_patterns;
 
-{8}CommutativeMatcher{0}
+{8}CommutativeMatcher{0}()
 {8}{{
 {8}{8}add_subject(NULL);
 {8}}}
 
-{8}@staticmethod
-{8}CommutativeMatcher{0} get()
+{8}static CommutativeMatcher{0} *get()
 {8}{{
 {8}{8}if (CommutativeMatcher{0}._instance == NULL)
-{8}{8}{8}CommutativeMatcher{0}._instance = new CommutativeMatcher{0}();
-{8}{8}return CommutativeMatcher{0}._instance;
+{8}{8}{8}this->_instance = new CommutativeMatcher{0}();
+{8}{8}return this->_instance;
 {8}}}
 
-{8}static tuple<int, Substitution>
-{6}'''.strip().format(
+{6}
+}};
+
+
+static CommutativeMatcher{0}::patterns = {1};
+static CommutativeMatcher{0}::Deque subjects = {2};
+static CommutativeMatcher{0}::subjects_by_id = {7};
+static CommutativeMatcher{0}::BipartiteGraph bipartite;
+static CommutativeMatcher{0}::associative = {3};
+static CommutativeMatcher{0}::int max_optional_count = {4};
+static CommutativeMatcher{0}::anonymous_patterns = {5};
+
+'''.strip().format(
                     state.number, patterns, subjects, associative, max_optional_count, anonymous_patterns, code,
                     subjects_by_id, self._indentation
                 )
             )
-            self.add_line('matcher = CommutativeMatcher{}.get()'.format(state.number))
+            self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::get();'.format(state.number))
             tmp = self.get_var_name('tmp')
-            self.add_line('{} = {}'.format(tmp, self._subjects[-1]))
-            self.add_line('{} = []'.format(self._subjects[-1]))
-            self.add_line('for s in {}:'.format(tmp))
-            self.indent()
-            self.add_line('matcher.add_subject(s)')
+            self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
+            self.add_line('{} = {{}};'.format(self._subjects[-1]))
+            self.add_line('for (auto &s : {}->get_args()) {{'.format(tmp))
+            self.indent(bracket=False)
+            self.add_line('matcher->add_subject(s);')
             subjects = self._subjects.pop()
             self.dedent()
             self.add_line(
-                'for pattern_index, subst{} in matcher.match({}, subst{}):'.format(self._substs + 1, tmp, self._substs)
+                'for (auto &p : matcher->match({}, subst{})) {{'.format(tmp, self._substs)
             )
             self._substs += 1
-            self.indent()
+            self.indent(bracket=False)
+            self.add_line("pattern_index = p.first;")
+            self.add_line("Substitution subst{} = p.second;".format(self._substs))
             for pattern_index, transitions in state.transitions.items():
-                self.add_line('if pattern_index == {}:'.format(pattern_index))
-                self.indent()
+                self.add_line('if (pattern_index == {}) {{'.format(pattern_index))
+                self.indent(bracket=False)
                 patterns, variables = next((p, v) for i, p, v in state.matcher.patterns.values() if i == pattern_index)
                 variables = set(v[0][0] for v in variables)
                 pvars = iter(get_variables(state.matcher.automaton.patterns[i][0].expression) for i in patterns)
@@ -192,6 +176,7 @@ public:
                 self.generate_constraints(constraints, transitions)
                 self.dedent()
             self.dedent()
+            self.add_line("delete matcher;")
             self._substs -= 1
             self._subjects.append(subjects)
         else:
@@ -275,17 +260,13 @@ public:
             self.exit_variable_assignment()
         exit_func(value)
 
-    def get_args(self, operation, operation_type):
-        return 'op_iter({})'.format(operation)
-
     def push_subjects(self, value, operation):
         self._subjects.append(self.get_var_name('subjects'))
         self.add_line('Deque {} = get_deque({});'.format(self._subjects[-1], value))
-        #self.get_args(value, operation)))
 
     def push_subst(self):
         new_subst = self.get_var_name('subst')
-        self.add_line('subst{} = Substitution(subst{})'.format(self._substs + 1, self._substs))
+        self.add_line('Substitution subst{} = Substitution(subst{});'.format(self._substs + 1, self._substs))
         self._substs += 1
 
     def enter_eps(self, _):
@@ -345,7 +326,7 @@ public:
         self.dedent()
 
     def enter_fixed_wildcard(self, wildcard):
-        self.add_line('if (len({}) >= 1) {{'.format(self._subjects[-1]))
+        self.add_line('if ({}.size() >= 1) {{'.format(self._subjects[-1]))
         self.indent(bracket=False)
         tmp = self.get_var_name('tmp')
         self.add_line('RCP<const Basic> {} = {}.front();'.format(tmp, self._subjects[-1]))
@@ -398,10 +379,7 @@ public:
         return tmp
 
     def symbol_repr(self, symbol):
-        # TODO: transform this into a SymEnginePrinter module in SymPy
-        if isinstance(symbol, sympy.Pow):
-            return 'pow({0}, {1})'.format(*map(self.symbol_repr, symbol.args))
-        return repr(symbol)
+        return symengine_print(symbol)
 
     def exit_symbol(self, value):
         self.add_line('{}.push_front({});'.format(self._subjects[-1], value))
