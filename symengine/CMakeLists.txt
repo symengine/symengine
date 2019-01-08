@@ -6,6 +6,10 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
+if (WITH_SYMENGINE_MATCHPYCPP)
+    add_subdirectory(utilities/matchpycpp)
+endif()
+
 if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT parser/parser.cpp
                       COMMAND ${BISONCPP_EXECUTABLE} parser.yy
