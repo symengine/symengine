@@ -10,3 +10,9 @@ target_link_libraries(example symengine)
 
 add_executable(example_yield example_yield.cpp)
 target_link_libraries(example_yield symengine)
+
+add_executable(example_coroutine example_coroutine.cpp)
+target_link_libraries(example_coroutine symengine)
+
+add_executable(example_coroutine2 example_coroutine2.cpp)
+target_link_libraries(example_coroutine2 symengine)
