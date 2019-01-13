@@ -12,7 +12,7 @@
 using namespace std;
 using namespace SymEngine;
 
-typedef map<string, const Basic*> Substitution2;
+typedef map<string, const Basic *> Substitution2;
 
 int try_add_variable(Substitution2 &subst, string variable_name,
                      const Basic *replacement)
@@ -33,7 +33,7 @@ public:
     }
     const Basic *front()
     {
-        return _deque[N-1];
+        return _deque[N - 1];
     }
     void pop_front()
     {
@@ -42,12 +42,12 @@ public:
     void push_front(const Basic *obj)
     {
         N++;
-        _deque[N-1] = obj;
+        _deque[N - 1] = obj;
     }
     void push_back(const Basic *obj)
     {
-        for (int i=N; i>0; i--) {
-            _deque[N] = _deque[N-1];
+        for (int i = N; i > 0; i--) {
+            _deque[N] = _deque[N - 1];
         }
         _deque[0] = obj;
         N++;
@@ -58,7 +58,7 @@ public:
     }
     const Basic *operator[](int i)
     {
-        return _deque[N-i-1];
+        return _deque[N - i - 1];
     }
 
 private:
@@ -75,13 +75,20 @@ Deque get_deque(const Basic *expr)
     return d;
 }
 
+#define YIELDABLE                                                              \
+    if (yielded) {                                                             \
+        longjmp(childTask, 1);                                                 \
+    } else {                                                                   \
+        yielded = true;                                                        \
+    }
 
-#define YIELDABLE if (yielded) { longjmp(childTask, 1); } else { yielded = true; }
+#define yield(val)                                                             \
+    if (!setjmp(childTask)) {                                                  \
+        value = (val);                                                         \
+        return;                                                                \
+    }
 
-#define yield(val) if (!setjmp(childTask)) { value = (val); return; }
-
-
-template<typename T>
+template <typename T>
 class Yielder
 {
 public:
@@ -89,7 +96,8 @@ public:
     {
     }
 
-    virtual ~Yielder() {
+    virtual ~Yielder()
+    {
     }
 
     T _next()
@@ -140,7 +148,6 @@ protected:
 class match_root : public Yielder<tuple<int, Substitution2>>
 {
 public:
-
     match_root(Basic *subject) : subject(subject)
     {
     }
@@ -148,7 +155,8 @@ public:
     {
         this->subject = subject.access_private_ptr();
     }
-    void run() {
+    void run()
+    {
 
         YIELDABLE
 
@@ -208,6 +216,7 @@ public:
         d.pop_front();
         return obj;
     }
+
 private:
     const Basic *subject;
 
@@ -223,14 +232,13 @@ private:
     const Basic *tmp6;
 };
 
-
 class generator : public Yielder<int>
 {
 public:
     void run()
     {
         YIELDABLE
-        for (i=0; i<10; ++i) {
+        for (i = 0; i < 10; ++i) {
             yield(i);
         }
         stop();
@@ -268,5 +276,4 @@ int main(int argc, char *argv[])
     for (const tuple<int, Substitution2> &p : vec) {
         std::cout << "pair::first\t" << get<0>(p) << std::endl;
     }
-
 }
