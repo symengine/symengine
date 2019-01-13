@@ -38,13 +38,15 @@ Deque get_deque(RCP<const Basic> expr)
 
 coroutine::Channel<tuple<int, Substitution2>> channel;
 
-
-template<typename T>
+template <typename T>
 class Yielder
 {
 public:
-    Yielder() {}
-    virtual ~Yielder() {
+    Yielder()
+    {
+    }
+    virtual ~Yielder()
+    {
         coroutine::destroy(routine);
     }
 
@@ -53,19 +55,19 @@ public:
         coroutine::resume(routine);
         return value;
     }
+
 protected:
     void yield(T val)
     {
         value = val;
-        //channel.push(val);
+        // channel.push(val);
         coroutine::yield();
     }
     coroutine::routine_t routine;
     T value;
 };
 
-//Yielder<tuple<int, Substitution2>> match_root;
-
+// Yielder<tuple<int, Substitution2>> match_root;
 
 class match_root : public Yielder<tuple<int, Substitution2>>
 {
@@ -76,7 +78,8 @@ public:
     {
         routine = coroutine::create(std::bind(&match_root::run, this));
     }
-    void run() {
+    void run()
+    {
         Deque subjects;
         subjects.push_back(subject);
         Substitution2 subst0;
@@ -124,9 +127,7 @@ public:
         }
         yield(make_tuple(-1, subst0));
     }
-
 };
-
 
 int main(int argc, char *argv[])
 {

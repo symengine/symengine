@@ -37,11 +37,10 @@ Deque get_deque(RCP<const Basic> expr)
 
 coroutine::Channel<tuple<int, Substitution2>> channel;
 
-
 void yield(tuple<int, Substitution2> val)
 {
-	channel.push(val);
-	coroutine::yield();
+    channel.push(val);
+    coroutine::yield();
 }
 
 void match_root(RCP<const Basic> subject)

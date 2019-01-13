@@ -139,7 +139,6 @@ public:
 
 protected:
     jmp_buf childTask;
-    jmp_buf mainTask;
     bool finished;
     bool yielded;
     T value;
