@@ -16,3 +16,6 @@ target_link_libraries(example_coroutine symengine)
 
 add_executable(example_coroutine2 example_coroutine2.cpp)
 target_link_libraries(example_coroutine2 symengine)
+
+add_executable(example_setjmp example_setjmp.cpp)
+target_link_libraries(example_setjmp symengine)
