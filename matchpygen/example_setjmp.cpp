@@ -205,17 +205,6 @@ public:
         stop();
     }
 
-    void deque_push_front(Deque d, const Basic *obj)
-    {
-        d.push_front(obj);
-    }
-    const Basic *deque_pop(Deque &d)
-    {
-        const Basic *obj = d.front();
-        d.pop_front();
-        return obj;
-    }
-
 private:
     const Basic *subject;
 
