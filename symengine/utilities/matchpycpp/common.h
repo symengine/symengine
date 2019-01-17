@@ -13,10 +13,8 @@
 
 #include "substitution.h"
 
-
 using namespace std;
 using namespace SymEngine;
-
 
 class Deque
 {
@@ -141,6 +139,6 @@ protected:
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");
 RCP<const Basic> z = symbol("z");
-//RCP<const Basic> w = symbol("w");
+// RCP<const Basic> w = symbol("w");
 
 #endif

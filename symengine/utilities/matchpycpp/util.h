@@ -27,30 +27,27 @@ map<T, int> count_multiset(multiset<T> m)
 template <typename T>
 vector<vector<T>> itertools_product(const vector<vector<T>> &v)
 {
-	vector<vector<T>> result;
-	vector<vector<T>> temp;
-	for (const T &e : v[0]) {
-		vector<T> val;
-		val.push_back(e);
-		result.push_back(val);
-	}
+    vector<vector<T>> result;
+    vector<vector<T>> temp;
+    for (const T &e : v[0]) {
+        vector<T> val;
+        val.push_back(e);
+        result.push_back(val);
+    }
 
-	for (int i=1; i<v.size(); ++i) {
-		temp.clear();
-		const vector<T> &vi = v[i];
-		for (vector<T> current : result) {
-			//for (T &curelem : current) {
-			for (const T &elem : vi) {
-				vector<T> copycurr(current.begin(), current.end());
-				copycurr.push_back(elem);
-				temp.push_back(copycurr);
-			}
-			//}
-
-		}
-		result = temp;
-	}
-	return result;
+    for (int i = 1; i < v.size(); ++i) {
+        temp.clear();
+        const vector<T> &vi = v[i];
+        for (vector<T> current : result) {
+            for (const T &elem : vi) {
+                vector<T> copycurr(current.begin(), current.end());
+                copycurr.push_back(elem);
+                temp.push_back(copycurr);
+            }
+        }
+        result = temp;
+    }
+    return result;
 }
 
 class VariableWithCount
@@ -353,11 +350,11 @@ enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
         result.push_back(matching);
         graph = graph.__copy__();
         vector<map<TLeft, TRight>> extension = _enum_maximum_matchings_iter(
-            graph, matching, _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, matching));
+            graph, matching,
+            _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, matching));
         result.insert(extension.begin(), extension.end());
     }
 }
-
 
 generator<map<string, multiset<int>>>
 _commutative_single_variable_partiton_iter(multiset<RCP<const Basic>> values,
@@ -399,7 +396,6 @@ _commutative_single_variable_partiton_iter(multiset<RCP<const Basic>> values,
     return result;
 }
 
-
 function<void(Substitution)>
 _make_variable_generator_factory(RCP<const Basic> value, int total,
                                  vector<VariableWithCount> variables)
@@ -434,9 +430,7 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
     return _factory;
 }
 
-
-generator<Substitution>
-commutative_sequence_variable_partition_iter(
+generator<Substitution> commutative_sequence_variable_partition_iter(
     multiset<RCP<const Basic>> values, vector<VariableWithCount> variables)
 {
 
@@ -477,6 +471,5 @@ commutative_sequence_variable_partition_iter(
         }
     }
 }
-
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_UTIL_H_ */

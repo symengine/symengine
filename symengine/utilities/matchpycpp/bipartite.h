@@ -98,12 +98,12 @@ public:
 
     TEdgeValue &setdefault(Edge key, TEdgeValue value)
     {
-    	if (_edges.find(key) != _edges.end()){
-    		return _edges[key];
-    	} else {
-    		__setitem__(key, value);
-    		return value;
-    	}
+        if (_edges.find(key) != _edges.end()) {
+            return _edges[key];
+        } else {
+            __setitem__(key, value);
+            return value;
+        }
     }
 
     TEdgeValue &__getitem__(Edge key)
