@@ -12,30 +12,61 @@
 using namespace std;
 using namespace SymEngine;
 
-class Substitution : public map<string, RCP<const Basic>>
+typedef map<string, RCP<const Basic>> Substitution;
+
+/*
+class Substitution
 {
+private:
+	typedef map<string, RCP<const Basic>> Dict;
+	Dict dict;
 public:
-    int try_add_variable(const string variable_name,
+	Substitution(Substitution &subst)
+	{
+		dict.insert(subst.dict.begin(), subst.dict.end());
+	}
+	Substitution()
+	{
+	}
+
+	Dict::iterator find(const string &a)
+	{
+		return dict.find(a);
+	}
+	Dict::iterator begin()
+	{
+		return dict.begin();
+	}
+	Dict::iterator end()
+	{
+		return dict.end();
+	}
+	Dict &get_dict()
+	{
+		return dict;
+	}
+*/
+    int try_add_variable(Substitution subst, const string variable_name,
                          const RCP<const Basic> &replacement)
     {
-        if (this->find(variable_name) == this->end()) {
-            (*this)[variable_name] = replacement;
+        if (subst.find(variable_name) == subst.end()) {
+        	subst[variable_name] = replacement;
         } else {
         }
         return 0;
     }
 
-    Substitution &substitution_union(vector<Substitution> &others)
+    Substitution substitution_union(Substitution subst, vector<Substitution> &others)
     {
-        Substitution new_subst(*this);
+        Substitution new_subst; //(*this);
 
         for (Substitution &other : others) {
             for (const pair<string, RCP<const Basic>> &p : other) {
-                new_subst.try_add_variable(p.first, p.second);
+                try_add_variable(subst, p.first, p.second);
             }
         }
         return new_subst;
     }
-};
+//};
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_SUBSTITUTION_H_ */

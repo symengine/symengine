@@ -16,6 +16,7 @@
 using namespace std;
 using namespace SymEngine;
 
+/*
 class Deque
 {
 public:
@@ -57,16 +58,22 @@ private:
     const Basic *_deque[100];
     int N;
 };
+*/
 
-Deque get_deque(const Basic *expr)
+typedef deque<RCP<const Basic>> Deque;
+
+
+Deque get_deque(RCP<const Basic> expr)
 {
     Deque d;
     for (RCP<const Basic> i : expr->get_args()) {
-        d.push_back(i.access_private_ptr());
+        d.push_back(i);
     }
     return d;
 }
 
+
+/*
 #define YIELDABLE                                                              \
     if (yielded) {                                                             \
         longjmp(childTask, 1);                                                 \
@@ -135,6 +142,7 @@ protected:
     bool yielded;
     T value;
 };
+*/
 
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");

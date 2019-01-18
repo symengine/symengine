@@ -32,7 +32,7 @@ def generate_cpp_code(matcher):
 
 
 def export_code_to_file(filename, a, b):
-    fout = open(os.path.join("tests", filename), "w")
+    fout = open(os.path.join("generated_tests", filename), "w")
     fout.write(a)
     fout.write("\n\n")
     fout.write(b)
@@ -55,7 +55,7 @@ int main() {
 
 
 def generate_tests():
-    fout = open(os.path.join("tests", "CMakeLists.txt"), "w")
+    fout = open(os.path.join("generated_tests", "CMakeLists.txt"), "w")
     fout.write("""\
 project(matchpycpp_tests)
 
@@ -75,6 +75,7 @@ include_directories(BEFORE ${teuchos_BINARY_DIR})
         fout.write("\n")
         fout.write("add_executable({0} {1})\n".format(filename, filenamecpp))
         fout.write("target_link_libraries({0} symengine)\n".format(filename))
+        #fout.write("target_link_libraries({0} matchpycpp)\n".format(filename))
     fout.close()
 
 

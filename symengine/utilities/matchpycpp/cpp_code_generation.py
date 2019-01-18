@@ -67,7 +67,8 @@ class CppCodeGenerator:
         self._imports.add('#include <symengine/basic.h>')
         self._imports.add('#include <symengine/pow.h>')
 
-        self._imports.add('#include "common.h"')
+        self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
+        self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
 
         self.add_line('tuple<int, Substitution> {}(RCP<const Basic> subject)'.format(func_name))
         self.indent()
@@ -89,9 +90,10 @@ class CppCodeGenerator:
     def generate_self(self, state):
         if state.matcher is not None:
             self._imports.add('#include <set>')
-            self._imports.add('#include "commutative_matcher.h')
-            self._imports.add('#include "bipartite.h"')
-            self._imports.add('#include "common.h"')
+            self._imports.add('#include <symengine/utilities/matchpycpp/commutative_matcher.h>')
+            self._imports.add('#include <symengine/utilities/matchpycpp/bipartite.h>')
+            self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
+            self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
             generator = type(self)(state.matcher.automaton)
             generator.indent(bracket=False)
             global_code, code = generator.generate_code(func_name='get_match_iter', add_imports=False)

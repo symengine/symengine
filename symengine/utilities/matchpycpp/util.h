@@ -452,6 +452,8 @@ generator<Substitution> commutative_sequence_variable_partition_iter(
     }
     bool valid;
     vector<map<string, multiset<int>>> result;
+    // TODO:
+    /*
     for (map<string, multiset<int>> &subst :
          generator_chain(initial, *generators)) {
         valid = true;
@@ -470,6 +472,8 @@ generator<Substitution> commutative_sequence_variable_partition_iter(
             result.push_back(subst);
         }
     }
+    */
+    return result;
 }
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_UTIL_H_ */
