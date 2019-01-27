@@ -1,21 +1,19 @@
-#ifndef SYMENGINE_UTILITIES_MATCHPYCPP_UTIL_H_
-#define SYMENGINE_UTILITIES_MATCHPYCPP_UTIL_H_
+#ifndef SYMENGINE_UTILITIES_MATCHPYCPP_UTILS_H_
+#define SYMENGINE_UTILITIES_MATCHPYCPP_UTILS_H_
 
 #include <vector>
 #include <map>
 #include <functional>
 
+#include "common.h"
 #include "bipartite.h"
 
 using namespace std;
 
-template <typename T>
-using generator = vector<T>;
-
 RCP<const Basic> None = symbol("None");
 
-template <typename T>
-map<T, int> count_multiset(multiset<T> m)
+template <typename T, typename Comparison>
+map<T, int> count_multiset(multiset<T, Comparison> m)
 {
     map<T, int> result;
     for (const T &elem : m) {
@@ -35,7 +33,7 @@ vector<vector<T>> itertools_product(const vector<vector<T>> &v)
         result.push_back(val);
     }
 
-    for (int i = 1; i < v.size(); ++i) {
+    for (unsigned int i = 1; i < v.size(); ++i) {
         temp.clear();
         const vector<T> &vi = v[i];
         for (vector<T> current : result) {
@@ -50,15 +48,16 @@ vector<vector<T>> itertools_product(const vector<vector<T>> &v)
     return result;
 }
 
+// template <typename T>
 class VariableWithCount
 {
 public:
-    VariableWithCount(string name, int count, int minimum,
+    VariableWithCount(RCP<const Basic> name, int count, int minimum,
                       RCP<const Basic> defaultv)
         : name(name), count(count), minimum(minimum), defaultv(defaultv)
     {
     }
-    string name;
+    RCP<const Basic> name;
     int count;
     int minimum;
     RCP<const Basic> defaultv;
@@ -74,34 +73,25 @@ public:
  */
 
 template <typename TLeft, typename TRight, typename TEdgeValue>
-generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
+generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
     BipartiteGraph<TLeft, TRight, TEdgeValue> graph,
     map<TLeft, TRight> matching,
     _DirectedMatchGraph<TLeft, TRight, TEdgeValue> directed_match_graph)
 {
+    TYPES_DERIVED_FROM_TLEFT_TRIGHT
+
     vector<map<TLeft, TRight>> result;
     map<TLeft, TRight> new_match;
-    typedef tuple<TLeft, TRight> Edge;
-    // WARNING: assuming TLeft = TRight:
-    typedef TLeft Node;
-    typedef vector<Node> NodeList;
-    Edge edge;
-    NodeList cycle;
     _DirectedMatchGraph<TLeft, TRight, TEdgeValue> directed_match_graph_minus,
         directed_match_graph_plus;
-    set<Node> old_value;
 
     BipartiteGraph<TLeft, TRight, TEdgeValue> graph_plus, graph_minus;
     _DirectedMatchGraph<TLeft, TRight, TEdgeValue> dgm_plus, dgm_minus;
 
-    TLeft *left1, *left2;
-    TRight *right;
-    list<Edge> edges;
-
     //# Step 1
     // if len(graph) == 0:
     //    return
-    if (graph.empty()) {
+    if (graph._edges.empty()) {
         return result;
     }
 
@@ -120,22 +110,24 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
     //        raw_cycle[:-1]))
     //    else:
     //        cycle = tuple(x[1] for x in raw_cycle)
-    // step3();
-    // else: step8()
     //
-    NodeList &raw_cycle = directed_match_graph.find_cycle();
+    NodeList raw_cycle = directed_match_graph.find_cycle();
+    vector<TLeft> cycle;
     if (!raw_cycle.empty()) {
         if (get<0>(raw_cycle[0]) != LEFT) {
-            cycle = NodeList();
-            cycle.push_back(cycle.back());
-            cycle.insert(cycle.end(), raw_cycle.begin() + 1, raw_cycle.end());
+            cycle.push_back(get<1>(*raw_cycle.end()));
+            for (size_t i = 1; i < raw_cycle.size(); i++) {
+                cycle.push_back(get<1>(raw_cycle[i]));
+            }
         } else {
-            cycle = NodeList(raw_cycle.begin() + 1, raw_cycle.end());
+            for (Node &i : raw_cycle) {
+                cycle.push_back(get<1>(i));
+            }
         }
 
         //# Step 3 - TODO: Properly find right edge? (to get complexity bound)
         // edge = cast(Edge, cycle[:2])
-        edge = make_tuple(cycle[0], cycle[1]);
+        Edge edge = make_tuple(cycle[0], cycle[1]);
 
         //# Step 4
         //# already done because we are not really finding the optimal edge
@@ -154,12 +146,13 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         // old_value = graph[edge]
         // del graph[edge]
         new_match = matching;
-        for (int i = 0; i < cycle.size(); i += 2) {
+        for (size_t i = 0; i < cycle.size(); i += 2) {
             new_match[(TLeft)cycle[i]] = cycle[i - 1];
         }
         result.push_back(new_match);
-        old_value = graph._graph.at(edge);
+        TEdgeValue old_value = graph._edges.at(edge);
         graph.__delitem__(edge);
+
         //# Step 7
         //# Recurse with the new matching M' but without the edge e
         // directed_match_graph_minus = _DirectedMatchGraph(graph, new_match)
@@ -170,18 +163,12 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         // graph[edge] = old_value
         directed_match_graph_minus
             = _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, new_match);
-        generator<map<TLeft, TRight>> iter_enum
-            = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
-                graph, new_match, directed_match_graph_minus);
+        generator<map<TLeft, TRight>> g = _enum_maximum_matchings_iter(
+            graph, new_match, directed_match_graph_minus);
+        result.insert(result.end(), g.begin(), g.end());
 
-        while (true) {
-            shared_ptr<TEdgeValue> v = iter_enum.next();
-            if (v == NULL) {
-                break;
-            }
-            result.push_back(*v);
-            return result;
-        }
+        graph.__setitem__(edge, old_value);
+
         //# Step 6
         //# Recurse with the old matching M but without the edge e
 
@@ -189,19 +176,19 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         graph_plus = graph;
 
         // edges = []
-        edges = list<Edge>();
+        vector<tuple<TLeft, TRight, TEdgeValue>> edges;
 
         // for left, right in list(graph_plus.edges()):
         //    if left == edge[0] or right == edge[1]:
         //        edges.append((left, right, graph_plus[left, right]))
         //        del graph_plus[left, right]
-        for (const pair<TLeft, TRight> &p : graph_plus._edges) {
-            TLeft &left = p.first;
-            TRight &right = p.second;
-            Edge lredge = make_tuple(left, right);
+        for (const pair<Edge, TEdgeValue> &p : graph_plus._edges) {
+            TLeft left = get<0>(p.first);
+            TRight right = get<1>(p.first);
             if ((left == get<0>(edge)) && (right == get<1>(edge))) {
+                Edge lredge = make_tuple(left, right);
                 edges.push_back(
-                    Edge(left, right, graph_plus.__getitem__(lredge)));
+                    make_tuple(left, right, graph_plus.__getitem__(lredge)));
                 graph_plus.__delitem__(lredge);
             }
         }
@@ -211,23 +198,16 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
                                                              matching);
         // yield from _enum_maximum_matchings_iter(graph_plus, matching,
         // directed_match_graph_plus)
-        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
-            graph_plus, matching, directed_match_graph_plus);
+        g = _enum_maximum_matchings_iter(graph_plus, matching,
+                                         directed_match_graph_plus);
 
-        while (true) {
-            shared_ptr<TEdgeValue> v = iter_enum.next();
-            if (v == NULL) {
-                break;
-            }
-            result.push_back(*v);
-            return result;
-        }
+        result.insert(result.end(), g.begin(), g.end());
 
         // for left, right, value in edges:
         //    graph_plus[left, right] = value
         for (const tuple<TLeft, TRight, TEdgeValue> &p : edges) {
             Node node(get<0>(p), get<1>(p));
-            graph_plus[node] = get<2>(p);
+            graph_plus.__setitem__(node, get<2>(p));
         }
     } else {
         //# Step 8
@@ -241,9 +221,9 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         // left2 = None  # type: TLeft
         // right = None  # type: TRight
         //
-        left1 = nullptr;
-        left2 = nullptr;
-        right = nullptr;
+        TLeft left1;
+        TLeft *left2 = nullptr;
+        TRight right;
         // for part1, node1 in directed_match_graph:
         //    if part1 == LEFT and node1 in matching:
         //        left1 = cast(TLeft, node1)
@@ -255,20 +235,21 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         //                    break
         //            if left2 is not None:
         //                break
-        for (pair<int, Node> &p : directed_match_graph._map) {
-            int part1 = p.first;
-            Node node1 = p.second;
+        for (const pair<Node, NodeSet> &p : directed_match_graph._map) {
+            int part1 = get<0>(p.first);
+            TLeft node1 = get<1>(p.first);
             if ((part1 == LEFT)
                 && (matching.find((TLeft)node1) != matching.end())) {
-                left1 = (TLeft *)&node1;
-                right = &matching[*left1];
+                left1 = (TLeft)node1;
+                right = matching[left1];
                 if (directed_match_graph._map.find(make_tuple(RIGHT, right))
                     != directed_match_graph._map.end()) {
-                    for (pair<int, Node> &p2 : directed_match_graph._map.at(
+                    for (const tuple<int, TLeft> &p2 :
+                         directed_match_graph._map.at(
                              make_tuple(RIGHT, right))) {
-                        Node node2 = p2.second;
+                        TLeft node2 = get<1>(p2);
                         if (matching.find((TLeft)node2) == matching.end()) {
-                            left2 = (TLeft)node2;
+                            left2 = &node2;
                             break;
                         }
                         if (left2 != nullptr) {
@@ -290,14 +271,14 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         // del new_match[left1]
         // new_match[left2] = right
         new_match = matching;
-        new_match.erase(*left1);
-        new_match[*left2] = *right;
+        new_match.erase(left1);
+        new_match[*left2] = right;
 
         // yield new_match
         result.push_back(new_match);
 
         // edge = (left2, right)
-        edge = make_tuple(*left2, *right);
+        Edge edge = make_tuple(*left2, right);
 
         //# Construct G+(e) and G-(e)
         graph_plus = graph.without_nodes(edge);
@@ -311,85 +292,57 @@ generator<vector<map<TLeft, TRight>>> _enum_maximum_matchings_iter(
         //# Step 9
         // yield from _enum_maximum_matchings_iter(graph_plus, new_match,
         // dgm_plus)
-        generator<map<TLeft, TRight>> iter_enum
-            = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
-                graph_plus, new_match, dgm_plus);
+        generator<map<TLeft, TRight>> g
+            = _enum_maximum_matchings_iter(graph_plus, new_match, dgm_plus);
 
-        while (true) {
-            shared_ptr<TEdgeValue> v = iter_enum.next();
-            if (v == NULL) {
-                break;
-            }
-            result.push_back(*v);
-        }
+        result.insert(result.end(), g.begin(), g.end());
 
         //# Step 10
         // yield from _enum_maximum_matchings_iter(graph_minus, matching,
         // dgm_minus)
-        iter_enum = _enum_maximum_matchings_iter<TLeft, TRight, TEdgeValue>(
-            graph_minus, matching, dgm_minus);
+        g = _enum_maximum_matchings_iter(graph_minus, matching, dgm_minus);
 
-        while (true) {
-            shared_ptr<TEdgeValue> v = iter_enum.next();
-            if (v == NULL) {
-                break;
-            }
-            result.push_back(*v);
-        }
+        result.insert(result.end(), g.begin(), g.end());
     }
     return result;
 }
 
-template <typename TLeft, typename TRight, typename TEdgeValue>
-generator<map<TLeft, TRight>>
-enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
-{
-    vector<map<TLeft, TRight>> result;
-    Matching matching = graph.find_matching();
-    if (matching) {
-        result.push_back(matching);
-        graph = graph.__copy__();
-        vector<map<TLeft, TRight>> extension = _enum_maximum_matchings_iter(
-            graph, matching,
-            _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, matching));
-        result.insert(extension.begin(), extension.end());
-    }
-}
-
-generator<map<string, multiset<int>>>
-_commutative_single_variable_partiton_iter(multiset<RCP<const Basic>> values,
+generator<Substitution>
+_commutative_single_variable_partiton_iter(MultisetOfBasic values,
                                            VariableWithCount variable)
 {
-    string name = variable.name;
+    string name = variable.name->__str__();
     int count = variable.count;
     int minimum = variable.minimum;
     RCP<const Basic> defaultv = variable.defaultv;
 
-    map<string, multiset<int>> result;
+    generator<Substitution> result;
 
     if (values.size() == 0 && defaultv != None) {
-        result[name] = defaultv;
+        result.push_back(Substitution{{name, {defaultv}}});
         return result;
     }
     if (count == 1) {
         if (values.size() >= minimum) {
-            if (name != None) {
-                result[name] = values;
+            if (name != "None") {
+                result.push_back(Substitution{{name, {values}}});
             }
         }
     } else {
-        multiset<int> new_values;
+        MultisetOfBasic new_values;
         for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
             RCP<const Basic> element = p.first;
             int element_count = p.second;
             if (element_count % count != 0) {
-                return map<string, multiset<int>>();
+                return generator<Substitution>();
             }
-            new_values[element] = element_count; // count
+            for (int i = 0; i < element_count; i++) {
+                new_values.insert(element); // TODO: make this more efficient
+            }
         }
         if (new_values.size() >= minimum) {
-            if (name != None) {
-                result[name] = new_values;
+            if (name != "None") {
+                result.push_back(Substitution{{name, {new_values}}});
             }
         }
     }
@@ -430,16 +383,19 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
     return _factory;
 }
 
+// generator<Substitution>
 generator<Substitution> commutative_sequence_variable_partition_iter(
-    multiset<RCP<const Basic>> values, vector<VariableWithCount> variables)
+    MultisetOfBasic values, vector<VariableWithCount> variables)
 {
+    generator<Substitution> result;
+    return result;
 
     if (variables.size() == 1) {
         return _commutative_single_variable_partiton_iter(values, variables[0]);
     }
 
     vector<function<void(Substitution)>> generators;
-    for (const pair<RCP<const Basic>, int> &p : values) {
+    for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
         RCP<const Basic> value = p.first;
         int count = p.second;
         generators.push_back(
@@ -448,10 +404,10 @@ generator<Substitution> commutative_sequence_variable_partition_iter(
 
     map<string, multiset<int>> initial;
     for (VariableWithCount &var : variables) {
-        initial[var] = multiset<int>();
+        initial[var.name->__str__()] = multiset<int>();
     }
     bool valid;
-    vector<map<string, multiset<int>>> result;
+    // vector<map<string, multiset<int>>> result;
     // TODO:
     /*
     for (map<string, multiset<int>> &subst :
@@ -476,4 +432,4 @@ generator<Substitution> commutative_sequence_variable_partition_iter(
     return result;
 }
 
-#endif /* SYMENGINE_UTILITIES_MATCHPYCPP_UTIL_H_ */
+#endif /* SYMENGINE_UTILITIES_MATCHPYCPP_UTILS_H_ */

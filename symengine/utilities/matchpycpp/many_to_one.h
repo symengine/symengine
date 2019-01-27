@@ -2,7 +2,6 @@
 #define COMMUTATIVE_MATCHER_H
 
 #include "bipartite.h"
-#include "coroutine.h"
 #include "util.h"
 
 #include <map>
@@ -12,10 +11,14 @@ class OperationMeta
 public:
 };
 
+typedef BipartiteGraph<tuple<int, int>, tuple<int, int>, vector<Substitution>>
+    Subgraph;
+typedef map<tuple<int, int>, tuple<int, int>> Matching;
+
 class CommutativeMatcher
 {
 public:
-    map<RCP<const Basic>, tuple<int, set<RCP<const Basic>>>> subjects;
+    map<RCP<const Basic>, tuple<int, set<int>>> subjects;
     BipartiteGraph<int, int, vector<Substitution>> bipartite;
     int max_optional_count;
     // map subject_pattern_ids;
@@ -33,8 +36,8 @@ public:
     {
     }
 
-    virtual vector<tuple<int, Substitution>>
-    get_match_iter_tovector(RCP<const Basic> subject) = 0;
+    virtual generator<tuple<int, Substitution>>
+    get_match_iter(RCP<const Basic> subject) = 0;
 
     int add_subject(RCP<const Basic> subject)
     {
@@ -45,7 +48,7 @@ public:
             // tuple<int, set<RCP<const Basic>>> elem =
             // make_tuple(subjects.size(), set<RCP<const Basic>>());
             subjects[subject] = make_tuple(subject_id, pattern_set);
-            for (auto &p : get_match_iter_tovector(subject)) {
+            for (auto &p : get_match_iter(subject)) {
                 int pattern_index = get<0>(p);
                 Substitution substitution = get<1>(p);
 
@@ -61,20 +64,27 @@ public:
         return subject_id;
     }
 
+    generator<tuple<int, Substitution>> match(RCP<const Basic> subject,
+                                              Substitution substitution)
+    {
+        Deque subjects = {subject};
+        return match(subjects, substitution);
+    }
+
     // def match(self, subjects: Sequence[Expression], substitution:
     // Substitution) -> Iterator[Tuple[int, Substitution]]:
-    vector<tuple<int, Substitution>> match(vector<RCP<const Basic>> subjects,
-                                           Substitution substitution)
+    generator<tuple<int, Substitution>> match(Deque subjects,
+                                              Substitution substitution)
     {
         vector<tuple<int, Substitution>> result;
 
         multiset<int> subject_ids;
         multiset<int> pattern_ids;
         int subject_id;
-        int pattern_index;
+        // int pattern_index;
         multiset<int> pattern_set;
         tuple<> pattern_vars;
-        multiset<int> subject_pattern_ids;
+        set<int> subject_pattern_ids;
         if (max_optional_count > 0) {
             subject_id = get<0>(this->subjects[None]);
             subject_pattern_ids = get<1>(this->subjects[None]);
@@ -85,7 +95,7 @@ public:
             }
         }
         for (RCP<const Basic> &subject : subjects) {
-            tuple<int, set<RCP<const Basic>>> p = subjects[subject];
+            tuple<int, set<int>> p = this->subjects[subject];
             subject_id = get<0>(p);
             subject_pattern_ids = get<1>(p);
             subject_ids.insert(subject_id);
@@ -93,14 +103,16 @@ public:
                                subject_pattern_ids.end());
         }
         for (const pair<set<int>,
-                        tuple<int, multiset<int>, set<RCP<const Basic>>>> &p :
-             patterns) {
+                        tuple<int, multiset<int>,
+                              set<tuple<VariableWithCount, OperationMeta>>>>
+                 &p : patterns) {
             int pattern_index = get<0>(p.second);
             multiset<int> pattern_set = get<1>(p.second);
             set<tuple<VariableWithCount, OperationMeta>> pattern_vars
                 = get<2>(p.second);
             if (pattern_set.size() > 0) {
-                if (not pattern_set <= pattern_ids) {
+                if (!includes(pattern_set.begin(), pattern_set.end(),
+                              pattern_ids.begin(), pattern_ids.end())) {
                     continue;
                 }
                 vector<tuple<Substitution, multiset<int>>> bipartite_match_iter
@@ -114,14 +126,14 @@ public:
                     set_difference(subject_ids.begin(), subject_ids.end(),
                                    matched_subjects.begin(),
                                    matched_subjects.end(), ids.begin());
-                    multiset<RCP<const Basic>> remaining;
+                    MultisetOfBasic remaining;
                     for (int id : ids) {
-                        if (subjects_by_id[id] == NULL) {
+                        if (subjects_by_id[id] == None) {
                             continue;
                         }
                         remaining.insert(subjects_by_id[id]);
                     }
-                    if (pattern_vars) {
+                    if (pattern_vars.size() > 0) {
                         vector<Substitution> sequence_var_iter
                             = _match_sequence_variables(remaining, pattern_vars,
                                                         bipartite_substitution);
@@ -136,9 +148,8 @@ public:
                             make_tuple(pattern_index, bipartite_substitution));
                     }
                 }
-            } else if (pattern_vars) {
-                multiset<RCP<const Basic>> multiset_arg(subjects.begin(),
-                                                        subjects.end());
+            } else if (pattern_vars.size() > 0) {
+                MultisetOfBasic multiset_arg(subjects.begin(), subjects.end());
                 vector<Substitution> sequence_var_iter
                     = _match_sequence_variables(multiset_arg, pattern_vars,
                                                 substitution);
@@ -168,10 +179,10 @@ public:
 
         typedef vector<Substitution> TEdgeValue;
 
-        BipartiteGraph<int, int, TEdgeValue> bipartite
-            = _build_bipartite(subject_ids, pattern_set);
-        for (map<tuple<int, int>, tuple<int, int>> &matching :
-             enum_maximum_matchings_iter(bipartite)) {
+        Subgraph bipartite = _build_bipartite(subject_ids, pattern_set);
+        for (const Matching &matching :
+             enum_maximum_matchings_iter<tuple<int, int>, tuple<int, int>,
+                                         vector<Substitution>>(bipartite)) {
             if (matching.size() < pattern_set.size()) {
                 break;
             }
@@ -183,15 +194,21 @@ public:
             };
             vector<TEdgeValue> iterobjs;
             for (const pair<tuple<int, int>, tuple<int, int>> &p3 : matching) {
-                iterobjs.push_back(bipartite.__getitem__(p3.second));
+                iterobjs.push_back(
+                    bipartite.__getitem__(make_tuple(p3.first, p3.second)));
             }
             for (vector<Substitution> &substs : itertools_product(iterobjs)) {
                 Substitution bipartite_substitution
-                    = substitution.substitution_union(substs);
+                    = substitution_union(substitution, substs);
 
                 multiset<int> matched_subjects;
-                for (const pair<int, int> &p3 : matching) {
-                    matched_subjects.insert((const int)p3);
+                for (const pair<tuple<int, int>, tuple<int, int>> &p3 :
+                     matching) {
+                    int elem = get<0>(p3.first);
+                    int count = get<1>(p3.first);
+                    for (int j = 0; j < count; j++) {
+                        matched_subjects.insert(elem);
+                    }
                 }
                 // YIELD:
                 result.push_back(
@@ -202,7 +219,7 @@ public:
     }
 
     vector<Substitution> _match_sequence_variables(
-        multiset<RCP<const Basic>> subjects,
+        MultisetOfBasic subjects,
         set<tuple<VariableWithCount, OperationMeta>> pattern_vars,
         Substitution substitution)
     {
@@ -212,29 +229,27 @@ public:
         list<string> wrapped_vars;
         for (const tuple<VariableWithCount, OperationMeta> &p : pattern_vars) {
             only_counts.push_back(get<0>(p));
-            wrapped_vars.push_back(get<0>(p).name);
+            wrapped_vars.push_back(get<0>(p).name->__str__());
         }
-        for (vector<Substitution> &variable_substitution :
+        for (Substitution &variable_substitution :
              commutative_sequence_variable_partition_iter(subjects,
                                                           only_counts)) {
             for (auto &var : wrapped_vars) {
-                multiset<RCP<const Basic>> operands
-                    = variable_substitution[var];
-                /*
-                 * TODO: finish:
-                if (isinstance(operands, (tuple, list, Multiset))) {
-                    if (operands.size() > 1) {
-                        variable_substitution[var]
-                            = self.associative(*operands);
-                    } else {
-                        variable_substitution[var] = next(iter(operands));
-                    }
-                }
-                */
-            }
+                MultisetOfBasic operands = variable_substitution[var];
 
+                //				for (const pair<RCP<const Basic>, int> &pp :
+                //count_multiset(operands)) {
+                //					RCP<const Basic> operands_var = pp.first;
+                //					int operands_size = pp.second;
+                if (operands.size() > 1) {
+                    // variable_substitution[var] = associative(operands);
+                    throw runtime_error("not implemented");
+                } else {
+                    variable_substitution[var] = operands;
+                }
+            }
             Substitution result_substitution
-                = substitution.substitution_union(variable_substitution);
+                = substitution_union(substitution, {variable_substitution});
 
             // YIELD:
             result.push_back(result_substitution);
@@ -245,12 +260,12 @@ public:
     bool _is_canonical_matching(Matching matching)
     {
         // anonymous_patterns = self.anonymous_patterns
-        for (const pair<tuple<int, int>, tuple<int, int>> &p : matching) {
+        for (const pair<tuple<int, int>, tuple<int, int>> &pair1 : matching) {
             //.items():
-            int s1 = get<0>(p.first);
-            int n1 = get<1>(p.first);
-            int p1 = get<0>(p.second);
-            int m1 = get<1>(p.second);
+            int s1 = get<0>(pair1.first);
+            int n1 = get<1>(pair1.first);
+            int p1 = get<0>(pair1.second);
+            int m1 = get<1>(pair1.second);
             for (const pair<tuple<int, int>, tuple<int, int>> &pair2 :
                  matching) {
                 int s2 = get<0>(pair2.first);
@@ -272,24 +287,26 @@ public:
         return true;
     }
 
-    BipartiteGraph<int, int, Substitution>
-    _build_bipartite(multiset<int> subjects, multiset<int> patterns)
+    Subgraph _build_bipartite(multiset<int> subjects, multiset<int> patterns)
     {
-        bipartite = BipartiteGraph<int, int, Substitution>();
+        Subgraph bipartite;
         int n = 0;
         int m = 0;
         map<int, int> p_states;
         for (const pair<int, int> &p : count_multiset(subjects)) {
             int subject = p.first;
             int s_count = p.second;
-            for (const pair<int, set<int>> &subp :
-                 this->bipartite._graph_left) {
+            if (this->bipartite._graph_left.find(subject)
+                != this->bipartite._graph_left.end()) {
+                // for (const pair<int, set<int>> &subp :
+                //     this->bipartite._graph_left) {
                 bool any_patterns = false;
                 for (int pattern : this->bipartite._graph_left[subject]) {
                     if (patterns.find(pattern) != patterns.end()) {
-                        bool any_patterns = true;
-                        Substitution subst = this->bipartite[subject, pattern];
-                        int p_count = patterns[pattern];
+                        vector<Substitution> subst
+                            = this->bipartite.__getitem__(
+                                make_tuple(subject, pattern));
+                        int p_count = count_multiset(patterns).at(pattern);
                         int p_start;
                         if (p_states.find(pattern) != p_states.end()) {
                             p_start = p_states[pattern];
@@ -299,7 +316,11 @@ public:
                         }
                         for (int i = n; i < n + s_count; i++) {
                             for (int j = p_start; j < p_start + p_count; j++) {
-                                bipartite[(subject, i), (pattern, j)] = subst;
+                                // (subject, i), (pattern, j)
+                                bipartite.__setitem__(
+                                    make_tuple(make_tuple(subject, i),
+                                               make_tuple(pattern, j)),
+                                    subst);
                             }
                         }
                     }

@@ -14,6 +14,9 @@ class SymEnginePrinter(PythonCodePrinter):
             self._print(expr.args[1]),
         )
 
+    def _print_Integer(self, expr):
+        return "integer({})".format(expr)
+
 
 def symengine_print(expr):
     printer = SymEnginePrinter()

@@ -12,61 +12,76 @@
 using namespace std;
 using namespace SymEngine;
 
-typedef map<string, RCP<const Basic>> Substitution;
+// bool operator<(RCP<const Basic> &a, RCP<const Basic> &b)
+//{
+//	return (a->__hash__() < b->__hash__())? true : false;
+//}
 
-/*
-class Substitution
-{
-private:
-	typedef map<string, RCP<const Basic>> Dict;
-	Dict dict;
-public:
-	Substitution(Substitution &subst)
-	{
-		dict.insert(subst.dict.begin(), subst.dict.end());
-	}
-	Substitution()
-	{
-	}
-
-	Dict::iterator find(const string &a)
-	{
-		return dict.find(a);
-	}
-	Dict::iterator begin()
-	{
-		return dict.begin();
-	}
-	Dict::iterator end()
-	{
-		return dict.end();
-	}
-	Dict &get_dict()
-	{
-		return dict;
-	}
-*/
-    int try_add_variable(Substitution subst, const string variable_name,
-                         const RCP<const Basic> &replacement)
+struct lessBasic {
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
-        if (subst.find(variable_name) == subst.end()) {
-        	subst[variable_name] = replacement;
-        } else {
-        }
-        return 0;
+        return (x->__hash__()) < (y->__hash__());
     }
+};
 
-    Substitution substitution_union(Substitution subst, vector<Substitution> &others)
-    {
-        Substitution new_subst; //(*this);
+bool operator==(RCP<const Basic> &a, RCP<const Basic> &b)
+{
+    return (a->__hash__()) == (b->__hash__());
+}
 
-        for (Substitution &other : others) {
-            for (const pair<string, RCP<const Basic>> &p : other) {
-                try_add_variable(subst, p.first, p.second);
+typedef multiset<RCP<const Basic>, lessBasic> MultisetOfBasic;
+
+typedef map<string, MultisetOfBasic> Substitution;
+
+int try_add_variable(Substitution subst, const string variable_name,
+                     const MultisetOfBasic &replacement)
+{
+    if (subst.find(variable_name) == subst.end()) {
+        subst[variable_name] = replacement;
+    } else {
+        MultisetOfBasic existing_value = subst.at(variable_name);
+        if (existing_value.size() != replacement.size()) {
+            return 1;
+        }
+        MultisetOfBasic::iterator it1 = existing_value.begin();
+        MultisetOfBasic::iterator it2 = replacement.begin();
+        for (size_t i = 0; i < existing_value.size(); i++) {
+            if ((*it1) != (*it2)) {
+                return 1;
             }
         }
-        return new_subst;
+        return 1;
     }
-//};
+    return 0;
+}
+
+int try_add_variable(Substitution subst, const string variable_name,
+                     vector<RCP<const Basic>> &replacement)
+{
+    MultisetOfBasic new_repl;
+    new_repl.insert(replacement.begin(), replacement.end());
+    return try_add_variable(subst, variable_name, new_repl);
+}
+
+int try_add_variable(Substitution subst, const string variable_name,
+                     const RCP<const Basic> &replacement)
+{
+    MultisetOfBasic new_repl = {replacement};
+    return try_add_variable(subst, variable_name, new_repl);
+}
+
+Substitution substitution_union(Substitution subst,
+                                const vector<Substitution> &others)
+{
+    Substitution new_subst; //(*this);
+
+    for (const Substitution &other : others) {
+        for (const pair<string, MultisetOfBasic> &p : other) {
+            int ret = try_add_variable(subst, p.first, p.second);
+            assert(ret == 0);
+        }
+    }
+    return new_subst;
+}
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_SUBSTITUTION_H_ */

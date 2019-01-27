@@ -70,13 +70,14 @@ class CppCodeGenerator:
         self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
         self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
 
-        self.add_line('tuple<int, Substitution> {}(RCP<const Basic> subject)'.format(func_name))
+        self.add_line('generator<tuple<int, Substitution>> {}(RCP<const Basic> subject)'.format(func_name))
         self.indent()
+        self.add_line('generator<tuple<int, Substitution>> result;')
         self.add_line('Deque {};'.format(self._subjects[-1]))
         self.add_line('{}.push_front(subject);'.format(self._subjects[-1]))
         self.add_line('Substitution subst{};'.format(self._substs))
         self.generate_self(self._matcher.root)
-        self.add_line('return make_tuple(-1, Substitution());')
+        self.add_line('return result')
         self.dedent()
 
         if add_imports:
@@ -90,7 +91,7 @@ class CppCodeGenerator:
     def generate_self(self, state):
         if state.matcher is not None:
             self._imports.add('#include <set>')
-            self._imports.add('#include <symengine/utilities/matchpycpp/commutative_matcher.h>')
+            self._imports.add('#include <symengine/utilities/matchpycpp/many_to_one.h>')
             self._imports.add('#include <symengine/utilities/matchpycpp/bipartite.h>')
             self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
             self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
@@ -120,27 +121,26 @@ public:
 
 {8}CommutativeMatcher{0}()
 {8}{{
-{8}{8}add_subject(NULL);
+
+{8}{8}patterns = {1};
+{8}{8}subjects = {2};
+{8}{8}subjects_by_id = {7};
+{8}{8}associative = {3};
+{8}{8}max_optional_count = {4};
+{8}{8}anonymous_patterns = {5};
+
+{8}{8}add_subject(None);
 {8}}}
 
 {8}static CommutativeMatcher{0} *get()
 {8}{{
-{8}{8}if (CommutativeMatcher{0}._instance == NULL)
-{8}{8}{8}this->_instance = new CommutativeMatcher{0}();
-{8}{8}return this->_instance;
+{8}{8}if (CommutativeMatcher{0}::_instance == NULL)
+{8}{8}{8}_instance = new CommutativeMatcher{0}();
+{8}{8}return _instance;
 {8}}}
 
 {6}
 }};
-
-
-static CommutativeMatcher{0}::patterns = {1};
-static CommutativeMatcher{0}::Deque subjects = {2};
-static CommutativeMatcher{0}::subjects_by_id = {7};
-static CommutativeMatcher{0}::BipartiteGraph bipartite;
-static CommutativeMatcher{0}::associative = {3};
-static CommutativeMatcher{0}::int max_optional_count = {4};
-static CommutativeMatcher{0}::anonymous_patterns = {5};
 
 '''.strip().format(
                     state.number, patterns, subjects, associative, max_optional_count, anonymous_patterns, code,
@@ -149,20 +149,21 @@ static CommutativeMatcher{0}::anonymous_patterns = {5};
             )
             self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::get();'.format(state.number))
             tmp = self.get_var_name('tmp')
-            self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
+            #self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
+            self.add_line('Deque Basic> {} = {};'.format(tmp, self._subjects[-1]))
             self.add_line('{} = {{}};'.format(self._subjects[-1]))
-            self.add_line('for (auto &s : {}->get_args()) {{'.format(tmp))
+            self.add_line('for (RCP<const Basic> &s : {}) {{'.format(tmp))
             self.indent(bracket=False)
             self.add_line('matcher->add_subject(s);')
             subjects = self._subjects.pop()
             self.dedent()
             self.add_line(
-                'for (auto &p : matcher->match({}, subst{})) {{'.format(tmp, self._substs)
+                'for (tuple<int, Substitution> &p : matcher->match({}, subst{})) {{'.format(tmp, self._substs)
             )
             self._substs += 1
             self.indent(bracket=False)
-            self.add_line("pattern_index = p.first;")
-            self.add_line("Substitution subst{} = p.second;".format(self._substs))
+            self.add_line("int pattern_index = get<0>(p);")
+            self.add_line("Substitution subst{} = get<1>(p);".format(self._substs))
             for pattern_index, transitions in state.transitions.items():
                 self.add_line('if (pattern_index == {}) {{'.format(pattern_index))
                 self.indent(bracket=False)
@@ -291,8 +292,8 @@ static CommutativeMatcher{0}::anonymous_patterns = {5};
         self._associative_stack.append(atype)
         if atype is not None:
             self._associative += 1
-            self.add_line('associative{} = {}'.format(self._associative, tmp))
-            self.add_line('associative_type{} = type({})'.format(self._associative, tmp))
+            self.add_line('RCP<const Basic> associative{} = {};'.format(self._associative, tmp))
+            self.add_line('string associative_type{} = {}->__str__();'.format(self._associative, tmp))
         self.push_subjects(tmp, operation)
         return tmp
 
@@ -463,7 +464,7 @@ static CommutativeMatcher{0}::anonymous_patterns = {5};
                 self.add_line('tmp_subst["{}"] = subst{}["{}"];'.format(original, self._substs, renamed))
             subst_name = 'tmp_subst'
         self.add_line('// {}: {}'.format(pattern_index, self._matcher.patterns[pattern_index][0]))
-        self.add_line('return make_tuple({}, {});'.format(self.final_label(pattern_index, subst_name), subst_name))
+        self.add_line('result.push_back(make_tuple({}, {}));'.format(self.final_label(pattern_index, subst_name), subst_name))
 
     def generate_constraints(self, constraints, transitions):
         if len(constraints) == 0:

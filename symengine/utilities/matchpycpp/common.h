@@ -16,6 +16,30 @@
 using namespace std;
 using namespace SymEngine;
 
+template <typename T>
+using generator = vector<T>;
+
+// typedef int TLeft;
+// typedef int TRight;
+
+// Assuming TLeft = TRight, otherwise
+// Node should be tuple<int, variant<TLeft, TRight>>
+#define TYPES_DERIVED_FROM_TLEFT_TRIGHT                                        \
+    typedef tuple<int, TLeft> Node;                                            \
+    typedef vector<Node> NodeList;                                             \
+    typedef set<Node> NodeSet;                                                 \
+    typedef tuple<TLeft, TRight> Edge;
+
+// typedef map<TLeft, TRight> Matching1;
+// typedef map<tuple<int, int>, tuple<int, int>> Matching2;
+
+const int LEFT = 0;
+const int RIGHT = 1;
+
+// typedef map<tuple<int, int>, tuple<int, int>> Matching;
+
+typedef vector<Substitution> TEdgeValue;
+
 /*
 class Deque
 {
@@ -62,7 +86,6 @@ private:
 
 typedef deque<RCP<const Basic>> Deque;
 
-
 Deque get_deque(RCP<const Basic> expr)
 {
     Deque d;
@@ -71,7 +94,6 @@ Deque get_deque(RCP<const Basic> expr)
     }
     return d;
 }
-
 
 /*
 #define YIELDABLE                                                              \
