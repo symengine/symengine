@@ -2,7 +2,7 @@
 #define COMMUTATIVE_MATCHER_H
 
 #include "bipartite.h"
-#include "util.h"
+#include "utils.h"
 
 #include <map>
 
