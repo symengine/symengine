@@ -10,21 +10,20 @@
 
 using namespace std;
 
-
 template <typename TLeft, typename TRight>
 class HopcroftKarp
 {
 public:
-
-    HopcroftKarp(set<TLeft> _left, map<TLeft, set<TRight>> _graph_left) : _left(_left), _graph_left(_graph_left)
+    HopcroftKarp(set<TLeft> _left, map<TLeft, set<TRight>> _graph_left)
+        : _left(_left), _graph_left(_graph_left)
     {
         reference_distance = -1;
     }
 
     HopcroftKarp(map<TLeft, set<TRight>> _graph_left) : _graph_left(_graph_left)
     {
-    	reference_distance = -1;
-    	_left = get_set(_graph_left);
+        reference_distance = -1;
+        _left = get_set(_graph_left);
     }
 
     int hopcroft_karp()
@@ -64,6 +63,7 @@ public:
 
     map<TLeft, TRight> pair_left;
     map<TRight, TLeft> pair_right;
+
 private:
     set<TLeft> _left;
     map<TLeft, set<TRight>> _graph_left;
@@ -71,12 +71,13 @@ private:
     map<TLeft, int> dist_left;
     int reference_distance;
 
-    set<TLeft> get_set(map<TLeft, set<TRight>> m) {
-    	set<TLeft> s;
-    	for (const pair<TLeft, set<TRight>> &p : m) {
-    		s.insert(p.first);
-    	}
-    	return s;
+    set<TLeft> get_set(map<TLeft, set<TRight>> m)
+    {
+        set<TLeft> s;
+        for (const pair<TLeft, set<TRight>> &p : m) {
+            s.insert(p.first);
+        }
+        return s;
     }
 
     bool _bfs_hopcroft_karp()
@@ -97,8 +98,7 @@ private:
             vertex_queue.pop_front();
             if (dist_left.find(left_vertex) == dist_left.end())
                 continue;
-            for (const TRight &right_vertex :
-                 _graph_left[left_vertex]) {
+            for (const TRight &right_vertex : _graph_left[left_vertex]) {
                 if (pair_right.find(right_vertex) == pair_right.end()) {
                     if (reference_distance == -1) {
                         reference_distance = dist_left[left_vertex] + 1;
@@ -140,6 +140,5 @@ private:
         return false;
     }
 };
-
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_HOPCROFT_KARP_H_ */
