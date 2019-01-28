@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef SYMENGINE_UTILITIES_MATCHPYCPP_COMMON_H_
+#define SYMENGINE_UTILITIES_MATCHPYCPP_COMMON_H_
 
 #include <symengine/basic.h>
 #include <symengine/add.h>
@@ -49,4 +49,4 @@ RCP<const Basic> y = symbol("y");
 RCP<const Basic> z = symbol("z");
 // RCP<const Basic> w = symbol("w");
 
-#endif
+#endif /* SYMENGINE_UTILITIES_MATCHPYCPP_COMMON_H_ */

@@ -1,5 +1,5 @@
-#ifndef COMMUTATIVE_MATCHER_H
-#define COMMUTATIVE_MATCHER_H
+#ifndef SYMENGINE_UTILITIES_MATCHPYCPP_MANY_TO_ONE_H_
+#define SYMENGINE_UTILITIES_MATCHPYCPP_MANY_TO_ONE_H_
 
 #include "bipartite.h"
 #include "utils.h"
@@ -335,7 +335,7 @@ public:
     }
 };
 
-#endif
+#endif /* SYMENGINE_UTILITIES_MATCHPYCPP_MANY_TO_ONE_H_ */
 
 /*
 class CommutativeMatcher(object):
