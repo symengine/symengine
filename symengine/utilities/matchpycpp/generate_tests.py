@@ -54,15 +54,15 @@ def export_code_to_file(filename, a, b):
 def add_main_with_tests(fout, test_cases):
     fout.write("""
 int main() {
-    tuple<int, Substitution> ret;
+    generator<tuple<int, Substitution>> ret;
 
 """)
     for test_case, result in test_cases.items():
         fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
         if result:
-            fout.write("    assert(get<0>(ret) >= 0);\n")
+            fout.write("    assert(get<0>(ret[0]) >= 0);\n")
         else:
-            fout.write("    assert(get<0>(ret) == -1);\n")
+            fout.write("    assert(get<0>(ret[0]) == -1);\n")
     fout.write("}\n")
 
 

@@ -77,7 +77,7 @@ class CppCodeGenerator:
         self.add_line('{}.push_front(subject);'.format(self._subjects[-1]))
         self.add_line('Substitution subst{};'.format(self._substs))
         self.generate_self(self._matcher.root)
-        self.add_line('return result')
+        self.add_line('return result;')
         self.dedent()
 
         if add_imports:
@@ -110,22 +110,17 @@ class CppCodeGenerator:
 class CommutativeMatcher{0} : public CommutativeMatcher
 {{
 public:
-{8}static CommutativeMatcher{0} *_instance = NULL;
-{8}static patterns;
-{8}static Deque subjects;
-{8}static subjects_by_id;
-{8}static BipartiteGraph bipartite;
-{8}static associative;
-{8}static int max_optional_count;
-{8}static anonymous_patterns;
+{8}static CommutativeMatcher{0} *_instance;
 
 {8}CommutativeMatcher{0}()
 {8}{{
 
+/*
 {8}{8}patterns = {1};
+*/
 {8}{8}subjects = {2};
 {8}{8}subjects_by_id = {7};
-{8}{8}associative = {3};
+//{8}{8}associative = {3};
 {8}{8}max_optional_count = {4};
 {8}{8}anonymous_patterns = {5};
 
@@ -134,9 +129,9 @@ public:
 
 {8}static CommutativeMatcher{0} *get()
 {8}{{
-{8}{8}if (CommutativeMatcher{0}::_instance == NULL)
-{8}{8}{8}_instance = new CommutativeMatcher{0}();
-{8}{8}return _instance;
+{8}{8}//if (CommutativeMatcher{0}::_instance == NULL)
+{8}{8}{8}//_instance = new CommutativeMatcher{0}();
+{8}{8}return new CommutativeMatcher{0}();
 {8}}}
 
 {6}
@@ -150,7 +145,7 @@ public:
             self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::get();'.format(state.number))
             tmp = self.get_var_name('tmp')
             #self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
-            self.add_line('Deque Basic> {} = {};'.format(tmp, self._subjects[-1]))
+            self.add_line('Deque {} = {};'.format(tmp, self._subjects[-1]))
             self.add_line('{} = {{}};'.format(self._subjects[-1]))
             self.add_line('for (RCP<const Basic> &s : {}) {{'.format(tmp))
             self.indent(bracket=False)
