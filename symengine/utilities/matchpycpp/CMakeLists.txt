@@ -21,12 +21,3 @@ add_subdirectory(tests)
 add_subdirectory(autogen_tests)
 
 include_directories(BEFORE ${matchpycpp_BINARY_DIR})
-
-#add_library(matchpycpp ${SRC})
-
-#install(TARGETS matchpycpp
-#EXPORT SymEngineTargets
-#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#)
