@@ -10,10 +10,9 @@
 
 #include "coroutine.h"
 
-using namespace std;
 using namespace SymEngine;
 
-typedef map<string, RCP<const Basic>> Substitution2;
+typedef std::map<std::string, RCP<const Basic>> Substitution2;
 
 int try_add_variable(Substitution2 &subst, string variable_name,
                      RCP<const Basic> &replacement)
@@ -25,9 +24,9 @@ int try_add_variable(Substitution2 &subst, string variable_name,
     return 0;
 }
 
-typedef deque<RCP<const Basic>> Deque;
+typedef std::deque<RCP<const Basic>> Deque;
 
-Deque get_deque(RCP<const Basic> expr)
+Deque get_deque(RCP<const Basic>& expr)
 {
     Deque d;
     for (RCP<const Basic> i : expr->get_args()) {
@@ -35,8 +34,6 @@ Deque get_deque(RCP<const Basic> expr)
     }
     return d;
 }
-
-coroutine::Channel<tuple<int, Substitution2>> channel;
 
 template <typename T>
 class Yielder
@@ -47,65 +44,67 @@ public:
     }
     virtual ~Yielder()
     {
+        std::cout << "print destructor" << std::endl;
         coroutine::destroy(routine);
     }
 
     T next()
     {
         coroutine::resume(routine);
-        return value;
+        return std::make_tuple(value_int, value_subst);
     }
 
 protected:
-    void yield(T val)
+    void yield(int value_int_, Substitution2& value_subst_)
     {
-        value = val;
-        // channel.push(val);
+        value_int = value_int_;
+        value_subst = value_subst_;
         coroutine::yield();
     }
     coroutine::routine_t routine;
-    T value;
+    int value_int;
+    Substitution2 value_subst;
 };
 
-// Yielder<tuple<int, Substitution2>> match_root;
-
-class match_root : public Yielder<tuple<int, Substitution2>>
+class match_root : public Yielder<std::tuple<int, Substitution2>>
 {
 public:
     RCP<const Basic> subject;
+    Deque subjects, subjects2;
+    RCP<const Basic> tmp1, tmp3, tmp4, tmp6;
+    Substitution2 subst0, subst1, tmp_subst;
 
-    match_root(RCP<const Basic> subject) : subject(subject)
+    match_root(RCP<const Basic>& subject_) : subject(subject_)
     {
         routine = coroutine::create(std::bind(&match_root::run, this));
     }
+
     void run()
     {
-        Deque subjects;
         subjects.push_back(subject);
-        Substitution2 subst0;
         // state 2200;
         if (subjects.size() >= 1 && is_a<Pow>(*subjects[0])) {
-            RCP<const Basic> tmp1 = subjects.front();
+            tmp1 = subjects.front();
             subjects.pop_front();
-            Deque subjects2 = get_deque(tmp1);
+            subjects2 = get_deque(tmp1);
             // state 2201;
-            if (subjects2.size() >= 1 && subjects2[0]->__eq__(*symbol("x"))) {
-                RCP<const Basic> tmp3 = subjects2.front();
+            if (subjects2.size() >= 1 && eq(*subjects2[0], *symbol("x"))) {
+                tmp3 = subjects2.front();
                 subjects2.pop_front();
                 // state 2202;
                 if (subjects2.size() >= 1) {
-                    auto tmp4 = subjects2.front();
+                    tmp4 = subjects2.front();
                     subjects2.pop_front();
-                    Substitution2 subst1(subst0);
+                    subst1 = subst0;
                     if (!try_add_variable(subst1, "i2", tmp4)) {
                         // state 2203;
                         if (subjects2.size() == 0) {
                             // state 2204;
                             if (subjects.size() == 0) {
-                                Substitution2 tmp_subst;
-                                tmp_subst["w"] = subst1["i2"];
+                                tmp_subst["w"] = symbol("x");
+                                tmp_subst["w2"] = symbol("y");
                                 // 0: x**w;
-                                yield(make_tuple(0, tmp_subst));
+                                yield(0, tmp_subst);
                             }
                         }
                     }
@@ -116,16 +115,16 @@ public:
             subjects.push_front(tmp1);
         }
         if (subjects.size() >= 1 && subjects[0]->__eq__(*symbol("y"))) {
-            auto &tmp6 = subjects.front();
+            tmp6 = subjects.front();
             subjects.pop_front();
             // state 2205;
             if (subjects.size() == 0) {
                 // 1: y;
-                yield(make_tuple(1, subst0));
+                yield(1, subst0);
             }
             subjects.push_front(tmp6);
         }
-        yield(make_tuple(-1, subst0));
+        yield(-1, subst0);
     }
 };
 
@@ -139,12 +138,12 @@ int main(int argc, char *argv[])
     auto result = mr1.next();
 
     RCP<const Basic> y = symbol("y");
-    std::cout << "Result for " << expr->__str__() << " is " << get<0>(result)
+    std::cout << "Result for " << expr->__str__() << " is " << std::get<0>(result)
               << std::endl;
     result = match_root(y).next();
-    std::cout << "Result for " << y->__str__() << " is " << get<0>(result)
+    std::cout << "Result for " << y->__str__() << " is " << std::get<0>(result)
               << std::endl;
     result = match_root(x).next();
-    std::cout << "Result for " << x->__str__() << " is " << get<0>(result)
+    std::cout << "Result for " << x->__str__() << " is " << std::get<0>(result)
               << std::endl;
 }
