@@ -26,7 +26,7 @@ int try_add_variable(Substitution2 &subst, string variable_name,
 
 typedef std::deque<RCP<const Basic>> Deque;
 
-Deque get_deque(RCP<const Basic>& expr)
+Deque get_deque(RCP<const Basic> &expr)
 {
     Deque d;
     for (RCP<const Basic> i : expr->get_args()) {
@@ -44,7 +44,6 @@ public:
     }
     virtual ~Yielder()
     {
-        std::cout << "print destructor" << std::endl;
         coroutine::destroy(routine);
     }
 
@@ -55,7 +54,7 @@ public:
     }
 
 protected:
-    void yield(int value_int_, Substitution2& value_subst_)
+    void yield(int value_int_, Substitution2 &value_subst_)
     {
         value_int = value_int_;
         value_subst = value_subst_;
@@ -74,7 +73,7 @@ public:
     RCP<const Basic> tmp1, tmp3, tmp4, tmp6;
     Substitution2 subst0, subst1, tmp_subst;
 
-    match_root(RCP<const Basic>& subject_) : subject(subject_)
+    match_root(RCP<const Basic> &subject_) : subject(subject_)
     {
         routine = coroutine::create(std::bind(&match_root::run, this));
     }
@@ -138,8 +137,8 @@ int main(int argc, char *argv[])
     auto result = mr1.next();
 
     RCP<const Basic> y = symbol("y");
-    std::cout << "Result for " << expr->__str__() << " is " << std::get<0>(result)
-              << std::endl;
+    std::cout << "Result for " << expr->__str__() << " is "
+              << std::get<0>(result) << std::endl;
     result = match_root(y).next();
     std::cout << "Result for " << y->__str__() << " is " << std::get<0>(result)
               << std::endl;
