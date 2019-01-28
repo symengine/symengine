@@ -13,9 +13,9 @@ using namespace std;
 RCP<const Basic> None = symbol("None");
 
 template <typename T, typename Comparison>
-map<T, int> count_multiset(multiset<T, Comparison> m)
+map<T, int, Comparison> count_multiset(multiset<T, Comparison> m)
 {
-    map<T, int> result;
+    map<T, int, Comparison> result;
     for (const T &elem : m) {
         result[elem]++;
     }
@@ -206,8 +206,8 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
         // for left, right, value in edges:
         //    graph_plus[left, right] = value
         for (const tuple<TLeft, TRight, TEdgeValue> &p : edges) {
-            Node node(get<0>(p), get<1>(p));
-            graph_plus.__setitem__(node, get<2>(p));
+            Edge edge0 = make_tuple(get<0>(p), get<1>(p));
+            graph_plus.__setitem__(edge0, get<2>(p));
         }
     } else {
         //# Step 8

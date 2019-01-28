@@ -19,9 +19,6 @@ using namespace SymEngine;
 template <typename T>
 using generator = vector<T>;
 
-// typedef int TLeft;
-// typedef int TRight;
-
 // Assuming TLeft = TRight, otherwise
 // Node should be tuple<int, variant<TLeft, TRight>>
 #define TYPES_DERIVED_FROM_TLEFT_TRIGHT                                        \
@@ -30,59 +27,11 @@ using generator = vector<T>;
     typedef set<Node> NodeSet;                                                 \
     typedef tuple<TLeft, TRight> Edge;
 
-// typedef map<TLeft, TRight> Matching1;
-// typedef map<tuple<int, int>, tuple<int, int>> Matching2;
-
 const int LEFT = 0;
 const int RIGHT = 1;
 
-// typedef map<tuple<int, int>, tuple<int, int>> Matching;
-
 typedef vector<Substitution> TEdgeValue;
 
-/*
-class Deque
-{
-public:
-    Deque()
-    {
-        N = 0;
-    }
-    const Basic *front()
-    {
-        return _deque[N - 1];
-    }
-    void pop_front()
-    {
-        N--;
-    }
-    void push_front(const Basic *obj)
-    {
-        N++;
-        _deque[N - 1] = obj;
-    }
-    void push_back(const Basic *obj)
-    {
-        for (int i = N; i > 0; i--) {
-            _deque[N] = _deque[N - 1];
-        }
-        _deque[0] = obj;
-        N++;
-    }
-    int size()
-    {
-        return N;
-    }
-    const Basic *operator[](int i)
-    {
-        return _deque[N - i - 1];
-    }
-
-private:
-    const Basic *_deque[100];
-    int N;
-};
-*/
 
 typedef deque<RCP<const Basic>> Deque;
 
@@ -94,77 +43,6 @@ Deque get_deque(RCP<const Basic> expr)
     }
     return d;
 }
-
-/*
-#define YIELDABLE                                                              \
-    if (yielded) {                                                             \
-        longjmp(childTask, 1);                                                 \
-    } else {                                                                   \
-        yielded = true;                                                        \
-    }
-
-#define yield(val)                                                             \
-    if (!setjmp(childTask)) {                                                  \
-        value = (val);                                                         \
-        return;                                                                \
-    }
-
-template <typename T>
-class Yielder
-{
-public:
-    Yielder() : finished(false), yielded(false)
-    {
-    }
-
-    virtual ~Yielder()
-    {
-    }
-
-    T _next()
-    {
-        run();
-        return value;
-    }
-
-    T next()
-    {
-        T v = _next();
-        if (finished) {
-            throw(-1);
-        }
-        return v;
-    }
-
-    std::vector<T> tovector()
-    {
-        if (yielded)
-            throw("iterator already started");
-        std::vector<T> vec;
-        while (true) {
-            T v = _next();
-            if (finished) {
-                break;
-            }
-            vec.push_back(v);
-        }
-        return vec;
-    }
-
-    void stop()
-    {
-        finished = true;
-    }
-
-    virtual void run() = 0;
-
-protected:
-    jmp_buf childTask;
-    bool finished;
-    bool yielded;
-    T value;
-};
-*/
 
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");

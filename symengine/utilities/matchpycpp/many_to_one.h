@@ -18,7 +18,7 @@ typedef map<tuple<int, int>, tuple<int, int>> Matching;
 class CommutativeMatcher
 {
 public:
-    map<RCP<const Basic>, tuple<int, set<int>>> subjects;
+    map<RCP<const Basic>, tuple<int, set<int>>, lessBasic> subjects;
     BipartiteGraph<int, int, vector<Substitution>> bipartite;
     int max_optional_count;
     // map subject_pattern_ids;
@@ -125,7 +125,7 @@ public:
                     multiset<int> ids;
                     set_difference(subject_ids.begin(), subject_ids.end(),
                                    matched_subjects.begin(),
-                                   matched_subjects.end(), ids.begin());
+                                   matched_subjects.end(), inserter(ids, ids.begin()));
                     MultisetOfBasic remaining;
                     for (int id : ids) {
                         if (subjects_by_id[id] == None) {
