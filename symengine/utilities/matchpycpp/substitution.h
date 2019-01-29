@@ -12,10 +12,6 @@
 using namespace std;
 using namespace SymEngine;
 
-// bool operator<(RCP<const Basic> &a, RCP<const Basic> &b)
-//{
-//	return (a->__hash__() < b->__hash__())? true : false;
-//}
 
 struct lessBasic {
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const

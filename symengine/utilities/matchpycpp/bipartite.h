@@ -11,7 +11,7 @@
 #include <symengine/pow.h>
 #include <symengine/add.h>
 
-//#include <symengine/utilities/matchpycpp/hopcroft_karp.h>
+#include <symengine/utilities/matchpycpp/hopcroft_karp.h>
 
 #include "common.h"
 #include "generator_trick.h"
@@ -179,46 +179,22 @@ public:
 
     map<TLeft, TRight> find_matching()
     {
-        map<tuple<int, TLeft>, set<tuple<int, TRight>>> directed_graph;
-        //= {}  # type: Dict[Tuple[int, TLeft], Set[Tuple[int, TRight]]]
+        map<TLeft, set<TRight>> directed_graph;
 
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TLeft left = get<0>(p.first);
             TRight right = get<1>(p.first);
-            tuple<int, TLeft> tail = make_tuple(LEFT, left);
-            tuple<int, TRight> head = make_tuple(RIGHT, right);
-            if (directed_graph.find(tail) == directed_graph.end()) {
-                directed_graph[tail] = {head};
+            if (directed_graph.find(left) == directed_graph.end()) {
+                directed_graph[left] = {right};
             } else {
-                directed_graph[tail].insert(head);
+                directed_graph[left].insert(right);
             }
         }
 
-        return map<TLeft, TRight>();
+        HopcroftKarp<TLeft, TRight> hk(directed_graph);
+        int number_matchings = hk.hopcroft_karp();
 
-        //        HopcroftKarp<TLeft, TRight, TEdgeValue> hk(directed_graph);
-        //        int number_matchings = hk.hopcroft_karp();
-        //
-        //        map<tuple<int, tuple<int, int>>, tuple<int, tuple<int, int>>>
-        //        matching;
-        //        for (const pair<TLeft, TRight> &p : hk.pair_left) {
-        //        	matching[p.first] = p.second;
-        //        }
-        //        for (const pair<TRight, TLeft> &p : hk.pair_right) {
-        //        	matching[p.first] = p.second;
-        //        }
-        //
-        //        // Filter out the partitions (LEFT and RIGHT) and only return
-        //        the matching edges
-        //        // that go from LEFT to RIGHT
-        //        // return dict((tail[1], head[1]) for tail, head in
-        //        matching.items() if tail[0] == LEFT);
-        //
-        //        map<TLeft, TRight> result;
-        //        for (const pair<int, tuple<int, int>> &elem : matching) {
-        //        	result[elem.first] = elem.second;
-        //        }
-        //        return result;
+        return hk.pair_left;
     }
 
     void clear()
@@ -240,12 +216,10 @@ int get1(tuple<int, int> a)
     return get<1>(a);
 }
 
-template <typename TLeft, typename TRight, typename TEdgeValue>
+template <typename TLeft, typename TRight>
 class _DirectedMatchGraph
 {
 public:
-    // map<Node, NodeSet> _map_left;
-    // map<Node, NodeSet> _map_right;
     TYPES_DERIVED_FROM_TLEFT_TRIGHT
 
     map<Node, NodeSet> _map;
@@ -254,57 +228,30 @@ public:
     {
     }
 
+    template <typename TEdgeValue>
     _DirectedMatchGraph(BipartiteGraph<TLeft, TRight, TEdgeValue> graph,
                         map<TLeft, TRight> matching)
     {
-        /*
-        def __init__(self, graph: BipartiteGraph[TLeft, TRight, TEdgeValue],
-        matching: Dict[TLeft, TRight]) -> None:
-            super(_DirectedMatchGraph, self).__init__()
-            for (tail, head) in graph:
-                if tail in matching and matching[tail] == head:
-                    self[(LEFT, tail)] = {(RIGHT, head)}
-                else:
-                    if (RIGHT, head) not in self:
-                        self[(RIGHT, head)] = set()
-                    self[(RIGHT, head)].add((LEFT, tail))
-*/
-        //        for (tail, head) in graph:
         for (const pair<Edge, TEdgeValue> &p : graph._edges) {
             TLeft tail = get<0>(p.first);
             TRight head = get<1>(p.first);
-            // if tail in matching and matching[tail] == head:
-            //    self[(LEFT, tail)] = {(RIGHT, head)}
             if ((matching.find(tail) != matching.end())
                 && (matching.at(tail) == head)) {
                 set<tuple<int, TRight>> s;
                 s.insert(make_tuple(RIGHT, head));
-                _map[make_tuple(RIGHT, tail)] = s;
+                _map[make_tuple(LEFT, tail)] = s;
             } else {
-                // if (RIGHT, head) not in self:
-                //    self[(RIGHT, head)] = set()
-                // self[(RIGHT, head)].add((LEFT, tail))
-                // Node head_node = make_tuple(RIGHT, head);
+
                 if (_map.find(make_tuple(RIGHT, head)) == _map.end()) {
                     _map[make_tuple(RIGHT, head)] = NodeSet();
                 }
-                // Node tail_node = make_tuple(LEFT, tail);
                 _map[make_tuple(RIGHT, head)].insert(make_tuple(LEFT, tail));
             }
         }
     }
 
-    // def find_cycle(self) -> NodeList:
-    //    visited = cast(NodeSet, set())
-    //    for n in self:
-    //    cycle = self._find_cycle(n, cast(NodeList, []), visited)
-    //    if cycle:
-    //        return cycle
-    //    return cast(NodeList, [])
-
     NodeList find_cycle()
     {
-        // set<variant<TLeft, TRight>> visited;
         set<Node> visited;
         for (const pair<Node, NodeSet> &n : _map) {
             NodeList node_list;
@@ -319,12 +266,6 @@ public:
 
     NodeList _find_cycle(const Node &node, NodeList &path, set<Node> &visited)
     {
-        // if node in visited:
-        //    try:
-        //        index = path.index(node)
-        //        return path[index:]
-        //    except ValueError:
-        //        return cast(NodeList, [])
         if (visited.find(node) != visited.end()) {
             typename NodeList::iterator found_end;
             found_end = find_if(path.begin(), path.end(),
@@ -335,17 +276,10 @@ public:
                 return NodeList();
             }
         }
-        // visited.add(node)
         visited.insert(node);
-        // if node not in self:
-        //    return cast(NodeList, [])
         if (_map.find(node) == _map.end()) {
             return NodeList();
         }
-        // for other in self[node]:
-        //    cycle = self._find_cycle(other, path + [node], visited)
-        //    if cycle:
-        //        return cycle
         for (const Node &other : _map[node]) {
             NodeList new_path(path.begin(), path.end());
             new_path.push_back(node);
@@ -358,6 +292,251 @@ public:
     }
 };
 
+
+/*
+ * Algorithm described in "Algorithms for Enumerating All Perfect, Maximum and
+ * Maximal Matchings in Bipartite Graphs"
+ * By Takeaki Uno in "Algorithms and Computation: 8th International Symposium,
+ * ISAAC '97 Singapore,
+ * December 17-19, 1997 Proceedings"
+ * See http://dx.doi.org/10.1007/3-540-63890-3_11
+ */
+
+template <typename TLeft, typename TRight, typename TEdgeValue>
+generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
+    BipartiteGraph<TLeft, TRight, TEdgeValue> graph,
+    map<TLeft, TRight> matching,
+    _DirectedMatchGraph<TLeft, TRight> directed_match_graph)
+{
+    TYPES_DERIVED_FROM_TLEFT_TRIGHT
+
+    vector<map<TLeft, TRight>> result;
+    map<TLeft, TRight> new_match;
+    _DirectedMatchGraph<TLeft, TRight> directed_match_graph_minus,
+        directed_match_graph_plus;
+
+    BipartiteGraph<TLeft, TRight, TEdgeValue> graph_plus, graph_minus;
+    _DirectedMatchGraph<TLeft, TRight> dgm_plus, dgm_minus;
+
+    //# Step 1
+    // if len(graph) == 0:
+    //    return
+    if (graph._edges.empty()) {
+        return result;
+    }
+
+    //# Step 2
+    //# Find a circle in the directed matching graph
+    //# Note that this circle alternates between nodes from the left and the
+    // right part of the graph
+    // raw_cycle = directed_match_graph.find_cycle()
+    //
+    // if raw_cycle:
+    //    # Make sure the circle "starts"" in the the left part
+    //    # If not, start the circle from the second node, which is in the
+    //    left part
+    //    if raw_cycle[0][0] != LEFT:
+    //        cycle = tuple([raw_cycle[-1][1]] + list(x[1] for x in
+    //        raw_cycle[:-1]))
+    //    else:
+    //        cycle = tuple(x[1] for x in raw_cycle)
+    //
+    NodeList raw_cycle = directed_match_graph.find_cycle();
+    vector<TLeft> cycle;
+    if (!raw_cycle.empty()) {
+        if (get<0>(raw_cycle[0]) != LEFT) {
+            cycle.push_back(get<1>(*raw_cycle.end()));
+            for (size_t i = 1; i < raw_cycle.size(); i++) {
+                cycle.push_back(get<1>(raw_cycle[i]));
+            }
+        } else {
+            for (Node &i : raw_cycle) {
+                cycle.push_back(get<1>(i));
+            }
+        }
+
+        //# Step 3 - TODO: Properly find right edge? (to get complexity bound)
+        // edge = cast(Edge, cycle[:2])
+        Edge edge = make_tuple(cycle[0], cycle[1]);
+
+        //# Step 4
+        //# already done because we are not really finding the optimal edge
+
+        //# Step 5
+        //# Construct new matching M' by flipping edges along the cycle, i.e.
+        // change the direction of all the
+        //# edges in the circle
+        // new_match = matching.copy()
+        // for i in range(0, len(cycle), 2):
+        //    new_match[cycle[i]] = cycle[i - 1]  # type: ignore
+        //
+        // yield new_match
+        //
+        //# Construct G+(e) and G-(e)
+        // old_value = graph[edge]
+        // del graph[edge]
+        new_match = matching;
+        for (size_t i = 0; i < cycle.size(); i += 2) {
+            new_match[(TLeft)cycle[i]] = cycle[i - 1];
+        }
+        result.push_back(new_match);
+        TEdgeValue old_value = graph._edges.at(edge);
+        graph.__delitem__(edge);
+
+        //# Step 7
+        //# Recurse with the new matching M' but without the edge e
+        // directed_match_graph_minus = _DirectedMatchGraph(graph, new_match)
+        //
+        // yield from _enum_maximum_matchings_iter(graph, new_match,
+        // directed_match_graph_minus)
+        //
+        // graph[edge] = old_value
+        directed_match_graph_minus
+            = _DirectedMatchGraph<TLeft, TRight>(graph, new_match);
+        generator<map<TLeft, TRight>> g = _enum_maximum_matchings_iter(
+            graph, new_match, directed_match_graph_minus);
+        result.insert(result.end(), g.begin(), g.end());
+
+        graph.__setitem__(edge, old_value);
+
+        //# Step 6
+        //# Recurse with the old matching M but without the edge e
+
+        // graph_plus = graph
+        graph_plus = graph;
+
+        // edges = []
+        vector<tuple<TLeft, TRight, TEdgeValue>> edges;
+
+        // for left, right in list(graph_plus.edges()):
+        //    if left == edge[0] or right == edge[1]:
+        //        edges.append((left, right, graph_plus[left, right]))
+        //        del graph_plus[left, right]
+        for (const pair<Edge, TEdgeValue> &p : graph_plus._edges) {
+            TLeft left = get<0>(p.first);
+            TRight right = get<1>(p.first);
+            if ((left == get<0>(edge)) && (right == get<1>(edge))) {
+                Edge lredge = make_tuple(left, right);
+                edges.push_back(
+                    make_tuple(left, right, graph_plus.__getitem__(lredge)));
+                graph_plus.__delitem__(lredge);
+            }
+        }
+        // directed_match_graph_plus = _DirectedMatchGraph(graph_plus, matching)
+        directed_match_graph_plus
+            = _DirectedMatchGraph<TLeft, TRight>(graph_plus,
+                                                             matching);
+        // yield from _enum_maximum_matchings_iter(graph_plus, matching,
+        // directed_match_graph_plus)
+        g = _enum_maximum_matchings_iter(graph_plus, matching,
+                                         directed_match_graph_plus);
+
+        result.insert(result.end(), g.begin(), g.end());
+
+        // for left, right, value in edges:
+        //    graph_plus[left, right] = value
+        for (const tuple<TLeft, TRight, TEdgeValue> &p : edges) {
+            Edge edge0 = make_tuple(get<0>(p), get<1>(p));
+            graph_plus.__setitem__(edge0, get<2>(p));
+        }
+    } else {
+        //# Step 8
+        //# Find feasible path of length 2 in D(graph, matching)
+        //# This path has the form left1 -> right -> left2
+        //# left1 must be in the left part of the graph and in matching
+        //# right must be in the right part of the graph
+        //# left2 is also in the left part of the graph and but must not be in
+        // matching
+        // left1 = None  # type: TLeft
+        // left2 = None  # type: TLeft
+        // right = None  # type: TRight
+        //
+        TLeft left1;
+        TLeft *left2 = nullptr;
+        TRight right;
+        // for part1, node1 in directed_match_graph:
+        //    if part1 == LEFT and node1 in matching:
+        //        left1 = cast(TLeft, node1)
+        //        right = matching[left1]
+        //        if (RIGHT, right) in directed_match_graph:
+        //            for _, node2 in directed_match_graph[(RIGHT, right)]:
+        //                if node2 not in matching:
+        //                    left2 = cast(TLeft, node2)
+        //                    break
+        //            if left2 is not None:
+        //                break
+        for (const pair<Node, NodeSet> &p : directed_match_graph._map) {
+            int part1 = get<0>(p.first);
+            TLeft node1 = get<1>(p.first);
+            if ((part1 == LEFT)
+                && (matching.find((TLeft)node1) != matching.end())) {
+                left1 = (TLeft)node1;
+                right = matching[left1];
+                if (directed_match_graph._map.find(make_tuple(RIGHT, right))
+                    != directed_match_graph._map.end()) {
+                    for (const tuple<int, TLeft> &p2 :
+                         directed_match_graph._map.at(
+                             make_tuple(RIGHT, right))) {
+                        TLeft node2 = get<1>(p2);
+                        if (matching.find((TLeft)node2) == matching.end()) {
+                            left2 = &node2;
+                            break;
+                        }
+                    }
+                    if (left2 != nullptr) {
+                        break;
+                    }
+                }
+            }
+        }
+        // if left2 is None:
+        //    return
+        if (left2 == nullptr) {
+            return result;
+        }
+        //# Construct M'
+        //# Exchange the direction of the path left1 -> right -> left2
+        //# to left1 <- right <- left2 in the new matching
+        // new_match = matching.copy()
+        // del new_match[left1]
+        // new_match[left2] = right
+        new_match = matching;
+        new_match.erase(left1);
+        new_match[*left2] = right;
+
+        // yield new_match
+        result.push_back(new_match);
+
+        // edge = (left2, right)
+        Edge edge = make_tuple(*left2, right);
+
+        //# Construct G+(e) and G-(e)
+        graph_plus = graph.without_nodes(edge);
+        graph_minus = graph.without_edge(edge);
+
+        dgm_plus = _DirectedMatchGraph<TLeft, TRight>(graph_plus,
+                                                                  new_match);
+        dgm_minus = _DirectedMatchGraph<TLeft, TRight>(graph_minus,
+                                                                   matching);
+
+        //# Step 9
+        // yield from _enum_maximum_matchings_iter(graph_plus, new_match,
+        // dgm_plus)
+        generator<map<TLeft, TRight>> g
+            = _enum_maximum_matchings_iter(graph_plus, new_match, dgm_plus);
+
+        result.insert(result.end(), g.begin(), g.end());
+
+        //# Step 10
+        // yield from _enum_maximum_matchings_iter(graph_minus, matching,
+        // dgm_minus)
+        g = _enum_maximum_matchings_iter(graph_minus, matching, dgm_minus);
+
+        result.insert(result.end(), g.begin(), g.end());
+    }
+    return result;
+}
+
 template <typename TLeft, typename TRight, typename TEdgeValue>
 generator<map<TLeft, TRight>>
 enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
@@ -369,7 +548,7 @@ enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
         // graph = graph.__copy__();
         generator<map<TLeft, TRight>> extension = _enum_maximum_matchings_iter(
             graph, matching,
-            _DirectedMatchGraph<TLeft, TRight, TEdgeValue>(graph, matching));
+            _DirectedMatchGraph<TLeft, TRight>(graph, matching));
         result.insert(result.end(), extension.begin(), extension.end());
     }
     return result;
