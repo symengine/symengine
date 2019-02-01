@@ -168,9 +168,6 @@ public:
         return result;
     }
 
-    /*
-     * Variables for `_match_with_bipartite`:
-     */
     vector<tuple<Substitution, multiset<int>>>
     _match_with_bipartite(multiset<int> subject_ids, multiset<int> pattern_set,
                           Substitution substitution)
@@ -258,7 +255,6 @@ public:
 
     bool _is_canonical_matching(Matching matching)
     {
-        // anonymous_patterns = self.anonymous_patterns
         for (const pair<tuple<int, int>, tuple<int, int>> &pair1 : matching) {
             //.items():
             int s1 = get<0>(pair1.first);
