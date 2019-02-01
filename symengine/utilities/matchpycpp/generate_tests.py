@@ -17,11 +17,11 @@ GENERATED_TEST_DIR = "autogen_tests"
 
 
 collection_of_expressions = [
-        ([x], {x: True, y: False}),
-        ([x**y], {x**y: True, x**z: False}),
-        ([x**y, w], {x**y: True, x: True, x+y: True}),
-        ([x+y, x**2], {y+x: True, x**2: True, x**3: False}),
-        ([x**w, ], {y+x: False, x**2: True, x**3: True}),
+        ([x], {x: (0, {}), y: None}),
+        ([x**y], {x**y: (0, {}), x**z: None}),
+        ([x**y, w], {x**y: (0, {}), x: (1, {w: x}), x+y: (1, {w: x+y})}),
+        ([x+y, x**2], {y+x: (0, {}), x**2: (1, {}), x**3: None}),
+        ([x**w,], {y+x: None, x**2: (0, {}), x**3: (0, {})}),
 ]
 
 def generate_matchpy_matcher(pattern_list):
@@ -43,8 +43,17 @@ def generate_python_code(matcher):
     return a, b
 
 
-def export_code_to_file(filename, a, b):
+def export_code_to_file(filename, a, b, test_number):
+    patterns = collection_of_expressions[test_number][0]
+    patterns = [str(i) for i in patterns]
     fout = open(os.path.join(GENERATED_TEST_DIR, filename), "w")
+    fout.write("""\
+/*
+ * This file was automatically generated: DO NOT EDIT.
+ *
+ * Decision tree matching expressions {0}
+ */
+""".format(str(patterns)))
     fout.write('#include "catch.hpp"\n')
     fout.write(a)
     fout.write("\n\n")
@@ -57,14 +66,28 @@ def add_main_with_tests(fout, test_cases, test_number):
 TEST_CASE("GeneratedMatchPyTest{0}", "")
 {{
     generator<tuple<int, Substitution>> ret;
-
+    Substitution substitution;
 """.format(test_number))
+    pattern_list = collection_of_expressions[test_number][0]
     for test_case, result in test_cases.items():
-        fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
-        if result:
+        fout.write("\n")
+        if result is not None:
+            pattern_id, substitution = result
+            substitution_pretty = {symengine_print(k): str(v) for k, v in substitution.items()}
+            fout.write("    // Pattern {0} matching {1} with substitution {2}:\n".format(pattern_list[pattern_id], test_case, substitution_pretty))
+            fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
+            fout.write("    substitution = get<1>(ret[0]);\n")
             fout.write("    REQUIRE(ret.size() > 0);\n")
-            fout.write("    REQUIRE(get<0>(ret[0]) >= 0);\n")
+            fout.write("    REQUIRE(get<0>(ret[0]) == {0});\n".format(pattern_id))
+            for key, value in substitution.items():
+                wildcard = symengine_print(key)
+                matched = symengine_print(value)
+                #import pdb; pdb.set_trace()
+                fout.write('    REQUIRE(substitution.find("{0}") != substitution.end());\n'.format(wildcard, matched))
+                fout.write('    REQUIRE((*substitution.at("{0}").begin())->__eq__(*{1}));\n'.format(wildcard, matched))
         else:
+            fout.write("    // Pattern {0} not matching:\n".format(test_case))
+            fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
             fout.write("    REQUIRE(ret.size() == 0);\n")
     fout.write("}\n")
 
@@ -86,7 +109,7 @@ include_directories(BEFORE ${catch_SOURCE_DIR})
         a, b = generate_cpp_code(matcher)
         filename = "test_case{0:03}".format(i+1)
         filenamecpp = "{}.cpp".format(filename)
-        fwrite = export_code_to_file(filenamecpp, a, b)
+        fwrite = export_code_to_file(filenamecpp, a, b, i)
         add_main_with_tests(fwrite, test_cases, i)
         fwrite.close()
         fout.write("\n")

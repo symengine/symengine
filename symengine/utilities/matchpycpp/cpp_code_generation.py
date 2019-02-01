@@ -83,7 +83,7 @@ class CppCodeGenerator:
         self.dedent()
 
         if add_imports:
-            self._global_code.insert(0, '\n'.join(self._imports))
+            self._global_code.insert(0, '\n'.join(sorted(self._imports)))
 
         return self.clean_code('\n\n'.join(p for p in self._global_code if p)), self.clean_code(self._code)
 

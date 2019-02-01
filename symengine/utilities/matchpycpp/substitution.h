@@ -29,7 +29,7 @@ typedef multiset<RCP<const Basic>, lessBasic> MultisetOfBasic;
 
 typedef map<string, MultisetOfBasic> Substitution;
 
-int try_add_variable(Substitution subst, const string variable_name,
+int try_add_variable(Substitution &subst, const string variable_name,
                      const MultisetOfBasic &replacement)
 {
     if (subst.find(variable_name) == subst.end()) {
@@ -51,7 +51,7 @@ int try_add_variable(Substitution subst, const string variable_name,
     return 0;
 }
 
-int try_add_variable(Substitution subst, const string variable_name,
+int try_add_variable(Substitution &subst, const string variable_name,
                      vector<RCP<const Basic>> &replacement)
 {
     MultisetOfBasic new_repl;
@@ -59,7 +59,7 @@ int try_add_variable(Substitution subst, const string variable_name,
     return try_add_variable(subst, variable_name, new_repl);
 }
 
-int try_add_variable(Substitution subst, const string variable_name,
+int try_add_variable(Substitution &subst, const string variable_name,
                      const RCP<const Basic> &replacement)
 {
     MultisetOfBasic new_repl = {replacement};
