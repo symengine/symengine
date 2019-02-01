@@ -2,6 +2,8 @@ import re
 import sympy
 from collections import defaultdict
 
+from multiset import Multiset
+
 from matchpy.expressions.expressions import Wildcard, AssociativeOperation, SymbolWildcard
 from matchpy.expressions.constraints import CustomConstraint
 from matchpy.expressions.functions import op_iter, get_variables
@@ -88,6 +90,21 @@ class CppCodeGenerator:
     def final_label(self, index, subst_name):
         return str(index)
 
+    def format_to_initializer_list(self, expr):
+        if isinstance(expr, dict):
+            return "{%s}" % (", ".join(["{%s, %s}" % (self.format_to_initializer_list(i), self.format_to_initializer_list(j)) for i, j in expr.items()]))
+        if isinstance(expr, Multiset):
+            return "{%s}" % (", ".join([self.format_to_initializer_list(i) for i in list(expr)]))
+            m = []
+            import pdb; pdb.set_trace()
+            for i, j in expr:
+                for k in range(j):
+                    m.append(i)
+            return "{%s}" % (", ".join([self.format_to_initializer_list(i) for i in m]))
+        if isinstance(expr, (tuple, list, set)):
+            return "{%s}" % (", ".join([self.format_to_initializer_list(i) for i in expr]))
+        return str(expr)
+
     def generate_self(self, state):
         if state.matcher is not None:
             self._imports.add('#include <set>')
@@ -110,17 +127,13 @@ class CppCodeGenerator:
 class CommutativeMatcher{0} : public CommutativeMatcher
 {{
 public:
-{8}static CommutativeMatcher{0} *_instance;
-
 {8}CommutativeMatcher{0}()
 {8}{{
 
-/*
 {8}{8}patterns = {1};
-*/
 {8}{8}subjects = {2};
 {8}{8}subjects_by_id = {7};
-//{8}{8}associative = {3};
+{8}{8}// associative = {3};
 {8}{8}max_optional_count = {4};
 {8}{8}anonymous_patterns = {5};
 
@@ -129,13 +142,10 @@ public:
 
 {8}static CommutativeMatcher{0} *get()
 {8}{{
-{8}{8}//if (CommutativeMatcher{0}::_instance == NULL)
-{8}{8}{8}//_instance = new CommutativeMatcher{0}();
 {8}{8}return new CommutativeMatcher{0}();
 {8}}}
 
-{6}
-}};
+{6}}};
 
 '''.strip().format(
                     state.number, patterns, subjects, associative, max_optional_count, anonymous_patterns, code,
@@ -204,12 +214,8 @@ public:
 
     def commutative_patterns(self, patterns):
         patterns = sorted(patterns.values(), key=lambda x: x[0])
-        return '{{\n    {}\n}}'.format(
-            ',\n    '.join(
-                '{0}: ({0}, {1!r}, [\n      {2}\n])'.format(i, s, ',\n      '.join(map(self.commutative_var_entry, v)))
-                for i, s, v in patterns
-            )
-        )
+        expr = {(i,): (i, s, list(map(self.commutative_var_entry, v))) for (i, s, v) in patterns}
+        return self.format_to_initializer_list(expr)
 
     def generate_transition_code(self, transition):
         enter_func = None

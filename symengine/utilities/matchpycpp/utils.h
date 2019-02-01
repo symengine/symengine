@@ -139,7 +139,6 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
     return _factory;
 }
 
-// generator<Substitution>
 generator<Substitution> commutative_sequence_variable_partition_iter(
     MultisetOfBasic values, vector<VariableWithCount> variables)
 {

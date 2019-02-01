@@ -18,10 +18,7 @@
 
 using namespace std;
 
-// typedef map<int, int> Matching;
 
-//(Generic[TLeft, TRight, TEdgeValue], MutableMapping[Tuple[TLeft, TRight],
-// TEdgeValue])
 /*
  * A bipartite graph representation.
  *
@@ -62,20 +59,16 @@ public:
 
     void __setitem__(Edge key, TEdgeValue value)
     {
-        // if not isinstance(key, tuple) or len(key) != 2:
-        //    raise TypeError("The edge must be a 2-tuple")
         _edges[key] = value;
         _left.insert(get<0>(key));
         _right.insert(get<1>(key));
 
-        //_graph.setdefault((LEFT, key[0]), set()).add((RIGHT, key[1]));
         TLeft k1 = get<0>(key);
         if (_graph_left.find(k1) == _graph_left.end()) {
             _graph_left[k1] = set<TRight>();
         }
         _graph_left[k1].insert(get<1>(key));
 
-        //_graph.setdefault((RIGHT, key[1]), set()).add((LEFT, key[0]));
         TRight k2 = get<1>(key);
         if (_graph_right.find(k2) == _graph_right.end()) {
             _graph_right[k2] = set<TLeft>();
@@ -101,8 +94,6 @@ public:
     void __delitem__(Edge key)
     {
         _edges.erase(key);
-        // if all(l != key[0] for (l, _) in self._edges):
-        //    self._left.remove(key[0])
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TLeft l = get<0>(p.first);
             if (l == get<0>(key)) {
@@ -110,8 +101,6 @@ public:
                 break;
             }
         }
-        // if all(r != key[1] for (_, r) in self._edges):
-        //    self._right.remove(key[1])
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TRight l = get<1>(p.first);
             if (l == get<1>(key)) {
@@ -119,22 +108,14 @@ public:
                 break;
             }
         }
-        // self._graph[(LEFT, key[0])].remove((RIGHT, key[1]))
         _graph_right[get<0>(key)].erase(get<1>(key));
-        // self._graph[(RIGHT, key[1])].remove((LEFT, key[0]))
         _graph_left[get<1>(key)].erase(get<0>(key));
     }
 
-    // def without_nodes(self, edge: Edge) -> 'BipartiteGraph[TLeft, TRight,
-    // TEdgeValue]':
     //    """Returns a copy of this bipartite graph with the given edge and its
     //    adjacent nodes removed."""
-    //    return BipartiteGraph(((n1, n2), v) for (n1, n2), v in
-    //    self._edges.items() if n1 != edge[0] and n2 != edge[1])
     BipartiteGraph<TLeft, TRight, TEdgeValue> without_nodes(Edge &edge)
     {
-        //((n1, n2), v) for (n1, n2), v in self._edges.items() if n1 != edge[0]
-        // and n2 != edge[1])
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             Edge node = p.first;
@@ -149,15 +130,12 @@ public:
         return new_graph;
     }
 
-    // def without_edge(self, edge: Edge) -> 'BipartiteGraph[TLeft, TRight,
-    // TEdgeValue]':
     //    """Returns a copy of this bipartite graph with the given edge
     //    removed."""
     //    return BipartiteGraph((e2, v) for e2, v in self._edges.items() if edge
     //    != e2)
     BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(Edge &edge)
     {
-        //((e2, v) for e2, v in self._edges.items() if edge != e2)
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             Edge e2 = p.first;
@@ -169,13 +147,6 @@ public:
         }
         return new_graph;
     }
-
-    // def edges_with_labels(self):
-    //    """Returns a view on the edges with labels."""
-    //    return self._edges.items()
-
-    // def edges(self):
-    //    return self._edges.keys()
 
     map<TLeft, TRight> find_matching()
     {
@@ -318,29 +289,14 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
     BipartiteGraph<TLeft, TRight, TEdgeValue> graph_plus, graph_minus;
     _DirectedMatchGraph<TLeft, TRight> dgm_plus, dgm_minus;
 
-    //# Step 1
-    // if len(graph) == 0:
-    //    return
+    // Step 1
     if (graph._edges.empty()) {
         return result;
     }
 
-    //# Step 2
-    //# Find a circle in the directed matching graph
-    //# Note that this circle alternates between nodes from the left and the
-    // right part of the graph
-    // raw_cycle = directed_match_graph.find_cycle()
-    //
-    // if raw_cycle:
-    //    # Make sure the circle "starts"" in the the left part
-    //    # If not, start the circle from the second node, which is in the
-    //    left part
-    //    if raw_cycle[0][0] != LEFT:
-    //        cycle = tuple([raw_cycle[-1][1]] + list(x[1] for x in
-    //        raw_cycle[:-1]))
-    //    else:
-    //        cycle = tuple(x[1] for x in raw_cycle)
-    //
+    // Step 2
+    // Find a circle in the directed matching graph
+    // Note that this circle alternates between nodes from the left and the
     NodeList raw_cycle = directed_match_graph.find_cycle();
     vector<TLeft> cycle;
     if (!raw_cycle.empty()) {
@@ -355,42 +311,29 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
             }
         }
 
-        //# Step 3 - TODO: Properly find right edge? (to get complexity bound)
-        // edge = cast(Edge, cycle[:2])
+        // Step 3 - TODO: Properly find right edge? (to get complexity bound)
         Edge edge = make_tuple(cycle[0], cycle[1]);
 
-        //# Step 4
-        //# already done because we are not really finding the optimal edge
+        // Step 4
+        // already done because we are not really finding the optimal edge
 
-        //# Step 5
-        //# Construct new matching M' by flipping edges along the cycle, i.e.
+        // Step 5
+        // Construct new matching M' by flipping edges along the cycle, i.e.
         // change the direction of all the
-        //# edges in the circle
-        // new_match = matching.copy()
-        // for i in range(0, len(cycle), 2):
-        //    new_match[cycle[i]] = cycle[i - 1]  # type: ignore
-        //
-        // yield new_match
-        //
-        //# Construct G+(e) and G-(e)
-        // old_value = graph[edge]
-        // del graph[edge]
+        // edges in the circle
         new_match = matching;
         for (size_t i = 0; i < cycle.size(); i += 2) {
             new_match[(TLeft)cycle[i]] = cycle[i - 1];
         }
         result.push_back(new_match);
+
+        // Construct G+(e) and G-(e)
         TEdgeValue old_value = graph._edges.at(edge);
         graph.__delitem__(edge);
 
-        //# Step 7
-        //# Recurse with the new matching M' but without the edge e
+        // Step 7
+        // Recurse with the new matching M' but without the edge e
         // directed_match_graph_minus = _DirectedMatchGraph(graph, new_match)
-        //
-        // yield from _enum_maximum_matchings_iter(graph, new_match,
-        // directed_match_graph_minus)
-        //
-        // graph[edge] = old_value
         directed_match_graph_minus
             = _DirectedMatchGraph<TLeft, TRight>(graph, new_match);
         generator<map<TLeft, TRight>> g = _enum_maximum_matchings_iter(
@@ -399,19 +342,12 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
 
         graph.__setitem__(edge, old_value);
 
-        //# Step 6
-        //# Recurse with the old matching M but without the edge e
-
-        // graph_plus = graph
+        // Step 6
+        // Recurse with the old matching M but without the edge e
         graph_plus = graph;
 
-        // edges = []
         vector<tuple<TLeft, TRight, TEdgeValue>> edges;
 
-        // for left, right in list(graph_plus.edges()):
-        //    if left == edge[0] or right == edge[1]:
-        //        edges.append((left, right, graph_plus[left, right]))
-        //        del graph_plus[left, right]
         for (const pair<Edge, TEdgeValue> &p : graph_plus._edges) {
             TLeft left = get<0>(p.first);
             TRight right = get<1>(p.first);
@@ -422,49 +358,30 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
                 graph_plus.__delitem__(lredge);
             }
         }
-        // directed_match_graph_plus = _DirectedMatchGraph(graph_plus, matching)
         directed_match_graph_plus
             = _DirectedMatchGraph<TLeft, TRight>(graph_plus,
                                                              matching);
-        // yield from _enum_maximum_matchings_iter(graph_plus, matching,
-        // directed_match_graph_plus)
         g = _enum_maximum_matchings_iter(graph_plus, matching,
                                          directed_match_graph_plus);
 
         result.insert(result.end(), g.begin(), g.end());
 
-        // for left, right, value in edges:
-        //    graph_plus[left, right] = value
         for (const tuple<TLeft, TRight, TEdgeValue> &p : edges) {
             Edge edge0 = make_tuple(get<0>(p), get<1>(p));
             graph_plus.__setitem__(edge0, get<2>(p));
         }
     } else {
-        //# Step 8
-        //# Find feasible path of length 2 in D(graph, matching)
-        //# This path has the form left1 -> right -> left2
-        //# left1 must be in the left part of the graph and in matching
-        //# right must be in the right part of the graph
-        //# left2 is also in the left part of the graph and but must not be in
+        // Step 8
+        // Find feasible path of length 2 in D(graph, matching)
+        // This path has the form left1 -> right -> left2
+        // left1 must be in the left part of the graph and in matching
+        // right must be in the right part of the graph
+        // left2 is also in the left part of the graph and but must not be in
         // matching
-        // left1 = None  # type: TLeft
-        // left2 = None  # type: TLeft
-        // right = None  # type: TRight
-        //
         TLeft left1;
         TLeft *left2 = nullptr;
         TRight right;
-        // for part1, node1 in directed_match_graph:
-        //    if part1 == LEFT and node1 in matching:
-        //        left1 = cast(TLeft, node1)
-        //        right = matching[left1]
-        //        if (RIGHT, right) in directed_match_graph:
-        //            for _, node2 in directed_match_graph[(RIGHT, right)]:
-        //                if node2 not in matching:
-        //                    left2 = cast(TLeft, node2)
-        //                    break
-        //            if left2 is not None:
-        //                break
+
         for (const pair<Node, NodeSet> &p : directed_match_graph._map) {
             int part1 = get<0>(p.first);
             TLeft node1 = get<1>(p.first);
@@ -489,28 +406,21 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
                 }
             }
         }
-        // if left2 is None:
-        //    return
         if (left2 == nullptr) {
             return result;
         }
-        //# Construct M'
-        //# Exchange the direction of the path left1 -> right -> left2
-        //# to left1 <- right <- left2 in the new matching
-        // new_match = matching.copy()
-        // del new_match[left1]
-        // new_match[left2] = right
+        // Construct M'
+        // Exchange the direction of the path left1 -> right -> left2
+        // to left1 <- right <- left2 in the new matching
         new_match = matching;
         new_match.erase(left1);
         new_match[*left2] = right;
 
-        // yield new_match
         result.push_back(new_match);
 
-        // edge = (left2, right)
         Edge edge = make_tuple(*left2, right);
 
-        //# Construct G+(e) and G-(e)
+        // Construct G+(e) and G-(e)
         graph_plus = graph.without_nodes(edge);
         graph_minus = graph.without_edge(edge);
 
@@ -519,17 +429,13 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
         dgm_minus = _DirectedMatchGraph<TLeft, TRight>(graph_minus,
                                                                    matching);
 
-        //# Step 9
-        // yield from _enum_maximum_matchings_iter(graph_plus, new_match,
-        // dgm_plus)
+        // Step 9
         generator<map<TLeft, TRight>> g
             = _enum_maximum_matchings_iter(graph_plus, new_match, dgm_plus);
 
         result.insert(result.end(), g.begin(), g.end());
 
-        //# Step 10
-        // yield from _enum_maximum_matchings_iter(graph_minus, matching,
-        // dgm_minus)
+        // Step 10
         g = _enum_maximum_matchings_iter(graph_minus, matching, dgm_minus);
 
         result.insert(result.end(), g.begin(), g.end());

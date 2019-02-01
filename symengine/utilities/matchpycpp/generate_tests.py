@@ -21,7 +21,7 @@ collection_of_expressions = [
         ([x**y], {x**y: True, x**z: False}),
         ([x**y, w], {x**y: True, x: True, x+y: True}),
         ([x+y, x**2], {y+x: True, x**2: True, x**3: False}),
-        ([x**w, ], {y+x: True, x**2: True, x**3: True}),
+        ([x**w, ], {y+x: False, x**2: True, x**3: True}),
 ]
 
 def generate_matchpy_matcher(pattern_list):
@@ -45,24 +45,27 @@ def generate_python_code(matcher):
 
 def export_code_to_file(filename, a, b):
     fout = open(os.path.join(GENERATED_TEST_DIR, filename), "w")
+    fout.write('#include "catch.hpp"\n')
     fout.write(a)
     fout.write("\n\n")
     fout.write(b)
     return fout
 
 
-def add_main_with_tests(fout, test_cases):
+def add_main_with_tests(fout, test_cases, test_number):
     fout.write("""
-int main() {
+TEST_CASE("GeneratedMatchPyTest{0}", "")
+{{
     generator<tuple<int, Substitution>> ret;
 
-""")
+""".format(test_number))
     for test_case, result in test_cases.items():
         fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
         if result:
-            fout.write("    assert(get<0>(ret[0]) >= 0);\n")
+            fout.write("    REQUIRE(ret.size() > 0);\n")
+            fout.write("    REQUIRE(get<0>(ret[0]) >= 0);\n")
         else:
-            fout.write("    assert(get<0>(ret[0]) == -1);\n")
+            fout.write("    REQUIRE(ret.size() == 0);\n")
     fout.write("}\n")
 
 
@@ -75,6 +78,8 @@ include_directories(BEFORE ${symengine_SOURCE_DIR})
 include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${teuchos_SOURCE_DIR})
 include_directories(BEFORE ${teuchos_BINARY_DIR})
+
+include_directories(BEFORE ${catch_SOURCE_DIR})
 """)
     for i, (pattern_list, test_cases) in enumerate(collection_of_expressions):
         matcher = generate_matchpy_matcher(pattern_list)
@@ -82,11 +87,11 @@ include_directories(BEFORE ${teuchos_BINARY_DIR})
         filename = "test_case{0:03}".format(i+1)
         filenamecpp = "{}.cpp".format(filename)
         fwrite = export_code_to_file(filenamecpp, a, b)
-        add_main_with_tests(fwrite, test_cases)
+        add_main_with_tests(fwrite, test_cases, i)
         fwrite.close()
         fout.write("\n")
         fout.write("add_executable({0} {1})\n".format(filename, filenamecpp))
-        fout.write("target_link_libraries({0} symengine)\n".format(filename))
+        fout.write("target_link_libraries({0} symengine catch)\n".format(filename))
         #fout.write("target_link_libraries({0} matchpycpp)\n".format(filename))
 
         filenamepy = "{}.py".format(filename)
