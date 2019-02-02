@@ -15,6 +15,10 @@
 #include <symengine/utilities/matchpycpp/substitution.h>
 #include <tuple>
 
+RCP<const Basic> w_ = symbol("w_");
+RCP<const Basic> x = symbol("x");
+RCP<const Basic> y = symbol("y");
+
 generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
 {
     generator<tuple<int, Substitution>> result;
@@ -27,7 +31,7 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
         subjects.pop_front();
         Deque subjects2 = get_deque(tmp1);
         // State 2218
-        if (subjects2.size() >= 1 && subjects2[0]->__eq__(*x)) {
+        if (subjects2.size() >= 1 && eq(*subjects2[0], *x)) {
             RCP<const Basic> tmp3 = subjects2.front();
             subjects2.pop_front();
             // State 2219
@@ -56,7 +60,7 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
     return result;
 }
 
-TEST_CASE("GeneratedMatchPyTest4", "")
+TEST_CASE("GeneratedMatchPyTest5", "")
 {
     generator<tuple<int, Substitution>> ret;
     Substitution substitution;
@@ -67,13 +71,13 @@ TEST_CASE("GeneratedMatchPyTest4", "")
 
     // Pattern x**w matching x**2 with substitution {}:
     ret = match_root(pow(x, integer(2)));
-    substitution = get<1>(ret[0]);
     REQUIRE(ret.size() > 0);
     REQUIRE(get<0>(ret[0]) == 0);
+    substitution = get<1>(ret[0]);
 
     // Pattern x**w matching x**3 with substitution {}:
     ret = match_root(pow(x, integer(3)));
-    substitution = get<1>(ret[0]);
     REQUIRE(ret.size() > 0);
     REQUIRE(get<0>(ret[0]) == 0);
+    substitution = get<1>(ret[0]);
 }

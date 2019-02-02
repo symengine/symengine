@@ -6,25 +6,34 @@
 
 #include <map>
 
-class OperationMeta
-{
-public:
-};
+typedef int OperationMeta;
 
 typedef BipartiteGraph<tuple<int, int>, tuple<int, int>, vector<Substitution>>
     Subgraph;
 typedef map<tuple<int, int>, tuple<int, int>> Matching;
 
+//! Needed for `set` sorting:
+struct lessVariableCount {
+    //! true if memory locations `x < y`, false otherwise
+    bool operator()(const tuple<VariableWithCount, OperationMeta> &x, const tuple<VariableWithCount, OperationMeta> &y) const
+    {
+        return ((unsigned long)&x) < ((unsigned long)&y);
+    }
+};
+
+typedef set<tuple<VariableWithCount, OperationMeta>, lessVariableCount> PatternSet;
+
 class CommutativeMatcher
 {
 public:
-    map<RCP<const Basic>, tuple<int, set<int>>, lessBasic> subjects;
+    std::function<RCP<const Basic>(const RCP<const Basic>&, const RCP<const Basic>&)> associative;
+    map<RCP<const Basic>, tuple<int, set<int>>, RCPBasicKeyLess> subjects;
     BipartiteGraph<int, int, vector<Substitution>> bipartite;
     int max_optional_count;
     // map subject_pattern_ids;
     map<int, RCP<const Basic>> subjects_by_id;
     map<set<int>,
-        tuple<int, multiset<int>, set<tuple<VariableWithCount, OperationMeta>>>>
+        tuple<int, multiset<int>, PatternSet>>
         patterns;
     set<int> anonymous_patterns;
 
@@ -73,10 +82,8 @@ public:
         return match(subjects, substitution);
     }
 
-    // def match(self, subjects: Sequence[Expression], substitution:
-    // Substitution) -> Iterator[Tuple[int, Substitution]]:
-    generator<tuple<int, Substitution>> match(Deque subjects,
-                                              Substitution substitution)
+    generator<tuple<int, Substitution>> match(const Deque &subjects,
+                                              const Substitution &substitution)
     {
         vector<tuple<int, Substitution>> result;
 
@@ -96,7 +103,7 @@ public:
                                    subject_pattern_ids.end());
             }
         }
-        for (RCP<const Basic> &subject : subjects) {
+        for (const RCP<const Basic> &subject : subjects) {
             tuple<int, set<int>> p = this->subjects[subject];
             subject_id = get<0>(p);
             subject_pattern_ids = get<1>(p);
@@ -106,11 +113,11 @@ public:
         }
         for (const pair<set<int>,
                         tuple<int, multiset<int>,
-                              set<tuple<VariableWithCount, OperationMeta>>>>
+                              PatternSet>>
                  &p : patterns) {
             int pattern_index = get<0>(p.second);
             multiset<int> pattern_set = get<1>(p.second);
-            set<tuple<VariableWithCount, OperationMeta>> pattern_vars
+            PatternSet pattern_vars
                 = get<2>(p.second);
             if (pattern_set.size() > 0) {
                 if (!includes(pattern_set.begin(), pattern_set.end(),
@@ -128,7 +135,7 @@ public:
                     set_difference(subject_ids.begin(), subject_ids.end(),
                                    matched_subjects.begin(),
                                    matched_subjects.end(), inserter(ids, ids.begin()));
-                    MultisetOfBasic remaining;
+                    multiset_basic remaining;
                     for (int id : ids) {
                         if (subjects_by_id.at(id)->__eq__(*None)) {
                             continue;
@@ -151,7 +158,7 @@ public:
                     }
                 }
             } else if (pattern_vars.size() > 0) {
-                MultisetOfBasic multiset_arg(subjects.begin(), subjects.end());
+                multiset_basic multiset_arg(subjects.begin(), subjects.end());
                 vector<Substitution> sequence_var_iter
                     = _match_sequence_variables(multiset_arg, pattern_vars,
                                                 substitution);
@@ -215,8 +222,8 @@ public:
     }
 
     vector<Substitution> _match_sequence_variables(
-        MultisetOfBasic subjects,
-        set<tuple<VariableWithCount, OperationMeta>> pattern_vars,
+        multiset_basic subjects,
+        PatternSet pattern_vars,
         Substitution substitution)
     {
         vector<Substitution> result;
@@ -231,7 +238,7 @@ public:
              commutative_sequence_variable_partition_iter(subjects,
                                                           only_counts)) {
             for (auto &var : wrapped_vars) {
-                MultisetOfBasic operands = variable_substitution[var];
+                multiset_basic operands = variable_substitution[var];
 
                 //				for (const pair<RCP<const Basic>, int> &pp :
                 //count_multiset(operands)) {

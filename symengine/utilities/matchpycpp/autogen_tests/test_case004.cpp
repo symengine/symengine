@@ -16,7 +16,11 @@
 #include <symengine/utilities/matchpycpp/common.h>
 #include <symengine/utilities/matchpycpp/many_to_one.h>
 #include <symengine/utilities/matchpycpp/substitution.h>
+#include <symengine/utilities/matchpycpp/utils.h>
 #include <tuple>
+
+RCP<const Basic> x = symbol("x");
+RCP<const Basic> y = symbol("y");
 
 class CommutativeMatcher2209 : public CommutativeMatcher
 {
@@ -27,14 +31,14 @@ public:
         patterns = {{{0}, {0, {0, 1}, {}}}};
         subjects = {};
         subjects_by_id = {};
-        // associative = Add;
+        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){ return add(x, y); };
         max_optional_count = 0;
         anonymous_patterns = {0, 1};
 
         add_subject(None);
     }
 
-    static CommutativeMatcher2209 *get()
+    static CommutativeMatcher2209 *getInstance()
     {
         return new CommutativeMatcher2209();
     }
@@ -46,7 +50,7 @@ public:
         subjects.push_front(subject);
         Substitution subst0;
         // State 2208
-        if (subjects.size() >= 1 && subjects[0]->__eq__(*x)) {
+        if (subjects.size() >= 1 && eq(*subjects[0], *x)) {
             RCP<const Basic> tmp1 = subjects.front();
             subjects.pop_front();
             // State 2210
@@ -56,7 +60,7 @@ public:
             }
             subjects.push_front(tmp1);
         }
-        if (subjects.size() >= 1 && subjects[0]->__eq__(*y)) {
+        if (subjects.size() >= 1 && eq(*subjects[0], *y)) {
             RCP<const Basic> tmp2 = subjects.front();
             subjects.pop_front();
             // State 2211
@@ -83,7 +87,7 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
         RCP<const Basic> associative1 = tmp1;
         string associative_type1 = tmp1->__str__();
         Deque subjects2 = get_deque(tmp1);
-        CommutativeMatcher2209 *matcher = CommutativeMatcher2209::get();
+        CommutativeMatcher2209 *matcher = CommutativeMatcher2209::getInstance();
         Deque tmp3 = subjects2;
         subjects2 = {};
         for (RCP<const Basic> &s : tmp3) {
@@ -108,11 +112,11 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
         subjects.pop_front();
         Deque subjects5 = get_deque(tmp4);
         // State 2213
-        if (subjects5.size() >= 1 && subjects5[0]->__eq__(*x)) {
+        if (subjects5.size() >= 1 && eq(*subjects5[0], *x)) {
             RCP<const Basic> tmp6 = subjects5.front();
             subjects5.pop_front();
             // State 2214
-            if (subjects5.size() >= 1 && subjects5[0]->__eq__(*integer(2))) {
+            if (subjects5.size() >= 1 && eq(*subjects5[0], *integer(2))) {
                 RCP<const Basic> tmp7 = subjects5.front();
                 subjects5.pop_front();
                 // State 2215
@@ -132,22 +136,22 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
     return result;
 }
 
-TEST_CASE("GeneratedMatchPyTest3", "")
+TEST_CASE("GeneratedMatchPyTest4", "")
 {
     generator<tuple<int, Substitution>> ret;
     Substitution substitution;
 
     // Pattern x + y matching x + y with substitution {}:
     ret = match_root(add(x, y));
-    substitution = get<1>(ret[0]);
     REQUIRE(ret.size() > 0);
     REQUIRE(get<0>(ret[0]) == 0);
+    substitution = get<1>(ret[0]);
 
     // Pattern x**2 matching x**2 with substitution {}:
     ret = match_root(pow(x, integer(2)));
-    substitution = get<1>(ret[0]);
     REQUIRE(ret.size() > 0);
     REQUIRE(get<0>(ret[0]) == 1);
+    substitution = get<1>(ret[0]);
 
     // Pattern x**3 not matching:
     ret = match_root(pow(x, integer(3)));

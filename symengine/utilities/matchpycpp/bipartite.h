@@ -4,17 +4,9 @@
 #include <deque>
 #include <map>
 #include <set>
-#include <variant>
-#include <any>
-
-#include <symengine/basic.h>
-#include <symengine/pow.h>
-#include <symengine/add.h>
 
 #include <symengine/utilities/matchpycpp/hopcroft_karp.h>
-
-#include "common.h"
-#include "generator_trick.h"
+#include <symengine/utilities/matchpycpp/common.h>
 
 using namespace std;
 

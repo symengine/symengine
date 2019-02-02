@@ -1,7 +1,8 @@
 from sympy.printing.pycode import PythonCodePrinter
+from sympy.printing import StrPrinter
 
 
-class SymEnginePrinter(PythonCodePrinter):
+class SymEnginePrinter(StrPrinter):
 
     def _print_Pow(self, expr):
         return "pow({0}, {1})".format(self._print(expr.base), self._print(expr.exp))
@@ -16,6 +17,9 @@ class SymEnginePrinter(PythonCodePrinter):
 
     def _print_Integer(self, expr):
         return "integer({})".format(expr)
+
+    def _print_int(self, expr):
+        return self._print_Integer(expr)
 
 
 def symengine_print(expr):

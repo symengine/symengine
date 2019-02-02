@@ -35,7 +35,7 @@ typedef vector<Substitution> TEdgeValue;
 
 typedef deque<RCP<const Basic>> Deque;
 
-Deque get_deque(RCP<const Basic> expr)
+Deque get_deque(RCP<const Basic> &expr)
 {
     Deque d;
     for (RCP<const Basic> i : expr->get_args()) {
@@ -43,10 +43,5 @@ Deque get_deque(RCP<const Basic> expr)
     }
     return d;
 }
-
-RCP<const Basic> x = symbol("x");
-RCP<const Basic> y = symbol("y");
-RCP<const Basic> z = symbol("z");
-// RCP<const Basic> w = symbol("w");
 
 #endif /* SYMENGINE_UTILITIES_MATCHPYCPP_COMMON_H_ */

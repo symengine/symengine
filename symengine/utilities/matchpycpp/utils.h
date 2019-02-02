@@ -54,8 +54,14 @@ class VariableWithCount
 public:
     VariableWithCount(RCP<const Basic> name, int count, int minimum,
                       RCP<const Basic> defaultv)
-        : name(name), count(count), minimum(minimum), defaultv(defaultv)
+            : name(name), count(count), minimum(minimum), defaultv(defaultv)
     {
+    }
+    VariableWithCount(string name, int count, int minimum,
+                      RCP<const Basic> defaultv)
+            : count(count), minimum(minimum), defaultv(defaultv)
+    {
+        this->name = symbol(name);
     }
     RCP<const Basic> name;
     int count;
@@ -64,7 +70,7 @@ public:
 };
 
 generator<Substitution>
-_commutative_single_variable_partiton_iter(MultisetOfBasic values,
+_commutative_single_variable_partiton_iter(multiset_basic values,
                                            VariableWithCount variable)
 {
     string name = variable.name->__str__();
@@ -85,7 +91,7 @@ _commutative_single_variable_partiton_iter(MultisetOfBasic values,
             }
         }
     } else {
-        MultisetOfBasic new_values;
+        multiset_basic new_values;
         for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
             RCP<const Basic> element = p.first;
             int element_count = p.second;
@@ -140,7 +146,7 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
 }
 
 generator<Substitution> commutative_sequence_variable_partition_iter(
-    MultisetOfBasic values, vector<VariableWithCount> variables)
+    multiset_basic values, vector<VariableWithCount> variables)
 {
     generator<Substitution> result;
     return result;

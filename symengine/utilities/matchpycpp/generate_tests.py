@@ -22,6 +22,7 @@ collection_of_expressions = [
         ([x**y, w], {x**y: (0, {}), x: (1, {w: x}), x+y: (1, {w: x+y})}),
         ([x+y, x**2], {y+x: (0, {}), x**2: (1, {}), x**3: None}),
         ([x**w,], {y+x: None, x**2: (0, {}), x**3: (0, {})}),
+        ([x**(x+w), x+y+w, w**(1-x*w)], {y+x: (1, {w: 0}), x**2: None, x**(y+x): (0, {w: y}), x**(2+x): (0, {w: 2})})
 ]
 
 def generate_matchpy_matcher(pattern_list):
@@ -31,8 +32,18 @@ def generate_matchpy_matcher(pattern_list):
     return matcher
 
 
-def generate_cpp_code(matcher):
+def get_symbol_list(pattern_list, test_cases):
+    symbols = set()
+    for p in pattern_list:
+        symbols.update(p.free_symbols)
+    for k, v in test_cases.items():
+        symbols.update(k.free_symbols)
+    return symbols
+
+def generate_cpp_code(matcher, symbol_list):
     cg = CppCodeGenerator(matcher)
+    for i in symbol_list:
+        cg.add_global_symbol(i)
     a, b = cg.generate_code()
     return a, b
 
@@ -43,8 +54,7 @@ def generate_python_code(matcher):
     return a, b
 
 
-def export_code_to_file(filename, a, b, test_number):
-    patterns = collection_of_expressions[test_number][0]
+def export_code_to_file(filename, a, b, patterns):
     patterns = [str(i) for i in patterns]
     fout = open(os.path.join(GENERATED_TEST_DIR, filename), "w")
     fout.write("""\
@@ -67,7 +77,7 @@ TEST_CASE("GeneratedMatchPyTest{0}", "")
 {{
     generator<tuple<int, Substitution>> ret;
     Substitution substitution;
-""".format(test_number))
+""".format(test_number+1))
     pattern_list = collection_of_expressions[test_number][0]
     for test_case, result in test_cases.items():
         fout.write("\n")
@@ -76,15 +86,19 @@ TEST_CASE("GeneratedMatchPyTest{0}", "")
             substitution_pretty = {symengine_print(k): str(v) for k, v in substitution.items()}
             fout.write("    // Pattern {0} matching {1} with substitution {2}:\n".format(pattern_list[pattern_id], test_case, substitution_pretty))
             fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
-            fout.write("    substitution = get<1>(ret[0]);\n")
             fout.write("    REQUIRE(ret.size() > 0);\n")
             fout.write("    REQUIRE(get<0>(ret[0]) == {0});\n".format(pattern_id))
+            fout.write("    substitution = get<1>(ret[0]);\n")
             for key, value in substitution.items():
                 wildcard = symengine_print(key)
                 matched = symengine_print(value)
+                if isinstance(matched, (int, float)):
+                    matched = S(matched)
+                if isinstance(matched, Basic):
+                    matched = symengine_print(matched)
                 #import pdb; pdb.set_trace()
                 fout.write('    REQUIRE(substitution.find("{0}") != substitution.end());\n'.format(wildcard, matched))
-                fout.write('    REQUIRE((*substitution.at("{0}").begin())->__eq__(*{1}));\n'.format(wildcard, matched))
+                fout.write('    REQUIRE(eq(*(*substitution.at("{0}").begin()), *{1}));\n'.format(wildcard, matched))
         else:
             fout.write("    // Pattern {0} not matching:\n".format(test_case))
             fout.write("    ret = match_root({0});\n".format(symengine_print(test_case)))
@@ -106,10 +120,11 @@ include_directories(BEFORE ${catch_SOURCE_DIR})
 """)
     for i, (pattern_list, test_cases) in enumerate(collection_of_expressions):
         matcher = generate_matchpy_matcher(pattern_list)
-        a, b = generate_cpp_code(matcher)
+        symbol_list = get_symbol_list(pattern_list, test_cases)
+        a, b = generate_cpp_code(matcher, symbol_list)
         filename = "test_case{0:03}".format(i+1)
         filenamecpp = "{}.cpp".format(filename)
-        fwrite = export_code_to_file(filenamecpp, a, b, i)
+        fwrite = export_code_to_file(filenamecpp, a, b, pattern_list)
         add_main_with_tests(fwrite, test_cases, i)
         fwrite.close()
         fout.write("\n")

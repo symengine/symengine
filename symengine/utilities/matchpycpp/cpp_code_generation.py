@@ -36,6 +36,7 @@ class CppCodeGenerator:
         self._associative_stack = [None]
         self._global_code = []
         self._imports = set()
+        self._global_symbols = set()
 
     def indent(self, bracket=True):
         if bracket:
@@ -50,6 +51,9 @@ class CppCodeGenerator:
     def add_line(self, line):
         self._code += (self._indentation * self._level) + str(line) + '\n'
 
+    def add_global_symbol(self, symbol):
+        self._global_symbols.add('RCP<const Basic> {0} = symbol("{0}");'.format(str(symbol)))
+
     def get_var_name(self, prefix):
         self._var_number += 1
         return prefix + str(self._var_number)
@@ -57,7 +61,7 @@ class CppCodeGenerator:
     def prepend_code(self):
         code = """
 """
-    def generate_code(self, func_name='match_root', add_imports=True):
+    def generate_code(self, func_name='match_root', add_imports=True, add_global_symbols=True):
         self._imports.add('#include <deque>')
         self._imports.add('#include <iostream>')
         self._imports.add('#include <tuple>')
@@ -82,6 +86,11 @@ class CppCodeGenerator:
         self.add_line('return result;')
         self.dedent()
 
+        if add_global_symbols:
+            for (pattern1, pattern2, _) in self._matcher.patterns:
+                for symbol in pattern1.expression.free_symbols:
+                    self.add_global_symbol(symbol)
+            self._global_code.insert(0, '\n'.join(sorted(self._global_symbols)))
         if add_imports:
             self._global_code.insert(0, '\n'.join(sorted(self._imports)))
 
@@ -96,7 +105,6 @@ class CppCodeGenerator:
         if isinstance(expr, Multiset):
             return "{%s}" % (", ".join([self.format_to_initializer_list(i) for i in list(expr)]))
             m = []
-            import pdb; pdb.set_trace()
             for i, j in expr:
                 for k in range(j):
                     m.append(i)
@@ -112,14 +120,15 @@ class CppCodeGenerator:
             self._imports.add('#include <symengine/utilities/matchpycpp/bipartite.h>')
             self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
             self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
+            self._imports.add('#include <symengine/utilities/matchpycpp/utils.h>')
             generator = type(self)(state.matcher.automaton)
             generator.indent(bracket=False)
-            global_code, code = generator.generate_code(func_name='get_match_iter', add_imports=False)
+            global_code, code = generator.generate_code(func_name='get_match_iter', add_imports=False, add_global_symbols=False)
             self._global_code.append(global_code)
             patterns = self.commutative_patterns(state.matcher.patterns)
             subjects = repr(state.matcher.subjects)
             subjects_by_id = repr(state.matcher.subjects_by_id)
-            associative = self.operation_symbol(state.matcher.associative)
+            associative = self.operation_symbol_lowercase(state.matcher.associative)
             max_optional_count = repr(state.matcher.max_optional_count)
             anonymous_patterns = repr(state.matcher.anonymous_patterns)
             self._global_code.append(
@@ -133,14 +142,14 @@ public:
 {8}{8}patterns = {1};
 {8}{8}subjects = {2};
 {8}{8}subjects_by_id = {7};
-{8}{8}// associative = {3};
+{8}{8}associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){{ return {3}(x, y); }};
 {8}{8}max_optional_count = {4};
 {8}{8}anonymous_patterns = {5};
 
 {8}{8}add_subject(None);
 {8}}}
 
-{8}static CommutativeMatcher{0} *get()
+{8}static CommutativeMatcher{0} *getInstance()
 {8}{{
 {8}{8}return new CommutativeMatcher{0}();
 {8}}}
@@ -152,7 +161,7 @@ public:
                     subjects_by_id, self._indentation
                 )
             )
-            self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::get();'.format(state.number))
+            self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::getInstance();'.format(state.number))
             tmp = self.get_var_name('tmp')
             #self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
             self.add_line('Deque {} = {};'.format(tmp, self._subjects[-1]))
@@ -207,9 +216,9 @@ public:
                         self.generate_transition_code(transition)
 
     def commutative_var_entry(self, entry):
-        return '(VariableWithCount({!r}, {}, {}, {}), {})'.format(
+        return '{{VariableWithCount("{}", {}, {}, {}), {}}}'.format(
             entry[0][0], entry[0][1], entry[0][2],
-            self.expr(entry[0][3]), self.operation_symbol(entry[1]) if isinstance(entry[1], type) else repr(entry[1])
+            self.expr(entry[0][3]), self.operation_symbol_enum(entry[1]) if isinstance(entry[1], type) else repr(entry[1])
         )
 
     def commutative_patterns(self, patterns):
@@ -298,6 +307,17 @@ public:
         self.push_subjects(tmp, operation)
         return tmp
 
+    def operation_symbol_enum(self, operation):
+        SYMENGINE_TYPES = dict(
+            Pow="POW",
+            Add="ADD",
+            Mul="MUL",
+        )
+        return SYMENGINE_TYPES[operation.__name__]
+
+    def operation_symbol_lowercase(self, operation):
+        return (operation.__name__).lower()
+
     def operation_symbol(self, operation):
         if operation is None:
             return 'None'
@@ -375,7 +395,7 @@ public:
         self.exit_variable_assignment()
 
     def enter_symbol(self, symbol):
-        self.add_line('if ({0}.size() >= 1 && {0}[0]->__eq__(*{1})) {{'.format(self._subjects[-1], self.symbol_repr(symbol)))
+        self.add_line('if ({0}.size() >= 1 && eq(*{0}[0], *{1})) {{'.format(self._subjects[-1], self.symbol_repr(symbol)))
         self.indent(bracket=False)
         tmp = self.get_var_name('tmp')
         self.add_line('RCP<const Basic> {} = {}.front();'.format(tmp, self._subjects[-1]))
@@ -383,6 +403,7 @@ public:
         return tmp
 
     def symbol_repr(self, symbol):
+        symbol = sympy.S(symbol)
         return symengine_print(symbol)
 
     def exit_symbol(self, value):
