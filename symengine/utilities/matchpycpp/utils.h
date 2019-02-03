@@ -52,20 +52,20 @@ vector<vector<T>> itertools_product(const vector<vector<T>> &v)
 class VariableWithCount
 {
 public:
-    VariableWithCount(RCP<const Basic> name, int count, int minimum,
+    VariableWithCount(RCP<const Basic> name, unsigned count, unsigned minimum,
                       RCP<const Basic> defaultv)
             : name(name), count(count), minimum(minimum), defaultv(defaultv)
     {
     }
-    VariableWithCount(string name, int count, int minimum,
+    VariableWithCount(string name, unsigned count, unsigned minimum,
                       RCP<const Basic> defaultv)
             : count(count), minimum(minimum), defaultv(defaultv)
     {
         this->name = symbol(name);
     }
     RCP<const Basic> name;
-    int count;
-    int minimum;
+    unsigned count;
+    unsigned minimum;
     RCP<const Basic> defaultv;
 };
 
@@ -74,8 +74,8 @@ _commutative_single_variable_partiton_iter(multiset_basic values,
                                            VariableWithCount variable)
 {
     string name = variable.name->__str__();
-    int count = variable.count;
-    int minimum = variable.minimum;
+    unsigned count = variable.count;
+    unsigned minimum = variable.minimum;
     RCP<const Basic> defaultv = variable.defaultv;
 
     generator<Substitution> result;
