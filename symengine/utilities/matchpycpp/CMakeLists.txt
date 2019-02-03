@@ -17,7 +17,4 @@ set(HEADER
     util.h
 )
 
-add_subdirectory(tests)
-add_subdirectory(autogen_tests)
-
 include_directories(BEFORE ${matchpycpp_BINARY_DIR})

@@ -6,10 +6,6 @@ if (WITH_SYMENGINE_TEUCHOS)
     include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
-if (WITH_SYMENGINE_MATCHPYCPP)
-    add_subdirectory(utilities/matchpycpp)
-endif()
-
 if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT parser/parser.cpp
                       COMMAND ${BISONCPP_EXECUTABLE} parser.yy
@@ -23,6 +19,8 @@ if (WITH_GENERATE_PARSER)
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
                      )
 endif()
+
+add_subdirectory(utilities/matchpycpp)
 
 set(SRC
     add.cpp
@@ -265,4 +263,6 @@ INSTALL_HEADERS_WITH_DIRECTORY(HEADERS)
 if (BUILD_TESTS)
     add_subdirectory(utilities/catch)
     add_subdirectory(tests)
+    add_subdirectory(utilities/matchpycpp/tests)
+    add_subdirectory(utilities/matchpycpp/autogen_tests)
 endif()
