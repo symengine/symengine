@@ -5,6 +5,7 @@
 #include "utils.h"
 
 #include <map>
+#include <list>
 
 typedef int OperationMeta;
 

@@ -22,18 +22,7 @@ int try_add_variable(Substitution &subst, const string variable_name,
         subst[variable_name] = replacement;
     } else {
         const multiset_basic &existing_value = subst.at(variable_name);
-        if (existing_value.size() != replacement.size()) {
-            return 1;
-        }
-        multiset_basic::iterator it1 = existing_value.begin();
-        multiset_basic::iterator it2 = replacement.begin();
-        for (size_t i = 0; i < existing_value.size(); i++) {
-            if ((*it1) != (*it2)) {
-                return 1;
-            }
-            it1++;
-            it2++;
-        }
+        return unified_eq(existing_value, replacement);
     }
     return 0;
 }

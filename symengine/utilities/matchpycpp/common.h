@@ -35,12 +35,10 @@ typedef vector<Substitution> TEdgeValue;
 
 typedef deque<RCP<const Basic>> Deque;
 
-Deque get_deque(RCP<const Basic> &expr)
+Deque get_deque(const RCP<const Basic> &expr)
 {
-    Deque d;
-    for (RCP<const Basic> i : expr->get_args()) {
-        d.push_back(i);
-    }
+    vec_basic v = expr->get_args();
+    Deque d(v.begin(), v.end());
     return d;
 }
 
