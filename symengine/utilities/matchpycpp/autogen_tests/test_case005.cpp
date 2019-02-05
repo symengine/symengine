@@ -19,12 +19,13 @@ RCP<const Basic> w_ = symbol("w_");
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");
 
-generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
+generator<tuple<int, SubstitutionMultiset>>
+match_root(const RCP<const Basic> &subject)
 {
-    generator<tuple<int, Substitution>> result;
+    generator<tuple<int, SubstitutionMultiset>> result;
     Deque subjects;
     subjects.push_front(subject);
-    Substitution subst0;
+    SubstitutionMultiset subst0;
     // State 2217
     if (subjects.size() >= 1 && is_a<Pow>(*subjects[0])) {
         RCP<const Basic> tmp1 = subjects.front();
@@ -38,13 +39,13 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
             if (subjects2.size() >= 1) {
                 RCP<const Basic> tmp4 = subjects2.front();
                 subjects2.pop_front();
-                Substitution subst1 = Substitution(subst0);
+                SubstitutionMultiset subst1 = SubstitutionMultiset(subst0);
                 if (!try_add_variable(subst1, "i2", tmp4)) {
                     // State 2220
                     if (subjects2.size() == 0) {
                         // State 2221
                         if (subjects.size() == 0) {
-                            Substitution tmp_subst;
+                            SubstitutionMultiset tmp_subst;
                             tmp_subst["w"] = subst1["i2"];
                             // 0: x**w
                             result.push_back(make_tuple(0, tmp_subst));
@@ -62,8 +63,8 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
 
 TEST_CASE("GeneratedMatchPyTest5", "")
 {
-    generator<tuple<int, Substitution>> ret;
-    Substitution substitution;
+    generator<tuple<int, SubstitutionMultiset>> ret;
+    SubstitutionMultiset substitution;
 
     // Pattern x + y not matching:
     ret = match_root(add(x, y));

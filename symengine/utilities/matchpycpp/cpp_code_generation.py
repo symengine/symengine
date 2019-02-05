@@ -76,12 +76,16 @@ class CppCodeGenerator:
         self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
         self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
 
-        self.add_line('generator<tuple<int, Substitution>> {}(RCP<const Basic> subject)'.format(func_name))
+        if func_name == 'match_root':
+            self.add_line('generator<tuple<int, SubstitutionMultiset>>')
+            self.add_line('{}(const RCP<const Basic> &subject)'.format(func_name))
+        else:
+            self.add_line('generator<tuple<int, SubstitutionMultiset>> {}(const RCP<const Basic> &subject)'.format(func_name))
         self.indent()
-        self.add_line('generator<tuple<int, Substitution>> result;')
+        self.add_line('generator<tuple<int, SubstitutionMultiset>> result;')
         self.add_line('Deque {};'.format(self._subjects[-1]))
         self.add_line('{}.push_front(subject);'.format(self._subjects[-1]))
-        self.add_line('Substitution subst{};'.format(self._substs))
+        self.add_line('SubstitutionMultiset subst{};'.format(self._substs))
         self.generate_self(self._matcher.root)
         self.add_line('return result;')
         self.dedent()
@@ -149,11 +153,6 @@ public:
 {8}{8}add_subject(None);
 {8}}}
 
-{8}static CommutativeMatcher{0} *getInstance()
-{8}{{
-{8}{8}return new CommutativeMatcher{0}();
-{8}}}
-
 {6}}};
 
 '''.strip().format(
@@ -161,23 +160,23 @@ public:
                     subjects_by_id, self._indentation
                 )
             )
-            self.add_line('CommutativeMatcher{0} *matcher = CommutativeMatcher{0}::getInstance();'.format(state.number))
+            self.add_line('CommutativeMatcher{0} matcher;'.format(state.number))
             tmp = self.get_var_name('tmp')
             #self.add_line('RCP<const Basic> {} = {};'.format(tmp, self._subjects[-1]))
             self.add_line('Deque {} = {};'.format(tmp, self._subjects[-1]))
             self.add_line('{} = {{}};'.format(self._subjects[-1]))
             self.add_line('for (RCP<const Basic> &s : {}) {{'.format(tmp))
             self.indent(bracket=False)
-            self.add_line('matcher->add_subject(s);')
+            self.add_line('matcher.add_subject(s);')
             subjects = self._subjects.pop()
             self.dedent()
             self.add_line(
-                'for (tuple<int, Substitution> &p : matcher->match({}, subst{})) {{'.format(tmp, self._substs)
+                'for (tuple<int, SubstitutionMultiset> &p : matcher.match({}, subst{})) {{'.format(tmp, self._substs)
             )
             self._substs += 1
             self.indent(bracket=False)
             self.add_line("int pattern_index = get<0>(p);")
-            self.add_line("Substitution subst{} = get<1>(p);".format(self._substs))
+            self.add_line("SubstitutionMultiset subst{} = get<1>(p);".format(self._substs))
             for pattern_index, transitions in state.transitions.items():
                 self.add_line('if (pattern_index == {}) {{'.format(pattern_index))
                 self.indent(bracket=False)
@@ -193,7 +192,6 @@ public:
                 self.generate_constraints(constraints, transitions)
                 self.dedent()
             self.dedent()
-            self.add_line("delete matcher;")
             self._substs -= 1
             self._subjects.append(subjects)
         else:
@@ -279,7 +277,7 @@ public:
 
     def push_subst(self):
         new_subst = self.get_var_name('subst')
-        self.add_line('Substitution subst{} = Substitution(subst{});'.format(self._substs + 1, self._substs))
+        self.add_line('SubstitutionMultiset subst{} = SubstitutionMultiset(subst{});'.format(self._substs + 1, self._substs))
         self._substs += 1
 
     def enter_eps(self, _):
@@ -481,7 +479,7 @@ public:
         renaming = self._matcher.pattern_vars[pattern_index]
         subst_name = 'subst{}'.format(self._substs)
         if any(k != v for k, v in renaming.items()):
-            self.add_line('Substitution tmp_subst;')
+            self.add_line('SubstitutionMultiset tmp_subst;')
             for original, renamed in renaming.items():
                 self.add_line('tmp_subst["{}"] = subst{}["{}"];'.format(original, self._substs, renamed))
             subst_name = 'tmp_subst'

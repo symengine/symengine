@@ -30,8 +30,7 @@ using generator = vector<T>;
 const int LEFT = 0;
 const int RIGHT = 1;
 
-typedef vector<Substitution> TEdgeValue;
-
+typedef vector<SubstitutionMultiset> TEdgeValue;
 
 typedef deque<RCP<const Basic>> Deque;
 

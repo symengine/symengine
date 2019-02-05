@@ -38,17 +38,12 @@ public:
         add_subject(None);
     }
 
-    static CommutativeMatcher2209 *getInstance()
+    generator<tuple<int, SubstitutionMultiset>> get_match_iter(const RCP<const Basic> &subject)
     {
-        return new CommutativeMatcher2209();
-    }
-
-    generator<tuple<int, Substitution>> get_match_iter(RCP<const Basic> subject)
-    {
-        generator<tuple<int, Substitution>> result;
+        generator<tuple<int, SubstitutionMultiset>> result;
         Deque subjects;
         subjects.push_front(subject);
-        Substitution subst0;
+        SubstitutionMultiset subst0;
         // State 2208
         if (subjects.size() >= 1 && eq(*subjects[0], *x)) {
             RCP<const Basic> tmp1 = subjects.front();
@@ -74,12 +69,13 @@ public:
     }
 };
 
-generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
+generator<tuple<int, SubstitutionMultiset>>
+match_root(const RCP<const Basic> &subject)
 {
-    generator<tuple<int, Substitution>> result;
+    generator<tuple<int, SubstitutionMultiset>> result;
     Deque subjects;
     subjects.push_front(subject);
-    Substitution subst0;
+    SubstitutionMultiset subst0;
     // State 2207
     if (subjects.size() >= 1 && is_a<Add>(*subjects[0])) {
         RCP<const Basic> tmp1 = subjects.front();
@@ -87,15 +83,15 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
         RCP<const Basic> associative1 = tmp1;
         string associative_type1 = tmp1->__str__();
         Deque subjects2 = get_deque(tmp1);
-        CommutativeMatcher2209 *matcher = CommutativeMatcher2209::getInstance();
+        CommutativeMatcher2209 matcher;
         Deque tmp3 = subjects2;
         subjects2 = {};
         for (RCP<const Basic> &s : tmp3) {
-            matcher->add_subject(s);
+            matcher.add_subject(s);
         }
-        for (tuple<int, Substitution> &p : matcher->match(tmp3, subst0)) {
+        for (tuple<int, SubstitutionMultiset> &p : matcher.match(tmp3, subst0)) {
             int pattern_index = get<0>(p);
-            Substitution subst1 = get<1>(p);
+            SubstitutionMultiset subst1 = get<1>(p);
             if (pattern_index == 0) {
                 // State 2212
                 if (subjects.size() == 0) {
@@ -104,7 +100,6 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
                 }
             }
         }
-        delete matcher;
         subjects.push_front(tmp1);
     }
     if (subjects.size() >= 1 && is_a<Pow>(*subjects[0])) {
@@ -138,8 +133,8 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
 
 TEST_CASE("GeneratedMatchPyTest4", "")
 {
-    generator<tuple<int, Substitution>> ret;
-    Substitution substitution;
+    generator<tuple<int, SubstitutionMultiset>> ret;
+    SubstitutionMultiset substitution;
 
     // Pattern x + y matching x + y with substitution {}:
     ret = match_root(add(x, y));

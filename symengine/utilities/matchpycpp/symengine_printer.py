@@ -1,5 +1,6 @@
 from sympy.printing.pycode import PythonCodePrinter
 from sympy.printing import StrPrinter
+from sympy import Add
 
 
 class SymEnginePrinter(StrPrinter):
@@ -9,7 +10,7 @@ class SymEnginePrinter(StrPrinter):
 
     def _print_Add(self, expr):
         if len(expr.args) != 2:
-            raise NotImplementedError
+            return "add({}, {})".format(expr.args[0], self._print(Add.fromiter(expr.args[1:])))
         return "add({}, {})".format(
             self._print(expr.args[0]),
             self._print(expr.args[1]),

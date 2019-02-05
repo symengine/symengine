@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 /*
  * A bipartite graph representation.
  *
@@ -255,7 +254,6 @@ public:
     }
 };
 
-
 /*
  * Algorithm described in "Algorithms for Enumerating All Perfect, Maximum and
  * Maximal Matchings in Bipartite Graphs"
@@ -351,8 +349,7 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
             }
         }
         directed_match_graph_plus
-            = _DirectedMatchGraph<TLeft, TRight>(graph_plus,
-                                                             matching);
+            = _DirectedMatchGraph<TLeft, TRight>(graph_plus, matching);
         g = _enum_maximum_matchings_iter(graph_plus, matching,
                                          directed_match_graph_plus);
 
@@ -416,10 +413,8 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
         graph_plus = graph.without_nodes(edge);
         graph_minus = graph.without_edge(edge);
 
-        dgm_plus = _DirectedMatchGraph<TLeft, TRight>(graph_plus,
-                                                                  new_match);
-        dgm_minus = _DirectedMatchGraph<TLeft, TRight>(graph_minus,
-                                                                   matching);
+        dgm_plus = _DirectedMatchGraph<TLeft, TRight>(graph_plus, new_match);
+        dgm_minus = _DirectedMatchGraph<TLeft, TRight>(graph_minus, matching);
 
         // Step 9
         generator<map<TLeft, TRight>> g

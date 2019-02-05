@@ -12,10 +12,9 @@
 using namespace std;
 using namespace SymEngine;
 
+typedef map<string, multiset_basic> SubstitutionMultiset;
 
-typedef map<string, multiset_basic> Substitution;
-
-int try_add_variable(Substitution &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
                      const multiset_basic &replacement)
 {
     if (subst.find(variable_name) == subst.end()) {
@@ -27,7 +26,7 @@ int try_add_variable(Substitution &subst, const string variable_name,
     return 0;
 }
 
-int try_add_variable(Substitution &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
                      const vector<RCP<const Basic>> &replacement)
 {
     multiset_basic new_repl;
@@ -35,21 +34,21 @@ int try_add_variable(Substitution &subst, const string variable_name,
     return try_add_variable(subst, variable_name, new_repl);
 }
 
-int try_add_variable(Substitution &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
                      const RCP<const Basic> &replacement)
 {
     multiset_basic new_repl = {replacement};
     return try_add_variable(subst, variable_name, new_repl);
 }
 
-Substitution substitution_union(Substitution subst,
-                                const vector<Substitution> &others)
+SubstitutionMultiset
+substitution_union(const SubstitutionMultiset &subst,
+                   const vector<SubstitutionMultiset> &others)
 {
-    Substitution new_subst; //(*this);
-
-    for (const Substitution &other : others) {
+    SubstitutionMultiset new_subst = subst;
+    for (const SubstitutionMultiset &other : others) {
         for (const pair<string, multiset_basic> &p : other) {
-            int ret = try_add_variable(subst, p.first, p.second);
+            int ret = try_add_variable(new_subst, p.first, p.second);
             assert(ret == 0);
         }
     }

@@ -17,7 +17,11 @@ map<T, int, Comparison> count_multiset(multiset<T, Comparison> m)
 {
     map<T, int, Comparison> result;
     for (const T &elem : m) {
-        result[elem]++;
+        if (result.find(elem) == result.end()) {
+            result[elem] = 1;
+        } else {
+            result[elem]++;
+        }
     }
     return result;
 }
@@ -54,12 +58,12 @@ class VariableWithCount
 public:
     VariableWithCount(RCP<const Basic> name, unsigned count, unsigned minimum,
                       RCP<const Basic> defaultv)
-            : name(name), count(count), minimum(minimum), defaultv(defaultv)
+        : name(name), count(count), minimum(minimum), defaultv(defaultv)
     {
     }
     VariableWithCount(string name, unsigned count, unsigned minimum,
                       RCP<const Basic> defaultv)
-            : count(count), minimum(minimum), defaultv(defaultv)
+        : count(count), minimum(minimum), defaultv(defaultv)
     {
         this->name = symbol(name);
     }
@@ -69,7 +73,7 @@ public:
     RCP<const Basic> defaultv;
 };
 
-generator<Substitution>
+generator<SubstitutionMultiset>
 _commutative_single_variable_partiton_iter(multiset_basic values,
                                            VariableWithCount variable)
 {
@@ -78,16 +82,16 @@ _commutative_single_variable_partiton_iter(multiset_basic values,
     unsigned minimum = variable.minimum;
     RCP<const Basic> defaultv = variable.defaultv;
 
-    generator<Substitution> result;
+    generator<SubstitutionMultiset> result;
 
     if (values.size() == 0 && defaultv != None) {
-        result.push_back(Substitution{{name, {defaultv}}});
+        result.push_back(SubstitutionMultiset{{name, {defaultv}}});
         return result;
     }
     if (count == 1) {
         if (values.size() >= minimum) {
             if (name != "None") {
-                result.push_back(Substitution{{name, {values}}});
+                result.push_back(SubstitutionMultiset{{name, {values}}});
             }
         }
     } else {
@@ -96,7 +100,7 @@ _commutative_single_variable_partiton_iter(multiset_basic values,
             RCP<const Basic> element = p.first;
             int element_count = p.second;
             if (element_count % count != 0) {
-                return generator<Substitution>();
+                return generator<SubstitutionMultiset>();
             }
             for (int i = 0; i < element_count; i++) {
                 new_values.insert(element); // TODO: make this more efficient
@@ -104,14 +108,14 @@ _commutative_single_variable_partiton_iter(multiset_basic values,
         }
         if (new_values.size() >= minimum) {
             if (name != "None") {
-                result.push_back(Substitution{{name, {new_values}}});
+                result.push_back(SubstitutionMultiset{{name, {new_values}}});
             }
         }
     }
     return result;
 }
 
-function<void(Substitution)>
+function<void(SubstitutionMultiset)>
 _make_variable_generator_factory(RCP<const Basic> value, int total,
                                  vector<VariableWithCount> variables)
 {
@@ -123,11 +127,11 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
     // cache_key.push_back(total);
     // cache_key.insert(var_counts.begin(), var_counts.end());
 
-    auto _factory = [&](Substitution subst) {
+    auto _factory = [&](SubstitutionMultiset subst) {
         // if cache_key in _linear_diop_solution_cache:
         //    solutions = _linear_diop_solution_cache[cache_key]
         // else:
-        vector<Substitution> result;
+        vector<SubstitutionMultiset> result;
         // TODO: finish
         /*
             solutions = list(solve_linear_diop(total, *var_counts))
@@ -145,17 +149,16 @@ _make_variable_generator_factory(RCP<const Basic> value, int total,
     return _factory;
 }
 
-generator<Substitution> commutative_sequence_variable_partition_iter(
-    multiset_basic values, vector<VariableWithCount> variables)
+generator<SubstitutionMultiset> commutative_sequence_variable_partition_iter(
+    const multiset_basic &values, const vector<VariableWithCount> &variables)
 {
-    generator<Substitution> result;
-    return result;
+    generator<SubstitutionMultiset> result;
 
     if (variables.size() == 1) {
         return _commutative_single_variable_partiton_iter(values, variables[0]);
     }
 
-    vector<function<void(Substitution)>> generators;
+    vector<function<void(SubstitutionMultiset)>> generators;
     for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
         RCP<const Basic> value = p.first;
         int count = p.second;
@@ -164,7 +167,7 @@ generator<Substitution> commutative_sequence_variable_partition_iter(
     }
 
     map<string, multiset<int>> initial;
-    for (VariableWithCount &var : variables) {
+    for (const VariableWithCount &var : variables) {
         initial[var.name->__str__()] = multiset<int>();
     }
     bool valid;

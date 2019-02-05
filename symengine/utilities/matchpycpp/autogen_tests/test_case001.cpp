@@ -18,12 +18,13 @@
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");
 
-generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
+generator<tuple<int, SubstitutionMultiset>>
+match_root(const RCP<const Basic> &subject)
 {
-    generator<tuple<int, Substitution>> result;
+    generator<tuple<int, SubstitutionMultiset>> result;
     Deque subjects;
     subjects.push_front(subject);
-    Substitution subst0;
+    SubstitutionMultiset subst0;
     // State 2194
     if (subjects.size() >= 1 && eq(*subjects[0], *x)) {
         RCP<const Basic> tmp1 = subjects.front();
@@ -40,8 +41,8 @@ generator<tuple<int, Substitution>> match_root(RCP<const Basic> subject)
 
 TEST_CASE("GeneratedMatchPyTest1", "")
 {
-    generator<tuple<int, Substitution>> ret;
-    Substitution substitution;
+    generator<tuple<int, SubstitutionMultiset>> ret;
+    SubstitutionMultiset substitution;
 
     // Pattern x matching x with substitution {}:
     ret = match_root(x);
