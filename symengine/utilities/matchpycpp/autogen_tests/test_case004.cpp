@@ -2,6 +2,8 @@
  * This file was automatically generated: DO NOT EDIT.
  *
  * Decision tree matching expressions ['x + y', 'x**2']
+ *
+ * Wildcards: []
  */
 #include "catch.hpp"
 #include <deque>

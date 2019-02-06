@@ -2,6 +2,8 @@
  * This file was automatically generated: DO NOT EDIT.
  *
  * Decision tree matching expressions ['x**w']
+ *
+ * Wildcards: ['w']
  */
 #include "catch.hpp"
 #include <deque>
@@ -15,7 +17,6 @@
 #include <symengine/utilities/matchpycpp/substitution.h>
 #include <tuple>
 
-RCP<const Basic> w_ = symbol("w_");
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");
 

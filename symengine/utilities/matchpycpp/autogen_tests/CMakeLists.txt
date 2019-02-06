@@ -24,3 +24,7 @@ add_test(test_case005 test_case005)
 add_executable(test_case006 test_case006.cpp)
 target_link_libraries(test_case006 symengine catch)
 add_test(test_case006 test_case006)
+
+add_executable(test_case007 test_case007.cpp)
+target_link_libraries(test_case007 symengine catch)
+add_test(test_case007 test_case007)

@@ -93,6 +93,8 @@ class CppCodeGenerator:
         if add_global_symbols:
             for (pattern1, pattern2, _) in self._matcher.patterns:
                 for symbol in pattern1.expression.free_symbols:
+                    if isinstance(symbol, Wildcard):
+                        continue
                     self.add_global_symbol(symbol)
             self._global_code.insert(0, '\n'.join(sorted(self._global_symbols)))
         if add_imports:
@@ -214,9 +216,13 @@ public:
                         self.generate_transition_code(transition)
 
     def commutative_var_entry(self, entry):
+        if entry[0][3] == True and isinstance(entry[0][3], bool):
+            defaultv = symengine_print(entry[1].identity)
+        else:
+            defaultv = self.expr(entry[0][3])
         return '{{VariableWithCount("{}", {}, {}, {}), {}}}'.format(
             entry[0][0], entry[0][1], entry[0][2],
-            self.expr(entry[0][3]), self.operation_symbol_enum(entry[1]) if isinstance(entry[1], type) else repr(entry[1])
+            defaultv, self.operation_symbol_enum(entry[1]) if isinstance(entry[1], type) else repr(entry[1])
         )
 
     def commutative_patterns(self, patterns):
