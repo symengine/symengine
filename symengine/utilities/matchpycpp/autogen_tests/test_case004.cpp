@@ -1,7 +1,8 @@
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions ['x + y', 'x**2']
+ * Decision tree matching expressions
+ * ['x + y', 'x**2']
  *
  * Wildcards: []
  */
@@ -30,17 +31,21 @@ public:
     CommutativeMatcher2209()
     {
 
-        patterns = {{{0}, {0, {0, 1}, {}}}};
+        patterns = {
+            {{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {})}};
         subjects = {};
         subjects_by_id = {};
-        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){ return add(x, y); };
+        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
+            return add(x, y);
+        };
         max_optional_count = 0;
         anonymous_patterns = {0, 1};
 
         add_subject(None);
     }
 
-    generator<tuple<int, SubstitutionMultiset>> get_match_iter(const RCP<const Basic> &subject)
+    generator<tuple<int, SubstitutionMultiset>>
+    get_match_iter(const RCP<const Basic> &subject)
     {
         generator<tuple<int, SubstitutionMultiset>> result;
         Deque subjects;
@@ -91,7 +96,8 @@ match_root(const RCP<const Basic> &subject)
         for (RCP<const Basic> &s : tmp3) {
             matcher.add_subject(s);
         }
-        for (tuple<int, SubstitutionMultiset> &p : matcher.match(tmp3, subst0)) {
+        for (tuple<int, SubstitutionMultiset> &p :
+             matcher.match(tmp3, subst0)) {
             int pattern_index = get<0>(p);
             SubstitutionMultiset subst1 = get<1>(p);
             if (pattern_index == 0) {

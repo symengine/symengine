@@ -76,11 +76,9 @@ class CppCodeGenerator:
         self._imports.add('#include <symengine/utilities/matchpycpp/common.h>')
         self._imports.add('#include <symengine/utilities/matchpycpp/substitution.h>')
 
-        if func_name == 'match_root':
-            self.add_line('generator<tuple<int, SubstitutionMultiset>>')
-            self.add_line('{}(const RCP<const Basic> &subject)'.format(func_name))
-        else:
-            self.add_line('generator<tuple<int, SubstitutionMultiset>> {}(const RCP<const Basic> &subject)'.format(func_name))
+        self.add_line('generator<tuple<int, SubstitutionMultiset>>')
+        self.add_line('{}(const RCP<const Basic> &subject)'.format(func_name))
+
         self.indent()
         self.add_line('generator<tuple<int, SubstitutionMultiset>> result;')
         self.add_line('Deque {};'.format(self._subjects[-1]))
@@ -148,7 +146,9 @@ public:
 {8}{8}patterns = {1};
 {8}{8}subjects = {2};
 {8}{8}subjects_by_id = {7};
-{8}{8}associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){{ return {3}(x, y); }};
+{8}{8}associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {{
+{8}{8}{8}return {3}(x, y);
+{8}{8}}};
 {8}{8}max_optional_count = {4};
 {8}{8}anonymous_patterns = {5};
 
@@ -172,9 +172,8 @@ public:
             self.add_line('matcher.add_subject(s);')
             subjects = self._subjects.pop()
             self.dedent()
-            self.add_line(
-                'for (tuple<int, SubstitutionMultiset> &p : matcher.match({}, subst{})) {{'.format(tmp, self._substs)
-            )
+            self.add_line('for (tuple<int, SubstitutionMultiset> &p :')
+            self.add_line('     matcher.match({}, subst{})) {{'.format(tmp, self._substs))
             self._substs += 1
             self.indent(bracket=False)
             self.add_line("int pattern_index = get<0>(p);")
@@ -227,7 +226,9 @@ public:
 
     def commutative_patterns(self, patterns):
         patterns = sorted(patterns.values(), key=lambda x: x[0])
-        expr = {(i,): (i, s, list(map(self.commutative_var_entry, v))) for (i, s, v) in patterns}
+        expr = {(i,): "make_tuple<int, multiset<int>, PatternSet>({})".format(
+                ", ".join([self.format_to_initializer_list(a) for a in (i, s, list(map(self.commutative_var_entry, v)))])
+            ) for (i, s, v) in patterns}
         return self.format_to_initializer_list(expr)
 
     def generate_transition_code(self, transition):

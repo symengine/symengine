@@ -67,7 +67,8 @@ def export_code_to_file(filename, a, b, patterns):
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions {0}
+ * Decision tree matching expressions
+ * {0}
  *
  * Wildcards: {1}
  */

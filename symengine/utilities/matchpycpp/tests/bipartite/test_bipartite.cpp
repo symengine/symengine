@@ -8,11 +8,11 @@ TEST_CASE("BipartiteGraph", "")
 {
     SECTION("Test 1")
     {
-        map<tuple<int, int>, bool> m = {{{0, 1}, true},
-                                        {{1, 0}, true},
-                                        {{1, 1}, true},
-                                        {{2, 0}, true},
-                                        {{2, 1}, true}};
+        map<tuple<int, int>, bool> m = {{make_tuple(0, 1), true},
+                                        {make_tuple(1, 0), true},
+                                        {make_tuple(1, 1), true},
+                                        {make_tuple(2, 0), true},
+                                        {make_tuple(2, 1), true}};
         BipartiteGraph<int, int, bool> bg(m);
 
         vector<map<int, int>> expected = {{{1, 0}, {0, 1}},
@@ -25,8 +25,9 @@ TEST_CASE("BipartiteGraph", "")
 
     SECTION("Test 2")
     {
-        map<tuple<int, int>, bool> m
-            = {{{0, 0}, true}, {{1, 1}, true}, {{2, 0}, true}};
+        map<tuple<int, int>, bool> m = {{make_tuple(0, 0), true},
+                                        {make_tuple(1, 1), true},
+                                        {make_tuple(2, 0), true}};
         BipartiteGraph<int, int, bool> bg(m);
 
         vector<map<int, int>> expected = {{{0, 0}, {1, 1}}, {{1, 1}, {2, 0}}};
@@ -36,8 +37,10 @@ TEST_CASE("BipartiteGraph", "")
 
     SECTION("Test 3")
     {
-        map<tuple<int, int>, bool> m
-            = {{{0, 0}, true}, {{1, 1}, true}, {{2, 0}, true}, {{2, 1}, true}};
+        map<tuple<int, int>, bool> m = {{make_tuple(0, 0), true},
+                                        {make_tuple(1, 1), true},
+                                        {make_tuple(2, 0), true},
+                                        {make_tuple(2, 1), true}};
         BipartiteGraph<int, int, bool> bg(m);
 
         vector<map<int, int>> expected

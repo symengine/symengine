@@ -1,7 +1,8 @@
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions ['x + y + wo', '3*x*y*wo', '7*x*y*w']
+ * Decision tree matching expressions
+ * ['x + y + wo', '3*x*y*wo', '7*x*y*w']
  *
  * Wildcards: ['w', 'wo']
  */
@@ -31,17 +32,24 @@ public:
     CommutativeMatcher2248()
     {
 
-        patterns = {{{0}, {0, {0, 1}, {{VariableWithCount("i1.0", 1, 1, integer(0)), ADD}}}}};
+        patterns
+            = {{{0},
+                make_tuple<int, multiset<int>, PatternSet>(
+                    0, {0, 1},
+                    {{VariableWithCount("i1.0", 1, 1, integer(0)), ADD}})}};
         subjects = {};
         subjects_by_id = {};
-        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){ return add(x, y); };
+        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
+            return add(x, y);
+        };
         max_optional_count = 1;
         anonymous_patterns = {0, 1};
 
         add_subject(None);
     }
 
-    generator<tuple<int, SubstitutionMultiset>> get_match_iter(const RCP<const Basic> &subject)
+    generator<tuple<int, SubstitutionMultiset>>
+    get_match_iter(const RCP<const Basic> &subject)
     {
         generator<tuple<int, SubstitutionMultiset>> result;
         Deque subjects;
@@ -78,17 +86,27 @@ public:
     CommutativeMatcher2253()
     {
 
-        patterns = {{{0}, {0, {0, 1, 2}, {{VariableWithCount("i1.0", 1, 1, integer(1)), MUL}}}}, {{1}, {1, {3, 1, 2}, {{VariableWithCount("i1.0", 1, 1, None), MUL}}}}};
+        patterns = {{{0},
+                     make_tuple<int, multiset<int>, PatternSet>(
+                         0, {0, 1, 2},
+                         {{VariableWithCount("i1.0", 1, 1, integer(1)), MUL}})},
+                    {{1},
+                     make_tuple<int, multiset<int>, PatternSet>(
+                         1, {3, 1, 2},
+                         {{VariableWithCount("i1.0", 1, 1, None), MUL}})}};
         subjects = {};
         subjects_by_id = {};
-        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y){ return mul(x, y); };
+        associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
+            return mul(x, y);
+        };
         max_optional_count = 1;
         anonymous_patterns = {0, 1, 2, 3};
 
         add_subject(None);
     }
 
-    generator<tuple<int, SubstitutionMultiset>> get_match_iter(const RCP<const Basic> &subject)
+    generator<tuple<int, SubstitutionMultiset>>
+    get_match_iter(const RCP<const Basic> &subject)
     {
         generator<tuple<int, SubstitutionMultiset>> result;
         Deque subjects;
@@ -159,7 +177,8 @@ match_root(const RCP<const Basic> &subject)
         for (RCP<const Basic> &s : tmp3) {
             matcher.add_subject(s);
         }
-        for (tuple<int, SubstitutionMultiset> &p : matcher.match(tmp3, subst0)) {
+        for (tuple<int, SubstitutionMultiset> &p :
+             matcher.match(tmp3, subst0)) {
             int pattern_index = get<0>(p);
             SubstitutionMultiset subst1 = get<1>(p);
             if (pattern_index == 0) {
@@ -186,7 +205,8 @@ match_root(const RCP<const Basic> &subject)
         for (RCP<const Basic> &s : tmp6) {
             matcher.add_subject(s);
         }
-        for (tuple<int, SubstitutionMultiset> &p : matcher.match(tmp6, subst0)) {
+        for (tuple<int, SubstitutionMultiset> &p :
+             matcher.match(tmp6, subst0)) {
             int pattern_index = get<0>(p);
             SubstitutionMultiset subst1 = get<1>(p);
             if (pattern_index == 0) {

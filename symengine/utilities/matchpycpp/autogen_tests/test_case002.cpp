@@ -1,7 +1,8 @@
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions ['x**y']
+ * Decision tree matching expressions
+ * ['x**y']
  *
  * Wildcards: []
  */
