@@ -32,11 +32,7 @@ public:
     CommutativeMatcher2248()
     {
 
-        patterns
-            = {{{0},
-                make_tuple<int, multiset<int>, PatternSet>(
-                    0, {0, 1},
-                    {{VariableWithCount("i1.0", 1, 1, integer(0)), ADD}})}};
+        patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {{VariableWithCount("i1.0", 1, 1, integer(0)), ADD}})}};
         subjects = {};
         subjects_by_id = {};
         associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
