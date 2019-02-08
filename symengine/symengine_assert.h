@@ -3,8 +3,9 @@
 
 // SYMENGINE_ASSERT uses internal functions to perform as assert
 // so that there is no effect with NDEBUG
-#if !defined(SYMENGINE_ASSERT)
 #if defined(WITH_SYMENGINE_ASSERT)
+
+#if !defined(SYMENGINE_ASSERT)
 #define stringize(s) #s
 #define XSTR(s) stringize(s)
 #define SYMENGINE_ASSERT(cond)                                                 \
@@ -17,14 +18,17 @@
             abort();                                                           \
         }                                                                      \
     }
-#else
+#endif // !defined(SYMENGINE_ASSERT)
+
+#else // defined(WITH_SYMENGINE_ASSERT)
+
 #define SYMENGINE_ASSERT(cond)
-#endif
-#endif
+
+#endif // defined(WITH_SYMENGINE_ASSERT)
 
 #define SYMENGINE_ERROR(description)                                           \
     std::cerr << description;                                                  \
     std::cerr << "\n";                                                         \
     abort();
 
-#endif
+#endif // SYMENGINE_ASSERT_H
