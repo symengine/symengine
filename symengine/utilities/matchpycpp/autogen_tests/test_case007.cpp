@@ -32,7 +32,7 @@ public:
     CommutativeMatcher2248()
     {
 
-        patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {{VariableWithCount("i1.0", 1, 1, integer(0)), ADD}})}};
+        patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {make_tuple(VariableWithCount("i1.0", 1, 1, integer(0)), ADD)})}};
         subjects = {};
         subjects_by_id = {};
         associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
@@ -82,14 +82,7 @@ public:
     CommutativeMatcher2253()
     {
 
-        patterns = {{{0},
-                     make_tuple<int, multiset<int>, PatternSet>(
-                         0, {0, 1, 2},
-                         {{VariableWithCount("i1.0", 1, 1, integer(1)), MUL}})},
-                    {{1},
-                     make_tuple<int, multiset<int>, PatternSet>(
-                         1, {3, 1, 2},
-                         {{VariableWithCount("i1.0", 1, 1, None), MUL}})}};
+        patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1, 2}, {make_tuple(VariableWithCount("i1.0", 1, 1, integer(1)), MUL)})}, {{1}, make_tuple<int, multiset<int>, PatternSet>(1, {3, 1, 2}, {make_tuple(VariableWithCount("i1.0", 1, 1, None), MUL)})}};
         subjects = {};
         subjects_by_id = {};
         associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {

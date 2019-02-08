@@ -219,7 +219,7 @@ public:
             defaultv = symengine_print(entry[1].identity)
         else:
             defaultv = self.expr(entry[0][3])
-        return '{{VariableWithCount("{}", {}, {}, {}), {}}}'.format(
+        return 'make_tuple(VariableWithCount("{}", {}, {}, {}), {})'.format(
             entry[0][0], entry[0][1], entry[0][2],
             defaultv, self.operation_symbol_enum(entry[1]) if isinstance(entry[1], type) else repr(entry[1])
         )
