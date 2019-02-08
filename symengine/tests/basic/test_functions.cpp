@@ -4260,13 +4260,15 @@ TEST_CASE("test_floor", "[Floor]")
     CHECK(eq(*r, *ceiling(x)));
 
     r = floor(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
-    CHECK(eq(*r, *add(integer(2),
-                      floor(add(mul(integer(2), x), mul(integer(3), y))))));
+    CHECK(eq(
+        *r,
+        *add(integer(2), floor(add(mul(integer(2), x), mul(integer(3), y))))));
 
     r = floor(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
                   mul(integer(3), y)));
-    CHECK(eq(*r, *floor(add(add(mul(integer(2), x), mul(integer(3), y)),
-                            Rational::from_two_ints(2, 3)))));
+    CHECK(eq(*r,
+             *floor(add(add(mul(integer(2), x), mul(integer(3), y)),
+                        Rational::from_two_ints(2, 3)))));
 
     CHECK_THROWS_AS(floor(Eq(integer(2), integer(3))), SymEngineException &);
 
@@ -4332,13 +4334,15 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     CHECK(eq(*r, *ceiling(x)));
 
     r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
-    CHECK(eq(*r, *add(integer(2),
-                      ceiling(add(mul(integer(2), x), mul(integer(3), y))))));
+    CHECK(eq(*r,
+             *add(integer(2),
+                  ceiling(add(mul(integer(2), x), mul(integer(3), y))))));
 
     r = ceiling(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
                     mul(integer(3), y)));
-    CHECK(eq(*r, *ceiling(add(add(mul(integer(2), x), mul(integer(3), y)),
-                              Rational::from_two_ints(2, 3)))));
+    CHECK(eq(*r,
+             *ceiling(add(add(mul(integer(2), x), mul(integer(3), y)),
+                          Rational::from_two_ints(2, 3)))));
 
     CHECK_THROWS_AS(ceiling(Eq(integer(2), integer(3))), SymEngineException &);
 
@@ -4469,16 +4473,18 @@ TEST_CASE("test_conjugate", "[Conjugate]")
 
     r = conjugate(
         pow(Complex::from_two_nums(*integer(2), *integer(3)), integer(2)));
-    CHECK(eq(*r, *pow(Complex::from_two_nums(*integer(2), *integer(-3)),
-                      integer(2))));
+    CHECK(eq(
+        *r,
+        *pow(Complex::from_two_nums(*integer(2), *integer(-3)), integer(2))));
 
     r = conjugate(complex_double(std::complex<double>(0.0, 1.0)));
     CHECK(eq(*r, *complex_double(std::complex<double>(0.0, -1.0))));
 
     r = conjugate(
         pow(complex_double(std::complex<double>(2.0, 3.0)), integer(-2)));
-    CHECK(eq(*r, *pow(complex_double(std::complex<double>(2.0, -3.0)),
-                      integer(-2))));
+    CHECK(
+        eq(*r,
+           *pow(complex_double(std::complex<double>(2.0, -3.0)), integer(-2))));
 
     r = conjugate(pow(y, integer(2)));
     CHECK(eq(*r, *pow(conjugate(y), integer(2))));

@@ -5,13 +5,11 @@ namespace SymEngine
 
 URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, const std::string varname,
                                        const unsigned degree)
-    : SeriesBase(std::move(p), varname, degree)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
-RCP<const URatPSeriesPiranha>
-URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
-                           unsigned int prec)
+    : SeriesBase(
+          std::move(p), varname,
+          degree){SYMENGINE_ASSIGN_TYPEID()} RCP<const URatPSeriesPiranha> URatPSeriesPiranha::
+          series(const RCP<const Basic> &t, const std::string &x,
+                 unsigned int prec)
 {
     SeriesVisitor<pp_t, piranha::rational, URatPSeriesPiranha> visitor(pp_t(x),
                                                                        x, prec);
@@ -179,14 +177,10 @@ pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r,
 
 UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname,
                                  const unsigned degree)
-    : SeriesBase(std::move(p), varname, degree)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+    : SeriesBase(std::move(p), varname, degree){SYMENGINE_ASSIGN_TYPEID()}
 
-RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t,
-                                                   const std::string &x,
-                                                   unsigned int prec)
+      RCP<const UPSeriesPiranha> UPSeriesPiranha::series(
+          const RCP<const Basic> &t, const std::string &x, unsigned int prec)
 {
     SeriesVisitor<p_expr, Expression, UPSeriesPiranha> visitor(p_expr(x), x,
                                                                prec);

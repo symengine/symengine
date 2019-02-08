@@ -8,12 +8,10 @@ RCP<const Boolean> Boolean::logical_not() const
     return make_rcp<const Not>(this->rcp_from_this_cast<const Boolean>());
 }
 
-BooleanAtom::BooleanAtom(bool b) : b_{b}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+BooleanAtom::BooleanAtom(bool b)
+    : b_{b} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t BooleanAtom::__hash__() const
+      hash_t BooleanAtom::__hash__() const
 {
     hash_t seed = BOOLEAN_ATOM;
     if (b_)
@@ -56,12 +54,9 @@ RCP<const BooleanAtom> boolTrue = make_rcp<BooleanAtom>(true);
 RCP<const BooleanAtom> boolFalse = make_rcp<BooleanAtom>(false);
 
 Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
-    : expr_{expr}, set_{set}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+    : expr_{expr}, set_{set} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t Contains::__hash__() const
+      hash_t Contains::__hash__() const
 {
     hash_t seed = CONTAINS;
     hash_combine<Basic>(seed, *expr_);
@@ -120,12 +115,10 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
     }
 }
 
-Piecewise::Piecewise(PiecewiseVec &&vec) : vec_(vec)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+Piecewise::Piecewise(PiecewiseVec &&vec)
+    : vec_(vec){SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t Piecewise::__hash__() const
+      hash_t Piecewise::__hash__() const
 {
     hash_t seed = this->get_type_code();
     for (auto &p : vec_) {

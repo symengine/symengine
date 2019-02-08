@@ -732,11 +732,12 @@ TEST_CASE("Complex: Basic", "[basic]")
 
     // Basic check for equality in Complex::from_two_nums and
     // Complex::from_two_rats
-    REQUIRE(eq(*c1, *Complex::from_two_rats(down_cast<const Rational &>(*r1),
-                                            down_cast<const Rational &>(*r2))));
-    REQUIRE(
-        neq(*c2, *Complex::from_two_rats(down_cast<const Rational &>(*r1),
-                                         down_cast<const Rational &>(*r2))));
+    REQUIRE(eq(*c1,
+               *Complex::from_two_rats(down_cast<const Rational &>(*r1),
+                                       down_cast<const Rational &>(*r2))));
+    REQUIRE(neq(*c2,
+                *Complex::from_two_rats(down_cast<const Rational &>(*r1),
+                                        down_cast<const Rational &>(*r2))));
 
     // Checks for complex addition
     // Final result is int

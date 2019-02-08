@@ -6,13 +6,11 @@ namespace SymEngine
 
 URatPSeriesFlint::URatPSeriesFlint(fqp_t p, const std::string varname,
                                    const unsigned degree)
-    : SeriesBase(std::move(p), varname, degree)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
-RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
-                                                     const std::string &x,
-                                                     unsigned int prec)
+    : SeriesBase(
+          std::move(p), varname,
+          degree){SYMENGINE_ASSIGN_TYPEID()} RCP<const URatPSeriesFlint> URatPSeriesFlint::
+          series(const RCP<const Basic> &t, const std::string &x,
+                 unsigned int prec)
 {
     fqp_t p("2  0 1");
     SeriesVisitor<fqp_t, fmpq_wrapper, URatPSeriesFlint> visitor(p, x, prec);

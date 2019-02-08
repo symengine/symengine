@@ -25,11 +25,9 @@ public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `integer_class`
     // explicit Integer(integer_class i);
-    Integer(const integer_class &_i) : i(_i)
-    {
-        SYMENGINE_ASSIGN_TYPEID()
-    }
-    Integer(integer_class &&_i) : i(std::move(_i))
+    Integer(const integer_class &_i)
+        : i(_i){SYMENGINE_ASSIGN_TYPEID()} Integer(integer_class && _i)
+        : i(std::move(_i))
     {
         SYMENGINE_ASSIGN_TYPEID()
     }

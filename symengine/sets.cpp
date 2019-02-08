@@ -514,13 +514,11 @@ RCP<const Set> FiniteSet::create(const set_basic &container) const
     return finiteset(container);
 }
 
-Union::Union(const set_set &in) : container_(in)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(Union::is_canonical(in))
-}
+Union::Union(const set_set &in)
+    : container_(in){SYMENGINE_ASSIGN_TYPEID()
+                         SYMENGINE_ASSERT(Union::is_canonical(in))}
 
-hash_t Union::__hash__() const
+      hash_t Union::__hash__() const
 {
     hash_t seed = UNION;
     for (const auto &a : container_)
@@ -621,12 +619,9 @@ vec_basic Union::get_args() const
 
 Complement::Complement(const RCP<const Set> &universe,
                        const RCP<const Set> &container)
-    : universe_(universe), container_(container)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+    : universe_(universe), container_(container){SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t Complement::__hash__() const
+      hash_t Complement::__hash__() const
 {
     hash_t seed = COMPLEMENT;
     hash_combine<Basic>(seed, *universe_);

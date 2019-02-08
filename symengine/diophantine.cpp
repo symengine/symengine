@@ -101,8 +101,9 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
                 if (i > 0) {
                     SYMENGINE_ASSERT(is_a<Integer>(*T.get(0, i - 1)));
-                    T.set(0, i - 1, down_cast<const Integer &>(*T.get(0, i - 1))
-                                        .subint(*one));
+                    T.set(0, i - 1,
+                          down_cast<const Integer &>(*T.get(0, i - 1))
+                              .subint(*one));
                 }
 
                 dot = zero;

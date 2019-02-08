@@ -300,9 +300,10 @@ void match_common_args(const std::string &func_class, const vec_basic &funcs_,
             }
         }
         if (std::find(changed.begin(), changed.end(), i) != changed.end()) {
-            opt_subs[funcs[i].first] = function_symbol(
-                func_class, arg_tracker.get_args_in_value_order(
-                                arg_tracker.func_to_argset[i]));
+            opt_subs[funcs[i].first]
+                = function_symbol(func_class,
+                                  arg_tracker.get_args_in_value_order(
+                                      arg_tracker.func_to_argset[i]));
         }
         arg_tracker.stop_arg_tracking(i);
     }

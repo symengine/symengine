@@ -167,24 +167,28 @@ TEST_CASE("RealImag: Trigonometric functions", "[as_real_imag]")
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(csc(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(sin(i2), cosh(one)),
-                         add(mul(pow(cos(i2), i2), pow(sinh(one), i2)),
-                             mul(pow(sin(i2), i2), pow(cosh(one), i2))))));
-    REQUIRE(eq(*im, *div(mul({minus_one, cos(i2), sinh(one)}),
-                         add(mul(pow(cos(i2), i2), pow(sinh(one), i2)),
-                             mul(pow(sin(i2), i2), pow(cosh(one), i2))))));
+    REQUIRE(eq(*re,
+               *div(mul(sin(i2), cosh(one)),
+                    add(mul(pow(cos(i2), i2), pow(sinh(one), i2)),
+                        mul(pow(sin(i2), i2), pow(cosh(one), i2))))));
+    REQUIRE(eq(*im,
+               *div(mul({minus_one, cos(i2), sinh(one)}),
+                    add(mul(pow(cos(i2), i2), pow(sinh(one), i2)),
+                        mul(pow(sin(i2), i2), pow(cosh(one), i2))))));
 
     as_real_imag(sec(i2), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(one, cos(i2))));
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(sec(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(cos(i2), cosh(one)),
-                         add(mul(pow(cos(i2), i2), pow(cosh(one), i2)),
-                             mul(pow(sin(i2), i2), pow(sinh(one), i2))))));
-    REQUIRE(eq(*im, *div(mul(sin(i2), sinh(one)),
-                         add(mul(pow(cos(i2), i2), pow(cosh(one), i2)),
-                             mul(pow(sin(i2), i2), pow(sinh(one), i2))))));
+    REQUIRE(eq(*re,
+               *div(mul(cos(i2), cosh(one)),
+                    add(mul(pow(cos(i2), i2), pow(cosh(one), i2)),
+                        mul(pow(sin(i2), i2), pow(sinh(one), i2))))));
+    REQUIRE(eq(*im,
+               *div(mul(sin(i2), sinh(one)),
+                    add(mul(pow(cos(i2), i2), pow(cosh(one), i2)),
+                        mul(pow(sin(i2), i2), pow(sinh(one), i2))))));
 
     as_real_imag(cot(i2), outArg(re), outArg(im));
     REQUIRE(eq(*re, *cot(i2)));
@@ -216,44 +220,52 @@ TEST_CASE("RealImag: Trigonometric functions", "[as_real_imag]")
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(tanh(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(sinh(i2), cosh(i2)),
-                         add(pow(cos(one), i2), pow(sinh(i2), i2)))));
-    REQUIRE(eq(*im, *div(mul(sin(one), cos(one)),
-                         add(pow(cos(one), i2), pow(sinh(i2), i2)))));
+    REQUIRE(eq(*re,
+               *div(mul(sinh(i2), cosh(i2)),
+                    add(pow(cos(one), i2), pow(sinh(i2), i2)))));
+    REQUIRE(eq(*im,
+               *div(mul(sin(one), cos(one)),
+                    add(pow(cos(one), i2), pow(sinh(i2), i2)))));
 
     as_real_imag(csch(i2), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(one, sinh(i2))));
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(csch(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(sinh(i2), cos(one)),
-                         add(mul(pow(cosh(i2), i2), pow(sin(one), i2)),
-                             mul(pow(sinh(i2), i2), pow(cos(one), i2))))));
-    REQUIRE(eq(*im, *div(mul({minus_one, cosh(i2), sin(one)}),
-                         add(mul(pow(cosh(i2), i2), pow(sin(one), i2)),
-                             mul(pow(sinh(i2), i2), pow(cos(one), i2))))));
+    REQUIRE(eq(*re,
+               *div(mul(sinh(i2), cos(one)),
+                    add(mul(pow(cosh(i2), i2), pow(sin(one), i2)),
+                        mul(pow(sinh(i2), i2), pow(cos(one), i2))))));
+    REQUIRE(eq(*im,
+               *div(mul({minus_one, cosh(i2), sin(one)}),
+                    add(mul(pow(cosh(i2), i2), pow(sin(one), i2)),
+                        mul(pow(sinh(i2), i2), pow(cos(one), i2))))));
 
     as_real_imag(sech(i2), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(one, cosh(i2))));
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(sech(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(cosh(i2), cos(one)),
-                         add(mul(pow(cosh(i2), i2), pow(cos(one), i2)),
-                             mul(pow(sinh(i2), i2), pow(sin(one), i2))))));
-    REQUIRE(eq(*im, *div(mul({minus_one, sin(one), sinh(i2)}),
-                         add(mul(pow(cosh(i2), i2), pow(cos(one), i2)),
-                             mul(pow(sinh(i2), i2), pow(sin(one), i2))))));
+    REQUIRE(eq(*re,
+               *div(mul(cosh(i2), cos(one)),
+                    add(mul(pow(cosh(i2), i2), pow(cos(one), i2)),
+                        mul(pow(sinh(i2), i2), pow(sin(one), i2))))));
+    REQUIRE(eq(*im,
+               *div(mul({minus_one, sin(one), sinh(i2)}),
+                    add(mul(pow(cosh(i2), i2), pow(cos(one), i2)),
+                        mul(pow(sinh(i2), i2), pow(sin(one), i2))))));
 
     as_real_imag(coth(i2), outArg(re), outArg(im));
     REQUIRE(eq(*re, *coth(i2)));
     REQUIRE(eq(*im, *zero));
 
     as_real_imag(coth(add(i2, I)), outArg(re), outArg(im));
-    REQUIRE(eq(*re, *div(mul(sinh(i2), cosh(i2)),
-                         add(pow(sin(one), i2), pow(sinh(i2), i2)))));
-    REQUIRE(eq(*im, *div(mul({minus_one, sin(one), cos(one)}),
-                         add(pow(sin(one), i2), pow(sinh(i2), i2)))));
+    REQUIRE(eq(*re,
+               *div(mul(sinh(i2), cosh(i2)),
+                    add(pow(sin(one), i2), pow(sinh(i2), i2)))));
+    REQUIRE(eq(*im,
+               *div(mul({minus_one, sin(one), cos(one)}),
+                    add(pow(sin(one), i2), pow(sinh(i2), i2)))));
 
     CHECK_THROWS_AS(as_real_imag(asin(i2), outArg(re), outArg(im)),
                     SymEngineException &);

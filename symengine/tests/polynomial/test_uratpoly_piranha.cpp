@@ -172,8 +172,9 @@ TEST_CASE("URatPolyPiranha as_symbolic", "[URatPolyPiranha]")
 
     RCP<const URatPolyPiranha> b
         = URatPolyPiranha::from_dict(x, {{1, rc(3_z, 2_z)}, {2, 2_q}});
-    REQUIRE(eq(*b->as_symbolic(), *add(mul(x, div(integer(3), integer(2))),
-                                       mul(integer(2), pow(x, integer(2))))));
+    REQUIRE(eq(*b->as_symbolic(),
+               *add(mul(x, div(integer(3), integer(2))),
+                    mul(integer(2), pow(x, integer(2))))));
 
     RCP<const URatPolyPiranha> c
         = URatPolyPiranha::from_dict(x, map_uint_mpq{});

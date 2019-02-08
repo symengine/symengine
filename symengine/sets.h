@@ -51,14 +51,13 @@ public:
 class EmptySet : public Set
 {
 public:
-    EmptySet()
-    {
-        SYMENGINE_ASSIGN_TYPEID()
-    }
+    EmptySet(){SYMENGINE_ASSIGN_TYPEID()}
 
     IMPLEMENT_TYPEID(EMPTYSET)
-    // EmptySet(EmptySet const&) = delete;
-    void operator=(EmptySet const &) = delete;
+        // EmptySet(EmptySet const&) = delete;
+        void
+        operator=(EmptySet const &)
+        = delete;
     const static RCP<const EmptySet> &getInstance();
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;

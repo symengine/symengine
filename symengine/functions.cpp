@@ -1706,13 +1706,11 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
-    : MultiArgFunction({arg}), name_{name}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(get_vec()))
-}
+    : MultiArgFunction({arg}), name_{name} {SYMENGINE_ASSIGN_TYPEID()
+                                                SYMENGINE_ASSERT(
+                                                    is_canonical(get_vec()))}
 
-FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
+      FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     : MultiArgFunction(arg), name_{name}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -1769,20 +1767,15 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 }
 
 FunctionWrapper::FunctionWrapper(std::string name, const RCP<const Basic> &arg)
-    : FunctionSymbol(name, arg)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+    : FunctionSymbol(name, arg){SYMENGINE_ASSIGN_TYPEID()}
 
-FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
-    : FunctionSymbol(name, vec)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+      FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
+    : FunctionSymbol(name, vec){SYMENGINE_ASSIGN_TYPEID()}
 
-/* ---------------------------- */
+      /* ---------------------------- */
 
-Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)
+      Derivative::Derivative(const RCP<const Basic> &arg,
+                             const multiset_basic &x)
     : arg_{arg}, x_{x}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -2622,13 +2615,11 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
 }
 
 Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
-    : TwoArgFunction(s, a)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(s, a))
-}
+    : TwoArgFunction(s, a){SYMENGINE_ASSIGN_TYPEID()
+                               SYMENGINE_ASSERT(is_canonical(s, a))}
 
-Zeta::Zeta(const RCP<const Basic> &s) : TwoArgFunction(s, one)
+      Zeta::Zeta(const RCP<const Basic> &s)
+    : TwoArgFunction(s, one)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(s, one))

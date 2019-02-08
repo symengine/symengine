@@ -141,9 +141,9 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
 
     poly = add(sqx, sub(mul(integer(8), x), integer(5)));
     soln = solve(poly, x);
-    REQUIRE(
-        eq(*soln, *finiteset({add(integer(-4), div(sqrt(integer(84)), i2)),
-                              sub(integer(-4), div(sqrt(integer(84)), i2))})));
+    REQUIRE(eq(*soln,
+               *finiteset({add(integer(-4), div(sqrt(integer(84)), i2)),
+                           sub(integer(-4), div(sqrt(integer(84)), i2))})));
 
     poly = add(sqx, sub(integer(50), mul(integer(8), x)));
     soln = solve(poly, x);
@@ -194,8 +194,9 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
 
     poly = Ne(add({cbx, mul(x, i3), mul(sqx, i3)}), neg(one));
     soln = solve(poly, x, reals);
-    REQUIRE(eq(*soln, *set_union({interval(NegInf, integer(-1), true, true),
-                                  interval(integer(-1), Inf, true, true)})));
+    REQUIRE(eq(*soln,
+               *set_union({interval(NegInf, integer(-1), true, true),
+                           interval(integer(-1), Inf, true, true)})));
 
     poly = Ge(add({cbx, mul(x, i3), mul(sqx, i3)}), one);
     soln = solve(poly, x, reals);
@@ -284,8 +285,9 @@ TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")
                 mul(cbx, integer(5015)), mul(sqx, integer(-13436)),
                 mul(x, integer(3700)), integer(14352)});
     soln = solve(poly, x);
-    REQUIRE(eq(*soln, *finiteset({i2, i3, rational(26, 3), rational(-4, 5),
-                                  integer(23)})));
+    REQUIRE(eq(
+        *soln,
+        *finiteset({i2, i3, rational(26, 3), rational(-4, 5), integer(23)})));
 
     poly = add({mul(qx, qx), mul({i3, qx, cbx}), mul({i2, qx, sqx}), mul(qx, x),
                 mul(i3, qx), mul(i2, cbx), sqx, mul(i3, x), i2});
@@ -361,9 +363,10 @@ TEST_CASE("solve_poly", "[Solve]")
     soln = solve_poly(p3, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 
-    auto P3 = URatPolyFlint::from_dict(x, {{0, 1_q},
-                                           {1, rational_class(3_z, 2_z)},
-                                           {2, rational_class(1_z, 2_z)}});
+    auto P3 = URatPolyFlint::from_dict(x,
+                                       {{0, 1_q},
+                                        {1, rational_class(3_z, 2_z)},
+                                        {2, rational_class(1_z, 2_z)}});
     soln = solve_poly(P3, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 #endif
@@ -373,9 +376,10 @@ TEST_CASE("solve_poly", "[Solve]")
     soln = solve_poly(p4, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 
-    auto P4 = URatPolyPiranha::from_dict(x, {{0, 1_q},
-                                             {1, rational_class(3_z, 2_z)},
-                                             {2, rational_class(1_z, 2_z)}});
+    auto P4 = URatPolyPiranha::from_dict(x,
+                                         {{0, 1_q},
+                                          {1, rational_class(3_z, 2_z)},
+                                          {2, rational_class(1_z, 2_z)}});
     soln = solve_poly(P4, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 #endif
@@ -475,10 +479,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
          add({mul(integer(2), x), mul(integer(2), y), mul(integer(3), z)}),
          add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
         {x, y, z});
-    REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(1), integer(2), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+    REQUIRE(solns.first == DenseMatrix(3, 3,
+                                       {integer(1), integer(2), integer(3),
+                                        integer(2), integer(2), integer(3),
+                                        integer(3), integer(3), integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -487,10 +491,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
          add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
         {y, x, z});
 
-    REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(2), integer(1), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+    REQUIRE(solns.first == DenseMatrix(3, 3,
+                                       {integer(2), integer(1), integer(3),
+                                        integer(2), integer(2), integer(3),
+                                        integer(3), integer(3), integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -507,14 +511,15 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
                  mul(integer(6), t)}),
             integer(30))},
         {y, z, t, x});
-    REQUIRE(
-        solns.first
-        == DenseMatrix(4, 4, {integer(2), integer(3), integer(4), integer(1),
-                              integer(2), integer(3), integer(4), integer(2),
-                              integer(3), integer(3), integer(4), integer(3),
-                              integer(8), integer(7), integer(6), integer(9)}));
-    REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
-                                               integer(13), integer(30)}));
+    REQUIRE(solns.first
+            == DenseMatrix(4, 4,
+                           {integer(2), integer(3), integer(4), integer(1),
+                            integer(2), integer(3), integer(4), integer(2),
+                            integer(3), integer(3), integer(4), integer(3),
+                            integer(8), integer(7), integer(6), integer(9)}));
+    REQUIRE(solns.second
+            == DenseMatrix(
+                   4, 1, {integer(10), integer(11), integer(13), integer(30)}));
 }
 
 TEST_CASE("is_a_LinearArgTrigEquation", "[Solve]")

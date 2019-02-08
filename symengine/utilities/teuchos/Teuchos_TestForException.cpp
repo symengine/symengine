@@ -41,70 +41,61 @@
 
 #include "Teuchos_TestForException.hpp"
 
-
 //
 // ToDo: Make these functions thread-safe!
 //
 
-
-namespace {
-
+namespace
+{
 
 int throwNumber = 0;
 
-
-bool& loc_enableStackTrace()
+bool &loc_enableStackTrace()
 {
-  static bool static_enableStackTrace =
+    static bool static_enableStackTrace =
 #ifdef HAVE_TEUCHOS_DEFAULT_STACKTRACE
-    true
+        true
 #else
-    false
+        false
 #endif
-    ;
-  return static_enableStackTrace;
+        ;
+    return static_enableStackTrace;
 }
-
 
 } // namespace
 
-
 void Teuchos::TestForException_incrThrowNumber()
 {
-  ++throwNumber;
+    ++throwNumber;
 }
-
 
 int Teuchos::TestForException_getThrowNumber()
 {
-  return throwNumber;
+    return throwNumber;
 }
 
-
-void Teuchos::TestForException_break( const std::string &errorMsg )
+void Teuchos::TestForException_break(const std::string &errorMsg)
 {
-  int break_on_me;
-  break_on_me = errorMsg.length(); // Use errMsg to avoid compiler warning.
-  (void)break_on_me;
-  // Above is just some statement for the debugger to break on.  Note: now is
-  // a good time to examine the stack trace and look at the error message in
-  // 'errorMsg' to see what happened.  In GDB just type 'where' or you can go
-  // up by typing 'up' and moving up in the stack trace to see where you are
-  // and how you got to this point in the code where you are throwning this
-  // exception!  Typing in a 'p errorMsg' will show you what the error message
-  // is.  Also, you should consider adding a conditional breakpoint in this
-  // function based on a specific value of 'throwNumber' if the exception you
-  // want to examine is not the first exception thrown.
+    int break_on_me;
+    break_on_me = errorMsg.length(); // Use errMsg to avoid compiler warning.
+    (void)break_on_me;
+    // Above is just some statement for the debugger to break on.  Note: now is
+    // a good time to examine the stack trace and look at the error message in
+    // 'errorMsg' to see what happened.  In GDB just type 'where' or you can go
+    // up by typing 'up' and moving up in the stack trace to see where you are
+    // and how you got to this point in the code where you are throwning this
+    // exception!  Typing in a 'p errorMsg' will show you what the error message
+    // is.  Also, you should consider adding a conditional breakpoint in this
+    // function based on a specific value of 'throwNumber' if the exception you
+    // want to examine is not the first exception thrown.
 }
-
 
 void Teuchos::TestForException_setEnableStacktrace(bool enableStrackTrace)
 {
-  loc_enableStackTrace() = enableStrackTrace;
+    loc_enableStackTrace() = enableStrackTrace;
 }
-
 
 bool Teuchos::TestForException_getEnableStacktrace()
 {
-  return loc_enableStackTrace();
+    return loc_enableStackTrace();
 }

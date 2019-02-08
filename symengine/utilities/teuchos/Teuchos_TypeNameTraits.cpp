@@ -46,34 +46,38 @@
 //#define HAVE_TEUCHOS_DEMANGLE
 
 #if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
-#  include <cxxabi.h>
+#include <cxxabi.h>
 #endif
 
-
-std::string Teuchos::demangleName( const std::string &mangledName )
+std::string Teuchos::demangleName(const std::string &mangledName)
 {
 #if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
-  int status;
-  char *_demangledName = abi::__cxa_demangle(mangledName.c_str(), 0, 0, &status);
-  if (status != 0 || 0==_demangledName) {
+    int status;
+    char *_demangledName
+        = abi::__cxa_demangle(mangledName.c_str(), 0, 0, &status);
+    if (status != 0 || 0 == _demangledName) {
 #ifdef TEUCHOS_DEBUG
-    std::string nullstr("NULL");
-    const char* demangle_output = _demangledName ? _demangledName : nullstr.c_str();
-    TEUCHOS_TEST_FOR_EXCEPTION(
-      true, std::logic_error,
-      "Error, name demangling with g++ has been enabled but the function "
-      "abi::__cxa_demangle("<<mangledName<<") returned returnVal = "<<demangle_output
-      <<" and status = "<<status<<".  Name demangling for this build"
-      "can be turned off by using --disable-teuchos-demangle at configure time." );
+        std::string nullstr("NULL");
+        const char *demangle_output
+            = _demangledName ? _demangledName : nullstr.c_str();
+        TEUCHOS_TEST_FOR_EXCEPTION(
+            true, std::logic_error,
+            "Error, name demangling with g++ has been enabled but the function "
+            "abi::__cxa_demangle("
+                << mangledName << ") returned returnVal = " << demangle_output
+                << " and status = " << status
+                << ".  Name demangling for this build"
+                   "can be turned off by using --disable-teuchos-demangle at "
+                   "configure time.");
 #endif
-    if (_demangledName != NULL)
-      free(_demangledName);
-    return ( mangledName + "<demangle-failed>" );
-  }
-  const std::string demangledName(_demangledName);
-  free(_demangledName); // We have to free this before we return!
-  return demangledName;
+        if (_demangledName != NULL)
+            free(_demangledName);
+        return (mangledName + "<demangle-failed>");
+    }
+    const std::string demangledName(_demangledName);
+    free(_demangledName); // We have to free this before we return!
+    return demangledName;
 #else
-  return mangledName;
+    return mangledName;
 #endif
 }

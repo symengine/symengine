@@ -268,11 +268,12 @@ public:
             t = p.second->diff(x);
             if (neq(*t, *zero)) {
                 if (is_a<Symbol>(*p.first)) {
-                    diff = add(diff,
-                               mul(t, self.get_arg()
-                                          ->diff(rcp_static_cast<const Symbol>(
-                                              p.first))
-                                          ->subs(self.get_dict())));
+                    diff = add(
+                        diff,
+                        mul(t,
+                            self.get_arg()
+                                ->diff(rcp_static_cast<const Symbol>(p.first))
+                                ->subs(self.get_dict())));
                 } else {
                     return Derivative::create(self.rcp_from_this(), {x});
                 }

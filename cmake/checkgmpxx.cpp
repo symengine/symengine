@@ -2,7 +2,8 @@
 #include <iostream>
 #include <gmpxx.h>
 
-int main() {
+int main()
+{
     mpz_class m = 1;
     std::cout << m;
 }

@@ -11,12 +11,10 @@
 namespace SymEngine
 {
 
-ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+ComplexMPC::ComplexMPC(mpc_class i)
+    : i{std::move(i)} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t ComplexMPC::__hash__() const
+      hash_t ComplexMPC::__hash__() const
 {
     hash_t seed = COMPLEX_MPC;
     hash_combine_impl(seed, mpc_realref(i.get_mpc_t()));

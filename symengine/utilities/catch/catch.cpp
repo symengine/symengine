@@ -15,17 +15,17 @@
 #include <arb.h>
 #endif // HAVE_SYMENGINE_ARB
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-	int result = Catch::Session().run( argc, argv );
+    int result = Catch::Session().run(argc, argv);
 
-	#if defined(HAVE_SYMENGINE_MPFR)
-	   mpfr_free_cache();
-	#endif // HAVE_SYMENGINE_MPFR
+#if defined(HAVE_SYMENGINE_MPFR)
+    mpfr_free_cache();
+#endif // HAVE_SYMENGINE_MPFR
 
-	#if defined(HAVE_SYMENGINE_ARB)
-	   flint_cleanup();
-	#endif // HAVE_SYMENGINE_ARB
+#if defined(HAVE_SYMENGINE_ARB)
+    flint_cleanup();
+#endif // HAVE_SYMENGINE_ARB
 
-	return result;
+    return result;
 }

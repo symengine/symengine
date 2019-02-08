@@ -1276,8 +1276,9 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = mul(i3, pow(i5, div(im1, i2)));
     r2 = mul(i4, pow(i5, div(im1, i2)));
     r2 = expand(pow(add(add(r1, r2), integer(1)), i2));
-    REQUIRE(eq(*r2, *add(div(integer(54), i5),
-                         mul(integer(14), pow(i5, div(im1, i2))))));
+    REQUIRE(eq(
+        *r2,
+        *add(div(integer(54), i5), mul(integer(14), pow(i5, div(im1, i2))))));
 
     r1 = pow(add(mul(I, x), i2), i2);
     r1 = expand(r1);

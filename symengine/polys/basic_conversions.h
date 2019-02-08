@@ -261,8 +261,10 @@ public:
     {
         if (is_a<const Integer>(x))
             this->dict = Poly::container_from_dict(
-                this->gen, {{pow, rational_class(static_cast<const Integer &>(x)
-                                                     .as_integer_class())}});
+                this->gen,
+                {{pow,
+                  rational_class(
+                      static_cast<const Integer &>(x).as_integer_class())}});
         else if (is_a<const Rational>(x))
             this->dict = Poly::container_from_dict(
                 this->gen,

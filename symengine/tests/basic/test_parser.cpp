@@ -253,8 +253,9 @@ TEST_CASE("Parsing: functions", "[parser]")
 
     s = "beta(sin(x+3), gamma(2**y+sin(y)))";
     res = parse(s);
-    REQUIRE(eq(*res, *beta(sin(add(x, integer(3))),
-                           gamma(add(sin(y), pow(integer(2), y))))));
+    REQUIRE(eq(*res,
+               *beta(sin(add(x, integer(3))),
+                     gamma(add(sin(y), pow(integer(2), y))))));
 
     s = "y**(abs(sin(3) + x)) + sinh(2)";
     res = parse(s);
@@ -268,8 +269,9 @@ TEST_CASE("Parsing: functions", "[parser]")
 
     s = "2 + zeta(2, x) + zeta(ln(3))";
     res = parse(s);
-    REQUIRE(eq(*res, *add(integer(2),
-                          add(zeta(integer(2), x), zeta(log(integer(3)))))));
+    REQUIRE(
+        eq(*res,
+           *add(integer(2), add(zeta(integer(2), x), zeta(log(integer(3)))))));
 
     s = "sin(asin(x)) + y";
     res = parse(s);
@@ -488,8 +490,9 @@ TEST_CASE("Parsing: constants", "[parser]")
 
     s = "(3+4*I)/(5+cos(pi/2)*I)";
     res = parse(s);
-    REQUIRE(eq(*res, *div(Complex::from_two_nums(*integer(3), *integer(4)),
-                          integer(5))));
+    REQUIRE(
+        eq(*res,
+           *div(Complex::from_two_nums(*integer(3), *integer(4)), integer(5))));
 
     s = "(2*I +6*I)*3*I + 4*I";
     res = parse(s);
@@ -522,13 +525,15 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
 
     s = "my_func(x, wt) + sin(f(y))";
     res = parse(s);
-    REQUIRE(eq(*res, *add(function_symbol("my_func", {x, z}),
-                          sin(function_symbol("f", y)))));
+    REQUIRE(eq(*res,
+               *add(function_symbol("my_func", {x, z}),
+                    sin(function_symbol("f", y)))));
 
     s = "func(x, y, wt) + f(sin(x))";
     res = parse(s);
-    REQUIRE(eq(*res, *add(function_symbol("func", {x, y, z}),
-                          function_symbol("f", sin(x)))));
+    REQUIRE(eq(*res,
+               *add(function_symbol("func", {x, y, z}),
+                    function_symbol("f", sin(x)))));
 
     s = "f(g(2**x))";
     res = parse(s);

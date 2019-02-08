@@ -4,13 +4,11 @@ namespace SymEngine
 {
 
 URatPoly::URatPoly(const RCP<const Basic> &var, URatDict &&dict)
-    : USymEnginePoly(var, std::move(dict))
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    SYMENGINE_ASSERT(is_canonical(get_poly()))
-}
+    : USymEnginePoly(
+          var, std::move(dict)){SYMENGINE_ASSIGN_TYPEID()
+                                    SYMENGINE_ASSERT(is_canonical(get_poly()))}
 
-hash_t URatPoly::__hash__() const
+      hash_t URatPoly::__hash__() const
 {
     hash_t seed = URATPOLY;
 

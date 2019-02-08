@@ -35,21 +35,23 @@ TEST_CASE("Constructing MIntPoly", "[MIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    RCP<const MIntPoly> P = MIntPoly::from_dict({x, y}, {{{1, 2}, 1_z},
-                                                         {{1, 1}, 2_z},
-                                                         {{0, 1}, 2_z},
-                                                         {{1, 0}, 3_z},
-                                                         {{0, 0}, 0_z}});
+    RCP<const MIntPoly> P = MIntPoly::from_dict({x, y},
+                                                {{{1, 2}, 1_z},
+                                                 {{1, 1}, 2_z},
+                                                 {{0, 1}, 2_z},
+                                                 {{1, 0}, 3_z},
+                                                 {{0, 0}, 0_z}});
 
     REQUIRE(eq(*P->as_symbolic(),
                *add({mul(x, pow(y, integer(2))), mul(integer(2), mul(x, y)),
                      mul(integer(3), x), mul(integer(2), y)})));
 
-    RCP<const MIntPoly> Pprime = MIntPoly::from_dict({y, x}, {{{1, 2}, 1_z},
-                                                              {{1, 1}, 2_z},
-                                                              {{0, 1}, 2_z},
-                                                              {{1, 0}, 3_z},
-                                                              {{0, 0}, 0_z}});
+    RCP<const MIntPoly> Pprime = MIntPoly::from_dict({y, x},
+                                                     {{{1, 2}, 1_z},
+                                                      {{1, 1}, 2_z},
+                                                      {{0, 1}, 2_z},
+                                                      {{1, 0}, 3_z},
+                                                      {{0, 0}, 0_z}});
 
     REQUIRE(eq(*Pprime->as_symbolic(),
                *add({mul(pow(x, integer(2)), y), mul(integer(2), mul(x, y)),
@@ -129,16 +131,17 @@ TEST_CASE("Testing MIntPoly::eval((std::map<RCP<const "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    RCP<const MIntPoly> p = MIntPoly::from_dict({x, y, z}, {{{2, 0, 0}, 1_z},
-                                                            {{0, 2, 0}, 2_z},
-                                                            {{0, 0, 2}, 3_z},
-                                                            {{1, 1, 1}, 4_z},
-                                                            {{1, 1, 0}, 1_z},
-                                                            {{0, 1, 1}, 2_z},
-                                                            {{1, 0, 0}, 1_z},
-                                                            {{0, 1, 0}, 2_z},
-                                                            {{0, 0, 1}, 3_z},
-                                                            {{0, 0, 0}, 5_z}});
+    RCP<const MIntPoly> p = MIntPoly::from_dict({x, y, z},
+                                                {{{2, 0, 0}, 1_z},
+                                                 {{0, 2, 0}, 2_z},
+                                                 {{0, 0, 2}, 3_z},
+                                                 {{1, 1, 1}, 4_z},
+                                                 {{1, 1, 0}, 1_z},
+                                                 {{0, 1, 1}, 2_z},
+                                                 {{1, 0, 0}, 1_z},
+                                                 {{0, 1, 0}, 2_z},
+                                                 {{0, 0, 1}, 3_z},
+                                                 {{0, 0, 0}, 5_z}});
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> m1
         = {{x, 1_z}, {y, 2_z}, {z, 5_z}};
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> m2
@@ -173,35 +176,40 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    RCP<const MIntPoly> p1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, 2_z},
-                                                             {{4, 1, 0}, 3_z},
-                                                             {{0, 0, 0}, 4_z}});
-    RCP<const MIntPoly> p2 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z}});
+    RCP<const MIntPoly> p1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, 2_z},
+                                                  {{4, 1, 0}, 3_z},
+                                                  {{0, 0, 0}, 4_z}});
+    RCP<const MIntPoly> p2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z}});
 
-    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 2_z},
-                                                             {{4, 1, 0}, 3_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 7_z}});
-    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z}, {{{3, 2, 1}, 4_z},
-                                                             {{4, 1, 0}, 3_z},
-                                                             {{0, 1, 2}, -1_z},
-                                                             {{0, 0, 0}, 1_z}});
-    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z}, {{{2, 4, 6}, 1_z},
-                                                             {{5, 3, 3}, 3_z},
-                                                             {{6, 4, 2}, -4_z},
-                                                             {{7, 3, 1}, -6_z},
-                                                             {{1, 3, 5}, 1_z},
-                                                             {{3, 3, 3}, 2_z},
-                                                             {{4, 2, 2}, 3_z},
-                                                             {{0, 1, 2}, 4_z},
-                                                             {{4, 1, 0}, 9_z},
-                                                             {{0, 0, 0}, 12_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{1, 2, 3}, 7_z}});
+    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 2_z},
+                                                  {{4, 1, 0}, 3_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 7_z}});
+    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{3, 2, 1}, 4_z},
+                                                  {{4, 1, 0}, 3_z},
+                                                  {{0, 1, 2}, -1_z},
+                                                  {{0, 0, 0}, 1_z}});
+    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z},
+                                                 {{{2, 4, 6}, 1_z},
+                                                  {{5, 3, 3}, 3_z},
+                                                  {{6, 4, 2}, -4_z},
+                                                  {{7, 3, 1}, -6_z},
+                                                  {{1, 3, 5}, 1_z},
+                                                  {{3, 3, 3}, 2_z},
+                                                  {{4, 2, 2}, 3_z},
+                                                  {{0, 1, 2}, 4_z},
+                                                  {{4, 1, 0}, 9_z},
+                                                  {{0, 0, 0}, 12_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{1, 2, 3}, 7_z}});
 
     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
@@ -220,59 +228,61 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    RCP<const MIntPoly> p1 = MIntPoly::from_dict({a, b, c}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, 2_z},
-                                                             {{4, 1, 0}, 3_z},
-                                                             {{0, 0, 0}, 4_z}});
-    RCP<const MIntPoly> p2 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z}});
+    RCP<const MIntPoly> p1 = MIntPoly::from_dict({a, b, c},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, 2_z},
+                                                  {{4, 1, 0}, 3_z},
+                                                  {{0, 0, 0}, 4_z}});
+    RCP<const MIntPoly> p2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z}});
 
-    RCP<const MIntPoly> q1
-        = MIntPoly::from_dict({a, b, c, x, y, z}, {{{1, 2, 3, 0, 0, 0}, 1_z},
-                                                   {{3, 2, 1, 0, 0, 0}, 2_z},
-                                                   {{4, 1, 0, 0, 0, 0}, 3_z},
-                                                   {{0, 0, 0, 0, 0, 0}, 7_z},
-                                                   {{0, 0, 0, 1, 2, 3}, 1_z},
-                                                   {{0, 0, 0, 3, 2, 1}, -2_z},
-                                                   {{0, 0, 0, 0, 1, 2}, 1_z}});
-    RCP<const MIntPoly> q2
-        = MIntPoly::from_dict({a, b, c, x, y, z}, {{{1, 2, 3, 0, 0, 0}, 1_z},
-                                                   {{3, 2, 1, 0, 0, 0}, 2_z},
-                                                   {{4, 1, 0, 0, 0, 0}, 3_z},
-                                                   {{0, 0, 0, 0, 0, 0}, 1_z},
-                                                   {{0, 0, 0, 1, 2, 3}, -1_z},
-                                                   {{0, 0, 0, 3, 2, 1}, 2_z},
-                                                   {{0, 0, 0, 0, 1, 2}, -1_z}});
-    RCP<const MIntPoly> q3
-        = MIntPoly::from_dict({a, b, c, x, y, z}, {{{1, 2, 3, 0, 0, 0}, -1_z},
-                                                   {{3, 2, 1, 0, 0, 0}, -2_z},
-                                                   {{4, 1, 0, 0, 0, 0}, -3_z},
-                                                   {{0, 0, 0, 0, 0, 0}, -1_z},
-                                                   {{0, 0, 0, 1, 2, 3}, 1_z},
-                                                   {{0, 0, 0, 3, 2, 1}, -2_z},
-                                                   {{0, 0, 0, 0, 1, 2}, 1_z}});
-    RCP<const MIntPoly> q4
-        = MIntPoly::from_dict({a, b, c, x, y, z}, {{{1, 2, 3, 1, 2, 3}, 1_z},
-                                                   {{3, 2, 1, 1, 2, 3}, 2_z},
-                                                   {{4, 1, 0, 1, 2, 3}, 3_z},
-                                                   {{0, 0, 0, 1, 2, 3}, 4_z},
+    RCP<const MIntPoly> q1 = MIntPoly::from_dict({a, b, c, x, y, z},
+                                                 {{{1, 2, 3, 0, 0, 0}, 1_z},
+                                                  {{3, 2, 1, 0, 0, 0}, 2_z},
+                                                  {{4, 1, 0, 0, 0, 0}, 3_z},
+                                                  {{0, 0, 0, 0, 0, 0}, 7_z},
+                                                  {{0, 0, 0, 1, 2, 3}, 1_z},
+                                                  {{0, 0, 0, 3, 2, 1}, -2_z},
+                                                  {{0, 0, 0, 0, 1, 2}, 1_z}});
+    RCP<const MIntPoly> q2 = MIntPoly::from_dict({a, b, c, x, y, z},
+                                                 {{{1, 2, 3, 0, 0, 0}, 1_z},
+                                                  {{3, 2, 1, 0, 0, 0}, 2_z},
+                                                  {{4, 1, 0, 0, 0, 0}, 3_z},
+                                                  {{0, 0, 0, 0, 0, 0}, 1_z},
+                                                  {{0, 0, 0, 1, 2, 3}, -1_z},
+                                                  {{0, 0, 0, 3, 2, 1}, 2_z},
+                                                  {{0, 0, 0, 0, 1, 2}, -1_z}});
+    RCP<const MIntPoly> q3 = MIntPoly::from_dict({a, b, c, x, y, z},
+                                                 {{{1, 2, 3, 0, 0, 0}, -1_z},
+                                                  {{3, 2, 1, 0, 0, 0}, -2_z},
+                                                  {{4, 1, 0, 0, 0, 0}, -3_z},
+                                                  {{0, 0, 0, 0, 0, 0}, -1_z},
+                                                  {{0, 0, 0, 1, 2, 3}, 1_z},
+                                                  {{0, 0, 0, 3, 2, 1}, -2_z},
+                                                  {{0, 0, 0, 0, 1, 2}, 1_z}});
+    RCP<const MIntPoly> q4 = MIntPoly::from_dict({a, b, c, x, y, z},
+                                                 {{{1, 2, 3, 1, 2, 3}, 1_z},
+                                                  {{3, 2, 1, 1, 2, 3}, 2_z},
+                                                  {{4, 1, 0, 1, 2, 3}, 3_z},
+                                                  {{0, 0, 0, 1, 2, 3}, 4_z},
 
-                                                   {{1, 2, 3, 3, 2, 1}, -2_z},
-                                                   {{3, 2, 1, 3, 2, 1}, -4_z},
-                                                   {{4, 1, 0, 3, 2, 1}, -6_z},
-                                                   {{0, 0, 0, 3, 2, 1}, -8_z},
+                                                  {{1, 2, 3, 3, 2, 1}, -2_z},
+                                                  {{3, 2, 1, 3, 2, 1}, -4_z},
+                                                  {{4, 1, 0, 3, 2, 1}, -6_z},
+                                                  {{0, 0, 0, 3, 2, 1}, -8_z},
 
-                                                   {{1, 2, 3, 0, 1, 2}, 1_z},
-                                                   {{3, 2, 1, 0, 1, 2}, 2_z},
-                                                   {{4, 1, 0, 0, 1, 2}, 3_z},
-                                                   {{0, 0, 0, 0, 1, 2}, 4_z},
+                                                  {{1, 2, 3, 0, 1, 2}, 1_z},
+                                                  {{3, 2, 1, 0, 1, 2}, 2_z},
+                                                  {{4, 1, 0, 0, 1, 2}, 3_z},
+                                                  {{0, 0, 0, 0, 1, 2}, 4_z},
 
-                                                   {{1, 2, 3, 0, 0, 0}, 3_z},
-                                                   {{3, 2, 1, 0, 0, 0}, 6_z},
-                                                   {{4, 1, 0, 0, 0, 0}, 9_z},
-                                                   {{0, 0, 0, 0, 0, 0}, 12_z}});
+                                                  {{1, 2, 3, 0, 0, 0}, 3_z},
+                                                  {{3, 2, 1, 0, 0, 0}, 6_z},
+                                                  {{4, 1, 0, 0, 0, 0}, 9_z},
+                                                  {{0, 0, 0, 0, 0, 0}, 12_z}});
 
     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
@@ -294,40 +304,42 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const MIntPoly> p2 = MIntPoly::from_dict(
         {y, z}, {{{2, 1}, -2_z}, {{0, 2}, 1_z}, {{1, 0}, 3_z}});
 
-    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, 1_z},
-                                                             {{4, 0, 0}, 3_z},
-                                                             {{0, 3, 0}, 4_z},
-                                                             {{0, 2, 1}, -2_z},
-                                                             {{0, 0, 2}, 1_z},
-                                                             {{0, 1, 0}, 3_z}});
+    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, 1_z},
+                                                  {{4, 0, 0}, 3_z},
+                                                  {{0, 3, 0}, 4_z},
+                                                  {{0, 2, 1}, -2_z},
+                                                  {{0, 0, 2}, 1_z},
+                                                  {{0, 1, 0}, 3_z}});
 
-    RCP<const MIntPoly> q2
-        = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, 1_z},
-                                          {{4, 0, 0}, 3_z},
-                                          {{0, 3, 0}, 4_z},
-                                          {{0, 2, 1}, 2_z},
-                                          {{0, 0, 2}, -1_z},
-                                          {{0, 1, 0}, -3_z}});
+    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, 1_z},
+                                                  {{4, 0, 0}, 3_z},
+                                                  {{0, 3, 0}, 4_z},
+                                                  {{0, 2, 1}, 2_z},
+                                                  {{0, 0, 2}, -1_z},
+                                                  {{0, 1, 0}, -3_z}});
 
-    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, -1_z},
-                                                             {{4, 0, 0}, -3_z},
-                                                             {{0, 3, 0}, -4_z},
-                                                             {{0, 2, 1}, -2_z},
-                                                             {{0, 0, 2}, 1_z},
-                                                             {{0, 1, 0}, 3_z}});
+    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, -1_z},
+                                                  {{4, 0, 0}, -3_z},
+                                                  {{0, 3, 0}, -4_z},
+                                                  {{0, 2, 1}, -2_z},
+                                                  {{0, 0, 2}, 1_z},
+                                                  {{0, 1, 0}, 3_z}});
 
-    RCP<const MIntPoly> q4
-        = MIntPoly::from_dict({x, y, z}, {{{1, 4, 1}, -2_z},
-                                          {{4, 2, 1}, -6_z},
-                                          {{0, 5, 1}, -8_z},
+    RCP<const MIntPoly> q4 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 4, 1}, -2_z},
+                                                  {{4, 2, 1}, -6_z},
+                                                  {{0, 5, 1}, -8_z},
 
-                                          {{1, 2, 2}, 1_z},
-                                          {{4, 0, 2}, 3_z},
-                                          {{0, 3, 2}, 4_z},
+                                                  {{1, 2, 2}, 1_z},
+                                                  {{4, 0, 2}, 3_z},
+                                                  {{0, 3, 2}, 4_z},
 
-                                          {{1, 3, 0}, 3_z},
-                                          {{4, 1, 0}, 9_z},
-                                          {{0, 4, 0}, 12_z}});
+                                                  {{1, 3, 0}, 3_z},
+                                                  {{4, 1, 0}, 9_z},
+                                                  {{0, 4, 0}, 12_z}});
 
     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
@@ -342,13 +354,14 @@ TEST_CASE("Testing derivative of MIntPoly", "[MIntPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    RCP<const MIntPoly> p = MIntPoly::from_dict({x, y}, {{{2, 1}, 3_z},
-                                                         {{1, 2}, 2_z},
-                                                         {{2, 0}, 3_z},
-                                                         {{0, 2}, 2_z},
-                                                         {{1, 0}, 3_z},
-                                                         {{0, 1}, 2_z},
-                                                         {{0, 0}, 5_z}});
+    RCP<const MIntPoly> p = MIntPoly::from_dict({x, y},
+                                                {{{2, 1}, 3_z},
+                                                 {{1, 2}, 2_z},
+                                                 {{2, 0}, 3_z},
+                                                 {{0, 2}, 2_z},
+                                                 {{1, 0}, 3_z},
+                                                 {{0, 1}, 2_z},
+                                                 {{0, 0}, 5_z}});
 
     RCP<const MIntPoly> q1 = MIntPoly::from_dict(
         {x, y}, {{{1, 1}, 6_z}, {{0, 2}, 2_z}, {{1, 0}, 6_z}, {{0, 0}, 3_z}});
@@ -368,51 +381,56 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    RCP<const MIntPoly> p1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z},
-                                                             {{2, 0, 0}, 2_z},
-                                                             {{1, 0, 0}, 1_z}});
+    RCP<const MIntPoly> p1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{2, 0, 0}, 2_z},
+                                                  {{1, 0, 0}, 1_z}});
     RCP<const MIntPoly> p2 = MIntPoly::from_dict({x}, {{{1}, 1_z}, {{2}, 1_z}});
     RCP<const MIntPoly> p3 = MIntPoly::from_dict({y}, {{{1}, 1_z}, {{2}, 1_z}});
 
-    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z},
-                                                             {{2, 0, 0}, 3_z},
-                                                             {{1, 0, 0}, 2_z}});
-    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z},
-                                                             {{2, 0, 0}, 1_z}});
-    RCP<const MIntPoly> q3
-        = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, -1_z},
-                                          {{3, 2, 1}, 2_z},
-                                          {{0, 1, 2}, -1_z},
-                                          {{0, 0, 0}, -3_z},
-                                          {{2, 0, 0}, -1_z}});
-    RCP<const MIntPoly> q4 = MIntPoly::from_dict({x, y, z}, {{{2, 2, 3}, 1_z},
-                                                             {{4, 2, 1}, -2_z},
-                                                             {{1, 1, 2}, 1_z},
-                                                             {{1, 0, 0}, 3_z},
-                                                             {{3, 0, 0}, 3_z},
+    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{2, 0, 0}, 3_z},
+                                                  {{1, 0, 0}, 2_z}});
+    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{2, 0, 0}, 1_z}});
+    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, -1_z},
+                                                  {{3, 2, 1}, 2_z},
+                                                  {{0, 1, 2}, -1_z},
+                                                  {{0, 0, 0}, -3_z},
+                                                  {{2, 0, 0}, -1_z}});
+    RCP<const MIntPoly> q4 = MIntPoly::from_dict({x, y, z},
+                                                 {{{2, 2, 3}, 1_z},
+                                                  {{4, 2, 1}, -2_z},
+                                                  {{1, 1, 2}, 1_z},
+                                                  {{1, 0, 0}, 3_z},
+                                                  {{3, 0, 0}, 3_z},
 
-                                                             {{3, 2, 3}, 1_z},
-                                                             {{5, 2, 1}, -2_z},
-                                                             {{2, 1, 2}, 1_z},
-                                                             {{2, 0, 0}, 4_z},
-                                                             {{4, 0, 0}, 2_z}});
-    RCP<const MIntPoly> q5 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 3}, 1_z},
-                                                             {{3, 2, 1}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 0}, 3_z},
-                                                             {{2, 0, 0}, 2_z},
-                                                             {{1, 0, 0}, 1_z},
-                                                             {{0, 1, 0}, 1_z},
-                                                             {{0, 2, 0}, 1_z}});
+                                                  {{3, 2, 3}, 1_z},
+                                                  {{5, 2, 1}, -2_z},
+                                                  {{2, 1, 2}, 1_z},
+                                                  {{2, 0, 0}, 4_z},
+                                                  {{4, 0, 0}, 2_z}});
+    RCP<const MIntPoly> q5 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 3}, 1_z},
+                                                  {{3, 2, 1}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{2, 0, 0}, 2_z},
+                                                  {{1, 0, 0}, 1_z},
+                                                  {{0, 1, 0}, 1_z},
+                                                  {{0, 2, 0}, 1_z}});
 
     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
     REQUIRE(eq(*add_mpoly(*p2, *p1), *q1));
@@ -435,34 +453,37 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
         {x, y}, {{{1, 2}, 1_z}, {{2, 1}, -2_z}, {{0, 1}, 1_z}, {{0, 0}, 3_z}});
     RCP<const MIntPoly> p2 = MIntPoly::from_dict({z}, {{{1}, 1_z}, {{2}, 1_z}});
 
-    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, 1_z},
-                                                             {{2, 1, 0}, -2_z},
-                                                             {{0, 1, 0}, 1_z},
-                                                             {{0, 0, 0}, 3_z},
-                                                             {{0, 0, 1}, 1_z},
-                                                             {{0, 0, 2}, 1_z}});
-    RCP<const MIntPoly> q2
-        = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, 1_z},
-                                          {{2, 1, 0}, -2_z},
-                                          {{0, 1, 0}, 1_z},
-                                          {{0, 0, 0}, 3_z},
-                                          {{0, 0, 1}, -1_z},
-                                          {{0, 0, 2}, -1_z}});
-    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 0}, -1_z},
-                                                             {{2, 1, 0}, 2_z},
-                                                             {{0, 1, 0}, -1_z},
-                                                             {{0, 0, 0}, -3_z},
-                                                             {{0, 0, 1}, 1_z},
-                                                             {{0, 0, 2}, 1_z}});
-    RCP<const MIntPoly> q4 = MIntPoly::from_dict({x, y, z}, {{{1, 2, 1}, 1_z},
-                                                             {{2, 1, 1}, -2_z},
-                                                             {{0, 1, 1}, 1_z},
-                                                             {{0, 0, 1}, 3_z},
+    RCP<const MIntPoly> q1 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, 1_z},
+                                                  {{2, 1, 0}, -2_z},
+                                                  {{0, 1, 0}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{0, 0, 1}, 1_z},
+                                                  {{0, 0, 2}, 1_z}});
+    RCP<const MIntPoly> q2 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, 1_z},
+                                                  {{2, 1, 0}, -2_z},
+                                                  {{0, 1, 0}, 1_z},
+                                                  {{0, 0, 0}, 3_z},
+                                                  {{0, 0, 1}, -1_z},
+                                                  {{0, 0, 2}, -1_z}});
+    RCP<const MIntPoly> q3 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 0}, -1_z},
+                                                  {{2, 1, 0}, 2_z},
+                                                  {{0, 1, 0}, -1_z},
+                                                  {{0, 0, 0}, -3_z},
+                                                  {{0, 0, 1}, 1_z},
+                                                  {{0, 0, 2}, 1_z}});
+    RCP<const MIntPoly> q4 = MIntPoly::from_dict({x, y, z},
+                                                 {{{1, 2, 1}, 1_z},
+                                                  {{2, 1, 1}, -2_z},
+                                                  {{0, 1, 1}, 1_z},
+                                                  {{0, 0, 1}, 3_z},
 
-                                                             {{1, 2, 2}, 1_z},
-                                                             {{2, 1, 2}, -2_z},
-                                                             {{0, 1, 2}, 1_z},
-                                                             {{0, 0, 2}, 3_z}});
+                                                  {{1, 2, 2}, 1_z},
+                                                  {{2, 1, 2}, -2_z},
+                                                  {{0, 1, 2}, 1_z},
+                                                  {{0, 0, 2}, 3_z}});
 
     REQUIRE(eq(*add_mpoly(*p1, *p2), *q1));
     REQUIRE(eq(*sub_mpoly(*p1, *p2), *q2));
