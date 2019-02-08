@@ -20,9 +20,25 @@
     }
 #endif // !defined(SYMENGINE_ASSERT)
 
+#if !defined(SYMENGINE_ASSERT_MSG)
+#define SYMENGINE_ASSERT_MSG(cond, msg)                                        \
+    {                                                                          \
+        if (!(cond)) {                                                         \
+            std::cerr << "SYMENGINE_ASSERT failed: " << __FILE__               \
+                      << "\nfunction " << __func__ << "(), line number "       \
+                      << __LINE__ << " at \n"                                  \
+                      << XSTR(cond) << "\n"                                    \
+                      << "ERROR MESSAGE:\n"                                    \
+                      << msg << "\n";                                          \
+            abort();                                                           \
+        }                                                                      \
+    }
+#endif // !defined(SYMENGINE_ASSERT_MSG)
+
 #else // defined(WITH_SYMENGINE_ASSERT)
 
 #define SYMENGINE_ASSERT(cond)
+#define SYMENGINE_ASSERT_MSG(cond, msg)
 
 #endif // defined(WITH_SYMENGINE_ASSERT)
 
