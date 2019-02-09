@@ -36,14 +36,14 @@ TEST_CASE("Constructing MExprPoly", "[MExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression num1(integer(2));                             // 2
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp2(integer(2) - Expression(symbol("d")));  //(2 - d)
-    Expression comp3(integer(-3) + Expression(symbol("e"))); //(-3 + e)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression num1(2);                     // 2
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp2(2 - Expression("d"));  //(2 - d)
+    Expression comp3(-3 + Expression("e")); //(-3 + e)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
     vec_basic s;
     vec_int v;
 
@@ -178,13 +178,12 @@ TEST_CASE("Testing MExprPoly::eval", "[MExprPoly]")
         = {{x, ex}, {y, why}, {z, zee}};
     // CHECK_THROWS_AS(p->eval(m1), SymEngineException&);
     REQUIRE(p->eval(m2)
-            == expr1 * pow_ex(ex, 2) + expr2 * pow_ex(why, 2)
-                   + expr3 * pow_ex(zee, 2) + expr4 * ex * why * zee
-                   + expr1 * ex * why + expr2 * why * zee + expr1 * ex
-                   + expr2 * why + expr3 * zee + expr4
-                   + expr1 * pow_ex(ex, -1) * pow_ex(why, -1) * pow_ex(zee, -1)
-                   + expr2 * pow_ex(ex, -2) * pow_ex(why, -2) * pow_ex(zee, -2)
-                   + expr3 * pow_ex(ex, -2) * pow_ex(why, 2) * pow_ex(zee, -2));
+            == expr1 * pow(ex, 2) + expr2 * pow(why, 2) + expr3 * pow(zee, 2)
+                   + expr4 * ex * why * zee + expr1 * ex * why
+                   + expr2 * why * zee + expr1 * ex + expr2 * why + expr3 * zee
+                   + expr4 + expr1 * pow(ex, -1) * pow(why, -1) * pow(zee, -1)
+                   + expr2 * pow(ex, -2) * pow(why, -2) * pow(zee, -2)
+                   + expr3 * pow(ex, -2) * pow(why, 2) * pow(zee, -2));
 }
 
 TEST_CASE("Testing derivative of MExprPoly", "[MExprPoly]")
@@ -274,14 +273,14 @@ TEST_CASE("Testing MExprPoly negation"
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression num1(integer(2));                             // 2
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp2(integer(2) - Expression(symbol("d")));  //(2 - d)
-    Expression comp3(integer(-3) + Expression(symbol("e"))); //(-3 + e)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression num1(2);                     // 2
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp2(2 - Expression("d"));  //(2 - d)
+    Expression comp3(-3 + Expression("e")); //(-3 + e)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y},
@@ -316,12 +315,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression num1(integer(2));                             // 2
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression num1(2);                     // 2
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y},
@@ -382,11 +381,11 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> n = symbol("n");
     RCP<const Symbol> m = symbol("m");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y}, {{{1, 1}, a}, {{-1, 0}, negB}, {{0, 0}, negNum}});
@@ -434,11 +433,11 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y}, {{{1, -1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
@@ -579,11 +578,11 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
@@ -633,11 +632,11 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    Expression a(symbol("a"));                               // a
-    Expression negB(-Expression(symbol("b")));               //-b
-    Expression negNum(integer(-3));                          //-3
-    Expression comp1(integer(1) + Expression(symbol("c")));  //(1+c)
-    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    Expression a("a");                      // a
+    Expression negB(-Expression("b"));      //-b
+    Expression negNum(-3);                  //-3
+    Expression comp1(1 + Expression("c"));  //(1+c)
+    Expression comp4(-4 - Expression("f")); //(-4 - f)
 
     RCP<const MExprPoly> p1 = MExprPoly::from_dict(
         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
@@ -762,8 +761,9 @@ TEST_CASE("MExprPoly from_poly", "[MExprPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const MExprPoly> mpoly
-        = MExprPoly::from_dict({x}, {{{1}, y}, {{2}, 3_z}});
-    RCP<const UExprPoly> upoly = UExprPoly::from_vec(x, {0_z, y, 3_z});
+        = MExprPoly::from_dict({x}, {{{1}, Expression("y")}, {{2}, 3_z}});
+    RCP<const UExprPoly> upoly
+        = UExprPoly::from_vec(x, {0_z, Expression("y"), 3_z});
 
     REQUIRE(eq(*MExprPoly::from_poly(*upoly), *mpoly));
 }

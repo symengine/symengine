@@ -90,7 +90,7 @@ Expression MExprPoly::eval(
         Expression term = bucket.second;
         unsigned int whichvar = 0;
         for (auto sym : get_vars()) {
-            term *= pow_ex(vals.find(sym)->second, bucket.first[whichvar]);
+            term *= pow(vals.find(sym)->second, bucket.first[whichvar]);
             whichvar++;
         }
         ans += term;

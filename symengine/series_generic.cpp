@@ -136,7 +136,7 @@ Expression UnivariateSeries::find_cf(const UExprDict &s, const UExprDict &var,
 
 Expression UnivariateSeries::root(Expression &c, unsigned n)
 {
-    return pow_ex(c, 1 / Expression(n));
+    return SymEngine::pow(c, 1 / Expression(n));
 }
 
 UExprDict UnivariateSeries::diff(const UExprDict &s, const UExprDict &var)

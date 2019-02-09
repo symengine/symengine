@@ -1,4 +1,5 @@
 #include <symengine/printers/strprinter.h>
+#include <symengine/parser.h>
 
 namespace SymEngine
 {
@@ -13,6 +14,11 @@ std::string poly_print(const Expression &x)
     }
     return x.get_basic()->__str__();
 }
+}
+
+Expression::Expression(const std::string &s)
+{
+    m_basic = parse(s);
 }
 
 } // SymEngine

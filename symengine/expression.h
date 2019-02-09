@@ -57,20 +57,16 @@ public:
     {
     }
 
-    template <typename T>
-    Expression(RCP<const T> &&o,
-               typename std::enable_if<std::is_base_of<Basic, T>::value>::type
-                   * = nullptr)
-        : m_basic(o)
+    Expression(RCP<const Basic> &&o) : m_basic(o)
     {
     }
-    template <typename T>
-    Expression(const RCP<const T> &o,
-               typename std::enable_if<std::is_base_of<Basic, T>::value>::type
-                   * = nullptr)
-        : m_basic(o)
+
+    Expression(const RCP<const Basic> &o) : m_basic(o)
     {
     }
+
+    Expression(const std::string &s);
+
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
@@ -113,6 +109,10 @@ public:
     friend Expression operator-(const Expression &a, const Expression &b)
     {
         return Expression(sub(a.m_basic, b.m_basic));
+    }
+    operator RCP<const Basic>() const
+    {
+        return m_basic;
     }
     //! Overload unary negative
     Expression operator-() const
@@ -168,7 +168,7 @@ public:
     }
 };
 
-inline Expression pow_ex(const Expression &base, const Expression &exp)
+inline Expression pow(const Expression &base, const Expression &exp)
 {
     return pow(base.get_basic(), exp.get_basic());
 }

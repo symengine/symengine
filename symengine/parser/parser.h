@@ -112,14 +112,10 @@ public:
              std::function<RCP<const Basic>(const RCP<const Basic> &,
                                             const RCP<const Basic> &)>>
         double_arg_functions = {
-            {"pow", pow},
-            {"beta", beta},
-            {"log", double_casted_log},
-            {"zeta", double_casted_zeta},
-            {"lowergamma", lowergamma},
-            {"uppergamma", uppergamma},
-            {"polygamma", polygamma},
-            {"kronecker_delta", kronecker_delta},
+            {"pow", (double_arg_func)pow}, {"beta", beta},
+            {"log", double_casted_log},    {"zeta", double_casted_zeta},
+            {"lowergamma", lowergamma},    {"uppergamma", uppergamma},
+            {"polygamma", polygamma},      {"kronecker_delta", kronecker_delta},
         };
 
     // maps string to corresponding multi argument function

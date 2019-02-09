@@ -54,6 +54,7 @@ using SymEngine::dummy;
 using SymEngine::set_union;
 using SymEngine::imageset;
 using SymEngine::add;
+using SymEngine::Expression;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -352,7 +353,8 @@ TEST_CASE("solve_poly", "[Solve]")
     soln = solve_poly(p2, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 
-    auto P = uexpr_poly(x, {{0, integer(2)}, {1, integer(3)}, {2, integer(1)}});
+    auto P = uexpr_poly(
+        x, {{0, Expression(2)}, {1, Expression(3)}, {2, Expression(1)}});
     soln = solve_poly(P, x);
     REQUIRE(eq(*soln, *finiteset({neg(one), neg(integer(2))})));
 
