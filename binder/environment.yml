@@ -9,3 +9,5 @@ dependencies:
   - mpc
   - cmake
   - arb
+  - libflint
+  - notebook
