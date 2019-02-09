@@ -99,16 +99,37 @@ public:
     {
         return Expression(add(a.m_basic, b.m_basic));
     }
+    friend Expression operator+(const RCP<const Basic> &a, const Expression &b)
+    {
+        return Expression(add(a, b.m_basic));
+    }
+    friend Expression operator+(const Expression &a, const RCP<const Basic> &b)
+    {
+        return Expression(add(a.m_basic, b));
+    }
     //! Overload addition and assignment(+=)
     Expression &operator+=(const Expression &other)
     {
         m_basic = add(m_basic, other.m_basic);
         return *this;
     }
+    Expression &operator+=(const RCP<const Basic> &other)
+    {
+        m_basic = add(m_basic, other);
+        return *this;
+    }
     //! Overload subtraction
     friend Expression operator-(const Expression &a, const Expression &b)
     {
         return Expression(sub(a.m_basic, b.m_basic));
+    }
+    friend Expression operator-(const RCP<const Basic> &a, const Expression &b)
+    {
+        return Expression(sub(a, b.m_basic));
+    }
+    friend Expression operator-(const Expression &a, const RCP<const Basic> &b)
+    {
+        return Expression(sub(a.m_basic, b));
     }
     operator RCP<const Basic>() const
     {
@@ -127,10 +148,23 @@ public:
         m_basic = sub(m_basic, other.m_basic);
         return *this;
     }
+    Expression &operator-=(const RCP<const Basic> &other)
+    {
+        m_basic = sub(m_basic, other);
+        return *this;
+    }
     //! Overload multiplication
     friend Expression operator*(const Expression &a, const Expression &b)
     {
         return Expression(mul(a.m_basic, b.m_basic));
+    }
+    friend Expression operator*(const RCP<const Basic> &a, const Expression &b)
+    {
+        return Expression(mul(a, b.m_basic));
+    }
+    friend Expression operator*(const Expression &a, const RCP<const Basic> &b)
+    {
+        return Expression(mul(a.m_basic, b));
     }
     //! Overload multiplication and assignment (*=)
     Expression &operator*=(const Expression &other)
@@ -138,10 +172,23 @@ public:
         m_basic = mul(m_basic, other.m_basic);
         return *this;
     }
+    Expression &operator*=(const RCP<const Basic> &other)
+    {
+        m_basic = mul(m_basic, other);
+        return *this;
+    }
     //! Overload Division
     friend Expression operator/(const Expression &a, const Expression &b)
     {
         return Expression(div(a.m_basic, b.m_basic));
+    }
+    friend Expression operator/(const RCP<const Basic> &a, const Expression &b)
+    {
+        return Expression(div(a, b.m_basic));
+    }
+    friend Expression operator/(const Expression &a, const RCP<const Basic> &b)
+    {
+        return Expression(div(a.m_basic, b));
     }
     //! Overload Division and assignment (/=)
     Expression &operator/=(const Expression &other)
@@ -149,14 +196,27 @@ public:
         m_basic = div(m_basic, other.m_basic);
         return *this;
     }
+    Expression &operator/=(const RCP<const Basic> &other)
+    {
+        m_basic = div(m_basic, other);
+        return *this;
+    }
     //! Overload check equality (==)
     bool operator==(const Expression &other) const
     {
         return eq(*m_basic, *other.m_basic);
     }
+    bool operator==(const RCP<const Basic> &other) const
+    {
+        return eq(*m_basic, *other);
+    }
 
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
+    {
+        return not(*this == other);
+    }
+    bool operator!=(const RCP<const Basic> &other) const
     {
         return not(*this == other);
     }

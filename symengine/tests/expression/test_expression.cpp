@@ -20,7 +20,9 @@ TEST_CASE("Constructors of Expression", "[Expression]")
 
     e0 = e0 + sin(e0);
     e0 = cos(e0);
-    REQUIRE(eq(*e0.get_basic(), *cos(add(symbol("x"), sin(symbol("x"))))));
+    e0 = e0 + integer(1);
+    REQUIRE(eq(*e0.get_basic(),
+               *add(cos(add(symbol("x"), sin(symbol("x")))), integer(1))));
 
     Expression e1 = 20;
     REQUIRE(eq(*e1.get_basic(), *integer(20)));
