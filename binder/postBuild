@@ -1,3 +1,4 @@
+set -e
 mkdir build
 cd build
 export LDFLAGS="-Wl,-rpath,$CONDA_DIR/lib -L$CONDA_DIR/lib"
