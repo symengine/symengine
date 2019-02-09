@@ -67,10 +67,13 @@ def export_code_to_file(filename, a, b, patterns):
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions
+ * Use symengine/utilities/matchpycpp/generate_tests.py to generate this file.
+ *
+ * Decision tree matching expressions:
  * {0}
  *
- * Wildcards: {1}
+ * Wildcards:
+ * {1}
  */
 """.format(str(patterns), wilds))
     fout.write('#include "catch.hpp"\n')

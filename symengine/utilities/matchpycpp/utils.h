@@ -13,7 +13,7 @@ using namespace std;
 RCP<const Basic> None = symbol("None");
 
 template <typename T, typename Comparison>
-map<T, int, Comparison> count_multiset(multiset<T, Comparison> m)
+map<T, int, Comparison> count_multiset(const multiset<T, Comparison> &m)
 {
     map<T, int, Comparison> result;
     for (const T &elem : m) {
@@ -61,7 +61,7 @@ public:
         : name(name), count(count), minimum(minimum), defaultv(defaultv)
     {
     }
-    VariableWithCount(string name, unsigned count, unsigned minimum,
+    VariableWithCount(const string &name, unsigned count, unsigned minimum,
                       RCP<const Basic> defaultv)
         : count(count), minimum(minimum), defaultv(defaultv)
     {
@@ -74,8 +74,8 @@ public:
 };
 
 generator<SubstitutionMultiset>
-_commutative_single_variable_partiton_iter(multiset_basic values,
-                                           VariableWithCount variable)
+_commutative_single_variable_partiton_iter(const multiset_basic &values,
+                                           const VariableWithCount &variable)
 {
     string name = variable.name->__str__();
     unsigned count = variable.count;
@@ -116,11 +116,11 @@ _commutative_single_variable_partiton_iter(multiset_basic values,
 }
 
 function<void(SubstitutionMultiset)>
-_make_variable_generator_factory(RCP<const Basic> value, int total,
-                                 vector<VariableWithCount> variables)
+_make_variable_generator_factory(const RCP<const Basic> value, const int total,
+                                 const vector<VariableWithCount> &variables)
 {
     vector<int> var_counts;
-    for (VariableWithCount &v : variables) {
+    for (const VariableWithCount &v : variables) {
         var_counts.push_back(v.count);
     }
     // vector<int> cache_key;

@@ -142,7 +142,6 @@ class CommutativeMatcher{0} : public CommutativeMatcher
 public:
 {8}CommutativeMatcher{0}()
 {8}{{
-
 {8}{8}patterns = {1};
 {8}{8}subjects = {2};
 {8}{8}subjects_by_id = {7};

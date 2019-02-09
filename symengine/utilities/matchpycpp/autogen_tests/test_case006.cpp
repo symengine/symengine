@@ -1,10 +1,13 @@
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions
+ * Use symengine/utilities/matchpycpp/generate_tests.py to generate this file.
+ *
+ * Decision tree matching expressions:
  * ['x**(x + w)', 'x + y + w', 'w**(-x*w + 1)']
  *
- * Wildcards: ['w']
+ * Wildcards:
+ * ['w']
  */
 #include "catch.hpp"
 #include <deque>
@@ -31,7 +34,6 @@ class CommutativeMatcher2226 : public CommutativeMatcher
 public:
     CommutativeMatcher2226()
     {
-
         patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0}, {make_tuple(VariableWithCount("i3.0", 1, 1, None), ADD)})}};
         subjects = {};
         subjects_by_id = {};
@@ -71,7 +73,6 @@ class CommutativeMatcher2240 : public CommutativeMatcher
 public:
     CommutativeMatcher2240()
     {
-
         patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {make_tuple(VariableWithCount("i1", 1, 1, None), MUL)})}};
         subjects = {};
         subjects_by_id = {};
@@ -121,7 +122,6 @@ class CommutativeMatcher2237 : public CommutativeMatcher
 public:
     CommutativeMatcher2237()
     {
-
         patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {})}};
         subjects = {};
         subjects_by_id = {};
@@ -187,7 +187,6 @@ class CommutativeMatcher2231 : public CommutativeMatcher
 public:
     CommutativeMatcher2231()
     {
-
         patterns
             = {{{0},
                 make_tuple<int, multiset<int>, PatternSet>(

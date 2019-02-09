@@ -15,7 +15,8 @@ template <typename TLeft, typename TRight>
 class HopcroftKarp
 {
 public:
-    HopcroftKarp(map<TLeft, set<TRight>> _graph_left) : _graph_left(_graph_left)
+    HopcroftKarp(map<TLeft, set<TRight>> &_graph_left)
+        : _graph_left(_graph_left)
     {
         reference_distance = INT_MAX;
         get_left_indices_vector(_graph_left);

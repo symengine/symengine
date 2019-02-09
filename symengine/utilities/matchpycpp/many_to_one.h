@@ -267,7 +267,7 @@ public:
         return result;
     }
 
-    bool _is_canonical_matching(Matching matching)
+    bool _is_canonical_matching(const Matching &matching)
     {
         for (const pair<tuple<int, int>, tuple<int, int>> &pair1 : matching) {
             //.items():
@@ -296,7 +296,8 @@ public:
         return true;
     }
 
-    Subgraph _build_bipartite(multiset<int> subjects, multiset<int> patterns)
+    Subgraph _build_bipartite(const multiset<int> &subjects,
+                              const multiset<int> &patterns)
     {
         Subgraph bipartite;
         int n = 0;

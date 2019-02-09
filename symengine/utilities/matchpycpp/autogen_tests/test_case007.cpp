@@ -1,10 +1,13 @@
 /*
  * This file was automatically generated: DO NOT EDIT.
  *
- * Decision tree matching expressions
+ * Use symengine/utilities/matchpycpp/generate_tests.py to generate this file.
+ *
+ * Decision tree matching expressions:
  * ['x + y + wo', '3*x*y*wo', '7*x*y*w']
  *
- * Wildcards: ['w', 'wo']
+ * Wildcards:
+ * ['w', 'wo']
  */
 #include "catch.hpp"
 #include <deque>
@@ -31,7 +34,6 @@ class CommutativeMatcher2248 : public CommutativeMatcher
 public:
     CommutativeMatcher2248()
     {
-
         patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {make_tuple(VariableWithCount("i1.0", 1, 1, integer(0)), ADD)})}};
         subjects = {};
         subjects_by_id = {};
@@ -81,7 +83,6 @@ class CommutativeMatcher2253 : public CommutativeMatcher
 public:
     CommutativeMatcher2253()
     {
-
         patterns
             = {{{0},
                 make_tuple<int, multiset<int>, PatternSet>(
