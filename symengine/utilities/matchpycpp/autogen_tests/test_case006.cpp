@@ -25,6 +25,8 @@
 #include <symengine/utilities/matchpycpp/utils.h>
 #include <tuple>
 
+using SymEngine::print_stack_on_segfault;
+
 RCP<const Basic> x = symbol("x");
 RCP<const Basic> y = symbol("y");
 RCP<const Basic> z = symbol("z");
@@ -360,6 +362,7 @@ match_root(const RCP<const Basic> &subject)
 
 TEST_CASE("GeneratedMatchPyTest6", "")
 {
+    SymEngine::print_stack_on_segfault();
     generator<tuple<int, SubstitutionMultiset>> ret;
     SubstitutionMultiset substitution;
 
