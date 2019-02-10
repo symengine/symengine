@@ -91,7 +91,7 @@ endif()
 if (${EXCLUDE_LIBS})
     message(STATUS "Linker supports --exclude-libs")
 else()
-    message(STATUS "Linker does not support --exclude-libs ${EXCLUDE_LIBS_ERROR_LOG}")
+    message(STATUS "Linker does not support --exclude-libs")
 endif()
 
 set(HAVE_GCC_ABI_DEMANGLE yes

@@ -101,13 +101,13 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs arb=2.8.1"
 fi
 
-if [[ ! -z "${WITH_LLVM}" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
-    export LLVM_DIR=$our_install_dir/share/llvm/
-elif [[ ! -z "${WITH_SANITIZE}" ]]; then
+if [[ "${WITH_LLVM}" == "7.0" ]]; then
     export LLVM_DIR=/usr/lib/llvm-7/share/llvm/
     export CC=clang-7
     export CXX=clang++-7
+elif [[ ! -z "${WITH_LLVM}" ]]; then
+    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
+    export LLVM_DIR=$our_install_dir/share/llvm/
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then
