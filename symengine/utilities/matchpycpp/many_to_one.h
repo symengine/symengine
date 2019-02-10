@@ -306,7 +306,6 @@ public:
         for (const pair<int, int> &p : count_multiset(subjects)) {
             int subject = p.first;
             int s_count = p.second;
-            auto &ya = *(this->bipartite._graph_left.begin());
             if (this->bipartite._graph_left.find(subject)
                 != this->bipartite._graph_left.end()) {
                 bool any_patterns = false;
