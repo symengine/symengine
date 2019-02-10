@@ -122,7 +122,7 @@ public:
             int pattern_index = get<0>(p.second);
             multiset<int> pattern_set = get<1>(p.second);
             PatternSet pattern_vars = get<2>(p.second);
-            if (pattern_set.size() > 0) {
+            if (!pattern_set.empty()) {
                 if (!includes(pattern_set.begin(), pattern_set.end(),
                               pattern_ids.begin(), pattern_ids.end())) {
                     continue;
@@ -146,7 +146,7 @@ public:
                         }
                         remaining.insert(subjects_by_id.at(id));
                     }
-                    if (pattern_vars.size() > 0) {
+                    if (!pattern_vars.empty()) {
                         vector<SubstitutionMultiset> sequence_var_iter
                             = _match_sequence_variables(remaining, pattern_vars,
                                                         bipartite_substitution);
@@ -156,12 +156,12 @@ public:
                             result.push_back(
                                 make_tuple(pattern_index, result_substitution));
                         }
-                    } else if (remaining.size() == 0) {
+                    } else if (remaining.empty()) {
                         result.push_back(
                             make_tuple(pattern_index, bipartite_substitution));
                     }
                 }
-            } else if (pattern_vars.size() > 0) {
+            } else if (!pattern_vars.empty()) {
                 multiset_basic multiset_arg(subjects.begin(), subjects.end());
                 vector<SubstitutionMultiset> sequence_var_iter
                     = _match_sequence_variables(multiset_arg, pattern_vars,
@@ -172,7 +172,7 @@ public:
                     result.push_back(
                         make_tuple(pattern_index, variable_substitution));
                 }
-            } else if (subjects.size() == 0) {
+            } else if (subjects.empty()) {
                 // YIELD:
                 result.push_back(make_tuple(pattern_index, substitution));
             }

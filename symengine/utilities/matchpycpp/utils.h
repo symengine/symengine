@@ -84,7 +84,7 @@ _commutative_single_variable_partiton_iter(const multiset_basic &values,
 
     generator<SubstitutionMultiset> result;
 
-    if (values.size() == 0 && defaultv != None) {
+    if (values.empty() && defaultv != None) {
         result.push_back(SubstitutionMultiset{{name, {defaultv}}});
         return result;
     }

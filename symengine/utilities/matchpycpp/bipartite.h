@@ -121,10 +121,8 @@ public:
         return new_graph;
     }
 
-    //    """Returns a copy of this bipartite graph with the given edge
-    //    removed."""
-    //    return BipartiteGraph((e2, v) for e2, v in self._edges.items() if edge
-    //    != e2)
+    // Returns a copy of this bipartite graph with the given edge
+    // removed
     BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(Edge &edge)
     {
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
@@ -169,14 +167,6 @@ public:
     }
 };
 
-int get0(tuple<int, int> a)
-{
-    return get<0>(a);
-}
-int get1(tuple<int, int> a)
-{
-    return get<1>(a);
-}
 
 template <typename TLeft, typename TRight>
 class _DirectedMatchGraph
@@ -219,7 +209,7 @@ public:
             NodeList node_list;
             NodeList cycle;
             cycle = _find_cycle(n.first, node_list, visited);
-            if (cycle.size() > 0) {
+            if (!cycle.empty()) {
                 return cycle;
             }
         }
@@ -246,7 +236,7 @@ public:
             NodeList new_path(path.begin(), path.end());
             new_path.push_back(node);
             NodeList cycle = _find_cycle(other, new_path, visited);
-            if (cycle.size() > 0) {
+            if (!cycle.empty()) {
                 return cycle;
             }
         }
@@ -436,7 +426,7 @@ enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
 {
     vector<map<TLeft, TRight>> result;
     map<TLeft, TRight> matching = graph.find_matching();
-    if (matching.size() > 0) {
+    if (!matching.empty()) {
         result.push_back(matching);
         // graph = graph.__copy__();
         generator<map<TLeft, TRight>> extension = _enum_maximum_matchings_iter(
