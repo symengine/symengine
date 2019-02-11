@@ -650,7 +650,9 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
 
     CHECK_THROWS_AS(
         from_basic<UIntPolyFlint>(
-            UExprPoly::from_vec(gen, {{one, integer(2), zero, integer(4)}}), x),
+            UExprPoly::from_vec(gen, {{Expression(1), Expression(2),
+                                       Expression(0), Expression(4)}}),
+            x),
         SymEngineException &);
 }
 #endif
