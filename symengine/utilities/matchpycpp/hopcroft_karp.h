@@ -11,6 +11,18 @@
 
 using namespace std;
 
+/*
+ * Implementation of the Hopcroft-Karp algorithm on a bipartite graph.
+ *
+ * The bipartite graph has types TLeft and TRight on the two partitions.
+ *
+ * The constructor accepts a `map` mapping the left vertices to the set of
+ * connected right vertices.
+ *
+ * The method `.hopcroft_karp()` finds the maximum cardinality matching,
+ * returning its cardinality. The matching will be stored in the file `pair_left`
+ * and `pair_right` after the matching is found.
+ */
 template <typename TLeft, typename TRight>
 class HopcroftKarp
 {

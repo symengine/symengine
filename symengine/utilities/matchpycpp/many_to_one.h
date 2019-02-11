@@ -180,7 +180,7 @@ public:
         return result;
     }
 
-    vector<tuple<SubstitutionMultiset, multiset<int>>>
+    generator<tuple<SubstitutionMultiset, multiset<int>>>
     _match_with_bipartite(const multiset<int> &subject_ids,
                           const multiset<int> &pattern_set,
                           const SubstitutionMultiset &substitution)

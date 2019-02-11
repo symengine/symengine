@@ -116,7 +116,7 @@ _commutative_single_variable_partiton_iter(const multiset_basic &values,
 }
 
 function<void(SubstitutionMultiset)>
-_make_variable_generator_factory(const RCP<const Basic> value, const int total,
+_make_variable_generator_factory(const RCP<const Basic> &value, const int total,
                                  const vector<VariableWithCount> &variables)
 {
     vector<int> var_counts;

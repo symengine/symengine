@@ -22,12 +22,8 @@ public:
     TYPES_DERIVED_FROM_TLEFT_TRIGHT
 
     map<Edge, TEdgeValue> _edges;
-    map<TLeft, TRight> _matching;
-    vector<int> _dfs_paths;
-    map<int, int> _dfs_parent;
     set<TLeft> _left;
     set<TRight> _right;
-    // map<Node, set<Node>> _graph;
     map<TLeft, set<TRight>> _graph_left;
     map<TRight, set<TLeft>> _graph_right;
 
@@ -35,7 +31,7 @@ public:
     {
     }
 
-    BipartiteGraph(map<Edge, TEdgeValue> edges)
+    BipartiteGraph(map<Edge, TEdgeValue> &edges)
     {
         _edges = edges;
         for (const pair<Edge, TEdgeValue> &p : edges) {
@@ -48,7 +44,7 @@ public:
         }
     }
 
-    void __setitem__(Edge key, TEdgeValue value)
+    void __setitem__(const Edge &key, const TEdgeValue &value)
     {
         _edges[key] = value;
         _left.insert(get<0>(key));
@@ -67,7 +63,7 @@ public:
         _graph_right[k2].insert(get<0>(key));
     }
 
-    TEdgeValue setdefault(Edge key, TEdgeValue value)
+    TEdgeValue setdefault(const Edge &key, const TEdgeValue &value)
     {
         if (_edges.find(key) != _edges.end()) {
             return _edges[key];
@@ -77,12 +73,12 @@ public:
         }
     }
 
-    TEdgeValue &__getitem__(Edge key)
+    TEdgeValue &__getitem__(const Edge &key)
     {
-        return _edges[key];
+        return _edges.at(key);
     }
 
-    void __delitem__(Edge key)
+    void __delitem__(const Edge &key)
     {
         _edges.erase(key);
         for (const pair<Edge, TEdgeValue> &p : _edges) {
@@ -105,7 +101,7 @@ public:
 
     //    """Returns a copy of this bipartite graph with the given edge and its
     //    adjacent nodes removed."""
-    BipartiteGraph<TLeft, TRight, TEdgeValue> without_nodes(Edge &edge)
+    BipartiteGraph<TLeft, TRight, TEdgeValue> without_nodes(const Edge &edge) const
     {
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
@@ -123,7 +119,7 @@ public:
 
     // Returns a copy of this bipartite graph with the given edge
     // removed
-    BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(Edge &edge)
+    BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(const Edge &edge) const
     {
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
@@ -137,7 +133,7 @@ public:
         return new_graph;
     }
 
-    map<TLeft, TRight> find_matching()
+    map<TLeft, TRight> find_matching() const
     {
         map<TLeft, set<TRight>> directed_graph;
 
@@ -152,8 +148,7 @@ public:
         }
 
         HopcroftKarp<TLeft, TRight> hk(directed_graph);
-        int number_matchings = hk.hopcroft_karp();
-
+        hk.hopcroft_karp();
         return hk.pair_left;
     }
 
@@ -202,7 +197,7 @@ public:
         }
     }
 
-    NodeList find_cycle()
+    NodeList find_cycle() const
     {
         set<Node> visited;
         for (const pair<Node, NodeSet> &n : _map) {
@@ -216,7 +211,7 @@ public:
         return NodeList();
     }
 
-    NodeList _find_cycle(const Node &node, NodeList &path, set<Node> &visited)
+    NodeList _find_cycle(const Node &node, NodeList &path, set<Node> &visited) const
     {
         if (visited.find(node) != visited.end()) {
             typename NodeList::iterator found_end;
@@ -232,7 +227,7 @@ public:
         if (_map.find(node) == _map.end()) {
             return NodeList();
         }
-        for (const Node &other : _map[node]) {
+        for (const Node &other : _map.at(node)) {
             NodeList new_path(path.begin(), path.end());
             new_path.push_back(node);
             NodeList cycle = _find_cycle(other, new_path, visited);
@@ -255,9 +250,9 @@ public:
 
 template <typename TLeft, typename TRight, typename TEdgeValue>
 generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
-    BipartiteGraph<TLeft, TRight, TEdgeValue> graph,
-    map<TLeft, TRight> matching,
-    _DirectedMatchGraph<TLeft, TRight> directed_match_graph)
+    BipartiteGraph<TLeft, TRight, TEdgeValue> &graph,
+    map<TLeft, TRight> &matching,
+    const _DirectedMatchGraph<TLeft, TRight> &directed_match_graph)
 {
     TYPES_DERIVED_FROM_TLEFT_TRIGHT
 
@@ -358,7 +353,8 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
         // left2 is also in the left part of the graph and but must not be in
         // matching
         TLeft left1;
-        TLeft *left2 = nullptr;
+        TLeft left2;
+        bool left2found = false;
         TRight right;
 
         for (const pair<Node, NodeSet> &p : directed_match_graph._map) {
@@ -375,17 +371,18 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
                              make_tuple(RIGHT, right))) {
                         TLeft node2 = get<1>(p2);
                         if (matching.find((TLeft)node2) == matching.end()) {
-                            left2 = &node2;
+                            left2 = node2;
+                            left2found = true;
                             break;
                         }
                     }
-                    if (left2 != nullptr) {
+                    if (left2found) {
                         break;
                     }
                 }
             }
         }
-        if (left2 == nullptr) {
+        if (!left2found) {
             return result;
         }
         // Construct M'
@@ -393,11 +390,11 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
         // to left1 <- right <- left2 in the new matching
         new_match = matching;
         new_match.erase(left1);
-        new_match[*left2] = right;
+        new_match[left2] = right;
 
         result.push_back(new_match);
 
-        Edge edge = make_tuple(*left2, right);
+        Edge edge = make_tuple(left2, right);
 
         // Construct G+(e) and G-(e)
         graph_plus = graph.without_nodes(edge);
@@ -422,7 +419,7 @@ generator<map<TLeft, TRight>> _enum_maximum_matchings_iter(
 
 template <typename TLeft, typename TRight, typename TEdgeValue>
 generator<map<TLeft, TRight>>
-enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> graph)
+enum_maximum_matchings_iter(BipartiteGraph<TLeft, TRight, TEdgeValue> &graph)
 {
     vector<map<TLeft, TRight>> result;
     map<TLeft, TRight> matching = graph.find_matching();

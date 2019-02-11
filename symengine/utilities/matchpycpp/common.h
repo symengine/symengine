@@ -27,10 +27,8 @@ using generator = vector<T>;
     typedef set<Node> NodeSet;                                                 \
     typedef tuple<TLeft, TRight> Edge;
 
-const int LEFT = 0;
-const int RIGHT = 1;
-
-typedef vector<SubstitutionMultiset> TEdgeValue;
+constexpr int LEFT = 0;
+constexpr int RIGHT = 1;
 
 typedef deque<RCP<const Basic>> Deque;
 

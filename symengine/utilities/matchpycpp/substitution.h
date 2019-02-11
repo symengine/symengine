@@ -14,7 +14,7 @@ using namespace SymEngine;
 
 typedef map<string, multiset_basic> SubstitutionMultiset;
 
-int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string &variable_name,
                      const multiset_basic &replacement)
 {
     if (subst.find(variable_name) == subst.end()) {
@@ -26,7 +26,7 @@ int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
     return 0;
 }
 
-int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string &variable_name,
                      const vector<RCP<const Basic>> &replacement)
 {
     multiset_basic new_repl;
@@ -34,7 +34,7 @@ int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
     return try_add_variable(subst, variable_name, new_repl);
 }
 
-int try_add_variable(SubstitutionMultiset &subst, const string variable_name,
+int try_add_variable(SubstitutionMultiset &subst, const string &variable_name,
                      const RCP<const Basic> &replacement)
 {
     multiset_basic new_repl = {replacement};
