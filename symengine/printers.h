@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_PRINTER_H
 #define SYMENGINE_PRINTER_H
 
-#include <symengine/visitor.h>
+#include <symengine/basic.h>
 
 namespace SymEngine
 {
