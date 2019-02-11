@@ -320,7 +320,9 @@ namespace SymEngine
 {
 
 #ifdef __CLING__
-#if defined(__has_include) && __has_include(<nlohmann / json.hpp>)
+// clang-format off
+#if defined(__has_include) && __has_include(<nlohmann/json.hpp>)
+// clang-format on
 #include <nlohmann/json.hpp>
 
 inline nlohmann::json mime_bundle_repr(const Expression &i)
