@@ -319,6 +319,8 @@ struct print_coefficient_impl<U, typename std::
 namespace SymEngine
 {
 
+#ifdef __CLING__
+#if defined(__has_include) && __has_include(<nlohmann / json.hpp>)
 #include <nlohmann/json.hpp>
 
 inline nlohmann::json mime_bundle_repr(const Expression &i)
@@ -328,6 +330,9 @@ inline nlohmann::json mime_bundle_repr(const Expression &i)
     bundle["text/latex"] = "$" + latex(i) + "$";
     return bundle;
 }
+#endif
+#endif
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_EXPRESSION_H
