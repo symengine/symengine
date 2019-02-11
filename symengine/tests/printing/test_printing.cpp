@@ -648,6 +648,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l19 = parse("pi^2 + e*2 + asin(sqrt(2)) + sin(2^(1/10))");
     RCP<const Basic> l20 = parse("f(2*a, 2*b)")->diff(a)->diff(b);
     RCP<const Basic> l21 = parse("alpha + _xi_1 + xi2");
+    RCP<const Basic> l22 = parse("2 + 3 * x^10");
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -677,4 +678,5 @@ TEST_CASE("test_latex_printing()", "[latex]")
                          "\\xi_2\\right)\\right|_{\\substack{\\xi_1=2 a \\\\ "
                          "\\xi_2=2 b}}");
     CHECK(latex(*l21) == "\\xi_1 + \\alpha + xi2");
+    CHECK(latex(*l22) == "2 + 3 x^{10}");
 }
