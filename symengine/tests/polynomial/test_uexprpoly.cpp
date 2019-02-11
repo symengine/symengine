@@ -66,8 +66,8 @@ TEST_CASE("Adding two UExprPoly", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    UExprDict adict_({{0, 1}, {1, 2}, {2, symbol("a")}});
-    UExprDict bdict_({{0, 2}, {1, 3}, {2, symbol("b")}});
+    UExprDict adict_({{0, 1}, {1, 2}, {2, Expression("a")}});
+    UExprDict bdict_({{0, 2}, {1, 3}, {2, Expression("b")}});
     const UExprPoly a(x, std::move(adict_));
     const UExprPoly b(x, std::move(bdict_));
 
@@ -85,7 +85,7 @@ TEST_CASE("Adding two UExprPoly", "[UExprPoly]")
 TEST_CASE("Negative of a UExprPoly", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprDict adict_({{0, 1}, {1, symbol("a")}, {2, symbol("c")}});
+    UExprDict adict_({{0, 1}, {1, Expression("a")}, {2, Expression("c")}});
     const UExprPoly a(x, std::move(adict_));
     {
         auto check_map_str
@@ -122,7 +122,7 @@ TEST_CASE("Subtracting two UExprPoly", "[UExprPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     UExprDict adict_({{0, 1}, {1, 2}, {2, 1}});
-    UExprDict bdict_({{0, 2}, {1, symbol("b")}, {2, symbol("a")}});
+    UExprDict bdict_({{0, 2}, {1, Expression("b")}, {2, Expression("a")}});
     const UExprPoly a(x, std::move(adict_));
     const UExprPoly b(x, std::move(bdict_));
 
@@ -144,7 +144,7 @@ TEST_CASE("Multiplication of two UExprPoly", "[UExprPoly]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> none = symbol("");
     RCP<const UExprPoly> a
-        = uexpr_poly(x, {{0, 1}, {1, symbol("b")}, {2, symbol("a")}});
+        = uexpr_poly(x, {{0, 1}, {1, Expression("b")}, {2, Expression("a")}});
     RCP<const UExprPoly> b
         = uexpr_poly(x, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
 
@@ -178,11 +178,12 @@ TEST_CASE("Comparing two UExprPoly", "[UExprPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const UExprPoly> P = uexpr_poly(x, {{0, 1}, {1, 2}});
-    RCP<const UExprPoly> Q = uexpr_poly(x, {{0, 1}, {1, symbol("b")}, {2, 1}});
+    RCP<const UExprPoly> Q
+        = uexpr_poly(x, {{0, 1}, {1, Expression("b")}, {2, 1}});
 
     REQUIRE(P->compare(*Q) == -1);
 
-    P = uexpr_poly(x, {{0, 1}, {1, symbol("k")}, {2, 3}, {3, 2}});
+    P = uexpr_poly(x, {{0, 1}, {1, Expression("k")}, {2, 3}, {3, 2}});
     REQUIRE(P->compare(*Q) == 1);
 
     P = uexpr_poly(x, {{0, 1}, {1, 2}, {3, 3}});
@@ -191,11 +192,11 @@ TEST_CASE("Comparing two UExprPoly", "[UExprPoly]")
     P = uexpr_poly(y, {{0, 1}, {1, 2}, {3, 3}});
     REQUIRE(P->compare(*Q) == 1);
 
-    P = uexpr_poly(x, {{0, 1}, {1, symbol("b")}, {2, 1}});
+    P = uexpr_poly(x, {{0, 1}, {1, Expression("b")}, {2, 1}});
     REQUIRE(P->compare(*Q) == 0);
     REQUIRE(P->__eq__(*Q) == true);
 
-    P = uexpr_poly(x, {{0, 1}, {1, symbol("a")}, {2, 1}});
+    P = uexpr_poly(x, {{0, 1}, {1, Expression("a")}, {2, 1}});
     REQUIRE(P->compare(*Q) == -1);
     REQUIRE(P->__eq__(*Q) == false);
 }
@@ -222,7 +223,8 @@ TEST_CASE("UExprPoly max_coef", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, 4}});
-    RCP<const UExprPoly> b = uexpr_poly(x, {{0, 2}, {1, 2}, {2, symbol("b")}});
+    RCP<const UExprPoly> b
+        = uexpr_poly(x, {{0, 2}, {1, 2}, {2, Expression("b")}});
 
     Expression c(symbol("a"));
     Expression d(symbol("b"));
@@ -237,7 +239,8 @@ TEST_CASE("UExprPoly max_coef", "[UExprPoly]")
 TEST_CASE("Evaluation of UExprPoly", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
+    RCP<const UExprPoly> a
+        = uexpr_poly(x, {{0, 1}, {1, 2}, {2, Expression("a")}});
 
     REQUIRE(a->eval(2).get_basic()->__str__() == "5 + 4*a");
 
@@ -248,7 +251,8 @@ TEST_CASE("Evaluation of UExprPoly", "[UExprPoly]")
 TEST_CASE("Convert UExprPoly to Symbolic", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
+    RCP<const UExprPoly> a
+        = uexpr_poly(x, {{0, 1}, {1, 2}, {2, Expression("a")}});
 
     REQUIRE(eq(*a->get_poly().get_basic("x"),
                *add(integer(1),
@@ -260,7 +264,8 @@ TEST_CASE("Derivative of UExprPoly", "[UExprPoly]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> none = symbol("");
-    RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
+    RCP<const UExprPoly> a
+        = uexpr_poly(x, {{0, 1}, {1, 2}, {2, Expression("a")}});
     RCP<const UExprPoly> b = uexpr_poly(x, {{0, Expression(1)}});
     RCP<const UExprPoly> c = uexpr_poly(none, {{0, Expression(5)}});
 
@@ -268,7 +273,7 @@ TEST_CASE("Derivative of UExprPoly", "[UExprPoly]")
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "0");
 
-    a = uexpr_poly(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}, {2, symbol("a")}});
+    a = uexpr_poly(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}, {2, Expression("a")}});
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2 - 3*x**(-2) - 10*x**(-3)");
 
     REQUIRE(c->diff(x)->__str__() == "0");
@@ -329,7 +334,8 @@ TEST_CASE("Bool checks specific UExprPoly cases", "[UExprPoly]")
 TEST_CASE("UExprPoly expand", "[UExprPoly][expand]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UExprPoly> a = uexpr_poly(x, {{1, 1}, {2, 1}, {3, symbol("a")}});
+    RCP<const UExprPoly> a
+        = uexpr_poly(x, {{1, 1}, {2, 1}, {3, Expression("a")}});
     RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 

@@ -52,7 +52,7 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
 
     map_int_Expr cdict_
-        = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
+        = {{0, Expression("c")}, {1, Expression("b")}, {2, Expression("a")}};
     UExprDict cpoly_(cdict_);
     RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
     REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
@@ -92,7 +92,7 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     UExprDict apoly_(adict_);
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
     UExprDict bpoly_(bdict_);
-    map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
+    map_int_Expr cdict_ = {{0, 1}, {1, Expression("a")}};
     UExprDict cpoly_(cdict_);
     map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
     UExprDict dpoly_(ddict_);
@@ -191,7 +191,7 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     UExprDict P({{0, 1}, {1, 2}});
-    UExprDict Q({{0, 1}, {1, symbol("b")}, {2, 1}});
+    UExprDict Q({{0, 1}, {1, Expression("b")}, {2, 1}});
     RCP<const UnivariateSeries> R = univariate_series(x, 4, P);
     RCP<const UnivariateSeries> S = univariate_series(x, 5, Q);
     umap_int_basic m = {{0, integer(1)}, {1, integer(2)}};

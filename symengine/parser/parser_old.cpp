@@ -78,7 +78,7 @@ private:
 
             {"", [](const RCP<const Basic> &x) { return x; }},
 
-            {"sin", sin},
+            {"sin", (single_arg_func)sin},
             {"cos", cos},
             {"tan", tan},
             {"cot", cot},
@@ -125,7 +125,7 @@ private:
                                             const RCP<const Basic> &)>>
         double_arg_functions = {
 
-            {"pow", pow},
+            {"pow", (double_arg_func)pow},
             {"beta", beta},
             {"log", double_casted_log},
             {"zeta", double_casted_zeta},

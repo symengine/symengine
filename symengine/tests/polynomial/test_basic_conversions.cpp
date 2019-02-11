@@ -20,6 +20,7 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::minus_one;
 using SymEngine::E;
+using SymEngine::Expression;
 using SymEngine::pi;
 using SymEngine::integer;
 using SymEngine::add;
@@ -253,7 +254,9 @@ TEST_CASE("basic_to_poly UInt", "[b2poly]")
         SymEngineException &); // Rat->Int
     CHECK_THROWS_AS(
         from_basic<UIntPoly>(
-            UExprPoly::from_vec(gen, {{symbol("y"), one, one}}), gen),
+            UExprPoly::from_vec(
+                gen, {{Expression("y"), Expression(1), Expression(1)}}),
+            gen),
         SymEngineException &); // Expr->Int
 
 #ifdef HAVE_SYMENGINE_FLINT
@@ -367,7 +370,9 @@ TEST_CASE("basic_to_poly URat", "[b2poly]")
 
     CHECK_THROWS_AS(
         from_basic<URatPoly>(
-            UExprPoly::from_vec(gen, {{symbol("y"), one, one}}), gen),
+            UExprPoly::from_vec(
+                gen, {{Expression("y"), Expression(1), Expression(1)}}),
+            gen),
         SymEngineException &); // Expr->Rat
 
 #ifdef HAVE_SYMENGINE_FLINT
@@ -427,21 +432,23 @@ TEST_CASE("basic_to_poly UExpr", "[b2poly]")
     basic = add(x, add(mul(x, y), mul(z, pow(x, hf))));
     gen = pow(x, hf);
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, z, add(one, y)}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{Expression(0), Expression("z"), add(one, y)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 3*2**x + 2**(x+y)
     basic = add(mul(i3, twopx), pow(i2, add(x, y)));
     gen = twopx;
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, add(i3, pow(i2, y))}});
+    poly2 = UExprPoly::from_vec(gen, {{Expression(0), add(i3, pow(i2, y))}});
     REQUIRE(eq(*poly1, *poly2));
 
     // 2**(-x + (1/2)) + 2**(-2x)
     basic = add(pow(i2, add(neg(x), hf)), pow(i2, mul(neg(i2), x)));
     gen = pow(i2, neg(x));
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, pow(i2, hf), one}});
+    poly2 = UExprPoly::from_vec(gen,
+                                {{Expression(0), pow(i2, hf), Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // xy + xz + yz
@@ -455,42 +462,48 @@ TEST_CASE("basic_to_poly UExpr", "[b2poly]")
     basic = add(mul(mul(i2, x), y), pow(add(x, one), i2));
     gen = x;
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{one, add(mul(i2, y), i2), one}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{Expression(1), add(mul(i2, y), i2), Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x**x + x**(2x + y)
     basic = add(pow(x, x), pow(x, add(mul(i2, x), y)));
     gen = pow(x, x);
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, one, pow(x, y)}});
+    poly2
+        = UExprPoly::from_vec(gen, {{Expression(0), Expression(1), pow(x, y)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (1/2)*x**2 + 1/x
     basic = add(mul(hf, pow(x, i2)), div(one, x));
     gen = x;
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{div(one, x), zero, hf}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{div(one, x), Expression(0), Expression(1) / 2}});
     REQUIRE(eq(*poly1, *poly2));
 
     // (x/2)**2 + xz
     basic = add(pow(div(x, i2), i2), mul(z, x));
     gen = x;
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, z, div(one, integer(4))}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{Expression(0), Expression("z"), div(one, integer(4))}});
     REQUIRE(eq(*poly1, *poly2));
 
     // pi**2 + E*pi
     basic = add(pow(pi, i2), mul(pi, E));
     gen = pi;
     poly1 = from_basic<UExprPoly>(basic, gen);
-    poly2 = UExprPoly::from_vec(gen, {{zero, E, one}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{Expression(0), Expression(E), Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 
     poly1 = from_basic<UExprPoly>(poly2, gen);
     REQUIRE(eq(*poly1, *poly2));
 
     gen = x;
-    poly2 = UExprPoly::from_vec(gen, {{one, integer(2), integer(3)}});
+    poly2 = UExprPoly::from_vec(
+        gen, {{Expression(1), Expression(2), Expression(3)}});
     auto ipoly1 = UIntPoly::from_vec(gen, {{1_z, 2_z, 3_z}});
     poly1 = from_basic<UExprPoly>(ipoly1, gen);
     REQUIRE(eq(*poly1, *poly2));
@@ -637,7 +650,9 @@ TEST_CASE("basic_to_poly UIntFlint", "[b2poly]")
 
     CHECK_THROWS_AS(
         from_basic<UIntPolyFlint>(
-            UExprPoly::from_vec(gen, {{one, integer(2), zero, integer(4)}}), x),
+            UExprPoly::from_vec(gen, {{Expression(1), Expression(2),
+                                       Expression(0), Expression(4)}}),
+            x),
         SymEngineException &);
 }
 #endif
@@ -782,7 +797,8 @@ TEST_CASE("basic_to_poly MExpr", "[b2poly]")
     basic = add(x, mul(x, mul(y, z)));
     gens = {x, y};
     poly1 = from_basic<MExprPoly>(basic, gens);
-    poly2 = MExprPoly::from_dict({x, y}, {{{1, 0}, one}, {{1, 1}, z}});
+    poly2 = MExprPoly::from_dict(
+        {x, y}, {{{1, 0}, Expression(1)}, {{1, 1}, Expression("z")}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x*2**x + 2**(x+y)
@@ -796,31 +812,33 @@ TEST_CASE("basic_to_poly MExpr", "[b2poly]")
     basic = add(pow(i2, add(neg(x), hf)), pow(i2, mul(neg(i2), x)));
     gens = {pow(i2, neg(x)), pow(i2, hf)};
     poly1 = from_basic<MExprPoly>(basic, gens);
-    poly2 = MExprPoly::from_dict({pow(i2, neg(x)), pow(i2, hf)},
-                                 {{{1, 1}, one}, {{2, 0}, one}});
+    poly2 = MExprPoly::from_dict(
+        {pow(i2, neg(x)), pow(i2, hf)},
+        {{{1, 1}, Expression(1)}, {{2, 0}, Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // xy + xz + yz
     basic = add(mul(x, y), add(mul(x, z), mul(y, z)));
     gens = {x, y};
     poly1 = from_basic<MExprPoly>(basic, gens);
-    poly2 = MExprPoly::from_dict({x, y},
-                                 {{{1, 1}, one}, {{0, 1}, z}, {{1, 0}, z}});
+    poly2 = MExprPoly::from_dict({x, y}, {{{1, 1}, Expression(1)},
+                                          {{0, 1}, Expression("z")},
+                                          {{1, 0}, Expression("z")}});
     REQUIRE(eq(*poly1, *poly2));
 
     // x**(x + z) + x**(2x + y)
     basic = add(pow(x, add(x, z)), pow(x, add(mul(i2, x), y)));
     gens = {pow(x, x), pow(x, y)};
     poly1 = from_basic<MExprPoly>(basic, gens);
-    poly2 = MExprPoly::from_dict({pow(x, x), pow(x, y)},
-                                 {{{1, 0}, pow(x, z)}, {{2, 1}, one}});
+    poly2 = MExprPoly::from_dict(
+        {pow(x, x), pow(x, y)}, {{{1, 0}, pow(x, z)}, {{2, 1}, Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 
     // pi**2 + E*pi + E*pi*z
     basic = add(mul(E, mul(pi, z)), add(pow(pi, i2), mul(pi, E)));
     gens = {pi, E};
     poly1 = from_basic<MExprPoly>(basic, gens);
-    poly2
-        = MExprPoly::from_dict({pi, E}, {{{1, 1}, add(one, z)}, {{2, 0}, one}});
+    poly2 = MExprPoly::from_dict(
+        {pi, E}, {{{1, 1}, add(one, z)}, {{2, 0}, Expression(1)}});
     REQUIRE(eq(*poly1, *poly2));
 }
