@@ -17,10 +17,11 @@ typedef map<string, multiset_basic> SubstitutionMultiset;
 int try_add_variable(SubstitutionMultiset &subst, const string &variable_name,
                      const multiset_basic &replacement)
 {
-    if (subst.find(variable_name) == subst.end()) {
+    auto elem = subst.find(variable_name);
+    if (elem == subst.end()) {
         subst[variable_name] = replacement;
     } else {
-        const multiset_basic &existing_value = subst.at(variable_name);
+        const multiset_basic &existing_value = elem->second;
         return unified_eq(existing_value, replacement);
     }
     return 0;

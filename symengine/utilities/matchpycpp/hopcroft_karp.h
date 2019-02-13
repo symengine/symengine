@@ -20,7 +20,8 @@ using namespace std;
  * connected right vertices.
  *
  * The method `.hopcroft_karp()` finds the maximum cardinality matching,
- * returning its cardinality. The matching will be stored in the file `pair_left`
+ * returning its cardinality. The matching will be stored in the file
+ * `pair_left`
  * and `pair_right` after the matching is found.
  */
 template <typename TLeft, typename TRight>

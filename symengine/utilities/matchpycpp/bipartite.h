@@ -101,7 +101,8 @@ public:
 
     //    """Returns a copy of this bipartite graph with the given edge and its
     //    adjacent nodes removed."""
-    BipartiteGraph<TLeft, TRight, TEdgeValue> without_nodes(const Edge &edge) const
+    BipartiteGraph<TLeft, TRight, TEdgeValue>
+    without_nodes(const Edge &edge) const
     {
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
@@ -119,7 +120,8 @@ public:
 
     // Returns a copy of this bipartite graph with the given edge
     // removed
-    BipartiteGraph<TLeft, TRight, TEdgeValue> without_edge(const Edge &edge) const
+    BipartiteGraph<TLeft, TRight, TEdgeValue>
+    without_edge(const Edge &edge) const
     {
         BipartiteGraph<TLeft, TRight, TEdgeValue> new_graph;
         for (const pair<Edge, TEdgeValue> &p : _edges) {
@@ -140,10 +142,11 @@ public:
         for (const pair<Edge, TEdgeValue> &p : _edges) {
             TLeft left = get<0>(p.first);
             TRight right = get<1>(p.first);
-            if (directed_graph.find(left) == directed_graph.end()) {
+            auto elem = directed_graph.find(left);
+            if (elem == directed_graph.end()) {
                 directed_graph[left] = {right};
             } else {
-                directed_graph[left].insert(right);
+                elem->second.insert(right);
             }
         }
 
@@ -161,7 +164,6 @@ public:
         _graph_right.clear();
     }
 };
-
 
 template <typename TLeft, typename TRight>
 class _DirectedMatchGraph
@@ -182,17 +184,19 @@ public:
         for (const pair<Edge, TEdgeValue> &p : graph._edges) {
             TLeft tail = get<0>(p.first);
             TRight head = get<1>(p.first);
-            if ((matching.find(tail) != matching.end())
-                && (matching.at(tail) == head)) {
+            auto elem = matching.find(tail);
+            if ((elem != matching.end()) && (elem->second == head)) {
                 set<tuple<int, TRight>> s;
                 s.insert(make_tuple(RIGHT, head));
                 _map[make_tuple(LEFT, tail)] = s;
             } else {
-
-                if (_map.find(make_tuple(RIGHT, head)) == _map.end()) {
-                    _map[make_tuple(RIGHT, head)] = NodeSet();
+                Node right_head = make_tuple(RIGHT, head);
+                auto elem_map = _map.find(right_head);
+                if (elem_map == _map.end()) {
+                    _map[right_head] = {make_tuple(LEFT, tail)};
+                } else {
+                    elem_map->second.insert(make_tuple(LEFT, tail));
                 }
-                _map[make_tuple(RIGHT, head)].insert(make_tuple(LEFT, tail));
             }
         }
     }
@@ -211,7 +215,8 @@ public:
         return NodeList();
     }
 
-    NodeList _find_cycle(const Node &node, NodeList &path, set<Node> &visited) const
+    NodeList _find_cycle(const Node &node, NodeList &path,
+                         set<Node> &visited) const
     {
         if (visited.find(node) != visited.end()) {
             typename NodeList::iterator found_end;

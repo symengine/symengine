@@ -55,7 +55,8 @@ public:
     int add_subject(const RCP<const Basic> &subject)
     {
         int subject_id;
-        if (subjects.find(subject) == subjects.end()) {
+        auto elem = subjects.find(subject);
+        if (elem == subjects.end()) {
             subject_id = subjects.size();
             set<int> pattern_set;
             // tuple<int, set<RCP<const Basic>>> elem =
@@ -75,7 +76,7 @@ public:
                 pattern_set.insert(pattern_index);
             }
         } else {
-            subject_id = get<0>(subjects.at(subject));
+            subject_id = get<0>(elem->second);
         }
         return subject_id;
     }
@@ -306,10 +307,10 @@ public:
         for (const pair<int, int> &p : count_multiset(subjects)) {
             int subject = p.first;
             int s_count = p.second;
-            if (this->bipartite._graph_left.find(subject)
-                != this->bipartite._graph_left.end()) {
+            auto elem = this->bipartite._graph_left.find(subject);
+            if (elem != this->bipartite._graph_left.end()) {
                 bool any_patterns = false;
-                for (int pattern : this->bipartite._graph_left[subject]) {
+                for (int pattern : elem->second) {
                     if (patterns.find(pattern) != patterns.end()) {
                         any_patterns = true;
                         vector<SubstitutionMultiset> subst

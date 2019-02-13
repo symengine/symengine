@@ -17,10 +17,11 @@ map<T, int, Comparison> count_multiset(const multiset<T, Comparison> &m)
 {
     map<T, int, Comparison> result;
     for (const T &elem : m) {
-        if (result.find(elem) == result.end()) {
+        auto it = result.find(elem);
+        if (it == result.end()) {
             result[elem] = 1;
         } else {
-            result[elem]++;
+            it->second++;
         }
     }
     return result;
