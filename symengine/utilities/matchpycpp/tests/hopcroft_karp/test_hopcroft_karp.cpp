@@ -30,14 +30,14 @@ TEST_CASE("Hopcroft Karp algorithm",
     SECTION("Test 2")
     {
         cout << "output 1\n";
-        map<string, set<int>> graph
-            = {{"A", {1, 2}}, {"B", {2, 3}}, {"C", {2}}, {"D", {3, 4, 5, 6}},
-               {"E", {4, 7}}, {"F", {7}},    {"G", {7}}};
+        map<char, set<int>> graph
+            = {{'A', {1, 2}}, {'B', {2, 3}}, {'C', {2}}, {'D', {3, 4, 5, 6}},
+               {'E', {4, 7}}, {'F', {7}},    {'G', {7}}};
         cout << "output 2\n";
-        map<string, int> expected
-            = {{"A", 1}, {"B", 3}, {"C", 2}, {"D", 5}, {"E", 4}, {"F", 7}};
+        map<char, int> expected
+            = {{'A', 1}, {'B', 3}, {'C', 2}, {'D', 5}, {'E', 4}, {'F', 7}};
         cout << "output 3\n";
-        HopcroftKarp<string, int> hk(graph);
+        HopcroftKarp<char, int> hk(graph);
         cout << "output 4\n";
         int matchings = hk.hopcroft_karp();
         cout << "output 5\n";
