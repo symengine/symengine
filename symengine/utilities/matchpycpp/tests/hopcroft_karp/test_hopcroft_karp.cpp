@@ -3,11 +3,15 @@
 #include <string>
 #include <symengine/utilities/matchpycpp/hopcroft_karp.h>
 
+#include <symengine/basic.h>
+using SymEngine::print_stack_on_segfault;
+
 using namespace std;
 
 TEST_CASE("Hopcroft Karp algorithm",
           "Testing the implementation of the Hopcroft Karp algorithm.")
 {
+    SymEngine::print_stack_on_segfault();
     SECTION("Test 1")
     {
         map<int, set<string>> graph = {{0, {"v0", "v1"}},
