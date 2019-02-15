@@ -6,6 +6,7 @@
 
 #include <map>
 #include <list>
+#include <iterator>
 
 typedef int OperationMeta;
 
