@@ -7,6 +7,7 @@
 #include <map>
 #include <list>
 #include <iterator>
+#include <cstdint>
 
 typedef int OperationMeta;
 
@@ -21,7 +22,7 @@ struct lessVariableCount {
     bool operator()(const tuple<VariableWithCount, OperationMeta> &x,
                     const tuple<VariableWithCount, OperationMeta> &y) const
     {
-        return ((unsigned long)&x) < ((unsigned long)&y);
+        return ((intptr_t)&x) < ((intptr_t)&y);
     }
 };
 

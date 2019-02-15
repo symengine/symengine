@@ -24,12 +24,12 @@ TEST_CASE("Hopcroft Karp algorithm",
     }
     SECTION("Test 2")
     {
-        map<string, set<int>> graph
-            = {{"A", {1, 2}}, {"B", {2, 3}}, {"C", {2}}, {"D", {3, 4, 5, 6}},
-               {"E", {4, 7}}, {"F", {7}},    {"G", {7}}};
-        map<string, int> expected
-            = {{"A", 1}, {"B", 3}, {"C", 2}, {"D", 5}, {"E", 4}, {"F", 7}};
-        HopcroftKarp<string, int> hk(graph);
+        map<char, set<int>> graph
+            = {{'A', {1, 2}}, {'B', {2, 3}}, {'C', {2}}, {'D', {3, 4, 5, 6}},
+               {'E', {4, 7}}, {'F', {7}},    {'G', {7}}};
+        map<char, int> expected
+            = {{'A', 1}, {'B', 3}, {'C', 2}, {'D', 5}, {'E', 4}, {'F', 7}};
+        HopcroftKarp<char, int> hk(graph);
         int matchings = hk.hopcroft_karp();
         REQUIRE(hk.pair_left == expected);
         REQUIRE(matchings == 6);
