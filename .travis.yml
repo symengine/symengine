@@ -175,6 +175,11 @@ matrix:
       os: linux
       script:
         - bin/test_cling_notebook.sh
+    - env: CONDA_ENV_FILE="symengine/utilities/matchpycpp/environment.yml"
+      compiler: gcc
+      os: linux
+      script:
+        - bin/test_matchpycpp_gen_tests.sh
 
 before_install:
 - |

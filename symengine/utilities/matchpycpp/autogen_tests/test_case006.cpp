@@ -187,11 +187,7 @@ class CommutativeMatcher2231 : public CommutativeMatcher
 public:
     CommutativeMatcher2231()
     {
-        patterns
-            = {{{0},
-                make_tuple<int, multiset<int>, PatternSet>(
-                    0, {0, 1},
-                    {make_tuple(VariableWithCount("i1.0", 1, 1, None), ADD)})}};
+        patterns = {{{0}, make_tuple<int, multiset<int>, PatternSet>(0, {0, 1}, {make_tuple(VariableWithCount("i1.0", 1, 1, None), ADD)})}};
         subjects = {};
         subjects_by_id = {};
         associative = [](const RCP<const Basic> &x, const RCP<const Basic> &y) {
