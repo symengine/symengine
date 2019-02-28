@@ -10,6 +10,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
+#include <symengine/printers.h>
 
 namespace SymEngine
 {
@@ -131,9 +132,13 @@ public:
     {
         return Expression(sub(a.m_basic, b));
     }
-    operator RCP<const Basic>() const
+    operator const RCP<const Basic> &() const
     {
         return m_basic;
+    }
+    operator const Basic &() const
+    {
+        return *m_basic;
     }
     //! Overload unary negative
     Expression operator-() const
@@ -248,13 +253,15 @@ inline int unified_compare(const Expression &a, const Expression &b)
     return unified_compare(a.get_basic(), b.get_basic());
 }
 
+// Utility functions for piranha
+
 namespace detail
 {
 // This function must have external linkage
 std::string poly_print(const Expression &x);
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 
@@ -293,7 +300,7 @@ struct pow_impl<T, U,
                               SymEngine::integer(y));
     }
 };
-}
+} // namespace piranha::math
 
 template <typename U>
 struct print_coefficient_impl<U, typename std::
@@ -305,7 +312,29 @@ struct print_coefficient_impl<U, typename std::
         return os << SymEngine::detail::poly_print(cf);
     }
 };
-}
+} // namespace piranha
 #endif // HAVE_SYMENGINE_PIRANHA
+
+// Utility functions for xeus-cling
+namespace SymEngine
+{
+
+#ifdef __CLING__
+// clang-format off
+#if defined(__has_include) && __has_include(<nlohmann/json.hpp>)
+// clang-format on
+#include <nlohmann/json.hpp>
+
+inline nlohmann::json mime_bundle_repr(const Expression &i)
+{
+    auto bundle = nlohmann::json::object();
+    bundle["text/plain"] = str(i);
+    bundle["text/latex"] = "$" + latex(i) + "$";
+    return bundle;
+}
+#endif
+#endif
+
+} // namespace SymEngine
 
 #endif // SYMENGINE_EXPRESSION_H
