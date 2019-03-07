@@ -471,7 +471,7 @@ void LatexPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                               const RCP<const Basic> &b)
 {
     if (eq(*a, *E)) {
-        o << "e^\\{" << apply(a) << "}";
+        o << "e^{" << apply(b) << "}";
     } else if (eq(*b, *rational(1, 2))) {
         o << "\\sqrt{" << apply(a) << "}";
     } else if (is_a<Rational>(*b)
