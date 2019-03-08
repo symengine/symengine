@@ -105,6 +105,8 @@ public:
     void bvisit(const Min &x);
     void bvisit(const Contains &x);
     void bvisit(const Infty &x);
+    void bvisit(const Floor &x);
+    void bvisit(const Ceiling &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
     const std::string &dumps() const;
