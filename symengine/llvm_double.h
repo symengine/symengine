@@ -58,7 +58,8 @@ public:
 
     // Helper functions
     void set_double(double d);
-    llvm::Function *get_external_function(const std::string &name);
+    llvm::Function *get_external_function(const std::string &name,
+                                          size_t nargs = 1);
     llvm::Function *get_powi();
 
     void bvisit(const Integer &x, bool as_int32 = false);
@@ -81,6 +82,7 @@ public:
     void bvisit(const ASin &x);
     void bvisit(const ACos &x);
     void bvisit(const ATan &x);
+    void bvisit(const ATan2 &x);
     void bvisit(const Sinh &x);
     void bvisit(const Cosh &x);
     void bvisit(const Tanh &x);
@@ -107,6 +109,7 @@ public:
     void bvisit(const Infty &x);
     void bvisit(const Floor &x);
     void bvisit(const Ceiling &x);
+    void bvisit(const Sign &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
     const std::string &dumps() const;
