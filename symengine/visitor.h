@@ -146,21 +146,30 @@ public:
 
     void bvisit(const Mul &x)
     {
+        bool containsx = false;
         for (auto &p : x.get_dict()) {
             if (eq(*p.first, *x_) and eq(*p.second, *n_)) {
                 map_basic_basic dict = x.get_dict();
                 dict.erase(p.first);
                 coeff_ = Mul::from_dict(x.get_coef(), std::move(dict));
                 return;
+            } else if (eq(*p.first, *x_)) {
+                containsx = true;
             }
         }
-        coeff_ = zero;
+        if (!containsx and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
     }
 
     void bvisit(const Pow &x)
     {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
+        } else if (!eq(*x.get_base(), *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
@@ -170,6 +179,8 @@ public:
     {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;
+        } else if (!eq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
@@ -179,6 +190,8 @@ public:
     {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;
+        } else if (!eq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
