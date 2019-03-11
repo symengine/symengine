@@ -50,6 +50,19 @@
 #include <symengine/llvm_double.h>
 #include <symengine/eval_double.h>
 
+extern "C" {
+double symengine_sign_internal(double x)
+{
+    if (x == 0) {
+        return 0.0;
+    } else if (x > 0) {
+        return 1.0;
+    } else {
+        return -1.0;
+    }
+}
+}
+
 namespace SymEngine
 {
 
@@ -704,6 +717,7 @@ SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, erf)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, erfc)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, atan2)
+SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sign, symengine_sign_internal)
 
 void LLVMDoubleVisitor::bvisit(const Min &x)
 {
@@ -889,19 +903,6 @@ void LLVMDoubleVisitor::bvisit(const Ceiling &x)
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
     fun = get_double_intrinsic(llvm::Intrinsic::ceil, 1, mod);
-    auto r = builder->CreateCall(fun, args);
-    r->setTailCall(true);
-    result_ = r;
-}
-
-void LLVMDoubleVisitor::bvisit(const Sign &x)
-{
-    std::vector<llvm::Value *> args;
-    llvm::Function *fun;
-    set_double(1.0);
-    args.push_back(result_);
-    args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::copysign, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
