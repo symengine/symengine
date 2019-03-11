@@ -953,15 +953,18 @@ TEST_CASE("coeff: Basic", "[basic]")
     REQUIRE(eq(*coeff(*r1, *y, *integer(2)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *z, *integer(2)), *integer(0)));
 
-    REQUIRE(eq(*coeff(*r2, *y, *integer(0)), *add(mul(integer(2), z), pow(x, integer(3)))));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(0)),
+               *add(mul(integer(2), z), pow(x, integer(3)))));
     REQUIRE(eq(*coeff(*r2, *y, *integer(1)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *y, *integer(2)), *integer(1)));
-    REQUIRE(eq(*coeff(*r2, *z, *integer(0)), *add(pow(x, integer(3)), pow(y, integer(2)))));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(0)),
+               *add(pow(x, integer(3)), pow(y, integer(2)))));
     REQUIRE(eq(*coeff(*r2, *z, *integer(1)), *integer(2)));
     REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
-    REQUIRE(eq(*coeff(*r2, *x, *integer(0)), *add(mul(integer(2), z), pow(y, integer(2)))));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(0)),
+               *add(mul(integer(2), z), pow(y, integer(2)))));
 
     REQUIRE(eq(*coeff(*r3, *z, *integer(1)), *add(x, integer(2))));
     REQUIRE(eq(*coeff(*r3, *f1, *integer(1)), *integer(4)));
