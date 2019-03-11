@@ -344,6 +344,24 @@ public:
         result_ = [=](const T *x) { return std::abs(tmp(x)); };
     };
 
+    // void bvisit(const Sign &x)
+    // {
+    //     fn tmp = apply(*(x.get_arg()));
+    //     result_ = [=](const T *x) { return tmp(x) == 0.0 ? 0.0 : (tmp(x) < 0.0 ? -1.0 : 1.0); };
+    // };
+
+    // void bvisit(const Floor &x)
+    // {
+    //     fn tmp = apply(*(x.get_arg()));
+    //     result_ = [=](const T *x) { return std::floor(tmp(x)); };
+    // };
+
+    // void bvisit(const Ceiling &x)
+    // {
+    //     fn tmp = apply(*(x.get_arg()));
+    //     result_ = [=](const T *x) { return std::ceil(tmp(x)); };
+    // };
+
     void bvisit(const Basic &)
     {
         throw NotImplementedError("Not Implemented");
