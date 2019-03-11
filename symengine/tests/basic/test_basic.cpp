@@ -943,7 +943,7 @@ TEST_CASE("coeff: Basic", "[basic]")
     r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
     r3 = add(add(add(add(r2, mul(x, z)), f1), f2), mul(f1, integer(3)));
     r4 = mul(pow(x, integer(2)), y);
-    r5 = pow(add(x, y), 3);
+    r5 = expand(pow(add(x, y), 3));
     REQUIRE(eq(*coeff(*x, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*x, *x, *integer(0)), *integer(0)));
 
