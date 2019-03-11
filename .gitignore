@@ -48,6 +48,7 @@ symengine/python/symengine/lib/config.pxi
 build*
 *__pycache__*
 *.pyc
+symengine/utilities/matchpycpp/autogen_tests/test_case*.py
 
 # Temp files
 *~

@@ -20,6 +20,8 @@ if (WITH_GENERATE_PARSER)
                      )
 endif()
 
+add_subdirectory(utilities/matchpycpp)
+
 set(SRC
     add.cpp
     basic.cpp
@@ -261,4 +263,6 @@ INSTALL_HEADERS_WITH_DIRECTORY(HEADERS)
 if (BUILD_TESTS)
     add_subdirectory(utilities/catch)
     add_subdirectory(tests)
+    add_subdirectory(utilities/matchpycpp/tests)
+    add_subdirectory(utilities/matchpycpp/autogen_tests)
 endif()
