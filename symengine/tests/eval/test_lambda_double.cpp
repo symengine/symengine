@@ -49,6 +49,9 @@ using SymEngine::acoth;
 using SymEngine::acsch;
 using SymEngine::asech;
 using SymEngine::atan2;
+using SymEngine::sign;
+using SymEngine::floor;
+using SymEngine::ceiling;
 using SymEngine::log;
 using SymEngine::E;
 using SymEngine::Catalan;
@@ -237,7 +240,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     vec_basic exprs
         = {log(a),   abs(a),      tan(a),   sinh(a), cosh(a),     tanh(a),
            asinh(b), acosh(b),    atanh(a), asin(a), acos(a),     atan(a),
-           gamma(a), loggamma(a), erf(a),   erfc(a), max({a, b}), min({a, b})};
+           gamma(a), loggamma(a), erf(a),   erfc(a), floor(a),    ceiling(a),
+           sign(a), max({a, b}), min({a, b}), atan2(a,b)};
 
     for (unsigned i = 0; i < exprs.size(); i++) {
         exprs[i] = add(exprs[i], z);
@@ -274,9 +278,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         d = v.call({1.4, 3.0, -1.0});
         d2 = v2.call({1.4, 3.0, -1.0});
         d3 = v3.call({1.4, 3.0, -1.0});
-
-        REQUIRE(::fabs((d - d2) / d) < 1e-12);
-        REQUIRE(::fabs((d - d3) / d) < 1e-12);
+        REQUIRE(::fabs((d - d2) ) < 1e-12);
+        REQUIRE(::fabs((d - d3) ) < 1e-12);
     }
 }
 
