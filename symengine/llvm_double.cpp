@@ -50,19 +50,6 @@
 #include <symengine/llvm_double.h>
 #include <symengine/eval_double.h>
 
-extern "C" {
-double symengine_sign_internal(double x)
-{
-    if (x == 0) {
-        return 0.0;
-    } else if (x > 0) {
-        return 1.0;
-    } else {
-        return -1.0;
-    }
-}
-}
-
 namespace SymEngine
 {
 
@@ -588,6 +575,17 @@ void LLVMDoubleVisitor::bvisit(const Piecewise &x)
     result_ = phi_node;
 }
 
+void LLVMDoubleVisitor::bvisit(const Sign &x)
+{
+    const auto x2 = x.get_arg();
+    PiecewiseVec new_pw;
+    new_pw.push_back({real_double(0.0), Eq(x2, real_double(0.0))});
+    new_pw.push_back({real_double(-1.0), Lt(x2, real_double(0.0))});
+    new_pw.push_back({real_double(1.0), boolTrue});
+    auto pw = rcp_static_cast<const Piecewise>(piecewise(std::move(new_pw)));
+    bvisit(*pw);
+}
+
 void LLVMDoubleVisitor::bvisit(const Contains &cts)
 {
     llvm::Value *expr = apply(*cts.get_expr());
@@ -717,7 +715,6 @@ SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, erf)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, erfc)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, atan2)
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sign, symengine_sign_internal)
 
 void LLVMDoubleVisitor::bvisit(const Min &x)
 {

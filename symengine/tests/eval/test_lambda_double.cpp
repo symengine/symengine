@@ -278,8 +278,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         d = v.call({1.4, 3.0, -1.0});
         d2 = v2.call({1.4, 3.0, -1.0});
         d3 = v3.call({1.4, 3.0, -1.0});
-        REQUIRE(::fabs((d - d2) ) < 1e-12);
-        REQUIRE(::fabs((d - d3) ) < 1e-12);
+        REQUIRE(::fabs((d - d2)) < 1e-12);
+        REQUIRE(::fabs((d - d3)) < 1e-12);
     }
 }
 
