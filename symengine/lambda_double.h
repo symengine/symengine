@@ -514,7 +514,9 @@ public:
     void bvisit(const Sign &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return tmp(x) == 0.0 ? 0.0 : (tmp(x) < 0.0 ? -1.0 : 1.0); };
+        result_ = [=](const double *x) {
+            return tmp(x) == 0.0 ? 0.0 : (tmp(x) < 0.0 ? -1.0 : 1.0);
+        };
     };
 
     void bvisit(const Floor &x)
@@ -606,7 +608,6 @@ public:
             }
         };
     }
-
 };
 
 class LambdaComplexDoubleVisitor
