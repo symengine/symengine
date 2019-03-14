@@ -283,6 +283,35 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     }
 }
 
+TEST_CASE("Check llvm and lambda are equal 2", "[llvm_double]")
+{
+
+    RCP<const Basic> x, r;
+    double d, d2, d3;
+    x = symbol("x");
+
+    auto expr = sub(real_double(0.0), abs(x));
+              
+
+    LambdaRealDoubleVisitor v;
+    v.init({x}, *expr);
+
+    LLVMDoubleVisitor v2;
+    v2.init({x}, *expr);
+
+    LLVMDoubleVisitor v3;
+    bool symbolic_cse = true;
+    int opt_level = 3;
+    v3.init({x}, *expr, symbolic_cse, opt_level);
+
+    d = v.call({-2.0});
+    d2 = v2.call({-2.0});
+    d3 = v3.call({-2.0});
+    std::cout << "d= " << d << " d2= " << d2 << " d3= " << d3 << std::endl;
+    REQUIRE(::fabs((d - d2)) < 1e-12);
+    REQUIRE(::fabs((d - d3)) < 1e-12);
+}
+
 TEST_CASE("Check llvm save and load", "[llvm_double]")
 {
     RCP<const Basic> x, y, z, r;

@@ -699,7 +699,6 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         result_ = r;                                                           \
     }
 
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(Abs, abs)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tan, tan)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sinh, sinh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Cosh, cosh)
@@ -715,6 +714,18 @@ SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, erf)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, erfc)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, atan2)
+
+void LLVMDoubleVisitor::bvisit(const Abs &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_double_intrinsic(llvm::Intrinsic::fabs, 1, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
 
 void LLVMDoubleVisitor::bvisit(const Min &x)
 {
