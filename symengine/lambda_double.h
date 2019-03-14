@@ -511,6 +511,26 @@ public:
         };
     };
 
+    void bvisit(const Sign &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const double *x) {
+            return tmp(x) == 0.0 ? 0.0 : (tmp(x) < 0.0 ? -1.0 : 1.0);
+        };
+    };
+
+    void bvisit(const Floor &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const double *x) { return std::floor(tmp(x)); };
+    };
+
+    void bvisit(const Ceiling &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const double *x) { return std::ceil(tmp(x)); };
+    };
+
     void bvisit(const Infty &x)
     {
         if (x.is_negative_infinity()) {
