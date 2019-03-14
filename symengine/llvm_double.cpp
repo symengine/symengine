@@ -726,7 +726,6 @@ void LLVMDoubleVisitor::bvisit(const Abs &x)
     result_ = r;
 }
 
-
 void LLVMDoubleVisitor::bvisit(const Min &x)
 {
     llvm::Value *value = nullptr;
