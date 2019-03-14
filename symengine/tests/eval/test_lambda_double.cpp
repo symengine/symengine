@@ -250,6 +250,7 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
                         pow(sin(x), integer(2))));
     exprs.push_back(r);
+    exprs.push_back(neg(abs(z)));
 
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
