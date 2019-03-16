@@ -355,8 +355,8 @@ TEST_CASE("Check that our default LLVM passes give correct results",
 
     LambdaRealDoubleVisitor v;
     v.init({x, y, z}, *r);
+    LLVMDoubleVisitor v2;
     for (int opt_level = 0; opt_level < 4; ++opt_level) {
-        LLVMDoubleVisitor v2;
         v2.init({x, y, z}, *r, false,
                 LLVMDoubleVisitor::create_default_passes(opt_level));
         d = v.call({0.4, 2.0, 3.0});

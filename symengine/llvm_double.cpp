@@ -181,21 +181,21 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                              const bool symbolic_cse,
                              const std::vector<llvm::Pass *> &passes)
 {
+    executionengine.reset();
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
-    std::unique_ptr<llvm::LLVMContext> context
-        = llvm::make_unique<llvm::LLVMContext>();
+    context = std::make_shared<llvm::LLVMContext>();
     symbols = inputs;
 
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
-        = llvm::make_unique<llvm::Module>("SymEngine", *context);
+        = llvm::make_unique<llvm::Module>("SymEngine", *context.get());
     module->setDataLayout("");
     mod = module.get();
 
     // Create a new pass manager attached to it.
-    auto fpm = llvm::make_unique<llvm::legacy::FunctionPassManager>(mod);
+    fpm = std::make_shared<llvm::legacy::FunctionPassManager>(mod);
     for (auto pass : passes) {
         fpm->add(pass);
     }
@@ -290,11 +290,12 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Now we create the JIT.
     std::string error;
-    auto executionengine = llvm::EngineBuilder(std::move(module))
-                               .setEngineKind(llvm::EngineKind::Kind::JIT)
-                               .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
-                               .setErrorStr(&error)
-                               .create();
+    executionengine = std::shared_ptr<llvm::ExecutionEngine>(
+        llvm::EngineBuilder(std::move(module))
+            .setEngineKind(llvm::EngineKind::Kind::JIT)
+            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+            .setErrorStr(&error)
+            .create());
 
     // This is a hack to get the MemoryBuffer of a compiled object.
     class MemoryBufferRefCallback : public llvm::ObjectCache
@@ -327,6 +328,9 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Get the symbol's address
     func = (intptr_t)executionengine->getPointerToFunction(F);
+    symbol_ptrs.clear();
+    replacement_symbol_ptrs.clear();
+    symbols.clear();
 }
 
 double LLVMDoubleVisitor::call(const std::vector<double> &vec)
@@ -842,8 +846,7 @@ void LLVMDoubleVisitor::loads(const std::string &s)
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
-    std::unique_ptr<llvm::LLVMContext> context
-        = llvm::make_unique<llvm::LLVMContext>();
+    context = std::make_shared<llvm::LLVMContext>();
 
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
@@ -858,11 +861,12 @@ void LLVMDoubleVisitor::loads(const std::string &s)
     auto F = get_function_type(context.get());
 
     std::string error;
-    auto executionengine = llvm::EngineBuilder(std::move(module))
-                               .setEngineKind(llvm::EngineKind::Kind::JIT)
-                               .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
-                               .setErrorStr(&error)
-                               .create();
+    executionengine = std::shared_ptr<llvm::ExecutionEngine>(
+        llvm::EngineBuilder(std::move(module))
+            .setEngineKind(llvm::EngineKind::Kind::JIT)
+            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+            .setErrorStr(&error)
+            .create());
 
     class MCJITObjectLoader : public llvm::ObjectCache
     {

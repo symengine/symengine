@@ -16,6 +16,10 @@ class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
 class Pass;
+namespace legacy
+{
+class FunctionPassManager;
+}
 }
 
 namespace SymEngine
@@ -31,7 +35,9 @@ protected:
     std::map<RCP<const Basic>, llvm::Value *, RCPBasicKeyLess>
         replacement_symbol_ptrs;
     llvm::Value *result_;
-    llvm::ExecutionEngine *executionengine;
+    std::shared_ptr<llvm::LLVMContext> context;
+    std::shared_ptr<llvm::ExecutionEngine> executionengine;
+    std::shared_ptr<llvm::legacy::FunctionPassManager> fpm;
     intptr_t func;
 
     // Following are invalid after the init call.
