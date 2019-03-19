@@ -65,6 +65,14 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     std::string s;
     RCP<const Basic> res;
 
+    s = "-1^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-1)));
+
+    s = "-a^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *neg(parse("a^2"))));
+
     s = "-3-5";
     res = parse(s);
     REQUIRE(eq(*res, *integer(-8)));
