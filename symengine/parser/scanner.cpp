@@ -33,8 +33,9 @@ size_t const ScannerBase::s_ranges__[] = {
     38, 38, 38, 38, 38, 38, 38, 38, 38,
 };
 
+// $insert startcondinfo
 // s_dfa__ contains the rows of *all* DFAs ordered by start state.  The
-// enum class StartCondition__ is defined in the baseclass header
+// enum class StartCondition__is defined in the baseclass header.
 // StartCondition__::INITIAL is always 0.  Each entry defines the row to
 // transit to if the column's character range was sensed. Row numbers are
 // relative to the used DFA, and d_dfaBase__ is set to the first row of
@@ -45,18 +46,18 @@ size_t const ScannerBase::s_ranges__[] = {
 // 9) is set) then the rule only matches when d_atBOL is also true.
 int const ScannerBase::s_dfa__[][42] = {
     // INITIAL
-    {-1, 1, 2,  3,  4,  3,  5,  3, 5,  5,  6,  5,  5,  5,
-     7,  5, 8,  3,  9,  10, 11, 3, 12, 13, 13, 13, 3,  5,
-     13, 3, 13, 13, 13, 3,  5,  3, 5,  3,  13, -1, -1, -1}, // 0
+    {1,  2, 3,  1,  4,  1,  5,  1, 5,  5,  6,  5,  5,  5,
+     7,  5, 8,  1,  9,  10, 11, 1, 12, 13, 13, 13, 1,  5,
+     13, 1, 13, 13, 13, 1,  5,  1, 5,  1,  13, -1, -1, -1}, // 0
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9,  -1}, // 1
+     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1}, // 1
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8,  -1}, // 2
+     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9,  -1}, // 2
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1}, // 3
+     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8,  -1}, // 3
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1}, // 4

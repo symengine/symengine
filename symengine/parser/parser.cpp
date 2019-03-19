@@ -1,12 +1,15 @@
 // Automatically generated
 
+// base/comment
+
 // $insert class.ih
 #include "parser.ih"
 
 // The FIRST element of SR arrays shown below uses `d_type', defining the
 // state's type, and `d_lastIdx' containing the last element's index. If
 // d_lastIdx contains the REQ_TOKEN bitflag (see below) then the state needs
-// a token: if in this state d_token__ is _UNDETERMINED_, nextToken() will be
+// a token: if in this state d_token is Reserved__::UNDETERMINED__, nextToken()
+// will be
 // called
 
 // The LAST element of SR arrays uses `d_token' containing the last retrieved
@@ -16,13 +19,13 @@
 // indicates `ACCEPT', if negative, -d_action represents the number of the
 // rule to reduce to.
 
-// `lookup()' tries to find d_token__ in the current SR array. If it fails, and
+// `lookup()' tries to find d_token in the current SR array. If it fails, and
 // there is no default reduction UNEXPECTED_TOKEN__ is thrown, which is then
 // caught by the error-recovery function.
 
 // The error-recovery function will pop elements off the stack until a state
-// having bit flag ERR_ITEM is found. This state has a transition on _error_
-// which is applied. In this _error_ state, while the current token is not a
+// having bit flag ERR_ITEM is found. This state has a transition on errTok__
+// which is applied. In this errTok__ state, while the current token is not a
 // proper continuation, new tokens are obtained by nextToken(). If such a
 // token is found, error recovery is successful and the token is
 // handled according to the error state's SR table and parsing continues.
@@ -46,27 +49,14 @@
 //                                      ( < 0: reduce,
 //                                          0: ACCEPT,
 //                                        > 0: next state)
-// Last element:    {set to d_token__,    action to perform}
 //      }
 
-// When the --thread-safe option is specified, all static data are defined as
-// const. If --thread-safe is not provided, the state-tables are not defined
-// as const, since the lookup() function below will modify them
+// base/declarations
 
 namespace // anonymous
 {
 
-enum {
-    STACK_EXPANSION = 5 // size to expand the state-stack with when
-                        // full
-};
-
-enum ReservedTokens {
-    PARSE_ACCEPT = 0, // `ACCEPT' TRANSITION
-    _UNDETERMINED_ = -2,
-    _EOF_ = -1,
-    _error_ = 256
-};
+enum Reserved__ { UNDETERMINED__ = -2, EOF__ = -1, errTok__ = 256 };
 enum StateType // modify statetype/data.cc when this enum changes
 { NORMAL,
   ERR_ITEM,
@@ -77,6 +67,10 @@ enum StateType // modify statetype/data.cc when this enum changes
   REQ_DEF,    // REQ_TOKEN | DEF_RED
   ERR_REQ_DEF // ERR_ITEM | REQ_TOKEN | DEF_RED
 };
+enum StateTransition {
+    ACCEPT__ = 0, // `ACCEPT' TRANSITION
+};
+
 struct PI__ // Production Info
 {
     size_t d_nonTerm; // identification number of this production's
@@ -89,20 +83,24 @@ struct SR__ // Shift Reduce info, see its description above
     union {
         int _field_1_; // initializer, allowing initializations
                        // of the SR s_[] arrays
-        int d_type;
+        StateType d_type;
         int d_token;
     };
     union {
         int _field_2_;
 
-        int d_lastIdx;       // if negative, the state uses SHIFT
-        int d_action;        // may be negative (reduce),
-                             // postive (shift), or 0 (accept)
-        size_t d_errorState; // used with Error states
+        int d_lastIdx; // if negative, the state uses SHIFT
+        int d_action;  // may be negative (reduce),
+                       // postive (shift), or 0 (accept)
     };
 };
 
 // $insert staticdata
+
+enum // size to expand the state-stack with when
+{    // full
+    STACK_EXPANSION__ = 10
+};
 
 // Productions Info Records:
 PI__ const s_productionInfo[] = {
@@ -152,7 +150,7 @@ SR__ s_0[] = {
 };
 
 SR__ s_1[] = {
-    {{REQ_TOKEN}, {2}}, {{_EOF_}, {PARSE_ACCEPT}}, {{0}, {0}},
+    {{REQ_TOKEN}, {2}}, {{EOF__}, {ACCEPT__}}, {{0}, {0}},
 };
 
 SR__ s_2[] = {
@@ -160,7 +158,7 @@ SR__ s_2[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -408,7 +406,7 @@ SR__ s_24[] = {
     {{45}, {12}},                      // '-'
     {{42}, {13}},                      // '*'
     {{47}, {14}},                      // '/'
-    {{263}, {15}},                     // POW
+    {{264}, {15}},                     // POW
     {{60}, {16}},                      // '<'
     {{62}, {17}},                      // '>'
     {{261}, {18}},                     // LE
@@ -421,7 +419,9 @@ SR__ s_24[] = {
 };
 
 SR__ s_25[] = {
-    {{REQ_DEF}, {1}}, {{0}, {-16}},
+    {{REQ_DEF}, {2}},
+    {{264}, {15}}, // POW
+    {{0}, {-16}},
 };
 
 SR__ s_26[] = {
@@ -445,32 +445,32 @@ SR__ s_27[] = {
 SR__ s_28[] = {
     {{REQ_DEF}, {4}}, {{42}, {13}}, // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{0}, {-2}},
 };
 
 SR__ s_29[] = {
     {{REQ_DEF}, {4}}, {{42}, {13}}, // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{0}, {-3}},
 };
 
 SR__ s_30[] = {
     {{REQ_DEF}, {2}},
-    {{263}, {15}}, // POW
+    {{264}, {15}}, // POW
     {{0}, {-4}},
 };
 
 SR__ s_31[] = {
     {{REQ_DEF}, {2}},
-    {{263}, {15}}, // POW
+    {{264}, {15}}, // POW
     {{0}, {-5}},
 };
 
 SR__ s_32[] = {
     {{REQ_DEF}, {2}},
-    {{263}, {15}}, // POW
+    {{264}, {15}}, // POW
     {{0}, {-6}},
 };
 
@@ -479,7 +479,7 @@ SR__ s_33[] = {
     {{45}, {12}},                   // '-'
     {{42}, {13}},                   // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{261}, {18}},                  // LE
     {{262}, {19}},                  // GE
     {{0}, {-7}},
@@ -490,7 +490,7 @@ SR__ s_34[] = {
     {{45}, {12}},                   // '-'
     {{42}, {13}},                   // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{60}, {16}},                   // '<'
     {{261}, {18}},                  // LE
     {{262}, {19}},                  // GE
@@ -502,7 +502,7 @@ SR__ s_35[] = {
     {{45}, {12}},                   // '-'
     {{42}, {13}},                   // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{262}, {19}},                  // GE
     {{0}, {-9}},
 };
@@ -512,7 +512,7 @@ SR__ s_36[] = {
     {{45}, {12}},                   // '-'
     {{42}, {13}},                   // '*'
     {{47}, {14}},                   // '/'
-    {{263}, {15}},                  // POW
+    {{264}, {15}},                  // POW
     {{0}, {-10}},
 };
 
@@ -521,7 +521,7 @@ SR__ s_37[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -534,7 +534,7 @@ SR__ s_38[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -550,7 +550,7 @@ SR__ s_39[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -564,7 +564,7 @@ SR__ s_40[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -590,7 +590,7 @@ SR__ s_43[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -624,7 +624,7 @@ SR__ s_46[] = {
     {{45}, {12}},                    // '-'
     {{42}, {13}},                    // '*'
     {{47}, {14}},                    // '/'
-    {{263}, {15}},                   // POW
+    {{264}, {15}},                   // POW
     {{60}, {16}},                    // '<'
     {{62}, {17}},                    // '>'
     {{261}, {18}},                   // LE
@@ -650,326 +650,97 @@ SR__ *s_state[] = {
 namespace SymEngine
 {
 
-// If the parsing function call uses arguments, then provide an overloaded
-// function.  The code below doesn't rely on parameters, so no arguments are
-// required.  Furthermore, parse uses a function try block to allow us to do
-// ACCEPT and ABORT from anywhere, even from within members called by actions,
-// simply throwing the appropriate exceptions.
+// $insert polymorphicCode
+namespace Meta__
+{
 
+size_t const *t_nErrors;
+// $insert idoftag
+char const *idOfTag__[] = {"basic", "string", "basic_vec", "<undefined>"};
+
+size_t const *s_nErrors__;
+
+Base::~Base()
+{
+}
+
+} // namespace Meta__
+
+// If the parsing function call (i.e., parse()' needs arguments, then provide
+// an overloaded function.  The code below doesn't rely on parameters, so no
+// arguments are required.  Furthermore, parse uses a function try block to
+// allow us to do ACCEPT and ABORT from anywhere, even from within members
+// called by actions, simply throwing the appropriate exceptions.
+
+// base/base1
 ParserBase::ParserBase()
-    : d_stackIdx__(-1),
-      // $insert debuginit
-      d_debug__(false), d_nErrors__(0),
-      // $insert requiredtokens
-      d_requiredTokens__(0), d_acceptedTokens__(d_requiredTokens__),
-      d_token__(_UNDETERMINED_), d_nextToken__(_UNDETERMINED_)
+    : d_token(Reserved__::UNDETERMINED__),
+      // $insert baseclasscode
+      d_requiredTokens__(0)
 {
+    Meta__::t_nErrors = &d_nErrors__;
 }
 
-void Parser::print__()
+// base/clearin
+void ParserBase::clearin__()
 {
-    // $insert print
+    d_nErrors__ = 0;
+    d_stackIdx = -1;
+    d_stateStack.clear();
+    d_token = Reserved__::UNDETERMINED__;
+    d_next = TokenPair{Reserved__::UNDETERMINED__, STYPE__{}};
+    d_recovery = false;
+    d_acceptedTokens__ = d_requiredTokens__;
+    d_val__ = STYPE__{};
+
+    push__(0);
 }
 
-void ParserBase::clearin()
+// base/debugfunctions
+
+void ParserBase::setDebug(bool mode)
 {
-    d_token__ = d_nextToken__ = _UNDETERMINED_;
+    d_actionCases__ = false;
+    d_debug__ = mode;
 }
 
-void ParserBase::push__(size_t state)
+void ParserBase::setDebug(DebugMode__ mode)
 {
-    if (static_cast<size_t>(d_stackIdx__ + 1) == d_stateStack__.size()) {
-        size_t newSize = d_stackIdx__ + STACK_EXPANSION;
-        d_stateStack__.resize(newSize);
-        d_valueStack__.resize(newSize);
-    }
-    ++d_stackIdx__;
-    d_stateStack__[d_stackIdx__] = d_state__ = state;
-    *(d_vsp__ = &d_valueStack__[d_stackIdx__]) = d_val__;
+    d_actionCases__ = mode & ACTIONCASES;
+    d_debug__ = mode & ON;
 }
 
-void ParserBase::popToken__()
+// base/lex
+void ParserBase::lex__(int token)
 {
-    d_token__ = d_nextToken__;
+    d_token = token;
 
-    d_val__ = d_nextVal__;
-    d_nextVal__ = STYPE__();
+    if (d_token <= 0)
+        d_token = Reserved__::EOF__;
 
-    d_nextToken__ = _UNDETERMINED_;
+    d_terminalToken = true;
 }
 
-void ParserBase::pushToken__(int token)
+// base/lookup
+int ParserBase::lookup__() const
 {
-    d_nextToken__ = d_token__;
-    d_nextVal__ = d_val__;
-    d_token__ = token;
-}
+    // if the final transition is negative, then we should reduce by the rule
+    // given by its positive value.
 
-void ParserBase::pop__(size_t count)
-{
-    if (d_stackIdx__ < static_cast<int>(count)) {
-        ABORT();
-    }
+    SR__ const *sr = s_state[d_state];
+    SR__ const *last = sr + sr->d_lastIdx;
 
-    d_stackIdx__ -= count;
-    d_state__ = d_stateStack__[d_stackIdx__];
-    d_vsp__ = &d_valueStack__[d_stackIdx__];
-}
-
-inline size_t ParserBase::top__() const
-{
-    return d_stateStack__[d_stackIdx__];
-}
-
-void Parser::executeAction(int production) try {
-    if (d_token__ != _UNDETERMINED_)
-        pushToken__(d_token__); // save an already available token
-
-    // $insert defaultactionreturn
-    // save default non-nested block $$
-    if (int size = s_productionInfo[production].d_size)
-        d_val__ = d_vsp__[1 - size];
-
-    switch (production) {
-        // $insert actioncases
-
-        case 1:
-#line 43 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
-            res = d_val__.get<Tag__::basic>();
-        } break;
-
-        case 2:
-#line 51 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = add(d_vsp__[-2].data<Tag__::basic>(),
-                                              d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 3:
-#line 54 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = sub(d_vsp__[-2].data<Tag__::basic>(),
-                                              d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 4:
-#line 57 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = mul(d_vsp__[-2].data<Tag__::basic>(),
-                                              d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 5:
-#line 60 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = div(d_vsp__[-2].data<Tag__::basic>(),
-                                              d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 6:
-#line 63 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = pow(d_vsp__[-2].data<Tag__::basic>(),
-                                              d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 7:
-#line 66 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = Lt(d_vsp__[-2].data<Tag__::basic>(),
-                                             d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 8:
-#line 69 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = Gt(d_vsp__[-2].data<Tag__::basic>(),
-                                             d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 9:
-#line 72 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = Le(d_vsp__[-2].data<Tag__::basic>(),
-                                             d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 10:
-#line 75 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = Ge(d_vsp__[-2].data<Tag__::basic>(),
-                                             d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 11:
-#line 78 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = Eq(d_vsp__[-2].data<Tag__::basic>(),
-                                             d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 12:
-#line 81 "parser.yy"
-        {
-            set_boolean s;
-            s.insert(rcp_static_cast<const Boolean>(
-                d_vsp__[-2].data<Tag__::basic>()));
-            s.insert(rcp_static_cast<const Boolean>(
-                d_vsp__[0].data<Tag__::basic>()));
-            d_val__.get<Tag__::basic>() = logical_or(s);
-        } break;
-
-        case 13:
-#line 89 "parser.yy"
-        {
-            set_boolean s;
-            s.insert(rcp_static_cast<const Boolean>(
-                d_vsp__[-2].data<Tag__::basic>()));
-            s.insert(rcp_static_cast<const Boolean>(
-                d_vsp__[0].data<Tag__::basic>()));
-            d_val__.get<Tag__::basic>() = logical_and(s);
-        } break;
-
-        case 14:
-#line 97 "parser.yy"
-        {
-            vec_boolean s;
-            s.push_back(rcp_static_cast<const Boolean>(
-                d_vsp__[-2].data<Tag__::basic>()));
-            s.push_back(rcp_static_cast<const Boolean>(
-                d_vsp__[0].data<Tag__::basic>()));
-            d_val__.get<Tag__::basic>() = logical_xor(s);
-        } break;
-
-        case 15:
-#line 105 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = d_vsp__[-1].data<Tag__::basic>();
-        } break;
-
-        case 16:
-#line 108 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = neg(d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 17:
-#line 111 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>()
-                = logical_not(rcp_static_cast<const Boolean>(
-                    d_vsp__[0].data<Tag__::basic>()));
-        } break;
-
-        case 18:
-#line 114 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
-        } break;
-
-        case 19:
-#line 119 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>()
-                = parse_identifier(d_vsp__[0].data<Tag__::string>());
-        } break;
-
-        case 20:
-#line 124 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>()
-                = parse_implicit_mul(d_vsp__[0].data<Tag__::string>());
-        } break;
-
-        case 21:
-#line 129 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>()
-                = parse_numeric(d_vsp__[0].data<Tag__::string>());
-        } break;
-
-        case 22:
-#line 134 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>() = d_vsp__[0].data<Tag__::basic>();
-        } break;
-
-        case 23:
-#line 141 "parser.yy"
-        {
-            d_val__.get<Tag__::basic>()
-                = functionify(d_vsp__[-3].data<Tag__::string>(),
-                              d_vsp__[-1].data<Tag__::basic_vec>());
-        } break;
-
-        case 24:
-#line 149 "parser.yy"
-        {
-            d_val__.get<Tag__::basic_vec>()
-                = d_vsp__[-2].data<Tag__::basic_vec>();
-            d_val__.get<Tag__::basic_vec>().push_back(
-                d_vsp__[0].data<Tag__::basic>());
-        } break;
-
-        case 25:
-#line 155 "parser.yy"
-        {
-            d_val__.get<Tag__::basic_vec>() = {d_vsp__[0].data<Tag__::basic>()};
-        } break;
-    }
-} catch (std::exception const &exc) {
-    exceptionHandler__(exc);
-}
-
-inline void ParserBase::reduce__(PI__ const &pi)
-{
-    d_token__ = pi.d_nonTerm;
-    pop__(pi.d_size);
-}
-
-// If d_token__ is _UNDETERMINED_ then if d_nextToken__ is _UNDETERMINED_
-// another
-// token is obtained from lex(). Then d_nextToken__ is assigned to d_token__.
-void Parser::nextToken()
-{
-    if (d_token__ != _UNDETERMINED_) // no need for a token: got one
-        return;                      // already
-
-    if (d_nextToken__ != _UNDETERMINED_) {
-        popToken__(); // consume pending token
-    } else {
-        ++d_acceptedTokens__; // accept another token (see
-                              // errorRecover())
-        d_token__ = lex();
-        if (d_token__ <= 0)
-            d_token__ = _EOF_;
-    }
-    print();
-}
-
-// if the final transition is negative, then we should reduce by the rule
-// given by its positive value. Note that the `recovery' parameter is only
-// used with the --debug option
-int Parser::lookup(bool recovery)
-{
-    // $insert threading
-    SR__ *sr = s_state[d_state__]; // get the appropriate state-table
-    int lastIdx = sr->d_lastIdx;   // sentinel-index in the SR__ array
-
-    SR__ *lastElementPtr = sr + lastIdx;
-    lastElementPtr->d_token = d_token__; // set search-token
-
-    SR__ *elementPtr = sr + 1; // start the search at s_xx[1]
-    while (elementPtr->d_token != d_token__)
-        ++elementPtr;
-
-    if (elementPtr == lastElementPtr) // reached the last element
+    for (; ++sr != last;) // visit all but the last SR entries
     {
-        if (elementPtr->d_action < 0) // default reduction
+        if (sr->d_token == d_token)
+            return sr->d_action;
+    }
+
+    if (sr == last) // reached the last element
+    {
+        if (sr->d_action < 0) // default reduction
         {
-            return elementPtr->d_action;
+            return sr->d_action;
         }
 
         // No default reduction, so token not found, so error.
@@ -979,23 +750,126 @@ int Parser::lookup(bool recovery)
     // not at the last element: inspect the nature of the action
     // (< 0: reduce, 0: ACCEPT, > 0: shift)
 
-    int action = elementPtr->d_action;
+    int action = sr->d_action;
 
     return action;
 }
 
-// When an error has occurred, pop elements off the stack until the top
-// state has an error-item. If none is found, the default recovery
-// mode (which is to abort) is activated.
-//
-// If EOF is encountered without being appropriate for the current state,
-// then the error recovery will fall back to the default recovery mode.
-// (i.e., parsing terminates)
-void Parser::errorRecovery() try {
+// base/pop
+void ParserBase::pop__(size_t count)
+{
+    if (d_stackIdx < static_cast<int>(count)) {
+        ABORT();
+    }
+
+    d_stackIdx -= count;
+    d_state = d_stateStack[d_stackIdx].first;
+    d_vsp = &d_stateStack[d_stackIdx];
+}
+
+// base/poptoken
+void ParserBase::popToken__()
+{
+    d_token = d_next.first;
+    d_val__ = std::move(d_next.second);
+
+    d_next.first = Reserved__::UNDETERMINED__;
+}
+
+// base/push
+void ParserBase::push__(size_t state)
+{
+    size_t currentSize = d_stateStack.size();
+    if (stackSize__() == currentSize) {
+        size_t newSize = currentSize + STACK_EXPANSION__;
+        d_stateStack.resize(newSize);
+    }
+
+    ++d_stackIdx;
+    d_stateStack[d_stackIdx] = StatePair{d_state = state, std::move(d_val__)};
+
+    d_vsp = &d_stateStack[d_stackIdx];
+
+    if (d_stackIdx == 0) {
+    } else {
+    }
+}
+
+// base/pushtoken
+void ParserBase::pushToken__(int token)
+{
+    d_next = TokenPair{d_token, std::move(d_val__)};
+    d_token = token;
+}
+
+// base/redotoken
+void ParserBase::redoToken__()
+{
+    if (d_token != Reserved__::UNDETERMINED__)
+        pushToken__(d_token);
+}
+
+// base/reduce
+void ParserBase::reduce__(int rule)
+{
+    PI__ const &pi = s_productionInfo[rule];
+
+    d_token = pi.d_nonTerm;
+    pop__(pi.d_size);
+
+    d_terminalToken = false;
+}
+
+// base/shift
+void ParserBase::shift__(int action)
+{
+    push__(action);
+    popToken__(); // token processed
+
+    if (d_recovery and d_terminalToken) {
+        d_recovery = false;
+        d_acceptedTokens__ = 0;
+    }
+}
+
+// base/startrecovery
+void ParserBase::startRecovery__()
+{
+    int lastToken = d_token; // give the unexpected token a
+                             // chance to be processed
+                             // again.
+
+    pushToken__(Reserved__::errTok__); // specify errTok__ as next token
+    push__(lookup__());                // push the error state
+
+    d_token = lastToken; // reactivate the unexpected
+                         // token (we're now in an
+                         // ERROR state).
+
+    d_recovery = true;
+}
+
+// base/top
+inline size_t ParserBase::top__() const
+{
+    return d_stateStack[d_stackIdx].first;
+}
+
+// derived/errorrecovery
+void Parser::errorRecovery__()
+{
+    // When an error has occurred, pop elements off the stack until the top
+    // state has an error-item. If none is found, the default recovery
+    // mode (which is to abort) is activated.
+    //
+    // If EOF is encountered without being appropriate for the current state,
+    // then the error recovery will fall back to the default recovery mode.
+    // (i.e., parsing terminates)
+
     if (d_acceptedTokens__ >= d_requiredTokens__) // only generate an error-
     {                                             // message if enough tokens
         ++d_nErrors__;                            // were accepted. Otherwise
-        error("Syntax error");                    // simply skip input
+        error();                                  // simply skip input
     }
 
     // get the error state
@@ -1003,125 +877,307 @@ void Parser::errorRecovery() try {
         pop__();
     }
 
-    // In the error state, lookup a token allowing us to proceed.
-    // Continuation may be possible following multiple reductions,
-    // but eventuall a shift will be used, requiring the retrieval of
-    // a terminal token. If a retrieved token doesn't match, the catch below
-    // will ensure the next token is requested in the while(true) block
-    // implemented below:
+    // In the error state, looking up a token allows us to proceed.
+    // Continuation may be require multiple reductions, but eventually a
+    // terminal-token shift is used. See nextCycle__ for details.
 
-    int lastToken = d_token__; // give the unexpected token a
-                               // chance to be processed
-                               // again.
-
-    pushToken__(_error_); // specify _error_ as next token
-    push__(lookup(true)); // push the error state
-
-    d_token__ = lastToken; // reactivate the unexpected
-                           // token (we're now in an
-                           // ERROR state).
-
-    bool gotToken = true; // the next token is a terminal
-
-    while (true) {
-        try {
-            if (s_state[d_state__]->d_type & REQ_TOKEN) {
-                gotToken = d_token__ == _UNDETERMINED_;
-                nextToken(); // obtain next token
-            }
-
-            int action = lookup(true);
-
-            if (action > 0) // push a new state
-            {
-                push__(action);
-                popToken__();
-
-                if (gotToken) {
-
-                    d_acceptedTokens__ = 0;
-                    return;
-                }
-            } else if (action < 0) {
-                // no actions executed on recovery but save an already
-                // available token:
-                if (d_token__ != _UNDETERMINED_)
-                    pushToken__(d_token__);
-
-                // next token is the rule's LHS
-                reduce__(s_productionInfo[-action]);
-            } else
-                ABORT(); // abort when accepting during
-                         // error recovery
-        } catch (...) {
-            if (d_token__ == _EOF_)
-                ABORT(); // saw inappropriate _EOF_
-
-            popToken__(); // failing token now skipped
-        }
-    }
-} catch (ErrorRecovery__) // This is: DEFAULT_RECOVERY_MODE
-{
-    ABORT();
+    startRecovery__();
 }
 
-// The parsing algorithm:
-// Initially, state 0 is pushed on the stack, and d_token__ as well as
-// d_nextToken__ are initialized to _UNDETERMINED_.
-//
-// Then, in an eternal loop:
-//
-//  1. If a state does not have REQ_TOKEN no token is assigned to
-//     d_token__. If the state has REQ_TOKEN, nextToken() is called to
-//      determine d_nextToken__ and d_token__ is set to
-//     d_nextToken__. nextToken() will not call lex() unless d_nextToken__ is
-//     _UNDETERMINED_.
-//
-//  2. lookup() is called:
-//     d_token__ is stored in the final element's d_token field of the
-//     state's SR_ array.
-//
-//  3. The current token is looked up in the state's SR_ array
-//
-//  4. Depending on the result of the lookup() function the next state is
-//     shifted on the parser's stack, a reduction by some rule is applied,
-//     or the parsing function returns ACCEPT(). When a reduction is
-//     called for, any action that may have been defined for that
-//     reduction is executed.
-//
-//  5. An error occurs if d_token__ is not found, and the state has no
-//     default reduction. Error handling was described at the top of this
-//     file.
+// derived/executeaction
+void Parser::executeAction__(int production) try {
+    if (token__() != Reserved__::UNDETERMINED__)
+        pushToken__(token__()); // save an already available token
+    switch (production) {
+        // $insert actioncases
 
+        case 1:
+#line 43 "parser.yy"
+        {
+            d_val__ = vs__(0).get<Tag__::basic>();
+            res = d_val__.get<Tag__::basic>();
+        } break;
+
+        case 2:
+#line 51 "parser.yy"
+        {
+            d_val__ = add(vs__(-2).get<Tag__::basic>(),
+                          vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 3:
+#line 54 "parser.yy"
+        {
+            d_val__ = sub(vs__(-2).get<Tag__::basic>(),
+                          vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 4:
+#line 57 "parser.yy"
+        {
+            d_val__ = mul(vs__(-2).get<Tag__::basic>(),
+                          vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 5:
+#line 60 "parser.yy"
+        {
+            d_val__ = div(vs__(-2).get<Tag__::basic>(),
+                          vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 6:
+#line 63 "parser.yy"
+        {
+            d_val__ = pow(vs__(-2).get<Tag__::basic>(),
+                          vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 7:
+#line 66 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(
+                Lt(vs__(-2).get<Tag__::basic>(), vs__(0).get<Tag__::basic>()));
+        } break;
+
+        case 8:
+#line 69 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(
+                Gt(vs__(-2).get<Tag__::basic>(), vs__(0).get<Tag__::basic>()));
+        } break;
+
+        case 9:
+#line 72 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(
+                Le(vs__(-2).get<Tag__::basic>(), vs__(0).get<Tag__::basic>()));
+        } break;
+
+        case 10:
+#line 75 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(
+                Ge(vs__(-2).get<Tag__::basic>(), vs__(0).get<Tag__::basic>()));
+        } break;
+
+        case 11:
+#line 78 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(
+                Eq(vs__(-2).get<Tag__::basic>(), vs__(0).get<Tag__::basic>()));
+        } break;
+
+        case 12:
+#line 81 "parser.yy"
+        {
+            set_boolean s;
+            s.insert(
+                rcp_static_cast<const Boolean>(vs__(-2).get<Tag__::basic>()));
+            s.insert(
+                rcp_static_cast<const Boolean>(vs__(0).get<Tag__::basic>()));
+            d_val__ = rcp_static_cast<const Basic>(logical_or(s));
+        } break;
+
+        case 13:
+#line 89 "parser.yy"
+        {
+            set_boolean s;
+            s.insert(
+                rcp_static_cast<const Boolean>(vs__(-2).get<Tag__::basic>()));
+            s.insert(
+                rcp_static_cast<const Boolean>(vs__(0).get<Tag__::basic>()));
+            d_val__ = rcp_static_cast<const Basic>(logical_and(s));
+        } break;
+
+        case 14:
+#line 97 "parser.yy"
+        {
+            vec_boolean s;
+            s.push_back(
+                rcp_static_cast<const Boolean>(vs__(-2).get<Tag__::basic>()));
+            s.push_back(
+                rcp_static_cast<const Boolean>(vs__(0).get<Tag__::basic>()));
+            d_val__ = rcp_static_cast<const Basic>(logical_xor(s));
+        } break;
+
+        case 15:
+#line 105 "parser.yy"
+        {
+            d_val__ = vs__(-1).get<Tag__::basic>();
+        } break;
+
+        case 16:
+#line 108 "parser.yy"
+        {
+            d_val__ = neg(vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 17:
+#line 111 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(logical_not(
+                rcp_static_cast<const Boolean>(vs__(0).get<Tag__::basic>())));
+        } break;
+
+        case 18:
+#line 114 "parser.yy"
+        {
+            d_val__ = rcp_static_cast<const Basic>(vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 19:
+#line 119 "parser.yy"
+        {
+            d_val__ = parse_identifier(vs__(0).get<Tag__::string>());
+        } break;
+
+        case 20:
+#line 124 "parser.yy"
+        {
+            d_val__ = parse_implicit_mul(vs__(0).get<Tag__::string>());
+        } break;
+
+        case 21:
+#line 129 "parser.yy"
+        {
+            d_val__ = parse_numeric(vs__(0).get<Tag__::string>());
+        } break;
+
+        case 22:
+#line 134 "parser.yy"
+        {
+            d_val__ = vs__(0).get<Tag__::basic>();
+        } break;
+
+        case 23:
+#line 141 "parser.yy"
+        {
+            d_val__ = functionify(vs__(-3).get<Tag__::string>(),
+                                  vs__(-1).get<Tag__::basic_vec>());
+        } break;
+
+        case 24:
+#line 149 "parser.yy"
+        {
+            d_val__ = vs__(-2).get<Tag__::basic_vec>();
+            d_val__.get<Tag__::basic_vec>().push_back(
+                vs__(0).get<Tag__::basic>());
+        } break;
+
+        case 25:
+#line 155 "parser.yy"
+        {
+            d_val__ = vec_basic(1, vs__(0).get<Tag__::basic>());
+        } break;
+    }
+} catch (std::exception const &exc) {
+    exceptionHandler(exc);
+}
+
+// derived/nextcycle
+void Parser::nextCycle__() try {
+    if (s_state[state__()]->d_type & REQ_TOKEN)
+        nextToken__(); // obtain next token
+
+    int action = lookup__(); // lookup d_token in d_state
+
+    if (action > 0) // SHIFT: push a new state
+    {
+        shift__(action);
+        return;
+    }
+
+    if (action < 0) // REDUCE: execute and pop.
+    {
+
+        if (recovery__())
+            redoToken__();
+        else
+            executeAction__(-action);
+        // next token is the rule's LHS
+        reduce__(-action);
+        return;
+    }
+
+    if (recovery__())
+        ABORT();
+    else
+        ACCEPT();
+} catch (ErrorRecovery__) {
+    if (not recovery__())
+        errorRecovery__();
+    else {
+        if (token__() == Reserved__::EOF__)
+            ABORT();
+        popToken__(); // skip the failing token
+    }
+}
+
+// derived/nexttoken
+void Parser::nextToken__()
+{
+    // If d_token is Reserved__::UNDETERMINED__ then if savedToken__() is
+    // Reserved__::UNDETERMINED__ another token is obtained from lex(). Then
+    // savedToken__() is assigned to d_token.
+
+    // no need for a token: got one already
+    if (token__() != Reserved__::UNDETERMINED__) {
+        return;
+    }
+
+    if (savedToken__() != Reserved__::UNDETERMINED__) {
+        popToken__(); // consume pending token
+    } else {
+        ++d_acceptedTokens__; // accept another token (see
+                              // errorRecover())
+        lex__(lex());
+        print__();
+    }
+    print();
+}
+
+// derived/print
+void Parser::print__()
+{
+    // $insert print
+}
+
+// derived/parse
 int Parser::parse() try {
-    push__(0); // initial state
-    clearin(); // clear the tokens.
+    // The parsing algorithm:
+    // Initially, state 0 is pushed on the stack, and all relevant variables
+    // are initialized by Base::clearin__.
+    //
+    // Then, in an eternal loop:
+    //
+    //  1. If a state is a REQ_TOKEN type, then the next token is obtained
+    //     from nextToken().  This may very well be the currently available
+    //     token. When retrieving a terminal token d_terminal is set to true.
+    //
+    //  2. lookup() is called, d_token is looked up in the current state's
+    //     SR_ array.
+    //
+    //  4. Depending on the result of the lookup() function the next state is
+    //     shifted on the parser's stack, a reduction by some rule is applied,
+    //     or the parsing function returns ACCEPT(). When a reduction is
+    //     called for, any action that may have been defined for that
+    //     reduction is executed.
+    //
+    //  5. An error occurs if d_token is not found, and the state has no
+    //     default reduction.
+
+    clearin__(); // initialize, push(0)
 
     while (true) {
-        try {
-            if (s_state[d_state__]->d_type & REQ_TOKEN)
-                nextToken(); // obtain next token
-
-            int action = lookup(false); // lookup d_token__ in d_state__
-
-            if (action > 0) // SHIFT: push a new state
-            {
-                push__(action);
-                popToken__();      // token processed
-            } else if (action < 0) // REDUCE: execute and pop.
-            {
-                executeAction(-action);
-                // next token is the rule's LHS
-                reduce__(s_productionInfo[-action]);
-            } else
-                ACCEPT();
-        } catch (ErrorRecovery__) {
-            errorRecovery();
-        }
+        // $insert prompt
+        nextCycle__();
     }
 } catch (Return__ retValue) {
-    return retValue;
+    return retValue or d_nErrors__;
 }
+
+// derived/tail
 
 // $insert namespace-close
 }
