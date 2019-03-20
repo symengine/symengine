@@ -62,3 +62,41 @@ TEST_CASE("Arithmetic of Expression", "[Expression]")
         << "ns" << std::endl;
     std::cout << res << std::endl;
 }
+
+TEST_CASE("Substitution of Expression", "[Expression]")
+{
+    const Expression x("x");
+    const Expression f_x = 2 * x * x;
+    const Expression f_x_subs = f_x.subs({{x, integer(2)}});
+    REQUIRE(f_x_subs == 8);
+}
+
+TEST_CASE("Conversion of Expression", "[Expression]")
+{
+    const Expression x("x");
+    const Expression f_x = x * x;
+
+    REQUIRE(static_cast<int>(f_x.subs({{x, integer(2)}})) == 4);
+    REQUIRE(static_cast<double>(f_x.subs({{x, real_double(3.5)}})) == 12.25);
+    REQUIRE(static_cast<float>(f_x.subs({{x, real_double(3.5)}})) == 12.25f);
+    REQUIRE(std::abs(static_cast<std::complex<double>>(
+                         f_x.subs({{x, complex_double({0.0, 2.0})}}))
+                     - std::complex<double>(-4, 0))
+            < 1e-12);
+    REQUIRE(std::abs(static_cast<std::complex<float>>(
+                         f_x.subs({{x, complex_double({0.0f, 2.0f})}}))
+                     - std::complex<float>(-4, 0))
+            < 1e-12);
+}
+
+TEST_CASE("Differentiation of Expression", "[Expression]")
+{
+    const Expression x("x");
+    const Expression f_x = x * x;
+    const Expression df_dx = f_x.diff(x);
+    REQUIRE(df_dx == 2 * x);
+
+    const auto symb_x = symbol("x");
+    const Expression df_dsx = f_x.diff(symb_x);
+    REQUIRE(df_dsx == 2 * Expression(symb_x));
+}
