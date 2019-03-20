@@ -149,10 +149,15 @@ public:
     {
         return Expression(sdiff(m_basic, x));
     }
+    //! Substitution
+    Expression subs(const map_basic_basic &subs_map) const
+    {
+        return Expression(m_basic->subs(subs_map));
+    }
     //! Evaluation to a floating point type
     template <typename T,
               typename
-              = typename std::enable_if<std::is_floating_point<T>::value>::type>
+              = typename std::enable_if<std::is_arithmetic<T>::value>::type>
     explicit operator T() const
     {
         return T(eval_double(*get_basic()));
@@ -160,7 +165,7 @@ public:
     //! Evaluation to a complex floating point type
     template <typename T,
               typename
-              = typename std::enable_if<std::is_floating_point<T>::value>::type>
+              = typename std::enable_if<std::is_arithmetic<T>::value>::type>
     explicit operator std::complex<T>() const
     {
         return std::complex<T>(eval_complex_double(*get_basic()));
