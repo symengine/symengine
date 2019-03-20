@@ -9,6 +9,8 @@
 
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/derivative.h>
+#include <symengine/symbol.h>
 #include <symengine/complex_double.h>
 #include <symengine/printers.h>
 
@@ -135,6 +137,16 @@ public:
     operator const RCP<const Basic> &() const
     {
         return m_basic;
+    }
+    //! Differentiation
+    Expression diff(const RCP<const Symbol> &x) const
+    {
+        return Expression(SymEngine::diff(m_basic, x));
+    }
+    //! Differentiation
+    Expression diff(const RCP<const Basic> &x) const
+    {
+        return Expression(sdiff(m_basic, x));
     }
     operator const Basic &() const
     {
