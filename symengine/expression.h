@@ -12,6 +12,7 @@
 #include <symengine/derivative.h>
 #include <symengine/symbol.h>
 #include <symengine/complex_double.h>
+#include <symengine/eval_double.h>
 #include <symengine/printers.h>
 
 namespace SymEngine
@@ -147,6 +148,22 @@ public:
     Expression diff(const RCP<const Basic> &x) const
     {
         return Expression(sdiff(m_basic, x));
+    }
+    //! Evaluation to a floating point type
+    template <typename T,
+              typename
+              = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    explicit operator T() const
+    {
+        return T(eval_double(*get_basic()));
+    }
+    //! Evaluation to a complex floating point type
+    template <typename T,
+              typename
+              = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    explicit operator std::complex<T>() const
+    {
+        return std::complex<T>(eval_complex_double(*get_basic()));
     }
     operator const Basic &() const
     {
