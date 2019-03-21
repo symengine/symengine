@@ -89,7 +89,7 @@ public:
         return *this;
     }
     //! Destructor of Expression
-    ~Expression() SYMENGINE_NOEXCEPT
+    virtual ~Expression() SYMENGINE_NOEXCEPT
     {
     }
     //! Overload stream operator
