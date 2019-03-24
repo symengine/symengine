@@ -69,9 +69,17 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *integer(-1)));
 
+    s = "-2^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-4)));
+
     s = "-a^2";
     res = parse(s);
     REQUIRE(eq(*res, *neg(parse("a^2"))));
+
+    s = "-2a^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(integer(-2), parse("a^2"))));
 
     s = "-3-5";
     res = parse(s);
