@@ -172,7 +172,8 @@ public:
     RCP<const Basic> functionify(const std::string &name, vec_basic &params);
     RCP<const Basic> parse_numeric(const std::string &expr);
     RCP<const Basic> parse_identifier(const std::string &expr);
-    RCP<const Basic> parse_implicit_mul(const std::string &expr);
+    std::tuple<RCP<const Basic>, RCP<const Basic>>
+    parse_implicit_mul(const std::string &expr);
 
 private:
     void error(char const *msg)

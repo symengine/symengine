@@ -59,6 +59,16 @@ expr:
         expr '/' expr
         { $$ = div($1, $3); }
 |
+        IMPLICIT_MUL POW expr
+        { 
+          auto tup = parse_implicit_mul($1);
+          if (neq(*std::get<1>(tup), *one)) {
+            $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
+          } else {
+            $$ = pow(std::get<0>(tup), $3);
+          }
+        }
+|
         expr POW expr
         { $$ = pow($1, $3); }
 |
@@ -122,7 +132,8 @@ leaf:
 |
     IMPLICIT_MUL
     {
-        $$ = parse_implicit_mul($1);
+        auto tup = parse_implicit_mul($1);
+        $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
 |
     NUMERIC
