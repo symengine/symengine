@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_SUBS_H
 #define SYMENGINE_SUBS_H
 
+#include <symengine/logic.h>
 #include <symengine/visitor.h>
 #include <symengine/derivative.h>
 
@@ -217,6 +218,19 @@ public:
             v.insert(rcp_static_cast<const Set>(a));
         }
         result_ = x.create(v);
+    }
+
+    void bvisit(const Piecewise &pw)
+    {
+        PiecewiseVec pwv;
+        pwv.reserve(pw.get_vec().size());
+        for (const auto &expr_pred : pw.get_vec()) {
+            const auto expr = apply(*expr_pred.first);
+            const auto pred = apply(*expr_pred.second);
+            pwv.emplace_back(
+                std::make_pair(expr, rcp_static_cast<const Boolean>(pred)));
+        }
+        result_ = piecewise(std::move(pwv));
     }
 
     void bvisit(const Derivative &x)
