@@ -376,6 +376,22 @@ public:
     {
         result_ = ba.get_val();
     }
+
+    void bvisit(const Piecewise &pw)
+    {
+        if (neq(*pw.get_vec().back().second, *boolTrue)) {
+            throw SymEngineException(
+                "EvalDouble requires a (Expr, True) at the end of Piecewise");
+        }
+        for (const auto &expr_pred : pw.get_vec()) {
+            if (apply(*expr_pred.second) == 1.0) {
+                result_ = apply(*expr_pred.first);
+                return;
+            }
+        }
+        throw SymEngineException(
+            "Unexpectedly reached end of Piecewise function.");
+    }
 };
 
 class EvalRealDoubleVisitorPattern

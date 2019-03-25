@@ -5,6 +5,7 @@
 #include <symengine/eval_mpfr.h>
 #include <symengine/eval_mpc.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/subs.h>
 
 using SymEngine::Basic;
 using SymEngine::constant;
@@ -57,6 +58,12 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
 using SymEngine::boolean;
+using SymEngine::PiecewiseVec;
+using SymEngine::piecewise;
+using SymEngine::Gt;
+using SymEngine::subs;
+using SymEngine::boolTrue;
+using SymEngine::rcp_static_cast;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -141,6 +148,19 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     // Booleans
     REQUIRE(eval_double(*boolean(true)) == true);
     REQUIRE(eval_double(*boolean(false)) == false);
+
+    // Piecewise
+    {
+        RCP<const Basic> x = symbol("x");
+        PiecewiseVec pwv;
+        pwv.push_back({rcp_static_cast<const Basic>(real_double(2.0)),
+                       Gt(x, integer(1))});
+        pwv.push_back(
+            {rcp_static_cast<const Basic>(real_double(3.0)), boolTrue});
+        RCP<const Basic> pw1 = piecewise(std::move(pwv));
+        REQUIRE(eval_double(*subs(pw1, {{x, integer(10)}})) == 2.0);
+        REQUIRE(eval_double(*subs(pw1, {{x, integer(-10)}})) == 3.0);
+    }
 
     // Symbol must raise an exception
     CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException &);
