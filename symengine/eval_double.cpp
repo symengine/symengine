@@ -371,6 +371,11 @@ public:
         }
         result_ = result;
     };
+
+    void bvisit(const BooleanAtom &ba)
+    {
+        result_ = ba.get_val();
+    }
 };
 
 class EvalRealDoubleVisitorPattern

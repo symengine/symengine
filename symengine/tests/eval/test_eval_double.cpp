@@ -56,6 +56,7 @@ using SymEngine::rational_class;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
+using SymEngine::boolean;
 using SymEngine::NotImplementedError;
 using SymEngine::SymEngineException;
 
@@ -136,6 +137,10 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         double val = eval_double_single_dispatch(*vec[i].first);
         REQUIRE(::fabs(val - vec[i].second) < 1e-12);
     }
+
+    // Booleans
+    REQUIRE(eval_double(*boolean(true)) == true);
+    REQUIRE(eval_double(*boolean(false)) == false);
 
     // Symbol must raise an exception
     CHECK_THROWS_AS(eval_double(*symbol("x")), SymEngineException &);
