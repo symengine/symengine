@@ -43,8 +43,8 @@ protected:
     };
 
 public:
-    // $insert startcondenum
     enum class StartCondition__ {
+        // $insert startCondNames
         INITIAL,
     };
 
@@ -185,8 +185,10 @@ protected:
     ScannerBase(std::string const &infilename, std::string const &outfilename);
     ~ScannerBase();
 
+    StartCondition__ startCondition() const; // current start condition
     bool popStream();
     std::ostream &out();
+    void begin(StartCondition__ startCondition);
     void echo() const;
     void leave(int retValue) const;
 
@@ -239,14 +241,7 @@ protected:
     void lop3__();            // catch-all while matching b
     void lop4__();            // matches the LOP's a head
 
-    // $insert startconddecl
-    StartCondition__ startCondition() const; // current start condition
-    void begin(StartCondition__ startCondition);
-
 private:
-    static StartCondition__ constexpr SC(int sc);
-    static int constexpr SC(StartCondition__ sc);
-
     size_t getInput();
     size_t getLOP();
     void p_pushStream(std::string const &name, std::istream *streamPtr);
@@ -256,33 +251,13 @@ private:
     template <typename ReturnType, typename ArgType>
     static ReturnType constexpr as(ArgType value);
     static bool constexpr available(size_t value);
+    static StartCondition__ constexpr SC(int sc);
+    static int constexpr SC(StartCondition__ sc);
 };
 
 inline ScannerBase::~ScannerBase()
 {
     d_input.close();
-}
-
-// $insert startcondimpl
-inline ScannerBase::StartCondition__ constexpr ScannerBase::SC(int sc)
-{
-    return as<StartCondition__>(sc);
-}
-
-inline int constexpr ScannerBase::SC(StartCondition__ sc)
-{
-    return as<int>(sc);
-}
-
-inline ScannerBase::StartCondition__ ScannerBase::startCondition() const
-{
-    return SC(d_startCondition);
-}
-
-inline void ScannerBase::begin(StartCondition__ startCondition)
-{
-    // d_state is reset to 0 by reset__()
-    d_dfaBase__ = s_dfaBase__[d_startCondition = SC(startCondition)];
 }
 
 template <typename ReturnType, typename ArgType>
@@ -300,6 +275,16 @@ inline bool ScannerBase::knownFinalState()
 inline bool constexpr ScannerBase::available(size_t value)
 {
     return value != std::numeric_limits<size_t>::max();
+}
+
+inline ScannerBase::StartCondition__ constexpr ScannerBase::SC(int sc)
+{
+    return as<StartCondition__>(sc);
+}
+
+inline int constexpr ScannerBase::SC(StartCondition__ sc)
+{
+    return as<int>(sc);
 }
 
 inline std::ostream &ScannerBase::out()
@@ -332,6 +317,11 @@ inline std::string const &ScannerBase::matched() const
     return d_matched;
 }
 
+inline ScannerBase::StartCondition__ ScannerBase::startCondition() const
+{
+    return SC(d_startCondition);
+}
+
 inline std::string const &ScannerBase::filename() const
 {
     return d_filename;
@@ -360,6 +350,12 @@ inline size_t ScannerBase::lineNr() const
 inline void ScannerBase::more()
 {
     d_more = true;
+}
+
+inline void ScannerBase::begin(StartCondition__ startCondition)
+{
+    // d_state is reset to 0 by reset__()
+    d_dfaBase__ = s_dfaBase__[d_startCondition = SC(startCondition)];
 }
 
 inline size_t ScannerBase::state__() const
