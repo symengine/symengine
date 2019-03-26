@@ -51,6 +51,9 @@ set(SRC
     ntheory.cpp
     number.cpp
     numer_denom.cpp
+    numerics/number_visitor.cpp
+    numerics/optimizer.cpp
+    numerics/utilities.cpp
     parser/parser.cpp
     parser/parser_old.cpp
     parser/scanner.cpp
@@ -149,6 +152,9 @@ set(HEADERS
     nan.h
     ntheory.h
     number.h
+    numerics/number_visitor.h
+    numerics/optimizer.h
+    numerics/utilities.h
     parser.h
     polys/basic_conversions.h
     polys/uexprpoly.h
