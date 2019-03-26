@@ -399,7 +399,7 @@ public:
                 iaddnum(outArg(overall_coef), coef);
             } else {
                 RCP<const Basic> mul = Mul::from_dict(one, std::move(d));
-                Add::coef_dict_add_term(outArg(overall_coef), add_dict, one,
+                Add::coef_dict_add_term(outArg(overall_coef), add_dict, coef,
                                         mul);
             }
         }
