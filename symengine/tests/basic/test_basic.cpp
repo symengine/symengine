@@ -557,6 +557,10 @@ TEST_CASE("Diff: Basic", "[basic]")
     r2 = diff(add(pow(x, i2), x), x);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = diff(mul(x, add(one, x)), x);
+    r2 = add(one, mul(i2, x));
+    REQUIRE(eq(*r1, *r2));
+
     // Test that this doesn't segfault
     r1 = pow(sqrt(div(x, i3)), real_double(2.0));
     r1 = diff(r1, x);
