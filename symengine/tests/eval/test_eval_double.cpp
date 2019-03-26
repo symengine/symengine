@@ -146,8 +146,8 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     }
 
     // Booleans
-    REQUIRE(eval_double(*boolean(true)) == true);
-    REQUIRE(eval_double(*boolean(false)) == false);
+    REQUIRE(eval_double(*boolean(true)) == 1.0);
+    REQUIRE(eval_double(*boolean(false)) == 0.0);
 
     // Piecewise
     {
