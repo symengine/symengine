@@ -9,6 +9,11 @@
 #include <symengine/mp_class.h>
 #include <algorithm>
 #include <cstdint>
+#include <map>
+#include <vector>
+#include <unordered_map>
+#include <set>
+#include <unordered_set>
 
 namespace SymEngine
 {
