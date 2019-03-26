@@ -178,21 +178,17 @@ public:
 private:
     void error(char const *msg)
     {
-    } // called on (syntax) errors
-    void error()
-    {
     }             // called on (syntax) errors
     int lex();    // returns the next token from the
                   // lexical scanner.
     void print(); // use, e.g., d_token, d_loc
 
-    void executeAction__(int ruleNr);
-    void errorRecovery__();
+    void executeAction(int ruleNr);
+    void errorRecovery();
     int lookup(bool recovery);
-    void nextToken__();
-    void nextCycle__();
+    void nextToken();
     void print__();
-    void exceptionHandler(std::exception const &exc)
+    void exceptionHandler__(std::exception const &exc)
     {
         std::cout << exc.what() << '\n';
     }
