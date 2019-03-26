@@ -90,17 +90,25 @@ void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v);
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
 protected:
-    Ptr<const Symbol> x_;
+    Ptr<const Basic> x_;
     bool has_;
 
 public:
-    HasSymbolVisitor(Ptr<const Symbol> x) : x_(x)
+    HasSymbolVisitor(Ptr<const Basic> x) : x_(x)
     {
     }
 
     void bvisit(const Symbol &x)
     {
-        if (x_->__eq__(x)) {
+        if (eq(*x_, x)) {
+            has_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const FunctionSymbol &x)
+    {
+        if (eq(*x_, x)) {
             has_ = true;
             stop_ = true;
         }
@@ -117,7 +125,7 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const Symbol &x);
+bool has_symbol(const Basic &b, const Basic &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
@@ -154,13 +162,19 @@ public:
                 return;
             }
         }
-        coeff_ = zero;
+        if (eq(*zero, *n_) and not has_symbol(x, *x_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
     }
 
     void bvisit(const Pow &x)
     {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
+        } else if (neq(*x.get_base(), *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
@@ -170,6 +184,8 @@ public:
     {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;
+        } else if (neq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
@@ -179,6 +195,8 @@ public:
     {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;
+        } else if (neq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
         } else {
             coeff_ = zero;
         }
@@ -186,7 +204,15 @@ public:
 
     void bvisit(const Basic &x)
     {
-        coeff_ = zero;
+        if (neq(*zero, *n_)) {
+            coeff_ = zero;
+            return;
+        }
+        if (has_symbol(x, *x_)) {
+            coeff_ = zero;
+        } else {
+            coeff_ = x.rcp_from_this();
+        }
     }
 
     RCP<const Basic> apply(const Basic &b)

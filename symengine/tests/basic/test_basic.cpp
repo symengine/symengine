@@ -931,7 +931,7 @@ TEST_CASE("has_symbol: Basic", "[basic]")
 
 TEST_CASE("coeff: Basic", "[basic]")
 {
-    RCP<const Basic> r1, r2, r3;
+    RCP<const Basic> r1, r2, r3, r4, r5, r6;
     RCP<const Symbol> x, y, z;
     RCP<const Basic> f1, f2;
     x = symbol("x");
@@ -942,25 +942,48 @@ TEST_CASE("coeff: Basic", "[basic]")
     r1 = add(x, pow(y, integer(2)));
     r2 = add(add(mul(integer(2), z), pow(x, integer(3))), pow(y, integer(2)));
     r3 = add(add(add(add(r2, mul(x, z)), f1), f2), mul(f1, integer(3)));
+    r4 = mul(pow(x, integer(2)), y);
+    r5 = expand(pow(add(x, y), 3));
+    r6 = add(add(add(x, sin(x)), mul(x, sin(x))), y);
+    REQUIRE(eq(*coeff(*x, *x, *integer(1)), *integer(1)));
+    REQUIRE(eq(*coeff(*x, *x, *integer(0)), *integer(0)));
+
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *x, *integer(1)), *integer(1)));
-    REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r1, *y, *integer(0)), *x));
     REQUIRE(eq(*coeff(*r1, *y, *integer(1)), *integer(0)));
     REQUIRE(eq(*coeff(*r1, *y, *integer(2)), *integer(1)));
     REQUIRE(eq(*coeff(*r1, *z, *integer(2)), *integer(0)));
 
-    REQUIRE(eq(*coeff(*r2, *y, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *y, *integer(0)),
+               *add(mul(integer(2), z), pow(x, integer(3)))));
     REQUIRE(eq(*coeff(*r2, *y, *integer(1)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *y, *integer(2)), *integer(1)));
-    REQUIRE(eq(*coeff(*r2, *z, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r2, *z, *integer(0)),
+               *add(pow(x, integer(3)), pow(y, integer(2)))));
     REQUIRE(eq(*coeff(*r2, *z, *integer(1)), *integer(2)));
     REQUIRE(eq(*coeff(*r2, *z, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(2)), *integer(0)));
     REQUIRE(eq(*coeff(*r2, *x, *integer(3)), *integer(1)));
+    REQUIRE(eq(*coeff(*r2, *x, *integer(0)),
+               *add(mul(integer(2), z), pow(y, integer(2)))));
 
     REQUIRE(eq(*coeff(*r3, *z, *integer(1)), *add(x, integer(2))));
     REQUIRE(eq(*coeff(*r3, *f1, *integer(1)), *integer(4)));
+    REQUIRE(eq(*coeff(*r3, *f1, *integer(0)), *add(add(r2, mul(x, z)), f2)));
     REQUIRE(eq(*coeff(*r3, *f2, *integer(1)), *integer(1)));
+
+    REQUIRE(eq(*coeff(*r4, *x, *integer(0)), *integer(0)));
+    REQUIRE(eq(*coeff(*r4, *x, *integer(1)), *integer(0)));
+    REQUIRE(eq(*coeff(*r4, *x, *integer(2)), *y));
+
+    REQUIRE(eq(*coeff(*r5, *x, *integer(3)), *integer(1)));
+    REQUIRE(eq(*coeff(*r5, *x, *integer(2)), *mul(integer(3), y)));
+    REQUIRE(
+        eq(*coeff(*r5, *x, *integer(1)), *mul(integer(3), pow(y, integer(2)))));
+    REQUIRE(eq(*coeff(*r5, *x, *integer(0)), *pow(y, integer(3))));
+
+    REQUIRE(eq(*coeff(*r6, *x, *integer(0)), *y));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
