@@ -149,6 +149,14 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *div(one, integer(4))));
 
+    s = "2^-2n*y";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse("(2^(-2*n))*y")));
+
+    s = "2^2n*y";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse("(2^(2*n))*y")));
+
     s = "10000000000000000000000000";
     res = parse(s);
     REQUIRE(eq(*res, *pow(integer(10), integer(25))));
