@@ -1,9 +1,9 @@
 All people who contributed to SymEngine by sending at least a patch or more (in
 the order of the date of their first contribution). You can generate this file
-by: git log --reverse --format="%aN <%aE>" | awk ' !x[$0]++'
+by: bin/update_authors.sh
 
 
-Ondřej Čertík <ondrej.certik@gmail.com>
+Ondřej Čertík <ondrej@certik.us>
 Dale Lukas Peterson <hazelnusse@gmail.com>
 Thilina Bandara Rathnayake <thilinarmtb@gmail.com>
 Christopher Dembia <cld72@cornell.edu>
@@ -29,15 +29,15 @@ Akash Trehan <akash.trehan123@gmail.com>
 Srajan Garg <srajan.garg@gmail.com>
 Abhimanyu Siwach <siwachabhi@gmail.com>
 Pradyot Prakash <pp2105@gmail.com>
-Nishant Nikhil <nishantiam@gmail.com>
 malayaleecoder <malayaleecoder@gmail.com>
+Nishant Nikhil <nishantiam@gmail.com>
 Zhang Yuning <codeworm96@outlook.com>
-Vic Luo <vicluo96@gmail.com>
 Charles Chen <charlesyychen@gmail.com>
-Kunal Singh <kunalsingh.iitkgp@gmail.com>
-Rajith Vidanaarachchi <rajith.vidanaarachchi@gmail.com>
 Matthew Luszczak <myluszczak@ucdavis.edu>
 Iris Lui <irislui66@gmail.com>
+Rajith Vidanaarachchi <rajith.vidanaarachchi@gmail.com>
+Kunal Singh <kunalsingh.iitkgp@gmail.com>
+Vic Luo <vicluo96@gmail.com>
 James Stojic <jbrankos@yahoo.com>
 Arihant Parsoya <parsoyaarihant@gmail.com>
 Ritesh Kumar <babarwal.ritesh@gmail.com>
@@ -52,14 +52,16 @@ Kv Manohar <kvmanohar22@gmail.com>
 Kanchana Ruwanpathirana <kanchana.ruwanpathirana@gmail.com>
 Melanka Saroad <saroadmelanka@yahoo.com>
 Dirk Reusch <lists@kybdr.de>
-Jialin Ma <marlin-@gmx.cn>
 Gerrit Ansmann <wrzlrpmft@users.noreply.github.com>
+Jialin Ma <marlin-@gmx.cn>
 Nilay Pochhi <pochhi.nilay@gmail.com>
 Eeshan Gupta <eeshan9815@gmail.com>
 Ziyi Yan <cxfyzy@gmail.com>
 Andreas Humenberger <ahumenberger@gmail.com>
-Kieran Kaempen <kaempen2@illinois.edu>
 Clouds Flowing <clouds.flowing@gmail.com>
 Sylvain Corlay <sylvain.corlay@gmail.com>
+Kieran Kaempen <kaempen2@illinois.edu>
 Alan Hu <alanlh2@illinois.edu>
-
+Rajiv Ranjan Singh <rajivperfect007@gmail.com>
+Francesco Bonazzi <franz.bonazzi@gmail.com>
+Simon Stelter <simon.stelter@gmail.com>
