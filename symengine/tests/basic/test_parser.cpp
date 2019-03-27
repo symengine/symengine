@@ -65,6 +65,22 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     std::string s;
     RCP<const Basic> res;
 
+    s = "-1^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-1)));
+
+    s = "-2^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-4)));
+
+    s = "-a^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *neg(parse("a^2"))));
+
+    s = "-2a^2";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(integer(-2), parse("a^2"))));
+
     s = "-3-5";
     res = parse(s);
     REQUIRE(eq(*res, *integer(-8)));
@@ -132,6 +148,14 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "2**-3*2";
     res = parse(s);
     REQUIRE(eq(*res, *div(one, integer(4))));
+
+    s = "2^-2n*y";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse("(2^(-2*n))*y")));
+
+    s = "2^2n*y";
+    res = parse(s);
+    REQUIRE(eq(*res, *parse("(2^(2*n))*y")));
 
     s = "10000000000000000000000000";
     res = parse(s);

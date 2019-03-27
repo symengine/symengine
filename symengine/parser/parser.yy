@@ -24,8 +24,8 @@
 %left GE
 %left '-' '+'
 %left '*' '/'
-%right POW
 %right UMINUS
+%right POW
 %right NOT
 %nonassoc '('
 
@@ -59,30 +59,40 @@ expr:
         expr '/' expr
         { $$ = div($1, $3); }
 |
+        IMPLICIT_MUL POW expr
+        { 
+          auto tup = parse_implicit_mul($1);
+          if (neq(*std::get<1>(tup), *one)) {
+            $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
+          } else {
+            $$ = pow(std::get<0>(tup), $3);
+          }
+        }
+|
         expr POW expr
         { $$ = pow($1, $3); }
 |
         expr '<' expr
-        { $$ = Lt($1, $3); }
+        { $$ = rcp_static_cast<const Basic>(Lt($1, $3)); }
 |
         expr '>' expr
-        { $$ = Gt($1, $3); }
+        { $$ = rcp_static_cast<const Basic>(Gt($1, $3)); }
 |
         expr LE expr
-        { $$ = Le($1, $3); }
+        { $$ = rcp_static_cast<const Basic>(Le($1, $3)); }
 |
         expr GE expr
-        { $$ = Ge($1, $3); }
+        { $$ = rcp_static_cast<const Basic>(Ge($1, $3)); }
 |
         expr EQ expr
-        { $$ = Eq($1, $3); }
+        { $$ = rcp_static_cast<const Basic>(Eq($1, $3)); }
 |
         expr '|' expr
         { 
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = logical_or(s);
+            $$ = rcp_static_cast<const Basic>(logical_or(s));
         }
 |
         expr '&' expr
@@ -90,7 +100,7 @@ expr:
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = logical_and(s);
+            $$ = rcp_static_cast<const Basic>(logical_and(s));
         }
 |
         expr '^' expr
@@ -98,7 +108,7 @@ expr:
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>($1));
             s.push_back(rcp_static_cast<const Boolean>($3));
-            $$ = logical_xor(s);
+            $$ = rcp_static_cast<const Basic>(logical_xor(s));
         }
 |
         '(' expr ')'
@@ -108,10 +118,10 @@ expr:
         { $$ = neg($2); }
 |
         '~' expr %prec NOT
-        { $$ = logical_not(rcp_static_cast<const Boolean>($2)); }
+        { $$ = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>($2))); }
 |
         leaf
-        { $$ = $1; }
+        { $$ = rcp_static_cast<const Basic>($1); }
 ;
 
 leaf:
@@ -122,7 +132,8 @@ leaf:
 |
     IMPLICIT_MUL
     {
-        $$ = parse_implicit_mul($1);
+        auto tup = parse_implicit_mul($1);
+        $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
 |
     NUMERIC
@@ -153,6 +164,6 @@ expr_list:
 |
     expr
     {
-        $$ = {$1};
+        $$ = vec_basic(1, $1);
     }
 ;

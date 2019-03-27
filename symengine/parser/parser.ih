@@ -135,7 +135,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
     }
 }
 
-RCP<const Basic> Parser::parse_implicit_mul(const std::string &expr)
+std::tuple<RCP<const Basic>, RCP<const Basic>> Parser::parse_implicit_mul(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;
@@ -151,10 +151,11 @@ RCP<const Basic> Parser::parse_implicit_mul(const std::string &expr)
     // get the rest of the string
     lexpr = std::string(startptr + length, expr.length() - length);
     if (lexpr.length() == 0) {
-        return num;
+        sym = one;
+    } else {
+        sym = parse_identifier(lexpr);
     }
-    sym = parse_identifier(lexpr);
-    return mul(num, sym);
+    return std::make_tuple(num, sym);
 }
 
 }

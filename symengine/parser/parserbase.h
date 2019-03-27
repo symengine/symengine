@@ -22,9 +22,9 @@ namespace SymEngine
 
 // $insert polymorphic
 enum class Tag__ {
-    basic,
-    string,
     basic_vec,
+    string,
+    basic,
 };
 
 namespace Meta__
@@ -37,8 +37,8 @@ struct TagOf;
 
 // $insert polymorphicSpecializations
 template <>
-struct TagOf<RCP<const Basic>> {
-    static Tag__ const tag = Tag__::basic;
+struct TagOf<vec_basic> {
+    static Tag__ const tag = Tag__::basic_vec;
 };
 
 template <>
@@ -47,13 +47,13 @@ struct TagOf<std::string> {
 };
 
 template <>
-struct TagOf<vec_basic> {
-    static Tag__ const tag = Tag__::basic_vec;
+struct TagOf<RCP<const Basic>> {
+    static Tag__ const tag = Tag__::basic;
 };
 
 template <>
-struct TypeOf<Tag__::basic> {
-    typedef RCP<const Basic> type;
+struct TypeOf<Tag__::basic_vec> {
+    typedef vec_basic type;
 };
 
 template <>
@@ -62,8 +62,8 @@ struct TypeOf<Tag__::string> {
 };
 
 template <>
-struct TypeOf<Tag__::basic_vec> {
-    typedef vec_basic type;
+struct TypeOf<Tag__::basic> {
+    typedef RCP<const Basic> type;
 };
 
 // The Base class:
@@ -177,8 +177,8 @@ public:
         EQ,
         LE,
         GE,
-        POW,
         UMINUS,
+        POW,
         NOT,
     };
 
