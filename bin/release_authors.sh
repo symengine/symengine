@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Prints the list of authors who contributed to a given release.
+# You can copy & paste the result into a Markdown document.
 #
 # To obtain the list of authors who contributed to the v0.3.0 release:
 #
@@ -13,4 +14,5 @@
 
 set -e
 
-git log --reverse --format="%aN" $1..$2 | awk ' !x[$0]++'
+echo "People who contributed to the release:"
+git log --reverse --format="* %aN  " $1..$2 | awk ' !x[$0]++'
