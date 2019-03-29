@@ -170,6 +170,17 @@ matrix:
           packages:
           - clang-7
           - llvm-7-dev
+    - env: BUILD_TYPE="Debug" WITH_SANITIZE="memory" WITH_LLVM="7.0"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-7
+          packages:
+          - clang-7
+          - llvm-7-dev
     - env: CONDA_ENV_FILE="binder/environment.yml"
       compiler: gcc
       os: linux

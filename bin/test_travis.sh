@@ -104,6 +104,17 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	    export ASAN_OPTIONS=symbolize=1,detect_leaks=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
 	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
+	    export MSAN_OPTIONS=halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+            # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
+            LLVM_ORG_VER=${WITH_LLVM}.1  # 7.0.1, using ${WITH_LLVM} so we rembmer to update this
+            curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
+            mkdir /opt/libcxx_msan && cd /opt/libcxx_msan
+            cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx
+            make cxx
+            cd -
+            export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -L/opt/libcxx_msan/lib -I/opt/libcxx_msan/include -I/opt/libcxx_msan/include/c++/v1"
+            export LDFLAGS="$LDFLAGS -Wl,-rpath,/opt/libcxx_msan/lib -lc++abi"
 	else
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
