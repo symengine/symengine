@@ -113,8 +113,8 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
             cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx
             make cxx
             cd -
-            export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -L/opt/libcxx_msan/lib -I/opt/libcxx_msan/include -I/opt/libcxx_msan/include/c++/v1"
-            export LDFLAGS="$LDFLAGS -Wl,-rpath,/opt/libcxx_msan/lib -lc++abi"
+            export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -I/opt/libcxx_msan/include -I/opt/libcxx_msan/include/c++/v1"
+            export LDFLAGS="$LDFLAGS -Wl,-rpath,/opt/libcxx_msan/lib -L/opt/libcxx_msan/lib -lc++abi"
 	else
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
