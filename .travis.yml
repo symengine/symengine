@@ -56,17 +56,17 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="7.0" USE_GLIBCXX_DEBUG="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="8.0" USE_GLIBCXX_DEBUG="yes"
       compiler: gcc
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-7
+          - llvm-toolchain-trusty-8
           packages:
-          - clang-7
-          - llvm-7-dev
+          - clang-8
+          - llvm-8-dev
           - binutils-dev
           - g++-8
     - env: TEST_CLANG_FORMAT="yes"
