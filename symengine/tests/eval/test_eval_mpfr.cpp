@@ -55,6 +55,7 @@ using SymEngine::Catalan;
 using SymEngine::GoldenRatio;
 using SymEngine::pow;
 using SymEngine::gamma;
+using SymEngine::uppergamma;
 using SymEngine::beta;
 using SymEngine::constant;
 using SymEngine::NotImplementedError;
@@ -197,6 +198,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(gamma(add(arg1, arg2)), -100, 100),
         std::make_tuple(gamma(arg1), -100, 100),
         std::make_tuple(gamma(add(add(arg1, arg2), arg1)), -100, 100),
+        std::make_tuple(uppergamma(arg1, arg2), 0.97350097883925,
+                        0.97350097883926),
         std::make_tuple(beta(add(arg1, arg2), arg1), 0.13675213675213,
                         0.13675213675214),
         std::make_tuple(abs((neg(sqrt(add(arg2, arg2))))), 0.70710678118654,

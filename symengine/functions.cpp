@@ -2970,6 +2970,10 @@ bool UpperGamma::is_canonical(const RCP<const Basic> &s,
         return false;
     if (is_a<Integer>(*mul(i2, s)))
         return false;
+#ifdef HAVE_SYMENGINE_MPFR
+    if (is_a<RealMPFR>(*s) && is_a<RealMPFR>(*x))
+        return false;
+#endif
     return true;
 }
 
@@ -3009,6 +3013,18 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s,
                            mul(pow(x, s), exp(mul(minus_one, x)))),
                        s);
         }
+#ifdef HAVE_SYMENGINE_MPFR
+    } else if (is_a<RealMPFR>(*s) && is_a<RealMPFR>(*x)) {
+        auto s_ = down_cast<const RealMPFR &>(*s).i.get_mpfr_t();
+        auto x_ = down_cast<const RealMPFR &>(*x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 0) >= 0) {
+            mpfr_class t(std::max(mpfr_get_prec(s_), mpfr_get_prec(x_)));
+            mpfr_gamma_inc(t.get_mpfr_t(), s_, x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        } else {
+            throw NotImplementedError("Not implemented.");
+        }
+#endif
     }
     return make_rcp<const UpperGamma>(s, x);
 }
