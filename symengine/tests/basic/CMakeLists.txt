@@ -12,9 +12,29 @@ add_executable(test_poly test_poly.cpp)
 target_link_libraries(test_poly symengine catch)
 add_test(test_poly ${PROJECT_BINARY_DIR}/test_poly)
 
-add_executable(test_polynomial test_polynomial.cpp)
-target_link_libraries(test_polynomial symengine catch)
-add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
+add_executable(test_series test_series.cpp)
+target_link_libraries(test_series symengine catch)
+add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
+
+add_executable(test_series_generic test_series_generic.cpp)
+target_link_libraries(test_series_generic symengine catch)
+add_test(test_series_generic ${PROJECT_BINARY_DIR}/test_series_generic)
+
+if (WITH_PIRANHA)
+    add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)
+    target_link_libraries(test_series_expansion_UP symengine catch)
+    add_test(test_series_expansion_UP ${PROJECT_BINARY_DIR}/test_series_expansion_UP)
+
+    add_executable(test_series_expansion_URatP test_series_expansion_URatP.cpp)
+    target_link_libraries(test_series_expansion_URatP symengine catch)
+    add_test(test_series_expansion_URatP ${PROJECT_BINARY_DIR}/test_series_expansion_URatP)
+endif()
+
+if (WITH_FLINT)
+    add_executable(test_series_expansion_URatF test_series_expansion_URatF.cpp)
+    target_link_libraries(test_series_expansion_URatF symengine catch)
+    add_test(test_series_expansion_URatF ${PROJECT_BINARY_DIR}/test_series_expansion_URatF)
+endif()
 
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
@@ -28,6 +48,61 @@ add_executable(test_integer test_integer.cpp)
 target_link_libraries(test_integer symengine catch)
 add_test(test_integer ${PROJECT_BINARY_DIR}/test_integer)
 
+add_executable(test_rational test_rational.cpp)
+target_link_libraries(test_rational symengine catch)
+add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
+
+add_executable(test_relationals test_relationals.cpp)
+target_link_libraries(test_relationals symengine catch)
+add_test(test_relationals ${PROJECT_BINARY_DIR}/test_relationals)
+
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)
 add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
+
+add_executable(test_as_numer_denom test_as_numer_denom.cpp)
+target_link_libraries(test_as_numer_denom symengine catch)
+add_test(test_as_numer_denom ${PROJECT_BINARY_DIR}/test_as_numer_denom)
+
+add_executable(test_parser test_parser.cpp)
+target_link_libraries(test_parser symengine catch)
+add_test(test_parser ${PROJECT_BINARY_DIR}/test_parser)
+
+add_executable(test_sets test_sets.cpp)
+target_link_libraries(test_sets symengine catch)
+add_test(test_sets ${PROJECT_BINARY_DIR}/test_sets)
+
+add_executable(test_fields test_fields.cpp)
+target_link_libraries(test_fields symengine catch)
+add_test(test_fields ${PROJECT_BINARY_DIR}/test_fields)
+
+add_executable(test_infinity test_infinity.cpp)
+target_link_libraries(test_infinity symengine catch)
+add_test(test_infinity ${PROJECT_BINARY_DIR}/test_infinity)
+
+add_executable(test_nan test_nan.cpp)
+target_link_libraries(test_nan symengine catch)
+add_test(test_nan ${PROJECT_BINARY_DIR}/test_nan)
+
+add_executable(test_solve test_solve.cpp)
+target_link_libraries(test_solve symengine catch)
+add_test(test_solve ${PROJECT_BINARY_DIR}/test_solve)
+
+add_executable(test_as_real_imag test_as_real_imag.cpp)
+target_link_libraries(test_as_real_imag symengine catch)
+add_test(test_as_real_imag ${PROJECT_BINARY_DIR}/test_as_real_imag)
+
+if ("${INTEGER_CLASS}" MATCHES "boostmp")
+	add_executable(test_integer_class test_integer_class.cpp)
+	target_link_libraries(test_integer_class symengine catch)
+	add_test(test_integer_class ${PROJECT_BINARY_DIR}/test_integer_class)
+endif()
+
+add_executable(test_cse test_cse.cpp)
+target_link_libraries(test_cse symengine catch)
+add_test(test_cse ${PROJECT_BINARY_DIR}/test_cse)
+
+
+add_executable(test_count_ops test_count_ops.cpp)
+target_link_libraries(test_count_ops symengine catch)
+add_test(test_count_ops ${PROJECT_BINARY_DIR}/test_count_ops)

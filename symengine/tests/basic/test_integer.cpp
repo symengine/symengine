@@ -1,11 +1,14 @@
 #include "catch.hpp"
 
 #include <symengine/integer.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::Integer;
 using SymEngine::integer;
+using SymEngine::integer_class;
 using SymEngine::isqrt;
 
 TEST_CASE("isqrt: integer", "[integer]")
@@ -60,9 +63,30 @@ TEST_CASE("iabs: integer", "[integer]")
 {
     RCP<const Integer> _i5 = integer(-5);
     RCP<const Integer> _i9 = integer(-9);
-    RCP<const Integer> i12 =  integer(12);
+    RCP<const Integer> i12 = integer(12);
 
     REQUIRE(eq(*iabs(*_i5), *integer(5)));
     REQUIRE(eq(*iabs(*_i9), *integer(9)));
     REQUIRE(eq(*iabs(*i12), *integer(12)));
+}
+
+TEST_CASE("fix#461: integer", "[integer]")
+{
+    RCP<const Integer> ir;
+
+    long lmax = std::numeric_limits<long>::max();
+    ir = integer(lmax);
+    REQUIRE(integer_class(lmax) == ir->as_integer_class());
+
+    unsigned long ulmax = std::numeric_limits<unsigned long>::max();
+    ir = integer(ulmax);
+    REQUIRE(integer_class(ulmax) == ir->as_integer_class());
+
+    int imax = std::numeric_limits<int>::max();
+    ir = integer(imax);
+    REQUIRE(integer_class(imax) == ir->as_integer_class());
+
+    integer_class val(12345);
+    ir = integer(val);
+    REQUIRE(val == ir->as_integer_class());
 }

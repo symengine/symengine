@@ -43,3 +43,42 @@ target_link_libraries(lwbench symengine)
 
 add_executable(expand6 expand6.cpp)
 target_link_libraries(expand6 symengine)
+
+add_executable(expand6b expand6b.cpp)
+target_link_libraries(expand6b symengine)
+
+add_executable(expand7 expand7.cpp)
+target_link_libraries(expand7 symengine)
+
+add_executable(series series.cpp)
+target_link_libraries(series symengine)
+
+add_executable(symengine_bench symengine_bench.cpp)
+target_link_libraries(symengine_bench symengine)
+
+add_executable(ntheorybench ntheorybench.cpp)
+target_link_libraries(ntheorybench symengine)
+
+if (WITH_FLINT)
+    add_executable(series_expansion_sincos_flint series_expansion_sincos_flint.cpp)
+    target_link_libraries(series_expansion_sincos_flint symengine)
+endif()
+
+if (WITH_PIRANHA)
+    add_executable(series_expansion_sincos_piranha series_expansion_sincos_piranha.cpp)
+    target_link_libraries(series_expansion_sincos_piranha symengine)
+
+    add_executable(series_expansion_sinp series_expansion_sinp.cpp)
+    target_link_libraries(series_expansion_sinp symengine)
+endif()
+
+if (BUILD_BENCHMARKS_NONIUS)
+    add_executable(bench bench.cpp)
+    target_link_libraries(bench symengine)
+
+    add_executable(bench_eval_double bench_eval_double.cpp)
+    target_link_libraries(bench_eval_double symengine)
+endif()
+
+add_executable(parsing parsing.cpp)
+target_link_libraries(parsing symengine)

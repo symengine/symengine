@@ -1,43 +1,34 @@
 #ifndef SYMENGINE_BASIC_INL_H
 #define SYMENGINE_BASIC_INL_H
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-inline std::size_t Basic::hash() const
+inline hash_t Basic::hash() const
 {
     if (hash_ == 0)
         hash_ = __hash__();
     return hash_;
 }
 
-//! \return true if not equal    
+//! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
-    return !(this->__eq__(o));
-}
-
-inline RCP<const Basic> Basic::get_rcp() const {
-    return get_rcp_cast<const Basic>();
-}
-
-template <class T>
-inline RCP<T> Basic::get_rcp_cast() const {
-#if defined(WITH_SYMENGINE_RCP)
-    return rcp(static_cast<T*>(this));
-#else
-    return rcp_static_cast<T>(weak_self_ptr_.create_strong());
-#endif
+    return not(eq(*this, o));
 }
 
 //! \return true if  `a` equal `b`
 inline bool eq(const Basic &a, const Basic &b)
 {
+    if (&a == &b) {
+        return true;
+    }
     return a.__eq__(b);
 }
 //! \return true if  `a` not equal `b`
 inline bool neq(const Basic &a, const Basic &b)
 {
-    return !(a.__eq__(b));
+    return not(a.__eq__(b));
 }
 
 //! Templatised version to check is_a type
@@ -53,36 +44,94 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
-} // SymEngine
+inline bool is_same_type(const Basic &a, const Basic &b)
+{
+    return a.get_type_code() == b.get_type_code();
+}
 
-// global namespace functions
 //! `<<` Operator
-inline std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p)
+inline std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p)
 {
     out << p.__str__();
     return out;
 }
+
 //! Templatised version to combine hash
-template <class T>
-inline void hash_combine(std::size_t& seed, const T& v)
+template <typename T>
+inline void hash_combine_impl(
+    hash_t &seed, const T &v,
+    typename std::enable_if<std::is_base_of<Basic, T>::value>::type * = nullptr)
 {
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+    hash_combine(seed, v.hash());
 }
+
+template <typename T>
+inline void hash_combine_impl(
+    hash_t &seed, const T &v,
+    typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
+{
+    seed ^= hash_t(v) + hash_t(0x9e3779b9) + (seed << 6) + (seed >> 2);
+}
+
+inline void hash_combine_impl(hash_t &seed, const std::string &s)
+{
+    for (const char &c : s) {
+        hash_combine<hash_t>(seed, static_cast<hash_t>(c));
+    }
+}
+
+inline void hash_combine_impl(hash_t &seed, const double &s)
+{
+    union {
+        hash_t h;
+        double d;
+    } u;
+    u.h = 0u;
+    u.d = s;
+    hash_combine(seed, u.h);
+}
+
+template <class T>
+inline void hash_combine(hash_t &seed, const T &v)
+{
+    hash_combine_impl(seed, v);
+}
+
+template <typename T>
+hash_t vec_hash<T>::operator()(const T &v) const
+{
+    hash_t h = 0;
+    for (auto i : v)
+        hash_combine<typename T::value_type>(h, i);
+    return h;
+}
+
+//! workaround for MinGW bug
+template <typename T>
+std::string to_string(const T &value)
+{
+#ifdef HAVE_SYMENGINE_STD_TO_STRING
+    return std::to_string(value);
+#else
+    std::ostringstream ss;
+    ss << value;
+    return ss.str();
+#endif
+}
+
+} // SymEngine
 
 // std namespace functions
 namespace std
 {
-    //! Specialise std::hash for Basic. We just call Basic.__hash__()
-    template<>
-    struct hash<SymEngine::Basic>
+//! Specialise std::hash for Basic. We just call Basic.__hash__()
+template <>
+struct hash<SymEngine::Basic> {
+    std::size_t operator()(const SymEngine::Basic &b) const
     {
-        std::size_t operator()(const SymEngine::Basic& b) const
-        {
-            return b.hash();
-        }
-    };
+        return b.hash();
+    }
+};
 }
 
 #endif
-

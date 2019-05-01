@@ -1,8 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
-
-#include "Teuchos_stacktrace.hpp"
+#include <iomanip>
 
 #include "symengine/ntheory.h"
 #include <symengine/mul.h>
@@ -35,9 +34,8 @@ double A()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
-
 
 double B()
 {
@@ -49,22 +47,22 @@ double B()
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double C()
 {
-    RCP<const Integer> x = integer(13*17*31);
-    RCP<const Integer> y = integer(13*19*29);
+    RCP<const Integer> x = integer(13 * 17 * 31);
+    RCP<const Integer> y = integer(13 * 19 * 29);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 200; i++) {
-        gcd(*rcp_static_cast<const Integer>(pow(x, integer(300 + i%181))),
-            *rcp_static_cast<const Integer>(pow(y, integer(200 + i%183))));
+        gcd(*rcp_static_cast<const Integer>(pow(x, integer(300 + i % 181))),
+            *rcp_static_cast<const Integer>(pow(y, integer(200 + i % 183))));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double D()
@@ -76,11 +74,11 @@ double D()
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 10; i++) {
         s = add(s, div(mul(integer(i), mul(y, pow(t, integer(i)))),
-                    pow(add(y, mul(integer(i), t)), integer(i))));
+                       pow(add(y, mul(integer(i), t)), integer(i))));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
 double E()
@@ -92,22 +90,26 @@ double E()
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 10; i++) {
         s = add(s, div(mul(integer(i), mul(y, pow(t, integer(i)))),
-                    pow(add(y, mul(integer(abs(5 - i)), t)), integer(i))));
+                       pow(add(y, mul(integer(abs(5 - i)), t)), integer(i))));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+    return std::chrono::duration<double>(t2 - t1).count();
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
 
-    std::cout << "Time for A : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << A() << std::endl;
-    std::cout << "Time for B : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << B() << std::endl;
-    std::cout << "Time for C : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << C() << std::endl;
-    std::cout << "Time for D : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << D() << std::endl;
-    std::cout << "Time for E : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << E() << std::endl;
+    std::cout << "Time for A : \t " << std::setw(15) << std::setprecision(9)
+              << std::fixed << A() << std::endl;
+    std::cout << "Time for B : \t " << std::setw(15) << std::setprecision(9)
+              << std::fixed << B() << std::endl;
+    std::cout << "Time for C : \t " << std::setw(15) << std::setprecision(9)
+              << std::fixed << C() << std::endl;
+    std::cout << "Time for D : \t " << std::setw(15) << std::setprecision(9)
+              << std::fixed << D() << std::endl;
+    std::cout << "Time for E : \t " << std::setw(15) << std::setprecision(9)
+              << std::fixed << E() << std::endl;
 
     return 0;
 }

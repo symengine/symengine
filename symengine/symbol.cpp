@@ -1,41 +1,84 @@
-#include <symengine/symbol.h>
-#include <symengine/integer.h>
 #include <symengine/constants.h>
+#include <symengine/symengine_casts.h>
 
-namespace SymEngine {
-
-Symbol::Symbol(const std::string &name)
-    : name_{name}
+namespace SymEngine
 {
+
+Symbol::Symbol(const std::string &name) : name_{name}
+{
+    SYMENGINE_ASSIGN_TYPEID()
 }
 
-std::size_t Symbol::__hash__() const
+hash_t Symbol::__hash__() const
 {
-    std::hash<std::string> hash_fn;
-    return hash_fn(name_);
+    hash_t seed = 0;
+    hash_combine(seed, name_);
+    return seed;
 }
 
 bool Symbol::__eq__(const Basic &o) const
 {
     if (is_a<Symbol>(o))
-        return name_ == static_cast<const Symbol &>(o).name_;
+        return name_ == down_cast<const Symbol &>(o).name_;
     return false;
 }
 
 int Symbol::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Symbol>(o))
-    const Symbol &s = static_cast<const Symbol &>(o);
-    if (name_ == s.name_) return 0;
+    const Symbol &s = down_cast<const Symbol &>(o);
+    if (name_ == s.name_)
+        return 0;
     return name_ < s.name_ ? -1 : 1;
 }
 
-RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
+RCP<const Symbol> Symbol::as_dummy() const
 {
-    if (x->name_ == this->name_)
-        return one;
-    else
-        return zero;
+    return dummy(name_);
+}
+
+size_t Dummy::count_ = 0;
+
+Dummy::Dummy() : Symbol("_Dummy_" + to_string(count_))
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    count_ += 1;
+    dummy_index = count_;
+}
+
+Dummy::Dummy(const std::string &name) : Symbol("_" + name)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    count_ += 1;
+    dummy_index = count_;
+}
+
+hash_t Dummy::__hash__() const
+{
+    hash_t seed = 0;
+    hash_combine(seed, get_name());
+    hash_combine(seed, dummy_index);
+    return seed;
+}
+
+bool Dummy::__eq__(const Basic &o) const
+{
+    if (is_a<Dummy>(o))
+        return ((get_name() == down_cast<const Dummy &>(o).get_name())
+                and (dummy_index == down_cast<const Dummy &>(o).get_index()));
+    return false;
+}
+
+int Dummy::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Dummy>(o))
+    const Dummy &s = down_cast<const Dummy &>(o);
+    if (get_name() == s.get_name()) {
+        if (dummy_index == s.get_index())
+            return 0;
+        return dummy_index < s.get_index() ? -1 : 1;
+    }
+    return get_name() < s.get_name() ? -1 : 1;
 }
 
 } // SymEngine

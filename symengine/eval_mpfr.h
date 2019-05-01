@@ -13,7 +13,8 @@
 #include <symengine/basic.h>
 #include <mpfr.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 void eval_mpfr(mpfr_ptr result, const Basic &b, mpfr_rnd_t rnd);
 

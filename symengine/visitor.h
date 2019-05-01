@@ -6,174 +6,118 @@
 #ifndef SYMENGINE_VISITOR_H
 #define SYMENGINE_VISITOR_H
 
-#include <symengine/basic.h>
-#include <symengine/add.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/polynomial.h>
-#include <symengine/functions.h>
-#include <symengine/symbol.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/constants.h>
-#include <symengine/real_double.h>
-#include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
+#include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uintpoly_piranha.h>
+#include <symengine/polys/uexprpoly.h>
+#include <symengine/polys/msymenginepoly.h>
+#include <symengine/polys/uratpoly.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/series_generic.h>
+#include <symengine/series_piranha.h>
+#include <symengine/series_flint.h>
+#include <symengine/series_generic.h>
+#include <symengine/series_piranha.h>
+#include <symengine/sets.h>
+#include <symengine/fields.h>
+#include <symengine/logic.h>
+#include <symengine/infinity.h>
+#include <symengine/nan.h>
+#include <symengine/matrix.h>
+#include <symengine/symengine_casts.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Visitor {
+class Visitor
+{
 public:
-    virtual void visit(const Symbol &) = 0;
-    virtual void visit(const Add &) = 0;
-    virtual void visit(const Mul &) = 0;
-    virtual void visit(const Pow &) = 0;
-    virtual void visit(const UnivariatePolynomial &) = 0;
-    virtual void visit(const Integer &) = 0;
-    virtual void visit(const Rational &) = 0;
-    virtual void visit(const Complex &) = 0;
-    virtual void visit(const Log &) = 0;
-    virtual void visit(const Derivative &) = 0;
-    virtual void visit(const Sin &) = 0;
-    virtual void visit(const Cos &) = 0;
-    virtual void visit(const Tan &) = 0;
-    virtual void visit(const Cot &) = 0;
-    virtual void visit(const Csc &) = 0;
-    virtual void visit(const Sec &) = 0;
-    virtual void visit(const ASin &) = 0;
-    virtual void visit(const ACos &) = 0;
-    virtual void visit(const ASec &) = 0;
-    virtual void visit(const ACsc &) = 0;
-    virtual void visit(const ATan &) = 0;
-    virtual void visit(const ACot &) = 0;
-    virtual void visit(const ATan2 &) = 0;
-    virtual void visit(const LambertW &) = 0;
-    virtual void visit(const FunctionSymbol &) = 0;
-    virtual void visit(const Sinh &) = 0;
-    virtual void visit(const Cosh &) = 0;
-    virtual void visit(const Tanh &) = 0;
-    virtual void visit(const Coth &) = 0;
-    virtual void visit(const ASinh &) = 0;
-    virtual void visit(const ACosh &) = 0;
-    virtual void visit(const ATanh &) = 0;
-    virtual void visit(const ACoth &) = 0;
-    virtual void visit(const ASech &) = 0;
-    virtual void visit(const KroneckerDelta &) = 0;
-    virtual void visit(const LeviCivita &) = 0;
-    virtual void visit(const Zeta &) = 0;
-    virtual void visit(const Dirichlet_eta &) = 0;
-    virtual void visit(const Gamma &) = 0;
-    virtual void visit(const LowerGamma &) = 0;
-    virtual void visit(const UpperGamma &) = 0;
-    virtual void visit(const Constant &) = 0;
-    virtual void visit(const Abs &) = 0;
-    virtual void visit(const Subs &) = 0;
-    virtual void visit(const RealDouble &) = 0;
-    virtual void visit(const ComplexDouble &) = 0;
-#ifdef HAVE_SYMENGINE_MPFR
-    virtual void visit(const RealMPFR &) = 0;
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-    virtual void visit(const ComplexMPC &) = 0;
-#endif
+#define SYMENGINE_ENUM(TypeID, Class) virtual void visit(const Class &) = 0;
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-template<class T>
-class BaseVisitor : public Visitor {
+template <class Derived, class Base = Visitor>
+class BaseVisitor : public Base
+{
 
 public:
-    T *p_;
-public:
-    BaseVisitor(T* p) : p_ {p} {
+#if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+    // Following two ctors can be replaced by `using Base::Base` if inheriting
+    // constructors are allowed by the compiler. GCC 4.8 is the earliest
+    // version supporting this.
+    template <typename... Args,
+              typename
+              = enable_if_t<std::is_constructible<Base, Args...>::value>>
+    BaseVisitor(Args &&... args) : Base(std::forward<Args>(args)...)
+    {
+    }
 
+    BaseVisitor() : Base()
+    {
+    }
+#else
+    using Base::Base;
+#endif
+
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &x)                                         \
+    {                                                                          \
+        down_cast<Derived *>(this)->bvisit(x);                                 \
     };
-    virtual void visit(const Add &x) { p_->bvisit(x); };
-    virtual void visit(const Symbol &x) { p_->bvisit(x); };
-    virtual void visit(const Mul &x) { p_->bvisit(x); };
-    virtual void visit(const Pow &x) { p_->bvisit(x); };
-    virtual void visit(const UnivariatePolynomial &x) { p_->bvisit(x); };
-    virtual void visit(const Integer &x) { p_->bvisit(x); };
-    virtual void visit(const Rational &x) { p_->bvisit(x); };
-    virtual void visit(const Complex &x) { p_->bvisit(x); };
-    virtual void visit(const Log &x) { p_->bvisit(x); };
-    virtual void visit(const Derivative &x) { p_->bvisit(x); };
-    virtual void visit(const Sin &x) { p_->bvisit(x); };
-    virtual void visit(const Cos &x) { p_->bvisit(x); };
-    virtual void visit(const Tan &x) { p_->bvisit(x); };
-    virtual void visit(const Cot &x) { p_->bvisit(x); };
-    virtual void visit(const Csc &x) { p_->bvisit(x); };
-    virtual void visit(const Sec &x) { p_->bvisit(x); };
-    virtual void visit(const ASin &x) { p_->bvisit(x); };
-    virtual void visit(const ACos &x) { p_->bvisit(x); };
-    virtual void visit(const ASec &x) { p_->bvisit(x); };
-    virtual void visit(const ACsc &x) { p_->bvisit(x); };
-    virtual void visit(const ATan &x) { p_->bvisit(x); };
-    virtual void visit(const ACot &x) { p_->bvisit(x); };
-    virtual void visit(const ATan2 &x) { p_->bvisit(x); };
-    virtual void visit(const LambertW &x) { p_->bvisit(x); };
-    virtual void visit(const FunctionSymbol &x) { p_->bvisit(x); };
-    virtual void visit(const Sinh &x) { p_->bvisit(x); };
-    virtual void visit(const Cosh &x) { p_->bvisit(x); };
-    virtual void visit(const Tanh &x) { p_->bvisit(x); };
-    virtual void visit(const Coth &x) { p_->bvisit(x); };
-    virtual void visit(const ASinh &x) { p_->bvisit(x); };
-    virtual void visit(const ACosh &x) { p_->bvisit(x); };
-    virtual void visit(const ATanh &x) { p_->bvisit(x); };
-    virtual void visit(const ACoth &x) { p_->bvisit(x); };
-    virtual void visit(const ASech &x) { p_->bvisit(x); };
-    virtual void visit(const KroneckerDelta &x) { p_->bvisit(x); };
-    virtual void visit(const LeviCivita &x) { p_->bvisit(x); };
-    virtual void visit(const Zeta &x) { p_->bvisit(x); };
-    virtual void visit(const Dirichlet_eta &x) { p_->bvisit(x); };
-    virtual void visit(const Gamma &x) { p_->bvisit(x); };
-    virtual void visit(const LowerGamma &x) { p_->bvisit(x); };
-    virtual void visit(const UpperGamma &x) { p_->bvisit(x); };
-    virtual void visit(const Constant &x) { p_->bvisit(x); };
-    virtual void visit(const Abs &x) { p_->bvisit(x); };
-    virtual void visit(const Subs &x) { p_->bvisit(x); };
-    virtual void visit(const RealDouble &x) { p_->bvisit(x); };
-    virtual void visit(const ComplexDouble &x) { p_->bvisit(x); };
-#ifdef HAVE_SYMENGINE_MPFR
-    virtual void visit(const RealMPFR &x) { p_->bvisit(x); };
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-    virtual void visit(const ComplexMPC &x) { p_->bvisit(x); };
-#endif
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 };
 
-template<class T>
-class StopVisitor : public BaseVisitor<T> {
+class StopVisitor : public Visitor
+{
 public:
-    StopVisitor(T *p) : BaseVisitor<T>(p) { };
     bool stop_;
 };
 
-template<class T>
-void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v);
-
-class HasSymbolVisitor : public StopVisitor<HasSymbolVisitor> {
-private:
-    RCP<const Symbol> x_;
-    bool has_;
+class LocalStopVisitor : public StopVisitor
+{
 public:
-    HasSymbolVisitor() : StopVisitor(this) { };
+    bool local_stop_;
+};
 
-    void bvisit(const Symbol &x) {
-        if (x_->__eq__(x)) {
+void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+void postorder_traversal_stop(const Basic &b, StopVisitor &v);
+void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v);
+
+class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
+{
+protected:
+    Ptr<const Basic> x_;
+    bool has_;
+
+public:
+    HasSymbolVisitor(Ptr<const Basic> x) : x_(x)
+    {
+    }
+
+    void bvisit(const Symbol &x)
+    {
+        if (eq(*x_, x)) {
             has_ = true;
             stop_ = true;
         }
     }
 
-    void bvisit(const Basic &x) { };
+    void bvisit(const FunctionSymbol &x)
+    {
+        if (eq(*x_, x)) {
+            has_ = true;
+            stop_ = true;
+        }
+    }
 
-    bool apply(const Basic &b, const RCP<const Symbol> &x) {
-        x_ = x;
+    void bvisit(const Basic &x){};
+
+    bool apply(const Basic &b)
+    {
         has_ = false;
         stop_ = false;
         preorder_traversal_stop(b, *this);
@@ -181,38 +125,212 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
+bool has_symbol(const Basic &b, const Basic &x);
 
-class CoeffVisitor : public StopVisitor<CoeffVisitor> {
-private:
-    RCP<const Symbol> x_;
-    RCP<const Integer> n_;
+class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
+{
+protected:
+    Ptr<const Basic> x_;
+    Ptr<const Basic> n_;
     RCP<const Basic> coeff_;
+
 public:
-    CoeffVisitor() : StopVisitor(this) { };
-
-    void bvisit(const Add &x) {
-        // TODO: Implement coeff for Add
+    CoeffVisitor(Ptr<const Basic> x, Ptr<const Basic> n) : x_(x), n_(n)
+    {
     }
 
-    void bvisit(const Basic &x) {
-
+    void bvisit(const Add &x)
+    {
+        umap_basic_num dict;
+        RCP<const Number> coef = zero;
+        for (auto &p : x.get_dict()) {
+            p.first->accept(*this);
+            if (neq(*coeff_, *zero)) {
+                Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
+            }
+        }
+        coeff_ = Add::from_dict(coef, std::move(dict));
     }
 
-    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
-            const RCP<const Integer> &n) {
-        x_ = x;
-        n_ = n;
+    void bvisit(const Mul &x)
+    {
+        for (auto &p : x.get_dict()) {
+            if (eq(*p.first, *x_) and eq(*p.second, *n_)) {
+                map_basic_basic dict = x.get_dict();
+                dict.erase(p.first);
+                coeff_ = Mul::from_dict(x.get_coef(), std::move(dict));
+                return;
+            }
+        }
+        if (eq(*zero, *n_) and not has_symbol(x, *x_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
+    }
+
+    void bvisit(const Pow &x)
+    {
+        if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
+            coeff_ = one;
+        } else if (neq(*x.get_base(), *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
+    }
+
+    void bvisit(const Symbol &x)
+    {
+        if (eq(x, *x_) and eq(*one, *n_)) {
+            coeff_ = one;
+        } else if (neq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
+    }
+
+    void bvisit(const FunctionSymbol &x)
+    {
+        if (eq(x, *x_) and eq(*one, *n_)) {
+            coeff_ = one;
+        } else if (neq(x, *x_) and eq(*zero, *n_)) {
+            coeff_ = x.rcp_from_this();
+        } else {
+            coeff_ = zero;
+        }
+    }
+
+    void bvisit(const Basic &x)
+    {
+        if (neq(*zero, *n_)) {
+            coeff_ = zero;
+            return;
+        }
+        if (has_symbol(x, *x_)) {
+            coeff_ = zero;
+        } else {
+            coeff_ = x.rcp_from_this();
+        }
+    }
+
+    RCP<const Basic> apply(const Basic &b)
+    {
         coeff_ = zero;
         b.accept(*this);
         return coeff_;
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
-        const RCP<const Integer> &n);
+RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
 
 set_basic free_symbols(const Basic &b);
+
+set_basic free_symbols(const MatrixBase &m);
+
+set_basic function_symbols(const Basic &b);
+
+class TransformVisitor : public BaseVisitor<TransformVisitor>
+{
+protected:
+    RCP<const Basic> result_;
+
+public:
+    TransformVisitor()
+    {
+    }
+
+    virtual RCP<const Basic> apply(const RCP<const Basic> &x);
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const OneArgFunction &x);
+
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &x)
+    {
+        auto farg1 = x.get_arg1(), farg2 = x.get_arg2();
+        auto newarg1 = apply(farg1), newarg2 = apply(farg2);
+        if (farg1 != newarg1 or farg2 != newarg2) {
+            result_ = x.create(newarg1, newarg2);
+        } else {
+            result_ = x.rcp_from_this();
+        }
+    }
+
+    void bvisit(const MultiArgFunction &x);
+};
+
+template <typename Derived, typename First, typename... Rest>
+struct is_base_of_multiple {
+    static const bool value = std::is_base_of<First, Derived>::value
+                              or is_base_of_multiple<Derived, Rest...>::value;
+};
+
+template <typename Derived, typename First>
+struct is_base_of_multiple<Derived, First> {
+    static const bool value = std::is_base_of<First, Derived>::value;
+};
+
+template <typename... Args>
+class AtomsVisitor : public BaseVisitor<AtomsVisitor<Args...>>
+{
+public:
+    set_basic s;
+    uset_basic visited;
+
+    template <typename T,
+              typename = enable_if_t<is_base_of_multiple<T, Args...>::value>>
+    void bvisit(const T &x)
+    {
+        s.insert(x.rcp_from_this());
+        visited.insert(x.rcp_from_this());
+        bvisit((const Basic &)x);
+    }
+
+    void bvisit(const Basic &x)
+    {
+        for (const auto &p : x.get_args()) {
+            auto iter = visited.insert(p->rcp_from_this());
+            if (iter.second) {
+                p->accept(*this);
+            }
+        }
+    }
+
+    set_basic apply(const Basic &b)
+    {
+        b.accept(*this);
+        return s;
+    }
+};
+
+template <typename... Args>
+inline set_basic atoms(const Basic &b)
+{
+    AtomsVisitor<Args...> visitor;
+    return visitor.apply(b);
+};
+
+class CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
+{
+public:
+    unsigned count = 0;
+    void apply(const Basic &b);
+    void bvisit(const Mul &x);
+    void bvisit(const Add &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Number &x);
+    void bvisit(const ComplexBase &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+};
+
+unsigned count_ops(const vec_basic &a);
 
 } // SymEngine
 

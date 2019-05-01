@@ -6,67 +6,114 @@ compiler:
 os:
   - linux
   - osx
+dist: trusty
+osx_image: xcode7.3
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
     packages:
-    - libgmp-dev
-    - libmpfr-dev
-    - libmpc-dev
+    - binutils-dev
+    - g++-4.7
+
 env:
+  global:
+    - secure: "Xj8vvg++O4mhcUTQGtHqXHhn8o5LklI/GkGWO6fcRXlJQszvpSMQiYfJ1UAYlmmuvXRNjWWdhEr7inJdHe1ZtNSXVU/jEICUytFBG6T3uuhOsBPkjVTp2en5vwsSPohaHcAnhoDyK9L48SBcTKLTCkTMhOitj9jk2renem0dX84="
+
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
   ## so if they are not set, cmake will use a default value. For the rest, the
   ## bin/test_travis.sh script usually checks for either "yes" or "no" in an if
   ## statement, so if the variable is not set, the other if branch will get
   ## executed.
-
+  matrix:
   ## Out of tree builds (default):
-  # Debug build
-  - BUILD_TYPE="Debug"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with Python 2.7
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-  # Debug build (with SYMENGINE_ASSERT and SYMENGINE_THREAD_SAFE and Teuchos::RCP)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_SYMENGINE_THREAD_SAFE="yes"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with ECM
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_ECM="yes"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with PRIMESIEVE
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PRIMESIEVE="yes"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with Arb
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_ARB="yes"
-  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with MPC
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_MPC="yes"
-  # Debug build shared lib (with SYMENGINE_ASSERT and Teuchos::RCP)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" BUILD_SHARED_LIBS="yes"
+  # Debug build (with BFD)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TRIGGER_FEEDSTOCK="yes"
+  # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
+  # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_PRIMESIEVE="yes" WITH_MPC="yes"
+  # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" BUILD_DOXYGEN="yes" TEST_IN_TREE="yes"
+  # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
+  # Debug build (with BFD and INTEGER_CLASS from boostmp)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" INTEGER_CLASS="boostmp"
+  # Debug build shared lib (with BFD)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
+  # Release build (with BFD)
+  - WITH_BFD="yes"
+  # Release shared build (with BFD)
+  - WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
 
   ## In-tree builds (we just check a few configurations to make sure they work):
-  # Debug build without Python:
-  - BUILD_TYPE="Debug" TEST_IN_TREE="yes"
-  # Debug build with Python 2.7:
-  - BUILD_TYPE="Debug" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" PYTHON_VERSION="2.7"
-  # Release build with Python 2.7:
-  - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-  # Release build shared lib with Python 2.7:
-  - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7" BUILD_SHARED_LIBS="yes"
-
-  # These test the default Release build with other Python versions
-  - WITH_PYTHON="yes" PYTHON_VERSION="2.6" -DWITH_MPFR="yes"
-  - WITH_PYTHON="yes" PYTHON_VERSION="3.3" -DWITH_MPC="yes"
-  - WITH_PYTHON="yes" PYTHON_VERSION="3.4"
-
-  # These test the setup.py file
-  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.6"
-  - PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
-  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.3"
-  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
+  # Debug build:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
 
 matrix:
   exclude:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes" WITH_LLVM="8.0" USE_GLIBCXX_DEBUG="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-8
+          packages:
+          - clang-8
+          - llvm-8-dev
+          - binutils-dev
+          - g++-8
+    - env: TEST_CLANG_FORMAT="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.7
+          packages:
+          - clang-format-3.8
+      install:
+        - echo "nothing to install"
+      script:
+        - bin/travis_clang_format.sh
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_GCC_6="yes" WITH_PIRANHA="yes" MAKEFLAGS="-j2" BUILD_SHARED_LIBS="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-6
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_FLINT_DEV="yes" WITH_MPC="yes" BUILD_BENCHMARKS="no" MAKEFLAGS="-j2"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-4.7
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha" MAKEFLAGS="-j2"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils-dev
+          - g++-4.8
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="3.8" WITH_BENCHMARKS_NONIUS="yes"
       compiler: clang
       os: linux
       addons:
@@ -77,7 +124,8 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+          - binutils-dev
+    - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
       addons:
@@ -88,62 +136,74 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Debug" WITH_LLVM="3.8"
       compiler: clang
       os: osx
+    - env: BUILD_TYPE="Release" WITH_LLVM="5.0"
+      compiler: clang
+      os: osx
+    - env: BUILD_TYPE="Debug"
+      compiler: gcc
+      os: osx
+    - env: BUILD_TYPE="Release"
+      compiler: gcc
+      os: osx
+    - env: BUILD_TYPE="Debug" WITH_SANITIZE="address" WITH_LLVM="7.0"
+      compiler: clang
+      os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-7
           packages:
-          - clang
-          - libstdc++-4.8-dev
-          - libgmp-dev
-    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+          - clang-7
+          - llvm-7-dev
+    - env: BUILD_TYPE="Debug" WITH_SANITIZE="undefined" WITH_LLVM="7.0"
       compiler: clang
-      os: osx
+      os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-7
           packages:
-          - clang
-          - libstdc++-4.8-dev
-          - libgmp-dev
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-      compiler: gcc
-      os: osx
-    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-      compiler: gcc
-      os: osx
-    - language: ruby
-      cache: bundler
-      env: TEST_IN_TREE="yes" WITH_RUBY="yes"
-      rvm: 1.9.3
+          - clang-7
+          - llvm-7-dev
+    - env: CONDA_ENV_FILE="binder/environment.yml"
       compiler: gcc
       os: linux
-    - language: ruby
-      cache: bundler
-      env: TEST_IN_TREE="yes" WITH_RUBY="yes"
-      rvm: 2.0
+      script:
+        - bin/test_cling_notebook.sh
+    - env: CONDA_ENV_FILE="symengine/utilities/matchpycpp/environment.yml"
       compiler: gcc
       os: linux
-    - language: ruby
-      cache: bundler
-      env: TEST_IN_TREE="yes" WITH_RUBY="yes"
-      rvm: 2.1
-      compiler: gcc
-      os: linux
-    - language: ruby
-      cache: bundler
-      env: TEST_IN_TREE="yes" WITH_RUBY="yes"
-      rvm: 2.2
-      compiler: gcc
-      os: linux
+      script:
+        - bin/test_matchpycpp_gen_tests.sh
 
+before_install:
+- |
+   if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+     command curl -sSL https://rvm.io/mpapis.asc | gpg --import -;
+     rvm get head || true
+   fi
 install:
   - source bin/install_travis.sh
 script:
   - bin/test_travis.sh
+  - bin/trigger_feedstock.sh
 notifications:
   email: false
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  repo: symengine/symengine.github.io
+  target_branch: master
+  local_dir: doc/html
+  github_token:
+    secure: "nA/geBch3kWX4aURwe52JZNEG/JDR4RRkMvWqoqKTbnma54ohOokwaBlwmSc7lcmiq6YP8nI7uSCtK7EtqatJZewxNTNP8JXcuPb1IRuCXIvusakmk4iEqveEun5Igfge/6e6K/ujUiZchDT9ucEkxGNIAYDwrW0MPQ3ZG0Tla0="
+  on:
+    branch: master
+    repo: symengine/symengine
+    condition: $BUILD_DOXYGEN = yes

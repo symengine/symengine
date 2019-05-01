@@ -1,17 +1,13 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
 
-#include <symengine/basic.h>
 #include <symengine/add.h>
-#include <symengine/symbol.h>
-#include <symengine/dict.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/rings.h>
 #include <symengine/monomials.h>
+#include <symengine/symengine_exception.h>
 
+using SymEngine::SymEngineException;
 using SymEngine::Basic;
 using SymEngine::Add;
 using SymEngine::Mul;
@@ -19,10 +15,8 @@ using SymEngine::Pow;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
-using SymEngine::map_vec_int;
 using SymEngine::Integer;
 using SymEngine::integer;
-using SymEngine::multinomial_coefficients;
 using SymEngine::map_vec_mpz;
 using SymEngine::expr2poly;
 using SymEngine::vec_int;
@@ -81,7 +75,6 @@ TEST_CASE("expand: poly", "[poly]")
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 
-
     /*
     std::cout << *e << std::endl;
     std::cout << *f1 << std::endl;
@@ -91,7 +84,7 @@ TEST_CASE("expand: poly", "[poly]")
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
     */
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
 }

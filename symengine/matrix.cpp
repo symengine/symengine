@@ -1,15 +1,17 @@
 #include <symengine/matrix.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-std::string MatrixBase::__str__() const {
+std::string MatrixBase::__str__() const
+{
     std::ostringstream o;
 
-    for (unsigned i = 0; i < row_; i++) {
+    for (unsigned i = 0; i < nrows(); i++) {
         o << "[";
-        for (unsigned j = 0; j < col_ - 1; j++)
+        for (unsigned j = 0; j < ncols() - 1; j++)
             o << *this->get(i, j) << ", ";
-        o << *this->get(i, col_ - 1) << "]" << std::endl;
+        o << *this->get(i, ncols() - 1) << "]" << std::endl;
     }
 
     return o.str();
@@ -17,13 +19,13 @@ std::string MatrixBase::__str__() const {
 
 bool MatrixBase::eq(const MatrixBase &other) const
 {
-	if (this->nrows() != other.nrows() || this->ncols() != other.ncols())
+    if (this->nrows() != other.nrows() or this->ncols() != other.ncols())
         return false;
 
     for (unsigned i = 0; i < this->nrows(); i++)
         for (unsigned j = 0; j < this->ncols(); j++)
-        if(neq(*this->get(i, j), *(other.get(i, j))))
-            return false;
+            if (neq(*this->get(i, j), *(other.get(i, j))))
+                return false;
 
     return true;
 }

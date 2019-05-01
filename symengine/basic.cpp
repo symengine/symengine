@@ -1,17 +1,8 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/constants.h>
-#include <symengine/functions.h>
-#include <symengine/polynomial.h>
-#include <symengine/printer.h>
+#include <symengine/printers.h>
+#include <symengine/subs.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 int Basic::__cmp__(const Basic &o) const
 {
@@ -20,42 +11,42 @@ int Basic::__cmp__(const Basic &o) const
     if (a == b) {
         return this->compare(o);
     } else {
-        // We return the order given by the numerical value of the TypeID enum type.
-        // The types don't need to be ordered in any given way, they just need to be ordered.
+        // We return the order given by the numerical value of the TypeID enum
+        // type.
+        // The types don't need to be ordered in any given way, they just need
+        // to be ordered.
         return a < b ? -1 : 1;
     }
 }
 
 std::string Basic::__str__() const
 {
-    StrPrinter strPrinter;
-    return strPrinter.apply(*this);
-}
-
-RCP<const Basic> expand(const RCP<const Basic> &self)
-{
-    if (is_a<Symbol>(*self)) return self;
-    if (is_a_Number(*self)) return self;
-    if (is_a<Add>(*self)) return add_expand(rcp_static_cast<const Add>(self));
-    if (is_a<Mul>(*self)) return mul_expand(rcp_static_cast<const Mul>(self));
-    if (is_a<Pow>(*self)) return pow_expand(rcp_static_cast<const Pow>(self));
-    return self;
+    return str(*this);
 }
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Basic> self = get_rcp();
-    auto it = subs_dict.find(self);
-    if (it == subs_dict.end())
-        return self;
-    else
-        return it->second;
+    return SymEngine::subs(this->rcp_from_this(), subs_dict);
+}
+
+RCP<const Basic> Basic::xreplace(const map_basic_basic &xreplace_dict) const
+{
+    return SymEngine::xreplace(this->rcp_from_this(), xreplace_dict);
 }
 
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 {
-    return Derivative::create(get_rcp(), {x});
+    return Derivative::create(rcp_from_this(), {x});
+}
+
+const char *get_version()
+{
+    return SYMENGINE_VERSION;
+}
+
+bool is_a_Atom(const Basic &b)
+{
+    return is_a_Number(b) or is_a<Symbol>(b) or is_a<Constant>(b);
 }
 
 } // SymEngine
-
