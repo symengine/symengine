@@ -3015,8 +3015,8 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s,
         }
 #ifdef HAVE_SYMENGINE_MPFR
     } else if (is_a<RealMPFR>(*s) && is_a<RealMPFR>(*x)) {
-        auto s_ = down_cast<const RealMPFR &>(*s).i.get_mpfr_t();
-        auto x_ = down_cast<const RealMPFR &>(*x).i.get_mpfr_t();
+        const auto &s_ = down_cast<const RealMPFR &>(*s).i.get_mpfr_t();
+        const auto &x_ = down_cast<const RealMPFR &>(*x).i.get_mpfr_t();
         if (mpfr_cmp_si(x_, 0) >= 0) {
             mpfr_class t(std::max(mpfr_get_prec(s_), mpfr_get_prec(x_)));
             mpfr_gamma_inc(t.get_mpfr_t(), s_, x_, MPFR_RNDN);
