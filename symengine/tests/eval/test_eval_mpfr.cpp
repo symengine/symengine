@@ -205,7 +205,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(beta(add(arg1, arg2), arg1), 0.13675213675213,
                         0.13675213675214),
         std::make_tuple(abs((neg(sqrt(add(arg2, arg2))))), 0.70710678118654,
-                        0.70710678118655)};
+                        0.70710678118655)
+    };
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         eval_mpfr(a, *std::get<0>(testvec[i]), MPFR_RNDN);
