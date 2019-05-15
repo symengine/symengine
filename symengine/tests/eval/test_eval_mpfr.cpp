@@ -198,8 +198,10 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(gamma(add(arg1, arg2)), -100, 100),
         std::make_tuple(gamma(arg1), -100, 100),
         std::make_tuple(gamma(add(add(arg1, arg2), arg1)), -100, 100),
-        std::make_tuple(uppergamma(arg1, arg2), 0.97350097883925,
-                        0.97350097883926),
+#if MPFR_VERSION_MAJOR > 3
+        std::make_tuple(uppergamma(sqrt(integer(2)), arg2), 0.80040012955715,
+                        0.80040012955716),
+#endif
         std::make_tuple(beta(add(arg1, arg2), arg1), 0.13675213675213,
                         0.13675213675214),
         std::make_tuple(abs((neg(sqrt(add(arg2, arg2))))), 0.70710678118654,
