@@ -56,6 +56,7 @@ using SymEngine::GoldenRatio;
 using SymEngine::pow;
 using SymEngine::gamma;
 using SymEngine::uppergamma;
+using SymEngine::lowergamma;
 using SymEngine::beta;
 using SymEngine::constant;
 using SymEngine::NotImplementedError;
@@ -201,6 +202,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 #if MPFR_VERSION_MAJOR > 3
         std::make_tuple(uppergamma(sqrt(integer(2)), arg2), 0.80040012955715,
                         0.80040012955716),
+        std::make_tuple(lowergamma(sqrt(integer(2)), arg2), 0.08618129916210,
+                        0.08618129916211),
 #endif
         std::make_tuple(beta(add(arg1, arg2), arg1), 0.13675213675213,
                         0.13675213675214),

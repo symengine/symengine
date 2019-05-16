@@ -2910,6 +2910,12 @@ bool LowerGamma::is_canonical(const RCP<const Basic> &s,
         return false;
     if (is_a<Integer>(*mul(i2, s)))
         return false;
+#ifdef HAVE_SYMENGINE_MPFR
+#if MPFR_VERSION_MAJOR > 3
+    if (is_a<RealMPFR>(*s) && is_a<RealMPFR>(*x))
+        return false;
+#endif
+#endif
     return true;
 }
 
@@ -2948,6 +2954,23 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
                            mul(pow(x, s), exp(mul(minus_one, x)))),
                        s);
         }
+#ifdef HAVE_SYMENGINE_MPFR
+#if MPFR_VERSION_MAJOR > 3
+    } else if (is_a<RealMPFR>(*s) && is_a<RealMPFR>(*x)) {
+        const auto &s_ = down_cast<const RealMPFR &>(*s).i.get_mpfr_t();
+        const auto &x_ = down_cast<const RealMPFR &>(*x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 0) >= 0) {
+            mpfr_class t(std::max(mpfr_get_prec(s_), mpfr_get_prec(x_)));
+            mpfr_class u(std::max(mpfr_get_prec(s_), mpfr_get_prec(x_)));
+            mpfr_gamma_inc(t.get_mpfr_t(), s_, x_, MPFR_RNDN);
+            mpfr_gamma(u.get_mpfr_t(), s_, MPFR_RNDN);
+            mpfr_sub(t.get_mpfr_t(), u.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        } else {
+            throw NotImplementedError("Not implemented.");
+        }
+#endif
+#endif
     }
     return make_rcp<const LowerGamma>(s, x);
 }
