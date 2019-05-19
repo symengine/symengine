@@ -1,7 +1,7 @@
 # SymEngine
 
 [![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
-[![Build status](https://ci.appveyor.com/api/projects/status/n7vqq2ilkw59o4bx/branch/master?svg=true)](https://ci.appveyor.com/project/certik/symengine/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/qs1gvno1ht1gf0q8/branch/master?svg=true)](https://ci.appveyor.com/project/symengine/symengine/branch/master)
 [![codecov.io](https://codecov.io/github/symengine/symengine/coverage.svg?branch=master)](https://codecov.io/github/symengine/symengine?branch=master)
 
 SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
