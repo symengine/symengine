@@ -1134,7 +1134,7 @@ TEST_CASE("test_LDL(): matrices", "[matrices]")
                                     integer(0), integer(0), integer(9)}));
 }
 
-/*TEST_CASE("test_cholesky(): matrices", "[matrices]")
+TEST_CASE("test_cholesky(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
                                        integer(12), integer(37), integer(-43),
@@ -1144,10 +1144,10 @@ integer(98)});
 
     cholesky(A, L);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                   integer(3), integer(1), integer(0),
-                                   integer(-4), integer(5), integer(1)}));
-}*/
+    REQUIRE(L == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
+                                   integer(6), integer(1), integer(0),
+                                   integer(-8), integer(5), integer(3)}));
+}
 
 TEST_CASE("test_determinant(): matrices", "[matrices]")
 {
