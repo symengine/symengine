@@ -29,7 +29,7 @@ env:
   matrix:
   ## Out of tree builds (default):
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TRIGGER_FEEDSTOCK="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
@@ -37,7 +37,7 @@ env:
   # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" BUILD_DOXYGEN="yes" TEST_IN_TREE="yes"
   # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_RCP="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
   # Debug build (with BFD and INTEGER_CLASS from boostmp)
   - BUILD_TYPE="Debug" WITH_BFD="yes" INTEGER_CLASS="boostmp"
   # Debug build shared lib (with BFD)
