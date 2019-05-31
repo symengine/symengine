@@ -31,6 +31,8 @@ namespace SymEngine
 class Visitor
 {
 public:
+    uset_basic has_visited;
+
 #define SYMENGINE_ENUM(TypeID, Class) virtual void visit(const Class &) = 0;
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
@@ -44,6 +46,7 @@ class BaseVisitor : public Base
 {
 
 public:
+    uset_basic has_visited;
 #if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
     // Following two ctors can be replaced by `using Base::Base` if inheriting
     // constructors are allowed by the compiler. GCC 4.8 is the earliest
@@ -144,7 +147,10 @@ public:
         umap_basic_num dict;
         RCP<const Number> coef = zero;
         for (auto &p : x.get_dict()) {
-            p.first->accept(*this);
+            auto iter = has_visited.insert(p.first->rcp_from_this());
+            if (iter.second) {
+                p.first->accept(*this);
+            }
             if (neq(*coeff_, *zero)) {
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
             }
