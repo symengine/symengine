@@ -843,6 +843,7 @@ const std::string &LLVMDoubleVisitor::dumps() const
 
 void LLVMDoubleVisitor::loads(const std::string &s)
 {
+    membuffer = s;
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
