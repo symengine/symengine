@@ -331,23 +331,9 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
 
     // Test that dumping and loading on a loaded object also works
-    t1 = std::chrono::high_resolution_clock::now();
-    auto &s = v2.dumps();
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Saving "
-              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                     .count()
-              << "us" << std::endl;
-
+    auto &s2 = v2.dumps();
     LLVMDoubleVisitor v3;
-
-    t1 = std::chrono::high_resolution_clock::now();
-    v3.loads(s);
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Loading "
-              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                     .count()
-              << "us" << std::endl;
+    v3.loads(s2);
 
     d3 = v3.call({0.4, 2.0, 3.0});
     REQUIRE(::fabs((d - d3) / d) < 1e-12);
