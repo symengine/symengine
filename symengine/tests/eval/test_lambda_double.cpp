@@ -329,6 +329,14 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
     d = v.call({0.4, 2.0, 3.0});
     d2 = v2.call({0.4, 2.0, 3.0});
     REQUIRE(::fabs((d - d2) / d) < 1e-12);
+
+    // Test that dumping and loading on a loaded object also works
+    auto &s2 = v2.dumps();
+    LLVMDoubleVisitor v3;
+    v3.loads(s2);
+
+    d3 = v3.call({0.4, 2.0, 3.0});
+    REQUIRE(::fabs((d - d3) / d) < 1e-12);
 }
 
 TEST_CASE("Check that our default LLVM passes give correct results",
