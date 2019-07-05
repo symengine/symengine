@@ -9,6 +9,7 @@ cython_test.cpp
 SymEngineConfig.cmake
 SymEngineConfigVersion.cmake
 SymEngineTargets.cmake
+compile_commands.json
 
 # Cotire
 symengine/cotire
