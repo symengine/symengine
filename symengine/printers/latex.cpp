@@ -426,6 +426,7 @@ std::vector<std::string> init_latex_printer_names()
     names[BETA] = "\\operatorname{B}";
     names[LOG] = "\\log";
     names[GAMMA] = "\\Gamma";
+    names[TRUNCATE] = "\\operatorname{truncate}";
     return names;
 }
 

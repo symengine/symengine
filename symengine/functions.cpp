@@ -543,6 +543,9 @@ bool Floor::is_canonical(const RCP<const Basic> &arg) const
     if (is_a<Ceiling>(*arg)) {
         return false;
     }
+    if (is_a<Truncate>(*arg)) {
+        return false;
+    }
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         return false;
     }
@@ -596,6 +599,9 @@ RCP<const Basic> floor(const RCP<const Basic> &arg)
     if (is_a<Ceiling>(*arg)) {
         return arg;
     }
+    if (is_a<Truncate>(*arg)) {
+        return arg;
+    }
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         throw SymEngineException(
             "Boolean objects not allowed in this context.");
@@ -629,6 +635,9 @@ bool Ceiling::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<Truncate>(*arg)) {
         return false;
     }
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
@@ -684,6 +693,9 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg)
     if (is_a<Ceiling>(*arg)) {
         return arg;
     }
+    if (is_a<Truncate>(*arg)) {
+        return arg;
+    }
     if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
         throw SymEngineException(
             "Boolean objects not allowed in this context.");
@@ -697,6 +709,100 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg)
         }
     }
     return make_rcp<const Ceiling>(arg);
+}
+
+Truncate::Truncate(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Truncate::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a_Number(*arg)) {
+        return false;
+    }
+    if (is_a<Constant>(*arg)) {
+        return false;
+    }
+    if (is_a<Floor>(*arg)) {
+        return false;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return false;
+    }
+    if (is_a<Truncate>(*arg)) {
+        return false;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        return false;
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        if (neq(*zero, *s) and is_a<Integer>(*s)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+RCP<const Basic> Truncate::create(const RCP<const Basic> &arg) const
+{
+    return truncate(arg);
+}
+
+RCP<const Basic> truncate(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg)) {
+        if (down_cast<const Number &>(*arg).is_exact()) {
+            if (is_a<Rational>(*arg)) {
+                const Rational &s = down_cast<const Rational &>(*arg);
+                integer_class quotient;
+                mp_tdiv_q(quotient, SymEngine::get_num(s.as_rational_class()),
+                          SymEngine::get_den(s.as_rational_class()));
+                return integer(std::move(quotient));
+            }
+            return arg;
+        }
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        return _arg->get_eval().truncate(*_arg);
+    }
+    if (is_a<Constant>(*arg)) {
+        if (eq(*arg, *pi)) {
+            return integer(3);
+        }
+        if (eq(*arg, *E)) {
+            return integer(2);
+        }
+        if (eq(*arg, *GoldenRatio)) {
+            return integer(1);
+        }
+        if (eq(*arg, *Catalan) or eq(*arg, *EulerGamma)) {
+            return integer(0);
+        }
+    }
+    if (is_a<Floor>(*arg)) {
+        return arg;
+    }
+    if (is_a<Ceiling>(*arg)) {
+        return arg;
+    }
+    if (is_a<Truncate>(*arg)) {
+        return arg;
+    }
+    if (is_a<BooleanAtom>(*arg) or is_a_Relational(*arg)) {
+        throw SymEngineException(
+            "Boolean objects not allowed in this context.");
+    }
+    if (is_a<Add>(*arg)) {
+        RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
+        umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
+        if (is_a<Integer>(*s)) {
+            return add(
+                s, make_rcp<const Truncate>(Add::from_dict(zero, std::move(d))));
+        }
+    }
+    return make_rcp<const Truncate>(arg);
 }
 
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)

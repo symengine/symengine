@@ -103,6 +103,12 @@ void CodePrinter::bvisit(const Ceiling &x)
     s << "ceil(" << apply(x.get_arg()) << ")";
     str_ = s.str();
 }
+void CodePrinter::bvisit(const Truncate &x)
+{
+    std::ostringstream s;
+    s << "trunc(" << apply(x.get_arg()) << ")";
+    str_ = s.str();
+}
 void CodePrinter::bvisit(const Max &x)
 {
     std::ostringstream s;

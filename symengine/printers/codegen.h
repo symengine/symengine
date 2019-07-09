@@ -25,6 +25,7 @@ public:
     void bvisit(const UniversalSet &x);
     void bvisit(const Abs &x);
     void bvisit(const Ceiling &x);
+    void bvisit(const Truncate &x);
     void bvisit(const Max &x);
     void bvisit(const Min &x);
     void bvisit(const Constant &x);
