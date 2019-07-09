@@ -332,6 +332,8 @@ CWRAPPER_OUTPUT_TYPE basic_zeta(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_dirichlet_eta(basic s, const basic a);
 //! Assigns s = gamma(a).
 CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
+//! Assigns s = loggamma(a).
+CWRAPPER_OUTPUT_TYPE basic_loggamma(basic s, const basic a);
 //! Assigns s = sqrt(a).
 CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
 //! Assigns s = cbrt(a).
