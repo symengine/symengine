@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export CONDA_DIR=$CONDA_PREFIX
+export NB_PYTHON_PREFIX=$CONDA_PREFIX
 binder/postBuild
 jupyter nbconvert --execute --to notebook notebooks/symengine.ipynb
