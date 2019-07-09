@@ -1340,6 +1340,9 @@ void test_functions()
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
+    basic_loggamma(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
     basic_atan2(ans, one, one);
     basic_mul(ans, ans, four);
     SYMENGINE_C_ASSERT(basic_eq(ans, pi));
