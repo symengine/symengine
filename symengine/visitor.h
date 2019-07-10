@@ -317,6 +317,10 @@ inline set_basic atoms(const Basic &b)
 
 class CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
 {
+protected:
+    std::unordered_map<RCP<const Basic>, unsigned, RCPBasicHash, RCPBasicKeyEq>
+        v;
+
 public:
     unsigned count = 0;
     void apply(const Basic &b);
