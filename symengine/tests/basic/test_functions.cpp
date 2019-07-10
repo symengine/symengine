@@ -4418,9 +4418,9 @@ TEST_CASE("test_truncate", "[Truncate]")
                       truncate(add(mul(integer(2), x), mul(integer(3), y))))));
 
     r = truncate(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
-                    mul(integer(3), y)));
+                     mul(integer(3), y)));
     CHECK(eq(*r, *truncate(add(add(mul(integer(2), x), mul(integer(3), y)),
-                              Rational::from_two_ints(2, 3)))));
+                               Rational::from_two_ints(2, 3)))));
 
     CHECK_THROWS_AS(truncate(Eq(integer(2), integer(3))), SymEngineException &);
 

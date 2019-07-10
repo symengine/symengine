@@ -798,8 +798,8 @@ RCP<const Basic> truncate(const RCP<const Basic> &arg)
         RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
         umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
         if (is_a<Integer>(*s)) {
-            return add(
-                s, make_rcp<const Truncate>(Add::from_dict(zero, std::move(d))));
+            return add(s, make_rcp<const Truncate>(
+                              Add::from_dict(zero, std::move(d))));
         }
     }
     return make_rcp<const Truncate>(arg);
