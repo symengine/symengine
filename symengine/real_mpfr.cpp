@@ -1051,6 +1051,15 @@ class EvaluateMPFR : public Evaluate
         mp_demote(i);
         return integer(std::move(i));
     }
+    virtual RCP<const Basic> truncate(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        integer_class i;
+        mpfr_get_z(get_mpz_t(i), x_, MPFR_RNDZ);
+        mp_demote(i);
+        return integer(std::move(i));
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))

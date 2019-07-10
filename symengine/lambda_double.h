@@ -531,6 +531,12 @@ public:
         result_ = [=](const double *x) { return std::ceil(tmp(x)); };
     };
 
+    void bvisit(const Truncate &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const double *x) { return std::trunc(tmp(x)); };
+    };
+
     void bvisit(const Infty &x)
     {
         if (x.is_negative_infinity()) {

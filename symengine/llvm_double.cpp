@@ -920,4 +920,15 @@ void LLVMDoubleVisitor::bvisit(const Ceiling &x)
     result_ = r;
 }
 
+void LLVMDoubleVisitor::bvisit(const Truncate &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_double_intrinsic(llvm::Intrinsic::trunc, 1, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
 } // namespace SymEngine

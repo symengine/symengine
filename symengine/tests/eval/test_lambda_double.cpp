@@ -52,6 +52,7 @@ using SymEngine::atan2;
 using SymEngine::sign;
 using SymEngine::floor;
 using SymEngine::ceiling;
+using SymEngine::truncate;
 using SymEngine::log;
 using SymEngine::E;
 using SymEngine::Catalan;
@@ -237,11 +238,11 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     a = add(x, z);
     b = add(y, z);
 
-    vec_basic exprs
-        = {log(a),   abs(a),      tan(a),      sinh(a),    cosh(a),  tanh(a),
-           asinh(b), acosh(b),    atanh(a),    asin(a),    acos(a),  atan(a),
-           gamma(a), loggamma(a), erf(a),      erfc(a),    floor(a), ceiling(a),
-           sign(a),  max({a, b}), min({a, b}), atan2(a, b)};
+    vec_basic exprs = {
+        log(a),   abs(a),      tan(a),      sinh(a),     cosh(a),    tanh(a),
+        asinh(b), acosh(b),    atanh(a),    asin(a),     acos(a),    atan(a),
+        gamma(a), loggamma(a), erf(a),      erfc(a),     floor(a),   ceiling(a),
+        sign(a),  max({a, b}), min({a, b}), atan2(a, b), truncate(a)};
 
     for (unsigned i = 0; i < exprs.size(); i++) {
         exprs[i] = add(exprs[i], z);

@@ -949,6 +949,23 @@ class EvaluateMPC : public Evaluate
         return Complex::from_two_nums(*integer(std::move(re)),
                                       *integer(std::move(im)));
     }
+    virtual RCP<const Basic> truncate(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        integer_class re, im;
+        mpfr_get_z(
+            get_mpz_t(re),
+            mpc_realref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDZ);
+        mpfr_get_z(
+            get_mpz_t(im),
+            mpc_imagref(down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t()),
+            MPFR_RNDZ);
+        mp_demote(re);
+        mp_demote(im);
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))

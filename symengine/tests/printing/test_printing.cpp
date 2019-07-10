@@ -55,6 +55,7 @@ using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::floor;
 using SymEngine::ceiling;
+using SymEngine::truncate;
 using SymEngine::conditionset;
 using SymEngine::Boolean;
 using SymEngine::logical_and;
@@ -545,6 +546,17 @@ TEST_CASE("test_ceiling(): printing", "[printing]")
 
     r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
     CHECK(r->__str__() == "2 + ceiling(2*x + 3*y)");
+}
+
+TEST_CASE("test_truncate(): printing", "[printing]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r = truncate(mul(pow(x, integer(3)), y));
+    CHECK(r->__str__() == "truncate(x**3*y)");
+
+    r = truncate(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(r->__str__() == "2 + truncate(2*x + 3*y)");
 }
 
 TEST_CASE("test_conjugate(): printing", "[printing]")

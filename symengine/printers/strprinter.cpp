@@ -1054,6 +1054,7 @@ std::vector<std::string> init_str_printer_names()
     names[LEVICIVITA] = "levicivita";
     names[FLOOR] = "floor";
     names[CEILING] = "ceiling";
+    names[TRUNCATE] = "truncate";
     names[ERF] = "erf";
     names[ERFC] = "erfc";
     names[LOWERGAMMA] = "lowergamma";

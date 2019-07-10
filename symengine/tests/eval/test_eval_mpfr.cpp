@@ -26,6 +26,7 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::loggamma;
 using SymEngine::one;
+using SymEngine::minus_one;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::tan;
@@ -150,6 +151,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     RCP<const Basic> arg1 = integer(2);
     RCP<const Basic> arg2 = div(one, integer(4));
+    RCP<const Basic> arg3 = div(minus_one, integer(4));
 
     std::vector<std::tuple<RCP<const Basic>, double, double>> testvec = {
         std::make_tuple(pow(E, integer(2)), 7.3890560989306, 7.38905609893066),
@@ -166,7 +168,11 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(erf(div(E, pi)), 0.778918254986, 0.778918254988),
         std::make_tuple(erfc(integer(2)), 0.004677734981, 0.004677734983),
         std::make_tuple(floor(arg2), -0.000000000001, 0.000000000001),
+        std::make_tuple(floor(arg3), -1.000000000001, -0.999999999999),
         std::make_tuple(ceiling(arg2), 0.999999999999, 1.000000000001),
+        std::make_tuple(ceiling(arg3), -0.000000000001, 0.000000000001),
+        std::make_tuple(truncate(arg2), -0.000000000001, 0.000000000001),
+        std::make_tuple(truncate(arg3), -0.000000000001, 0.000000000001),
         std::make_tuple(sin(arg1), 0.90929742682568, 0.90929742682569),
         std::make_tuple(cos(arg1), -0.41614683654715, -0.41614683654714),
         std::make_tuple(tan(arg1), -2.1850398632616, -2.1850398632615),

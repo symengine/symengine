@@ -115,6 +115,7 @@ public:
     void bvisit(const Infty &x);
     void bvisit(const Floor &x);
     void bvisit(const Ceiling &x);
+    void bvisit(const Truncate &x);
     void bvisit(const Sign &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
