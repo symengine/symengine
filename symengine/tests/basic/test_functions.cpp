@@ -3703,6 +3703,7 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
     REQUIRE(eq(*abs(sub(x, y)), *abs(sub(y, x))));
     REQUIRE(eq(*abs(real_double(-1.0)), *real_double(1.0)));
+    REQUIRE(eq(*abs(abs(x)), *abs(x)));
 }
 
 class MySin : public FunctionWrapper
