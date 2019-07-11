@@ -3437,6 +3437,9 @@ bool Abs::is_canonical(const RCP<const Basic> &arg) const
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
+    if (is_a<Abs>(*arg)) {
+        return false;
+    }
 
     if (could_extract_minus(*arg)) {
         return false;
@@ -3473,6 +3476,9 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     } else if (is_a_Number(*arg)
                and not down_cast<const Number &>(*arg).is_exact()) {
         return down_cast<const Number &>(*arg).get_eval().abs(*arg);
+    }
+    if (is_a<Abs>(*arg)) {
+        return arg;
     }
 
     RCP<const Basic> d;
