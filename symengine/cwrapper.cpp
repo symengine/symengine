@@ -66,6 +66,10 @@ using SymEngine::parse;
 using SymEngine::SymEngineException;
 using SymEngine::numeric_cast;
 using SymEngine::julia_str;
+using SymEngine::mathml;
+using SymEngine::latex;
+using SymEngine::ccode;
+using SymEngine::jscode;
 
 namespace SymEngine
 {
@@ -622,6 +626,38 @@ char *basic_str_julia(const basic s)
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
+}
+
+char *basic_str_mathml(const basic s)
+{
+    std::string str = mathml(*s->m);
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_latex(const basic s)
+{
+    std::string str = latex(*s->m);
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_ccode(const basic s)
+{
+    std::string str = ccode(*s->m);
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+char *basic_str_jscode(const basic s)
+{
+  std::string str = jscode(*s->m);
+  auto cc = new char[str.length() + 1];
+  std::strcpy(cc, str.c_str());
+  return cc;
 }
 
 void basic_str_free(char *s)

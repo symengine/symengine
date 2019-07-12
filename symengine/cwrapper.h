@@ -351,6 +351,14 @@ char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
 //! Compatible with Julia
 char *basic_str_julia(const basic s);
+//! Printing mathml
+char *basic_str_mathml(const basic s);
+//! Printing latex string
+char *basic_str_latex(const basic s);
+//! Printing C code
+char *basic_str_ccode(const basic s);
+//! Printing JavaScript code
+char *basic_str_jscode(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
