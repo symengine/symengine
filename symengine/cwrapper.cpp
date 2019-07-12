@@ -654,10 +654,10 @@ char *basic_str_ccode(const basic s)
 
 char *basic_str_jscode(const basic s)
 {
-  std::string str = jscode(*s->m);
-  auto cc = new char[str.length() + 1];
-  std::strcpy(cc, str.c_str());
-  return cc;
+    std::string str = jscode(*s->m);
+    auto cc = new char[str.length() + 1];
+    std::strcpy(cc, str.c_str());
+    return cc;
 }
 
 void basic_str_free(char *s)
