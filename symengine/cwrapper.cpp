@@ -612,53 +612,28 @@ CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
-char *basic_str(const basic s)
-{
-    std::string str = s->m->__str__();
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
+#define IMPLEMENT_STR_CONVERSION(name, func)                                   \
+    char *basic_##name(const basic s)                                          \
+    {                                                                          \
+        std::string str;                                                       \
+        try {                                                                  \
+            str = func(*s->m);                                                 \
+        } catch (SymEngineException & e) {                                     \
+            return nullptr;                                                    \
+        } catch (...) {                                                        \
+            return nullptr;                                                    \
+        }                                                                      \
+        auto cc = new char[str.length() + 1];                                  \
+        std::strcpy(cc, str.c_str());                                          \
+        return cc;                                                             \
+    }
 
-char *basic_str_julia(const basic s)
-{
-    std::string str = julia_str(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
-
-char *basic_str_mathml(const basic s)
-{
-    std::string str = mathml(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
-
-char *basic_str_latex(const basic s)
-{
-    std::string str = latex(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
-
-char *basic_str_ccode(const basic s)
-{
-    std::string str = ccode(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
-
-char *basic_str_jscode(const basic s)
-{
-    std::string str = jscode(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
+IMPLEMENT_STR_CONVERSION(str, str)
+IMPLEMENT_STR_CONVERSION(str_julia, julia_str)
+IMPLEMENT_STR_CONVERSION(str_mathml, mathml)
+IMPLEMENT_STR_CONVERSION(str_latex, latex)
+IMPLEMENT_STR_CONVERSION(str_ccode, ccode)
+IMPLEMENT_STR_CONVERSION(str_jscode, jscode)
 
 void basic_str_free(char *s)
 {
