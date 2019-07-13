@@ -149,6 +149,9 @@ public:
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
             }
         }
+        if (eq(*zero, *n_)) {
+            iaddnum(outArg(coef), x.get_coef());
+        }
         coeff_ = Add::from_dict(coef, std::move(dict));
     }
 
