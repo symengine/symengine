@@ -612,6 +612,11 @@ CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
+std::string _str(const Basic &a)
+{
+    return a.__str__();
+}
+
 #define IMPLEMENT_STR_CONVERSION(name, func)                                   \
     char *basic_##name(const basic s)                                          \
     {                                                                          \
@@ -628,7 +633,7 @@ CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
         return cc;                                                             \
     }
 
-IMPLEMENT_STR_CONVERSION(str, str)
+IMPLEMENT_STR_CONVERSION(str, _str)
 IMPLEMENT_STR_CONVERSION(str_julia, julia_str)
 IMPLEMENT_STR_CONVERSION(str_mathml, mathml)
 IMPLEMENT_STR_CONVERSION(str_latex, latex)
