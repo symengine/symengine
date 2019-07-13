@@ -988,6 +988,7 @@ TEST_CASE("coeff: Basic", "[basic]")
     REQUIRE(eq(*coeff(*r5, *x, *integer(0)), *pow(y, integer(3))));
 
     REQUIRE(eq(*coeff(*r6, *x, *integer(0)), *y));
+    REQUIRE(eq(*coeff(*add(r6, one), *x, *integer(0)), *add(y, one)));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")
