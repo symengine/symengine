@@ -79,6 +79,11 @@ inline bool is_aligned(T *p, size_t n = alignof(T))
 {
     return 0 == reinterpret_cast<uintptr_t>(p) % n;
 }
+
+static std::string _str(const Basic &a)
+{
+    return a.__str__();
+}
 }
 
 extern "C" {
@@ -610,11 +615,6 @@ CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
     CWRAPPER_BEGIN
     s->m = SymEngine::atan2(a->m, b->m);
     CWRAPPER_END
-}
-
-std::string _str(const Basic &a)
-{
-    return a.__str__();
 }
 
 #define IMPLEMENT_STR_CONVERSION(name, func)                                   \
