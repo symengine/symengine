@@ -94,6 +94,19 @@ else()
     message(STATUS "Linker does not support --exclude-libs")
 endif()
 
+include(CheckSymbolExists)
+set(BACKUP_CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS}")
+if (WIN32)
+    check_symbol_exists(_strtod_l "stdlib.h;locale.h" HAVE_STRTOD_L)
+elseif (APPLE)
+    check_symbol_exists(strtod_l "stdlib.h;xlocale.h" HAVE_STRTOD_L)
+else ()
+    set(CMAKE_REQUIRED_DEFINITIONS "-D_GNU_SOURCE ${CMAKE_REQUIRED_DEFINITIONS}")
+    check_symbol_exists(strtod_l "stdlib.h;locale.h" HAVE_STRTOD_L)
+endif ()
+set(CMAKE_REQUIRED_DEFINITIONS "${BACKUP_CMAKE_REQUIRED_DEFINITIONS}")
+
+
 set(HAVE_GCC_ABI_DEMANGLE yes
     CACHE BOOL "Build with C++ name demangling support")
 

@@ -1,3 +1,17 @@
+#include <symengine/symengine_config.h>
+
+#ifdef HAVE_STRTOD_L
+#if defined(__GNUC__) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+#include <stdlib.h>
+#ifdef __APPLE__
+#include <xlocale.h>
+#else
+#include <locale.h>
+#endif
+#endif
+
 #include "parserbase.h"
 #include "scanner.h"
 #include <fstream>
@@ -88,6 +102,32 @@ RCP<const Basic> Parser::parse_identifier(const std::string &expr)
     }
 }
 
+#ifdef HAVE_STRTOD_L
+static int strtod_locale_initialized = 0;
+#ifdef _WIN32
+static _locale_t strtod_locale;
+#else
+static locale_t strtod_locale;
+#endif
+#endif
+
+inline double symengine_strtod(const char *startptr, char** endptr) {
+#ifdef HAVE_STRTOD_L
+    if(!strtod_locale_initialized)
+    {
+        strtod_locale_initialized = 1;
+        strtod_locale = newlocale(LC_ALL_MASK, "C", NULL);
+    }
+#ifdef _WIN32
+    return _strtod_l(startptr, endptr, strtod_locale);
+#else
+    return strtod_l(startptr, endptr, strtod_locale);
+#endif
+#else
+    return strtod(startptr, endptr);
+#endif
+}
+
 RCP<const Basic> Parser::parse_numeric(const std::string &expr)
 {
     const char *startptr = expr.c_str();
@@ -118,7 +158,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
         }
         if (digits <= 15) {
             char *endptr = 0;
-            double d = std::strtod(startptr, &endptr);
+            double d = symengine_strtod(startptr, &endptr);
             return real_double(d);
         } else {
             // mpmath.libmp.libmpf.dps_to_prec
@@ -129,7 +169,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
         }
 #else
         char *endptr = 0;
-        double d = std::strtod(startptr, &endptr);
+        double d = symengine_strtod(startptr, &endptr);
         return real_double(d);
 #endif
     }
@@ -139,7 +179,7 @@ std::tuple<RCP<const Basic>, RCP<const Basic>> Parser::parse_implicit_mul(const 
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;
-    std::strtod(startptr, &endptr);
+    symengine_strtod(startptr, &endptr);
 
     RCP<const Basic> num = one, sym;
 
