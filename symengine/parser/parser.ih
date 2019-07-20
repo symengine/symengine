@@ -116,7 +116,11 @@ inline double symengine_strtod(const char *startptr, char** endptr) {
     if(!strtod_locale_initialized)
     {
         strtod_locale_initialized = 1;
+#ifdef _WIN32
+        strtod_locale = _create_locale(LC_NUMERIC, "C");
+#else
         strtod_locale = newlocale(LC_NUMERIC, "C", NULL);
+#endif
     }
 #ifdef _WIN32
     return _strtod_l(startptr, endptr, strtod_locale);
