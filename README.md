@@ -167,6 +167,22 @@ doing `cmake -DPKG_LIBRARY=/path/libname.so .`, where `PKG` should be replaced
 with the name of the external library (`GMP`, `ARB`, `BFD`, `FLINT`, `MPFR`, ...).
 Similarly, `-DPKG_INCLUDE_DIR` can be used for headers.
 
+### Recommended options to build
+
+#### For package managers
+
+For packaging symengine it is recommended to use `GMP, MPFR, MPC, FLINT, LLVM` as
+dependencies if they are available and build with thread safety on.
+
+   cmake -DWITH_GMP=yes -DWITH_MPFR=yes -DWITH_MPC=yes -DINTEGER_CLASS=flint -DWITH_LLVM=yes
+    -DWITH_SYMENGINE_THREAD_SAFE=yes ..
+
+#### Optimized build
+
+To build with more optimizations, you can use the above dependencies and options and also,
+
+    CC="-march=native -O3" cmake -DWITH_TCMALLOC=on ..
+
 ## Developer Documentation
 
 Please follow the [C++ Style Guide](doc/style_guide.md) when developing.
