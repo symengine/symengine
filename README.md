@@ -49,7 +49,8 @@ For RPM based systems (Fedora etc.):
 
 Install SymEngine:
 
-    cmake .
+    mkdir build && cd build
+    cmake ..
     make
     make install
 
@@ -67,7 +68,7 @@ checks, so just sending a GitHub pull request is enough and you can use any
 mode you want to develop it. However, the best way to develop SymEngine on Linux
 is to use the Debug mode with `BFD` support on:
 
-    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes ..
 
 This `BFD` support turns on nice Python like stack traces on exceptions, assert
 errors or segfaults, and the Debug mode automatically turns on
@@ -120,7 +121,7 @@ their default values indicated below:
                                                         flint, piranha, boostmp
         -DBUILD_SHARED_LIBS:BOOL=OFF \                # Build a shared library.
         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built
-        .
+        ..
 
 If `OpenMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
 irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
@@ -128,9 +129,15 @@ irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
 `CMake` prints the value of its options at the end of the run.
 If you want to use a different compiler, do:
 
-    CC=clang CXX=clang++ cmake .
+    CC=clang CXX=clang++ cmake ..
 
-and check that CMake picked it up.
+If you want to set additional compilation flags, do:
+
+    CXXFLAGS="$CXXFLAGS -march=native" cmake ..
+
+These environment variables are checked only in the first run of
+cmake and you have to delete the build directory or `CMakeCache.txt` file
+for these environment variables to be picked up in subsequent runs.
 
 Using `INTEGER_CLASS=boostmp` would remove the dependency on gmp and use boost's
 multiprecision integer and rational classes. This would make boost, the only
@@ -159,6 +166,22 @@ If CMake still cannot find the library, you can specify the path to the library 
 doing `cmake -DPKG_LIBRARY=/path/libname.so .`, where `PKG` should be replaced
 with the name of the external library (`GMP`, `ARB`, `BFD`, `FLINT`, `MPFR`, ...).
 Similarly, `-DPKG_INCLUDE_DIR` can be used for headers.
+
+### Recommended options to build
+
+#### For package managers
+
+For packaging symengine it is recommended to use `GMP, MPFR, MPC, FLINT, LLVM` as
+dependencies if they are available and build with thread safety on.
+
+    cmake -DWITH_GMP=on -DWITH_MPFR=on -DWITH_MPC=on -DINTEGER_CLASS=flint -DWITH_LLVM=on
+    -DWITH_SYMENGINE_THREAD_SAFE=on ..
+
+#### Optimized build
+
+To build with more optimizations, you can use the above dependencies and options and also,
+
+    CXXFLAGS="-march=native -O3" cmake -DWITH_TCMALLOC=on -DWITH_SYMENGINE_THREAD_SAFE=no ..
 
 ## Developer Documentation
 
