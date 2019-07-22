@@ -26,12 +26,6 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    if (BUILD_FOR_DISTRIBUTION)
-        string(REPLACE "-march=native" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-    endif()
-endif()
-
 #Boost.multiprecision build segfaults if -O3 optimization is on
 #which it is by default for cmake Release mode. Remove -O3 from flags.
 if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -513,7 +507,7 @@ set(WITH_SYMENGINE_ASSERT no
     CACHE BOOL "Enable SYMENGINE_ASSERT macro")
 
 # SYMENGINE_THREAD_SAFE
-set(WITH_SYMENGINE_THREAD_SAFE no
+set(WITH_SYMENGINE_THREAD_SAFE "${BUILD_FOR_DISTRIBUTION}"
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
 
 # TESTS
