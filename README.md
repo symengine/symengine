@@ -181,7 +181,7 @@ dependencies if they are available and build with thread safety on.
 
 To build with more optimizations, you can use the above dependencies and options and also,
 
-    CC="-march=native -O3" cmake -DWITH_TCMALLOC=on ..
+    CXXFLAGS="-march=native -O3" cmake -DWITH_TCMALLOC=on ..
 
 ## Developer Documentation
 
