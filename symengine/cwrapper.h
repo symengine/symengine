@@ -148,7 +148,8 @@ CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor);
 TypeID basic_get_type(const basic s);
 //! Returns the typeID of the class with the name c
 TypeID basic_get_class_id(const char *c);
-//! Returns the class name of with the typeid `id`
+//! Returns the class name of an object with the typeid `id`.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *basic_get_class_from_id(TypeID id);
 
 //! Assign to s, a symbol with string representation c.
@@ -448,7 +449,8 @@ void sparse_matrix_free(CSparseMatrix *self);
 //! Assign to s, a DenseMatrix with value d
 CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 
-//! Return a string representation of s
+//! Return a string representation of s.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *dense_matrix_str(const CDenseMatrix *s);
 //! Resize mat to rxc
 CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r,
@@ -623,7 +625,8 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
-//! Returns the name of the given FunctionSymbol
+//! Returns the name of the given FunctionSymbol.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *function_symbol_get_name(const basic b);
 //! Returns the coefficient of x^n in b
 CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
