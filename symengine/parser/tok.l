@@ -1,54 +1,50 @@
+/* scanner for a toy Pascal-like language */
+
 %{
-#include "tokh.h"
+/* need this for the call to atof() below */
+#include <math.h>
 %}
 
-%%
+%option noyywrap
 
-dig [0-9]
-char  [\x80-\xff]|[a-zA-Z_]
-operators ("-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|")
-
-pows      ("**"|"@")
-le  ("<=")
-ge  (">=")
-eqs  ("==")
-ident ({char}({char}|{dig})*)
-numeric ({dig}*\.?{dig}+([eE][-+]?{dig}+)?)|({dig}+\.)
-implicitmul ({numeric}{ident})
+DIGIT    [0-9]
+ID       [a-z][a-z0-9]*
 
 %%
 
-{operators}         {
-                        //return matched()[0];
-                        return OP;
-                    }
-{pows}              {
-                        return POW;
-                    }
-{le}                {
-                        return LE;
-                    }
-{ge}                {
-                        return GE;
-                    }
-{eqs}               {
-                        return EQ;
-                    }
-{ident}             {
-                        //*dval = std::string(matched());
-                        return IDENTIFIER;
-                    }
-{implicitmul}       {
-                        //*dval = std::string(matched());
-                        return IMPLICIT_MUL;
-                    }
-{numeric}           {
-                        //*dval = std::string(matched());
-                        return NUMERIC;
-                    }
-\n              |
-\t              |
-" "                 {
-                    }
-.                   {
-                    }
+{DIGIT}+    {
+            printf( "An integer: %s (%d)\n", yytext,
+                    atoi( yytext ) );
+            }
+
+{DIGIT}+"."{DIGIT}*        {
+            printf( "A float: %s (%g)\n", yytext,
+                    atof( yytext ) );
+            }
+
+if|then|begin|end|procedure|function        {
+            printf( "A keyword: %s\n", yytext );
+            }
+
+{ID}        printf( "An identifier: %s\n", yytext );
+
+"+"|"-"|"*"|"/"   printf( "An operator: %s\n", yytext );
+
+"{"[^{}\n]*"}"     /* eat up one-line comments */
+
+[ \t\n]+          /* eat up whitespace */
+
+.           printf( "Unrecognized character: %s\n", yytext );
+
+%%
+
+int main( int argc, char **argv )
+    {
+    ++argv, --argc;  /* skip over program name */
+    if ( argc > 0 )
+            yyin = fopen( argv[0], "r" );
+    else
+            yyin = stdin;
+
+    yylex();
+    }
