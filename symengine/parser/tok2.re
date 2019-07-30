@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-enum num_t { ERR, BIN, OCT, DEC, HEX,    OP };
+enum num_t { ERR, BIN, OCT, DEC, HEX,    OP, POW, LE, EQ, GE };
 
 static num_t lex(const char *YYCURSOR)
 {
