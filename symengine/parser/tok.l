@@ -1,10 +1,13 @@
+%option outfile="tok.cpp"
+%option header-file="tok.h"
+%option noyywrap
+
 %{
 #include "parser.h"
 SymEngine::ParserBase::STYPE__ *dval;
 using SymEngine::Parser;
 %}
 
-%option noyywrap
 
 dig [0-9]
 char  [\x80-\xff]|[a-zA-Z_]

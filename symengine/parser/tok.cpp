@@ -470,7 +470,7 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "tok.l"
-#line 2 "tok.l"
+#line 6 "tok.l"
 #include "parser.h"
 SymEngine::ParserBase::STYPE__ *dval;
 using SymEngine::Parser;
@@ -692,7 +692,7 @@ YY_DECL
 		}
 
 	{
-#line 21 "tok.l"
+#line 24 "tok.l"
 
 
 #line 699 "tok.cpp"
@@ -754,42 +754,42 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 23 "tok.l"
+#line 26 "tok.l"
 {
                         return yytext[0];
                     }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "tok.l"
+#line 29 "tok.l"
 {
                         return Parser::POW;
                     }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "tok.l"
+#line 32 "tok.l"
 {
                         return Parser::LE;
                     }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "tok.l"
+#line 35 "tok.l"
 {
                         return Parser::GE;
                     }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 35 "tok.l"
+#line 38 "tok.l"
 {
                         return Parser::EQ;
                     }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 38 "tok.l"
+#line 41 "tok.l"
 {
                         *dval = std::string(yytext);
                         return Parser::IDENTIFIER;
@@ -797,7 +797,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 42 "tok.l"
+#line 45 "tok.l"
 {
                         *dval = std::string(yytext);
                         return Parser::IMPLICIT_MUL;
@@ -805,7 +805,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 46 "tok.l"
+#line 49 "tok.l"
 {
                         *dval = std::string(yytext);
                         return Parser::NUMERIC;
@@ -813,26 +813,26 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
-#line 51 "tok.l"
+#line 54 "tok.l"
 case 10:
 /* rule 10 can match eol */
-#line 52 "tok.l"
+#line 55 "tok.l"
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 52 "tok.l"
+#line 55 "tok.l"
 {
                     }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 54 "tok.l"
+#line 57 "tok.l"
 {
                     }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 56 "tok.l"
+#line 59 "tok.l"
 ECHO;
 	YY_BREAK
 #line 839 "tok.cpp"
@@ -1840,4 +1840,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "tok.l"
+#line 59 "tok.l"
