@@ -1,3 +1,9 @@
+%{
+#include "tokh.h"
+%}
+
+%%
+
 dig [0-9]
 char  [\x80-\xff]|[a-zA-Z_]
 operators ("-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|")
@@ -13,31 +19,32 @@ implicitmul ({numeric}{ident})
 %%
 
 {operators}         {
-                        return matched()[0];
+                        //return matched()[0];
+                        return OP;
                     }
 {pows}              {
-                        return Parser::POW;
+                        return POW;
                     }
 {le}                {
-                        return Parser::LE;
+                        return LE;
                     }
 {ge}                {
-                        return Parser::GE;
+                        return GE;
                     }
 {eqs}               {
-                        return Parser::EQ;
+                        return EQ;
                     }
 {ident}             {
-                        *dval = std::string(matched());
-                        return Parser::IDENTIFIER;
+                        //*dval = std::string(matched());
+                        return IDENTIFIER;
                     }
 {implicitmul}       {
-                        *dval = std::string(matched());
-                        return Parser::IMPLICIT_MUL;
+                        //*dval = std::string(matched());
+                        return IMPLICIT_MUL;
                     }
 {numeric}           {
-                        *dval = std::string(matched());
-                        return Parser::NUMERIC;
+                        //*dval = std::string(matched());
+                        return NUMERIC;
                     }
 \n              |
 \t              |

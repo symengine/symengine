@@ -54,6 +54,7 @@ set(SRC
     parser/parser.cpp
     parser/parser_old.cpp
     parser/scanner.cpp
+    parser/tok.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
