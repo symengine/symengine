@@ -1,6 +1,9 @@
 %option outfile="tok.cpp"
 %option header-file="tok.h"
 %option noyywrap
+%option nounput
+%option fast
+%option 8bit
 
 %{
 #include "parser.h"
