@@ -467,7 +467,7 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 55 "tok.l"
+#line 56 "tok.l"
 
 #line 473 "tok.h"
 #undef yyIN_HEADER

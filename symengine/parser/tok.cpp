@@ -473,8 +473,9 @@ char *yytext;
 #line 2 "tok.l"
 #include "parser.h"
 SymEngine::ParserBase::STYPE__ *dval;
-#line 477 "tok.cpp"
+using SymEngine::Parser;
 #line 478 "tok.cpp"
+#line 479 "tok.cpp"
 
 #define INITIAL 0
 
@@ -691,10 +692,10 @@ YY_DECL
 		}
 
 	{
-#line 20 "tok.l"
+#line 21 "tok.l"
 
 
-#line 698 "tok.cpp"
+#line 699 "tok.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -753,88 +754,88 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "tok.l"
+#line 23 "tok.l"
 {
                         return yytext[0];
                     }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 25 "tok.l"
+#line 26 "tok.l"
 {
-                        return SymEngine::Parser::POW;
+                        return Parser::POW;
                     }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 28 "tok.l"
+#line 29 "tok.l"
 {
-                        return SymEngine::Parser::LE;
+                        return Parser::LE;
                     }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "tok.l"
+#line 32 "tok.l"
 {
-                        return SymEngine::Parser::GE;
+                        return Parser::GE;
                     }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "tok.l"
+#line 35 "tok.l"
 {
-                        return SymEngine::Parser::EQ;
+                        return Parser::EQ;
                     }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 37 "tok.l"
+#line 38 "tok.l"
 {
                         *dval = std::string(yytext);
-                        return SymEngine::Parser::IDENTIFIER;
+                        return Parser::IDENTIFIER;
                     }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 41 "tok.l"
+#line 42 "tok.l"
 {
                         *dval = std::string(yytext);
-                        return SymEngine::Parser::IMPLICIT_MUL;
+                        return Parser::IMPLICIT_MUL;
                     }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 45 "tok.l"
+#line 46 "tok.l"
 {
                         *dval = std::string(yytext);
-                        return SymEngine::Parser::NUMERIC;
+                        return Parser::NUMERIC;
                     }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
-#line 50 "tok.l"
+#line 51 "tok.l"
 case 10:
 /* rule 10 can match eol */
-#line 51 "tok.l"
+#line 52 "tok.l"
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 51 "tok.l"
+#line 52 "tok.l"
 {
                     }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 53 "tok.l"
+#line 54 "tok.l"
 {
                     }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 55 "tok.l"
+#line 56 "tok.l"
 ECHO;
 	YY_BREAK
-#line 838 "tok.cpp"
+#line 839 "tok.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1839,4 +1840,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 55 "tok.l"
+#line 56 "tok.l"
