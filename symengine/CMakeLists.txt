@@ -13,11 +13,6 @@ if (WITH_GENERATE_PARSER)
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
-    add_custom_command(OUTPUT parser/scanner.cpp
-                      COMMAND ${FLEXCPP_EXECUTABLE} --namespace=SymEngine scanner.ll
-                      DEPENDS parser/scanner.ll parser/scanner.h
-                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
-                     )
 endif()
 
 add_subdirectory(utilities/matchpycpp)
@@ -53,7 +48,6 @@ set(SRC
     numer_denom.cpp
     parser/parser.cpp
     parser/parser_old.cpp
-    parser/scanner.cpp
     parser/tok.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
@@ -223,10 +217,7 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
-    set_source_files_properties(parser/parser.cpp parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra")
-endif()
-if (NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
-    set_source_files_properties(parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra -Wno-implicit-fallthrough")
+    set_source_files_properties(parser/parser.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)

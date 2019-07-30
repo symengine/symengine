@@ -1,5 +1,4 @@
 #include "parserbase.h"
-#include "scanner.h"
 #include <fstream>
 #include <algorithm>
 
@@ -8,7 +7,6 @@ namespace SymEngine
 #undef Parser
 class Parser : public ParserBase
 {
-    Scanner d_scanner;
     std::istringstream inp;
 
 public:
@@ -23,8 +21,6 @@ public:
         } else {
             inp.str(input);
         }
-        d_scanner.switchStreams(inp, std::cout);
-        d_scanner.dval = &d_val__;
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {

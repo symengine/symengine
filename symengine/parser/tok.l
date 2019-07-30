@@ -1,16 +1,5 @@
 %{
-    enum Tokens {
-        TOK_IDENTIFIER  =    10,
-        TOK_NUMERIC,      // 11
-        TOK_IMPLICIT_MUL, // 12
-        TOK_EQ,           // 13
-        TOK_LE,           // 14
-        TOK_GE,           // 15
-        TOK_UMINUS,       // 16
-        TOK_POW,          // 17
-        TOK_NOT,          // 18
-        TOK_OPERATOR,     // 19
-    };
+#include "parser.h"
 %}
 
 %option noyywrap
@@ -30,32 +19,31 @@ implicitmul ({numeric}{ident})
 %%
 
 {operators}         {
-                        /*return matched()[0];*/
-                        return TOK_OPERATOR;
+                        return yytext[0];
                     }
 {pows}              {
-                        return TOK_POW;
+                        return SymEngine::Parser::POW;
                     }
 {le}                {
-                        return TOK_LE;
+                        return SymEngine::Parser::LE;
                     }
 {ge}                {
-                        return TOK_GE;
+                        return SymEngine::Parser::GE;
                     }
 {eqs}               {
-                        return TOK_EQ;
+                        return SymEngine::Parser::EQ;
                     }
 {ident}             {
-                        /**dval = std::string(matched());*/
-                        return TOK_IDENTIFIER;
+                        /*dval = std::string(yytext);*/
+                        return SymEngine::Parser::IDENTIFIER;
                     }
 {implicitmul}       {
-                        /**dval = std::string(matched());*/
-                        return TOK_IMPLICIT_MUL;
+                        /*dval = std::string(yytext);*/
+                        return SymEngine::Parser::IMPLICIT_MUL;
                     }
 {numeric}           {
-                        /**dval = std::string(matched());*/
-                        return TOK_NUMERIC;
+                        /*dval = std::string(yytext);*/
+                        return SymEngine::Parser::NUMERIC;
                     }
 \n              |
 \t              |
@@ -63,17 +51,3 @@ implicitmul ({numeric}{ident})
                     }
 .                   {
                     }
-
-%%
-
-int main()
-{
-    for (int i=0; i <= 50; i++) {
-        int r = yylex();
-        if (r == 0) {
-            printf("END.\n");
-            break;
-        }
-        printf("TOK: %d: %s\n", r, yytext);
-    }
-}
