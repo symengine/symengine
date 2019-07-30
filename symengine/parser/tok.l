@@ -1,15 +1,15 @@
 %{
     enum Tokens {
-        TOK_IDENTIFIER,
-        TOK_NUMERIC,
-        TOK_IMPLICIT_MUL,
-        TOK_EQ,
-        TOK_LE,
-        TOK_GE,
-        TOK_UMINUS,
-        TOK_POW,
-        TOK_NOT,
-        TOK_OPERATOR,
+        TOK_IDENTIFIER  =    10,
+        TOK_NUMERIC,      // 11
+        TOK_IMPLICIT_MUL, // 12
+        TOK_EQ,           // 13
+        TOK_LE,           // 14
+        TOK_GE,           // 15
+        TOK_UMINUS,       // 16
+        TOK_POW,          // 17
+        TOK_NOT,          // 18
+        TOK_OPERATOR,     // 19
     };
 %}
 
@@ -63,3 +63,17 @@ implicitmul ({numeric}{ident})
                     }
 .                   {
                     }
+
+%%
+
+int main()
+{
+    for (int i=0; i <= 50; i++) {
+        int r = yylex();
+        if (r == 0) {
+            printf("END.\n");
+            break;
+        }
+        printf("TOK: %d: %s\n", r, yytext);
+    }
+}
