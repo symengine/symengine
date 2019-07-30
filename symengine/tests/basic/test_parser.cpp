@@ -5,6 +5,7 @@
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/symengine_exception.h>
+#include <clocale>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -637,6 +638,18 @@ TEST_CASE("Parsing: doubles", "[parser]")
     s = "-.12x";
     res = parse(s);
     REQUIRE(eq(*res, *mul(real_double(-0.12), x)));
+
+    s = "2.5";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(2.5)));
+
+#ifdef HAVE_STRTOD_L
+    std::setlocale(LC_NUMERIC, "de_DE.UTF-8");
+    s = "2.5";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(2.5)));
+    std::setlocale(LC_NUMERIC, "C");
+#endif
 }
 
 TEST_CASE("Parsing: polys", "[parser]")
