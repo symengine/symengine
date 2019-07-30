@@ -2,6 +2,8 @@
 #include <fstream>
 #include <algorithm>
 
+extern SymEngine::ParserBase::STYPE__ *dval;
+
 namespace SymEngine
 {
 #undef Parser
@@ -21,6 +23,8 @@ public:
         } else {
             inp.str(input);
         }
+        yy_scan_string(inp.str().c_str());
+        dval = &d_val__;
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {

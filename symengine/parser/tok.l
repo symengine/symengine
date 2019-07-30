@@ -1,5 +1,6 @@
 %{
 #include "parser.h"
+SymEngine::ParserBase::STYPE__ *dval;
 %}
 
 %option noyywrap
@@ -34,15 +35,15 @@ implicitmul ({numeric}{ident})
                         return SymEngine::Parser::EQ;
                     }
 {ident}             {
-                        /*dval = std::string(yytext);*/
+                        *dval = std::string(yytext);
                         return SymEngine::Parser::IDENTIFIER;
                     }
 {implicitmul}       {
-                        /*dval = std::string(yytext);*/
+                        *dval = std::string(yytext);
                         return SymEngine::Parser::IMPLICIT_MUL;
                     }
 {numeric}           {
-                        /*dval = std::string(yytext);*/
+                        *dval = std::string(yytext);
                         return SymEngine::Parser::NUMERIC;
                     }
 \n              |
