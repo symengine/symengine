@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-enum num_t { ERR, BIN, OCT, DEC, HEX };
+enum num_t { ERR, BIN, OCT, DEC, HEX,    OP };
 
 static num_t lex(const char *YYCURSOR)
 {
@@ -32,7 +32,16 @@ static num_t lex(const char *YYCURSOR)
         oct end { return OCT; }
         dec end { return DEC; }
         hex end { return HEX; }
+
+        operators { return OP; }
+        pows { return POW; }
+        le   { return LE; }
+        ge   { return GE; }
+        eqs  { return EQ; }
     */
+        //ident { return IDENTIFIER; }
+        //implicitmul { return IMPLICIT_MUL; }
+        //numeric { return NUMERIC; }
 }
 
 int main(int argc, char **argv)
@@ -44,6 +53,7 @@ int main(int argc, char **argv)
             case OCT: printf("octal\n"); break;
             case DEC: printf("decimal\n"); break;
             case HEX: printf("hexadecimal\n"); break;
+            case OP: printf("OP\n"); break;
         }
     }
     return 0;
