@@ -15,6 +15,18 @@ static num_t lex(const char *YYCURSOR)
         dec = [1-9][0-9]*;
         hex = '0x' [0-9a-fA-F]+;
 
+        dig = [0-9];
+        char =  [\x80-\xff]|[a-zA-Z_];
+        operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
+
+        pows = ("**"|"@");
+        le = ("<=");
+        ge = (">=");
+        eqs = ("==");
+        ident = (char(char|dig)*);
+        numeric = (dig*\.?dig+([eE][-+]?dig+)?)|(dig+\.);
+        implicitmul = (numeric ident);
+
         *       { return ERR; }
         bin end { return BIN; }
         oct end { return OCT; }
