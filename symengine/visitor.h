@@ -31,6 +31,7 @@ namespace SymEngine
 class Visitor
 {
 public:
+    virtual ~Visitor(){};
 #define SYMENGINE_ENUM(TypeID, Class) virtual void visit(const Class &) = 0;
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
