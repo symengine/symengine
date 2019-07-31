@@ -93,10 +93,7 @@ static num_t lex(input_t &in)
                 }
             }
 
-        operators {
-            char c = *(in.tok);
-            dval = c; return OPERATOR;
-            }
+        operators { dval = *(in.tok); return OPERATOR; }
         pows { return POW; }
         le   { return LE; }
         ge   { return GE; }
