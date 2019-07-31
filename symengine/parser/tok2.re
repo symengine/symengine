@@ -5,7 +5,7 @@
 #include <string>
 
 
-enum num_t { ERR, END, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
+enum num_t { ERR, END, WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
     IMPLICIT_MUL};
 
 /*!max:re2c*/
@@ -72,6 +72,7 @@ static num_t lex(input_t &in)
         end = "\x00";
 
 
+        whitespace = [ \t\v\n\r]+;
         dig = [0-9];
         char =  [\x80-\xff] | [a-zA-Z_];
         operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
@@ -92,6 +93,7 @@ static num_t lex(input_t &in)
                     return ERR;
                 }
             }
+        whitespace { return WS; }
 
         operators { dval = *in.tok; return OPERATOR; }
         pows { return POW; }
@@ -102,10 +104,6 @@ static num_t lex(input_t &in)
         numeric { dval.assign((char*)in.tok, in.cur-in.tok); return NUMERIC; }
         implicitmul { dval.assign((char*)in.tok, in.cur-in.tok); return IMPLICIT_MUL; }
     */
-    // TODO: [\n\t ] -> empty / ignore
-    // TODO: save strings to dval
-    // TODO: read from a file
-    // TODO: read all tokens from the same string
 }
 
 int main(int argc, char **argv)
@@ -134,6 +132,7 @@ int main(int argc, char **argv)
         switch (t) {
             case ERR: printf("error\n"); break;
             case END: printf("end\n"); break;
+            case WS: printf("WS\n"); break;
             case OPERATOR: printf("OPERATOR: %s\n", dval.c_str()); break;
             case POW: printf("POW\n"); break;
             case LE: printf("LE\n"); break;
