@@ -18,7 +18,7 @@ static num_t lex(const char *YYCURSOR)
         ge = ">=";
         eqs = "==";
         ident = char(char|dig)*;
-        numeric = (dig*\.?dig+([eE][-+]?dig+)?) | (dig+\.);
+        numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
         implicitmul = numeric ident;
 
         *       { return ERR; }
@@ -28,9 +28,9 @@ static num_t lex(const char *YYCURSOR)
         ge   { return GE; }
         eqs  { return EQ; }
         ident { return IDENTIFIER; }
+        numeric { return NUMERIC; }
     */
         //implicitmul { return IMPLICIT_MUL; }
-        //numeric { return NUMERIC; }
 }
 
 int main(int argc, char **argv)
