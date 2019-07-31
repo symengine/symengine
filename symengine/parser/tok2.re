@@ -2,6 +2,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
+#include <string>
 
 
 enum num_t { ERR, END, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
@@ -9,6 +10,8 @@ enum num_t { ERR, END, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
 
 /*!max:re2c*/
 static const size_t SIZE = 64 * 1024;
+
+std::string dval;
 
 
 struct input_t {
@@ -90,7 +93,10 @@ static num_t lex(input_t &in)
                 }
             }
 
-        operators { return OPERATOR; }
+        operators {
+            char c = *(in.tok);
+            dval = c; return OPERATOR;
+            }
         pows { return POW; }
         le   { return LE; }
         ge   { return GE; }
@@ -131,7 +137,7 @@ int main(int argc, char **argv)
         switch (t) {
             case ERR: printf("error\n"); break;
             case END: printf("end\n"); break;
-            case OPERATOR: printf("OPERATOR\n"); break;
+            case OPERATOR: printf("OPERATOR: %s\n", dval.c_str()); break;
             case POW: printf("POW\n"); break;
             case LE: printf("LE\n"); break;
             case EQ: printf("EQ\n"); break;
