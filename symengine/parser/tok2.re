@@ -5,7 +5,20 @@
 #include <string>
 
 
-enum num_t { ERR, END, WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
+enum num_t {
+    // Unrecognized token
+    ERR_UNKNOWN_TOKEN,
+
+    // Null character \x00 in input file (we use it to terminate)
+    // We can treat this \x00 as a token and continue
+    ERR_NULL,
+
+    // The buffer input_t::buf is not big enough to hold `need` chars
+    ERR_BUF,
+
+    // We reached the end of input
+    END,
+    WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
     IMPLICIT_MUL};
 
 /*!max:re2c*/
@@ -65,7 +78,7 @@ static num_t lex(input_t &in)
         re2c:define:YYMARKER = in.mar;
         re2c:define:YYLIMIT = in.lim;
         re2c:yyfill:enable = 1;
-        re2c:define:YYFILL = "if (!in.fill(@@)) return ERR;";
+        re2c:define:YYFILL = "if (!in.fill(@@)) return ERR_BUF;";
         re2c:define:YYFILL:naked = 1;
         re2c:define:YYCTYPE = char;
 
@@ -85,12 +98,12 @@ static num_t lex(input_t &in)
         numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
         implicitmul = numeric ident;
 
-        *   { return ERR; }
+        *   { return ERR_UNKNOWN_TOKEN; }
         end {
                 if (in.lim - in.tok == YYMAXFILL) {
                     return END;
                 } else {
-                    return ERR;
+                    return ERR_NULL;
                 }
             }
         whitespace { return WS; }
@@ -122,16 +135,16 @@ int main(int argc, char **argv)
     input_t in(file);
     for (;;) {
         num_t t = lex(in);
-        if (t == ERR) {
-            printf("... error\n");
+        if (t == END) {
+            printf("END.\n");
             break;
-        } else if (t == END) {
-            printf("... END\n");
+        } else if (t == ERR_BUF) {
+            printf("ERR BUF.\n");
             break;
         }
         switch (t) {
-            case ERR: printf("error\n"); break;
-            case END: printf("end\n"); break;
+            case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); break;
+            case ERR_NULL: printf("NULL token\n"); break;
             case WS: printf("WS\n"); break;
             case OPERATOR: printf("OPERATOR: %s\n", dval.c_str()); break;
             case POW: printf("POW\n"); break;
