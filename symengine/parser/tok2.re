@@ -98,9 +98,9 @@ static num_t lex(input_t &in)
         le   { return LE; }
         ge   { return GE; }
         eqs  { return EQ; }
-        ident { return IDENTIFIER; }
-        numeric { return NUMERIC; }
-        implicitmul { return IMPLICIT_MUL; }
+        ident { dval.assign((char*)in.tok, in.cur-in.tok); return IDENTIFIER; }
+        numeric { dval.assign((char*)in.tok, in.cur-in.tok); return NUMERIC; }
+        implicitmul { dval.assign((char*)in.tok, in.cur-in.tok); return IMPLICIT_MUL; }
     */
     // TODO: [\n\t ] -> empty / ignore
     // TODO: save strings to dval
@@ -139,9 +139,9 @@ int main(int argc, char **argv)
             case LE: printf("LE\n"); break;
             case EQ: printf("EQ\n"); break;
             case GE: printf("GE\n"); break;
-            case IDENTIFIER: printf("IDENTIFIER\n"); break;
-            case NUMERIC: printf("NUMERIC\n"); break;
-            case IMPLICIT_MUL: printf("IMPLICIT_MUL\n"); break;
+            case IDENTIFIER: printf("IDENTIFIER: %s\n", dval.c_str()); break;
+            case NUMERIC: printf("NUMERIC: %s\n", dval.c_str()); break;
+            case IMPLICIT_MUL: printf("IMPLICIT_MUL: %s\n", dval.c_str()); break;
         }
     }
 
