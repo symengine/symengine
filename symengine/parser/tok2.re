@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-enum num_t { ERR, BIN, OCT, DEC, HEX,    OP, POW, LE, EQ, GE };
+enum num_t { ERR, OP, POW, LE, EQ, GE };
 
 static num_t lex(const char *YYCURSOR)
 {
@@ -28,16 +28,17 @@ static num_t lex(const char *YYCURSOR)
         implicitmul = (numeric ident);
 
         *       { return ERR; }
-        bin end { return BIN; }
-        oct end { return OCT; }
-        dec end { return DEC; }
-        hex end { return HEX; }
-
         operators { return OP; }
         pows { return POW; }
         le   { return LE; }
         ge   { return GE; }
         eqs  { return EQ; }
+    */
+    /*
+        bin end { return BIN; }
+        oct end { return OCT; }
+        dec end { return DEC; }
+        hex end { return HEX; }
     */
         //ident { return IDENTIFIER; }
         //implicitmul { return IMPLICIT_MUL; }
@@ -49,10 +50,6 @@ int main(int argc, char **argv)
     for (int i = 1; i < argc; ++i) {
         switch (lex(argv[i])) {
             case ERR: printf("error\n"); break;
-            case BIN: printf("binary\n"); break;
-            case OCT: printf("octal\n"); break;
-            case DEC: printf("decimal\n"); break;
-            case HEX: printf("hexadecimal\n"); break;
             case OP: printf("OP\n"); break;
             case POW: printf("POW\n"); break;
             case LE: printf("LE\n"); break;
