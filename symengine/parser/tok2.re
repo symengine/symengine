@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-enum num_t { ERR, OPERATOR, POW, LE, EQ, GE, IDENTIFIER };
+enum num_t { ERR, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC };
 
 static num_t lex(const char *YYCURSOR)
 {
@@ -29,8 +29,8 @@ static num_t lex(const char *YYCURSOR)
         eqs  { return EQ; }
         ident { return IDENTIFIER; }
     */
-        //implicitmul { return IMPLICIT_MUL; }
         //numeric { return NUMERIC; }
+        //implicitmul { return IMPLICIT_MUL; }
 }
 
 int main(int argc, char **argv)
@@ -44,6 +44,7 @@ int main(int argc, char **argv)
             case EQ: printf("EQ\n"); break;
             case GE: printf("GE\n"); break;
             case IDENTIFIER: printf("IDENTIFIER\n"); break;
+            case NUMERIC: printf("NUMERIC\n"); break;
         }
     }
     return 0;
