@@ -9,7 +9,7 @@ static num_t lex(const char *YYCURSOR)
         re2c:define:YYCTYPE = char;
         re2c:yyfill:enable = 0;
 
-        dig = [012345789];
+        dig = [0-9];
         char =  [\x80-\xff]|[a-zA-Z_];
         operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
 
