@@ -1,14 +1,73 @@
+#include <float.h>
+#include <limits.h>
 #include <stdio.h>
+#include <string.h>
 
-enum num_t { ERR, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
+
+enum num_t { ERR, END, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
     IMPLICIT_MUL};
 
-static num_t lex(const char *YYCURSOR)
+/*!max:re2c*/
+static const size_t SIZE = 64 * 1024;
+
+
+struct input_t {
+    unsigned char buf[SIZE + YYMAXFILL];
+    unsigned char *lim;
+    unsigned char *cur;
+    unsigned char *mar;
+    unsigned char *tok;
+    bool eof;
+
+    FILE *const file;
+
+    input_t(FILE *f)
+        : buf()
+        , lim(buf + SIZE)
+        , cur(lim)
+        , mar(lim)
+        , tok(lim)
+        , eof(false)
+        , file(f)
+    {}
+    bool fill(size_t need)
+    {
+        if (eof) {
+            return false;
+        }
+        const size_t free = tok - buf;
+        if (free < need) {
+            return false;
+        }
+        memmove(buf, tok, lim - tok);
+        lim -= free;
+        cur -= free;
+        mar -= free;
+        tok -= free;
+        lim += fread(lim, 1, free, file);
+        if (lim < buf + SIZE) {
+            eof = true;
+            memset(lim, 0, YYMAXFILL);
+            lim += YYMAXFILL;
+        }
+        return true;
+    }
+};
+
+static num_t lex(input_t &in)
 {
-    const char *YYMARKER;
+    in.tok = in.cur;
     /*!re2c
+        re2c:define:YYCURSOR = in.cur;
+        re2c:define:YYMARKER = in.mar;
+        re2c:define:YYLIMIT = in.lim;
+        re2c:yyfill:enable = 1;
+        re2c:define:YYFILL = "if (!in.fill(@@)) return ERR;";
+        re2c:define:YYFILL:naked = 1;
         re2c:define:YYCTYPE = char;
-        re2c:yyfill:enable = 0;
+
+        end = "\x00";
+
 
         dig = [0-9];
         char =  [\x80-\xff] | [a-zA-Z_];
@@ -22,7 +81,15 @@ static num_t lex(const char *YYCURSOR)
         numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
         implicitmul = numeric ident;
 
-        *       { return ERR; }
+        *   { return ERR; }
+        end {
+                if (in.lim - in.tok == YYMAXFILL) {
+                    return END;
+                } else {
+                    return ERR;
+                }
+            }
+
         operators { return OPERATOR; }
         pows { return POW; }
         le   { return LE; }
@@ -40,9 +107,30 @@ static num_t lex(const char *YYCURSOR)
 
 int main(int argc, char **argv)
 {
-    for (int i = 1; i < argc; ++i) {
-        switch (lex(argv[i])) {
+    if (argc != 2) {
+        printf ("usage: ./a.out <filename>\n");
+        return 1;
+    }
+
+    FILE *file = fopen(argv[1], "rb");
+    if (!file) {
+        printf("error: cannot open file: %s\n", argv[1]);
+        return 1;
+    }
+
+    input_t in(file);
+    for (;;) {
+        num_t t = lex(in);
+        if (t == ERR) {
+            printf("... error\n");
+            break;
+        } else if (t == END) {
+            printf("... END\n");
+            break;
+        }
+        switch (t) {
             case ERR: printf("error\n"); break;
+            case END: printf("end\n"); break;
             case OPERATOR: printf("OPERATOR\n"); break;
             case POW: printf("POW\n"); break;
             case LE: printf("LE\n"); break;
@@ -53,5 +141,7 @@ int main(int argc, char **argv)
             case IMPLICIT_MUL: printf("IMPLICIT_MUL\n"); break;
         }
     }
+
+    fclose(file);
     return 0;
 }
