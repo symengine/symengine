@@ -11,14 +11,14 @@ static num_t lex(const char *YYCURSOR)
         re2c:yyfill:enable = 0;
 
         dig = [0-9];
-        char =  [\x80-\xff]|[a-zA-Z_];
+        char =  [\x80-\xff] | [a-zA-Z_];
         operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
 
         pows = "**"|"@";
         le = "<=";
         ge = ">=";
         eqs = "==";
-        ident = char(char|dig)*;
+        ident = char (char | dig)*;
         numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
         implicitmul = numeric ident;
 
