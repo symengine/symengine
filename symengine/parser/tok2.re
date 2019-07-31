@@ -32,6 +32,10 @@ static num_t lex(const char *YYCURSOR)
         numeric { return NUMERIC; }
         implicitmul { return IMPLICIT_MUL; }
     */
+    // TODO: [\n\t ] -> empty / ignore
+    // TODO: save strings to dval
+    // TODO: read from a file
+    // TODO: read all tokens from the same string
 }
 
 int main(int argc, char **argv)
