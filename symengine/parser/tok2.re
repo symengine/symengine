@@ -54,6 +54,10 @@ int main(int argc, char **argv)
             case DEC: printf("decimal\n"); break;
             case HEX: printf("hexadecimal\n"); break;
             case OP: printf("OP\n"); break;
+            case POW: printf("POW\n"); break;
+            case LE: printf("LE\n"); break;
+            case EQ: printf("EQ\n"); break;
+            case GE: printf("GE\n"); break;
         }
     }
     return 0;
