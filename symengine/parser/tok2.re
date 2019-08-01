@@ -43,6 +43,7 @@ struct input_t {
     unsigned char *mar;
     unsigned char *tok;
     bool eof;
+    std::string token;
 
     FILE *const file;
 
@@ -79,7 +80,7 @@ struct input_t {
     }
 };
 
-static num_t lex(input_t &in, std::string &dval)
+static num_t lex(input_t &in)
 {
     in.tok = in.cur;
     /*!re2c
@@ -117,16 +118,49 @@ static num_t lex(input_t &in, std::string &dval)
             }
         whitespace { return WS; }
 
-        operators { dval = *in.tok; return OPERATOR; }
+        operators { in.token = *in.tok; return OPERATOR; }
         pows { return POW; }
         le   { return LE; }
         ge   { return GE; }
         eqs  { return EQ; }
-        ident { dval.assign((char*)in.tok, in.cur-in.tok); return IDENTIFIER; }
-        numeric { dval.assign((char*)in.tok, in.cur-in.tok); return NUMERIC; }
-        implicitmul { dval.assign((char*)in.tok, in.cur-in.tok); return IMPLICIT_MUL; }
+        ident { in.token.assign((char*)in.tok, in.cur-in.tok); return IDENTIFIER; }
+        numeric { in.token.assign((char*)in.tok, in.cur-in.tok); return NUMERIC; }
+        implicitmul { in.token.assign((char*)in.tok, in.cur-in.tok); return IMPLICIT_MUL; }
     */
 }
+
+/*
+input_t in;
+
+int yylex()
+{
+    for (;;) {
+        num_t t = lex(in);
+        if (t == END) {
+            return 0;
+        } else if (t == ERR_BUF) {
+            printf("ERR BUF.\n");
+            return 0;
+        } else if (t == ERR_NULL) {
+            printf("ERR NULL.\n");
+            return 0;
+        }
+        switch (t) {
+            case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); return 0;
+            case ERR_NULL: printf("NULL token\n"); return 0;
+            case WS: break;
+            case OPERATOR: return s[0];
+            case POW: return Parser::POW;
+            case LE: return Parser::LE;
+            case EQ: return Parser::EQ;
+            case GE: return Parser::GE;
+            case IDENTIFIER: dval = s; return Parser::IDENTIFIER;
+            case NUMERIC: dval = s; return Parser::NUMERIC;
+            case IMPLICIT_MUL: dval = s; return Parser:: IMPLICIT_MUL;
+        }
+    }
+}
+*/
 
 int main(int argc, char **argv)
 {
@@ -142,9 +176,8 @@ int main(int argc, char **argv)
     }
 
     input_t in(file);
-    std::string dval;
     for (;;) {
-        num_t t = lex(in, dval);
+        num_t t = lex(in);
         if (t == END) {
             printf("END.\n");
             break;
@@ -159,14 +192,14 @@ int main(int argc, char **argv)
             case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); break;
             case ERR_NULL: printf("NULL token\n"); break;
             case WS: printf("WS\n"); break;
-            case OPERATOR: printf("OPERATOR: %s\n", dval.c_str()); break;
+            case OPERATOR: printf("OPERATOR: %s\n", in.token.c_str()); break;
             case POW: printf("POW\n"); break;
             case LE: printf("LE\n"); break;
             case EQ: printf("EQ\n"); break;
             case GE: printf("GE\n"); break;
-            case IDENTIFIER: printf("IDENTIFIER: %s\n", dval.c_str()); break;
-            case NUMERIC: printf("NUMERIC: %s\n", dval.c_str()); break;
-            case IMPLICIT_MUL: printf("IMPLICIT_MUL: %s\n", dval.c_str()); break;
+            case IDENTIFIER: printf("IDENTIFIER: %s\n", in.token.c_str()); break;
+            case NUMERIC: printf("NUMERIC: %s\n", in.token.c_str()); break;
+            case IMPLICIT_MUL: printf("IMPLICIT_MUL: %s\n", in.token.c_str()); break;
         }
     }
 
