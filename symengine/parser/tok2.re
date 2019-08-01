@@ -36,9 +36,6 @@ enum num_t {
 /*!max:re2c*/
 static const size_t SIZE = 64*1024;
 
-std::string dval;
-
-
 struct input_t {
     unsigned char buf[SIZE + YYMAXFILL];
     unsigned char *lim;
@@ -82,7 +79,7 @@ struct input_t {
     }
 };
 
-static num_t lex(input_t &in)
+static num_t lex(input_t &in, std::string &dval)
 {
     in.tok = in.cur;
     /*!re2c
@@ -145,8 +142,9 @@ int main(int argc, char **argv)
     }
 
     input_t in(file);
+    std::string dval;
     for (;;) {
-        num_t t = lex(in);
+        num_t t = lex(in, dval);
         if (t == END) {
             printf("END.\n");
             break;
