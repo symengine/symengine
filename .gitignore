@@ -9,6 +9,7 @@ cython_test.cpp
 SymEngineConfig.cmake
 SymEngineConfigVersion.cmake
 SymEngineTargets.cmake
+cmake-build-*
 
 # Cotire
 symengine/cotire
@@ -163,3 +164,6 @@ symengine/symengine_config_cling.h
 
 # Jupyter artefacts
 .ipynb_checkpoints/
+
+# IDE related
+/.idea
