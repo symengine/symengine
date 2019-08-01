@@ -164,7 +164,9 @@ int yylex()
             case LE: return Parser::LE;
             case EQ: return Parser::EQ;
             case GE: return Parser::GE;
-            case IDENTIFIER: *dval = in->token; return Parser::IDENTIFIER;
+            case IDENTIFIER:
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::IDENTIFIER;
             case NUMERIC: *dval = in->token; return Parser::NUMERIC;
             case IMPLICIT_MUL: *dval = in->token; return Parser:: IMPLICIT_MUL;
         }
