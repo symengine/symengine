@@ -7,13 +7,13 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 if (WITH_GENERATE_PARSER)
-    add_custom_command(OUTPUT parser/parser.cpp
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
                       COMMAND ${BISONCPP_EXECUTABLE} parser.yy
                       DEPENDS parser/parser.yy parser/parser.ih
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
-    add_custom_command(OUTPUT parser/tokenizer.cpp
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/tokenizer.cpp
                       COMMAND ${RE2C_EXECUTABLE} -W -g tokenizer.re -o tokenizer.cpp
                       DEPENDS parser/tokenizer.re
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
