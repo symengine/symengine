@@ -113,18 +113,20 @@ matrix:
           packages:
           - binutils-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="3.8" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LLVM="6.0" WITH_BENCHMARKS_NONIUS="yes"
       compiler: clang
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
           packages:
-          - clang
+          - clang-6.0
           - libstdc++-4.8-dev
           - libgmp-dev
           - binutils-dev
+          - llvm-6.0-dev
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: linux
