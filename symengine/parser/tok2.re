@@ -6,23 +6,27 @@
 
 
 enum num_t {
-    // Unrecognized token
+    // Unrecognized token. This is caused by a syntax error, unless there is a
+    // bug in the tokenizer rules.
     ERR_UNKNOWN_TOKEN,
 
-    // Null character \x00 in input file (we use it to terminate)
-    // We can treat this \x00 as a token and continue
+    // Null character \x00 encountered in the input file (we use it to
+    // terminate). With a different SIZE, this Null character might be
+    // mis-recognized as the END token. Solution: ensure the file does not
+    // contain the null character.
     ERR_NULL,
 
-    // The buffer input_t::buf is not big enough to hold `need` chars
+    // The buffer input_t::buf is not big enough to hold `need` chars.
+    // Solution: Increase SIZE.
     ERR_BUF,
 
-    // We reached the end of input
+    // We reached the end of input.
     END,
     WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
     IMPLICIT_MUL};
 
 /*!max:re2c*/
-static const size_t SIZE = 5;
+static const size_t SIZE = 4;
 
 std::string dval;
 
@@ -140,6 +144,9 @@ int main(int argc, char **argv)
             break;
         } else if (t == ERR_BUF) {
             printf("ERR BUF.\n");
+            break;
+        } else if (t == ERR_NULL) {
+            printf("ERR NULL.\n");
             break;
         }
         switch (t) {
