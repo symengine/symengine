@@ -159,7 +159,8 @@ int yylex()
             case ERR_NULL: printf("ERR NULL.\n"); return 0;
             case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); return 0;
             case WS: break;
-            case OPERATOR: return in->token[0];
+            case OPERATOR:
+                return in->tok[0];
             case POW: return Parser::POW;
             case LE: return Parser::LE;
             case EQ: return Parser::EQ;
@@ -167,8 +168,12 @@ int yylex()
             case IDENTIFIER:
                 *dval = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::IDENTIFIER;
-            case NUMERIC: *dval = in->token; return Parser::NUMERIC;
-            case IMPLICIT_MUL: *dval = in->token; return Parser:: IMPLICIT_MUL;
+            case NUMERIC:
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::NUMERIC;
+            case IMPLICIT_MUL:
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::IMPLICIT_MUL;
         }
     }
 }
