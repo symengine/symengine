@@ -153,18 +153,11 @@ int yylex()
 {
     for (;;) {
         num_t t = lex(*in);
-        if (t == END) {
-            return 0;
-        } else if (t == ERR_BUF) {
-            printf("ERR BUF.\n");
-            return 0;
-        } else if (t == ERR_NULL) {
-            printf("ERR NULL.\n");
-            return 0;
-        }
         switch (t) {
+            case END: return 0;
+            case ERR_BUF: printf("ERR BUF.\n"); return 0;
+            case ERR_NULL: printf("ERR NULL.\n"); return 0;
             case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); return 0;
-            case ERR_NULL: printf("NULL token\n"); return 0;
             case WS: break;
             case OPERATOR: return in->token[0];
             case POW: return Parser::POW;
