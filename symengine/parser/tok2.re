@@ -90,89 +90,73 @@ struct input_t {
     }
 };
 
-static num_t lex(input_t &in)
-{
-    in.tok = in.cur;
-    /*!re2c
-        re2c:define:YYCURSOR = in.cur;
-        re2c:define:YYMARKER = in.mar;
-        re2c:define:YYLIMIT = in.lim;
-        re2c:yyfill:enable = 1;
-        re2c:define:YYFILL = "if (!in.fill(@@)) return ERR_BUF;";
-        re2c:define:YYFILL:naked = 1;
-        re2c:define:YYCTYPE = char;
-
-        end = "\x00";
-
-
-        whitespace = [ \t\v\n\r]+;
-        dig = [0-9];
-        char =  [\x80-\xff] | [a-zA-Z_];
-        operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
-
-        pows = "**"|"@";
-        le = "<=";
-        ge = ">=";
-        eqs = "==";
-        ident = char (char | dig)*;
-        numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
-        implicitmul = numeric ident;
-
-        *   { return ERR_UNKNOWN_TOKEN; }
-        end {
-                if (in.lim - in.tok == YYMAXFILL) {
-                    return END;
-                } else {
-                    return ERR_NULL;
-                }
-            }
-        whitespace { return WS; }
-
-        operators { return OPERATOR; }
-        pows { return POW; }
-        le   { return LE; }
-        ge   { return GE; }
-        eqs  { return EQ; }
-        ident { return IDENTIFIER; }
-        numeric { return NUMERIC; }
-        implicitmul { return IMPLICIT_MUL; }
-    */
-}
-
 std::unique_ptr<input_t> in;
 using SymEngine::Parser;
 SymEngine::ParserBase::STYPE__ *dval;
+
+int yylex()
+{
+    for (;;) {
+        in->tok = in->cur;
+        /*!re2c
+            re2c:define:YYCURSOR = in->cur;
+            re2c:define:YYMARKER = in->mar;
+            re2c:define:YYLIMIT = in->lim;
+            re2c:yyfill:enable = 1;
+            re2c:define:YYFILL = "if (!in->fill(@@)) return 0;";
+            re2c:define:YYFILL:naked = 1;
+            re2c:define:YYCTYPE = char;
+
+            end = "\x00";
+
+
+            whitespace = [ \t\v\n\r]+;
+            dig = [0-9];
+            char =  [\x80-\xff] | [a-zA-Z_];
+            operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
+
+            pows = "**"|"@";
+            le = "<=";
+            ge = ">=";
+            eqs = "==";
+            ident = char (char | dig)*;
+            numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
+            implicitmul = numeric ident;
+
+            *   { printf("ERR unknown token\n"); return 0; }
+            end {
+                    if (in->lim - in->tok == YYMAXFILL) {
+                        return 0;
+                    } else {
+                        printf("ERR NULL.\n");
+                        return 0;
+                    }
+                }
+            whitespace { continue; }
+
+            operators { return in->tok[0]; }
+            pows { return Parser::POW; }
+            le   { return Parser::LE; }
+            ge   { return Parser::GE; }
+            eqs  { return Parser::EQ; }
+            ident {
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::IDENTIFIER;
+            }
+            numeric {
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::NUMERIC;
+            }
+            implicitmul {
+                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                return Parser::IMPLICIT_MUL;
+            }
+        */
+    }
+}
 
 void yy_scan_stream(std::istream &stream)
 {
     in = std::make_unique<input_t>(stream);
 }
 
-int yylex()
-{
-    for (;;) {
-        num_t t = lex(*in);
-        switch (t) {
-            case END: return 0;
-            case ERR_BUF: printf("ERR BUF.\n"); return 0;
-            case ERR_NULL: printf("ERR NULL.\n"); return 0;
-            case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); return 0;
-            case WS: break;
-            case OPERATOR:
-                return in->tok[0];
-            case POW: return Parser::POW;
-            case LE: return Parser::LE;
-            case EQ: return Parser::EQ;
-            case GE: return Parser::GE;
-            case IDENTIFIER:
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
-                return Parser::IDENTIFIER;
-            case NUMERIC:
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
-                return Parser::NUMERIC;
-            case IMPLICIT_MUL:
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
-                return Parser::IMPLICIT_MUL;
-        }
-    }
-}
