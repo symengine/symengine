@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     std::string text;
     std::string t0 = "(x + y - sin(x)/(z**2-4) - x**(y**z))";
     text = t0;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 5000; i++) {
         text = text + " * " + t0;
     }
     //std::cout << text << std::endl;
