@@ -26,7 +26,7 @@ enum num_t {
     IMPLICIT_MUL};
 
 /*!max:re2c*/
-static const size_t SIZE = 4;
+static const size_t SIZE = 6;
 
 std::string dval;
 
