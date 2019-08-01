@@ -105,7 +105,7 @@ int yylex()
             re2c:yyfill:enable = 1;
             re2c:define:YYFILL = "if (!in->fill(@@)) return 0;";
             re2c:define:YYFILL:naked = 1;
-            re2c:define:YYCTYPE = char;
+            re2c:define:YYCTYPE = "unsigned char";
 
             end = "\x00";
 
