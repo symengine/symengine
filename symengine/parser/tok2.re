@@ -7,6 +7,8 @@
 #include <fstream>
 #include <memory>
 
+#include "parser.h"
+
 
 enum num_t {
     // Unrecognized token. This is caused by a syntax error, unless there is a
@@ -139,7 +141,13 @@ static num_t lex(input_t &in)
 }
 
 std::unique_ptr<input_t> in;
-// in = std::make_unique<input_t>(stream);
+using SymEngine::Parser;
+SymEngine::ParserBase::STYPE__ *dval;
+
+void yy_scan_stream(std::istream &stream)
+{
+    in = std::make_unique<input_t>(stream);
+}
 
 int yylex()
 {
@@ -163,13 +171,14 @@ int yylex()
             case LE: return Parser::LE;
             case EQ: return Parser::EQ;
             case GE: return Parser::GE;
-            case IDENTIFIER: dval = in->token; return Parser::IDENTIFIER;
-            case NUMERIC: dval = in->token; return Parser::NUMERIC;
-            case IMPLICIT_MUL: dval = in->token; return Parser:: IMPLICIT_MUL;
+            case IDENTIFIER: *dval = in->token; return Parser::IDENTIFIER;
+            case NUMERIC: *dval = in->token; return Parser::NUMERIC;
+            case IMPLICIT_MUL: *dval = in->token; return Parser:: IMPLICIT_MUL;
         }
     }
 }
 
+/*
 int main(int argc, char **argv)
 {
     if (argc != 2) {
@@ -208,4 +217,4 @@ int main(int argc, char **argv)
     }
 
     return 0;
-}
+}*/

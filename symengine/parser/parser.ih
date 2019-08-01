@@ -1,7 +1,8 @@
 #include "parserbase.h"
-#include "tok.h"
 #include <fstream>
 #include "parser.h"
+
+int yylex();
 
 namespace SymEngine
 {

@@ -3,6 +3,8 @@
 #include <algorithm>
 
 extern SymEngine::ParserBase::STYPE__ *dval;
+void yy_scan_stream(std::istream &stream);
+int yylex();
 
 namespace SymEngine
 {
@@ -23,7 +25,7 @@ public:
         } else {
             inp.str(input);
         }
-        yy_scan_string(inp.str().c_str());
+        yy_scan_stream(inp);
         dval = &d_val__;
     }
 
