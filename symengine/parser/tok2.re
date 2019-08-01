@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <istream>
+#include <fstream>
 
 
 enum num_t {
@@ -36,6 +38,12 @@ enum num_t {
 /*!max:re2c*/
 static const size_t SIZE = 64*1024;
 
+size_t sread(char *ptr, size_t size, size_t count, std::istream &stream)
+{
+    stream.read(ptr, count);
+    return stream.gcount();
+}
+
 struct input_t {
     unsigned char buf[SIZE + YYMAXFILL];
     unsigned char *lim;
@@ -45,9 +53,9 @@ struct input_t {
     bool eof;
     std::string token;
 
-    FILE *const file;
+    std::istream &file;
 
-    input_t(FILE *f)
+    input_t(std::istream &f)
         : buf()
         , lim(buf + SIZE)
         , cur(lim)
@@ -70,7 +78,7 @@ struct input_t {
         cur -= free;
         mar -= free;
         tok -= free;
-        lim += fread(lim, 1, free, file);
+        lim += sread((char*)lim, 1, free, file);
         if (lim < buf + SIZE) {
             eof = true;
             memset(lim, 0, YYMAXFILL);
@@ -169,11 +177,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    FILE *file = fopen(argv[1], "rb");
-    if (!file) {
-        printf("error: cannot open file: %s\n", argv[1]);
-        return 1;
-    }
+    std::ifstream file(argv[1], std::ios::binary);
 
     input_t in(file);
     for (;;) {
@@ -203,6 +207,5 @@ int main(int argc, char **argv)
         }
     }
 
-    fclose(file);
     return 0;
 }
