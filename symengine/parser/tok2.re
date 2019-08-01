@@ -54,7 +54,6 @@ struct input_t {
     unsigned char *mar;
     unsigned char *tok;
     bool eof;
-    std::string token;
 
     std::istream &file;
 
@@ -129,14 +128,14 @@ static num_t lex(input_t &in)
             }
         whitespace { return WS; }
 
-        operators { in.token = *in.tok; return OPERATOR; }
+        operators { return OPERATOR; }
         pows { return POW; }
         le   { return LE; }
         ge   { return GE; }
         eqs  { return EQ; }
-        ident { in.token.assign((char*)in.tok, in.cur-in.tok); return IDENTIFIER; }
-        numeric { in.token.assign((char*)in.tok, in.cur-in.tok); return NUMERIC; }
-        implicitmul { in.token.assign((char*)in.tok, in.cur-in.tok); return IMPLICIT_MUL; }
+        ident { return IDENTIFIER; }
+        numeric { return NUMERIC; }
+        implicitmul { return IMPLICIT_MUL; }
     */
 }
 
@@ -177,44 +176,3 @@ int yylex()
         }
     }
 }
-
-/*
-int main(int argc, char **argv)
-{
-    if (argc != 2) {
-        printf ("usage: ./a.out <filename>\n");
-        return 1;
-    }
-
-    std::ifstream file(argv[1], std::ios::binary);
-
-    input_t in(file);
-    for (;;) {
-        num_t t = lex(in);
-        if (t == END) {
-            printf("END.\n");
-            break;
-        } else if (t == ERR_BUF) {
-            printf("ERR BUF.\n");
-            break;
-        } else if (t == ERR_NULL) {
-            printf("ERR NULL.\n");
-            break;
-        }
-        switch (t) {
-            case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); break;
-            case ERR_NULL: printf("NULL token\n"); break;
-            case WS: printf("WS\n"); break;
-            case OPERATOR: printf("OPERATOR: %s\n", in.token.c_str()); break;
-            case POW: printf("POW\n"); break;
-            case LE: printf("LE\n"); break;
-            case EQ: printf("EQ\n"); break;
-            case GE: printf("GE\n"); break;
-            case IDENTIFIER: printf("IDENTIFIER: %s\n", in.token.c_str()); break;
-            case NUMERIC: printf("NUMERIC: %s\n", in.token.c_str()); break;
-            case IMPLICIT_MUL: printf("IMPLICIT_MUL: %s\n", in.token.c_str()); break;
-        }
-    }
-
-    return 0;
-}*/
