@@ -5,6 +5,7 @@
 #include <string>
 #include <istream>
 #include <fstream>
+#include <memory>
 
 
 enum num_t {
@@ -137,13 +138,13 @@ static num_t lex(input_t &in)
     */
 }
 
-/*
-input_t in;
+std::unique_ptr<input_t> in;
+// in = std::make_unique<input_t>(stream);
 
 int yylex()
 {
     for (;;) {
-        num_t t = lex(in);
+        num_t t = lex(*in);
         if (t == END) {
             return 0;
         } else if (t == ERR_BUF) {
@@ -157,18 +158,17 @@ int yylex()
             case ERR_UNKNOWN_TOKEN: printf("ERR unknown token\n"); return 0;
             case ERR_NULL: printf("NULL token\n"); return 0;
             case WS: break;
-            case OPERATOR: return s[0];
+            case OPERATOR: return in->token[0];
             case POW: return Parser::POW;
             case LE: return Parser::LE;
             case EQ: return Parser::EQ;
             case GE: return Parser::GE;
-            case IDENTIFIER: dval = s; return Parser::IDENTIFIER;
-            case NUMERIC: dval = s; return Parser::NUMERIC;
-            case IMPLICIT_MUL: dval = s; return Parser:: IMPLICIT_MUL;
+            case IDENTIFIER: dval = in->token; return Parser::IDENTIFIER;
+            case NUMERIC: dval = in->token; return Parser::NUMERIC;
+            case IMPLICIT_MUL: dval = in->token; return Parser:: IMPLICIT_MUL;
         }
     }
 }
-*/
 
 int main(int argc, char **argv)
 {
