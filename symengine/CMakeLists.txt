@@ -54,7 +54,7 @@ set(SRC
     numer_denom.cpp
     parser/parser.cpp
     parser/parser_old.cpp
-    parser/tok2.cpp
+    parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
