@@ -13,6 +13,12 @@ if (WITH_GENERATE_PARSER)
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
+    add_custom_command(OUTPUT parser/tokenizer.cpp
+                      COMMAND ${RE2C_EXECUTABLE} -W -g tokenizer.re -o tokenizer.cpp
+                      DEPENDS parser/tokenizer.re
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
+                     )
+
 endif()
 
 add_subdirectory(utilities/matchpycpp)
