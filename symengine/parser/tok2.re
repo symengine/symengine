@@ -16,8 +16,16 @@ enum num_t {
     // contain the null character.
     ERR_NULL,
 
-    // The buffer input_t::buf is not big enough to hold `need` chars.
+    // The buffer input_t::buf is not big enough to hold `need` chars. The
+    // `need <= YYMAXFILL`, where `YYMAXFILL` is the longest (sequence) of
+    // tokens needed to be in the buffer simultaneously.
     // Solution: Increase SIZE.
+    // Note: Whenever the buffer fills, the data (all the loaded tokens in the
+    // buffer) gets moved in it and we start over. To ensure this happens
+    // rarely, make SIZE large enough, for example 64*1024 (64 KB). The amount
+    // of data to move is typically low, so this size should be large enough
+    // not to be noticeable. One can run a benchmark study what size stops
+    // being noticeable for a large file.
     ERR_BUF,
 
     // We reached the end of input.
@@ -26,7 +34,7 @@ enum num_t {
     IMPLICIT_MUL};
 
 /*!max:re2c*/
-static const size_t SIZE = 6;
+static const size_t SIZE = 64*1024;
 
 std::string dval;
 
