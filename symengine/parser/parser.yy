@@ -24,8 +24,8 @@ using SymEngine::Ge;
 using SymEngine::Eq;
 using SymEngine::set_boolean;
 using SymEngine::Boolean;
+using SymEngine::one;
 using SymEngine::vec_boolean;
-//using SymEngine::parse_implicit_mul;
 }
 
 %code // *.cpp
@@ -100,10 +100,11 @@ expr:
 |
         expr '/' expr
         { $$ = div($1, $3); }
-/*
 |
+// FIXME: This rule generates:
+// parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
         IMPLICIT_MUL POW expr
-        { 
+        {
           auto tup = parse_implicit_mul($1);
           if (neq(*std::get<1>(tup), *one)) {
             $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
@@ -111,7 +112,6 @@ expr:
             $$ = pow(std::get<0>(tup), $3);
           }
         }
-*/
 |
         expr POW expr
         { $$ = pow($1, $3); }
