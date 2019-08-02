@@ -93,7 +93,7 @@ struct input_t {
 
 std::unique_ptr<input_t> in;
 using SymEngine::Parser;
-SymEngine::ParserBase::STYPE__ *dval;
+SymEngine::ParserBase::STYPE__ *val;
 
 int yylex()
 {
@@ -141,15 +141,15 @@ int yylex()
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
             ident {
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                *val = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::IDENTIFIER;
             }
             numeric {
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                *val = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::NUMERIC;
             }
             implicitmul {
-                *dval = std::string((char*)in->tok, in->cur-in->tok);
+                *val = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::IMPLICIT_MUL;
             }
         */
@@ -165,11 +165,11 @@ namespace SymEngine {
 
 void Tokenizer::scan_stream(std::istream &stream) {
     yy_scan_stream(stream);
-    dval = this->dval;
+    val = dval;
 }
 
 int Tokenizer::lex() {
-    yylex();
+    return yylex();
 }
 
 } // SymEngine
