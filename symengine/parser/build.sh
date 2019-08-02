@@ -2,4 +2,4 @@
 
 set -ex
 
-bison -L c++ -d parser.yy
+bison -d parser.yy

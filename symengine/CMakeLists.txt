@@ -7,11 +7,11 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 if (WITH_GENERATE_PARSER)
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
-                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
-                      DEPENDS parser/parser.yy parser/parser.ih
-                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
-                     )
+#    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
+#                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
+#                      DEPENDS parser/parser.yy parser/parser.ih
+#                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
+#                     )
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/tokenizer.cpp
                       COMMAND ${RE2C_EXECUTABLE} -W  --no-generation-date -b tokenizer.re -o tokenizer.cpp
@@ -54,6 +54,7 @@ set(SRC
     numer_denom.cpp
     parser/parser.cpp
     parser/parser_old.cpp
+    parser/parser.tab.cc
     parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp

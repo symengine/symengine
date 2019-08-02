@@ -1,18 +1,59 @@
-%baseclass-preinclude symengine/visitor.h
-%scanner tokenizer.h
-%scanner-token-function d_tokenizer.lex()
-%filenames parser
-%parsefun-source parser.cpp
-%namespace SymEngine
+%skeleton "lalr1.cc"
+%require "3.0"
+%language "c++"
+%define api.value.type variant
+
+%code requires // *.h
+{
+#include "symengine/add.h"
+#include "symengine/pow.h"
+#include "symengine/logic.h"
+
+using SymEngine::RCP;
+using SymEngine::Basic;
+using SymEngine::vec_basic;
+using SymEngine::rcp_static_cast;
+using SymEngine::mul;
+using SymEngine::pow;
+using SymEngine::add;
+using SymEngine::sub;
+using SymEngine::Lt;
+using SymEngine::Gt;
+using SymEngine::Le;
+using SymEngine::Ge;
+using SymEngine::Eq;
+using SymEngine::set_boolean;
+using SymEngine::Boolean;
+using SymEngine::vec_boolean;
+//using SymEngine::parse_implicit_mul;
+}
+
+%code // *.cpp
+{
+
+namespace yy
+{
+
+int yylex (parser::semantic_type* yylval)
+{
+    //int t = tokenizer.lex();
+    //yylval = tokenizer.val
+    //return t;
+    return 0;
+} // ylex
+
+RCP<const Basic> parse_identifier(std::string s);
+RCP<const Basic> parse_numeric(std::string s);
+RCP<const Basic> functionify(std::string s, vec_basic v);
+
+} // namespace yy
+
+} // code
 
 
-%polymorphic basic: RCP<const Basic>;
-             basic_vec : vec_basic;
-             string : std::string;
-
-%token <string> IDENTIFIER
-%token <string> NUMERIC
-%token <string> IMPLICIT_MUL
+%token <std::string> IDENTIFIER
+%token <std::string> NUMERIC
+%token <std::string> IMPLICIT_MUL
 
 %left '|'
 %left '^'
@@ -29,11 +70,11 @@
 %right NOT
 %nonassoc '('
 
-%type <basic> st_expr
-%type <basic> expr
-%type <basic_vec> expr_list
-%type <basic> leaf
-%type <basic> func
+%type <RCP<const Basic>> st_expr
+%type <RCP<const Basic>> expr
+%type <vec_basic> expr_list
+%type <RCP<const Basic>> leaf
+%type <RCP<const Basic>> func
 
 %start st_expr
 
@@ -42,7 +83,7 @@ st_expr :
     expr
     {
         $$ = $1;
-        res = $$;
+        //res = $$;
     }
 ;
 
@@ -58,6 +99,7 @@ expr:
 |
         expr '/' expr
         { $$ = div($1, $3); }
+/*
 |
         IMPLICIT_MUL POW expr
         { 
@@ -68,6 +110,7 @@ expr:
             $$ = pow(std::get<0>(tup), $3);
           }
         }
+*/
 |
         expr POW expr
         { $$ = pow($1, $3); }
@@ -129,12 +172,13 @@ leaf:
     {
         $$ = parse_identifier($1);
     }
-|
+/*|
     IMPLICIT_MUL
     {
         auto tup = parse_implicit_mul($1);
         $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
+*/
 |
     NUMERIC
     {
