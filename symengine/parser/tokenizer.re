@@ -38,61 +38,22 @@ enum num_t {
     WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
     IMPLICIT_MUL};
 
-/*!max:re2c*/
-static const size_t SIZE = 64*1024;
-
-size_t sread(char *ptr, size_t size, size_t count, std::istream &stream)
-{
-    stream.read(ptr, count);
-    return stream.gcount();
-}
-
 using SymEngine::Parser;
 
 
 struct input_t {
-    unsigned char buf[SIZE + YYMAXFILL];
-    unsigned char *lim;
     unsigned char *cur;
     unsigned char *mar;
     unsigned char *tok;
-    bool eof;
 
-    std::istream &file;
+    std::string &str;
 
     SymEngine::ParserBase::STYPE__ *val;
 
-    input_t(std::istream &f)
-        : buf()
-        , lim(buf + SIZE)
-        , cur(lim)
-        , mar(lim)
-        , tok(lim)
-        , eof(false)
-        , file(f)
+    input_t(std::string &s)
+        : cur((unsigned char*)(&s[0]))
+        , str(s)
     {}
-    bool fill(size_t need)
-    {
-        if (eof) {
-            return false;
-        }
-        const size_t free = tok - buf;
-        if (free < need) {
-            return false;
-        }
-        memmove(buf, tok, lim - tok);
-        lim -= free;
-        cur -= free;
-        mar -= free;
-        tok -= free;
-        lim += sread((char*)lim, 1, free, file);
-        if (lim < buf + SIZE) {
-            eof = true;
-            memset(lim, 0, YYMAXFILL);
-            lim += YYMAXFILL;
-        }
-        return true;
-    }
 };
 
 int yylex(input_t &in)
@@ -102,15 +63,10 @@ int yylex(input_t &in)
         /*!re2c
             re2c:define:YYCURSOR = in.cur;
             re2c:define:YYMARKER = in.mar;
-            re2c:define:YYLIMIT = in.lim;
-            re2c:yyfill:enable = 1;
-            re2c:define:YYFILL = "if (!in.fill(@@)) return 0;";
-            re2c:define:YYFILL:naked = 1;
+            re2c:yyfill:enable = 0;
             re2c:define:YYCTYPE = "unsigned char";
 
             end = "\x00";
-
-
             whitespace = [ \t\v\n\r]+;
             dig = [0-9];
             char =  [\x80-\xff] | [a-zA-Z_];
@@ -124,15 +80,8 @@ int yylex(input_t &in)
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
             implicitmul = numeric ident;
 
-            *   { printf("ERR unknown token\n"); return 0; }
-            end {
-                    if (in.lim - in.tok == YYMAXFILL) {
-                        return 0;
-                    } else {
-                        printf("ERR NULL.\n");
-                        return 0;
-                    }
-                }
+            *   { throw SymEngine::ParseError("Unknown token"); }
+            end { return 0; }
             whitespace { continue; }
 
             operators { return in.tok[0]; }
@@ -164,8 +113,8 @@ Tokenizer::Tokenizer() {
 Tokenizer::~Tokenizer() {
 }
 
-void Tokenizer::scan_stream(std::istream &stream) {
-    m_in = SymEngine::make_unique<input_t>(stream);
+void Tokenizer::scan_string(std::string &str);
+    m_in = SymEngine::make_unique<input_t>(str);
     m_in->val = dval;
 }
 

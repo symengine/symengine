@@ -2,7 +2,7 @@
 #define SYMENGINE_TOKENIZER_H
 
 #include <algorithm>
-#include <istream>
+#include <string>
 
 #include "parserbase.h"
 
@@ -14,12 +14,11 @@ namespace SymEngine
 class Tokenizer
 {
     std::unique_ptr<input_t> m_in;
-
 public:
     SymEngine::ParserBase::STYPE__ *dval;
     Tokenizer();
     ~Tokenizer();
-    void scan_stream(std::istream &stream);
+    void scan_string(std::string &str);
     int lex();
 };
 

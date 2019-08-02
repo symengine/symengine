@@ -9,22 +9,20 @@ namespace SymEngine
 class Parser : public ParserBase
 {
     Tokenizer d_tokenizer;
-    std::istringstream inp;
+    std::string inp;
 
 public:
     RCP<const Basic> res;
 
     inline Parser(const std::string &input, bool convert_xor_)
     {
+        inp = input;
         if (convert_xor_) {
-            std::string s = input;
-            std::replace(s.begin(), s.end(), '^', '@');
-            inp.str(s);
-        } else {
-            inp.str(input);
+            std::replace(inp.begin(), inp.end(), '^', '@');
         }
+        inp.append("\x00"); // Tokenizer requires NULL terminated input
         d_tokenizer.dval = &d_val__;
-        d_tokenizer.scan_stream(inp);
+        d_tokenizer.scan_string(inp);
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {
