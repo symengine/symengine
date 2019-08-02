@@ -113,7 +113,7 @@ Tokenizer::Tokenizer() {
 Tokenizer::~Tokenizer() {
 }
 
-void Tokenizer::scan_string(std::string &str);
+void Tokenizer::scan_string(std::string &str) {
     m_in = SymEngine::make_unique<input_t>(str);
     m_in->val = dval;
 }
