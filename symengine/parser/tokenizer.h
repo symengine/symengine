@@ -1,11 +1,8 @@
 #ifndef SYMENGINE_TOKENIZER_H
 #define SYMENGINE_TOKENIZER_H
 
-#include <cstddef>
-#include <memory>
-#include <type_traits>
-#include <utility>
 #include <algorithm>
+#include <istream>
 
 #include "parserbase.h"
 
