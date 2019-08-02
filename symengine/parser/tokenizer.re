@@ -95,18 +95,16 @@ struct input_t {
     }
 };
 
-std::unique_ptr<input_t> in;
-
-int yylex()
+int yylex(input_t &in)
 {
     for (;;) {
-        in->tok = in->cur;
+        in.tok = in.cur;
         /*!re2c
-            re2c:define:YYCURSOR = in->cur;
-            re2c:define:YYMARKER = in->mar;
-            re2c:define:YYLIMIT = in->lim;
+            re2c:define:YYCURSOR = in.cur;
+            re2c:define:YYMARKER = in.mar;
+            re2c:define:YYLIMIT = in.lim;
             re2c:yyfill:enable = 1;
-            re2c:define:YYFILL = "if (!in->fill(@@)) return 0;";
+            re2c:define:YYFILL = "if (!in.fill(@@)) return 0;";
             re2c:define:YYFILL:naked = 1;
             re2c:define:YYCTYPE = "unsigned char";
 
@@ -128,7 +126,7 @@ int yylex()
 
             *   { printf("ERR unknown token\n"); return 0; }
             end {
-                    if (in->lim - in->tok == YYMAXFILL) {
+                    if (in.lim - in.tok == YYMAXFILL) {
                         return 0;
                     } else {
                         printf("ERR NULL.\n");
@@ -137,30 +135,25 @@ int yylex()
                 }
             whitespace { continue; }
 
-            operators { return in->tok[0]; }
+            operators { return in.tok[0]; }
             pows { return Parser::POW; }
             le   { return Parser::LE; }
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
             ident {
-                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
+                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
                 return Parser::IDENTIFIER;
             }
             numeric {
-                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
+                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
                 return Parser::NUMERIC;
             }
             implicitmul {
-                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
+                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
                 return Parser::IMPLICIT_MUL;
             }
         */
     }
-}
-
-void yy_scan_stream(std::istream &stream)
-{
-    in = SymEngine::make_unique<input_t>(stream);
 }
 
 namespace SymEngine {
@@ -172,12 +165,12 @@ Tokenizer::~Tokenizer() {
 }
 
 void Tokenizer::scan_stream(std::istream &stream) {
-    yy_scan_stream(stream);
+    in = SymEngine::make_unique<input_t>(stream);
     in->val = dval;
 }
 
 int Tokenizer::lex() {
-    return yylex();
+    return yylex(*in);
 }
 
 } // SymEngine

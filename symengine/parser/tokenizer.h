@@ -14,7 +14,7 @@ struct input_t;
 namespace SymEngine {
 
 class Tokenizer {
-    std::unique_ptr<input_t> m_in;
+    std::unique_ptr<input_t> in;
 public:
     Tokenizer();
     ~Tokenizer();
