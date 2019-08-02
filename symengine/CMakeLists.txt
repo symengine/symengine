@@ -14,7 +14,7 @@ if (WITH_GENERATE_PARSER)
                      )
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/tokenizer.cpp
-                      COMMAND ${RE2C_EXECUTABLE} -W -g tokenizer.re -o tokenizer.cpp
+                      COMMAND ${RE2C_EXECUTABLE} -W -b tokenizer.re -o tokenizer.cpp
                       DEPENDS parser/tokenizer.re
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
