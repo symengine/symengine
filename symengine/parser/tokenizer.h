@@ -1,7 +1,6 @@
 #ifndef SYMENGINE_TOKENIZER_H
 #define SYMENGINE_TOKENIZER_H
 
-#include <algorithm>
 #include <string>
 
 #include "parserbase.h"

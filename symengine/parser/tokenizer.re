@@ -1,15 +1,4 @@
-#include <float.h>
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
-#include <string>
-#include <istream>
-#include <fstream>
-#include <memory>
-
 #include "tokenizer.h"
-#include "unique.h"
-
 
 namespace SymEngine {
 
