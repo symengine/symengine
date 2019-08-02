@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "parser.h"
+#include "unique.h"
 
 
 enum num_t {
@@ -157,6 +158,6 @@ int yylex()
 
 void yy_scan_stream(std::istream &stream)
 {
-    in = std::make_unique<input_t>(stream);
+    in = SymEngine::make_unique<input_t>(stream);
 }
 
