@@ -1,16 +1,14 @@
 #include "parserbase.h"
+#include "tokenizer.h"
 #include <fstream>
 #include <algorithm>
-
-extern SymEngine::ParserBase::STYPE__ *dval;
-void yy_scan_stream(std::istream &stream);
-int yylex();
 
 namespace SymEngine
 {
 #undef Parser
 class Parser : public ParserBase
 {
+    Tokenizer d_tokenizer;
     std::istringstream inp;
 
 public:
@@ -25,8 +23,8 @@ public:
         } else {
             inp.str(input);
         }
-        yy_scan_stream(inp);
-        dval = &d_val__;
+        d_tokenizer.d_val = %d_val__;
+        d_tokenizer.add_stream(inp);
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {

@@ -2,14 +2,12 @@
 #include <fstream>
 #include "parser.h"
 
-int yylex();
-
 namespace SymEngine
 {
 // $insert lex
 inline int Parser::lex()
 {
-    return yylex();
+    return d_tokenizer.lex();
 }
 
 inline void Parser::print()
