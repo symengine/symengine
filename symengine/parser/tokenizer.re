@@ -80,7 +80,10 @@ int yylex(input_t &in)
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
             implicitmul = numeric ident;
 
-            *   { throw SymEngine::ParseError("Unknown token"); }
+            * {
+                std::string s = std::string((char*)in.tok, in.cur-in.tok);
+                throw SymEngine::ParseError("Unknown token: '" + s + "'");
+            }
             end { return 0; }
             whitespace { continue; }
 
