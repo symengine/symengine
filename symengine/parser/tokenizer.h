@@ -8,10 +8,13 @@
 
 struct input_t;
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Tokenizer {
+class Tokenizer
+{
     std::unique_ptr<input_t> m_in;
+
 public:
     SymEngine::ParserBase::STYPE__ *dval;
     Tokenizer();
@@ -20,7 +23,6 @@ public:
     int lex();
 };
 
-} // SymEngine
-
+} // namespace SymEngine
 
 #endif
