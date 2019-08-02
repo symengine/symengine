@@ -6,10 +6,11 @@
 
 #include "parserbase.h"
 
-struct input_t;
 
 namespace SymEngine
 {
+
+struct input_t;
 
 class Tokenizer
 {

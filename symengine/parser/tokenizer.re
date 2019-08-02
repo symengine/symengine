@@ -10,36 +10,8 @@
 #include "tokenizer.h"
 #include "unique.h"
 
-enum num_t {
-    // Unrecognized token. This is caused by a syntax error, unless there is a
-    // bug in the tokenizer rules.
-    ERR_UNKNOWN_TOKEN,
 
-    // Null character \x00 encountered in the input file (we use it to
-    // terminate). With a different SIZE, this Null character might be
-    // mis-recognized as the END token. Solution: ensure the file does not
-    // contain the null character.
-    ERR_NULL,
-
-    // The buffer input_t::buf is not big enough to hold `need` chars. The
-    // `need <= YYMAXFILL`, where `YYMAXFILL` is the longest (sequence) of
-    // tokens needed to be in the buffer simultaneously.
-    // Solution: Increase SIZE.
-    // Note: Whenever the buffer fills, the data (all the loaded tokens in the
-    // buffer) gets moved in it and we start over. To ensure this happens
-    // rarely, make SIZE large enough, for example 64*1024 (64 KB). The amount
-    // of data to move is typically low, so this size should be large enough
-    // not to be noticeable. One can run a benchmark study what size stops
-    // being noticeable for a large file.
-    ERR_BUF,
-
-    // We reached the end of input.
-    END,
-    WS, OPERATOR, POW, LE, EQ, GE, IDENTIFIER, NUMERIC,
-    IMPLICIT_MUL};
-
-using SymEngine::Parser;
-
+namespace SymEngine {
 
 struct input_t {
     unsigned char *cur;
@@ -55,6 +27,21 @@ struct input_t {
         , str(s)
     {}
 };
+
+
+Tokenizer::Tokenizer() {
+}
+
+Tokenizer::~Tokenizer() {
+}
+
+void Tokenizer::scan_string(std::string &str) {
+    // The input string must be NULL terminated, otherwise the tokenizer will
+    // not detect the end of string.
+    SYMENGINE_ASSERT(str[str.size()-1] == "\x00");
+    m_in = SymEngine::make_unique<input_t>(str);
+    m_in->val = dval;
+}
 
 int yylex(input_t &in)
 {
@@ -108,24 +95,9 @@ int yylex(input_t &in)
     }
 }
 
-namespace SymEngine {
-
-Tokenizer::Tokenizer() {
-}
-
-Tokenizer::~Tokenizer() {
-}
-
-void Tokenizer::scan_string(std::string &str) {
-    // The input string must be NULL terminated, otherwise the tokenizer will
-    // not detect the end of string.
-    SYMENGINE_ASSERT(str[str.size()-1] == "\x00");
-    m_in = SymEngine::make_unique<input_t>(str);
-    m_in->val = dval;
-}
-
 int Tokenizer::lex() {
     return yylex(*m_in);
 }
+
 
 } // SymEngine
