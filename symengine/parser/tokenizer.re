@@ -7,7 +7,7 @@
 #include <fstream>
 #include <memory>
 
-#include "parser.h"
+#include "tokenizer.h"
 #include "unique.h"
 
 
@@ -161,3 +161,15 @@ void yy_scan_stream(std::istream &stream)
     in = SymEngine::make_unique<input_t>(stream);
 }
 
+namespace SymEngine {
+
+void Tokenizer::scan_stream(std::istream &stream) {
+    yy_scan_stream(stream);
+    dval = this->dval;
+}
+
+int Tokenizer::lex() {
+    yylex();
+}
+
+} // SymEngine
