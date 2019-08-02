@@ -20,7 +20,6 @@ public:
         if (convert_xor_) {
             std::replace(inp.begin(), inp.end(), '^', '@');
         }
-        inp.append("\x00"); // Tokenizer requires NULL terminated input
         d_tokenizer.set_string(inp);
         d_tokenizer.val = &d_val__;
     }
