@@ -44,10 +44,7 @@ int Tokenizer::lex()
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
             implicitmul = numeric ident;
 
-            * {
-                std::string s = std::string((char*)tok, cur-tok);
-                throw SymEngine::ParseError("Unknown token: '" + s + "'");
-            }
+            * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
             end { return 0; }
             whitespace { continue; }
 
@@ -56,21 +53,15 @@ int Tokenizer::lex()
             le   { return Parser::LE; }
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
-            ident {
-                *(val) = std::string((char*)tok, cur-tok);
-                return Parser::IDENTIFIER;
-            }
-            numeric {
-                *(val) = std::string((char*)tok, cur-tok);
-                return Parser::NUMERIC;
-            }
-            implicitmul {
-                *(val) = std::string((char*)tok, cur-tok);
-                return Parser::IMPLICIT_MUL;
-            }
+            ident { *(val) = token(); return Parser::IDENTIFIER; }
+            numeric { *(val) = token(); return Parser::NUMERIC; }
+            implicitmul { *(val) = token(); return Parser::IMPLICIT_MUL; }
         */
     }
 }
 
+std::string Tokenizer::token() {
+    return std::string((char*)tok, cur-tok);
+}
 
 } // namespace SymEngine

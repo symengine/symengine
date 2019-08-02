@@ -19,6 +19,7 @@ public:
     SymEngine::ParserBase::STYPE__ *val;
     void scan_string(std::string &str);
     int lex();
+    std::string token();
 };
 
 } // namespace SymEngine
