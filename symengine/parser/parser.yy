@@ -3,6 +3,14 @@
 %language "c++"
 %define api.value.type variant
 
+/*
+TODO:
+    * define parse_identifier, parse_numeric, functionify and parse_implicit_mul
+    * hook the tokenizer in
+    * fix the "res = $$;" part
+    * fix the shift/reduce conflict
+*/
+
 %code requires // *.h
 {
 #include "symengine/add.h"
