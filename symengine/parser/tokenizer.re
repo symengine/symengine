@@ -10,7 +10,6 @@
 #include "tokenizer.h"
 #include "unique.h"
 
-
 enum num_t {
     // Unrecognized token. This is caused by a syntax error, unless there is a
     // bug in the tokenizer rules.
@@ -48,6 +47,9 @@ size_t sread(char *ptr, size_t size, size_t count, std::istream &stream)
     return stream.gcount();
 }
 
+using SymEngine::Parser;
+
+
 struct input_t {
     unsigned char buf[SIZE + YYMAXFILL];
     unsigned char *lim;
@@ -57,6 +59,8 @@ struct input_t {
     bool eof;
 
     std::istream &file;
+
+    SymEngine::ParserBase::STYPE__ *val;
 
     input_t(std::istream &f)
         : buf()
@@ -92,8 +96,6 @@ struct input_t {
 };
 
 std::unique_ptr<input_t> in;
-using SymEngine::Parser;
-SymEngine::ParserBase::STYPE__ *val;
 
 int yylex()
 {
@@ -141,15 +143,15 @@ int yylex()
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
             ident {
-                *val = std::string((char*)in->tok, in->cur-in->tok);
+                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::IDENTIFIER;
             }
             numeric {
-                *val = std::string((char*)in->tok, in->cur-in->tok);
+                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::NUMERIC;
             }
             implicitmul {
-                *val = std::string((char*)in->tok, in->cur-in->tok);
+                *(in->val) = std::string((char*)in->tok, in->cur-in->tok);
                 return Parser::IMPLICIT_MUL;
             }
         */
@@ -165,7 +167,7 @@ namespace SymEngine {
 
 void Tokenizer::scan_stream(std::istream &stream) {
     yy_scan_stream(stream);
-    val = dval;
+    in->val = dval;
 }
 
 int Tokenizer::lex() {
