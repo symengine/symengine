@@ -45,6 +45,7 @@ int yylex (parser::semantic_type* yylval)
 RCP<const Basic> parse_identifier(std::string s);
 RCP<const Basic> parse_numeric(std::string s);
 RCP<const Basic> functionify(std::string s, vec_basic v);
+std::tuple<RCP<const Basic>,RCP<const Basic>> parse_implicit_mul(std::string s);
 
 } // namespace yy
 
@@ -172,13 +173,12 @@ leaf:
     {
         $$ = parse_identifier($1);
     }
-/*|
+|
     IMPLICIT_MUL
     {
         auto tup = parse_implicit_mul($1);
         $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
-*/
 |
     NUMERIC
     {
