@@ -1,6 +1,6 @@
 %baseclass-preinclude symengine/visitor.h
-%scanner scanner.h
-%scanner-token-function d_scanner.lex()
+%scanner tokenizer.h
+%scanner-token-function d_tokenizer.lex()
 %filenames parser
 %parsefun-source parser.cpp
 %namespace SymEngine

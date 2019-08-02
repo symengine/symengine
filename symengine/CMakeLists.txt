@@ -7,17 +7,18 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 if (WITH_GENERATE_PARSER)
-    add_custom_command(OUTPUT parser/parser.cpp
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
                       COMMAND ${BISONCPP_EXECUTABLE} parser.yy
                       DEPENDS parser/parser.yy parser/parser.ih
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
-    add_custom_command(OUTPUT parser/scanner.cpp
-                      COMMAND ${FLEXCPP_EXECUTABLE} --namespace=SymEngine scanner.ll
-                      DEPENDS parser/scanner.ll parser/scanner.h
-                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/tokenizer.cpp
+                      COMMAND ${RE2C_EXECUTABLE} -W  --no-generation-date -b tokenizer.re -o tokenizer.cpp
+                      DEPENDS parser/tokenizer.re
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
+
 endif()
 
 add_subdirectory(utilities/matchpycpp)
@@ -53,7 +54,7 @@ set(SRC
     numer_denom.cpp
     parser/parser.cpp
     parser/parser_old.cpp
-    parser/scanner.cpp
+    parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
@@ -222,10 +223,7 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
-    set_source_files_properties(parser/parser.cpp parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra")
-endif()
-if (NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
-    set_source_files_properties(parser/scanner.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra -Wno-implicit-fallthrough")
+    set_source_files_properties(parser/parser.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)
