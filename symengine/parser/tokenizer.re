@@ -13,7 +13,7 @@
 
 namespace SymEngine {
 
-void Tokenizer::scan_string(std::string &str) {
+void Tokenizer::set_string(std::string &str) {
     // The input string must be NULL terminated, otherwise the tokenizer will
     // not detect the end of string.
     SYMENGINE_ASSERT(str[str.size()-1] == "\x00");

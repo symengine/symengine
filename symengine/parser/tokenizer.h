@@ -17,7 +17,7 @@ class Tokenizer
     unsigned char *tok;
 public:
     SymEngine::ParserBase::STYPE__ *val;
-    void scan_string(std::string &str);
+    void set_string(std::string &str);
     int lex();
     std::string token();
 };
