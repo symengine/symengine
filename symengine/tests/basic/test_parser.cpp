@@ -700,6 +700,6 @@ TEST_CASE("Parsing: errors", "[parser]")
     s = "max(,3,2)";
     CHECK_THROWS_AS(parse(s), ParseError &);
 
-    s = "x+&y+z";
+    s = "x+%y+z";
     CHECK_THROWS_AS(parse(s), ParseError &);
 }
