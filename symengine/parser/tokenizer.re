@@ -165,12 +165,12 @@ Tokenizer::~Tokenizer() {
 }
 
 void Tokenizer::scan_stream(std::istream &stream) {
-    in = SymEngine::make_unique<input_t>(stream);
-    in->val = dval;
+    m_in = SymEngine::make_unique<input_t>(stream);
+    m_in->val = dval;
 }
 
 int Tokenizer::lex() {
-    return yylex(*in);
+    return yylex(*m_in);
 }
 
 } // SymEngine
