@@ -39,7 +39,6 @@ int main(int argc, char *argv[])
               << "ms" << std::endl;
     std::cout << *a << std::endl;
 
-
     /* ------------------------------------------------- */
 
     N = 3000;
