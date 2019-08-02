@@ -21,8 +21,8 @@ public:
             std::replace(inp.begin(), inp.end(), '^', '@');
         }
         inp.append("\x00"); // Tokenizer requires NULL terminated input
-        d_tokenizer.dval = &d_val__;
         d_tokenizer.scan_string(inp);
+        d_tokenizer.val = &d_val__;
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {

@@ -13,22 +13,6 @@
 
 namespace SymEngine {
 
-struct input_t {
-    unsigned char *cur;
-    unsigned char *mar;
-    unsigned char *tok;
-
-    std::string &str;
-
-    SymEngine::ParserBase::STYPE__ *val;
-
-    input_t(std::string &s)
-        : cur((unsigned char*)(&s[0]))
-        , str(s)
-    {}
-};
-
-
 Tokenizer::Tokenizer() {
 }
 
@@ -39,17 +23,16 @@ void Tokenizer::scan_string(std::string &str) {
     // The input string must be NULL terminated, otherwise the tokenizer will
     // not detect the end of string.
     SYMENGINE_ASSERT(str[str.size()-1] == "\x00");
-    m_in = SymEngine::make_unique<input_t>(str);
-    m_in->val = dval;
+    cur = (unsigned char*)(&str[0]);
 }
 
-int yylex(input_t &in)
+int Tokenizer::lex()
 {
     for (;;) {
-        in.tok = in.cur;
+        tok = cur;
         /*!re2c
-            re2c:define:YYCURSOR = in.cur;
-            re2c:define:YYMARKER = in.mar;
+            re2c:define:YYCURSOR = cur;
+            re2c:define:YYMARKER = mar;
             re2c:yyfill:enable = 0;
             re2c:define:YYCTYPE = "unsigned char";
 
@@ -68,36 +51,32 @@ int yylex(input_t &in)
             implicitmul = numeric ident;
 
             * {
-                std::string s = std::string((char*)in.tok, in.cur-in.tok);
+                std::string s = std::string((char*)tok, cur-tok);
                 throw SymEngine::ParseError("Unknown token: '" + s + "'");
             }
             end { return 0; }
             whitespace { continue; }
 
-            operators { return in.tok[0]; }
+            operators { return tok[0]; }
             pows { return Parser::POW; }
             le   { return Parser::LE; }
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
             ident {
-                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
+                *(val) = std::string((char*)tok, cur-tok);
                 return Parser::IDENTIFIER;
             }
             numeric {
-                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
+                *(val) = std::string((char*)tok, cur-tok);
                 return Parser::NUMERIC;
             }
             implicitmul {
-                *(in.val) = std::string((char*)in.tok, in.cur-in.tok);
+                *(val) = std::string((char*)tok, cur-tok);
                 return Parser::IMPLICIT_MUL;
             }
         */
     }
 }
 
-int Tokenizer::lex() {
-    return yylex(*m_in);
-}
 
-
-} // SymEngine
+} // namespace SymEngine

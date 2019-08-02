@@ -10,13 +10,13 @@
 namespace SymEngine
 {
 
-struct input_t;
-
 class Tokenizer
 {
-    std::unique_ptr<input_t> m_in;
+    unsigned char *cur;
+    unsigned char *mar;
+    unsigned char *tok;
 public:
-    SymEngine::ParserBase::STYPE__ *dval;
+    SymEngine::ParserBase::STYPE__ *val;
     Tokenizer();
     ~Tokenizer();
     void scan_string(std::string &str);
