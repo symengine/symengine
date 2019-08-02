@@ -38,8 +38,7 @@ done
 
 FILES="symengine/parser/parser.cpp
 symengine/parser/parserbase.h
-symengine/parser/scanner.cpp
-symengine/parser/scannerbase.h
+symengine/parser/tokenizer.cpp
 "
 UNAME=`uname`
 for FILE in $FILES; do
