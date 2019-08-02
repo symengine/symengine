@@ -165,6 +165,12 @@ void yy_scan_stream(std::istream &stream)
 
 namespace SymEngine {
 
+Tokenizer::Tokenizer() {
+}
+
+Tokenizer::~Tokenizer() {
+}
+
 void Tokenizer::scan_stream(std::istream &stream) {
     yy_scan_stream(stream);
     in->val = dval;
