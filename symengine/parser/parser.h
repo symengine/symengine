@@ -23,8 +23,8 @@ public:
         } else {
             inp.str(input);
         }
-        d_tokenizer.d_val = %d_val__;
-        d_tokenizer.add_stream(inp);
+        d_tokenizer.dval = &d_val__;
+        d_tokenizer.scan_stream(inp);
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {
