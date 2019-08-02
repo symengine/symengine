@@ -84,6 +84,7 @@ st_expr :
     expr
     {
         $$ = $1;
+        //FIXME:
         //res = $$;
     }
 ;
