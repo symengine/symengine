@@ -49,64 +49,78 @@ yy::parser::symbol_type Tokenizer::lex()
             if (yybm[0 + yych] & 32) {
                 goto yy6;
             }
-            if (yych <= '=') {
-                if (yych <= '.') {
-                    if (yych <= ')') {
-                        if (yych >= 0x01)
+            if (yych <= '>') {
+                if (yych <= '-') {
+                    if (yych <= '&') {
+                        if (yych <= 0x00)
+                            goto yy2;
+                        if (yych <= '%')
                             goto yy4;
+                        goto yy9;
                     } else {
-                        if (yych <= '*')
-                            goto yy9;
-                        if (yych <= '-')
+                        if (yych <= '\'')
                             goto yy4;
-                        goto yy10;
+                        if (yych == '*')
+                            goto yy11;
+                        goto yy9;
                     }
                 } else {
                     if (yych <= '9') {
+                        if (yych <= '.')
+                            goto yy12;
                         if (yych <= '/')
-                            goto yy4;
-                        goto yy11;
+                            goto yy9;
+                        goto yy13;
                     } else {
                         if (yych <= ';')
                             goto yy4;
                         if (yych <= '<')
-                            goto yy14;
-                        goto yy15;
+                            goto yy16;
+                        if (yych <= '=')
+                            goto yy17;
+                        goto yy18;
                     }
                 }
             } else {
-                if (yych <= '^') {
-                    if (yych <= '?') {
-                        if (yych <= '>')
-                            goto yy16;
-                        goto yy4;
-                    } else {
+                if (yych <= '`') {
+                    if (yych <= 'Z') {
+                        if (yych <= '?')
+                            goto yy4;
                         if (yych <= '@')
-                            goto yy17;
-                        if (yych <= 'Z')
                             goto yy19;
+                        goto yy21;
+                    } else {
+                        if (yych <= ']')
+                            goto yy4;
+                        if (yych <= '^')
+                            goto yy9;
+                        if (yych <= '_')
+                            goto yy21;
                         goto yy4;
                     }
                 } else {
-                    if (yych <= '`') {
-                        if (yych <= '_')
-                            goto yy19;
-                        goto yy4;
-                    } else {
+                    if (yych <= '|') {
                         if (yych <= 'z')
-                            goto yy19;
+                            goto yy21;
+                        if (yych <= '{')
+                            goto yy4;
+                        goto yy9;
+                    } else {
+                        if (yych == '~')
+                            goto yy9;
                         if (yych <= 0x7F)
                             goto yy4;
-                        goto yy19;
+                        goto yy21;
                     }
                 }
             }
+        yy2:
             ++cur;
 #line 39 "tokenizer.re"
             {
                 return yy::parser::make_END_OF_FILE();
             }
-#line 106 "tokenizer.cpp"
+#line 114 "tokenizer.cpp"
         yy4:
             ++cur;
         yy5 :
@@ -114,7 +128,7 @@ yy::parser::symbol_type Tokenizer::lex()
         {
             throw SymEngine::ParseError("Unknown token: '" + token() + "'");
         }
-#line 112 "tokenizer.cpp"
+#line 120 "tokenizer.cpp"
         yy6:
             yych = *++cur;
             if (yybm[0 + yych] & 32) {
@@ -124,223 +138,231 @@ yy::parser::symbol_type Tokenizer::lex()
             {
                 continue;
             }
-#line 120 "tokenizer.cpp"
+#line 128 "tokenizer.cpp"
         yy9:
+            ++cur;
+        yy10 :
+#line 43 "tokenizer.re"
+        {
+            return yy::parser::symbol_type((char)tok[0]);
+        }
+#line 134 "tokenizer.cpp"
+        yy11:
             yych = *++cur;
             if (yych == '*')
-                goto yy17;
-            goto yy5;
-        yy10:
+                goto yy19;
+            goto yy10;
+        yy12:
             yych = *++cur;
             if (yych <= '/')
                 goto yy5;
             if (yych <= '9')
-                goto yy22;
+                goto yy24;
             goto yy5;
-        yy11:
+        yy13:
             yych = *++cur;
             if (yybm[0 + yych] & 64) {
-                goto yy11;
+                goto yy13;
             }
             if (yych <= '^') {
                 if (yych <= '@') {
                     if (yych == '.')
-                        goto yy24;
+                        goto yy26;
                 } else {
                     if (yych == 'E')
-                        goto yy28;
+                        goto yy30;
                     if (yych <= 'Z')
-                        goto yy25;
+                        goto yy27;
                 }
             } else {
                 if (yych <= 'd') {
                     if (yych != '`')
-                        goto yy25;
+                        goto yy27;
                 } else {
                     if (yych <= 'e')
-                        goto yy28;
+                        goto yy30;
                     if (yych <= 'z')
-                        goto yy25;
+                        goto yy27;
                     if (yych >= 0x80)
-                        goto yy25;
+                        goto yy27;
                 }
             }
-        yy13 :
+        yy15 :
 #line 49 "tokenizer.re"
         {
             return yy::parser::make_NUMERIC(token());
         }
-#line 154 "tokenizer.cpp"
-        yy14:
-            yych = *++cur;
-            if (yych == '=')
-                goto yy29;
-            goto yy5;
-        yy15:
+#line 168 "tokenizer.cpp"
+        yy16:
             yych = *++cur;
             if (yych == '=')
                 goto yy31;
-            goto yy5;
-        yy16:
+            goto yy10;
+        yy17:
             yych = *++cur;
             if (yych == '=')
                 goto yy33;
             goto yy5;
-        yy17:
+        yy18:
+            yych = *++cur;
+            if (yych == '=')
+                goto yy35;
+            goto yy10;
+        yy19:
             ++cur;
 #line 44 "tokenizer.re"
             {
                 return yy::parser::make_POW();
             }
-#line 171 "tokenizer.cpp"
-        yy19:
+#line 185 "tokenizer.cpp"
+        yy21:
             yych = *++cur;
             if (yybm[0 + yych] & 128) {
-                goto yy19;
+                goto yy21;
             }
 #line 48 "tokenizer.re"
             {
                 return yy::parser::make_IDENTIFIER(token());
             }
-#line 179 "tokenizer.cpp"
-        yy22:
+#line 193 "tokenizer.cpp"
+        yy24:
             yych = *++cur;
-        yy23:
+        yy25:
             if (yych <= '^') {
                 if (yych <= '@') {
                     if (yych <= '/')
-                        goto yy13;
+                        goto yy15;
                     if (yych <= '9')
-                        goto yy22;
-                    goto yy13;
+                        goto yy24;
+                    goto yy15;
                 } else {
                     if (yych == 'E')
-                        goto yy28;
+                        goto yy30;
                     if (yych <= 'Z')
-                        goto yy25;
-                    goto yy13;
+                        goto yy27;
+                    goto yy15;
                 }
             } else {
                 if (yych <= 'd') {
                     if (yych == '`')
-                        goto yy13;
-                    goto yy25;
+                        goto yy15;
+                    goto yy27;
                 } else {
                     if (yych <= 'e')
-                        goto yy28;
+                        goto yy30;
                     if (yych <= 'z')
-                        goto yy25;
+                        goto yy27;
                     if (yych <= 0x7F)
-                        goto yy13;
-                    goto yy25;
+                        goto yy15;
+                    goto yy27;
                 }
             }
-        yy24:
+        yy26:
             yych = *++cur;
             if (yych == 'E')
-                goto yy25;
+                goto yy27;
             if (yych != 'e')
-                goto yy23;
-        yy25:
+                goto yy25;
+        yy27:
             yych = *++cur;
-        yy26:
+        yy28:
             if (yych <= '^') {
                 if (yych <= '9') {
                     if (yych >= '0')
-                        goto yy25;
+                        goto yy27;
                 } else {
                     if (yych <= '@')
-                        goto yy27;
+                        goto yy29;
                     if (yych <= 'Z')
-                        goto yy25;
+                        goto yy27;
                 }
             } else {
                 if (yych <= '`') {
                     if (yych <= '_')
-                        goto yy25;
+                        goto yy27;
                 } else {
                     if (yych <= 'z')
-                        goto yy25;
+                        goto yy27;
                     if (yych >= 0x80)
-                        goto yy25;
+                        goto yy27;
                 }
             }
-        yy27 :
+        yy29 :
 #line 50 "tokenizer.re"
         {
             return yy::parser::make_IMPLICIT_MUL(token());
         }
-#line 229 "tokenizer.cpp"
-        yy28:
+#line 243 "tokenizer.cpp"
+        yy30:
             yych = *(mar = ++cur);
             if (yych <= ',') {
                 if (yych == '+')
-                    goto yy35;
-                goto yy26;
+                    goto yy37;
+                goto yy28;
             } else {
                 if (yych <= '-')
-                    goto yy35;
-                if (yych <= '/')
-                    goto yy26;
-                if (yych <= '9')
                     goto yy37;
-                goto yy26;
+                if (yych <= '/')
+                    goto yy28;
+                if (yych <= '9')
+                    goto yy39;
+                goto yy28;
             }
-        yy29:
+        yy31:
             ++cur;
 #line 45 "tokenizer.re"
             {
                 return yy::parser::make_LE();
             }
-#line 245 "tokenizer.cpp"
-        yy31:
+#line 259 "tokenizer.cpp"
+        yy33:
             ++cur;
 #line 47 "tokenizer.re"
             {
                 return yy::parser::make_EQ();
             }
-#line 250 "tokenizer.cpp"
-        yy33:
+#line 264 "tokenizer.cpp"
+        yy35:
             ++cur;
 #line 46 "tokenizer.re"
             {
                 return yy::parser::make_GE();
             }
-#line 255 "tokenizer.cpp"
-        yy35:
+#line 269 "tokenizer.cpp"
+        yy37:
             yych = *++cur;
             if (yych <= '/')
-                goto yy36;
+                goto yy38;
             if (yych <= '9')
-                goto yy37;
-        yy36:
+                goto yy39;
+        yy38:
             cur = mar;
-            goto yy27;
-        yy37:
+            goto yy29;
+        yy39:
             yych = *++cur;
             if (yych <= '^') {
                 if (yych <= '9') {
                     if (yych <= '/')
-                        goto yy13;
-                    goto yy37;
+                        goto yy15;
+                    goto yy39;
                 } else {
                     if (yych <= '@')
-                        goto yy13;
+                        goto yy15;
                     if (yych <= 'Z')
-                        goto yy25;
-                    goto yy13;
+                        goto yy27;
+                    goto yy15;
                 }
             } else {
                 if (yych <= '`') {
                     if (yych <= '_')
-                        goto yy25;
-                    goto yy13;
+                        goto yy27;
+                    goto yy15;
                 } else {
                     if (yych <= 'z')
-                        goto yy25;
+                        goto yy27;
                     if (yych <= 0x7F)
-                        goto yy13;
-                    goto yy25;
+                        goto yy15;
+                    goto yy27;
                 }
             }
         }

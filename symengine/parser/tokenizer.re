@@ -40,7 +40,7 @@ yy::parser::symbol_type Tokenizer::lex()
             whitespace { continue; }
 
             // FIXME:
-            //operators { return tok[0]; }
+            operators { return yy::parser::symbol_type((char)tok[0]); }
             pows { return yy::parser::make_POW(); }
             le   { return yy::parser::make_LE(); }
             ge   { return yy::parser::make_GE(); }
