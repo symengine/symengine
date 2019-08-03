@@ -32,7 +32,7 @@ namespace yy {
     }
     ~YYSTYPE() {
     }
-    YYSTYPE& YYSTYPE::operator=(const YYSTYPE&) {
+    YYSTYPE& operator=(const YYSTYPE&) {
     }
 }
 
@@ -65,9 +65,6 @@ using SymEngine::vec_boolean;
 #include "symengine/parser/tokenizer.h"
 
 
-namespace yy
-{
-
 SymEngine::Parser2 p;
 
 int yylex ()
@@ -75,14 +72,10 @@ int yylex ()
     return p.d_tokenizer->lex();
 } // ylex
 
-/*
-void parser::error(const std::string &msg)
+void yyerror(const std::string &msg)
 {
     throw SymEngine::ParseError(msg + "XXX");
 }
-*/
-
-} // namespace yy
 
 } // code
 
