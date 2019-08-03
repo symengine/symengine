@@ -15,7 +15,6 @@ TODO:
 #include "symengine/add.h"
 #include "symengine/pow.h"
 #include "symengine/logic.h"
-#include "symengine/parser/tokenizer.h"
 #include "symengine/parser/parser_new.h"
 
 // TODO: move these to cpp
@@ -46,6 +45,9 @@ namespace yy {
 %code // *.cpp
 {
 
+#include "symengine/parser/tokenizer.h"
+
+
 namespace yy
 {
 
@@ -53,7 +55,7 @@ SymEngine::Parser2 p;
 
 parser::symbol_type yylex ()
 {
-    return p.d_tokenizer.lex();
+    return p.d_tokenizer->lex();
 } // ylex
 
 void parser::error(const std::string &msg)
@@ -69,6 +71,7 @@ void parser::error(const std::string &msg)
 %token <std::string> IDENTIFIER
 %token <std::string> NUMERIC
 %token <std::string> IMPLICIT_MUL
+%token END_OF_FILE 0
 
 %left '|'
 %left '^'

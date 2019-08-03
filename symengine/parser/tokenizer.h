@@ -4,6 +4,7 @@
 #include <string>
 
 #include "parserbase.h"
+#include "parser.tab.hh"
 
 namespace SymEngine
 {

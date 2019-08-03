@@ -11,7 +11,7 @@ void Tokenizer::set_string(std::string &str) {
     cur = (unsigned char*)(&str[0]);
 }
 
-parser::symbol_type Tokenizer::lex()
+yy::parser::symbol_type Tokenizer::lex()
 {
     for (;;) {
         tok = cur;
@@ -36,7 +36,7 @@ parser::symbol_type Tokenizer::lex()
             implicitmul = numeric ident;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
-            end { return 0; }
+            end { return yy::parser::make_END_OF_FILE(); }
             whitespace { continue; }
 
             operators { return tok[0]; }

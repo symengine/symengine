@@ -4,28 +4,24 @@
 #include <fstream>
 #include <algorithm>
 
-#include <symengine/parser/tokenizer.h>
+#include "symengine/add.h"
+#include "symengine/pow.h"
+#include "symengine/logic.h"
 
 namespace SymEngine
 {
+
+class Tokenizer;
 
 class Parser2
 {
     std::string inp;
 
 public:
-    Tokenizer d_tokenizer;
+    std::unique_ptr<Tokenizer> d_tokenizer;
     RCP<const Basic> res;
 
-    void init(const std::string &input, bool convert_xor_)
-    {
-        inp = input;
-        if (convert_xor_) {
-            std::replace(inp.begin(), inp.end(), '^', '@');
-        }
-        d_tokenizer.set_string(inp);
-        //d_tokenizer.val = &d_val__;
-    }
+    void init(const std::string &input, bool convert_xor_);
 
     std::map<const std::string, const RCP<const Basic>> constants = {
 

@@ -1,5 +1,6 @@
 #include <symengine/parser/parser_new.h>
 #include <symengine/parser/parser.tab.hh>
+#include "symengine/parser/tokenizer.h"
 
 namespace SymEngine {
 
@@ -12,6 +13,17 @@ RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
         return yy::p.res;
 
     throw ParseError("Parsing Unsuccessful");
+}
+
+void Parser2::init(const std::string &input, bool convert_xor_)
+{
+    inp = input;
+    if (convert_xor_) {
+        std::replace(inp.begin(), inp.end(), '^', '@');
+    }
+    d_tokenizer = std::unique_ptr<Tokenizer>(new Tokenizer());
+    d_tokenizer->set_string(inp);
+    //d_tokenizer.val = &d_val__;
 }
 
 RCP<const Basic> Parser2::functionify(const std::string &name, vec_basic &params)
