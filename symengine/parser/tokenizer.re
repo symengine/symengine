@@ -39,7 +39,8 @@ yy::parser::symbol_type Tokenizer::lex()
             end { return yy::parser::make_END_OF_FILE(); }
             whitespace { continue; }
 
-            operators { return tok[0]; }
+            // FIXME:
+            //operators { return tok[0]; }
             pows { return yy::parser::make_POW(); }
             le   { return yy::parser::make_LE(); }
             ge   { return yy::parser::make_GE(); }
