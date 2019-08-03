@@ -1,10 +1,14 @@
 #include <symengine/parser/parser_new.h>
+#include <symengine/parser/parser.tab.hh>
 
 namespace SymEngine {
 
 RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
 {
     Parser2 p(s, convert_xor);
+
+    yy::parser parser;
+    parser.parse();
 
     if (p.parse() == 0)
         return p.res;
