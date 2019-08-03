@@ -17,7 +17,9 @@ TODO:
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 #include "symengine/parser/tokenizer.h"
+#include "symengine/parser/parser_new.h"
 
+// TODO: move these to cpp
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::vec_basic;
@@ -35,6 +37,11 @@ using SymEngine::set_boolean;
 using SymEngine::Boolean;
 using SymEngine::one;
 using SymEngine::vec_boolean;
+
+namespace yy {
+    extern SymEngine::Parser2 p;
+}
+
 }
 
 %code // *.cpp
@@ -43,11 +50,11 @@ using SymEngine::vec_boolean;
 namespace yy
 {
 
-SymEngine::Tokenizer tokenizer;
+SymEngine::Parser2 p;
 
 int yylex (parser::semantic_type* yylval)
 {
-    int t = tokenizer.lex();
+    int t = p.d_tokenizer.lex();
     //yylval = tokenizer.val
     //return t;
     return 0;

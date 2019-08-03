@@ -11,13 +11,13 @@ namespace SymEngine
 
 class Parser2
 {
-    Tokenizer d_tokenizer;
     std::string inp;
 
 public:
+    Tokenizer d_tokenizer;
     RCP<const Basic> res;
 
-    inline Parser2(const std::string &input, bool convert_xor_)
+    void init(const std::string &input, bool convert_xor_)
     {
         inp = input;
         if (convert_xor_) {
