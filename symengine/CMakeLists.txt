@@ -55,6 +55,7 @@ set(SRC
     parser/parser.cpp
     parser/parser_old.cpp
     parser/parser.tab.cc
+    parser/parse_utils.cpp
     parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
