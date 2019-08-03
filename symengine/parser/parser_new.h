@@ -24,7 +24,7 @@ public:
             std::replace(inp.begin(), inp.end(), '^', '@');
         }
         d_tokenizer.set_string(inp);
-        d_tokenizer.val = &d_val__;
+        //d_tokenizer.val = &d_val__;
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {
