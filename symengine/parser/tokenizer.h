@@ -16,6 +16,7 @@ class Tokenizer
 
 public:
     SymEngine::ParserBase::STYPE__ *val;
+    std::string sval;
     void set_string(std::string &str);
     int lex();
     std::string token();

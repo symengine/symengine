@@ -53,8 +53,7 @@ SymEngine::Parser2 p;
 int yylex (parser::semantic_type* yylval)
 {
     int t = p.d_tokenizer.lex();
-    //yylval = tokenizer.val
-    //return t;
+    *yylval = p.d_tokenizer.sval;
     return 0;
 } // ylex
 

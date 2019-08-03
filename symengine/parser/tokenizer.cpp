@@ -374,6 +374,8 @@ int Tokenizer::lex()
 
 std::string Tokenizer::token()
 {
+    // FIXME: simplify this:
+    sval = std::string((char *)tok, cur - tok);
     return std::string((char *)tok, cur - tok);
 }
 
