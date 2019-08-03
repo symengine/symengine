@@ -7,7 +7,6 @@
 TODO:
     * define parse_identifier, parse_numeric, functionify and parse_implicit_mul
     * hook the tokenizer in
-    * fix the "res = $$;" part
     * fix the shift/reduce conflict
 */
 
@@ -102,8 +101,7 @@ st_expr :
     expr
     {
         $$ = $1;
-        //FIXME:
-        //res = $$;
+        p.res = $$;
     }
 ;
 
