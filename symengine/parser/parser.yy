@@ -2,6 +2,7 @@
 %require "3.0"
 %language "c++"
 %define api.value.type variant
+%define api.token.constructor
 
 /*
 TODO:
@@ -50,11 +51,9 @@ namespace yy
 
 SymEngine::Parser2 p;
 
-int yylex (parser::semantic_type* yylval)
+parser::symbol_type yylex ()
 {
-    int t = p.d_tokenizer.lex();
-    yylval->copy<std::string>(p.d_tokenizer.sval);
-    return t;
+    return p.d_tokenizer.lex();
 } // ylex
 
 void parser::error(const std::string &msg)

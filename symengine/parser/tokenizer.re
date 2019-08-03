@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+#include "parser.tab.hh"
 
 namespace SymEngine {
 
@@ -10,7 +11,7 @@ void Tokenizer::set_string(std::string &str) {
     cur = (unsigned char*)(&str[0]);
 }
 
-int Tokenizer::lex()
+parser::symbol_type Tokenizer::lex()
 {
     for (;;) {
         tok = cur;
@@ -39,13 +40,13 @@ int Tokenizer::lex()
             whitespace { continue; }
 
             operators { return tok[0]; }
-            pows { return Parser::POW; }
-            le   { return Parser::LE; }
-            ge   { return Parser::GE; }
-            eqs  { return Parser::EQ; }
-            ident { sval = token(); return Parser::IDENTIFIER; }
-            numeric { sval = token(); return Parser::NUMERIC; }
-            implicitmul { sval = token(); return Parser::IMPLICIT_MUL; }
+            pows { return yy::parser::make_POW(); }
+            le   { return yy::parser::make_LE(); }
+            ge   { return yy::parser::make_GE(); }
+            eqs  { return yy::parser::make_EQ(); }
+            ident { return yy::parser::make_IDENTIFIER(token()); }
+            numeric { return yy::parser::make_NUMERIC(token()); }
+            implicitmul { return yy::parser::make_IMPLICIT_MUL(token()); }
         */
     }
 }

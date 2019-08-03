@@ -18,7 +18,7 @@ public:
     SymEngine::ParserBase::STYPE__ *val;
     std::string sval;
     void set_string(std::string &str);
-    int lex();
+    yy::parser::symbol_type lex();
     std::string token();
 };
 
