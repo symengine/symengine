@@ -16,6 +16,7 @@ TODO:
 #include "symengine/add.h"
 #include "symengine/pow.h"
 #include "symengine/logic.h"
+#include "symengine/parser/tokenizer.h"
 
 using SymEngine::RCP;
 using SymEngine::Basic;
@@ -42,9 +43,11 @@ using SymEngine::vec_boolean;
 namespace yy
 {
 
+SymEngine::Tokenizer tokenizer;
+
 int yylex (parser::semantic_type* yylval)
 {
-    //int t = tokenizer.lex();
+    int t = tokenizer.lex();
     //yylval = tokenizer.val
     //return t;
     return 0;
