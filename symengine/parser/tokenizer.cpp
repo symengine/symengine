@@ -15,7 +15,7 @@ void Tokenizer::set_string(std::string &str)
     cur = (unsigned char *)(&str[0]);
 }
 
-yy::parser::symbol_type Tokenizer::lex()
+int Tokenizer::lex()
 {
     for (;;) {
         tok = cur;
@@ -144,7 +144,7 @@ yy::parser::symbol_type Tokenizer::lex()
         yy10 :
 #line 43 "tokenizer.re"
         {
-            return yy::parser::symbol_type((char)tok[0]);
+            return tok[0];
         }
 #line 134 "tokenizer.cpp"
         yy11:
@@ -212,7 +212,7 @@ yy::parser::symbol_type Tokenizer::lex()
             ++cur;
 #line 44 "tokenizer.re"
             {
-                return yy::parser::make_POW();
+                return yytokentype::POW;
             }
 #line 185 "tokenizer.cpp"
         yy21:

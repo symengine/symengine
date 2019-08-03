@@ -11,7 +11,7 @@ void Tokenizer::set_string(std::string &str) {
     cur = (unsigned char*)(&str[0]);
 }
 
-yy::parser::symbol_type Tokenizer::lex()
+int Tokenizer::lex()
 {
     for (;;) {
         tok = cur;
@@ -40,8 +40,8 @@ yy::parser::symbol_type Tokenizer::lex()
             whitespace { continue; }
 
             // FIXME:
-            operators { return yy::parser::symbol_type((char)tok[0]); }
-            pows { return yy::parser::make_POW(); }
+            operators { return tok[0]; }
+            pows { return yytokentype::POW; }
             le   { return yy::parser::make_LE(); }
             ge   { return yy::parser::make_GE(); }
             eqs  { return yy::parser::make_EQ(); }

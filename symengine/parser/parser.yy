@@ -6,20 +6,16 @@ TODO:
     * fix the shift/reduce conflict
 */
 
-%union {
-    RCP<const Basic> basic;
-    vec_basic basic_vec;
-    std::string string;
-}
-
 
 %code requires // *.h
 {
 
 #include "symengine/add.h"
+#include "symengine/parser/parser_new.h"
 
 using SymEngine::RCP;
 using SymEngine::Basic;
+using SymEngine::vec_basic;
 
 namespace yy {
     extern SymEngine::Parser2 p;
@@ -27,11 +23,18 @@ namespace yy {
 
 }
 
+
+%union {
+    RCP<const Basic> basic;
+    vec_basic basic_vec;
+    std::string string;
+}
+
+
 %code // *.cpp
 {
 #include "symengine/pow.h"
 #include "symengine/logic.h"
-#include "symengine/parser/parser_new.h"
 
 // TODO: move these to cpp
 using SymEngine::RCP;
@@ -61,24 +64,26 @@ namespace yy
 
 SymEngine::Parser2 p;
 
-parser::symbol_type yylex ()
+int yylex ()
 {
     return p.d_tokenizer->lex();
 } // ylex
 
+/*
 void parser::error(const std::string &msg)
 {
     throw SymEngine::ParseError(msg + "XXX");
 }
+*/
 
 } // namespace yy
 
 } // code
 
 
-%token <std::string> IDENTIFIER
-%token <std::string> NUMERIC
-%token <std::string> IMPLICIT_MUL
+%token <string> IDENTIFIER
+%token <string> NUMERIC
+%token <string> IMPLICIT_MUL
 %token END_OF_FILE 0
 
 %left '|'
@@ -96,11 +101,11 @@ void parser::error(const std::string &msg)
 %right NOT
 %nonassoc '('
 
-%type <RCP<const Basic>> st_expr
-%type <RCP<const Basic>> expr
-%type <vec_basic> expr_list
-%type <RCP<const Basic>> leaf
-%type <RCP<const Basic>> func
+%type <basic> st_expr
+%type <basic> expr
+%type <basic_vec> expr_list
+%type <basic> leaf
+%type <basic> func
 
 %start st_expr
 

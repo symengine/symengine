@@ -4,7 +4,6 @@
 #include <string>
 
 #include "parserbase.h"
-#include "parser.tab.hh"
 
 namespace SymEngine
 {
@@ -19,7 +18,7 @@ public:
     SymEngine::ParserBase::STYPE__ *val;
     std::string sval;
     void set_string(std::string &str);
-    yy::parser::symbol_type lex();
+    int lex();
     std::string token();
 };
 
