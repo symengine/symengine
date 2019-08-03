@@ -7,6 +7,7 @@ using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::parse;
 using SymEngine::parse_old;
+using SymEngine::parse_new;
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,14 @@ int main(int argc, char *argv[])
 
     t1 = std::chrono::high_resolution_clock::now();
     a = parse_old(text);
+    t2 = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
+    std::cout << *a << std::endl;
+
+    t1 = std::chrono::high_resolution_clock::now();
+    a = parse_new(text);
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
