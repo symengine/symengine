@@ -28,6 +28,12 @@ namespace yy {
     RCP<const Basic> basic;
     vec_basic basic_vec;
     std::string string;
+    YYSTYPE() {
+    }
+    ~YYSTYPE() {
+    }
+    YYSTYPE& YYSTYPE::operator=(const YYSTYPE&) {
+    }
 }
 
 
