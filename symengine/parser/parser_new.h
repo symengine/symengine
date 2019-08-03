@@ -1,5 +1,5 @@
-#ifndef SYMENGINE_UTILS_H
-#define SYMENGINE_UTILS_H
+#ifndef SYMENGINE_PARSER_NEW_H
+#define SYMENGINE_PARSER_NEW_H
 
 #include "parserbase.h"
 #include "tokenizer.h"
