@@ -1,5 +1,4 @@
 #include "parserbase.h"
-#include "scanner.h"
 #include <fstream>
 #include "parser.h"
 
@@ -8,7 +7,7 @@ namespace SymEngine
 // $insert lex
 inline int Parser::lex()
 {
-    return d_scanner.lex();
+    return d_tokenizer.lex();
 }
 
 inline void Parser::print()

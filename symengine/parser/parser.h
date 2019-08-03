@@ -1,5 +1,5 @@
 #include "parserbase.h"
-#include "scanner.h"
+#include "tokenizer.h"
 #include <fstream>
 #include <algorithm>
 
@@ -8,23 +8,20 @@ namespace SymEngine
 #undef Parser
 class Parser : public ParserBase
 {
-    Scanner d_scanner;
-    std::istringstream inp;
+    Tokenizer d_tokenizer;
+    std::string inp;
 
 public:
     RCP<const Basic> res;
 
     inline Parser(const std::string &input, bool convert_xor_)
     {
+        inp = input;
         if (convert_xor_) {
-            std::string s = input;
-            std::replace(s.begin(), s.end(), '^', '@');
-            inp.str(s);
-        } else {
-            inp.str(input);
+            std::replace(inp.begin(), inp.end(), '^', '@');
         }
-        d_scanner.switchStreams(inp, std::cout);
-        d_scanner.dval = &d_val__;
+        d_tokenizer.set_string(inp);
+        d_tokenizer.val = &d_val__;
     }
 
     std::map<const std::string, const RCP<const Basic>> constants = {
