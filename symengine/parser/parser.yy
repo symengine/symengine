@@ -1,8 +1,4 @@
-%skeleton "lalr1.cc"
 %require "3.0"
-%language "c++"
-%define api.value.type variant
-%define api.token.constructor
 
 /*
 TODO:
