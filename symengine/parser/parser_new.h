@@ -1,10 +1,10 @@
 #ifndef SYMENGINE_PARSER_NEW_H
 #define SYMENGINE_PARSER_NEW_H
 
-#include "parserbase.h"
-#include "tokenizer.h"
 #include <fstream>
 #include <algorithm>
+
+#include <symengine/parser/tokenizer.h>
 
 namespace SymEngine
 {

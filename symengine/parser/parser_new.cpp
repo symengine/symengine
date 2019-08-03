@@ -1,3 +1,5 @@
+#include <symengine/parser/parser_new.h>
+
 namespace SymEngine {
 
 RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
