@@ -6,9 +6,29 @@ TODO:
     * fix the shift/reduce conflict
 */
 
+%union {
+    RCP<const Basic> basic;
+    vec_basic basic_vec;
+    std::string string;
+}
+
+
 %code requires // *.h
 {
+
 #include "symengine/add.h"
+
+using SymEngine::RCP;
+using SymEngine::Basic;
+
+namespace yy {
+    extern SymEngine::Parser2 p;
+}
+
+}
+
+%code // *.cpp
+{
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 #include "symengine/parser/parser_new.h"
@@ -32,14 +52,6 @@ using SymEngine::Boolean;
 using SymEngine::one;
 using SymEngine::vec_boolean;
 
-namespace yy {
-    extern SymEngine::Parser2 p;
-}
-
-}
-
-%code // *.cpp
-{
 
 #include "symengine/parser/tokenizer.h"
 
