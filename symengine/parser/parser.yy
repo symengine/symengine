@@ -54,8 +54,13 @@ int yylex (parser::semantic_type* yylval)
 {
     int t = p.d_tokenizer.lex();
     yylval->copy<std::string>(p.d_tokenizer.sval);
-    return 0;
+    return t;
 } // ylex
+
+void parser::error(const std::string &msg)
+{
+    throw SymEngine::ParseError(msg);
+}
 
 } // namespace yy
 
