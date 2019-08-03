@@ -12,7 +12,6 @@ class DiffVisitor : public BaseVisitor<DiffVisitor>
 protected:
     const RCP<const Symbol> x;
     RCP<const Basic> result_;
-    umap_basic_basic visited;
 
 public:
     DiffVisitor(const RCP<const Symbol> &x) : x(x)
@@ -729,13 +728,7 @@ public:
 
     void apply(const RCP<const Basic> &b)
     {
-        auto it = visited.find(b);
-        if (it == visited.end()) {
-            b->accept(*this);
-            insert(visited, b, result_);
-        } else {
-            result_ = it->second;
-        }
+        b->accept(*this);
     }
 
     RCP<const Basic> get_result()
