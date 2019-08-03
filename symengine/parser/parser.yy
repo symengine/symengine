@@ -5,7 +5,6 @@
 
 /*
 TODO:
-    * define parse_identifier, parse_numeric, functionify and parse_implicit_mul
     * hook the tokenizer in
     * fix the shift/reduce conflict
 */
@@ -58,11 +57,6 @@ int yylex (parser::semantic_type* yylval)
     //return t;
     return 0;
 } // ylex
-
-RCP<const Basic> parse_identifier(std::string s);
-RCP<const Basic> parse_numeric(std::string s);
-RCP<const Basic> functionify(std::string s, vec_basic v);
-std::tuple<RCP<const Basic>,RCP<const Basic>> parse_implicit_mul(std::string s);
 
 } // namespace yy
 
@@ -122,7 +116,7 @@ expr:
 // parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
         IMPLICIT_MUL POW expr
         {
-          auto tup = parse_implicit_mul($1);
+          auto tup = p.parse_implicit_mul($1);
           if (neq(*std::get<1>(tup), *one)) {
             $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
           } else {
@@ -188,18 +182,18 @@ expr:
 leaf:
     IDENTIFIER
     {
-        $$ = parse_identifier($1);
+        $$ = p.parse_identifier($1);
     }
 |
     IMPLICIT_MUL
     {
-        auto tup = parse_implicit_mul($1);
+        auto tup = p.parse_implicit_mul($1);
         $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
 |
     NUMERIC
     {
-        $$ = parse_numeric($1);
+        $$ = p.parse_numeric($1);
     }
 |
     func
@@ -211,7 +205,7 @@ leaf:
 func:
     IDENTIFIER '(' expr_list ')'
     {
-        $$ = functionify($1, $3);
+        $$ = p.functionify($1, $3);
     }
 ;
 
