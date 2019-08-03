@@ -7,7 +7,9 @@ namespace SymEngine
 // $insert lex
 inline int Parser::lex()
 {
-    return d_tokenizer.lex();
+    // FIXME::
+    return 0;
+    //return d_tokenizer.lex();
 }
 
 inline void Parser::print()
