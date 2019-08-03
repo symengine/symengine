@@ -8,8 +8,8 @@ RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
 {
     yy::p.init(s, convert_xor);
     //yy::tokenizer.sval = &p.sval;
-    yy::parser parser;
-    if (parser.parse() == 0)
+    //yy::parser parser;
+    if (yyparse() == 0)
         return yy::p.res;
 
     throw ParseError("Parsing Unsuccessful");

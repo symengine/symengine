@@ -36,18 +36,18 @@ int Tokenizer::lex()
             implicitmul = numeric ident;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
-            end { return yy::parser::make_END_OF_FILE(); }
+            end { return END_OF_FILE; }
             whitespace { continue; }
 
             // FIXME:
             operators { return tok[0]; }
-            pows { return yytokentype::POW; }
-            le   { return yy::parser::make_LE(); }
-            ge   { return yy::parser::make_GE(); }
-            eqs  { return yy::parser::make_EQ(); }
-            ident { return yy::parser::make_IDENTIFIER(token()); }
-            numeric { return yy::parser::make_NUMERIC(token()); }
-            implicitmul { return yy::parser::make_IMPLICIT_MUL(token()); }
+            pows { return POW; }
+            le   { return LE; }
+            ge   { return GE; }
+            eqs  { return EQ; }
+            ident { yylval.string=token(); return IDENTIFIER; }
+            numeric { yylval.string=token(); return NUMERIC; }
+            implicitmul { yylval.string=token(); return IMPLICIT_MUL; }
         */
     }
 }
