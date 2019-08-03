@@ -7,10 +7,9 @@ RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
 {
     yy::p.init(s, convert_xor);
     //yy::tokenizer.sval = &p.sval;
-    yy::parser par;
-    int t = par.parse();
-    //if (par.parse() == 0)
-        //return par.value.as<RCP<const Basic>>;
+    yy::parser parser;
+    if (parser.parse() == 0)
+        return yy::p.res;
 
     throw ParseError("Parsing Unsuccessful");
 }
