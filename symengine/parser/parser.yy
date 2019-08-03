@@ -59,7 +59,7 @@ int yylex (parser::semantic_type* yylval)
 
 void parser::error(const std::string &msg)
 {
-    throw SymEngine::ParseError(msg);
+    throw SymEngine::ParseError(msg + "XXX");
 }
 
 } // namespace yy

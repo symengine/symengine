@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     }
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    a = parse(text);
+    a = parse_new(text);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
@@ -34,14 +34,6 @@ int main(int argc, char *argv[])
 
     t1 = std::chrono::high_resolution_clock::now();
     a = parse_old(text);
-    t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
-                     .count()
-              << "ms" << std::endl;
-    std::cout << *a << std::endl;
-
-    t1 = std::chrono::high_resolution_clock::now();
-    a = parse_new(text);
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()

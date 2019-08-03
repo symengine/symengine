@@ -43,16 +43,14 @@ int Tokenizer::lex()
             le   { return Parser::LE; }
             ge   { return Parser::GE; }
             eqs  { return Parser::EQ; }
-            ident { *(val) = token(); return Parser::IDENTIFIER; }
-            numeric { *(val) = token(); return Parser::NUMERIC; }
-            implicitmul { *(val) = token(); return Parser::IMPLICIT_MUL; }
+            ident { sval = token(); return Parser::IDENTIFIER; }
+            numeric { sval = token(); return Parser::NUMERIC; }
+            implicitmul { sval = token(); return Parser::IMPLICIT_MUL; }
         */
     }
 }
 
 std::string Tokenizer::token() {
-    // FIXME: simplify this:
-    sval = std::string((char*)tok, cur-tok);
     return std::string((char*)tok, cur-tok);
 }
 

@@ -189,7 +189,7 @@ int Tokenizer::lex()
         yy15 :
 #line 47 "tokenizer.re"
         {
-            *(val) = token();
+            sval = token();
             return Parser::NUMERIC;
         }
 #line 167 "tokenizer.cpp"
@@ -222,7 +222,7 @@ int Tokenizer::lex()
             }
 #line 46 "tokenizer.re"
             {
-                *(val) = token();
+                sval = token();
                 return Parser::IDENTIFIER;
             }
 #line 192 "tokenizer.cpp"
@@ -291,7 +291,7 @@ int Tokenizer::lex()
         yy29 :
 #line 48 "tokenizer.re"
         {
-            *(val) = token();
+            sval = token();
             return Parser::IMPLICIT_MUL;
         }
 #line 242 "tokenizer.cpp"
@@ -374,8 +374,6 @@ int Tokenizer::lex()
 
 std::string Tokenizer::token()
 {
-    // FIXME: simplify this:
-    sval = std::string((char *)tok, cur - tok);
     return std::string((char *)tok, cur - tok);
 }
 
