@@ -10,35 +10,20 @@ TODO:
 %code requires // *.h
 {
 
-#include "symengine/add.h"
 #include "symengine/parser/parser_new.h"
-
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::vec_basic;
 
 extern SymEngine::Parser2 p;
 
 }
 
-
-%union {
-    RCP<const Basic> basic;
-    vec_basic basic_vec;
-    std::string string;
-    YYSTYPE() {
-    }
-    ~YYSTYPE() {
-    }
-    YYSTYPE& operator=(const YYSTYPE&) {
-    }
-}
+%define api.value.type {struct YYSTYPE}
 
 
 %code // *.cpp
 {
 #include "symengine/pow.h"
 #include "symengine/logic.h"
+#include "symengine/parser/parser_new.h"
 
 // TODO: move these to cpp
 using SymEngine::RCP;

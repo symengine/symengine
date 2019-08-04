@@ -8,6 +8,12 @@
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 
+struct YYSTYPE {
+    SymEngine::RCP<const SymEngine::Basic> basic;
+    SymEngine::vec_basic basic_vec;
+    std::string string;
+};
+
 namespace SymEngine
 {
 
