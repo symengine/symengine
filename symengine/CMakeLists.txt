@@ -52,7 +52,6 @@ set(SRC
     ntheory.cpp
     number.cpp
     numer_denom.cpp
-    parser/parser.cpp
     parser/parser_old.cpp
     parser/parser.tab.cc
     parser/parser_new.cpp
