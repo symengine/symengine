@@ -123,9 +123,7 @@ public:
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
         multi_arg_functions = {
-            {"max", max},
-            {"min", min},
-            {"levi_civita", levi_civita},
+            {"max", max}, {"min", min}, {"levi_civita", levi_civita},
     };
 
     // maps string to corresponding single argument boolean function
@@ -159,8 +157,7 @@ public:
     // maps string to corresponding multi argument vec_boolean function
     std::map<std::string, std::function<RCP<const Boolean>(vec_boolean &)>>
         multi_arg_vec_boolean_functions = {
-            {"Xor", logical_xor},
-            {"Xnor", logical_xnor},
+            {"Xor", logical_xor}, {"Xnor", logical_xnor},
     };
 
     // maps string to corresponding multi argument set_boolean function
