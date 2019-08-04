@@ -107,7 +107,7 @@ public:
             {"ln", single_casted_log},
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
-        };
+    };
 
     // maps string to corresponding double argument function
     std::map<std::string,
@@ -118,20 +118,22 @@ public:
             {"log", double_casted_log},    {"zeta", double_casted_zeta},
             {"lowergamma", lowergamma},    {"uppergamma", uppergamma},
             {"polygamma", polygamma},      {"kronecker_delta", kronecker_delta},
-        };
+    };
 
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
         multi_arg_functions = {
-            {"max", max}, {"min", min}, {"levi_civita", levi_civita},
-        };
+            {"max", max},
+            {"min", min},
+            {"levi_civita", levi_civita},
+    };
 
     // maps string to corresponding single argument boolean function
     std::map<std::string,
              std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
             {"Eq", single_casted_Eq},
-        };
+    };
 
     // maps string to corresponding single argument boolean function (accepting
     // Boolean objects)
@@ -139,7 +141,7 @@ public:
              std::function<RCP<const Boolean>(const RCP<const Boolean> &)>>
         single_arg_boolean_boolean_functions = {
             {"Not", logical_not},
-        };
+    };
 
     // maps string to corresponding double argument boolean function
     std::map<std::string,
@@ -152,13 +154,14 @@ public:
             {"Gt", Gt},
             {"Le", Le},
             {"Lt", Lt},
-        };
+    };
 
     // maps string to corresponding multi argument vec_boolean function
     std::map<std::string, std::function<RCP<const Boolean>(vec_boolean &)>>
         multi_arg_vec_boolean_functions = {
-            {"Xor", logical_xor}, {"Xnor", logical_xnor},
-        };
+            {"Xor", logical_xor},
+            {"Xnor", logical_xnor},
+    };
 
     // maps string to corresponding multi argument set_boolean function
     std::map<std::string, std::function<RCP<const Boolean>(set_boolean &)>>
@@ -167,7 +170,7 @@ public:
             {"Or", logical_or},
             {"Nand", logical_nand},
             {"Nor", logical_nor},
-        };
+    };
 
     int parse();
 
@@ -180,6 +183,6 @@ public:
 private:
 };
 
-}
+} // namespace SymEngine
 
 #endif

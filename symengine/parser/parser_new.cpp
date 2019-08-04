@@ -4,14 +4,15 @@
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
     p.init(s, convert_xor);
-    //TODO: check how sval is handled
-    //yy::tokenizer.sval = &p.sval;
-    //yy::parser parser;
+    // TODO: check how sval is handled
+    // yy::tokenizer.sval = &p.sval;
+    // yy::parser parser;
     if (yyparse() == 0)
         return p.res;
 
@@ -26,10 +27,11 @@ void Parser2::init(const std::string &input, bool convert_xor_)
     }
     d_tokenizer = std::unique_ptr<Tokenizer>(new Tokenizer());
     d_tokenizer->set_string(inp);
-    //d_tokenizer.val = &d_val__;
+    // d_tokenizer.val = &d_val__;
 }
 
-RCP<const Basic> Parser2::functionify(const std::string &name, vec_basic &params)
+RCP<const Basic> Parser2::functionify(const std::string &name,
+                                      vec_basic &params)
 {
     if (params.size() == 1) {
         if (single_arg_functions.find(name) != single_arg_functions.end()) {
@@ -100,7 +102,8 @@ RCP<const Basic> Parser2::parse_numeric(const std::string &expr)
     long l = std::strtol(startptr, &lendptr, 0);
 
     // Number is a long;
-    if (expr.find_first_of('.') == std::string::npos && lendptr == startptr+expr.length()) {
+    if (expr.find_first_of('.') == std::string::npos
+        && lendptr == startptr + expr.length()) {
         if (errno != ERANGE) {
             // No overflow in l
             return integer(l);
@@ -125,9 +128,8 @@ RCP<const Basic> Parser2::parse_numeric(const std::string &expr)
             return real_double(d);
         } else {
             // mpmath.libmp.libmpf.dps_to_prec
-            long prec
-                = std::max(long(1), std::lround((digits + 1)
-                                                * 3.3219280948873626));
+            long prec = std::max(
+                long(1), std::lround((digits + 1) * 3.3219280948873626));
             return real_mpfr(mpfr_class(expr, prec));
         }
 #else
@@ -138,7 +140,8 @@ RCP<const Basic> Parser2::parse_numeric(const std::string &expr)
     }
 }
 
-std::tuple<RCP<const Basic>, RCP<const Basic>> Parser2::parse_implicit_mul(const std::string &expr)
+std::tuple<RCP<const Basic>, RCP<const Basic>>
+Parser2::parse_implicit_mul(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;
@@ -161,4 +164,4 @@ std::tuple<RCP<const Basic>, RCP<const Basic>> Parser2::parse_implicit_mul(const
     return std::make_tuple(num, sym);
 }
 
-}
+} // namespace SymEngine
