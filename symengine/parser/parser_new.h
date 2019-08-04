@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <algorithm>
+#include <memory>
 
 #include "symengine/add.h"
 #include "symengine/pow.h"
