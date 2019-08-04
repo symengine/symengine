@@ -31,10 +31,10 @@
    version 2.2 of Bison.  */
 
 #ifndef YY_YY_PARSER_TAB_HH_INCLUDED
-#define YY_YY_PARSER_TAB_HH_INCLUDED
+# define YY_YY_PARSER_TAB_HH_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-#define YYDEBUG 0
+# define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -42,16 +42,19 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 22 "parser.yy" /* yacc.c:1909  */
 
+
 #include "symengine/parser/parser_new.h"
 
 extern SymEngine::Parser2 p;
+
 
 #line 52 "parser.tab.hh" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
-#define YYTOKENTYPE
-enum yytokentype {
+# define YYTOKENTYPE
+  enum yytokentype
+  {
     END_OF_FILE = 0,
     IDENTIFIER = 258,
     NUMERIC = 259,
@@ -62,18 +65,19 @@ enum yytokentype {
     UMINUS = 264,
     POW = 265,
     NOT = 266
-};
+  };
 #endif
 
 /* Value type.  */
-#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef struct YYSTYPE YYSTYPE;
-#define YYSTYPE_IS_TRIVIAL 1
-#define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
 #endif
+
 
 extern YYSTYPE yylval;
 
-int yyparse(void);
+int yyparse (void);
 
 #endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */

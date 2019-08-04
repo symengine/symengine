@@ -68,7 +68,7 @@ int yylex ()
 
 void yyerror(const std::string &msg)
 {
-    throw SymEngine::ParseError(msg + "XXX");
+    throw SymEngine::ParseError(msg);
 }
 
 } // code
