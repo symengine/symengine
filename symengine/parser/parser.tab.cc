@@ -168,7 +168,7 @@ int yylex()
 
 void yyerror(const std::string &msg)
 {
-    //    throw SymEngine::ParseError(msg);
+    throw SymEngine::ParseError(msg);
 }
 
 #line 185 "parser.tab.cc" /* yacc.c:359  */
