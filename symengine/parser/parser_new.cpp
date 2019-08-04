@@ -5,7 +5,7 @@
 
 namespace SymEngine {
 
-RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
+RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
     p.init(s, convert_xor);
     //TODO: check how sval is handled
