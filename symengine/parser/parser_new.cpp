@@ -6,11 +6,12 @@ namespace SymEngine {
 
 RCP<const Basic> parse_new(const std::string &s, bool convert_xor)
 {
-    yy::p.init(s, convert_xor);
+    p.init(s, convert_xor);
+    //TODO: check how sval is handled
     //yy::tokenizer.sval = &p.sval;
     //yy::parser parser;
     if (yyparse() == 0)
-        return yy::p.res;
+        return p.res;
 
     throw ParseError("Parsing Unsuccessful");
 }

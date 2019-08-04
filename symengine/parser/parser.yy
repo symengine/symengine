@@ -17,9 +17,7 @@ using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::vec_basic;
 
-namespace yy {
-    extern SymEngine::Parser2 p;
-}
+extern SymEngine::Parser2 p;
 
 }
 
