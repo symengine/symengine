@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "parserbase.h"
-
 namespace SymEngine
 {
 
@@ -15,7 +13,6 @@ class Tokenizer
     unsigned char *tok;
 
 public:
-    SymEngine::ParserBase::STYPE__ *val;
     std::string sval;
     void set_string(std::string &str);
     int lex();

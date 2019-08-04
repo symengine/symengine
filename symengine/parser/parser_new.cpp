@@ -1,6 +1,7 @@
 #include <symengine/parser/parser_new.h>
 #include <symengine/parser/parser.tab.hh>
-#include "symengine/parser/tokenizer.h"
+#include <symengine/parser/tokenizer.h>
+#include <symengine/real_double.h>
 
 namespace SymEngine {
 
