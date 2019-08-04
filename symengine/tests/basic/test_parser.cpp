@@ -5,6 +5,7 @@
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/parser/parser_new.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -59,6 +60,18 @@ using SymEngine::logical_xor;
 using SymEngine::logical_xnor;
 
 using namespace SymEngine::literals;
+
+TEST_CASE("Parsing: internal data structures", "[parser]")
+{
+    std::string s;
+    RCP<const Basic> res;
+
+    struct YYSTYPE a, b;
+    a = b;
+    // TODO: test that res has the correct reference counts before and after
+    // the assignment. Also test when it goes out of scope.
+    REQUIRE(true);
+}
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
