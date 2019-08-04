@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     N = 3000;
     t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < N; i++) {
-        a = parse(t0);
+        a = parse_new(t0);
     }
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
