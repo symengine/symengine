@@ -2,6 +2,7 @@
 #include <symengine/parser/parser.tab.hh>
 #include <symengine/parser/tokenizer.h>
 #include <symengine/real_double.h>
+#include <symengine/real_mpfr.h>
 
 namespace SymEngine {
 
