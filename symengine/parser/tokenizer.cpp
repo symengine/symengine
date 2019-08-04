@@ -109,7 +109,7 @@ int Tokenizer::lex()
 yy2:
 	++cur;
 #line 39 "tokenizer.re"
-	{ return END_OF_FILE; }
+	{ return yytokentype::END_OF_FILE; }
 #line 114 "tokenizer.cpp"
 yy4:
 	++cur;
@@ -163,7 +163,7 @@ yy13:
 	}
 yy15:
 #line 49 "tokenizer.re"
-	{ yylval.string=token(); return NUMERIC; }
+	{ yylval.string=token(); return yytokentype::NUMERIC; }
 #line 168 "tokenizer.cpp"
 yy16:
 	yych = *++cur;
@@ -180,7 +180,7 @@ yy18:
 yy19:
 	++cur;
 #line 44 "tokenizer.re"
-	{ return POW; }
+	{ return yytokentype::POW; }
 #line 185 "tokenizer.cpp"
 yy21:
 	yych = *++cur;
@@ -188,7 +188,7 @@ yy21:
 		goto yy21;
 	}
 #line 48 "tokenizer.re"
-	{ yylval.string=token(); return IDENTIFIER; }
+	{ yylval.string=token(); return yytokentype::IDENTIFIER; }
 #line 193 "tokenizer.cpp"
 yy24:
 	yych = *++cur;
@@ -238,7 +238,7 @@ yy28:
 	}
 yy29:
 #line 50 "tokenizer.re"
-	{ yylval.string=token(); return IMPLICIT_MUL; }
+	{ yylval.string=token(); return yytokentype::IMPLICIT_MUL; }
 #line 243 "tokenizer.cpp"
 yy30:
 	yych = *(mar = ++cur);
@@ -254,17 +254,17 @@ yy30:
 yy31:
 	++cur;
 #line 45 "tokenizer.re"
-	{ return LE; }
+	{ return yytokentype::LE; }
 #line 259 "tokenizer.cpp"
 yy33:
 	++cur;
 #line 47 "tokenizer.re"
-	{ return EQ; }
+	{ return yytokentype::EQ; }
 #line 264 "tokenizer.cpp"
 yy35:
 	++cur;
 #line 46 "tokenizer.re"
-	{ return GE; }
+	{ return yytokentype::GE; }
 #line 269 "tokenizer.cpp"
 yy37:
 	yych = *++cur;
