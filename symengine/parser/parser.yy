@@ -14,7 +14,6 @@ struct YYSTYPE {
 
 /*
 TODO:
-    * hook the tokenizer in
     * fix the shift/reduce conflict
 */
 
