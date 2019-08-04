@@ -680,8 +680,7 @@ TEST_CASE("Parsing: errors", "[parser]")
     std::string s;
 
     s = "x+y+";
-    parse(s);
-//    CHECK_THROWS_AS(parse(s), ParseError &);
+    CHECK_THROWS_AS(parse(s), ParseError &);
 
     s = "x + (y))";
     CHECK_THROWS_AS(parse(s), ParseError &);
