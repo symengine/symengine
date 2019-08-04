@@ -1,7 +1,9 @@
 %require "3.0"
+/*
 %define parse.trace
 %printer { fprintf(yyo, "%s", $$.c_str()); } <string>
 %printer { std::cerr << *$$; } <basic>
+*/
 /*
 struct YYSTYPE {
     SymEngine::RCP<const SymEngine::Basic> basic;
