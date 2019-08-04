@@ -125,6 +125,7 @@ expr:
 |
 // FIXME: This rule generates:
 // parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+/*
         IMPLICIT_MUL POW expr
         {
           auto tup = p.parse_implicit_mul($1);
@@ -135,6 +136,7 @@ expr:
           }
         }
 |
+*/
         expr POW expr
         { $$ = pow($1, $3); }
 |

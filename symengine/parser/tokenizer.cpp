@@ -301,6 +301,7 @@ yy39:
 }
 
 std::string Tokenizer::token() {
+    std::cout << "TOKEN: " << std::string((char*)tok, cur-tok) << std::endl;
     return std::string((char*)tok, cur-tok);
 }
 
