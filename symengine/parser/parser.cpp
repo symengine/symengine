@@ -30,50 +30,52 @@ RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor)
 RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
 {
     if (params.size() == 1) {
-        if (single_arg_functions.find(name) != single_arg_functions.end()) {
-            return single_arg_functions[name](params[0]);
+        auto it1 = single_arg_functions.find(name);
+        if (it1 != single_arg_functions.end()) {
+            return it1->second(params[0]);
         }
-        if (single_arg_boolean_functions.find(name)
-            != single_arg_boolean_functions.end()) {
-            return single_arg_boolean_functions[name](params[0]);
+        auto it2 = single_arg_boolean_functions.find(name);
+        if (it2 != single_arg_boolean_functions.end()) {
+            return it2->second(params[0]);
         }
-        if (single_arg_boolean_boolean_functions.find(name)
-            != single_arg_boolean_boolean_functions.end()) {
-            return single_arg_boolean_boolean_functions[name](
-                rcp_static_cast<const Boolean>(params[0]));
+        auto it3 = single_arg_boolean_boolean_functions.find(name);
+        if (it3 != single_arg_boolean_boolean_functions.end()) {
+            return it3->second(rcp_static_cast<const Boolean>(params[0]));
         }
     }
 
     if (params.size() == 2) {
-        if (double_arg_functions.find(name) != double_arg_functions.end()) {
-            return double_arg_functions[name](params[0], params[1]);
+        auto it1 = double_arg_functions.find(name);
+        if (it1 != double_arg_functions.end()) {
+            return it1->second(params[0], params[1]);
         }
-        if (double_arg_boolean_functions.find(name)
-            != double_arg_boolean_functions.end()) {
-            return double_arg_boolean_functions[name](params[0], params[1]);
+        auto it2 = double_arg_boolean_functions.find(name);
+        if (it2 != double_arg_boolean_functions.end()) {
+            return it2->second(params[0], params[1]);
         }
     }
 
-    if (multi_arg_functions.find(name) != multi_arg_functions.end()) {
-        return multi_arg_functions[name](params);
+    auto it1 = multi_arg_functions.find(name);
+    if (it1 != multi_arg_functions.end()) {
+        return it1->second(params);
     }
 
-    if (multi_arg_vec_boolean_functions.find(name)
-        != multi_arg_vec_boolean_functions.end()) {
+    auto it2 = multi_arg_vec_boolean_functions.find(name);
+    if (it2 != multi_arg_vec_boolean_functions.end()) {
         vec_boolean p;
         for (auto &v : params) {
             p.push_back(rcp_static_cast<const Boolean>(v));
         }
-        return multi_arg_vec_boolean_functions[name](p);
+        return it2->second(p);
     }
 
-    if (multi_arg_set_boolean_functions.find(name)
-        != multi_arg_set_boolean_functions.end()) {
+    auto it3 = multi_arg_set_boolean_functions.find(name);
+    if (it3 != multi_arg_set_boolean_functions.end()) {
         set_boolean s;
         for (auto &v : params) {
             s.insert(rcp_static_cast<const Boolean>(v));
         }
-        return multi_arg_set_boolean_functions[name](s);
+        return it3->second(s);
     }
 
     return function_symbol(name, params);
