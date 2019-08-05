@@ -8,14 +8,13 @@ namespace SymEngine
 
 RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
-    Parser p;
-    p.init(s, convert_xor);
+    Parser p(s, convert_xor);
     if (yyparse(p) == 0)
         return p.res;
     throw ParseError("Parsing Unsuccessful");
 }
 
-void Parser::init(const std::string &input, bool convert_xor_)
+Parser::Parser(const std::string &input, bool convert_xor_)
 {
     inp = input;
     if (convert_xor_) {
