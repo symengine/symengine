@@ -67,11 +67,15 @@ TEST_CASE("Parsing: internal data structures", "[parser]")
     RCP<const Basic> res = integer(5);
     REQUIRE(res->use_count() == 1);
 
-    struct YYSTYPE a, b;
+    struct YYSTYPE a;
     a.basic = res;
     REQUIRE(res->use_count() == 2);
-    b = a;
-    REQUIRE(res->use_count() == 3);
+    {
+        struct YYSTYPE b;
+        b = a;
+        REQUIRE(res->use_count() == 3);
+    }
+    REQUIRE(res->use_count() == 2);
 }
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
