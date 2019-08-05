@@ -120,7 +120,7 @@ typedef struct YYSTYPE YYSTYPE;
 #define YYSTYPE_IS_DECLARED 1
 #endif
 
-int yyparse(SymEngine::Parser2 &p);
+int yyparse(SymEngine::Parser &p);
 
 #endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */
 
@@ -154,12 +154,12 @@ using SymEngine::vec_boolean;
 
 #include "symengine/parser/tokenizer.h"
 
-int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
+int yylex(YYSTYPE *yylval, SymEngine::Parser &p)
 {
     return p.m_tokenizer.lex(*yylval);
 } // ylex
 
-void yyerror(SymEngine::Parser2 &p, const std::string &msg)
+void yyerror(SymEngine::Parser &p, const std::string &msg)
 {
     throw SymEngine::ParseError(msg);
 }
@@ -605,7 +605,7 @@ static const yytype_uint8 yyr2[] = {0, 2, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 
 static void yy_symbol_value_print(FILE *yyoutput, int yytype,
                                   YYSTYPE const *const yyvaluep,
-                                  SymEngine::Parser2 &p)
+                                  SymEngine::Parser &p)
 {
     FILE *yyo = yyoutput;
     YYUSE(yyo);
@@ -625,7 +625,7 @@ static void yy_symbol_value_print(FILE *yyoutput, int yytype,
 
 static void yy_symbol_print(FILE *yyoutput, int yytype,
                             YYSTYPE const *const yyvaluep,
-                            SymEngine::Parser2 &p)
+                            SymEngine::Parser &p)
 {
     YYFPRINTF(yyoutput, "%s %s (", yytype < YYNTOKENS ? "token" : "nterm",
               yytname[yytype]);
@@ -660,7 +660,7 @@ static void yy_stack_print(yytype_int16 *yybottom, yytype_int16 *yytop)
 `------------------------------------------------*/
 
 static void yy_reduce_print(yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule,
-                            SymEngine::Parser2 &p)
+                            SymEngine::Parser &p)
 {
     unsigned long int yylno = yyrline[yyrule];
     int yynrhs = yyr2[yyrule];
@@ -923,7 +923,7 @@ static int yysyntax_error(YYSIZE_T *yymsg_alloc, char **yymsg,
 `-----------------------------------------------*/
 
 static void yydestruct(const char *yymsg, int yytype, YYSTYPE *yyvaluep,
-                       SymEngine::Parser2 &p)
+                       SymEngine::Parser &p)
 {
     YYUSE(yyvaluep);
     YYUSE(p);
@@ -940,7 +940,7 @@ static void yydestruct(const char *yymsg, int yytype, YYSTYPE *yyvaluep,
 | yyparse.  |
 `----------*/
 
-int yyparse(SymEngine::Parser2 &p)
+int yyparse(SymEngine::Parser &p)
 {
     /* The lookahead symbol.  */
     int yychar;

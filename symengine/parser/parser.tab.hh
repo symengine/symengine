@@ -70,6 +70,6 @@ typedef struct YYSTYPE YYSTYPE;
 #define YYSTYPE_IS_DECLARED 1
 #endif
 
-int yyparse(SymEngine::Parser2 &p);
+int yyparse(SymEngine::Parser &p);
 
 #endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */

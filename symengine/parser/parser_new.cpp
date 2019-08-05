@@ -8,14 +8,14 @@ namespace SymEngine
 
 RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
-    Parser2 p;
+    Parser p;
     p.init(s, convert_xor);
     if (yyparse(p) == 0)
         return p.res;
     throw ParseError("Parsing Unsuccessful");
 }
 
-void Parser2::init(const std::string &input, bool convert_xor_)
+void Parser::init(const std::string &input, bool convert_xor_)
 {
     inp = input;
     if (convert_xor_) {
@@ -24,7 +24,7 @@ void Parser2::init(const std::string &input, bool convert_xor_)
     m_tokenizer.set_string(inp);
 }
 
-RCP<const Basic> Parser2::functionify(const std::string &name,
+RCP<const Basic> Parser::functionify(const std::string &name,
                                       vec_basic &params)
 {
     if (params.size() == 1) {
@@ -77,7 +77,7 @@ RCP<const Basic> Parser2::functionify(const std::string &name,
     return function_symbol(name, params);
 }
 
-RCP<const Basic> Parser2::parse_identifier(const std::string &expr)
+RCP<const Basic> Parser::parse_identifier(const std::string &expr)
 {
     auto c = constants.find(expr);
     if (c != constants.end()) {
@@ -87,7 +87,7 @@ RCP<const Basic> Parser2::parse_identifier(const std::string &expr)
     }
 }
 
-RCP<const Basic> Parser2::parse_numeric(const std::string &expr)
+RCP<const Basic> Parser::parse_numeric(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *lendptr;
@@ -135,7 +135,7 @@ RCP<const Basic> Parser2::parse_numeric(const std::string &expr)
 }
 
 std::tuple<RCP<const Basic>, RCP<const Basic>>
-Parser2::parse_implicit_mul(const std::string &expr)
+Parser::parse_implicit_mul(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;

@@ -1,7 +1,7 @@
 %require "3.0"
 %define api.pure full
 %define api.value.type {struct YYSTYPE}
-%param {SymEngine::Parser2 &p}
+%param {SymEngine::Parser &p}
 
 /*
 // Uncomment this to enable parser tracing:
@@ -51,12 +51,12 @@ using SymEngine::vec_boolean;
 #include "symengine/parser/tokenizer.h"
 
 
-int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
+int yylex(YYSTYPE *yylval, SymEngine::Parser &p)
 {
     return p.m_tokenizer.lex(*yylval);
 } // ylex
 
-void yyerror(SymEngine::Parser2 &p, const std::string &msg)
+void yyerror(SymEngine::Parser &p, const std::string &msg)
 {
     throw SymEngine::ParseError(msg);
 }

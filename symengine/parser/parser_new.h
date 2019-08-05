@@ -13,7 +13,7 @@
 namespace SymEngine
 {
 
-class Parser2
+class Parser
 {
     std::string inp;
 
