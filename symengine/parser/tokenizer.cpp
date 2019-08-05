@@ -20,7 +20,7 @@ int Tokenizer::lex(YYSTYPE &yylval)
     for (;;) {
         tok = cur;
 
-#line 22 "tokenizer.cpp"
+#line 24 "tokenizer.cpp"
         {
             unsigned char yych;
             static const unsigned char yybm[] = {
@@ -116,37 +116,37 @@ int Tokenizer::lex(YYSTYPE &yylval)
             }
         yy2:
             ++cur;
-#line 39 "tokenizer.re"
+#line 41 "tokenizer.re"
             {
                 return yytokentype::END_OF_FILE;
             }
-#line 114 "tokenizer.cpp"
+#line 116 "tokenizer.cpp"
         yy4:
             ++cur;
         yy5 :
-#line 38 "tokenizer.re"
+#line 40 "tokenizer.re"
         {
             throw SymEngine::ParseError("Unknown token: '" + token() + "'");
         }
-#line 120 "tokenizer.cpp"
+#line 122 "tokenizer.cpp"
         yy6:
             yych = *++cur;
             if (yybm[0 + yych] & 32) {
                 goto yy6;
             }
-#line 40 "tokenizer.re"
+#line 42 "tokenizer.re"
             {
                 continue;
             }
-#line 128 "tokenizer.cpp"
+#line 130 "tokenizer.cpp"
         yy9:
             ++cur;
         yy10 :
-#line 43 "tokenizer.re"
+#line 45 "tokenizer.re"
         {
             return tok[0];
         }
-#line 134 "tokenizer.cpp"
+#line 136 "tokenizer.cpp"
         yy11:
             yych = *++cur;
             if (yych == '*')
@@ -188,12 +188,12 @@ int Tokenizer::lex(YYSTYPE &yylval)
                 }
             }
         yy15 :
-#line 49 "tokenizer.re"
+#line 51 "tokenizer.re"
         {
             yylval.string = token();
             return yytokentype::NUMERIC;
         }
-#line 168 "tokenizer.cpp"
+#line 170 "tokenizer.cpp"
         yy16:
             yych = *++cur;
             if (yych == '=')
@@ -211,22 +211,22 @@ int Tokenizer::lex(YYSTYPE &yylval)
             goto yy10;
         yy19:
             ++cur;
-#line 44 "tokenizer.re"
+#line 46 "tokenizer.re"
             {
                 return yytokentype::POW;
             }
-#line 185 "tokenizer.cpp"
+#line 187 "tokenizer.cpp"
         yy21:
             yych = *++cur;
             if (yybm[0 + yych] & 128) {
                 goto yy21;
             }
-#line 48 "tokenizer.re"
+#line 50 "tokenizer.re"
             {
                 yylval.string = token();
                 return yytokentype::IDENTIFIER;
             }
-#line 193 "tokenizer.cpp"
+#line 195 "tokenizer.cpp"
         yy24:
             yych = *++cur;
         yy25:
@@ -290,12 +290,12 @@ int Tokenizer::lex(YYSTYPE &yylval)
                 }
             }
         yy29 :
-#line 50 "tokenizer.re"
+#line 52 "tokenizer.re"
         {
             yylval.string = token();
             return yytokentype::IMPLICIT_MUL;
         }
-#line 243 "tokenizer.cpp"
+#line 245 "tokenizer.cpp"
         yy30:
             yych = *(mar = ++cur);
             if (yych <= ',') {
@@ -313,25 +313,25 @@ int Tokenizer::lex(YYSTYPE &yylval)
             }
         yy31:
             ++cur;
-#line 45 "tokenizer.re"
+#line 47 "tokenizer.re"
             {
                 return yytokentype::LE;
             }
-#line 259 "tokenizer.cpp"
+#line 261 "tokenizer.cpp"
         yy33:
             ++cur;
-#line 47 "tokenizer.re"
+#line 49 "tokenizer.re"
             {
                 return yytokentype::EQ;
             }
-#line 264 "tokenizer.cpp"
+#line 266 "tokenizer.cpp"
         yy35:
             ++cur;
-#line 46 "tokenizer.re"
+#line 48 "tokenizer.re"
             {
                 return yytokentype::GE;
             }
-#line 269 "tokenizer.cpp"
+#line 271 "tokenizer.cpp"
         yy37:
             yych = *++cur;
             if (yych <= '/')
@@ -369,7 +369,7 @@ int Tokenizer::lex(YYSTYPE &yylval)
                 }
             }
         }
-#line 51 "tokenizer.re"
+#line 53 "tokenizer.re"
     }
 }
 
