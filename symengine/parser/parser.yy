@@ -71,6 +71,17 @@ void yyerror(const std::string &msg)
     throw SymEngine::ParseError(msg);
 }
 
+// Force YYCOPY to not use memcopy, but rather copy the structs one by one,
+// which will cause C++ to call the proper copy constructors.
+# define YYCOPY(Dst, Src, Count)              \
+    do                                        \
+      {                                       \
+        YYSIZE_T yyi;                         \
+        for (yyi = 0; yyi < (Count); yyi++)   \
+          (Dst)[yyi] = (Src)[yyi];            \
+      }                                       \
+    while (0)
+
 } // code
 
 
