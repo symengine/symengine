@@ -1,9 +1,7 @@
 #ifndef SYMENGINE_TOKENIZER_H
 #define SYMENGINE_TOKENIZER_H
 
-#include <string>
-
-#include "parserbase.h"
+#include <symengine/parser/parser_stype.h>
 
 namespace SymEngine
 {
@@ -15,10 +13,19 @@ class Tokenizer
     unsigned char *tok;
 
 public:
-    SymEngine::ParserBase::STYPE__ *val;
-    void set_string(std::string &str);
-    int lex();
-    std::string token();
+    // Set the string to tokenize. The caller must ensure `str` will stay valid
+    // as long as `lex` is being called.
+    void set_string(const std::string &str);
+
+    // Get next token. Token ID is returned as function result, the semantic
+    // value is put into `yylval`.
+    int lex(YYSTYPE &yylval);
+
+    // Return the current token
+    std::string token() const
+    {
+        return std::string((char *)tok, cur - tok);
+    }
 };
 
 } // namespace SymEngine

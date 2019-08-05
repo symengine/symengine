@@ -1,28 +1,41 @@
-#include "parserbase.h"
-#include "tokenizer.h"
+#ifndef SYMENGINE_PARSER_PARSER_H
+#define SYMENGINE_PARSER_PARSER_H
+
 #include <fstream>
 #include <algorithm>
+#include <memory>
+
+#include <symengine/parser/tokenizer.h>
+#include <symengine/add.h>
+#include <symengine/pow.h>
+#include <symengine/logic.h>
 
 namespace SymEngine
 {
-#undef Parser
-class Parser : public ParserBase
+
+/*
+   To Parse (default) constructor is expensive as it creates all the maps and
+   tables. If just one expression needs to be parsed, then calling
+   SymEngine::parse() does the job. But if multiple expressions are to be
+   parsed, then first initialize SymEngine::Parser and after that call
+   SymEngine::Parser::parse() repeatedly.
+
+   Example:
+
+   Parser p;
+   auto r = p.parse("x**2");
+
+*/
+
+class Parser
 {
-    Tokenizer d_tokenizer;
     std::string inp;
 
 public:
+    Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
-    inline Parser(const std::string &input, bool convert_xor_)
-    {
-        inp = input;
-        if (convert_xor_) {
-            std::replace(inp.begin(), inp.end(), '^', '@');
-        }
-        d_tokenizer.set_string(inp);
-        d_tokenizer.val = &d_val__;
-    }
+    RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
 
     std::map<const std::string, const RCP<const Basic>> constants = {
 
@@ -102,7 +115,7 @@ public:
             {"ln", single_casted_log},
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
-        };
+    };
 
     // maps string to corresponding double argument function
     std::map<std::string,
@@ -113,20 +126,20 @@ public:
             {"log", double_casted_log},    {"zeta", double_casted_zeta},
             {"lowergamma", lowergamma},    {"uppergamma", uppergamma},
             {"polygamma", polygamma},      {"kronecker_delta", kronecker_delta},
-        };
+    };
 
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>>
         multi_arg_functions = {
             {"max", max}, {"min", min}, {"levi_civita", levi_civita},
-        };
+    };
 
     // maps string to corresponding single argument boolean function
     std::map<std::string,
              std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
             {"Eq", single_casted_Eq},
-        };
+    };
 
     // maps string to corresponding single argument boolean function (accepting
     // Boolean objects)
@@ -134,7 +147,7 @@ public:
              std::function<RCP<const Boolean>(const RCP<const Boolean> &)>>
         single_arg_boolean_boolean_functions = {
             {"Not", logical_not},
-        };
+    };
 
     // maps string to corresponding double argument boolean function
     std::map<std::string,
@@ -147,13 +160,13 @@ public:
             {"Gt", Gt},
             {"Le", Le},
             {"Lt", Lt},
-        };
+    };
 
     // maps string to corresponding multi argument vec_boolean function
     std::map<std::string, std::function<RCP<const Boolean>(vec_boolean &)>>
         multi_arg_vec_boolean_functions = {
             {"Xor", logical_xor}, {"Xnor", logical_xnor},
-        };
+    };
 
     // maps string to corresponding multi argument set_boolean function
     std::map<std::string, std::function<RCP<const Boolean>(set_boolean &)>>
@@ -162,7 +175,7 @@ public:
             {"Or", logical_or},
             {"Nand", logical_nand},
             {"Nor", logical_nor},
-        };
+    };
 
     int parse();
 
@@ -173,21 +186,8 @@ public:
     parse_implicit_mul(const std::string &expr);
 
 private:
-    void error(char const *msg)
-    {
-    }             // called on (syntax) errors
-    int lex();    // returns the next token from the
-                  // lexical scanner.
-    void print(); // use, e.g., d_token, d_loc
-
-    void executeAction(int ruleNr);
-    void errorRecovery();
-    int lookup(bool recovery);
-    void nextToken();
-    void print__();
-    void exceptionHandler__(std::exception const &exc)
-    {
-        std::cout << exc.what() << '\n';
-    }
 };
-}
+
+} // namespace SymEngine
+
+#endif

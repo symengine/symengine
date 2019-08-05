@@ -275,10 +275,10 @@ endif()
 # Parser
 set(WITH_GENERATE_PARSER no CACHE BOOL "Generate parser files")
 if (WITH_GENERATE_PARSER)
-    find_program(BISONCPP_EXECUTABLE bisonc++)
+    find_program(BISON_EXECUTABLE bison)
     find_program(RE2C_EXECUTABLE re2c)
 
-    if ("${BISONCPP_EXECUTABLE}" STREQUAL "BISONCPP_EXECUTABLE-NOTFOUND")
+    if ("${BISON_EXECUTABLE}" STREQUAL "BISON_EXECUTABLE-NOTFOUND")
         message(FATAL_ERROR "bisonc++ not found!")
     endif()
     if ("${RE2C_EXECUTABLE}" STREQUAL "RE2C_EXECUTABLE-NOTFOUND")
