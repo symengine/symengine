@@ -3,6 +3,8 @@
 
 #include <string>
 
+struct YYSTYPE;
+
 namespace SymEngine
 {
 
@@ -15,7 +17,7 @@ class Tokenizer
 public:
     std::string sval;
     void set_string(std::string &str);
-    int lex();
+    int lex(YYSTYPE &yylval);
     std::string token();
 };
 

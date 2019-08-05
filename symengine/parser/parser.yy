@@ -1,4 +1,5 @@
 %require "3.0"
+%define api.pure full
 /*
 %define parse.trace
 %printer { fprintf(yyo, "%s", $$.c_str()); } <string>
@@ -61,9 +62,9 @@ using SymEngine::vec_boolean;
 
 SymEngine::Parser2 p;
 
-int yylex ()
+int yylex(YYSTYPE *yylval)
 {
-    return p.d_tokenizer->lex();
+    return p.d_tokenizer->lex(*yylval);
 } // ylex
 
 void yyerror(const std::string &msg)

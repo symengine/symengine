@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 22 "parser.yy" /* yacc.c:1909  */
+#line 23 "parser.yy" /* yacc.c:1909  */
 
 #include "symengine/parser/parser_new.h"
 
@@ -71,8 +71,6 @@ typedef struct YYSTYPE YYSTYPE;
 #define YYSTYPE_IS_TRIVIAL 1
 #define YYSTYPE_IS_DECLARED 1
 #endif
-
-extern YYSTYPE yylval;
 
 int yyparse(void);
 

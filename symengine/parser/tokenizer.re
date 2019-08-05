@@ -11,7 +11,7 @@ void Tokenizer::set_string(std::string &str) {
     cur = (unsigned char*)(&str[0]);
 }
 
-int Tokenizer::lex()
+int Tokenizer::lex(YYSTYPE &yylval)
 {
     for (;;) {
         tok = cur;
