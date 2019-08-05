@@ -90,7 +90,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 20 "parser.yy" /* yacc.c:355  */
+#line 15 "parser.yy" /* yacc.c:355  */
 
 #include "symengine/parser/parser.h"
 
@@ -128,7 +128,7 @@ int yyparse(SymEngine::Parser &p);
 
 #line 138 "parser.tab.cc" /* yacc.c:358  */
 /* Unqualified %code blocks.  */
-#line 27 "parser.yy" /* yacc.c:359  */
+#line 22 "parser.yy" /* yacc.c:359  */
 
 #include "symengine/pow.h"
 #include "symengine/logic.h"
@@ -448,8 +448,8 @@ static const yytype_uint8 yytranslate[]
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[]
-    = {0,   109, 109, 117, 120, 123, 126, 131, 141, 144, 147, 150, 153, 156,
-       159, 167, 175, 183, 186, 189, 192, 197, 202, 208, 213, 220, 228, 234};
+    = {0,   104, 104, 112, 115, 118, 121, 126, 136, 139, 142, 145, 148, 151,
+       154, 162, 170, 178, 181, 184, 187, 192, 197, 203, 208, 215, 223, 229};
 #endif
 
 #if YYDEBUG || YYERROR_VERBOSE || 0
@@ -1174,7 +1174,7 @@ yyreduce:
     YY_REDUCE_PRINT(yyn);
     switch (yyn) {
         case 2:
-#line 110 "parser.yy" /* yacc.c:1646  */
+#line 105 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[0].basic);
             p.res = (yyval.basic);
@@ -1183,7 +1183,7 @@ yyreduce:
         break;
 
         case 3:
-#line 118 "parser.yy" /* yacc.c:1646  */
+#line 113 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = add((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1191,7 +1191,7 @@ yyreduce:
         break;
 
         case 4:
-#line 121 "parser.yy" /* yacc.c:1646  */
+#line 116 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = sub((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1199,7 +1199,7 @@ yyreduce:
         break;
 
         case 5:
-#line 124 "parser.yy" /* yacc.c:1646  */
+#line 119 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = mul((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1207,7 +1207,7 @@ yyreduce:
         break;
 
         case 6:
-#line 127 "parser.yy" /* yacc.c:1646  */
+#line 122 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = div((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1215,7 +1215,7 @@ yyreduce:
         break;
 
         case 7:
-#line 132 "parser.yy" /* yacc.c:1646  */
+#line 127 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[-2].string));
             if (neq(*std::get<1>(tup), *one)) {
@@ -1229,7 +1229,7 @@ yyreduce:
         break;
 
         case 8:
-#line 142 "parser.yy" /* yacc.c:1646  */
+#line 137 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1237,7 +1237,7 @@ yyreduce:
         break;
 
         case 9:
-#line 145 "parser.yy" /* yacc.c:1646  */
+#line 140 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Lt((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1246,7 +1246,7 @@ yyreduce:
         break;
 
         case 10:
-#line 148 "parser.yy" /* yacc.c:1646  */
+#line 143 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Gt((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1255,7 +1255,7 @@ yyreduce:
         break;
 
         case 11:
-#line 151 "parser.yy" /* yacc.c:1646  */
+#line 146 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Le((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1264,7 +1264,7 @@ yyreduce:
         break;
 
         case 12:
-#line 154 "parser.yy" /* yacc.c:1646  */
+#line 149 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Ge((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1273,7 +1273,7 @@ yyreduce:
         break;
 
         case 13:
-#line 157 "parser.yy" /* yacc.c:1646  */
+#line 152 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Eq((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1282,7 +1282,7 @@ yyreduce:
         break;
 
         case 14:
-#line 160 "parser.yy" /* yacc.c:1646  */
+#line 155 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1293,7 +1293,7 @@ yyreduce:
         break;
 
         case 15:
-#line 168 "parser.yy" /* yacc.c:1646  */
+#line 163 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1304,7 +1304,7 @@ yyreduce:
         break;
 
         case 16:
-#line 176 "parser.yy" /* yacc.c:1646  */
+#line 171 "parser.yy" /* yacc.c:1646  */
         {
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1315,7 +1315,7 @@ yyreduce:
         break;
 
         case 17:
-#line 184 "parser.yy" /* yacc.c:1646  */
+#line 179 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[-1].basic);
         }
@@ -1323,7 +1323,7 @@ yyreduce:
         break;
 
         case 18:
-#line 187 "parser.yy" /* yacc.c:1646  */
+#line 182 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = neg((yyvsp[0].basic));
         }
@@ -1331,7 +1331,7 @@ yyreduce:
         break;
 
         case 19:
-#line 190 "parser.yy" /* yacc.c:1646  */
+#line 185 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic))));
@@ -1340,7 +1340,7 @@ yyreduce:
         break;
 
         case 20:
-#line 193 "parser.yy" /* yacc.c:1646  */
+#line 188 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>((yyvsp[0].basic));
         }
@@ -1348,7 +1348,7 @@ yyreduce:
         break;
 
         case 21:
-#line 198 "parser.yy" /* yacc.c:1646  */
+#line 193 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_identifier((yyvsp[0].string));
         }
@@ -1356,7 +1356,7 @@ yyreduce:
         break;
 
         case 22:
-#line 203 "parser.yy" /* yacc.c:1646  */
+#line 198 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[0].string));
             (yyval.basic) = mul(std::get<0>(tup), std::get<1>(tup));
@@ -1365,7 +1365,7 @@ yyreduce:
         break;
 
         case 23:
-#line 209 "parser.yy" /* yacc.c:1646  */
+#line 204 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_numeric((yyvsp[0].string));
         }
@@ -1373,7 +1373,7 @@ yyreduce:
         break;
 
         case 24:
-#line 214 "parser.yy" /* yacc.c:1646  */
+#line 209 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[0].basic);
         }
@@ -1381,7 +1381,7 @@ yyreduce:
         break;
 
         case 25:
-#line 221 "parser.yy" /* yacc.c:1646  */
+#line 216 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic)
                 = p.functionify((yyvsp[-3].string), (yyvsp[-1].basic_vec));
@@ -1390,7 +1390,7 @@ yyreduce:
         break;
 
         case 26:
-#line 229 "parser.yy" /* yacc.c:1646  */
+#line 224 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec)
                 = (yyvsp[-2].basic_vec); // TODO : should make copy?
@@ -1400,7 +1400,7 @@ yyreduce:
         break;
 
         case 27:
-#line 235 "parser.yy" /* yacc.c:1646  */
+#line 230 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec) = vec_basic(1, (yyvsp[0].basic));
         }
