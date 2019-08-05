@@ -4,7 +4,8 @@
 #include <string>
 #include "symengine/basic.h"
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 struct YYSTYPE {
     SymEngine::RCP<const SymEngine::Basic> basic;
