@@ -52,8 +52,4 @@ int Tokenizer::lex(YYSTYPE &yylval)
     }
 }
 
-std::string Tokenizer::token() const {
-    return std::string((char*)tok, cur-tok);
-}
-
 } // namespace SymEngine
