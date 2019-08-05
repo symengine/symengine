@@ -7,9 +7,9 @@ if (WITH_SYMENGINE_TEUCHOS)
 endif()
 
 if (WITH_GENERATE_PARSER)
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
-                      COMMAND ${BISONCPP_EXECUTABLE} parser.yy
-                      DEPENDS parser/parser.yy parser/parser.ih
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.tab.cc
+                      COMMAND ${BISON_EXECUTABLE} -d parser.yy
+                      DEPENDS parser/parser.yy
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
@@ -52,8 +52,9 @@ set(SRC
     ntheory.cpp
     number.cpp
     numer_denom.cpp
-    parser/parser.cpp
     parser/parser_old.cpp
+    parser/parser.tab.cc
+    parser/parser.cpp
     parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
@@ -151,6 +152,9 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
+    parser/parser.h
+    parser/parser_stype.h
+    parser/tokenizer.h
     polys/basic_conversions.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h
@@ -223,7 +227,7 @@ endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
-    set_source_files_properties(parser/parser.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-extra")
+    set_source_files_properties(parser/parser.tab.cc PROPERTIES COMPILE_FLAGS "-Wno-conversion")
 endif()
 
 if (WITH_SYMENGINE_TEUCHOS)

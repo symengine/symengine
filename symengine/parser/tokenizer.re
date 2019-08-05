@@ -1,16 +1,19 @@
 #include "tokenizer.h"
+#include "parser.tab.hh"
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-void Tokenizer::set_string(std::string &str) {
+void Tokenizer::set_string(const std::string &str)
+{
     // The input string must be NULL terminated, otherwise the tokenizer will
     // not detect the end of string. After C++11, the std::string is guaranteed
     // to end with \0, but we check this here just in case.
     SYMENGINE_ASSERT(str[str.size()] == '\0');
-    cur = (unsigned char*)(&str[0]);
+    cur = (unsigned char *)(&str[0]);
 }
 
-int Tokenizer::lex()
+int Tokenizer::lex(YYSTYPE &yylval)
 {
     for (;;) {
         tok = cur;
@@ -35,23 +38,20 @@ int Tokenizer::lex()
             implicitmul = numeric ident;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
-            end { return 0; }
+            end { return yytokentype::END_OF_FILE; }
             whitespace { continue; }
 
+            // FIXME:
             operators { return tok[0]; }
-            pows { return Parser::POW; }
-            le   { return Parser::LE; }
-            ge   { return Parser::GE; }
-            eqs  { return Parser::EQ; }
-            ident { *(val) = token(); return Parser::IDENTIFIER; }
-            numeric { *(val) = token(); return Parser::NUMERIC; }
-            implicitmul { *(val) = token(); return Parser::IMPLICIT_MUL; }
+            pows { return yytokentype::POW; }
+            le   { return yytokentype::LE; }
+            ge   { return yytokentype::GE; }
+            eqs  { return yytokentype::EQ; }
+            ident { yylval.string=token(); return yytokentype::IDENTIFIER; }
+            numeric { yylval.string=token(); return yytokentype::NUMERIC; }
+            implicitmul { yylval.string=token(); return yytokentype::IMPLICIT_MUL; }
         */
     }
-}
-
-std::string Tokenizer::token() {
-    return std::string((char*)tok, cur-tok);
 }
 
 } // namespace SymEngine
