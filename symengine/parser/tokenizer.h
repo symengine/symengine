@@ -22,8 +22,9 @@ public:
     int lex(YYSTYPE &yylval);
 
     // Return the current token
-    std::string token() const {
-        return std::string((char*)tok, cur-tok);
+    std::string token() const
+    {
+        return std::string((char *)tok, cur - tok);
     }
 };
 

@@ -23,8 +23,7 @@ Parser::Parser(const std::string &input, bool convert_xor_)
     m_tokenizer.set_string(inp);
 }
 
-RCP<const Basic> Parser::functionify(const std::string &name,
-                                      vec_basic &params)
+RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
 {
     if (params.size() == 1) {
         if (single_arg_functions.find(name) != single_arg_functions.end()) {
