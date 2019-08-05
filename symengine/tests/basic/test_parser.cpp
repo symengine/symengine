@@ -64,13 +64,14 @@ using namespace SymEngine::literals;
 TEST_CASE("Parsing: internal data structures", "[parser]")
 {
     std::string s;
-    RCP<const Basic> res;
+    RCP<const Basic> res = integer(5);
+    REQUIRE(res->use_count() == 1);
 
     struct YYSTYPE a, b;
-    a = b;
-    // TODO: test that res has the correct reference counts before and after
-    // the assignment. Also test when it goes out of scope.
-    REQUIRE(true);
+    a.basic = res;
+    REQUIRE(res->use_count() == 2);
+    b = a;
+    REQUIRE(res->use_count() == 3);
 }
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
