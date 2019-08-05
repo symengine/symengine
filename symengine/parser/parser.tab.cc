@@ -92,7 +92,7 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 20 "parser.yy" /* yacc.c:355  */
 
-#include "symengine/parser/parser_new.h"
+#include "symengine/parser/parser.h"
 
 #line 103 "parser.tab.cc" /* yacc.c:355  */
 
@@ -132,7 +132,7 @@ int yyparse(SymEngine::Parser &p);
 
 #include "symengine/pow.h"
 #include "symengine/logic.h"
-#include "symengine/parser/parser_new.h"
+#include "symengine/parser/parser.h"
 
 using SymEngine::add;
 using SymEngine::Basic;

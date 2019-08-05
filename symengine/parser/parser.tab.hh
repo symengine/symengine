@@ -42,7 +42,7 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 20 "parser.yy" /* yacc.c:1909  */
 
-#include "symengine/parser/parser_new.h"
+#include "symengine/parser/parser.h"
 
 #line 50 "parser.tab.hh" /* yacc.c:1909  */
 

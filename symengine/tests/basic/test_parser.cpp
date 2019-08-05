@@ -5,7 +5,7 @@
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/symengine_exception.h>
-#include <symengine/parser/parser_new.h>
+#include <symengine/parser/parser.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;

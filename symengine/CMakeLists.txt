@@ -54,7 +54,7 @@ set(SRC
     numer_denom.cpp
     parser/parser_old.cpp
     parser/parser.tab.cc
-    parser/parser_new.cpp
+    parser/parser.cpp
     parser/tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
@@ -152,7 +152,7 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
-    parser/parser_new.h
+    parser/parser.h
     parser/parser_stype.h
     parser/tokenizer.h
     polys/basic_conversions.h

@@ -1,4 +1,4 @@
-#include <symengine/parser/parser_new.h>
+#include <symengine/parser/parser.h>
 #include <symengine/parser/parser.tab.hh>
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>

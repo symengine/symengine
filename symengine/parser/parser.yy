@@ -19,7 +19,7 @@ TODO:
 %code requires // *.h
 {
 
-#include "symengine/parser/parser_new.h"
+#include "symengine/parser/parser.h"
 
 }
 
@@ -27,7 +27,7 @@ TODO:
 {
 #include "symengine/pow.h"
 #include "symengine/logic.h"
-#include "symengine/parser/parser_new.h"
+#include "symengine/parser/parser.h"
 
 using SymEngine::RCP;
 using SymEngine::Basic;
