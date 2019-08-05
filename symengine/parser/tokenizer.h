@@ -1,9 +1,7 @@
 #ifndef SYMENGINE_TOKENIZER_H
 #define SYMENGINE_TOKENIZER_H
 
-#include <string>
-
-struct YYSTYPE;
+#include <symengine/parser/parser_stype.h>
 
 namespace SymEngine
 {

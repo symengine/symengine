@@ -5,30 +5,13 @@
 #include <algorithm>
 #include <memory>
 
-#include "symengine/add.h"
-#include "symengine/pow.h"
-#include "symengine/logic.h"
-
-struct YYSTYPE {
-    SymEngine::RCP<const SymEngine::Basic> basic;
-    SymEngine::vec_basic basic_vec;
-    std::string string;
-    // Constructor
-    YYSTYPE() = default;
-    // Destructor
-    ~YYSTYPE() = default;
-    // Copy constructor and assignment
-    YYSTYPE(const YYSTYPE &) = default;
-    YYSTYPE &operator=(const YYSTYPE &) = default;
-    // Move constructor and assignment
-    YYSTYPE(YYSTYPE &&) = default;
-    YYSTYPE &operator=(YYSTYPE &&) = default;
-};
+#include <symengine/parser/tokenizer.h>
+#include <symengine/add.h>
+#include <symengine/pow.h>
+#include <symengine/logic.h>
 
 namespace SymEngine
 {
-
-class Tokenizer;
 
 class Parser2
 {
