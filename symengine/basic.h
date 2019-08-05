@@ -184,6 +184,8 @@ public:
     virtual vec_basic get_args() const = 0;
 
     SYMENGINE_INCLUDE_METHODS(= 0;)
+
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
 //! Our hash:

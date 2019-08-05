@@ -7,16 +7,24 @@ namespace SymEngine
 
 extern RCP<const Basic> i2;
 
-class DiffImplementation
+class DiffVisitor : public BaseVisitor<DiffVisitor>
 {
+protected:
+    const RCP<const Symbol> x;
+    RCP<const Basic> result_;
+
 public:
+    DiffVisitor(const RCP<const Symbol> &x) : x(x)
+    {
+    }
+
 // Uncomment the following define in order to debug the methods:
 #define debug_methods
 #ifndef debug_methods
 
-    static RCP<const Basic> diff(const Basic &self, const RCP<const Symbol> &x)
+    void bvisit(const Basic &self)
     {
-        return Derivative::create(self.rcp_from_this(), {x});
+        result_ = Derivative::create(self.rcp_from_this(), {x});
     }
 
 #else
@@ -26,10 +34,9 @@ public:
 // wanted.
 
 #define DIFF0(CLASS)                                                           \
-    static RCP<const Basic> diff(const CLASS &self,                            \
-                                 const RCP<const Symbol> &x)                   \
+    void bvisit(const CLASS &self, const RCP<const Symbol> &x)                 \
     {                                                                          \
-        return Derivative::create(self.rcp_from_this(), {x});                  \
+        result_ = Derivative::create(self.rcp_from_this(), {x});               \
     }
 
     DIFF0(UnivariateSeries)
@@ -37,41 +44,44 @@ public:
     DIFF0(Min)
 #endif
 
-    static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)
+    void bvisit(const Number &self)
     {
-        return zero;
+        result_ = zero;
     }
 
-    static RCP<const Basic> diff(const Constant &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const Constant &self)
     {
-        return zero;
+        result_ = zero;
     }
 
-    static RCP<const Basic> diff(const Symbol &self, const RCP<const Symbol> &x)
+    void bvisit(const Symbol &self)
     {
-        if (x->get_name() == self.get_name())
-            return one;
-        else
-            return zero;
+        if (x->get_name() == self.get_name()) {
+            result_ = one;
+        } else {
+            result_ = zero;
+        }
     }
 
-    static RCP<const Basic> diff(const Log &self, const RCP<const Symbol> &x)
+    void bvisit(const Log &self)
     {
-        return mul(div(one, self.get_arg()), self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(one, self.get_arg()), result_);
     }
 
-    static RCP<const Basic> diff(const Abs &self, const RCP<const Symbol> &x)
+    void bvisit(const Abs &self)
     {
-        if (eq(*self.get_arg()->diff(x), *zero))
-            return zero;
-        else
-            return Derivative::create(self.rcp_from_this(), {x});
+        apply(self.get_arg());
+        if (eq(*result_, *zero)) {
+            result_ = zero;
+        } else {
+            result_ = Derivative::create(self.rcp_from_this(), {x});
+        }
     }
 
     // Needs create(vec_basic) method to be used.
     template <typename T>
-    static RCP<const Basic> fdiff(const T &self, const RCP<const Symbol> &x)
+    void fdiff(const T &self)
     {
         RCP<const Basic> diff = zero;
         RCP<const Basic> ret;
@@ -82,14 +92,16 @@ public:
 
         unsigned count = 0;
         for (unsigned i = 0; i < v.size(); i++) {
-            vdiff[i] = v[i]->diff(x);
+            apply(v[i]);
+            vdiff[i] = result_;
             if (neq(*vdiff[i], *zero)) {
                 count++;
             }
         }
 
         if (count == 0) {
-            return diff;
+            result_ = diff;
+            return;
         }
 
         for (unsigned i = 0; i < v.size(); i++) {
@@ -100,7 +112,8 @@ public:
                 diff = add(diff, mul(ret, vdiff[i]));
             } else {
                 if (count == 1 and eq(*v[i], *x)) {
-                    return Derivative::create(self.rcp_from_this(), {x});
+                    result_ = Derivative::create(self.rcp_from_this(), {x});
+                    return;
                 }
                 vec_basic new_args = v;
                 std::ostringstream stm;
@@ -116,16 +129,16 @@ public:
                                       m)));
             }
         }
-        return diff;
+        result_ = diff;
     }
 
     template <typename T>
-    static RCP<const Basic> diff(
-        const T &self, const RCP<const Symbol> &x,
+    void bvisit(
+        const T &self,
         typename std::enable_if<std::is_base_of<TwoArgFunction, T>::value>::type
             * = nullptr)
     {
-        return fdiff(self, x);
+        fdiff(self);
     }
 
     static bool fdiff(const Ptr<RCP<const Basic>> &ret, const Zeta &self,
@@ -183,117 +196,130 @@ public:
         return false;
     }
 
-    static RCP<const Basic> diff(const ASech &self, const RCP<const Symbol> &x)
+    void bvisit(const ASech &self)
     {
-        return mul(div(minus_one, mul(sqrt(sub(one, pow(self.get_arg(), i2))),
-                                      self.get_arg())),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(minus_one, mul(sqrt(sub(one, pow(self.get_arg(), i2))),
+                                     self.get_arg())),
+                  result_);
     }
 
-    static RCP<const Basic> diff(const ACoth &self, const RCP<const Symbol> &x)
+    void bvisit(const ACoth &self)
     {
-        return mul(div(one, sub(one, pow(self.get_arg(), i2))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(one, sub(one, pow(self.get_arg(), i2))), result_);
     }
 
-    static RCP<const Basic> diff(const ATanh &self, const RCP<const Symbol> &x)
+    void bvisit(const ATanh &self)
     {
-        return mul(div(one, sub(one, pow(self.get_arg(), i2))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(one, sub(one, pow(self.get_arg(), i2))), result_);
     }
 
-    static RCP<const Basic> diff(const ACosh &self, const RCP<const Symbol> &x)
+    void bvisit(const ACosh &self)
     {
-        return mul(div(one, sqrt(sub(pow(self.get_arg(), i2), one))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(one, sqrt(sub(pow(self.get_arg(), i2), one))), result_);
     }
 
-    static RCP<const Basic> diff(const ACsch &self, const RCP<const Symbol> &x)
+    void bvisit(const ACsch &self)
     {
-        return mul(div(minus_one,
-                       mul(sqrt(add(one, div(one, pow(self.get_arg(), i2)))),
-                           pow(self.get_arg(), i2))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(minus_one,
+                          mul(sqrt(add(one, div(one, pow(self.get_arg(), i2)))),
+                              pow(self.get_arg(), i2))),
+                      result_);
     }
 
-    static RCP<const Basic> diff(const ASinh &self, const RCP<const Symbol> &x)
+    void bvisit(const ASinh &self)
     {
-        return mul(div(one, sqrt(add(pow(self.get_arg(), i2), one))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(one, sqrt(add(pow(self.get_arg(), i2), one))), result_);
     }
 
-    static RCP<const Basic> diff(const Coth &self, const RCP<const Symbol> &x)
+    void bvisit(const Coth &self)
     {
-        return mul(div(minus_one, pow(sinh(self.get_arg()), i2)),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(minus_one, pow(sinh(self.get_arg()), i2)), result_);
     }
 
-    static RCP<const Basic> diff(const Tanh &self, const RCP<const Symbol> &x)
+    void bvisit(const Tanh &self)
     {
-        return mul(sub(one, pow(tanh(self.get_arg()), i2)),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(sub(one, pow(tanh(self.get_arg()), i2)), result_);
     }
 
-    static RCP<const Basic> diff(const Sech &self, const RCP<const Symbol> &x)
+    void bvisit(const Sech &self)
     {
-        return mul(
+        apply(self.get_arg());
+        result_ = mul(
             mul(mul(minus_one, sech(self.get_arg())), tanh(self.get_arg())),
-            self.get_arg()->diff(x));
+            result_);
     }
 
-    static RCP<const Basic> diff(const Cosh &self, const RCP<const Symbol> &x)
+    void bvisit(const Cosh &self)
     {
-        return mul(sinh(self.get_arg()), self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(sinh(self.get_arg()), result_);
     }
 
-    static RCP<const Basic> diff(const Csch &self, const RCP<const Symbol> &x)
+    void bvisit(const Csch &self)
     {
-        return mul(
+        apply(self.get_arg());
+        result_ = mul(
             mul(mul(minus_one, csch(self.get_arg())), coth(self.get_arg())),
-            self.get_arg()->diff(x));
+            result_);
     }
 
-    static RCP<const Basic> diff(const Sinh &self, const RCP<const Symbol> &x)
+    void bvisit(const Sinh &self)
     {
-        return mul(cosh(self.get_arg()), self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(cosh(self.get_arg()), result_);
     }
 
-    static RCP<const Basic> diff(const Subs &self, const RCP<const Symbol> &x)
+    void bvisit(const Subs &self)
     {
-        RCP<const Basic> diff = zero, t;
+        RCP<const Basic> d = zero, t;
         if (self.get_dict().count(x) == 0) {
-            diff = self.get_arg()->diff(x)->subs(self.get_dict());
+            apply(self.get_arg());
+            d = result_->subs(self.get_dict());
         }
         for (const auto &p : self.get_dict()) {
-            t = p.second->diff(x);
+            apply(p.second);
+            t = result_;
             if (neq(*t, *zero)) {
                 if (is_a<Symbol>(*p.first)) {
-                    diff = add(diff,
-                               mul(t, self.get_arg()
-                                          ->diff(rcp_static_cast<const Symbol>(
-                                              p.first))
-                                          ->subs(self.get_dict())));
+                    d = add(d,
+                            mul(t, diff(self.get_arg(),
+                                        rcp_static_cast<const Symbol>(p.first))
+                                       ->subs(self.get_dict())));
                 } else {
-                    return Derivative::create(self.rcp_from_this(), {x});
+                    result_ = Derivative::create(self.rcp_from_this(), {x});
+                    return;
                 }
             }
         }
-        return diff;
+        result_ = d;
     }
 
-    static RCP<const Basic> diff(const Derivative &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const Derivative &self)
     {
-        RCP<const Basic> ret = self.get_arg()->diff(x);
-        if (eq(*ret, *zero))
-            return zero;
+        apply(self.get_arg());
+        RCP<const Basic> ret = result_;
+        if (eq(*ret, *zero)) {
+            result_ = zero;
+        }
         multiset_basic t = self.get_symbols();
         for (auto &p : t) {
             // If x is already there in symbols multi-set add x to the symbols
             // multi-set
             if (eq(*p, *x)) {
                 t.insert(x);
-                return Derivative::create(self.get_arg(), t);
+                result_ = Derivative::create(self.get_arg(), t);
+                return;
             }
         }
         // Avoid cycles
@@ -301,12 +327,13 @@ public:
             && eq(*down_cast<const Derivative &>(*ret).get_arg(),
                   *self.get_arg())) {
             t.insert(x);
-            return Derivative::create(self.get_arg(), t);
+            result_ = Derivative::create(self.get_arg(), t);
+            return;
         }
         for (auto &p : t) {
-            ret = ret->diff(rcp_static_cast<const Symbol>(p));
+            ret = diff(ret, rcp_static_cast<const Symbol>(p));
         }
-        return ret;
+        result_ = ret;
     }
 
     static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name)
@@ -319,36 +346,35 @@ public:
         return s;
     }
 
-    static RCP<const Basic> diff(const OneArgFunction &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const OneArgFunction &self)
     {
-        return fdiff(self, x);
+        fdiff(self);
     }
 
-    static RCP<const Basic> diff(const MultiArgFunction &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const MultiArgFunction &self)
     {
-        return fdiff(self, x);
+        fdiff(self);
     }
 
-    static RCP<const Basic> diff(const LambertW &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const LambertW &self)
     {
         // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
         // for the equation
+        apply(self.get_arg());
         RCP<const Basic> lambertw_val = lambertw(self.get_arg());
-        return mul(
+        result_ = mul(
             div(lambertw_val, mul(self.get_arg(), add(lambertw_val, one))),
-            self.get_arg()->diff(x));
+            result_);
     }
 
-    static RCP<const Basic> diff(const Add &self, const RCP<const Symbol> &x)
+    void bvisit(const Add &self)
     {
         SymEngine::umap_basic_num d;
         RCP<const Number> coef = zero, coef2;
         RCP<const Basic> t;
         for (auto &p : self.get_dict()) {
-            RCP<const Basic> term = p.first->diff(x);
+            apply(p.first);
+            RCP<const Basic> term = result_;
             if (is_a<Integer>(*term)
                 && down_cast<const Integer &>(*term).is_zero()) {
                 continue;
@@ -367,16 +393,17 @@ public:
                 Add::dict_add_term(d, coef2, t);
             }
         }
-        return Add::from_dict(coef, std::move(d));
+        result_ = Add::from_dict(coef, std::move(d));
     }
 
-    static RCP<const Basic> diff(const Mul &self, const RCP<const Symbol> &x)
+    void bvisit(const Mul &self)
     {
         RCP<const Number> overall_coef = zero;
         umap_basic_num add_dict;
         for (auto &p : self.get_dict()) {
             RCP<const Number> coef = self.get_coef();
-            RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
+            apply(pow(p.first, p.second));
+            RCP<const Basic> factor = result_;
             if (is_a<Integer>(*factor)
                 && down_cast<const Integer &>(*factor).is_zero())
                 continue;
@@ -403,136 +430,152 @@ public:
                                         mul);
             }
         }
-        return Add::from_dict(overall_coef, std::move(add_dict));
+        result_ = Add::from_dict(overall_coef, std::move(add_dict));
     }
 
-    static RCP<const Basic> diff(const Pow &self, const RCP<const Symbol> &x)
+    void bvisit(const Pow &self)
     {
-        if (is_a_Number(*(self.get_exp())))
-            return mul(mul(self.get_exp(),
-                           pow(self.get_base(), sub(self.get_exp(), one))),
-                       self.get_base()->diff(x));
-        else
-            return mul(pow(self.get_base(), self.get_exp()),
-                       mul(self.get_exp(), log(self.get_base()))->diff(x));
+        if (is_a_Number(*(self.get_exp()))) {
+            apply(self.get_base());
+            result_ = mul(mul(self.get_exp(),
+                              pow(self.get_base(), sub(self.get_exp(), one))),
+                          result_);
+        } else {
+            apply(mul(self.get_exp(), log(self.get_base())));
+            result_ = mul(self.rcp_from_this(), result_);
+        }
     }
 
-    static RCP<const Basic> diff(const Sin &self, const RCP<const Symbol> &x)
+    void bvisit(const Sin &self)
     {
-        return mul(cos(self.get_arg()), self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(cos(self.get_arg()), result_);
     }
 
-    static RCP<const Basic> diff(const Cos &self, const RCP<const Symbol> &x)
+    void bvisit(const Cos &self)
     {
-        return mul(mul(minus_one, sin(self.get_arg())),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(mul(minus_one, sin(self.get_arg())), result_);
     }
 
-    static RCP<const Basic> diff(const Tan &self, const RCP<const Symbol> &x)
+    void bvisit(const Tan &self)
     {
+        apply(self.get_arg());
         RCP<const Integer> two = integer(2);
-        return mul(add(one, pow(tan(self.get_arg()), two)),
-                   self.get_arg()->diff(x));
+        result_ = mul(add(one, pow(tan(self.get_arg()), two)), result_);
     }
 
-    static RCP<const Basic> diff(const Cot &self, const RCP<const Symbol> &x)
+    void bvisit(const Cot &self)
     {
+        apply(self.get_arg());
         RCP<const Integer> two = integer(2);
-        return mul(mul(add(one, pow(cot(self.get_arg()), two)), minus_one),
-                   self.get_arg()->diff(x));
+        result_ = mul(mul(add(one, pow(cot(self.get_arg()), two)), minus_one),
+                      result_);
     }
 
-    static RCP<const Basic> diff(const Csc &self, const RCP<const Symbol> &x)
+    void bvisit(const Csc &self)
     {
-        return mul(
-            mul(mul(cot(self.get_arg()), csc(self.get_arg())), minus_one),
-            self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(mul(mul(cot(self.get_arg()), csc(self.get_arg())), minus_one),
+                  result_);
     }
 
-    static RCP<const Basic> diff(const Sec &self, const RCP<const Symbol> &x)
+    void bvisit(const Sec &self)
     {
-        return mul(mul(tan(self.get_arg()), sec(self.get_arg())),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(mul(tan(self.get_arg()), sec(self.get_arg())), result_);
     }
 
-    static RCP<const Basic> diff(const ASin &self, const RCP<const Symbol> &x)
+    void bvisit(const ASin &self)
     {
-        return mul(div(one, sqrt(sub(one, pow(self.get_arg(), i2)))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(one, sqrt(sub(one, pow(self.get_arg(), i2)))), result_);
     }
 
-    static RCP<const Basic> diff(const ACos &self, const RCP<const Symbol> &x)
+    void bvisit(const ACos &self)
     {
-        return mul(div(minus_one, sqrt(sub(one, pow(self.get_arg(), i2)))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(minus_one, sqrt(sub(one, pow(self.get_arg(), i2)))),
+                      result_);
     }
 
-    static RCP<const Basic> diff(const ASec &self, const RCP<const Symbol> &x)
+    void bvisit(const ASec &self)
     {
-        return mul(
+        apply(self.get_arg());
+        result_ = mul(
             div(one, mul(pow(self.get_arg(), i2),
                          sqrt(sub(one, div(one, pow(self.get_arg(), i2)))))),
-            self.get_arg()->diff(x));
+            result_);
     }
 
-    static RCP<const Basic> diff(const ACsc &self, const RCP<const Symbol> &x)
+    void bvisit(const ACsc &self)
     {
-        return mul(div(minus_one,
-                       mul(pow(self.get_arg(), i2),
-                           sqrt(sub(one, div(one, pow(self.get_arg(), i2)))))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(minus_one,
+                      mul(pow(self.get_arg(), i2),
+                          sqrt(sub(one, div(one, pow(self.get_arg(), i2)))))),
+                  result_);
     }
 
-    static RCP<const Basic> diff(const ATan &self, const RCP<const Symbol> &x)
+    void bvisit(const ATan &self)
     {
-        return mul(div(one, add(one, pow(self.get_arg(), i2))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_ = mul(div(one, add(one, pow(self.get_arg(), i2))), result_);
     }
 
-    static RCP<const Basic> diff(const ACot &self, const RCP<const Symbol> &x)
+    void bvisit(const ACot &self)
     {
-        return mul(div(minus_one, add(one, pow(self.get_arg(), i2))),
-                   self.get_arg()->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(div(minus_one, add(one, pow(self.get_arg(), i2))), result_);
     }
 
-    static RCP<const Basic> diff(const ATan2 &self, const RCP<const Symbol> &x)
+    void bvisit(const ATan2 &self)
     {
-        return mul(div(pow(self.get_den(), i2),
-                       add(pow(self.get_den(), i2), pow(self.get_num(), i2))),
-                   div(self.get_num(), self.get_den())->diff(x));
+        apply(div(self.get_num(), self.get_den()));
+        result_
+            = mul(div(pow(self.get_den(), i2),
+                      add(pow(self.get_den(), i2), pow(self.get_num(), i2))),
+                  result_);
     }
 
-    static RCP<const Basic> diff(const Erf &self, const RCP<const Symbol> &x)
+    void bvisit(const Erf &self)
     {
-        RCP<const Basic> arg = self.get_args()[0];
-        return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)),
-                   arg->diff(x));
+        apply(self.get_arg());
+        result_ = mul(
+            div(mul(integer(2), exp(neg(mul(self.get_arg(), self.get_arg())))),
+                sqrt(pi)),
+            result_);
     }
 
-    static RCP<const Basic> diff(const Erfc &self, const RCP<const Symbol> &x)
+    void bvisit(const Erfc &self)
     {
-        RCP<const Basic> arg = self.get_args()[0];
-        return neg(mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)),
-                       arg->diff(x)));
+        apply(self.get_arg());
+        result_ = neg(mul(
+            div(mul(integer(2), exp(neg(mul(self.get_arg(), self.get_arg())))),
+                sqrt(pi)),
+            result_));
     }
 
-    static RCP<const Basic> diff(const Gamma &self, const RCP<const Symbol> &x)
+    void bvisit(const Gamma &self)
     {
-        RCP<const Basic> gamma_arg = self.get_args()[0];
-        return mul(mul(self.rcp_from_this(), polygamma(zero, gamma_arg)),
-                   gamma_arg->diff(x));
+        apply(self.get_arg());
+        result_
+            = mul(mul(self.rcp_from_this(), polygamma(zero, self.get_arg())),
+                  result_);
     }
 
-    static RCP<const Basic> diff(const LogGamma &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const LogGamma &self)
     {
-        RCP<const Basic> arg = self.get_args()[0];
-        return mul(polygamma(zero, arg), arg->diff(x));
+        apply(self.get_arg());
+        result_ = mul(polygamma(zero, self.get_arg()), result_);
     }
 
     template <typename Poly, typename Dict>
-    static RCP<const Basic> diff_upoly(const Poly &self,
-                                       const RCP<const Symbol> &x)
+    void diff_upoly(const Poly &self)
     {
         if (self.get_var()->__eq__(*x)) {
             Dict d;
@@ -540,72 +583,63 @@ public:
                 if (it->first != 0)
                     d[it->first - 1] = it->second * it->first;
             }
-            return Poly::from_dict(self.get_var(), std::move(d));
+            result_ = Poly::from_dict(self.get_var(), std::move(d));
         } else {
-            return Poly::from_dict(self.get_var(), {{}});
+            result_ = Poly::from_dict(self.get_var(), {{}});
         }
     }
 
-    static RCP<const Basic> diff(const UIntPoly &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const UIntPoly &self)
     {
-        return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
+        diff_upoly<UIntPoly, map_uint_mpz>(self);
     }
 
-    static RCP<const Basic> diff(const URatPoly &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const URatPoly &self)
     {
-        return diff_upoly<URatPoly, map_uint_mpq>(self, x);
+        diff_upoly<URatPoly, map_uint_mpq>(self);
     }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-    static RCP<const Basic> diff(const UIntPolyPiranha &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const UIntPolyPiranha &self)
     {
-        return diff_upoly<UIntPolyPiranha, map_uint_mpz>(self, x);
+        diff_upoly<UIntPolyPiranha, map_uint_mpz>(self);
     }
-    static RCP<const Basic> diff(const URatPolyPiranha &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const URatPolyPiranha &self)
     {
-        return diff_upoly<URatPolyPiranha, map_uint_mpq>(self, x);
+        diff_upoly<URatPolyPiranha, map_uint_mpq>(self);
     }
 #endif
 
 #ifdef HAVE_SYMENGINE_FLINT
     template <typename P>
-    static RCP<const Basic> diff_upolyflint(const P &self,
-                                            const RCP<const Symbol> &x)
+    void diff_upolyflint(const P &self)
     {
         if (self.get_var()->__eq__(*x)) {
-            return P::from_container(self.get_var(),
-                                     self.get_poly().derivative());
+            result_ = P::from_container(self.get_var(),
+                                        self.get_poly().derivative());
         } else {
-            return P::from_dict(self.get_var(), {{}});
+            result_ = P::from_dict(self.get_var(), {{}});
         }
     }
 
-    static RCP<const Basic> diff(const UIntPolyFlint &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const UIntPolyFlint &self)
     {
-        return diff_upolyflint(self, x);
+        diff_upolyflint(self);
     }
 
-    static RCP<const Basic> diff(const URatPolyFlint &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const URatPolyFlint &self)
     {
-        return diff_upolyflint(self, x);
+        diff_upolyflint(self);
     }
 #endif
 
-    static RCP<const Basic> diff(const UExprPoly &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const UExprPoly &self)
     {
-        return diff_upoly<UExprPoly, map_int_Expr>(self, x);
+        diff_upoly<UExprPoly, map_int_Expr>(self);
     }
 
     template <typename Container, typename Poly>
-    static RCP<const Basic> diff(const MSymEnginePoly<Container, Poly> &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const MSymEnginePoly<Container, Poly> &self)
     {
         using Dict = typename Container::dict_type;
         using Vec = typename Container::vec_type;
@@ -627,81 +661,92 @@ public:
             }
             vec_basic v;
             v.insert(v.begin(), self.get_vars().begin(), self.get_vars().end());
-            return Poly::from_dict(v, std::move(dict));
+            result_ = Poly::from_dict(v, std::move(dict));
         } else {
             vec_basic vs;
             vs.insert(vs.begin(), self.get_vars().begin(),
                       self.get_vars().end());
-            return Poly::from_dict(vs, {{}});
+            result_ = Poly::from_dict(vs, {{}});
         }
     }
 
-    static RCP<const Basic> diff(const FunctionWrapper &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const FunctionWrapper &self)
     {
-        return self.diff_impl(x);
+        result_ = self.diff_impl(x);
     }
 
-    static RCP<const Basic> diff(const Beta &self, const RCP<const Symbol> &x)
+    void bvisit(const Beta &self)
     {
         RCP<const Basic> beta_arg0 = self.get_args()[0];
         RCP<const Basic> beta_arg1 = self.get_args()[1];
-        RCP<const Basic> diff_beta_arg0 = beta_arg0->diff(x);
-        RCP<const Basic> diff_beta_arg1 = beta_arg1->diff(x);
-        return mul(self.rcp_from_this(),
-                   add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
-                       sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
-                           mul(polygamma(zero, add(beta_arg0, beta_arg1)),
-                               add(diff_beta_arg0, diff_beta_arg1)))));
+        apply(beta_arg0);
+        RCP<const Basic> diff_beta_arg0 = result_;
+        apply(beta_arg1);
+        RCP<const Basic> diff_beta_arg1 = result_;
+        result_ = mul(self.rcp_from_this(),
+                      add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
+                          sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
+                              mul(polygamma(zero, add(beta_arg0, beta_arg1)),
+                                  add(diff_beta_arg0, diff_beta_arg1)))));
     }
 
-    static RCP<const Basic> diff(const Set &self, const RCP<const Symbol> &x)
+    void bvisit(const Set &self)
     {
         throw SymEngineException("Derivative doesn't exist.");
     }
 
-    static RCP<const Basic> diff(const Boolean &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const Boolean &self)
     {
         throw SymEngineException("Derivative doesn't exist.");
     }
 
-    static RCP<const Basic> diff(const GaloisField &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const GaloisField &self)
     {
         GaloisFieldDict d;
         if (self.get_var()->__eq__(*x)) {
             d = self.get_poly().gf_diff();
-            return GaloisField::from_dict(self.get_var(), std::move(d));
+            result_ = GaloisField::from_dict(self.get_var(), std::move(d));
         } else {
-            return GaloisField::from_dict(self.get_var(), std::move(d));
+            result_ = GaloisField::from_dict(self.get_var(), std::move(d));
         }
     }
 
-    static RCP<const Basic> diff(const Piecewise &self,
-                                 const RCP<const Symbol> &x)
+    void bvisit(const Piecewise &self)
     {
         PiecewiseVec v = self.get_vec();
         for (auto &p : v) {
-            p.first = p.first->diff(x);
+            apply(p.first);
+            p.first = result_;
         }
-        return piecewise(std::move(v));
+        result_ = piecewise(std::move(v));
+    }
+
+    void apply(const Basic &b)
+    {
+        apply(b.rcp_from_this());
+    }
+
+    void apply(const RCP<const Basic> &b)
+    {
+        b->accept(*this);
+    }
+
+    RCP<const Basic> get_result()
+    {
+        return result_;
     }
 };
 
-#define IMPLEMENT_DIFF(CLASS)                                                  \
-    RCP<const Basic> CLASS::diff(const RCP<const Symbol> &x) const             \
-    {                                                                          \
-        return DiffImplementation::diff(*this, x);                             \
-    }
-
-#define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
-#include "symengine/type_codes.inc"
-#undef SYMENGINE_ENUM
-
 RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
 {
-    return arg->diff(x);
+    DiffVisitor v(x);
+    v.apply(arg);
+    return v.get_result();
+}
+
+RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
+{
+    return SymEngine::diff(this->rcp_from_this(), x);
 }
 
 //! SymPy style differentiation for non-symbol variables
@@ -712,7 +757,7 @@ RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
     if (is_a<Symbol>(*x)) {
         return arg->diff(rcp_static_cast<const Symbol>(x));
     } else {
-        RCP<const Symbol> d = DiffImplementation::get_dummy(*arg, "x");
+        RCP<const Symbol> d = DiffVisitor::get_dummy(*arg, "x");
         return ssubs(ssubs(arg, {{x, d}})->diff(d), {{d, x}});
     }
 }
