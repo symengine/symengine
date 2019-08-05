@@ -8,20 +8,23 @@ namespace SymEngine
 
 RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
+    // This is expensive:
     Parser p;
-    p.init(s, convert_xor);
-    if (yyparse(p) == 0)
-        return p.res;
-    throw ParseError("Parsing Unsuccessful");
+    // If you need to parse multiple strings, initialize Parser first, then
+    // call Parser::parse() repeatedly.
+    return p.parse(s, convert_xor);
 }
 
-void Parser::init(const std::string &input, bool convert_xor_)
+RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor_)
 {
     inp = input;
     if (convert_xor_) {
         std::replace(inp.begin(), inp.end(), '^', '@');
     }
     m_tokenizer.set_string(inp);
+    if (yyparse(*this) == 0)
+        return this->res;
+    throw ParseError("Parsing Unsuccessful");
 }
 
 RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)

@@ -21,7 +21,7 @@ public:
     Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
-    void init(const std::string &input, bool convert_xor_);
+    RCP<const Basic> parse(const std::string &input, bool convert_xor_);
 
     std::map<const std::string, const RCP<const Basic>> constants = {
 
