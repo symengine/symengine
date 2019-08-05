@@ -58,6 +58,7 @@ using SymEngine::logical_nor;
 using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::logical_xnor;
+using SymEngine::YYSTYPE;
 
 using namespace SymEngine::literals;
 

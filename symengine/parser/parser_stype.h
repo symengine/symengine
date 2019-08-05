@@ -4,6 +4,8 @@
 #include <string>
 #include "symengine/basic.h"
 
+namespace SymEngine {
+
 struct YYSTYPE {
     SymEngine::RCP<const SymEngine::Basic> basic;
     SymEngine::vec_basic basic_vec;
@@ -19,5 +21,7 @@ struct YYSTYPE {
     YYSTYPE(YYSTYPE &&) = default;
     YYSTYPE &operator=(YYSTYPE &&) = default;
 };
+
+} // namespace SymEngine
 
 #endif
