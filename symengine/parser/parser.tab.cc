@@ -624,8 +624,7 @@ static void yy_symbol_value_print(FILE *yyoutput, int yytype,
 `--------------------------------*/
 
 static void yy_symbol_print(FILE *yyoutput, int yytype,
-                            YYSTYPE const *const yyvaluep,
-                            SymEngine::Parser &p)
+                            YYSTYPE const *const yyvaluep, SymEngine::Parser &p)
 {
     YYFPRINTF(yyoutput, "%s %s (", yytype < YYNTOKENS ? "token" : "nterm",
               yytname[yytype]);
