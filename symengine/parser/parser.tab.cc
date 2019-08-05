@@ -90,13 +90,11 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 23 "parser.yy" /* yacc.c:355  */
+#line 24 "parser.yy" /* yacc.c:355  */
 
 #include "symengine/parser/parser_new.h"
 
-extern SymEngine::Parser2 p;
-
-#line 105 "parser.tab.cc" /* yacc.c:355  */
+#line 103 "parser.tab.cc" /* yacc.c:355  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -122,15 +120,15 @@ typedef struct YYSTYPE YYSTYPE;
 #define YYSTYPE_IS_DECLARED 1
 #endif
 
-int yyparse(void);
+int yyparse(SymEngine::Parser2 &p);
 
 #endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 140 "parser.tab.cc" /* yacc.c:358  */
+#line 138 "parser.tab.cc" /* yacc.c:358  */
 /* Unqualified %code blocks.  */
-#line 35 "parser.yy" /* yacc.c:359  */
+#line 34 "parser.yy" /* yacc.c:359  */
 
 #include "symengine/pow.h"
 #include "symengine/logic.h"
@@ -159,12 +157,12 @@ using SymEngine::vec_boolean;
 
 SymEngine::Parser2 p;
 
-int yylex(YYSTYPE *yylval)
+int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
 {
     return p.d_tokenizer->lex(*yylval);
 } // ylex
 
-void yyerror(const std::string &msg)
+void yyerror(SymEngine::Parser2 &p, const std::string &msg)
 {
     throw SymEngine::ParseError(msg);
 }
@@ -178,7 +176,7 @@ void yyerror(const std::string &msg)
             (Dst)[yyi] = (Src)[yyi];                                           \
     } while (0)
 
-#line 195 "parser.tab.cc" /* yacc.c:359  */
+#line 193 "parser.tab.cc" /* yacc.c:359  */
 
 #ifdef short
 #undef short
@@ -453,8 +451,8 @@ static const yytype_uint8 yytranslate[]
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[]
-    = {0,   119, 119, 127, 130, 133, 136, 141, 151, 154, 157, 160, 163, 166,
-       169, 177, 185, 193, 196, 199, 202, 207, 212, 218, 223, 230, 238, 244};
+    = {0,   118, 118, 126, 129, 132, 135, 140, 150, 153, 156, 159, 162, 165,
+       168, 176, 184, 192, 195, 198, 201, 206, 211, 217, 222, 229, 237, 243};
 #endif
 
 #if YYDEBUG || YYERROR_VERBOSE || 0
@@ -567,7 +565,7 @@ static const yytype_uint8 yyr2[] = {0, 2, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
             yystate = *yyssp;                                                  \
             goto yybackup;                                                     \
         } else {                                                               \
-            yyerror(YY_("syntax error: cannot back up"));                      \
+            yyerror(p, YY_("syntax error: cannot back up"));                   \
             YYERROR;                                                           \
         }                                                                      \
     while (0)
@@ -599,7 +597,7 @@ static const yytype_uint8 yyr2[] = {0, 2, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
     do {                                                                       \
         if (yydebug) {                                                         \
             YYFPRINTF(stderr, "%s ", Title);                                   \
-            yy_symbol_print(stderr, Type, Value);                              \
+            yy_symbol_print(stderr, Type, Value, p);                           \
             YYFPRINTF(stderr, "\n");                                           \
         }                                                                      \
     } while (0)
@@ -609,10 +607,12 @@ static const yytype_uint8 yyr2[] = {0, 2, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 `----------------------------------------*/
 
 static void yy_symbol_value_print(FILE *yyoutput, int yytype,
-                                  YYSTYPE const *const yyvaluep)
+                                  YYSTYPE const *const yyvaluep,
+                                  SymEngine::Parser2 &p)
 {
     FILE *yyo = yyoutput;
     YYUSE(yyo);
+    YYUSE(p);
     if (!yyvaluep)
         return;
 #ifdef YYPRINT
@@ -627,12 +627,13 @@ static void yy_symbol_value_print(FILE *yyoutput, int yytype,
 `--------------------------------*/
 
 static void yy_symbol_print(FILE *yyoutput, int yytype,
-                            YYSTYPE const *const yyvaluep)
+                            YYSTYPE const *const yyvaluep,
+                            SymEngine::Parser2 &p)
 {
     YYFPRINTF(yyoutput, "%s %s (", yytype < YYNTOKENS ? "token" : "nterm",
               yytname[yytype]);
 
-    yy_symbol_value_print(yyoutput, yytype, yyvaluep);
+    yy_symbol_value_print(yyoutput, yytype, yyvaluep, p);
     YYFPRINTF(yyoutput, ")");
 }
 
@@ -661,7 +662,8 @@ static void yy_stack_print(yytype_int16 *yybottom, yytype_int16 *yytop)
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
 
-static void yy_reduce_print(yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
+static void yy_reduce_print(yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule,
+                            SymEngine::Parser2 &p)
 {
     unsigned long int yylno = yyrline[yyrule];
     int yynrhs = yyr2[yyrule];
@@ -672,7 +674,7 @@ static void yy_reduce_print(yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
     for (yyi = 0; yyi < yynrhs; yyi++) {
         YYFPRINTF(stderr, "   $%d = ", yyi + 1);
         yy_symbol_print(stderr, yystos[yyssp[yyi + 1 - yynrhs]],
-                        &(yyvsp[(yyi + 1) - (yynrhs)]));
+                        &(yyvsp[(yyi + 1) - (yynrhs)]), p);
         YYFPRINTF(stderr, "\n");
     }
 }
@@ -680,7 +682,7 @@ static void yy_reduce_print(yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule)
 #define YY_REDUCE_PRINT(Rule)                                                  \
     do {                                                                       \
         if (yydebug)                                                           \
-            yy_reduce_print(yyssp, yyvsp, Rule);                               \
+            yy_reduce_print(yyssp, yyvsp, Rule, p);                            \
     } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -923,9 +925,11 @@ static int yysyntax_error(YYSIZE_T *yymsg_alloc, char **yymsg,
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
-static void yydestruct(const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+static void yydestruct(const char *yymsg, int yytype, YYSTYPE *yyvaluep,
+                       SymEngine::Parser2 &p)
 {
     YYUSE(yyvaluep);
+    YYUSE(p);
     if (!yymsg)
         yymsg = "Deleting";
     YY_SYMBOL_PRINT(yymsg, yytype, yyvaluep, yylocationp);
@@ -939,7 +943,7 @@ static void yydestruct(const char *yymsg, int yytype, YYSTYPE *yyvaluep)
 | yyparse.  |
 `----------*/
 
-int yyparse(void)
+int yyparse(SymEngine::Parser2 &p)
 {
     /* The lookahead symbol.  */
     int yychar;
@@ -1103,7 +1107,7 @@ yybackup:
     /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
     if (yychar == YYEMPTY) {
         YYDPRINTF((stderr, "Reading a token: "));
-        yychar = yylex(&yylval);
+        yychar = yylex(&yylval, p);
     }
 
     if (yychar <= YYEOF) {
@@ -1174,7 +1178,7 @@ yyreduce:
     YY_REDUCE_PRINT(yyn);
     switch (yyn) {
         case 2:
-#line 120 "parser.yy" /* yacc.c:1646  */
+#line 119 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[0].basic);
             p.res = (yyval.basic);
@@ -1183,7 +1187,7 @@ yyreduce:
         break;
 
         case 3:
-#line 128 "parser.yy" /* yacc.c:1646  */
+#line 127 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = add((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1191,7 +1195,7 @@ yyreduce:
         break;
 
         case 4:
-#line 131 "parser.yy" /* yacc.c:1646  */
+#line 130 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = sub((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1199,7 +1203,7 @@ yyreduce:
         break;
 
         case 5:
-#line 134 "parser.yy" /* yacc.c:1646  */
+#line 133 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = mul((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1207,7 +1211,7 @@ yyreduce:
         break;
 
         case 6:
-#line 137 "parser.yy" /* yacc.c:1646  */
+#line 136 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = div((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1215,7 +1219,7 @@ yyreduce:
         break;
 
         case 7:
-#line 142 "parser.yy" /* yacc.c:1646  */
+#line 141 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[-2].string));
             if (neq(*std::get<1>(tup), *one)) {
@@ -1229,7 +1233,7 @@ yyreduce:
         break;
 
         case 8:
-#line 152 "parser.yy" /* yacc.c:1646  */
+#line 151 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic));
         }
@@ -1237,7 +1241,7 @@ yyreduce:
         break;
 
         case 9:
-#line 155 "parser.yy" /* yacc.c:1646  */
+#line 154 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Lt((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1246,7 +1250,7 @@ yyreduce:
         break;
 
         case 10:
-#line 158 "parser.yy" /* yacc.c:1646  */
+#line 157 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Gt((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1255,7 +1259,7 @@ yyreduce:
         break;
 
         case 11:
-#line 161 "parser.yy" /* yacc.c:1646  */
+#line 160 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Le((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1264,7 +1268,7 @@ yyreduce:
         break;
 
         case 12:
-#line 164 "parser.yy" /* yacc.c:1646  */
+#line 163 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Ge((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1273,7 +1277,7 @@ yyreduce:
         break;
 
         case 13:
-#line 167 "parser.yy" /* yacc.c:1646  */
+#line 166 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Eq((yyvsp[-2].basic), (yyvsp[0].basic)));
@@ -1282,7 +1286,7 @@ yyreduce:
         break;
 
         case 14:
-#line 170 "parser.yy" /* yacc.c:1646  */
+#line 169 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1293,7 +1297,7 @@ yyreduce:
         break;
 
         case 15:
-#line 178 "parser.yy" /* yacc.c:1646  */
+#line 177 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1304,7 +1308,7 @@ yyreduce:
         break;
 
         case 16:
-#line 186 "parser.yy" /* yacc.c:1646  */
+#line 185 "parser.yy" /* yacc.c:1646  */
         {
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
@@ -1315,7 +1319,7 @@ yyreduce:
         break;
 
         case 17:
-#line 194 "parser.yy" /* yacc.c:1646  */
+#line 193 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[-1].basic);
         }
@@ -1323,7 +1327,7 @@ yyreduce:
         break;
 
         case 18:
-#line 197 "parser.yy" /* yacc.c:1646  */
+#line 196 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = neg((yyvsp[0].basic));
         }
@@ -1331,7 +1335,7 @@ yyreduce:
         break;
 
         case 19:
-#line 200 "parser.yy" /* yacc.c:1646  */
+#line 199 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic))));
@@ -1340,7 +1344,7 @@ yyreduce:
         break;
 
         case 20:
-#line 203 "parser.yy" /* yacc.c:1646  */
+#line 202 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>((yyvsp[0].basic));
         }
@@ -1348,7 +1352,7 @@ yyreduce:
         break;
 
         case 21:
-#line 208 "parser.yy" /* yacc.c:1646  */
+#line 207 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_identifier((yyvsp[0].string));
         }
@@ -1356,7 +1360,7 @@ yyreduce:
         break;
 
         case 22:
-#line 213 "parser.yy" /* yacc.c:1646  */
+#line 212 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[0].string));
             (yyval.basic) = mul(std::get<0>(tup), std::get<1>(tup));
@@ -1365,7 +1369,7 @@ yyreduce:
         break;
 
         case 23:
-#line 219 "parser.yy" /* yacc.c:1646  */
+#line 218 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_numeric((yyvsp[0].string));
         }
@@ -1373,7 +1377,7 @@ yyreduce:
         break;
 
         case 24:
-#line 224 "parser.yy" /* yacc.c:1646  */
+#line 223 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[0].basic);
         }
@@ -1381,7 +1385,7 @@ yyreduce:
         break;
 
         case 25:
-#line 231 "parser.yy" /* yacc.c:1646  */
+#line 230 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic)
                 = p.functionify((yyvsp[-3].string), (yyvsp[-1].basic_vec));
@@ -1390,7 +1394,7 @@ yyreduce:
         break;
 
         case 26:
-#line 239 "parser.yy" /* yacc.c:1646  */
+#line 238 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec)
                 = (yyvsp[-2].basic_vec); // TODO : should make copy?
@@ -1400,7 +1404,7 @@ yyreduce:
         break;
 
         case 27:
-#line 245 "parser.yy" /* yacc.c:1646  */
+#line 244 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec) = vec_basic(1, (yyvsp[0].basic));
         }
@@ -1456,7 +1460,7 @@ yyerrlab:
     if (!yyerrstatus) {
         ++yynerrs;
 #if !YYERROR_VERBOSE
-        yyerror(YY_("syntax error"));
+        yyerror(p, YY_("syntax error"));
 #else
 #define YYSYNTAX_ERROR yysyntax_error(&yymsg_alloc, &yymsg, yyssp, yytoken)
         {
@@ -1478,7 +1482,7 @@ yyerrlab:
                     yymsgp = yymsg;
                 }
             }
-            yyerror(yymsgp);
+            yyerror(p, yymsgp);
             if (yysyntax_error_status == 2)
                 goto yyexhaustedlab;
         }
@@ -1495,7 +1499,7 @@ yyerrlab:
             if (yychar == YYEOF)
                 YYABORT;
         } else {
-            yydestruct("Error: discarding", yytoken, &yylval);
+            yydestruct("Error: discarding", yytoken, &yylval, p);
             yychar = YYEMPTY;
         }
     }
@@ -1544,7 +1548,7 @@ yyerrlab1:
         if (yyssp == yyss)
             YYABORT;
 
-        yydestruct("Error: popping", yystos[yystate], yyvsp);
+        yydestruct("Error: popping", yystos[yystate], yyvsp, p);
         YYPOPSTACK(1);
         yystate = *yyssp;
         YY_STACK_PRINT(yyss, yyssp);
@@ -1579,7 +1583,7 @@ yyabortlab:
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
 yyexhaustedlab:
-    yyerror(YY_("memory exhausted"));
+    yyerror(p, YY_("memory exhausted"));
     yyresult = 2;
     /* Fall through.  */
 #endif
@@ -1589,14 +1593,14 @@ yyreturn:
         /* Make sure we have latest lookahead translation.  See comments at
            user semantic actions for why this is necessary.  */
         yytoken = YYTRANSLATE(yychar);
-        yydestruct("Cleanup: discarding lookahead", yytoken, &yylval);
+        yydestruct("Cleanup: discarding lookahead", yytoken, &yylval, p);
     }
     /* Do not reclaim the symbols of the rule whose action triggered
        this YYABORT or YYACCEPT.  */
     YYPOPSTACK(yylen);
     YY_STACK_PRINT(yyss, yyssp);
     while (yyssp != yyss) {
-        yydestruct("Cleanup: popping", yystos[*yyssp], yyvsp);
+        yydestruct("Cleanup: popping", yystos[*yyssp], yyvsp, p);
         YYPOPSTACK(1);
     }
 #ifndef yyoverflow

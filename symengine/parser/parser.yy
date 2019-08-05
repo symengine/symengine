@@ -1,5 +1,6 @@
 %require "3.0"
 %define api.pure full
+%param {SymEngine::Parser2 &p}
 /*
 %define parse.trace
 %printer { fprintf(yyo, "%s", $$.c_str()); } <string>
@@ -23,8 +24,6 @@ TODO:
 {
 
 #include "symengine/parser/parser_new.h"
-
-extern SymEngine::Parser2 p;
 
 }
 
@@ -62,12 +61,12 @@ using SymEngine::vec_boolean;
 
 SymEngine::Parser2 p;
 
-int yylex(YYSTYPE *yylval)
+int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
 {
     return p.d_tokenizer->lex(*yylval);
 } // ylex
 
-void yyerror(const std::string &msg)
+void yyerror(SymEngine::Parser2 &p, const std::string &msg)
 {
     throw SymEngine::ParseError(msg);
 }

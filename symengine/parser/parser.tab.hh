@@ -40,13 +40,11 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 23 "parser.yy" /* yacc.c:1909  */
+#line 24 "parser.yy" /* yacc.c:1909  */
 
 #include "symengine/parser/parser_new.h"
 
-extern SymEngine::Parser2 p;
-
-#line 52 "parser.tab.hh" /* yacc.c:1909  */
+#line 50 "parser.tab.hh" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -72,6 +70,6 @@ typedef struct YYSTYPE YYSTYPE;
 #define YYSTYPE_IS_DECLARED 1
 #endif
 
-int yyparse(void);
+int yyparse(SymEngine::Parser2 &p);
 
 #endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */
