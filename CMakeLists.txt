@@ -279,7 +279,7 @@ if (WITH_GENERATE_PARSER)
     find_program(RE2C_EXECUTABLE re2c)
 
     if ("${BISON_EXECUTABLE}" STREQUAL "BISON_EXECUTABLE-NOTFOUND")
-        message(FATAL_ERROR "bisonc++ not found!")
+        message(FATAL_ERROR "bison not found!")
     endif()
     if ("${RE2C_EXECUTABLE}" STREQUAL "RE2C_EXECUTABLE-NOTFOUND")
         message(FATAL_ERROR "re2c not found!")
