@@ -15,10 +15,10 @@ RCP<const Basic> parse(const std::string &s, bool convert_xor)
     return p.parse(s, convert_xor);
 }
 
-RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor_)
+RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor)
 {
     inp = input;
-    if (convert_xor_) {
+    if (convert_xor) {
         std::replace(inp.begin(), inp.end(), '^', '@');
     }
     m_tokenizer.set_string(inp);

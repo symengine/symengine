@@ -13,6 +13,20 @@
 namespace SymEngine
 {
 
+/*
+   To Parse (default) constructor is expensive as it creates all the maps and
+   tables. If just one expression needs to be parsed, then calling
+   SymEngine::parse() does the job. But if multiple expressions are to be
+   parsed, then first initialize SymEngine::Parser and after that call
+   SymEngine::Parser::parse() repeatedly.
+
+   Example:
+
+   Parser p;
+   auto r = p.parse("x**2");
+
+*/
+
 class Parser
 {
     std::string inp;
@@ -21,7 +35,7 @@ public:
     Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
-    RCP<const Basic> parse(const std::string &input, bool convert_xor_);
+    RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
 
     std::map<const std::string, const RCP<const Basic>> constants = {
 
