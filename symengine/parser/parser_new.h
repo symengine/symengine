@@ -18,7 +18,7 @@ class Parser2
     std::string inp;
 
 public:
-    std::unique_ptr<Tokenizer> d_tokenizer;
+    Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
     void init(const std::string &input, bool convert_xor_);

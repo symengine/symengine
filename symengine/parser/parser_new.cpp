@@ -21,8 +21,7 @@ void Parser2::init(const std::string &input, bool convert_xor_)
     if (convert_xor_) {
         std::replace(inp.begin(), inp.end(), '^', '@');
     }
-    d_tokenizer = std::unique_ptr<Tokenizer>(new Tokenizer());
-    d_tokenizer->set_string(inp);
+    m_tokenizer.set_string(inp);
 }
 
 RCP<const Basic> Parser2::functionify(const std::string &name,

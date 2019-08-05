@@ -156,7 +156,7 @@ using SymEngine::vec_boolean;
 
 int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
 {
-    return p.d_tokenizer->lex(*yylval);
+    return p.m_tokenizer.lex(*yylval);
 } // ylex
 
 void yyerror(SymEngine::Parser2 &p, const std::string &msg)
