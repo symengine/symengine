@@ -157,7 +157,7 @@ expr:
         { $$ = rcp_static_cast<const Basic>(Eq($1, $3)); }
 |
         expr '|' expr
-        { 
+        {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
@@ -165,7 +165,7 @@ expr:
         }
 |
         expr '&' expr
-        { 
+        {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));

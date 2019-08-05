@@ -11,12 +11,8 @@ RCP<const Basic> parse(const std::string &s, bool convert_xor)
 {
     Parser2 p;
     p.init(s, convert_xor);
-    // TODO: check how sval is handled
-    // yy::tokenizer.sval = &p.sval;
-    // yy::parser parser;
     if (yyparse(p) == 0)
         return p.res;
-
     throw ParseError("Parsing Unsuccessful");
 }
 
@@ -28,7 +24,6 @@ void Parser2::init(const std::string &input, bool convert_xor_)
     }
     d_tokenizer = std::unique_ptr<Tokenizer>(new Tokenizer());
     d_tokenizer->set_string(inp);
-    // d_tokenizer.val = &d_val__;
 }
 
 RCP<const Basic> Parser2::functionify(const std::string &name,

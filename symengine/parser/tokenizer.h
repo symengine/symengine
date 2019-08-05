@@ -15,10 +15,11 @@ class Tokenizer
     unsigned char *tok;
 
 public:
-    std::string sval;
-    void set_string(std::string &str);
+    /* Set the string to tokenize. The caller must ensure `str` will stay valid
+    as long as `lex` is being called. */
+    void set_string(const std::string &str);
     int lex(YYSTYPE &yylval);
-    std::string token();
+    std::string token() const;
 };
 
 } // namespace SymEngine
