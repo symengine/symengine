@@ -390,17 +390,12 @@ union yyalloc {
 /* Copy COUNT objects from SRC to DST.  The source and destination do
    not overlap.  */
 #ifndef YYCOPY
-#if defined __GNUC__ && 1 < __GNUC__
-#define YYCOPY(Dst, Src, Count)                                                \
-    __builtin_memcpy(Dst, Src, (Count) * sizeof(*(Src)))
-#else
 #define YYCOPY(Dst, Src, Count)                                                \
     do {                                                                       \
         YYSIZE_T yyi;                                                          \
         for (yyi = 0; yyi < (Count); yyi++)                                    \
             (Dst)[yyi] = (Src)[yyi];                                           \
     } while (0)
-#endif
 #endif
 #endif /* !YYCOPY_NEEDED */
 
