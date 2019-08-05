@@ -1,5 +1,5 @@
-#ifndef SYMENGINE_PARSER_NEW_H
-#define SYMENGINE_PARSER_NEW_H
+#ifndef SYMENGINE_PARSER_PARSER_H
+#define SYMENGINE_PARSER_PARSER_H
 
 #include <fstream>
 #include <algorithm>

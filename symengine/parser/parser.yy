@@ -10,11 +10,6 @@
 %printer { std::cerr << *$$; } <basic>
 */
 
-/*
-TODO:
-    * fix the shift/reduce conflict
-*/
-
 
 %code requires // *.h
 {
