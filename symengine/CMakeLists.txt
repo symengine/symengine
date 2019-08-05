@@ -152,6 +152,9 @@ set(HEADERS
     ntheory.h
     number.h
     parser.h
+    parser/parser_new.h
+    parser/parser_stype.h
+    parser/tokenizer.h
     polys/basic_conversions.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h
