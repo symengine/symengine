@@ -1,17 +1,13 @@
 %require "3.0"
 %define api.pure full
+%define api.value.type {struct YYSTYPE}
 %param {SymEngine::Parser2 &p}
+
 /*
+// Uncomment this to enable parser tracing:
 %define parse.trace
 %printer { fprintf(yyo, "%s", $$.c_str()); } <string>
 %printer { std::cerr << *$$; } <basic>
-*/
-/*
-struct YYSTYPE {
-    SymEngine::RCP<const SymEngine::Basic> basic;
-    SymEngine::vec_basic basic_vec;
-    std::string string;
-};
 */
 
 /*
@@ -27,16 +23,12 @@ TODO:
 
 }
 
-%define api.value.type {struct YYSTYPE}
-
-
 %code // *.cpp
 {
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 #include "symengine/parser/parser_new.h"
 
-// TODO: move these to cpp
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::vec_basic;
@@ -58,8 +50,6 @@ using SymEngine::vec_boolean;
 
 #include "symengine/parser/tokenizer.h"
 
-
-SymEngine::Parser2 p;
 
 int yylex(YYSTYPE *yylval, SymEngine::Parser2 &p)
 {
@@ -83,6 +73,7 @@ void yyerror(SymEngine::Parser2 &p, const std::string &msg)
     while (0)
 
 } // code
+
 
 
 %token <string> IDENTIFIER
