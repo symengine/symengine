@@ -56,8 +56,7 @@ extern int yydebug;
     END_OF_FILE = 0,
     IDENTIFIER = 258,
     NUMERIC = 259,
-    UMINUS = 260,
-    POW = 261
+    POW = 260
   };
 #endif
 

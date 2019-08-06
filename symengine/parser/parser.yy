@@ -74,11 +74,9 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %token END_OF_FILE 0
 %token <string> IDENTIFIER NUMERIC
 %type <basic> st_expr expr
-%type <basic_vec> expr_list
 
 %left '-' '+'
 %left '*' '/'
-%precedence UMINUS
 %right POW
 
 
@@ -96,13 +94,6 @@ expr
     | expr '/' expr { $$ = div($1, $3); }
     | expr POW expr { $$ = pow($1, $3); }
     | '(' expr ')' { $$ = $2; }
-    | '-' expr %prec UMINUS { $$ = neg($2); }
     | IDENTIFIER { $$ = p.parse_identifier($1); }
     | NUMERIC { $$ = p.parse_numeric($1); }
-    | IDENTIFIER '(' expr_list ')' { $$ = p.functionify($1, $3); }
-    ;
-
-expr_list
-    : expr_list ',' expr { $$ = $1; $$.push_back($3); }
-    | expr { $$ = vec_basic(1, $1); }
     ;
