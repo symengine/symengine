@@ -19,7 +19,6 @@
 %code // *.cpp
 {
 
-#include "symengine/parser/sem.h"
 #include "symengine/parser/parser.h"
 #include "symengine/parser/tokenizer.h"
 
