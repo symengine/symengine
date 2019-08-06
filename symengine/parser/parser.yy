@@ -117,34 +117,30 @@ expr
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = logical_or(s);
-        }
+            $$ = logical_or(s); }
     | expr '&' expr {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = logical_and(s);
-        }
+            $$ = logical_and(s); }
     | expr '^' expr {
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>($1));
             s.push_back(rcp_static_cast<const Boolean>($3));
-            $$ = logical_xor(s);
-        }
+            $$ = logical_xor(s); }
     | '(' expr ')' { $$ = $2; }
     | '-' expr %prec UMINUS { $$ = neg($2); }
-    | '~' expr %prec NOT {$$ = logical_not(rcp_static_cast<const Boolean>($2));}
+    | '~' expr %prec NOT {
+            $$ = logical_not(rcp_static_cast<const Boolean>($2)); }
     | IDENTIFIER { $$ = p.parse_identifier($1); }
     | NUMERIC { $$ = p.parse_numeric($1); }
     | IDENTIFIER '(' expr_list ')' { $$ = p.functionify($1, $3); }
     | IMPLICIT_MUL {
             auto tup = p.parse_implicit_mul($1);
-            $$ = mul(std::get<0>(tup), std::get<1>(tup));
-        }
+            $$ = mul(std::get<0>(tup), std::get<1>(tup)); }
     | IMPLICIT_MUL POW expr {
             auto tup = p.parse_implicit_mul($1);
-            $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
-        }
+            $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3)); }
     ;
 
 expr_list
