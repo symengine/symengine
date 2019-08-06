@@ -9,6 +9,7 @@
 /******************************************************************************/
 
 /*
+// 40ms
 using SymEngine::add;
 using SymEngine::sub;
 using SymEngine::mul;
@@ -31,6 +32,8 @@ using SymEngine::integer;
 /******************************************************************************/
 
 /*
+// 8 - 9ms
+
 #define TYPE int
 #define ADD(x, y) x+y
 #define SUB(x, y) x-y
@@ -44,7 +47,9 @@ using SymEngine::integer;
 
 /******************************************************************************/
 
+
 /*
+// 10 - 13ms
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer
@@ -74,7 +79,7 @@ static struct Node* make_node(NodeType type) {
 
 /******************************************************************************/
 
-/*
+//13ms
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer
@@ -134,10 +139,10 @@ static struct Node* make_integer(std::string s) {
 #define SYMBOL(x) make_symbol(x)
 #define INTEGER(x) make_integer(x)
 #define PRINT(x) std::cout << x->d.binop.right->type << std::endl
-*/
 
 /******************************************************************************/
 
+/*
 enum BinOpType
 {
     Add, Sub, Mul, Div
@@ -207,6 +212,7 @@ static struct Node* make_integer(std::string s) {
 #define SYMBOL(x) make_symbol(x)
 #define INTEGER(x) make_integer(x)
 #define PRINT(x) std::cout << x->d.binop.right->type << std::endl
+*/
 
 
 namespace SymEngine
