@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
     RCP<const Basic> a;
     int N;
 
+    std::cout << "First call (initialization)" << std::endl;
+
     auto t1 = std::chrono::high_resolution_clock::now();
     a = parse("0");
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -23,6 +25,23 @@ int main(int argc, char *argv[])
               << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
                      .count()
               << "us" << std::endl;
+
+    std::cout << "Subsequent calls" << std::endl;
+
+    for (int i = 0; i < 10; i++) {
+        t1 = std::chrono::high_resolution_clock::now();
+        a = parse("0");
+        t2 = std::chrono::high_resolution_clock::now();
+        std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2
+                                                                           - t1)
+                         .count()
+                  << "us ";
+    }
+    std::cout << std::endl;
+
+    /* ------------------------------------------------- */
+
+    std::cout << std::endl << "Single long benchmark" << std::endl;
 
     N = 5000;
     std::string text;
@@ -49,6 +68,8 @@ int main(int argc, char *argv[])
     std::cout << *a << std::endl;
 
     /* ------------------------------------------------- */
+
+    std::cout << std::endl << "Repeated short benchmark" << std::endl;
 
     N = 3000;
     t1 = std::chrono::high_resolution_clock::now();
