@@ -94,7 +94,6 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %type <basic> st_expr
 %type <basic> expr
 %type <basic_vec> expr_list
-%type <basic> leaf
 %type <basic> func
 
 %start st_expr
@@ -180,11 +179,6 @@ expr:
         '~' expr %prec NOT
         { $$ = logical_not(rcp_static_cast<const Boolean>($2)); }
 |
-        leaf
-        { $$ = $1; }
-;
-
-leaf:
     IDENTIFIER
     {
         $$ = p.parse_identifier($1);
