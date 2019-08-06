@@ -87,6 +87,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left '-' '+'
 %left '*' '/'
 %right UMINUS
+%left IMPLICIT_MUL
 %right POW
 %right NOT
 %nonassoc '('
