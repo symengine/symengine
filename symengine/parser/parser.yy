@@ -26,21 +26,11 @@
 
 using SymEngine::RCP;
 using SymEngine::Basic;
-using SymEngine::vec_basic;
-using SymEngine::rcp_static_cast;
 using SymEngine::mul;
 using SymEngine::pow;
 using SymEngine::add;
 using SymEngine::sub;
-using SymEngine::Lt;
-using SymEngine::Gt;
-using SymEngine::Le;
-using SymEngine::Ge;
-using SymEngine::Eq;
-using SymEngine::set_boolean;
-using SymEngine::Boolean;
-using SymEngine::one;
-using SymEngine::vec_boolean;
+using SymEngine::symbol;
 
 
 #include "symengine/parser/tokenizer.h"
@@ -94,6 +84,6 @@ expr
     | expr '/' expr { $$ = div($1, $3); }
     | expr POW expr { $$ = pow($1, $3); }
     | '(' expr ')' { $$ = $2; }
-    | IDENTIFIER { $$ = p.parse_identifier($1); }
+    | IDENTIFIER { $$ = symbol($1); }
     | NUMERIC { $$ = p.parse_numeric($1); }
     ;
