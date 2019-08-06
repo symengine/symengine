@@ -448,8 +448,8 @@ static const yytype_uint8 yytranslate[]
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[]
-    = {0,   104, 104, 112, 115, 118, 121, 126, 136, 139, 142, 145, 148, 151,
-       154, 162, 170, 178, 181, 184, 187, 192, 197, 203, 208, 215, 223, 229};
+    = {0,   104, 104, 112, 115, 118, 121, 126, 132, 135, 138, 141, 144, 147,
+       150, 158, 166, 174, 177, 180, 183, 188, 193, 199, 204, 211, 219, 225};
 #endif
 
 #if YYDEBUG || YYERROR_VERBOSE || 0
@@ -1218,196 +1218,192 @@ yyreduce:
 #line 127 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[-2].string));
-            if (neq(*std::get<1>(tup), *one)) {
-                (yyval.basic) = mul(std::get<0>(tup),
-                                    pow(std::get<1>(tup), (yyvsp[0].basic)));
-            } else {
-                (yyval.basic) = pow(std::get<0>(tup), (yyvsp[0].basic));
-            }
+            (yyval.basic) = mul(std::get<0>(tup),
+                                pow(std::get<1>(tup), (yyvsp[0].basic)));
         }
-#line 1352 "parser.tab.cc" /* yacc.c:1646  */
+#line 1348 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 8:
-#line 137 "parser.yy" /* yacc.c:1646  */
+#line 133 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic));
         }
-#line 1358 "parser.tab.cc" /* yacc.c:1646  */
+#line 1354 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 9:
-#line 140 "parser.yy" /* yacc.c:1646  */
+#line 136 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Lt((yyvsp[-2].basic), (yyvsp[0].basic)));
         }
-#line 1364 "parser.tab.cc" /* yacc.c:1646  */
+#line 1360 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 10:
-#line 143 "parser.yy" /* yacc.c:1646  */
+#line 139 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Gt((yyvsp[-2].basic), (yyvsp[0].basic)));
         }
-#line 1370 "parser.tab.cc" /* yacc.c:1646  */
+#line 1366 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 11:
-#line 146 "parser.yy" /* yacc.c:1646  */
+#line 142 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Le((yyvsp[-2].basic), (yyvsp[0].basic)));
         }
-#line 1376 "parser.tab.cc" /* yacc.c:1646  */
+#line 1372 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 12:
-#line 149 "parser.yy" /* yacc.c:1646  */
+#line 145 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Ge((yyvsp[-2].basic), (yyvsp[0].basic)));
         }
-#line 1382 "parser.tab.cc" /* yacc.c:1646  */
+#line 1378 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 13:
-#line 152 "parser.yy" /* yacc.c:1646  */
+#line 148 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 Eq((yyvsp[-2].basic), (yyvsp[0].basic)));
         }
-#line 1388 "parser.tab.cc" /* yacc.c:1646  */
+#line 1384 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 14:
-#line 155 "parser.yy" /* yacc.c:1646  */
+#line 151 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
             (yyval.basic) = rcp_static_cast<const Basic>(logical_or(s));
         }
-#line 1399 "parser.tab.cc" /* yacc.c:1646  */
+#line 1395 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 15:
-#line 163 "parser.yy" /* yacc.c:1646  */
+#line 159 "parser.yy" /* yacc.c:1646  */
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
             (yyval.basic) = rcp_static_cast<const Basic>(logical_and(s));
         }
-#line 1410 "parser.tab.cc" /* yacc.c:1646  */
+#line 1406 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 16:
-#line 171 "parser.yy" /* yacc.c:1646  */
+#line 167 "parser.yy" /* yacc.c:1646  */
         {
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
             (yyval.basic) = rcp_static_cast<const Basic>(logical_xor(s));
         }
-#line 1421 "parser.tab.cc" /* yacc.c:1646  */
+#line 1417 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 17:
-#line 179 "parser.yy" /* yacc.c:1646  */
+#line 175 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[-1].basic);
         }
-#line 1427 "parser.tab.cc" /* yacc.c:1646  */
+#line 1423 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 18:
-#line 182 "parser.yy" /* yacc.c:1646  */
+#line 178 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = neg((yyvsp[0].basic));
         }
-#line 1433 "parser.tab.cc" /* yacc.c:1646  */
+#line 1429 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 19:
-#line 185 "parser.yy" /* yacc.c:1646  */
+#line 181 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>(
                 logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic))));
         }
-#line 1439 "parser.tab.cc" /* yacc.c:1646  */
+#line 1435 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 20:
-#line 188 "parser.yy" /* yacc.c:1646  */
+#line 184 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = rcp_static_cast<const Basic>((yyvsp[0].basic));
         }
-#line 1445 "parser.tab.cc" /* yacc.c:1646  */
+#line 1441 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 21:
-#line 193 "parser.yy" /* yacc.c:1646  */
+#line 189 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_identifier((yyvsp[0].string));
         }
-#line 1453 "parser.tab.cc" /* yacc.c:1646  */
+#line 1449 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 22:
-#line 198 "parser.yy" /* yacc.c:1646  */
+#line 194 "parser.yy" /* yacc.c:1646  */
         {
             auto tup = p.parse_implicit_mul((yyvsp[0].string));
             (yyval.basic) = mul(std::get<0>(tup), std::get<1>(tup));
         }
-#line 1462 "parser.tab.cc" /* yacc.c:1646  */
+#line 1458 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 23:
-#line 204 "parser.yy" /* yacc.c:1646  */
+#line 200 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = p.parse_numeric((yyvsp[0].string));
         }
-#line 1470 "parser.tab.cc" /* yacc.c:1646  */
+#line 1466 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 24:
-#line 209 "parser.yy" /* yacc.c:1646  */
+#line 205 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic) = (yyvsp[0].basic);
         }
-#line 1478 "parser.tab.cc" /* yacc.c:1646  */
+#line 1474 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 25:
-#line 216 "parser.yy" /* yacc.c:1646  */
+#line 212 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic)
                 = p.functionify((yyvsp[-3].string), (yyvsp[-1].basic_vec));
         }
-#line 1486 "parser.tab.cc" /* yacc.c:1646  */
+#line 1482 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 26:
-#line 224 "parser.yy" /* yacc.c:1646  */
+#line 220 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec)
                 = (yyvsp[-2].basic_vec); // TODO : should make copy?
             (yyval.basic_vec).push_back((yyvsp[0].basic));
         }
-#line 1495 "parser.tab.cc" /* yacc.c:1646  */
+#line 1491 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
         case 27:
-#line 230 "parser.yy" /* yacc.c:1646  */
+#line 226 "parser.yy" /* yacc.c:1646  */
         {
             (yyval.basic_vec) = vec_basic(1, (yyvsp[0].basic));
         }
-#line 1503 "parser.tab.cc" /* yacc.c:1646  */
+#line 1499 "parser.tab.cc" /* yacc.c:1646  */
         break;
 
-#line 1507 "parser.tab.cc" /* yacc.c:1646  */
+#line 1503 "parser.tab.cc" /* yacc.c:1646  */
         default:
             break;
     }
