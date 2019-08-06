@@ -72,9 +72,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 
 
 %token END_OF_FILE 0
-%token <string> IDENTIFIER
-%token <string> NUMERIC
-%token <string> IMPLICIT_MUL
+%token <string> IDENTIFIER NUMERIC IMPLICIT_MUL
 %type <basic> st_expr expr
 %type <basic_vec> expr_list
 
