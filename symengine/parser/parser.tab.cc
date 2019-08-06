@@ -1235,8 +1235,7 @@ yyreduce:
         case 9:
 #line 136 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                Lt((yyvsp[-2].basic), (yyvsp[0].basic)));
+            (yyval.basic) = Lt((yyvsp[-2].basic), (yyvsp[0].basic));
         }
 #line 1360 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1244,8 +1243,7 @@ yyreduce:
         case 10:
 #line 139 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                Gt((yyvsp[-2].basic), (yyvsp[0].basic)));
+            (yyval.basic) = Gt((yyvsp[-2].basic), (yyvsp[0].basic));
         }
 #line 1366 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1253,8 +1251,7 @@ yyreduce:
         case 11:
 #line 142 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                Le((yyvsp[-2].basic), (yyvsp[0].basic)));
+            (yyval.basic) = Le((yyvsp[-2].basic), (yyvsp[0].basic));
         }
 #line 1372 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1262,8 +1259,7 @@ yyreduce:
         case 12:
 #line 145 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                Ge((yyvsp[-2].basic), (yyvsp[0].basic)));
+            (yyval.basic) = Ge((yyvsp[-2].basic), (yyvsp[0].basic));
         }
 #line 1378 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1271,8 +1267,7 @@ yyreduce:
         case 13:
 #line 148 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                Eq((yyvsp[-2].basic), (yyvsp[0].basic)));
+            (yyval.basic) = Eq((yyvsp[-2].basic), (yyvsp[0].basic));
         }
 #line 1384 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1283,7 +1278,7 @@ yyreduce:
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_or(s));
+            (yyval.basic) = logical_or(s);
         }
 #line 1395 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1294,7 +1289,7 @@ yyreduce:
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_and(s));
+            (yyval.basic) = logical_and(s);
         }
 #line 1406 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1305,7 +1300,7 @@ yyreduce:
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.push_back(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_xor(s));
+            (yyval.basic) = logical_xor(s);
         }
 #line 1417 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1329,8 +1324,8 @@ yyreduce:
         case 19:
 #line 181 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>(
-                logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic))));
+            (yyval.basic)
+                = logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
         }
 #line 1435 "parser.tab.cc" /* yacc.c:1646  */
         break;
@@ -1338,7 +1333,7 @@ yyreduce:
         case 20:
 #line 184 "parser.yy" /* yacc.c:1646  */
         {
-            (yyval.basic) = rcp_static_cast<const Basic>((yyvsp[0].basic));
+            (yyval.basic) = (yyvsp[0].basic);
         }
 #line 1441 "parser.tab.cc" /* yacc.c:1646  */
         break;

@@ -133,26 +133,26 @@ expr:
         { $$ = pow($1, $3); }
 |
         expr '<' expr
-        { $$ = rcp_static_cast<const Basic>(Lt($1, $3)); }
+        { $$ = Lt($1, $3); }
 |
         expr '>' expr
-        { $$ = rcp_static_cast<const Basic>(Gt($1, $3)); }
+        { $$ = Gt($1, $3); }
 |
         expr LE expr
-        { $$ = rcp_static_cast<const Basic>(Le($1, $3)); }
+        { $$ = Le($1, $3); }
 |
         expr GE expr
-        { $$ = rcp_static_cast<const Basic>(Ge($1, $3)); }
+        { $$ = Ge($1, $3); }
 |
         expr EQ expr
-        { $$ = rcp_static_cast<const Basic>(Eq($1, $3)); }
+        { $$ = Eq($1, $3); }
 |
         expr '|' expr
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = rcp_static_cast<const Basic>(logical_or(s));
+            $$ = logical_or(s);
         }
 |
         expr '&' expr
@@ -160,7 +160,7 @@ expr:
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
-            $$ = rcp_static_cast<const Basic>(logical_and(s));
+            $$ = logical_and(s);
         }
 |
         expr '^' expr
@@ -168,7 +168,7 @@ expr:
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>($1));
             s.push_back(rcp_static_cast<const Boolean>($3));
-            $$ = rcp_static_cast<const Basic>(logical_xor(s));
+            $$ = logical_xor(s);
         }
 |
         '(' expr ')'
@@ -178,10 +178,10 @@ expr:
         { $$ = neg($2); }
 |
         '~' expr %prec NOT
-        { $$ = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>($2))); }
+        { $$ = logical_not(rcp_static_cast<const Boolean>($2)); }
 |
         leaf
-        { $$ = rcp_static_cast<const Basic>($1); }
+        { $$ = $1; }
 ;
 
 leaf:
