@@ -95,7 +95,6 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %type <basic> st_expr
 %type <basic> expr
 %type <basic_vec> expr_list
-%type <basic> func
 
 %start st_expr
 
@@ -138,7 +137,7 @@ expr
     | '~' expr %prec NOT {$$ = logical_not(rcp_static_cast<const Boolean>($2));}
     | IDENTIFIER { $$ = p.parse_identifier($1); }
     | NUMERIC { $$ = p.parse_numeric($1); }
-    | func { $$ = $1; }
+    | IDENTIFIER '(' expr_list ')' { $$ = p.functionify($1, $3); }
     | IMPLICIT_MUL {
             auto tup = p.parse_implicit_mul($1);
             $$ = mul(std::get<0>(tup), std::get<1>(tup));
@@ -147,10 +146,6 @@ expr
             auto tup = p.parse_implicit_mul($1);
             $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
         }
-    ;
-
-func
-    : IDENTIFIER '(' expr_list ')' { $$ = p.functionify($1, $3); }
     ;
 
 expr_list
