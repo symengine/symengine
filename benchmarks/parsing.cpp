@@ -16,6 +16,14 @@ int main(int argc, char *argv[])
     RCP<const Basic> a;
     int N;
 
+    auto t1 = std::chrono::high_resolution_clock::now();
+    a = parse("0");
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "parse('0') = " << *a << ": "
+              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+
     N = 5000;
     std::string text;
     std::string t0 = "(x + y - sin(x)/(z**2-4) - x**(y**z))";
@@ -24,9 +32,9 @@ int main(int argc, char *argv[])
         text = text + " * " + t0;
     }
 
-    auto t1 = std::chrono::high_resolution_clock::now();
+    t1 = std::chrono::high_resolution_clock::now();
     a = parse(text);
-    auto t2 = std::chrono::high_resolution_clock::now();
+    t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
