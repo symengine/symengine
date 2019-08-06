@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     N = 5000;
     std::string text;
-    std::string t0 = "(x + y - x/(z**2-4) - x**(y**z))";
+    std::string t0 = "(2*x + 3*y - x/(z**2-4) - x**(y**z))";
     text = t0;
     for (int i = 0; i < N; i++) {
         text = text + " * " + t0;

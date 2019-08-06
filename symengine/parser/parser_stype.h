@@ -51,7 +51,7 @@ using SymEngine::integer;
 #define MUL(x, y) x*y
 #define DIV(x, y) x/y
 #define POW(x, y) std::pow(x,y)
-#define SYMBOL(x) 3
+#define SYMBOL(x) 1
 #define INTEGER(x) std::stoi(x)
 #define PRINT(x) std::cout << x << std::endl
 
