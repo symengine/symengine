@@ -31,7 +31,7 @@ int Tokenizer::lex(YYSTYPE &yylval)
 
             pows = "**"|"@";
             ident = char (char | dig)*;
-            numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
+            numeric = dig+;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
             end { return yytokentype::END_OF_FILE; }
