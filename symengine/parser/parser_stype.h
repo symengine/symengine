@@ -8,8 +8,8 @@ namespace SymEngine
 {
 
 struct YYSTYPE {
-    SymEngine::RCP<const SymEngine::Basic> basic;
-    SymEngine::vec_basic basic_vec;
+    //SymEngine::RCP<const SymEngine::Basic> basic;
+    int basic;
     std::string string;
     // Constructor
     YYSTYPE() = default;
@@ -25,6 +25,7 @@ struct YYSTYPE {
 
 } // namespace SymEngine
 
+/*
 #include "symengine/add.h"
 #include "symengine/pow.h"
 
@@ -43,5 +44,15 @@ using SymEngine::integer;
 #define POW(x, y) pow(x, y)
 #define SYMBOL(x) symbol(x)
 #define INTEGER(x) integer(x)
+*/
+
+#define ADD(x, y) x+y
+#define SUB(x, y) x-y
+#define MUL(x, y) x*y
+#define DIV(x, y) x/y
+#define POW(x, y) std::pow(x,y)
+#define SYMBOL(x) 3
+#define INTEGER(x) std::stoi(x)
+#define PRINT(x) std::cout << x << std::endl
 
 #endif

@@ -18,7 +18,7 @@ std::string poly_print(const Expression &x)
 
 Expression::Expression(const std::string &s)
 {
-    m_basic = parse(s);
+    //m_basic = parse(s);
 }
 
 } // SymEngine

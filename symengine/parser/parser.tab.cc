@@ -1238,7 +1238,7 @@ yyreduce:
     {
         case 2:
 #line 63 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = (yyvsp[0].basic); p.res = (yyval.basic); }
+    { (yyval.basic) = (yyvsp[0].basic); PRINT((yyval.basic)); }
 #line 1243 "parser.tab.cc" /* yacc.c:1646  */
     break;
 

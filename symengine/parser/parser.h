@@ -35,7 +35,7 @@ public:
     Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
-    RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
+    void parse(const std::string &input);
     int parse();
 
     RCP<const Basic> functionify(const std::string &name, vec_basic &params);

@@ -503,7 +503,7 @@ CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b)
 CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str)
 {
     CWRAPPER_BEGIN
-    b->m = SymEngine::parse(str);
+    //b->m = SymEngine::parse(str);
     CWRAPPER_END
 }
 
@@ -511,9 +511,9 @@ CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor)
 {
     CWRAPPER_BEGIN
     if (convert_xor > 0) {
-        b->m = SymEngine::parse(str);
+        //b->m = SymEngine::parse(str);
     } else {
-        b->m = SymEngine::parse(str, false);
+        //b->m = SymEngine::parse(str, false);
     }
     CWRAPPER_END
 }

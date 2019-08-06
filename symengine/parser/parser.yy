@@ -60,7 +60,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 
 %%
 st_expr
-    : expr { $$ = $1; p.res = $$; }
+    : expr { $$ = $1; PRINT($$); }
     ;
 
 expr
