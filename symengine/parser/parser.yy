@@ -126,11 +126,7 @@ expr:
         IMPLICIT_MUL POW expr
         {
           auto tup = p.parse_implicit_mul($1);
-          if (neq(*std::get<1>(tup), *one)) {
-            $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
-          } else {
-            $$ = pow(std::get<0>(tup), $3);
-          }
+          $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
         }
 |
         expr POW expr
