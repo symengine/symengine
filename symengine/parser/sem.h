@@ -3,12 +3,11 @@
 
 #include "symengine/pow.h"
 
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::mul;
-using SymEngine::pow;
 using SymEngine::add;
 using SymEngine::sub;
+using SymEngine::mul;
+using SymEngine::div;
+using SymEngine::pow;
 using SymEngine::symbol;
 using SymEngine::integer;
 
