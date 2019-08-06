@@ -31,6 +31,7 @@ using SymEngine::pow;
 using SymEngine::add;
 using SymEngine::sub;
 using SymEngine::symbol;
+using SymEngine::integer;
 
 
 #include "symengine/parser/tokenizer.h"
@@ -85,5 +86,5 @@ expr
     | expr POW expr { $$ = pow($1, $3); }
     | '(' expr ')' { $$ = $2; }
     | IDENTIFIER { $$ = symbol($1); }
-    | NUMERIC { $$ = p.parse_numeric($1); }
+    | NUMERIC { $$ = integer($1); }
     ;
