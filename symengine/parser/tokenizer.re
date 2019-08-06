@@ -27,15 +27,11 @@ int Tokenizer::lex(YYSTYPE &yylval)
             whitespace = [ \t\v\n\r]+;
             dig = [0-9];
             char =  [\x80-\xff] | [a-zA-Z_];
-            operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"~"|"<"|">"|"&"|"|";
+            operators = "-"|"+"|"/"|"("|")"|"*"|",";
 
             pows = "**"|"@";
-            le = "<=";
-            ge = ">=";
-            eqs = "==";
             ident = char (char | dig)*;
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
-            implicitmul = numeric ident;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
             end { return yytokentype::END_OF_FILE; }
@@ -44,12 +40,8 @@ int Tokenizer::lex(YYSTYPE &yylval)
             // FIXME:
             operators { return tok[0]; }
             pows { return yytokentype::POW; }
-            le   { return yytokentype::LE; }
-            ge   { return yytokentype::GE; }
-            eqs  { return yytokentype::EQ; }
             ident { yylval.string=token(); return yytokentype::IDENTIFIER; }
             numeric { yylval.string=token(); return yytokentype::NUMERIC; }
-            implicitmul { yylval.string=token(); return yytokentype::IMPLICIT_MUL; }
         */
     }
 }
