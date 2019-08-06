@@ -6,7 +6,7 @@
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
-using SymEngine::Parser;
+using SymEngine::parse;
 using SymEngine::parse_old;
 
 int main(int argc, char *argv[])
@@ -14,8 +14,15 @@ int main(int argc, char *argv[])
     SymEngine::print_stack_on_segfault();
 
     RCP<const Basic> a;
-    Parser p;
     int N;
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    a = parse("0");
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "parse('0') = " << *a << ": "
+              << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
 
     N = 5000;
     std::string text;
@@ -25,9 +32,9 @@ int main(int argc, char *argv[])
         text = text + " * " + t0;
     }
 
-    auto t1 = std::chrono::high_resolution_clock::now();
-    a = p.parse(text);
-    auto t2 = std::chrono::high_resolution_clock::now();
+    t1 = std::chrono::high_resolution_clock::now();
+    a = parse(text);
+    t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
@@ -46,7 +53,7 @@ int main(int argc, char *argv[])
     N = 3000;
     t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < N; i++) {
-        a = p.parse(t0);
+        a = parse(t0);
     }
     t2 = std::chrono::high_resolution_clock::now();
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
