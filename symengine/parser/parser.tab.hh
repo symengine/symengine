@@ -42,11 +42,9 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 15 "parser.yy" /* yacc.c:1909  */
 
-
 #include "symengine/parser/parser.h"
 
-
-#line 50 "parser.tab.hh" /* yacc.c:1909  */
+#line 48 "parser.tab.hh" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
