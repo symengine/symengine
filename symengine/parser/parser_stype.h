@@ -132,7 +132,7 @@ static struct Node* make_integer(std::string s) {
 #define POW(x, y) make_pow(x, y)
 #define SYMBOL(x) make_symbol(x)
 #define INTEGER(x) make_integer(x)
-#define PRINT(x) std::cout << x->type << std::endl
+#define PRINT(x) std::cout << x->d.binop.right->type << std::endl
 
 
 namespace SymEngine
