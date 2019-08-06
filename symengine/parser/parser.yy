@@ -88,11 +88,10 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left GE
 %left '-' '+'
 %left '*' '/'
-%right UMINUS
-%left IMPLICIT_MUL
+%precedence UMINUS
+%precedence IMPLICIT_MUL
 %right POW
-%right NOT
-%nonassoc '('
+%precedence NOT
 
 
 %start st_expr
