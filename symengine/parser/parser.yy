@@ -71,10 +71,12 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 
 
 
+%token END_OF_FILE 0
 %token <string> IDENTIFIER
 %token <string> NUMERIC
 %token <string> IMPLICIT_MUL
-%token END_OF_FILE 0
+%type <basic> st_expr expr
+%type <basic_vec> expr_list
 
 %left '|'
 %left '^'
@@ -92,9 +94,6 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %right NOT
 %nonassoc '('
 
-%type <basic> st_expr
-%type <basic> expr
-%type <basic_vec> expr_list
 
 %start st_expr
 
