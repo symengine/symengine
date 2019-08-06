@@ -120,14 +120,6 @@ expr:
         expr '/' expr
         { $$ = div($1, $3); }
 |
-// FIXME: This rule generates:
-// parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
-        IMPLICIT_MUL POW expr
-        {
-          auto tup = p.parse_implicit_mul($1);
-          $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
-        }
-|
         expr POW expr
         { $$ = pow($1, $3); }
 |
@@ -184,12 +176,6 @@ expr:
         $$ = p.parse_identifier($1);
     }
 |
-    IMPLICIT_MUL
-    {
-        auto tup = p.parse_implicit_mul($1);
-        $$ = mul(std::get<0>(tup), std::get<1>(tup));
-    }
-|
     NUMERIC
     {
         $$ = p.parse_numeric($1);
@@ -199,6 +185,20 @@ expr:
     {
         $$ = $1;
     }
+|
+    IMPLICIT_MUL
+    {
+        auto tup = p.parse_implicit_mul($1);
+        $$ = mul(std::get<0>(tup), std::get<1>(tup));
+    }
+|
+// FIXME: This rule generates:
+// parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+        IMPLICIT_MUL POW expr
+        {
+          auto tup = p.parse_implicit_mul($1);
+          $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
+        }
 ;
 
 func:
