@@ -149,11 +149,6 @@ expr
     ;
 
 expr_list
-    : expr_list ',' expr {
-            $$ = $1; // TODO : should make copy?
-            $$ .push_back($3);
-        }
-    | expr {
-            $$ = vec_basic(1, $1);
-        }
+    : expr_list ',' expr { $$ = $1; $$.push_back($3); }
+    | expr { $$ = vec_basic(1, $1); }
     ;
