@@ -33,6 +33,14 @@ using SymEngine::sub;
 using SymEngine::symbol;
 using SymEngine::integer;
 
+#define ADD(x, y) add(x, y)
+#define SUB(x, y) sub(x, y)
+#define MUL(x, y) mul(x, y)
+#define DIV(x, y) div(x, y)
+#define POW(x, y) pow(x, y)
+#define SYMBOL(x) symbol(x)
+#define INTEGER(x) integer(x)
+
 
 #include "symengine/parser/tokenizer.h"
 
@@ -79,12 +87,12 @@ st_expr
     ;
 
 expr
-    : expr '+' expr { $$ = add($1, $3); }
-    | expr '-' expr { $$ = sub($1, $3); }
-    | expr '*' expr { $$ = mul($1, $3); }
-    | expr '/' expr { $$ = div($1, $3); }
-    | expr POW expr { $$ = pow($1, $3); }
+    : expr '+' expr { $$ = ADD($1, $3); }
+    | expr '-' expr { $$ = SUB($1, $3); }
+    | expr '*' expr { $$ = MUL($1, $3); }
+    | expr '/' expr { $$ = DIV($1, $3); }
+    | expr POW expr { $$ = POW($1, $3); }
     | '(' expr ')' { $$ = $2; }
-    | IDENTIFIER { $$ = symbol($1); }
-    | NUMERIC { $$ = integer($1); }
+    | IDENTIFIER { $$ = SYMBOL($1); }
+    | NUMERIC { $$ = INTEGER($1); }
     ;

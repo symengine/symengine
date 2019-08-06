@@ -145,6 +145,14 @@ using SymEngine::sub;
 using SymEngine::symbol;
 using SymEngine::integer;
 
+#define ADD(x, y) add(x, y)
+#define SUB(x, y) sub(x, y)
+#define MUL(x, y) mul(x, y)
+#define DIV(x, y) div(x, y)
+#define POW(x, y) pow(x, y)
+#define SYMBOL(x) symbol(x)
+#define INTEGER(x) integer(x)
+
 
 #include "symengine/parser/tokenizer.h"
 
@@ -171,7 +179,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
     while (0)
 
 
-#line 175 "parser.tab.cc" /* yacc.c:359  */
+#line 183 "parser.tab.cc" /* yacc.c:359  */
 
 #ifdef short
 # undef short
@@ -469,8 +477,8 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    78,    78,    82,    83,    84,    85,    86,    87,    88,
-      89
+       0,    86,    86,    90,    91,    92,    93,    94,    95,    96,
+      97
 };
 #endif
 
@@ -1252,61 +1260,61 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 78 "parser.yy" /* yacc.c:1646  */
+#line 86 "parser.yy" /* yacc.c:1646  */
     { (yyval.basic) = (yyvsp[0].basic); p.res = (yyval.basic); }
-#line 1258 "parser.tab.cc" /* yacc.c:1646  */
+#line 1266 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 82 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = add((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1264 "parser.tab.cc" /* yacc.c:1646  */
+#line 90 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = ADD((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1272 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 83 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = sub((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1270 "parser.tab.cc" /* yacc.c:1646  */
+#line 91 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = SUB((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1278 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 84 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = mul((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1276 "parser.tab.cc" /* yacc.c:1646  */
+#line 92 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = MUL((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1284 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 85 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = div((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1282 "parser.tab.cc" /* yacc.c:1646  */
+#line 93 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = DIV((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1290 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 86 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1288 "parser.tab.cc" /* yacc.c:1646  */
+#line 94 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = POW((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1296 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 87 "parser.yy" /* yacc.c:1646  */
+#line 95 "parser.yy" /* yacc.c:1646  */
     { (yyval.basic) = (yyvsp[-1].basic); }
-#line 1294 "parser.tab.cc" /* yacc.c:1646  */
+#line 1302 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 88 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = symbol((yyvsp[0].string)); }
-#line 1300 "parser.tab.cc" /* yacc.c:1646  */
+#line 96 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = SYMBOL((yyvsp[0].string)); }
+#line 1308 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 89 "parser.yy" /* yacc.c:1646  */
-    { (yyval.basic) = integer((yyvsp[0].string)); }
-#line 1306 "parser.tab.cc" /* yacc.c:1646  */
+#line 97 "parser.yy" /* yacc.c:1646  */
+    { (yyval.basic) = INTEGER((yyvsp[0].string)); }
+#line 1314 "parser.tab.cc" /* yacc.c:1646  */
     break;
 
 
-#line 1310 "parser.tab.cc" /* yacc.c:1646  */
+#line 1318 "parser.tab.cc" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
