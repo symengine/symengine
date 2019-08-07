@@ -39,11 +39,11 @@ public:
 };
 
 
-#define TYPE *Base
-#define ADD(x, y) new BinOp(NodeType::Add, x, y)
-#define SUB(x, y) new BinOp(NodeType::Sub, x, y)
-#define MUL(x, y) new BinOp(NodeType::Mul, x, y)
-#define DIV(x, y) new BinOp(NodeType::Div, x, y)
+#define TYPE Base*
+#define ADD(x, y) new BinOp(BinOpType::Add, x, y)
+#define SUB(x, y) new BinOp(BinOpType::Sub, x, y)
+#define MUL(x, y) new BinOp(BinOpType::Mul, x, y)
+#define DIV(x, y) new BinOp(BinOpType::Div, x, y)
 #define POW(x, y) new Pow(x, y)
 #define SYMBOL(x) new Symbol(x)
 #define INTEGER(x) new Integer(x)
