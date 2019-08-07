@@ -10,66 +10,44 @@ class Base {
 };
 
 class BinOp : public Base {
-    BinOp type;
+    const BinOpType type;
+    const Base *left, *right;
 public:
-    BinOp(NodeType type, PNode x, PNode y) {
+    BinOp(BinOpType type, const Base *x, const Base *y)
+        : type{type}, left{x}, right{y} {
     }
 };
 
-typedef struct Node *PNode;
-struct Node {
-    NodeType type;
-    union {
-        struct { PNode left; PNode right; } binop;
-        struct { PNode base; PNode exp; } pow;
-        struct { char *name; } symbol;
-        struct { char *i; } integer;
-    } d;
+class Pow : public Base {
+    const Base *base, *exp;
+public:
+    Pow(const Base *x, const Base *y)
+        : base{x}, exp{y} {
+    }
 };
 
-static struct Node* make_binop(NodeType type, PNode x, PNode y) {
-    PNode n;
-    n = new Node;
-    n->type = type;
-    n->d.binop.left = x;
-    n->d.binop.right = y;
-    return n;
-}
+class Symbol : public Base {
+    const char *name;
+public:
+    Symbol(const std::string s) : name{s.c_str()} { }
+};
 
-static struct Node* make_pow(PNode x, PNode y) {
-    PNode n;
-    n = new Node;
-    n->type = NodeType::Pow;
-    n->d.pow.base = x;
-    n->d.pow.exp = y;
-    return n;
-}
+class Integer : public Base {
+    const char *i;
+public:
+    Integer(const std::string s) : i{s.c_str()} { }
+};
 
-static struct Node* make_symbol(std::string s) {
-    PNode n;
-    n = new Node;
-    n->type = NodeType::Symbol;
-    n->d.symbol.name = &s[0];
-    return n;
-}
 
-static struct Node* make_integer(std::string s) {
-    PNode n;
-    n = new Node;
-    n->type = NodeType::Integer;
-    n->d.integer.i = &s[0];
-    return n;
-}
-
-#define TYPE PNode
-#define ADD(x, y) make_binop(NodeType::Add, x, y)
-#define SUB(x, y) make_binop(NodeType::Sub, x, y)
-#define MUL(x, y) make_binop(NodeType::Mul, x, y)
-#define DIV(x, y) make_binop(NodeType::Div, x, y)
-#define POW(x, y) make_pow(x, y)
-#define SYMBOL(x) make_symbol(x)
-#define INTEGER(x) make_integer(x)
-#define PRINT(x) std::cout << x->d.binop.right->type << std::endl
+#define TYPE *Base
+#define ADD(x, y) new BinOp(NodeType::Add, x, y)
+#define SUB(x, y) new BinOp(NodeType::Sub, x, y)
+#define MUL(x, y) new BinOp(NodeType::Mul, x, y)
+#define DIV(x, y) new BinOp(NodeType::Div, x, y)
+#define POW(x, y) new Pow(x, y)
+#define SYMBOL(x) new Symbol(x)
+#define INTEGER(x) new Integer(x)
+#define PRINT(x) std::cout << "OK" << std::endl; //x->d.binop.right->type << std::endl
 
 
 #endif
