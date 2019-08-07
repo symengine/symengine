@@ -59,7 +59,7 @@ public:
 #define POW(x, y) new Pow(x, y)
 #define SYMBOL(x) new Symbol(x)
 #define INTEGER(x) new Integer(x)
-#define PRINT(x) std::cout << "OK" << std::endl; //x->d.binop.right->type << std::endl
+#define PRINT(x) std::cout << (long int)x << std::endl; //x->d.binop.right->type << std::endl
 
 
 #endif
