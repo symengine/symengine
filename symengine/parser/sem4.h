@@ -1,27 +1,10 @@
-#ifndef SYMENGINE_PARSER_STYPE_H
-#define SYMENGINE_PARSER_STYPE_H
+#ifndef SYMENGINE_PARSER_SEM4_H
+#define SYMENGINE_PARSER_SEM4_H
 
-//#include "sem1.h"
-//#include "sem2.h"
-//#include "sem3.h"
-#include "sem4.h"
-
-/******************************************************************************/
-
-/*
-enum BinOpType
+//13ms
+enum NodeType
 {
-    Add, Sub, Mul, Div
-};
-
-class Base {
-};
-
-class BinOp : public Base {
-    BinOp type;
-public:
-    BinOp(NodeType type, PNode x, PNode y) {
-    }
+    Add, Sub, Mul, Div, Pow, Symbol, Integer
 };
 
 typedef struct Node *PNode;
@@ -78,29 +61,6 @@ static struct Node* make_integer(std::string s) {
 #define SYMBOL(x) make_symbol(x)
 #define INTEGER(x) make_integer(x)
 #define PRINT(x) std::cout << x->d.binop.right->type << std::endl
-*/
-
-
-namespace SymEngine
-{
-
-struct YYSTYPE {
-    TYPE basic;
-    std::string string;
-    // Constructor
-    YYSTYPE() = default;
-    // Destructor
-    ~YYSTYPE() = default;
-    // Copy constructor and assignment
-    YYSTYPE(const YYSTYPE &) = default;
-    YYSTYPE &operator=(const YYSTYPE &) = default;
-    // Move constructor and assignment
-    YYSTYPE(YYSTYPE &&) = default;
-    YYSTYPE &operator=(YYSTYPE &&) = default;
-};
-
-} // namespace SymEngine
-
 
 
 #endif
