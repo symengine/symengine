@@ -1,64 +1,59 @@
 #ifndef SYMENGINE_PARSER_SEM7_H
 #define SYMENGINE_PARSER_SEM7_H
 
+#include <variant>
+
 /*
-   Computer 1:
+   Computer 1: 12ms
    Computer 2:
 */
-
-template <typename T, typename... Args>
-inline std::unique_ptr<T> make_unique(Args &&... args)
-{
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-
 
 enum BinOpType
 {
     Add, Sub, Mul, Div
 };
 
-class Base {
-};
+struct Base;
 
-class BinOp : public Base {
+struct BinOp {
     const BinOpType type;
-    const std::unique_ptr<const Base> left, right;
-public:
+    const Base *left, *right;
     BinOp(BinOpType type, const Base *x, const Base *y)
         : type{type}, left{x}, right{y} {
     }
 };
 
-class Pow : public Base {
-    const std::unique_ptr<const Base> base, exp;
-public:
+struct Pow {
+    const Base *base, *exp;
     Pow(const Base *x, const Base *y)
         : base{x}, exp{y} {
     }
 };
 
-class Symbol : public Base {
+struct Symbol {
     const char *name;
-public:
     Symbol(const std::string s) : name{s.c_str()} { }
 };
 
-class Integer : public Base {
+struct Integer {
     const char *i;
-public:
     Integer(const std::string s) : i{s.c_str()} { }
+};
+
+struct Base {
+    std::variant<BinOp, Pow, Symbol, Integer> u;
+    template<typename A> Base(A &&x) : u{std::move(x)}  {}
 };
 
 
 #define TYPE Base*
-#define ADD(x, y) new BinOp(BinOpType::Add, x, y)
-#define SUB(x, y) new BinOp(BinOpType::Sub, x, y)
-#define MUL(x, y) new BinOp(BinOpType::Mul, x, y)
-#define DIV(x, y) new BinOp(BinOpType::Div, x, y)
-#define POW(x, y) new Pow(x, y)
-#define SYMBOL(x) new Symbol(x)
-#define INTEGER(x) new Integer(x)
+#define ADD(x, y) new Base(BinOp(BinOpType::Add, x, y))
+#define SUB(x, y) new Base(BinOp(BinOpType::Sub, x, y))
+#define MUL(x, y) new Base(BinOp(BinOpType::Mul, x, y))
+#define DIV(x, y) new Base(BinOp(BinOpType::Div, x, y))
+#define POW(x, y) new Base(Pow(x, y))
+#define SYMBOL(x) new Base(Symbol(x))
+#define INTEGER(x) new Base(Integer(x))
 #define PRINT(x) std::cout << (long int)x << std::endl; //x->d.binop.right->type << std::endl
 
 
