@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM6_H
 
 /*
-   Computer 1: 12ms
+   Computer 1: 12ms 122ms
    Computer 2:
 */
 

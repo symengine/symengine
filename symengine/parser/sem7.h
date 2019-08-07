@@ -4,7 +4,7 @@
 #include <variant>
 
 /*
-   Computer 1: 12ms
+   Computer 1: 12ms 139ms
    Computer 2:
 */
 

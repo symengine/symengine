@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_PARSER_SEM4_H
 #define SYMENGINE_PARSER_SEM4_H
 
-// Computer 1: 12ms
+// Computer 1: 12ms 128ms
 // Computer 2: 13ms
 enum NodeType
 {

@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_PARSER_SEM3_H
 #define SYMENGINE_PARSER_SEM3_H
 
-// Computer 1: 13ms
+// Computer 1: 13ms 123ms
 // Computer 2: 10 - 13ms
 enum NodeType
 {

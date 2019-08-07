@@ -1,13 +1,13 @@
 #ifndef SYMENGINE_PARSER_STYPE_H
 #define SYMENGINE_PARSER_STYPE_H
 
-//#include "sem1.h"
+#include "sem1.h"
 //#include "sem2.h"
 //#include "sem3.h"
 //#include "sem4.h"
 //#include "sem5.h"
 //#include "sem6.h"
-#include "sem7.h"
+//#include "sem7.h"
 
 
 

@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_PARSER_SEM2_H
 #define SYMENGINE_PARSER_SEM2_H
 
-// Computer 1: 8ms
+// Computer 1: 8ms 72ms
 // Computer 2: 8 - 9ms
 
 #define TYPE int

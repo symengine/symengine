@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_PARSER_SEM1_H
 #define SYMENGINE_PARSER_SEM1_H
 
-// Computer 1: 40ms
+// Computer 1: 40ms 440ms
 // Computer 2: 40ms
 
 #include <string>
