@@ -1,7 +1,8 @@
 #ifndef SYMENGINE_PARSER_SEM2_H
 #define SYMENGINE_PARSER_SEM2_H
 
-// 8 - 9ms
+// Computer 1: 8ms
+// Computer 2: 8 - 9ms
 
 #define TYPE int
 #define ADD(x, y) x+y
