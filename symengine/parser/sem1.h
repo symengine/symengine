@@ -1,5 +1,5 @@
-#ifndef SYMENGINE_PARSER_SEM_H
-#define SYMENGINE_PARSER_SEM_H
+#ifndef SYMENGINE_PARSER_SEM1_H
+#define SYMENGINE_PARSER_SEM1_H
 
 #include <string>
 #include "symengine/basic.h"
