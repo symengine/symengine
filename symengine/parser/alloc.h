@@ -44,6 +44,8 @@ public:
 
     template <typename T, typename... Args> T* make_new(Args &&... args) {
         return new(allocate(sizeof(T))) T(std::forward<Args>(args)...);
+        // To test the default "new", comment the above and uncomment this:
+        //return new T(std::forward<Args>(args)...);
     }
 };
 

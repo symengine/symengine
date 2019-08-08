@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM6_H
 
 /*
-   Computer 1: 12ms 122ms           111ms (linear)
+   Computer 1: 12ms 122ms           111ms (linear)  187ms (default new)
    Computer 2: -    74ms   86ms
 */
 
