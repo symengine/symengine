@@ -8,6 +8,10 @@
    Computer 2: --   78ms   92ms
 */
 
+#include "alloc.h"
+
+static Allocator al(1000000000);
+
 template<typename... LAMBDAS> struct visitors : LAMBDAS... {
   using LAMBDAS::operator()...;
 };
@@ -74,13 +78,13 @@ static int count(const Base &b) {
 
 
 #define TYPE Base*
-#define ADD(x, y) new Base(BinOp(BinOpType::Add, x, y))
-#define SUB(x, y) new Base(BinOp(BinOpType::Sub, x, y))
-#define MUL(x, y) new Base(BinOp(BinOpType::Mul, x, y))
-#define DIV(x, y) new Base(BinOp(BinOpType::Div, x, y))
-#define POW(x, y) new Base(Pow(x, y))
-#define SYMBOL(x) new Base(Symbol(x))
-#define INTEGER(x) new Base(Integer(x))
+#define ADD(x, y) al.make_new<Base>(BinOp(BinOpType::Add, x, y))
+#define SUB(x, y) al.make_new<Base>(BinOp(BinOpType::Sub, x, y))
+#define MUL(x, y) al.make_new<Base>(BinOp(BinOpType::Mul, x, y))
+#define DIV(x, y) al.make_new<Base>(BinOp(BinOpType::Div, x, y))
+#define POW(x, y) al.make_new<Base>(Pow(x, y))
+#define SYMBOL(x) al.make_new<Base>(Symbol(x))
+#define INTEGER(x) al.make_new<Base>(Integer(x))
 //#define PRINT(x) std::cout << (long int)x << std::endl; //x->d.binop.right->type << std::endl
 #define PRINT(x) std::cout << count(*x) << std::endl;
 
