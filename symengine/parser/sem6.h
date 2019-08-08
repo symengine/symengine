@@ -6,6 +6,10 @@
    Computer 2: -    74ms   86ms
 */
 
+#include "alloc.h"
+
+static Allocator al(1000000000);
+
 template <typename T, typename... Args>
 inline std::unique_ptr<T> make_unique(Args &&... args)
 {
@@ -45,7 +49,7 @@ public:
 class BinOp : public Base {
 public:
     const BinOpType type;
-    const std::unique_ptr<const Base> left, right;
+    const Base *left, *right;
     BinOp(BinOpType type, const Base *x, const Base *y)
         : type{type}, left{x}, right{y} {
     }
@@ -57,7 +61,7 @@ public:
 
 class Pow : public Base {
 public:
-    const std::unique_ptr<const Base> base, exp;
+    const Base *base, *exp;
     Pow(const Base *x, const Base *y)
         : base{x}, exp{y} {
     }
@@ -111,13 +115,13 @@ static int count(const Base &b) {
 
 
 #define TYPE Base*
-#define ADD(x, y) new BinOp(BinOpType::Add, x, y)
-#define SUB(x, y) new BinOp(BinOpType::Sub, x, y)
-#define MUL(x, y) new BinOp(BinOpType::Mul, x, y)
-#define DIV(x, y) new BinOp(BinOpType::Div, x, y)
-#define POW(x, y) new Pow(x, y)
-#define SYMBOL(x) new Symbol(x)
-#define INTEGER(x) new Integer(x)
+#define ADD(x, y) al.make_new<BinOp>(BinOpType::Add, x, y)
+#define SUB(x, y) al.make_new<BinOp>(BinOpType::Sub, x, y)
+#define MUL(x, y) al.make_new<BinOp>(BinOpType::Mul, x, y)
+#define DIV(x, y) al.make_new<BinOp>(BinOpType::Div, x, y)
+#define POW(x, y) al.make_new<Pow>(x, y)
+#define SYMBOL(x) al.make_new<Symbol>(x)
+#define INTEGER(x) al.make_new<Integer>(x)
 #define PRINT(x) std::cout << count(*x) << std::endl;
 //#define PRINT(x) std::cout << (long int)(x) << std::endl;
 
