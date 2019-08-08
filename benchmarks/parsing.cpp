@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     text = t0;
     std::cout << "Construct" << std::endl;
     for (int i = 0; i < N; i++) {
-        text = text + " * " + t0;
+        text.append(" * " + t0);
     }
 
     std::cout << "Parse" << std::endl;
