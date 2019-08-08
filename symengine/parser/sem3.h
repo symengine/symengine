@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM3_H
 
 // Computer 1: 13ms 123ms
-// Computer 2: 10 - 13ms
+// Computer 2: 10ms 68ms
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer

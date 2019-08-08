@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM4_H
 
 // Computer 1: 12ms 128ms
-// Computer 2: 13ms
+// Computer 2: 13ms 74ms
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer

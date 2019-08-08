@@ -3,7 +3,7 @@
 
 /*
    Computer 1: 12ms 122ms
-   Computer 2:
+   Computer 2: -    74ms   86ms
 */
 
 template <typename T, typename... Args>
@@ -119,6 +119,7 @@ static int count(const Base &b) {
 #define SYMBOL(x) new Symbol(x)
 #define INTEGER(x) new Integer(x)
 #define PRINT(x) std::cout << count(*x) << std::endl;
+//#define PRINT(x) std::cout << (long int)(x) << std::endl;
 
 
 #endif

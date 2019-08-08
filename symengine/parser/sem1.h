@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM1_H
 
 // Computer 1: 40ms 440ms
-// Computer 2: 40ms
+// Computer 2: 40ms 208ms
 
 #include <string>
 #include "symengine/basic.h"
