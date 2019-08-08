@@ -3,6 +3,11 @@
 
 // Computer 1: 13ms 123ms
 // Computer 2: 10ms 68ms
+
+#include "alloc.h"
+
+static Allocator al(1000000000);
+
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer
@@ -14,7 +19,7 @@ struct Node {
 
 static struct Node* make_node(NodeType type) {
     struct Node *n;
-    n = new Node;
+    n = al.make_new<Node>();
     n->type = type;
     return n;
 }
