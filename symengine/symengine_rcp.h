@@ -9,6 +9,7 @@
 
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
+#include <symengine/parser/alloc.h>
 
 #if defined(WITH_SYMENGINE_RCP)
 
@@ -26,6 +27,8 @@
 
 namespace SymEngine
 {
+
+static Allocator al(1000000000);
 
 #if defined(WITH_SYMENGINE_RCP)
 
@@ -143,8 +146,10 @@ public:
     }
     ~RCP() SYMENGINE_NOEXCEPT
     {
+        /*
         if (ptr_ != nullptr and --(ptr_->refcount_) == 0)
             delete ptr_;
+            */
     }
     T *operator->() const
     {
@@ -184,8 +189,10 @@ public:
         T *r_ptr_ptr_ = r_ptr.ptr_;
         if (not r_ptr.is_null())
             (r_ptr_ptr_->refcount_)++;
+        /*
         if (not is_null() and --(ptr_->refcount_) == 0)
             delete ptr_;
+        */
         ptr_ = r_ptr_ptr_;
         return *this;
     }
@@ -197,8 +204,10 @@ public:
     }
     void reset()
     {
+        /*
         if (not is_null() and --(ptr_->refcount_) == 0)
             delete ptr_;
+        */
         ptr_ = nullptr;
     }
     // Don't use this function directly:
@@ -373,7 +382,7 @@ template <typename T, typename... Args>
 inline RCP<T> make_rcp(Args &&... args)
 {
 #if defined(WITH_SYMENGINE_RCP)
-    return rcp(new T(std::forward<Args>(args)...));
+    return rcp(al.make_new<T>(std::forward<Args>(args)...));
 #else
     RCP<T> p = rcp(new T(std::forward<Args>(args)...));
     p->set_weak_self_ptr(p.create_weak());
