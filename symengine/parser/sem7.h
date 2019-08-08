@@ -5,7 +5,7 @@
 
 /*
    Computer 1: 12ms 139ms
-   Computer 2: --   78ms
+   Computer 2: --   78ms   92ms
 */
 
 enum BinOpType
