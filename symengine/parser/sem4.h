@@ -2,7 +2,7 @@
 #define SYMENGINE_PARSER_SEM4_H
 
 // Computer 1: 12ms 128ms
-// Computer 2: 13ms 74ms
+// Computer 2: 13ms 74ms   83ms
 enum NodeType
 {
     Add, Sub, Mul, Div, Pow, Symbol, Integer
@@ -53,6 +53,26 @@ static struct Node* make_integer(std::string s) {
     return n;
 }
 
+static int count(const Node &x) {
+    switch (x.type) {
+        case Add:
+        case Sub:
+        case Mul:
+        case Div: {
+                int c = 0;
+                c += count(*x.d.binop.left);
+                c += count(*x.d.binop.right);
+                return c; }
+        case Pow: {
+                int c = 0;
+                c += count(*x.d.pow.base);
+                c += count(*x.d.pow.exp);
+                return c; }
+        case Symbol: return 1;
+        case Integer: return 0;
+    }
+}
+
 #define TYPE PNode
 #define ADD(x, y) make_binop(NodeType::Add, x, y)
 #define SUB(x, y) make_binop(NodeType::Sub, x, y)
@@ -61,7 +81,8 @@ static struct Node* make_integer(std::string s) {
 #define POW(x, y) make_pow(x, y)
 #define SYMBOL(x) make_symbol(x)
 #define INTEGER(x) make_integer(x)
-#define PRINT(x) std::cout << x->d.binop.right->type << std::endl
+//#define PRINT(x) std::cout << x->d.binop.right->type << std::endl
+#define PRINT(x) std::cout << count(*x) << std::endl;
 
 
 #endif
