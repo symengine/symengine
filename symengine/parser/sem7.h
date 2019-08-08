@@ -8,6 +8,12 @@
    Computer 2: --   78ms   92ms
 */
 
+template<typename... LAMBDAS> struct visitors : LAMBDAS... {
+  using LAMBDAS::operator()...;
+};
+template<typename... LAMBDAS> visitors(LAMBDAS... x)->visitors<LAMBDAS...>;
+
+
 enum BinOpType
 {
     Add, Sub, Mul, Div
@@ -45,10 +51,6 @@ struct Base {
     template<typename A> Base(A &&x) : u{std::move(x)}  {}
 };
 
-template<typename... LAMBDAS> struct visitors : LAMBDAS... {
-  using LAMBDAS::operator()...;
-};
-template<typename... LAMBDAS> visitors(LAMBDAS... x)->visitors<LAMBDAS...>;
 
 
 static int count(const Base &b) {
