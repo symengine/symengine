@@ -1,6 +1,8 @@
 #ifndef SYMENGINE_PARSER_SEM4_H
 #define SYMENGINE_PARSER_SEM4_H
 
+#include "alloc.h"
+
 // Computer 1: 12ms 128ms
 // Computer 2: 13ms 74ms   83ms
 enum NodeType
