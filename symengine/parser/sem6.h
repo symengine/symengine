@@ -2,13 +2,19 @@
 #define SYMENGINE_PARSER_SEM6_H
 
 /*
-   Computer 1: 12ms 122ms
+   Computer 1: 12ms 122ms           111ms (linear)
    Computer 2: -    74ms   86ms
 */
 
 #include "alloc.h"
 
-static Allocator al(1000000000);
+namespace SymEngine {
+
+extern Allocator al;
+
+}
+
+using SymEngine::al;
 
 template <typename T, typename... Args>
 inline std::unique_ptr<T> make_unique(Args &&... args)
