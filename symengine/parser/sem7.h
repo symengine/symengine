@@ -4,13 +4,19 @@
 #include <variant>
 
 /*
-   Computer 1: 12ms 139ms
+   Computer 1: 12ms 139ms          129ms (linear)  195 (default new)
    Computer 2: --   78ms   92ms
 */
 
 #include "alloc.h"
 
-static Allocator al(1000000000);
+namespace SymEngine {
+
+extern Allocator al;
+
+}
+
+using SymEngine::al;
 
 template<typename... LAMBDAS> struct visitors : LAMBDAS... {
   using LAMBDAS::operator()...;
