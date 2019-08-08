@@ -28,7 +28,7 @@
 namespace SymEngine
 {
 
-static Allocator al(1000000000);
+extern Allocator al;
 
 #if defined(WITH_SYMENGINE_RCP)
 

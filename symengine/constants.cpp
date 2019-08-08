@@ -3,6 +3,7 @@
 #include <symengine/infinity.h>
 #include <symengine/pow.h>
 #include <symengine/nan.h>
+#include <symengine/parser/alloc.h>
 
 namespace SymEngine
 {
@@ -34,6 +35,8 @@ int Constant::compare(const Basic &o) const
         return 0;
     return name_ < s.name_ ? -1 : 1;
 }
+
+Allocator al(1000000000);
 
 RCP<const Integer> zero = integer(0);
 RCP<const Integer> one = integer(1);

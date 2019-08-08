@@ -15,15 +15,30 @@ class Allocator
 public:
     Allocator(size_t s) {
         start = malloc(s);
+        if (start == nullptr) {
+            throw std::runtime_error("malloc failed.");
+        }
         current_pos = (size_t)start;
         current_pos = align(current_pos);
         size = s;
     }
 
     void *allocate(size_t s) {
+        if (start == nullptr) {
+            throw std::runtime_error("malloc failed 2.");
+        }
         size_t addr = current_pos;
+        /*
+        std::cout << "start:" << (size_t)start << std::endl;
+        std::cout << "addr:" << addr << std::endl;
+        std::cout << "size:" << size << std::endl;
+        std::cout << "s:" << s << std::endl;
+        std::cout << "align(s):" << align(s) << std::endl;
+        */
         current_pos += align(s);
-        if (current_pos - (size_t)start > size) throw std::bad_alloc();
+        if (current_pos - (size_t)start > size) {
+            throw std::runtime_error("Linear allocator too small.");
+        }
         return (void*)addr;
     }
 
