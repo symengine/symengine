@@ -5,7 +5,7 @@
 
 /*
    Computer 1: 12ms 139ms
-   Computer 2: --   81ms
+   Computer 2: --   78ms
 */
 
 enum BinOpType
@@ -45,6 +45,31 @@ struct Base {
     template<typename A> Base(A &&x) : u{std::move(x)}  {}
 };
 
+template<typename... LAMBDAS> struct visitors : LAMBDAS... {
+  using LAMBDAS::operator()...;
+};
+template<typename... LAMBDAS> visitors(LAMBDAS... x)->visitors<LAMBDAS...>;
+
+
+static int count(const Base &b) {
+    return std::visit(
+        visitors{
+            [](const Symbol &x) { return 1; },
+            [](const BinOp &x) {
+                int c = 0;
+                c += count(*x.left);
+                c += count(*x.right);
+                return c; },
+            [](const Pow &x) {
+                int c = 0;
+                c += count(*x.base);
+                c += count(*x.exp);
+                return c; },
+            [](const auto &x) { return 0; },
+        },
+        b.u);
+}
+
 
 #define TYPE Base*
 #define ADD(x, y) new Base(BinOp(BinOpType::Add, x, y))
@@ -54,7 +79,8 @@ struct Base {
 #define POW(x, y) new Base(Pow(x, y))
 #define SYMBOL(x) new Base(Symbol(x))
 #define INTEGER(x) new Base(Integer(x))
-#define PRINT(x) std::cout << (long int)x << std::endl; //x->d.binop.right->type << std::endl
+//#define PRINT(x) std::cout << (long int)x << std::endl; //x->d.binop.right->type << std::endl
+#define PRINT(x) std::cout << count(*x) << std::endl;
 
 
 #endif
