@@ -3,6 +3,8 @@
 
 #include "alloc.h"
 
+static Allocator al(1000000000);
+
 // Computer 1: 12ms 128ms
 // Computer 2: 13ms 74ms   83ms
 enum NodeType
@@ -23,7 +25,7 @@ struct Node {
 
 static struct Node* make_binop(NodeType type, PNode x, PNode y) {
     PNode n;
-    n = new Node;
+    n = al.make_new<Node>();
     n->type = type;
     n->d.binop.left = x;
     n->d.binop.right = y;
@@ -32,7 +34,7 @@ static struct Node* make_binop(NodeType type, PNode x, PNode y) {
 
 static struct Node* make_pow(PNode x, PNode y) {
     PNode n;
-    n = new Node;
+    n = al.make_new<Node>();
     n->type = NodeType::Pow;
     n->d.pow.base = x;
     n->d.pow.exp = y;
@@ -41,7 +43,7 @@ static struct Node* make_pow(PNode x, PNode y) {
 
 static struct Node* make_symbol(std::string s) {
     PNode n;
-    n = new Node;
+    n = al.make_new<Node>();
     n->type = NodeType::Symbol;
     n->d.symbol.name = &s[0];
     return n;
@@ -49,7 +51,7 @@ static struct Node* make_symbol(std::string s) {
 
 static struct Node* make_integer(std::string s) {
     PNode n;
-    n = new Node;
+    n = al.make_new<Node>();
     n->type = NodeType::Integer;
     n->d.integer.i = &s[0];
     return n;
