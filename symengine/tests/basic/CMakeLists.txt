@@ -4,7 +4,7 @@ add_executable(${PROJECT_NAME} test_basic.cpp)
 target_link_libraries(${PROJECT_NAME} symengine catch)
 add_test(${PROJECT_NAME} ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 
-add_executable(tests_main
+set(SRC
     test_arit.cpp
     test_poly.cpp
     test_series.cpp
@@ -26,27 +26,26 @@ add_executable(tests_main
     test_cse.cpp
     test_count_ops.cpp
 )
-target_link_libraries(tests_main symengine catch)
-add_test(tests_main ${PROJECT_BINARY_DIR}/tests_main)
-
 if (WITH_PIRANHA)
-    add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)
-    target_link_libraries(test_series_expansion_UP symengine catch)
-    add_test(test_series_expansion_UP ${PROJECT_BINARY_DIR}/test_series_expansion_UP)
-
-    add_executable(test_series_expansion_URatP test_series_expansion_URatP.cpp)
-    target_link_libraries(test_series_expansion_URatP symengine catch)
-    add_test(test_series_expansion_URatP ${PROJECT_BINARY_DIR}/test_series_expansion_URatP)
+    set(SRC ${SRC}
+        test_series_expansion_UP.cpp
+        test_series_expansion_URatP.cpp
+    )
 endif()
 
 if (WITH_FLINT)
-    add_executable(test_series_expansion_URatF test_series_expansion_URatF.cpp)
-    target_link_libraries(test_series_expansion_URatF symengine catch)
-    add_test(test_series_expansion_URatF ${PROJECT_BINARY_DIR}/test_series_expansion_URatF)
+    set(SRC ${SRC}
+        test_series_expansion_URatF.cpp
+    )
 endif()
 
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
-	add_executable(test_integer_class test_integer_class.cpp)
-	target_link_libraries(test_integer_class symengine catch)
-	add_test(test_integer_class ${PROJECT_BINARY_DIR}/test_integer_class)
+    set(SRC ${SRC}
+        test_integer_class.cpp
+    )
 endif()
+
+
+add_executable(tests_main ${SRC})
+target_link_libraries(tests_main symengine catch)
+add_test(tests_main ${PROJECT_BINARY_DIR}/tests_main)
