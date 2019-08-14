@@ -2,7 +2,6 @@
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/logic.h>
 #include <symengine/mul.h>
-#include <symengine/as_real_imag.cpp>
 
 namespace SymEngine
 {

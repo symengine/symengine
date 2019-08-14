@@ -1,6 +1,12 @@
 #include "catch.hpp"
 
-#include <symengine/as_real_imag.cpp>
+#include <symengine/basic.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/functions.h>
+#include <symengine/add.h>
+#include <symengine/pow.h>
+#include <symengine/mul.h>
 #include <symengine/symengine_casts.h>
 
 using SymEngine::Basic;

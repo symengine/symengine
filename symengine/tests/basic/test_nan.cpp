@@ -57,7 +57,7 @@ TEST_CASE("Comparing NaN", "[NaN]")
     REQUIRE(neq(*a, *i1));
 }
 
-TEST_CASE("Check Derivative", "[NaN]")
+TEST_CASE("NaN: Check Derivative", "[NaN]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const NaN> b = Nan;
