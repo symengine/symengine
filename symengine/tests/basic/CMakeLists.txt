@@ -1,11 +1,8 @@
 project(test_basic)
 
-add_executable(${PROJECT_NAME} test_basic.cpp)
-target_link_libraries(${PROJECT_NAME} symengine catch)
-add_test(${PROJECT_NAME} ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
-
 set(SRC
     test_arit.cpp
+    test_basic.cpp
     test_poly.cpp
     test_series.cpp
     test_series_generic.cpp
