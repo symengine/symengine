@@ -1198,6 +1198,7 @@ void test_functions()
 
     basic_new_stack(pi);
     basic_new_stack(e);
+    basic_new_stack(complex_inf);
     basic_new_stack(ans);
     basic_new_stack(res);
     basic_new_stack(two);
