@@ -612,11 +612,11 @@ IMPLEMENT_ONE_ARG_FUNC(log)
 
 #define IMPLEMENT_TWO_ARG_FUNC(func)                                           \
     CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a, const basic b)   \
-{                                                                              \
-    CWRAPPER_BEGIN                                                             \
-    s->m = SymEngine::func(a->m, b->m);                                        \
-    CWRAPPER_END                                                               \
-}
+    {                                                                          \
+        CWRAPPER_BEGIN                                                         \
+        s->m = SymEngine::func(a->m, b->m);                                    \
+        CWRAPPER_END                                                           \
+    }
 
 IMPLEMENT_TWO_ARG_FUNC(atan2)
 IMPLEMENT_TWO_ARG_FUNC(zeta)

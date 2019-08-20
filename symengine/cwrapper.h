@@ -349,7 +349,8 @@ CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
 //! Assigns s = zeta(a, b).
 CWRAPPER_OUTPUT_TYPE basic_zeta(basic s, const basic a, const basic b);
 //! Assigns s = kronecker_delta(a, b).
-CWRAPPER_OUTPUT_TYPE basic_kronecker_delta(basic s, const basic a, const basic b);
+CWRAPPER_OUTPUT_TYPE basic_kronecker_delta(basic s, const basic a,
+                                           const basic b);
 //! Assigns s = lowergamma(a, b).
 CWRAPPER_OUTPUT_TYPE basic_lowergamma(basic s, const basic a, const basic b);
 //! Assigns s = uppergamma(a, b).
