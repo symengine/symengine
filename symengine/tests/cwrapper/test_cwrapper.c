@@ -1189,7 +1189,7 @@ void test_ascii_art()
 
 void test_functions()
 {
-    basic pi, e;
+    basic pi, e, complex_inf;
     basic minus_one, minus_half, zero, one, two, three, four;
     basic pi_div_two, pi_div_four;
     basic e_minus_one;
@@ -1212,6 +1212,7 @@ void test_functions()
 
     basic_const_pi(pi);
     basic_const_E(e);
+    basic_const_complex_infinity(complex_inf);
     integer_set_si(two, 2);
     integer_set_si(four, 4);
     integer_set_si(three, 3);
@@ -1347,6 +1348,30 @@ void test_functions()
     basic_mul(ans, ans, four);
     SYMENGINE_C_ASSERT(basic_eq(ans, pi));
 
+    basic_kronecker_delta(ans, two, two);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
+    basic_lowergamma(ans, one, two);
+    basic_sub(ans, ans, one);
+    basic_neg(ans, ans);
+    basic_log(ans, ans);
+    basic_neg(ans, ans);
+    SYMENGINE_C_ASSERT(basic_eq(ans, two));
+
+    basic_uppergamma(ans, one, two);
+    basic_log(ans, ans);
+    basic_neg(ans, ans);
+    SYMENGINE_C_ASSERT(basic_eq(ans, two));
+
+    basic_div(ans, one, two);
+    basic_beta(ans, ans, two);
+    basic_mul(ans, ans, three);
+    SYMENGINE_C_ASSERT(basic_eq(ans, four));
+
+    basic_mul(ans, minus_one, two);
+    basic_polygamma(ans, two, ans);
+    SYMENGINE_C_ASSERT(basic_eq(ans, complex_inf));
+
     basic_max(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, four));
 
@@ -1367,6 +1392,7 @@ void test_functions()
     basic_free_stack(e);
     basic_free_stack(e_minus_one);
     basic_free_stack(minus_half);
+    basic_free_stack(complex_inf);
     vecbasic_free(vec);
 }
 
