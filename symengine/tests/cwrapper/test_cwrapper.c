@@ -1356,14 +1356,8 @@ void test_functions()
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
     basic_lowergamma(ans, one, two);
-    basic_sub(ans, ans, one);
-    basic_neg(ans, ans);
-    basic_log(ans, ans);
-    basic_neg(ans, ans);
-    SYMENGINE_C_ASSERT(basic_eq(ans, two));
-
-    basic_uppergamma(ans, one, two);
-    SYMENGINE_C_ASSERT(basic_eq(ans, exp_minus_two));
+    basic_add(ans, ans, exp_minus_two);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
     basic_div(ans, one, two);
     basic_beta(ans, ans, two);
