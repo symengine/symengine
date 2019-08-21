@@ -610,12 +610,20 @@ IMPLEMENT_ONE_ARG_FUNC(cbrt)
 IMPLEMENT_ONE_ARG_FUNC(exp)
 IMPLEMENT_ONE_ARG_FUNC(log)
 
-CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
-{
-    CWRAPPER_BEGIN
-    s->m = SymEngine::atan2(a->m, b->m);
-    CWRAPPER_END
-}
+#define IMPLEMENT_TWO_ARG_FUNC(func)                                           \
+    CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a, const basic b)   \
+    {                                                                          \
+        CWRAPPER_BEGIN                                                         \
+        s->m = SymEngine::func(a->m, b->m);                                    \
+        CWRAPPER_END                                                           \
+    }
+
+IMPLEMENT_TWO_ARG_FUNC(atan2)
+IMPLEMENT_TWO_ARG_FUNC(kronecker_delta)
+IMPLEMENT_TWO_ARG_FUNC(lowergamma)
+IMPLEMENT_TWO_ARG_FUNC(uppergamma)
+IMPLEMENT_TWO_ARG_FUNC(beta)
+IMPLEMENT_TWO_ARG_FUNC(polygamma)
 
 #define IMPLEMENT_STR_CONVERSION(name, func)                                   \
     char *basic_##name(const basic s)                                          \

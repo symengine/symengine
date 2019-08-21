@@ -346,6 +346,17 @@ CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
 //! Assigns s = atan2(a, b).
 CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
+//! Assigns s = kronecker_delta(a, b).
+CWRAPPER_OUTPUT_TYPE basic_kronecker_delta(basic s, const basic a,
+                                           const basic b);
+//! Assigns s = lowergamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_lowergamma(basic s, const basic a, const basic b);
+//! Assigns s = uppergamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_uppergamma(basic s, const basic a, const basic b);
+//! Assigns s = beta(a, b).
+CWRAPPER_OUTPUT_TYPE basic_beta(basic s, const basic a, const basic b);
+//! Assigns s = polygamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_polygamma(basic s, const basic a, const basic b);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
