@@ -227,7 +227,7 @@ if (BUILD_SHARED_LIBS)
         set_target_properties(
             symengine
             PROPERTIES
-            RUNTIME_OUTPUT_NAME symengine-${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.dll
+            RUNTIME_OUTPUT_NAME symengine-${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
         )
     endif()
 endif()
