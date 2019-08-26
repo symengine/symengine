@@ -223,6 +223,13 @@ if (BUILD_SHARED_LIBS)
         VERSION ${SYMENGINE_VERSION}
         SOVERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
     )
+    if (WIN32)
+        set_target_properties(
+            symengine
+            PROPERTIES
+            RUNTIME_OUTPUT_NAME symengine-${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
+        )
+    endif()
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
