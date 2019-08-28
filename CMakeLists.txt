@@ -88,6 +88,9 @@ else()
     message(STATUS "Linker does not support --exclude-libs")
 endif()
 
+include(CheckTypeSize)
+check_type_size("long double" SYMENGINE_SIZEOF_LONG_DOUBLE)
+
 set(HAVE_GCC_ABI_DEMANGLE yes
     CACHE BOOL "Build with C++ name demangling support")
 

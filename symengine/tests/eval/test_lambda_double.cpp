@@ -372,5 +372,12 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         d2 = v2.call({0.4, 2.0, 3.0});
         REQUIRE(::fabs((d - d2) / d) < 1e-12);
     }
+    SymEngine::LLVMLongDoubleVisitor v3;
+    v2.init({x}, *SymEngine::pi);
+    v3.init({x}, *SymEngine::pi);
+    std::cout << "asd" << std::setprecision(100) << v3.call({0.0l})
+              << std::endl;
+    std::cout << "asd" << std::setprecision(100) << v2.call({0.0l})
+              << std::endl;
 }
 #endif
