@@ -27,7 +27,8 @@ namespace SymEngine
 
 class IRBuilder;
 
-class LLVMDoubleVisitor : public BaseVisitor<LLVMDoubleVisitor>
+template <typename T>
+class LLVMVisitor : public BaseVisitor<LLVMVisitor<T>>
 {
 protected:
     vec_basic symbols;
@@ -59,11 +60,11 @@ public:
 
     static std::vector<llvm::Pass *> create_default_passes(int optlevel);
 
-    double call(const std::vector<double> &vec);
-    void call(double *outs, const double *inps);
+    T call(const std::vector<T> &vec);
+    void call(T *outs, const T *inps);
 
     // Helper functions
-    void set_double(double d);
+    void set_real(T d);
     llvm::Function *get_external_function(const std::string &name,
                                           size_t nargs = 1);
     llvm::Function *get_powi();
@@ -123,6 +124,8 @@ public:
     // Load a previously compiled function from a string
     void loads(const std::string &s);
 };
+
+struct LLVMDoubleVisitor : public LLVMVisitor<double>; // backward compatibility
 }
 #endif
 #endif // SYMENGINE_LAMBDA_DOUBLE_H
