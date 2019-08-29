@@ -381,6 +381,7 @@ void LLVMVisitor::bvisit(const Integer &x)
                                     mp_get_d(x.as_integer_class()));
 }
 
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::convert_from_mpfr(const Basic &x)
 {
 #ifndef HAVE_SYMENGINE_MPFR
@@ -397,16 +398,19 @@ void LLVMLongDoubleVisitor::visit(const Integer &x)
     result_ = llvm::ConstantFP::get(get_float_type(&mod->getContext()),
                                     x.__str__());
 }
+#endif
 
 void LLVMVisitor::bvisit(const Rational &x)
 {
     set_double(mp_get_d(x.as_rational_class()));
 }
 
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Rational &x)
 {
     convert_from_mpfr(x);
 }
+#endif
 
 void LLVMVisitor::bvisit(const RealDouble &x)
 {
@@ -418,11 +422,12 @@ void LLVMVisitor::bvisit(const RealMPFR &x)
 {
     set_double(mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN));
 }
-
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const RealMPFR &x)
 {
     convert_from_mpfr(x);
 }
+#endif
 #endif
 
 void LLVMVisitor::bvisit(const Add &x)
@@ -742,7 +747,7 @@ SYMENGINE_RELATIONAL_FUNCTION(Unequality, CreateFCmpONE);
 SYMENGINE_RELATIONAL_FUNCTION(LessThan, CreateFCmpOLE);
 SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
 
-#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
+#define _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                         \
     void LLVMDoubleVisitor::visit(const Class &x)                              \
     {                                                                          \
         vec_basic basic_args = x.get_args();                                   \
@@ -767,7 +772,11 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         auto r = builder->CreateCall(func, args);                              \
         r->setTailCall(true);                                                  \
         result_ = r;                                                           \
-    }                                                                          \
+    }
+
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
+    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \
     void LLVMLongDoubleVisitor::visit(const Class &x)                          \
     {                                                                          \
         vec_basic basic_args = x.get_args();                                   \
@@ -781,6 +790,10 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         r->setTailCall(true);                                                  \
         result_ = r;                                                           \
     }
+#else
+#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
+    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)
+#endif
 
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tan, tan)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASin, asin)
