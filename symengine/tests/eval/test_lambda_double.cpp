@@ -410,12 +410,12 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         v.init({x, y, z}, *arg);
         d = v.call({0.4, 2.0, 3.0});
         v4.init({x, y, z}, *arg);
-        d4 = v4.call({0.4, 2.0, 3.0});
+        d4 = v4.call({0.4f, 2.0f, 3.0f});
         // Check only for 6 digits with floats
         REQUIRE(::fabs((d - d4) / d) < 1e-6);
 #if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
         v3.init({x, y, z}, *arg);
-        d3 = v3.call({0.4, 2.0, 3.0});
+        d3 = v3.call({0.4l, 2.0l, 3.0l});
         map_basic_basic subs_dict = {
             {x, evalf(*rational(4, 10), 128, SymEngine::EvalfDomain::Real)},
             {y, evalf(*integer(2), 128, SymEngine::EvalfDomain::Real)},
@@ -431,6 +431,6 @@ TEST_CASE("Check that our default LLVM passes give correct results",
 #endif
     }
     v4.init({x, y, z}, *r);
-    REQUIRE(std::isinf(v4.call({0.4, 2.0, 3.0})));
+    REQUIRE(std::isinf(v4.call({0.4f, 2.0f, 3.0f})));
 }
 #endif
