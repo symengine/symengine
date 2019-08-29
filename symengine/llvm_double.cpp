@@ -925,10 +925,12 @@ void LLVMVisitor::bvisit(const Constant &x)
     set_double(eval_double(x));
 }
 
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Constant &x)
 {
     convert_from_mpfr(x);
 }
+#endif
 
 void LLVMVisitor::bvisit(const Basic &)
 {
