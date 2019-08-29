@@ -3,15 +3,27 @@
 
 #include <symengine/lambda_double.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/eval.h>
+#include <symengine/rational.h>
 
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
+#include <symengine/eval_mpfr.h>
 using SymEngine::LLVMDoubleVisitor;
+using SymEngine::LLVMFloatVisitor;
+
+#ifdef HAVE_SYMENGINE_MPFR
+using SymEngine::RealMPFR;
+#endif
 #endif
 
+using SymEngine::evalf;
+using SymEngine::down_cast;
+using SymEngine::rational;
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::real_double;
+using SymEngine::map_basic_basic;
 using SymEngine::symbol;
 using SymEngine::add;
 using SymEngine::mul;
@@ -24,6 +36,7 @@ using SymEngine::boolTrue;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
+using SymEngine::pi;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::tan;
@@ -345,13 +358,28 @@ TEST_CASE("Check that our default LLVM passes give correct results",
 {
     RCP<const Basic> x, y, z, r;
     double d, d2;
+    float d4;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
 
-    vec_basic vec = {log(x),   abs(x),      tan(x),   sinh(x), cosh(x), tanh(x),
-                     asinh(y), acosh(y),    atanh(x), asin(x), acos(x), atan(x),
-                     gamma(x), loggamma(x), erf(x),   erfc(x)};
+    vec_basic vec = {log(x),
+                     abs(x),
+                     tan(x),
+                     sinh(x),
+                     cosh(x),
+                     tanh(x),
+                     asinh(y),
+                     acosh(y),
+                     atanh(x),
+                     asin(x),
+                     acos(x),
+                     atan(x),
+                     gamma(x),
+                     loggamma(x),
+                     erf(x),
+                     erfc(x),
+                     add(pi, div(integer(1), integer(3)))};
 
     r = mul(add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
                             pow(sin(x), integer(2)))),
@@ -370,7 +398,39 @@ TEST_CASE("Check that our default LLVM passes give correct results",
                 LLVMDoubleVisitor::create_default_passes(opt_level));
         d = v.call({0.4, 2.0, 3.0});
         d2 = v2.call({0.4, 2.0, 3.0});
+        // Check for 12 digits with doubles
         REQUIRE(::fabs((d - d2) / d) < 1e-12);
     }
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+    SymEngine::LLVMLongDoubleVisitor v3;
+    long double d3, mpfr_d;
+#endif
+    LLVMFloatVisitor v4;
+    for (auto &arg : vec) {
+        v.init({x, y, z}, *arg);
+        d = v.call({0.4, 2.0, 3.0});
+        v4.init({x, y, z}, *arg);
+        d4 = v4.call({0.4f, 2.0f, 3.0f});
+        // Check only for 6 digits with floats
+        REQUIRE(::fabs((d - d4) / d) < 1e-6);
+#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
+        v3.init({x, y, z}, *arg);
+        d3 = v3.call({0.4l, 2.0l, 3.0l});
+        map_basic_basic subs_dict = {
+            {x, evalf(*rational(4, 10), 128, SymEngine::EvalfDomain::Real)},
+            {y, evalf(*integer(2), 128, SymEngine::EvalfDomain::Real)},
+            {z, evalf(*integer(3), 128, SymEngine::EvalfDomain::Real)},
+        };
+        SymEngine::mpfr_class mc
+            = down_cast<const RealMPFR &>(*evalf(*arg->subs(subs_dict), 128,
+                                                 SymEngine::EvalfDomain::Real))
+                  .as_mpfr();
+        mpfr_d = mpfr_get_ld(mc.get_mpfr_t(), MPFR_RNDN);
+        // Check for 16 digits with long doubles
+        REQUIRE(::fabsl((mpfr_d - d3) / mpfr_d) < 1e-16);
+#endif
+    }
+    v4.init({x, y, z}, *r);
+    REQUIRE(std::isinf(v4.call({0.4f, 2.0f, 3.0f})));
 }
 #endif

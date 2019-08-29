@@ -49,6 +49,7 @@
 
 #include <symengine/llvm_double.h>
 #include <symengine/eval_double.h>
+#include <symengine/eval.h>
 
 namespace SymEngine
 {
@@ -57,32 +58,29 @@ class IRBuilder : public llvm::IRBuilder<>
 {
 };
 
-llvm::Value *LLVMDoubleVisitor::apply(const Basic &b)
+llvm::Value *LLVMVisitor::apply(const Basic &b)
 {
     b.accept(*this);
     return result_;
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b,
-                             bool symbolic_cse, int opt_level)
+void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
+                       int opt_level)
 {
-    init(x, b, symbolic_cse,
-         LLVMDoubleVisitor::create_default_passes(opt_level));
+    init(x, b, symbolic_cse, LLVMVisitor::create_default_passes(opt_level));
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &x, const Basic &b,
-                             bool symbolic_cse,
-                             const std::vector<llvm::Pass *> &passes)
+void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
+                       const std::vector<llvm::Pass *> &passes)
 {
     init(x, {b.rcp_from_this()}, symbolic_cse, passes);
 }
 
-llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
+llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 {
     std::vector<llvm::Type *> inp;
     for (int i = 0; i < 2; i++) {
-        inp.push_back(
-            llvm::PointerType::get(llvm::Type::getDoubleTy(*context), 0));
+        inp.push_back(llvm::PointerType::get(get_float_type(context), 0));
     }
     llvm::FunctionType *function_type = llvm::FunctionType::get(
         llvm::Type::getVoidTy(*context), inp, /*isVarArgs=*/false);
@@ -129,7 +127,7 @@ llvm::Function *LLVMDoubleVisitor::get_function_type(llvm::LLVMContext *context)
     return F;
 }
 
-std::vector<llvm::Pass *> LLVMDoubleVisitor::create_default_passes(int optlevel)
+std::vector<llvm::Pass *> LLVMVisitor::create_default_passes(int optlevel)
 {
     std::vector<llvm::Pass *> passes;
     if (optlevel == 0) {
@@ -170,16 +168,16 @@ std::vector<llvm::Pass *> LLVMDoubleVisitor::create_default_passes(int optlevel)
     return passes;
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                             const bool symbolic_cse, int opt_level)
+void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
+                       const bool symbolic_cse, int opt_level)
 {
     init(inputs, outputs, symbolic_cse,
-         LLVMDoubleVisitor::create_default_passes(opt_level));
+         LLVMVisitor::create_default_passes(opt_level));
 }
 
-void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                             const bool symbolic_cse,
-                             const std::vector<llvm::Pass *> &passes)
+void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
+                       const bool symbolic_cse,
+                       const std::vector<llvm::Pass *> &passes)
 {
     executionengine.reset();
     llvm::InitializeNativeTarget();
@@ -226,9 +224,9 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         }
         auto index
             = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
-        auto ptr = builder->CreateGEP(llvm::Type::getDoubleTy(*context),
-                                      input_arg, index);
-        result_ = builder->CreateLoad(llvm::Type::getDoubleTy(*context), ptr);
+        auto ptr = builder->CreateGEP(get_float_type(context.get()), input_arg,
+                                      index);
+        result_ = builder->CreateLoad(get_float_type(context.get()), ptr);
         symbol_ptrs.push_back(result_);
     }
 
@@ -265,7 +263,7 @@ void LLVMDoubleVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         auto index
             = llvm::ConstantInt::get(llvm::Type::getInt32Ty(*context), i);
         auto ptr
-            = builder->CreateGEP(llvm::Type::getDoubleTy(*context), out, index);
+            = builder->CreateGEP(get_float_type(context.get()), out, index);
         builder->CreateStore(output_vals[i], ptr);
     }
 
@@ -345,43 +343,94 @@ void LLVMDoubleVisitor::call(double *outs, const double *inps)
     ((double (*)(const double *, double *))func)(inps, outs);
 }
 
-void LLVMDoubleVisitor::set_double(double d)
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+long double LLVMLongDoubleVisitor::call(const std::vector<long double> &vec)
 {
-    result_
-        = llvm::ConstantFP::get(llvm::Type::getDoubleTy(mod->getContext()), d);
+    long double ret;
+    ((long double (*)(const long double *, long double *))func)(vec.data(),
+                                                                &ret);
+    return ret;
 }
 
-void LLVMDoubleVisitor::bvisit(const Integer &x, bool as_int32)
+void LLVMLongDoubleVisitor::call(long double *outs, const long double *inps)
 {
-    if (as_int32) {
-        int d = numeric_cast<int>(mp_get_si(x.as_integer_class()));
-        result_ = llvm::ConstantInt::get(
-            llvm::Type::getInt32Ty(mod->getContext()), d, true);
-    } else {
-        result_
-            = llvm::ConstantFP::get(llvm::Type::getDoubleTy(mod->getContext()),
+    ((long double (*)(const long double *, long double *))func)(inps, outs);
+}
+#endif
+
+float LLVMFloatVisitor::call(const std::vector<float> &vec)
+{
+    float ret;
+    ((float (*)(const float *, float *))func)(vec.data(), &ret);
+    return ret;
+}
+
+void LLVMFloatVisitor::call(float *outs, const float *inps)
+{
+    ((float (*)(const float *, float *))func)(inps, outs);
+}
+
+void LLVMVisitor::set_double(double d)
+{
+    result_ = llvm::ConstantFP::get(get_float_type(&mod->getContext()), d);
+}
+
+void LLVMVisitor::bvisit(const Integer &x)
+{
+    result_ = llvm::ConstantFP::get(get_float_type(&mod->getContext()),
                                     mp_get_d(x.as_integer_class()));
-    }
 }
 
-void LLVMDoubleVisitor::bvisit(const Rational &x)
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+void LLVMLongDoubleVisitor::convert_from_mpfr(const Basic &x)
+{
+#ifndef HAVE_SYMENGINE_MPFR
+    throw NotImplementedError("Cannot convert to long double without MPFR");
+#else
+    RCP<const Basic> m = evalf(x, 128, EvalfDomain::Real);
+    result_ = llvm::ConstantFP::get(get_float_type(&mod->getContext()),
+                                    m->__str__());
+#endif
+}
+
+void LLVMLongDoubleVisitor::visit(const Integer &x)
+{
+    result_ = llvm::ConstantFP::get(get_float_type(&mod->getContext()),
+                                    x.__str__());
+}
+#endif
+
+void LLVMVisitor::bvisit(const Rational &x)
 {
     set_double(mp_get_d(x.as_rational_class()));
 }
 
-void LLVMDoubleVisitor::bvisit(const RealDouble &x)
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+void LLVMLongDoubleVisitor::visit(const Rational &x)
+{
+    convert_from_mpfr(x);
+}
+#endif
+
+void LLVMVisitor::bvisit(const RealDouble &x)
 {
     set_double(x.i);
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
-void LLVMDoubleVisitor::bvisit(const RealMPFR &x)
+void LLVMVisitor::bvisit(const RealMPFR &x)
 {
     set_double(mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN));
 }
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+void LLVMLongDoubleVisitor::visit(const RealMPFR &x)
+{
+    convert_from_mpfr(x);
+}
+#endif
 #endif
 
-void LLVMDoubleVisitor::bvisit(const Add &x)
+void LLVMVisitor::bvisit(const Add &x)
 {
     llvm::Value *tmp, *tmp1, *tmp2;
     auto it = x.get_dict().begin();
@@ -407,7 +456,8 @@ void LLVMDoubleVisitor::bvisit(const Add &x)
         } else {
             //    std::vector<llvm::Value *> args({tmp1, tmp2, tmp});
             //    tmp =
-            //    builder->CreateCall(get_double_intrinsic(llvm::Intrinsic::fma,
+            //    builder->CreateCall(get_float_intrinsic(get_float_type(&mod->getContext()),
+            //    llvm::Intrinsic::fma,
             //    3, context), args);
             tmp1 = apply(*(it->first));
             tmp2 = apply(*(it->second));
@@ -417,7 +467,7 @@ void LLVMDoubleVisitor::bvisit(const Add &x)
     result_ = tmp;
 }
 
-void LLVMDoubleVisitor::bvisit(const Mul &x)
+void LLVMVisitor::bvisit(const Mul &x)
 {
     llvm::Value *tmp = nullptr;
     bool first = true;
@@ -432,34 +482,35 @@ void LLVMDoubleVisitor::bvisit(const Mul &x)
     result_ = tmp;
 }
 
-llvm::Function *LLVMDoubleVisitor::get_powi()
+llvm::Function *LLVMVisitor::get_powi()
 {
     std::vector<llvm::Type *> arg_type;
-    arg_type.push_back(llvm::Type::getDoubleTy(mod->getContext()));
+    arg_type.push_back(get_float_type(&mod->getContext()));
     arg_type.push_back(llvm::Type::getInt32Ty(mod->getContext()));
     return llvm::Intrinsic::getDeclaration(mod, llvm::Intrinsic::powi,
                                            arg_type);
 }
 
-llvm::Function *get_double_intrinsic(llvm::Intrinsic::ID id, unsigned n,
-                                     llvm::Module *mod)
+llvm::Function *get_float_intrinsic(llvm::Type *type, llvm::Intrinsic::ID id,
+                                    unsigned n, llvm::Module *mod)
 {
-    std::vector<llvm::Type *> arg_type(
-        n, llvm::Type::getDoubleTy(mod->getContext()));
+    std::vector<llvm::Type *> arg_type(n, type);
     return llvm::Intrinsic::getDeclaration(mod, id, arg_type);
 }
 
-void LLVMDoubleVisitor::bvisit(const Pow &x)
+void LLVMVisitor::bvisit(const Pow &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     if (eq(*(x.get_base()), *E)) {
         args.push_back(apply(*x.get_exp()));
-        fun = get_double_intrinsic(llvm::Intrinsic::exp, 1, mod);
+        fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                                  llvm::Intrinsic::exp, 1, mod);
 
     } else if (eq(*(x.get_base()), *integer(2))) {
         args.push_back(apply(*x.get_exp()));
-        fun = get_double_intrinsic(llvm::Intrinsic::exp2, 1, mod);
+        fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                                  llvm::Intrinsic::exp2, 1, mod);
 
     } else {
         if (is_a<Integer>(*x.get_exp())) {
@@ -469,14 +520,19 @@ void LLVMDoubleVisitor::bvisit(const Pow &x)
                 return;
             } else {
                 args.push_back(apply(*x.get_base()));
-                bvisit(down_cast<const Integer &>(*x.get_exp()), true);
+                int d = numeric_cast<int>(
+                    mp_get_si(static_cast<const Integer &>(*x.get_exp())
+                                  .as_integer_class()));
+                result_ = llvm::ConstantInt::get(
+                    llvm::Type::getInt32Ty(mod->getContext()), d, true);
                 args.push_back(result_);
                 fun = get_powi();
             }
         } else {
             args.push_back(apply(*x.get_base()));
             args.push_back(apply(*x.get_exp()));
-            fun = get_double_intrinsic(llvm::Intrinsic::pow, 2, mod);
+            fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                                      llvm::Intrinsic::pow, 2, mod);
         }
     }
     auto r = builder->CreateCall(fun, args);
@@ -484,29 +540,31 @@ void LLVMDoubleVisitor::bvisit(const Pow &x)
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Sin &x)
+void LLVMVisitor::bvisit(const Sin &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::sin, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::sin, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Cos &x)
+void LLVMVisitor::bvisit(const Cos &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::cos, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::cos, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Piecewise &x)
+void LLVMVisitor::bvisit(const Piecewise &x)
 {
     std::vector<llvm::BasicBlock> blocks;
 
@@ -534,8 +592,7 @@ void LLVMDoubleVisitor::bvisit(const Piecewise &x)
     llvm::Value *cond = apply(*cond_basic);
     // check if cond != 0.0
     cond = builder->CreateFCmpONE(
-        cond,
-        llvm::ConstantFP::get(llvm::Type::getDoubleTy(mod->getContext()), 0.0),
+        cond, llvm::ConstantFP::get(get_float_type(&mod->getContext()), 0.0),
         "ifcond");
     llvm::Function *function = builder->GetInsertBlock()->getParent();
     // Create blocks for the then and else cases.  Insert the 'then' block at
@@ -572,14 +629,14 @@ void LLVMDoubleVisitor::bvisit(const Piecewise &x)
     function->getBasicBlockList().push_back(merge_bb);
     builder->SetInsertPoint(merge_bb);
     llvm::PHINode *phi_node
-        = builder->CreatePHI(llvm::Type::getDoubleTy(mod->getContext()), 2);
+        = builder->CreatePHI(get_float_type(&mod->getContext()), 2);
 
     phi_node->addIncoming(then_value, then_bb);
     phi_node->addIncoming(else_value, else_bb);
     result_ = phi_node;
 }
 
-void LLVMDoubleVisitor::bvisit(const Sign &x)
+void LLVMVisitor::bvisit(const Sign &x)
 {
     const auto x2 = x.get_arg();
     PiecewiseVec new_pw;
@@ -590,7 +647,7 @@ void LLVMDoubleVisitor::bvisit(const Sign &x)
     bvisit(*pw);
 }
 
-void LLVMDoubleVisitor::bvisit(const Contains &cts)
+void LLVMVisitor::bvisit(const Contains &cts)
 {
     llvm::Value *expr = apply(*cts.get_expr());
     const auto set = cts.get_set();
@@ -607,47 +664,48 @@ void LLVMDoubleVisitor::bvisit(const Contains &cts)
         right_ok = (right_open) ? builder->CreateFCmpOLT(expr, end)
                                 : builder->CreateFCmpOLE(expr, end);
         result_ = builder->CreateAnd(left_ok, right_ok);
-        result_ = builder->CreateUIToFP(
-            result_, llvm::Type::getDoubleTy(mod->getContext()));
+        result_ = builder->CreateUIToFP(result_,
+                                        get_float_type(&mod->getContext()));
     } else {
-        throw SymEngineException("LLVMDoubleVisitor: only ``Interval`` "
+        throw SymEngineException("LLVMVisitor: only ``Interval`` "
                                  "implemented for ``Contains``.");
     }
 }
 
-void LLVMDoubleVisitor::bvisit(const Infty &x)
+void LLVMVisitor::bvisit(const Infty &x)
 {
     if (x.is_negative_infinity()) {
         result_ = llvm::ConstantFP::getInfinity(
-            llvm::Type::getDoubleTy(mod->getContext()), true);
+            get_float_type(&mod->getContext()), true);
     } else if (x.is_positive_infinity()) {
         result_ = llvm::ConstantFP::getInfinity(
-            llvm::Type::getDoubleTy(mod->getContext()), false);
+            get_float_type(&mod->getContext()), false);
     } else {
         throw SymEngineException(
             "LLVMDouble can only represent real valued infinity");
     }
 }
 
-void LLVMDoubleVisitor::bvisit(const BooleanAtom &x)
+void LLVMVisitor::bvisit(const BooleanAtom &x)
 {
     const bool val = x.get_val();
     set_double(val ? 1.0 : 0.0);
 }
 
-void LLVMDoubleVisitor::bvisit(const Log &x)
+void LLVMVisitor::bvisit(const Log &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::log, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::log, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
 #define SYMENGINE_LOGIC_FUNCTION(Class, method)                                \
-    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+    void LLVMVisitor::bvisit(const Class &x)                                   \
     {                                                                          \
         llvm::Value *value = nullptr;                                          \
         llvm::Value *tmp;                                                      \
@@ -661,27 +719,27 @@ void LLVMDoubleVisitor::bvisit(const Log &x)
                 value = builder->method(value, tmp);                           \
             }                                                                  \
         }                                                                      \
-        result_ = builder->CreateUIToFP(                                       \
-            value, llvm::Type::getDoubleTy(mod->getContext()));                \
+        result_ = builder->CreateUIToFP(value,                                 \
+                                        get_float_type(&mod->getContext()));   \
     }
 
 SYMENGINE_LOGIC_FUNCTION(And, CreateAnd);
 SYMENGINE_LOGIC_FUNCTION(Or, CreateOr);
 SYMENGINE_LOGIC_FUNCTION(Xor, CreateXor);
 
-void LLVMDoubleVisitor::bvisit(const Not &x)
+void LLVMVisitor::bvisit(const Not &x)
 {
     builder->CreateNot(apply(*x.get_arg()));
 }
 
 #define SYMENGINE_RELATIONAL_FUNCTION(Class, method)                           \
-    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+    void LLVMVisitor::bvisit(const Class &x)                                   \
     {                                                                          \
         llvm::Value *left = apply(*x.get_arg1());                              \
         llvm::Value *right = apply(*x.get_arg2());                             \
         result_ = builder->method(left, right);                                \
-        result_ = builder->CreateUIToFP(                                       \
-            result_, llvm::Type::getDoubleTy(mod->getContext()));              \
+        result_ = builder->CreateUIToFP(result_,                               \
+                                        get_float_type(&mod->getContext()));   \
     }
 
 SYMENGINE_RELATIONAL_FUNCTION(Equality, CreateFCmpOEQ);
@@ -689,8 +747,8 @@ SYMENGINE_RELATIONAL_FUNCTION(Unequality, CreateFCmpONE);
 SYMENGINE_RELATIONAL_FUNCTION(LessThan, CreateFCmpOLE);
 SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
 
-#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
-    void LLVMDoubleVisitor::bvisit(const Class &x)                             \
+#define _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                         \
+    void LLVMDoubleVisitor::visit(const Class &x)                              \
     {                                                                          \
         vec_basic basic_args = x.get_args();                                   \
         llvm::Function *func = get_external_function(#ext, basic_args.size()); \
@@ -701,40 +759,76 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         auto r = builder->CreateCall(func, args);                              \
         r->setTailCall(true);                                                  \
         result_ = r;                                                           \
+    }                                                                          \
+    void LLVMFloatVisitor::visit(const Class &x)                               \
+    {                                                                          \
+        vec_basic basic_args = x.get_args();                                   \
+        llvm::Function *func = get_external_function(#ext + std::string("f"),  \
+                                                     basic_args.size());       \
+        std::vector<llvm::Value *> args;                                       \
+        for (const auto &arg : basic_args) {                                   \
+            args.push_back(apply(*arg));                                       \
+        }                                                                      \
+        auto r = builder->CreateCall(func, args);                              \
+        r->setTailCall(true);                                                  \
+        result_ = r;                                                           \
     }
 
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
+    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \
+    void LLVMLongDoubleVisitor::visit(const Class &x)                          \
+    {                                                                          \
+        vec_basic basic_args = x.get_args();                                   \
+        llvm::Function *func = get_external_function(#ext + std::string("l"),  \
+                                                     basic_args.size());       \
+        std::vector<llvm::Value *> args;                                       \
+        for (const auto &arg : basic_args) {                                   \
+            args.push_back(apply(*arg));                                       \
+        }                                                                      \
+        auto r = builder->CreateCall(func, args);                              \
+        r->setTailCall(true);                                                  \
+        result_ = r;                                                           \
+    }
+#else
+#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
+    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)
+#endif
+
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tan, tan)
+SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASin, asin)
+SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACos, acos)
+SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan, atan)
+SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, atan2)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sinh, sinh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Cosh, cosh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tanh, tanh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASinh, asinh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACosh, acosh)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATanh, atanh)
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASin, asin)
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACos, acos)
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan, atan)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Gamma, tgamma)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, erf)
 SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, erfc)
-SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, atan2)
 
-void LLVMDoubleVisitor::bvisit(const Abs &x)
+void LLVMVisitor::bvisit(const Abs &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::fabs, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::fabs, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Min &x)
+void LLVMVisitor::bvisit(const Min &x)
 {
     llvm::Value *value = nullptr;
     llvm::Function *fun;
-    fun = get_double_intrinsic(llvm::Intrinsic::minnum, 2, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::minnum, 2, mod);
     for (auto &arg : x.get_vec()) {
         if (value != nullptr) {
             std::vector<llvm::Value *> args;
@@ -750,11 +844,12 @@ void LLVMDoubleVisitor::bvisit(const Min &x)
     result_ = value;
 }
 
-void LLVMDoubleVisitor::bvisit(const Max &x)
+void LLVMVisitor::bvisit(const Max &x)
 {
     llvm::Value *value = nullptr;
     llvm::Function *fun;
-    fun = get_double_intrinsic(llvm::Intrinsic::maxnum, 2, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::maxnum, 2, mod);
     for (auto &arg : x.get_vec()) {
         if (value != nullptr) {
             std::vector<llvm::Value *> args;
@@ -770,7 +865,7 @@ void LLVMDoubleVisitor::bvisit(const Max &x)
     result_ = value;
 }
 
-void LLVMDoubleVisitor::bvisit(const Symbol &x)
+void LLVMVisitor::bvisit(const Symbol &x)
 {
     unsigned i = 0;
     for (auto &symb : symbols) {
@@ -789,14 +884,13 @@ void LLVMDoubleVisitor::bvisit(const Symbol &x)
                              + " not in the symbols vector.");
 }
 
-llvm::Function *
-LLVMDoubleVisitor::get_external_function(const std::string &name, size_t nargs)
+llvm::Function *LLVMVisitor::get_external_function(const std::string &name,
+                                                   size_t nargs)
 {
-    std::vector<llvm::Type *> func_args(
-        nargs, llvm::Type::getDoubleTy(mod->getContext()));
-    llvm::FunctionType *func_type
-        = llvm::FunctionType::get(llvm::Type::getDoubleTy(mod->getContext()),
-                                  func_args, /*isVarArgs=*/false);
+    std::vector<llvm::Type *> func_args(nargs,
+                                        get_float_type(&mod->getContext()));
+    llvm::FunctionType *func_type = llvm::FunctionType::get(
+        get_float_type(&mod->getContext()), func_args, /*isVarArgs=*/false);
 
     llvm::Function *func = mod->getFunction(name);
     if (!func) {
@@ -826,22 +920,29 @@ LLVMDoubleVisitor::get_external_function(const std::string &name, size_t nargs)
     return func;
 }
 
-void LLVMDoubleVisitor::bvisit(const Constant &x)
+void LLVMVisitor::bvisit(const Constant &x)
 {
     set_double(eval_double(x));
 }
 
-void LLVMDoubleVisitor::bvisit(const Basic &)
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+void LLVMLongDoubleVisitor::visit(const Constant &x)
+{
+    convert_from_mpfr(x);
+}
+#endif
+
+void LLVMVisitor::bvisit(const Basic &)
 {
     throw std::runtime_error("Not implemented.");
 }
 
-const std::string &LLVMDoubleVisitor::dumps() const
+const std::string &LLVMVisitor::dumps() const
 {
     return membuffer;
 };
 
-void LLVMDoubleVisitor::loads(const std::string &s)
+void LLVMVisitor::loads(const std::string &s)
 {
     membuffer = s;
     llvm::InitializeNativeTarget();
@@ -898,37 +999,57 @@ void LLVMDoubleVisitor::loads(const std::string &s)
     func = (intptr_t)executionengine->getPointerToFunction(F);
 }
 
-void LLVMDoubleVisitor::bvisit(const Floor &x)
+void LLVMVisitor::bvisit(const Floor &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::floor, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::floor, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Ceiling &x)
+void LLVMVisitor::bvisit(const Ceiling &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::ceil, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::ceil, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
 
-void LLVMDoubleVisitor::bvisit(const Truncate &x)
+void LLVMVisitor::bvisit(const Truncate &x)
 {
     std::vector<llvm::Value *> args;
     llvm::Function *fun;
     args.push_back(apply(*x.get_arg()));
-    fun = get_double_intrinsic(llvm::Intrinsic::trunc, 1, mod);
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::trunc, 1, mod);
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
 }
+
+llvm::Type *LLVMDoubleVisitor::get_float_type(llvm::LLVMContext *context)
+{
+    return llvm::Type::getDoubleTy(*context);
+}
+
+llvm::Type *LLVMFloatVisitor::get_float_type(llvm::LLVMContext *context)
+{
+    return llvm::Type::getFloatTy(*context);
+}
+
+#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE)
+llvm::Type *LLVMLongDoubleVisitor::get_float_type(llvm::LLVMContext *context)
+{
+    return llvm::Type::getX86_FP80Ty(*context);
+}
+#endif
 
 } // namespace SymEngine
