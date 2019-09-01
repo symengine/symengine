@@ -82,3 +82,6 @@ endif()
 
 add_executable(parsing parsing.cpp)
 target_link_libraries(parsing symengine)
+
+add_executable(diff_cache diff_cache.cpp)
+target_link_libraries(diff_cache symengine)

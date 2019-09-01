@@ -731,6 +731,10 @@ public:
 
     void apply(const RCP<const Basic> &b)
     {
+        if (not cache) {
+            b->accept(*this);
+            return;
+        }
         auto it = visited.find(b);
         if (it == visited.end()) {
             b->accept(*this);
