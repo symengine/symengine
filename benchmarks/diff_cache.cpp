@@ -35,7 +35,7 @@ double CommonSubexprDiff(bool cache)
     }
 
     e = integer(23);
-    for (int i = 0; i < v.size(); ++i) {
+    for (unsigned int i = 0; i < v.size(); ++i) {
         RCP<const Basic> z = symbol(tmp_str);
         e = pow(e, add(cos(sqrt(log(sin(pow(v[v.size() - i - 1], v[i]))))), e));
     }
@@ -60,7 +60,7 @@ double NoCommonSubexprDiff(bool cache)
     }
 
     e = integer(23);
-    for (uint i = 0; i < v.size(); ++i) {
+    for (unsigned int i = 0; i < v.size(); ++i) {
         RCP<const Basic> z = symbol(tmp_str);
         e = pow(e, cos(sqrt(log(sin(pow(v[v.size() - i - 1], v[i]))))));
     }
