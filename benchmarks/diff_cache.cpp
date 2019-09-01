@@ -35,7 +35,7 @@ double CommonSubexprDiff(bool cache)
     }
 
     e = integer(23);
-    for (uint i = 0; i < v.size(); ++i) {
+    for (int i = 0; i < v.size(); ++i) {
         RCP<const Basic> z = symbol(tmp_str);
         e = pow(e, add(cos(sqrt(log(sin(pow(v[v.size() - i - 1], v[i]))))), e));
     }
