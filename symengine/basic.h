@@ -185,7 +185,7 @@ public:
 
     SYMENGINE_INCLUDE_METHODS(= 0;)
 
-    RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    RCP<const Basic> diff(const RCP<const Symbol> &x, bool cache = true) const;
 };
 
 //! Our hash:

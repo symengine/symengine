@@ -13,9 +13,11 @@ protected:
     const RCP<const Symbol> x;
     RCP<const Basic> result_;
     umap_basic_basic visited;
+    bool cache;
 
 public:
-    DiffVisitor(const RCP<const Symbol> &x) : x(x)
+    DiffVisitor(const RCP<const Symbol> &x, bool cache = true)
+        : x(x), cache(cache)
     {
     }
 
@@ -744,28 +746,30 @@ public:
     }
 };
 
-RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
+                      bool cache)
 {
-    DiffVisitor v(x);
+    DiffVisitor v(x, cache);
     v.apply(arg);
     return v.get_result();
 }
 
-RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
+RCP<const Basic> Basic::diff(const RCP<const Symbol> &x, bool cache) const
 {
-    return SymEngine::diff(this->rcp_from_this(), x);
+    return SymEngine::diff(this->rcp_from_this(), x, cache);
 }
 
 //! SymPy style differentiation for non-symbol variables
 // Since SymPy's differentiation makes no sense mathematically, it is
 // defined separately here for compatibility
-RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
+                       bool cache)
 {
     if (is_a<Symbol>(*x)) {
-        return arg->diff(rcp_static_cast<const Symbol>(x));
+        return arg->diff(rcp_static_cast<const Symbol>(x), cache);
     } else {
         RCP<const Symbol> d = DiffVisitor::get_dummy(*arg, "x");
-        return ssubs(ssubs(arg, {{x, d}})->diff(d), {{d, x}});
+        return ssubs(ssubs(arg, {{x, d}})->diff(d, cache), {{d, x}});
     }
 }
 

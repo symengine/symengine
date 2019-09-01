@@ -13,10 +13,12 @@ namespace SymEngine
 {
 
 //! Differentiation w.r.t symbols
-RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x);
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
+                      bool cache = true);
 
 //! SymPy style differentiation w.r.t non-symbols and symbols
-RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x);
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
+                       bool cache = true);
 
 } // namespace SymEngine
 
