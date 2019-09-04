@@ -151,17 +151,17 @@ public:
 
     // Return the Jacobian of the matrix
     friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
-                         DenseMatrix &result, bool cache);
+                         DenseMatrix &result, bool diff_cache);
     // Return the Jacobian of the matrix using sdiff
     friend void sjacobian(const DenseMatrix &A, const DenseMatrix &x,
-                          DenseMatrix &result, bool cache);
+                          DenseMatrix &result, bool diff_cache);
 
     // Differentiate the matrix element-wise
     friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-                     DenseMatrix &result, bool cache);
+                     DenseMatrix &result, bool diff_cache);
     // Differentiate the matrix element-wise using SymPy compatible diff
     friend void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-                      DenseMatrix &result, bool cache);
+                      DenseMatrix &result, bool diff_cache);
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -377,9 +377,9 @@ public:
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
     static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x,
-                              bool cache = true);
+                              bool diff_cache = true);
     static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x,
-                              bool cache = true);
+                              bool diff_cache = true);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
                                  CSRMatrix &C);
@@ -405,17 +405,17 @@ private:
 
 // Return the Jacobian of the matrix
 void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
-              bool cache = true);
+              bool diff_cache = true);
 // Return the Jacobian of the matrix using sdiff
 void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
-               bool cache = true);
+               bool diff_cache = true);
 
 // Differentiate all the elements
 void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
-          bool cache = true);
+          bool diff_cache = true);
 // Differentiate all the elements using SymPy compatible diff
 void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
-           bool cache = true);
+           bool diff_cache = true);
 
 // Get submatrix from a DenseMatrix
 void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,

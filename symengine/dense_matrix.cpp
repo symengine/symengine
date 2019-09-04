@@ -1,6 +1,5 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
-#include <symengine/derivative.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
@@ -201,24 +200,23 @@ void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 // ---------------------------- Jacobian -------------------------------------//
 
 void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
-              bool cache)
+              bool diff_cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
     SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
     bool error = false;
 #pragma omp parallel for
-    for (unsigned j = 0; j < result.col_; j++) {
-        RCP<const Symbol> x_;
-        if (is_a<Symbol>(*(x.m_[j]))) {
-            x_ = rcp_static_cast<const Symbol>(x.m_[j]);
-        } else {
-            error = true;
-            break;
-        }
-        DiffVisitor v(x_, cache);
-        for (unsigned i = 0; i < result.row_; i++) {
-            result.m_[i * result.col_ + j] = v.apply(A.m_[i]);
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            if (is_a<Symbol>(*(x.m_[j]))) {
+                const RCP<const Symbol> x_
+                    = rcp_static_cast<const Symbol>(x.m_[j]);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_, diff_cache);
+            } else {
+                error = true;
+                break;
+            }
         }
     }
     if (error) {
@@ -229,27 +227,24 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
 }
 
 void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
-               bool cache)
+               bool diff_cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
     SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
 #pragma omp parallel for
-    for (unsigned j = 0; j < result.col_; j++) {
-        RCP<const Symbol> x_;
-        if (is_a<Symbol>(*(x.m_[j]))) {
-            x_ = rcp_static_cast<const Symbol>(x.m_[j]);
-        } else {
-            // TODO: Use a dummy symbol
-            x_ = symbol("x_");
-        }
-        DiffVisitor v(x_, cache);
-        for (unsigned i = 0; i < result.row_; i++) {
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
             if (is_a<Symbol>(*(x.m_[j]))) {
-                result.m_[i * result.col_ + j] = v.apply(A.m_[i]);
+                const RCP<const Symbol> x_
+                    = rcp_static_cast<const Symbol>(x.m_[j]);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_, diff_cache);
             } else {
+                // TODO: Use a dummy symbol
+                const RCP<const Symbol> x_ = symbol("x_");
                 result.m_[i * result.col_ + j] = ssubs(
-                    v.apply(ssubs(A.m_[i], {{x.m_[j], x_}})), {{x_, x.m_[j]}});
+                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_, diff_cache),
+                    {{x_, x.m_[j]}});
             }
         }
     }
@@ -258,50 +253,36 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
 // ---------------------------- Diff -------------------------------------//
 
 void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
-          bool cache)
+          bool diff_cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
-#ifndef _OPENMP
-    DiffVisitor v(x, cache);
-#endif
 #pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
-#ifdef _OPENMP
-        DiffVisitor v(x, cache);
-#endif
         for (unsigned j = 0; j < result.col_; j++) {
-            result.m_[i * result.col_ + j] = v.apply(A.m_[i * result.col_ + j]);
+            result.m_[i * result.col_ + j]
+                = A.m_[i * result.col_ + j]->diff(x, diff_cache);
         }
     }
 }
 
 void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
-           bool cache)
+           bool diff_cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
-    RCP<const Symbol> x_;
-    if (not is_a<Symbol>(*x)) {
-        // TODO: Use a dummy symbol
-        x_ = symbol("_x");
-    } else {
-        x_ = rcp_static_cast<const Symbol>(x);
-    }
-#ifndef _OPENMP
-    DiffVisitor v(x_, cache);
-#endif
 #pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
-#ifdef _OPENMP
-        DiffVisitor v(x_, cache);
-#endif
         for (unsigned j = 0; j < result.col_; j++) {
             if (is_a<Symbol>(*x)) {
+                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(x);
                 result.m_[i * result.col_ + j]
-                    = v.apply(A.m_[i * result.col_ + j]);
+                    = A.m_[i * result.col_ + j]->diff(x_, diff_cache);
             } else {
-                result.m_[i * result.col_ + j] = ssubs(
-                    v.apply(ssubs(A.m_[i * result.col_ + j], {{x, x_}})),
-                    {{x_, x}});
+                // TODO: Use a dummy symbol
+                const RCP<const Symbol> x_ = symbol("_x");
+                result.m_[i * result.col_ + j]
+                    = ssubs(ssubs(A.m_[i * result.col_ + j], {{x, x_}})
+                                ->diff(x_, diff_cache),
+                            {{x_, x}});
             }
         }
     }
