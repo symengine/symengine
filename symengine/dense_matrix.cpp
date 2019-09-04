@@ -1,5 +1,6 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
+#include <symengine/derivative.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
@@ -199,23 +200,25 @@ void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 
 // ---------------------------- Jacobian -------------------------------------//
 
-void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
+void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+              bool cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
     SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
     bool error = false;
 #pragma omp parallel for
-    for (unsigned i = 0; i < result.row_; i++) {
-        for (unsigned j = 0; j < result.col_; j++) {
-            if (is_a<Symbol>(*(x.m_[j]))) {
-                const RCP<const Symbol> x_
-                    = rcp_static_cast<const Symbol>(x.m_[j]);
-                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
-            } else {
-                error = true;
-                break;
-            }
+    for (unsigned j = 0; j < result.col_; j++) {
+        RCP<const Symbol> x_;
+        if (is_a<Symbol>(*(x.m_[j]))) {
+            x_ = rcp_static_cast<const Symbol>(x.m_[j]);
+        } else {
+            error = true;
+            break;
+        }
+        DiffVisitor v(x_, cache);
+        for (unsigned i = 0; i < result.row_; i++) {
+            result.m_[i * result.col_ + j] = v.apply(A.m_[i]);
         }
     }
     if (error) {
@@ -225,23 +228,28 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
     }
 }
 
-void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
+void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+               bool cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
     SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
 #pragma omp parallel for
-    for (unsigned i = 0; i < result.row_; i++) {
-        for (unsigned j = 0; j < result.col_; j++) {
+    for (unsigned j = 0; j < result.col_; j++) {
+        RCP<const Symbol> x_;
+        if (is_a<Symbol>(*(x.m_[j]))) {
+            x_ = rcp_static_cast<const Symbol>(x.m_[j]);
+        } else {
+            // TODO: Use a dummy symbol
+            x_ = symbol("x_");
+        }
+        DiffVisitor v(x_, cache);
+        for (unsigned i = 0; i < result.row_; i++) {
             if (is_a<Symbol>(*(x.m_[j]))) {
-                const RCP<const Symbol> x_
-                    = rcp_static_cast<const Symbol>(x.m_[j]);
-                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
+                result.m_[i * result.col_ + j] = v.apply(A.m_[i]);
             } else {
-                // TODO: Use a dummy symbol
-                const RCP<const Symbol> x_ = symbol("x_");
                 result.m_[i * result.col_ + j] = ssubs(
-                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_), {{x_, x.m_[j]}});
+                    v.apply(ssubs(A.m_[i], {{x.m_[j], x_}})), {{x_, x.m_[j]}});
             }
         }
     }

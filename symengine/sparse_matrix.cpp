@@ -5,6 +5,7 @@
 #include <symengine/constants.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
+#include <symengine/derivative.h>
 
 namespace SymEngine
 {
@@ -422,7 +423,8 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     return B;
 }
 
-CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
+CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x,
+                              bool cache)
 {
     const unsigned nrows = static_cast<unsigned>(exprs.size());
     const unsigned ncols = static_cast<unsigned>(x.size());
@@ -431,10 +433,15 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
     p.reserve(nrows + 1);
     j.reserve(nrows);
     elems.reserve(nrows);
+    std::vector<DiffVisitor> visitors;
+    for (unsigned ci = 0; ci < ncols; ++ci) {
+        visitors.push_back(DiffVisitor(x[ci], cache));
+    }
+
     for (unsigned ri = 0; ri < nrows; ++ri) {
         p.push_back(p.back());
         for (unsigned ci = 0; ci < ncols; ++ci) {
-            auto elem = exprs[ri]->diff(x[ci]);
+            auto elem = visitors[ci].apply(exprs[ri]);
             if (neq(*elem, *zero)) {
                 p.back()++;
                 j.push_back(ci);
@@ -446,7 +453,8 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
                      std::move(elems));
 }
 
-CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x,
+                              bool cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);

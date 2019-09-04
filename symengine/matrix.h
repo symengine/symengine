@@ -151,10 +151,10 @@ public:
 
     // Return the Jacobian of the matrix
     friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
-                         DenseMatrix &result);
+                         DenseMatrix &result, bool cache);
     // Return the Jacobian of the matrix using sdiff
     friend void sjacobian(const DenseMatrix &A, const DenseMatrix &x,
-                          DenseMatrix &result);
+                          DenseMatrix &result, bool cache);
 
     // Differentiate the matrix element-wise
     friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
@@ -376,8 +376,10 @@ public:
                               const std::vector<unsigned> &i,
                               const std::vector<unsigned> &j,
                               const vec_basic &x);
-    static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x);
-    static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x);
+    static CSRMatrix jacobian(const vec_basic &exprs, const vec_sym &x,
+                              bool cache = true);
+    static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x,
+                              bool cache = true);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
                                  CSRMatrix &C);
@@ -402,9 +404,11 @@ private:
 };
 
 // Return the Jacobian of the matrix
-void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result);
+void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+              bool cache = true);
 // Return the Jacobian of the matrix using sdiff
-void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result);
+void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+               bool cache = true);
 
 // Differentiate all the elements
 void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
