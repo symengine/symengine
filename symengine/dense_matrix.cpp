@@ -257,32 +257,50 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
 
 // ---------------------------- Diff -------------------------------------//
 
-void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result)
+void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
+          bool cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
+#ifndef _OPENMP
+    DiffVisitor v(x, cache);
+#endif
 #pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
+#ifdef _OPENMP
+        DiffVisitor v(x, cache);
+#endif
         for (unsigned j = 0; j < result.col_; j++) {
-            result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]->diff(x);
+            result.m_[i * result.col_ + j] = v.apply(A.m_[i * result.col_ + j]);
         }
     }
 }
 
-void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
+void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
+           bool cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
+    RCP<const Symbol> x_;
+    if (not is_a<Symbol>(*x)) {
+        // TODO: Use a dummy symbol
+        x_ = symbol("_x");
+    } else {
+        x_ = rcp_static_cast<const Symbol>(x);
+    }
+#ifndef _OPENMP
+    DiffVisitor v(x_, cache);
+#endif
 #pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
+#ifdef _OPENMP
+        DiffVisitor v(x_, cache);
+#endif
         for (unsigned j = 0; j < result.col_; j++) {
             if (is_a<Symbol>(*x)) {
-                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(x);
                 result.m_[i * result.col_ + j]
-                    = A.m_[i * result.col_ + j]->diff(x_);
+                    = v.apply(A.m_[i * result.col_ + j]);
             } else {
-                // TODO: Use a dummy symbol
-                const RCP<const Symbol> x_ = symbol("_x");
                 result.m_[i * result.col_ + j] = ssubs(
-                    ssubs(A.m_[i * result.col_ + j], {{x, x_}})->diff(x_),
+                    v.apply(ssubs(A.m_[i * result.col_ + j], {{x, x_}})),
                     {{x_, x}});
             }
         }

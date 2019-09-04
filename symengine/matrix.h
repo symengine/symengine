@@ -158,10 +158,10 @@ public:
 
     // Differentiate the matrix element-wise
     friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-                     DenseMatrix &result);
+                     DenseMatrix &result, bool cache);
     // Differentiate the matrix element-wise using SymPy compatible diff
     friend void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-                      DenseMatrix &result);
+                      DenseMatrix &result, bool cache);
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -411,11 +411,11 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
                bool cache = true);
 
 // Differentiate all the elements
-void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-          DenseMatrix &result);
+void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
+          bool cache = true);
 // Differentiate all the elements using SymPy compatible diff
-void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-           DenseMatrix &result);
+void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
+           bool cache = true);
 
 // Get submatrix from a DenseMatrix
 void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
