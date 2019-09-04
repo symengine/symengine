@@ -466,7 +466,7 @@ CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x,
         }
         syms.push_back(rcp_static_cast<const Symbol>(dx));
     }
-    return CSRMatrix::jacobian(A.m_, syms);
+    return CSRMatrix::jacobian(A.m_, syms, cache);
 }
 
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
