@@ -1101,6 +1101,13 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
                            integer(167), integer(-68), integer(-4), integer(24),
                            integer(-41)});
     QR(A, Q, R);
+    
+    REQUIRE(Q == DenseMatrix(3, 3, {integer(6) / integer(7), integer(-69) / integer(175), integer(-58) / integer(175),
+                                    integer(3) / integer(7), integer(158) / integer(175), integer(6) / integer(175),
+                                    integer(-2) / integer(7), integer(6) / integer(35), integer(-33) / integer(35)}));
+    REQUIRE(R == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
+                                    integer(0), integer(175), integer(-70),
+                                    integer(0), integer(0), integer(35)}));
 }
 
 TEST_CASE("test_LDL(): matrices", "[matrices]")
