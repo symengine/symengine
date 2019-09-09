@@ -197,6 +197,25 @@ void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
     }
 }
 
+// QR factorization
+void DenseMatrix::QR(MatrixBase &Q, MatrixBase &R) const
+{
+    if (is_a<DenseMatrix>(Q) and is_a<DenseMatrix>(R)) {
+        DenseMatrix &Q_ = down_cast<DenseMatrix &>(Q);
+        DenseMatrix &R_ = down_cast<DenseMatrix &>(R);
+        SymEngine::QR(*this, Q_, R_);
+    }
+}
+
+// Cholesky decomposition
+void DenseMatrix::cholesky(MatrixBase &L) const
+{
+    if (is_a<DenseMatrix>(L)) {
+        DenseMatrix &L_ = down_cast<DenseMatrix &>(L);
+        SymEngine::cholesky(*this, L_);
+    }
+}
+
 // ---------------------------- Jacobian -------------------------------------//
 
 void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
