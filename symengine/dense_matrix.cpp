@@ -199,7 +199,8 @@ void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 
 // ---------------------------- Jacobian -------------------------------------//
 
-void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
+void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+              bool diff_cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
@@ -211,7 +212,7 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
             if (is_a<Symbol>(*(x.m_[j]))) {
                 const RCP<const Symbol> x_
                     = rcp_static_cast<const Symbol>(x.m_[j]);
-                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_, diff_cache);
             } else {
                 error = true;
                 break;
@@ -225,7 +226,8 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
     }
 }
 
-void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
+void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
+               bool diff_cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
@@ -236,12 +238,13 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
             if (is_a<Symbol>(*(x.m_[j]))) {
                 const RCP<const Symbol> x_
                     = rcp_static_cast<const Symbol>(x.m_[j]);
-                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_, diff_cache);
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("x_");
                 result.m_[i * result.col_ + j] = ssubs(
-                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_), {{x_, x.m_[j]}});
+                    ssubs(A.m_[i], {{x.m_[j], x_}})->diff(x_, diff_cache),
+                    {{x_, x.m_[j]}});
             }
         }
     }
@@ -249,18 +252,21 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
 
 // ---------------------------- Diff -------------------------------------//
 
-void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result)
+void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
+          bool diff_cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
 #pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
         for (unsigned j = 0; j < result.col_; j++) {
-            result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]->diff(x);
+            result.m_[i * result.col_ + j]
+                = A.m_[i * result.col_ + j]->diff(x, diff_cache);
         }
     }
 }
 
-void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
+void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
+           bool diff_cache)
 {
     SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
 #pragma omp parallel for
@@ -269,13 +275,14 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
             if (is_a<Symbol>(*x)) {
                 const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(x);
                 result.m_[i * result.col_ + j]
-                    = A.m_[i * result.col_ + j]->diff(x_);
+                    = A.m_[i * result.col_ + j]->diff(x_, diff_cache);
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("_x");
-                result.m_[i * result.col_ + j] = ssubs(
-                    ssubs(A.m_[i * result.col_ + j], {{x, x_}})->diff(x_),
-                    {{x_, x}});
+                result.m_[i * result.col_ + j]
+                    = ssubs(ssubs(A.m_[i * result.col_ + j], {{x, x_}})
+                                ->diff(x_, diff_cache),
+                            {{x_, x}});
             }
         }
     }

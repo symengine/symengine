@@ -9,7 +9,6 @@
 
 #include <symengine/add.h>
 #include <symengine/pow.h>
-#include <symengine/derivative.h>
 #include <symengine/symbol.h>
 #include <symengine/complex_double.h>
 #include <symengine/eval_double.h>
@@ -17,6 +16,14 @@
 
 namespace SymEngine
 {
+
+// Forward declare these here to avoid including derivative.h and break the
+// cycle
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
+                      bool cache);
+
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
+                       bool cache);
 
 class Expression
 {
@@ -140,14 +147,14 @@ public:
         return m_basic;
     }
     //! Differentiation
-    Expression diff(const RCP<const Symbol> &x) const
+    Expression diff(const RCP<const Symbol> &x, bool cache = true) const
     {
-        return Expression(SymEngine::diff(m_basic, x));
+        return Expression(SymEngine::diff(m_basic, x, cache));
     }
     //! Differentiation
-    Expression diff(const RCP<const Basic> &x) const
+    Expression diff(const RCP<const Basic> &x, bool cache = true) const
     {
-        return Expression(sdiff(m_basic, x));
+        return Expression(sdiff(m_basic, x, cache));
     }
     //! Substitution
     Expression subs(const map_basic_basic &subs_map) const

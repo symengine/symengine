@@ -3,7 +3,6 @@
 
 #include <symengine/logic.h>
 #include <symengine/visitor.h>
-#include <symengine/derivative.h>
 
 namespace SymEngine
 {
