@@ -10,6 +10,7 @@
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::integer;
+using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
 using SymEngine::symbol;
@@ -1101,6 +1102,15 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
                            integer(167), integer(-68), integer(-4), integer(24),
                            integer(-41)});
     QR(A, Q, R);
+
+    REQUIRE(Q == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
+                                    rational(-58, 175), rational(3, 7),
+                                    rational(158, 175), rational(6, 175),
+                                    rational(-2, 7), rational(6, 35),
+                                    rational(-33, 35)}));
+    REQUIRE(R == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
+                                    integer(0), integer(175), integer(-70),
+                                    integer(0), integer(0), integer(35)}));
 }
 
 TEST_CASE("test_LDL(): matrices", "[matrices]")

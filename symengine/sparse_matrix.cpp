@@ -268,6 +268,18 @@ void CSRMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
     throw NotImplementedError("Not Implemented");
 }
 
+// QR factorization
+void CSRMatrix::QR(MatrixBase &Q, MatrixBase &R) const
+{
+    throw NotImplementedError("Not Implemented");
+}
+
+// Cholesky decomposition
+void CSRMatrix::cholesky(MatrixBase &L) const
+{
+    throw NotImplementedError("Not Implemented");
+}
+
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_,
                                    std::vector<unsigned> &j_, vec_basic &x_,
                                    unsigned row_)
