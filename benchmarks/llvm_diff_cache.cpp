@@ -59,27 +59,20 @@ double CommonSubexprLLVM()
         << std::setw(15) << std::setprecision(9) << std::fixed
         << std::chrono::duration<double>(t2 - t1).count() << std::endl;
 
-
     t1 = std::chrono::high_resolution_clock::now();
 
     LLVMDoubleVisitor v3;
     bool symbolic_cse = true;
     int opt_level = 3;
-    v3.init(v, {
-        J.get(0,0), 
-        J.get(0,1),
-        J.get(0,2),
-        J.get(0,3),
-        J.get(0,4),
-        J.get(0,5),
-        J.get(0,6),
-        J.get(0,7),
-        J.get(0,8),
-        J.get(0,9)}, symbolic_cse, opt_level);
+    v3.init(v,
+            {J.get(0, 0), J.get(0, 1), J.get(0, 2), J.get(0, 3), J.get(0, 4),
+             J.get(0, 5), J.get(0, 6), J.get(0, 7), J.get(0, 8), J.get(0, 9)},
+            symbolic_cse, opt_level);
     t2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Time for llvm init with common subexpressions (with cache) : \t "
-              << std::setw(15) << std::setprecision(9) << std::fixed
-              << std::chrono::duration<double>(t2 - t1).count() << std::endl;
+    std::cout
+        << "Time for llvm init with common subexpressions (with cache) : \t "
+        << std::setw(15) << std::setprecision(9) << std::fixed
+        << std::chrono::duration<double>(t2 - t1).count() << std::endl;
     return 0;
 }
 
@@ -110,30 +103,23 @@ double NoCommonSubexprLLVM()
     jacobian(M, S, J, false);
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    std::cout
-        << "Time for jacobian without common subexpressions (without cache) : \t "
-        << std::setw(15) << std::setprecision(9) << std::fixed
-        << std::chrono::duration<double>(t2 - t1).count() << std::endl;
-
+    std::cout << "Time for jacobian without common subexpressions (without "
+                 "cache) : \t "
+              << std::setw(15) << std::setprecision(9) << std::fixed
+              << std::chrono::duration<double>(t2 - t1).count() << std::endl;
 
     t1 = std::chrono::high_resolution_clock::now();
 
     LLVMDoubleVisitor v3;
     bool symbolic_cse = true;
     int opt_level = 3;
-    v3.init(v, {
-        J.get(0,0), 
-        J.get(0,1),
-        J.get(0,2),
-        J.get(0,3),
-        J.get(0,4),
-        J.get(0,5),
-        J.get(0,6),
-        J.get(0,7),
-        J.get(0,8),
-        J.get(0,9)}, symbolic_cse, opt_level);
+    v3.init(v,
+            {J.get(0, 0), J.get(0, 1), J.get(0, 2), J.get(0, 3), J.get(0, 4),
+             J.get(0, 5), J.get(0, 6), J.get(0, 7), J.get(0, 8), J.get(0, 9)},
+            symbolic_cse, opt_level);
     t2 = std::chrono::high_resolution_clock::now();
-    std::cout << "Time for llvm init without common subexpressions (without cache) : \t "
+    std::cout << "Time for llvm init without common subexpressions (without "
+                 "cache) : \t "
               << std::setw(15) << std::setprecision(9) << std::fixed
               << std::chrono::duration<double>(t2 - t1).count() << std::endl;
     return 0;
@@ -146,4 +132,3 @@ int main(int argc, char *argv[])
     NoCommonSubexprLLVM();
     return 0;
 }
-
