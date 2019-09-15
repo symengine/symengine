@@ -66,6 +66,10 @@ using SymEngine::parse;
 using SymEngine::SymEngineException;
 using SymEngine::numeric_cast;
 using SymEngine::julia_str;
+using SymEngine::mathml;
+using SymEngine::latex;
+using SymEngine::ccode;
+using SymEngine::jscode;
 
 namespace SymEngine
 {
@@ -74,6 +78,11 @@ template <typename T>
 inline bool is_aligned(T *p, size_t n = alignof(T))
 {
     return 0 == reinterpret_cast<uintptr_t>(p) % n;
+}
+
+static std::string _str(const Basic &a)
+{
+    return a.__str__();
 }
 }
 
@@ -595,33 +604,49 @@ IMPLEMENT_ONE_ARG_FUNC(lambertw)
 IMPLEMENT_ONE_ARG_FUNC(zeta)
 IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta)
 IMPLEMENT_ONE_ARG_FUNC(gamma)
+IMPLEMENT_ONE_ARG_FUNC(loggamma)
 IMPLEMENT_ONE_ARG_FUNC(sqrt)
 IMPLEMENT_ONE_ARG_FUNC(cbrt)
 IMPLEMENT_ONE_ARG_FUNC(exp)
 IMPLEMENT_ONE_ARG_FUNC(log)
 
-CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b)
-{
-    CWRAPPER_BEGIN
-    s->m = SymEngine::atan2(a->m, b->m);
-    CWRAPPER_END
-}
+#define IMPLEMENT_TWO_ARG_FUNC(func)                                           \
+    CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a, const basic b)   \
+    {                                                                          \
+        CWRAPPER_BEGIN                                                         \
+        s->m = SymEngine::func(a->m, b->m);                                    \
+        CWRAPPER_END                                                           \
+    }
 
-char *basic_str(const basic s)
-{
-    std::string str = s->m->__str__();
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
+IMPLEMENT_TWO_ARG_FUNC(atan2)
+IMPLEMENT_TWO_ARG_FUNC(kronecker_delta)
+IMPLEMENT_TWO_ARG_FUNC(lowergamma)
+IMPLEMENT_TWO_ARG_FUNC(uppergamma)
+IMPLEMENT_TWO_ARG_FUNC(beta)
+IMPLEMENT_TWO_ARG_FUNC(polygamma)
 
-char *basic_str_julia(const basic s)
-{
-    std::string str = julia_str(*s->m);
-    auto cc = new char[str.length() + 1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
+#define IMPLEMENT_STR_CONVERSION(name, func)                                   \
+    char *basic_##name(const basic s)                                          \
+    {                                                                          \
+        std::string str;                                                       \
+        try {                                                                  \
+            str = func(*s->m);                                                 \
+        } catch (SymEngineException & e) {                                     \
+            return nullptr;                                                    \
+        } catch (...) {                                                        \
+            return nullptr;                                                    \
+        }                                                                      \
+        auto cc = new char[str.length() + 1];                                  \
+        std::strcpy(cc, str.c_str());                                          \
+        return cc;                                                             \
+    }
+
+IMPLEMENT_STR_CONVERSION(str, _str)
+IMPLEMENT_STR_CONVERSION(str_julia, julia_str)
+IMPLEMENT_STR_CONVERSION(str_mathml, mathml)
+IMPLEMENT_STR_CONVERSION(str_latex, latex)
+IMPLEMENT_STR_CONVERSION(str_ccode, ccode)
+IMPLEMENT_STR_CONVERSION(str_jscode, jscode)
 
 void basic_str_free(char *s)
 {

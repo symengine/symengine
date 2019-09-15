@@ -148,7 +148,8 @@ CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor);
 TypeID basic_get_type(const basic s);
 //! Returns the typeID of the class with the name c
 TypeID basic_get_class_id(const char *c);
-//! Returns the class name of with the typeid `id`
+//! Returns the class name of an object with the typeid `id`.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *basic_get_class_from_id(TypeID id);
 
 //! Assign to s, a symbol with string representation c.
@@ -332,6 +333,8 @@ CWRAPPER_OUTPUT_TYPE basic_zeta(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_dirichlet_eta(basic s, const basic a);
 //! Assigns s = gamma(a).
 CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
+//! Assigns s = loggamma(a).
+CWRAPPER_OUTPUT_TYPE basic_loggamma(basic s, const basic a);
 //! Assigns s = sqrt(a).
 CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
 //! Assigns s = cbrt(a).
@@ -343,12 +346,31 @@ CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 
 //! Assigns s = atan2(a, b).
 CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
+//! Assigns s = kronecker_delta(a, b).
+CWRAPPER_OUTPUT_TYPE basic_kronecker_delta(basic s, const basic a,
+                                           const basic b);
+//! Assigns s = lowergamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_lowergamma(basic s, const basic a, const basic b);
+//! Assigns s = uppergamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_uppergamma(basic s, const basic a, const basic b);
+//! Assigns s = beta(a, b).
+CWRAPPER_OUTPUT_TYPE basic_beta(basic s, const basic a, const basic b);
+//! Assigns s = polygamma(a, b).
+CWRAPPER_OUTPUT_TYPE basic_polygamma(basic s, const basic a, const basic b);
 
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
 //! Compatible with Julia
 char *basic_str_julia(const basic s);
+//! Printing mathml
+char *basic_str_mathml(const basic s);
+//! Printing latex string
+char *basic_str_latex(const basic s);
+//! Printing C code
+char *basic_str_ccode(const basic s);
+//! Printing JavaScript code
+char *basic_str_jscode(const basic s);
 //! Frees the string s
 void basic_str_free(char *s);
 
@@ -438,7 +460,8 @@ void sparse_matrix_free(CSparseMatrix *self);
 //! Assign to s, a DenseMatrix with value d
 CWRAPPER_OUTPUT_TYPE dense_matrix_set(CDenseMatrix *s, const CDenseMatrix *d);
 
-//! Return a string representation of s
+//! Return a string representation of s.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *dense_matrix_str(const CDenseMatrix *s);
 //! Resize mat to rxc
 CWRAPPER_OUTPUT_TYPE dense_matrix_rows_cols(CDenseMatrix *mat, unsigned r,
@@ -613,7 +636,8 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
 //! symbols arg
 CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg);
-//! Returns the name of the given FunctionSymbol
+//! Returns the name of the given FunctionSymbol.
+//! The caller is responsible to free the string with 'basic_str_free'
 char *function_symbol_get_name(const basic b);
 //! Returns the coefficient of x^n in b
 CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,

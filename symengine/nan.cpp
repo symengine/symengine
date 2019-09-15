@@ -211,6 +211,11 @@ class EvaluateNaN : public Evaluate
         SYMENGINE_ASSERT(is_a<NaN>(x))
         return Nan;
     }
+    virtual RCP<const Basic> truncate(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<NaN>(x))

@@ -151,6 +151,7 @@ using SymEngine::digamma;
 using SymEngine::trigamma;
 using SymEngine::floor;
 using SymEngine::ceiling;
+using SymEngine::truncate;
 using SymEngine::Eq;
 using SymEngine::Conjugate;
 using SymEngine::rewrite_as_exp;
@@ -3702,6 +3703,7 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
     REQUIRE(eq(*abs(sub(x, y)), *abs(sub(y, x))));
     REQUIRE(eq(*abs(real_double(-1.0)), *real_double(1.0)));
+    REQUIRE(eq(*abs(abs(x)), *abs(x)));
 }
 
 class MySin : public FunctionWrapper
@@ -4259,6 +4261,9 @@ TEST_CASE("test_floor", "[Floor]")
     r = floor(ceiling(x));
     CHECK(eq(*r, *ceiling(x)));
 
+    r = floor(truncate(x));
+    CHECK(eq(*r, *truncate(x)));
+
     r = floor(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
     CHECK(eq(*r, *add(integer(2),
                       floor(add(mul(integer(2), x), mul(integer(3), y))))));
@@ -4331,6 +4336,9 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     r = ceiling(ceiling(x));
     CHECK(eq(*r, *ceiling(x)));
 
+    r = ceiling(truncate(x));
+    CHECK(eq(*r, *truncate(x)));
+
     r = ceiling(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
     CHECK(eq(*r, *add(integer(2),
                       ceiling(add(mul(integer(2), x), mul(integer(3), y))))));
@@ -4354,6 +4362,81 @@ TEST_CASE("test_ceiling", "[Ceiling]")
     mpc_set_d_d(b.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
     r = ceiling(complex_mpc(std::move(b)));
     CHECK(eq(*r, *Complex::from_two_nums(*integer(11), *integer(12))));
+#endif // HAVE_SYMENGINE_MPC
+}
+
+TEST_CASE("test_truncate", "[Truncate]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> r = truncate(integer(1));
+    CHECK(eq(*r, *one));
+
+    r = truncate(Complex::from_two_nums(*integer(2), *integer(1)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(1))));
+
+    r = truncate(Nan);
+    CHECK(eq(*r, *Nan));
+
+    r = truncate(Inf);
+    CHECK(eq(*r, *Inf));
+
+    r = truncate(NegInf);
+    CHECK(eq(*r, *NegInf));
+
+    r = truncate(Rational::from_two_ints(3, 1));
+    CHECK(eq(*r, *integer(3)));
+
+    r = truncate(Rational::from_two_ints(3, 2));
+    CHECK(eq(*r, *integer(1)));
+
+    r = truncate(Rational::from_two_ints(-3, 2));
+    CHECK(eq(*r, *integer(-1)));
+
+    r = truncate(real_double(2.65));
+    CHECK(eq(*r, *integer(2)));
+
+    r = truncate(complex_double(std::complex<double>(2.86, 2.79)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(2), *integer(2))));
+
+    r = truncate(pi);
+    CHECK(eq(*r, *integer(3)));
+
+    r = truncate(E);
+    CHECK(eq(*r, *integer(2)));
+
+    r = truncate(floor(x));
+    CHECK(eq(*r, *floor(x)));
+
+    r = truncate(ceiling(x));
+    CHECK(eq(*r, *ceiling(x)));
+
+    r = truncate(truncate(x));
+    CHECK(eq(*r, *truncate(x)));
+
+    r = truncate(add(add(integer(2), mul(integer(2), x)), mul(integer(3), y)));
+    CHECK(eq(*r, *add(integer(2),
+                      truncate(add(mul(integer(2), x), mul(integer(3), y))))));
+
+    r = truncate(add(add(Rational::from_two_ints(2, 3), mul(integer(2), x)),
+                     mul(integer(3), y)));
+    CHECK(eq(*r, *truncate(add(add(mul(integer(2), x), mul(integer(3), y)),
+                               Rational::from_two_ints(2, 3)))));
+
+    CHECK_THROWS_AS(truncate(Eq(integer(2), integer(3))), SymEngineException &);
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 10.65, MPFR_RNDN);
+    r = truncate(real_mpfr(std::move(a)));
+    CHECK(eq(*r, *integer(10)));
+#endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class b(100);
+    mpc_set_d_d(b.get_mpc_t(), 10.65, 11.47, MPFR_RNDN);
+    r = truncate(complex_mpc(std::move(b)));
+    CHECK(eq(*r, *Complex::from_two_nums(*integer(10), *integer(11))));
 #endif // HAVE_SYMENGINE_MPC
 }
 

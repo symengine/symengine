@@ -1,18 +1,80 @@
-%baseclass-preinclude symengine/visitor.h
-%scanner scanner.h
-%scanner-token-function d_scanner.lex()
-%filenames parser
-%parsefun-source parser.cpp
-%namespace SymEngine
+%require "3.0"
+%define api.pure full
+%define api.value.type {struct SymEngine::YYSTYPE}
+%param {SymEngine::Parser &p}
+
+/*
+// Uncomment this to enable parser tracing:
+%define parse.trace
+%printer { fprintf(yyo, "%s", $$.c_str()); } <string>
+%printer { std::cerr << *$$; } <basic>
+*/
 
 
-%polymorphic basic: RCP<const Basic>;
-             basic_vec : vec_basic;
-             string : std::string;
+%code requires // *.h
+{
+
+#include "symengine/parser/parser.h"
+
+}
+
+%code // *.cpp
+{
+#include "symengine/pow.h"
+#include "symengine/logic.h"
+#include "symengine/parser/parser.h"
+
+using SymEngine::RCP;
+using SymEngine::Basic;
+using SymEngine::vec_basic;
+using SymEngine::rcp_static_cast;
+using SymEngine::mul;
+using SymEngine::pow;
+using SymEngine::add;
+using SymEngine::sub;
+using SymEngine::Lt;
+using SymEngine::Gt;
+using SymEngine::Le;
+using SymEngine::Ge;
+using SymEngine::Eq;
+using SymEngine::set_boolean;
+using SymEngine::Boolean;
+using SymEngine::one;
+using SymEngine::vec_boolean;
+
+
+#include "symengine/parser/tokenizer.h"
+
+
+int yylex(SymEngine::YYSTYPE *yylval, SymEngine::Parser &p)
+{
+    return p.m_tokenizer.lex(*yylval);
+} // ylex
+
+void yyerror(SymEngine::Parser &p, const std::string &msg)
+{
+    throw SymEngine::ParseError(msg);
+}
+
+// Force YYCOPY to not use memcopy, but rather copy the structs one by one,
+// which will cause C++ to call the proper copy constructors.
+# define YYCOPY(Dst, Src, Count)              \
+    do                                        \
+      {                                       \
+        YYSIZE_T yyi;                         \
+        for (yyi = 0; yyi < (Count); yyi++)   \
+          (Dst)[yyi] = (Src)[yyi];            \
+      }                                       \
+    while (0)
+
+} // code
+
+
 
 %token <string> IDENTIFIER
 %token <string> NUMERIC
 %token <string> IMPLICIT_MUL
+%token END_OF_FILE 0
 
 %left '|'
 %left '^'
@@ -42,7 +104,7 @@ st_expr :
     expr
     {
         $$ = $1;
-        res = $$;
+        p.res = $$;
     }
 ;
 
@@ -59,9 +121,11 @@ expr:
         expr '/' expr
         { $$ = div($1, $3); }
 |
+// FIXME: This rule generates:
+// parser.yy: warning: 1 shift/reduce conflict [-Wconflicts-sr]
         IMPLICIT_MUL POW expr
-        { 
-          auto tup = parse_implicit_mul($1);
+        {
+          auto tup = p.parse_implicit_mul($1);
           if (neq(*std::get<1>(tup), *one)) {
             $$ = mul(std::get<0>(tup), pow(std::get<1>(tup), $3));
           } else {
@@ -88,7 +152,7 @@ expr:
         { $$ = rcp_static_cast<const Basic>(Eq($1, $3)); }
 |
         expr '|' expr
-        { 
+        {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
@@ -96,7 +160,7 @@ expr:
         }
 |
         expr '&' expr
-        { 
+        {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>($1));
             s.insert(rcp_static_cast<const Boolean>($3));
@@ -127,18 +191,18 @@ expr:
 leaf:
     IDENTIFIER
     {
-        $$ = parse_identifier($1);
+        $$ = p.parse_identifier($1);
     }
 |
     IMPLICIT_MUL
     {
-        auto tup = parse_implicit_mul($1);
+        auto tup = p.parse_implicit_mul($1);
         $$ = mul(std::get<0>(tup), std::get<1>(tup));
     }
 |
     NUMERIC
     {
-        $$ = parse_numeric($1);
+        $$ = p.parse_numeric($1);
     }
 |
     func
@@ -150,7 +214,7 @@ leaf:
 func:
     IDENTIFIER '(' expr_list ')'
     {
-        $$ = functionify($1, $3);
+        $$ = p.functionify($1, $3);
     }
 ;
 

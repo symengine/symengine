@@ -210,7 +210,14 @@ void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
 
 void CountOpsVisitor::apply(const Basic &b)
 {
-    b.accept(*this);
+    unsigned count_now = count;
+    auto it = v.find(b.rcp_from_this());
+    if (it == v.end()) {
+        b.accept(*this);
+        insert(v, b.rcp_from_this(), count - count_now);
+    } else {
+        count += it->second;
+    }
 }
 
 void CountOpsVisitor::bvisit(const Mul &x)

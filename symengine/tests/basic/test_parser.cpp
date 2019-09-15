@@ -5,6 +5,7 @@
 #include <symengine/parser.h>
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/parser/parser.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -57,8 +58,26 @@ using SymEngine::logical_nor;
 using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::logical_xnor;
+using SymEngine::YYSTYPE;
 
 using namespace SymEngine::literals;
+
+TEST_CASE("Parsing: internal data structures", "[parser]")
+{
+    std::string s;
+    RCP<const Basic> res = integer(5);
+    REQUIRE(res->use_count() == 1);
+
+    struct YYSTYPE a;
+    a.basic = res;
+    REQUIRE(res->use_count() == 2);
+    {
+        struct YYSTYPE b;
+        b = a;
+        REQUIRE(res->use_count() == 3);
+    }
+    REQUIRE(res->use_count() == 2);
+}
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -698,5 +717,8 @@ TEST_CASE("Parsing: errors", "[parser]")
     CHECK_THROWS_AS(parse(s), ParseError &);
 
     s = "max(,3,2)";
+    CHECK_THROWS_AS(parse(s), ParseError &);
+
+    s = "x+%y+z";
     CHECK_THROWS_AS(parse(s), ParseError &);
 }

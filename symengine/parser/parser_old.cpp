@@ -684,4 +684,4 @@ RCP<const Basic> parse_old(const std::string &s, bool convert_xor)
     return p.parse_expr(s);
 }
 
-} // SymEngine
+} // namespace SymEngine

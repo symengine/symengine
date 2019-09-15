@@ -230,6 +230,21 @@ public:
 //! Canonicalize Ceiling:
 RCP<const Basic> ceiling(const RCP<const Basic> &arg);
 
+class Truncate : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(TRUNCATE)
+    //! Truncate Constructor
+    Truncate(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized truncate
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize Truncate:
+RCP<const Basic> truncate(const RCP<const Basic> &arg);
+
 class Conjugate : public OneArgFunction
 {
 public:

@@ -302,7 +302,25 @@ public:
         apply(result_, *(x.get_args()[0]));
         mpfr_gamma(result_, result_, rnd_);
     };
+#if MPFR_VERSION_MAJOR > 3
+    void bvisit(const UpperGamma &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(result_, *(x.get_args()[1]));
+        apply(t.get_mpfr_t(), *(x.get_args()[0]));
+        mpfr_gamma_inc(result_, t.get_mpfr_t(), result_, rnd_);
+    };
 
+    void bvisit(const LowerGamma &x)
+    {
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(result_, *(x.get_args()[1]));
+        apply(t.get_mpfr_t(), *(x.get_args()[0]));
+        mpfr_gamma_inc(result_, t.get_mpfr_t(), result_, rnd_);
+        mpfr_gamma(t.get_mpfr_t(), t.get_mpfr_t(), rnd_);
+        mpfr_sub(result_, t.get_mpfr_t(), result_, rnd_);
+    };
+#endif
     void bvisit(const LogGamma &x)
     {
         apply(result_, *(x.get_args()[0]));
@@ -392,7 +410,7 @@ public:
     }
 
     // Classes not implemented are
-    // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
+    // Subs, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &)

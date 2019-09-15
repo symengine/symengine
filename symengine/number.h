@@ -188,6 +188,7 @@ public:
     virtual RCP<const Basic> exp(const Basic &) const = 0;
     virtual RCP<const Basic> floor(const Basic &) const = 0;
     virtual RCP<const Basic> ceiling(const Basic &) const = 0;
+    virtual RCP<const Basic> truncate(const Basic &) const = 0;
     virtual RCP<const Basic> erf(const Basic &) const = 0;
     virtual RCP<const Basic> erfc(const Basic &) const = 0;
 };

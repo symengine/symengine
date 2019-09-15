@@ -268,6 +268,18 @@ void CSRMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
     throw NotImplementedError("Not Implemented");
 }
 
+// QR factorization
+void CSRMatrix::QR(MatrixBase &Q, MatrixBase &R) const
+{
+    throw NotImplementedError("Not Implemented");
+}
+
+// Cholesky decomposition
+void CSRMatrix::cholesky(MatrixBase &L) const
+{
+    throw NotImplementedError("Not Implemented");
+}
+
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_,
                                    std::vector<unsigned> &j_, vec_basic &x_,
                                    unsigned row_)
@@ -422,7 +434,8 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     return B;
 }
 
-CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
+CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x,
+                              bool diff_cache)
 {
     const unsigned nrows = static_cast<unsigned>(exprs.size());
     const unsigned ncols = static_cast<unsigned>(x.size());
@@ -434,7 +447,7 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
     for (unsigned ri = 0; ri < nrows; ++ri) {
         p.push_back(p.back());
         for (unsigned ci = 0; ci < ncols; ++ci) {
-            auto elem = exprs[ri]->diff(x[ci]);
+            auto elem = exprs[ri]->diff(x[ci], diff_cache);
             if (neq(*elem, *zero)) {
                 p.back()++;
                 j.push_back(ci);
@@ -446,7 +459,8 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x)
                      std::move(elems));
 }
 
-CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
+CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x,
+                              bool diff_cache)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
@@ -458,7 +472,7 @@ CSRMatrix CSRMatrix::jacobian(const DenseMatrix &A, const DenseMatrix &x)
         }
         syms.push_back(rcp_static_cast<const Symbol>(dx));
     }
-    return CSRMatrix::jacobian(A.m_, syms);
+    return CSRMatrix::jacobian(A.m_, syms, diff_cache);
 }
 
 void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)

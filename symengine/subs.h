@@ -3,25 +3,24 @@
 
 #include <symengine/logic.h>
 #include <symengine/visitor.h>
-#include <symengine/derivative.h>
 
 namespace SymEngine
 {
 // xreplace replaces subtrees of a node in the expression tree
 // with a new subtree
 RCP<const Basic> xreplace(const RCP<const Basic> &x,
-                          const map_basic_basic &subs_dict);
+                          const map_basic_basic &subs_dict, bool cache = true);
 // subs substitutes expressions similar to xreplace, but keeps
 // the mathematical equivalence for derivatives and subs
 RCP<const Basic> subs(const RCP<const Basic> &x,
-                      const map_basic_basic &subs_dict);
+                      const map_basic_basic &subs_dict, bool cache = true);
 // port of sympy.physics.mechanics.msubs where f'(x) and f(x)
 // are considered independent
 RCP<const Basic> msubs(const RCP<const Basic> &x,
-                       const map_basic_basic &subs_dict);
+                       const map_basic_basic &subs_dict, bool cache = true);
 // port of sympy's subs where subs inside derivatives are done
 RCP<const Basic> ssubs(const RCP<const Basic> &x,
-                       const map_basic_basic &subs_dict);
+                       const map_basic_basic &subs_dict, bool cache = true);
 
 class XReplaceVisitor : public BaseVisitor<XReplaceVisitor>
 {
@@ -29,10 +28,16 @@ class XReplaceVisitor : public BaseVisitor<XReplaceVisitor>
 protected:
     RCP<const Basic> result_;
     const map_basic_basic &subs_dict_;
+    map_basic_basic visited;
+    bool cache;
 
 public:
-    XReplaceVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
+    XReplaceVisitor(const map_basic_basic &subs_dict, bool cache = true)
+        : subs_dict_(subs_dict), cache(cache)
     {
+        if (cache) {
+            visited = subs_dict;
+        }
     }
     // TODO : Polynomials, Series, Sets
     void bvisit(const Basic &x)
@@ -263,11 +268,21 @@ public:
 
     RCP<const Basic> apply(const RCP<const Basic> &x)
     {
-        auto it = subs_dict_.find(x);
-        if (it != subs_dict_.end()) {
-            result_ = it->second;
+        if (cache) {
+            auto it = visited.find(x);
+            if (it != visited.end()) {
+                result_ = it->second;
+            } else {
+                x->accept(*this);
+                insert(visited, x, result_);
+            }
         } else {
-            x->accept(*this);
+            auto it = subs_dict_.find(x);
+            if (it != subs_dict_.end()) {
+                result_ = it->second;
+            } else {
+                x->accept(*this);
+            }
         }
         return result_;
     }
@@ -275,9 +290,9 @@ public:
 
 //! Mappings in the `subs_dict` are applied to the expression tree of `x`
 inline RCP<const Basic> xreplace(const RCP<const Basic> &x,
-                                 const map_basic_basic &subs_dict)
+                                 const map_basic_basic &subs_dict, bool cache)
 {
-    XReplaceVisitor s(subs_dict);
+    XReplaceVisitor s(subs_dict, cache);
     return s.apply(x);
 }
 
@@ -286,8 +301,8 @@ class SubsVisitor : public BaseVisitor<SubsVisitor, XReplaceVisitor>
 public:
     using XReplaceVisitor::bvisit;
 
-    SubsVisitor(const map_basic_basic &subs_dict_)
-        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_)
+    SubsVisitor(const map_basic_basic &subs_dict_, bool cache = true)
+        : BaseVisitor<SubsVisitor, XReplaceVisitor>(subs_dict_, cache)
     {
     }
 
@@ -425,8 +440,8 @@ class MSubsVisitor : public BaseVisitor<MSubsVisitor, XReplaceVisitor>
 public:
     using XReplaceVisitor::bvisit;
 
-    MSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<MSubsVisitor, XReplaceVisitor>(d)
+    MSubsVisitor(const map_basic_basic &d, bool cache = true)
+        : BaseVisitor<MSubsVisitor, XReplaceVisitor>(d, cache)
     {
     }
 
@@ -450,8 +465,8 @@ class SSubsVisitor : public BaseVisitor<SSubsVisitor, SubsVisitor>
 public:
     using XReplaceVisitor::bvisit;
 
-    SSubsVisitor(const map_basic_basic &d)
-        : BaseVisitor<SSubsVisitor, SubsVisitor>(d)
+    SSubsVisitor(const map_basic_basic &d, bool cache = true)
+        : BaseVisitor<SSubsVisitor, SubsVisitor>(d, cache)
     {
     }
 
@@ -479,24 +494,24 @@ public:
 
 //! Subs which treat f(t) and Derivative(f(t), t) as separate variables
 inline RCP<const Basic> msubs(const RCP<const Basic> &x,
-                              const map_basic_basic &subs_dict)
+                              const map_basic_basic &subs_dict, bool cache)
 {
-    MSubsVisitor s(subs_dict);
+    MSubsVisitor s(subs_dict, cache);
     return s.apply(x);
 }
 
 //! SymPy compatible subs
 inline RCP<const Basic> ssubs(const RCP<const Basic> &x,
-                              const map_basic_basic &subs_dict)
+                              const map_basic_basic &subs_dict, bool cache)
 {
-    SSubsVisitor s(subs_dict);
+    SSubsVisitor s(subs_dict, cache);
     return s.apply(x);
 }
 
 inline RCP<const Basic> subs(const RCP<const Basic> &x,
-                             const map_basic_basic &subs_dict)
+                             const map_basic_basic &subs_dict, bool cache)
 {
-    SubsVisitor b(subs_dict);
+    SubsVisitor b(subs_dict, cache);
     return b.apply(x);
 }
 

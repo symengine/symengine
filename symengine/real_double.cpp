@@ -262,6 +262,13 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble>
         mp_set_d(i, std::ceil(down_cast<const RealDouble &>(x).i));
         return integer(std::move(i));
     }
+    virtual RCP<const Basic> truncate(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        integer_class i;
+        mp_set_d(i, std::trunc(down_cast<const RealDouble &>(x).i));
+        return integer(std::move(i));
+    }
     virtual RCP<const Basic> erf(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
@@ -341,6 +348,15 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
         integer_class re, im;
         mp_set_d(re, std::ceil(down_cast<const ComplexDouble &>(x).i.real()));
         mp_set_d(im, std::ceil(down_cast<const ComplexDouble &>(x).i.imag()));
+        return Complex::from_two_nums(*integer(std::move(re)),
+                                      *integer(std::move(im)));
+    }
+    virtual RCP<const Basic> truncate(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        integer_class re, im;
+        mp_set_d(re, std::trunc(down_cast<const ComplexDouble &>(x).i.real()));
+        mp_set_d(im, std::trunc(down_cast<const ComplexDouble &>(x).i.imag()));
         return Complex::from_two_nums(*integer(std::move(re)),
                                       *integer(std::move(im)));
     }

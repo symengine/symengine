@@ -40,6 +40,7 @@ using SymEngine::acosh;
 using SymEngine::atanh;
 using SymEngine::floor;
 using SymEngine::ceiling;
+using SymEngine::truncate;
 using SymEngine::erf;
 using SymEngine::erfc;
 using SymEngine::gamma;
@@ -127,6 +128,8 @@ TEST_CASE("Functions", "[ccode]")
     REQUIRE(ccode(*p) == "floor(x)");
     p = ceiling(x);
     REQUIRE(ccode(*p) == "ceil(x)");
+    p = truncate(x);
+    REQUIRE(ccode(*p) == "trunc(x)");
     p = erf(x);
     REQUIRE(ccode(*p) == "erf(x)");
     p = erfc(x);

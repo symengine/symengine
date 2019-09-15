@@ -26,6 +26,7 @@ using SymEngine::max;
 using SymEngine::min;
 using SymEngine::loggamma;
 using SymEngine::one;
+using SymEngine::minus_one;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::tan;
@@ -55,6 +56,8 @@ using SymEngine::Catalan;
 using SymEngine::GoldenRatio;
 using SymEngine::pow;
 using SymEngine::gamma;
+using SymEngine::uppergamma;
+using SymEngine::lowergamma;
 using SymEngine::beta;
 using SymEngine::constant;
 using SymEngine::NotImplementedError;
@@ -148,6 +151,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 
     RCP<const Basic> arg1 = integer(2);
     RCP<const Basic> arg2 = div(one, integer(4));
+    RCP<const Basic> arg3 = div(minus_one, integer(4));
 
     std::vector<std::tuple<RCP<const Basic>, double, double>> testvec = {
         std::make_tuple(pow(E, integer(2)), 7.3890560989306, 7.38905609893066),
@@ -164,7 +168,11 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
         std::make_tuple(erf(div(E, pi)), 0.778918254986, 0.778918254988),
         std::make_tuple(erfc(integer(2)), 0.004677734981, 0.004677734983),
         std::make_tuple(floor(arg2), -0.000000000001, 0.000000000001),
+        std::make_tuple(floor(arg3), -1.000000000001, -0.999999999999),
         std::make_tuple(ceiling(arg2), 0.999999999999, 1.000000000001),
+        std::make_tuple(ceiling(arg3), -0.000000000001, 0.000000000001),
+        std::make_tuple(truncate(arg2), -0.000000000001, 0.000000000001),
+        std::make_tuple(truncate(arg3), -0.000000000001, 0.000000000001),
         std::make_tuple(sin(arg1), 0.90929742682568, 0.90929742682569),
         std::make_tuple(cos(arg1), -0.41614683654715, -0.41614683654714),
         std::make_tuple(tan(arg1), -2.1850398632616, -2.1850398632615),
@@ -194,13 +202,22 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
                         1.76274717403909),
         std::make_tuple(gamma(div(arg1, integer(3))), 1.35411793942640,
                         1.35411793942641),
-        std::make_tuple(gamma(add(arg1, arg2)), -100, 100),
-        std::make_tuple(gamma(arg1), -100, 100),
-        std::make_tuple(gamma(add(add(arg1, arg2), arg1)), -100, 100),
+        std::make_tuple(gamma(arg2), 3.62560990822190, 3.62560990822191),
+        std::make_tuple(gamma(add(arg1, arg2)), 1.13300309631934,
+                        1.13300309631935),
+        std::make_tuple(gamma(add(add(arg1, arg2), arg1)), 8.28508514183522,
+                        8.28508514183523),
+#if MPFR_VERSION_MAJOR > 3
+        std::make_tuple(uppergamma(sqrt(integer(2)), arg2), 0.80040012955715,
+                        0.80040012955716),
+        std::make_tuple(lowergamma(sqrt(integer(2)), arg2), 0.08618129916210,
+                        0.08618129916211),
+#endif
         std::make_tuple(beta(add(arg1, arg2), arg1), 0.13675213675213,
                         0.13675213675214),
         std::make_tuple(abs((neg(sqrt(add(arg2, arg2))))), 0.70710678118654,
-                        0.70710678118655)};
+                        0.70710678118655)
+    };
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         eval_mpfr(a, *std::get<0>(testvec[i]), MPFR_RNDN);
