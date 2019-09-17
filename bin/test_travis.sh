@@ -20,7 +20,6 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
 	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
-	    export MSAN_OPTIONS=abort_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             fold_start libcxx.1 "Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
             LLVM_ORG_VER=7.0.1  # should match llvm-X-dev package.
@@ -31,7 +30,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               set -xe; \
               mkdir /tmp/build_libcxx; \
               cd /tmp/build_libcxx; \
-              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DCMAKE_INSTALL_PREFIX=/opt/libcxx_msan /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
+              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
               echo "Current dir:"; \
               pwd; \
               cmake --build . ;\
@@ -44,16 +43,17 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               set -xe;
               mkdir /tmp/build_libcxxabi; \
               cd /tmp/build_libcxxabi; \
-              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DCMAKE_INSTALL_PREFIX=/opt/libcxx_msan /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
+              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory  -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan  -DLIBCXXABI_LIBCXX_INCLUDES=/opt/libcxx7_msan/include/c++/v1 -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
               echo "Current dir:"; \
               pwd; \
               cmake --build . ;\
               cmake --build . --target install
             )
-            if [ ! -e /opt/libcxx_msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
+            if [ ! -e /opt/libcxx7_msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
             fold_end libcxxabi.1
-            export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -I/opt/libcxx_msan/include -I/opt/libcxx_msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
-            export LDFLAGS="-fsanitize=memory $LDFLAGS -Wl,-rpath,/opt/libcxx_msan/lib -L/opt/libcxx_msan/lib -lc++abi"
+	    export MSAN_OPTIONS=abort_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+            export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -I/opt/libcxx7_msan/include -I/opt/libcxx7_msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
+            export LDFLAGS="-fsanitize=memory $LDFLAGS -Wl,-rpath,/opt/libcxx7_msan/lib -L/opt/libcxx7_msan/lib -lc++abi"
             #export CMAKE_CXX_FLAGS_DEBUG="$CXXFLAGS"
             #unset CXXFLAGS
             #echo "CMAKE_CXX_FLAGS_DEBUG=$CMAKE_CXX_FLAGS_DEBUG"  # debug
