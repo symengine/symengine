@@ -298,7 +298,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     }
 }
 
-TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level", "[llvm_double]")
+TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
+          "[llvm_double]")
 {
 
     RCP<const Basic> x, y, z, r, a, b;
@@ -342,8 +343,7 @@ TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level", "[
         LLVMDoubleVisitor v;
         v.init({x, y, z}, *expr, symbolic_cse);
 
-        for (int opt_level = 0; opt_level < 4; ++opt_level)
-        {
+        for (int opt_level = 0; opt_level < 4; ++opt_level) {
             LLVMDoubleVisitor v2;
             v2.init({x, y, z}, *expr, symbolic_cse, opt_level);
 
