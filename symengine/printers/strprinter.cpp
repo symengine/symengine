@@ -1123,6 +1123,39 @@ void JuliaStrPrinter::bvisit(const Infty &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complex &x)
+{
+    std::ostringstream s;
+    if (x.real_ != 0) {
+        s << x.real_;
+        // Since Complex is in canonical form, imaginary_ is not 0.
+        if (mp_sign(x.imaginary_) == 1) {
+            s << " + ";
+        } else {
+            s << " - ";
+        }
+        // If imaginary_ is not 1 or -1, print the absolute value
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
+            s << mp_abs(x.imaginary_);
+            s << print_mul() << "im";
+        } else {
+            s << "im";
+        }
+    } else {
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
+            s << x.imaginary_;
+            s << print_mul() << "im";
+        } else {
+            if (mp_sign(x.imaginary_) == 1) {
+                s << "im";
+            } else {
+                s << "-im";
+            }
+        }
+    }
+    str_ = s.str();
+}
+
 std::string str(const Basic &x)
 {
     StrPrinter strPrinter;
