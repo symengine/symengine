@@ -65,15 +65,17 @@ llvm::Value *LLVMVisitor::apply(const Basic &b)
 }
 
 void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
-                       int opt_level)
+                       unsigned opt_level)
 {
-    init(x, b, symbolic_cse, LLVMVisitor::create_default_passes(opt_level));
+    init(x, b, symbolic_cse, LLVMVisitor::create_default_passes(opt_level),
+         opt_level);
 }
 
 void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
-                       const std::vector<llvm::Pass *> &passes)
+                       const std::vector<llvm::Pass *> &passes,
+                       unsigned opt_level)
 {
-    init(x, {b.rcp_from_this()}, symbolic_cse, passes);
+    init(x, {b.rcp_from_this()}, symbolic_cse, passes, opt_level);
 }
 
 llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
@@ -169,15 +171,16 @@ std::vector<llvm::Pass *> LLVMVisitor::create_default_passes(int optlevel)
 }
 
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                       const bool symbolic_cse, int opt_level)
+                       const bool symbolic_cse, unsigned opt_level)
 {
     init(inputs, outputs, symbolic_cse,
-         LLVMVisitor::create_default_passes(opt_level));
+         LLVMVisitor::create_default_passes(opt_level), opt_level);
 }
 
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                        const bool symbolic_cse,
-                       const std::vector<llvm::Pass *> &passes)
+                       const std::vector<llvm::Pass *> &passes,
+                       unsigned opt_level)
 {
     executionengine.reset();
     llvm::InitializeNativeTarget();
@@ -291,7 +294,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     executionengine = std::shared_ptr<llvm::ExecutionEngine>(
         llvm::EngineBuilder(std::move(module))
             .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+            .setOptLevel(static_cast<llvm::CodeGenOpt::Level>(opt_level))
             .setErrorStr(&error)
             .create());
 

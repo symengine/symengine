@@ -298,6 +298,62 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     }
 }
 
+TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
+          "[llvm_double]")
+{
+
+    RCP<const Basic> x, y, z, r, a, b;
+    double d, d2, d3;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+
+    a = add(x, z);
+    b = add(y, z);
+
+    vec_basic exprs = {
+        log(a),   abs(a),      tan(a),      sinh(a),     cosh(a),    tanh(a),
+        asinh(b), acosh(b),    atanh(a),    asin(a),     acos(a),    atan(a),
+        gamma(a), loggamma(a), erf(a),      erfc(a),     floor(a),   ceiling(a),
+        sign(a),  max({a, b}), min({a, b}), atan2(a, b), truncate(a)};
+
+    for (unsigned i = 0; i < exprs.size(); i++) {
+        exprs[i] = add(exprs[i], z);
+    }
+
+    r = add(sin(x), add(mul(pow(y, integer(4)), mul(z, integer(2))),
+                        pow(sin(x), integer(2))));
+    exprs.push_back(r);
+    exprs.push_back(neg(abs(z)));
+
+    // Piecewise
+    auto int1 = interval(NegInf, integer(2), true, false);
+    auto int2 = interval(integer(2), integer(5), true, false);
+
+    SymEngine::set_boolean s = {Lt(x, integer(6)), Gt(x, integer(5))};
+    r = add(z, piecewise({{x, contains(x, int1)},
+                          {y, contains(x, int2)},
+                          {z, Ge(x, integer(7))},
+                          {a, logical_and(s)},
+                          {add(x, y), boolTrue}}));
+    exprs.push_back(r);
+
+    bool symbolic_cse = true;
+    for (auto &expr : exprs) {
+        LLVMDoubleVisitor v;
+        v.init({x, y, z}, *expr, symbolic_cse);
+
+        for (int opt_level = 0; opt_level < 4; ++opt_level) {
+            LLVMDoubleVisitor v2;
+            v2.init({x, y, z}, *expr, symbolic_cse, opt_level);
+
+            d = v.call({1.4, 3.0, -1.0});
+            d2 = v2.call({1.4, 3.0, -1.0});
+            REQUIRE(::fabs((d - d2)) < 1e-12);
+        }
+    }
+}
+
 TEST_CASE("Check llvm save and load", "[llvm_double]")
 {
     RCP<const Basic> x, y, z, r;
@@ -395,7 +451,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
     LLVMDoubleVisitor v2;
     for (int opt_level = 0; opt_level < 4; ++opt_level) {
         v2.init({x, y, z}, *r, false,
-                LLVMDoubleVisitor::create_default_passes(opt_level));
+                LLVMDoubleVisitor::create_default_passes(opt_level), opt_level);
         d = v.call({0.4, 2.0, 3.0});
         d2 = v2.call({0.4, 2.0, 3.0});
         // Check for 12 digits with doubles
