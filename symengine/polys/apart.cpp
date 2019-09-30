@@ -1,16 +1,27 @@
-#include <symengine/basic.h>
-
-using SymEngine::RCP;
-using SymEngine::Basic;
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
-RCP<const Basic> apart(const RCP<const Basic> &f)
+
+class ApartVisitor : public BaseVisitor<ApartVisitor>
 {
-    if (is_a_Atom(*f)) {
-        return f;
+private:
+    bool full;
+
+public:
+    ApartVisitor(bool full_ = true) : full(full_)
+    {
     }
-    // work pending here
-    return f;
+    RCP<const Basic> apply(const Basic &b)
+    {
+        b.accept(*this);
+    }
+}
+
+// Apart `self`
+RCP<const Basic> apart(const RCP<const Basic> &self, bool full)
+{
+    ApartVisitor v(full);
+    return v.apply(*self);
 }
 }
