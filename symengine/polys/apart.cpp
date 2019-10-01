@@ -1,27 +1,21 @@
-#include <symengine/visitor.h>
+#include <symengine/basic.h>
+#include <symengine/polys/basic_conversions.h>
+
+using SymEngine::RCP;
 
 namespace SymEngine
 {
-
-class ApartVisitor : public BaseVisitor<ApartVisitor>
+RCP<const Basic> apart(const RCP<const Basic> &self, bool full=false)
 {
-private:
-    bool full;
+    umap_basic_num gens = _find_gens_poly(self);
 
-public:
-    ApartVisitor(bool full_ = true) : full(full_)
-    {
-    }
-    RCP<const Basic> apply(const Basic &b)
-    {
-        b.accept(*this);
-    }
-}
 
-// Apart `self`
-RCP<const Basic> apart(const RCP<const Basic> &self, bool full)
-{
-    ApartVisitor v(full);
-    return v.apply(*self);
+    if (gens.size() != 1) return self;
+    RCP<const Basic> var = gens.begin()->first;
+
+    RCP<const UExprPoly> poly = from_basic<UExprPoly>(self, var);
+    std::cout<<poly->get_poly();
+
+    return self;
 }
 }
