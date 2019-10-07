@@ -118,6 +118,7 @@ protected:
                             const RCP<const Basic> &b);
     virtual std::string print_div(const std::string &num,
                                   const std::string &den, bool paren);
+    virtual std::string get_imag_symbol();
     virtual std::string parenthesize(const std::string &expr);
     std::string parenthesizeLT(const RCP<const Basic> &x,
                                PrecedenceEnum precedenceEnum);
@@ -197,6 +198,7 @@ public:
     using StrPrinter::bvisit;
     virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                             const RCP<const Basic> &b);
+    virtual std::string get_imag_symbol();
     void bvisit(const Constant &x);
     void bvisit(const NaN &x);
     void bvisit(const Infty &x);
