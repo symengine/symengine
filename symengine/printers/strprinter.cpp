@@ -1123,7 +1123,7 @@ void JuliaStrPrinter::bvisit(const Infty &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const Complex &x)
+void JuliaStrPrinter::bvisit(const Complex &x)
 {
     std::ostringstream s;
     if (x.real_ != 0) {
