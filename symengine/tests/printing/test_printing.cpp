@@ -64,6 +64,7 @@ using SymEngine::logical_xor;
 using SymEngine::imageset;
 using SymEngine::latex;
 using SymEngine::diff;
+using SymEngine::julia_str;
 
 using namespace SymEngine::literals;
 
@@ -631,6 +632,19 @@ TEST_CASE("test_relational(): printing", "[printing]")
     REQUIRE(r1->__str__() == "x*(y < z)");
     r1 = mul(Lt(y, z), x);
     REQUIRE(r1->__str__() == "x*(y < z)");
+}
+
+TEST_CASE("test_julia(): printing", "[printing]")
+{
+    std::string r = julia_str(*parse("2 + 3*I"));
+    CHECK(r == "2 + 3*im");
+    r = julia_str(*parse("2.0 + 3.0*I"));
+    CHECK(r == "2.0 + 3.0*im");
+#ifdef HAVE_SYMENGINE_MPC
+    r = julia_str(*parse("2.00000000000000000000000000000000 + 3*I"));
+    CHECK(r == "2.00000000000000000000000000000000 + "
+               "3.00000000000000000000000000000000*im");
+#endif
 }
 
 TEST_CASE("test_latex_printing()", "[latex]")

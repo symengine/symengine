@@ -190,19 +190,19 @@ void StrPrinter::bvisit(const Complex &x)
         // If imaginary_ is not 1 or -1, print the absolute value
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << mp_abs(x.imaginary_);
-            s << print_mul() << "I";
+            s << print_mul() << get_imag_symbol();
         } else {
             s << "I";
         }
     } else {
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
-            s << print_mul() << "I";
+            s << print_mul() << get_imag_symbol();
         } else {
             if (mp_sign(x.imaginary_) == 1) {
-                s << "I";
+                s << get_imag_symbol();
             } else {
-                s << "-I";
+                s << "-" << get_imag_symbol();
             }
         }
     }
@@ -235,9 +235,11 @@ void StrPrinter::bvisit(const ComplexDouble &x)
 {
     str_ = print_double(x.i.real());
     if (x.i.imag() < 0) {
-        str_ += " - " + print_double(-x.i.imag()) + print_mul() + "I";
+        str_ += " - " + print_double(-x.i.imag()) + print_mul()
+                + get_imag_symbol();
     } else {
-        str_ += " + " + print_double(x.i.imag()) + print_mul() + "I";
+        str_ += " + " + print_double(x.i.imag()) + print_mul()
+                + get_imag_symbol();
     }
 }
 
@@ -467,10 +469,11 @@ void StrPrinter::bvisit(const ComplexMPC &x)
     if (imag->is_negative()) {
         std::string str = this->apply(imag);
         str = str.substr(1, str.length() - 1);
-        str_ = this->apply(x.real_part()) + " - " + str + print_mul() + "I";
+        str_ = this->apply(x.real_part()) + " - " + str + print_mul()
+               + get_imag_symbol();
     } else {
         str_ = this->apply(x.real_part()) + " + " + this->apply(imag)
-               + print_mul() + "I";
+               + print_mul() + get_imag_symbol();
     }
 }
 #endif
@@ -1121,6 +1124,16 @@ void JuliaStrPrinter::bvisit(const Infty &x)
     else
         s << "zoo";
     str_ = s.str();
+}
+
+std::string JuliaStrPrinter::get_imag_symbol()
+{
+    return "im";
+}
+
+std::string StrPrinter::get_imag_symbol()
+{
+    return "I";
 }
 
 std::string str(const Basic &x)
