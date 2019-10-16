@@ -334,20 +334,21 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     symbols.clear();
 }
 
-double LLVMDoubleVisitor::call(const std::vector<double> &vec)
+double LLVMDoubleVisitor::call(const std::vector<double> &vec) const
 {
     double ret;
     ((double (*)(const double *, double *))func)(vec.data(), &ret);
     return ret;
 }
 
-void LLVMDoubleVisitor::call(double *outs, const double *inps)
+void LLVMDoubleVisitor::call(double *outs, const double *inps) const
 {
     ((double (*)(const double *, double *))func)(inps, outs);
 }
 
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
-long double LLVMLongDoubleVisitor::call(const std::vector<long double> &vec)
+long double
+LLVMLongDoubleVisitor::call(const std::vector<long double> &vec) const
 {
     long double ret;
     ((long double (*)(const long double *, long double *))func)(vec.data(),
@@ -355,20 +356,21 @@ long double LLVMLongDoubleVisitor::call(const std::vector<long double> &vec)
     return ret;
 }
 
-void LLVMLongDoubleVisitor::call(long double *outs, const long double *inps)
+void LLVMLongDoubleVisitor::call(long double *outs,
+                                 const long double *inps) const
 {
     ((long double (*)(const long double *, long double *))func)(inps, outs);
 }
 #endif
 
-float LLVMFloatVisitor::call(const std::vector<float> &vec)
+float LLVMFloatVisitor::call(const std::vector<float> &vec) const
 {
     float ret;
     ((float (*)(const float *, float *))func)(vec.data(), &ret);
     return ret;
 }
 
-void LLVMFloatVisitor::call(float *outs, const float *inps)
+void LLVMFloatVisitor::call(float *outs, const float *inps) const
 {
     ((float (*)(const float *, float *))func)(inps, outs);
 }
