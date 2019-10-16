@@ -113,8 +113,8 @@ public:
 class LLVMDoubleVisitor : public LLVMVisitor
 {
 public:
-    double call(const std::vector<double> &vec);
-    void call(double *outs, const double *inps);
+    double call(const std::vector<double> &vec) const;
+    void call(double *outs, const double *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -136,8 +136,8 @@ public:
 class LLVMFloatVisitor : public LLVMVisitor
 {
 public:
-    float call(const std::vector<float> &vec);
-    void call(float *outs, const float *inps);
+    float call(const std::vector<float> &vec) const;
+    void call(float *outs, const float *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -161,8 +161,8 @@ public:
 class LLVMLongDoubleVisitor : public LLVMVisitor
 {
 public:
-    long double call(const std::vector<long double> &vec);
-    void call(long double *outs, const long double *inps);
+    long double call(const std::vector<long double> &vec) const;
+    void call(long double *outs, const long double *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
