@@ -16,7 +16,7 @@ void cancel(const RCP<const Basic> &self, const RCP<const Basic> &other,
 
     if (self_gens.size() != 1 && other_gens.size() != 1) {
         // only considering univariate here
-        return self;
+        return;
     }
     RCP<const Basic> self_var = self_gens.begin()->first;
     RCP<const Basic> other_var = other_gens.begin()->first;
