@@ -10,6 +10,7 @@
 using SymEngine::cancel;
 using SymEngine::mul;
 using SymEngine::integer;
+using SymEngine::symbol;
 using SymEngine::UIntPolyFlint;
 using SymEngine::RCP;
 
