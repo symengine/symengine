@@ -7,6 +7,7 @@
 #include <symengine/polys/cancel.cpp>
 #include <symengine/polys/uintpoly_flint.h>
 
+using SymEngine::Basic;
 using SymEngine::cancel;
 using SymEngine::mul;
 using SymEngine::integer;
