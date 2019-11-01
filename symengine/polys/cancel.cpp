@@ -2,40 +2,40 @@
 #include <symengine/polys/basic_conversions.h>
 
 using SymEngine::RCP;
-using SymEngine::divides_upoly;
 using SymEngine::UIntPolyFlint;
+using SymEngine::divides_upoly;
 
 namespace SymEngine
 {
-void cancel(const RCP<const Basic> &self, const RCP<const Basic> &other,
-            const Ptr<RCP<const UIntPolyFlint>> &result_self,
-            const Ptr<RCP<const UIntPolyFlint>> &result_other)
+// Cancel common factors in a rational function ``numer/denom``.
+// Return null if the rational function is not univariate.
+void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
+            const Ptr<RCP<const UIntPolyFlint>> &result_numer,
+            const Ptr<RCP<const UIntPolyFlint>> &result_denom,
+            const Ptr<RCP<const UIntPolyFlint>> &common)
 {
-    umap_basic_num self_gens = _find_gens_poly(self);
-    umap_basic_num other_gens = _find_gens_poly(other);
+    // Converting basic to UIntPolyFlint
+    umap_basic_num numer_gens = _find_gens_poly(numer);
+    umap_basic_num denom_gens = _find_gens_poly(denom);
 
-    if (self_gens.size() != 1 && other_gens.size() != 1) {
+    if (numer_gens.size() != 1 && denom_gens.size() != 1) {
         // only considering univariate here
         return;
     }
-    RCP<const Basic> self_var = self_gens.begin()->first;
-    RCP<const Basic> other_var = other_gens.begin()->first;
+    RCP<const Basic> numer_var = numer_gens.begin()->first;
+    RCP<const Basic> denom_var = denom_gens.begin()->first;
 
-    RCP<const UIntPolyFlint> self_poly
-        = from_basic<UIntPolyFlint>(self, self_var);
-    RCP<const UIntPolyFlint> other_poly
-        = from_basic<UIntPolyFlint>(other, other_var);
-    // std::cout << self_poly->__str__() << "\n" << other_poly->__str__()
-    // <<"\n";
+    RCP<const UIntPolyFlint> numer_poly
+        = from_basic<UIntPolyFlint>(numer, numer_var);
+    RCP<const UIntPolyFlint> denom_poly
+        = from_basic<UIntPolyFlint>(denom, denom_var);
 
-    RCP<const UIntPolyFlint> gcd_poly = gcd_upoly(*self_poly, *other_poly);
-    // std::cout << gcd_poly->__str__() << "\n";
+    // Finding common factors of numer_poly and denom_poly
+    RCP<const UIntPolyFlint> gcd_poly = gcd_upoly(*numer_poly, *denom_poly);
 
-    // RCP<const UIntPolyFlint> result_self, result_other;
-
-    divides_upoly(*gcd_poly, *self_poly, outArg(*result_self));
-    divides_upoly(*gcd_poly, *other_poly, outArg(*result_other));
-    // std::cout << (*result_self)->__str__() << "result self\n" <<
-    // (*result_other)->__str__() << "result other\n";
+    // Dividing both by common factors
+    divides_upoly(*gcd_poly, *numer_poly, outArg(*result_numer));
+    divides_upoly(*gcd_poly, *denom_poly, outArg(*result_denom));
+    *common = gcd_poly;
 }
 }
