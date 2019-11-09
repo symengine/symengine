@@ -1,9 +1,4 @@
-#include <symengine/basic.h>
-#include <symengine/polys/basic_conversions.h>
-
-using SymEngine::RCP;
-using SymEngine::UIntPolyFlint;
-using SymEngine::divides_upoly;
+#include <symengine/polys/cancel.h>
 
 namespace SymEngine
 {
