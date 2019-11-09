@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include <chrono>
 
+#include <symengine/polys/cancel.h>
 #include <symengine/polys/uintpoly_flint.h>
 
 using SymEngine::Basic;
