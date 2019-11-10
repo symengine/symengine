@@ -1,5 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/polys/basic_conversions.h>
+#include <symengine/polys/uintpoly_flint.h>
 
 using SymEngine::RCP;
 using SymEngine::UIntPolyFlint;
