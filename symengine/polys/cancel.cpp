@@ -2,6 +2,7 @@
 
 namespace SymEngine
 {
+#ifdef SYMENGINE_CANCEL_H
 // Cancel common factors in a rational function ``numer/denom``.
 // Return null if the rational function is not univariate.
 void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
@@ -33,4 +34,6 @@ void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
     divides_upoly(*gcd_poly, *denom_poly, outArg(*result_denom));
     *common = gcd_poly;
 }
+
+#endif
 }
