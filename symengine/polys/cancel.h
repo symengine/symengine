@@ -1,11 +1,12 @@
-#ifdef SYMENGINE_UINTPOLY_FLINT_H
 
-#include <symengine/polys/uintpoly_flint.h>
 #include <symengine/basic.h>
 #include <symengine/polys/basic_conversions.h>
 
-using SymEngine::RCP;
+#ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
+#endif
+
+using SymEngine::RCP;
 using SymEngine::divides_upoly;
 
 namespace SymEngine
@@ -16,5 +17,3 @@ void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
             const Ptr<RCP<const UIntPolyFlint>> &result_denom,
             const Ptr<RCP<const UIntPolyFlint>> &common);
 }
-
-#endif // SYMENGINE_UINTPOLY_FLINT_H
