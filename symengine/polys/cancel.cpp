@@ -2,7 +2,7 @@
 
 namespace SymEngine
 {
-#ifdef SYMENGINE_CANCEL_H
+#ifdef HAVE_SYMENGINE_FLINT
 // Cancel common factors in a rational function ``numer/denom``.
 // Return null if the rational function is not univariate.
 void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
