@@ -14,10 +14,11 @@ using SymEngine::divides_upoly;
 namespace SymEngine
 {
 // Declaration of cancel function
+template <typename Poly>
 void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
-            const Ptr<RCP<const UIntPolyFlint>> &result_numer,
-            const Ptr<RCP<const UIntPolyFlint>> &result_denom,
-            const Ptr<RCP<const UIntPolyFlint>> &common);
+            const Ptr<RCP<const Poly>> &result_numer,
+            const Ptr<RCP<const Poly>> &result_denom,
+            const Ptr<RCP<const Poly>> &common);
 }
 #endif // HAVE_SYMENGINE_FLINT
 
