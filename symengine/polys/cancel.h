@@ -4,9 +4,6 @@
 #include <symengine/basic.h>
 #include <symengine/polys/basic_conversions.h>
 
-using SymEngine::RCP;
-using SymEngine::divides_upoly;
-
 namespace SymEngine
 {
 // Declaration of cancel function
