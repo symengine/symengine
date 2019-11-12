@@ -4,9 +4,6 @@
 #include <symengine/basic.h>
 #include <symengine/polys/basic_conversions.h>
 
-#ifdef HAVE_SYMENGINE_FLINT
-using SymEngine::UIntPolyFlint;
-
 using SymEngine::RCP;
 using SymEngine::divides_upoly;
 
@@ -42,6 +39,4 @@ inline void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
     *common = gcd_poly;
 }
 }
-#endif // HAVE_SYMENGINE_FLINT
-
 #endif // SYMENGINE_CANCEL_H
