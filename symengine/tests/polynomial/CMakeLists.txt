@@ -32,6 +32,10 @@ if (WITH_FLINT)
     add_executable(test_uratpoly_flint test_uratpoly_flint.cpp)
     target_link_libraries(test_uratpoly_flint symengine catch)
     add_test(test_uratpoly_flint ${PROJECT_BINARY_DIR}/test_uratpoly_flint)
+
+    add_executable(test_cancel test_cancel.cpp)
+    target_link_libraries(test_cancel symengine catch)
+    add_test(test_cancel ${PROJECT_BINARY_DIR}/test_cancel)
 endif()
 
 if (WITH_PIRANHA)
