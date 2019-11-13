@@ -156,6 +156,7 @@ set(HEADERS
     parser/parser_stype.h
     parser/tokenizer.h
     polys/basic_conversions.h
+    polys/cancel.h
     polys/uexprpoly.h
     polys/uintpoly_flint.h
     polys/uintpoly.h
