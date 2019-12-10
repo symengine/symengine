@@ -88,6 +88,19 @@ else()
     message(STATUS "Linker does not support --exclude-libs")
 endif()
 
+if (NOT(MSVC) AND NOT "${EXCLUDE_LIBS}" STREQUAL "TRUE")
+    try_compile(UNEXPORTED_SYMBOL "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,-unexported_symbol,dummy"
+        OUTPUT_VARIABLE UNEXPORTED_SYMBOL_ERROR_LOG)
+    if (${UNEXPORTED_SYMBOL})
+        message(STATUS "Linker supports -unexported_symbol")
+    else()
+        message(STATUS "Linker does not support -unexported_symbol")
+    endif()
+endif()
+
 include(CheckTypeSize)
 check_type_size("long double" SYMENGINE_SIZEOF_LONG_DOUBLE)
 
