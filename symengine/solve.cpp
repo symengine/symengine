@@ -579,10 +579,8 @@ vec_basic linsolve(const DenseMatrix &system, const vec_sym &syms)
 
 vec_basic linsolve(const vec_basic &system, const vec_sym &syms)
 {
-    DenseMatrix A, b;
     auto mat = linear_eqns_to_matrix(system, syms);
-    A = mat.first;
-    b = mat.second;
+    DenseMatrix A = mat.first, b = mat.second;
     return linsolve_helper(A, b);
 }
 
