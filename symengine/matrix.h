@@ -89,10 +89,11 @@ class DenseMatrix : public MatrixBase
 public:
     // Constructors
     DenseMatrix();
-    DenseMatrix(const DenseMatrix &);
+    DenseMatrix(const DenseMatrix &) = default;
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
     DenseMatrix(const vec_basic &column_elements);
+    DenseMatrix &operator=(const DenseMatrix &other) = default;
     // Resize
     void resize(unsigned i, unsigned j);
 
