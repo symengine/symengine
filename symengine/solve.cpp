@@ -598,7 +598,7 @@ std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms)
 {
     auto size = numeric_cast<unsigned int>(syms.size());
-    DenseMatrix A(equations.size(), size);
+    DenseMatrix A(numeric_cast<unsigned int>(equations.size()), size);
     zeros(A);
     vec_basic bvec;
 
