@@ -939,6 +939,7 @@ void test_solve_poly()
 {
     basic x, a;
     basic m1, i2, i5;
+    CWRAPPER_OUTPUT_TYPE error_code;
 
     basic_new_stack(x);
     basic_new_stack(a);
@@ -968,7 +969,7 @@ void test_solve_poly()
     basic_add(a, a, m1);
 
     CSetBasic *r2 = setbasic_new();
-    CWRAPPER_OUTPUT_TYPE error_code = basic_solve_poly(r2, a, x);
+    error_code = basic_solve_poly(r2, a, x);
     SYMENGINE_C_ASSERT(setbasic_size(r2) == 0);
     SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
 
@@ -979,7 +980,7 @@ void test_solve_poly()
     basic_add(a, a, m1);
 
     CSetBasic *r3 = setbasic_new();
-    CWRAPPER_OUTPUT_TYPE error_code = basic_solve_poly(r3, a, x);
+    error_code = basic_solve_poly(r3, a, x);
     SYMENGINE_C_ASSERT(setbasic_size(r3) == 0);
     SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
 
