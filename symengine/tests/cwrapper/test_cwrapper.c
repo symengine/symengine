@@ -949,6 +949,7 @@ void test_solve_poly()
 
     basic_new_stack(m1);
     basic_new_stack(i2);
+    basic_new_stack(i5);
 
     basic_const_minus_one(m1);
     integer_set_si(i2, 2);
@@ -990,6 +991,7 @@ void test_solve_poly()
     basic_free_stack(a);
     basic_free_stack(x);
     basic_free_stack(i2);
+    basic_free_stack(i5);
 }
 
 void test_constants()
