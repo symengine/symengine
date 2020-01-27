@@ -938,7 +938,7 @@ void test_linsolve()
 void test_solve_poly()
 {
     basic x, a;
-    basic m1, i2;
+    basic m1, i2, i5;
 
     basic_new_stack(x);
     basic_new_stack(a);
@@ -951,16 +951,39 @@ void test_solve_poly()
 
     basic_const_minus_one(m1);
     integer_set_si(i2, 2);
+    integer_set_si(i5, 5);
 
-    // x^2 - 1
+    // a = x^2 - 1
     basic_pow(a, x, i2);
     basic_add(a, a, m1);
 
-    CSetBasic *r = setbasic_new();
-    basic_solve_poly(r, a, x);
-    SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
+    CSetBasic *r1 = setbasic_new();
+    basic_solve_poly(r1, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r1) == 2);
 
-    setbasic_free(r);
+    setbasic_free(r1);
+
+    // a = x^5 - 1
+    basic_pow(a, x, i5);
+    basic_add(a, a, m1);
+
+    CSetBasic *r2 = setbasic_new();
+    CWRAPPER_OUTPUT_TYPE error_code = basic_solve_poly(r2, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r2) == 0);
+    SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
+
+    setbasic_free(r2);
+
+    // a = exp(x) - 1
+    basic_exp(a, x);
+    basic_add(a, a, m1);
+
+    CSetBasic *r3 = setbasic_new();
+    CWRAPPER_OUTPUT_TYPE error_code = basic_solve_poly(r3, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r3) == 0);
+    SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
+
+    setbasic_free(r3);
 
     basic_free_stack(m1);
     basic_free_stack(a);
