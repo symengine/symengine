@@ -54,6 +54,12 @@
 namespace SymEngine
 {
 
+#if (LLVM_VERSION_MAJOR >= 10)
+using std::make_unique;
+#else
+using llvm::make_unique;
+#endif
+
 class IRBuilder : public llvm::IRBuilder<>
 {
 };
@@ -191,7 +197,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
-        = llvm::make_unique<llvm::Module>("SymEngine", *context.get());
+        = make_unique<llvm::Module>("SymEngine", *context.get());
     module->setDataLayout("");
     mod = module.get();
 
@@ -957,7 +963,7 @@ void LLVMVisitor::loads(const std::string &s)
 
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
-        = llvm::make_unique<llvm::Module>("SymEngine", *context);
+        = make_unique<llvm::Module>("SymEngine", *context);
     module->setDataLayout("");
     mod = module.get();
 

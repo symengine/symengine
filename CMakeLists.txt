@@ -34,8 +34,13 @@ endif()
 
 # Enable C++11 support in all compilers. SymEngine will not compile unless
 # the C++11 support is enabled.
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel")
-    set(CXX11_OPTIONS "-std=c++11")
+set(WITH_CPP14 no CACHE BOOL "Build with C++14 support")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel")
+    if(WITH_CPP14)
+        set(CXX11_OPTIONS "-std=c++14")
+    else()
+        set(CXX11_OPTIONS "-std=c++11")
+    endif()
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
     # pgcpp
     set(CXX11_OPTIONS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
