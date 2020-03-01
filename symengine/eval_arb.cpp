@@ -443,6 +443,11 @@ public:
     {
         x.eval(prec_)->accept(*this);
     }
+
+    void bvisit(const UnevaluatedExpr &x)
+    {
+        apply(*x.get_arg());
+    }
 };
 
 void eval_arb(arb_t result, const Basic &b, long precision)

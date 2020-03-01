@@ -3694,4 +3694,26 @@ RCP<const Basic> min(const vec_basic &arg)
     }
 }
 
+UnevaluatedExpr::UnevaluatedExpr(const RCP<const Basic> &arg)
+    : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool UnevaluatedExpr::is_canonical(const RCP<const Basic> &arg) const
+{
+    return true;
+}
+
+RCP<const Basic> UnevaluatedExpr::create(const RCP<const Basic> &arg) const
+{
+    return make_rcp<const UnevaluatedExpr>(arg);
+}
+
+RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg)
+{
+    return make_rcp<const UnevaluatedExpr>(arg);
+}
+
 } // SymEngine

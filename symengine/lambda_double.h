@@ -348,6 +348,11 @@ public:
     {
         throw NotImplementedError("Not Implemented");
     };
+
+    void bvisit(const UnevaluatedExpr &x)
+    {
+        apply(*x.get_arg());
+    };
 };
 
 class LambdaRealDoubleVisitor

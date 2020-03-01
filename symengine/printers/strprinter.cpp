@@ -1072,6 +1072,7 @@ std::vector<std::string> init_str_printer_names()
     names[MIN] = "min";
     names[SIGN] = "sign";
     names[CONJUGATE] = "conjugate";
+    names[UNEVALUATED_EXPR] = "";
     return names;
 }
 

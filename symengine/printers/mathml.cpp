@@ -267,6 +267,11 @@ void MathMLPrinter::bvisit(const Function &x)
     s << "</apply>";
 }
 
+void MathMLPrinter::bvisit(const UnevaluatedExpr &x)
+{
+    apply(*x.get_arg());
+}
+
 void MathMLPrinter::bvisit(const FunctionSymbol &x)
 {
     s << "<apply><ci>" << x.get_name() << "</ci>";

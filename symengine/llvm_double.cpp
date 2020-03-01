@@ -1034,6 +1034,11 @@ void LLVMVisitor::bvisit(const Ceiling &x)
     result_ = r;
 }
 
+void LLVMVisitor::bvisit(const UnevaluatedExpr &x)
+{
+    apply(*x.get_arg());
+}
+
 void LLVMVisitor::bvisit(const Truncate &x)
 {
     std::vector<llvm::Value *> args;

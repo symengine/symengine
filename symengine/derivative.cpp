@@ -246,6 +246,10 @@ void DiffVisitor::bvisit(const PolyGamma &self)
 {
     result_ = fdiff(self, x, *this);
 }
+void DiffVisitor::bvisit(const UnevaluatedExpr &self)
+{
+    result_ = Derivative::create(self.rcp_from_this(), {x});
+}
 void DiffVisitor::bvisit(const TwoArgFunction &self)
 {
     result_ = fdiff(self, x, *this);
