@@ -340,7 +340,7 @@ public:
 
     void bvisit(const UnevaluatedExpr &x)
     {
-        apply(*x.get_arg());
+        apply(result_, *x.get_arg());
     }
 
     // Classes not implemented are

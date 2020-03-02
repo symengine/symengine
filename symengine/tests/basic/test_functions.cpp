@@ -4660,4 +4660,7 @@ TEST_CASE("test UnevaluatedExpr", "[Functions]")
     r1 = add(z, one);
     r2 = add(y, one);
     REQUIRE(neq(*r1, *r2));
+
+    r1 = z->subs({{x, zero}});
+    REQUIRE(neq(*r1, *one));
 }
