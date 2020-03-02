@@ -303,7 +303,7 @@ TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
 {
 
     RCP<const Basic> x, y, z, r, a, b;
-    double d, d2, d3;
+    double d, d2;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
