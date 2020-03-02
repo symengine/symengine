@@ -226,10 +226,10 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     }
 
     CHECK_THROWS_AS(eval_mpfr(a, *constant("dummy_constant"), MPFR_RNDN),
-                    NotImplementedError );
+                    NotImplementedError);
 
     CHECK_THROWS_AS(eval_mpfr(a, *lambertw(arg1), MPFR_RNDN),
-                    NotImplementedError );
+                    NotImplementedError);
 
     mpfr_clear(a);
 }

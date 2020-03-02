@@ -115,7 +115,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     soln = solve(add(x, y), x);
     REQUIRE(eq(*soln, *finiteset({neg(y)})));
 
-    CHECK_THROWS_AS(solve_poly_linear({one}, reals), SymEngineException );
+    CHECK_THROWS_AS(solve_poly_linear({one}, reals), SymEngineException);
 
     // Quadratic
     poly = add(sqx, one);
@@ -166,7 +166,7 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
     REQUIRE(soln->__str__() == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
                                "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
-    CHECK_THROWS_AS(solve_poly_quadratic({one}, reals), SymEngineException );
+    CHECK_THROWS_AS(solve_poly_quadratic({one}, reals), SymEngineException);
 
     auto onebyx = div(one, x);
     poly = add(onebyx, one);
@@ -240,8 +240,8 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     // -(-1/2 - 1/2*I*sqrt(3)) != 1/2 + 1/2*I*sqrt(3) ?
     // REQUIRE(eq(*soln, *finiteset({r1, r2, r3})));
 
-    CHECK_THROWS_AS(solve_poly_cubic({one}, reals), SymEngineException );
-    CHECK_THROWS_AS(solve_poly_quartic({one}, reals), SymEngineException );
+    CHECK_THROWS_AS(solve_poly_cubic({one}, reals), SymEngineException);
+    CHECK_THROWS_AS(solve_poly_quartic({one}, reals), SymEngineException);
 
     // Quartic
     poly = qx;
@@ -472,7 +472,7 @@ TEST_CASE("linsolve", "[Solve]")
     CHECK_THROWS_AS(
         linsolve({Eq(y, mul({integer(4), x, x})), add({x, y, integer(-10)})},
                  {x, y}),
-        SymEngineException );
+        SymEngineException);
 }
 
 TEST_CASE("linear_eqns_to_matrix", "[Solve]")

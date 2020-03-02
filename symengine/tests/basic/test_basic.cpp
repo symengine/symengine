@@ -712,7 +712,7 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r1->__cmp__(*r2) != 0);
     CHECK(r1->__cmp__(*r1) == 0);
 
-    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError );
+    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
 
     r1 = pi;
     r2 = EulerGamma;
@@ -908,11 +908,11 @@ TEST_CASE("Complex: Basic", "[basic]")
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = Rational::from_two_ints(4, 5);
-    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError );
+    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError);
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = integer(3);
-    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError );
+    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")

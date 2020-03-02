@@ -164,7 +164,7 @@ TEST_CASE("Exponentiation of UExprDict with precision", "[UnivariateSeries]")
     REQUIRE(e == c);
     REQUIRE(f == d);
     REQUIRE(g == one);
-    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), DomainError );
+    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), DomainError);
 }
 
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
@@ -183,7 +183,7 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
     UExprDict c({{1, 1}, {2, 1}, {3, 1}});
     REQUIRE_THROWS_AS(
         UnivariateSeries::integrate(a, UnivariateSeries::var("x")),
-        NotImplementedError );
+        NotImplementedError);
     REQUIRE(UnivariateSeries::integrate(b, UnivariateSeries::var("x")) == c);
 }
 

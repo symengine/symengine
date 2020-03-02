@@ -699,26 +699,26 @@ TEST_CASE("Parsing: errors", "[parser]")
     std::string s;
 
     s = "x+y+";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x + (y))";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x + max((3, 2+1)";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "2..33 + 2";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "(2)(3)";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "sin(x y)";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "max(,3,2)";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x+%y+z";
-    CHECK_THROWS_AS(parse(s), ParseError );
+    CHECK_THROWS_AS(parse(s), ParseError);
 }

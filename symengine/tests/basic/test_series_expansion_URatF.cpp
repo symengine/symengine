@@ -275,6 +275,6 @@ TEST_CASE("Check error when expansion called without Flint ",
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
     REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex1, "x", 10),
-                      SymEngineException );
+                      SymEngineException);
 }
 #endif
