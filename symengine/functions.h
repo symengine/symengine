@@ -1288,6 +1288,20 @@ RCP<const Basic> min(const vec_basic &arg);
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 
+class UnevaluatedExpr : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(UNEVALUATED_EXPR)
+    //! UnevaluatedExpr Constructor
+    UnevaluatedExpr(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized UnevaluatedExpr
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
+
 } // SymEngine
 
 #endif

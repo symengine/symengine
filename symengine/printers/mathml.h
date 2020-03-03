@@ -39,6 +39,7 @@ public:
     void bvisit(const Function &x);
     void bvisit(const FunctionSymbol &x);
     void bvisit(const Derivative &x);
+    void bvisit(const UnevaluatedExpr &x);
     // void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const Equality &x);

@@ -409,6 +409,11 @@ public:
         }
     }
 
+    void bvisit(const UnevaluatedExpr &x)
+    {
+        apply(result_, *x.get_arg());
+    }
+
     // Classes not implemented are
     // Subs, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW

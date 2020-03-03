@@ -270,6 +270,11 @@ public:
     {
         apply(*(x.eval(53)));
     }
+
+    void bvisit(const UnevaluatedExpr &x)
+    {
+        apply(*x.get_arg());
+    }
 };
 
 template <typename C>

@@ -94,6 +94,7 @@ public:
     void bvisit(const Erfc &self);
     void bvisit(const Gamma &self);
     void bvisit(const LogGamma &self);
+    void bvisit(const UnevaluatedExpr &self);
     void bvisit(const UIntPoly &self);
     void bvisit(const URatPoly &self);
 #ifdef HAVE_SYMENGINE_PIRANHA

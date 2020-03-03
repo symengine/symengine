@@ -156,6 +156,7 @@ using SymEngine::Eq;
 using SymEngine::Conjugate;
 using SymEngine::rewrite_as_exp;
 using SymEngine::mul;
+using SymEngine::unevaluated_expr;
 
 using namespace SymEngine::literals;
 
@@ -4643,4 +4644,23 @@ TEST_CASE("test rewrite_as_exp", "[Functions]")
         {mul({rational(-1, 2), I, sub(exp(mul(I, x)), exp(mul(neg(I), x)))}),
          symbol("y"), symbol("z")});
     REQUIRE(eq(*r1, *r2));
+}
+TEST_CASE("test UnevaluatedExpr", "[Functions]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = pow(add(x, one), integer(2));
+    RCP<const Basic> z = unevaluated_expr(y);
+    auto r1 = add(z, x);
+    auto r2 = add(y, x);
+    REQUIRE(neq(*r1, *r2));
+    REQUIRE(eq(*expand(z), *z));
+
+    y = add(x, one);
+    z = unevaluated_expr(y);
+    r1 = add(z, one);
+    r2 = add(y, one);
+    REQUIRE(neq(*r1, *r2));
+
+    r1 = z->subs({{x, zero}});
+    REQUIRE(neq(*r1, *one));
 }
