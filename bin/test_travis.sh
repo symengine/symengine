@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-fold_start() {
-  echo -e "travis_fold:start:$1\033[33;1m$2\033[0m"
-}
-
-fold_end() {
-  echo -e "\ntravis_fold:end:$1\r"
-}
-
 # Exit on error
 set -e
 # Echo each command
@@ -21,7 +13,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
-            fold_start libcxx.1 "Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
+            echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
             LLVM_ORG_VER=7.0.1  # should match llvm-X-dev package.
             export CC=clang-7
             export CXX=clang++-7
@@ -36,9 +28,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               cmake --build . ;\
               cmake --build . --target install
             )
-            fold_end libcxx.1
-            echo "---"
-            fold_start libcxxabi.1 "Building libc++abi instrumented with memory-sanitizer"
+            echo "=== Building libc++abi instrumented with memory-sanitizer"
             ( \
               set -xe;
               mkdir /tmp/build_libcxxabi; \
@@ -50,7 +40,6 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               cmake --build . --target install
             )
             if [ ! -e /opt/libcxx7_msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
-            fold_end libcxxabi.1
 	    export MSAN_OPTIONS=abort_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
             export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -I/opt/libcxx7_msan/include -I/opt/libcxx7_msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
             export LDFLAGS="-fsanitize=memory $LDFLAGS -Wl,-rpath,/opt/libcxx7_msan/lib -L/opt/libcxx7_msan/lib -lc++abi"
@@ -72,7 +61,7 @@ else
     fi
 fi
 
-fold_start symengine_cmake_line.1 "Generating cmake command from environtment variables"
+echo "=== Generating cmake command from environtment variables"
 
 # Shippable currently does not clean the directory after previous builds
 # (https://github.com/Shippable/support/issues/238), so
@@ -153,48 +142,38 @@ if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 
-fold_end symengine_cmake_line.1
-
-fold_start symengine_cmake_config.1 "Generating build scripts for SymEngine using cmake"
+echo "=== Generating build scripts for SymEngine using cmake"
 echo "Current directory:"
 export BUILD_DIR=`pwd`
 pwd
 echo "Running cmake:"
 cmake $cmake_line ${SOURCE_DIR}
-fold_end symengine_cmake_config.1
 
 
-fold_start symengine_cmake_build.1 "Running build scripts for SymEngine"
-echo "Current directory:"
+echo "=== Running build scripts for SymEngine"
 pwd
 echo "Running make" $MAKEFLAGS ":"
 make
-fold_end symengine_cmake_build.1
 
-fold_start symengine_cmake_install.1 "Installing SymEngine"
 echo "Running make install:"
 make install
-fold_end symengine_cmake_install.1 "Installing SymEngine"
 
 if [[ "${TEST_CPP}" == "no" ]]; then
     exit 0;
 fi
 
-fold_start symengine_cmake_test.1 "Running the test suite of SymEngine"
-echo "Running tests in build directory:"
+echo "=== Running tests in build directory:"
 # C++
 if [[ "${WITH_SANITIZE}" == "memory" ]]; then
     ctest --output-on-failure --exclude-regex "(test_bipartite)|(test_hopcroft_karp)"  # TODO: debug the reason for failure
 else
     ctest --output-on-failure
 fi
-fold_end symengine_cmake_test.1 "Running the test suite of SymEngine"
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    fold_start symengine_coverage.1 "Collecting coverage data"
+    echo "=== Collecting coverage data"
     curl -L https://codecov.io/bash -o codecov.sh
     bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
-    fold_end symengine_coverage.1
     exit 0;
 fi
 
@@ -203,9 +182,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
     exit 0;
 fi
 
-fold_start symengine_standalone_test.1 "Testing the installed SymEngine library simulating use by 3rd party lib"
-echo "Running tests using installed SymEngine:"
-
+echo "=== Testing the installed SymEngine library simulating use by 3rd party lib"
 cd $SOURCE_DIR/benchmarks
 
 compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
@@ -214,8 +191,6 @@ link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_d
 ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
-fold_end symengine_standalone_test.1
-
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
