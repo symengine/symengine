@@ -82,6 +82,11 @@ public:
     {
         return false;
     }
+    //! \return `true` if even
+    inline virtual bool is_even() const
+    {
+        return this->i % 2 == 0;
+    }
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
