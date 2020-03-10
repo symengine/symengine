@@ -2143,7 +2143,8 @@ void test_lambda_double()
         long double outs_l[2];
         long double inps_l[3] = {1.5L, 2.0L, 3.0L};
         CLLVMLongDoubleVisitor *vis2l = llvm_long_double_visitor_new();
-        llvm_long_double_visitor_init(vis2l, args, exprs, symbolic_cse, opt_level);
+        llvm_long_double_visitor_init(vis2l, args, exprs, symbolic_cse,
+                                      opt_level);
         llvm_long_double_visitor_call(vis2l, outs_l, inps_l);
         llvm_long_double_visitor_free(vis2l);
         SYMENGINE_C_ASSERT(fabs(outs_l[0] - 43.5L) < 1e-6L);

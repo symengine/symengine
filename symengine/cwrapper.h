@@ -376,7 +376,8 @@ void basic_str_free(char *s);
 
 //! Returns 1 if a specific component is installed and 0 if not.
 //! Component can be "mpfr", "flint", "arb", "mpc", "ecm", "primesieve",
-//! "piranha", "boost", "pthread", "llvm" or "llvm_long_double" (all in lowercase).
+//! "piranha", "boost", "pthread", "llvm" or "llvm_long_double" (all in
+//! lowercase).
 //! This function, using string comparison, was implemented for particular
 //! libraries that do not provide header access (i.e. SymEngine.jl
 //! and other related shared libraries).
@@ -730,21 +731,23 @@ void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
 typedef struct CLLVMFloatVisitor CLLVMFloatVisitor;
 CLLVMFloatVisitor *llvm_float_visitor_new();
 void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse,
-                              int opt_level);
+                             const CVecBasic *exprs, int perform_cse,
+                             int opt_level);
 void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
-                              const float *const inps);
+                             const float *const inps);
 void llvm_float_visitor_free(CLLVMFloatVisitor *self);
 
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 // long double
 typedef struct CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;
 CLLVMLongDoubleVisitor *llvm_long_double_visitor_new();
-void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse,
-                              int opt_level);
-void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self, long double *const outs,
-                              const long double *const inps);
+void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                   const CVecBasic *args,
+                                   const CVecBasic *exprs, int perform_cse,
+                                   int opt_level);
+void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
+                                   long double *const outs,
+                                   const long double *const inps);
 void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self);
 #endif
 #endif

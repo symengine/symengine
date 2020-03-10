@@ -1692,14 +1692,14 @@ CLLVMFloatVisitor *llvm_float_visitor_new()
 }
 
 void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse,
-                              int opt_level)
+                             const CVecBasic *exprs, int perform_cse,
+                             int opt_level)
 {
     self->m.init(args->m, exprs->m, perform_cse, opt_level);
 }
 
 void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
-                              const float *const inps)
+                             const float *const inps)
 {
     self->m.call(outs, inps);
 }
@@ -1719,15 +1719,17 @@ CLLVMLongDoubleVisitor *llvm_long_double_visitor_new()
     return new CLLVMLongDoubleVisitor();
 }
 
-void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse,
-                              int opt_level)
+void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                   const CVecBasic *args,
+                                   const CVecBasic *exprs, int perform_cse,
+                                   int opt_level)
 {
     self->m.init(args->m, exprs->m, perform_cse, opt_level);
 }
 
-void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self, long double *const outs,
-                              const long double *const inps)
+void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
+                                   long double *const outs,
+                                   const long double *const inps)
 {
     self->m.call(outs, inps);
 }
