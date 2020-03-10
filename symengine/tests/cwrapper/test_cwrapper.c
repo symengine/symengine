@@ -1117,6 +1117,13 @@ void test_constants()
 #else
     SYMENGINE_C_ASSERT(!symengine_have_component(s));
 #endif
+    // Checking llvm builds with optional long double
+    s = "llvm_long_double";
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+    SYMENGINE_C_ASSERT(symengine_have_component(s));
+#else
+    SYMENGINE_C_ASSERT(!symengine_have_component(s));
+#endif
 
     basic_free_stack(custom);
     basic_free_stack(pi);
@@ -2113,6 +2120,7 @@ void test_lambda_double()
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
 #ifdef HAVE_SYMENGINE_LLVM
+        // double
         int symbolic_cse = 1, opt_level = 2;
         CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
         llvm_double_visitor_init(vis2, args, exprs, symbolic_cse, opt_level);
@@ -2120,6 +2128,27 @@ void test_lambda_double()
         llvm_double_visitor_free(vis2);
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+
+        // float
+        float outs_f[2];
+        float inps_f[3] = {1.5F, 2.0F, 3.0F};
+        CLLVMFloatVisitor *vis2f = llvm_float_visitor_new();
+        llvm_float_visitor_init(vis2f, args, exprs, symbolic_cse, opt_level);
+        llvm_float_visitor_call(vis2f, outs_f, inps_f);
+        llvm_float_visitor_free(vis2f);
+        SYMENGINE_C_ASSERT(fabs(outs_f[0] - 43.5F) < 1e-6F);
+        SYMENGINE_C_ASSERT(fabs(outs_f[1] - 45.0F) < 1e-6F);
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+        // long double
+        long double outs_l[2];
+        long double inps_l[3] = {1.5L, 2.0L, 3.0L};
+        CLLVMLongDoubleVisitor *vis2l = llvm_long_double_visitor_new();
+        llvm_long_double_visitor_init(vis2l, args, exprs, symbolic_cse, opt_level);
+        llvm_long_double_visitor_call(vis2l, outs_l, inps_l);
+        llvm_long_double_visitor_free(vis2l);
+        SYMENGINE_C_ASSERT(fabs(outs_l[0] - 43.5L) < 1e-6L);
+        SYMENGINE_C_ASSERT(fabs(outs_l[1] - 45.0L) < 1e-6L);
+#endif
 #endif
     }
     basic_free_stack(two);
