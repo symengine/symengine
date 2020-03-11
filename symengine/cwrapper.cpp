@@ -12,6 +12,10 @@
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
 using SymEngine::LLVMDoubleVisitor;
+using SymEngine::LLVMFloatVisitor;
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+using SymEngine::LLVMLongDoubleVisitor;
+#endif
 #endif
 
 #define xstr(s) str(s)
@@ -693,6 +697,10 @@ int symengine_have_component(const char *c)
 #endif
 #ifdef HAVE_SYMENGINE_LLVM
     if (std::strcmp("llvm", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+    if (std::strcmp("llvm_long_double", c) == 0)
         return 1;
 #endif
     return 0;
@@ -1646,6 +1654,7 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
+// double
 struct CLLVMDoubleVisitor {
     SymEngine::LLVMDoubleVisitor m;
 };
@@ -1672,6 +1681,64 @@ void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
 {
     delete self;
 }
+// float
+struct CLLVMFloatVisitor {
+    SymEngine::LLVMFloatVisitor m;
+};
+
+CLLVMFloatVisitor *llvm_float_visitor_new()
+{
+    return new CLLVMFloatVisitor();
+}
+
+void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
+                             const CVecBasic *exprs, int perform_cse,
+                             int opt_level)
+{
+    self->m.init(args->m, exprs->m, perform_cse, opt_level);
+}
+
+void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
+                             const float *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_float_visitor_free(CLLVMFloatVisitor *self)
+{
+    delete self;
+}
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+// long double
+struct CLLVMLongDoubleVisitor {
+    SymEngine::LLVMLongDoubleVisitor m;
+};
+
+CLLVMLongDoubleVisitor *llvm_long_double_visitor_new()
+{
+    return new CLLVMLongDoubleVisitor();
+}
+
+void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                   const CVecBasic *args,
+                                   const CVecBasic *exprs, int perform_cse,
+                                   int opt_level)
+{
+    self->m.init(args->m, exprs->m, perform_cse, opt_level);
+}
+
+void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
+                                   long double *const outs,
+                                   const long double *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self)
+{
+    delete self;
+}
+#endif
 #endif
 
 CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,
