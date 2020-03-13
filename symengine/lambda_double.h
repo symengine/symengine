@@ -81,14 +81,14 @@ public:
         return result_;
     }
 
-    T call(const std::vector<T> &vec)
+    T call(const std::vector<T> &vec) const
     {
         T res;
         call(&res, vec.data());
         return res;
     }
 
-    void call(T *outs, const T *inps)
+    void call(T *outs, const T *inps) const
     {
         if (cse_intermediate_fns.size() > 0) {
             for (unsigned i = 0; i < cse_intermediate_fns.size(); ++i) {
