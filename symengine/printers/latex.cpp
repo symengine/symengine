@@ -1,5 +1,10 @@
 #include <symengine/printers/latex.h>
 
+// avoid conflict with solaris header
+#ifdef SEC
+#undef SEC
+#endif
+
 namespace SymEngine
 {
 

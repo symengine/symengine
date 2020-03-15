@@ -11,6 +11,11 @@
 #include <symengine/symengine_casts.h>
 #include <symengine/constants.h>
 
+// avoid conflict with solaris header
+#ifdef SEC
+#undef SEC
+#endif
+
 namespace SymEngine
 {
 

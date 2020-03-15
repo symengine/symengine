@@ -1,6 +1,11 @@
 #include <limits>
 #include <symengine/printers/strprinter.h>
 
+// avoid conflict with solaris header
+#ifdef SEC
+#undef SEC
+#endif
+
 namespace SymEngine
 {
 

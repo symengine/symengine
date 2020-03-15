@@ -2,6 +2,11 @@
 #include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
 
+// avoid conflict with solaris header
+#ifdef SEC
+#undef SEC
+#endif
+
 namespace SymEngine
 {
 
