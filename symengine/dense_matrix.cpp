@@ -1376,7 +1376,7 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
             }
             return det;
         }
-        
+
         DenseMatrix B = DenseMatrix(n, n, A.m_);
         unsigned i, sign = 1;
         RCP<const Basic> d;
@@ -1631,6 +1631,25 @@ void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 RCP<const Set> eigen_values(const DenseMatrix &A)
 {
+    unsigned n = A.nrows(); 
+    bool is_upper = true, is_lower = true;
+    for (unsigned i = 0; i < n; ++i) {
+        for (unsigned j = 0; j < n; ++j) {
+            if (i > j and not eq(*(A.get(i, j)), *zero))
+                is_lower = false;
+            else if (i < j and not eq(*(A.get(i, j)), *zero))
+                is_upper = false;
+        }
+    }
+
+    if (is_lower or is_upper) {
+        RCP<const Set> eigenvals = emptyset();
+        for (unsigned i = 0; i < n; ++i) {
+            eigenvals = set_union({eigenvals, finiteset({A.get(i, i)})});
+        }
+        return eigenvals;
+    }
+    
     DenseMatrix B = DenseMatrix(A.nrows() + 1, 1);
     char_poly(A, B);
     map_int_Expr coeffs;
