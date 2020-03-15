@@ -53,6 +53,10 @@ SYMENGINE_ENUM(COS, Cos)
 SYMENGINE_ENUM(TAN, Tan)
 SYMENGINE_ENUM(COT, Cot)
 SYMENGINE_ENUM(CSC, Csc)
+// Avoid conflict with SEC macro in solaris's system header
+#ifdef SEC
+#undef SEC
+#endif
 SYMENGINE_ENUM(SEC, Sec)
 SYMENGINE_ENUM(ASIN, ASin)
 SYMENGINE_ENUM(ACOS, ACos)
