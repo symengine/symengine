@@ -1631,7 +1631,7 @@ void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 RCP<const Set> eigen_values(const DenseMatrix &A)
 {
-    unsigned n = A.nrows(); 
+    unsigned n = A.nrows();
     bool is_upper = true, is_lower = true;
     for (unsigned i = 0; i < n; ++i) {
         for (unsigned j = 0; j < n; ++j) {
@@ -1649,7 +1649,7 @@ RCP<const Set> eigen_values(const DenseMatrix &A)
         }
         return eigenvals;
     }
-    
+
     DenseMatrix B = DenseMatrix(A.nrows() + 1, 1);
     char_poly(A, B);
     map_int_Expr coeffs;
