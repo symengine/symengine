@@ -1359,6 +1359,24 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])),
                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
+        bool is_upper = true, is_lower = true;
+        for (unsigned i = 0; i < n; ++i) {
+            for (unsigned j = 0; j < n; ++j) {
+                if (i > j and not eq(*(A.m_[i * n + j]), *zero))
+                    is_lower = false;
+                else if (i < j and not eq(*(A.m_[i * n + j]), *zero))
+                    is_upper = false;
+            }
+        }
+
+        if (is_lower or is_upper) {
+            RCP<const Basic> det = A.m_[0];
+            for (unsigned i = 1; i < n; ++i) {
+                det = mul(det, A.m_[i * n + i]);
+            }
+            return det;
+        }
+        
         DenseMatrix B = DenseMatrix(n, n, A.m_);
         unsigned i, sign = 1;
         RCP<const Basic> d;
