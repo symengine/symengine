@@ -330,6 +330,13 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
                                interval(one, Inf, true, true)});
     REQUIRE(eq(*r2->set_complement(interval(NegInf, Inf, true, true)), *r3));
 
+    r1 = finiteset({symbol("x")}); // {x} U [1, 2] (issue #1648)
+    r2 = interval(integer(1), integer(2));
+    r3 = r2->set_union(r1);
+    REQUIRE(is_a<Union>(*r3));
+    REQUIRE(eq(*r3->get_args()[0], *r1));
+    REQUIRE(eq(*r3->get_args()[1], *r2));
+
     r3 = SymEngine::set_union(
         {interval(NegInf, real_double(1.0), true, true),
          interval(real_double(1.0), real_double(2.0), true, true),

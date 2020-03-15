@@ -396,7 +396,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                     }
                 container.insert(a);
             } else if (is_a<Contains>(*contain)) {
-                SymEngineException("Not implemented");
+                container.insert(a);
             }
         }
         if (not container.empty()) {
