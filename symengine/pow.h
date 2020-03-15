@@ -20,7 +20,7 @@ private:
     RCP<const Basic> base_, exp_; //! base**exp
 
 public:
-    IMPLEMENT_TYPEID(POW)
+    IMPLEMENT_TYPEID(SYMENGINE_POW)
     //! Pow Constructor
     Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp);
     //! \return Size of the hash

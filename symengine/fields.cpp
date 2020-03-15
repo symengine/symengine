@@ -27,11 +27,11 @@ bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
 
 hash_t GaloisField::__hash__() const
 {
-    hash_t seed = GALOISFIELD;
+    hash_t seed = SYMENGINE_GALOISFIELD;
 
     seed += get_var()->hash();
     for (const auto &it : get_poly().dict_) {
-        hash_t temp = GALOISFIELD;
+        hash_t temp = SYMENGINE_GALOISFIELD;
         hash_combine<hash_t>(temp, mp_get_si(it));
         seed += temp;
     }

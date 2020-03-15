@@ -14,7 +14,7 @@ Constant::Constant(const std::string &name) : name_{name}
 
 hash_t Constant::__hash__() const
 {
-    hash_t seed = CONSTANT;
+    hash_t seed = SYMENGINE_CONSTANT;
     hash_combine<std::string>(seed, name_);
     return seed;
 }

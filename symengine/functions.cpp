@@ -1832,7 +1832,7 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg) const
 
 hash_t FunctionSymbol::__hash__() const
 {
-    hash_t seed = FUNCTIONSYMBOL;
+    hash_t seed = SYMENGINE_FUNCTIONSYMBOL;
     for (const auto &a : get_vec())
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
@@ -1959,7 +1959,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
 
 hash_t Derivative::__hash__() const
 {
-    hash_t seed = DERIVATIVE;
+    hash_t seed = SYMENGINE_DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
     for (auto &p : x_) {
         hash_combine<Basic>(seed, *p);
@@ -2006,7 +2006,7 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
 
 hash_t Subs::__hash__() const
 {
-    hash_t seed = SUBS;
+    hash_t seed = SYMENGINE_SUBS;
     hash_combine<Basic>(seed, *arg_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *p.first);

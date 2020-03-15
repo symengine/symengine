@@ -19,7 +19,7 @@ class URatPSeriesFlint
 public:
     URatPSeriesFlint(const fqp_t p, const std::string varname,
                      const unsigned degree);
-    IMPLEMENT_TYPEID(URATPSERIESFLINT)
+    IMPLEMENT_TYPEID(SYMENGINE_URATPSERIESFLINT)
     virtual int compare(const Basic &o) const;
     virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;

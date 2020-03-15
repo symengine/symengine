@@ -46,7 +46,7 @@ private:
     umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
 
 public:
-    IMPLEMENT_TYPEID(ADD)
+    IMPLEMENT_TYPEID(SYMENGINE_ADD)
     /*! Constructs Add from a dictionary by copying the contents of the
         dictionary. Assumes that the input is in canonical form
     */

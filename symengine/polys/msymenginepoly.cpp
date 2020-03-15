@@ -21,7 +21,7 @@ RCP<const Basic> MIntPoly::as_symbolic() const
 
 hash_t MIntPoly::__hash__() const
 {
-    hash_t seed = MINTPOLY;
+    hash_t seed = SYMENGINE_MINTPOLY;
     for (auto var : get_vars())
         hash_combine<std::string>(seed, var->__str__());
 
@@ -69,7 +69,7 @@ RCP<const Basic> MExprPoly::as_symbolic() const
 
 hash_t MExprPoly::__hash__() const
 {
-    hash_t seed = MEXPRPOLY;
+    hash_t seed = SYMENGINE_MEXPRPOLY;
     for (auto var : get_vars())
         hash_combine<std::string>(seed, var->__str__());
 

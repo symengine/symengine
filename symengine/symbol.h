@@ -18,7 +18,7 @@ private:
     std::string name_;
 
 public:
-    IMPLEMENT_TYPEID(SYMBOL)
+    IMPLEMENT_TYPEID(SYMENGINE_SYMBOL)
     //! Symbol Constructor
     explicit Symbol(const std::string &name);
     //! \return Size of the hash
@@ -56,7 +56,7 @@ private:
     size_t dummy_index;
 
 public:
-    IMPLEMENT_TYPEID(DUMMY)
+    IMPLEMENT_TYPEID(SYMENGINE_DUMMY)
     //! Dummy Constructors
     explicit Dummy();
     explicit Dummy(const std::string &name);

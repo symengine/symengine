@@ -19,7 +19,7 @@ private:
     rational_class i;
 
 public:
-    IMPLEMENT_TYPEID(RATIONAL)
+    IMPLEMENT_TYPEID(SYMENGINE_RATIONAL)
     //! Constructor of Rational class
     Rational(rational_class &&_i) : i(std::move(_i))
     {

@@ -56,7 +56,7 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(EMPTYSET)
+    IMPLEMENT_TYPEID(SYMENGINE_EMPTYSET)
     // EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const &) = delete;
     const static RCP<const EmptySet> &getInstance();
@@ -89,7 +89,7 @@ public:
     }
 
 public:
-    IMPLEMENT_TYPEID(UNIVERSALSET)
+    IMPLEMENT_TYPEID(SYMENGINE_UNIVERSALSET)
     // UniversalSet(UniversalSet const&) = delete;
     void operator=(UniversalSet const &) = delete;
     const static RCP<const UniversalSet> &getInstance();
@@ -119,7 +119,7 @@ private:
     set_basic container_;
 
 public:
-    IMPLEMENT_TYPEID(FINITESET)
+    IMPLEMENT_TYPEID(SYMENGINE_FINITESET)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -151,7 +151,7 @@ private:
     bool left_open_, right_open_;
 
 public:
-    IMPLEMENT_TYPEID(INTERVAL)
+    IMPLEMENT_TYPEID(SYMENGINE_INTERVAL)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -198,7 +198,7 @@ private:
     set_set container_;
 
 public:
-    IMPLEMENT_TYPEID(UNION)
+    IMPLEMENT_TYPEID(SYMENGINE_UNION)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -227,7 +227,7 @@ private:
     RCP<const Set> container_;
 
 public:
-    IMPLEMENT_TYPEID(COMPLEMENT)
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEMENT)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -259,7 +259,7 @@ private:
     RCP<const Boolean> condition_;
 
 public:
-    IMPLEMENT_TYPEID(CONDITIONSET)
+    IMPLEMENT_TYPEID(SYMENGINE_CONDITIONSET)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -294,7 +294,7 @@ private:
     RCP<const Set> base_; // base set for all symbols
 
 public:
-    IMPLEMENT_TYPEID(IMAGESET)
+    IMPLEMENT_TYPEID(SYMENGINE_IMAGESET)
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -333,11 +333,14 @@ public:
 
 inline bool is_a_Set(const Basic &b)
 {
-    return (b.get_type_code() == EMPTYSET || b.get_type_code() == UNIVERSALSET
-            || b.get_type_code() == FINITESET || b.get_type_code() == COMPLEMENT
-            || b.get_type_code() == CONDITIONSET
-            || b.get_type_code() == INTERVAL || b.get_type_code() == UNION
-            || b.get_type_code() == IMAGESET);
+    return (b.get_type_code() == SYMENGINE_EMPTYSET
+            || b.get_type_code() == SYMENGINE_UNIVERSALSET
+            || b.get_type_code() == SYMENGINE_FINITESET
+            || b.get_type_code() == SYMENGINE_COMPLEMENT
+            || b.get_type_code() == SYMENGINE_CONDITIONSET
+            || b.get_type_code() == SYMENGINE_INTERVAL
+            || b.get_type_code() == SYMENGINE_UNION
+            || b.get_type_code() == SYMENGINE_IMAGESET);
 }
 
 //! \return RCP<const EmptySet>

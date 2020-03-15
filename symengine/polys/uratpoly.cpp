@@ -12,11 +12,11 @@ URatPoly::URatPoly(const RCP<const Basic> &var, URatDict &&dict)
 
 hash_t URatPoly::__hash__() const
 {
-    hash_t seed = URATPOLY;
+    hash_t seed = SYMENGINE_URATPOLY;
 
     seed += get_var()->hash();
     for (const auto &it : get_poly().dict_) {
-        hash_t temp = URATPOLY;
+        hash_t temp = SYMENGINE_URATPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(get_num(it.second)));
         hash_combine<long long int>(temp, mp_get_si(get_den(it.second)));

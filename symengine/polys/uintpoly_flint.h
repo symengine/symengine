@@ -134,7 +134,7 @@ public:
 class UIntPolyFlint : public UFlintPoly<fzp_t, UIntPolyBase, UIntPolyFlint>
 {
 public:
-    IMPLEMENT_TYPEID(UINTPOLYFLINT)
+    IMPLEMENT_TYPEID(SYMENGINE_UINTPOLYFLINT)
     //! Constructor of UIntPolyFlint class
     UIntPolyFlint(const RCP<const Basic> &var, fzp_t &&dict);
     //! \return size of the hash
@@ -145,7 +145,7 @@ public:
 class URatPolyFlint : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
 {
 public:
-    IMPLEMENT_TYPEID(URATPOLYFLINT)
+    IMPLEMENT_TYPEID(SYMENGINE_URATPOLYFLINT)
     //! Constructor of URatPolyFlint class
     URatPolyFlint(const RCP<const Basic> &var, fqp_t &&dict);
     //! \return size of the hash

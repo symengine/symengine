@@ -61,7 +61,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 
 hash_t Pow::__hash__() const
 {
-    hash_t seed = POW;
+    hash_t seed = SYMENGINE_POW;
     hash_combine<Basic>(seed, *base_);
     hash_combine<Basic>(seed, *exp_);
     return seed;

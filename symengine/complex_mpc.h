@@ -85,7 +85,7 @@ private:
     mpc_class i;
 
 public:
-    IMPLEMENT_TYPEID(COMPLEX_MPC)
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_MPC)
     //! Constructor of ComplexMPC class
     ComplexMPC(mpc_class i);
     inline const mpc_class &as_mpc() const
@@ -398,7 +398,7 @@ namespace SymEngine
 class ComplexMPC : public ComplexBase
 {
 public:
-    IMPLEMENT_TYPEID(COMPLEX_MPC)
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_MPC)
 };
 }
 

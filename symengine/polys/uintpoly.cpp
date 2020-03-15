@@ -12,11 +12,11 @@ UIntPoly::UIntPoly(const RCP<const Basic> &var, UIntDict &&dict)
 
 hash_t UIntPoly::__hash__() const
 {
-    hash_t seed = UINTPOLY;
+    hash_t seed = SYMENGINE_UINTPOLY;
 
     seed += get_var()->hash();
     for (const auto &it : get_poly().dict_) {
-        hash_t temp = UINTPOLY;
+        hash_t temp = SYMENGINE_UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
