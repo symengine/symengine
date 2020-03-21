@@ -1360,12 +1360,27 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
         bool is_upper = true, is_lower = true;
-        for (unsigned i = 0; i < n; ++i) {
-            for (unsigned j = 0; j < n; ++j) {
-                if (i > j and not eq(*(A.m_[i * n + j]), *zero)) {
+        for (unsigned i = 1; i < n; ++i) {
+            for (unsigned j = 0; j < i; ++j) {
+                if (not eq(*(A.m_[i * n + j]), *zero)) {
                     is_lower = false;
-                } else if (i < j and not eq(*(A.m_[i * n + j]), *zero)) {
-                    is_upper = false;
+                    break;
+                }
+            }
+            if (not is_lower) {
+                break;
+            }
+        }
+        if (not is_lower) {
+            for (unsigned i = 0; i < n - 1; ++i) {
+                for (unsigned j = i + 1; j < n; ++j) {
+                    if (not eq(*(A.m_[i * n + j]), *zero)) {
+                        is_upper = false;
+                        break;
+                    }
+                }
+                if (not is_upper) {
+                    break;
                 }
             }
         }
@@ -1634,21 +1649,27 @@ RCP<const Set> eigen_values(const DenseMatrix &A)
 {
     unsigned n = A.nrows();
     bool is_upper = true, is_lower = true;
-    for (unsigned i = 0; i < n; ++i) {
-        for (unsigned j = 0; j < n; ++j) {
-            if (i > j and not eq(*(A.get(i, j)), *zero)) {
+    for (unsigned i = 1; i < n; ++i) {
+        for (unsigned j = 0; j < i; ++j) {
+            if (not eq(*(A.get(i, j)), *zero)) {
                 is_lower = false;
                 break;
             }
         }
+        if (not is_lower) {
+            break;
+        }
     }
     if (not is_lower) {
-        for (unsigned i = 0; i < n; ++i) {
-            for (unsigned j = 0; j < n; ++j) {
-                if (i < j and not eq(*(A.get(i, j)), *zero)) {
+        for (unsigned i = 0; i < n - 1; ++i) {
+            for (unsigned j = i + 1; j < n; ++j) {
+                if (not eq(*(A.get(i, j)), *zero)) {
                     is_upper = false;
                     break;
                 }
+            }
+            if (not is_upper) {
+                break;
             }
         }
     }
