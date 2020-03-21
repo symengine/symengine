@@ -1639,9 +1639,16 @@ RCP<const Set> eigen_values(const DenseMatrix &A)
             if (i > j and not eq(*(A.get(i, j)), *zero)) {
                 is_lower = false;
                 break;
-            } else if (i < j and not eq(*(A.get(i, j)), *zero)) {
-                is_upper = false;
-                break;
+            }
+        }
+    }
+    if (not is_lower) {
+        for (unsigned i = 0; i < n; ++i) {
+            for (unsigned j = 0; j < n; ++j) {
+                if (i < j and not eq(*(A.get(i, j)), *zero)) {
+                    is_upper = false;
+                    break;
+                }
             }
         }
     }
