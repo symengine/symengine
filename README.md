@@ -101,6 +101,8 @@ their default values indicated below:
     cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)s
+        -DWITH_COTIRE=ON \                            # Use Cotire for precompiled headers
+        -DWITH_CPP14=OFF \                            # Enable C++14 during compilation
         -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
         -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
