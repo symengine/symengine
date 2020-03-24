@@ -79,7 +79,7 @@ public:
 
     void bvisit(const Mul &x)
     {
-        RCP<const Number> coef = x.get_coef();
+        RCP<const Number> coef = one;
         map_basic_basic d;
         for (const auto &p : x.get_dict()) {
             RCP<const Basic> factor_old;
@@ -110,6 +110,13 @@ public:
                 Mul::dict_add_term_new(outArg(coef), d, exp, t);
             }
         }
+
+        // Replace the coefficient
+        RCP<const Basic> factor = apply(x.get_coef());
+        RCP<const Basic> exp, t;
+        Mul::as_base_exp(factor, outArg(exp), outArg(t));
+        Mul::dict_add_term_new(outArg(coef), d, exp, t);
+
         result_ = Mul::from_dict(coef, std::move(d));
     }
 
