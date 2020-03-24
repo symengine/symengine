@@ -465,7 +465,7 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(MINTPOLY)
+    IMPLEMENT_TYPEID(SYMENGINE_MINTPOLY)
 
     hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;
@@ -483,7 +483,7 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(MEXPRPOLY)
+    IMPLEMENT_TYPEID(SYMENGINE_MEXPRPOLY)
 
     hash_t __hash__() const;
     RCP<const Basic> as_symbolic() const;

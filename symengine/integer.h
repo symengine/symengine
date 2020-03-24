@@ -22,7 +22,7 @@ private:
     integer_class i;
 
 public:
-    IMPLEMENT_TYPEID(INTEGER)
+    IMPLEMENT_TYPEID(SYMENGINE_INTEGER)
     //! Constructor of Integer using `integer_class`
     // explicit Integer(integer_class i);
     Integer(const integer_class &_i) : i(_i)

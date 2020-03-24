@@ -18,7 +18,7 @@ public:
     std::complex<double> i;
 
 public:
-    IMPLEMENT_TYPEID(COMPLEX_DOUBLE)
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_DOUBLE)
     //! Constructor of ComplexDouble class
     explicit ComplexDouble(std::complex<double> i);
     //! \return size of the hash

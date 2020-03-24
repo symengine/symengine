@@ -125,7 +125,7 @@ public:
 class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
 {
 public:
-    IMPLEMENT_TYPEID(UINTPOLY)
+    IMPLEMENT_TYPEID(SYMENGINE_UINTPOLY)
     //! Constructor of UIntPoly class
     UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 

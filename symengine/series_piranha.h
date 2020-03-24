@@ -19,7 +19,7 @@ class URatPSeriesPiranha
 public:
     URatPSeriesPiranha(const pp_t p, const std::string varname,
                        const unsigned degree);
-    IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
+    IMPLEMENT_TYPEID(SYMENGINE_URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;
@@ -52,7 +52,7 @@ class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
 public:
     UPSeriesPiranha(const p_expr p, const std::string varname,
                     const unsigned degree);
-    IMPLEMENT_TYPEID(UPSERIESPIRANHA)
+    IMPLEMENT_TYPEID(SYMENGINE_UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual hash_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;

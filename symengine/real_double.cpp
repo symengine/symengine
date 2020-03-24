@@ -17,7 +17,7 @@ RealDouble::RealDouble(double i)
 
 hash_t RealDouble::__hash__() const
 {
-    hash_t seed = REAL_DOUBLE;
+    hash_t seed = SYMENGINE_REAL_DOUBLE;
     hash_combine<double>(seed, i);
     return seed;
 }

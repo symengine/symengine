@@ -48,7 +48,7 @@ public:
 class URatPoly : public USymEnginePoly<URatDict, URatPolyBase, URatPoly>
 {
 public:
-    IMPLEMENT_TYPEID(URATPOLY)
+    IMPLEMENT_TYPEID(SYMENGINE_URATPOLY)
     //! Constructor of URatPoly class
     URatPoly(const RCP<const Basic> &var, URatDict &&dict);
 

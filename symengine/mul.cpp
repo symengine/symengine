@@ -77,7 +77,7 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
 
 hash_t Mul::__hash__() const
 {
-    hash_t seed = MUL;
+    hash_t seed = SYMENGINE_MUL;
     hash_combine<Basic>(seed, *coef_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *(p.first));

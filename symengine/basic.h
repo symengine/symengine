@@ -306,9 +306,9 @@ struct hash<SymEngine::Basic>;
 
 // Macro to define the type_code_id variable and its getter method
 #ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
-#define IMPLEMENT_TYPEID(ID)                                                   \
+#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \
     /*! Type_code_id shared by all instances */                                \
-    const static TypeID type_code_id = ID;                                     \
+    const static TypeID type_code_id = SYMENGINE_ID;                           \
     /*! Virtual function that gives the type_code_id of the object */          \
     virtual TypeID get_type_code() const                                       \
     {                                                                          \
@@ -316,9 +316,9 @@ struct hash<SymEngine::Basic>;
     };                                                                         \
     SYMENGINE_INCLUDE_METHODS(;)
 #else
-#define IMPLEMENT_TYPEID(ID)                                                   \
+#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \
     /*! Type_code_id shared by all instances */                                \
-    const static TypeID type_code_id = ID;                                     \
+    const static TypeID type_code_id = SYMENGINE_ID;                           \
     SYMENGINE_INCLUDE_METHODS(;)
 #endif
 

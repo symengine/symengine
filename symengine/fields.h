@@ -551,7 +551,7 @@ public:
 class GaloisField : public UIntPolyBase<GaloisFieldDict, GaloisField>
 {
 public:
-    IMPLEMENT_TYPEID(GALOISFIELD)
+    IMPLEMENT_TYPEID(SYMENGINE_GALOISFIELD)
 
     //! Constructor of GaloisField class
     GaloisField(const RCP<const Basic> &var, GaloisFieldDict &&dict);

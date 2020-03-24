@@ -30,7 +30,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
 
 hash_t Interval::__hash__() const
 {
-    hash_t seed = INTERVAL;
+    hash_t seed = SYMENGINE_INTERVAL;
     hash_combine<Basic>(seed, *start_);
     hash_combine<Basic>(seed, *end_);
     hash_combine<bool>(seed, left_open_);
@@ -250,7 +250,7 @@ RCP<const Set> EmptySet::set_complement(const RCP<const Set> &o) const
 
 hash_t EmptySet::__hash__() const
 {
-    hash_t seed = EMPTYSET;
+    hash_t seed = SYMENGINE_EMPTYSET;
     return seed;
 }
 
@@ -290,7 +290,7 @@ RCP<const Set> UniversalSet::set_complement(const RCP<const Set> &o) const
 
 hash_t UniversalSet::__hash__() const
 {
-    hash_t seed = UNIVERSALSET;
+    hash_t seed = SYMENGINE_UNIVERSALSET;
     return seed;
 }
 
@@ -326,7 +326,7 @@ bool FiniteSet::is_canonical(const set_basic &container)
 
 hash_t FiniteSet::__hash__() const
 {
-    hash_t seed = FINITESET;
+    hash_t seed = SYMENGINE_FINITESET;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -522,7 +522,7 @@ Union::Union(const set_set &in) : container_(in)
 
 hash_t Union::__hash__() const
 {
-    hash_t seed = UNION;
+    hash_t seed = SYMENGINE_UNION;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -628,7 +628,7 @@ Complement::Complement(const RCP<const Set> &universe,
 
 hash_t Complement::__hash__() const
 {
-    hash_t seed = COMPLEMENT;
+    hash_t seed = SYMENGINE_COMPLEMENT;
     hash_combine<Basic>(seed, *universe_);
     hash_combine<Basic>(seed, *container_);
     return seed;
@@ -704,7 +704,7 @@ bool ConditionSet::is_canonical(const RCP<const Basic> &sym,
 
 hash_t ConditionSet::__hash__() const
 {
-    hash_t seed = CONDITIONSET;
+    hash_t seed = SYMENGINE_CONDITIONSET;
     hash_combine<Basic>(seed, *sym);
     hash_combine<Basic>(seed, *condition_);
     return seed;
@@ -771,7 +771,7 @@ ImageSet::ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
 
 hash_t ImageSet::__hash__() const
 {
-    hash_t seed = IMAGESET;
+    hash_t seed = SYMENGINE_IMAGESET;
     hash_combine<Basic>(seed, *sym_);
     hash_combine<Basic>(seed, *expr_);
     hash_combine<Basic>(seed, *base_);

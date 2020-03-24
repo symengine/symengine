@@ -404,29 +404,29 @@ std::vector<std::string> init_latex_printer_names()
             names[i] = "\\operatorname{" + names[i] + "}";
         }
     }
-    names[SIN] = "\\sin";
-    names[COS] = "\\cos";
-    names[TAN] = "\\tan";
-    names[COT] = "\\cot";
-    names[CSC] = "\\csc";
-    names[SEC] = "\\sec";
-    names[ATAN2] = "\\operatorname{atan_2}";
-    names[SINH] = "\\sinh";
-    names[COSH] = "\\cosh";
-    names[TANH] = "\\tanh";
-    names[COTH] = "\\coth";
-    names[LOG] = "\\log";
-    names[ZETA] = "\\zeta";
-    names[LAMBERTW] = "\\operatorname{W}";
-    names[DIRICHLET_ETA] = "\\eta";
-    names[KRONECKERDELTA] = "\\delta_";
-    names[LEVICIVITA] = "\\varepsilon_";
-    names[LOWERGAMMA] = "\\gamma";
-    names[UPPERGAMMA] = "\\Gamma";
-    names[BETA] = "\\operatorname{B}";
-    names[LOG] = "\\log";
-    names[GAMMA] = "\\Gamma";
-    names[TRUNCATE] = "\\operatorname{truncate}";
+    names[SYMENGINE_SIN] = "\\sin";
+    names[SYMENGINE_COS] = "\\cos";
+    names[SYMENGINE_TAN] = "\\tan";
+    names[SYMENGINE_COT] = "\\cot";
+    names[SYMENGINE_CSC] = "\\csc";
+    names[SYMENGINE_SEC] = "\\sec";
+    names[SYMENGINE_ATAN2] = "\\operatorname{atan_2}";
+    names[SYMENGINE_SINH] = "\\sinh";
+    names[SYMENGINE_COSH] = "\\cosh";
+    names[SYMENGINE_TANH] = "\\tanh";
+    names[SYMENGINE_COTH] = "\\coth";
+    names[SYMENGINE_LOG] = "\\log";
+    names[SYMENGINE_ZETA] = "\\zeta";
+    names[SYMENGINE_LAMBERTW] = "\\operatorname{W}";
+    names[SYMENGINE_DIRICHLET_ETA] = "\\eta";
+    names[SYMENGINE_KRONECKERDELTA] = "\\delta_";
+    names[SYMENGINE_LEVICIVITA] = "\\varepsilon_";
+    names[SYMENGINE_LOWERGAMMA] = "\\gamma";
+    names[SYMENGINE_UPPERGAMMA] = "\\Gamma";
+    names[SYMENGINE_BETA] = "\\operatorname{B}";
+    names[SYMENGINE_LOG] = "\\log";
+    names[SYMENGINE_GAMMA] = "\\Gamma";
+    names[SYMENGINE_TRUNCATE] = "\\operatorname{truncate}";
     return names;
 }
 

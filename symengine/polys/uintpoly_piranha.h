@@ -273,7 +273,7 @@ class UIntPolyPiranha
     : public UPiranhaPoly<pintpoly, UIntPolyBase, UIntPolyPiranha>
 {
 public:
-    IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
+    IMPLEMENT_TYPEID(SYMENGINE_UINTPOLYPIRANHA)
     //! Constructor of UIntPolyPiranha class
     UIntPolyPiranha(const RCP<const Basic> &var, pintpoly &&dict);
     //! \return size of the hash
@@ -285,7 +285,7 @@ class URatPolyPiranha
     : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
 {
 public:
-    IMPLEMENT_TYPEID(URATPOLYPIRANHA)
+    IMPLEMENT_TYPEID(SYMENGINE_URATPOLYPIRANHA)
     //! Constructor of UIntPolyPiranha class
     URatPolyPiranha(const RCP<const Basic> &var, pratpoly &&dict);
     //! \return size of the hash

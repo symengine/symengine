@@ -19,7 +19,7 @@ namespace SymEngine
 class NaN : public Number
 {
 public:
-    IMPLEMENT_TYPEID(NOT_A_NUMBER)
+    IMPLEMENT_TYPEID(SYMENGINE_NOT_A_NUMBER)
     //! Constructs NaN
     NaN();
 

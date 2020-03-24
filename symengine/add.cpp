@@ -52,7 +52,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
 
 hash_t Add::__hash__() const
 {
-    hash_t seed = ADD, temp;
+    hash_t seed = SYMENGINE_ADD, temp;
     hash_combine<Basic>(seed, *coef_);
     for (const auto &p : dict_) {
         temp = p.first->hash();

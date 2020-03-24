@@ -215,7 +215,7 @@ TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class) {xstr(Class), SYMENGINE_##type},
+#define SYMENGINE_ENUM(type, Class) {xstr(Class), type},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -228,7 +228,7 @@ char *basic_get_class_from_id(TypeID id)
 {
     static std::map<TypeID, std::string> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class) {SYMENGINE_##type, xstr(Class)},
+#define SYMENGINE_ENUM(type, Class) {type, xstr(Class)},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL

@@ -32,7 +32,7 @@ RCP<const Basic> ComplexDouble::conjugate() const
 }
 hash_t ComplexDouble::__hash__() const
 {
-    hash_t seed = COMPLEX_DOUBLE;
+    hash_t seed = SYMENGINE_COMPLEX_DOUBLE;
     hash_combine<double>(seed, i.real());
     hash_combine<double>(seed, i.imag());
     return seed;

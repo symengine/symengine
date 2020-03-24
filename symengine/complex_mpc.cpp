@@ -18,7 +18,7 @@ ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
 
 hash_t ComplexMPC::__hash__() const
 {
-    hash_t seed = COMPLEX_MPC;
+    hash_t seed = SYMENGINE_COMPLEX_MPC;
     hash_combine_impl(seed, mpc_realref(i.get_mpc_t()));
     hash_combine_impl(seed, mpc_imagref(i.get_mpc_t()));
     return seed;
