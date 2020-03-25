@@ -248,7 +248,7 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Set> &domain)
 {
 
-#if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
+#if defined(HAVE_SYMENGINE_FLINT) && __FLINT_RELEASE > 20502
     try {
         auto poly = from_basic<UIntPolyFlint>(f, sym);
         auto fac = factors(*poly);
