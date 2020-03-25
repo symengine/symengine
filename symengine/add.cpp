@@ -112,7 +112,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_SYMENGINE_THREAD_SAFE) and defined(WITH_SYMENGINE_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (down_cast<const Mul &>(*(p->first)).use_count() == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -146,7 +146,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_SYMENGINE_THREAD_SAFE) and defined(WITH_SYMENGINE_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (down_cast<const Mul &>(*(p->first)).use_count() == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since

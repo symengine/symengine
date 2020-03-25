@@ -45,7 +45,8 @@ class BaseVisitor : public Base
 {
 
 public:
-#if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8
+#if (defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 8                  \
+     || defined(__SUNPRO_CC))
     // Following two ctors can be replaced by `using Base::Base` if inheriting
     // constructors are allowed by the compiler. GCC 4.8 is the earliest
     // version supporting this.

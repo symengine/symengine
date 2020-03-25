@@ -248,7 +248,7 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Set> &domain)
 {
 
-#if defined(HAVE_SYMENGINE_FLINT) and __FLINT_RELEASE > 20502
+#if defined(HAVE_SYMENGINE_FLINT) && __FLINT_RELEASE > 20502
     try {
         auto poly = from_basic<UIntPolyFlint>(f, sym);
         auto fac = factors(*poly);
@@ -270,7 +270,8 @@ RCP<const Set> solve_poly(const RCP<const Basic> &f,
         // Try next
     }
 #endif
-    auto uexp = from_basic<UExprPoly>(f, sym);
+    RCP<const Basic> gen = rcp_static_cast<const Basic>(sym);
+    auto uexp = from_basic<UExprPoly>(f, gen);
     auto degree = uexp->get_degree();
     if (degree <= 4) {
         return solve_poly_heuristics(extract_coeffs(uexp), domain);

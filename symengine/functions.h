@@ -188,7 +188,7 @@ public:
 class Sign : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_SIGN);
+    IMPLEMENT_TYPEID(SYMENGINE_SIGN)
     //! Sign constructor
     Sign(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -248,7 +248,7 @@ RCP<const Basic> truncate(const RCP<const Basic> &arg);
 class Conjugate : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_CONJUGATE);
+    IMPLEMENT_TYPEID(SYMENGINE_CONJUGATE)
     //! Conjugate constructor
     Conjugate(const RCP<const Basic> &arg);
     //! \return `true` if canonical
