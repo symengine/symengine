@@ -191,7 +191,7 @@ class Equality : public Relational
 {
     //! Class for operator `==`.
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_EQUALITY);
+    IMPLEMENT_TYPEID(SYMENGINE_EQUALITY)
     Equality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -202,7 +202,7 @@ class Unequality : public Relational
 {
     //! Class for operator `!=`.
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_UNEQUALITY);
+    IMPLEMENT_TYPEID(SYMENGINE_UNEQUALITY)
     Unequality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -213,7 +213,7 @@ class LessThan : public Relational
 {
     //! Class for operator `<=`.
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_LESSTHAN);
+    IMPLEMENT_TYPEID(SYMENGINE_LESSTHAN)
     LessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -224,7 +224,7 @@ class StrictLessThan : public Relational
 {
     //! Class for operator `<`.
 public:
-    IMPLEMENT_TYPEID(SYMENGINE_STRICTLESSTHAN);
+    IMPLEMENT_TYPEID(SYMENGINE_STRICTLESSTHAN)
     StrictLessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
