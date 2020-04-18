@@ -678,9 +678,9 @@ std::vector<fn> init_eval_double()
     };
     table[SYMENGINE_CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {
-            return ::atan2(0, -1);
+            return std::atan2(0, -1);
         } else if (eq(x, *E)) {
-            return ::exp(1);
+            return std::exp(1);
         } else if (eq(x, *EulerGamma)) {
             return 0.5772156649015328606065; // use until polygamma or digamma
                                              // is implemented
