@@ -1,7 +1,7 @@
 project(matchpycpp_tests)
 include_directories(BEFORE ${catch_SOURCE_DIR})
 
-if (MSVC AND "${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}" STREQUAL "MSVC")
+if (MSVC AND NOT "${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}" STREQUAL "GNU")
   # Suppress a warning about a mangled name being too long for debugging info
   add_definitions("/wd4503")
 endif()
