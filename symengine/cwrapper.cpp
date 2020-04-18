@@ -1344,7 +1344,7 @@ CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
 
 size_t basic_hash(const basic self)
 {
-    return self->m->hash();
+    return static_cast<size_t>(self->m->hash());
 }
 
 CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e,
