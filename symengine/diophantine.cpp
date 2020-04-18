@@ -52,7 +52,6 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 {
     unsigned p = A.nrows();
     unsigned q = A.ncols();
-    long n;
 
     SYMENGINE_ASSERT(p > 0 and q > 1);
 
@@ -79,7 +78,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
     transpose = DenseMatrix(q, 1);
 
     while (P.size() > 0) {
-        n = P.size() - 1;
+        auto n = P.size() - 1;
         t = P[n];
         P.pop_back();
 

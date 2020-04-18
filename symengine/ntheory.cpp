@@ -1720,7 +1720,7 @@ int mobius(const Integer &a)
     map_integer_uint prime_mul;
     bool is_square_free = true;
     prime_factor_multiplicities(prime_mul, a);
-    unsigned long num_prime_factors = prime_mul.size();
+    auto num_prime_factors = prime_mul.size();
     for (const auto &it : prime_mul) {
         int p_freq = it.second;
         if (p_freq > 1) {

@@ -163,7 +163,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.get_coef();
-        long unsigned size = s.get_dict().size();
+        auto size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
