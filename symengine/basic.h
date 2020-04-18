@@ -193,7 +193,7 @@ struct RCPBasicHash {
     //! Returns the hashed value.
     size_t operator()(const RCP<const Basic> &k) const
     {
-        return k->hash();
+        return static_cast<size_t>(k->hash());
     }
 };
 
