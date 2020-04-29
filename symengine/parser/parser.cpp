@@ -103,6 +103,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"log", double_casted_log},    {"zeta", double_casted_zeta},
             {"lowergamma", lowergamma},    {"uppergamma", uppergamma},
             {"polygamma", polygamma},      {"kronecker_delta", kronecker_delta},
+            {"atan2", atan2},
         };
 
     const static std::map<const std::string,
