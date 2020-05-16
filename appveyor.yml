@@ -53,7 +53,6 @@ environment:
 install:
 - if [%COMPILER%]==[MSVC15] call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
 - if [%COMPILER%]==[MSVC15] conda update --yes --quiet conda
-- if [%COMPILER%]==[MSVC15] conda config --set channel_priority strict
 - if [%COMPILER%]==[MSVC15] conda config --add channels conda-forge
 - if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] conda config --add channels symengine/label/debug
 - if [%COMPILER%]==[MSVC15] set "conda_pkgs=mpir=3.0.0"
