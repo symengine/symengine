@@ -61,7 +61,7 @@ install:
 - if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] set "conda_pkgs=%conda_pkgs% llvmdev=3.9"
 - if [%COMPILER%]==[MSVC15] conda create --yes -n myenv %conda_pkgs%
 - if [%COMPILER%]==[MSVC15] conda activate myenv
-- if [%COMPILER%]==[MSVC15] echo CONDA_PREFIX "%CONDA_PREFIX%"
+- if [%COMPILER%]==[MSVC15] set "CONDA_PREFIX=%CONDA_INSTALL_LOCN%\\envs\\myenv"
 - if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] rm %CONDA_PREFIX%\Library\lib\gmp.lib
 - if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] move %CONDA_PREFIX%\Library\lib\gmp_static.lib %CONDA_PREFIX%\Library\lib\gmp.lib
 
