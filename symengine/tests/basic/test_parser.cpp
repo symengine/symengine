@@ -342,6 +342,10 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
 
+    s = "atan2(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *atan2(x, y)));
+
     s = "Eq(x)";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, integer(0))));
