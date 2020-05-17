@@ -13,7 +13,7 @@ environment:
       COMPILER: MSVC15
       PLATFORM: x64
       LIB_TYPE: dll
-      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
       WITH_MPFR: yes
       WITH_MPC: yes
       WITH_LLVM: yes
@@ -23,7 +23,7 @@ environment:
     - BUILD_TYPE: Release
       COMPILER: MSVC15
       PLATFORM: Win32
-      CONDA_INSTALL_LOCN: C:\\Miniconda35
+      CONDA_INSTALL_LOCN: C:\\Miniconda37
       LIB_TYPE: dll
       WITH_MPFR: yes
       WITH_MPC: yes
@@ -34,7 +34,7 @@ environment:
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: Win32
-      CONDA_INSTALL_LOCN: C:\\Miniconda35
+      CONDA_INSTALL_LOCN: C:\\Miniconda37
       LIB_TYPE: lib
     - BUILD_TYPE: Debug
       COMPILER: MinGW
@@ -45,7 +45,7 @@ environment:
       COMPILER: MSVC15
       PLATFORM: x64
       LIB_TYPE: lib
-      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
     - BUILD_TYPE: Debug
       COMPILER: MinGW-w64
       PLATFORM: x64
@@ -55,12 +55,16 @@ install:
 - if [%COMPILER%]==[MSVC15] conda update --yes --quiet conda
 - if [%COMPILER%]==[MSVC15] conda config --add channels conda-forge
 - if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] conda config --add channels symengine/label/debug
-- if [%COMPILER%]==[MSVC15] conda install --yes mpir=3.0.0
-- if [%COMPILER%]==[MSVC15] if [%WITH_MPFR%]==[yes] conda install --yes mpfr=3.1.5
-- if [%COMPILER%]==[MSVC15] if [%WITH_MPC%]==[yes] conda install --yes mpc=1.0.3
-- if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] conda install --yes llvmdev=3.9
-- if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] rm %CONDA_INSTALL_LOCN%\Library\lib\gmp.lib
-- if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] move %CONDA_INSTALL_LOCN%\Library\lib\gmp_static.lib %CONDA_INSTALL_LOCN%\Library\lib\gmp.lib
+- if [%COMPILER%]==[MSVC15] set "conda_pkgs=conda-forge::mpir=3.0.0"
+- if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] conda config --add channels symengine/label/debug
+- if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] set "conda_pkgs=symengine/label/debug::mpir=3.0.0"
+- if [%COMPILER%]==[MSVC15] if [%WITH_MPFR%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::mpfr=3.1.5"
+- if [%COMPILER%]==[MSVC15] if [%WITH_MPC%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::mpc=1.0.3"
+- if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::llvmdev=3.9"
+- if [%COMPILER%]==[MSVC15] conda create --yes -n myenv %conda_pkgs%
+- if [%COMPILER%]==[MSVC15] call activate myenv
+- if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] rm %CONDA_PREFIX%\Library\lib\gmp.lib
+- if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] move %CONDA_PREFIX%\Library\lib\gmp_static.lib %CONDA_PREFIX%\Library\lib\gmp.lib
 
 - if [%COMPILER%]==[MinGW] set PATH=C:\MinGW\bin;%PATH%
 - if [%COMPILER%]==[MinGW] mingw-get update
