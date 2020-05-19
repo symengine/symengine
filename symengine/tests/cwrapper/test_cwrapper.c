@@ -973,9 +973,11 @@ void test_solve_poly()
     error_code = basic_solve_poly(r2, a, x);
 
     printf("setbasic_size(r2) is %d :\n", setbasic_size(r2));
+    basic tmp;
     basic_new_stack(tmp);
     char *s;
-    for (int i=0; i < setbasic_size(r2); i++) {
+    int i;
+    for (i=0; i < setbasic_size(r2); i++) {
         setbasic_get(r2, i, tmp);
         s = basic_str(tmp);
         printf("- %s\n", s);
