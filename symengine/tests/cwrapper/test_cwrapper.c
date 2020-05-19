@@ -971,6 +971,7 @@ void test_solve_poly()
 
     CSetBasic *r2 = setbasic_new();
     error_code = basic_solve_poly(r2, a, x);
+    printf("setbasic_size(r2) = %d\n", setbasic_size(r2));
     SYMENGINE_C_ASSERT(setbasic_size(r2) == 0);
     SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
 
