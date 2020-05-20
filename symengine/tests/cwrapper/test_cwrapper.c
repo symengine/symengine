@@ -959,11 +959,11 @@ void test_solve_poly()
     basic_pow(a, x, i2);
     basic_add(a, a, m1);
 
-    CSetBasic *r1 = setbasic_new();
-    basic_solve_poly(r1, a, x);
-    SYMENGINE_C_ASSERT(setbasic_size(r1) == 2);
+    CSetBasic *r = setbasic_new();
+    basic_solve_poly(r, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r) == 2);
 
-    setbasic_free(r1);
+    setbasic_free(r);
 
     // a = exp(x) - 1
     basic_exp(a, x);
