@@ -1412,7 +1412,9 @@ CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
     SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
     RCP<const Set> set
         = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
-    SYMENGINE_ASSERT(is_a<FiniteSet>(*set));
+    if (not is_a<FiniteSet>(*set)) {
+        return SYMENGINE_RUNTIME_ERROR;
+    }
     r->m = down_cast<const FiniteSet &>(*set).get_container();
     CWRAPPER_END
 }

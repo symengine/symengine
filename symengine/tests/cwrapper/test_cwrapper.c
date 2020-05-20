@@ -938,7 +938,8 @@ void test_linsolve()
 void test_solve_poly()
 {
     basic x, a;
-    basic m1, i2;
+    basic m1, i2, i5;
+    CWRAPPER_OUTPUT_TYPE error_code;
 
     basic_new_stack(x);
     basic_new_stack(a);
@@ -948,11 +949,13 @@ void test_solve_poly()
 
     basic_new_stack(m1);
     basic_new_stack(i2);
+    basic_new_stack(i5);
 
     basic_const_minus_one(m1);
     integer_set_si(i2, 2);
+    integer_set_si(i5, 5);
 
-    // x^2 - 1
+    // a = x^2 - 1
     basic_pow(a, x, i2);
     basic_add(a, a, m1);
 
@@ -962,10 +965,22 @@ void test_solve_poly()
 
     setbasic_free(r);
 
+    // a = exp(x) - 1
+    basic_exp(a, x);
+    basic_add(a, a, m1);
+
+    CSetBasic *r3 = setbasic_new();
+    error_code = basic_solve_poly(r3, a, x);
+    SYMENGINE_C_ASSERT(setbasic_size(r3) == 0);
+    SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
+
+    setbasic_free(r3);
+
     basic_free_stack(m1);
     basic_free_stack(a);
     basic_free_stack(x);
     basic_free_stack(i2);
+    basic_free_stack(i5);
 }
 
 void test_constants()

@@ -105,9 +105,8 @@ public:
                 coef = mul(coef, pow(genbase, it));
             }
             dict_set(powr, *coef);
-
         } else {
-            dict_set(0, x);
+            this->bvisit((const Basic &)x);
         }
     }
 
@@ -173,7 +172,6 @@ public:
             genpow = down_cast<const Pow &>(*gen).get_exp();
             genbase = down_cast<const Pow &>(*gen).get_base();
         }
-
         if (eq(*genbase, x)) {
             powr = div(one, genpow);
             if (is_a<const Integer>(*powr)) {
@@ -186,7 +184,11 @@ public:
                 }
             }
         }
-
+        if (is_a<const Symbol>(*gen)) {
+            if (has_symbol(x, *gen)) {
+                throw SymEngineException("Not a Polynomial");
+            }
+        }
         dict_set(0, x);
     }
 };
