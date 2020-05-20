@@ -965,31 +965,6 @@ void test_solve_poly()
 
     setbasic_free(r1);
 
-    // a = x^5 - 1
-    basic_pow(a, x, i5);
-    basic_add(a, a, m1);
-
-    CSetBasic *r2 = setbasic_new();
-    error_code = basic_solve_poly(r2, a, x);
-
-    printf("setbasic_size(r2) is %d :\n", setbasic_size(r2));
-    basic tmp;
-    basic_new_stack(tmp);
-    char *s;
-    int i;
-    for (i=0; i < setbasic_size(r2); i++) {
-        setbasic_get(r2, i, tmp);
-        s = basic_str(tmp);
-        printf("- %s\n", s);
-        basic_str_free(s);
-    }
-    basic_free_stack(tmp);
-
-    SYMENGINE_C_ASSERT(setbasic_size(r2) == 0);
-    SYMENGINE_C_ASSERT(error_code == SYMENGINE_RUNTIME_ERROR);
-
-    setbasic_free(r2);
-
     // a = exp(x) - 1
     basic_exp(a, x);
     basic_add(a, a, m1);
