@@ -263,6 +263,7 @@ install(TARGETS symengine
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 install(FILES
     "${symengine_BINARY_DIR}/symengine/symengine_config.h"
