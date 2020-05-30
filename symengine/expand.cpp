@@ -190,7 +190,7 @@ public:
 
     void square_expand(umap_basic_num &base_dict)
     {
-        long m = base_dict.size();
+        auto m = base_dict.size();
 #if defined(HAVE_SYMENGINE_RESERVE)
         d_.reserve(d_.size() + m * (m + 1) / 2);
 #endif

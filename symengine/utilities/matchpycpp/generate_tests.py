@@ -125,6 +125,11 @@ def generate_tests():
     fout.write("""\
 project(matchpycpp_tests)
 include_directories(BEFORE ${catch_SOURCE_DIR})
+
+if (MSVC AND NOT "${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}" STREQUAL "GNU")
+  # Suppress a warning about a mangled name being too long for debugging info
+  add_definitions("/wd4503")
+endif()
 """)
     for i, (pattern_list, test_cases) in enumerate(collection_of_expressions):
         matcher = generate_matchpy_matcher(pattern_list)
