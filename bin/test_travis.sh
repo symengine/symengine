@@ -40,7 +40,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               cmake --build . --target install
             )
             if [ ! -e /opt/libcxx7_msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
-	    export MSAN_OPTIONS=abort_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+	    export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
             export CXXFLAGS="$CXXFLAGS -stdlib=libc++ -I/opt/libcxx7_msan/include -I/opt/libcxx7_msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
             export LDFLAGS="-fsanitize=memory $LDFLAGS -Wl,-rpath,/opt/libcxx7_msan/lib -L/opt/libcxx7_msan/lib -lc++abi"
             #export CMAKE_CXX_FLAGS_DEBUG="$CXXFLAGS"
