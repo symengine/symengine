@@ -164,11 +164,7 @@ fi
 
 echo "=== Running tests in build directory:"
 # C++
-if [[ "${WITH_SANITIZE}" == "memory" ]]; then
-    ctest --output-on-failure --exclude-regex "(test_bipartite)|(test_hopcroft_karp)"  # TODO: debug the reason for failure
-else
-    ctest --output-on-failure
-fi
+ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"

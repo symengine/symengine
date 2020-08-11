@@ -167,3 +167,4 @@ symengine/symengine_config_cling.h
 
 # IDE related
 /.idea
+.*cache/
