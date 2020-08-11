@@ -8,7 +8,6 @@ using namespace std;
 TEST_CASE("Hopcroft Karp algorithm",
           "Testing the implementation of the Hopcroft Karp algorithm.")
 {
-    SECTION("Test 1")
     {
         map<int, set<string>> graph = {{0, {"v0", "v1"}},
                                        {1, {"v0", "v4"}},
@@ -22,7 +21,6 @@ TEST_CASE("Hopcroft Karp algorithm",
         REQUIRE(hk.pair_left == expected);
         REQUIRE(matchings == 5);
     }
-    SECTION("Test 2")
     {
         map<char, set<int>> graph
             = {{'A', {1, 2}}, {'B', {2, 3}}, {'C', {2}}, {'D', {3, 4, 5, 6}},
@@ -34,7 +32,6 @@ TEST_CASE("Hopcroft Karp algorithm",
         REQUIRE(hk.pair_left == expected);
         REQUIRE(matchings == 6);
     }
-    SECTION("Test 3")
     {
         map<int, set<char>> graph
             = {{1, {'a', 'c'}}, {2, {'a', 'c'}}, {3, {'c', 'b'}}, {4, {'e'}}};
@@ -44,7 +41,6 @@ TEST_CASE("Hopcroft Karp algorithm",
         REQUIRE(hk.pair_left == expected);
         REQUIRE(matchings == 4);
     }
-    SECTION("Test 4")
     {
         map<char, set<int>> graph
             = {{'A', {3, 4}},    {'B', {3, 4}}, {'C', {3}}, {'D', {1, 5, 7}},
