@@ -218,7 +218,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     // Create a basic block builder with default parameters.  The builder
     // will
     // automatically append instructions to the basic block `BB'.
-    llvm::IRBuilder<> _builder = llvm::IRBuilder<>(BB);
+    llvm::IRBuilder<> _builder(BB);
     builder = reinterpret_cast<IRBuilder *>(&_builder);
     builder->SetInsertPoint(BB);
     auto fmf = llvm::FastMathFlags();
