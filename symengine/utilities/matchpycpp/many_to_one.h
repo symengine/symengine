@@ -120,7 +120,7 @@ public:
             pattern_ids.insert(subject_pattern_ids.begin(),
                                subject_pattern_ids.end());
         }
-        for (const pair<set<int>, tuple<int, multiset<int>, PatternSet>> &p :
+        for (const pair<const set<int>, tuple<int, multiset<int>, PatternSet>> &p :
              patterns) {
             int pattern_index = get<0>(p.second);
             multiset<int> pattern_set = get<1>(p.second);
@@ -209,7 +209,7 @@ public:
             };
              */
             vector<TEdgeValue> iterobjs;
-            for (const pair<tuple<int, int>, tuple<int, int>> &p3 : matching) {
+            for (const pair<const tuple<int, int>, tuple<int, int>> &p3 : matching) {
                 iterobjs.push_back(
                     bipartite.__getitem__(make_tuple(p3.first, p3.second)));
             }
@@ -219,7 +219,7 @@ public:
                     = substitution_union(substitution, substs);
 
                 multiset<int> matched_subjects;
-                for (const pair<tuple<int, int>, tuple<int, int>> &p3 :
+                for (const pair<const tuple<int, int>, tuple<int, int>> &p3 :
                      matching) {
                     int elem = get<0>(p3.first);
                     matched_subjects.insert(elem);
@@ -272,13 +272,13 @@ public:
 
     bool _is_canonical_matching(const Matching &matching)
     {
-        for (const pair<tuple<int, int>, tuple<int, int>> &pair1 : matching) {
+        for (const pair<const tuple<int, int>, tuple<int, int>> &pair1 : matching) {
             //.items():
             int s1 = get<0>(pair1.first);
             int n1 = get<1>(pair1.first);
             int p1 = get<0>(pair1.second);
             int m1 = get<1>(pair1.second);
-            for (const pair<tuple<int, int>, tuple<int, int>> &pair2 :
+            for (const pair<const tuple<int, int>, tuple<int, int>> &pair2 :
                  matching) {
                 int s2 = get<0>(pair2.first);
                 int n2 = get<1>(pair2.first);
@@ -306,7 +306,7 @@ public:
         int n = 0;
         int m = 0;
         map<int, int> p_states;
-        for (const pair<int, int> &p : count_multiset(subjects)) {
+        for (const pair<const int, int> &p : count_multiset(subjects)) {
             int subject = p.first;
             int s_count = p.second;
             auto elem = this->bipartite._graph_left.find(subject);
