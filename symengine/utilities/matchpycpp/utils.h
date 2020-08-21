@@ -97,7 +97,7 @@ _commutative_single_variable_partiton_iter(const multiset_basic &values,
         }
     } else {
         multiset_basic new_values;
-        for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
+        for (const pair<const RCP<const Basic>, int> &p : count_multiset(values)) {
             RCP<const Basic> element = p.first;
             int element_count = p.second;
             if (element_count % count != 0) {
@@ -160,7 +160,7 @@ generator<SubstitutionMultiset> commutative_sequence_variable_partition_iter(
     }
 
     vector<function<void(SubstitutionMultiset)>> generators;
-    for (const pair<RCP<const Basic>, int> &p : count_multiset(values)) {
+    for (const pair<const RCP<const Basic>, int> &p : count_multiset(values)) {
         RCP<const Basic> value = p.first;
         int count = p.second;
         generators.push_back(

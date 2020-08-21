@@ -48,7 +48,7 @@ substitution_union(const SubstitutionMultiset &subst,
 {
     SubstitutionMultiset new_subst = subst;
     for (const SubstitutionMultiset &other : others) {
-        for (const pair<string, multiset_basic> &p : other) {
+        for (const pair<const string, multiset_basic> &p : other) {
             int ret = try_add_variable(new_subst, p.first, p.second);
             assert(ret == 0);
         }
