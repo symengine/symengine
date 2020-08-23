@@ -168,7 +168,7 @@ ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"
-    curl -L https://codecov.io/bash -o codecov.sh
+    curl --connect-timeout 10 --retry 5 -L https://codecov.io/bash -o codecov.sh
     bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
     exit 0;
 fi
