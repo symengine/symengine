@@ -145,12 +145,18 @@ TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
     r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
     s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
 
-    LambdaRealDoubleVisitor v;
-    v.init({x, y, z}, {r, s}, true);
-
     double d[2];
     double inps[] = {1.5, 2.0, 3.0};
-    v.call(d, inps);
+    LambdaRealDoubleVisitor v2;
+    {
+        LambdaRealDoubleVisitor v;
+        v.init({x, y, z}, {r, s}, true);
+        v.call(d, inps);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+        v2 = v; // Copy construct another visitor
+    }
+    v2.call(d, inps);
     REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
     REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
 }

@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <limits>
+#include <memory>
 #include <symengine/eval_double.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
@@ -24,7 +25,7 @@ protected:
 
     typedef std::function<T(const T *x)> fn;
     std::vector<fn> results;
-    std::vector<T> cse_intermediate_results;
+    std::shared_ptr<std::vector<T>> cse_intermediate_results;
 
     std::map<RCP<const Basic>, size_t, RCPBasicKeyLess>
         cse_intermediate_fns_map;
@@ -64,7 +65,8 @@ public:
                 // Store it in a vector for faster use in call
                 cse_intermediate_fns.push_back(res);
             }
-            cse_intermediate_results.resize(cse_intermediate_fns.size());
+            cse_intermediate_results
+                = std::make_shared<std::vector<T>>(cse_intermediate_fns.size());
             // Generate functions for all the reduced exprs and save it
             for (unsigned i = 0; i < outputs.size(); i++) {
                 results.push_back(apply(*reduced_exprs[i]));
@@ -92,7 +94,7 @@ public:
     {
         if (cse_intermediate_fns.size() > 0) {
             for (unsigned i = 0; i < cse_intermediate_fns.size(); ++i) {
-                cse_intermediate_results[i] = cse_intermediate_fns[i](inps);
+                (*cse_intermediate_results)[i] = cse_intermediate_fns[i](inps);
             }
         }
         for (unsigned i = 0; i < results.size(); ++i) {
@@ -112,8 +114,9 @@ public:
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
             auto index = it->second;
-            result_
-                = [=](const T *x) { return cse_intermediate_results[index]; };
+            result_ = [=](const T *x) {
+                return (*cse_intermediate_results)[index];
+            };
             return;
         }
         throw SymEngineException("Symbol not in the symbols vector.");
