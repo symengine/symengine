@@ -23,9 +23,9 @@ protected:
        recursively.
     */
 
-    typedef std::function<T(const T *x)> fn;
+    typedef std::function<T(const T *x, const std::vector<T> *cse)> fn;
     std::vector<fn> results;
-    std::shared_ptr<std::vector<T>> cse_intermediate_results;
+    std::vector<T> cse_intermediate_results;
 
     std::map<RCP<const Basic>, size_t, RCPBasicKeyLess>
         cse_intermediate_fns_map;
@@ -65,8 +65,7 @@ public:
                 // Store it in a vector for faster use in call
                 cse_intermediate_fns.push_back(res);
             }
-            cse_intermediate_results
-                = std::make_shared<std::vector<T>>(cse_intermediate_fns.size());
+            cse_intermediate_results.resize(cse_intermediate_fns.size());
             // Generate functions for all the reduced exprs and save it
             for (unsigned i = 0; i < outputs.size(); i++) {
                 results.push_back(apply(*reduced_exprs[i]));
@@ -94,11 +93,12 @@ public:
     {
         if (cse_intermediate_fns.size() > 0) {
             for (unsigned i = 0; i < cse_intermediate_fns.size(); ++i) {
-                (*cse_intermediate_results)[i] = cse_intermediate_fns[i](inps);
+                cse_intermediate_results[i]
+                    = cse_intermediate_fns[i](inps, &cse_intermediate_results);
             }
         }
         for (unsigned i = 0; i < results.size(); ++i) {
-            outs[i] = results[i](inps);
+            outs[i] = results[i](inps, &cse_intermediate_results);
         }
         return;
     }
@@ -107,15 +107,17 @@ public:
     {
         for (unsigned i = 0; i < symbols.size(); ++i) {
             if (eq(x, *symbols[i])) {
-                result_ = [=](const T *x) { return x[i]; };
+                result_ = [=](const T *x, const std::vector<T> *cse) {
+                    return x[i];
+                };
                 return;
             }
         }
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
             auto index = it->second;
-            result_ = [=](const T *x) {
-                return (*cse_intermediate_results)[index];
+            result_ = [=](const T *x, const std::vector<T> *cse) {
+                return (*cse)[index];
             };
             return;
         }
@@ -125,26 +127,26 @@ public:
     void bvisit(const Integer &x)
     {
         T tmp = mp_get_d(x.as_integer_class());
-        result_ = [=](const T *x_) { return tmp; };
+        result_ = [=](const T *x, const std::vector<T> *cse) { return tmp; };
     }
 
     void bvisit(const Rational &x)
     {
         T tmp = mp_get_d(x.as_rational_class());
-        result_ = [=](const T *x) { return tmp; };
+        result_ = [=](const T *x, const std::vector<T> *cse) { return tmp; };
     }
 
     void bvisit(const RealDouble &x)
     {
         T tmp = x.i;
-        result_ = [=](const T *x) { return tmp; };
+        result_ = [=](const T *x, const std::vector<T> *cse) { return tmp; };
     }
 
 #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x)
     {
         T tmp = mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN);
-        result_ = [=](const T *x) { return tmp; };
+        result_ = [=](const T *x, const std::vector<T> *cse) { return tmp; };
     }
 #endif
 
@@ -155,7 +157,9 @@ public:
         for (const auto &p : x.get_dict()) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
-            tmp = [=](const T *x) { return tmp(x) + tmp1(x) * tmp2(x); };
+            tmp = [=](const T *x, const std::vector<T> *cse) {
+                return tmp(x, cse) + tmp1(x, cse) * tmp2(x, cse);
+            };
         }
         result_ = tmp;
     }
@@ -167,8 +171,8 @@ public:
         for (const auto &p : x.get_dict()) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
-            tmp = [=](const T *x) {
-                return tmp(x) * std::pow(tmp1(x), tmp2(x));
+            tmp = [=](const T *x, const std::vector<T> *cse) {
+                return tmp(x, cse) * std::pow(tmp1(x, cse), tmp2(x, cse));
             };
         }
         result_ = tmp;
@@ -178,173 +182,229 @@ public:
     {
         fn exp_ = apply(*(x.get_exp()));
         if (eq(*(x.get_base()), *E)) {
-            result_ = [=](const T *x) { return std::exp(exp_(x)); };
+            result_ = [=](const T *x, const std::vector<T> *cse) {
+                return std::exp(exp_(x, cse));
+            };
         } else {
             fn base_ = apply(*(x.get_base()));
-            result_ = [=](const T *x) { return std::pow(base_(x), exp_(x)); };
+            result_ = [=](const T *x, const std::vector<T> *cse) {
+                return std::pow(base_(x, cse), exp_(x, cse));
+            };
         }
     }
 
     void bvisit(const Sin &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::sin(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::sin(tmp(x, cse));
+        };
     }
 
     void bvisit(const Cos &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::cos(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::cos(tmp(x, cse));
+        };
     }
 
     void bvisit(const Tan &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::tan(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::tan(tmp(x, cse));
+        };
     }
 
     void bvisit(const Log &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::log(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::log(tmp(x, cse));
+        };
     };
 
     void bvisit(const Cot &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::tan(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::tan(tmp(x, cse));
+        };
     };
 
     void bvisit(const Csc &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::sin(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::sin(tmp(x, cse));
+        };
     };
 
     void bvisit(const Sec &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::cos(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::cos(tmp(x, cse));
+        };
     };
 
     void bvisit(const ASin &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::asin(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::asin(tmp(x, cse));
+        };
     };
 
     void bvisit(const ACos &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::acos(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::acos(tmp(x, cse));
+        };
     };
 
     void bvisit(const ASec &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::acos(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::acos(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const ACsc &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::asin(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::asin(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const ATan &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::atan(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::atan(tmp(x, cse));
+        };
     };
 
     void bvisit(const ACot &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::atan(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::atan(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const Sinh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::sinh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::sinh(tmp(x, cse));
+        };
     };
 
     void bvisit(const Csch &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::sinh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::sinh(tmp(x, cse));
+        };
     };
 
     void bvisit(const Cosh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::cosh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::cosh(tmp(x, cse));
+        };
     };
 
     void bvisit(const Sech &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::cosh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::cosh(tmp(x, cse));
+        };
     };
 
     void bvisit(const Tanh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::tanh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::tanh(tmp(x, cse));
+        };
     };
 
     void bvisit(const Coth &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return 1.0 / std::tanh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return 1.0 / std::tanh(tmp(x, cse));
+        };
     };
 
     void bvisit(const ASinh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::asinh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::asinh(tmp(x, cse));
+        };
     };
 
     void bvisit(const ACsch &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::asinh(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::asinh(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const ACosh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::acosh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::acosh(tmp(x, cse));
+        };
     };
 
     void bvisit(const ATanh &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::atanh(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::atanh(tmp(x, cse));
+        };
     };
 
     void bvisit(const ACoth &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::atanh(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::atanh(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const ASech &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::acosh(1.0 / tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::acosh(1.0 / tmp(x, cse));
+        };
     };
 
     void bvisit(const Constant &x)
     {
         T tmp = eval_double(x);
-        result_ = [=](const T *x) { return tmp; };
+        result_ = [=](const T *x, const std::vector<T> *cse) { return tmp; };
     };
 
     void bvisit(const Abs &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const T *x) { return std::abs(tmp(x)); };
+        result_ = [=](const T *x, const std::vector<T> *cse) {
+            return std::abs(tmp(x, cse));
+        };
     };
 
     void bvisit(const Basic &)
@@ -373,59 +433,77 @@ public:
     {
         fn num = apply(*(x.get_num()));
         fn den = apply(*(x.get_den()));
-        result_ = [=](const double *x) { return std::atan2(num(x), den(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::atan2(num(x, cse), den(x, cse));
+        };
     };
 
     void bvisit(const Gamma &x)
     {
         fn tmp = apply(*(x.get_args()[0]));
-        result_ = [=](const double *x) { return std::tgamma(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::tgamma(tmp(x, cse));
+        };
     };
 
     void bvisit(const LogGamma &x)
     {
         fn tmp = apply(*(x.get_args()[0]));
-        result_ = [=](const double *x) { return std::lgamma(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::lgamma(tmp(x, cse));
+        };
     };
 
     void bvisit(const Erf &x)
     {
         fn tmp = apply(*(x.get_args()[0]));
-        result_ = [=](const double *x) { return std::erf(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::erf(tmp(x, cse));
+        };
     }
 
     void bvisit(const Erfc &x)
     {
         fn tmp = apply(*(x.get_args()[0]));
-        result_ = [=](const double *x) { return std::erfc(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::erfc(tmp(x, cse));
+        };
     }
 
     void bvisit(const Equality &x)
     {
         fn lhs_ = apply(*(x.get_arg1()));
         fn rhs_ = apply(*(x.get_arg2()));
-        result_ = [=](const double *x) { return (lhs_(x) == rhs_(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return (lhs_(x, cse) == rhs_(x, cse));
+        };
     }
 
     void bvisit(const Unequality &x)
     {
         fn lhs_ = apply(*(x.get_arg1()));
         fn rhs_ = apply(*(x.get_arg2()));
-        result_ = [=](const double *x) { return (lhs_(x) != rhs_(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return (lhs_(x, cse) != rhs_(x, cse));
+        };
     }
 
     void bvisit(const LessThan &x)
     {
         fn lhs_ = apply(*(x.get_arg1()));
         fn rhs_ = apply(*(x.get_arg2()));
-        result_ = [=](const double *x) { return (lhs_(x) <= rhs_(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return (lhs_(x, cse) <= rhs_(x, cse));
+        };
     }
 
     void bvisit(const StrictLessThan &x)
     {
         fn lhs_ = apply(*(x.get_arg1()));
         fn rhs_ = apply(*(x.get_arg2()));
-        result_ = [=](const double *x) { return (lhs_(x) < rhs_(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return (lhs_(x, cse) < rhs_(x, cse));
+        };
     }
 
     void bvisit(const And &x)
@@ -435,11 +513,11 @@ public:
             applys.push_back(apply(*p));
         }
 
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
 
-            bool result = bool(applys[0](x));
+            bool result = bool(applys[0](x, cse));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result && bool(applys[i](x));
+                result = result && bool(applys[i](x, cse));
             }
             return double(result);
         };
@@ -452,11 +530,11 @@ public:
             applys.push_back(apply(*p));
         }
 
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
 
-            bool result = bool(applys[0](x));
+            bool result = bool(applys[0](x, cse));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result || bool(applys[i](x));
+                result = result || bool(applys[i](x, cse));
             }
             return double(result);
         };
@@ -469,11 +547,11 @@ public:
             applys.push_back(apply(*p));
         }
 
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
 
-            bool result = bool(applys[0](x));
+            bool result = bool(applys[0](x, cse));
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = result != bool(applys[i](x));
+                result = result != bool(applys[i](x, cse));
             }
             return double(result);
         };
@@ -482,7 +560,9 @@ public:
     void bvisit(const Not &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return double(not bool(tmp(x))); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return double(not bool(tmp(x, cse)));
+        };
     }
 
     void bvisit(const Max &x)
@@ -492,11 +572,11 @@ public:
             applys.push_back(apply(*p));
         }
 
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
 
-            double result = applys[0](x);
+            double result = applys[0](x, cse);
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = std::max(result, applys[i](x));
+                result = std::max(result, applys[i](x, cse));
             }
             return result;
         };
@@ -509,11 +589,11 @@ public:
             applys.push_back(apply(*p));
         }
 
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
 
-            double result = applys[0](x);
+            double result = applys[0](x, cse);
             for (unsigned int i = 0; i < applys.size(); i++) {
-                result = std::min(result, applys[i](x));
+                result = std::min(result, applys[i](x, cse));
             }
             return result;
         };
@@ -522,39 +602,47 @@ public:
     void bvisit(const Sign &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) {
-            return tmp(x) == 0.0 ? 0.0 : (tmp(x) < 0.0 ? -1.0 : 1.0);
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return tmp(x, cse) == 0.0 ? 0.0 : (tmp(x, cse) < 0.0 ? -1.0 : 1.0);
         };
     };
 
     void bvisit(const Floor &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return std::floor(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::floor(tmp(x, cse));
+        };
     };
 
     void bvisit(const Ceiling &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return std::ceil(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::ceil(tmp(x, cse));
+        };
     };
 
     void bvisit(const Truncate &x)
     {
         fn tmp = apply(*(x.get_arg()));
-        result_ = [=](const double *x) { return std::trunc(tmp(x)); };
+        result_ = [=](const double *x, const std::vector<double> *cse) {
+            return std::trunc(tmp(x, cse));
+        };
     };
 
     void bvisit(const Infty &x)
     {
         if (x.is_negative_infinity()) {
-            result_ = [=](const double * /* x */) {
-                return -std::numeric_limits<double>::infinity();
-            };
+            result_
+                = [=](const double * /* x */, const std::vector<double> *cse) {
+                      return -std::numeric_limits<double>::infinity();
+                  };
         } else if (x.is_positive_infinity()) {
-            result_ = [=](const double * /* x */) {
-                return std::numeric_limits<double>::infinity();
-            };
+            result_
+                = [=](const double * /* x */, const std::vector<double> *cse) {
+                      return std::numeric_limits<double>::infinity();
+                  };
         } else {
             throw SymEngineException(
                 "LambdaDouble can only represent real valued infinity");
@@ -571,10 +659,10 @@ public:
             const auto fn_end = apply(*interv.get_end());
             const bool left_open = interv.get_left_open();
             const bool right_open = interv.get_right_open();
-            result_ = [=](const double *x) {
-                const auto val_expr = fn_expr(x);
-                const auto val_start = fn_start(x);
-                const auto val_end = fn_end(x);
+            result_ = [=](const double *x, const std::vector<double> *cse) {
+                const auto val_expr = fn_expr(x, cse);
+                const auto val_start = fn_start(x, cse);
+                const auto val_end = fn_end(x, cse);
                 bool left_ok, right_ok;
                 if (val_start == -std::numeric_limits<double>::infinity()) {
                     left_ok = !std::isnan(val_expr);
@@ -599,7 +687,9 @@ public:
     void bvisit(const BooleanAtom &ba)
     {
         const bool val = ba.get_val();
-        result_ = [=](const double * /* x */) { return (val) ? 1.0 : 0.0; };
+        result_ = [=](const double * /* x */, const std::vector<double> *cse) {
+            return (val) ? 1.0 : 0.0;
+        };
     }
 
     void bvisit(const Piecewise &pw)
@@ -614,10 +704,10 @@ public:
             applys.push_back(apply(*expr_pred.first));
             preds.push_back(apply(*expr_pred.second));
         }
-        result_ = [=](const double *x) {
+        result_ = [=](const double *x, const std::vector<double> *cse) {
             for (size_t i = 0;; ++i) {
-                if (preds[i](x) == 1.0) {
-                    return applys[i](x);
+                if (preds[i](x, cse) == 1.0) {
+                    return applys[i](x, cse);
                 }
             }
             throw SymEngineException(
@@ -641,7 +731,8 @@ public:
     void bvisit(const Complex &x)
     {
         double t1 = mp_get_d(x.real_), t2 = mp_get_d(x.imaginary_);
-        result_ = [=](const std::complex<double> *x) {
+        result_ = [=](const std::complex<double> *x,
+                      const std::vector<std::complex<double>> *cse) {
             return std::complex<double>(t1, t2);
         };
     };
@@ -649,7 +740,9 @@ public:
     void bvisit(const ComplexDouble &x)
     {
         std::complex<double> tmp = x.i;
-        result_ = [=](const std::complex<double> *x) { return tmp; };
+        result_
+            = [=](const std::complex<double> *x,
+                  const std::vector<std::complex<double>> *cse) { return tmp; };
     };
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x)
@@ -661,7 +754,9 @@ public:
         mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);
         imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
         std::complex<double> tmp(real, imag);
-        result_ = [=](const std::complex<double> *x) { return tmp; };
+        result_
+            = [=](const std::complex<double> *x,
+                  const std::vector<std::complex<double>> *cse) { return tmp; };
     }
 #endif
 };
