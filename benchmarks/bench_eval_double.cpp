@@ -27,19 +27,20 @@ RCP<const Basic> get_eval_double_expression()
     return e;
 }
 
-RCP<const Basic> e = get_eval_double_expression();
-
 NONIUS_BENCHMARK("eval_double", [](nonius::chronometer meter) {
+    auto e = get_eval_double_expression();
     double r;
     meter.measure([&](int i) { r = eval_double(*e); });
 })
 
 NONIUS_BENCHMARK("eval_double_visitor_pattern", [](nonius::chronometer meter) {
+    auto e = get_eval_double_expression();
     double r;
     meter.measure([&](int i) { r = eval_double_visitor_pattern(*e); });
 })
 
 NONIUS_BENCHMARK("eval_double_single_dispatch", [](nonius::chronometer meter) {
+    auto e = get_eval_double_expression();
     double r;
     meter.measure([&](int i) { r = eval_double_single_dispatch(*e); });
 })
