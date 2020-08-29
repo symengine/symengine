@@ -621,7 +621,7 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
     unsigned i;
 
     for (i = 0; i < A.col_; i++) {
-        if (is_zero(X.get(i, 0)))
+        if (is_zero(*X.get(i, 0)))
             throw SymEngineException("Scaling factor can't be zero");
     }
 

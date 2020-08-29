@@ -27,7 +27,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_zero(*exp))
+    if (is_zero(exp))
         return false;
     // e.g. x**1
     if (is_a<Integer>(exp) and down_cast<const Integer &>(exp).is_one())
