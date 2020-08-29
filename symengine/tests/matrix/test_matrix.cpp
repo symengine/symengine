@@ -5,6 +5,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/.h>
 #include <symengine/visitor.h>
 
 using SymEngine::print_stack_on_segfault;
@@ -32,6 +33,7 @@ using SymEngine::eigen_values;
 using SymEngine::finiteset;
 using SymEngine::one;
 using SymEngine::mul;
+using SymEngine::real_double;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -1194,6 +1196,13 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(13), integer(14), integer(15), integer(16)});
     REQUIRE(eq(*det_bareis(M), *integer(0)));
     REQUIRE(eq(*det_berkowitz(M), *integer(0)));
+
+    M = DenseMatrix(4, 4, {real_double(0.0), integer(0), integer(0), integer(1),
+                           integer(0), integer(11), integer(12), integer(1),
+                           integer(1), integer(1), integer(2), integer(1),
+                           integer(1), integer(0), integer(1), integer(1)});
+    REQUIRE(eq(*det_bareis(M), *real_double(1.0)));
+    REQUIRE(eq(*det_berkowitz(M), *real_double(1.0)));
 
     M = DenseMatrix(
         5, 5, {integer(3), integer(2), integer(0), integer(0), integer(0),
