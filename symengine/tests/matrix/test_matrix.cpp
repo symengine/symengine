@@ -5,7 +5,6 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
-#include <symengine/.h>
 #include <symengine/visitor.h>
 
 using SymEngine::print_stack_on_segfault;
@@ -33,6 +32,8 @@ using SymEngine::eigen_values;
 using SymEngine::finiteset;
 using SymEngine::one;
 using SymEngine::mul;
+using SymEngine::down_cast;
+using SymEngine::RealDouble;
 using SymEngine::real_double;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
@@ -1162,6 +1163,7 @@ TEST_CASE("test_cholesky(): matrices", "[matrices]")
 
 TEST_CASE("test_determinant(): matrices", "[matrices]")
 {
+    RCP<const Basic> r;
     // Test cases are taken from SymPy
     DenseMatrix M = DenseMatrix(1, 1, {integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(1)));
@@ -1201,8 +1203,14 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(0), integer(11), integer(12), integer(1),
                            integer(1), integer(1), integer(2), integer(1),
                            integer(1), integer(0), integer(1), integer(1)});
-    REQUIRE(eq(*det_bareis(M), *real_double(1.0)));
-    REQUIRE(eq(*det_berkowitz(M), *real_double(1.0)));
+
+    r = det_bareis(M);
+    REQUIRE(is_a<const RealDouble>(*r));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r).i - 1) < 1e-12);
+
+    r = det_berkowitz(M);
+    REQUIRE(is_a<const RealDouble>(*r));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r).i - 1) < 1e-12);
 
     M = DenseMatrix(
         5, 5, {integer(3), integer(2), integer(0), integer(0), integer(0),
