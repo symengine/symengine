@@ -764,7 +764,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
 unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
     for (unsigned k = r; k < B.row_; k++) {
-        if (neq(*(B.m_[k * B.col_ + c]), *zero)) {
+        if (not is_zero(*(B.m_[k * B.col_ + c]))) {
             return k;
         }
     }
@@ -782,7 +782,7 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
     }
     unsigned row = 0;
     for (unsigned col = 0; col < b.col_ && row < b.row_; col++) {
-        if (eq(*zero, *b.get(row, col)))
+        if (is_zero(*b.get(row, col)))
             continue;
         pivot_cols.push_back(col);
         if (row == 0 and normalize_last) {
@@ -1103,7 +1103,7 @@ void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
                 LU.m_[i * n + j] = sub(LU.m_[i * n + j],
                                        mul(LU.m_[i * n + k], LU.m_[k * n + j]));
             }
-            if (pivot == -1 and neq(*LU.m_[i * n + j], *zero))
+            if (pivot == -1 and not is_zero(*LU.m_[i * n + j]))
                 pivot = i;
         }
         if (pivot == -1)
@@ -1364,9 +1364,9 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
         RCP<const Basic> d;
 
         for (unsigned k = 0; k < n - 1; k++) {
-            if (eq(*(B.m_[k * n + k]), *zero)) {
+            if (is_zero(*B.m_[k * n + k])) {
                 for (i = k + 1; i < n; i++)
-                    if (neq(*(B.m_[i * n + k]), *zero)) {
+                    if (not is_zero(*B.m_[i * n + k])) {
                         row_exchange_dense(B, i, k);
                         sign *= -1;
                         break;
