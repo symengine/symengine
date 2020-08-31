@@ -1,49 +1,53 @@
 #define NONIUS_RUNNER
 #include "nonius.h++"
 
-#include <symengine/basic.h>
-#include <symengine/add.h>
-#include <symengine/symbol.h>
-#include <symengine/dict.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
+#include "bench_common.h"
 #include <symengine/lambda_double.h>
 
-using SymEngine::Basic;
-using SymEngine::symbol;
-using SymEngine::integer;
 using SymEngine::LambdaRealDoubleVisitor;
-using SymEngine::RCP;
 
-LambdaRealDoubleVisitor get_real_double_visitor(bool cse)
-{
-    LambdaRealDoubleVisitor v;
-    RCP<const Basic> x, y, z, r;
-    x = symbol("x");
-    y = symbol("y");
-    z = symbol("z");
-    r = sin(add(x, cos(add(mul(y, z), pow(x, integer(2))))));
-    r = mul(add(integer(3), r), add(integer(2), r));
-    r = pow(add(integer(5), r), add(integer(-2), r));
-    v.init({x, y, z}, *r, cse);
-    return v;
-}
+#define SYMENGINE_LAMBDA_BENCH_CALL(NAME, EXPR, CSE)                           \
+    NONIUS_BENCHMARK(NAME, [](nonius::chronometer meter) {                     \
+        auto vec = get_vec();                                                  \
+        auto expr = get_expression_##EXPR(vec);                                \
+        LambdaRealDoubleVisitor v;                                             \
+        v.init(vec, expr, CSE);                                                \
+        std::vector<double> s{0.0, 0.0, 0.0};                                  \
+        std::vector<double> d{0.0, 0.0, 0.0};                                  \
+        std::vector<double> x{1.0, 4.4365, 12.8};                              \
+        meter.measure([&]() {                                                  \
+            for (std::size_t j = 0; j < call_iterations; ++j) {                \
+                x[0] += 1.0;                                                   \
+                x[1] += 2.0;                                                   \
+                x[2] += 3.0;                                                   \
+                v.call(d.data(), x.data());                                    \
+                s[0] += d[0];                                                  \
+                s[1] += d[1];                                                  \
+                s[2] += d[2];                                                  \
+            }                                                                  \
+        });                                                                    \
+    })
 
-NONIUS_BENCHMARK("lambda_real_double_visitor_call",
-                 [](nonius::chronometer meter) {
-                     double d;
-                     auto v = get_real_double_visitor(false);
-                     meter.measure([&](int i) {
-                         d = v.call({1.0 + i, 4.4365 + 2 * i, 12.8 + 3 * i});
-                     });
-                 })
+#define SYMENGINE_LAMBDA_BENCH_INIT(NAME, EXPR, CSE)                           \
+    NONIUS_BENCHMARK(NAME, [](nonius::chronometer meter) {                     \
+        auto vec = get_vec();                                                  \
+        auto expr = get_expression_##EXPR(vec);                                \
+        LambdaRealDoubleVisitor v;                                             \
+        meter.measure([&]() { v.init(vec, expr, CSE); });                      \
+    })
 
-NONIUS_BENCHMARK("lambda_real_double_visitor_cse_call",
-                 [](nonius::chronometer meter) {
-                     double d;
-                     auto v = get_real_double_visitor(true);
-                     meter.measure([&](int i) {
-                         d = v.call({1.0 + i, 4.4365 + 2 * i, 12.8 + 3 * i});
-                     });
-                 })
+SYMENGINE_LAMBDA_BENCH_CALL("lambda_real_double_visitor_expr1_call", 1, false);
+SYMENGINE_LAMBDA_BENCH_CALL("lambda_real_double_visitor_expr1_cse_call", 1,
+                            true);
+
+SYMENGINE_LAMBDA_BENCH_INIT("lambda_real_double_visitor_expr1_init", 1, false);
+SYMENGINE_LAMBDA_BENCH_INIT("lambda_real_double_visitor_expr1_cse_init", 1,
+                            true);
+
+SYMENGINE_LAMBDA_BENCH_CALL("lambda_real_double_visitor_expr2_call", 2, false);
+SYMENGINE_LAMBDA_BENCH_CALL("lambda_real_double_visitor_expr2_cse_call", 2,
+                            true);
+
+SYMENGINE_LAMBDA_BENCH_INIT("lambda_real_double_visitor_expr2_init", 2, false);
+SYMENGINE_LAMBDA_BENCH_INIT("lambda_real_double_visitor_expr2_cse_init", 2,
+                            true);

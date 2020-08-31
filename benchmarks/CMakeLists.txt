@@ -79,8 +79,14 @@ if (BUILD_BENCHMARKS_NONIUS)
     add_executable(bench_eval_double bench_eval_double.cpp)
     target_link_libraries(bench_eval_double symengine)
 
-    add_executable(bench_lambda_double bench_lambda_double.cpp)
+    add_executable(bench_lambda_double bench_lambda_double.cpp bench_common.cpp)
     target_link_libraries(bench_lambda_double symengine)
+
+    add_executable(bench_llvm_double bench_llvm_double.cpp bench_common.cpp)
+    target_link_libraries(bench_llvm_double symengine)
+
+    add_executable(bench_native_double bench_native_double.cpp bench_common.cpp)
+    target_link_libraries(bench_native_double symengine)
 endif()
 
 add_executable(parsing parsing.cpp)
