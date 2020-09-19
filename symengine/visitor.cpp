@@ -164,8 +164,7 @@ public:
 
 set_basic function_symbols(const Basic &b)
 {
-    FunctionSymbolsVisitor visitor;
-    return visitor.apply(b);
+    return atoms<FunctionSymbol>(b);
 }
 
 RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)
