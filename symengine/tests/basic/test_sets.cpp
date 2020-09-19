@@ -21,6 +21,8 @@ using SymEngine::interval;
 using SymEngine::FiniteSet;
 using SymEngine::finiteset;
 using SymEngine::Set;
+using SymEngine::Reals;
+using SymEngine::reals;
 using SymEngine::EmptySet;
 using SymEngine::emptyset;
 using SymEngine::UniversalSet;
@@ -221,6 +223,70 @@ TEST_CASE("Interval : Basic", "[basic]")
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), NotImplementedError &);
     CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException &);
+}
+
+TEST_CASE("Reals : Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Set> r1 = reals();
+    RCP<const Set> r2 = interval(zero, one);
+    RCP<const Set> r3 = finiteset({zero, one, integer(2)});
+    RCP<const Number> i1 = integer(3);
+    RCP<const Number> i2 = integer(5);
+    RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
+    RCP<const Set> r4 = finiteset({zero, one, integer(2), c1});
+    RCP<const Set> r5 = finiteset({c1});
+    RCP<const Set> r6 = set_union({r1, r5});
+    RCP<const Set> r7 = finiteset({real_double(2.0), c1, x});
+    RCP<const Set> r8 = finiteset({c1, x});
+    RCP<const Set> r9 = set_union({r1, r8});
+    // RCP<const Set> r10 = finiteset({real_double(2.0), x});
+    // RCP<const Set> r11 = set_intersection({r10, r1});
+    RCP<const Set> r12 = universalset();
+    RCP<const Set> r13 = emptyset();
+
+    REQUIRE(is_a<Reals>(*r1));
+    REQUIRE(not is_a<UniversalSet>(*r1));
+    REQUIRE(r2->is_subset(r1));
+    REQUIRE(r2->is_proper_subset(r1));
+    REQUIRE(r1->is_superset(r2));
+    REQUIRE(eq(*r1, *r1->set_intersection(r1)));
+    REQUIRE(eq(*r2, *r1->set_intersection(r2)));
+    REQUIRE(eq(*r2, *r2->set_intersection(r1)));
+    REQUIRE(eq(*r3, *r1->set_intersection(r3)));
+    REQUIRE(eq(*r3, *r3->set_intersection(r1)));
+    REQUIRE(eq(*r3, *r4->set_intersection(r1)));
+    REQUIRE(eq(*r3, *r1->set_intersection(r4)));
+    REQUIRE(eq(*r1, *r1->set_intersection(r12)));
+    REQUIRE(eq(*r1, *r12->set_intersection(r1)));
+    REQUIRE(eq(*r13, *r1->set_intersection(r5)));
+    REQUIRE(eq(*r13, *r5->set_intersection(r1)));
+    // Following doesn't work since we cannot yet create the set intersection
+    // REQUIRE(eq(*r11, *r1->set_intersection(r7)));
+    REQUIRE(eq(*r1, *r1->set_union(r1)));
+    REQUIRE(eq(*r1, *r1->set_union(r2)));
+    REQUIRE(eq(*r1, *r2->set_union(r1)));
+    REQUIRE(eq(*r1, *r3->set_union(r1)));
+    REQUIRE(eq(*r1, *r1->set_union(r3)));
+    REQUIRE(eq(*r6, *r1->set_union(r4)));
+    REQUIRE(eq(*r6, *r4->set_union(r1)));
+    REQUIRE(eq(*r9, *r7->set_union(r1)));
+    REQUIRE(eq(*r12, *r1->set_union(r12)));
+    REQUIRE(eq(*r12, *r12->set_union(r1)));
+    REQUIRE(eq(*r1->set_complement(r2), *emptyset()));
+    REQUIRE(r1->__str__() == "Reals");
+    REQUIRE(r1->__hash__() == reals()->__hash__());
+    REQUIRE(not r1->is_proper_subset(r1));
+    REQUIRE(not r1->__eq__(*r2));
+    REQUIRE(r1->__eq__(*r1));
+    REQUIRE(r1->compare(*reals()) == 0);
+    REQUIRE(eq(*r1->contains(zero), *boolTrue));
+    REQUIRE(eq(*r1->contains(c1), *boolFalse));
+    REQUIRE(eq(*r1->contains(r1), *boolFalse));
+    REQUIRE(eq(*r1->contains(zero), *boolTrue));
+    REQUIRE(eq(*r1->contains(x), *make_rcp<Contains>(x, r1)));
+    REQUIRE(r1->get_args().empty());
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException &);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")

@@ -369,6 +369,11 @@ void LatexPrinter::bvisit(const EmptySet &x)
     str_ = "\\emptyset";
 }
 
+void LatexPrinter::bvisit(const Reals &x)
+{
+    str_ = "\\mathbf{R}";
+}
+
 void LatexPrinter::bvisit(const FiniteSet &x)
 {
     std::ostringstream s;
