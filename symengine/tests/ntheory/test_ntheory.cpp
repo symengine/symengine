@@ -5,10 +5,14 @@
 #include <symengine/rational.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
+#include <symengine/pow.h>
 #include <symengine/real_double.h>
+#include <symengine/symbol.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
+using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::Rational;
 using SymEngine::rational;
 using SymEngine::print_stack_on_segfault;
@@ -37,6 +41,8 @@ using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
 using SymEngine::mertens;
+using SymEngine::polygonal_number;
+using SymEngine::principal_polygonal_root;
 using SymEngine::integer_class;
 using SymEngine::harmonic;
 using SymEngine::vec_integer_class;
@@ -902,4 +908,51 @@ TEST_CASE("test_factor_trial_division(): ntheory", "[ntheory]")
     RCP<const Integer> f;
 
     REQUIRE(factor_trial_division(outArg(f), *i47) == 0);
+}
+
+TEST_CASE("test_polygonal_number(): ntheory", "[ntheory]")
+{
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i16 = integer(16);
+    RCP<const Integer> i35 = integer(35);
+    RCP<const Symbol> s1 = symbol("n");
+
+    REQUIRE(eq(*polygonal_number(i3, i1), *i1));
+    REQUIRE(eq(*polygonal_number(i3, i2), *i3));
+    REQUIRE(eq(*polygonal_number(i3, i3), *i6));
+    REQUIRE(eq(*polygonal_number(i4, i2), *i4));
+    REQUIRE(eq(*polygonal_number(i4, i4), *i16));
+    REQUIRE(eq(*polygonal_number(i5, i5), *i35));
+    REQUIRE(eq(*polygonal_number(i3, s1), *div(add(s1, pow(s1, i2)), i2)));
+    REQUIRE(eq(*polygonal_number(i4, s1), *mul(s1, s1)));
+}
+
+TEST_CASE("test_principal_polygonal_root(): ntheory", "[ntheory]")
+{
+    RCP<const Integer> m1 = integer(-1);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i16 = integer(16);
+    RCP<const Integer> i35 = integer(35);
+    RCP<const Symbol> s1 = symbol("x");
+
+    REQUIRE(eq(*principal_polygonal_root(i3, i1), *i1));
+    REQUIRE(eq(*principal_polygonal_root(i3, i3), *i2));
+    REQUIRE(eq(*principal_polygonal_root(i3, i6), *i3));
+    REQUIRE(eq(*principal_polygonal_root(i4, i4), *i2));
+    REQUIRE(eq(*principal_polygonal_root(i4, i16), *i4));
+    REQUIRE(eq(*principal_polygonal_root(i5, i35), *i5));
+    REQUIRE(eq(*principal_polygonal_root(i3, s1),
+               *div(add(m1, sqrt(add(i1, mul(i8, s1)))), i2)));
+    REQUIRE(eq(*principal_polygonal_root(i4, s1), *sqrt(s1)));
 }

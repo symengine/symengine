@@ -212,5 +212,10 @@ int mobius(const Integer &a);
 // Mertens Function
 // mertens(n) -> Sum of mobius(i) for i from 1 to n
 long mertens(const unsigned long a);
+
+RCP<const Basic> polygonal_number(const RCP<const Basic> &s,
+                                  const RCP<const Basic> &n);
+RCP<const Basic> principal_polygonal_root(const RCP<const Basic> &s,
+                                          const RCP<const Basic> &x);
 }
 #endif
