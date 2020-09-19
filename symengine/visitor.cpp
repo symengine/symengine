@@ -134,34 +134,6 @@ set_basic free_symbols(const Basic &b)
     return visitor.apply(b);
 }
 
-class FunctionSymbolsVisitor : public BaseVisitor<FunctionSymbolsVisitor>
-{
-public:
-    set_basic s;
-    uset_basic v;
-
-    void bvisit(const FunctionSymbol &x)
-    {
-        s.insert(x.rcp_from_this());
-    }
-
-    void bvisit(const Basic &x)
-    {
-        for (const auto &p : x.get_args()) {
-            auto iter = v.insert(p->rcp_from_this());
-            if (iter.second) {
-                p->accept(*this);
-            }
-        }
-    }
-
-    set_basic apply(const Basic &b)
-    {
-        b.accept(*this);
-        return s;
-    }
-};
-
 set_basic function_symbols(const Basic &b)
 {
     return atoms<FunctionSymbol>(b);
