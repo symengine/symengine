@@ -1018,6 +1018,34 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.count(x) == 1);
 }
 
+TEST_CASE("function_symbols: Basic", "[basic]")
+{
+    RCP<const Basic> r1, f1, f2;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    f1 = function_symbol("f", x);
+    f2 = function_symbol("g", {y, z});
+
+    r1 = add(x, add(z, pow(y, x)));
+    set_basic s = function_symbols(*r1);
+    REQUIRE(s.size() == 0);
+    s.clear();
+
+    r1 = f1;
+    s = function_symbols(*r1);
+    REQUIRE(s.size() == 1);
+    REQUIRE(s.count(f1) == 1);
+    s.clear();
+
+    r1 = cos(add(f1, f2));
+    s = function_symbols(*r1);
+    REQUIRE(s.size() == 2);
+    REQUIRE(s.count(f1) == 1);
+    REQUIRE(s.count(f2) == 1);
+}
+
 TEST_CASE("atoms: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2, r3;
