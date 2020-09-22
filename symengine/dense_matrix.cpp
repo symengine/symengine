@@ -1,5 +1,6 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
+#include <symengine/functions.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
@@ -119,12 +120,30 @@ void DenseMatrix::mul_scalar(const RCP<const Basic> &k,
     }
 }
 
+// Matrix conjugate
+void DenseMatrix::conjugate(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        conjugate_dense(*this, r);
+    }
+}
+
 // Matrix transpose
 void DenseMatrix::transpose(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = down_cast<DenseMatrix &>(result);
         transpose_dense(*this, r);
+    }
+}
+
+// Matrix conjugate transpose
+void DenseMatrix::conjugate_transpose(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        conjugate_transpose_dense(*this, r);
     }
 }
 
@@ -302,6 +321,16 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
     }
 }
 
+// ----------------------------- Matrix Conjugate ----------------------------//
+void conjugate_dense(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(B.col_ == A.col_ and B.row_ == A.row_);
+
+    for (unsigned i = 0; i < A.row_; i++)
+        for (unsigned j = 0; j < A.col_; j++)
+            B.m_[i * B.col_ + j] = conjugate(A.m_[i * A.col_ + j]);
+}
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
@@ -310,6 +339,16 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
     for (unsigned i = 0; i < A.row_; i++)
         for (unsigned j = 0; j < A.col_; j++)
             B.m_[j * B.col_ + i] = A.m_[i * A.col_ + j];
+}
+
+// ----------------------------- Matrix Conjugate Transpose -----------------//
+void conjugate_transpose_dense(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(B.row_ == A.col_ and B.col_ == A.row_);
+
+    for (unsigned i = 0; i < A.row_; i++)
+        for (unsigned j = 0; j < A.col_; j++)
+            B.m_[j * B.col_ + i] = conjugate(A.m_[i * A.col_ + j]);
 }
 
 // ------------------------------- Submatrix ---------------------------------//
