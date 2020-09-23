@@ -243,6 +243,43 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
                                         mul(symbol("w"), symbol("z")))}));
 }
 
+TEST_CASE("test_elementwise_dense_dense_multiplication(): matrices",
+          "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    DenseMatrix B
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    elementwise_mul_dense_dense(A, B, A);
+
+    REQUIRE(A == DenseMatrix(2, 2,
+                             {integer(1), integer(0), integer(0), integer(4)}));
+
+    A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
+    B = DenseMatrix(1, 4, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix C = DenseMatrix(1, 4);
+    A.elementwise_mul_matrix(B, C);
+
+    REQUIRE(C == DenseMatrix(1, 4, {integer(1), integer(6), integer(21),
+                                    integer(-20)}));
+
+    A = DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                           symbol("q"), symbol("r")});
+    B = DenseMatrix(3, 2, {symbol("x"), symbol("y"), symbol("z"), symbol("w"),
+                           symbol("k"), symbol("f")});
+    C = DenseMatrix(3, 2);
+    B.elementwise_mul_matrix(A, C);
+
+    REQUIRE(C == DenseMatrix(3, 2, {
+                                       mul(symbol("a"), symbol("x")),
+                                       mul(symbol("b"), symbol("y")),
+                                       mul(symbol("c"), symbol("z")),
+                                       mul(symbol("p"), symbol("w")),
+                                       mul(symbol("q"), symbol("k")),
+                                       mul(symbol("r"), symbol("f")),
+                                   }));
+}
+
 TEST_CASE("test_mul_dense_scalar(): matrices", "[matrices]")
 {
     // More tests should be added
@@ -1789,6 +1826,19 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
                            {integer(1), integer(7), integer(2), integer(8),
                             integer(9), integer(3), integer(4), integer(5),
                             integer(6)}));
+}
+
+TEST_CASE("test_csr_elementwise_mul(): matrices", "[matrices]")
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                            {integer(1), integer(2), integer(3), integer(4),
+                             integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    A.elementwise_mul_matrix(A, B);
+    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                           {integer(1), integer(4), integer(9), integer(16),
+                            integer(25), integer(36)}));
 }
 
 TEST_CASE("test_eye(): matrices", "[matrices]")

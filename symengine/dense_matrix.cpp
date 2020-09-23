@@ -100,6 +100,19 @@ void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
     }
 }
 
+void DenseMatrix::elementwise_mul_matrix(const MatrixBase &other,
+                                         MatrixBase &result) const
+{
+    SYMENGINE_ASSERT(row_ == result.nrows() and col_ == result.ncols()
+                     and row_ == other.nrows() and col_ == other.ncols());
+
+    if (is_a<DenseMatrix>(other) and is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = down_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        elementwise_mul_dense_dense(*this, o, r);
+    }
+}
+
 // Add a scalar
 void DenseMatrix::add_scalar(const RCP<const Basic> &k,
                              MatrixBase &result) const
@@ -420,6 +433,21 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
         DenseMatrix tmp = DenseMatrix(A.row_, B.col_);
         mul_dense_dense(A, B, tmp);
         C = tmp;
+    }
+}
+
+void elementwise_mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+                                 DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and A.row_ == C.row_
+                     and A.col_ == C.col_);
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * col + j] = mul(A.m_[i * col + j], B.m_[i * col + j]);
+        }
     }
 }
 
