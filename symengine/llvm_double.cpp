@@ -146,7 +146,7 @@ std::vector<llvm::Pass *> LLVMVisitor::create_default_passes(int optlevel)
 #else
     passes.push_back(llvm::createInstructionCombiningPass(optlevel > 1));
 #endif
-    passes.push_back(llvm::createDeadInstEliminationPass());
+    passes.push_back(llvm::createDeadCodeEliminationPass());
     passes.push_back(llvm::createPromoteMemoryToRegisterPass());
     passes.push_back(llvm::createReassociatePass());
     passes.push_back(llvm::createGVNPass());
