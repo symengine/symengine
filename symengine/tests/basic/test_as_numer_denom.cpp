@@ -153,7 +153,7 @@ TEST_CASE("NumerDenom: Add", "[as_numer_denom]")
     REQUIRE(eq(*den, *mul(x, mul(y, z)))); // x*y*z
 }
 
-TEST_CASE("Complex: Basic", "[basic]")
+TEST_CASE("Complex: Basic (as_numer_denom)", "[basic]")
 {
     RCP<const Number> r1, r2, r3, c, cnum;
     RCP<const Basic> num, den;

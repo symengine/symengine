@@ -25,6 +25,7 @@ add_subdirectory(utilities/matchpycpp)
 
 set(SRC
     add.cpp
+    as_real_imag.cpp
     basic.cpp
     complex.cpp
     complex_double.cpp
