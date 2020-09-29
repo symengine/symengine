@@ -185,6 +185,16 @@ void CSRMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
     throw NotImplementedError("Not Implemented");
 }
 
+void CSRMatrix::elementwise_mul_matrix(const MatrixBase &other,
+                                       MatrixBase &result) const
+{
+    if (is_a<CSRMatrix>(result)) {
+        auto &o = down_cast<const CSRMatrix &>(other);
+        auto &r = down_cast<CSRMatrix &>(result);
+        csr_binop_csr_canonical(*this, o, r, mul);
+    }
+}
+
 // Add a scalar
 void CSRMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
 {
