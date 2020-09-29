@@ -52,6 +52,7 @@ using SymEngine::set_complement;
 using SymEngine::Set;
 using SymEngine::interval;
 using SymEngine::reals;
+using SymEngine::integers;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::floor;
@@ -619,6 +620,8 @@ TEST_CASE("test_mathml()", "[mathml]")
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
     RCP<const Basic> b1 = reals();
     REQUIRE(mathml(*b1) == "<reals/>");
+    RCP<const Basic> b2 = integers();
+    REQUIRE(mathml(*b2) == "<integers/>");
 }
 
 TEST_CASE("test_relational(): printing", "[printing]")
@@ -680,6 +683,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l22 = parse("2 + 3 * x^10");
     RCP<const Basic> l23 = parse("exp(x-y)");
     RCP<const Basic> l24 = reals();
+    RCP<const Basic> l25 = integers();
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -695,7 +699,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l12) == "\\mathrm{False}");
     CHECK(latex(*l13) == "2 \\leq a \\wedge 5 \\leq b");
     CHECK(latex(*l14)
-          == "b \\leq a \\wedge \\left(a = b \\vee a \\neq c\\right)");
+          == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
     CHECK(latex(*l15) == "\\frac{\\partial}{\\partial a} f\\left(a, b\\right)");
     CHECK(latex(*l16) == "\\frac{d}{d a} f\\left(a, 2\\right)");
     CHECK(latex(*l17)
@@ -712,4 +716,5 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l22) == "2 + 3 x^{10}");
     CHECK(latex(*l23) == "e^{x - y}");
     CHECK(latex(*l24) == "\\mathbf{R}");
+    CHECK(latex(*l25) == "\\mathbf{Z}");
 }

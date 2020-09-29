@@ -1,4 +1,6 @@
+#include <symengine/add.h>
 #include <symengine/logic.h>
+#include <symengine/functions.h>
 #include <symengine/symengine_casts.h>
 #include <iterator>
 
@@ -154,6 +156,30 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
             return emptyset();
         }
     }
+    if (is_a<Integers>(*o)) {
+        if (is_a_Number(*start_) and is_a_Number(*end_)) {
+            auto first = SymEngine::ceiling(start_);
+            auto last = SymEngine::floor(end_);
+            if (eq(*first, *start_) and left_open_) {
+                first = add(first, integer(1));
+            }
+            if (eq(*last, *end_) and right_open_) {
+                last = add(last, integer(-1));
+            }
+            if (eq(*Lt(last, first), *boolTrue)) {
+                return emptyset();
+            }
+            set_basic container;
+            while (eq(*Ge(last, first), *boolTrue)) {
+                container.insert(first);
+                first = add(first, integer(1));
+            }
+            return finiteset(container);
+        } else {
+            return SymEngine::set_intersection(
+                {rcp_from_this_cast<const Set>(), o});
+        }
+    }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
         or is_a<Union>(*o) or is_a<Reals>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -204,7 +230,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
-        or is_a<Union>(*o) or is_a<Reals>(*o)) {
+        or is_a<Union>(*o) or is_a<Reals>(*o) or is_a<Integers>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
@@ -235,7 +261,8 @@ vec_basic Interval::get_args() const
 
 RCP<const Set> Reals::set_intersection(const RCP<const Set> &o) const
 {
-    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)) {
+    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
+        or is_a<Integers>(*o)) {
         return o;
     } else if (is_a<FiniteSet>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -247,7 +274,8 @@ RCP<const Set> Reals::set_intersection(const RCP<const Set> &o) const
 
 RCP<const Set> Reals::set_union(const RCP<const Set> &o) const
 {
-    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)) {
+    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
+        or is_a<Integers>(*o)) {
         return reals();
     } else if (is_a<FiniteSet>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
@@ -258,7 +286,14 @@ RCP<const Set> Reals::set_union(const RCP<const Set> &o) const
 
 RCP<const Set> Reals::set_complement(const RCP<const Set> &o) const
 {
-    return emptyset();
+    if (is_a<EmptySet>(*o) or is_a<Reals>(*o) or is_a<Integers>(*o)
+        or is_a<Interval>(*o)) {
+        return emptyset();
+    }
+    if (is_a<UniversalSet>(*o)) {
+        return make_rcp<const Complement>(o, reals());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
 }
 
 RCP<const Boolean> Reals::contains(const RCP<const Basic> &a) const
@@ -298,6 +333,86 @@ int Reals::compare(const Basic &o) const
 const RCP<const Reals> &Reals::getInstance()
 {
     const static auto a = make_rcp<const Reals>();
+    return a;
+}
+
+RCP<const Set> Integers::set_intersection(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+        return o;
+    } else if (is_a<Reals>(*o)) {
+        return integers();
+    } else if (is_a<FiniteSet>(*o) or is_a<Interval>(*o)) {
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Integers::set_union(const RCP<const Set> &o) const
+{
+    if (is_a<Integers>(*o) or is_a<EmptySet>(*o)) {
+        return integers();
+    } else if (is_a<Reals>(*o)) {
+        return reals();
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_union(rcp_from_this_cast<const Set>());
+    } else if (is_a<UniversalSet>(*o)) {
+        return universalset();
+    } else {
+        return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Integers::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+        return emptyset();
+    }
+    if (is_a<UniversalSet>(*o) or is_a<Reals>(*o)) {
+        return make_rcp<const Complement>(o, integers());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Boolean> Integers::contains(const RCP<const Basic> &a) const
+{
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    }
+    if (is_a<Integer>(*a)) {
+        return boolean(true);
+    }
+    return boolean(false);
+}
+
+hash_t Integers::__hash__() const
+{
+    hash_t seed = SYMENGINE_INTEGERS;
+    return seed;
+}
+
+bool Integers::__eq__(const Basic &o) const
+{
+    if (is_a<Integers>(o))
+        return true;
+    return false;
+}
+
+int Integers::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Integers>(o))
+    return 0;
+}
+
+const RCP<const Integers> &Integers::getInstance()
+{
+    const static auto a = make_rcp<const Integers>();
     return a;
 }
 
@@ -501,6 +616,20 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
             return SymEngine::make_set_union({reals(), finiteset(container)});
         }
     }
+    if (is_a<Integers>(*o)) {
+        set_basic container;
+        for (const auto &elem : container_) {
+            if (!is_a<Integer>(*elem)) {
+                container.insert(elem);
+            }
+        }
+        if (container.empty()) {
+            return integers();
+        } else {
+            return SymEngine::make_set_union(
+                {integers(), finiteset(container)});
+        }
+    }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
@@ -555,6 +684,35 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
                 others.insert(kept_reals.begin(), kept_reals.end());
                 return SymEngine::set_intersection(
                     {reals(), finiteset(others)});
+            }
+        }
+    }
+    if (is_a<Integers>(*o)) {
+        set_basic kept_integers;
+        set_basic others;
+        for (const auto &elem : container_) {
+            if (is_a_Number(*elem)) {
+                if (is_a<Integer>(*elem)) {
+                    kept_integers.insert(elem);
+                }
+            } else {
+                others.insert(elem);
+            }
+        }
+        if (kept_integers.empty()) {
+            if (others.empty()) {
+                return emptyset();
+            } else {
+                return SymEngine::set_intersection(
+                    {integers(), finiteset(others)});
+            }
+        } else {
+            if (others.empty()) {
+                return finiteset(kept_integers);
+            } else {
+                others.insert(kept_integers.begin(), kept_integers.end());
+                return SymEngine::set_intersection(
+                    {integers(), finiteset(others)});
             }
         }
     }
