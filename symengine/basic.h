@@ -220,6 +220,13 @@ struct RCPBasicKeyLess {
     }
 };
 
+enum tribool { indeterminate = -1, trifalse = 0, tritrue = 1 };
+
+inline bool is_true(tribool x)
+{
+    return x == tribool::tritrue;
+};
+
 // Convenience functions
 //! Checks equality for `a` and `b`
 bool eq(const Basic &a, const Basic &b);
