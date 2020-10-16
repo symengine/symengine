@@ -63,6 +63,44 @@ unsigned DenseMatrix::rank() const
     throw NotImplementedError("Not Implemented");
 }
 
+bool DenseMatrix::is_lower() const
+{
+    bool is_lower = true;
+    auto A = *this;
+    unsigned n = A.nrows();
+    for (unsigned i = 1; i < n; ++i) {
+        for (unsigned j = 0; j < i; ++j) {
+            if (neq(*(A.get(i, j)), *zero)) {
+                is_lower = false;
+                break;
+            }
+        }
+        if (not is_lower) {
+            break;
+        }
+    }
+    return is_lower;
+}
+
+bool DenseMatrix::is_upper() const
+{
+    bool is_upper = true;
+    auto A = *this;
+    unsigned n = A.nrows();
+    for (unsigned i = 0; i < n - 1; ++i) {
+        for (unsigned j = i + 1; j < n; ++j) {
+            if (neq(*(A.get(i, j)), *zero)) {
+                is_upper = false;
+                break;
+            }
+        }
+        if (not is_upper) {
+            break;
+        }
+    }
+    return is_upper;
+}
+
 RCP<const Basic> DenseMatrix::det() const
 {
     return det_bareis(*this);
@@ -1359,33 +1397,8 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])),
                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
-        bool is_upper = true, is_lower = true;
-        for (unsigned i = 1; i < n; ++i) {
-            for (unsigned j = 0; j < i; ++j) {
-                if (not eq(*(A.m_[i * n + j]), *zero)) {
-                    is_lower = false;
-                    break;
-                }
-            }
-            if (not is_lower) {
-                break;
-            }
-        }
-        if (not is_lower) {
-            for (unsigned i = 0; i < n - 1; ++i) {
-                for (unsigned j = i + 1; j < n; ++j) {
-                    if (not eq(*(A.m_[i * n + j]), *zero)) {
-                        is_upper = false;
-                        break;
-                    }
-                }
-                if (not is_upper) {
-                    break;
-                }
-            }
-        }
 
-        if (is_lower or is_upper) {
+        if (A.is_lower() or A.is_upper()) {
             RCP<const Basic> det = A.m_[0];
             for (unsigned i = 1; i < n; ++i) {
                 det = mul(det, A.m_[i * n + i]);
@@ -1648,33 +1661,7 @@ void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 RCP<const Set> eigen_values(const DenseMatrix &A)
 {
     unsigned n = A.nrows();
-    bool is_upper = true, is_lower = true;
-    for (unsigned i = 1; i < n; ++i) {
-        for (unsigned j = 0; j < i; ++j) {
-            if (not eq(*(A.get(i, j)), *zero)) {
-                is_lower = false;
-                break;
-            }
-        }
-        if (not is_lower) {
-            break;
-        }
-    }
-    if (not is_lower) {
-        for (unsigned i = 0; i < n - 1; ++i) {
-            for (unsigned j = i + 1; j < n; ++j) {
-                if (not eq(*(A.get(i, j)), *zero)) {
-                    is_upper = false;
-                    break;
-                }
-            }
-            if (not is_upper) {
-                break;
-            }
-        }
-    }
-
-    if (is_lower or is_upper) {
+    if (A.is_lower() or A.is_upper()) {
         RCP<const Set> eigenvals = emptyset();
         set_basic x;
         for (unsigned i = 0; i < n; ++i) {
