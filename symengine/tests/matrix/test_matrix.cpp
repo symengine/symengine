@@ -1193,7 +1193,7 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(0), integer(0), integer(5), integer(10),
                            integer(0), integer(0), integer(0), integer(4)});
     REQUIRE(eq(*det_bareis(M), *mul(integer(60), symbol("y"))));
-    
+
     M = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
                            integer(5), integer(6), integer(7), integer(8),
                            integer(9), integer(10), integer(11), integer(12),
@@ -1238,23 +1238,22 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
     REQUIRE(eq(*det_bareis(M), *integer(123)));
     REQUIRE(eq(*det_berkowitz(M), *integer(123)));
 
-
     M = DenseMatrix(
-        5, 5, {integer(2),  integer(17),  integer(-41), integer(33), integer(62),
-               integer(0),  integer(9),  integer(16),  integer(40), integer(91),
-               integer(0), integer(0),  integer(5),  integer(70), integer(42),
-               integer(0), integer(0), integer(0),  integer(2), integer(123),
-               integer(0),  integer(0),  integer(0),  integer(0), integer(3)});
+        5, 5, {integer(2), integer(17), integer(-41), integer(33), integer(62),
+               integer(0), integer(9),  integer(16),  integer(40), integer(91),
+               integer(0), integer(0),  integer(5),   integer(70), integer(42),
+               integer(0), integer(0),  integer(0),   integer(2),  integer(123),
+               integer(0), integer(0),  integer(0),   integer(0),  integer(3)});
     REQUIRE(eq(*det_bareis(M), *integer(540)));
 
-    M = DenseMatrix(
-        5, 5, {integer(2),  integer(0),  integer(0), integer(0), integer(0),
-               integer(60),  integer(5),  integer(0),  integer(0), integer(0),
-               integer(-25), integer(0),  integer(7),  integer(0), integer(0),
-               integer(-31), integer(-2), integer(44),  integer(5), integer(0),
-               integer(12),  integer(40),  integer(10),  integer(54), integer(1)});
+    M = DenseMatrix(5, 5, {integer(2),  integer(0),  integer(0),   integer(0),
+                           integer(0),  integer(60), integer(5),   integer(0),
+                           integer(0),  integer(0),  integer(-25), integer(0),
+                           integer(7),  integer(0),  integer(0),   integer(-31),
+                           integer(-2), integer(44), integer(5),   integer(0),
+                           integer(12), integer(40), integer(10),  integer(54),
+                           integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(350)));
-
 }
 
 TEST_CASE("test_berkowitz(): matrices", "[matrices]")
@@ -1510,9 +1509,9 @@ TEST_CASE("test_eigen_values(): matrices", "[matrices]")
     auto vals = eigen_values(A);
     REQUIRE(eq(*vals, *finiteset({one})));
 
-    A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                       integer(2), integer(3), integer(0),
-                                       integer(4), integer(5), integer(6)});
+    A = DenseMatrix(3, 3,
+                    {integer(1), integer(0), integer(0), integer(2), integer(3),
+                     integer(0), integer(4), integer(5), integer(6)});
     vals = eigen_values(A);
     REQUIRE(eq(*vals, *finiteset({integer(1), integer(3), integer(6)})));
 
@@ -1715,11 +1714,11 @@ TEST_CASE("test_eye(): matrices", "[matrices]")
 TEST_CASE("Test is_lower", "[matrices]")
 {
     DenseMatrix M = DenseMatrix(
-        5, 5, {integer(2),  integer(17),  integer(-41), integer(33), integer(62),
-               integer(0),  integer(9),  integer(16),  integer(40), integer(91),
-               integer(0), integer(0),  integer(5),  integer(70), integer(42),
-               integer(0), integer(0), integer(0),  integer(2), integer(123),
-               integer(0),  integer(0),  integer(0),  integer(0), integer(3)});
+        5, 5, {integer(2), integer(17), integer(-41), integer(33), integer(62),
+               integer(0), integer(9),  integer(16),  integer(40), integer(91),
+               integer(0), integer(0),  integer(5),   integer(70), integer(42),
+               integer(0), integer(0),  integer(0),   integer(2),  integer(123),
+               integer(0), integer(0),  integer(0),   integer(0),  integer(3)});
     REQUIRE(M.is_lower());
 
     M = DenseMatrix(4, 4, {integer(3), symbol("x"), symbol("z"), integer(59),
@@ -1729,7 +1728,6 @@ TEST_CASE("Test is_lower", "[matrices]")
     REQUIRE(eq(*det_bareis(M), *mul(integer(60), symbol("y"))));
     REQUIRE(M.is_lower());
 
-
     vec_basic d{integer(1), integer(2), integer(3), integer(4), integer(5)};
     diag(M, d);
     REQUIRE(M.is_lower());
@@ -1738,11 +1736,12 @@ TEST_CASE("Test is_lower", "[matrices]")
 TEST_CASE("Test is_upper", "[matrices]")
 {
     DenseMatrix M = DenseMatrix(
-        5, 5, {integer(2),  integer(0),  integer(0), integer(0), integer(0),
-               integer(60),  integer(5),  integer(0),  integer(0), integer(0),
-               integer(-25), integer(0),  integer(7),  integer(0), integer(0),
-               integer(-31), integer(-2), integer(44),  integer(5), integer(0),
-               integer(12),  integer(40),  integer(10),  integer(54), integer(1)});
+        5, 5,
+        {integer(2),   integer(0),  integer(0),  integer(0),  integer(0),
+         integer(60),  integer(5),  integer(0),  integer(0),  integer(0),
+         integer(-25), integer(0),  integer(7),  integer(0),  integer(0),
+         integer(-31), integer(-2), integer(44), integer(5),  integer(0),
+         integer(12),  integer(40), integer(10), integer(54), integer(1)});
     REQUIRE(M.is_upper());
 
     M = DenseMatrix(4, 4, {integer(3), integer(0), integer(0), integer(0),
