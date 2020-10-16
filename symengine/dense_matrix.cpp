@@ -65,40 +65,30 @@ unsigned DenseMatrix::rank() const
 
 bool DenseMatrix::is_lower() const
 {
-    bool is_lower = true;
     auto A = *this;
     unsigned n = A.nrows();
     for (unsigned i = 1; i < n; ++i) {
         for (unsigned j = 0; j < i; ++j) {
             if (neq(*(A.get(i, j)), *zero)) {
-                is_lower = false;
-                break;
+                return false;
             }
         }
-        if (not is_lower) {
-            break;
-        }
     }
-    return is_lower;
+    return true;
 }
 
 bool DenseMatrix::is_upper() const
 {
-    bool is_upper = true;
     auto A = *this;
     unsigned n = A.nrows();
     for (unsigned i = 0; i < n - 1; ++i) {
         for (unsigned j = i + 1; j < n; ++j) {
             if (neq(*(A.get(i, j)), *zero)) {
-                is_upper = false;
-                break;
+                return false;
             }
         }
-        if (not is_upper) {
-            break;
-        }
     }
-    return is_upper;
+    return true;
 }
 
 RCP<const Basic> DenseMatrix::det() const
