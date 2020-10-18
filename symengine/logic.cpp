@@ -15,7 +15,7 @@ BooleanAtom::BooleanAtom(bool b) : b_{b}
 
 hash_t BooleanAtom::__hash__() const
 {
-    hash_t seed = BOOLEAN_ATOM;
+    hash_t seed = SYMENGINE_BOOLEAN_ATOM;
     if (b_)
         ++seed;
     return seed;
@@ -63,7 +63,7 @@ Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
 
 hash_t Contains::__hash__() const
 {
-    hash_t seed = CONTAINS;
+    hash_t seed = SYMENGINE_CONTAINS;
     hash_combine<Basic>(seed, *expr_);
     hash_combine<Basic>(seed, *set_);
     return seed;
@@ -171,7 +171,7 @@ And::And(const set_boolean &s) : container_{s}
 
 hash_t And::__hash__() const
 {
-    hash_t seed = AND;
+    hash_t seed = SYMENGINE_AND;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -239,7 +239,7 @@ Or::Or(const set_boolean &s) : container_{s}
 
 hash_t Or::__hash__() const
 {
-    hash_t seed = OR;
+    hash_t seed = SYMENGINE_OR;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -301,7 +301,7 @@ Not::Not(const RCP<const Boolean> &in) : arg_{in}
 
 hash_t Not::__hash__() const
 {
-    hash_t seed = NOT;
+    hash_t seed = SYMENGINE_NOT;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }
@@ -349,7 +349,7 @@ Xor::Xor(const vec_boolean &s) : container_{s}
 
 hash_t Xor::__hash__() const
 {
-    hash_t seed = XOR;
+    hash_t seed = SYMENGINE_XOR;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;

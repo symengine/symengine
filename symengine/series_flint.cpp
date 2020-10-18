@@ -22,7 +22,7 @@ RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
 hash_t URatPSeriesFlint::__hash__() const
 {
     std::hash<std::string> str_hash;
-    hash_t seed = URATPSERIESFLINT;
+    hash_t seed = SYMENGINE_URATPSERIESFLINT;
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
     hash_combine(seed, str_hash(p_.to_string()));

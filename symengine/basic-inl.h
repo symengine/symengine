@@ -129,7 +129,7 @@ template <>
 struct hash<SymEngine::Basic> {
     std::size_t operator()(const SymEngine::Basic &b) const
     {
-        return b.hash();
+        return static_cast<std::size_t>(b.hash());
     }
 };
 }

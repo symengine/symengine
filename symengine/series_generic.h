@@ -21,7 +21,7 @@ class UnivariateSeries
 public:
     using SeriesBase::pow;
     using SeriesBase::mul;
-    IMPLEMENT_TYPEID(UNIVARIATESERIES)
+    IMPLEMENT_TYPEID(SYMENGINE_UNIVARIATESERIES)
     UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree)

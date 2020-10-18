@@ -146,7 +146,7 @@ std::vector<llvm::Pass *> LLVMVisitor::create_default_passes(int optlevel)
 #else
     passes.push_back(llvm::createInstructionCombiningPass(optlevel > 1));
 #endif
-    passes.push_back(llvm::createDeadInstEliminationPass());
+    passes.push_back(llvm::createDeadCodeEliminationPass());
     passes.push_back(llvm::createPromoteMemoryToRegisterPass());
     passes.push_back(llvm::createReassociatePass());
     passes.push_back(llvm::createGVNPass());
@@ -218,7 +218,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     // Create a basic block builder with default parameters.  The builder
     // will
     // automatically append instructions to the basic block `BB'.
-    llvm::IRBuilder<> _builder = llvm::IRBuilder<>(BB);
+    llvm::IRBuilder<> _builder(BB);
     builder = reinterpret_cast<IRBuilder *>(&_builder);
     builder->SetInsertPoint(BB);
     auto fmf = llvm::FastMathFlags();
@@ -1032,6 +1032,11 @@ void LLVMVisitor::bvisit(const Ceiling &x)
     auto r = builder->CreateCall(fun, args);
     r->setTailCall(true);
     result_ = r;
+}
+
+void LLVMVisitor::bvisit(const UnevaluatedExpr &x)
+{
+    apply(*x.get_arg());
 }
 
 void LLVMVisitor::bvisit(const Truncate &x)

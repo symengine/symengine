@@ -172,7 +172,7 @@ public:
 class UExprPoly : public USymEnginePoly<UExprDict, UExprPolyBase, UExprPoly>
 {
 public:
-    IMPLEMENT_TYPEID(UEXPRPOLY)
+    IMPLEMENT_TYPEID(SYMENGINE_UEXPRPOLY)
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Basic> &var, UExprDict &&dict);
 

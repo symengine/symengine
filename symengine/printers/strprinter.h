@@ -132,6 +132,8 @@ public:
     void bvisit(const Rational &x);
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
+    void bvisit(const Reals &x);
+    void bvisit(const Integers &x);
     void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
     void bvisit(const FiniteSet &x);

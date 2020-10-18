@@ -1,4 +1,6 @@
+#include <symengine/add.h>
 #include <symengine/logic.h>
+#include <symengine/functions.h>
 #include <symengine/symengine_casts.h>
 #include <iterator>
 
@@ -30,7 +32,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
 
 hash_t Interval::__hash__() const
 {
-    hash_t seed = INTERVAL;
+    hash_t seed = SYMENGINE_INTERVAL;
     hash_combine<Basic>(seed, *start_);
     hash_combine<Basic>(seed, *end_);
     hash_combine<bool>(seed, left_open_);
@@ -154,8 +156,32 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
             return emptyset();
         }
     }
+    if (is_a<Integers>(*o)) {
+        if (is_a_Number(*start_) and is_a_Number(*end_)) {
+            auto first = SymEngine::ceiling(start_);
+            auto last = SymEngine::floor(end_);
+            if (eq(*first, *start_) and left_open_) {
+                first = add(first, integer(1));
+            }
+            if (eq(*last, *end_) and right_open_) {
+                last = add(last, integer(-1));
+            }
+            if (eq(*Lt(last, first), *boolTrue)) {
+                return emptyset();
+            }
+            set_basic container;
+            while (eq(*Ge(last, first), *boolTrue)) {
+                container.insert(first);
+                first = add(first, integer(1));
+            }
+            return finiteset(container);
+        } else {
+            return SymEngine::set_intersection(
+                {rcp_from_this_cast<const Set>(), o});
+        }
+    }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
-        or is_a<Union>(*o)) {
+        or is_a<Union>(*o) or is_a<Reals>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
     throw SymEngineException("Not implemented Intersection class");
@@ -204,7 +230,7 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
-        or is_a<Union>(*o)) {
+        or is_a<Union>(*o) or is_a<Reals>(*o) or is_a<Integers>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
@@ -233,6 +259,163 @@ vec_basic Interval::get_args() const
     return {start_, end_, boolean(left_open_), boolean(right_open_)};
 }
 
+RCP<const Set> Reals::set_intersection(const RCP<const Set> &o) const
+{
+    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
+        or is_a<Integers>(*o)) {
+        return o;
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Reals::set_union(const RCP<const Set> &o) const
+{
+    if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
+        or is_a<Integers>(*o)) {
+        return reals();
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_union(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_union({rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Reals::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Reals>(*o) or is_a<Integers>(*o)
+        or is_a<Interval>(*o)) {
+        return emptyset();
+    }
+    if (is_a<UniversalSet>(*o)) {
+        return make_rcp<const Complement>(o, reals());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Boolean> Reals::contains(const RCP<const Basic> &a) const
+{
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    }
+    if (is_a<Complex>(*a)) {
+        return boolean(false);
+    }
+    return boolean(true);
+}
+
+hash_t Reals::__hash__() const
+{
+    hash_t seed = SYMENGINE_REALS;
+    return seed;
+}
+
+bool Reals::__eq__(const Basic &o) const
+{
+    if (is_a<Reals>(o))
+        return true;
+    return false;
+}
+
+int Reals::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Reals>(o))
+    return 0;
+}
+
+const RCP<const Reals> &Reals::getInstance()
+{
+    const static auto a = make_rcp<const Reals>();
+    return a;
+}
+
+RCP<const Set> Integers::set_intersection(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+        return o;
+    } else if (is_a<Reals>(*o)) {
+        return integers();
+    } else if (is_a<FiniteSet>(*o) or is_a<Interval>(*o)) {
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Integers::set_union(const RCP<const Set> &o) const
+{
+    if (is_a<Integers>(*o) or is_a<EmptySet>(*o)) {
+        return integers();
+    } else if (is_a<Reals>(*o)) {
+        return reals();
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_union(rcp_from_this_cast<const Set>());
+    } else if (is_a<UniversalSet>(*o)) {
+        return universalset();
+    } else {
+        return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Integers::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+        return emptyset();
+    }
+    if (is_a<UniversalSet>(*o) or is_a<Reals>(*o)) {
+        return make_rcp<const Complement>(o, integers());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Boolean> Integers::contains(const RCP<const Basic> &a) const
+{
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    }
+    if (is_a<Integer>(*a)) {
+        return boolean(true);
+    }
+    return boolean(false);
+}
+
+hash_t Integers::__hash__() const
+{
+    hash_t seed = SYMENGINE_INTEGERS;
+    return seed;
+}
+
+bool Integers::__eq__(const Basic &o) const
+{
+    if (is_a<Integers>(o))
+        return true;
+    return false;
+}
+
+int Integers::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Integers>(o))
+    return 0;
+}
+
+const RCP<const Integers> &Integers::getInstance()
+{
+    const static auto a = make_rcp<const Integers>();
+    return a;
+}
+
 RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const
 {
     return emptyset();
@@ -250,7 +433,7 @@ RCP<const Set> EmptySet::set_complement(const RCP<const Set> &o) const
 
 hash_t EmptySet::__hash__() const
 {
-    hash_t seed = EMPTYSET;
+    hash_t seed = SYMENGINE_EMPTYSET;
     return seed;
 }
 
@@ -290,7 +473,7 @@ RCP<const Set> UniversalSet::set_complement(const RCP<const Set> &o) const
 
 hash_t UniversalSet::__hash__() const
 {
-    hash_t seed = UNIVERSALSET;
+    hash_t seed = SYMENGINE_UNIVERSALSET;
     return seed;
 }
 
@@ -326,7 +509,7 @@ bool FiniteSet::is_canonical(const set_basic &container)
 
 hash_t FiniteSet::__hash__() const
 {
-    hash_t seed = FINITESET;
+    hash_t seed = SYMENGINE_FINITESET;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -396,7 +579,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                     }
                 container.insert(a);
             } else if (is_a<Contains>(*contain)) {
-                SymEngineException("Not implemented");
+                container.insert(a);
             }
         }
         if (not container.empty()) {
@@ -417,6 +600,34 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                 return interval(other.get_start(), other.get_end(), left,
                                 right);
             }
+        }
+    }
+    if (is_a<Reals>(*o)) {
+        set_basic container;
+        for (const auto &elem : container_) {
+            if (!is_a_Number(*elem)
+                || down_cast<const Number &>(*elem).is_complex()) {
+                container.insert(elem);
+            }
+        }
+        if (container.empty()) {
+            return reals();
+        } else {
+            return SymEngine::make_set_union({reals(), finiteset(container)});
+        }
+    }
+    if (is_a<Integers>(*o)) {
+        set_basic container;
+        for (const auto &elem : container_) {
+            if (!is_a<Integer>(*elem)) {
+                container.insert(elem);
+            }
+        }
+        if (container.empty()) {
+            return integers();
+        } else {
+            return SymEngine::make_set_union(
+                {integers(), finiteset(container)});
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
@@ -446,6 +657,64 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
                 throw SymEngineException("Not implemented");
         }
         return finiteset(container);
+    }
+    if (is_a<Reals>(*o)) {
+        set_basic kept_reals;
+        set_basic others;
+        for (const auto &elem : container_) {
+            if (is_a_Number(*elem)) {
+                if (!down_cast<const Number &>(*elem).is_complex()) {
+                    kept_reals.insert(elem);
+                }
+            } else {
+                others.insert(elem);
+            }
+        }
+        if (kept_reals.empty()) {
+            if (others.empty()) {
+                return emptyset();
+            } else {
+                return SymEngine::set_intersection(
+                    {reals(), finiteset(others)});
+            }
+        } else {
+            if (others.empty()) {
+                return finiteset(kept_reals);
+            } else {
+                others.insert(kept_reals.begin(), kept_reals.end());
+                return SymEngine::set_intersection(
+                    {reals(), finiteset(others)});
+            }
+        }
+    }
+    if (is_a<Integers>(*o)) {
+        set_basic kept_integers;
+        set_basic others;
+        for (const auto &elem : container_) {
+            if (is_a_Number(*elem)) {
+                if (is_a<Integer>(*elem)) {
+                    kept_integers.insert(elem);
+                }
+            } else {
+                others.insert(elem);
+            }
+        }
+        if (kept_integers.empty()) {
+            if (others.empty()) {
+                return emptyset();
+            } else {
+                return SymEngine::set_intersection(
+                    {integers(), finiteset(others)});
+            }
+        } else {
+            if (others.empty()) {
+                return finiteset(kept_integers);
+            } else {
+                others.insert(kept_integers.begin(), kept_integers.end());
+                return SymEngine::set_intersection(
+                    {integers(), finiteset(others)});
+            }
+        }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -522,7 +791,7 @@ Union::Union(const set_set &in) : container_(in)
 
 hash_t Union::__hash__() const
 {
-    hash_t seed = UNION;
+    hash_t seed = SYMENGINE_UNION;
     for (const auto &a : container_)
         hash_combine<Basic>(seed, *a);
     return seed;
@@ -628,7 +897,7 @@ Complement::Complement(const RCP<const Set> &universe,
 
 hash_t Complement::__hash__() const
 {
-    hash_t seed = COMPLEMENT;
+    hash_t seed = SYMENGINE_COMPLEMENT;
     hash_combine<Basic>(seed, *universe_);
     hash_combine<Basic>(seed, *container_);
     return seed;
@@ -704,7 +973,7 @@ bool ConditionSet::is_canonical(const RCP<const Basic> &sym,
 
 hash_t ConditionSet::__hash__() const
 {
-    hash_t seed = CONDITIONSET;
+    hash_t seed = SYMENGINE_CONDITIONSET;
     hash_combine<Basic>(seed, *sym);
     hash_combine<Basic>(seed, *condition_);
     return seed;
@@ -771,7 +1040,7 @@ ImageSet::ImageSet(const RCP<const Basic> &sym, const RCP<const Basic> &expr,
 
 hash_t ImageSet::__hash__() const
 {
-    hash_t seed = IMAGESET;
+    hash_t seed = SYMENGINE_IMAGESET;
     hash_combine<Basic>(seed, *sym_);
     hash_combine<Basic>(seed, *expr_);
     hash_combine<Basic>(seed, *base_);

@@ -21,6 +21,8 @@ public:
     void bvisit(const Interval &x);
     void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
+    void bvisit(const Reals &x);
+    void bvisit(const Integers &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const ConditionSet &x);
     void bvisit(const Contains &x);
@@ -39,6 +41,7 @@ public:
     void bvisit(const Function &x);
     void bvisit(const FunctionSymbol &x);
     void bvisit(const Derivative &x);
+    void bvisit(const UnevaluatedExpr &x);
     // void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const Equality &x);

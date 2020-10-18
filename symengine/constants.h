@@ -22,7 +22,7 @@ private:
     std::string name_;
 
 public:
-    IMPLEMENT_TYPEID(CONSTANT)
+    IMPLEMENT_TYPEID(SYMENGINE_CONSTANT)
     //! Constant Constructor
     Constant(const std::string &name);
     //! \return Size of the hash

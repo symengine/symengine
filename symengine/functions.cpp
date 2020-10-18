@@ -163,7 +163,7 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
     if (is_a<Add>(*arg)) {
         const Add &s = down_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.get_coef();
-        long unsigned size = s.get_dict().size();
+        auto size = s.get_dict().size();
         if (size > 1) {
             // arg should be of form `x + n*pi`
             // `n` is an integer
@@ -1832,7 +1832,7 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg) const
 
 hash_t FunctionSymbol::__hash__() const
 {
-    hash_t seed = FUNCTIONSYMBOL;
+    hash_t seed = SYMENGINE_FUNCTIONSYMBOL;
     for (const auto &a : get_vec())
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
@@ -1959,7 +1959,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
 
 hash_t Derivative::__hash__() const
 {
-    hash_t seed = DERIVATIVE;
+    hash_t seed = SYMENGINE_DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
     for (auto &p : x_) {
         hash_combine<Basic>(seed, *p);
@@ -2006,7 +2006,7 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
 
 hash_t Subs::__hash__() const
 {
-    hash_t seed = SUBS;
+    hash_t seed = SYMENGINE_SUBS;
     hash_combine<Basic>(seed, *arg_);
     for (const auto &p : dict_) {
         hash_combine<Basic>(seed, *p.first);
@@ -3692,6 +3692,28 @@ RCP<const Basic> min(const vec_basic &arg)
     } else {
         throw SymEngineException("Empty vec_basic passed to min!");
     }
+}
+
+UnevaluatedExpr::UnevaluatedExpr(const RCP<const Basic> &arg)
+    : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool UnevaluatedExpr::is_canonical(const RCP<const Basic> &arg) const
+{
+    return true;
+}
+
+RCP<const Basic> UnevaluatedExpr::create(const RCP<const Basic> &arg) const
+{
+    return make_rcp<const UnevaluatedExpr>(arg);
+}
+
+RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg)
+{
+    return make_rcp<const UnevaluatedExpr>(arg);
 }
 
 } // SymEngine

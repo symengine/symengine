@@ -27,7 +27,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_a_Number(exp) and down_cast<const Number &>(exp).is_zero())
+    if (is_zero(exp))
         return false;
     // e.g. x**1
     if (is_a<Integer>(exp) and down_cast<const Integer &>(exp).is_one())
@@ -61,7 +61,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 
 hash_t Pow::__hash__() const
 {
-    hash_t seed = POW;
+    hash_t seed = SYMENGINE_POW;
     hash_combine<Basic>(seed, *base_);
     hash_combine<Basic>(seed, *exp_);
     return seed;
@@ -89,7 +89,7 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_a_Number(*b) and down_cast<const Number &>(*b).is_zero()) {
+    if (is_zero(*b)) {
         // addnum is used for converting to the type of `b`.
         return addnum(one, rcp_static_cast<const Number>(b));
     }

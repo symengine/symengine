@@ -372,6 +372,16 @@ void StrPrinter::bvisit(const Piecewise &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Reals &x)
+{
+    str_ = "Reals";
+}
+
+void StrPrinter::bvisit(const Integers &x)
+{
+    str_ = "Integers";
+}
+
 void StrPrinter::bvisit(const EmptySet &x)
 {
     str_ = "EmptySet";
@@ -1024,54 +1034,55 @@ std::vector<std::string> init_str_printer_names()
 {
     std::vector<std::string> names;
     names.assign(TypeID_Count, "");
-    names[SIN] = "sin";
-    names[COS] = "cos";
-    names[TAN] = "tan";
-    names[COT] = "cot";
-    names[CSC] = "csc";
-    names[SEC] = "sec";
-    names[ASIN] = "asin";
-    names[ACOS] = "acos";
-    names[ASEC] = "asec";
-    names[ACSC] = "acsc";
-    names[ATAN] = "atan";
-    names[ACOT] = "acot";
-    names[ATAN2] = "atan2";
-    names[SINH] = "sinh";
-    names[CSCH] = "csch";
-    names[COSH] = "cosh";
-    names[SECH] = "sech";
-    names[TANH] = "tanh";
-    names[COTH] = "coth";
-    names[ASINH] = "asinh";
-    names[ACSCH] = "acsch";
-    names[ACOSH] = "acosh";
-    names[ATANH] = "atanh";
-    names[ACOTH] = "acoth";
-    names[ASECH] = "asech";
-    names[LOG] = "log";
-    names[LAMBERTW] = "lambertw";
-    names[ZETA] = "zeta";
-    names[DIRICHLET_ETA] = "dirichlet_eta";
-    names[KRONECKERDELTA] = "kroneckerdelta";
-    names[LEVICIVITA] = "levicivita";
-    names[FLOOR] = "floor";
-    names[CEILING] = "ceiling";
-    names[TRUNCATE] = "truncate";
-    names[ERF] = "erf";
-    names[ERFC] = "erfc";
-    names[LOWERGAMMA] = "lowergamma";
-    names[UPPERGAMMA] = "uppergamma";
-    names[BETA] = "beta";
-    names[LOGGAMMA] = "loggamma";
-    names[LOG] = "log";
-    names[POLYGAMMA] = "polygamma";
-    names[GAMMA] = "gamma";
-    names[ABS] = "abs";
-    names[MAX] = "max";
-    names[MIN] = "min";
-    names[SIGN] = "sign";
-    names[CONJUGATE] = "conjugate";
+    names[SYMENGINE_SIN] = "sin";
+    names[SYMENGINE_COS] = "cos";
+    names[SYMENGINE_TAN] = "tan";
+    names[SYMENGINE_COT] = "cot";
+    names[SYMENGINE_CSC] = "csc";
+    names[SYMENGINE_SEC] = "sec";
+    names[SYMENGINE_ASIN] = "asin";
+    names[SYMENGINE_ACOS] = "acos";
+    names[SYMENGINE_ASEC] = "asec";
+    names[SYMENGINE_ACSC] = "acsc";
+    names[SYMENGINE_ATAN] = "atan";
+    names[SYMENGINE_ACOT] = "acot";
+    names[SYMENGINE_ATAN2] = "atan2";
+    names[SYMENGINE_SINH] = "sinh";
+    names[SYMENGINE_CSCH] = "csch";
+    names[SYMENGINE_COSH] = "cosh";
+    names[SYMENGINE_SECH] = "sech";
+    names[SYMENGINE_TANH] = "tanh";
+    names[SYMENGINE_COTH] = "coth";
+    names[SYMENGINE_ASINH] = "asinh";
+    names[SYMENGINE_ACSCH] = "acsch";
+    names[SYMENGINE_ACOSH] = "acosh";
+    names[SYMENGINE_ATANH] = "atanh";
+    names[SYMENGINE_ACOTH] = "acoth";
+    names[SYMENGINE_ASECH] = "asech";
+    names[SYMENGINE_LOG] = "log";
+    names[SYMENGINE_LAMBERTW] = "lambertw";
+    names[SYMENGINE_ZETA] = "zeta";
+    names[SYMENGINE_DIRICHLET_ETA] = "dirichlet_eta";
+    names[SYMENGINE_KRONECKERDELTA] = "kroneckerdelta";
+    names[SYMENGINE_LEVICIVITA] = "levicivita";
+    names[SYMENGINE_FLOOR] = "floor";
+    names[SYMENGINE_CEILING] = "ceiling";
+    names[SYMENGINE_TRUNCATE] = "truncate";
+    names[SYMENGINE_ERF] = "erf";
+    names[SYMENGINE_ERFC] = "erfc";
+    names[SYMENGINE_LOWERGAMMA] = "lowergamma";
+    names[SYMENGINE_UPPERGAMMA] = "uppergamma";
+    names[SYMENGINE_BETA] = "beta";
+    names[SYMENGINE_LOGGAMMA] = "loggamma";
+    names[SYMENGINE_LOG] = "log";
+    names[SYMENGINE_POLYGAMMA] = "polygamma";
+    names[SYMENGINE_GAMMA] = "gamma";
+    names[SYMENGINE_ABS] = "abs";
+    names[SYMENGINE_MAX] = "max";
+    names[SYMENGINE_MIN] = "min";
+    names[SYMENGINE_SIGN] = "sign";
+    names[SYMENGINE_CONJUGATE] = "conjugate";
+    names[SYMENGINE_UNEVALUATED_EXPR] = "";
     return names;
 }
 

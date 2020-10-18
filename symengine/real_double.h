@@ -22,7 +22,7 @@ public:
     double i;
 
 public:
-    IMPLEMENT_TYPEID(REAL_DOUBLE)
+    IMPLEMENT_TYPEID(SYMENGINE_REAL_DOUBLE)
     //! Constructor of RealDouble class
     explicit RealDouble(double i);
     //! \return size of the hash

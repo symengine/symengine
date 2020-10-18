@@ -11,7 +11,7 @@ NaN::NaN()
 
 hash_t NaN::__hash__() const
 {
-    hash_t seed = NOT_A_NUMBER;
+    hash_t seed = SYMENGINE_NOT_A_NUMBER;
     return seed;
 }
 

@@ -313,9 +313,9 @@ public:
 
     def operation_symbol_enum(self, operation):
         SYMENGINE_TYPES = dict(
-            Pow="POW",
-            Add="ADD",
-            Mul="MUL",
+            Pow="SYMENGINE_POW",
+            Add="SYMENGINE_ADD",
+            Mul="SYMENGINE_MUL",
         )
         return SYMENGINE_TYPES[operation.__name__]
 

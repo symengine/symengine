@@ -9,18 +9,18 @@ namespace SymEngine
 std::vector<std::string> init_mathml_printer_names()
 {
     std::vector<std::string> names = init_str_printer_names();
-    names[ASIN] = "arcsin";
-    names[ACOS] = "arccos";
-    names[ASEC] = "arcsec";
-    names[ACSC] = "arccsc";
-    names[ATAN] = "arctan";
-    names[ACOT] = "arccot";
-    names[ASINH] = "arcsinh";
-    names[ACSCH] = "arccsch";
-    names[ACOSH] = "arccosh";
-    names[ATANH] = "arctanh";
-    names[ACOTH] = "arccoth";
-    names[ASECH] = "arcsech";
+    names[SYMENGINE_ASIN] = "arcsin";
+    names[SYMENGINE_ACOS] = "arccos";
+    names[SYMENGINE_ASEC] = "arcsec";
+    names[SYMENGINE_ACSC] = "arccsc";
+    names[SYMENGINE_ATAN] = "arctan";
+    names[SYMENGINE_ACOT] = "arccot";
+    names[SYMENGINE_ASINH] = "arcsinh";
+    names[SYMENGINE_ACSCH] = "arccsch";
+    names[SYMENGINE_ACOSH] = "arccosh";
+    names[SYMENGINE_ATANH] = "arctanh";
+    names[SYMENGINE_ACOTH] = "arccoth";
+    names[SYMENGINE_ASECH] = "arcsech";
     return names;
 }
 const std::vector<std::string> MathMLPrinter::names_
@@ -106,6 +106,16 @@ void MathMLPrinter::bvisit(const Piecewise &x)
 void MathMLPrinter::bvisit(const EmptySet &x)
 {
     s << "<emptyset/>";
+}
+
+void MathMLPrinter::bvisit(const Reals &x)
+{
+    s << "<reals/>";
+}
+
+void MathMLPrinter::bvisit(const Integers &x)
+{
+    s << "<integers/>";
 }
 
 void MathMLPrinter::bvisit(const FiniteSet &x)
@@ -265,6 +275,11 @@ void MathMLPrinter::bvisit(const Function &x)
         arg->accept(*this);
     }
     s << "</apply>";
+}
+
+void MathMLPrinter::bvisit(const UnevaluatedExpr &x)
+{
+    apply(*x.get_arg());
 }
 
 void MathMLPrinter::bvisit(const FunctionSymbol &x)

@@ -34,7 +34,7 @@ typedef symengine_exceptions_t CWRAPPER_OUTPUT_TYPE;
 
 typedef enum {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
+#define SYMENGINE_ENUM(type, Class) type,
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -376,7 +376,8 @@ void basic_str_free(char *s);
 
 //! Returns 1 if a specific component is installed and 0 if not.
 //! Component can be "mpfr", "flint", "arb", "mpc", "ecm", "primesieve",
-//! "piranha", "boost", "pthread" or "llvm" (all in lowercase).
+//! "piranha", "boost", "pthread", "llvm" or "llvm_long_double" (all in
+//! lowercase).
 //! This function, using string comparison, was implemented for particular
 //! libraries that do not provide header access (i.e. SymEngine.jl
 //! and other related shared libraries).
@@ -717,6 +718,7 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 
 //! Wrapper for LambdaRealDoubleVisitor
 #ifdef HAVE_SYMENGINE_LLVM
+// double
 typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
 CLLVMDoubleVisitor *llvm_double_visitor_new();
 void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
@@ -725,6 +727,29 @@ void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
                               const double *const inps);
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
+// float
+typedef struct CLLVMFloatVisitor CLLVMFloatVisitor;
+CLLVMFloatVisitor *llvm_float_visitor_new();
+void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
+                             const CVecBasic *exprs, int perform_cse,
+                             int opt_level);
+void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
+                             const float *const inps);
+void llvm_float_visitor_free(CLLVMFloatVisitor *self);
+
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+// long double
+typedef struct CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;
+CLLVMLongDoubleVisitor *llvm_long_double_visitor_new();
+void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                   const CVecBasic *args,
+                                   const CVecBasic *exprs, int perform_cse,
+                                   int opt_level);
+void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
+                                   long double *const outs,
+                                   const long double *const inps);
+void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self);
+#endif
 #endif
 
 CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,

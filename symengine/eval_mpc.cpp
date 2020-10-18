@@ -338,6 +338,11 @@ public:
         x.eval(mpc_get_prec(result_))->accept(*this);
     }
 
+    void bvisit(const UnevaluatedExpr &x)
+    {
+        apply(result_, *x.get_arg());
+    }
+
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW

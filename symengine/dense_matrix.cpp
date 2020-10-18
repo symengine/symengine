@@ -1,5 +1,6 @@
 #include <symengine/matrix.h>
 #include <symengine/add.h>
+#include <symengine/functions.h>
 #include <symengine/pow.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
@@ -127,6 +128,19 @@ void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
     }
 }
 
+void DenseMatrix::elementwise_mul_matrix(const MatrixBase &other,
+                                         MatrixBase &result) const
+{
+    SYMENGINE_ASSERT(row_ == result.nrows() and col_ == result.ncols()
+                     and row_ == other.nrows() and col_ == other.ncols());
+
+    if (is_a<DenseMatrix>(other) and is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = down_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        elementwise_mul_dense_dense(*this, o, r);
+    }
+}
+
 // Add a scalar
 void DenseMatrix::add_scalar(const RCP<const Basic> &k,
                              MatrixBase &result) const
@@ -147,12 +161,30 @@ void DenseMatrix::mul_scalar(const RCP<const Basic> &k,
     }
 }
 
+// Matrix conjugate
+void DenseMatrix::conjugate(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        conjugate_dense(*this, r);
+    }
+}
+
 // Matrix transpose
 void DenseMatrix::transpose(MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = down_cast<DenseMatrix &>(result);
         transpose_dense(*this, r);
+    }
+}
+
+// Matrix conjugate transpose
+void DenseMatrix::conjugate_transpose(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = down_cast<DenseMatrix &>(result);
+        conjugate_transpose_dense(*this, r);
     }
 }
 
@@ -330,6 +362,16 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
     }
 }
 
+// ----------------------------- Matrix Conjugate ----------------------------//
+void conjugate_dense(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(B.col_ == A.col_ and B.row_ == A.row_);
+
+    for (unsigned i = 0; i < A.row_; i++)
+        for (unsigned j = 0; j < A.col_; j++)
+            B.m_[i * B.col_ + j] = conjugate(A.m_[i * A.col_ + j]);
+}
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
@@ -338,6 +380,16 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
     for (unsigned i = 0; i < A.row_; i++)
         for (unsigned j = 0; j < A.col_; j++)
             B.m_[j * B.col_ + i] = A.m_[i * A.col_ + j];
+}
+
+// ----------------------------- Matrix Conjugate Transpose -----------------//
+void conjugate_transpose_dense(const DenseMatrix &A, DenseMatrix &B)
+{
+    SYMENGINE_ASSERT(B.row_ == A.col_ and B.col_ == A.row_);
+
+    for (unsigned i = 0; i < A.row_; i++)
+        for (unsigned j = 0; j < A.col_; j++)
+            B.m_[j * B.col_ + i] = conjugate(A.m_[i * A.col_ + j]);
 }
 
 // ------------------------------- Submatrix ---------------------------------//
@@ -409,6 +461,21 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
         DenseMatrix tmp = DenseMatrix(A.row_, B.col_);
         mul_dense_dense(A, B, tmp);
         C = tmp;
+    }
+}
+
+void elementwise_mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+                                 DenseMatrix &C)
+{
+    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and A.row_ == C.row_
+                     and A.col_ == C.col_);
+
+    unsigned row = A.row_, col = A.col_;
+
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i * col + j] = mul(A.m_[i * col + j], B.m_[i * col + j]);
+        }
     }
 }
 
@@ -792,7 +859,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
 unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
     for (unsigned k = r; k < B.row_; k++) {
-        if (neq(*(B.m_[k * B.col_ + c]), *zero)) {
+        if (not is_zero(*(B.m_[k * B.col_ + c]))) {
             return k;
         }
     }
@@ -810,7 +877,7 @@ void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &b,
     }
     unsigned row = 0;
     for (unsigned col = 0; col < b.col_ && row < b.row_; col++) {
-        if (eq(*zero, *b.get(row, col)))
+        if (is_zero(*b.get(row, col)))
             continue;
         pivot_cols.push_back(col);
         if (row == 0 and normalize_last) {
@@ -1131,7 +1198,7 @@ void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU, permutelist &pl)
                 LU.m_[i * n + j] = sub(LU.m_[i * n + j],
                                        mul(LU.m_[i * n + k], LU.m_[k * n + j]));
             }
-            if (pivot == -1 and neq(*LU.m_[i * n + j], *zero))
+            if (pivot == -1 and not is_zero(*LU.m_[i * n + j]))
                 pivot = i;
         }
         if (pivot == -1)
@@ -1401,9 +1468,9 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
         RCP<const Basic> d;
 
         for (unsigned k = 0; k < n - 1; k++) {
-            if (eq(*(B.m_[k * n + k]), *zero)) {
+            if (is_zero(*B.m_[k * n + k])) {
                 for (i = k + 1; i < n; i++)
-                    if (neq(*(B.m_[i * n + k]), *zero)) {
+                    if (not is_zero(*B.m_[i * n + k])) {
                         row_exchange_dense(B, i, k);
                         sign *= -1;
                         break;

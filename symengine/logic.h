@@ -28,7 +28,7 @@ private:
     bool b_;
 
 public:
-    IMPLEMENT_TYPEID(BOOLEAN_ATOM)
+    IMPLEMENT_TYPEID(SYMENGINE_BOOLEAN_ATOM)
     BooleanAtom(bool b);
     //! \return the hash
     hash_t __hash__() const;
@@ -57,7 +57,7 @@ private:
     RCP<const Set> set_;
 
 public:
-    IMPLEMENT_TYPEID(CONTAINS)
+    IMPLEMENT_TYPEID(SYMENGINE_CONTAINS)
     //! Constructor
     Contains(const RCP<const Basic> &expr, const RCP<const Set> &set);
     hash_t __hash__() const;
@@ -85,7 +85,7 @@ private:
     PiecewiseVec vec_;
 
 public:
-    IMPLEMENT_TYPEID(PIECEWISE)
+    IMPLEMENT_TYPEID(SYMENGINE_PIECEWISE)
     //! Constructor
     Piecewise(PiecewiseVec &&vec);
     hash_t __hash__() const;
@@ -109,7 +109,7 @@ private:
     set_boolean container_;
 
 public:
-    IMPLEMENT_TYPEID(AND)
+    IMPLEMENT_TYPEID(SYMENGINE_AND)
     And(const set_boolean &s);
     bool is_canonical(const set_boolean &container_);
     //! \return the hash
@@ -129,7 +129,7 @@ private:
     set_boolean container_;
 
 public:
-    IMPLEMENT_TYPEID(OR)
+    IMPLEMENT_TYPEID(SYMENGINE_OR)
     Or(const set_boolean &s);
     bool is_canonical(const set_boolean &container_);
     //! \return the hash
@@ -148,7 +148,7 @@ private:
     RCP<const Boolean> arg_;
 
 public:
-    IMPLEMENT_TYPEID(NOT)
+    IMPLEMENT_TYPEID(SYMENGINE_NOT)
     Not(const RCP<const Boolean> &s);
     bool is_canonical(const RCP<const Boolean> &s);
     //! \return the hash
@@ -167,7 +167,7 @@ private:
     vec_boolean container_;
 
 public:
-    IMPLEMENT_TYPEID(XOR)
+    IMPLEMENT_TYPEID(SYMENGINE_XOR)
     Xor(const vec_boolean &s);
     bool is_canonical(const vec_boolean &container_);
     hash_t __hash__() const;
@@ -191,7 +191,7 @@ class Equality : public Relational
 {
     //! Class for operator `==`.
 public:
-    IMPLEMENT_TYPEID(EQUALITY);
+    IMPLEMENT_TYPEID(SYMENGINE_EQUALITY)
     Equality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -202,7 +202,7 @@ class Unequality : public Relational
 {
     //! Class for operator `!=`.
 public:
-    IMPLEMENT_TYPEID(UNEQUALITY);
+    IMPLEMENT_TYPEID(SYMENGINE_UNEQUALITY)
     Unequality(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -213,7 +213,7 @@ class LessThan : public Relational
 {
     //! Class for operator `<=`.
 public:
-    IMPLEMENT_TYPEID(LESSTHAN);
+    IMPLEMENT_TYPEID(SYMENGINE_LESSTHAN)
     LessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -224,7 +224,7 @@ class StrictLessThan : public Relational
 {
     //! Class for operator `<`.
 public:
-    IMPLEMENT_TYPEID(STRICTLESSTHAN);
+    IMPLEMENT_TYPEID(SYMENGINE_STRICTLESSTHAN)
     StrictLessThan(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
     virtual RCP<const Basic> create(const RCP<const Basic> &lhs,
                                     const RCP<const Basic> &rhs) const;
@@ -233,17 +233,20 @@ public:
 
 inline bool is_a_Relational(const Basic &b)
 {
-    return (b.get_type_code() == EQUALITY || b.get_type_code() == UNEQUALITY
-            || b.get_type_code() == LESSTHAN
-            || b.get_type_code() == STRICTLESSTHAN);
+    return (b.get_type_code() == SYMENGINE_EQUALITY
+            || b.get_type_code() == SYMENGINE_UNEQUALITY
+            || b.get_type_code() == SYMENGINE_LESSTHAN
+            || b.get_type_code() == SYMENGINE_STRICTLESSTHAN);
 }
 
 inline bool is_a_Boolean(const Basic &b)
 {
-    return (b.get_type_code() == BOOLEAN_ATOM || b.get_type_code() == CONTAINS
-            || b.get_type_code() == AND || b.get_type_code() == OR
-            || b.get_type_code() == NOT || b.get_type_code() == XOR
-            || is_a_Relational(b));
+    return (b.get_type_code() == SYMENGINE_BOOLEAN_ATOM
+            || b.get_type_code() == SYMENGINE_CONTAINS
+            || b.get_type_code() == SYMENGINE_AND
+            || b.get_type_code() == SYMENGINE_OR
+            || b.get_type_code() == SYMENGINE_NOT
+            || b.get_type_code() == SYMENGINE_XOR || is_a_Relational(b));
 }
 
 //! Returns the canonicalized Equality object from a single argument

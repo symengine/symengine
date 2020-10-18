@@ -1,6 +1,11 @@
 project(matchpycpp_tests)
 include_directories(BEFORE ${catch_SOURCE_DIR})
 
+if (MSVC AND NOT "${CMAKE_CXX_COMPILER_FRONTEND_VARIANT}" STREQUAL "GNU")
+  # Suppress a warning about a mangled name being too long for debugging info
+  add_definitions("/wd4503")
+endif()
+
 add_executable(test_case001 test_case001.cpp)
 target_link_libraries(test_case001 symengine catch)
 add_test(test_case001 test_case001)

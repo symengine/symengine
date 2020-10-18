@@ -23,8 +23,9 @@ public:
 //! \return true if 'b' is any of the subclasses of ComplexBase
 inline bool is_a_Complex(const Basic &b)
 {
-    return (b.get_type_code() == COMPLEX || b.get_type_code() == COMPLEX_MPC
-            || b.get_type_code() == COMPLEX_DOUBLE);
+    return (b.get_type_code() == SYMENGINE_COMPLEX
+            || b.get_type_code() == SYMENGINE_COMPLEX_MPC
+            || b.get_type_code() == SYMENGINE_COMPLEX_DOUBLE);
 }
 
 //! Complex Class
@@ -38,7 +39,7 @@ public:
     rational_class imaginary_;
 
 public:
-    IMPLEMENT_TYPEID(COMPLEX)
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEX)
     //! Constructor of Complex class
     Complex(rational_class real, rational_class imaginary);
     /*! Creates an instance of Complex if imaginary part is non-zero

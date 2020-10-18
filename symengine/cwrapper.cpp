@@ -12,6 +12,10 @@
 #ifdef HAVE_SYMENGINE_LLVM
 #include <symengine/llvm_double.h>
 using SymEngine::LLVMDoubleVisitor;
+using SymEngine::LLVMFloatVisitor;
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+using SymEngine::LLVMLongDoubleVisitor;
+#endif
 #endif
 
 #define xstr(s) str(s)
@@ -211,7 +215,7 @@ TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class) {xstr(Class), SYMENGINE_##type},
+#define SYMENGINE_ENUM(type, Class) {xstr(Class), type},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -224,7 +228,7 @@ char *basic_get_class_from_id(TypeID id)
 {
     static std::map<TypeID, std::string> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class) {SYMENGINE_##type, xstr(Class)},
+#define SYMENGINE_ENUM(type, Class) {type, xstr(Class)},
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
@@ -693,6 +697,10 @@ int symengine_have_component(const char *c)
 #endif
 #ifdef HAVE_SYMENGINE_LLVM
     if (std::strcmp("llvm", c) == 0)
+        return 1;
+#endif
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+    if (std::strcmp("llvm_long_double", c) == 0)
         return 1;
 #endif
     return 0;
@@ -1336,7 +1344,7 @@ CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
 
 size_t basic_hash(const basic self)
 {
-    return self->m->hash();
+    return static_cast<size_t>(self->m->hash());
 }
 
 CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e,
@@ -1404,7 +1412,9 @@ CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
     SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
     RCP<const Set> set
         = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
-    SYMENGINE_ASSERT(is_a<FiniteSet>(*set));
+    if (not is_a<FiniteSet>(*set)) {
+        return SYMENGINE_RUNTIME_ERROR;
+    }
     r->m = down_cast<const FiniteSet &>(*set).get_container();
     CWRAPPER_END
 }
@@ -1646,6 +1656,7 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
+// double
 struct CLLVMDoubleVisitor {
     SymEngine::LLVMDoubleVisitor m;
 };
@@ -1672,6 +1683,64 @@ void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
 {
     delete self;
 }
+// float
+struct CLLVMFloatVisitor {
+    SymEngine::LLVMFloatVisitor m;
+};
+
+CLLVMFloatVisitor *llvm_float_visitor_new()
+{
+    return new CLLVMFloatVisitor();
+}
+
+void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
+                             const CVecBasic *exprs, int perform_cse,
+                             int opt_level)
+{
+    self->m.init(args->m, exprs->m, perform_cse, opt_level);
+}
+
+void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
+                             const float *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_float_visitor_free(CLLVMFloatVisitor *self)
+{
+    delete self;
+}
+#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+// long double
+struct CLLVMLongDoubleVisitor {
+    SymEngine::LLVMLongDoubleVisitor m;
+};
+
+CLLVMLongDoubleVisitor *llvm_long_double_visitor_new()
+{
+    return new CLLVMLongDoubleVisitor();
+}
+
+void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                   const CVecBasic *args,
+                                   const CVecBasic *exprs, int perform_cse,
+                                   int opt_level)
+{
+    self->m.init(args->m, exprs->m, perform_cse, opt_level);
+}
+
+void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
+                                   long double *const outs,
+                                   const long double *const inps)
+{
+    self->m.call(outs, inps);
+}
+
+void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self)
+{
+    delete self;
+}
+#endif
 #endif
 
 CWRAPPER_OUTPUT_TYPE basic_cse(CVecBasic *replacement_syms,

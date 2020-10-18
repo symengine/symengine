@@ -6,7 +6,6 @@ using namespace std;
 
 TEST_CASE("BipartiteGraph", "")
 {
-    SECTION("Test 1")
     {
         map<tuple<int, int>, bool> m = {{make_tuple(0, 1), true},
                                         {make_tuple(1, 0), true},
@@ -23,7 +22,6 @@ TEST_CASE("BipartiteGraph", "")
         REQUIRE(result.size() == expected.size());
     }
 
-    SECTION("Test 2")
     {
         map<tuple<int, int>, bool> m = {{make_tuple(0, 0), true},
                                         {make_tuple(1, 1), true},
@@ -35,7 +33,6 @@ TEST_CASE("BipartiteGraph", "")
         REQUIRE(result.size() == expected.size());
     }
 
-    SECTION("Test 3")
     {
         map<tuple<int, int>, bool> m = {{make_tuple(0, 0), true},
                                         {make_tuple(1, 1), true},
@@ -49,7 +46,6 @@ TEST_CASE("BipartiteGraph", "")
         REQUIRE(result.size() == expected.size());
     }
 
-    SECTION("Test 4")
     {
         map<tuple<int, int>, bool> m = {};
         BipartiteGraph<int, int, bool> bg(m);

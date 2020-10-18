@@ -342,6 +342,10 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
 
+    s = "atan2(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *atan2(x, y)));
+
     s = "Eq(x)";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, integer(0))));
@@ -629,7 +633,7 @@ TEST_CASE("Parsing: doubles", "[parser]")
     res = parse(s);
     REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
-    REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
+    REQUIRE(std::abs(d - (std::sqrt(2) + 5)) < 1e-12);
 
     // Test that https://github.com/symengine/symengine/issues/1413 is fixed
 

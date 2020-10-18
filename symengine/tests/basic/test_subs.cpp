@@ -179,6 +179,11 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = div(one, mul(x, y));
     d[x] = zero;
     REQUIRE(eq(*r1->subs(d), *div(ComplexInf, y)));
+
+    d.clear();
+    r1 = mul(i2, x);
+    d[i2] = one;
+    REQUIRE(eq(*r1->subs(d), *x));
 }
 
 TEST_CASE("Pow: subs", "[subs]")

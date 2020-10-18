@@ -42,7 +42,7 @@ hash_t Complex::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    hash_t seed = COMPLEX;
+    hash_t seed = SYMENGINE_COMPLEX;
     hash_combine<long long int>(seed, mp_get_si(get_num(this->real_)));
     hash_combine<long long int>(seed, mp_get_si(get_den(this->real_)));
     hash_combine<long long int>(seed, mp_get_si(get_num(this->imaginary_)));

@@ -128,10 +128,16 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
 //! \return true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
-    // `NUMBER_WRAPPER` is the last subclass of Number in TypeID
-    // An enum should be before `NUMBER_WRAPPER` iff it is a
+    // `NumberWraper` is the last subclass of Number in TypeID
+    // An enum should be before `SYMENIGNE_NUMBER_WRAPPER` iff it is a
     // subclass of Number
-    return b.get_type_code() <= NUMBER_WRAPPER;
+    return b.get_type_code() <= SYMENGINE_NUMBER_WRAPPER;
+}
+
+//! \return true if 'b' is a Number and is zero
+inline bool is_zero(const Basic &b)
+{
+    return is_a_Number(b) and down_cast<const Number &>(b).is_zero();
 }
 
 class NumberWrapper : public Number
@@ -142,7 +148,7 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
 
-    IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+    IMPLEMENT_TYPEID(SYMENGINE_NUMBER_WRAPPER)
 
     virtual std::string __str__() const
     {

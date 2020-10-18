@@ -13,6 +13,11 @@ class MatrixBase
 public:
     virtual ~MatrixBase(){};
 
+    bool is_square() const
+    {
+        return ncols() == nrows();
+    }
+
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
 
@@ -41,6 +46,10 @@ public:
     virtual void mul_matrix(const MatrixBase &other,
                             MatrixBase &result) const = 0;
 
+    // Matrix elementwise Multiplication
+    virtual void elementwise_mul_matrix(const MatrixBase &other,
+                                        MatrixBase &result) const = 0;
+
     // Add a scalar
     virtual void add_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const = 0;
@@ -49,8 +58,14 @@ public:
     virtual void mul_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const = 0;
 
+    // Matrix conjugate
+    virtual void conjugate(MatrixBase &result) const = 0;
+
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const = 0;
+
+    // Matrix conjugate transpose
+    virtual void conjugate_transpose(MatrixBase &result) const = 0;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,
@@ -127,6 +142,10 @@ public:
     // Matrix multiplication
     virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
 
+    // Matrix elementwise Multiplication
+    virtual void elementwise_mul_matrix(const MatrixBase &other,
+                                        MatrixBase &result) const;
+
     // Add a scalar
     virtual void add_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const;
@@ -135,8 +154,14 @@ public:
     virtual void mul_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const;
 
+    // Matrix conjugate
+    virtual void conjugate(MatrixBase &result) const;
+
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const;
+
+    // Matrix conjugate transpose
+    virtual void conjugate_transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,
@@ -186,9 +211,14 @@ public:
                                  const RCP<const Basic> &k, DenseMatrix &B);
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
                                 DenseMatrix &C);
+    friend void elementwise_mul_dense_dense(const DenseMatrix &A,
+                                            const DenseMatrix &B,
+                                            DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A,
                                  const RCP<const Basic> &k, DenseMatrix &C);
+    friend void conjugate_dense(const DenseMatrix &A, DenseMatrix &B);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+    friend void conjugate_transpose_dense(const DenseMatrix &A, DenseMatrix &B);
     friend void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
                                 unsigned row_start, unsigned col_start,
                                 unsigned row_end, unsigned col_end,
@@ -335,6 +365,10 @@ public:
     // Matrix Multiplication
     virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
 
+    // Matrix elementwise Multiplication
+    virtual void elementwise_mul_matrix(const MatrixBase &other,
+                                        MatrixBase &result) const;
+
     // Add a scalar
     virtual void add_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const;
@@ -343,9 +377,15 @@ public:
     virtual void mul_scalar(const RCP<const Basic> &k,
                             MatrixBase &result) const;
 
+    // Matrix conjugate
+    virtual void conjugate(MatrixBase &result) const;
+
     // Matrix transpose
     virtual void transpose(MatrixBase &result) const;
-    CSRMatrix transpose() const;
+    CSRMatrix transpose(bool conjugate = false) const;
+
+    // Matrix conjugate transpose
+    virtual void conjugate_transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
     virtual void submatrix(MatrixBase &result, unsigned row_start,

@@ -87,7 +87,7 @@ public:
     mpfr_class i;
 
 public:
-    IMPLEMENT_TYPEID(REAL_MPFR)
+    IMPLEMENT_TYPEID(SYMENGINE_REAL_MPFR)
     //! Constructor of RealMPFR class
     RealMPFR(mpfr_class i);
     inline const mpfr_class &as_mpfr() const
@@ -371,7 +371,7 @@ namespace SymEngine
 class RealMPFR : public Number
 {
 public:
-    IMPLEMENT_TYPEID(REAL_MPFR)
+    IMPLEMENT_TYPEID(SYMENGINE_REAL_MPFR)
 };
 }
 

@@ -3,6 +3,8 @@
 
 #include <symengine/matrix.h>
 #include <symengine/add.h>
+#include <symengine/functions.h>
+#include <symengine/complex_double.h>
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
@@ -13,6 +15,7 @@ using SymEngine::integer;
 using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
+using SymEngine::complex_double;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::is_a;
@@ -32,6 +35,10 @@ using SymEngine::eigen_values;
 using SymEngine::finiteset;
 using SymEngine::one;
 using SymEngine::mul;
+using SymEngine::down_cast;
+using SymEngine::RealDouble;
+using SymEngine::real_double;
+using SymEngine::conjugate;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -236,6 +243,43 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
                                         mul(symbol("w"), symbol("z")))}));
 }
 
+TEST_CASE("test_elementwise_dense_dense_multiplication(): matrices",
+          "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    DenseMatrix B
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    elementwise_mul_dense_dense(A, B, A);
+
+    REQUIRE(A == DenseMatrix(2, 2,
+                             {integer(1), integer(0), integer(0), integer(4)}));
+
+    A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
+    B = DenseMatrix(1, 4, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix C = DenseMatrix(1, 4);
+    A.elementwise_mul_matrix(B, C);
+
+    REQUIRE(C == DenseMatrix(1, 4, {integer(1), integer(6), integer(21),
+                                    integer(-20)}));
+
+    A = DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                           symbol("q"), symbol("r")});
+    B = DenseMatrix(3, 2, {symbol("x"), symbol("y"), symbol("z"), symbol("w"),
+                           symbol("k"), symbol("f")});
+    C = DenseMatrix(3, 2);
+    B.elementwise_mul_matrix(A, C);
+
+    REQUIRE(C == DenseMatrix(3, 2, {
+                                       mul(symbol("a"), symbol("x")),
+                                       mul(symbol("b"), symbol("y")),
+                                       mul(symbol("c"), symbol("z")),
+                                       mul(symbol("p"), symbol("w")),
+                                       mul(symbol("q"), symbol("k")),
+                                       mul(symbol("r"), symbol("f")),
+                                   }));
+}
+
 TEST_CASE("test_mul_dense_scalar(): matrices", "[matrices]")
 {
     // More tests should be added
@@ -248,6 +292,60 @@ TEST_CASE("test_mul_dense_scalar(): matrices", "[matrices]")
 
     REQUIRE(B == DenseMatrix(2, 2,
                              {integer(2), integer(4), integer(6), integer(8)}));
+}
+
+TEST_CASE("test_conjugate_dense(): matrices", "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    auto c1 = complex_double(std::complex<double>(8, 1));
+    auto s1 = symbol("R");
+    DenseMatrix C = DenseMatrix(2, 2, {c1, integer(2), s1, integer(4)});
+
+    A.conjugate(B);
+    REQUIRE(B == A);
+    C.conjugate(B);
+    REQUIRE(B == DenseMatrix(2, 2, {complex_double(std::complex<double>(8, -1)),
+                                    integer(2), SymEngine::conjugate(s1),
+                                    integer(4)}));
+
+    DenseMatrix M1 = DenseMatrix(1, 1);
+    DenseMatrix M2
+        = DenseMatrix(1, 1, {complex_double(std::complex<double>(3, 4))});
+    M2.conjugate(M1);
+    REQUIRE(
+        M1 == DenseMatrix(1, 1, {complex_double(std::complex<double>(3, -4))}));
+
+    DenseMatrix M3 = DenseMatrix(2, 1);
+    DenseMatrix M4
+        = DenseMatrix(2, 1, {complex_double(std::complex<double>(1, 2)),
+                             complex_double(std::complex<double>(0, 3))});
+    M4.conjugate(M3);
+    REQUIRE(
+        M3 == DenseMatrix(2, 1, {complex_double(std::complex<double>(1, -2)),
+                                 complex_double(std::complex<double>(0, -3))}));
+}
+
+TEST_CASE("test_conjugate CSR: matrices", "[matrices]")
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+                            {integer(1), integer(1), integer(2), integer(3),
+                             integer(4), integer(6), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    A.conjugate(B);
+    REQUIRE(A == B);
+
+    A = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+                  {complex_double(std::complex<double>(0, -2)), symbol("x"),
+                   integer(3), integer(4),
+                   complex_double(std::complex<double>(5, 4))});
+    A.conjugate(B);
+    REQUIRE(B == CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+                           {complex_double(std::complex<double>(0, 2)),
+                            conjugate(symbol("x")), integer(3), integer(4),
+                            complex_double(std::complex<double>(5, -4))}));
 }
 
 TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
@@ -279,6 +377,65 @@ TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
 
     REQUIRE(B == DenseMatrix(3, 1, {x, y, z}));
     REQUIRE(B == DenseMatrix({x, y, z}));
+}
+
+TEST_CASE("conjugate_transpose_dense(): matrices", "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    conjugate_transpose_dense(A, B);
+
+    REQUIRE(B == DenseMatrix(2, 2,
+                             {integer(1), integer(3), integer(2), integer(4)}));
+
+    A = DenseMatrix(2, 2, {complex_double(std::complex<double>(1, 1)),
+                           complex_double(std::complex<double>(0, 14)),
+                           complex_double(std::complex<double>(-1, -1)),
+                           complex_double(std::complex<double>(2, -2))});
+    A.conjugate_transpose(B);
+
+    REQUIRE(B
+            == DenseMatrix(2, 2, {complex_double(std::complex<double>(1, -1)),
+                                  complex_double(std::complex<double>(-1, 1)),
+                                  complex_double(std::complex<double>(0, -14)),
+                                  complex_double(std::complex<double>(2, 2))}));
+
+    A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                           symbol("q"), symbol("r"), symbol("u"), symbol("v"),
+                           symbol("w")});
+    B = DenseMatrix(3, 3);
+    conjugate_transpose_dense(A, B);
+
+    REQUIRE(
+        B == DenseMatrix(3, 3, {conjugate(symbol("a")), conjugate(symbol("p")),
+                                conjugate(symbol("u")), conjugate(symbol("b")),
+                                conjugate(symbol("q")), conjugate(symbol("v")),
+                                conjugate(symbol("c")), conjugate(symbol("r")),
+                                conjugate(symbol("w"))}));
+}
+
+TEST_CASE("conjugate_transpose CSR: matrices", "[matrices]")
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+                            {integer(1), integer(1), integer(2), integer(3),
+                             integer(4), integer(6), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    A.conjugate_transpose(B);
+    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 4, 7}, {0, 2, 0, 2, 0, 1, 2},
+                           {integer(1), integer(4), integer(1), integer(6),
+                            integer(2), integer(3), integer(6)}));
+
+    A = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+                  {complex_double(std::complex<double>(0, -2)), symbol("x"),
+                   integer(3), integer(4),
+                   complex_double(std::complex<double>(5, 4))});
+    A.conjugate_transpose(B);
+    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 5}, {0, 2, 2, 1, 2},
+                           {complex_double(std::complex<double>(0, 2)),
+                            integer(3), integer(4), conjugate(symbol("x")),
+                            complex_double(std::complex<double>(5, -4))}));
 }
 
 TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
@@ -1160,6 +1317,7 @@ TEST_CASE("test_cholesky(): matrices", "[matrices]")
 
 TEST_CASE("test_determinant(): matrices", "[matrices]")
 {
+    RCP<const Basic> r;
     // Test cases are taken from SymPy
     DenseMatrix M = DenseMatrix(1, 1, {integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(1)));
@@ -1200,6 +1358,19 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(13), integer(14), integer(15), integer(16)});
     REQUIRE(eq(*det_bareis(M), *integer(0)));
     REQUIRE(eq(*det_berkowitz(M), *integer(0)));
+
+    M = DenseMatrix(4, 4, {real_double(0.0), integer(0), integer(0), integer(1),
+                           integer(0), integer(11), integer(12), integer(1),
+                           integer(1), integer(1), integer(2), integer(1),
+                           integer(1), integer(0), integer(1), integer(1)});
+
+    r = det_bareis(M);
+    REQUIRE(is_a<const RealDouble>(*r));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r).i - 1) < 1e-12);
+
+    r = det_berkowitz(M);
+    REQUIRE(is_a<const RealDouble>(*r));
+    CHECK(std::abs(down_cast<const RealDouble &>(*r).i - 1) < 1e-12);
 
     M = DenseMatrix(
         5, 5, {integer(3), integer(2), integer(0), integer(0), integer(0),
@@ -1686,6 +1857,19 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
                             integer(6)}));
 }
 
+TEST_CASE("test_csr_elementwise_mul(): matrices", "[matrices]")
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                            {integer(1), integer(2), integer(3), integer(4),
+                             integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    A.elementwise_mul_matrix(A, B);
+    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                           {integer(1), integer(4), integer(9), integer(16),
+                            integer(25), integer(36)}));
+}
+
 TEST_CASE("test_eye(): matrices", "[matrices]")
 {
     DenseMatrix A(3, 3);
@@ -1906,4 +2090,17 @@ TEST_CASE("free_symbols: MatrixBase", "[matrices]")
     s = free_symbols(B);
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(symbol("x")) == 1);
+}
+
+TEST_CASE("is_square: MatrixBase", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(4, 4);
+    DenseMatrix B = DenseMatrix(2, 3);
+    CSRMatrix C = CSRMatrix(8, 8);
+    CSRMatrix D = CSRMatrix(8, 1);
+
+    REQUIRE(A.is_square());
+    REQUIRE(!B.is_square());
+    REQUIRE(C.is_square());
+    REQUIRE(!D.is_square());
 }

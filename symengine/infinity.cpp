@@ -50,7 +50,7 @@ bool Infty::is_canonical(const RCP<const Number> &num) const
 
 hash_t Infty::__hash__() const
 {
-    hash_t seed = INFTY;
+    hash_t seed = SYMENGINE_INFTY;
     hash_combine<Basic>(seed, *_direction);
     return seed;
 }

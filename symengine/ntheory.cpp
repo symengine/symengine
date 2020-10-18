@@ -931,7 +931,7 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n)
 
     prime_factor_multiplicities(prime_mul, *n);
     lambda = 1;
-    for (const auto it : prime_mul) {
+    for (const auto &it : prime_mul) {
         p = it.first->as_integer_class();
         multiplicity = it.second;
         if (p == 2
@@ -967,7 +967,7 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o,
     _a %= _n;
     order = lambda->as_integer_class();
 
-    for (const auto it : prime_mul) {
+    for (const auto &it : prime_mul) {
         p = it.first->as_integer_class();
         mp_pow_ui(t, p, it.second);
         mp_divexact(order, order, t);
@@ -1720,7 +1720,7 @@ int mobius(const Integer &a)
     map_integer_uint prime_mul;
     bool is_square_free = true;
     prime_factor_multiplicities(prime_mul, a);
-    unsigned long num_prime_factors = prime_mul.size();
+    auto num_prime_factors = prime_mul.size();
     for (const auto &it : prime_mul) {
         int p_freq = it.second;
         if (p_freq > 1) {

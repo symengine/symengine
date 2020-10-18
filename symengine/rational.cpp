@@ -81,7 +81,7 @@ hash_t Rational::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    hash_t seed = RATIONAL;
+    hash_t seed = SYMENGINE_RATIONAL;
     hash_combine<long long int>(seed, mp_get_si(SymEngine::get_num(this->i)));
     hash_combine<long long int>(seed, mp_get_si(SymEngine::get_den(this->i)));
     return seed;

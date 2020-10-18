@@ -79,6 +79,14 @@ void CodePrinter::bvisit(const Rational &x)
     o << print_double(n) << "/" << print_double(d);
     str_ = o.str();
 }
+void CodePrinter::bvisit(const Reals &x)
+{
+    throw SymEngineException("Not supported");
+}
+void CodePrinter::bvisit(const Integers &x)
+{
+    throw SymEngineException("Not supported");
+}
 void CodePrinter::bvisit(const EmptySet &x)
 {
     throw SymEngineException("Not supported");

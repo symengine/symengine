@@ -134,6 +134,11 @@ set_basic free_symbols(const Basic &b)
     return visitor.apply(b);
 }
 
+set_basic function_symbols(const Basic &b)
+{
+    return atoms<FunctionSymbol>(b);
+}
+
 RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)
 {
     x->accept(*this);

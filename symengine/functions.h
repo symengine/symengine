@@ -188,7 +188,7 @@ public:
 class Sign : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(SIGN);
+    IMPLEMENT_TYPEID(SYMENGINE_SIGN)
     //! Sign constructor
     Sign(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -203,7 +203,7 @@ RCP<const Basic> sign(const RCP<const Basic> &arg);
 class Floor : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(FLOOR)
+    IMPLEMENT_TYPEID(SYMENGINE_FLOOR)
     //! Floor Constructor
     Floor(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -218,7 +218,7 @@ RCP<const Basic> floor(const RCP<const Basic> &arg);
 class Ceiling : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(CEILING)
+    IMPLEMENT_TYPEID(SYMENGINE_CEILING)
     //! Ceiling Constructor
     Ceiling(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -233,7 +233,7 @@ RCP<const Basic> ceiling(const RCP<const Basic> &arg);
 class Truncate : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(TRUNCATE)
+    IMPLEMENT_TYPEID(SYMENGINE_TRUNCATE)
     //! Truncate Constructor
     Truncate(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -248,7 +248,7 @@ RCP<const Basic> truncate(const RCP<const Basic> &arg);
 class Conjugate : public OneArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(CONJUGATE);
+    IMPLEMENT_TYPEID(SYMENGINE_CONJUGATE)
     //! Conjugate constructor
     Conjugate(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -314,7 +314,7 @@ class Sin : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(SIN)
+    IMPLEMENT_TYPEID(SYMENGINE_SIN)
     //! Sin Constructor
     Sin(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -330,7 +330,7 @@ class Cos : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(COS)
+    IMPLEMENT_TYPEID(SYMENGINE_COS)
     //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -346,7 +346,7 @@ class Tan : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(TAN)
+    IMPLEMENT_TYPEID(SYMENGINE_TAN)
     //! Tan Constructor
     Tan(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -361,7 +361,7 @@ class Cot : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(COT)
+    IMPLEMENT_TYPEID(SYMENGINE_COT)
     //! Cot Constructor
     Cot(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -376,7 +376,7 @@ class Csc : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(CSC)
+    IMPLEMENT_TYPEID(SYMENGINE_CSC)
     //! Csc Constructor
     Csc(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -391,7 +391,7 @@ class Sec : public TrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(SEC)
+    IMPLEMENT_TYPEID(SYMENGINE_SEC)
     //! Sec Constructor
     Sec(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -406,7 +406,7 @@ class ASin : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ASIN)
+    IMPLEMENT_TYPEID(SYMENGINE_ASIN)
     //! ASin Constructor
     ASin(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -422,7 +422,7 @@ class ACos : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ACOS)
+    IMPLEMENT_TYPEID(SYMENGINE_ACOS)
     //! ACos Constructor
     ACos(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -438,7 +438,7 @@ class ASec : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ASEC)
+    IMPLEMENT_TYPEID(SYMENGINE_ASEC)
     //! ASec Constructor
     ASec(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -454,7 +454,7 @@ class ACsc : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ACSC)
+    IMPLEMENT_TYPEID(SYMENGINE_ACSC)
     //! ACsc Constructor
     ACsc(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -470,7 +470,7 @@ class ATan : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ATAN)
+    IMPLEMENT_TYPEID(SYMENGINE_ATAN)
     //! ATan Constructor
     ATan(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -486,7 +486,7 @@ class ACot : public InverseTrigFunction
 {
 
 public:
-    IMPLEMENT_TYPEID(ACOT)
+    IMPLEMENT_TYPEID(SYMENGINE_ACOT)
     //! ACot Constructor
     ACot(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -501,7 +501,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg);
 class ATan2 : public TwoArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(ATAN2)
+    IMPLEMENT_TYPEID(SYMENGINE_ATAN2)
     //! ATan2 Constructor
     ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
     //! \return `true` if canonical
@@ -532,7 +532,7 @@ class Log : public OneArgFunction
     // a logarithm of a different base `b`, use `log(x, b)`,
     // which is essentially short-hand for `log(x)/log(b)`.
 public:
-    IMPLEMENT_TYPEID(LOG)
+    IMPLEMENT_TYPEID(SYMENGINE_LOG)
     //! Log Constructor
     Log(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -554,7 +554,7 @@ class LambertW : public OneArgFunction
     // For more information, see:
     // http://en.wikipedia.org/wiki/Lambert_W_function
 public:
-    IMPLEMENT_TYPEID(LAMBERTW)
+    IMPLEMENT_TYPEID(SYMENGINE_LAMBERTW)
     //! LambertW Constructor
     LambertW(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -581,7 +581,7 @@ class Zeta : public TwoArgFunction
     // of :math:`a = 1`, yielding the Riemann zeta function.
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(ZETA)
+    IMPLEMENT_TYPEID(SYMENGINE_ZETA)
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
     //! Zeta Constructor
@@ -612,7 +612,7 @@ class Dirichlet_eta : public OneArgFunction
 {
     // See http://en.wikipedia.org/wiki/Dirichlet_eta_function
 public:
-    IMPLEMENT_TYPEID(DIRICHLET_ETA)
+    IMPLEMENT_TYPEID(SYMENGINE_DIRICHLET_ETA)
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
     //! \return `s`
@@ -638,7 +638,7 @@ protected:
     std::string name_; //! The `f` in `f(x+y, z)`
 
 public:
-    IMPLEMENT_TYPEID(FUNCTIONSYMBOL)
+    IMPLEMENT_TYPEID(SYMENGINE_FUNCTIONSYMBOL)
     //! FunctionSymbol Constructors
     FunctionSymbol(std::string name, const vec_basic &arg);
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
@@ -671,7 +671,7 @@ RCP<const Basic> function_symbol(std::string name, const vec_basic &arg);
 class FunctionWrapper : public FunctionSymbol
 {
 public:
-    IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
+    IMPLEMENT_TYPEID(SYMENGINE_FUNCTIONWRAPPER)
     FunctionWrapper(std::string name, const vec_basic &arg);
     FunctionWrapper(std::string name, const RCP<const Basic> &arg);
     virtual RCP<const Basic> create(const vec_basic &v) const = 0;
@@ -701,7 +701,7 @@ private:
     multiset_basic x_; //! x, y, ...
 
 public:
-    IMPLEMENT_TYPEID(DERIVATIVE)
+    IMPLEMENT_TYPEID(SYMENGINE_DERIVATIVE)
     Derivative(const RCP<const Basic> &arg, const multiset_basic &x);
 
     static RCP<const Derivative> create(const RCP<const Basic> &arg,
@@ -742,7 +742,7 @@ private:
     map_basic_basic dict_;
 
 public:
-    IMPLEMENT_TYPEID(SUBS)
+    IMPLEMENT_TYPEID(SYMENGINE_SUBS)
     Subs(const RCP<const Basic> &arg, const map_basic_basic &x);
 
     static RCP<const Subs> create(const RCP<const Basic> &arg,
@@ -795,7 +795,7 @@ class Sinh : public HyperbolicFunction
 {
     //! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
 public:
-    IMPLEMENT_TYPEID(SINH)
+    IMPLEMENT_TYPEID(SYMENGINE_SINH)
     //! Sinh Constructor
     Sinh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -811,7 +811,7 @@ class Csch : public HyperbolicFunction
 {
     //! The hyperbolic cosecant function, `\frac{2}{e^x - e^{-x}}`.
 public:
-    IMPLEMENT_TYPEID(CSCH)
+    IMPLEMENT_TYPEID(SYMENGINE_CSCH)
     //! Csch Constructor
     Csch(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -827,7 +827,7 @@ class Cosh : public HyperbolicFunction
 {
     //! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
 public:
-    IMPLEMENT_TYPEID(COSH)
+    IMPLEMENT_TYPEID(SYMENGINE_COSH)
     //! Cosh Constructor
     Cosh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -843,7 +843,7 @@ class Sech : public HyperbolicFunction
 {
     //! The hyperbolic secant function, `\frac{2}{e^x + e^{-x}}`.
 public:
-    IMPLEMENT_TYPEID(SECH)
+    IMPLEMENT_TYPEID(SYMENGINE_SECH)
     //! Sech Constructor
     Sech(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -859,7 +859,7 @@ class Tanh : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
 public:
-    IMPLEMENT_TYPEID(TANH)
+    IMPLEMENT_TYPEID(SYMENGINE_TANH)
     //! Tanh Constructor
     Tanh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -875,7 +875,7 @@ class Coth : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
 public:
-    IMPLEMENT_TYPEID(COTH)
+    IMPLEMENT_TYPEID(SYMENGINE_COTH)
     //! Coth Constructor
     Coth(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -891,7 +891,7 @@ class ASinh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic sine function.
 public:
-    IMPLEMENT_TYPEID(ASINH)
+    IMPLEMENT_TYPEID(SYMENGINE_ASINH)
     //! ASinh Constructor
     ASinh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -907,7 +907,7 @@ class ACsch : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosecant function.
 public:
-    IMPLEMENT_TYPEID(ACSCH)
+    IMPLEMENT_TYPEID(SYMENGINE_ACSCH)
     //! ACsch Constructor
     ACsch(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -923,7 +923,7 @@ class ACosh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosine function.
 public:
-    IMPLEMENT_TYPEID(ACOSH)
+    IMPLEMENT_TYPEID(SYMENGINE_ACOSH)
     //! ACosh Constructor
     ACosh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -939,7 +939,7 @@ class ATanh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic tangent function.
 public:
-    IMPLEMENT_TYPEID(ATANH)
+    IMPLEMENT_TYPEID(SYMENGINE_ATANH)
     //! ATanh Constructor
     ATanh(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -955,7 +955,7 @@ class ACoth : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cotangent function.
 public:
-    IMPLEMENT_TYPEID(ACOTH)
+    IMPLEMENT_TYPEID(SYMENGINE_ACOTH)
     //! ACoth Constructor
     ACoth(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -971,7 +971,7 @@ class ASech : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic secant function.
 public:
-    IMPLEMENT_TYPEID(ASECH)
+    IMPLEMENT_TYPEID(SYMENGINE_ASECH)
     //! ASech Constructor
     ASech(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -993,7 +993,7 @@ class KroneckerDelta : public TwoArgFunction
      **/
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(KRONECKERDELTA)
+    IMPLEMENT_TYPEID(SYMENGINE_KRONECKERDELTA)
     //! KroneckerDelta Constructor
     KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
     //! \return `true` if canonical
@@ -1018,7 +1018,7 @@ class LeviCivita : public MultiArgFunction
      *  Thus it represents an alternating pseudotensor.
      **/
 public:
-    IMPLEMENT_TYPEID(LEVICIVITA)
+    IMPLEMENT_TYPEID(SYMENGINE_LEVICIVITA)
     //! LeviCivita Constructor
     LeviCivita(const vec_basic &&arg);
     //! \return `true` if canonical
@@ -1039,7 +1039,7 @@ class Erf : public OneArgFunction
      *\mathrm{d}t.
      **/
 public:
-    IMPLEMENT_TYPEID(ERF)
+    IMPLEMENT_TYPEID(SYMENGINE_ERF)
     //! Erf Constructor
     Erf(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
@@ -1064,7 +1064,7 @@ class Erfc : public OneArgFunction
      *	 	 \mathrm{d}t.
      **/
 public:
-    IMPLEMENT_TYPEID(ERFC)
+    IMPLEMENT_TYPEID(SYMENGINE_ERFC)
     //! Erfc Constructor
     Erfc(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
@@ -1093,7 +1093,7 @@ class Gamma : public OneArgFunction
      *  plane except at the negative integers where there are simple poles.
      **/
 public:
-    IMPLEMENT_TYPEID(GAMMA)
+    IMPLEMENT_TYPEID(SYMENGINE_GAMMA)
     //! Gamma Constructor
     Gamma(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -1110,7 +1110,7 @@ class LowerGamma : public TwoArgFunction
     //! The lower incomplete gamma function.
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(LOWERGAMMA)
+    IMPLEMENT_TYPEID(SYMENGINE_LOWERGAMMA)
     //! LowerGamma Constructor
     LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
     //! \return `true` if canonical
@@ -1130,7 +1130,7 @@ class UpperGamma : public TwoArgFunction
     //! The upper incomplete gamma function.
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(UPPERGAMMA)
+    IMPLEMENT_TYPEID(SYMENGINE_UPPERGAMMA)
     //! UpperGamma Constructor
     UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
     //! \return `true` if canonical
@@ -1152,7 +1152,7 @@ class LogGamma : public OneArgFunction
         gamma function i.e, `\log\Gamma(x)`.
      **/
 public:
-    IMPLEMENT_TYPEID(LOGGAMMA)
+    IMPLEMENT_TYPEID(SYMENGINE_LOGGAMMA)
     //! LogGamma Constructor
     LogGamma(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
@@ -1179,7 +1179,7 @@ class Beta : public TwoArgFunction
      **/
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(BETA)
+    IMPLEMENT_TYPEID(SYMENGINE_BETA)
     //! Beta Constructor
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         : TwoArgFunction(x, y)
@@ -1215,7 +1215,7 @@ class PolyGamma : public TwoArgFunction
      **/
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(POLYGAMMA)
+    IMPLEMENT_TYPEID(SYMENGINE_POLYGAMMA)
     //! PolyGamma Constructor
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
         : TwoArgFunction(n, x)
@@ -1243,7 +1243,7 @@ class Abs : public OneArgFunction
     /*!    The absolute value function
      **/
 public:
-    IMPLEMENT_TYPEID(ABS)
+    IMPLEMENT_TYPEID(SYMENGINE_ABS)
     //! Abs Constructor
     Abs(const RCP<const Basic> &arg);
     //! \return `true` if canonical
@@ -1258,7 +1258,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg);
 class Max : public MultiArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(MAX)
+    IMPLEMENT_TYPEID(SYMENGINE_MAX)
     //! Max Constructor
     Max(const vec_basic &&arg);
     //! \return `true` if canonical
@@ -1273,7 +1273,7 @@ RCP<const Basic> max(const vec_basic &arg);
 class Min : public MultiArgFunction
 {
 public:
-    IMPLEMENT_TYPEID(MIN)
+    IMPLEMENT_TYPEID(SYMENGINE_MIN)
     //! Min Constructor
     Min(const vec_basic &&arg);
     //! \return `true` if canonical
@@ -1287,6 +1287,20 @@ RCP<const Basic> min(const vec_basic &arg);
 
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
+
+class UnevaluatedExpr : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_UNEVALUATED_EXPR)
+    //! UnevaluatedExpr Constructor
+    UnevaluatedExpr(const RCP<const Basic> &arg);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized UnevaluatedExpr
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
 
 } // SymEngine
 
