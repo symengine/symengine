@@ -129,6 +129,9 @@ public:
         return col_;
     }
 
+    virtual bool is_lower() const;
+    virtual bool is_upper() const;
+
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual void inv(MatrixBase &result) const;

@@ -64,6 +64,34 @@ unsigned DenseMatrix::rank() const
     throw NotImplementedError("Not Implemented");
 }
 
+bool DenseMatrix::is_lower() const
+{
+    auto A = *this;
+    unsigned n = A.nrows();
+    for (unsigned i = 1; i < n; ++i) {
+        for (unsigned j = 0; j < i; ++j) {
+            if (not is_zero(*A.get(i, j))) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool DenseMatrix::is_upper() const
+{
+    auto A = *this;
+    unsigned n = A.nrows();
+    for (unsigned i = 0; i < n - 1; ++i) {
+        for (unsigned j = i + 1; j < n; ++j) {
+            if (not is_zero(*A.get(i, j))) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 RCP<const Basic> DenseMatrix::det() const
 {
     return det_bareis(*this);
@@ -1426,6 +1454,15 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])),
                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
+
+        if (A.is_lower() or A.is_upper()) {
+            RCP<const Basic> det = A.m_[0];
+            for (unsigned i = 1; i < n; ++i) {
+                det = mul(det, A.m_[i * n + i]);
+            }
+            return det;
+        }
+
         DenseMatrix B = DenseMatrix(n, n, A.m_);
         unsigned i, sign = 1;
         RCP<const Basic> d;
@@ -1680,6 +1717,17 @@ void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 RCP<const Set> eigen_values(const DenseMatrix &A)
 {
+    unsigned n = A.nrows();
+    if (A.is_lower() or A.is_upper()) {
+        RCP<const Set> eigenvals = emptyset();
+        set_basic x;
+        for (unsigned i = 0; i < n; ++i) {
+            x.insert(A.get(i, i));
+        }
+        eigenvals = finiteset(x);
+        return eigenvals;
+    }
+
     DenseMatrix B = DenseMatrix(A.nrows() + 1, 1);
     char_poly(A, B);
     map_int_Expr coeffs;
