@@ -78,6 +78,7 @@ set(SRC
     symbol.cpp
     symengine_rcp.cpp
     visitor.cpp
+    test_visitors.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -190,6 +191,7 @@ set(HEADERS
     symengine_rcp.h
     type_codes.inc
     visitor.h
+    test_visitors.h
 )
 
 include(GNUInstallDirs)

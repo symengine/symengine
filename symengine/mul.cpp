@@ -2,6 +2,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/test_visitors.h>
 
 namespace SymEngine
 {
@@ -166,7 +167,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
         } else {
             // General case:
             it->second = add(it->second, exp);
-            if (is_zero(*it->second)) {
+            if (is_number_and_zero(*it->second)) {
                 d.erase(it);
             }
         }
@@ -424,8 +425,8 @@ RCP<const Basic> mul(const vec_basic &a)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_zero(*b)) {
-        if (is_zero(*a)) {
+    if (is_number_and_zero(*b)) {
+        if (is_number_and_zero(*a)) {
             return Nan;
         } else {
             return ComplexInf;

@@ -2,6 +2,7 @@
 #include <symengine/add.h>
 #include <symengine/complex.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/test_visitors.h>
 
 namespace SymEngine
 {
@@ -27,7 +28,7 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     if (is_a<Integer>(base) and down_cast<const Integer &>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_zero(exp))
+    if (is_number_and_zero(exp))
         return false;
     // e.g. x**1
     if (is_a<Integer>(exp) and down_cast<const Integer &>(exp).is_one())
@@ -89,7 +90,7 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (is_zero(*b)) {
+    if (is_number_and_zero(*b)) {
         // addnum is used for converting to the type of `b`.
         return addnum(one, rcp_static_cast<const Number>(b));
     }
