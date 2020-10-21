@@ -71,7 +71,7 @@ bool DenseMatrix::is_lower() const
     unsigned n = A.nrows();
     for (unsigned i = 1; i < n; ++i) {
         for (unsigned j = 0; j < i; ++j) {
-            if (not is_true(is_zero(*A.get(i, j)))) {
+            if (not is_number_and_zero(*A.get(i, j))) {
                 return false;
             }
         }
@@ -85,7 +85,7 @@ bool DenseMatrix::is_upper() const
     unsigned n = A.nrows();
     for (unsigned i = 0; i < n - 1; ++i) {
         for (unsigned j = i + 1; j < n; ++j) {
-            if (not is_true(is_zero(*A.get(i, j)))) {
+            if (not is_number_and_zero(*A.get(i, j))) {
                 return false;
             }
         }
