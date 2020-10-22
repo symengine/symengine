@@ -1121,9 +1121,12 @@ TEST_CASE("tribool", "[basic]")
     REQUIRE(is_false(and_tribool(tribool::trifalse, tribool::tritrue)));
     REQUIRE(is_false(and_tribool(tribool::indeterminate, tribool::trifalse)));
     REQUIRE(is_false(and_tribool(tribool::tritrue, tribool::trifalse)));
-    REQUIRE(is_indeterminate(and_tribool(tribool::indeterminate, tribool::indeterminate)));
-    REQUIRE(is_indeterminate(and_tribool(tribool::tritrue, tribool::indeterminate)));
-    REQUIRE(is_indeterminate(and_tribool(tribool::indeterminate, tribool::tritrue)));
+    REQUIRE(is_indeterminate(
+        and_tribool(tribool::indeterminate, tribool::indeterminate)));
+    REQUIRE(is_indeterminate(
+        and_tribool(tribool::tritrue, tribool::indeterminate)));
+    REQUIRE(is_indeterminate(
+        and_tribool(tribool::indeterminate, tribool::tritrue)));
     REQUIRE(is_true(and_tribool(tribool::tritrue, tribool::tritrue)));
 
     REQUIRE(is_true(not_tribool(tribool::trifalse)));
@@ -1131,12 +1134,17 @@ TEST_CASE("tribool", "[basic]")
     REQUIRE(is_indeterminate(not_tribool(tribool::indeterminate)));
 
     REQUIRE(is_false(andwk_tribool(tribool::trifalse, tribool::trifalse)));
-    REQUIRE(is_indeterminate(andwk_tribool(tribool::trifalse, tribool::indeterminate)));
+    REQUIRE(is_indeterminate(
+        andwk_tribool(tribool::trifalse, tribool::indeterminate)));
     REQUIRE(is_false(andwk_tribool(tribool::trifalse, tribool::tritrue)));
-    REQUIRE(is_indeterminate(andwk_tribool(tribool::indeterminate, tribool::trifalse)));
+    REQUIRE(is_indeterminate(
+        andwk_tribool(tribool::indeterminate, tribool::trifalse)));
     REQUIRE(is_false(andwk_tribool(tribool::tritrue, tribool::trifalse)));
-    REQUIRE(is_indeterminate(andwk_tribool(tribool::indeterminate, tribool::indeterminate)));
-    REQUIRE(is_indeterminate(andwk_tribool(tribool::tritrue, tribool::indeterminate)));
-    REQUIRE(is_indeterminate(andwk_tribool(tribool::indeterminate, tribool::tritrue)));
+    REQUIRE(is_indeterminate(
+        andwk_tribool(tribool::indeterminate, tribool::indeterminate)));
+    REQUIRE(is_indeterminate(
+        andwk_tribool(tribool::tritrue, tribool::indeterminate)));
+    REQUIRE(is_indeterminate(
+        andwk_tribool(tribool::indeterminate, tribool::tritrue)));
     REQUIRE(is_true(andwk_tribool(tribool::tritrue, tribool::tritrue)));
 }

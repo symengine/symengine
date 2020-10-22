@@ -141,6 +141,7 @@ inline bool is_number_and_zero(const Basic &b)
 }
 
 tribool is_zero(const Basic &b);
+tribool is_real(const Basic &b);
 
 class NumberWrapper : public Number
 {

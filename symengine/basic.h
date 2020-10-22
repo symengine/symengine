@@ -242,7 +242,7 @@ inline tribool and_tribool(tribool a, tribool b)
     if (!(a & b)) {
         return tribool::trifalse;
     } else {
-        return (tribool) (a | b);
+        return (tribool)(a | b);
     }
 };
 
@@ -251,7 +251,7 @@ inline tribool not_tribool(tribool a)
     if (is_indeterminate(a))
         return a;
     else
-        return (tribool) !a;
+        return (tribool)!a;
 };
 
 // The weak kleene conjunction
@@ -261,7 +261,7 @@ inline tribool andwk_tribool(tribool a, tribool b)
     if (is_indeterminate(a) or is_indeterminate(b))
         return tribool::indeterminate;
     else
-        return (tribool) (a && b);
+        return (tribool)(a && b);
 };
 
 // Convenience functions
