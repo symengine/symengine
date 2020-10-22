@@ -1855,6 +1855,12 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
                            {integer(1), integer(7), integer(2), integer(8),
                             integer(9), integer(3), integer(4), integer(5),
                             integer(6)}));
+
+    A = CSRMatrix(2, 2, {0, 1, 2}, {0, 1}, {integer(1), integer(2)});
+    B = CSRMatrix(2, 2, {0, 1, 2}, {1, 0}, {integer(3), integer(4)});
+    C = CSRMatrix(2, 2);
+    csr_binop_csr_canonical(A, B, C, mul);
+    REQUIRE(C == CSRMatrix(2, 2));
 }
 
 TEST_CASE("test_csr_elementwise_mul(): matrices", "[matrices]")

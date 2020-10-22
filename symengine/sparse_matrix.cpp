@@ -393,7 +393,7 @@ bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned> &p_,
                                    unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
-        for (unsigned j = p_[i]; j < p_[i + 1] - 1; j++) {
+        for (unsigned j = p_[i]; j + 1 < p_[i + 1]; j++) {
             if (j_[j] == j_[j + 1])
                 return true;
         }
@@ -685,6 +685,8 @@ void csr_binop_csr_canonical(
 
     // Method that works for canonical CSR matrices
     C.p_[0] = 0;
+    C.j_.clear();
+    C.x_.clear();
     unsigned nnz = 0;
     unsigned A_pos, B_pos, A_end, B_end;
 
