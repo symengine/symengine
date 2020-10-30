@@ -26,7 +26,7 @@ tribool is_zero(const Basic &b)
 
 void RealVisitor::bvisit(const Number &x)
 {
-    if (is_a<Complex>(x) or is_a<Infty>(x) or is_a<NaN>(x)) {
+    if (is_a_Complex(x) or is_a<Infty>(x) or is_a<NaN>(x)) {
         is_real_ = tribool::trifalse;
     } else {
         is_real_ = tribool::tritrue;

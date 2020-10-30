@@ -1,4 +1,5 @@
 #include <symengine/matrix.h>
+#include <symengine/number.h>
 #include <symengine/add.h>
 #include <symengine/functions.h>
 #include <symengine/pow.h>
@@ -91,6 +92,106 @@ bool DenseMatrix::is_upper() const
         }
     }
     return true;
+}
+
+tribool DenseMatrix::is_zero() const
+{
+    auto A = *this;
+    tribool cur = tribool::tritrue;
+    for (auto &e : m_) {
+        cur = and_tribool(cur, SymEngine::is_zero(*e));
+        if (is_false(cur)) {
+            return cur;
+        }
+    }
+    return cur;
+}
+
+tribool DenseMatrix::is_diagonal() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+    unsigned ncols = A.ncols();
+    unsigned offset;
+    tribool cur = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        offset = i * ncols;
+        for (unsigned j = 0; j < ncols; j++) {
+            if (j != i) {
+                auto &e = m_[offset];
+                cur = and_tribool(cur, SymEngine::is_zero(*e));
+                if (is_false(cur)) {
+                    return cur;
+                }
+            }
+            offset++;
+        }
+    }
+    return cur;
+}
+
+tribool DenseMatrix::is_real() const
+{
+    auto A = *this;
+    tribool cur = tribool::tritrue;
+    for (auto &e : m_) {
+        cur = and_tribool(cur, SymEngine::is_real(*e));
+        if (is_false(cur)) {
+            return cur;
+        }
+    }
+    return cur;
+}
+
+tribool DenseMatrix::is_symmetric() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+    unsigned ncols = A.ncols();
+    tribool cur = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        for (unsigned j = 0; j <= i; j++) {
+            if (j != i) {
+                auto &e = m_[i * ncols + j];
+                auto &e2 = m_[j * ncols + i];
+                cur = and_tribool(cur, SymEngine::is_zero(*sub(e, e2)));
+            }
+            if (is_false(cur)) {
+                return cur;
+            }
+        }
+    }
+    return cur;
+}
+
+tribool DenseMatrix::is_hermitian() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+    unsigned ncols = A.ncols();
+    tribool cur = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        for (unsigned j = 0; j <= i; j++) {
+            auto &e = m_[i * ncols + j];
+            if (j != i) {
+                auto &e2 = m_[j * ncols + i];
+                cur = and_tribool(
+                    cur, SymEngine::is_zero(*sub(e, SymEngine::conjugate(e2))));
+            } else {
+                cur = and_tribool(cur, SymEngine::is_real(*e));
+            }
+            if (is_false(cur)) {
+                return cur;
+            }
+        }
+    }
+    return cur;
 }
 
 RCP<const Basic> DenseMatrix::det() const
