@@ -131,6 +131,11 @@ public:
 
     virtual bool is_lower() const;
     virtual bool is_upper() const;
+    virtual tribool is_zero() const;
+    virtual tribool is_diagonal() const;
+    virtual tribool is_real() const;
+    virtual tribool is_symmetric() const;
+    virtual tribool is_hermitian() const;
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;

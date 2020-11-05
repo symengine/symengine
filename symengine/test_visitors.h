@@ -40,6 +40,39 @@ public:
 
     tribool apply(const Basic &b);
 };
+
+class RealVisitor : public BaseVisitor<RealVisitor>
+{
+private:
+    tribool is_real_;
+
+public:
+    void bvisit(const Basic &x)
+    {
+        is_real_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x)
+    {
+        is_real_ = tribool::indeterminate;
+    };
+    void bvisit(const Number &x);
+    void bvisit(const Set &x)
+    {
+        is_real_ = tribool::trifalse;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_real_ = tribool::trifalse;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_real_ = tribool::trifalse;
+    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+
+    tribool apply(const Basic &b);
+};
 }
 
 #endif // SYMENGINE_TEST_VISITORS_H

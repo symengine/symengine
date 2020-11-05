@@ -222,10 +222,12 @@ struct RCPBasicKeyLess {
 
 enum tribool { indeterminate = -1, trifalse = 0, tritrue = 1 };
 
-inline bool is_true(tribool x)
-{
-    return x == tribool::tritrue;
-};
+inline bool is_true(tribool x);
+inline bool is_false(tribool x);
+inline bool is_indeterminate(tribool x);
+inline tribool and_tribool(tribool a, tribool b);
+inline tribool not_tribool(tribool a);
+inline tribool andwk_tribool(tribool a, tribool b);
 
 // Convenience functions
 //! Checks equality for `a` and `b`
