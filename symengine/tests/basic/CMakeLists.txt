@@ -71,6 +71,10 @@ add_executable(test_parser test_parser.cpp)
 target_link_libraries(test_parser symengine catch)
 add_test(test_parser ${PROJECT_BINARY_DIR}/test_parser)
 
+add_executable(test_serialize test_serialize.cpp)
+target_link_libraries(test_serialize symengine catch)
+add_test(test_serialize ${PROJECT_BINARY_DIR}/test_serialize)
+
 add_executable(test_sets test_sets.cpp)
 target_link_libraries(test_sets symengine catch)
 add_test(test_sets ${PROJECT_BINARY_DIR}/test_sets)

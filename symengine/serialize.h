@@ -63,7 +63,7 @@ inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
     }
 }
 
-//! Saving for boost::intrusive_ptr
+//! Saving for SymEngine::RCP
 template <class Archive, class T>
 inline void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, RCP<const T> const &ptr)
 {
