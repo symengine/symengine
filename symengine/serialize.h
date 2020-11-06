@@ -135,10 +135,8 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
                 throw std::runtime_error("Unknown type");
         }
 
-        std::shared_ptr<RCP<const Basic>> shared_rcp_ptr
-            = std::make_shared<RCP<const Basic>>(ptr);
-        std::shared_ptr<void> sharedPtr
-            = std::static_pointer_cast<void>(shared_rcp_ptr);
+        std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
+            std::make_shared<RCP<const Basic>>(ptr));
 
         ar.registerSharedPointer(id, sharedPtr);
     } else {
