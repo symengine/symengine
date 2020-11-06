@@ -1,9 +1,10 @@
+#include <symengine/parser.h>
 #include <symengine/serialize.h>
 #include <cereal/archives/binary.hpp>
 
 int main()
 {
-    SymEngine::RCP<const SymEngine::Basic> x = SymEngine::parse("y**x");
+    SymEngine::RCP<const SymEngine::Basic> x = SymEngine::parse("x+y");
     std::ostringstream oss;
     cereal::BinaryOutputArchive boa{oss};
     boa(x);
@@ -16,7 +17,7 @@ int main()
         cereal::BinaryInputArchive iar{iss};
         iar(y);
     }
-    std::cout << y->use_count() << std::endl;
+    std::cout << *y << std::endl;
     // logic to save to string and load from string omitted since it already
     // fails to compile
     return 0;
