@@ -1,7 +1,9 @@
+#pragma once
 #include <symengine/basic.h>
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 #include <symengine/visitor.h>
+#include <symengine/utilities/stream_fmt.h>
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/cereal.hpp>
@@ -17,7 +19,9 @@ namespace SymEngine
 template <class Archive>
 inline void save_basic(Archive &ar, const Basic &b)
 {
-    throw std::runtime_error("not supported");
+    TypeID t_code = b.get_type_code();
+    throw std::runtime_error(StreamFmt() << __FILE__ << ":" << __LINE__ << ": " << __PRETTY_FUNCTION__
+                             << " not supported: " << type_code_name(t_code) << " (" << t_code << ")" );
 }
 template <class Archive>
 inline void save_basic(Archive &ar, const Symbol &b)

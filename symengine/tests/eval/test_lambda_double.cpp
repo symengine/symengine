@@ -232,9 +232,16 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     };
 
     for (unsigned i = 0; i < testvec.size(); i++) {
-        v.init({x}, *std::get<0>(testvec[i]));
-        d = v.call({std::get<1>(testvec[i])});
-        REQUIRE(::fabs(d - std::get<2>(testvec[i])) < 1e-12);
+        RCP<const Basic> expr1 = std::get<0>(testvec[i]);
+        RCP<const Basic> expr2 = Basic::loads(expr1->dumps()); // test serialization
+        const auto arg = std::get<1>(testvec[i]);
+        const auto ref = std::get<2>(testvec[i]);
+        std::array<RCP<const Basic>, 2> exprs {{expr1, expr2}};
+        for (auto expr : exprs) {
+            v.init({x}, *expr);
+            d = v.call({arg});
+            REQUIRE(::fabs(d - ref) < 1e-12);
+        }
     }
 }
 
