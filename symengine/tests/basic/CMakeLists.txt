@@ -12,9 +12,6 @@ add_executable(test_poly test_poly.cpp)
 target_link_libraries(test_poly symengine catch)
 add_test(test_poly ${PROJECT_BINARY_DIR}/test_poly)
 
-add_executable(test_serialize test_serialize.cpp)
-target_link_libraries(test_serialize symengine)
-
 add_executable(test_series test_series.cpp)
 target_link_libraries(test_series symengine catch)
 add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
