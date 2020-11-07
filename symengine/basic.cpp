@@ -5,6 +5,24 @@
 namespace SymEngine
 {
 
+std::string type_code_name(TypeID id) {
+#define STRINGIFY0(x) #x
+#define STRINGIFY(x) STRINGIFY0(x)
+    const static std::array<std::string, static_cast<int>(TypeID::TypeID_Count)+1> type_names {{
+#define SYMENGINE_ENUM(type, Class) STRINGIFY(Class),
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+        "TypeID_Count"
+            }};
+#undef STRINGIFY0
+#undef STRINGIFY
+
+    if ((id < 0) || (id > TypeID::TypeID_Count)) {
+        throw std::runtime_error("type_id out of range");
+    }
+    return type_names[id];
+}
+
 int Basic::__cmp__(const Basic &o) const
 {
     auto a = this->get_type_code();

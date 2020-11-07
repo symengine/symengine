@@ -48,6 +48,8 @@ enum TypeID {
     TypeID_Count
 };
 
+std::string type_code_name(TypeID id);
+
 #include "basic-methods.inc"
 
 class Visitor;
