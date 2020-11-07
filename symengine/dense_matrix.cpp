@@ -61,6 +61,19 @@ vec_basic DenseMatrix::as_vec_basic() const
     return m_;
 }
 
+RCP<const Basic> DenseMatrix::trace() const
+{
+    SYMENGINE_ASSERT(row_ == col_);
+    unsigned offset = 0;
+    vec_basic diag;
+    for (unsigned i = 0; i < row_; i++) {
+        diag.push_back(m_[offset]);
+        offset += row_ + 1;
+    }
+    auto sum = add(diag);
+    return sum;
+}
+
 unsigned DenseMatrix::rank() const
 {
     throw NotImplementedError("Not Implemented");

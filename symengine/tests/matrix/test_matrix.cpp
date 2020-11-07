@@ -1315,6 +1315,20 @@ TEST_CASE("test_cholesky(): matrices", "[matrices]")
                                     integer(-8), integer(5), integer(3)}));
 }
 
+TEST_CASE("test_trace(): matrices", "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(1, 1, {symbol("y")});
+    DenseMatrix C = DenseMatrix(3, 3, {integer(0), integer(1), integer(2),
+                                       integer(3), integer(4), integer(5),
+                                       integer(6), integer(7), integer(-4)});
+
+    REQUIRE(eq(*A.trace(), *integer(5)));
+    REQUIRE(eq(*B.trace(), *symbol("y")));
+    REQUIRE(eq(*C.trace(), *integer(0)));
+}
+
 TEST_CASE("test_determinant(): matrices", "[matrices]")
 {
     RCP<const Basic> r;

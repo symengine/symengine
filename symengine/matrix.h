@@ -137,6 +137,7 @@ public:
     virtual tribool is_symmetric() const;
     virtual tribool is_hermitian() const;
 
+    RCP<const Basic> trace() const;
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual void inv(MatrixBase &result) const;
