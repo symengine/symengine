@@ -80,6 +80,23 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
     REQUIRE(hash_fn(*x) < hash_fn(*y));
 }
 
+TEST_CASE("Symbol string serialization: Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> x2 = rcp_static_cast<const Symbol>(Basic::loads(x->dumps()));
+    RCP<const Symbol> y = symbol("y");
+
+    REQUIRE(x->__eq__(*x));
+    REQUIRE(x->__eq__(*x2));
+    REQUIRE(not(x2->__eq__(*y)));
+    REQUIRE(x2->__neq__(*y));
+
+    std::hash<Basic> hash_fn;
+    // Hashes of x and x2 must be the same:
+    REQUIRE(hash_fn(*x) == hash_fn(*x2));
+}
+
+
 TEST_CASE("Symbol dict: Basic", "[basic]")
 {
     umap_basic_num ubn;

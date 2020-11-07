@@ -107,7 +107,7 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const T> &)
     throw std::runtime_error("Loading this type is not implemented");
 }
 
-//! Loading for boost::intrusive_ptr
+//! Loading for SymEngine::RCP
 template <class Archive, class T>
 inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 {

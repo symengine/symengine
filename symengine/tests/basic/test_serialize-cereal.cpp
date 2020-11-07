@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/basic.h>
-#include <symengine/serialize.h>
+#include <symengine/serialize-cereal.h>
 #include <cereal/archives/binary.hpp>
 
 using std::string;
@@ -37,7 +37,7 @@ void check_string_serialization_roundtrip(RCP<const Basic> basic1) {
     REQUIRE(basic1->__eq__(*basic2));
 }
 
-TEST_CASE("Test serialization using cereal", "[serialize]") {
+TEST_CASE("Test serialization using cereal", "[serialize-cereal]") {
     RCP<const Symbol> symb_x_ori = se::symbol("x");
     string s_symb_x = dumps<Symbol>(symb_x_ori);
     RCP<const Symbol> symb_x_des = loads<Symbol>(s_symb_x);

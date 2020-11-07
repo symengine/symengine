@@ -1,5 +1,6 @@
 #include <symengine/printers.h>
 #include <symengine/subs.h>
+#include <symengine/serialize-cereal.h>
 
 namespace SymEngine
 {
@@ -23,6 +24,20 @@ std::string Basic::__str__() const
 {
     return str(*this);
 }
+
+std::string Basic::dumps() const {
+    std::ostringstream oss;
+    cereal::BinaryOutputArchive{oss}(this->rcp_from_this());
+    return oss.str();
+}
+
+RCP<const Basic> Basic::loads(const std::string& serialized) {
+    RCP<const Basic> obj;
+    std::istringstream iss(serialized);
+    cereal::BinaryInputArchive{iss}(obj);
+    return obj;
+}
+
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
