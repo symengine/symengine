@@ -4,6 +4,7 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/real_double.h>
 
+using SymEngine::Basic;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::Integer;
@@ -48,6 +49,9 @@ TEST_CASE("Rational", "[rational]")
     REQUIRE(eq(*r1, *ComplexInf));
 
     CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError &);
+
+    RCP<const Basic> r3 = Basic::loads(r1->dumps());
+    REQUIRE(eq(*r1, *r3));
 }
 
 TEST_CASE("Rational compare", "[rational compare]")
