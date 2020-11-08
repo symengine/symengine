@@ -1,4 +1,5 @@
 #include <symengine/logic.h>
+#include <symengine/utilities/stream_fmt.h>
 
 namespace SymEngine
 {
@@ -564,6 +565,19 @@ RCP<const Boolean> logical_xor(const vec_boolean &s)
 Relational::Relational(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     : TwoArgBasic<Boolean>(lhs, rhs)
 {
+}
+
+RCP<const Basic> Relational::from_typeid_args(TypeID id, RCP<const Basic> arg1, RCP<const Basic> arg2) {
+    switch (id) {
+#define SYMENGINE_ENUM(type_enum, Class)                \
+        case type_enum:                                 \
+            return make_rcp<const Class>(arg1, arg2);
+#include "symengine/type_codes_boolean_relational.inc"
+#undef SYMENGINE_ENUM
+    default:
+        throw std::runtime_error(StreamFmt() << __FILE__ << ":" << __LINE__ << ": " << __PRETTY_FUNCTION__
+                                 << " Not a TypeID matching Relational: " << type_code_name(id) << " (" << id << ")");
+    }
 }
 
 inline bool Relational::is_canonical(const RCP<const Basic> &lhs,

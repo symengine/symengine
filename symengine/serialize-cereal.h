@@ -139,13 +139,6 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Constant> &)
     return constant(name);
 }
 template <class Archive>
-RCP<const Basic> load_oneargfunction(Archive &ar, TypeID id)
-{
-        RCP<const Basic> arg;
-        ar(arg);
-        return OneArgFunction::from_typeid_arg(id, arg);
-}
-template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Relational> &)
 {
     RCP<const Basic> arg1, arg2;
@@ -170,21 +163,40 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
     if (id & cereal::detail::msb_32bit) {
         TypeID type_code;
         ar(type_code);
-        bool isOneArgFunction {true};
+        bool handledThroughParentClass {false};
         switch (type_code) {
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
      case type_enum:
 #include "symengine/type_codes_oneargfunction.inc"
 #undef SYMENGINE_ENUM
             {
-                ptr = rcp_static_cast<const T>(
-                    rcp_static_cast<const Basic>(load_oneargfunction(ar, type_code)));
+                RCP<const Basic> arg;
+                ar(arg);
+                ptr = rcp_static_cast<const T>(OneArgFunction::from_typeid_arg(type_code, arg));
+                handledThroughParentClass = true;
                 break;
             }
         default:
-            isOneArgFunction = false;
+            ; // ignore a bunch of type codes (silence compiler warning)
         }
-        if (!isOneArgFunction) {
+        if (!handledThroughParentClass) {
+            switch (type_code) {
+#define SYMENGINE_ENUM(type_enum, Class)                                       \
+     case type_enum:
+#include "symengine/type_codes_boolean_relational.inc"
+#undef SYMENGINE_ENUM
+            {
+                RCP<const Basic> arg1, arg2;
+                ar(arg1, arg2);
+                ptr = rcp_static_cast<const T>(Relational::from_typeid_args(type_code, arg1, arg2));
+                handledThroughParentClass = true;
+                break;
+            }
+            default:
+                ; // ignore a bunch of type codes (silence compiler warning)
+            }
+        }
+        if (!handledThroughParentClass) {
         switch (type_code) {
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
     case type_enum: {                                                          \

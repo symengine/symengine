@@ -49,8 +49,8 @@ extern umap_basic_basic inverse_tct;
 
 RCP<const Basic> OneArgFunction::from_typeid_arg(TypeID id, RCP<const Basic> arg) {
     switch (id) {
-#define SYMENGINE_ENUM(type_enum, Class)                                       \
-        case type_enum:                                                 \
+#define SYMENGINE_ENUM(type_enum, Class)        \
+        case type_enum:                         \
             return make_rcp<const Class>(arg);
 #include "symengine/type_codes_oneargfunction.inc"
 #undef SYMENGINE_ENUM
