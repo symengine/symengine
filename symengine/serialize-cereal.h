@@ -34,6 +34,12 @@ inline void save_basic(Archive &ar, const Symbol &b)
     ar(b.__str__());
 }
 template <class Archive>
+inline void save_basic(Archive &ar, const Mul &b)
+{
+    ar(b.get_coef());
+    ar(b.get_dict());
+}
+template <class Archive>
 inline void save_basic(Archive &ar, const Add &b)
 {
     ar(b.get_coef());
@@ -116,6 +122,15 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Symbol> &)
     std::string name;
     ar(name);
     return symbol(name);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Mul> &)
+{
+    RCP<const Number> coeff;
+    map_basic_basic dict;
+    ar(coeff);
+    ar(dict);
+    return make_rcp<const Mul>(coeff, std::move(dict));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Add> &)
