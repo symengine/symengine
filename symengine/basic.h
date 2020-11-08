@@ -175,7 +175,7 @@ public:
     std::string dumps() const;
 
     //! Creates an instance of a serialized string.
-    static RCP<const Basic> loads(const std::string&);
+    static RCP<const Basic> loads(const std::string &);
 
     //! Substitutes 'subs_dict' into 'self'.
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;

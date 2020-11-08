@@ -83,7 +83,8 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 TEST_CASE("Symbol string serialization: Basic", "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> x2 = rcp_static_cast<const Symbol>(Basic::loads(x->dumps()));
+    RCP<const Symbol> x2
+        = rcp_static_cast<const Symbol>(Basic::loads(x->dumps()));
     RCP<const Symbol> y = symbol("y");
 
     REQUIRE(x->__eq__(*x));
@@ -95,7 +96,6 @@ TEST_CASE("Symbol string serialization: Basic", "[basic]")
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
 }
-
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
 {

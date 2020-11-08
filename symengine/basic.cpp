@@ -6,15 +6,17 @@
 namespace SymEngine
 {
 
-std::string type_code_name(TypeID id) {
+std::string type_code_name(TypeID id)
+{
 #define STRINGIFY0(x) #x
 #define STRINGIFY(x) STRINGIFY0(x)
-    const static std::array<std::string, static_cast<int>(TypeID::TypeID_Count)+1> type_names {{
+    const static std::array<std::string,
+                            static_cast<int>(TypeID::TypeID_Count) + 1>
+        type_names{{
 #define SYMENGINE_ENUM(type, Class) STRINGIFY(Class),
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
-        "TypeID_Count"
-            }};
+            "TypeID_Count"}};
 #undef STRINGIFY0
 #undef STRINGIFY
 
@@ -44,19 +46,20 @@ std::string Basic::__str__() const
     return str(*this);
 }
 
-std::string Basic::dumps() const {
+std::string Basic::dumps() const
+{
     std::ostringstream oss;
     cereal::PortableBinaryOutputArchive{oss}(this->rcp_from_this());
     return oss.str();
 }
 
-RCP<const Basic> Basic::loads(const std::string& serialized) {
+RCP<const Basic> Basic::loads(const std::string &serialized)
+{
     RCP<const Basic> obj;
     std::istringstream iss(serialized);
     cereal::PortableBinaryInputArchive{iss}(obj);
     return obj;
 }
-
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
