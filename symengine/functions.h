@@ -25,7 +25,6 @@ private:
 public:
     //! Constructor
     OneArgFunction(const RCP<const Basic> &arg) : arg_{arg} {};
-    static RCP<const Basic> from_typeid_arg(TypeID id, RCP<const Basic> arg);
     //! \return the hash
     inline hash_t __hash__() const
     {

@@ -182,8 +182,6 @@ class Relational : public TwoArgBasic<Boolean>
 public:
     //! Constructor
     Relational(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
-    static RCP<const Basic> from_typeid_args(TypeID, RCP<const Basic> arg1,
-                                             RCP<const Basic> arg2);
     //! \return `true` if canonical
     virtual bool is_canonical(const RCP<const Basic> &lhs,
                               const RCP<const Basic> &rhs) const;
