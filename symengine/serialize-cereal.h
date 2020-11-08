@@ -62,6 +62,11 @@ inline void save_basic(Archive &ar, const Integer &b)
 {
     ar(b.__str__());
 }
+template <class Archive>
+inline void save_basic(Archive &ar, const RealDouble &b)
+{
+    ar(b.i);
+}
 // template <class Archive>
 // inline void save_basic(Archive &ar, const Rational &b)
 // {
@@ -116,6 +121,13 @@ template <class Archive, class T>
 inline void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, RCP<const T> const &ptr)
 {
     save_basic(ar, rcp_static_cast<const Basic>(ptr));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const RealDouble> &)
+{
+    double val;
+    ar(val);
+    return real_double(val);
 }
 
 template <class Archive>
