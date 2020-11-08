@@ -34,16 +34,22 @@ inline void save_basic(Archive &ar, const Symbol &b)
     ar(b.__str__());
 }
 template <class Archive>
+inline void save_basic(Archive &ar, const Add &b)
+{
+    ar(b.get_coef());
+    ar(b.get_dict());
+}
+template <class Archive>
 inline void save_basic(Archive &ar, const Pow &b)
 {
     ar(b.get_base());
     ar(b.get_exp());
 }
 template <class Archive>
-inline void save_basic(Archive &ar, const Add &b)
+inline void save_basic(Archive &ar, const URatPoly &b)
 {
-    ar(b.get_coef());
-    ar(b.get_dict());
+    ar(b.get_var());
+    ar(b.get_poly());
 }
 template <class Archive>
 inline void save_basic(Archive &ar, const Integer &b)
@@ -73,6 +79,8 @@ inline void save_basic(Archive &ar, const Relational &b)
 {
     ar(b.get_arg1(), b.get_arg2());
 }
+
+
 
 template <class Archive>
 inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
@@ -110,6 +118,15 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Symbol> &)
     return symbol(name);
 }
 template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Add> &)
+{
+    RCP<const Number> coeff;
+    umap_basic_num dict;
+    ar(coeff);
+    ar(dict);
+    return make_rcp<const Add>(coeff, std::move(dict));
+}
+template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Pow> &)
 {
     RCP<const Basic> base, exp;
@@ -118,13 +135,12 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Pow> &)
     return make_rcp<const Pow>(base, exp);
 }
 template <class Archive>
-RCP<const Basic> load_basic(Archive &ar, RCP<const Add> &)
+RCP<const Basic> load_basic(Archive &ar, RCP<const URatPoly> &)
 {
-    RCP<const Number> coeff;
-    umap_basic_num dict;
-    ar(coeff);
-    ar(dict);
-    return make_rcp<const Add>(coeff, std::move(dict));
+    RCP<const Basic> var;
+    URatDict poly;
+    ar(var, poly);
+    return make_rcp<const URatPoly>(var, std::move(poly));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
@@ -210,5 +226,33 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
         ptr = *sharedPtr.get();
     }
 }
-
+template<typename Archive>
+void serialize(Archive& ar, URatDict& urd) {
+    ar(urd.dict_);
+}
+template<typename Archive>
+void save(Archive& ar, const rational_class& rat) {
+    integer_class num = get_num(rat);
+    integer_class den = get_den(rat);
+    ar(num, den);
+}
+template<typename Archive>
+void load(Archive& ar, rational_class& rat) {
+    integer_class num;
+    integer_class den;
+    ar(num, den);
+    rat = rational_class(num, den);
+}
+template<typename Archive>
+void save(Archive& ar, const integer_class& intgr) {
+    std::ostringstream s;
+    s << intgr;  // stream to string
+    ar(s.str());
+}
+template<typename Archive>
+void load(Archive& ar, integer_class& intgr) {
+    std::string s;
+    ar(s);
+    intgr = integer_class(s);
+}
 } // namespace SymEngine
