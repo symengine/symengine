@@ -67,6 +67,10 @@ inline void save_basic(Archive &ar, const Integer &b)
 // {
 //     ar(b.get_num(), b.get_den());
 // }
+template <class Archive>
+inline void save_basic(Archive &ar, const NaN &b)
+{
+}
 
 template <class Archive>
 inline void save_basic(Archive &ar, const Constant &b)
@@ -116,6 +120,11 @@ inline void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, RCP<const T> const &ptr)
     save_basic(ar, rcp_static_cast<const Basic>(ptr));
 }
 
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const NaN> &)
+{
+    return rcp_static_cast<const Basic>(Nan);
+}
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Symbol> &)
 {
