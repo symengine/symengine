@@ -13,10 +13,12 @@ std::string type_code_name(TypeID id)
     const static std::array<std::string,
                             static_cast<int>(TypeID::TypeID_Count) + 1>
         type_names{{
+#define SYMENGINE_INCLUDE_ALL
 #define SYMENGINE_ENUM(type, Class) STRINGIFY(Class),
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
             "TypeID_Count"}};
+#undef SYMENGINE_INCLUDE_ALL
 #undef STRINGIFY0
 #undef STRINGIFY
 
