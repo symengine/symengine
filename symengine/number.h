@@ -141,6 +141,10 @@ inline bool is_number_and_zero(const Basic &b)
 }
 
 tribool is_zero(const Basic &b);
+tribool is_positive(const Basic &b);
+tribool is_nonpositive(const Basic &b);
+tribool is_negative(const Basic &b);
+tribool is_nonnegative(const Basic &b);
 tribool is_real(const Basic &b);
 
 class NumberWrapper : public Number
