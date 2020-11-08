@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/utilities/stream_fmt.h>
 
 namespace SymEngine
 {
@@ -45,6 +46,19 @@ extern RCP<const Basic> sin_table[];
 extern umap_basic_basic inverse_cst;
 
 extern umap_basic_basic inverse_tct;
+
+RCP<const Basic> OneArgFunction::from_typeid_arg(TypeID id, RCP<const Basic> arg) {
+    switch (id) {
+#define SYMENGINE_ENUM(type_enum, Class)                                       \
+        case type_enum:                                                 \
+            return make_rcp<const Class>(arg);
+#include "symengine/type_codes_oneargfunction.inc"
+#undef SYMENGINE_ENUM
+    default:
+        throw std::runtime_error(StreamFmt() << __FILE__ << ":" << __LINE__ << ": " << __PRETTY_FUNCTION__
+                                 << " Not a TypeID matching OneArgFunction: " << type_code_name(id) << " (" << id << ")");
+    }
+}
 
 Conjugate::Conjugate(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {

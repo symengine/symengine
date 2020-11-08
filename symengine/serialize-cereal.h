@@ -49,33 +49,29 @@ inline void save_basic(Archive &ar, const Integer &b)
 {
     ar(b.__str__());
 }
-
 // template <class Archive>
 // inline void save_basic(Archive &ar, const Rational &b)
 // {
 //     ar(b.get_num(), b.get_den());
 // }
 
-#define SYMENGINE_ENUM(type, Class)                     \
-    template <class Archive>                            \
-    inline void save_basic(Archive &ar, const Class &b) \
-    {                                                   \
-        ar(b.get_arg());                                \
-    }
+template <class Archive>
+inline void save_basic(Archive &ar, const Constant &b)
+{
+    ar(b.get_name());
+}
 
-#include "symengine/type_codes_oneargfunction.inc"
-#undef SYMENGINE_ENUM
+template <class Archive>
+inline void save_basic(Archive &ar, const OneArgFunction &b)
+{
+    ar(b.get_arg());
+}
 
-#define SYMENGINE_ENUM(type, Class)                     \
-    template <class Archive>                            \
-    inline void save_basic(Archive &ar, const Class &b) \
-    {                                                   \
-        ar(b.get_arg1(), b.get_arg2());                 \
-    }
-
-#include "symengine/type_codes_boolean_relational.inc"
-#undef SYMENGINE_ENUM
-
+template <class Archive>
+inline void save_basic(Archive &ar, const Relational &b)
+{
+    ar(b.get_arg1(), b.get_arg2());
+}
 
 template <class Archive>
 inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
@@ -136,47 +132,33 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
     ar(name);
     return integer(integer_class(name));
 }
-// template <class Archive>
-// RCP<const Basic> load_basic(Archive &ar, RCP<const Rational> &)
-// {
-//     RCP<const Integer> num;
-//     RCP<const Integer> den;
-//     ar(num, den);
-//     return Rational::from_two_ints(*num, *den);
-// }
-
-#define SYMENGINE_ENUM(type, Class)                             \
-    template <class Archive>                                    \
-    RCP<const Basic> load_basic(Archive &ar, RCP<const Class> &)\
-    {                                                           \
-        RCP<const Number> arg;                                  \
-        ar(arg);                                                \
-        return make_rcp<const Class>(arg);                      \
-    }
-#include "symengine/type_codes_oneargfunction.inc"
-#undef SYMENGINE_ENUM
-
-#define SYMENGINE_ENUM(type, Class)                                     \
-    template <class Archive>                                            \
-    RCP<const Basic> load_basic(Archive &ar, RCP<const Class> &)        \
-    {                                                                   \
-        RCP<const Number> arg1;                                         \
-        RCP<const Number> arg2;                                         \
-        ar(arg1, arg2);                                                 \
-        return make_rcp<const Class>(arg1, arg2);                       \
-    }
-#include "symengine/type_codes_boolean_relational.inc"
-#undef SYMENGINE_ENUM
-
-
-template <class Archive, typename T>
-RCP<const Basic> load_basic(Archive &ar, RCP<const T> &b)
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Constant> &)
 {
-    const auto t_code = b->get_type_code();
+    std::string name;
+    ar(name);
+    return constant(name);
+}
+template <class Archive>
+RCP<const Basic> load_oneargfunction(Archive &ar, TypeID id)
+{
+        RCP<const Basic> arg;
+        ar(arg);
+        return OneArgFunction::from_typeid_arg(id, arg);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Relational> &)
+{
+    RCP<const Basic> arg1, arg2;
+    ar(arg1, arg2);
+    return make_rcp<const Relational>(arg1, arg2);
+}
+template <class Archive, typename T>
+RCP<const Basic> load_basic(Archive &ar, RCP<const T> &)
+{
     throw std::runtime_error(StreamFmt() << __FILE__ << ":"
                              << __LINE__ << ": " << __PRETTY_FUNCTION__
-                             << "Loading of this type is not implemented: "
-                             << type_code_name(t_code) << " (" << t_code << ")" );
+                             << "Loading of this type is not implemented.");
 }
 
 //! Loading for SymEngine::RCP
@@ -189,6 +171,21 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
     if (id & cereal::detail::msb_32bit) {
         TypeID type_code;
         ar(type_code);
+        bool isOneArgFunction {true};
+        switch (type_code) {
+#define SYMENGINE_ENUM(type_enum, Class)                                       \
+     case type_enum:
+#include "symengine/type_codes_oneargfunction.inc"
+#undef SYMENGINE_ENUM
+            {
+                ptr = rcp_static_cast<const T>(
+                    rcp_static_cast<const Basic>(load_oneargfunction(ar, type_code)));
+                break;
+            }
+        default:
+            isOneArgFunction = false;
+        }
+        if (!isOneArgFunction) {
         switch (type_code) {
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
     case type_enum: {                                                          \
@@ -206,7 +203,7 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
             default:
                 throw std::runtime_error("Unknown type");
         }
-
+       }
         std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
             std::make_shared<RCP<const Basic>>(ptr));
 
@@ -219,5 +216,3 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 }
 
 } // namespace SymEngine
-
-#undef SYMENGINE_CASES_ONEARGFUNCTION
