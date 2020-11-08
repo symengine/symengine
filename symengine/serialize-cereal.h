@@ -88,6 +88,11 @@ inline void save_basic(Archive &ar, const OneArgFunction &b)
 {
     ar(b.get_arg());
 }
+template <class Archive>
+inline void save_basic(Archive &ar, const TwoArgFunction &b)
+{
+    ar(b.get_arg1(), b.get_arg2());
+}
 
 template <class Archive>
 inline void save_basic(Archive &ar, const Relational &b)
@@ -203,6 +208,16 @@ load_basic(Archive &ar, RCP<const T> &,
 template <class Archive, class T>
 RCP<const Basic>
 load_basic(Archive &ar, RCP<const T> &,
+           typename std::enable_if<std::is_base_of<TwoArgFunction, T>::value,
+                                   int>::type * = nullptr)
+{
+    RCP<const Basic> arg1, arg2;
+    ar(arg1, arg2);
+    return make_rcp<const T>(arg1, arg2);
+}
+template <class Archive, class T>
+RCP<const Basic>
+load_basic(Archive &ar, RCP<const T> &,
            typename std::enable_if<std::is_base_of<Relational, T>::value,
                                    int>::type * = nullptr)
 {
@@ -214,7 +229,8 @@ template <class Archive, class T>
 RCP<const Basic> load_basic(
     Archive &ar, RCP<const T> &,
     typename std::enable_if<not(std::is_base_of<Relational, T>::value
-                                or std::is_base_of<OneArgFunction, T>::value),
+                                or std::is_base_of<OneArgFunction, T>::value
+                                or std::is_base_of<TwoArgFunction, T>::value),
                             int>::type * = nullptr)
 {
     throw std::runtime_error(StreamFmt()

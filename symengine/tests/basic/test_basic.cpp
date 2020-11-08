@@ -61,6 +61,12 @@ TEST_CASE("Test version", "[basic]")
     REQUIRE(std::strcmp(SymEngine::get_version(), SYMENGINE_VERSION) == 0);
 }
 
+TEST_CASE("Test type_code_name", "[basic]")
+{
+    REQUIRE(type_code_name(SymEngine::SYMENGINE_UNEVALUATED_EXPR) == "UnevaluatedExpr");
+}
+
+
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
