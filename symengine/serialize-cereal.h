@@ -5,7 +5,6 @@
 #include <symengine/visitor.h>
 #include <symengine/utilities/stream_fmt.h>
 
-#include <cereal/archives/binary.hpp>
 #include <cereal/cereal.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/string.hpp>

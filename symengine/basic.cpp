@@ -1,6 +1,7 @@
 #include <symengine/printers.h>
 #include <symengine/subs.h>
 #include <symengine/serialize-cereal.h>
+#include <cereal/archives/portable_binary.hpp>
 
 namespace SymEngine
 {
@@ -45,14 +46,14 @@ std::string Basic::__str__() const
 
 std::string Basic::dumps() const {
     std::ostringstream oss;
-    cereal::BinaryOutputArchive{oss}(this->rcp_from_this());
+    cereal::PortableBinaryOutputArchive{oss}(this->rcp_from_this());
     return oss.str();
 }
 
 RCP<const Basic> Basic::loads(const std::string& serialized) {
     RCP<const Basic> obj;
     std::istringstream iss(serialized);
-    cereal::BinaryInputArchive{iss}(obj);
+    cereal::PortableBinaryInputArchive{iss}(obj);
     return obj;
 }
 
