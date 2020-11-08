@@ -1,5 +1,6 @@
 #pragma once
 #include <symengine/basic.h>
+#include <symengine/number.h>
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 #include <symengine/visitor.h>
@@ -73,6 +74,12 @@ inline void save_basic(Archive &ar, const RealDouble &b)
 //     ar(b.get_num(), b.get_den());
 // }
 template <class Archive>
+inline void save_basic(Archive &ar, const Infty &b)
+{
+    ar(b.get_direction());
+}
+
+template <class Archive>
 inline void save_basic(Archive &ar, const NaN &b)
 {
 }
@@ -134,7 +141,13 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const RealDouble> &)
     ar(val);
     return real_double(val);
 }
-
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Infty> &)
+{
+    RCP<const Number> direction;
+    ar(direction);
+    return Infty::from_direction(direction);
+}
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const NaN> &)
 {
