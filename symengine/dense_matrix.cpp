@@ -194,6 +194,64 @@ tribool DenseMatrix::is_hermitian() const
     return cur;
 }
 
+tribool DenseMatrix::is_weakly_diagonally_dominant() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+
+    unsigned ncols = A.ncols();
+    RCP<const Basic> diag;
+    RCP<const Basic> sum;
+    tribool diagdom = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        sum = zero;
+        for (unsigned j = 0; j < ncols; j++) {
+            auto &e = m_[i * ncols + j];
+            if (i == j) {
+                diag = abs(e);
+            } else {
+                sum = add(sum, abs(e));
+            }
+        }
+        diagdom = and_tribool(diagdom, is_nonnegative(*sub(diag, sum)));
+        if (is_false(diagdom)) {
+            return diagdom;
+        }
+    }
+    return diagdom;
+}
+
+tribool DenseMatrix::is_strictly_diagonally_dominant() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+
+    unsigned ncols = A.ncols();
+    RCP<const Basic> diag;
+    RCP<const Basic> sum;
+    tribool diagdom = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        sum = zero;
+        for (unsigned j = 0; j < ncols; j++) {
+            auto &e = m_[i * ncols + j];
+            if (i == j) {
+                diag = abs(e);
+            } else {
+                sum = add(sum, abs(e));
+            }
+        }
+        diagdom = and_tribool(diagdom, is_positive(*sub(diag, sum)));
+        if (is_false(diagdom)) {
+            return diagdom;
+        }
+    }
+    return diagdom;
+}
+
 RCP<const Basic> DenseMatrix::det() const
 {
     return det_bareis(*this);

@@ -2212,3 +2212,67 @@ TEST_CASE("is_hermitian(): DenseMatrix", "[matrices]")
     REQUIRE(is_true(G.is_hermitian()));
     REQUIRE(is_false(H.is_hermitian()));
 }
+
+TEST_CASE("is_weakly_diagonally_dominant(): DenseMatrix", "[matrices]")
+{
+    auto c1 = complex_double(std::complex<double>(2, 1));
+    auto c2 = complex_double(std::complex<double>(2, -1));
+    auto c3 = complex_double(std::complex<double>(2, -2));
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(2), c1, c2, integer(3)});
+    DenseMatrix C = DenseMatrix(2, 2, {symbol("z"), c1, c2, integer(3)});
+    DenseMatrix D = DenseMatrix(3, 4);
+    DenseMatrix E = DenseMatrix(1, 1, {c1});
+    DenseMatrix F = DenseMatrix(1, 1, {integer(2)});
+    DenseMatrix G = DenseMatrix(2, 2, {integer(2), c1, c1, integer(3)});
+    DenseMatrix H
+        = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
+    DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
+                                       integer(2), integer(4), rational(1, 2),
+                                       integer(7), integer(-3), integer(5)});
+
+    REQUIRE(is_true(A.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(B.is_weakly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(C.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(D.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(E.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(F.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(G.is_weakly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(H.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(K.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(L.is_weakly_diagonally_dominant()));
+}
+
+TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
+{
+    auto c1 = complex_double(std::complex<double>(2, 1));
+    auto c2 = complex_double(std::complex<double>(2, -1));
+    auto c3 = complex_double(std::complex<double>(2, -2));
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(2), c1, c2, integer(3)});
+    DenseMatrix C = DenseMatrix(2, 2, {symbol("z"), c1, c2, integer(3)});
+    DenseMatrix D = DenseMatrix(3, 4);
+    DenseMatrix E = DenseMatrix(1, 1, {c1});
+    DenseMatrix F = DenseMatrix(1, 1, {integer(2)});
+    DenseMatrix G = DenseMatrix(2, 2, {integer(2), c1, c1, integer(3)});
+    DenseMatrix H
+        = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
+    DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
+                                       integer(2), integer(4), rational(1, 2),
+                                       integer(7), integer(-3), integer(5)});
+
+    REQUIRE(is_false(A.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(B.is_strictly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(C.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(D.is_strictly_diagonally_dominant()));
+    REQUIRE(is_true(E.is_strictly_diagonally_dominant()));
+    REQUIRE(is_true(F.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(G.is_strictly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(H.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(K.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(L.is_strictly_diagonally_dominant()));
+}
