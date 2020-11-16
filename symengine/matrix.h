@@ -138,6 +138,7 @@ public:
     virtual tribool is_hermitian() const;
     virtual tribool is_weakly_diagonally_dominant() const;
     virtual tribool is_strictly_diagonally_dominant() const;
+    virtual tribool is_positive_definite() const;
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
@@ -329,6 +330,9 @@ private:
     // Stores the dimension of the Matrix
     unsigned row_;
     unsigned col_;
+
+    tribool shortcut_to_posdef() const;
+    tribool is_positive_definite_GE();
 };
 
 // ----------------------------- Sparse Matrices -----------------------------//

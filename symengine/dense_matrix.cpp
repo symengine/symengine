@@ -252,6 +252,68 @@ tribool DenseMatrix::is_strictly_diagonally_dominant() const
     return diagdom;
 }
 
+tribool DenseMatrix::shortcut_to_posdef() const
+{
+    tribool is_diagonal_positive = tribool::tritrue;
+    unsigned offset = 0;
+    for (unsigned i = 1; i < row_; i++) {
+        is_diagonal_positive
+            = and_tribool(is_diagonal_positive, is_positive(*m_[offset]));
+        if (is_false(is_diagonal_positive))
+            return is_diagonal_positive;
+        offset += row_ + 1;
+    }
+    if (is_true(and_tribool(is_diagonal_positive,
+                            this->is_strictly_diagonally_dominant())))
+        return tribool::tritrue;
+    return tribool::indeterminate;
+}
+
+tribool DenseMatrix::is_positive_definite_GE()
+{
+    auto size = row_;
+    for (unsigned i = 0; i < size; i++) {
+        auto ispos = is_positive(*m_[i * size + i]);
+        if (!is_true(ispos))
+            return ispos;
+        for (unsigned j = i + 1; j < size; j++) {
+            for (unsigned k = i + 1; k < size; k++) {
+                m_[j * size + k] = sub(mul(m_[i * size + i], m_[j * size + k]),
+                                       mul(m_[j * size + i], m_[i * size + k]));
+            }
+        }
+    }
+    return tribool::tritrue;
+}
+
+tribool DenseMatrix::is_positive_definite() const
+{
+
+    auto A = *this;
+    std::unique_ptr<DenseMatrix> B;
+    const DenseMatrix *H;
+    if (!is_true(A.is_hermitian())) {
+        if (!A.is_square())
+            return tribool::trifalse;
+        DenseMatrix tmp1 = DenseMatrix(A.row_, A.col_);
+        B = std::unique_ptr<DenseMatrix>(new DenseMatrix(A.row_, A.col_));
+        A.conjugate_transpose(tmp1);
+        add_dense_dense(A, tmp1, *B.get());
+        H = B.get();
+    } else {
+        H = this;
+    }
+
+    tribool shortcut = H->shortcut_to_posdef();
+    if (!is_indeterminate(shortcut))
+        return shortcut;
+
+    if (!B) {
+        B = std::unique_ptr<DenseMatrix>(new DenseMatrix(A));
+    }
+    return B->is_positive_definite_GE();
+}
+
 RCP<const Basic> DenseMatrix::det() const
 {
     return det_bareis(*this);
