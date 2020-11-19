@@ -139,6 +139,7 @@ public:
     virtual tribool is_weakly_diagonally_dominant() const;
     virtual tribool is_strictly_diagonally_dominant() const;
 
+    RCP<const Basic> trace() const;
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual void inv(MatrixBase &result) const;
