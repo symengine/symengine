@@ -83,6 +83,10 @@ void CodePrinter::bvisit(const Reals &x)
 {
     throw SymEngineException("Not supported");
 }
+void CodePrinter::bvisit(const Rationals &x)
+{
+    throw SymEngineException("Not supported");
+}
 void CodePrinter::bvisit(const Integers &x)
 {
     throw SymEngineException("Not supported");

@@ -221,6 +221,35 @@ public:
     virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
 };
 
+class Rationals : public Set
+{
+public:
+    Rationals()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_RATIONALS)
+    void operator=(Rationals const &) = delete;
+    const static RCP<const Rationals> &getInstance();
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&... args);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+};
+
 class Integers : public Set
 {
 public:
@@ -398,6 +427,7 @@ inline bool is_a_Set(const Basic &b)
             || b.get_type_code() == SYMENGINE_CONDITIONSET
             || b.get_type_code() == SYMENGINE_INTERVAL
             || b.get_type_code() == SYMENGINE_REALS
+            || b.get_type_code() == SYMENGINE_RATIONALS
             || b.get_type_code() == SYMENGINE_INTEGERS
             || b.get_type_code() == SYMENGINE_UNION
             || b.get_type_code() == SYMENGINE_IMAGESET);
@@ -407,6 +437,12 @@ inline bool is_a_Set(const Basic &b)
 inline RCP<const Reals> reals()
 {
     return Reals::getInstance();
+}
+
+//! \return RCP<const Rationals>
+inline RCP<const Rationals> rationals()
+{
+    return Rationals::getInstance();
 }
 
 //! \return RCP<const Reals>

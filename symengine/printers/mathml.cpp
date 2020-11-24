@@ -113,6 +113,11 @@ void MathMLPrinter::bvisit(const Reals &x)
     s << "<reals/>";
 }
 
+void MathMLPrinter::bvisit(const Rationals &x)
+{
+    s << "<rationals/>";
+}
+
 void MathMLPrinter::bvisit(const Integers &x)
 {
     s << "<integers/>";
