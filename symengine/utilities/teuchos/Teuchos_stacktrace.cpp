@@ -208,8 +208,8 @@ void process_section(bfd *abfd, asection *section, void *_data)
     return;
   }
 
-#ifdef bfd_get_section_size
-  bfd_size_type section_size = bfd_get_section_size(abfd, section);
+#ifdef bfd_section_size
+  bfd_size_type section_size = bfd_section_size(abfd, section);
 #else
   bfd_size_type section_size = bfd_section_size(section);
 #endif
