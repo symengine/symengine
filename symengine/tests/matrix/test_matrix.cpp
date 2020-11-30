@@ -2278,7 +2278,7 @@ TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
     REQUIRE(is_false(L.is_strictly_diagonally_dominant()));
 }
 
-TEST_CASE("is_positive_definite(): DenseMatrix", "[matrices]")
+TEST_CASE("definiteness: DenseMatrix", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3, {integer(2), integer(-1), integer(0),
                                        integer(-1), integer(2), integer(-1),
@@ -2315,17 +2315,37 @@ TEST_CASE("is_positive_definite(): DenseMatrix", "[matrices]")
     DenseMatrix N
         = DenseMatrix(2, 2, {integer(2), integer(0), integer(-1), integer(2)});
     DenseMatrix P = DenseMatrix(2, 1, {integer(2), integer(0)});
+    DenseMatrix Q = DenseMatrix(1, 1, {integer(-1)});
+    DenseMatrix R
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(-23)});
 
     REQUIRE(is_true(A.is_positive_definite()));
+    REQUIRE(is_false(A.is_negative_definite()));
     REQUIRE(is_true(B.is_positive_definite()));
+    REQUIRE(is_false(B.is_negative_definite()));
     REQUIRE(is_false(C.is_positive_definite()));
+    REQUIRE(is_false(C.is_negative_definite()));
     REQUIRE(is_false(D.is_positive_definite()));
+    REQUIRE(is_false(D.is_negative_definite()));
     REQUIRE(is_true(E.is_positive_definite()));
+    REQUIRE(is_false(E.is_negative_definite()));
     REQUIRE(is_true(F.is_positive_definite()));
+    REQUIRE(is_false(F.is_negative_definite()));
     REQUIRE(is_indeterminate(G.is_positive_definite()));
+    REQUIRE(is_indeterminate(G.is_negative_definite()));
     REQUIRE(is_true(H.is_positive_definite()));
+    REQUIRE(is_false(H.is_negative_definite()));
     REQUIRE(is_false(L.is_positive_definite()));
+    REQUIRE(is_false(L.is_negative_definite()));
     REQUIRE(is_false(M.is_positive_definite()));
+    REQUIRE(is_false(M.is_negative_definite()));
+    REQUIRE(is_true(N.is_positive_definite()));
+    REQUIRE(is_false(N.is_negative_definite()));
     REQUIRE(is_true(N.is_positive_definite()));
     REQUIRE(is_false(P.is_positive_definite()));
+    REQUIRE(is_false(P.is_negative_definite()));
+    REQUIRE(is_false(Q.is_positive_definite()));
+    REQUIRE(is_true(Q.is_negative_definite()));
+    REQUIRE(is_false(R.is_positive_definite()));
+    REQUIRE(is_false(R.is_negative_definite()));
 }

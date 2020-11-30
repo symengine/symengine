@@ -256,7 +256,7 @@ tribool DenseMatrix::shortcut_to_posdef() const
 {
     tribool is_diagonal_positive = tribool::tritrue;
     unsigned offset = 0;
-    for (unsigned i = 1; i < row_; i++) {
+    for (unsigned i = 0; i < row_; i++) {
         is_diagonal_positive
             = and_tribool(is_diagonal_positive, is_positive(*m_[offset]));
         if (is_false(is_diagonal_positive))
@@ -312,6 +312,13 @@ tribool DenseMatrix::is_positive_definite() const
         B = std::unique_ptr<DenseMatrix>(new DenseMatrix(A));
     }
     return B->is_positive_definite_GE();
+}
+
+tribool DenseMatrix::is_negative_definite() const
+{
+    auto res = DenseMatrix(row_, col_);
+    mul_dense_scalar(*this, integer(-1), res);
+    return res.is_positive_definite();
 }
 
 RCP<const Basic> DenseMatrix::det() const
