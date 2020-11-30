@@ -210,7 +210,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic", "[basi
     d2 = GaloisFieldDict::from_vec(b, 7_z);
     d5 = GaloisFieldDict::from_vec(b, 5_z);
     CHECK_THROWS_AS(d1.gf_div(d5, outArg(d3), outArg(d4)), SymEngineException &);
-    CHECK_THROWS_AS(d1.mul(d5, d1), std::runtime_error);
+    CHECK_THROWS_AS(d1.mul(d5, d1), std::runtime_error &);
     d5 = GaloisFieldDict::from_vec(c, 7_z);
     REQUIRE(d5 == d1.mul(d5, d1));
     REQUIRE(d5 == d1.mul(d1, d5));
@@ -451,6 +451,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic", "[basi
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d2 = GaloisFieldDict::from_vec(a, 8_z);
     CHECK_THROWS_AS(d1.gf_gcd(d2), SymEngineException &);
+    CHECK_THROWS_AS(d1.gf_lcm(d2), SymEngineException &);
     d2 = GaloisFieldDict::from_vec(a, 11_z);
     REQUIRE(d1.gf_lcm(d2).get_dict().empty());
     a = {2_z};
