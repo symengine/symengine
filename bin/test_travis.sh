@@ -5,6 +5,9 @@ set -e
 # Echo each command
 set -x
 
+# https://github.com/sakra/cotire/blob/master/MANUAL.md#using-cotire-with-compiler-wrappers
+export CCACHE_SLOPPINESS=pch_defines,time_macros
+
 if [[ "${WITH_SANITIZE}" != "" ]]; then
 	export CXXFLAGS="-fsanitize=${WITH_SANITIZE}"
 	if [[ "${WITH_SANITIZE}" == "address" ]]; then
@@ -22,7 +25,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               set -xe; \
               mkdir /tmp/build_libcxx; \
               cd /tmp/build_libcxx; \
-              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
+              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx -DCMAKE_CXX_COMPILER_LAUNCHER=ccache; \
               echo "Current dir:"; \
               pwd; \
               cmake --build . ;\
@@ -33,7 +36,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               set -xe;
               mkdir /tmp/build_libcxxabi; \
               cd /tmp/build_libcxxabi; \
-              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory  -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan  -DLIBCXXABI_LIBCXX_INCLUDES=/opt/libcxx7_msan/include/c++/v1 -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
+              cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_USE_SANITIZER=Memory  -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-7 -DCMAKE_INSTALL_PREFIX=/opt/libcxx7_msan  -DLIBCXXABI_LIBCXX_INCLUDES=/opt/libcxx7_msan/include/c++/v1 -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi -DCMAKE_CXX_COMPILER_LAUNCHER=ccache; \
               echo "Current dir:"; \
               pwd; \
               cmake --build . ;\
@@ -75,6 +78,7 @@ fi
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
 cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
+cmake_line="$cmake_line -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
@@ -152,8 +156,11 @@ cmake $cmake_line ${SOURCE_DIR}
 
 echo "=== Running build scripts for SymEngine"
 pwd
+ccache --version
+ccache --zero-stats
 echo "Running make" $MAKEFLAGS ":"
 make
+ccache --show-stats
 
 echo "Running make install:"
 make install
