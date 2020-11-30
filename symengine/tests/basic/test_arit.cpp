@@ -59,9 +59,6 @@ TEST_CASE("Add: arit", "[arit]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
-    RCP<const Basic> im1 = integer(-1);
-    RCP<const Basic> i0 = integer(0);
-    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
@@ -128,12 +125,6 @@ TEST_CASE("Add: arit", "[arit]")
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),
                                 *Rational::from_mpq(rational_class(7, 5)));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.4));
-    RCP<const Basic> comp = integer(r1->compare(*r1));
-    REQUIRE(eq(*comp, *i0));
-    comp = integer(r1->compare(*r3));
-    REQUIRE(eq(*comp, *im1));
-    comp = integer(r3->compare(*r1));
-    REQUIRE(eq(*comp, *i1));
     REQUIRE(is_a<ComplexDouble>(*r3));
     REQUIRE(std::abs(down_cast<const ComplexDouble &>(*r3).i.real() - 2.0)
             < 1e-12);
