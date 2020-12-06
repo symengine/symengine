@@ -377,6 +377,11 @@ void StrPrinter::bvisit(const Reals &x)
     str_ = "Reals";
 }
 
+void StrPrinter::bvisit(const Rationals &x)
+{
+    str_ = "Rationals";
+}
+
 void StrPrinter::bvisit(const Integers &x)
 {
     str_ = "Integers";

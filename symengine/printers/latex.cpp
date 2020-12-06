@@ -374,6 +374,11 @@ void LatexPrinter::bvisit(const Reals &x)
     str_ = "\\mathbf{R}";
 }
 
+void LatexPrinter::bvisit(const Rationals &x)
+{
+    str_ = "\\mathbf{Q}";
+}
+
 void LatexPrinter::bvisit(const Integers &x)
 {
     str_ = "\\mathbf{Z}";
