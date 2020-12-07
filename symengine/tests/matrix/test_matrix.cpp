@@ -16,6 +16,7 @@ using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
 using SymEngine::complex_double;
+using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::is_a;
@@ -2289,4 +2290,76 @@ TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
     REQUIRE(is_indeterminate(H.is_strictly_diagonally_dominant()));
     REQUIRE(is_false(K.is_strictly_diagonally_dominant()));
     REQUIRE(is_false(L.is_strictly_diagonally_dominant()));
+}
+
+TEST_CASE("definiteness: DenseMatrix", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(2), integer(-1), integer(0),
+                                       integer(-1), integer(2), integer(-1),
+                                       integer(0), integer(-1), integer(2)});
+    DenseMatrix B
+        = DenseMatrix(2, 2, {integer(5), integer(4), integer(4), integer(5)});
+    DenseMatrix C = DenseMatrix(3, 3, {integer(2), integer(-1), integer(-1),
+                                       integer(-1), integer(2), integer(-1),
+                                       integer(-1), integer(-1), integer(2)});
+    DenseMatrix D
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
+    DenseMatrix E
+        = DenseMatrix(2, 2, {integer(2), integer(3), integer(4), integer(8)});
+    DenseMatrix F = DenseMatrix(
+        2, 2, {integer(1), Complex::from_two_nums(*integer(0), *integer(2)),
+               Complex::from_two_nums(*integer(0), *integer(-1)), integer(4)});
+    DenseMatrix G = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix H = DenseMatrix(
+        4, 4,
+        {real_double(0.0228202735623867), real_double(0.00518748979085398),
+         real_double(-0.0743036351048907), real_double(-0.00709135324903921),
+         real_double(0.00518748979085398), real_double(0.0349045359786350),
+         real_double(0.0830317991056637), real_double(0.00233147902806909),
+         real_double(-0.0743036351048907), real_double(0.0830317991056637),
+         real_double(1.15859676366277), real_double(0.340359081555988),
+         real_double(-0.00709135324903921), real_double(0.00233147902806909),
+         real_double(0.340359081555988), real_double(0.928147644848199)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
+                                       integer(0), integer(1), integer(2),
+                                       integer(0), integer(2), integer(1)});
+    DenseMatrix M
+        = DenseMatrix(2, 2, {integer(-1), integer(0), integer(0), integer(23)});
+    DenseMatrix N
+        = DenseMatrix(2, 2, {integer(2), integer(0), integer(-1), integer(2)});
+    DenseMatrix P = DenseMatrix(2, 1, {integer(2), integer(0)});
+    DenseMatrix Q = DenseMatrix(1, 1, {integer(-1)});
+    DenseMatrix R
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(-23)});
+
+    REQUIRE(is_true(A.is_positive_definite()));
+    REQUIRE(is_false(A.is_negative_definite()));
+    REQUIRE(is_true(B.is_positive_definite()));
+    REQUIRE(is_false(B.is_negative_definite()));
+    REQUIRE(is_false(C.is_positive_definite()));
+    REQUIRE(is_false(C.is_negative_definite()));
+    REQUIRE(is_false(D.is_positive_definite()));
+    REQUIRE(is_false(D.is_negative_definite()));
+    REQUIRE(is_true(E.is_positive_definite()));
+    REQUIRE(is_false(E.is_negative_definite()));
+    REQUIRE(is_true(F.is_positive_definite()));
+    REQUIRE(is_false(F.is_negative_definite()));
+    REQUIRE(is_indeterminate(G.is_positive_definite()));
+    REQUIRE(is_indeterminate(G.is_negative_definite()));
+    REQUIRE(is_true(H.is_positive_definite()));
+    REQUIRE(is_false(H.is_negative_definite()));
+    REQUIRE(is_false(L.is_positive_definite()));
+    REQUIRE(is_false(L.is_negative_definite()));
+    REQUIRE(is_false(M.is_positive_definite()));
+    REQUIRE(is_false(M.is_negative_definite()));
+    REQUIRE(is_true(N.is_positive_definite()));
+    REQUIRE(is_false(N.is_negative_definite()));
+    REQUIRE(is_true(N.is_positive_definite()));
+    REQUIRE(is_false(P.is_positive_definite()));
+    REQUIRE(is_false(P.is_negative_definite()));
+    REQUIRE(is_false(Q.is_positive_definite()));
+    REQUIRE(is_true(Q.is_negative_definite()));
+    REQUIRE(is_false(R.is_positive_definite()));
+    REQUIRE(is_false(R.is_negative_definite()));
 }
