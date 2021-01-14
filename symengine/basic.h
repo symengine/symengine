@@ -109,14 +109,10 @@ public:
     };
 #endif
     //! Constructor
-    Basic() : hash_{0}
-    {
-    }
+    Basic() : hash_{0} {}
     // Destructor must be explicitly defined as virtual here to avoid problems
     // with undefined behavior while deallocating derived classes.
-    virtual ~Basic()
-    {
-    }
+    virtual ~Basic() {}
 
     //! Delete the copy constructor and assignment
     Basic(const Basic &) = delete;
@@ -301,14 +297,14 @@ void hash_combine(hash_t &seed, const T &v);
 
 const char *get_version();
 
-} // SymEngine
+} // namespace SymEngine
 
 namespace std
 {
 //! Specialise `std::hash` for Basic.
 template <>
 struct hash<SymEngine::Basic>;
-}
+} // namespace std
 
 //! Inline members and functions
 #include "basic-inl.h"

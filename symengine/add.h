@@ -55,21 +55,21 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
-    * Mul) depending on the size of dictionary `d`.
-    */
+     * Mul) depending on the size of dictionary `d`.
+     */
     static RCP<const Basic> from_dict(const RCP<const Number> &coef,
                                       umap_basic_num &&d);
     /*!
-    * Adds `(coeff*t)` to the dict `d`
-    */
+     * Adds `(coeff*t)` to the dict `d`
+     */
     static void dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
                               const RCP<const Basic> &t);
     /*!
-    * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict
-    * `d` (as a pair `c, term`).
-    * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and
-    * `d`.
-    */
+     * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict
+     * `d` (as a pair `c, term`).
+     * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and
+     * `d`.
+     */
     static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef,
                                    umap_basic_num &d,
                                    const RCP<const Number> &c,
@@ -138,6 +138,6 @@ RCP<const Basic> add(const vec_basic &a);
 //! \return `a - b`
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

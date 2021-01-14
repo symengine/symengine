@@ -584,7 +584,7 @@ inline bool operator!=(const SymEngine::MatrixBase &lhs,
     return not lhs.eq(rhs);
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 // Print Matrix
 inline std::ostream &operator<<(std::ostream &out,

@@ -13,9 +13,7 @@ namespace SymEngine
 {
 
 // Constructors
-DenseMatrix::DenseMatrix()
-{
-}
+DenseMatrix::DenseMatrix() {}
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
@@ -23,12 +21,9 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 }
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
-    : m_{l}, row_(row), col_(col)
-{
-    SYMENGINE_ASSERT(m_.size() == row * col)
-}
+    : m_{l}, row_(row), col_(col){SYMENGINE_ASSERT(m_.size() == row * col)}
 
-DenseMatrix::DenseMatrix(const vec_basic &column_elements)
+      DenseMatrix::DenseMatrix(const vec_basic &column_elements)
     : m_(column_elements), row_(static_cast<unsigned>(column_elements.size())),
       col_(1)
 {
@@ -2044,4 +2039,4 @@ void zeros(DenseMatrix &A)
     }
 }
 
-} // SymEngine
+} // namespace SymEngine

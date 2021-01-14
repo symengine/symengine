@@ -253,4 +253,4 @@ void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
     v.apply(*x);
 }
 
-} // SymEngine
+} // namespace SymEngine

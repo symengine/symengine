@@ -344,4 +344,4 @@ vec_basic Add::get_args() const
     return args;
 }
 
-} // SymEngine
+} // namespace SymEngine

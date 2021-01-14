@@ -38,4 +38,4 @@ std::ostream &operator<<(std::ostream &os, const mpq_wrapper &f)
 }
 #endif
 
-} // SymEngine
+} // namespace SymEngine

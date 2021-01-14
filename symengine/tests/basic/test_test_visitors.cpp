@@ -2,21 +2,21 @@
 #include <symengine/test_visitors.h>
 #include <symengine/sets.h>
 
-using SymEngine::symbol;
-using SymEngine::tribool;
-using SymEngine::integer;
-using SymEngine::Number;
 using SymEngine::Basic;
-using SymEngine::Symbol;
+using SymEngine::boolTrue;
+using SymEngine::Complex;
+using SymEngine::Inf;
+using SymEngine::integer;
+using SymEngine::interval;
+using SymEngine::Nan;
+using SymEngine::Number;
+using SymEngine::pi;
 using SymEngine::Rational;
 using SymEngine::RCP;
-using SymEngine::interval;
 using SymEngine::Set;
-using SymEngine::Complex;
-using SymEngine::pi;
-using SymEngine::boolTrue;
-using SymEngine::Inf;
-using SymEngine::Nan;
+using SymEngine::symbol;
+using SymEngine::Symbol;
+using SymEngine::tribool;
 
 TEST_CASE("Test is zero", "[is_zero]")
 {

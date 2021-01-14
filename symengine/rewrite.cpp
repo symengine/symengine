@@ -9,9 +9,7 @@ class RewriteAsExp : public BaseVisitor<RewriteAsExp, TransformVisitor>
 public:
     using TransformVisitor::bvisit;
 
-    RewriteAsExp() : BaseVisitor<RewriteAsExp, TransformVisitor>()
-    {
-    }
+    RewriteAsExp() : BaseVisitor<RewriteAsExp, TransformVisitor>() {}
 
     void bvisit(const Sin &x)
     {
@@ -130,4 +128,4 @@ RCP<const Basic> rewrite_as_exp(const RCP<const Basic> &x)
     return b.apply(x);
 }
 
-} // SymEngine
+} // namespace SymEngine

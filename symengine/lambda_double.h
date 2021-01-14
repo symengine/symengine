@@ -433,7 +433,6 @@ public:
         }
 
         result_ = [=](const double *x) {
-
             bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
                 result = result && bool(applys[i](x));
@@ -450,7 +449,6 @@ public:
         }
 
         result_ = [=](const double *x) {
-
             bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
                 result = result || bool(applys[i](x));
@@ -467,7 +465,6 @@ public:
         }
 
         result_ = [=](const double *x) {
-
             bool result = bool(applys[0](x));
             for (unsigned int i = 0; i < applys.size(); i++) {
                 result = result != bool(applys[i](x));
@@ -490,7 +487,6 @@ public:
         }
 
         result_ = [=](const double *x) {
-
             double result = applys[0](x);
             for (unsigned int i = 0; i < applys.size(); i++) {
                 result = std::max(result, applys[i](x));
@@ -507,7 +503,6 @@ public:
         }
 
         result_ = [=](const double *x) {
-
             double result = applys[0](x);
             for (unsigned int i = 0; i < applys.size(); i++) {
                 result = std::min(result, applys[i](x));
@@ -662,5 +657,5 @@ public:
     }
 #endif
 };
-}
+} // namespace SymEngine
 #endif // SYMENGINE_LAMBDA_DOUBLE_H

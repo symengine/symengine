@@ -11,12 +11,10 @@
 namespace SymEngine
 {
 
-ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+ComplexMPC::ComplexMPC(mpc_class i)
+    : i{std::move(i)} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t ComplexMPC::__hash__() const
+      hash_t ComplexMPC::__hash__() const
 {
     hash_t seed = SYMENGINE_COMPLEX_MPC;
     hash_combine_impl(seed, mpc_realref(i.get_mpc_t()));
@@ -632,8 +630,8 @@ RCP<const Number> ComplexMPC::rpow(const RealDouble &other) const
 }
 
 /*! Raise `other` to power ComplexMPC
-* \param other of type ComplexDouble
-* */
+ * \param other of type ComplexDouble
+ * */
 RCP<const Number> ComplexMPC::rpow(const ComplexDouble &other) const
 {
     mpc_class t(get_prec());
@@ -643,8 +641,8 @@ RCP<const Number> ComplexMPC::rpow(const ComplexDouble &other) const
 }
 
 /*! Raise `other` to power ComplexMPC
-* \param other of type RealMPFR
-* */
+ * \param other of type RealMPFR
+ * */
 RCP<const Number> ComplexMPC::rpow(const RealMPFR &other) const
 {
     mpc_class t(std::max(get_prec(), other.get_prec()));
@@ -984,5 +982,5 @@ Evaluate &ComplexMPC::get_eval() const
     return evaluate_mpc;
 }
 
-} // SymEngine
+} // namespace SymEngine
 #endif // HAVE_SYMENGINE_MPC

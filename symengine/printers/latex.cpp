@@ -538,4 +538,4 @@ void LatexPrinter::bvisit(const Piecewise &x)
     }
     str_ = s.str();
 }
-}
+} // namespace SymEngine

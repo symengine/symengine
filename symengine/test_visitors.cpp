@@ -156,4 +156,4 @@ tribool is_real(const Basic &b)
     RealVisitor visitor;
     return visitor.apply(b);
 }
-}
+} // namespace SymEngine

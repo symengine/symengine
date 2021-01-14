@@ -11,12 +11,10 @@
 namespace SymEngine
 {
 
-RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+RealMPFR::RealMPFR(mpfr_class i)
+    : i{std::move(i)} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t RealMPFR::__hash__() const
+      hash_t RealMPFR::__hash__() const
 {
     hash_t seed = SYMENGINE_REAL_MPFR;
     hash_combine_impl(seed, i.get_mpfr_t());
@@ -677,8 +675,8 @@ RCP<const Number> RealMPFR::rpowreal(const RealDouble &other) const
 }
 
 /*! Raise `other` to power RealMPFR
-* \param other of type ComplexDouble
-* */
+ * \param other of type ComplexDouble
+ * */
 RCP<const Number> RealMPFR::rpowreal(const ComplexDouble &other) const
 {
 #ifdef HAVE_SYMENGINE_MPC
@@ -1084,5 +1082,5 @@ Evaluate &RealMPFR::get_eval() const
     return evaluate_mpfr;
 }
 
-} // SymEngine
+} // namespace SymEngine
 #endif // HAVE_SYMENGINE_MPFR

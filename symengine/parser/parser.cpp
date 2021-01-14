@@ -49,9 +49,9 @@ double_arg_boolean_func double_casted_Eq = Eq;
 
 RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
 {
-    const static std::map<const std::string,
-                          const std::function<RCP<const Basic>(
-                              const RCP<const Basic> &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
         single_arg_functions = {
             {"sin", sin},
             {"cos", cos},
@@ -94,10 +94,10 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
         };
-    const static std::map<const std::string,
-                          const std::function<RCP<const Basic>(
-                              const RCP<const Basic> &,
-                              const RCP<const Basic> &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Basic>(const RCP<const Basic> &,
+                                             const RCP<const Basic> &)>>
         double_arg_functions = {
             {"pow", (double_arg_func)pow},
             {"beta", beta},
@@ -113,26 +113,28 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
     const static std::map<const std::string,
                           const std::function<RCP<const Basic>(vec_basic &)>>
         multi_arg_functions = {
-            {"max", max}, {"min", min}, {"levi_civita", levi_civita},
+            {"max", max},
+            {"min", min},
+            {"levi_civita", levi_civita},
         };
 
-    const static std::map<const std::string,
-                          const std::function<RCP<const Boolean>(
-                              const RCP<const Basic> &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
             {"Eq", single_casted_Eq},
         };
-    const static std::map<const std::string,
-                          const std::function<RCP<const Boolean>(
-                              const RCP<const Boolean> &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Boolean>(const RCP<const Boolean> &)>>
         single_arg_boolean_boolean_functions = {
             {"Not", logical_not},
         };
 
-    const static std::map<const std::string,
-                          const std::function<RCP<const Boolean>(
-                              const RCP<const Basic> &,
-                              const RCP<const Basic> &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Boolean>(const RCP<const Basic> &,
+                                               const RCP<const Basic> &)>>
         double_arg_boolean_functions = {
             {"Eq", double_casted_Eq},
             {"Ne", Ne},
@@ -142,16 +144,17 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"Lt", Lt},
         };
 
-    const static std::map<const std::string,
-                          const std::function<RCP<const Boolean>(
-                              vec_boolean &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Boolean>(vec_boolean &)>>
         multi_arg_vec_boolean_functions = {
-            {"Xor", logical_xor}, {"Xnor", logical_xnor},
+            {"Xor", logical_xor},
+            {"Xnor", logical_xnor},
         };
 
-    const static std::map<const std::string,
-                          const std::function<RCP<const Boolean>(
-                              set_boolean &)>>
+    const static std::map<
+        const std::string,
+        const std::function<RCP<const Boolean>(set_boolean &)>>
         multi_arg_set_boolean_functions = {
             {"And", logical_and},
             {"Or", logical_or},

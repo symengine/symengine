@@ -213,6 +213,6 @@ public:
 
     tribool apply(const Basic &b);
 };
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H

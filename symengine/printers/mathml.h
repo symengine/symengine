@@ -55,6 +55,6 @@ public:
     // void bvisit(const NumberWrapper &x);
     std::string apply(const Basic &b);
 };
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_MATHML_H

@@ -385,4 +385,4 @@ Evaluate &ComplexDouble::get_eval() const
     return evaluate_complex_double;
 }
 
-} // SymEngine
+} // namespace SymEngine
