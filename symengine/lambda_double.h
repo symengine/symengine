@@ -120,8 +120,8 @@ public:
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
             auto index = it->second;
-            result_
-                = [=](const T *x) { return cse_intermediate_results[index]; };
+            T *cse_intermediate_result = &(cse_intermediate_results[index]);
+            result_ = [=](const T *x) { return *cse_intermediate_result; };
             return;
         }
         throw SymEngineException("Symbol not in the symbols vector.");

@@ -155,7 +155,8 @@ TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
     REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
 }
 
-TEST_CASE("LambdaRealDoubleVisitor with cse can be moved", "[lambda_double_cse]")
+TEST_CASE("LambdaRealDoubleVisitor with cse can be moved",
+          "[lambda_double_cse]")
 {
     RCP<const Basic> x, y, z, r, s;
     x = symbol("x");
