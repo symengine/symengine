@@ -33,6 +33,14 @@ protected:
     vec_basic symbols;
 
 public:
+    LambdaDoubleVisitor() = default;
+    LambdaDoubleVisitor(LambdaDoubleVisitor &&) = default;
+    LambdaDoubleVisitor &operator=(LambdaDoubleVisitor &&) = default;
+    // delete copy constructor:
+    // https://github.com/symengine/symengine/issues/1674
+    LambdaDoubleVisitor(const LambdaDoubleVisitor &) = delete;
+    LambdaDoubleVisitor &operator=(const LambdaDoubleVisitor &) = delete;
+
     void init(const vec_basic &x, const Basic &b, bool cse = false)
     {
         vec_basic outputs = {b.rcp_from_this()};
