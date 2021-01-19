@@ -25,10 +25,10 @@ most frequent operations are given in our [C++ Style
 Guide](style_guide.md), this is useful to consult if you are unsure about
 the syntax.  In order to understand how it works under the hood, read
 [Teuchos::RCP Beginner's
-Guide](http://trilinos.sandia.gov/RefCountPtrBeginnersGuideSAND.pdf) (pdf).
+Guide](https://docs.trilinos.org/dev/packages/teuchos/doc/html/RefCountPtrBeginnersGuideSAND.pdf) (pdf).
 Finally, more thorough exposition is given in [Teuchos C++ Memory Management
 Classes, Idioms, and Related Topics --- The Complete
-Reference](http://www.cs.sandia.gov/~rabartl/TeuchosMemoryManagementSAND.pdf)
+Reference](https://docs.trilinos.org/dev/packages/teuchos/doc/html/TeuchosMemoryManagementSAND.pdf)
 (pdf).
 
 `Teuchos`' RCP implements reference counting of objects, exactly like Python
@@ -147,7 +147,7 @@ gcc.
 The Python wrappers then just call this `add` function and provide natural mathematical syntax `(x + y) + (y + x)` at the Python level.
 
 
-[1] http://trilinos.sandia.gov/packages/docs/dev/packages/thyra/doc/html/LinearAlgebraFunctionConvention.pdf
+[1] https://docs.trilinos.org/dev/packages/thyra/doc/html/LinearAlgebraFunctionConvention.pdf
 
 [2] http://www.math.ttu.edu/~kelong/Playa/html/
 
