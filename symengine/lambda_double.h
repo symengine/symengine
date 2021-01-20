@@ -33,6 +33,14 @@ protected:
     vec_basic symbols;
 
 public:
+    LambdaDoubleVisitor() = default;
+    LambdaDoubleVisitor(LambdaDoubleVisitor &&) = default;
+    LambdaDoubleVisitor &operator=(LambdaDoubleVisitor &&) = default;
+    // delete copy constructor:
+    // https://github.com/symengine/symengine/issues/1674
+    LambdaDoubleVisitor(const LambdaDoubleVisitor &) = delete;
+    LambdaDoubleVisitor &operator=(const LambdaDoubleVisitor &) = delete;
+
     void init(const vec_basic &x, const Basic &b, bool cse = false)
     {
         vec_basic outputs = {b.rcp_from_this()};
@@ -112,8 +120,8 @@ public:
         auto it = cse_intermediate_fns_map.find(x.rcp_from_this());
         if (it != cse_intermediate_fns_map.end()) {
             auto index = it->second;
-            result_
-                = [=](const T *x) { return cse_intermediate_results[index]; };
+            T *cse_intermediate_result = &(cse_intermediate_results[index]);
+            result_ = [=](const T *x) { return *cse_intermediate_result; };
             return;
         }
         throw SymEngineException("Symbol not in the symbols vector.");
