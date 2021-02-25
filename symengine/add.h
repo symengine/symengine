@@ -1,8 +1,16 @@
 /**
- * \file add.h
- * Header containing definition of Add and related functions add, sub
+ *  @file   add.h
+ *  @author SymEngine Developers
+ *  @date   2021-02-25
+ *  @brief  Classes and functions relating to the binary operation of addition
  *
- **/
+ *  Created on: 2012-07-11
+ *
+ *  This file contains the basic binary operations defined for symbolic enties.
+ *  In particular the @ref Add class for representing addition is
+ *  defined here, along with the `add` and `substract` functions
+ *
+ */
 
 #ifndef SYMENGINE_ADD_H
 #define SYMENGINE_ADD_H
@@ -11,133 +19,161 @@
 
 namespace SymEngine
 {
-/*! \class Add
-   Add class keeps an addition of symbolic expressions. Internal representation
-   of an Add is a numeric coefficient `coef_` and a dictionary `dict_` of
-   key-value pairs.
 
-        Add(coef_, {{key1, value1}, {key2, value2}, ... })
-
-   This represents the following expression,
-
-        coef_ + key1*value1 + key2*value2 + ...
-
-   `coef_` and the values of dictionary are numeric coefficients like Integer,
-   RealDouble, Complex
-   `key`s can be any symbolic expression except numeric coefficients and `Mul`
-   objects with coefficient != 1.
-
-   For example, the following are valid representations
-
-        Add(1, {{x, 2}, {y, 5}})
-        Add(0, {{x, 1}, {y, 4}, {z, 3}})
-
-   Following are invalid representations. (valid equivalent is shown next to
-   them)
-
-        Add(1, {{x, 1}, {2*y, 3})   -> Add(1, {{x, 1}, {y, 6}})
-        Add(0, {{x, 2}})             -> Mul(2, {{x, 1}})
-        Add(1, {{x, 2}, {4, 6}})    -> Add(25, {{x, 2}})
-*/
+/**
+ *   @class Add
+ *   @brief The base class for representing addition in symbolic expressions
+ **/
 class Add : public Basic
 {
 private:
-    RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2+x+y`)
-    umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
+    RCP<const Number> coef_; //!< The numeric coefficient of the expression
+                             //!< (e.g. `2` in `2+x+y`)
+    umap_basic_num dict_;    //!< The expression without its coefficient as a
+                             //!< dictionary (e.g. `x+y` in `2+x+y`)
 
 public:
     IMPLEMENT_TYPEID(SYMENGINE_ADD)
-    /*! Constructs Add from a dictionary by copying the contents of the
-        dictionary. Assumes that the input is in canonical form
-    */
+
+    /**
+     *  @brief Default constructor
+     *  @pre Input must be in cannonical form
+     *  @param coef numeric coefficient
+     *  @param dict dictionary of the expression without the coefficient
+     */
     Add(const RCP<const Number> &coef, umap_basic_num &&dict);
     virtual hash_t __hash__() const;
+
+    /**
+     *  @brief Test equality
+     *  @deprecated Use eq(const Basic &a, const Basic &b) instead
+     *  @param o a constant reference to object to test against
+     *  @return True if `this` is equal to `o`
+     */
     virtual bool __eq__(const Basic &o) const;
+
+    /**
+     *  @brief Compares `Add` objects
+     *  @param o object to test against
+     *  @see `unified_compare()` for the actual implementation
+     *  @return 1 if `this` is equal to `o` otherwise -1
+     */
     virtual int compare(const Basic &o) const;
-    /*! Creates appropriate instance (i.e Add , Symbol, Integer,
-    * Mul) depending on the size of dictionary `d`.
-    */
+
+    /**
+     *  @brief Create an appropriate instance from dictionary quickly
+     *  @pre The dictionary must be in canonical form
+     *  @see `Mul` for how `Pow` gets returned
+     *  @see `Basic` for the guarantees and expectations
+     *  @param coef the numeric coefficient
+     *  @param d the dictionary of the expression without the coefficient
+     *  @return `coef` if the dictionary is empty (size 0)
+     *  @return `Mul` if the dictionary has one element which is a `Mul`
+     *  @return `Integer` if the dictionary has one element which is a `Integer`
+     *  @return `Symbol` if the dictionary has one element which is a `Symbol`
+     *  @return `Pow` if the dictionary has one element which is a `Pow`
+     *  @return `Add` if the size of the dictionary is greater than 1
+     */
     static RCP<const Basic> from_dict(const RCP<const Number> &coef,
                                       umap_basic_num &&d);
-    /*!
-    * Adds `(coeff*t)` to the dict `d`
-    */
+    /**
+     *  @brief Adds a new term to the expression
+     *  @pre The coefficient of the new term is non-zero
+     *  @param d dictionary to be updated
+     *  @param coef new coefficient
+     *  @param t new term
+     *  @return Void.
+     */
     static void dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
                               const RCP<const Basic> &t);
-    /*!
-    * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict
-    * `d` (as a pair `c, term`).
-    * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and
-    * `d`.
-    */
+    /**
+     *  @brief Updates the numerical coefficient and the dictionary
+     *  @param coef the numerical coefficient
+     *  @param d  the dictionary containing the expression
+     *  @param c  the numerical coefficient to be added
+     *  @param term the new term
+     *  @return Void.
+     */
     static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef,
                                    umap_basic_num &d,
                                    const RCP<const Number> &c,
                                    const RCP<const Basic> &term);
-    //! Converts the Add into a sum of two Basic objects and returns them.
+
+    /**
+     *  @brief Converts the Add into a sum of two Basic objects and returns them
+     *  @param a first basic object
+     *  @param b second basic object
+     *  @return Void.
+     */
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
                       const Ptr<RCP<const Basic>> &b) const;
-    //! Converts a Basic `self` into the form of `coefficient * term`
+
+    /**
+     *  @brief Converts a Basic `self` into the form of `coefficient * term`
+     *  @param coef numerical coefficient
+     *  @param term the term
+     *  @return Void.
+     */
     static void as_coef_term(const RCP<const Basic> &self,
                              const Ptr<RCP<const Number>> &coef,
                              const Ptr<RCP<const Basic>> &term);
-    //! \return `true` if a given dictionary and a coefficient is in canonical
-    //! form
+    /**
+     *  @brief Checks if a given dictionary and coeffient is in cannonical form
+     *  @param coef numerical coefficient
+     *  @param dict dictionary of remaining expression terms
+     *  @return `true` if canonical
+     */
     bool is_canonical(const RCP<const Number> &coef,
                       const umap_basic_num &dict) const;
 
-    /*!
-        Returns the arguments of the Add.
-        For an Add of the form,
-
-            Add(coef_, {{key1, value1}, {key2, value2}, ... })
-
-        if coef_ is non-zero it returns,
-
-            {coef_, key1*value1, key2*value2, ... }
-
-        otherwise it returns,
-
-            {key1*value1, key2*value2, ... }
-
-        \return list of arguments
-    */
+    /**
+     * @brief Returns the arguments of the Add
+     * @return list of arguments
+     */
     virtual vec_basic get_args() const;
 
-    //! \return const reference to the coefficient of the Add
+    //!< @return const reference to the coefficient of the `Add`
     inline const RCP<const Number> &get_coef() const
     {
         return coef_;
     }
-    //! \return const reference to the dictionary of the Add
+
+    //!< @return const reference to the dictionary of the `Add`
     inline const umap_basic_num &get_dict() const
     {
         return dict_;
     }
 };
 
-/*!
-    Add the Basic classes `a` and `b`
-    This'll return the most appropriate type.
-    For example if `x` and `y` are symbols,
-
-        x + y will return an Add
-        x + x will return a Mul (2*x)
-
-    \return `a + b`
-    \see Add, Mul
-*/
+/**
+ * @brief Adds two objects (safely)
+ * @param a is a `Basic` object
+ * @param b is a `Basic` object
+ * @returns `a+b` in its most aproriate form
+ * 
+ * @relatesalso Add
+ */
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
-/*!
-    Sums the elements of a vector. For `n` elements, this method should be
-    faster than doing `n-1` adds.
-    \return Sum of the elements of vector `a`
-*/
+
+/**
+ * @brief Sums the elements of a vector
+ * @param a is a vector
+ * @returns sum of elements of the input vector `a`
+ * 
+ * @relatesalso Add
+ */
 RCP<const Basic> add(const vec_basic &a);
-//! Subtracts `b` from `a`
-//! \return `a - b`
+
+/**
+ * @brief Substracts `b` from `a`
+ * @param a is the minuend
+ * @param b is the subtrahend
+ * @returns the difference `a-b`
+ * 
+ * @relatesalso Add
+ */
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif
