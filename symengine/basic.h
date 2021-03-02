@@ -115,10 +115,14 @@ public:
     };
 #endif
     //! Constructor
-    Basic() : hash_{0} {}
+    Basic() : hash_{0}
+    {
+    }
     // Destructor must be explicitly defined as virtual here to avoid problems
     // with undefined behavior while deallocating derived classes.
-    virtual ~Basic() {}
+    virtual ~Basic()
+    {
+    }
 
     //! Delete the copy constructor and assignment
     Basic(const Basic &) = delete;

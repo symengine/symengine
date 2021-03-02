@@ -1,3 +1,16 @@
+/**
+ *  @file   add.cpp
+ *  @author SymEngine Developers
+ *  @date   2021-02-25
+ *  @brief  Definitions for arithmatic
+ *
+ *  Created on: 2012-07-11
+ *
+ *  This file contains the basic binary operations defined for symbolic enties.
+ *   In particular the @ref Add class for representing addition is
+ *   @b defined here, along with the `add` and `substract` functions.
+ */
+
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex.h>
@@ -18,9 +31,9 @@ namespace SymEngine
  *       coef_ + key1*value1 + key2*value2 + ...
  *
  *  `coef_` and the values of the dictionary may be numeric coefficients like
- *   Integer, RealDouble, Complex while their corresponding  `key`s can be any
- *   symbolic expression except numeric coefficients and `Mul` objects with
- *   coefficient != 1.
+ *    Integer, RealDouble, Complex while their corresponding  `key`s can be any
+ *    symbolic expression except numeric coefficients and `Mul` objects with
+ *    coefficient != 1.
  *
  *  For example, the following are valid representations
  *
@@ -41,18 +54,21 @@ namespace SymEngine
  *  @image html symEngineTree.png "Sample Expression Data Structure"
  *
  *  @see `Basic` for an explanation of how the intialization works in conjuction
- *   to the constructors of the `Basic` class and the guarantees in Release
+ *    to the constructors of the `Basic` class and the guarantees in Release.
  **/
 
 /**
  *  @details Constructs Add from a dictionary by copying the contents of
- *   the dictionary.
+ *    the dictionary.
  */
 Add::Add(const RCP<const Number> &coef, umap_basic_num &&dict)
     : coef_{coef}, dict_{std::move(dict)} {
                        SYMENGINE_ASSIGN_TYPEID()
                            SYMENGINE_ASSERT(is_canonical(coef, dict_))}
 
+      /**
+       * @details This uses `Basic.hash()` to give a cached version of the hash.
+       */
       hash_t Add::__hash__() const
 {
     hash_t seed = SYMENGINE_ADD, temp;
@@ -65,6 +81,10 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num &&dict)
     return seed;
 }
 
+/**
+ * @details This older implementation compares the elements of the coefficients
+ *  and expressions for two objects.
+ */
 bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o) and eq(*coef_, *(down_cast<const Add &>(o).coef_))
@@ -77,12 +97,12 @@ bool Add::__eq__(const Basic &o) const
 /**
  *  @details This function takes a `Basic` object, checks if it is an `Add`
  *   object, and subsequently compares exhaustively:
- *    - The number of elements
- *    - The coefficients
- *    - Each element of the dictionary
+ *    - The number of elements.
+ *    - The coefficients.
+ *    - Each element of the dictionary.
  *
  *  @note Since the `map_basic_num` representation is not cached by `Add` after
- *   being computed, this is slow
+ *   being computed, this is slow.
  * */
 int Add::compare(const Basic &o) const
 {
@@ -98,7 +118,7 @@ int Add::compare(const Basic &o) const
         return cmp;
 
     // Compare dictionaries (slow):
-    //!> @todo cache `adict` and `bdict`
+    //!< @todo cache `adict` and `bdict`
     map_basic_num adict(dict_.begin(), dict_.end());
     map_basic_num bdict(s.dict_.begin(), s.dict_.end());
     return unified_compare(adict, bdict);
@@ -210,7 +230,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
 }
 
 /**
- *  @details Adds `(coeff*t)` to the dict @a d inplace
+ *  @details Adds `(coeff*t)` to the dict @a d inplace.
  *  @warning We assume that `t` has no numerical coefficients, and `coef` has
  *   only numerical coefficients.
  */
@@ -231,12 +251,12 @@ void Add::dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
 
 /**
  *  @details This implements the following logic:
- *  - If both `c` and `term` are numbers, then the term `(c* term)` is
- *     added to the existing `coeff`
- *  - If `term` is not a number then the pair (`c, term`) is used to update
- *     the existing  dict `d` (as a pair `c, term`)
- *  - In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff`
- *     and `d`
+ *   - If both `c` and `term` are numbers, then the term `(c* term)` is
+ *      added to the existing `coeff`.
+ *   - If `term` is not a number then the pair (`c, term`) is used to update
+ *      the existing  dict `d` (as a pair `c, term`).
+ *   - In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff`
+ *      and `d`.
  */
 void Add::coef_dict_add_term(const Ptr<RCP<const Number>> &coef,
                              umap_basic_num &d, const RCP<const Number> &c,
@@ -277,11 +297,11 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 /**
  *  @details This function converts the its representation as per the following
  *   logic:
- *    - If `self` is a `Mul` return the coefficient and the remaining term
+ *    - If `self` is a `Mul` return the coefficient and the remaining term.
  *    - If `self` is not `Mul` or `Add` the coefficient is set one and the term
- *       is unchanged
+ *       is unchanged.
  *    - If `self` is a `Number` the term is set one and the coefficient is
- *       unchanged
+ *       unchanged.
  */
 void Add::as_coef_term(const RCP<const Basic> &self,
                        const Ptr<RCP<const Number>> &coef,
@@ -310,7 +330,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
 /**
  *  @details This function ensures that each term in *dict* is in canonical
  *   form. The implementation in the form of a exclusion list (defaults to
- *   true)
+ *   true).
  *
  *  @note **Canonical form** requires the existance of both `coef` and
  *   `dict`, so `null` coefficients and purely numerical (empty dictionaries)
@@ -318,12 +338,12 @@ void Add::as_coef_term(const RCP<const Basic> &self,
  *   important, it must be `(coeff, dict)` and **not** `(dict, coeff)`.
  *
  *  Some **non-cannonical** forms are:
- *   - @f$0 + x@f$
- *   - @f$0 + 2x@f$
- *   - @f$ 2 \times 3 @f$
- *   - @f$ x \times 0 @f$
- *   - @f$ 1 \times x @f$ has the wrong order
- *   - @f$ 3x \times 2 @f$ is actually just @f$6x@f$
+ *   - @f$0 + x@f$.
+ *   - @f$0 + 2x@f$.
+ *   - @f$ 2 \times 3 @f$.
+ *   - @f$ x \times 0 @f$.
+ *   - @f$ 1 \times x @f$ has the wrong order.
+ *   - @f$ 3x \times 2 @f$ is actually just @f$6x@f$.
  */
 bool Add::is_canonical(const RCP<const Number> &coef,
                        const umap_basic_num &dict) const
@@ -399,8 +419,8 @@ vec_basic Add::get_args() const
  *  perform canonicalization.
  *
  * Note that:
- * > x + y will return an `Add`
- * > x + x will return `Mul (2*x)`
+ * > x + y will return an `Add`.
+ * > x + x will return `Mul (2*x)`.
  */
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
@@ -456,7 +476,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
 /**
  * @details This should be faster for `n` elements compared to performing `n-1`
- *  additions
+ *  additions.
  */
 RCP<const Basic> add(const vec_basic &a)
 {
