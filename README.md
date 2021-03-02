@@ -18,7 +18,7 @@ wrappers allow usage of the library from other languages, e.g.:
 
 Tutorials are at [SymEngine.org](https://symengine.org/design/design.html).
 
-Run an interactive C++ session with SymEngine using [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/symengine/symengine/master?filepath=notebooks%2Fsymengine.ipynb).
+Run an interactive C++ session with SymEngine using [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/symengine/symengine/master?filepath=docs/mystMD/firststeps.myst.md).
 
 ## License
 

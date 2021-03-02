@@ -2,7 +2,7 @@ name: symengine
 channels:
   - conda-forge
 dependencies:
-  - xeus-cling=0.4.11
+  - xeus-cling
   - llvmdev=5
   - gmp
   - mpfr
@@ -10,4 +10,6 @@ dependencies:
   - cmake
   - arb
   - libflint
-  - notebook
+  - jupytext
+  - papermill
+  - symengine
