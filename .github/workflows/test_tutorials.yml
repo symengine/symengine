@@ -1,0 +1,46 @@
+name: Test myST tutorials
+
+on:
+  push:
+    branches: [ master]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: "0 0 * * */6"
+
+jobs:
+  build_doxygen:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+          fetch-depth: 0
+      - name: Cache conda
+        uses: actions/cache@v1
+        env:
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('symedoctests.yml') }}
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('symedoctests.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: symedoctests
+          environment-file: ./binder/symedoctests.yml
+          python-version: 3.9
+          auto-activate-base: false
+      - name: Test Tutorials with Conda SymEngine
+        run: python bin/test_tutorials.py

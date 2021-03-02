@@ -172,3 +172,4 @@ symengine/symengine_config_cling.h
 # Generated Documentation
 gen_docs/
 /docs/Doxygen/tags/
+*.ipynb
