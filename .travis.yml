@@ -35,7 +35,7 @@ env:
   # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes" WITH_PRIMESIEVE="yes" WITH_MPC="yes"
   # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" BUILD_DOXYGEN="yes" TEST_IN_TREE="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint" WITH_MPC="yes" TEST_IN_TREE="yes"
   # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
   - BUILD_TYPE="Debug" WITH_SYMENGINE_RCP="yes" WITH_MPFR="yes" INTEGER_CLASS="gmpxx"
   # Debug build (with BFD and INTEGER_CLASS from boostmp)
@@ -207,16 +207,3 @@ script:
   - bin/trigger_feedstock.sh
 notifications:
   email: false
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  repo: symengine/symengine.github.io
-  target_branch: master
-  local_dir: doc/html
-  github_token:
-    secure: "nA/geBch3kWX4aURwe52JZNEG/JDR4RRkMvWqoqKTbnma54ohOokwaBlwmSc7lcmiq6YP8nI7uSCtK7EtqatJZewxNTNP8JXcuPb1IRuCXIvusakmk4iEqveEun5Igfge/6e6K/ujUiZchDT9ucEkxGNIAYDwrW0MPQ3ZG0Tla0="
-  on:
-    branch: master
-    repo: symengine/symengine
-    condition: $BUILD_DOXYGEN = yes
