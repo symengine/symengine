@@ -59,7 +59,7 @@ public:
                 f.set_coeff(p.first, r);
             }
         }
-        return std::move(f);
+        return f;
     }
 
     static RCP<const Poly> from_vec(const RCP<const Basic> &var,
