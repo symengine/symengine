@@ -1,0 +1,21 @@
+<map id="SymEngine::TrigBase" name="SymEngine::TrigBase">
+<area shape="rect" id="node1" title=" " alt="" coords="860,284,1009,311"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1InverseTrigFunction.html" title=" " alt="" coords="1057,157,1269,184"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1TrigFunction.html" title=" " alt="" coords="1079,411,1248,437"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="621,284,812,311"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="427,284,573,311"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title=" " alt="" coords="248,284,379,311"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,277,200,318"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1ACos.html" title=" " alt="" coords="1317,5,1447,32"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1ACot.html" title=" " alt="" coords="1319,56,1445,83"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1ACsc.html" title=" " alt="" coords="1317,107,1447,133"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1ASec.html" title=" " alt="" coords="1317,157,1447,184"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1ASin.html" title=" " alt="" coords="1319,208,1445,235"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1ATan.html" title=" " alt="" coords="1319,259,1445,285"/>
+<area shape="rect" id="node14" href="$classSymEngine_1_1Cos.html" title=" " alt="" coords="1322,309,1442,336"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1Cot.html" title=" " alt="" coords="1323,360,1441,387"/>
+<area shape="rect" id="node16" href="$classSymEngine_1_1Csc.html" title=" " alt="" coords="1322,411,1442,437"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1Sec.html" title=" " alt="" coords="1322,461,1442,488"/>
+<area shape="rect" id="node18" href="$classSymEngine_1_1Sin.html" title=" " alt="" coords="1324,512,1440,539"/>
+<area shape="rect" id="node19" href="$classSymEngine_1_1Tan.html" title=" " alt="" coords="1323,563,1441,589"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="SymEngine::ComplexDouble" name="SymEngine::ComplexDouble">
+<area shape="rect" id="node1" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="105,337,293,364"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="13,248,192,275"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="31,172,174,199"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title=" " alt="" coords="37,96,168,123"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,200,47"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/numeric/complex.html" title=" " alt="" coords="217,248,375,275"/>
+</map>

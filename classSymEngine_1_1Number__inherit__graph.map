@@ -1,0 +1,20 @@
+<map id="SymEngine::Number" name="SymEngine::Number">
+<area shape="rect" id="node1" title=" " alt="" coords="427,259,569,285"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="636,56,815,83"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1Infty.html" title=" " alt="" coords="664,107,787,133"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Integer.html" title="Integer Class." alt="" coords="657,157,794,184"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1NaN.html" title=" " alt="" coords="664,208,787,235"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1NumberWrapper.html" title=" " alt="" coords="630,259,821,285"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1Rational.html" title="Rational Class." alt="" coords="653,309,797,336"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="644,360,807,387"/>
+<area shape="rect" id="node14" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="645,411,805,437"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="617,461,833,488"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title=" " alt="" coords="248,259,379,285"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,251,200,293"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="901,5,1049,32"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="881,56,1069,83"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="887,107,1064,133"/>
+<area shape="rect" id="node16" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="890,409,1061,465"/>
+<area shape="rect" id="node18" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="893,490,1057,531"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1UnivariateSeries.html" title="UnivariateSeries Class." alt="" coords="1117,424,1309,451"/>
+</map>
