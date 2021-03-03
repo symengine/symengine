@@ -29,7 +29,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 - We use `@` for all [Doxygen special commands](https://www.doxygen.nl/manual/commands.html)
 
-```cpp
+```unparsed
 // Do
 //!< @note
 
@@ -46,7 +46,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 - We use the `/**` style
 
-```cpp
+```unparsed
 /**
  *  @note This is acceptable
  */
@@ -57,7 +57,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 - The author of the documentation is supposed to ensure that the documentation is legible in the code
 - We use one space before, and _two spaces_ after `*`
 
-```cpp
+```unparsed
 /**
  *  @note This is acceptable since it has two spaces between the * and the word
  */
@@ -65,14 +65,14 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 - We use one space to indicate a paragraph
 
-```cpp
+```unparsed
 /**
  *  @note This is acceptable since it has two spaces between the * and the word.
  *   It is also an acceptable paragraph because of the leading indentation.
  */
 ```
 
-```cpp
+```unparsed
 /**
  *  @warning This is a pointlessly long paragraph to demonstrate the @b wrong
  *  way to indent a paragraph
@@ -81,7 +81,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 - Lists are to be indented for legibility as well
 
-```cpp
+```unparsed
 /**
  *  @note I am a good list:
  *    - Item 1
@@ -97,7 +97,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 Each file shall begin with a `@file` block as shown:
 
-```cpp
+```unparsed
 /**
  *  @file   blah.extension
  *  @author SymEngine Developers
@@ -134,15 +134,15 @@ grouping. The logical grouping follows the layout of the `tests` directory.
 
 ### Headers
 
-To maintain the logical division of `.cpp` and `.h` files, we disallow long comments in header files. This is also to reduce the compilation time when changing minor documentation[^1]. Anything longer than one line should be replaced with a short description which is expanded on in a `@note` in the corresponding `.cpp`. Acceptable special directives are (in order):
+To maintain the logical division of `.unparsed` and `.h` files, we disallow long comments in header files. This is also to reduce the compilation time when changing minor documentation[^1]. Anything longer than one line should be replaced with a short description which is expanded on in a `@note` in the corresponding `.unparsed`. Acceptable special directives are (in order):
 
 - `@brief` for a pithy description of the entity
 - `@pre` for describing preconditions (_optional_)
 - `@see` for related functions
 - `@param` one for each input parameter
-  - `@param[out]` is not used, we have the `.cpp` to describe the effects of `void` functions
+  - `@param[out]` is not used, we have the `.unparsed` to describe the effects of `void` functions
 - `@return` one for each possible return value with a line on the condition
-  - Keep this short, the `.cpp` has the implementation details
+  - Keep this short, the `.unparsed` has the implementation details
   - `void` functions should `@return Void.` (including the `.`)
 - `@relatesalso` takes a single class and groups the function with the class in the output (_optional_)
   - This is preceded by a line
@@ -151,7 +151,7 @@ Note that since C++ is strongly typed, there is no need to describe the type of 
 
 For example:
 
-```cpp
+```unparsed
 /**
  *  @brief The best number generator in the universe
  *  @pre Does assume a known universe
@@ -180,7 +180,7 @@ Here we expect:
 - Other special directives as required
 - `@see` is allowed in both headers and code files, but only sparingly
 
-```cpp
+```unparsed
 /**
  *  @details The best number is determined by a complicated algorithm described
  *   over many paragraphs with equations here
@@ -201,7 +201,7 @@ is the most legible method.
 - We **do** expect private variables to be documented
 
 Classes descriptions have the `@class` directive declared before `@brief` in `.h` files and
-before `@details` in the `.cpp` as well.
+before `@details` in the `.unparsed` as well.
 
 ### Functions
 
