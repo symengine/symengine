@@ -5,29 +5,30 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 ## Language and Locale
 
-- Documentation should be in english
-- All dates are `YYYY-MM-DD`
-- We strongly discourage the use of unicode symbols
-  - Symbols inside TeX math modes are fine
-- Numbers which are return values should not be in math mode
-- We use `snake_case` for the variables and functions
-- When adding in-text references, any style (APA, MLA, Chicago, IEEE, etc.) is allowed
-  - It is a good practice to add to the relevant `.bib` file in the repository
+- Documentation should be in English.
+- All dates are `YYYY-MM-DD`.
+- We strongly discourage the use of Unicode symbols.
+  - Symbols inside TeX math modes are fine.
+- Numbers which are return values should not be in math mode.
+- We use `snake_case` for the variables and functions.
+- Use `.` at the end of each list item
+- When adding in-text references, any style (APA, MLA, Chicago, IEEE, etc.) is allowed.
+  - It is a good practice to add to the relevant `.bib` file in the repository.
 
 ### Markup
 
-- Doxygen markup is preferred for single words
-  - `@a` for italics (parameters)
-  - `@b` for bold (single emphasis)
-  - `@c` for monospace (for file names / code symbols)
-- For multiple words, we use the markdown syntax
-  - Keep the [Doxygen eccentricities](https://www.doxygen.nl/manual/markdown.html#markdown_dox) in mind
-  - We use the `#` style for headings
-- Never use HTML
+- Doxygen markup is preferred for single words.
+  - `@a` for italics (parameters).
+  - `@b` for bold (single emphasis).
+  - `@c` for monospace (for file names / code symbols).
+- For multiple words, we use the markdown syntax.
+  - Keep the [Doxygen eccentricities](https://www.doxygen.nl/manual/markdown.html#markdown_dox) in mind.
+  - We use the `#` style for headings.
+- Never use HTML.
 
 ## Comments
 
-- We use `@` for all [Doxygen special commands](https://www.doxygen.nl/manual/commands.html)
+- We use `@` for all [Doxygen special commands](https://www.doxygen.nl/manual/commands.html).
 
 ```unparsed
 // Do
@@ -37,14 +38,14 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 //!< \note
 ```
 
-- We use `//!<` for inline documentation (see above) so keep the [caveats in mind](https://www.doxygen.nl/manual/docblocks.html#memberdoc) from the Doxygen manual
+- We use `//!<` for inline documentation (see above) so keep the [caveats in mind](https://www.doxygen.nl/manual/docblocks.html#memberdoc) from the Doxygen manual.
 
-- Non documenting `//` and `/**/` are used to describe steps of an algorithm in-place
-  - We use [INLINE_SOURCES](https://www.doxygen.nl/manual/config.html#cfg_inline_sources) so they will show up in the documentation
+- Non documenting `//` and `/**/` are used to describe steps of an algorithm in-place.
+  - We use [INLINE_SOURCES](https://www.doxygen.nl/manual/config.html#cfg_inline_sources) so they will show up in the documentation.
 
 ## Documentation Blocks
 
-- We use the `/**` style
+- We use the `/**` style.
 
 ```unparsed
 /**
@@ -54,8 +55,8 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
 
 ## Indentation
 
-- The author of the documentation is supposed to ensure that the documentation is legible in the code
-- We use one space before, and _two spaces_ after `*`
+- The author of the documentation is supposed to ensure that the documentation is legible in the code.
+- We use one space before, and _two spaces_ after `*`.
 
 ```unparsed
 /**
@@ -63,7 +64,7 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
  */
 ```
 
-- We use one space to indicate a paragraph
+- We use one space to indicate a paragraph.
 
 ```unparsed
 /**
@@ -79,17 +80,17 @@ We write all the API documentation with [Doxygen](https://doxygen.nl). The
  */
 ```
 
-- Lists are to be indented for legibility as well
+- Lists are to be indented for legibility as well.
 
 ```unparsed
 /**
  *  @note I am a good list:
- *    - Item 1
- *    - Item 2
- *      - SubItem 1
- *      - SubItem 2
- *    - Item 3
- *      - SubItem 1
+ *    - Item 1.
+ *    - Item 2.
+ *      - SubItem 1.
+ *      - SubItem 2.
+ *    - Item 3.
+ *      - SubItem 1.
  */
 ```
 
@@ -114,15 +115,15 @@ Each file shall begin with a `@file` block as shown:
 
 The salient points are:
 
-- `@file` must be present and is simply the filename
-- `@author` is **always** SymEngine Developers
-  - We let `git` handle more granular attribution
-- `@date` is the date the file was last modified
-  - This is inclusive of documentation changes
-- `@brief` should be a single line about the contents of the file
-- `Created on:` is not a Doxygen directive, but should be present
-- The paragraph is meant to describe the logical layout of the file
-  - `@ref` tags are meant to allow the user to jump to relevant sections more easily
+- `@file` must be present and is simply the filename.
+- `@author` is **always** SymEngine Developers.
+  - We let `git` handle more granular attribution.
+- `@date` is the date the file was last modified.
+  - This is inclusive of documentation changes.
+- `@brief` should be a single line about the contents of the file.
+- `Created on:` is not a Doxygen directive, but should be present.
+- The paragraph is meant to describe the logical layout of the file.
+  - `@ref` tags are meant to allow the user to jump to relevant sections more easily.
 
 Note that this block is to appear before any `#ifndef` and `#include`
 preprocessor directives.
@@ -134,20 +135,20 @@ grouping. The logical grouping follows the layout of the `tests` directory.
 
 ### Headers
 
-To maintain the logical division of `.unparsed` and `.h` files, we disallow long comments in header files. This is also to reduce the compilation time when changing minor documentation[^1]. Anything longer than one line should be replaced with a short description which is expanded on in a `@note` in the corresponding `.unparsed`. Acceptable special directives are (in order):
+To maintain the logical division of `.cpp` and `.h` files, we disallow long comments in header files. This is also to reduce the compilation time when changing minor documentation[^1]. Anything longer than one line should be replaced with a short description which is expanded on in a `@note` in the corresponding `.cpp`. Acceptable special directives are (in order):
 
-- `@brief` for a pithy description of the entity
-- `@pre` for describing preconditions (_optional_)
-- `@see` for related functions
-- `@param` one for each input parameter
-  - `@param[out]` is not used, we have the `.unparsed` to describe the effects of `void` functions
-- `@return` one for each possible return value with a line on the condition
-  - Keep this short, the `.unparsed` has the implementation details
-  - `void` functions should `@return Void.` (including the `.`)
-- `@relatesalso` takes a single class and groups the function with the class in the output (_optional_)
-  - This is preceded by a line
+- `@brief` for a pithy description of the entity.
+- `@pre` for describing preconditions (_optional_).
+- `@see` for related functions.
+- `@param` one for each input parameter.
+  - `@param[out]` is not used, we have the `.cpp` to describe the effects of `void` functions.
+- `@return` one for each possible return value with a line on the condition.
+  - Keep this short, the `.cpp` has the implementation details.
+  - `void` functions should `@return Void.` (including the `.`).
+- `@relatesalso` takes a single class and groups the function with the class in the output (_optional_).
+  - This is preceded by a line.
 
-Note that since C++ is strongly typed, there is no need to describe the type of inputs (`@param`) or the outputs
+Note that since C++ is strongly typed, there is no need to describe the type of inputs (`@param`) or the outputs.
 
 For example:
 
@@ -175,10 +176,10 @@ These are typically simply a `@return` directive in a single line `//!<`; but sh
 Here we expect:
 
 - `@details` for explanations of the overall algorithm, speed concerns, etc.
-- `@note` for longer details of the parameters or other important issues
-- `@warning` for pitfalls
-- Other special directives as required
-- `@see` is allowed in both headers and code files, but only sparingly
+- `@note` for longer details of the parameters or other important issues.
+- `@warning` for pitfalls.
+- Other special directives as required.
+- `@see` is allowed in both headers and code files, but only sparingly.
 
 ```unparsed
 /**
@@ -198,17 +199,17 @@ is the most legible method.
 
 ### Classes
 
-- We **do** expect private variables to be documented
+- We **do** expect private variables to be documented.
 
 Classes descriptions have the `@class` directive declared before `@brief` in `.h` files and
-before `@details` in the `.unparsed` as well.
+before `@details` in the `.cpp` as well.
 
 ### Functions
 
-- All documentation blocks must precede the function being documented
+- All documentation blocks must precede the function being documented.
 
 ## External Tools
 
-We expect the build system to be able to find `graphiz` for `dot`.
+We expect the build system to be able to find `graphviz` for `dot`.
 
-[^1]: Changing a header triggers the recompilation of the entire project
+[^1]: Changing a header triggers the recompilation of the entire project.
