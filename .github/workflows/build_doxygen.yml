@@ -1,12 +1,6 @@
 name: Build Doxygen API Docs
 
-on:
-  push:
-    branches: [ master]
-  pull_request:
-    branches: [ master ]
-  schedule:
-    - cron: "0 0 * * */6"
+on: [push, pull_request]
 
 jobs:
   build_doxygen:
