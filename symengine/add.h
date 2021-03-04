@@ -74,7 +74,8 @@ public:
      *  @param d the dictionary of the expression without the coefficient.
      *  @return `coef` if the dictionary is empty (size 0).
      *  @return `Mul` if the dictionary has one element which is a `Mul`.
-     *  @return `Integer` if the dictionary has one element which is a `Integer`.
+     *  @return `Integer` if the dictionary has one element which is a
+     *   `Integer`.
      *  @return `Symbol` if the dictionary has one element which is a `Symbol`.
      *  @return `Pow` if the dictionary has one element which is a `Pow`.
      *  @return `Add` if the size of the dictionary is greater than 1.
@@ -105,7 +106,7 @@ public:
                                    const RCP<const Basic> &term);
 
     /**
-     *  @brief Converts the Add into a sum of two Basic objects and returns them.
+     *  @brief Converts the Add into a sum of two Basic objects.
      *  @param a first basic object.
      *  @param b second basic object.
      *  @return Void.
