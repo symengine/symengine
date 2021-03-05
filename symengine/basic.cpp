@@ -44,4 +44,4 @@ bool is_a_Atom(const Basic &b)
     return is_a_Number(b) or is_a<Symbol>(b) or is_a<Constant>(b);
 }
 
-} // SymEngine
+} // namespace SymEngine
