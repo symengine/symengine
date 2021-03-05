@@ -122,6 +122,10 @@ if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs doxygen=1.8.13"
 fi
 
+if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs jupytext papermill xeus-cling"
+fi
+
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then
     conda create -q -p $our_install_dir ${conda_pkgs};
 else

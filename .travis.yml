@@ -183,11 +183,6 @@ matrix:
           packages:
           - clang-7
           - llvm-7-dev
-    - env: CONDA_ENV_FILE="binder/environment.yml"
-      compiler: gcc
-      os: linux
-      script:
-        - bin/test_cling_notebook.sh
     - env: CONDA_ENV_FILE="symengine/utilities/matchpycpp/environment.yml"
       compiler: gcc
       os: linux
