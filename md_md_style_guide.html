@@ -95,7 +95,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Please follow these guidelines when submitting patches.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Whitespace</h1>
 <p>Use 4 spaces. Format <code>if</code> as follows:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (d.find(t) == d.end()) {</div>
@@ -103,10 +103,10 @@ Whitespace</h1>
 <div class="line">} <span class="keywordflow">else</span> {</div>
 <div class="line">    d[t] = d[t] + coef;</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md18"></a>
 Pointers</h1>
 <p>Never use raw C++ pointers and never use the raw <code>new</code> and <code>delete</code>. Always use the smart pointers provided by <code><a class="el" href="symengine__rcp_8h_source.html">symengine_rcp.h</a></code> (depending on WITH_SYMENGINE_RCP, those are either Teuchos::RCP, or our own, faster implementation), i.e. <code>Ptr</code> and <code>RCP</code> (and do not use the <code>.get()</code> method, only the <code>.ptr()</code> method). In Debug mode, the pointers are 100% safe, i.e. no matter how you use them the code will not segfault, but instead raise a nice exception if a pointer becomes dangling or null. In Release mode, the <code>Ptr</code> is as fast as a raw pointer and <code>RCP</code> is a lot faster, but no checks are done (so the code can segfault).</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
 Declaration</h2>
 <p>In the <code>.cpp</code> files you can declare:</p>
 <div class="fragment"><div class="line"><span class="keyword">using</span> SymEngine::RCP;</div>
@@ -116,7 +116,7 @@ Declaration</h2>
 <div class="line"><span class="keyword">using</span> SymEngine::rcp_dynamic_cast;</div>
 </div><!-- fragment --><p>and then just use <code>RCP</code> or <code>Ptr</code>.</p>
 <p>In the <code>.h</code> header files use the full name like <code>SymEngine::RCP</code> or <code>SymEngine::Ptr</code>.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 Initialization</h2>
 <p>Initialize as follows:</p>
 <div class="fragment"><div class="line">RCP&lt;Basic&gt; x  = make_rcp&lt;Symbol&gt;(<span class="stringliteral">&quot;x&quot;</span>);</div>
@@ -124,10 +124,10 @@ Initialization</h2>
 <div class="fragment"><div class="line">RCP&lt;Basic&gt; x  = <a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>(<span class="stringliteral">&quot;x&quot;</span>);</div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f382b48b9cb214e1017d0e11fd3e6d6"><div class="ttname"><a href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a></div><div class="ttdeci">RCP&lt; const Symbol &gt; symbol(const std::string &amp;name)</div><div class="ttdoc">inline version to return Symbol</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00082">symbol.h:82</a></div></div>
 </div><!-- fragment --><p>This does the same thing (internally it calls <code>make_rcp</code>), but it is easier to use.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Freeing</h2>
 <p>The <code>RCP</code> pointer is released automatically. You never call the naked <code>delete</code>.</p>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 Passing To/From Functions</h2>
 <p>Use C++ references for objects that you are <b>not</b> passing around. If the object is <em>not</em> modified, use <code>const A &amp;a</code>:</p>
 <div class="fragment"><div class="line">RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a>(<span class="keyword">const</span> Integer &amp;a, <span class="keyword">const</span> Integer &amp;b)</div>
@@ -173,13 +173,13 @@ Passing To/From Functions</h2>
 <div class="line">as_coef_term(b, outArg(coef), outArg(t));</div>
 </div><!-- fragment --><p><code><a class="el" href="namespaceSymEngine.html" title="Main namespace for SymEngine package.">SymEngine</a></code> objects are always immutable, so you always declare them as <code>const</code>. And <code>RCP</code> is only used with <code><a class="el" href="namespaceSymEngine.html" title="Main namespace for SymEngine package.">SymEngine</a></code>'s objects, so you always use <code>const RCP&lt;const Integer&gt; &amp;i</code>. But if the <code>Integer</code> was somehow mutable (it's not in <code><a class="el" href="namespaceSymEngine.html" title="Main namespace for SymEngine package.">SymEngine</a></code>), you would use <code>const RCP&lt;Integer&gt; &amp;i</code>.</p>
 <p>For returning objects from functions, simply declare the return type as <code>RCP&lt;const Basic&gt;</code> as shown above.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 Casting</h2>
 <p>You can use dynamic cast as follows:</p>
 <div class="fragment"><div class="line">RCP&lt;Basic&gt; tmp;</div>
 <div class="line">RCP&lt;Integer&gt; coef;</div>
 <div class="line">coef = rcp_dynamic_cast&lt;Integer&gt;(tmp);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md24"></a>
 Namespaces</h1>
 <p>Never use "implicit imports": <code>using namespace std;</code>.</p>
 <p>In cpp files, either use the full name of the symbol (e.g. <code>SymEngine::RCP</code>), or use "explicit import" as follows: <code>using SymEngine::RCP;</code>.</p>

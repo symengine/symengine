@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['c_2b_2b_20style_20guide_4624',['C++ Style Guide',['../md_md_style_guide.html',1,'']]]
+  ['doxygen_20style_20guide_4626',['Doxygen Style Guide',['../md_md_doc_guide.html',1,'']]]
 ];
