@@ -12,7 +12,7 @@
 <area shape="rect" id="node31" href="$complex_8h.html" title=" " alt="" coords="132,408,281,435"/>
 <area shape="rect" id="node33" title=" " alt="" coords="44,408,107,435"/>
 <area shape="rect" id="node34" href="$logic_8h.html" title=" " alt="" coords="306,408,432,435"/>
-<area shape="rect" id="node4" href="$basic_8h.html" title=" " alt="" coords="1006,707,1137,733"/>
+<area shape="rect" id="node4" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="1006,707,1137,733"/>
 <area shape="rect" id="node29" href="$constants_8h.html" title=" " alt="" coords="850,557,1008,584"/>
 <area shape="rect" id="node5" title=" " alt="" coords="1160,789,1229,815"/>
 <area shape="rect" id="node6" title=" " alt="" coords="1254,789,1322,815"/>
@@ -41,7 +41,7 @@
 <area shape="rect" id="node32" href="$rational_8h.html" title=" " alt="" coords="290,483,432,509"/>
 <area shape="rect" id="node36" href="$upolybase_8h_source.html" title=" " alt="" coords="953,259,1148,285"/>
 <area shape="rect" id="node37" href="$pow_8h.html" title=" " alt="" coords="876,408,998,435"/>
-<area shape="rect" id="node38" href="$add_8h.html" title=" " alt="" coords="1134,408,1255,435"/>
+<area shape="rect" id="node38" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="1134,408,1255,435"/>
 <area shape="rect" id="node39" href="$expression_8h.html" title=" " alt="" coords="969,333,1132,360"/>
 <area shape="rect" id="node43" title=" " alt="" coords="1352,333,1421,360"/>
 <area shape="rect" id="node40" href="$complex__double_8h_source.html" title=" " alt="" coords="404,632,598,659"/>

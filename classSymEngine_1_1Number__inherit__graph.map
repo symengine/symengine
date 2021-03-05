@@ -9,7 +9,7 @@
 <area shape="rect" id="node13" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="644,360,807,387"/>
 <area shape="rect" id="node14" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="645,411,805,437"/>
 <area shape="rect" id="node15" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="617,461,833,488"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title=" " alt="" coords="248,259,379,285"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="248,259,379,285"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,251,200,293"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="901,5,1049,32"/>
 <area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="881,56,1069,83"/>

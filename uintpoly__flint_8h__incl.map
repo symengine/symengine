@@ -1,9 +1,9 @@
 <map id="/home/runner/work/symengine/symengine/symengine/polys/uintpoly_flint.h" name="/home/runner/work/symengine/symengine/symengine/polys/uintpoly_flint.h">
 <area shape="rect" id="node1" title=" " alt="" coords="1124,5,1320,61"/>
 <area shape="rect" id="node2" href="$upolybase_8h_source.html" title=" " alt="" coords="1125,109,1319,136"/>
-<area shape="rect" id="node3" href="$basic_8h.html" title=" " alt="" coords="687,707,818,733"/>
+<area shape="rect" id="node3" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="687,707,818,733"/>
 <area shape="rect" id="node33" href="$pow_8h.html" title=" " alt="" coords="838,259,961,285"/>
-<area shape="rect" id="node43" href="$add_8h.html" title=" " alt="" coords="365,259,487,285"/>
+<area shape="rect" id="node43" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="365,259,487,285"/>
 <area shape="rect" id="node44" href="$rational_8h.html" title=" " alt="" coords="1349,333,1492,360"/>
 <area shape="rect" id="node45" href="$expression_8h.html" title=" " alt="" coords="545,184,707,211"/>
 <area shape="rect" id="node50" title=" " alt="" coords="1399,184,1469,211"/>

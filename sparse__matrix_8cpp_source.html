@@ -442,7 +442,7 @@ $(function() {
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            jj++;</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;            <span class="keywordflow">while</span> (jj &lt; row_end and j_[jj] == j) {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                x = <a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(x, x_[jj]);</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;                x = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(x, x_[jj]);</div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;                jj++;</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;            }</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
@@ -678,7 +678,7 @@ $(function() {
 <div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = kk_start; kk &lt; kk_end; kk++) {</div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
 <div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160; </div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;                sums[k] = <a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(sums[k], <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;                sums[k] = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sums[k], <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160; </div>
 <div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;                <span class="keywordflow">if</span> (next[k] == -1) {</div>
 <div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[k] = head;</div>
@@ -860,9 +860,10 @@ $(function() {
 <div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;}</div>
 <div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160; </div>
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;} <span class="comment">// SymEngine</span></div>
-<div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div></div>
+<div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
+<div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00427">add.cpp:427</a></div></div>
 <div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
 <div class="ttc" id="aconstants_8h_html"><div class="ttname"><a href="constants_8h.html">constants.h</a></div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
@@ -872,9 +873,8 @@ $(function() {
 <div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
 <div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00005">add.cpp:6</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00347">mul.cpp:347</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab7ffb6840e5963dbdcff5d457068c42b"><div class="ttname"><a href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00251">add.cpp:251</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00106">functions.cpp:106</a></div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>

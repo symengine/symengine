@@ -107,10 +107,12 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Add.html">Add</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base class for representing addition in symbolic expressions.  <a href="classSymEngine_1_1Add.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealImagVisitor.html">RealImagVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html">Basic</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The lowest unit of symbolic representation.  <a href="classSymEngine_1_1Basic.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1RCPBasicHash.html">RCPBasicHash</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Our hash:  <a href="structSymEngine_1_1RCPBasicHash.html#details">More...</a><br /></td></tr>
@@ -688,7 +690,7 @@ typedef <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.ht
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a976db42c9dfad76ad2c95a6038cbc093"><td class="memItemLeft" align="right" valign="top"><a id="a976db42c9dfad76ad2c95a6038cbc093"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>TypeID</b> { <b>TypeID_Count</b>
+<tr class="memitem:a976db42c9dfad76ad2c95a6038cbc093"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">TypeID</a> { <a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a>
  }</td></tr>
 <tr class="separator:a976db42c9dfad76ad2c95a6038cbc093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa859e1ef481111b06c165d334b1b2e5e"><td class="memItemLeft" align="right" valign="top"><a id="aa859e1ef481111b06c165d334b1b2e5e"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>tribool</b> { <b>indeterminate</b> = -1
@@ -714,12 +716,15 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab7ffb6840e5963dbdcff5d457068c42b"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
-<tr class="separator:ab7ffb6840e5963dbdcff5d457068c42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ceef3b30efccd900ff91d78026f66f6"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a3ceef3b30efccd900ff91d78026f66f6">add</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;a)</td></tr>
-<tr class="separator:a3ceef3b30efccd900ff91d78026f66f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92cd0098b66cad6a0cddcd895430bd65"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
-<tr class="separator:a92cd0098b66cad6a0cddcd895430bd65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2c2fd8b576973746d871681781e7130"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
+<tr class="memdesc:ab2c2fd8b576973746d871681781e7130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds two objects (safely).  <a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">More...</a><br /></td></tr>
+<tr class="separator:ab2c2fd8b576973746d871681781e7130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52682796c8d199c8157a3a672f50482c"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a52682796c8d199c8157a3a672f50482c">add</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;a)</td></tr>
+<tr class="memdesc:a52682796c8d199c8157a3a672f50482c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sums the elements of a vector.  <a href="namespaceSymEngine.html#a52682796c8d199c8157a3a672f50482c">More...</a><br /></td></tr>
+<tr class="separator:a52682796c8d199c8157a3a672f50482c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55dff9563772a56967626d9697b4f6a3"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
+<tr class="memdesc:a55dff9563772a56967626d9697b4f6a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Substracts <code>b</code> from <code>a</code>.  <a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">More...</a><br /></td></tr>
+<tr class="separator:a55dff9563772a56967626d9697b4f6a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a461daa8a1cc57e54ef94bf0f94ad60d9"><td class="memItemLeft" align="right" valign="top"><a id="a461daa8a1cc57e54ef94bf0f94ad60d9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>as_real_imag</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;x, const Ptr&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&gt; &amp;real, const Ptr&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&gt; &amp;imag)</td></tr>
 <tr class="separator:a461daa8a1cc57e54ef94bf0f94ad60d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1993,7 +1998,7 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>mertens</b> (const un
 <tr class="separator:aa73118b241918d4e37cd71ce122e00f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9e9d3644739d976aa17eef3e19bf2c2"><td class="memItemLeft" align="right" valign="top"><a id="ae9e9d3644739d976aa17eef3e19bf2c2"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ae9e9d3644739d976aa17eef3e19bf2c2">addnum</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;self, const RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;other)</td></tr>
-<tr class="memdesc:ae9e9d3644739d976aa17eef3e19bf2c2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSymEngine_1_1Add.html">Add</a> <code>self</code> and <code>other</code> <br /></td></tr>
+<tr class="memdesc:ae9e9d3644739d976aa17eef3e19bf2c2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions.">Add</a> <code>self</code> and <code>other</code> <br /></td></tr>
 <tr class="separator:ae9e9d3644739d976aa17eef3e19bf2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a4a9bd6c4580b3775e8852ff02b155b"><td class="memItemLeft" align="right" valign="top"><a id="a3a4a9bd6c4580b3775e8852ff02b155b"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a3a4a9bd6c4580b3775e8852ff02b155b">subnum</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;self, const RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;other)</td></tr>
@@ -2544,7 +2549,7 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq5</b> = sqrt_(i5)</td></tr>
 <tr class="separator:a82f7f893f59f02403333a07b47026632"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"><td class="memItemLeft" align="right" valign="top"><a id="a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C0</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2))</td></tr>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C0</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2))</td></tr>
 <tr class="separator:a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa97432c9d3f6cf07216b3d19b26dbfdf"><td class="memItemLeft" align="right" valign="top"><a id="aa97432c9d3f6cf07216b3d19b26dbfdf"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C1</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, i2)</td></tr>
@@ -2556,13 +2561,13 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C3</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sq3, i2)</td></tr>
 <tr class="separator:a2a7b96ad02c00696ed3e62569c501221"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a090bbddf8659d698ed8c2d61da9f86d4"><td class="memItemLeft" align="right" valign="top"><a id="a090bbddf8659d698ed8c2d61da9f86d4"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C4</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2))</td></tr>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C4</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2))</td></tr>
 <tr class="separator:a090bbddf8659d698ed8c2d61da9f86d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97f54acd2c3ab2b9297d235896bbd9d7"><td class="memItemLeft" align="right" valign="top"><a id="a97f54acd2c3ab2b9297d235896bbd9d7"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C5</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sqrt_(<a class="el" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(i5, sqrt_(i5))), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(8))</td></tr>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C5</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sqrt_(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(i5, sqrt_(i5))), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(8))</td></tr>
 <tr class="separator:a97f54acd2c3ab2b9297d235896bbd9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b5e2351233e8d5898454827d4012c1a"><td class="memItemLeft" align="right" valign="top"><a id="a3b5e2351233e8d5898454827d4012c1a"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C6</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(sqrt_(i5), one), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(4))</td></tr>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C6</b> = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sqrt_(i5), one), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(4))</td></tr>
 <tr class="separator:a3b5e2351233e8d5898454827d4012c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b7e5dcd8a17bd042e402ac04a80c1c2"><td class="memItemLeft" align="right" valign="top"><a id="a2b7e5dcd8a17bd042e402ac04a80c1c2"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC0</b> = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C0)</td></tr>
@@ -2603,15 +2608,45 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAto
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main namespace for <a class="el" href="namespaceSymEngine.html" title="Main namespace for SymEngine package.">SymEngine</a> package. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ab7ffb6840e5963dbdcff5d457068c42b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7ffb6840e5963dbdcff5d457068c42b">&#9670;&nbsp;</a></span>add() <span class="overload">[1/2]</span></h2>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a976db42c9dfad76ad2c95a6038cbc093"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a976db42c9dfad76ad2c95a6038cbc093">&#9670;&nbsp;</a></span>TypeID</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; SymEngine::add </td>
+          <td class="memname">enum <a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">SymEngine::TypeID</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2"></a>TypeID_Count&#160;</td><td class="fielddoc"><p>The 'TypeID_Count' returns the number of elements in 'TypeID'. For this to work, do not assign numbers to the elements above (or if you do, you must assign the correct count below). </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00043">43</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define SYMENGINE_INCLUDE_ALL</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define SYMENGINE_ENUM(type, Class) type,</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#include &quot;symengine/type_codes.inc&quot;</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#undef SYMENGINE_ENUM</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#undef SYMENGINE_INCLUDE_ALL</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;};</div>
+<div class="ttc" id="anamespaceSymEngine_html_a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2"><div class="ttname"><a href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">SymEngine::TypeID_Count</a></div><div class="ttdeci">@ TypeID_Count</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00053">basic.h:52</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ab2c2fd8b576973746d871681781e7130"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2c2fd8b576973746d871681781e7130">&#9670;&nbsp;</a></span>add() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; add </td>
           <td>(</td>
           <td class="paramtype">const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
@@ -2629,62 +2664,72 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAto
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="classSymEngine_1_1Add.html">Add</a> the <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> classes <code>a</code> and <code>b</code> This'll return the most appropriate type. For example if <code>x</code> and <code>y</code> are symbols, </p><pre class="fragment">x + y will return an Add
-x + x will return a Mul (2*x)
-</pre> <dl class="section return"><dt>Returns</dt><dd><code>a + b</code> </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSymEngine_1_1Add.html">Add</a>, <a class="el" href="classSymEngine_1_1Mul.html">Mul</a> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00251">251</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;{</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">SymEngine::umap_basic_num</a> d;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    RCP&lt;const Number&gt; coef;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*a) and is_a&lt;Add&gt;(*b)) {</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*a)).get_coef();</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*a)).get_dict();</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : (down_cast&lt;const Add &amp;&gt;(*b)).get_dict())</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            Add::dict_add_term(d, p.second, p.first);</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        iaddnum(outArg(coef), down_cast&lt;const Add &amp;&gt;(*b).get_coef());</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*a)) {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*a)).get_coef();</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*a)).get_dict();</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*b).is_zero()) {</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                iaddnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            RCP&lt;const Number&gt; coef2;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            Add::as_coef_term(b, outArg(coef2), outArg(t));</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            Add::dict_add_term(d, coef2, t);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        }</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*b)) {</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*b)).get_coef();</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*b)).get_dict();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*a).is_zero()) {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                iaddnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            }</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            RCP&lt;const Number&gt; coef2;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            Add::as_coef_term(a, outArg(coef2), outArg(t));</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            Add::dict_add_term(d, coef2, t);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        }</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        Add::as_coef_term(a, outArg(coef), outArg(t));</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        Add::dict_add_term(d, coef, t);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        Add::as_coef_term(b, outArg(coef), outArg(t));</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        Add::dict_add_term(d, coef, t);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <span class="keyword">auto</span> it = d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(one);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        <span class="keywordflow">if</span> (it == d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            coef = zero;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            coef = it-&gt;second;</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;            d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/erase.html">erase</a>(it);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        }</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    }</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;}</div>
+<p>Adds two objects (safely). </p>
+<p>This implementation is slower than the methods of <code><a class="el" href="classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions.">Add</a></code>, however it is conceptually simpler and also safer, as it is more general and can perform canonicalization.</p>
+<p>Note that: </p><blockquote class="doxtable">
+<p>x + y will return an <code><a class="el" href="classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions.">Add</a></code>. x + x will return <code><a class="el" href="classSymEngine_1_1Mul.html">Mul</a> (2*x)</code>. </p>
+</blockquote>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>is a <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> object. </td></tr>
+    <tr><td class="paramname">b</td><td>is a <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>a+b</code> in its most aproriate form. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00427">427</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;{</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">SymEngine::umap_basic_num</a> d;</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    RCP&lt;const Number&gt; coef;</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    RCP&lt;const Basic&gt; t;</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*a) and is_a&lt;Add&gt;(*b)) {</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*a)).get_coef();</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*a)).get_dict();</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : (down_cast&lt;const Add &amp;&gt;(*b)).get_dict())</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            Add::dict_add_term(d, p.second, p.first);</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        iaddnum(outArg(coef), down_cast&lt;const Add &amp;&gt;(*b).get_coef());</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*a)) {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*a)).get_coef();</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*a)).get_dict();</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;            <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*b).is_zero()) {</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                iaddnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;            }</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            RCP&lt;const Number&gt; coef2;</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;            Add::as_coef_term(b, outArg(coef2), outArg(t));</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;            Add::dict_add_term(d, coef2, t);</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        }</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*b)) {</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        coef = (down_cast&lt;const Add &amp;&gt;(*b)).get_coef();</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        d = (down_cast&lt;const Add &amp;&gt;(*b)).get_dict();</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;            <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*a).is_zero()) {</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;                iaddnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            }</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            RCP&lt;const Number&gt; coef2;</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;            Add::as_coef_term(a, outArg(coef2), outArg(t));</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;            Add::dict_add_term(d, coef2, t);</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        }</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        Add::as_coef_term(a, outArg(coef), outArg(t));</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        Add::dict_add_term(d, coef, t);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        Add::as_coef_term(b, outArg(coef), outArg(t));</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        Add::dict_add_term(d, coef, t);</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <span class="keyword">auto</span> it = d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(one);</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">if</span> (it == d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;            coef = zero;</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;            coef = it-&gt;second;</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/erase.html">erase</a>(it);</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        }</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;        <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    }</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;}</div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">std::unordered_map::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/erase.html">std::unordered_map::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
 <div class="ttc" id="afind_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">std::unordered_map::find</a></div><div class="ttdeci">T find(T... args)</div></div>
@@ -2694,14 +2739,14 @@ x + x will return a Mul (2*x)
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a3ceef3b30efccd900ff91d78026f66f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ceef3b30efccd900ff91d78026f66f6">&#9670;&nbsp;</a></span>add() <span class="overload">[2/2]</span></h2>
+<a id="a52682796c8d199c8157a3a672f50482c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52682796c8d199c8157a3a672f50482c">&#9670;&nbsp;</a></span>add() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; SymEngine::add </td>
+          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; add </td>
           <td>(</td>
           <td class="paramtype">const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;&#160;</td>
           <td class="paramname"><em>a</em></td><td>)</td>
@@ -2709,17 +2754,26 @@ x + x will return a Mul (2*x)
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Sums the elements of a vector. For <code>n</code> elements, this method should be faster than doing <code>n-1</code> adds. </p><dl class="section return"><dt>Returns</dt><dd>Sum of the elements of vector <code>a</code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00303">303</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;{</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">SymEngine::umap_basic_num</a> d;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    RCP&lt;const Number&gt; coef = zero;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : a) {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        Add::coef_dict_add_term(outArg(coef), d, one, i);</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    }</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;}</div>
+<p>Sums the elements of a vector. </p>
+<p>This should be faster for <code>n</code> elements compared to performing <code>n-1</code> additions.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>is a vector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>sum of elements of the input vector <code>a</code>.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00483">483</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;{</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">SymEngine::umap_basic_num</a> d;</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    RCP&lt;const Number&gt; coef = zero;</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : a) {</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        Add::coef_dict_add_term(outArg(coef), d, one, i);</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    }</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3286,7 +3340,7 @@ cube root of <code>x</code> </dd></dl>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                    check_pi = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                    *n = p.second;</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                    *x = <a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(p.first, p.second), *x);</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                    *x = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(p.first, p.second), *x);</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                }</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;            }</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="keywordflow">if</span> (check_pi)</div>
@@ -3335,8 +3389,8 @@ cube root of <code>x</code> </dd></dl>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    }</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;}</div>
+<div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00427">add.cpp:427</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00347">mul.cpp:347</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab7ffb6840e5963dbdcff5d457068c42b"><div class="ttname"><a href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00251">add.cpp:251</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3958,7 +4012,7 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 
 <p><code>&lt;&lt;</code> Operator </p>
-<p>This <code>&lt;&lt;</code> overloaded function simply calls <code>p.__str__</code>, so it allows any <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> type to be printed.</p>
+<p>This <code>&lt;&lt;</code> overloaded function simply calls <code>p.__str__</code>, so it allows any <a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a> type to be printed.</p>
 <p>This prints using: <code><a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::cout</a> &lt;&lt; *x;</code> </p>
 
 <p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00095">95</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
@@ -4613,14 +4667,14 @@ square root of <code>x</code> </dd></dl>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a92cd0098b66cad6a0cddcd895430bd65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92cd0098b66cad6a0cddcd895430bd65">&#9670;&nbsp;</a></span>sub()</h2>
+<a id="a55dff9563772a56967626d9697b4f6a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55dff9563772a56967626d9697b4f6a3">&#9670;&nbsp;</a></span>sub()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; SymEngine::sub </td>
+          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; sub </td>
           <td>(</td>
           <td class="paramtype">const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
@@ -4638,12 +4692,22 @@ square root of <code>x</code> </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Subtracts <code>b</code> from <code>a</code> </p><dl class="section return"><dt>Returns</dt><dd><code>a - b</code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00313">313</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;{</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(a, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, b));</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;}</div>
+<p>Substracts <code>b</code> from <code>a</code>. </p>
+<p>This essentially implements the addition of <code>a</code> and <code>-b</code>. Note that since this calls <code><a class="el" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130" title="Adds two objects (safely).">add()</a></code> it performs canonicalization if required.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>is the minuend. </td></tr>
+    <tr><td class="paramname">b</td><td>is the subtrahend. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the difference <code>a-b</code>.</dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="add_8cpp_source.html#l00497">497</a> of file <a class="el" href="add_8cpp_source.html">add.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;{</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(a, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, b));</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4671,93 +4735,93 @@ square root of <code>x</code> </dd></dl>
 <div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Sin&gt;(*arg)) {</div>
 <div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ACos&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;            i_arg = down_cast&lt;const ACos &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
 <div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ATan&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;            i_arg = down_cast&lt;const ATan &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ASec&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;            i_arg = down_cast&lt;const ASec &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
+<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
 <div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACot&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;            i_arg = down_cast&lt;const ACot &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
+<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
 <div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;        }</div>
 <div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Cos&gt;(*arg)) {</div>
 <div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ASin&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;            i_arg = down_cast&lt;const ASin &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
+<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
 <div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ATan&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;            i_arg = down_cast&lt;const ATan &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACsc&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;            i_arg = down_cast&lt;const ACsc &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
+<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
 <div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACot&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;            i_arg = down_cast&lt;const ACot &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;        }</div>
 <div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Tan&gt;(*arg)) {</div>
 <div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ASin&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;            i_arg = down_cast&lt;const ASin &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACos&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;            i_arg = down_cast&lt;const ACos &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
+<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
 <div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACsc&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;            i_arg = down_cast&lt;const ACsc &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
+<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
 <div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ASec&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;            i_arg = down_cast&lt;const ASec &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;        }</div>
 <div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Csc&gt;(*arg)) {</div>
 <div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ACos&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;            i_arg = down_cast&lt;const ACos &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ATan&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;            i_arg = down_cast&lt;const ATan &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
+<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
 <div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ASec&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;            i_arg = down_cast&lt;const ASec &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACot&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;            i_arg = down_cast&lt;const ACot &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;        }</div>
 <div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Sec&gt;(*arg)) {</div>
 <div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ASin&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;            i_arg = down_cast&lt;const ASin &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ATan&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;            i_arg = down_cast&lt;const ATan &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
+<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2)));</div>
 <div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACsc&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;            i_arg = down_cast&lt;const ACsc &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACot&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;            i_arg = down_cast&lt;const ACot &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)));</div>
 <div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;        }</div>
 <div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Cot&gt;(*arg)) {</div>
 <div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ASin&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;            i_arg = down_cast&lt;const ASin &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))), i_arg);</div>
 <div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACos&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;            i_arg = down_cast&lt;const ACos &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, i2))));</div>
 <div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ACsc&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;            i_arg = down_cast&lt;const ACsc &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2))));</div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ASec&gt;(*arg-&gt;get_args()[0])) {</div>
 <div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;            i_arg = down_cast&lt;const ASec &amp;&gt;(*(arg-&gt;get_args()[0])).get_arg();</div>
-<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;            <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i_arg, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i_arg, im2)))));</div>
 <div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;        }</div>
 <div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;    }</div>
 <div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160; </div>
 <div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    <span class="keywordflow">return</span> arg;</div>
 <div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;}</div>
+<div class="ttc" id="aclassSymEngine_1_1Add_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::Add::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00497">add.cpp:497</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a3fed2bc2a99f9d70b4dd04ae0320d32b"><div class="ttname"><a href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">SymEngine::sqrt</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sqrt(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00061">pow.h:61</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a92cd0098b66cad6a0cddcd895430bd65"><div class="ttname"><a href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00313">add.cpp:313</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4945,14 +5009,14 @@ template&lt;class T &gt; </div>
 <div class="line">    {<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(minus_one, sq3), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(im2, i3)},</div>
 <div class="line">    {sq3, i3},</div>
 <div class="line">    {<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, sq3), im3},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, sq2), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3), i3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, <a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(one, sq2)), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3), im3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(sq2, one), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(one, sq2), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(im2, i3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(i2, sq3), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, i2), i3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(sq3, i2), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(im2, i2), i3)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(i5, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(i5)))), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i5, i2)},</div>
-<div class="line">    {<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="namespaceSymEngine.html#ab7ffb6840e5963dbdcff5d457068c42b">add</a>(i5, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(i5))))), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(im5, i2)},</div>
+<div class="line">    {<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, sq2), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3), i3)},</div>
+<div class="line">    {<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(one, sq2)), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3), im3)},</div>
+<div class="line">    {<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sq2, one), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i3)},</div>
+<div class="line">    {<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(one, sq2), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(im2, i3)},</div>
+<div class="line">    {<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(i2, sq3), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, i2), i3)},</div>
+<div class="line">    {<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sq3, i2), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(im2, i2), i3)},</div>
+<div class="line">    {<a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(i5, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(i5)))), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(i5, i2)},</div>
+<div class="line">    {<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(<a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(i5, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, <a class="code" href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">sqrt</a>(i5))))), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(im5, i2)},</div>
 <div class="line">    {one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i2)},</div>
 <div class="line">    {minus_one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(i2, i2))},</div>
 <div class="line">}</div>

@@ -77,7 +77,9 @@ var menudata={children:[
 {text:"u",url:"namespacemembers_func.html#index_u"},
 {text:"v",url:"namespacemembers_func.html#index_v"},
 {text:"x",url:"namespacemembers_func.html#index_x"},
-{text:"z",url:"namespacemembers_func.html#index_z"}]}]}]},
+{text:"z",url:"namespacemembers_func.html#index_z"}]},
+{text:"Enumerations",url:"namespacemembers_enum.html"},
+{text:"Enumerator",url:"namespacemembers_eval.html"}]}]},
 {text:"Data Structures",url:"annotated.html",children:[
 {text:"Data Structures",url:"annotated.html"},
 {text:"Data Structure Index",url:"classes.html"},

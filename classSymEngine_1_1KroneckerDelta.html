@@ -172,7 +172,7 @@ virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:add848acfe7960a313f800baa1ade66a3"><td class="memItemLeft" align="right" valign="top">static const TypeID&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1KroneckerDelta.html#add848acfe7960a313f800baa1ade66a3">type_code_id</a> = SYMENGINE_KRONECKERDELTA</td></tr>
+<tr class="memitem:add848acfe7960a313f800baa1ade66a3"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">TypeID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1KroneckerDelta.html#add848acfe7960a313f800baa1ade66a3">type_code_id</a> = SYMENGINE_KRONECKERDELTA</td></tr>
 <tr class="separator:add848acfe7960a313f800baa1ade66a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -298,7 +298,7 @@ Static Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02617">2617</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l02619"></a><span class="lineno"> 2619</span>&#160;{</div>
-<div class="line"><a name="l02620"></a><span class="lineno"> 2620</span>&#160;    RCP&lt;const Basic&gt; diff = <a class="code" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a>(<a class="code" href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">sub</a>(i, j));</div>
+<div class="line"><a name="l02620"></a><span class="lineno"> 2620</span>&#160;    RCP&lt;const Basic&gt; diff = <a class="code" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a>(<a class="code" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(i, j));</div>
 <div class="line"><a name="l02621"></a><span class="lineno"> 2621</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*diff, *zero)) {</div>
 <div class="line"><a name="l02622"></a><span class="lineno"> 2622</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l02623"></a><span class="lineno"> 2623</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*diff)) {</div>
@@ -310,7 +310,7 @@ Static Public Attributes</h2></td></tr>
 <div class="line"><a name="l02629"></a><span class="lineno"> 2629</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00129">number.h:129</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a92cd0098b66cad6a0cddcd895430bd65"><div class="ttname"><a href="namespaceSymEngine.html#a92cd0098b66cad6a0cddcd895430bd65">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00313">add.cpp:313</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00497">add.cpp:497</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac104d13f145416cd18c61b0121017eb6"><div class="ttname"><a href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">SymEngine::expand</a></div><div class="ttdeci">RCP&lt; const Basic &gt; expand(const RCP&lt; const Basic &gt; &amp;self, bool deep=true)</div><div class="ttdoc">Expands self</div><div class="ttdef"><b>Definition:</b> <a href="expand_8cpp_source.html#l00371">expand.cpp:371</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -326,7 +326,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const TypeID SymEngine::KroneckerDelta::type_code_id = SYMENGINE_KRONECKERDELTA</td>
+          <td class="memname">const <a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">TypeID</a> SymEngine::KroneckerDelta::type_code_id = SYMENGINE_KRONECKERDELTA</td>
         </tr>
       </table>
   </td>

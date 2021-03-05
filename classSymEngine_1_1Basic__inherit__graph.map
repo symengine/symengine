@@ -1,9 +1,9 @@
 <map id="SymEngine::Basic" name="SymEngine::Basic">
-<area shape="rect" id="node1" title=" " alt="" coords="248,669,379,696"/>
+<area shape="rect" id="node1" title="The lowest unit of symbolic representation." alt="" coords="248,669,379,696"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="427,17,628,58"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="427,101,628,142"/>
 <area shape="rect" id="node7" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="446,202,609,243"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Add.html" title=" " alt="" coords="467,340,587,367"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions." alt="" coords="467,340,587,367"/>
 <area shape="rect" id="node10" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="455,391,599,417"/>
 <area shape="rect" id="node18" href="$classSymEngine_1_1Constant.html" title=" " alt="" coords="453,509,602,536"/>
 <area shape="rect" id="node19" href="$classSymEngine_1_1Derivative.html" title=" " alt="" coords="450,560,605,587"/>
