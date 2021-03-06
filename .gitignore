@@ -173,3 +173,4 @@ symengine/symengine_config_cling.h
 gen_docs/
 /docs/Doxygen/tags/
 *.ipynb
+.auctex-auto/
