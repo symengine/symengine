@@ -31,7 +31,7 @@
 # target_link_libraries(example ${SYMENGINE_LIBRARIES})
 #
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(SYMENGINE_CXX_FLAGS "@CMAKE_CXX_FLAGS@")
 set(SYMENGINE_CXX_FLAGS_RELEASE "@CMAKE_CXX_FLAGS_RELEASE@")
@@ -48,6 +48,7 @@ set(SYMENGINE_BUILD_TREE @SYMENGINE_BUILD_TREE@)
 if(NOT TARGET symengine)
     include("${SYMENGINE_CMAKE_DIR}/SymEngineTargets.cmake")
 endif()
+set_target_properties(symengine PROPERTIES INTERFACE_LINK_LIBRARIES "")
 
 if(SYMENGINE_BUILD_TREE)
     set(SYMENGINE_INSTALL_CMAKE_DIR "${SYMENGINE_CMAKE_DIR}")
