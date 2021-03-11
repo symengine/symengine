@@ -62,6 +62,7 @@ public:
             vec_pair replacements;
             // cse the outputs
             SymEngine::cse(replacements, reduced_exprs, outputs);
+            cse_intermediate_results.resize(replacements.size());
             for (auto &rep : replacements) {
                 auto res = apply(*(rep.second));
                 // Store the replacement symbol values in a dictionary for
@@ -72,7 +73,6 @@ public:
                 // Store it in a vector for faster use in call
                 cse_intermediate_fns.push_back(res);
             }
-            cse_intermediate_results.resize(cse_intermediate_fns.size());
             // Generate functions for all the reduced exprs and save it
             for (unsigned i = 0; i < outputs.size(); i++) {
                 results.push_back(apply(*reduced_exprs[i]));
