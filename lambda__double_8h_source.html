@@ -162,17 +162,17 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_pair</a> replacements;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="comment">// cse the outputs</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            SymEngine::cse(replacements, reduced_exprs, outputs);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;rep : replacements) {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <span class="keyword">auto</span> res = apply(*(rep.second));</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <span class="comment">// Store the replacement symbol values in a dictionary for</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                <span class="comment">// faster</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                <span class="comment">// lookup for initialization</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                cse_intermediate_fns_map[rep.first]</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                    = cse_intermediate_fns.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <span class="comment">// Store it in a vector for faster use in call</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                cse_intermediate_fns.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(res);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            cse_intermediate_results.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(cse_intermediate_fns.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            cse_intermediate_results.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(replacements.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;rep : replacements) {</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <span class="keyword">auto</span> res = apply(*(rep.second));</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                <span class="comment">// Store the replacement symbol values in a dictionary for</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                <span class="comment">// faster</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                <span class="comment">// lookup for initialization</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                cse_intermediate_fns_map[rep.first]</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                    = cse_intermediate_fns.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                <span class="comment">// Store it in a vector for faster use in call</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                cse_intermediate_fns.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(res);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="comment">// Generate functions for all the reduced exprs and save it</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; outputs.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                results.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*reduced_exprs[i]));</div>
