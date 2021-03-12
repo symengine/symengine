@@ -196,18 +196,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install apt packages on Linux
-      if: matrix.OS == 'ubuntu-16.04'
+    - name: Build and test symengine
       shell: bash
       run: |
-        sudo apt update
-        sudo apt install software-properties-common
-        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-        if [[ "$EXTRA_APT_REPOSITORY" != "" ]]; then
-            sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
-        fi
-        sudo apt update
-        sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
+        source bin/test_symengine_unix.sh
       env:
         USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
         WITH_MPFR: ${{ matrix.WITH_MPFR }}
