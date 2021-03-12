@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $(uname) == "Linux" ]]; then
+if [[ "$(uname)" == "Linux" ]]; then
   sudo apt update
   sudo apt install software-properties-common
   sudo add-apt-repository ppa:ubuntu-toolchain-r/test
@@ -18,4 +18,4 @@ elif [[ "$CONDA_ENV_FILE" == *"matchpycpp"* ]]; then
 else
   source bin/install_travis.sh
   source bin/test_travis.sh
-endif
+fi
