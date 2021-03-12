@@ -55,6 +55,16 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     fi
 fi
 
+if [[ "$WITH_LLVM" == "yes" && "${TRAVIS_OS_NAME}" == "linux" && "$GITHUB_ACTIONS" == "true" ]]; then
+    wget http://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
+    tar -xf binutils-2.32.tar.xz
+    pushd binutils-2.32
+    ./configure
+    make
+    sudo make install
+    popd
+fi
+
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
 
