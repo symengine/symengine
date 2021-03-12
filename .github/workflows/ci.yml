@@ -90,13 +90,13 @@ jobs:
             USE_GLIBCXX_DEBUG: yes
             OS: ubuntu-16.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
             EXTRA_APT_PACKAGES: "clang-8 llvm-8-dev binutils-dev g++-8"
 
           - TEST_CLANG_FORMAT: yes
             OS: ubuntu-16.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.8 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.8 main'
             EXTRA_APT_PACKAGES: clang-format-3.8
 
           - BUILD_TYPE: Debug
@@ -136,7 +136,7 @@ jobs:
             WITH_BENCHMARKS_NONIUS: yes
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
             EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-4.8-dev libgmp-dev llvm-6.0-dev"
 
           - BUILD_TYPE: Release
@@ -167,7 +167,7 @@ jobs:
             WITH_LLVM: 7.0
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
           - BUILD_TYPE: Debug
@@ -175,7 +175,7 @@ jobs:
             WITH_LLVM: 7.0
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
 
           - BUILD_TYPE: Debug
@@ -185,7 +185,7 @@ jobs:
             INTEGER_CLASS: boostmp
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
