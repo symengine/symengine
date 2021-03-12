@@ -156,7 +156,7 @@ cmake $cmake_line ${SOURCE_DIR}
 echo "=== Running build scripts for SymEngine"
 pwd
 echo "Running make" $MAKEFLAGS ":"
-make
+make VERBOSE=1
 
 echo "Running make install:"
 make install
