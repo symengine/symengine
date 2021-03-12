@@ -90,13 +90,13 @@ jobs:
             USE_GLIBCXX_DEBUG: yes
             OS: ubuntu-16.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-trusty-8 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
             EXTRA_APT_PACKAGES: "clang-8 llvm-8-dev binutils-dev g++-8"
 
           - TEST_CLANG_FORMAT: yes
             OS: ubuntu-16.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-precise-3.7 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.8 main'
             EXTRA_APT_PACKAGES: clang-format-3.8
 
           - BUILD_TYPE: Debug
@@ -136,7 +136,7 @@ jobs:
             WITH_BENCHMARKS_NONIUS: yes
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
             EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-4.8-dev libgmp-dev llvm-6.0-dev"
 
           - BUILD_TYPE: Release
@@ -167,7 +167,7 @@ jobs:
             WITH_LLVM: 7.0
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
           - BUILD_TYPE: Debug
@@ -175,7 +175,7 @@ jobs:
             WITH_LLVM: 7.0
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
 
           - BUILD_TYPE: Debug
@@ -185,7 +185,7 @@ jobs:
             INTEGER_CLASS: boostmp
             CC: clang
             OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main'
+            EXTRA_APT_REPOSITORY: 'http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
@@ -209,5 +209,33 @@ jobs:
         sudo apt update
         sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
       env:
+        USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
+        WITH_MPFR: ${{ matrix.WITH_MPFR }}
+        BUILD_BENCHMARKS: ${{ matrix.BUILD_BENCHMARKS }}
+        WITH_LLVM: ${{ matrix.WITH_LLVM }}
+        WITH_BENCHMARKS_NONIUS: ${{ matrix.WITH_BENCHMARKS_NONIUS }}
+        WITH_SYMENGINE_RCP: ${{ matrix.WITH_SYMENGINE_RCP }}
+        TEST_IN_TREE: ${{ matrix.TEST_IN_TREE }}
+        WITH_SYMENGINE_THREAD_SAFE: ${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}
+        WITH_PRIMESIEVE: ${{ matrix.WITH_PRIMESIEVE }}
+        INTEGER_CLASS: ${{ matrix.INTEGER_CLASS }}
+        WITH_ARB: ${{ matrix.WITH_ARB }}
+        WITH_PIRANHA: ${{ matrix.WITH_PIRANHA }}
+        WITH_GCC_6: ${{ matrix.WITH_GCC_6 }}
+        CONDA_ENV_FILE: ${{ matrix.CONDA_ENV_FILE }}
+        WITH_BFD: ${{ matrix.WITH_BFD }}
+        WITH_FLINT: ${{ matrix.WITH_FLINT }}
         EXTRA_APT_REPOSITORY: ${{ matrix.EXTRA_APT_REPOSITORY }}
         EXTRA_APT_PACKAGES: ${{ matrix.EXTRA_APT_PACKAGES }}
+        TEST_CLANG_FORMAT: ${{ matrix.TEST_CLANG_FORMAT }}
+        WITH_ECM: ${{ matrix.WITH_ECM }}
+        WITH_LATEST_GCC: ${{ matrix.WITH_LATEST_GCC }}
+        OS: ${{ matrix.OS }}
+        WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
+        CC: ${{ matrix.CC }}
+        WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
+        BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
+        WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
+        WITH_MPC: ${{ matrix.WITH_MPC }}
+        MAKEFLAGS: ${{ matrix.MAKEFLAGS }}
+        BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
