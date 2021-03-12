@@ -54,11 +54,8 @@ elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
-else
+elif [[ "$(uname)" == "Linux" ]]; then
     export CXXFLAGS="$CXXFLAGS -Werror"
-    if [[ "$(uname)" == "Darwin" ]]; then
-        export CXXFLAGS="$CXXFLAGS -Wno-error=self-assign-overloaded"
-    fi
     if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
         export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
     fi
