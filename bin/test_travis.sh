@@ -50,11 +50,11 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
 	fi
-elif [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
-else
+elif [[ "$(uname)" == "Linux" ]]; then
     export CXXFLAGS="$CXXFLAGS -Werror"
     if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
         export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
@@ -138,7 +138,7 @@ fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
-if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 
@@ -153,7 +153,7 @@ cmake $cmake_line ${SOURCE_DIR}
 echo "=== Running build scripts for SymEngine"
 pwd
 echo "Running make" $MAKEFLAGS ":"
-make
+make VERBOSE=1
 
 echo "Running make install:"
 make install
