@@ -5,6 +5,7 @@ if [[ "$(uname)" == "Linux" ]]; then
   sudo apt install software-properties-common
   sudo add-apt-repository ppa:ubuntu-toolchain-r/test
   if [[ "$EXTRA_APT_REPOSITORY" != "" ]]; then
+      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
       sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
   fi
   sudo apt update
