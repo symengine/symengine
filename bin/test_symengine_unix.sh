@@ -9,7 +9,11 @@ if [[ "$(uname)" == "Linux" ]]; then
       sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
   fi
   sudo apt update
-  sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
+  if [[ "$OS" == "ubuntu-16.04" ]]; then
+    sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
+  else
+    sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES
+  fi
 fi
 
 if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
