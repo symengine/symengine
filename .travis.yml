@@ -5,13 +5,13 @@ env: BUILD_TYPE="Debug" WITH_SYMENGINE_RCP="yes" WITH_BFD="no" WITH_SANITIZE="me
 compiler: clang
 os: linux
 addons:
-apt:
-  sources:
-  - ubuntu-toolchain-r-test
-  - llvm-toolchain-trusty-7
-  packages:
-  - clang-7
-  - llvm-7-dev
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-trusty-7
+    packages:
+    - clang-7
+    - llvm-7-dev
 
 install:
   - source bin/install_travis.sh
