@@ -56,6 +56,9 @@ elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     fi
 else
     export CXXFLAGS="$CXXFLAGS -Werror"
+    if [[ "${CC}" == *"clang"* ]]; then
+        export CXXFLAGS="$CXXFLAGS -Wno-error=self-assign-overloaded"
+    fi
     if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
         export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
     fi

@@ -101,13 +101,14 @@ jobs:
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
-            WITH_GCC_6: yes
             WITH_PIRANHA: yes
             MAKEFLAGS: -j2
             BUILD_SHARED_LIBS: yes
             CC: gcc
             OS: ubuntu-16.04
-            EXTRA_APT_PACKAGES: "binutils-dev g++-6"
+            EXTRA_APT_PACKAGES: "binutils-dev g++-4.8"
+            # This is not used, but was in travis config
+            # WITH_GCC_6: yes
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes

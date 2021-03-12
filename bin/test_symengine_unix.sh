@@ -14,6 +14,7 @@ fi
 if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
   source bin/travis_clang_format.sh
 elif [[ "$CONDA_ENV_FILE" == *"matchpycpp"* ]]; then
+  source bin/install_travis.sh
   source bin/test_matchpycpp_gen_tests.sh
 else
   source bin/install_travis.sh

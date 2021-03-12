@@ -25,13 +25,15 @@ if [[ "${CC}" == "" ]]; then
         export CXX=g++
     fi
 fi
-export GCOV_EXECUTABLE=gcov
 
-if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
-    # brew update
-    export CC=gcc-4.9
-    export CXX=g++-4.9
+if [[ "${CXX}" == "" ]]; then
+    if [[ "$CC" == gcc ]]; then
+        export CXX=g++
+    elif [[ "$CC" == clang ]]; then
+        export CXX=clang++
+    fi
 fi
+export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
