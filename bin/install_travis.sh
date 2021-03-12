@@ -10,6 +10,12 @@ set -x
 # we need to do it ourselves.
 git clean -dfx
 
+if [[ "$(uname)" == "Darwin"  ]]; then
+    export TRAVIS_OS_NAME="osx"
+else
+    export TRAVIS_OS_NAME="linux"
+fi
+
 if [[ "${CC}" == "" ]]; then
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export CC=clang

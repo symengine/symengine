@@ -50,7 +50,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
 	fi
-elif [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
@@ -138,7 +138,7 @@ fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
-if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 
