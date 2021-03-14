@@ -12,9 +12,11 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
 	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
+            # remove existing system libc++ to avoid conflicts with msan instrumented libc++
+            sudo apt-get remove -yy libc++abi-dev libc++-dev
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
-            LLVM_ORG_VER=7.0.1  # should match llvm-X-dev package.
+            LLVM_ORG_VER=7.1.0  # should match llvm-X-dev package.
             export CC=clang-7
             export CXX=clang++-7
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
