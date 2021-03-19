@@ -7,54 +7,52 @@
 #include <symengine/pow.h>
 #include <symengine/polys/basic_conversions.h>
 
-using SymEngine::solve;
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::integer;
-using SymEngine::rational;
 using SymEngine::add;
-using SymEngine::symbol;
+using SymEngine::Basic;
+using SymEngine::boolFalse;
+using SymEngine::boolTrue;
+using SymEngine::ConditionSet;
+using SymEngine::DenseMatrix;
+using SymEngine::down_cast;
+using SymEngine::dummy;
 using SymEngine::emptyset;
+using SymEngine::Eq;
+using SymEngine::Expression;
+using SymEngine::finiteset;
+using SymEngine::FiniteSet;
+using SymEngine::Ge;
+using SymEngine::I;
+using SymEngine::imageset;
+using SymEngine::Inf;
+using SymEngine::integer;
 using SymEngine::interval;
 using SymEngine::Interval;
-using SymEngine::emptyset;
-using SymEngine::finiteset;
-using SymEngine::Set;
-using SymEngine::Symbol;
-using SymEngine::Inf;
-using SymEngine::NegInf;
-using SymEngine::I;
-using SymEngine::SymEngineException;
-using SymEngine::neg;
-using SymEngine::one;
-using SymEngine::zero;
-using SymEngine::pow;
-using SymEngine::FiniteSet;
-using SymEngine::Eq;
-using SymEngine::Ne;
-using SymEngine::Ge;
-using SymEngine::boolTrue;
-using SymEngine::boolFalse;
-using SymEngine::down_cast;
-using SymEngine::ConditionSet;
 using SymEngine::is_a;
-using SymEngine::logical_and;
-using SymEngine::Union;
-using SymEngine::mul;
-using SymEngine::UIntPoly;
-using SymEngine::URatPoly;
-using SymEngine::rational_class;
-using SymEngine::solve_poly_quartic;
-using SymEngine::DenseMatrix;
 using SymEngine::linear_eqns_to_matrix;
 using SymEngine::linsolve;
-using SymEngine::vec_basic;
+using SymEngine::logical_and;
+using SymEngine::mul;
+using SymEngine::Ne;
+using SymEngine::neg;
+using SymEngine::NegInf;
+using SymEngine::one;
 using SymEngine::pi;
-using SymEngine::dummy;
+using SymEngine::pow;
+using SymEngine::rational;
+using SymEngine::rational_class;
+using SymEngine::RCP;
+using SymEngine::Set;
 using SymEngine::set_union;
-using SymEngine::imageset;
-using SymEngine::add;
-using SymEngine::Expression;
+using SymEngine::solve;
+using SymEngine::solve_poly_quartic;
+using SymEngine::symbol;
+using SymEngine::Symbol;
+using SymEngine::SymEngineException;
+using SymEngine::UIntPoly;
+using SymEngine::Union;
+using SymEngine::URatPoly;
+using SymEngine::vec_basic;
+using SymEngine::zero;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -155,16 +153,18 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
 
     auto b = symbol("b"), c = symbol("c");
     soln = solve(add({sqx, mul(b, x), c}), x);
-    REQUIRE(soln->__str__() == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
-                               "+ (-1/2)*sqrt(-4*c + b**2)}");
+    REQUIRE(soln->__str__()
+            == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
+               "+ (-1/2)*sqrt(-4*c + b**2)}");
 
     soln = solve(add({sqx, mul(i3, x), c}), x);
     REQUIRE(soln->__str__()
             == "{-3/2 + (-1/2)*sqrt(9 - 4*c), -3/2 + (1/2)*sqrt(9 - 4*c)}");
 
     soln = solve(add({sqx, mul({i3, b, x}), c}), x);
-    REQUIRE(soln->__str__() == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
-                               "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
+    REQUIRE(soln->__str__()
+            == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
+               "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
     CHECK_THROWS_AS(solve_poly_quadratic({one}, reals), SymEngineException &);
 
@@ -473,7 +473,7 @@ TEST_CASE("linsolve", "[Solve]")
         linsolve({Eq(y, mul({integer(4), x, x})), add({x, y, integer(-10)})},
                  {x, y}),
         SymEngineException &);
-    
+
     // issue 1745
     {
         auto x = SymEngine::symbol("x"), y = SymEngine::symbol("y");
@@ -484,7 +484,8 @@ TEST_CASE("linsolve", "[Solve]")
         auto s2 = neg(s1);
 
         auto solns1 = linsolve(eqns, {y, x}); ///< o.k. in issue 1745
-        auto solns2 = linsolve(eqns, {x, y}); ///< results in a nan in issue 1745
+        auto solns2
+            = linsolve(eqns, {x, y}); ///< results in a nan in issue 1745
 
         REQUIRE(solns1.size() == 2);
         REQUIRE(solns2.size() == 2);
@@ -506,9 +507,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
          add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
         {x, y, z});
     REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(1), integer(2), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(2), integer(3), integer(2),
+                            integer(2), integer(3), integer(3), integer(3),
+                            integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -518,9 +520,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
         {y, x, z});
 
     REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(2), integer(1), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+            == DenseMatrix(3, 3,
+                           {integer(2), integer(1), integer(3), integer(2),
+                            integer(2), integer(3), integer(3), integer(3),
+                            integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -537,14 +540,15 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
                  mul(integer(6), t)}),
             integer(30))},
         {y, z, t, x});
-    REQUIRE(
-        solns.first
-        == DenseMatrix(4, 4, {integer(2), integer(3), integer(4), integer(1),
-                              integer(2), integer(3), integer(4), integer(2),
-                              integer(3), integer(3), integer(4), integer(3),
-                              integer(8), integer(7), integer(6), integer(9)}));
-    REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
-                                               integer(13), integer(30)}));
+    REQUIRE(solns.first
+            == DenseMatrix(4, 4,
+                           {integer(2), integer(3), integer(4), integer(1),
+                            integer(2), integer(3), integer(4), integer(2),
+                            integer(3), integer(3), integer(4), integer(3),
+                            integer(8), integer(7), integer(6), integer(9)}));
+    REQUIRE(solns.second
+            == DenseMatrix(
+                4, 1, {integer(10), integer(11), integer(13), integer(30)}));
 }
 
 TEST_CASE("is_a_LinearArgTrigEquation", "[Solve]")
@@ -636,11 +640,12 @@ TEST_CASE("trigonometric equations", "[Solve]")
 
     eqn = add(sin(x), cos(x));
     soln = solve(eqn, x);
-    req = set_union({imageset(n, sub(mul({i2, n, pi}), div(pi, integer(4))),
-                              interval(NegInf, Inf, true, true)),
-                     imageset(n, add(mul({i2, n, pi}),
-                                     div(mul(integer(3), pi), integer(4))),
-                              interval(NegInf, Inf, true, true))});
+    req = set_union(
+        {imageset(n, sub(mul({i2, n, pi}), div(pi, integer(4))),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n,
+                  add(mul({i2, n, pi}), div(mul(integer(3), pi), integer(4))),
+                  interval(NegInf, Inf, true, true))});
     // REQUIRE(eq(*soln, *req)); // atan2(sqrt(2)/2, -sqrt(2)/2) is wrongly
     // computed as it can't idenfity `-sqrt(2)/2` as negative(should pass once
     // assumptions are implemented).
