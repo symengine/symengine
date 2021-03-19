@@ -484,8 +484,7 @@ TEST_CASE("linsolve", "[Solve]")
         auto s2 = neg(s1);
 
         auto solns1 = linsolve(eqns, {y, x}); ///< o.k. in issue 1745
-        auto solns2
-            = linsolve(eqns, {x, y}); ///< results in a nan in issue 1745
+        auto solns2 = linsolve(eqns, {x, y}); ///< results in a nan in issue 1745
 
         REQUIRE(solns1.size() == 2);
         REQUIRE(solns2.size() == 2);
