@@ -213,6 +213,50 @@ public:
 
     tribool apply(const Basic &b);
 };
+
+class PolynomialVisitor : public BaseVisitor<PolynomialVisitor>
+{
+private:
+    bool is_polynomial_ = true;
+    bool variables_allowed_ = true;
+    const set_basic &variables_;
+
+    void check_power(const Basic &base, const Basic &exp);
+
+public:
+    PolynomialVisitor(const set_basic &variables) : variables_(variables)
+    {
+    }
+    void bvisit(const Basic &x);
+    void bvisit(const Number &x){};
+    void bvisit(const Constant &x){};
+    void bvisit(const Symbol &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Set &x)
+    {
+        is_polynomial_ = false;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_polynomial_ = false;
+    };
+
+    bool apply(const Basic &b);
+};
+
+/**
+ * @brief Check if expression is a polynomial
+ * @param b Basic
+ * @param variables Set of symbols for variables in polynomial
+ * @returns True if b is a polynomial in variables and false otherwise
+ *
+ * Check if b is a polynomial in variables. If no variables are specified
+ * all free symbols in b are considered to be variables. All symbols that
+ * are not variables will be considered to be constants.
+ */
+bool is_polynomial(const Basic &b, const set_basic &variables = {});
 }
 
 #endif // SYMENGINE_TEST_VISITORS_H

@@ -156,4 +156,95 @@ tribool is_real(const Basic &b)
     RealVisitor visitor;
     return visitor.apply(b);
 }
+
+void PolynomialVisitor::bvisit(const Basic &x)
+{
+    auto old_allowed = variables_allowed_;
+    variables_allowed_ = false;
+    for (const auto &p : x.get_args()) {
+        p->accept(*this);
+        if (!is_polynomial_) {
+            variables_allowed_ = old_allowed;
+            return;
+        }
+    }
+    variables_allowed_ = old_allowed;
+}
+
+void PolynomialVisitor::bvisit(const Add &x)
+{
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        if (!is_polynomial_)
+            return;
+    }
+}
+
+void PolynomialVisitor::bvisit(const Mul &x)
+{
+    for (const auto &p : x.get_dict()) {
+        this->check_power(*p.first, *p.second);
+        if (!is_polynomial_)
+            return;
+    }
+}
+
+void PolynomialVisitor::check_power(const Basic &base, const Basic &exp)
+{
+    if (variables_allowed_) {
+        variables_allowed_ = false;
+        exp.accept(*this);
+        if (!is_polynomial_) {
+            variables_allowed_ = true;
+            return;
+        }
+        base.accept(*this);
+        variables_allowed_ = true;
+        if (!is_polynomial_) {
+            is_polynomial_ = true;
+            base.accept(*this);
+            is_polynomial_ = is_polynomial_ and is_a<Integer>(exp)
+                             and down_cast<const Integer &>(exp).is_positive();
+        }
+    } else {
+        base.accept(*this);
+        if (!is_polynomial_)
+            return;
+        exp.accept(*this);
+    }
+}
+
+void PolynomialVisitor::bvisit(const Pow &x)
+{
+    check_power(*x.get_base(), *x.get_exp());
+}
+
+void PolynomialVisitor::bvisit(const Symbol &x)
+{
+    if (variables_allowed_)
+        return;
+
+    if (variables_.empty()) { // All symbols are variables
+        is_polynomial_ = false;
+    } else {
+        for (const auto &elem : variables_) {
+            if (x.__eq__(*elem)) {
+                is_polynomial_ = false;
+                return;
+            }
+        }
+    }
+}
+
+bool PolynomialVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_polynomial_;
+}
+
+bool is_polynomial(const Basic &b, const set_basic &variables)
+{
+    PolynomialVisitor visitor(variables);
+    return visitor.apply(b);
+}
 }
