@@ -4,4 +4,6 @@ coverage:
   - symengine/utilities/.*
   - benchmarks/.*
 
+  token: e049a7ee-c9f2-4e48-87b4-fca397853ce8
+
 comment: off
