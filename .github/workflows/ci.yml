@@ -14,7 +14,6 @@ jobs:
             WITH_LATEST_GCC: yes
             WITH_COVERAGE: yes
             WITH_MPC: yes
-            WITH_LLVM: 12
             USE_GLIBCXX_DEBUG: yes
             OS: ubuntu-22.04
             CC: gcc
@@ -145,7 +144,7 @@ jobs:
             OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
-            WITH_LLVM: 3.8
+            WITH_LLVM: 5.0
             OS: macos-latest
             CC: clang
 

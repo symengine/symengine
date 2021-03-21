@@ -1,8 +1,8 @@
 #include "llvm/ADT/STLExtras.h"
-#include "llvm/Analysis/Passes.h"
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/MCJIT.h"
+#include "llvm/Passes/PassBuilder.h"
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/Attributes.h"
 #include "llvm/IR/BasicBlock.h"
@@ -12,7 +12,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Intrinsics.h"
-#include "llvm/IR/LegacyPassManager.h"
+#include "llvm/Analysis/Passes.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
@@ -25,8 +25,6 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
-#include "llvm/Transforms/Scalar.h"
-#include "llvm/Transforms/Vectorize.h"
 #include "llvm/ExecutionEngine/ObjectCache.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Path.h"
@@ -35,17 +33,6 @@
 #include <memory>
 #include <vector>
 #include <fstream>
-
-#if (LLVM_VERSION_MAJOR == 3 && LLVM_VERSION_MINOR >= 9)                       \
-    || (LLVM_VERSION_MAJOR > 3)
-#include <llvm/Transforms/Scalar/GVN.h>
-#endif
-
-#if (LLVM_VERSION_MAJOR >= 7)
-#include <llvm/Transforms/InstCombine/InstCombine.h>
-#include <llvm/Transforms/Scalar/InstSimplifyPass.h>
-#include <llvm/Transforms/Utils.h>
-#endif
 
 #include <symengine/llvm_double.h>
 #include <symengine/eval_double.h>
@@ -73,15 +60,7 @@ llvm::Value *LLVMVisitor::apply(const Basic &b)
 void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
                        unsigned opt_level)
 {
-    init(x, b, symbolic_cse, LLVMVisitor::create_default_passes(opt_level),
-         opt_level);
-}
-
-void LLVMVisitor::init(const vec_basic &x, const Basic &b, bool symbolic_cse,
-                       const std::vector<llvm::Pass *> &passes,
-                       unsigned opt_level)
-{
-    init(x, {b.rcp_from_this()}, symbolic_cse, passes, opt_level);
+    init(x, {b.rcp_from_this()}, symbolic_cse, opt_level);
 }
 
 llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
@@ -140,58 +119,8 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
     return F;
 }
 
-std::vector<llvm::Pass *> LLVMVisitor::create_default_passes(int optlevel)
-{
-    std::vector<llvm::Pass *> passes;
-    if (optlevel == 0) {
-        return passes;
-    }
-#if (LLVM_VERSION_MAJOR < 4)
-    passes.push_back(llvm::createInstructionCombiningPass());
-#else
-    passes.push_back(llvm::createInstructionCombiningPass(optlevel > 1));
-#endif
-    passes.push_back(llvm::createDeadCodeEliminationPass());
-    passes.push_back(llvm::createPromoteMemoryToRegisterPass());
-    passes.push_back(llvm::createReassociatePass());
-    passes.push_back(llvm::createGVNPass());
-    passes.push_back(llvm::createCFGSimplificationPass());
-    passes.push_back(llvm::createPartiallyInlineLibCallsPass());
-#if (LLVM_VERSION_MAJOR < 5)
-    passes.push_back(llvm::createLoadCombinePass());
-#endif
-#if LLVM_VERSION_MAJOR >= 7
-    passes.push_back(llvm::createInstSimplifyLegacyPass());
-#else
-    passes.push_back(llvm::createInstructionSimplifierPass());
-#endif
-    passes.push_back(llvm::createMemCpyOptPass());
-    passes.push_back(llvm::createSROAPass());
-    passes.push_back(llvm::createMergedLoadStoreMotionPass());
-    passes.push_back(llvm::createBitTrackingDCEPass());
-    passes.push_back(llvm::createAggressiveDCEPass());
-    if (optlevel > 2) {
-        passes.push_back(llvm::createSLPVectorizerPass());
-#if LLVM_VERSION_MAJOR >= 7
-        passes.push_back(llvm::createInstSimplifyLegacyPass());
-#else
-        passes.push_back(llvm::createInstructionSimplifierPass());
-#endif
-    }
-    return passes;
-}
-
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                        const bool symbolic_cse, unsigned opt_level)
-{
-    init(inputs, outputs, symbolic_cse,
-         LLVMVisitor::create_default_passes(opt_level), opt_level);
-}
-
-void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
-                       const bool symbolic_cse,
-                       const std::vector<llvm::Pass *> &passes,
-                       unsigned opt_level)
 {
     executionengine.reset();
     llvm::InitializeNativeTarget();
@@ -205,13 +134,6 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         = make_unique<llvm::Module>("SymEngine", *context.get());
     module->setDataLayout("");
     mod = module.get();
-
-    // Create a new pass manager attached to it.
-    fpm = std::make_shared<llvm::legacy::FunctionPassManager>(mod);
-    for (auto pass : passes) {
-        fpm->add(pass);
-    }
-    fpm->doInitialization();
 
     auto F = get_function_type(context.get());
 
@@ -294,11 +216,47 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     //     module->print(llvm::errs(), nullptr);
     // #endif
 
-    // Optimize the function.
-    fpm->run(*F);
+    // module->print(llvm::errs(), nullptr);
+
+    // Optimize the function using default passes from PassBuilder
+    // FunctionSimplificationPipeline for the opt_level
+#if (LLVM_VERSION_MAJOR < 14)
+    using OptimizationLevel = llvm::PassBuilder::OptimizationLevel;
+#else
+    using OptimizationLevel = llvm::OptimizationLevel;
+#endif
+    llvm::PassBuilder PB;
+    llvm::ModuleAnalysisManager MAM;
+    llvm::CGSCCAnalysisManager CGAM;
+    llvm::FunctionAnalysisManager FAM;
+    llvm::LoopAnalysisManager LAM;
+    PB.registerModuleAnalyses(MAM);
+    PB.registerCGSCCAnalyses(CGAM);
+    PB.registerFunctionAnalyses(FAM);
+    PB.registerLoopAnalyses(LAM);
+    PB.crossRegisterProxies(LAM, FAM, CGAM, MAM);
+    llvm::FunctionPassManager FPM;
+    OptimizationLevel pb_opt_level{OptimizationLevel::O3};
+    if (opt_level == 0) {
+        pb_opt_level = OptimizationLevel::O0;
+    } else if (opt_level == 1) {
+        pb_opt_level = OptimizationLevel::O1;
+    } else if (opt_level == 2) {
+        pb_opt_level = OptimizationLevel::O2;
+    }
+#if (LLVM_VERSION_MAJOR < 6)
+    FPM = PB.buildFunctionSimplificationPipeline(pb_opt_level);
+#elif (LLVM_VERSION_MAJOR < 12)
+    FPM = PB.buildFunctionSimplificationPipeline(
+        pb_opt_level, llvm::PassBuilder::ThinLTOPhase::None);
+#else
+    FPM = PB.buildFunctionSimplificationPipeline(
+        pb_opt_level, llvm::ThinOrFullLTOPhase::None);
+#endif
+    FPM.run(*F, FAM);
 
     // std::cout << "Optimized LLVM IR" << std::endl;
-    // module->dump();
+    // module->print(llvm::errs(), nullptr);
 
     // Now we create the JIT.
     std::string error;

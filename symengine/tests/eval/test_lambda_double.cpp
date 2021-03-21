@@ -523,8 +523,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
     v.init({x, y, z}, *r);
     LLVMDoubleVisitor v2;
     for (int opt_level = 0; opt_level < 4; ++opt_level) {
-        v2.init({x, y, z}, *r, false,
-                LLVMDoubleVisitor::create_default_passes(opt_level), opt_level);
+        v2.init({x, y, z}, *r, false, opt_level);
         d = v.call({0.4, 2.0, 3.0});
         d2 = v2.call({0.4, 2.0, 3.0});
         // Check for 12 digits with doubles
