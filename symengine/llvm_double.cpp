@@ -280,7 +280,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     builder->CreateRetVoid();
 
     // Validate the generated code, checking for consistency.
-    llvm::verifyFunction(*F);
+    llvm::verifyFunction(*F, &llvm::outs());
 
     //     std::cout << "LLVM IR" << std::endl;
     // #if (LLVM_VERSION_MAJOR < 5)
@@ -497,7 +497,6 @@ llvm::Function *LLVMVisitor::get_powi()
 {
     std::vector<llvm::Type *> arg_type;
     arg_type.push_back(get_float_type(&mod->getContext()));
-    arg_type.push_back(llvm::Type::getInt32Ty(mod->getContext()));
     return llvm::Intrinsic::getDeclaration(mod, llvm::Intrinsic::powi,
                                            arg_type);
 }
@@ -543,7 +542,7 @@ void LLVMVisitor::bvisit(const Pow &x)
             args.push_back(apply(*x.get_base()));
             args.push_back(apply(*x.get_exp()));
             fun = get_float_intrinsic(get_float_type(&mod->getContext()),
-                                      llvm::Intrinsic::pow, 2, mod);
+                                      llvm::Intrinsic::pow, 1, mod);
         }
     }
     auto r = builder->CreateCall(fun, args);
@@ -839,7 +838,7 @@ void LLVMVisitor::bvisit(const Min &x)
     llvm::Value *value = nullptr;
     llvm::Function *fun;
     fun = get_float_intrinsic(get_float_type(&mod->getContext()),
-                              llvm::Intrinsic::minnum, 2, mod);
+                              llvm::Intrinsic::minnum, 1, mod);
     for (auto &arg : x.get_vec()) {
         if (value != nullptr) {
             std::vector<llvm::Value *> args;
@@ -860,7 +859,7 @@ void LLVMVisitor::bvisit(const Max &x)
     llvm::Value *value = nullptr;
     llvm::Function *fun;
     fun = get_float_intrinsic(get_float_type(&mod->getContext()),
-                              llvm::Intrinsic::maxnum, 2, mod);
+                              llvm::Intrinsic::maxnum, 1, mod);
     for (auto &arg : x.get_vec()) {
         if (value != nullptr) {
             std::vector<llvm::Value *> args;
