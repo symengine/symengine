@@ -220,3 +220,88 @@ TEST_CASE("Test is_real", "[is_real]")
     REQUIRE(is_false(is_real(*Inf)));
     REQUIRE(is_false(is_real(*Nan)));
 }
+
+TEST_CASE("Test is_polynomial", "[is_polynomial]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Number> i1 = integer(1);
+    RCP<const Number> i2 = integer(3);
+    RCP<const Number> i3 = integer(-2);
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Basic> e1 = add(x, i1);
+    RCP<const Basic> e2 = add(x, y);
+    RCP<const Basic> e3 = add(add(x, pi), y);
+    RCP<const Basic> e4 = mul(x, y);
+    RCP<const Basic> e5 = mul(i2, mul(x, y));
+    RCP<const Basic> e6 = mul(i2, mul(x, add(x, y)));
+    RCP<const Basic> e7 = pow(x, y);
+    RCP<const Basic> e8 = pow(x, i2);
+    RCP<const Basic> e9 = pow(x, rat1);
+    RCP<const Basic> e10 = pow(integer(2), x);
+    RCP<const Basic> e11 = div(i1, x);
+    RCP<const Basic> e12 = pow(x, i3);
+    RCP<const Basic> e13 = pow(x, x);
+    RCP<const Basic> e14 = pow(x, mul(i3, y));
+    RCP<const Basic> e15 = pow(mul(i2, x), y);
+    RCP<const Basic> e16 = add(add(mul(x, x), mul(i2, x)), i3);
+    RCP<const Basic> e17 = sqrt(x);
+    RCP<const Basic> e18 = pow(sqrt(x), i2);
+    RCP<const Basic> e19 = sqrt(y);
+    RCP<const Basic> e20 = add(add(mul(x, x), mul(i2, mul(x, e19))), i3);
+    RCP<const Basic> e21
+        = add(add(mul(mul(x, x), mul(y, y)), mul(x, pow(y, i2))), exp(i3));
+    RCP<const Basic> e22
+        = add(add(mul(mul(x, x), mul(y, y)), mul(x, pow(y, i2))), exp(x));
+    RCP<const Basic> e23 = sin(x);
+    RCP<const Basic> b1 = interval(i1, i2);
+    RCP<const Basic> rel1 = Eq(x, i1);
+
+    REQUIRE(is_polynomial(*x));
+    REQUIRE(is_polynomial(*i1));
+    REQUIRE(is_polynomial(*rat1));
+    REQUIRE(is_polynomial(*pi));
+    REQUIRE(is_polynomial(*e1));
+    REQUIRE(is_polynomial(*e2));
+    REQUIRE(is_polynomial(*e3));
+    REQUIRE(is_polynomial(*e4));
+    REQUIRE(is_polynomial(*e5));
+    REQUIRE(is_polynomial(*e6));
+    REQUIRE(!is_polynomial(*e7));
+    REQUIRE(is_polynomial(*e8));
+    REQUIRE(!is_polynomial(*e9));
+    REQUIRE(!is_polynomial(*e10));
+    REQUIRE(!is_polynomial(*e11));
+    REQUIRE(!is_polynomial(*b1));
+    REQUIRE(is_polynomial(*rat1, {x, y, z}));
+    REQUIRE(is_polynomial(*pi, {x, y, z}));
+    REQUIRE(is_polynomial(*x, {x}));
+    REQUIRE(is_polynomial(*x, {y}));
+    REQUIRE(is_polynomial(*e8, {x}));
+    REQUIRE(!is_polynomial(*e12, {x}));
+    REQUIRE(is_polynomial(*e12, {y}));
+    REQUIRE(!is_polynomial(*e10, {x}));
+    REQUIRE(is_polynomial(*e10, {y}));
+    REQUIRE(!is_polynomial(*e7, {x}));
+    REQUIRE(!is_polynomial(*e7, {y}));
+    REQUIRE(!is_polynomial(*e13, {x}));
+    REQUIRE(!is_polynomial(*e14, {x}));
+    REQUIRE(!is_polynomial(*e15, {x}));
+    REQUIRE(is_polynomial(*e16, {x}));
+    REQUIRE(is_polynomial(*e16, {y}));
+    REQUIRE(is_polynomial(*e16));
+    REQUIRE(!is_polynomial(*e17, {x}));
+    REQUIRE(is_polynomial(*e17, {y}));
+    REQUIRE(!is_polynomial(*e17));
+    REQUIRE(!is_polynomial(*e18, {x}));
+    REQUIRE(is_polynomial(*e20, {x}));
+    REQUIRE(!is_polynomial(*e20, {y}));
+    REQUIRE(is_polynomial(*e21));
+    REQUIRE(!is_polynomial(*e22));
+    REQUIRE(is_polynomial(*e21, {x, y}));
+    REQUIRE(!is_polynomial(*e22, {x, y}));
+    REQUIRE(!is_polynomial(*e23));
+    REQUIRE(is_polynomial(*e23, {y}));
+    REQUIRE(!is_polynomial(*rel1));
+}
