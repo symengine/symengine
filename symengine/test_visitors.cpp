@@ -478,4 +478,56 @@ bool is_polynomial(const Basic &b, const set_basic &variables)
     PolynomialVisitor visitor(variables);
     return visitor.apply(b);
 }
+
+void RationalVisitor::bvisit(const Number &x)
+{
+    is_rational_ = tribool::trifalse;
+    if (is_a_Complex(x) or is_a<Infty>(x) or is_a<NaN>(x)) {
+        neither_ = true;
+    }
+}
+
+void RationalVisitor::bvisit(const Constant &x)
+{
+    if (eq(x, *pi) or eq(x, *E) or eq(x, *GoldenRatio)) {
+        // It is currently (2021) not known whether Catalan's constant
+        // or Euler's constant are rational or irrational
+        is_rational_ = tribool::trifalse;
+    } else {
+        is_rational_ = tribool::indeterminate;
+    }
+}
+
+void RationalVisitor::bvisit(const Add &x)
+{
+    tribool b = tribool::tritrue;
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        b = andwk_tribool(b, is_rational_);
+        if (is_indeterminate(b))
+            return;
+    }
+}
+
+tribool RationalVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    tribool result = is_rational_;
+    if (not rational_ and not neither_) {
+        result = not_tribool(result);
+    }
+    return result;
+}
+
+tribool is_rational(const Basic &b)
+{
+    RationalVisitor visitor(true);
+    return visitor.apply(b);
+}
+
+tribool is_irrational(const Basic &b)
+{
+    RationalVisitor visitor(false);
+    return visitor.apply(b);
+}
 } // namespace SymEngine

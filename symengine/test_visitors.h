@@ -414,6 +414,55 @@ public:
  * are not variables will be considered to be constants.
  */
 bool is_polynomial(const Basic &b, const set_basic &variables = {});
+
+class RationalVisitor : public BaseVisitor<RationalVisitor>
+{
+private:
+    bool rational_; // are we testing for rational or irrational?
+    tribool is_rational_;
+    bool neither_ = false; // Neither rational or irrational (i.e. not real)
+
+public:
+    RationalVisitor(bool rational) : rational_{rational}
+    {
+    }
+    void bvisit(const Basic &x)
+    {
+        is_rational_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x)
+    {
+        is_rational_ = tribool::indeterminate;
+    };
+    void bvisit(const Integer &x)
+    {
+        is_rational_ = tribool::tritrue;
+    };
+    void bvisit(const Rational &x)
+    {
+        is_rational_ = tribool::tritrue;
+    };
+    void bvisit(const Number &x);
+    void bvisit(const Set &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+
+    tribool apply(const Basic &b);
+};
 } // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H
