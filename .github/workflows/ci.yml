@@ -170,44 +170,82 @@ jobs:
             CC: gcc
             OS: ubuntu-16.04
     
+          - MSYSTEM: MINGW64
+            ARCH: x86_64
+            OS: windows-2019
+            BUILD_TYPE: Release
+
+          - MSYSTEM: MINGW64
+            ARCH: x86_64
+            OS: windows-2019
+            BUILD_TYPE: Debug
+
+          - MSYSTEM: MINGW32
+            ARCH: i686
+            OS: windows-2019
+            BUILD_TYPE: Release
+            WITH_MPFR: yes
+
+          - MSYSTEM: MINGW32
+            ARCH: i686
+            OS: windows-2019
+            BUILD_TYPE: Debug
+            WITH_MPFR: yes
+            WITH_MPC: yes
+    env:
+      USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
+      WITH_MPFR: ${{ matrix.WITH_MPFR }}
+      BUILD_BENCHMARKS: ${{ matrix.BUILD_BENCHMARKS }}
+      WITH_LLVM: ${{ matrix.WITH_LLVM }}
+      WITH_BENCHMARKS_NONIUS: ${{ matrix.WITH_BENCHMARKS_NONIUS }}
+      WITH_SYMENGINE_RCP: ${{ matrix.WITH_SYMENGINE_RCP }}
+      TEST_IN_TREE: ${{ matrix.TEST_IN_TREE }}
+      WITH_SYMENGINE_THREAD_SAFE: ${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}
+      WITH_PRIMESIEVE: ${{ matrix.WITH_PRIMESIEVE }}
+      INTEGER_CLASS: ${{ matrix.INTEGER_CLASS }}
+      WITH_ARB: ${{ matrix.WITH_ARB }}
+      WITH_PIRANHA: ${{ matrix.WITH_PIRANHA }}
+      WITH_GCC_6: ${{ matrix.WITH_GCC_6 }}
+      CONDA_ENV_FILE: ${{ matrix.CONDA_ENV_FILE }}
+      WITH_BFD: ${{ matrix.WITH_BFD }}
+      WITH_FLINT: ${{ matrix.WITH_FLINT }}
+      EXTRA_APT_REPOSITORY: ${{ matrix.EXTRA_APT_REPOSITORY }}
+      EXTRA_APT_PACKAGES: ${{ matrix.EXTRA_APT_PACKAGES }}
+      TEST_CLANG_FORMAT: ${{ matrix.TEST_CLANG_FORMAT }}
+      WITH_ECM: ${{ matrix.WITH_ECM }}
+      WITH_LATEST_GCC: ${{ matrix.WITH_LATEST_GCC }}
+      OS: ${{ matrix.OS }}
+      WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
+      CC: ${{ matrix.CC }}
+      WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
+      BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
+      WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
+      WITH_MPC: ${{ matrix.WITH_MPC }}
+      MAKEFLAGS: ${{ matrix.MAKEFLAGS }}
+      BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
+
     steps:
+    - name: Setup msys2
+      uses: msys2/setup-msys2@v2
+      if: matrix.MSYSTEM != ''
+      with:
+        msystem: ${{ matrix.MSYSTEM }}
+        update: true
+        install: mingw-w64-${{ matrix.ARCH }}-gcc mingw-w64-${{ matrix.ARCH }}-cmake python make git
+
     - name: Checkout code
       uses: actions/checkout@v2
       with:
         fetch-depth: 2
 
     - name: Build and test symengine
-      shell: bash
+      shell: msys2 {0}
+      if: matrix.MSYSTEM != ''
       run: |
         source bin/test_symengine_unix.sh
-      env:
-        USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
-        WITH_MPFR: ${{ matrix.WITH_MPFR }}
-        BUILD_BENCHMARKS: ${{ matrix.BUILD_BENCHMARKS }}
-        WITH_LLVM: ${{ matrix.WITH_LLVM }}
-        WITH_BENCHMARKS_NONIUS: ${{ matrix.WITH_BENCHMARKS_NONIUS }}
-        WITH_SYMENGINE_RCP: ${{ matrix.WITH_SYMENGINE_RCP }}
-        TEST_IN_TREE: ${{ matrix.TEST_IN_TREE }}
-        WITH_SYMENGINE_THREAD_SAFE: ${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}
-        WITH_PRIMESIEVE: ${{ matrix.WITH_PRIMESIEVE }}
-        INTEGER_CLASS: ${{ matrix.INTEGER_CLASS }}
-        WITH_ARB: ${{ matrix.WITH_ARB }}
-        WITH_PIRANHA: ${{ matrix.WITH_PIRANHA }}
-        WITH_GCC_6: ${{ matrix.WITH_GCC_6 }}
-        CONDA_ENV_FILE: ${{ matrix.CONDA_ENV_FILE }}
-        WITH_BFD: ${{ matrix.WITH_BFD }}
-        WITH_FLINT: ${{ matrix.WITH_FLINT }}
-        EXTRA_APT_REPOSITORY: ${{ matrix.EXTRA_APT_REPOSITORY }}
-        EXTRA_APT_PACKAGES: ${{ matrix.EXTRA_APT_PACKAGES }}
-        TEST_CLANG_FORMAT: ${{ matrix.TEST_CLANG_FORMAT }}
-        WITH_ECM: ${{ matrix.WITH_ECM }}
-        WITH_LATEST_GCC: ${{ matrix.WITH_LATEST_GCC }}
-        OS: ${{ matrix.OS }}
-        WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
-        CC: ${{ matrix.CC }}
-        WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
-        BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
-        WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
-        WITH_MPC: ${{ matrix.WITH_MPC }}
-        MAKEFLAGS: ${{ matrix.MAKEFLAGS }}
-        BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
+
+    - name: Build and test symengine
+      shell: bash
+      if: matrix.MSYSTEM == ''
+      run: |
+        source bin/test_symengine_unix.sh
