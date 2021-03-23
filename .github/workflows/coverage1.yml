@@ -1,0 +1,27 @@
+name: Code coverage 1
+on: [push, pull_request]
+
+jobs:
+  coverage1:
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+    - name: Build and test symengine
+      shell: bash
+      run: |
+        source bin/test_symengine_unix.sh
+      env:
+        BUILD_TYPE: Debug
+        WITH_BFD: yes
+        WITH_LATEST_GCC: yes
+        WITH_COVERAGE: yes
+        WITH_MPC: yes
+        WITH_LLVM: 8.0
+        USE_GLIBCXX_DEBUG: yes
+        OS: ubuntu-16.04
+        CC: gcc
+        EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
+        EXTRA_APT_PACKAGES: "clang-8 llvm-8-dev binutils-dev g++-8"

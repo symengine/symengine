@@ -4,6 +4,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ${{ matrix.OS }}
+    name: "${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }} (${{ toJSON(matrix) }})"
     strategy:
       fail-fast: false
       matrix:
@@ -81,18 +82,6 @@ jobs:
             OS: ubuntu-16.04
             CC: gcc
 
-          - BUILD_TYPE: Debug
-            WITH_BFD: yes
-            WITH_LATEST_GCC: yes
-            WITH_COVERAGE: yes
-            WITH_MPC: yes
-            WITH_LLVM: 8.0
-            USE_GLIBCXX_DEBUG: yes
-            OS: ubuntu-16.04
-            CC: gcc
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
-            EXTRA_APT_PACKAGES: "clang-8 llvm-8-dev binutils-dev g++-8"
-
           - TEST_CLANG_FORMAT: yes
             OS: ubuntu-16.04
             CC: gcc
@@ -109,18 +98,6 @@ jobs:
             EXTRA_APT_PACKAGES: "binutils-dev g++-4.8"
             # This is not used, but was in travis config
             # WITH_GCC_6: yes
-
-          - BUILD_TYPE: Debug
-            WITH_BFD: yes
-            WITH_COVERAGE: yes
-            TEST_IN_TREE: yes
-            WITH_FLINT: yes
-            WITH_FLINT_DEV: yes
-            WITH_MPC: yes
-            BUILD_BENCHMARKS: no
-            MAKEFLAGS: -j2
-            CC: gcc
-            OS: ubuntu-16.04
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
