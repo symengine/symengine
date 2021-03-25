@@ -173,13 +173,11 @@ public:
     {
         return ptr_ == p2.ptr_;
     }
-#if !defined(__clang__) || __cplusplus <= 201703L
     template <class T2>
-    bool operator!=(const RCP<T2> &p2)
+    bool operator!=(const RCP<T2> &p2) const
     {
         return ptr_ != p2.ptr_;
     }
-#endif
     // Copy assignment
     RCP<T> &operator=(const RCP<T> &r_ptr)
     {
