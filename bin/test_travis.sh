@@ -145,6 +145,7 @@ if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 echo "=== Generating build scripts for SymEngine using cmake"
+echo "CMAKE_GENERATOR = ${CMAKE_GENERATOR}"
 echo "Current directory:"
 export BUILD_DIR=`pwd`
 pwd
@@ -183,12 +184,16 @@ fi
 echo "=== Testing the installed SymEngine library simulating use by 3rd party lib"
 cd $SOURCE_DIR/benchmarks
 
-compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+SymEngine_DIR="${our_install_dir}/lib/cmake/symengine"
+if [[ "${MSYSTEM}" != "" ]]; then
+  SymEngine_DIR="${our_install_dir}/CMake"
+fi
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
 
-${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+${CXX} -std=c++0x $compile_flags expand1.cpp -o expand1 $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-./a.out
+./expand1
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
