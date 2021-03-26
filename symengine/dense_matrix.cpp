@@ -1251,7 +1251,7 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
     SYMENGINE_ASSERT(x.col_ == b.col_);
 
     unsigned i, j, k, p, col = A.col_, bcol = b.col_;
-    RCP<const Basic> d, tmp;
+    RCP<const Basic> d;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
     DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
