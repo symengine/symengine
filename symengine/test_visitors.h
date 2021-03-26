@@ -185,16 +185,15 @@ class RealVisitor : public BaseVisitor<RealVisitor>
 {
 private:
     tribool is_real_;
+    const Assumptions *assumptions_;
 
 public:
+    RealVisitor(const Assumptions *assumptions) : assumptions_(assumptions){};
     void bvisit(const Basic &x)
     {
         is_real_ = tribool::indeterminate;
     };
-    void bvisit(const Symbol &x)
-    {
-        is_real_ = tribool::indeterminate;
-    };
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Set &x)
     {

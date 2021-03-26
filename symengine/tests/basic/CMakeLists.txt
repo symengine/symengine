@@ -110,3 +110,7 @@ add_test(test_count_ops ${PROJECT_BINARY_DIR}/test_count_ops)
 add_executable(test_test_visitors test_test_visitors.cpp)
 target_link_libraries(test_test_visitors symengine catch)
 add_test(test_test_visitors ${PROJECT_BINARY_DIR}/test_test_visitors)
+
+add_executable(test_assumptions test_assumptions.cpp)
+target_link_libraries(test_assumptions symengine catch)
+add_test(test_assumptions ${PROJECT_BINARY_DIR}/test_assumptions)
