@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - xeus-cling
-  - llvmdev=5
+  - llvmdev
   - gmp
   - mpfr
   - mpc
@@ -12,4 +12,3 @@ dependencies:
   - libflint
   - jupytext
   - papermill
-  - symengine
