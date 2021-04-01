@@ -50,6 +50,7 @@ set(SRC
     mul.cpp
     nan.cpp
     ntheory.cpp
+    ntheory_funcs.cpp
     number.cpp
     numer_denom.cpp
     parser/parser_old.cpp
@@ -151,6 +152,7 @@ set(HEADERS
     mul.h
     nan.h
     ntheory.h
+    ntheory_funcs.h
     number.h
     parser.h
     parser/parser.h

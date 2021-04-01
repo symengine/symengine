@@ -688,6 +688,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l24 = reals();
     RCP<const Basic> l25 = integers();
     RCP<const Basic> l26 = rationals();
+    RCP<const Basic> l27 = primepi(symbol("x"));
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -722,4 +723,5 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l24) == "\\mathbf{R}");
     CHECK(latex(*l25) == "\\mathbf{Z}");
     CHECK(latex(*l26) == "\\mathbf{Q}");
+    CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
 }
