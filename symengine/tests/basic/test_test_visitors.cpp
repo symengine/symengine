@@ -17,6 +17,10 @@ using SymEngine::pi;
 using SymEngine::boolTrue;
 using SymEngine::Inf;
 using SymEngine::Nan;
+using SymEngine::reals;
+using SymEngine::rationals;
+using SymEngine::integers;
+using SymEngine::Assumptions;
 
 TEST_CASE("Test is zero", "[is_zero]")
 {
@@ -191,6 +195,7 @@ TEST_CASE("Test is nonnegative", "[is_nonnegative]")
 TEST_CASE("Test is_real", "[is_real]")
 {
     RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     RCP<const Number> i1 = integer(0);
     RCP<const Number> i2 = integer(3);
     RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
@@ -203,6 +208,7 @@ TEST_CASE("Test is_real", "[is_real]")
     RCP<const Basic> e1 = add(x, x);
     RCP<const Basic> e2 = add(x, Inf);
     RCP<const Basic> e3 = add(x, c1);
+    RCP<const Basic> e4 = add(x, y);
 
     REQUIRE(is_indeterminate(is_real(*x)));
     REQUIRE(is_true(is_real(*i1)));
@@ -219,6 +225,16 @@ TEST_CASE("Test is_real", "[is_real]")
     REQUIRE(is_indeterminate(is_real(*e3)));
     REQUIRE(is_false(is_real(*Inf)));
     REQUIRE(is_false(is_real(*Nan)));
+
+    const auto a1 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(is_real(*x, &a1)));
+
+    const auto a2 = Assumptions({integers()->contains(x)});
+    REQUIRE(is_true(is_real(*x, &a2)));
+
+    const auto a3
+        = Assumptions({rationals()->contains(x), rationals()->contains(y)});
+    REQUIRE(is_true(is_real(*e4, &a3)));
 }
 
 TEST_CASE("Test is_polynomial", "[is_polynomial]")
