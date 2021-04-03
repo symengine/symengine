@@ -8,10 +8,13 @@
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
+#include <symengine/assumptions.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::integer;
+using SymEngine::reals;
+using SymEngine::Assumptions;
 using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
@@ -2167,15 +2170,19 @@ TEST_CASE("is_diagonal(): DenseMatrix", "[matrices]")
 TEST_CASE("is_real(): DenseMatrix", "[matrices]")
 {
     auto c1 = complex_double(std::complex<double>(8, 1));
+    auto x = symbol("x");
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    DenseMatrix B
-        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), symbol("x")});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), x});
     DenseMatrix C = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), c1});
 
     REQUIRE(is_true(A.is_real()));
     REQUIRE(is_indeterminate(B.is_real()));
     REQUIRE(is_false(C.is_real()));
+
+    const auto a1 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(B.is_real(&a1)));
+    REQUIRE(is_false(C.is_real(&a1)));
 }
 
 TEST_CASE("is_symmetric(): DenseMatrix", "[matrices]")

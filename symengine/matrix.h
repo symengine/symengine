@@ -133,7 +133,7 @@ public:
     virtual bool is_upper() const;
     virtual tribool is_zero() const;
     virtual tribool is_diagonal() const;
-    virtual tribool is_real() const;
+    virtual tribool is_real(const Assumptions *assumptions = nullptr) const;
     virtual tribool is_symmetric() const;
     virtual tribool is_hermitian() const;
     virtual tribool is_weakly_diagonally_dominant() const;
