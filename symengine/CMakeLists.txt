@@ -8,7 +8,7 @@ endif()
 
 if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.tab.cc
-                      COMMAND ${BISON_EXECUTABLE} -d parser.yy
+                      COMMAND ${BISON_EXECUTABLE} -Wall -d parser.yy
                       DEPENDS parser/parser.yy
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )

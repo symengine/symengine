@@ -288,20 +288,15 @@ Parser::parse_implicit_mul(const std::string &expr)
     char *endptr = 0;
     std::strtod(startptr, &endptr);
 
-    RCP<const Basic> num = one, sym;
-
     // Numerical part of the result of e.g. "100x";
     size_t length = endptr - startptr;
     std::string lexpr = std::string(startptr, length);
-    num = parse_numeric(lexpr);
+    RCP<const Basic> num = parse_numeric(lexpr);
 
     // get the rest of the string
     lexpr = std::string(startptr + length, expr.length() - length);
-    if (lexpr.length() == 0) {
-        sym = one;
-    } else {
-        sym = parse_identifier(lexpr);
-    }
+    SYMENGINE_ASSERT(lexpr.length() > 0);
+    RCP<const Basic> sym = parse_identifier(lexpr);
     return std::make_tuple(num, sym);
 }
 
