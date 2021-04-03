@@ -21,6 +21,13 @@ if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
 elif [[ "$CONDA_ENV_FILE" == *"matchpycpp"* ]]; then
   source bin/install_travis.sh
   source bin/test_matchpycpp_gen_tests.sh
+elif [[ "$MSYSTEM" != "" ]]; then
+  export SOURCE_DIR=`pwd`
+  export our_install_dir="$HOME/our_usr"
+  export CMAKE_GENERATOR="Unix Makefiles"
+  export CC=gcc
+  export CXX=g++
+  source bin/test_travis.sh
 else
   source bin/install_travis.sh
   source bin/test_travis.sh

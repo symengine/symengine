@@ -371,17 +371,17 @@ void LatexPrinter::bvisit(const EmptySet &x)
 
 void LatexPrinter::bvisit(const Reals &x)
 {
-    str_ = "\\mathbf{R}";
+    str_ = "\\mathbb{R}";
 }
 
 void LatexPrinter::bvisit(const Rationals &x)
 {
-    str_ = "\\mathbf{Q}";
+    str_ = "\\mathbb{Q}";
 }
 
 void LatexPrinter::bvisit(const Integers &x)
 {
-    str_ = "\\mathbf{Z}";
+    str_ = "\\mathbb{Z}";
 }
 
 void LatexPrinter::bvisit(const FiniteSet &x)

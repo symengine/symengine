@@ -720,8 +720,8 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l21) == "\\xi_1 + \\alpha + xi2");
     CHECK(latex(*l22) == "2 + 3 x^{10}");
     CHECK(latex(*l23) == "e^{x - y}");
-    CHECK(latex(*l24) == "\\mathbf{R}");
-    CHECK(latex(*l25) == "\\mathbf{Z}");
-    CHECK(latex(*l26) == "\\mathbf{Q}");
+    CHECK(latex(*l24) == "\\mathbb{R}");
+    CHECK(latex(*l25) == "\\mathbb{Z}");
+    CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
 }
