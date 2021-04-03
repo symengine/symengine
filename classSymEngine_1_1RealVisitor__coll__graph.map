@@ -1,5 +1,8 @@
 <map id="SymEngine::RealVisitor" name="SymEngine::RealVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="7,169,167,196"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,80,169,121"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="20,5,155,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="103,332,263,359"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,228,169,269"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="20,102,155,129"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Assumptions.html" title=" " alt="" coords="194,235,367,262"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="179,95,382,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="209,5,352,32"/>
 </map>
