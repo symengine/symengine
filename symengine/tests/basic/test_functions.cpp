@@ -4253,6 +4253,9 @@ TEST_CASE("test_floor", "[Floor]")
     r = floor(pi);
     CHECK(eq(*r, *integer(3)));
 
+    r = floor(add(pi, integer(4)));
+    CHECK(eq(*r, *integer(7)));
+
     r = floor(E);
     CHECK(eq(*r, *integer(2)));
 
