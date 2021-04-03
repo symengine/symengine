@@ -709,9 +709,9 @@ $(function() {
 <div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*arg)) {</div>
 <div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;        RCP&lt;const Number&gt; s = down_cast&lt;const Add &amp;&gt;(*arg).get_coef();</div>
 <div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> d = down_cast&lt;const Add &amp;&gt;(*arg).get_dict();</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s)) {</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;                s, make_rcp&lt;const Floor&gt;(<a class="code" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(zero, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d))));</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s)</div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;            and not down_cast&lt;const Integer &amp;&gt;(*s).is_zero()) {</div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(s, <a class="code" href="namespaceSymEngine.html#a8d243e3a9146c0b0641bced63fc79254">floor</a>(<a class="code" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(zero, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d))));</div>
 <div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;        }</div>
 <div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    }</div>
 <div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Floor&gt;(arg);</div>
