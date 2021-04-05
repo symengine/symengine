@@ -181,6 +181,9 @@ expr:
         '-' expr %prec UMINUS
         { $$ = neg($2); }
 |
+        '+' expr %prec UMINUS
+        { $$ = $2; }
+|
         '~' expr %prec NOT
         { $$ = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>($2))); }
 |
