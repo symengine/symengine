@@ -61,7 +61,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 # define YYCOPY(Dst, Src, Count)              \
     do                                        \
       {                                       \
-        YYSIZE_T yyi;                         \
+        YYPTRDIFF_T yyi;                      \
         for (yyi = 0; yyi < (Count); yyi++)   \
           (Dst)[yyi] = (Src)[yyi];            \
       }                                       \
