@@ -61,7 +61,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 # define YYCOPY(Dst, Src, Count)              \
     do                                        \
       {                                       \
-        YYSIZE_T yyi;                         \
+        YYPTRDIFF_T yyi;                      \
         for (yyi = 0; yyi < (Count); yyi++)   \
           (Dst)[yyi] = (Src)[yyi];            \
       }                                       \
@@ -87,6 +87,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left '-' '+'
 %left '*' '/'
 %right UMINUS
+%right UPLUS
 %right POW
 %right NOT
 %nonassoc '('
@@ -180,6 +181,9 @@ expr:
 |
         '-' expr %prec UMINUS
         { $$ = neg($2); }
+|
+        '+' expr %prec UPLUS
+        { $$ = $2; }
 |
         '~' expr %prec NOT
         { $$ = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>($2))); }
