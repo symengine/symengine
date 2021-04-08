@@ -69,8 +69,9 @@ extern int yydebug;
     LE = 262,                      /* LE  */
     GE = 263,                      /* GE  */
     UMINUS = 264,                  /* UMINUS  */
-    POW = 265,                     /* POW  */
-    NOT = 266                      /* NOT  */
+    UPLUS = 265,                   /* UPLUS  */
+    POW = 266,                     /* POW  */
+    NOT = 267                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

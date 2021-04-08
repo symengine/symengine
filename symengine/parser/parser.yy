@@ -87,6 +87,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left '-' '+'
 %left '*' '/'
 %right UMINUS
+%right UPLUS
 %right POW
 %right NOT
 %nonassoc '('
@@ -181,7 +182,7 @@ expr:
         '-' expr %prec UMINUS
         { $$ = neg($2); }
 |
-        '+' expr %prec UMINUS
+        '+' expr %prec UPLUS
         { $$ = $2; }
 |
         '~' expr %prec NOT
