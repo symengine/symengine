@@ -746,6 +746,11 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - 0.2648) < 1e-12);
+    // note: printing an expression containing a RealDouble & reparsing
+    // does not always compare equal, as the stored double has ~17 significant
+    // digits, but only 15 digits are printed.
+    // first print & parse res again to get only 15 significant figures:
+    res = parse(res->__str__());
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     s = "sqrt(2.0)+5";
@@ -753,6 +758,8 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(is_a<RealDouble>(*res));
     d = down_cast<const RealDouble &>(*res).as_double();
     REQUIRE(std::abs(d - (std::sqrt(2) + 5)) < 1e-12);
+    // as above: first print to get doubles with 15 significant figures
+    res = parse(res->__str__());
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     // Test that https://github.com/symengine/symengine/issues/1413 is fixed
