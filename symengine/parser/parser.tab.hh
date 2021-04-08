@@ -66,12 +66,13 @@ extern int yydebug;
     NUMERIC = 259,                 /* NUMERIC  */
     IMPLICIT_MUL = 260,            /* IMPLICIT_MUL  */
     EQ = 261,                      /* EQ  */
-    LE = 262,                      /* LE  */
-    GE = 263,                      /* GE  */
-    UMINUS = 264,                  /* UMINUS  */
-    UPLUS = 265,                   /* UPLUS  */
-    POW = 266,                     /* POW  */
-    NOT = 267                      /* NOT  */
+    NE = 262,                      /* NE  */
+    LE = 263,                      /* LE  */
+    GE = 264,                      /* GE  */
+    UMINUS = 265,                  /* UMINUS  */
+    UPLUS = 266,                   /* UPLUS  */
+    POW = 267,                     /* POW  */
+    NOT = 268                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
