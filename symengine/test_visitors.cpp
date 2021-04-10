@@ -115,6 +115,15 @@ tribool is_nonnegative(const Basic &b)
     return visitor.apply(b);
 }
 
+void RealVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_real_ = assumptions_->is_real(x.rcp_from_this());
+    } else {
+        is_real_ = tribool::indeterminate;
+    }
+}
+
 void RealVisitor::bvisit(const Number &x)
 {
     if (is_a_Complex(x) or is_a<Infty>(x) or is_a<NaN>(x)) {
@@ -151,9 +160,9 @@ tribool RealVisitor::apply(const Basic &b)
     return is_real_;
 }
 
-tribool is_real(const Basic &b)
+tribool is_real(const Basic &b, const Assumptions *assumptions)
 {
-    RealVisitor visitor;
+    RealVisitor visitor(assumptions);
     return visitor.apply(b);
 }
 

@@ -609,9 +609,9 @@ RCP<const Basic> floor(const RCP<const Basic> &arg)
     if (is_a<Add>(*arg)) {
         RCP<const Number> s = down_cast<const Add &>(*arg).get_coef();
         umap_basic_num d = down_cast<const Add &>(*arg).get_dict();
-        if (is_a<Integer>(*s)) {
-            return add(
-                s, make_rcp<const Floor>(Add::from_dict(zero, std::move(d))));
+        if (is_a<Integer>(*s)
+            and not down_cast<const Integer &>(*s).is_zero()) {
+            return add(s, floor(Add::from_dict(zero, std::move(d))));
         }
     }
     return make_rcp<const Floor>(arg);

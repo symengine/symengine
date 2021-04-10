@@ -7,54 +7,52 @@
 #include <symengine/pow.h>
 #include <symengine/polys/basic_conversions.h>
 
-using SymEngine::solve;
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::integer;
-using SymEngine::rational;
 using SymEngine::add;
-using SymEngine::symbol;
+using SymEngine::Basic;
+using SymEngine::boolFalse;
+using SymEngine::boolTrue;
+using SymEngine::ConditionSet;
+using SymEngine::DenseMatrix;
+using SymEngine::down_cast;
+using SymEngine::dummy;
 using SymEngine::emptyset;
+using SymEngine::Eq;
+using SymEngine::Expression;
+using SymEngine::finiteset;
+using SymEngine::FiniteSet;
+using SymEngine::Ge;
+using SymEngine::I;
+using SymEngine::imageset;
+using SymEngine::Inf;
+using SymEngine::integer;
 using SymEngine::interval;
 using SymEngine::Interval;
-using SymEngine::emptyset;
-using SymEngine::finiteset;
-using SymEngine::Set;
-using SymEngine::Symbol;
-using SymEngine::Inf;
-using SymEngine::NegInf;
-using SymEngine::I;
-using SymEngine::SymEngineException;
-using SymEngine::neg;
-using SymEngine::one;
-using SymEngine::zero;
-using SymEngine::pow;
-using SymEngine::FiniteSet;
-using SymEngine::Eq;
-using SymEngine::Ne;
-using SymEngine::Ge;
-using SymEngine::boolTrue;
-using SymEngine::boolFalse;
-using SymEngine::down_cast;
-using SymEngine::ConditionSet;
 using SymEngine::is_a;
-using SymEngine::logical_and;
-using SymEngine::Union;
-using SymEngine::mul;
-using SymEngine::UIntPoly;
-using SymEngine::URatPoly;
-using SymEngine::rational_class;
-using SymEngine::solve_poly_quartic;
-using SymEngine::DenseMatrix;
 using SymEngine::linear_eqns_to_matrix;
 using SymEngine::linsolve;
-using SymEngine::vec_basic;
+using SymEngine::logical_and;
+using SymEngine::mul;
+using SymEngine::Ne;
+using SymEngine::neg;
+using SymEngine::NegInf;
+using SymEngine::one;
 using SymEngine::pi;
-using SymEngine::dummy;
+using SymEngine::pow;
+using SymEngine::rational;
+using SymEngine::rational_class;
+using SymEngine::RCP;
+using SymEngine::Set;
 using SymEngine::set_union;
-using SymEngine::imageset;
-using SymEngine::add;
-using SymEngine::Expression;
+using SymEngine::solve;
+using SymEngine::solve_poly_quartic;
+using SymEngine::symbol;
+using SymEngine::Symbol;
+using SymEngine::SymEngineException;
+using SymEngine::UIntPoly;
+using SymEngine::Union;
+using SymEngine::URatPoly;
+using SymEngine::vec_basic;
+using SymEngine::zero;
 #ifdef HAVE_SYMENGINE_FLINT
 using SymEngine::UIntPolyFlint;
 using SymEngine::URatPolyFlint;
@@ -473,6 +471,29 @@ TEST_CASE("linsolve", "[Solve]")
         linsolve({Eq(y, mul({integer(4), x, x})), add({x, y, integer(-10)})},
                  {x, y}),
         SymEngineException &);
+
+    // issue 1745
+    {
+        auto x = SymEngine::symbol("x"), y = SymEngine::symbol("y");
+        auto a = SymEngine::symbol("a"), c = SymEngine::symbol("c");
+
+        auto eqns = {add({mul(a, y), c}), add({mul(a, x), mul(a, y)})};
+        auto s1 = div(c, a);
+        auto s2 = neg(s1);
+
+        auto solns1 = linsolve(eqns, {y, x}); ///< o.k. in issue 1745
+        auto solns2
+            = linsolve(eqns, {x, y}); ///< results in a nan in issue 1745
+
+        REQUIRE(solns1.size() == 2);
+        REQUIRE(solns2.size() == 2);
+
+        REQUIRE(eq(*solns1[0], *s2));
+        REQUIRE(eq(*solns1[1], *s1));
+
+        REQUIRE(eq(*solns2[0], *s1));
+        REQUIRE(eq(*solns2[1], *s2));
+    }
 }
 
 TEST_CASE("linear_eqns_to_matrix", "[Solve]")

@@ -284,7 +284,7 @@ public:
                                                          DenseMatrix &x);
     friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                                                  const DenseMatrix &b,
-                                                 DenseMatrix &x);
+                                                 DenseMatrix &x, bool pivot);
 
     // Matrix Decomposition
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
@@ -526,7 +526,8 @@ void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x);
 
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                      const DenseMatrix &b, DenseMatrix &x);
+                                      const DenseMatrix &b, DenseMatrix &x,
+                                      bool pivot = true);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
