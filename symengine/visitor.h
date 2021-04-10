@@ -23,6 +23,7 @@
 #include <symengine/infinity.h>
 #include <symengine/nan.h>
 #include <symengine/matrix.h>
+#include <symengine/ntheory_funcs.h>
 #include <symengine/symengine_casts.h>
 
 namespace SymEngine

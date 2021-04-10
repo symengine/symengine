@@ -699,6 +699,10 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
     REQUIRE(eq(
         *res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
     REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "primepi(23)";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(9)));
 }
 
 TEST_CASE("Parsing: multi-arg functions", "[parser]")
