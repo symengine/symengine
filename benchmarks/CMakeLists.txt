@@ -82,8 +82,12 @@ endif()
 
 if (BUILD_BENCHMARKS_GOOGLE)
     find_package(benchmark REQUIRED)
+
     add_executable(visitor_call visitor_call.cpp)
     target_link_libraries(visitor_call symengine benchmark::benchmark)
+
+    add_executable(visitor_init visitor_init.cpp)
+    target_link_libraries(visitor_init symengine benchmark::benchmark)
 endif()
 
 add_executable(parsing parsing.cpp)

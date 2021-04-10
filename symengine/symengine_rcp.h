@@ -169,12 +169,12 @@ public:
         return ptr_ == nullptr;
     }
     template <class T2>
-    bool operator==(const RCP<T2> &p2)
+    bool operator==(const RCP<T2> &p2) const
     {
         return ptr_ == p2.ptr_;
     }
     template <class T2>
-    bool operator!=(const RCP<T2> &p2)
+    bool operator!=(const RCP<T2> &p2) const
     {
         return ptr_ != p2.ptr_;
     }

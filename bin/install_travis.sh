@@ -10,6 +10,12 @@ set -x
 # we need to do it ourselves.
 git clean -dfx
 
+if [[ "$(uname)" == "Darwin"  ]]; then
+    export TRAVIS_OS_NAME="osx"
+else
+    export TRAVIS_OS_NAME="linux"
+fi
+
 if [[ "${CC}" == "" ]]; then
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export CC=clang
@@ -19,13 +25,15 @@ if [[ "${CC}" == "" ]]; then
         export CXX=g++
     fi
 fi
-export GCOV_EXECUTABLE=gcov
 
-if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
-    # brew update
-    export CC=gcc-4.9
-    export CXX=g++-4.9
+if [[ "${CXX}" == "" ]]; then
+    if [[ "$CC" == gcc ]]; then
+        export CXX=g++
+    elif [[ "$CC" == clang ]]; then
+        export CXX=clang++
+    fi
 fi
+export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
@@ -45,6 +53,16 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CXX=g++-4.7
         export GCOV_EXECUTABLE=gcov-4.7
     fi
+fi
+
+if [[ "$WITH_LLVM" != "" && "${TRAVIS_OS_NAME}" == "linux" && "$GITHUB_ACTIONS" == "true" ]]; then
+    wget http://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
+    tar -xf binutils-2.32.tar.xz
+    pushd binutils-2.32
+    ./configure --disable-static --enable-shared --prefix=/usr
+    make
+    sudo make install
+    popd
 fi
 
 export SOURCE_DIR=`pwd`
@@ -120,6 +138,10 @@ fi
 
 if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs doxygen=1.8.13"
+fi
+
+if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
+    conda_pkgs="$conda_pkgs jupytext papermill xeus-cling"
 fi
 
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then

@@ -271,6 +271,9 @@ RCP<const Number> RealMPFR::rsubreal(const ComplexDouble &other) const
  * */
 RCP<const Number> RealMPFR::mulreal(const Integer &other) const
 {
+    if (other.is_zero()) {
+        return zero;
+    }
     mpfr_class t(get_prec());
     mpfr_mul_z(t.get_mpfr_t(), i.get_mpfr_t(),
                get_mpz_t(other.as_integer_class()), MPFR_RNDN);

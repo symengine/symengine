@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 2.8.5)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
 
 set(SYMENGINE_MAJOR_VERSION 0)
-set(SYMENGINE_MINOR_VERSION 6)
+set(SYMENGINE_MINOR_VERSION 7)
 set(SYMENGINE_PATCH_VERSION 0)
 set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
@@ -193,29 +193,6 @@ else()
     set(SYMENGINE_INTEGER_CLASS "GMP")
 endif()
 
-# GMP
-if (HAVE_SYMENGINE_GMP)
-    find_package(GMP REQUIRED)
-    include_directories(SYSTEM ${GMP_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${GMP_TARGETS})
-    set(PKGS ${PKGS} "GMP")
-
-    # Check gmpxx
-    if (NOT(MSVC) AND WITH_GMPXX)
-        try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-            CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
-            CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-            CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
-            OUTPUT_VARIABLE GMPXX_ERROR_LOG)
-        if (NOT ${GMPXX})
-            message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
-                "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
-                "Error Log : \n${GMPXX_ERROR_LOG}")
-        endif()
-    endif()
-endif()
-
-
 set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
 set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
 
@@ -391,6 +368,28 @@ if (WITH_PIRANHA)
     set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
     set(WITH_BOOST yes)
+endif()
+
+# GMP
+if (HAVE_SYMENGINE_GMP)
+    find_package(GMP REQUIRED)
+    include_directories(SYSTEM ${GMP_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${GMP_TARGETS})
+    set(PKGS ${PKGS} "GMP")
+
+    # Check gmpxx
+    if (NOT(MSVC) AND WITH_GMPXX)
+        try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+            CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
+            CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+            CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+            OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+        if (NOT ${GMPXX})
+            message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+                "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+                "Error Log : \n${GMPXX_ERROR_LOG}")
+        endif()
+    endif()
 endif()
 
 # LLVM
@@ -794,6 +793,7 @@ endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
 message("WITH_VIRTUAL_TYPEID: ${WITH_VIRTUAL_TYPEID}")
+message("LIBS: ${LIBS}")
 
 message("")
 message("--------------------------------------------------------------------------------")

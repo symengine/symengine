@@ -172,3 +172,8 @@ symengine/symengine_config_cling.h
 
 #Personal
 my/
+
+# Generated Documentation
+gen_docs/
+/docs/Doxygen/tags/
+*.ipynb

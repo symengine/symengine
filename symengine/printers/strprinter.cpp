@@ -377,6 +377,11 @@ void StrPrinter::bvisit(const Reals &x)
     str_ = "Reals";
 }
 
+void StrPrinter::bvisit(const Rationals &x)
+{
+    str_ = "Rationals";
+}
+
 void StrPrinter::bvisit(const Integers &x)
 {
     str_ = "Integers";
@@ -1082,6 +1087,7 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_MIN] = "min";
     names[SYMENGINE_SIGN] = "sign";
     names[SYMENGINE_CONJUGATE] = "conjugate";
+    names[SYMENGINE_PRIMEPI] = "primepi";
     names[SYMENGINE_UNEVALUATED_EXPR] = "";
     return names;
 }

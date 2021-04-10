@@ -2,6 +2,7 @@
 #include <symengine/parser/parser.tab.hh>
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>
+#include <symengine/ntheory_funcs.h>
 
 namespace SymEngine
 {
@@ -93,6 +94,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"ln", single_casted_log},
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
+            {"primepi", primepi},
         };
     const static std::map<const std::string,
                           const std::function<RCP<const Basic>(
@@ -224,7 +226,9 @@ RCP<const Basic> Parser::parse_identifier(const std::string &expr)
                             {"oo", Inf},
                             {"inf", Inf},
                             {"zoo", ComplexInf},
-                            {"nan", Nan}};
+                            {"nan", Nan},
+                            {"True", boolTrue},
+                            {"False", boolFalse}};
 
     auto c = parser_constants.find(expr);
     if (c != parser_constants.end()) {

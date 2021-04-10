@@ -138,6 +138,8 @@ public:
     virtual tribool is_hermitian() const;
     virtual tribool is_weakly_diagonally_dominant() const;
     virtual tribool is_strictly_diagonally_dominant() const;
+    virtual tribool is_positive_definite() const;
+    virtual tribool is_negative_definite() const;
 
     RCP<const Basic> trace() const;
     virtual unsigned rank() const;
@@ -282,7 +284,7 @@ public:
                                                          DenseMatrix &x);
     friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                                                  const DenseMatrix &b,
-                                                 DenseMatrix &x);
+                                                 DenseMatrix &x, bool pivot);
 
     // Matrix Decomposition
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
@@ -330,6 +332,9 @@ private:
     // Stores the dimension of the Matrix
     unsigned row_;
     unsigned col_;
+
+    tribool shortcut_to_posdef() const;
+    tribool is_positive_definite_GE();
 };
 
 // ----------------------------- Sparse Matrices -----------------------------//
@@ -521,7 +526,8 @@ void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x);
 
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                      const DenseMatrix &b, DenseMatrix &x);
+                                      const DenseMatrix &b, DenseMatrix &x,
+                                      bool pivot = true);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
