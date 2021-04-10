@@ -170,9 +170,6 @@ symengine/symengine_config_cling.h
 .*cache/
 .vscode/
 
-#Personal
-my/
-
 # Generated Documentation
 gen_docs/
 /docs/Doxygen/tags/

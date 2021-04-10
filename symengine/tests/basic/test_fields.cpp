@@ -68,8 +68,9 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     REQUIRE(args[0]->__str__() == "0");
 }
 
-TEST_CASE("GaloisField Addition, Subtraction, Multiplication, Comparison : Basic",
-          "[basic]")
+TEST_CASE(
+    "GaloisField Addition, Subtraction, Multiplication, Comparison : Basic",
+    "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -198,7 +199,8 @@ TEST_CASE("GaloisField Addition, Subtraction, Multiplication, Comparison : Basic
     r1 = GaloisField::from_vec(x, a, 8_z);
     REQUIRE(r1->compare(*r2) == -1);
 }
-TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic", "[basic]")
+TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic",
+          "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
     std::vector<integer_class> a, b, c, mp;
@@ -209,7 +211,8 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic", "[basi
     d1 = GaloisFieldDict::from_vec(a, 7_z);
     d2 = GaloisFieldDict::from_vec(b, 7_z);
     d5 = GaloisFieldDict::from_vec(b, 5_z);
-    CHECK_THROWS_AS(d1.gf_div(d5, outArg(d3), outArg(d4)), SymEngineException &);
+    CHECK_THROWS_AS(d1.gf_div(d5, outArg(d3), outArg(d4)),
+                    SymEngineException &);
     CHECK_THROWS_AS(d1.mul(d5, d1), std::runtime_error &);
     d5 = GaloisFieldDict::from_vec(c, 7_z);
     REQUIRE(d5 == d1.mul(d5, d1));
@@ -219,7 +222,8 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic", "[basi
     d5.gf_div(d1, outArg(d3), outArg(d4));
     REQUIRE(d3.modulo_ == 7);
     REQUIRE(d4.modulo_ == 7);
-    CHECK_THROWS_AS(d1.gf_div(d5, outArg(d3), outArg(d4)), DivisionByZeroError &);
+    CHECK_THROWS_AS(d1.gf_div(d5, outArg(d3), outArg(d4)),
+                    DivisionByZeroError &);
     d1.gf_div(d2, outArg(d3), outArg(d4));
     mp = d3.get_dict();
     REQUIRE(mp[0] == 0);
