@@ -224,7 +224,9 @@ RCP<const Basic> Parser::parse_identifier(const std::string &expr)
                             {"oo", Inf},
                             {"inf", Inf},
                             {"zoo", ComplexInf},
-                            {"nan", Nan}};
+                            {"nan", Nan},
+                            {"True", boolTrue},
+                            {"False", boolFalse}};
 
     auto c = parser_constants.find(expr);
     if (c != parser_constants.end()) {

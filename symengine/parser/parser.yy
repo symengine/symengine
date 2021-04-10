@@ -36,6 +36,7 @@ using SymEngine::Lt;
 using SymEngine::Gt;
 using SymEngine::Le;
 using SymEngine::Ge;
+using SymEngine::Ne;
 using SymEngine::Eq;
 using SymEngine::set_boolean;
 using SymEngine::Boolean;
@@ -82,6 +83,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left EQ
 %left '>'
 %left '<'
+%left NE
 %left LE
 %left GE
 %left '-' '+'
@@ -142,6 +144,9 @@ expr:
 |
         expr '>' expr
         { $$ = rcp_static_cast<const Basic>(Gt($1, $3)); }
+|
+        expr NE expr
+        { $$ = rcp_static_cast<const Basic>(Ne($1, $3)); }
 |
         expr LE expr
         { $$ = rcp_static_cast<const Basic>(Le($1, $3)); }
