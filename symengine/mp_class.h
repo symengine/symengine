@@ -960,6 +960,8 @@ int mp_jacobi(const integer_class &a, const integer_class &n);
 
 int mp_kronecker(const integer_class &a, const integer_class &n);
 
+integer_class mp_primorial(unsigned long n);
+
 class mp_randstate
 {
 public:
@@ -1086,6 +1088,13 @@ inline int mp_kronecker(const integer_class &a, const integer_class &n)
 inline int mp_jacobi(const integer_class &a, const integer_class &n)
 {
     return mpz_jacobi(get_mpz_t(a), get_mpz_t(n));
+}
+
+inline integer_class mp_primorial(unsigned long n)
+{
+    integer_class res;
+    mpz_primorial_ui(res.get_mpz_t(), n);
+    return res;
 }
 
 inline bool mp_perfect_power_p(const integer_class &i)

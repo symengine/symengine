@@ -1088,6 +1088,7 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_SIGN] = "sign";
     names[SYMENGINE_CONJUGATE] = "conjugate";
     names[SYMENGINE_PRIMEPI] = "primepi";
+    names[SYMENGINE_PRIMORIAL] = "primorial";
     names[SYMENGINE_UNEVALUATED_EXPR] = "";
     return names;
 }
