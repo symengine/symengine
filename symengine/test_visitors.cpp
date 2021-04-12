@@ -166,6 +166,175 @@ tribool is_real(const Basic &b, const Assumptions *assumptions)
     return visitor.apply(b);
 }
 
+void ComplexVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_complex_ = assumptions_->is_complex(x.rcp_from_this());
+    } else {
+        is_complex_ = tribool::indeterminate;
+    }
+}
+
+void ComplexVisitor::bvisit(const Number &x)
+{
+    if (is_a<Infty>(x) or is_a<NaN>(x)) {
+        is_complex_ = tribool::trifalse;
+    } else {
+        is_complex_ = tribool::tritrue;
+    }
+}
+
+void ComplexVisitor::bvisit(const Add &x)
+{
+    tribool b = tribool::tritrue;
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        b = andwk_tribool(b, is_complex_);
+        if (is_indeterminate(b) or is_false(b))
+            return;
+    }
+}
+
+void ComplexVisitor::bvisit(const Mul &x)
+{
+    tribool b = tribool::tritrue;
+    for (const auto &p : x.get_dict()) {
+        this->check_power(*p.first, *p.second);
+        b = andwk_tribool(b, is_complex_);
+        if (is_indeterminate(b) or is_false(b))
+            return;
+    }
+}
+
+void ComplexVisitor::check_power(const Basic &base, const Basic &exp)
+{
+    base.accept(*this);
+    if (is_true(is_complex_)) {
+        exp.accept(*this);
+    }
+}
+
+void ComplexVisitor::bvisit(const Pow &x)
+{
+    check_power(*x.get_base(), *x.get_exp());
+}
+
+void ComplexVisitor::bvisit(const Log &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const Tan &x)
+{
+    complex_arg_not_zero(x, *cos(x.get_arg()));
+}
+
+void ComplexVisitor::complex_arg_not_zero(const OneArgFunction &x,
+                                          const Basic &not_zero)
+{
+    // Check if function argument is complex and then if 'not_zero' is not zero
+    x.get_arg()->accept(*this);
+    if (is_true(is_complex_)) {
+        tribool zero = is_zero(not_zero);
+        if (not is_false(zero)) {
+            is_complex_ = not_tribool(zero);
+        }
+    }
+}
+
+void ComplexVisitor::complex_arg_not_pm(const OneArgFunction &x, bool one)
+{
+    // Check if function argument is complex but not plus/minus 1 (one=True) or
+    // i (one=False)
+    x.get_arg()->accept(*this);
+    if (not is_true(is_complex_))
+        return;
+    RCP<const Number> i1;
+    if (one)
+        i1 = integer(1);
+    else
+        i1 = Complex::from_two_nums(*integer(0), *integer(1));
+    tribool zi1 = is_zero(*sub(x.get_arg(), i1));
+    if (not is_false(zi1)) {
+        is_complex_ = not_tribool(zi1);
+        return;
+    }
+    RCP<const Number> mi1;
+    if (one)
+        mi1 = integer(-1);
+    else
+        mi1 = Complex::from_two_nums(*integer(0), *integer(-1));
+    tribool zmi1 = is_zero(*sub(x.get_arg(), mi1));
+    is_complex_ = not_tribool(zmi1);
+}
+
+void ComplexVisitor::bvisit(const ATan &x)
+{
+    complex_arg_not_pm(x, false);
+}
+
+void ComplexVisitor::bvisit(const ATanh &x)
+{
+    complex_arg_not_pm(x, true);
+}
+
+void ComplexVisitor::bvisit(const ACot &x)
+{
+    complex_arg_not_pm(x, false);
+}
+
+void ComplexVisitor::bvisit(const ACoth &x)
+{
+    complex_arg_not_pm(x, true);
+}
+
+void ComplexVisitor::bvisit(const Cot &x)
+{
+    complex_arg_not_zero(x, *sin(x.get_arg()));
+}
+
+void ComplexVisitor::bvisit(const Sec &x)
+{
+    complex_arg_not_zero(x, *cos(x.get_arg()));
+}
+
+void ComplexVisitor::bvisit(const ASec &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const ASech &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const Csc &x)
+{
+    complex_arg_not_zero(x, *sin(x.get_arg()));
+}
+
+void ComplexVisitor::bvisit(const ACsc &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const ACsch &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+tribool ComplexVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_complex_;
+}
+
+tribool is_complex(const Basic &b, const Assumptions *assumptions)
+{
+    ComplexVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
 void PolynomialVisitor::bvisit(const Basic &x)
 {
     auto old_allowed = variables_allowed_;
