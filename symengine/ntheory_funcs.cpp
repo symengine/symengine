@@ -1,5 +1,6 @@
 #include <symengine/ntheory.h>
 #include <symengine/ntheory_funcs.h>
+#include <symengine/prime_sieve.h>
 
 namespace SymEngine
 {

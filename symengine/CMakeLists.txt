@@ -63,6 +63,7 @@ set(SRC
     polys/uintpoly.cpp
     polys/uratpoly.cpp
     pow.cpp
+    prime_sieve.cpp
     printers/codegen.cpp
     printers/mathml.cpp
     printers/strprinter.cpp
