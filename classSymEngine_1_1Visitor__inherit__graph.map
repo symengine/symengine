@@ -1,5 +1,5 @@
 <map id="SymEngine::Visitor" name="SymEngine::Visitor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,902,140,929"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,931,140,958"/>
 <area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,5,369,47"/>
 <area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,71,369,112"/>
 <area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="191,136,382,177"/>
@@ -18,34 +18,34 @@
 <area shape="rect" id="node34" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="195,989,378,1031"/>
 <area shape="rect" id="node36" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1055,369,1096"/>
 <area shape="rect" id="node38" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="203,1120,370,1161"/>
-<area shape="rect" id="node40" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1185,369,1227"/>
-<area shape="rect" id="node41" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1251,369,1292"/>
-<area shape="rect" id="node42" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1316,369,1357"/>
-<area shape="rect" id="node43" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1381,369,1423"/>
-<area shape="rect" id="node44" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1447,369,1488"/>
-<area shape="rect" id="node45" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1512,369,1553"/>
-<area shape="rect" id="node46" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1577,369,1619"/>
-<area shape="rect" id="node47" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1643,369,1684"/>
-<area shape="rect" id="node48" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1708,369,1749"/>
-<area shape="rect" id="node49" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="206,1774,367,1801"/>
+<area shape="rect" id="node39" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1185,369,1227"/>
+<area shape="rect" id="node40" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1251,369,1292"/>
+<area shape="rect" id="node41" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1316,369,1357"/>
+<area shape="rect" id="node42" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1381,369,1423"/>
+<area shape="rect" id="node43" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1447,369,1488"/>
+<area shape="rect" id="node44" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1512,369,1553"/>
+<area shape="rect" id="node45" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1577,369,1619"/>
+<area shape="rect" id="node46" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1643,369,1684"/>
+<area shape="rect" id="node47" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1708,369,1749"/>
+<area shape="rect" id="node48" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="205,1773,369,1815"/>
+<area shape="rect" id="node49" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="206,1839,367,1866"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1ZeroVisitor.html" title=" " alt="" coords="479,13,639,39"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1PositiveVisitor.html" title=" " alt="" coords="469,78,650,105"/>
 <area shape="rect" id="node7" href="$classSymEngine_1_1PolyGeneratorVisitorPow.html" title=" " alt="" coords="469,136,649,177"/>
 <area shape="rect" id="node9" href="$classSymEngine_1_1PolynomialVisitor.html" title=" " alt="" coords="460,209,659,235"/>
 <area shape="rect" id="node11" href="$classSymEngine_1_1ExpandVisitor.html" title=" " alt="" coords="470,274,649,301"/>
 <area shape="rect" id="node13" href="$classSymEngine_1_1OptsCSEVisitor.html" title=" " alt="" coords="465,339,654,366"/>
-<area shape="rect" id="node15" href="$classSymEngine_1_1NumerDenomVisitor.html" title=" " alt="" coords="453,394,666,421"/>
-<area shape="rect" id="node17" href="$classSymEngine_1_1RealVisitor.html" title=" " alt="" coords="479,445,639,471"/>
-<area shape="rect" id="node19" href="$classSymEngine_1_1LambdaDoubleVisitor.html" title=" " alt="" coords="433,495,685,522"/>
-<area shape="rect" id="node21" href="$classSymEngine_1_1InvertComplexVisitor.html" title=" " alt="" coords="469,547,650,588"/>
-<area shape="rect" id="node23" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="459,612,659,653"/>
-<area shape="rect" id="node24" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="459,677,659,719"/>
-<area shape="rect" id="node26" href="$classSymEngine_1_1SeriesVisitor.html" title=" " alt="" coords="474,743,645,784"/>
-<area shape="rect" id="node28" href="$classSymEngine_1_1FreeSymbolsVisitor.html" title=" " alt="" coords="454,809,665,835"/>
-<area shape="rect" id="node30" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="454,860,665,901"/>
-<area shape="rect" id="node31" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="455,925,664,967"/>
-<area shape="rect" id="node33" href="$classSymEngine_1_1RealImagVisitor.html" title=" " alt="" coords="465,991,654,1018"/>
-<area shape="rect" id="node35" href="$classSymEngine_1_1AtomsVisitor.html" title=" " alt="" coords="473,1043,645,1084"/>
-<area shape="rect" id="node37" href="$classSymEngine_1_1CountOpsVisitor.html" title=" " alt="" coords="463,1109,655,1135"/>
-<area shape="rect" id="node39" href="$classSymEngine_1_1PolyGeneratorVisitor.html" title=" " alt="" coords="469,1160,649,1201"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1NumerDenomVisitor.html" title=" " alt="" coords="453,399,666,426"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1RealVisitor.html" title=" " alt="" coords="479,450,639,477"/>
+<area shape="rect" id="node19" href="$classSymEngine_1_1LambdaDoubleVisitor.html" title=" " alt="" coords="433,501,685,527"/>
+<area shape="rect" id="node21" href="$classSymEngine_1_1InvertComplexVisitor.html" title=" " alt="" coords="469,552,650,593"/>
+<area shape="rect" id="node23" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="459,617,659,659"/>
+<area shape="rect" id="node24" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="459,683,659,724"/>
+<area shape="rect" id="node26" href="$classSymEngine_1_1SeriesVisitor.html" title=" " alt="" coords="474,748,645,789"/>
+<area shape="rect" id="node28" href="$classSymEngine_1_1FreeSymbolsVisitor.html" title=" " alt="" coords="454,814,665,841"/>
+<area shape="rect" id="node30" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="454,865,665,907"/>
+<area shape="rect" id="node31" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="455,931,664,972"/>
+<area shape="rect" id="node33" href="$classSymEngine_1_1RealImagVisitor.html" title=" " alt="" coords="465,997,654,1023"/>
+<area shape="rect" id="node35" href="$classSymEngine_1_1AtomsVisitor.html" title=" " alt="" coords="473,1048,645,1089"/>
+<area shape="rect" id="node37" href="$classSymEngine_1_1CountOpsVisitor.html" title=" " alt="" coords="463,1114,655,1141"/>
 </map>

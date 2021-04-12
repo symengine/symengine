@@ -109,19 +109,21 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Assumptions.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> real_symbols_;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> rational_symbols_;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> integer_symbols_;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;statements);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    tribool is_real(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    tribool is_rational(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    tribool is_integer(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_ASSUMPTIONS_H</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> complex_symbols_;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> real_symbols_;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> rational_symbols_;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> integer_symbols_;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;statements);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    tribool is_complex(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    tribool is_real(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    tribool is_rational(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    tribool is_integer(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;};</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_ASSUMPTIONS_H</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Assumptions_html"><div class="ttname"><a href="classSymEngine_1_1Assumptions.html">SymEngine::Assumptions</a></div><div class="ttdef"><b>Definition:</b> <a href="assumptions_8h_source.html#l00009">assumptions.h:10</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>

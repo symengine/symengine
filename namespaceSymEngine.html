@@ -552,6 +552,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html">RealVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ComplexVisitor.html">ComplexVisitor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1PolynomialVisitor.html">PolynomialVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1FreeSymbolsVisitor.html">FreeSymbolsVisitor</a></td></tr>
@@ -2056,6 +2058,9 @@ tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonnegative</b>
 <tr class="memitem:aeae5992fbe908c0beec7e5ade754d603"><td class="memItemLeft" align="right" valign="top"><a id="aeae5992fbe908c0beec7e5ade754d603"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_real</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
 <tr class="separator:aeae5992fbe908c0beec7e5ade754d603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60ba271e52dd18ba399bc037e847cba8"><td class="memItemLeft" align="right" valign="top"><a id="a60ba271e52dd18ba399bc037e847cba8"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_complex</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
+<tr class="separator:a60ba271e52dd18ba399bc037e847cba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab85d198cee227b876375a9943d65fd74"><td class="memItemLeft" align="right" valign="top"><a id="ab85d198cee227b876375a9943d65fd74"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parse</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s, bool convert_xor=true)</td></tr>
 <tr class="separator:ab85d198cee227b876375a9943d65fd74"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3921,11 +3926,11 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>True if b is a polynomial in variables and false otherwise</dd></dl>
 <p>Check if b is a polynomial in variables. If no variables are specified all free symbols in b are considered to be variables. All symbols that are not variables will be considered to be constants. </p>
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00254">254</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;{</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    PolynomialVisitor visitor(variables);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00423">423</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;{</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    PolynomialVisitor visitor(variables);</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
