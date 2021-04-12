@@ -16,6 +16,7 @@ using SymEngine::symbol;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Rational;
+using SymEngine::rational;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::Number;
@@ -31,7 +32,9 @@ using SymEngine::function_symbol;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::E;
+using SymEngine::I;
 using SymEngine::parse;
+using SymEngine::parse_julia;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::loggamma;
@@ -661,6 +664,67 @@ TEST_CASE("Parsing: constants", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *ComplexInf));
     REQUIRE(eq(*res, *parse(res->__str__())));
+}
+
+TEST_CASE("Parsing: local_constants", "[parser]")
+{
+    // local constants take precedence over parser built-ins
+    SymEngine::Parser parser({{"pi", integer(3)}, {"pie", pi}});
+    std::string s;
+    RCP<const Basic> res;
+
+    s = "E*pi";
+    res = parser.parse(s);
+    REQUIRE(eq(*res, *mul(E, integer(3))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "E*pie";
+    res = parser.parse(s);
+    REQUIRE(eq(*res, *mul(E, pi)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "pi*pie";
+    res = parser.parse(s);
+    REQUIRE(eq(*res, *mul(integer(3), pi)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+}
+
+TEST_CASE("Parsing: parse_julia", "[parser]")
+{
+    // julia_parse uses "im" for I
+    std::string s;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+
+    s = "2*I";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *mul(integer(2), symbol("I"))));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+
+    s = "2*im";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *mul(integer(2), I)));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+
+    s = "3^5";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *pow(integer(3), integer(5))));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+
+    s = "exp(x)";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *pow(E, x)));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+
+    s = "exp(1)";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *E));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+
+    s = "sqrt(x)";
+    res = parse_julia(s);
+    REQUIRE(eq(*res, *pow(x, rational(1, 2))));
+    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
 }
 
 TEST_CASE("Parsing: function_symbols", "[parser]")

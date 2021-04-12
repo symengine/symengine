@@ -16,6 +16,12 @@ RCP<const Basic> parse(const std::string &s, bool convert_xor)
     return p.parse(s, convert_xor);
 }
 
+RCP<const Basic> parse_julia(const std::string &s, bool convert_xor)
+{
+    Parser p({{"I", symbol("I")}, {"im", I}});
+    return p.parse(s, convert_xor);
+}
+
 RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor)
 {
     inp = input;
@@ -230,6 +236,10 @@ RCP<const Basic> Parser::parse_identifier(const std::string &expr)
                             {"True", boolTrue},
                             {"False", boolFalse}};
 
+    auto l = local_parser_constants.find(expr);
+    if (l != local_parser_constants.end()) {
+        return l->second;
+    }
     auto c = parser_constants.find(expr);
     if (c != parser_constants.end()) {
         return c->second;
@@ -307,6 +317,12 @@ Parser::parse_implicit_mul(const std::string &expr)
         sym = parse_identifier(lexpr);
     }
     return std::make_tuple(num, sym);
+}
+
+Parser::Parser(
+    std::map<const std::string, const RCP<const Basic>> &&parser_constants)
+    : local_parser_constants(std::move(parser_constants))
+{
 }
 
 } // namespace SymEngine
