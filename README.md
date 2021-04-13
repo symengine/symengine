@@ -1,6 +1,6 @@
 # SymEngine
 
-[![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
+[![Build and test symengine](https://github.com/symengine/symengine/actions/workflows/ci.yml/badge.svg)](https://github.com/symengine/symengine/actions/workflows/ci.yml)
 [![Build status](https://ci.appveyor.com/api/projects/status/qs1gvno1ht1gf0q8/branch/master?svg=true)](https://ci.appveyor.com/project/symengine/symengine/branch/master)
 [![codecov.io](https://codecov.io/github/symengine/symengine/coverage.svg?branch=master)](https://codecov.io/github/symengine/symengine?branch=master)
 
@@ -16,7 +16,9 @@ wrappers allow usage of the library from other languages, e.g.:
 
 ## Try SymEngine
 
-Run an interactive C++ session with SymEngine using [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/symengine/symengine/master?filepath=notebooks%2Fsymengine.ipynb).
+Tutorials are at [SymEngine.org](https://symengine.org/design/design.html).
+
+Run an interactive C++ session with SymEngine using [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/symengine/symengine/master?filepath=docs/mystMD/firststeps.myst.md).
 
 ## License
 
@@ -186,6 +188,6 @@ To build with more optimizations, you can use the above dependencies and options
 
 ## Developer Documentation
 
-Please follow the [C++ Style Guide](doc/style_guide.md) when developing.
+Please follow the [C++ Style Guide](docs/Doxygen/md/style_guide.md) when developing.
 
-The design decisions are documented in [Design](doc/design.md).
+The design decisions are documented in [Design](https://symengine.org/design/design.html).

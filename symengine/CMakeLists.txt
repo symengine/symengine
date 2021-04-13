@@ -50,6 +50,7 @@ set(SRC
     mul.cpp
     nan.cpp
     ntheory.cpp
+    ntheory_funcs.cpp
     number.cpp
     numer_denom.cpp
     parser/parser_old.cpp
@@ -79,6 +80,7 @@ set(SRC
     symengine_rcp.cpp
     visitor.cpp
     test_visitors.cpp
+    assumptions.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -151,6 +153,7 @@ set(HEADERS
     mul.h
     nan.h
     ntheory.h
+    ntheory_funcs.h
     number.h
     parser.h
     parser/parser.h
@@ -192,6 +195,7 @@ set(HEADERS
     type_codes.inc
     visitor.h
     test_visitors.h
+    assumptions.h
 )
 
 include(GNUInstallDirs)

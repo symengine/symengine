@@ -3,11 +3,13 @@
 #include <symengine/logic.h>
 #include <symengine/add.h>
 #include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::real_double;
+using SymEngine::complex_double;
 using SymEngine::Eq;
 using SymEngine::Ne;
 using SymEngine::Ge;
@@ -100,6 +102,21 @@ TEST_CASE("Comparing Relationals", "[Relationals]")
     a = Lt(x, y);
     b = Lt(x, y);
     CHECK(eq(*a, *b));
+
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i0 = integer(0);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> r1 = complex_double(std::complex<double>(0.1, 0.2));
+    RCP<const Basic> r2 = complex_double(std::complex<double>(1, 0.2));
+    RCP<const Basic> comp = integer(r1->compare(*r1));
+    CHECK(eq(*comp, *i0));
+    comp = integer(r1->compare(*r2));
+    CHECK(eq(*comp, *im1));
+    comp = integer(r2->compare(*r1));
+    CHECK(eq(*comp, *i1));
+    r2 = complex_double(std::complex<double>(0.1, 0.3));
+    comp = integer(r2->compare(*r1));
+    CHECK(eq(*comp, *i1));
 }
 
 TEST_CASE("Canonicalization", "[Relationals]")

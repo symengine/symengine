@@ -172,3 +172,9 @@ symengine/symengine_config_cling.h
 **.dir-locals.el
 **.gdb_history
 compile_commands.json
+.vscode/
+
+# Generated Documentation
+gen_docs/
+/docs/Doxygen/tags/
+*.ipynb

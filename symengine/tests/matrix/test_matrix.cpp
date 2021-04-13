@@ -16,6 +16,7 @@ using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
 using SymEngine::complex_double;
+using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::is_a;
@@ -31,6 +32,7 @@ using SymEngine::vec_basic;
 using SymEngine::function_symbol;
 using SymEngine::permutelist;
 using SymEngine::SymEngineException;
+using SymEngine::NotImplementedError;
 using SymEngine::eigen_values;
 using SymEngine::finiteset;
 using SymEngine::one;
@@ -923,6 +925,7 @@ TEST_CASE("reduced_row_echelon_form(): matrices", "[matrices]")
                                        integer(3), integer(4), integer(3)});
     DenseMatrix B = DenseMatrix(3, 3);
     reduced_row_echelon_form(A, B, pivots);
+    reduced_row_echelon_form(A, B, pivots, true);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -1254,11 +1257,14 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     DenseMatrix A = DenseMatrix(3, 3);
     DenseMatrix Q = DenseMatrix(3, 3);
     DenseMatrix R = DenseMatrix(3, 3);
+    DenseMatrix Q1 = DenseMatrix(3, 3);
+    DenseMatrix R1 = DenseMatrix(3, 3);
 
     A = DenseMatrix(3, 3, {integer(12), integer(-51), integer(4), integer(6),
                            integer(167), integer(-68), integer(-4), integer(24),
                            integer(-41)});
     QR(A, Q, R);
+    A.QR(Q1, R1);
 
     REQUIRE(Q == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
                                     rational(-58, 175), rational(3, 7),
@@ -1268,6 +1274,14 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     REQUIRE(R == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
                                     integer(0), integer(175), integer(-70),
                                     integer(0), integer(0), integer(35)}));
+    REQUIRE(Q1 == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
+                                     rational(-58, 175), rational(3, 7),
+                                     rational(158, 175), rational(6, 175),
+                                     rational(-2, 7), rational(6, 35),
+                                     rational(-33, 35)}));
+    REQUIRE(R1 == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
+                                     integer(0), integer(175), integer(-70),
+                                     integer(0), integer(0), integer(35)}));
 }
 
 TEST_CASE("test_LDL(): matrices", "[matrices]")
@@ -1307,12 +1321,31 @@ TEST_CASE("test_cholesky(): matrices", "[matrices]")
         3, 3, {integer(4), integer(12), integer(-16), integer(12), integer(37),
                integer(-43), integer(-16), integer(-43), integer(98)});
     DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix L1 = DenseMatrix(3, 3);
 
     cholesky(A, L);
+    A.cholesky(L1);
 
     REQUIRE(L == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
                                     integer(6), integer(1), integer(0),
                                     integer(-8), integer(5), integer(3)}));
+    REQUIRE(L1 == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
+                                     integer(6), integer(1), integer(0),
+                                     integer(-8), integer(5), integer(3)}));
+}
+
+TEST_CASE("test_trace(): matrices", "[matrices]")
+{
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(1, 1, {symbol("y")});
+    DenseMatrix C = DenseMatrix(3, 3, {integer(0), integer(1), integer(2),
+                                       integer(3), integer(4), integer(5),
+                                       integer(6), integer(7), integer(-4)});
+
+    REQUIRE(eq(*A.trace(), *integer(5)));
+    REQUIRE(eq(*B.trace(), *symbol("y")));
+    REQUIRE(eq(*C.trace(), *integer(0)));
 }
 
 TEST_CASE("test_determinant(): matrices", "[matrices]")
@@ -1425,6 +1458,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(12), integer(40), integer(10),  integer(54),
                            integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(350)));
+
+    CHECK_THROWS_AS(M.rank(), NotImplementedError &);
 }
 
 TEST_CASE("test_berkowitz(): matrices", "[matrices]")
@@ -1524,6 +1559,11 @@ TEST_CASE("test_solve_functions(): matrices", "[matrices]")
     LDL_solve(A, b, x);
 
     REQUIRE(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
+
+    A = DenseMatrix(2, 2, {integer(19), integer(-5), integer(-4), integer(1)});
+    b = DenseMatrix(2, 1, {integer(3), integer(-3)});
+    x = DenseMatrix(2, 1);
+    CHECK_THROWS_AS(LDL_solve(A, b, x), SymEngineException &);
 }
 
 TEST_CASE("test_char_poly(): matrices", "[matrices]")
@@ -2186,6 +2226,7 @@ TEST_CASE("is_symmetric(): DenseMatrix", "[matrices]")
     REQUIRE(is_true(E.is_symmetric()));
     REQUIRE(is_true(F.is_symmetric()));
     REQUIRE(is_indeterminate(H.is_symmetric()));
+    REQUIRE(is_symmetric_dense(D) == false);
 }
 
 TEST_CASE("is_hermitian(): DenseMatrix", "[matrices]")
@@ -2211,4 +2252,140 @@ TEST_CASE("is_hermitian(): DenseMatrix", "[matrices]")
     REQUIRE(is_false(F.is_hermitian()));
     REQUIRE(is_true(G.is_hermitian()));
     REQUIRE(is_false(H.is_hermitian()));
+}
+
+TEST_CASE("is_weakly_diagonally_dominant(): DenseMatrix", "[matrices]")
+{
+    auto c1 = complex_double(std::complex<double>(2, 1));
+    auto c2 = complex_double(std::complex<double>(2, -1));
+    auto c3 = complex_double(std::complex<double>(2, -2));
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(2), c1, c2, integer(3)});
+    DenseMatrix C = DenseMatrix(2, 2, {symbol("z"), c1, c2, integer(3)});
+    DenseMatrix D = DenseMatrix(3, 4);
+    DenseMatrix E = DenseMatrix(1, 1, {c1});
+    DenseMatrix F = DenseMatrix(1, 1, {integer(2)});
+    DenseMatrix G = DenseMatrix(2, 2, {integer(2), c1, c1, integer(3)});
+    DenseMatrix H
+        = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
+    DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
+                                       integer(2), integer(4), rational(1, 2),
+                                       integer(7), integer(-3), integer(5)});
+
+    REQUIRE(is_true(A.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(B.is_weakly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(C.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(D.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(E.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(F.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(G.is_weakly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(H.is_weakly_diagonally_dominant()));
+    REQUIRE(is_true(K.is_weakly_diagonally_dominant()));
+    REQUIRE(is_false(L.is_weakly_diagonally_dominant()));
+}
+
+TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
+{
+    auto c1 = complex_double(std::complex<double>(2, 1));
+    auto c2 = complex_double(std::complex<double>(2, -1));
+    auto c3 = complex_double(std::complex<double>(2, -2));
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(2), c1, c2, integer(3)});
+    DenseMatrix C = DenseMatrix(2, 2, {symbol("z"), c1, c2, integer(3)});
+    DenseMatrix D = DenseMatrix(3, 4);
+    DenseMatrix E = DenseMatrix(1, 1, {c1});
+    DenseMatrix F = DenseMatrix(1, 1, {integer(2)});
+    DenseMatrix G = DenseMatrix(2, 2, {integer(2), c1, c1, integer(3)});
+    DenseMatrix H
+        = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
+    DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
+                                       integer(2), integer(4), rational(1, 2),
+                                       integer(7), integer(-3), integer(5)});
+
+    REQUIRE(is_false(A.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(B.is_strictly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(C.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(D.is_strictly_diagonally_dominant()));
+    REQUIRE(is_true(E.is_strictly_diagonally_dominant()));
+    REQUIRE(is_true(F.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(G.is_strictly_diagonally_dominant()));
+    REQUIRE(is_indeterminate(H.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(K.is_strictly_diagonally_dominant()));
+    REQUIRE(is_false(L.is_strictly_diagonally_dominant()));
+}
+
+TEST_CASE("definiteness: DenseMatrix", "[matrices]")
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(2), integer(-1), integer(0),
+                                       integer(-1), integer(2), integer(-1),
+                                       integer(0), integer(-1), integer(2)});
+    DenseMatrix B
+        = DenseMatrix(2, 2, {integer(5), integer(4), integer(4), integer(5)});
+    DenseMatrix C = DenseMatrix(3, 3, {integer(2), integer(-1), integer(-1),
+                                       integer(-1), integer(2), integer(-1),
+                                       integer(-1), integer(-1), integer(2)});
+    DenseMatrix D
+        = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
+    DenseMatrix E
+        = DenseMatrix(2, 2, {integer(2), integer(3), integer(4), integer(8)});
+    DenseMatrix F = DenseMatrix(
+        2, 2, {integer(1), Complex::from_two_nums(*integer(0), *integer(2)),
+               Complex::from_two_nums(*integer(0), *integer(-1)), integer(4)});
+    DenseMatrix G = DenseMatrix(
+        2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    DenseMatrix H = DenseMatrix(
+        4, 4,
+        {real_double(0.0228202735623867), real_double(0.00518748979085398),
+         real_double(-0.0743036351048907), real_double(-0.00709135324903921),
+         real_double(0.00518748979085398), real_double(0.0349045359786350),
+         real_double(0.0830317991056637), real_double(0.00233147902806909),
+         real_double(-0.0743036351048907), real_double(0.0830317991056637),
+         real_double(1.15859676366277), real_double(0.340359081555988),
+         real_double(-0.00709135324903921), real_double(0.00233147902806909),
+         real_double(0.340359081555988), real_double(0.928147644848199)});
+    DenseMatrix L = DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
+                                       integer(0), integer(1), integer(2),
+                                       integer(0), integer(2), integer(1)});
+    DenseMatrix M
+        = DenseMatrix(2, 2, {integer(-1), integer(0), integer(0), integer(23)});
+    DenseMatrix N
+        = DenseMatrix(2, 2, {integer(2), integer(0), integer(-1), integer(2)});
+    DenseMatrix P = DenseMatrix(2, 1, {integer(2), integer(0)});
+    DenseMatrix Q = DenseMatrix(1, 1, {integer(-1)});
+    DenseMatrix R
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(-23)});
+
+    REQUIRE(is_true(A.is_positive_definite()));
+    REQUIRE(is_false(A.is_negative_definite()));
+    REQUIRE(is_true(B.is_positive_definite()));
+    REQUIRE(is_false(B.is_negative_definite()));
+    REQUIRE(is_false(C.is_positive_definite()));
+    REQUIRE(is_false(C.is_negative_definite()));
+    REQUIRE(is_false(D.is_positive_definite()));
+    REQUIRE(is_false(D.is_negative_definite()));
+    REQUIRE(is_true(E.is_positive_definite()));
+    REQUIRE(is_false(E.is_negative_definite()));
+    REQUIRE(is_true(F.is_positive_definite()));
+    REQUIRE(is_false(F.is_negative_definite()));
+    REQUIRE(is_indeterminate(G.is_positive_definite()));
+    REQUIRE(is_indeterminate(G.is_negative_definite()));
+    REQUIRE(is_true(H.is_positive_definite()));
+    REQUIRE(is_false(H.is_negative_definite()));
+    REQUIRE(is_false(L.is_positive_definite()));
+    REQUIRE(is_false(L.is_negative_definite()));
+    REQUIRE(is_false(M.is_positive_definite()));
+    REQUIRE(is_false(M.is_negative_definite()));
+    REQUIRE(is_true(N.is_positive_definite()));
+    REQUIRE(is_false(N.is_negative_definite()));
+    REQUIRE(is_true(N.is_positive_definite()));
+    REQUIRE(is_false(P.is_positive_definite()));
+    REQUIRE(is_false(P.is_negative_definite()));
+    REQUIRE(is_false(Q.is_positive_definite()));
+    REQUIRE(is_true(Q.is_negative_definite()));
+    REQUIRE(is_false(R.is_positive_definite()));
+    REQUIRE(is_false(R.is_negative_definite()));
 }

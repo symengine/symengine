@@ -61,6 +61,19 @@ vec_basic DenseMatrix::as_vec_basic() const
     return m_;
 }
 
+RCP<const Basic> DenseMatrix::trace() const
+{
+    SYMENGINE_ASSERT(row_ == col_);
+    unsigned offset = 0;
+    vec_basic diag;
+    for (unsigned i = 0; i < row_; i++) {
+        diag.push_back(m_[offset]);
+        offset += row_ + 1;
+    }
+    auto sum = add(diag);
+    return sum;
+}
+
 unsigned DenseMatrix::rank() const
 {
     throw NotImplementedError("Not Implemented");
@@ -192,6 +205,133 @@ tribool DenseMatrix::is_hermitian() const
         }
     }
     return cur;
+}
+
+tribool DenseMatrix::is_weakly_diagonally_dominant() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+
+    unsigned ncols = A.ncols();
+    RCP<const Basic> diag;
+    RCP<const Basic> sum;
+    tribool diagdom = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        sum = zero;
+        for (unsigned j = 0; j < ncols; j++) {
+            auto &e = m_[i * ncols + j];
+            if (i == j) {
+                diag = abs(e);
+            } else {
+                sum = add(sum, abs(e));
+            }
+        }
+        diagdom = and_tribool(diagdom, is_nonnegative(*sub(diag, sum)));
+        if (is_false(diagdom)) {
+            return diagdom;
+        }
+    }
+    return diagdom;
+}
+
+tribool DenseMatrix::is_strictly_diagonally_dominant() const
+{
+    auto A = *this;
+    if (not A.is_square()) {
+        return tribool::trifalse;
+    }
+
+    unsigned ncols = A.ncols();
+    RCP<const Basic> diag;
+    RCP<const Basic> sum;
+    tribool diagdom = tribool::tritrue;
+    for (unsigned i = 0; i < ncols; i++) {
+        sum = zero;
+        for (unsigned j = 0; j < ncols; j++) {
+            auto &e = m_[i * ncols + j];
+            if (i == j) {
+                diag = abs(e);
+            } else {
+                sum = add(sum, abs(e));
+            }
+        }
+        diagdom = and_tribool(diagdom, is_positive(*sub(diag, sum)));
+        if (is_false(diagdom)) {
+            return diagdom;
+        }
+    }
+    return diagdom;
+}
+
+tribool DenseMatrix::shortcut_to_posdef() const
+{
+    tribool is_diagonal_positive = tribool::tritrue;
+    unsigned offset = 0;
+    for (unsigned i = 0; i < row_; i++) {
+        is_diagonal_positive
+            = and_tribool(is_diagonal_positive, is_positive(*m_[offset]));
+        if (is_false(is_diagonal_positive))
+            return is_diagonal_positive;
+        offset += row_ + 1;
+    }
+    if (is_true(and_tribool(is_diagonal_positive,
+                            this->is_strictly_diagonally_dominant())))
+        return tribool::tritrue;
+    return tribool::indeterminate;
+}
+
+tribool DenseMatrix::is_positive_definite_GE()
+{
+    auto size = row_;
+    for (unsigned i = 0; i < size; i++) {
+        auto ispos = is_positive(*m_[i * size + i]);
+        if (!is_true(ispos))
+            return ispos;
+        for (unsigned j = i + 1; j < size; j++) {
+            for (unsigned k = i + 1; k < size; k++) {
+                m_[j * size + k] = sub(mul(m_[i * size + i], m_[j * size + k]),
+                                       mul(m_[j * size + i], m_[i * size + k]));
+            }
+        }
+    }
+    return tribool::tritrue;
+}
+
+tribool DenseMatrix::is_positive_definite() const
+{
+
+    auto A = *this;
+    std::unique_ptr<DenseMatrix> B;
+    const DenseMatrix *H;
+    if (!is_true(A.is_hermitian())) {
+        if (!A.is_square())
+            return tribool::trifalse;
+        DenseMatrix tmp1 = DenseMatrix(A.row_, A.col_);
+        B = std::unique_ptr<DenseMatrix>(new DenseMatrix(A.row_, A.col_));
+        A.conjugate_transpose(tmp1);
+        add_dense_dense(A, tmp1, *B.get());
+        H = B.get();
+    } else {
+        H = this;
+    }
+
+    tribool shortcut = H->shortcut_to_posdef();
+    if (!is_indeterminate(shortcut))
+        return shortcut;
+
+    if (!B) {
+        B = std::unique_ptr<DenseMatrix>(new DenseMatrix(A));
+    }
+    return B->is_positive_definite_GE();
+}
+
+tribool DenseMatrix::is_negative_definite() const
+{
+    auto res = DenseMatrix(row_, col_);
+    mul_dense_scalar(*this, integer(-1), res);
+    return res.is_positive_definite();
 }
 
 RCP<const Basic> DenseMatrix::det() const
@@ -1103,13 +1243,14 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
 }
 
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                      const DenseMatrix &b, DenseMatrix &x)
+                                      const DenseMatrix &b, DenseMatrix &x,
+                                      bool pivot)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
     SYMENGINE_ASSERT(x.col_ == b.col_);
 
-    unsigned i, j, k, col = A.col_, bcol = b.col_;
+    unsigned i, j, k, p, col = A.col_, bcol = b.col_;
     RCP<const Basic> d;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
     DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
@@ -1117,6 +1258,22 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
     for (i = 0; i < col; i++) {
         if (i > 0)
             d = A_.m_[i * col - col + i - 1];
+        if (pivot) {
+            p = i;
+            while (p < col and eq(*A_.m_[p * col + i], *zero)) {
+                p++;
+            }
+            SYMENGINE_ASSERT(p != col);
+            if (p != i) {
+                // pivot A
+                for (k = i; k < col; k++) {
+                    std::swap(A_.m_[p * col + k], A_.m_[i * col + k]);
+                }
+                for (k = 0; k < bcol; k++) {
+                    std::swap(b_.m_[p * bcol + k], b_.m_[i * bcol + k]);
+                }
+            }
+        }
         for (j = 0; j < col; j++)
             if (j != i) {
                 for (k = 0; k < bcol; k++) {

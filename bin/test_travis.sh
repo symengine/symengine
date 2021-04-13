@@ -12,9 +12,11 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
 	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
 	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
+            # remove existing system libc++ to avoid conflicts with msan instrumented libc++
+            sudo apt-get remove -yy libc++abi-dev libc++-dev
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
-            LLVM_ORG_VER=7.0.1  # should match llvm-X-dev package.
+            LLVM_ORG_VER=7.1.0  # should match llvm-X-dev package.
             export CC=clang-7
             export CXX=clang++-7
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
@@ -50,11 +52,11 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
 	    exit 1
 	fi
-elif [[ "${CC}" == *"clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
     fi
-else
+elif [[ "$(uname)" == "Linux" ]]; then
     export CXXFLAGS="$CXXFLAGS -Werror"
     if [[ "${USE_GLIBCXX_DEBUG}" == "yes" ]]; then
         export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
@@ -138,11 +140,12 @@ fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
-if [[ "${CC}" == *"gcc"* ]] && [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 
 echo "=== Generating build scripts for SymEngine using cmake"
+echo "CMAKE_GENERATOR = ${CMAKE_GENERATOR}"
 echo "Current directory:"
 export BUILD_DIR=`pwd`
 pwd
@@ -153,7 +156,7 @@ cmake $cmake_line ${SOURCE_DIR}
 echo "=== Running build scripts for SymEngine"
 pwd
 echo "Running make" $MAKEFLAGS ":"
-make
+make VERBOSE=1
 
 echo "Running make install:"
 make install
@@ -181,12 +184,16 @@ fi
 echo "=== Testing the installed SymEngine library simulating use by 3rd party lib"
 cd $SOURCE_DIR/benchmarks
 
-compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+SymEngine_DIR="${our_install_dir}/lib/cmake/symengine"
+if [[ "${MSYSTEM}" != "" ]]; then
+  SymEngine_DIR="${our_install_dir}/CMake"
+fi
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
 
-${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+${CXX} -std=c++0x $compile_flags expand1.cpp -o expand1 $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-./a.out
+./expand1
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine

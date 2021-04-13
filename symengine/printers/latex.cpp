@@ -371,12 +371,17 @@ void LatexPrinter::bvisit(const EmptySet &x)
 
 void LatexPrinter::bvisit(const Reals &x)
 {
-    str_ = "\\mathbf{R}";
+    str_ = "\\mathbb{R}";
+}
+
+void LatexPrinter::bvisit(const Rationals &x)
+{
+    str_ = "\\mathbb{Q}";
 }
 
 void LatexPrinter::bvisit(const Integers &x)
 {
-    str_ = "\\mathbf{Z}";
+    str_ = "\\mathbb{Z}";
 }
 
 void LatexPrinter::bvisit(const FiniteSet &x)
@@ -437,6 +442,7 @@ std::vector<std::string> init_latex_printer_names()
     names[SYMENGINE_LOG] = "\\log";
     names[SYMENGINE_GAMMA] = "\\Gamma";
     names[SYMENGINE_TRUNCATE] = "\\operatorname{truncate}";
+    names[SYMENGINE_PRIMEPI] = "\\pi";
     return names;
 }
 

@@ -1,8 +1,12 @@
 /**
- *  \file basic.h
- *  Includes the base class
+ *  @file   basic.h
+ *  @author SymEngine Developers
+ *  @date   2021-03-01
+ *  @brief  The base class for SymEngine
  *
- **/
+ *  Created on: 2012-07-11
+ *
+ */
 
 #ifndef SYMENGINE_BASIC_H
 #define SYMENGINE_BASIC_H
@@ -42,9 +46,9 @@ enum TypeID {
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
-    // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
-    // to work, do not assign numbers to the elements above (or if you do, you
-    // must assign the correct count below).
+    //!< The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
+    //!< to work, do not assign numbers to the elements above (or if you do, you
+    //!< must assign the correct count below).
     TypeID_Count
 };
 
@@ -55,38 +59,40 @@ std::string type_code_name(TypeID id);
 class Visitor;
 class Symbol;
 
-/*!  Classes like Add, Mul, Pow are initialized through their constructor using
-   their internal representation. Add, Mul have a 'coeff' and 'dict', while
-   Pow has 'base' and 'exp'. There are restrictions on what 'coeff' and
-   'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
-   used inside Add, then Mul's coeff must be one, etc.). All these
-   restrictions are checked when WITH_SYMENGINE_ASSERT is enabled inside the
-   constructors using the is_canonical() method. That way, you don't have to
-   worry about creating Add / Mul / Pow with wrong arguments, as it will be
-   caught by the tests. In the Release mode no checks are done, so you can
-   construct Add / Mul / Pow very quickly. The idea is that depending on the
-   algorithm, you sometimes know that things are already canonical, so you
-   simply pass it directly to the constructors of the Basic classes and you
-   avoid expensive type checking and canonicalization. At the same time, you
-   need to make sure that tests are still running with WITH_SYMENGINE_ASSERT
-   enabled, so that the Basic classes are never in an inconsistent state.
-
-   Summary: always try to construct the expressions Add / Mul / Pow directly
-   using their constructors and all the knowledge that you have for the given
-   algorithm, that way things will be very fast. If you want slower but
-   simpler code, you can use the add(), mul(), pow() functions that peform
-   general and possibly slow canonicalization first.
-*/
-
-/*!
-    Any Basic class can be used in a "dictionary", due to the methods:
-
-        __hash__()
-        __eq__(o)
-    Subclasses must implement these.
-
-*/
-
+/**
+ *  @class Basic
+ *  @brief The lowest unit of symbolic representation
+ *
+ *  @details Classes like `Add`, `Mul`, `Pow` are initialized through their
+ *  constructor using their internal representation. `Add`, `Mul` have a 'coeff'
+ *  and 'dict', while `Pow` has 'base' and 'exp'. There are restrictions on what
+ *  'coeff' and 'dict' can be (for example 'coeff' cannot be zero in `Mul`, and
+ * if `Mul` is used inside `Add`, then `Mul`'s coeff must be one, etc.). All
+ * these restrictions are checked when `WITH_SYMENGINE_ASSERT` is enabled inside
+ * the constructors using the is_canonical() method. That way, you don't have to
+ *  worry about creating `Add` / `Mul` / `Pow` with wrong arguments, as it will
+ * be caught by the tests. In the Release mode no checks are done, so you can
+ *  construct `Add` / `Mul` / `Pow` very quickly. The idea is that depending on
+ * the algorithm, you sometimes know that things are already canonical, so you
+ *  simply pass it directly to the constructors of the `Basic` classes and you
+ *  avoid expensive type checking and canonicalization. At the same time, you
+ *  need to make sure that tests are still running with `WITH_SYMENGINE_ASSERT`
+ *  enabled, so that the `Basic` classes are never in an inconsistent state.
+ *
+ *  Summary: always try to construct the expressions `Add` / `Mul` / `Pow`
+ *  directly using their constructors and all the knowledge that you have for
+ * the given algorithm, that way things will be very fast. If you want slower
+ * but simpler code, you can use the add(), mul(), pow() functions that peform
+ *  general and possibly slow canonicalization first.
+ *
+ *   @note Any `Basic` class can be used in a "dictionary", due to the methods:
+ *
+ *        __hash__()
+ *        __eq__(o)
+ *
+ *  @warning Subclasses must implement `__hash__()` and `__eq__()`
+ *
+ */
 class Basic : public EnableRCPFromThis<Basic>
 {
 private:
@@ -130,28 +136,36 @@ public:
     //! Assignment operator in continuation with above
     Basic &operator=(Basic &&) = delete;
 
-    /*!
-        Calculates the hash of the given SymEngine class.
-        Use Basic.hash() which gives a cached version of the hash.
-        \return 64-bit integer value for the hash
-    */
+    /**
+     *   Calculates the hash of the given SymEngine class.
+     *   Use Basic.hash() which gives a cached version of the hash.
+     *   @return 64-bit integer value for the hash
+     */
     virtual hash_t __hash__() const = 0;
 
-    /*! Returns the hash of the SymEngine class:
-        This method caches the value
-
-        Use `std::hash` to get the hash. Example:
-
-             RCP<const Symbol> x = symbol("x");
-             std::hash<Basic> hash_fn;
-             std::cout << hash_fn(*x);
-
-        \return 64-bit integer value for the hash
-    */
+    /** Returns the hash of the SymEngine class:
+     *   This method caches the value
+     *
+     *   Use `std::hash` to get the hash. Example:
+     *
+     *            RCP<const Symbol> x = symbol("x");
+     *         std::hash<Basic> hash_fn;
+     *         std::cout << hash_fn(*x);
+     *
+     *   @return 64-bit integer value for the hash
+     */
     hash_t hash() const;
 
-    //! true if `this` is equal to `o`.
-    //! Deprecated: Use eq(const Basic &a, const Basic &b) non-member method
+    /**
+     * @brief Test equality
+     *
+     * @details A virtual function for testing the equality of two `Basic`
+     * objects
+     * @deprecated Use eq(const Basic &a, const Basic &b) non-member method
+     *
+     * @param o a constant reference to object to test against
+     * @return True if `this` is equal to `o`
+     */
     virtual bool __eq__(const Basic &o) const = 0;
 
     //! true if `this` is not equal to `o`.
@@ -309,14 +323,14 @@ void hash_combine(hash_t &seed, const T &v);
 
 const char *get_version();
 
-} // SymEngine
+} // namespace SymEngine
 
 namespace std
 {
 //! Specialise `std::hash` for Basic.
 template <>
 struct hash<SymEngine::Basic>;
-}
+} // namespace std
 
 //! Inline members and functions
 #include "basic-inl.h"

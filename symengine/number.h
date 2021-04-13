@@ -8,6 +8,7 @@
 #define SYMENGINE_NUMBER_H
 
 #include <symengine/basic.h>
+#include <symengine/assumptions.h>
 
 namespace SymEngine
 {
@@ -141,7 +142,12 @@ inline bool is_number_and_zero(const Basic &b)
 }
 
 tribool is_zero(const Basic &b);
-tribool is_real(const Basic &b);
+tribool is_positive(const Basic &b);
+tribool is_nonpositive(const Basic &b);
+tribool is_negative(const Basic &b);
+tribool is_nonnegative(const Basic &b);
+tribool is_real(const Basic &b, const Assumptions *assumptions = nullptr);
+tribool is_complex(const Basic &b, const Assumptions *assumptions = nullptr);
 
 class NumberWrapper : public Number
 {

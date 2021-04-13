@@ -190,17 +190,29 @@ void process_section(bfd *abfd, asection *section, void *_data)
     // If we already found the line, exit
     return;
   }
+#ifdef bfd_get_section_flags
   if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0) {
-    return;
-  }
+#else
+  if ((bfd_section_flags(section) & SEC_ALLOC) == 0) {
+#endif
+  return;
+}
 
+#ifdef bfd_get_section_vma
   bfd_vma section_vma = bfd_get_section_vma(abfd, section);
+#else
+  bfd_vma section_vma = bfd_section_vma(section);
+#endif
   if (data->addr < section_vma) {
     // If the addr lies above the section, exit
     return;
   }
 
+#ifdef bfd_section_size
   bfd_size_type section_size = bfd_section_size(abfd, section);
+#else
+  bfd_size_type section_size = bfd_section_size(section);
+#endif
   if (data->addr >= section_vma + section_size) {
     // If the addr lies below the section, exit
     return;

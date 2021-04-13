@@ -23,6 +23,7 @@ public:
     void bvisit(const EmptySet &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const Reals &x);
+    void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
     void bvisit(const UniversalSet &x);
     void bvisit(const Abs &x);

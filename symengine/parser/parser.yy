@@ -36,6 +36,7 @@ using SymEngine::Lt;
 using SymEngine::Gt;
 using SymEngine::Le;
 using SymEngine::Ge;
+using SymEngine::Ne;
 using SymEngine::Eq;
 using SymEngine::set_boolean;
 using SymEngine::Boolean;
@@ -61,7 +62,7 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 # define YYCOPY(Dst, Src, Count)              \
     do                                        \
       {                                       \
-        YYSIZE_T yyi;                         \
+        YYPTRDIFF_T yyi;                      \
         for (yyi = 0; yyi < (Count); yyi++)   \
           (Dst)[yyi] = (Src)[yyi];            \
       }                                       \
@@ -82,11 +83,13 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %left EQ
 %left '>'
 %left '<'
+%left NE
 %left LE
 %left GE
 %left '-' '+'
 %left '*' '/'
 %right UMINUS
+%right UPLUS
 %right POW
 %right NOT
 %nonassoc '('
@@ -142,6 +145,9 @@ expr:
         expr '>' expr
         { $$ = rcp_static_cast<const Basic>(Gt($1, $3)); }
 |
+        expr NE expr
+        { $$ = rcp_static_cast<const Basic>(Ne($1, $3)); }
+|
         expr LE expr
         { $$ = rcp_static_cast<const Basic>(Le($1, $3)); }
 |
@@ -180,6 +186,9 @@ expr:
 |
         '-' expr %prec UMINUS
         { $$ = neg($2); }
+|
+        '+' expr %prec UPLUS
+        { $$ = $2; }
 |
         '~' expr %prec NOT
         { $$ = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>($2))); }
