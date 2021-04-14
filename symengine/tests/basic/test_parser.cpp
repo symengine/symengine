@@ -7,61 +7,60 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/parser/parser.h>
 
-using SymEngine::Basic;
 using SymEngine::Add;
-using SymEngine::Mul;
+using SymEngine::Basic;
+using SymEngine::boolFalse;
+using SymEngine::boolTrue;
 using SymEngine::Complex;
-using SymEngine::Symbol;
-using SymEngine::symbol;
-using SymEngine::Integer;
-using SymEngine::integer;
-using SymEngine::Rational;
-using SymEngine::rational;
-using SymEngine::one;
-using SymEngine::zero;
-using SymEngine::Number;
-using SymEngine::pow;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::has_symbol;
-using SymEngine::is_a;
-using SymEngine::pi;
+using SymEngine::ComplexInf;
+using SymEngine::down_cast;
+using SymEngine::E;
+using SymEngine::Eq;
 using SymEngine::erf;
 using SymEngine::erfc;
-using SymEngine::function_symbol;
-using SymEngine::real_double;
-using SymEngine::RealDouble;
-using SymEngine::E;
-using SymEngine::I;
-using SymEngine::parse;
-using SymEngine::parse_julia;
-using SymEngine::max;
-using SymEngine::min;
-using SymEngine::loggamma;
-using SymEngine::gamma;
-using SymEngine::UIntPoly;
 using SymEngine::from_basic;
-using SymEngine::ParseError;
-using SymEngine::down_cast;
-using SymEngine::Inf;
-using SymEngine::ComplexInf;
-using SymEngine::Eq;
-using SymEngine::Ne;
+using SymEngine::function_symbol;
+using SymEngine::gamma;
 using SymEngine::Ge;
 using SymEngine::Gt;
+using SymEngine::has_symbol;
+using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::is_a;
 using SymEngine::Le;
-using SymEngine::Lt;
-using SymEngine::boolTrue;
-using SymEngine::boolFalse;
-using SymEngine::minus_one;
+using SymEngine::loggamma;
 using SymEngine::logical_and;
-using SymEngine::logical_not;
 using SymEngine::logical_nand;
 using SymEngine::logical_nor;
+using SymEngine::logical_not;
 using SymEngine::logical_or;
-using SymEngine::logical_xor;
 using SymEngine::logical_xnor;
+using SymEngine::logical_xor;
+using SymEngine::Lt;
+using SymEngine::make_rcp;
+using SymEngine::max;
+using SymEngine::min;
+using SymEngine::minus_one;
+using SymEngine::Mul;
+using SymEngine::Ne;
+using SymEngine::Number;
+using SymEngine::one;
+using SymEngine::parse;
+using SymEngine::ParseError;
+using SymEngine::pi;
+using SymEngine::pow;
+using SymEngine::Rational;
+using SymEngine::rational;
+using SymEngine::RCP;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::UIntPoly;
 using SymEngine::YYSTYPE;
+using SymEngine::zero;
 
 using namespace SymEngine::literals;
 
@@ -687,44 +686,20 @@ TEST_CASE("Parsing: local_constants", "[parser]")
     res = parser.parse(s);
     REQUIRE(eq(*res, *mul(integer(3), pi)));
     REQUIRE(eq(*res, *parse(res->__str__())));
-}
 
-TEST_CASE("Parsing: parse_julia", "[parser]")
-{
-    // julia_parse uses "im" for I
-    std::string s;
-    RCP<const Basic> res;
-    RCP<const Basic> x = symbol("x");
+    // julia uses "im" for I
+    std::map<const std::string, const RCP<const Basic>> constants(
+        {{"I", symbol("I")}, {"im", I}});
 
     s = "2*I";
-    res = parse_julia(s);
+    res = parse(s, true, constants);
     REQUIRE(eq(*res, *mul(integer(2), symbol("I"))));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+    REQUIRE(eq(*res, *parse(julia_str(*res), true, constants)));
 
     s = "2*im";
-    res = parse_julia(s);
+    res = parse(s, true, constants);
     REQUIRE(eq(*res, *mul(integer(2), I)));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
-
-    s = "3^5";
-    res = parse_julia(s);
-    REQUIRE(eq(*res, *pow(integer(3), integer(5))));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
-
-    s = "exp(x)";
-    res = parse_julia(s);
-    REQUIRE(eq(*res, *pow(E, x)));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
-
-    s = "exp(1)";
-    res = parse_julia(s);
-    REQUIRE(eq(*res, *E));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
-
-    s = "sqrt(x)";
-    res = parse_julia(s);
-    REQUIRE(eq(*res, *pow(x, rational(1, 2))));
-    REQUIRE(eq(*res, *parse_julia(julia_str(*res))));
+    REQUIRE(eq(*res, *parse(julia_str(*res), true, constants)));
 }
 
 TEST_CASE("Parsing: function_symbols", "[parser]")

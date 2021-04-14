@@ -7,18 +7,14 @@
 namespace SymEngine
 {
 
-RCP<const Basic> parse(const std::string &s, bool convert_xor)
+RCP<const Basic>
+parse(const std::string &s, bool convert_xor,
+      const std::map<const std::string, const RCP<const Basic>> &constants)
 {
     // This is expensive:
-    Parser p;
+    Parser p(constants);
     // If you need to parse multiple strings, initialize Parser first, then
     // call Parser::parse() repeatedly.
-    return p.parse(s, convert_xor);
-}
-
-RCP<const Basic> parse_julia(const std::string &s, bool convert_xor)
-{
-    Parser p({{"I", symbol("I")}, {"im", I}});
     return p.parse(s, convert_xor);
 }
 
@@ -320,8 +316,8 @@ Parser::parse_implicit_mul(const std::string &expr)
 }
 
 Parser::Parser(
-    std::map<const std::string, const RCP<const Basic>> &&parser_constants)
-    : local_parser_constants(std::move(parser_constants))
+    const std::map<const std::string, const RCP<const Basic>> &parser_constants)
+    : local_parser_constants(parser_constants)
 {
 }
 

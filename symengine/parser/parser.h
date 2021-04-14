@@ -44,9 +44,9 @@ public:
     RCP<const Basic> parse_identifier(const std::string &expr);
     std::tuple<RCP<const Basic>, RCP<const Basic>>
     parse_implicit_mul(const std::string &expr);
-    explicit Parser(
-        std::map<const std::string, const RCP<const Basic>> &&parser_constants
-        = {});
+    explicit Parser(const std::map<const std::string, const RCP<const Basic>>
+                        &parser_constants
+                    = {});
 };
 
 } // namespace SymEngine
