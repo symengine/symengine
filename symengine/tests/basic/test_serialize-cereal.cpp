@@ -35,10 +35,7 @@ RCP<const T> loads(string sobj)
 void check_string_serialization_roundtrip(RCP<const Basic> basic1)
 {
     RCP<const Basic> basic2 = loads<Basic>(dumps<Basic>(basic1));
-    REQUIRE(
-        basic1->get_type_code() == basic2->get_type_code()
-        /* BD: I think this is checked in all __eq__ impls., but haven't looked exhaustively */);
-    REQUIRE(basic1->__eq__(*basic2));
+    REQUIRE(eq(*basic1, *basic2));
 }
 
 TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
@@ -59,4 +56,5 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     // Pow
     check_string_serialization_roundtrip(
         se::pow(se::symbol("y"), se::integer(2)));
+    check_string_serialization_roundtrip(se::reals());
 }

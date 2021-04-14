@@ -23,7 +23,7 @@ template <class Archive>
 inline void save_basic(Archive &ar, const Basic &b)
 {
     const auto t_code = b.get_type_code();
-    throw std::runtime_error(StreamFmt()
+    throw SerializationError(StreamFmt()
                              << __FILE__ << ":" << __LINE__ << ": "
                              << __PRETTY_FUNCTION__ << " not supported: "
                              << type_code_name(t_code) << " (" << t_code << ")"
@@ -186,7 +186,7 @@ inline void save_basic(Archive &ar, const Complement &b)
 template <class Archive>
 inline void save_basic(Archive &ar, const ImageSet &b)
 {
-    ar(b.get_expr(), b.get_symbol(), b.get_baseset());
+    ar(b.get_symbol(), b.get_expr(), b.get_baseset());
 }
 template <class Archive>
 inline void save_basic(Archive &ar, const FiniteSet &b)
@@ -347,6 +347,174 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Constant> &)
     ar(name);
     return constant(name);
 }
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Rational> &)
+{
+    RCP<const Integer> num, den;
+    ar(num, den);
+    return Rational::from_two_ints(*num, *den);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Complex> &)
+{
+    RCP<const Number> num, den;
+    ar(num, den);
+    return Complex::from_two_nums(*num, *den);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const ComplexBase> &)
+{
+    RCP<const Number> num, den;
+    ar(num, den);
+    return num->div(*den);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Interval> &)
+{
+    RCP<const Number> start, end;
+    bool left_open, right_open;
+    ar(left_open, start, right_open, end);
+    return make_rcp<const Interval>(start, end, left_open, right_open);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const BooleanAtom> &)
+{
+    bool val;
+    ar(val);
+    return boolean(val);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const And> &)
+{
+    set_boolean container;
+    ar(container);
+    return make_rcp<const And>(std::move(container));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Or> &)
+{
+    set_boolean container;
+    ar(container);
+    return make_rcp<const Or>(std::move(container));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Xor> &)
+{
+    vec_boolean container;
+    ar(container);
+    return make_rcp<const Xor>(std::move(container));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Not> &)
+{
+    RCP<const Boolean> arg;
+    ar(arg);
+    return make_rcp<const Not>(arg);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Piecewise> &)
+{
+    PiecewiseVec vec;
+    ar(vec);
+    return make_rcp<const Piecewise>(std::move(vec));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Contains> &)
+{
+    RCP<const Basic> expr;
+    RCP<const Set> contains_set;
+    ar(expr, contains_set);
+    return make_rcp<const Contains>(expr, contains_set);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Reals> &)
+{
+    return reals();
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Rationals> &)
+{
+    return rationals();
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const EmptySet> &)
+{
+    return emptyset();
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Integers> &)
+{
+    return integers();
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const UniversalSet> &)
+{
+    return universalset();
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Union> &)
+{
+    set_set union_set;
+    ar(union_set);
+    return make_rcp<const Union>(std::move(union_set));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Complement> &)
+{
+    RCP<const Set> universe, container;
+    ar(universe, container);
+    return make_rcp<const Complement>(universe, container);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const ImageSet> &)
+{
+    RCP<const Basic> sym, expr;
+    RCP<const Set> base;
+    ar(sym, expr, base);
+    return make_rcp<const ImageSet>(sym, expr, base);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const FiniteSet> &)
+{
+    set_basic set;
+    ar(set);
+    return make_rcp<const FiniteSet>(set);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const ConditionSet> &)
+{
+    RCP<const Basic> sym;
+    RCP<const Boolean> condition;
+    ar(sym, condition);
+    return make_rcp<const ConditionSet>(sym, condition);
+}
+#ifdef HAVE_SYMENGINE_MPFR
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const RealMPFR> &)
+{
+    std::string num;
+    unsigned prec;
+    ar(num, prec);
+    return make_rcp<const RealMPFR>(mpfr_class(num, prec, 10));
+}
+#endif
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Derivative> &)
+{
+    RCP<const Basic> arg;
+    multiset_basic set;
+    ar(arg, set);
+    return make_rcp<const Derivative>(arg, std::move(set));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Subs> &)
+{
+    RCP<const Basic> arg;
+    map_basic_basic dict;
+    ar(arg, dict);
+    return make_rcp<const Subs>(arg, std::move(dict));
+}
+
 template <class Archive, class T>
 RCP<const Basic>
 load_basic(Archive &ar, RCP<const T> &,
@@ -367,6 +535,32 @@ load_basic(Archive &ar, RCP<const T> &,
     ar(arg1, arg2);
     return make_rcp<const T>(arg1, arg2);
 }
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const FunctionSymbol> &)
+{
+    std::string name;
+    vec_basic vec;
+    ar(name, vec);
+    return make_rcp<const FunctionSymbol>(name, std::move(vec));
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const FunctionWrapper> &)
+{
+    throw SerializationError(StreamFmt()
+                             << __FILE__ << ":" << __LINE__ << ": "
+                             << __PRETTY_FUNCTION__
+                             << "Loading of this type is not implemented.");
+}
+template <class Archive, class T>
+RCP<const Basic>
+load_basic(Archive &ar, RCP<const T> &,
+           typename std::enable_if<std::is_base_of<MultiArgFunction, T>::value,
+                                   int>::type * = nullptr)
+{
+    vec_basic args;
+    ar(args);
+    return make_rcp<const T>(std::move(args));
+}
 template <class Archive, class T>
 RCP<const Basic>
 load_basic(Archive &ar, RCP<const T> &,
@@ -382,10 +576,11 @@ RCP<const Basic> load_basic(
     Archive &ar, RCP<const T> &,
     typename std::enable_if<not(std::is_base_of<Relational, T>::value
                                 or std::is_base_of<OneArgFunction, T>::value
+                                or std::is_base_of<MultiArgFunction, T>::value
                                 or std::is_base_of<TwoArgFunction, T>::value),
                             int>::type * = nullptr)
 {
-    throw std::runtime_error(StreamFmt()
+    throw SerializationError(StreamFmt()
                              << __FILE__ << ":" << __LINE__ << ": "
                              << __PRETTY_FUNCTION__
                              << "Loading of this type is not implemented.");
