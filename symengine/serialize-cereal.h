@@ -12,6 +12,9 @@
 #include <cereal/details/helpers.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/unordered_map.hpp>
+#include <cereal/types/set.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/utility.hpp>
 
 namespace SymEngine
 {
@@ -27,7 +30,7 @@ inline void save_basic(Archive &ar, const Basic &b)
 #if !defined(NDEBUG)
                              << ", " << b.__str__()
 #endif
-                                 );
+    );
 }
 template <class Archive>
 inline void save_basic(Archive &ar, const Symbol &b)
@@ -68,11 +71,26 @@ inline void save_basic(Archive &ar, const RealDouble &b)
 {
     ar(b.i);
 }
-// template <class Archive>
-// inline void save_basic(Archive &ar, const Rational &b)
-// {
-//     ar(b.get_num(), b.get_den());
-// }
+template <class Archive>
+inline void save_basic(Archive &ar, const Rational &b)
+{
+    ar(b.get_num(), b.get_den());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const ComplexBase &b)
+{
+    ar(b.real_part(), b.imaginary_part());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Interval &b)
+{
+    ar(b.get_left_open(), b.get_start(), b.get_right_open(), b.get_end());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const BooleanAtom &b)
+{
+    ar(b.get_val());
+}
 template <class Archive>
 inline void save_basic(Archive &ar, const Infty &b)
 {
@@ -89,7 +107,6 @@ inline void save_basic(Archive &ar, const Constant &b)
 {
     ar(b.get_name());
 }
-
 template <class Archive>
 inline void save_basic(Archive &ar, const OneArgFunction &b)
 {
@@ -105,6 +122,128 @@ template <class Archive>
 inline void save_basic(Archive &ar, const Relational &b)
 {
     ar(b.get_arg1(), b.get_arg2());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const And &b)
+{
+    ar(b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Or &b)
+{
+    ar(b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Xor &b)
+{
+    ar(b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Not &b)
+{
+    ar(b.get_arg());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Contains &b)
+{
+    ar(b.get_expr(), b.get_set());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Piecewise &b)
+{
+    ar(b.get_vec());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Reals &b)
+{
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Rationals &b)
+{
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const EmptySet &b)
+{
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Integers &b)
+{
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const UniversalSet &b)
+{
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Union &b)
+{
+    ar(b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Complement &b)
+{
+    ar(b.get_universe(), b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const ImageSet &b)
+{
+    ar(b.get_expr(), b.get_symbol(), b.get_baseset());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const FiniteSet &b)
+{
+    ar(b.get_container());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const ConditionSet &b)
+{
+    ar(b.get_symbol(), b.get_condition());
+}
+#ifdef HAVE_SYMENGINE_MPFR
+template <class Archive>
+inline void save_basic(Archive &ar, const RealMPFR &b)
+{
+    ar(b.__str__(), b.get_prec());
+}
+#endif
+template <class Archive>
+inline void save_basic(Archive &ar, const GaloisField &b)
+{
+    throw NotImplementedError("GaloisField saving is not implemented yet.");
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const SeriesCoeffInterface &)
+{
+    throw NotImplementedError("Series saving is not implemented yet.");
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const MultiArgFunction &b)
+{
+    ar(b.get_args());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const FunctionSymbol &b)
+{
+    ar(b.get_name(), b.get_args());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Derivative &b)
+{
+    ar(b.get_arg(), b.get_symbols());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const Subs &b)
+{
+    ar(b.get_arg(), b.get_dict());
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const NumberWrapper &b)
+{
+    throw NotImplementedError("NumberWrapper saving is not implemented yet.");
+}
+template <class Archive>
+inline void save_basic(Archive &ar, const FunctionWrapper &b)
+{
+    throw NotImplementedError("FunctionWrapper saving is not implemented yet.");
 }
 
 template <class Archive>
