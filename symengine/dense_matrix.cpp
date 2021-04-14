@@ -145,12 +145,12 @@ tribool DenseMatrix::is_diagonal() const
     return cur;
 }
 
-tribool DenseMatrix::is_real() const
+tribool DenseMatrix::is_real(const Assumptions *assumptions) const
 {
-    auto A = *this;
+    RealVisitor visitor(assumptions);
     tribool cur = tribool::tritrue;
     for (auto &e : m_) {
-        cur = and_tribool(cur, SymEngine::is_real(*e));
+        cur = and_tribool(cur, visitor.apply(*e));
         if (is_false(cur)) {
             return cur;
         }
