@@ -245,12 +245,12 @@ $(function() {
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">return</span> cur;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;}</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;tribool DenseMatrix::is_real()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;tribool DenseMatrix::is_real(<span class="keyword">const</span> Assumptions *assumptions)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keyword">auto</span> A = *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    RealVisitor visitor(assumptions);</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    tribool cur = tribool::tritrue;</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : m_) {</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        cur = and_tribool(cur, SymEngine::is_real(*e));</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        cur = and_tribool(cur, visitor.apply(*e));</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            <span class="keywordflow">return</span> cur;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        }</div>
