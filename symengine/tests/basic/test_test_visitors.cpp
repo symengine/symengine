@@ -54,6 +54,36 @@ TEST_CASE("Test is zero", "[is_zero]")
     REQUIRE(is_zero(*pi) == tribool::trifalse);
 }
 
+TEST_CASE("Test is nonzero", "[is_nonzero]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Number> i1 = integer(0);
+    RCP<const Number> i2 = integer(3);
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Basic> rat2 = Rational::from_two_ints(*integer(0), *integer(1));
+    RCP<const Basic> s1 = interval(i1, i2);
+    RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
+    RCP<const Basic> rel1 = Eq(x, i1);
+    RCP<const Basic> rel2 = Lt(x, i1);
+    RCP<const Symbol> t = symbol("t");
+    RCP<const Basic> f = function_symbol("f", t);
+    RCP<const Basic> d1 = f->diff(t);
+
+    REQUIRE(is_indeterminate(is_nonzero(*x)));
+    REQUIRE(is_false(is_nonzero(*i1)));
+    REQUIRE(is_true(is_nonzero(*i2)));
+    REQUIRE(is_true(is_nonzero(*rat1)));
+    REQUIRE(is_false(is_nonzero(*rat2)));
+    REQUIRE(is_false(is_nonzero(*s1)));
+    REQUIRE(is_true(is_nonzero(*c1)));
+    REQUIRE(is_false(is_nonzero(*rel1)));
+    REQUIRE(is_false(is_nonzero(*rel2)));
+    REQUIRE(is_true(is_nonzero(*pi)));
+    REQUIRE(is_indeterminate(is_nonzero(*d1)));
+    REQUIRE(is_false(is_nonzero(*boolTrue)));
+    REQUIRE(is_true(is_nonzero(*pi)));
+}
+
 TEST_CASE("Test is positive", "[is_positive]")
 {
     RCP<const Basic> x = symbol("x");

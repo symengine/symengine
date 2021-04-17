@@ -14,12 +14,22 @@ void ZeroVisitor::bvisit(const Number &x)
 tribool ZeroVisitor::apply(const Basic &b)
 {
     b.accept(*this);
-    return is_zero_;
+    tribool result = is_zero_;
+    if (not zero_ and not neither_) {
+        result = not_tribool(result);
+    }
+    return result;
 }
 
 tribool is_zero(const Basic &b)
 {
-    ZeroVisitor visitor;
+    ZeroVisitor visitor(true);
+    return visitor.apply(b);
+}
+
+tribool is_nonzero(const Basic &b)
+{
+    ZeroVisitor visitor(false);
     return visitor.apply(b);
 }
 
