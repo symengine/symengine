@@ -115,6 +115,59 @@ tribool is_nonnegative(const Basic &b)
     return visitor.apply(b);
 }
 
+void IntegerVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_integer_ = assumptions_->is_integer(x.rcp_from_this());
+    } else {
+        is_integer_ = tribool::indeterminate;
+    }
+}
+
+void IntegerVisitor::bvisit(const Constant &x)
+{
+    if (eq(x, *pi) or eq(x, *E) or eq(x, *EulerGamma) or eq(x, *Catalan)
+        or eq(x, *GoldenRatio)) {
+        is_integer_ = tribool::trifalse;
+    } else {
+        is_integer_ = tribool::indeterminate;
+    }
+}
+
+void IntegerVisitor::bvisit(const Add &x)
+{
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        if (not is_true(is_integer_)) {
+            is_integer_ = tribool::indeterminate;
+            return;
+        }
+    }
+}
+
+void IntegerVisitor::bvisit(const Mul &x)
+{
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        if (not is_true(is_integer_)) {
+            is_integer_ = tribool::indeterminate;
+            return;
+        }
+    }
+}
+
+tribool IntegerVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_integer_;
+}
+
+tribool is_integer(const Basic &b, const Assumptions *assumptions)
+{
+    IntegerVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
 void RealVisitor::bvisit(const Symbol &x)
 {
     if (assumptions_) {

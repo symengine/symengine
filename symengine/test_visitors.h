@@ -181,6 +181,55 @@ public:
     tribool apply(const Basic &b);
 };
 
+class IntegerVisitor : public BaseVisitor<IntegerVisitor>
+{
+private:
+    tribool is_integer_;
+    const Assumptions *assumptions_;
+
+public:
+    IntegerVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Basic &x)
+    {
+        is_integer_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x)
+    {
+        is_integer_ = tribool::tritrue;
+    };
+    void bvisit(const Number &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Set &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Conjugate &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const KroneckerDelta &x)
+    {
+        is_integer_ = tribool::tritrue;
+    };
+
+    tribool apply(const Basic &b);
+};
+
 class RealVisitor : public BaseVisitor<RealVisitor>
 {
 private:
