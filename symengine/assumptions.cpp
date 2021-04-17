@@ -97,10 +97,10 @@ void Assumptions::set_map(umap_basic_bool &map, const RCP<const Basic> &symbol,
 tribool Assumptions::from_map(const umap_basic_bool &map,
                               const RCP<const Basic> &symbol) const
 {
-    try {
-        bool b = map.at(symbol);
-        return (tribool)b;
-    } catch (std::out_of_range const &e) {
+    auto it = map.find(symbol);
+    if (it != map.end()) {
+        return (tribool)(*it);
+    } else {
         return tribool::indeterminate;
     }
 }
