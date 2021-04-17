@@ -550,6 +550,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1NonNegativeVisitor.html">NonNegativeVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1IntegerVisitor.html">IntegerVisitor</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html">RealVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ComplexVisitor.html">ComplexVisitor</a></td></tr>
@@ -2055,6 +2057,9 @@ tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_negative</b> (c
 <tr class="memitem:ae4d142c412130a03f69447fc61d661c8"><td class="memItemLeft" align="right" valign="top"><a id="ae4d142c412130a03f69447fc61d661c8"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonnegative</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:ae4d142c412130a03f69447fc61d661c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf4ac46d415b77418def5fc5038bb5a5"><td class="memItemLeft" align="right" valign="top"><a id="acf4ac46d415b77418def5fc5038bb5a5"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_integer</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
+<tr class="separator:acf4ac46d415b77418def5fc5038bb5a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeae5992fbe908c0beec7e5ade754d603"><td class="memItemLeft" align="right" valign="top"><a id="aeae5992fbe908c0beec7e5ade754d603"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_real</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
 <tr class="separator:aeae5992fbe908c0beec7e5ade754d603"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3926,11 +3931,11 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>True if b is a polynomial in variables and false otherwise</dd></dl>
 <p>Check if b is a polynomial in variables. If no variables are specified all free symbols in b are considered to be variables. All symbols that are not variables will be considered to be constants. </p>
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00423">423</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;{</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    PolynomialVisitor visitor(variables);</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00476">476</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;{</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    PolynomialVisitor visitor(variables);</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
