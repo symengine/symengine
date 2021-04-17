@@ -13,6 +13,7 @@ typedef std::unordered_map<RCP<const Basic>, bool, RCPBasicHash, RCPBasicKeyEq>
 class Assumptions
 {
 private:
+    set_basic complex_symbols_;
     set_basic real_symbols_;
     set_basic rational_symbols_;
     set_basic integer_symbols_;
@@ -29,6 +30,7 @@ private:
 
 public:
     Assumptions(const set_basic &statements);
+    tribool is_complex(const RCP<const Basic> &symbol) const;
     tribool is_real(const RCP<const Basic> &symbol) const;
     tribool is_rational(const RCP<const Basic> &symbol) const;
     tribool is_integer(const RCP<const Basic> &symbol) const;

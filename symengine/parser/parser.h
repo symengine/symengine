@@ -29,22 +29,24 @@ namespace SymEngine
 
 class Parser
 {
+private:
     std::string inp;
+    std::map<const std::string, const RCP<const Basic>> local_parser_constants;
 
 public:
     Tokenizer m_tokenizer;
     RCP<const Basic> res;
 
     RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
-    int parse();
 
     RCP<const Basic> functionify(const std::string &name, vec_basic &params);
     RCP<const Basic> parse_numeric(const std::string &expr);
     RCP<const Basic> parse_identifier(const std::string &expr);
     std::tuple<RCP<const Basic>, RCP<const Basic>>
     parse_implicit_mul(const std::string &expr);
-
-private:
+    explicit Parser(const std::map<const std::string, const RCP<const Basic>>
+                        &parser_constants
+                    = {});
 };
 
 } // namespace SymEngine

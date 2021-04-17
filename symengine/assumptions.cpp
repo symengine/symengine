@@ -15,11 +15,14 @@ Assumptions::Assumptions(const set_basic &statements)
             const auto set = contains.get_set();
             if (is_a<Symbol>(*expr)) {
                 if (is_a<Reals>(*set)) {
+                    complex_symbols_.insert(expr);
                     real_symbols_.insert(expr);
                 } else if (is_a<Rationals>(*set)) {
+                    complex_symbols_.insert(expr);
                     real_symbols_.insert(expr);
                     rational_symbols_.insert(expr);
                 } else if (is_a<Integers>(*set)) {
+                    complex_symbols_.insert(expr);
                     real_symbols_.insert(expr);
                     rational_symbols_.insert(expr);
                     integer_symbols_.insert(expr);
@@ -99,10 +102,16 @@ tribool Assumptions::from_map(const umap_basic_bool &map,
 {
     auto it = map.find(symbol);
     if (it != map.end()) {
-        return (tribool)(*it);
+        return (tribool)((*it).second);
     } else {
         return tribool::indeterminate;
     }
+}
+
+tribool Assumptions::is_complex(const RCP<const Basic> &symbol) const
+{
+    bool cmplx = complex_symbols_.find(symbol) != complex_symbols_.end();
+    return cmplx ? tribool::tritrue : tribool::indeterminate;
 }
 
 tribool Assumptions::is_real(const RCP<const Basic> &symbol) const

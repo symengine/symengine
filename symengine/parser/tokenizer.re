@@ -32,6 +32,7 @@ int Tokenizer::lex(YYSTYPE &yylval)
             pows = "**"|"@";
             le = "<=";
             ge = ">=";
+            ne = "!=";
             eqs = "==";
             ident = char (char | dig)*;
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
@@ -46,6 +47,7 @@ int Tokenizer::lex(YYSTYPE &yylval)
             pows { return yytokentype::POW; }
             le   { return yytokentype::LE; }
             ge   { return yytokentype::GE; }
+            ne   { return yytokentype::NE; }
             eqs  { return yytokentype::EQ; }
             ident { yylval.string=token(); return yytokentype::IDENTIFIER; }
             numeric { yylval.string=token(); return yytokentype::NUMERIC; }

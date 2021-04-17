@@ -8,10 +8,13 @@
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
+#include <symengine/assumptions.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::integer;
+using SymEngine::reals;
+using SymEngine::Assumptions;
 using SymEngine::rational;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
@@ -32,6 +35,7 @@ using SymEngine::vec_basic;
 using SymEngine::function_symbol;
 using SymEngine::permutelist;
 using SymEngine::SymEngineException;
+using SymEngine::NotImplementedError;
 using SymEngine::eigen_values;
 using SymEngine::finiteset;
 using SymEngine::one;
@@ -924,6 +928,7 @@ TEST_CASE("reduced_row_echelon_form(): matrices", "[matrices]")
                                        integer(3), integer(4), integer(3)});
     DenseMatrix B = DenseMatrix(3, 3);
     reduced_row_echelon_form(A, B, pivots);
+    reduced_row_echelon_form(A, B, pivots, true);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
                                     integer(0), integer(1), integer(0),
@@ -1255,11 +1260,14 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     DenseMatrix A = DenseMatrix(3, 3);
     DenseMatrix Q = DenseMatrix(3, 3);
     DenseMatrix R = DenseMatrix(3, 3);
+    DenseMatrix Q1 = DenseMatrix(3, 3);
+    DenseMatrix R1 = DenseMatrix(3, 3);
 
     A = DenseMatrix(3, 3, {integer(12), integer(-51), integer(4), integer(6),
                            integer(167), integer(-68), integer(-4), integer(24),
                            integer(-41)});
     QR(A, Q, R);
+    A.QR(Q1, R1);
 
     REQUIRE(Q == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
                                     rational(-58, 175), rational(3, 7),
@@ -1269,6 +1277,14 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     REQUIRE(R == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
                                     integer(0), integer(175), integer(-70),
                                     integer(0), integer(0), integer(35)}));
+    REQUIRE(Q1 == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
+                                     rational(-58, 175), rational(3, 7),
+                                     rational(158, 175), rational(6, 175),
+                                     rational(-2, 7), rational(6, 35),
+                                     rational(-33, 35)}));
+    REQUIRE(R1 == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
+                                     integer(0), integer(175), integer(-70),
+                                     integer(0), integer(0), integer(35)}));
 }
 
 TEST_CASE("test_LDL(): matrices", "[matrices]")
@@ -1308,12 +1324,17 @@ TEST_CASE("test_cholesky(): matrices", "[matrices]")
         3, 3, {integer(4), integer(12), integer(-16), integer(12), integer(37),
                integer(-43), integer(-16), integer(-43), integer(98)});
     DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix L1 = DenseMatrix(3, 3);
 
     cholesky(A, L);
+    A.cholesky(L1);
 
     REQUIRE(L == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
                                     integer(6), integer(1), integer(0),
                                     integer(-8), integer(5), integer(3)}));
+    REQUIRE(L1 == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
+                                     integer(6), integer(1), integer(0),
+                                     integer(-8), integer(5), integer(3)}));
 }
 
 TEST_CASE("test_trace(): matrices", "[matrices]")
@@ -1440,6 +1461,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(12), integer(40), integer(10),  integer(54),
                            integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(350)));
+
+    CHECK_THROWS_AS(M.rank(), NotImplementedError &);
 }
 
 TEST_CASE("test_berkowitz(): matrices", "[matrices]")
@@ -1539,6 +1562,11 @@ TEST_CASE("test_solve_functions(): matrices", "[matrices]")
     LDL_solve(A, b, x);
 
     REQUIRE(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
+
+    A = DenseMatrix(2, 2, {integer(19), integer(-5), integer(-4), integer(1)});
+    b = DenseMatrix(2, 1, {integer(3), integer(-3)});
+    x = DenseMatrix(2, 1);
+    CHECK_THROWS_AS(LDL_solve(A, b, x), SymEngineException &);
 }
 
 TEST_CASE("test_char_poly(): matrices", "[matrices]")
@@ -2167,15 +2195,19 @@ TEST_CASE("is_diagonal(): DenseMatrix", "[matrices]")
 TEST_CASE("is_real(): DenseMatrix", "[matrices]")
 {
     auto c1 = complex_double(std::complex<double>(8, 1));
+    auto x = symbol("x");
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    DenseMatrix B
-        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), symbol("x")});
+    DenseMatrix B = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), x});
     DenseMatrix C = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), c1});
 
     REQUIRE(is_true(A.is_real()));
     REQUIRE(is_indeterminate(B.is_real()));
     REQUIRE(is_false(C.is_real()));
+
+    const auto a1 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(B.is_real(&a1)));
+    REQUIRE(is_false(C.is_real(&a1)));
 }
 
 TEST_CASE("is_symmetric(): DenseMatrix", "[matrices]")
@@ -2201,6 +2233,7 @@ TEST_CASE("is_symmetric(): DenseMatrix", "[matrices]")
     REQUIRE(is_true(E.is_symmetric()));
     REQUIRE(is_true(F.is_symmetric()));
     REQUIRE(is_indeterminate(H.is_symmetric()));
+    REQUIRE(is_symmetric_dense(D) == false);
 }
 
 TEST_CASE("is_hermitian(): DenseMatrix", "[matrices]")

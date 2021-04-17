@@ -147,6 +147,7 @@ tribool is_nonpositive(const Basic &b);
 tribool is_negative(const Basic &b);
 tribool is_nonnegative(const Basic &b);
 tribool is_real(const Basic &b, const Assumptions *assumptions = nullptr);
+tribool is_complex(const Basic &b, const Assumptions *assumptions = nullptr);
 
 class NumberWrapper : public Number
 {

@@ -2,14 +2,17 @@
 #include <symengine/parser/parser.tab.hh>
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>
+#include <symengine/ntheory_funcs.h>
 
 namespace SymEngine
 {
 
-RCP<const Basic> parse(const std::string &s, bool convert_xor)
+RCP<const Basic>
+parse(const std::string &s, bool convert_xor,
+      const std::map<const std::string, const RCP<const Basic>> &constants)
 {
     // This is expensive:
-    Parser p;
+    Parser p(constants);
     // If you need to parse multiple strings, initialize Parser first, then
     // call Parser::parse() repeatedly.
     return p.parse(s, convert_xor);
@@ -93,6 +96,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"ln", single_casted_log},
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
+            {"primepi", primepi},
         };
     const static std::map<const std::string,
                           const std::function<RCP<const Basic>(
@@ -224,8 +228,14 @@ RCP<const Basic> Parser::parse_identifier(const std::string &expr)
                             {"oo", Inf},
                             {"inf", Inf},
                             {"zoo", ComplexInf},
-                            {"nan", Nan}};
+                            {"nan", Nan},
+                            {"True", boolTrue},
+                            {"False", boolFalse}};
 
+    auto l = local_parser_constants.find(expr);
+    if (l != local_parser_constants.end()) {
+        return l->second;
+    }
     auto c = parser_constants.find(expr);
     if (c != parser_constants.end()) {
         return c->second;
@@ -303,6 +313,12 @@ Parser::parse_implicit_mul(const std::string &expr)
         sym = parse_identifier(lexpr);
     }
     return std::make_tuple(num, sym);
+}
+
+Parser::Parser(
+    const std::map<const std::string, const RCP<const Basic>> &parser_constants)
+    : local_parser_constants(parser_constants)
+{
 }
 
 } // namespace SymEngine

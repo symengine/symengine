@@ -4,6 +4,7 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/symengine_casts.h>
 
@@ -39,7 +40,6 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
-using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::rational_class;
 using SymEngine::is_a;
@@ -53,6 +53,11 @@ using SymEngine::pi;
 using SymEngine::minus_one;
 using SymEngine::Nan;
 using SymEngine::make_rcp;
+using SymEngine::real_double;
+#ifdef HAVE_SYMENGINE_MPFR
+using SymEngine::real_mpfr;
+using SymEngine::mpfr_class;
+#endif
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -287,6 +292,30 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = mul({r1, Rational::from_mpq(rational_class(1, 2)), integer(3),
               real_double(0.2)});
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.03) < 1e-12);
+
+    // Real * 0 = 0 * Real = 0
+    r1 = real_double(0.0);
+    r2 = integer(0);
+    r3 = mul(r1, r2);
+    REQUIRE(eq(*r3, *integer(0)));
+    r1 = real_double(4.5);
+    r3 = mul(r2, r1);
+    REQUIRE(eq(*r3, *integer(0)));
+    // 0 / Real = 0
+    r3 = div(r2, r1);
+    REQUIRE(eq(*r3, *integer(0)));
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(60);
+    mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
+    r1 = real_mpfr(a);
+    r3 = mul(r1, r2);
+    REQUIRE(eq(*r3, *integer(0)));
+    r3 = mul(r2, r1);
+    REQUIRE(eq(*r3, *integer(0)));
+    r3 = div(r2, r1);
+    REQUIRE(eq(*r3, *integer(0)));
+#endif
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)),

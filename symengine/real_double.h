@@ -228,6 +228,9 @@ public:
      * */
     RCP<const Number> mulreal(const Integer &other) const
     {
+        if (other.is_zero()) {
+            return zero;
+        }
         return make_rcp<const RealDouble>(i
                                           * mp_get_d(other.as_integer_class()));
     }

@@ -213,6 +213,117 @@ public:
     tribool apply(const Basic &b);
 };
 
+class ComplexVisitor : public BaseVisitor<ComplexVisitor>
+{
+private:
+    tribool is_complex_;
+    const Assumptions *assumptions_;
+
+    void check_power(const Basic &base, const Basic &exp);
+    void complex_arg_not_zero(const OneArgFunction &x, const Basic &not_zero);
+    void complex_arg_not_pm(const OneArgFunction &x, bool one);
+
+public:
+    ComplexVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Basic &x)
+    {
+        is_complex_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x);
+    void bvisit(const Number &x);
+    void bvisit(const Integer &x)
+    {
+        is_complex_ = tribool::tritrue;
+    }
+    void bvisit(const Rational &x)
+    {
+        is_complex_ = tribool::tritrue;
+    }
+    void bvisit(const Set &x)
+    {
+        is_complex_ = tribool::trifalse;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_complex_ = tribool::trifalse;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_complex_ = tribool::trifalse;
+    };
+    void bvisit(const Constant &x)
+    {
+        is_complex_ = tribool::tritrue;
+    };
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Cos &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Sin &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const ASin &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const ACos &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const ATan &x);
+    void bvisit(const ATanh &x);
+    void bvisit(const ACot &x);
+    void bvisit(const ACoth &x);
+    void bvisit(const Sinh &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Cosh &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Tan &x);
+    void bvisit(const Cot &x);
+    void bvisit(const Sec &x);
+    void bvisit(const ASec &x);
+    void bvisit(const ASech &x);
+    void bvisit(const Csc &x);
+    void bvisit(const ACsc &x);
+    void bvisit(const ACsch &x);
+    void bvisit(const Log &x);
+    void bvisit(const Sign &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Floor &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Ceiling &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Abs &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Conjugate &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const KroneckerDelta &x)
+    {
+        is_complex_ = tribool::tritrue;
+    };
+
+    tribool apply(const Basic &b);
+};
+
 class PolynomialVisitor : public BaseVisitor<PolynomialVisitor>
 {
 private:
