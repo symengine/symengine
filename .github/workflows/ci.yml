@@ -85,8 +85,8 @@ jobs:
           - TEST_CLANG_FORMAT: yes
             OS: ubuntu-16.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.8 main'
-            EXTRA_APT_PACKAGES: clang-format-3.8
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-11 main'
+            EXTRA_APT_PACKAGES: clang-format-11
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
