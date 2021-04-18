@@ -114,5 +114,5 @@ inline RCP<const Infty> infty(int n = 1)
 
 RCP<const Infty> infty(const RCP<const Number> &direction);
 
-} // SymEngine
+} // namespace SymEngine
 #endif

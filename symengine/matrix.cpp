@@ -30,4 +30,4 @@ bool MatrixBase::eq(const MatrixBase &other) const
     return true;
 }
 
-} // SymEngine
+} // namespace SymEngine

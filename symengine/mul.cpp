@@ -518,4 +518,4 @@ vec_basic Mul::get_args() const
     return args;
 }
 
-} // SymEngine
+} // namespace SymEngine

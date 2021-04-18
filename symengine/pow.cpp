@@ -272,4 +272,4 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
     return pow(E, x);
 }
 
-} // SymEngine
+} // namespace SymEngine

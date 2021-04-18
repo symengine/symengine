@@ -5,24 +5,24 @@
 #include <symengine/rational.h>
 #include <symengine/real_double.h>
 
-using SymEngine::integer;
-using SymEngine::real_double;
 using SymEngine::Basic;
-using SymEngine::Rational;
 using SymEngine::Complex;
-using SymEngine::Nan;
-using SymEngine::is_a;
-using SymEngine::pi;
-using SymEngine::NaN;
-using SymEngine::Infty;
+using SymEngine::down_cast;
 using SymEngine::Inf;
-using SymEngine::SymEngineException;
+using SymEngine::Infty;
+using SymEngine::integer;
+using SymEngine::is_a;
+using SymEngine::make_rcp;
+using SymEngine::Nan;
+using SymEngine::NaN;
+using SymEngine::pi;
+using SymEngine::PrimePi;
+using SymEngine::Rational;
+using SymEngine::RCP;
+using SymEngine::real_double;
 using SymEngine::Symbol;
 using SymEngine::symbol;
-using SymEngine::make_rcp;
-using SymEngine::down_cast;
-using SymEngine::RCP;
-using SymEngine::PrimePi;
+using SymEngine::SymEngineException;
 
 TEST_CASE("test_primepi(): ntheory_funcs", "[ntheory_funcs]")
 {

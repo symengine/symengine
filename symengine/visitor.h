@@ -54,13 +54,11 @@ public:
     template <typename... Args,
               typename
               = enable_if_t<std::is_constructible<Base, Args...>::value>>
-    BaseVisitor(Args &&... args) : Base(std::forward<Args>(args)...)
+    BaseVisitor(Args &&...args) : Base(std::forward<Args>(args)...)
     {
     }
 
-    BaseVisitor() : Base()
-    {
-    }
+    BaseVisitor() : Base() {}
 #else
     using Base::Base;
 #endif
@@ -97,9 +95,7 @@ protected:
     bool has_;
 
 public:
-    HasSymbolVisitor(Ptr<const Basic> x) : x_(x)
-    {
-    }
+    HasSymbolVisitor(Ptr<const Basic> x) : x_(x) {}
 
     void bvisit(const Symbol &x)
     {
@@ -138,9 +134,7 @@ protected:
     RCP<const Basic> coeff_;
 
 public:
-    CoeffVisitor(Ptr<const Basic> x, Ptr<const Basic> n) : x_(x), n_(n)
-    {
-    }
+    CoeffVisitor(Ptr<const Basic> x, Ptr<const Basic> n) : x_(x), n_(n) {}
 
     void bvisit(const Add &x)
     {
@@ -243,9 +237,7 @@ protected:
     RCP<const Basic> result_;
 
 public:
-    TransformVisitor()
-    {
-    }
+    TransformVisitor() {}
 
     virtual RCP<const Basic> apply(const RCP<const Basic> &x);
 
@@ -342,6 +334,6 @@ public:
 
 unsigned count_ops(const vec_basic &a);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

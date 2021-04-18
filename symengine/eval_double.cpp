@@ -446,7 +446,7 @@ public:
 
 /*
  * These two seem to be equivalent and about the same fast.
-*/
+ */
 // typedef double (*fn)(const Basic &);
 typedef std::function<double(const Basic &)> fn;
 
@@ -757,4 +757,4 @@ double eval_double_visitor_pattern(const Basic &b)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 
-} // SymEngine
+} // namespace SymEngine

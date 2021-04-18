@@ -17,6 +17,6 @@ std::string ccode(const Basic &x);
 std::string c89code(const Basic &x);
 std::string c99code(const Basic &x);
 std::string jscode(const Basic &x);
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_PRINTER_H

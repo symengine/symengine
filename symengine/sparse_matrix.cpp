@@ -11,9 +11,7 @@
 namespace SymEngine
 {
 // ----------------------------- CSRMatrix ------------------------------------
-CSRMatrix::CSRMatrix()
-{
-}
+CSRMatrix::CSRMatrix() {}
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
@@ -759,4 +757,4 @@ void csr_binop_csr_canonical(
         CSRMatrix::csr_sum_duplicates(C.p_, C.j_, C.x_, A.row_);
 }
 
-} // SymEngine
+} // namespace SymEngine

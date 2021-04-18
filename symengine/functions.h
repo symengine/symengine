@@ -293,8 +293,8 @@ bool handle_minus(const RCP<const Basic> &arg,
                   const Ptr<RCP<const Basic>> &rarg);
 
 /*! returns `true` if the given argument `t` is found in the
-*   lookup table `d`. It also returns the value in `index`
-**/
+ *   lookup table `d`. It also returns the value in `index`
+ **/
 bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
                     const Ptr<RCP<const Basic>> &index);
 
@@ -666,7 +666,7 @@ RCP<const Basic> function_symbol(std::string name, const vec_basic &arg);
 
 /*! Use this class to define custom functions by overriding
  *  the defaut behaviour for create, eval, diff, __eq__, compare etc.
-* */
+ * */
 
 class FunctionWrapper : public FunctionSymbol
 {
@@ -1302,6 +1302,6 @@ public:
 
 RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

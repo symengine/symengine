@@ -26,8 +26,8 @@ public:
         SYMENGINE_ASSIGN_TYPEID()
     }
     /*! \param `i` must already be in rational_class canonical form
-    *   \return Integer or Rational depending on denumerator.
-    * */
+     *   \return Integer or Rational depending on denumerator.
+     * */
     static RCP<const Number> from_mpq(const rational_class &i);
     static RCP<const Number> from_mpq(rational_class &&i);
     //! \return size of the hash
@@ -42,8 +42,8 @@ public:
     bool is_canonical(const rational_class &i) const;
 
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
-    *   Integer, it will return an Integer instead.
-    * */
+     *   Integer, it will return an Integer instead.
+     * */
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
@@ -329,6 +329,6 @@ inline RCP<const Number> rational(long n, long d)
 {
     return Rational::from_two_ints(n, d);
 }
-} // SymEngine
+} // namespace SymEngine
 
 #endif

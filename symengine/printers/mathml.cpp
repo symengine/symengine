@@ -351,4 +351,4 @@ std::string mathml(const Basic &x)
     MathMLPrinter m;
     return m.apply(x);
 }
-}
+} // namespace SymEngine

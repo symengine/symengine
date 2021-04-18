@@ -319,8 +319,8 @@ public:
         RCP<const Basic> exp_new = apply(x.get_exp());
         if (subs_dict_.size() == 1 and is_a<Pow>(*((*subs_dict_.begin()).first))
             and not is_a<Add>(
-                    *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
-                         .get_exp())) {
+                *down_cast<const Pow &>(*(*subs_dict_.begin()).first)
+                     .get_exp())) {
             auto &subs_first
                 = down_cast<const Pow &>(*(*subs_dict_.begin()).first);
             if (eq(*subs_first.get_base(), *base_new)) {
@@ -367,9 +367,9 @@ public:
             // If p.first and p.second are symbols and arg_ is
             // independent of p.second, p.first can be replaced
             if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)
-                and eq(*x.get_arg()->diff(
-                           rcp_static_cast<const Symbol>(p.second)),
-                       *zero)) {
+                and eq(
+                    *x.get_arg()->diff(rcp_static_cast<const Symbol>(p.second)),
+                    *zero)) {
                 insert(n, p.first, p.second);
                 continue;
             }

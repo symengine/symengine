@@ -16,7 +16,7 @@ class BooleanAtom;
 class Boolean;
 inline bool is_a_Boolean(const Basic &b);
 RCP<const BooleanAtom> boolean(bool b);
-}
+} // namespace SymEngine
 #include <symengine/logic.h>
 
 namespace SymEngine
@@ -51,14 +51,13 @@ public:
 class EmptySet : public Set
 {
 public:
-    EmptySet()
-    {
-        SYMENGINE_ASSIGN_TYPEID()
-    }
+    EmptySet(){SYMENGINE_ASSIGN_TYPEID()}
 
     IMPLEMENT_TYPEID(SYMENGINE_EMPTYSET)
-    // EmptySet(EmptySet const&) = delete;
-    void operator=(EmptySet const &) = delete;
+        // EmptySet(EmptySet const&) = delete;
+        void
+        operator=(EmptySet const &)
+        = delete;
     const static RCP<const EmptySet> &getInstance();
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
@@ -69,7 +68,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend inline RCP<T_> make_rcp(Args &&...args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -102,7 +101,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend inline RCP<T_> make_rcp(Args &&...args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -213,7 +212,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend inline RCP<T_> make_rcp(Args &&...args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -242,7 +241,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend inline RCP<T_> make_rcp(Args &&...args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -271,7 +270,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&... args);
+    friend inline RCP<T_> make_rcp(Args &&...args);
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -547,5 +546,5 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 //! \return RCP<const Set>
 RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition);
-}
+} // namespace SymEngine
 #endif

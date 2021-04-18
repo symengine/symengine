@@ -156,4 +156,4 @@ tribool Assumptions::is_nonzero(const RCP<const Basic> &symbol) const
 {
     return from_map(nonzero_, symbol);
 }
-}
+} // namespace SymEngine

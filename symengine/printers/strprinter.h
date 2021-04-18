@@ -206,6 +206,6 @@ public:
     void bvisit(const NaN &x);
     void bvisit(const Infty &x);
 };
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_STR_PRINTER_H

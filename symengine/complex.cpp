@@ -192,4 +192,4 @@ RCP<const Number> Complex::powcomp(const Integer &other) const
         return one->div(*pow_number(*this, -1 * other.as_int()));
     }
 }
-} // SymEngine
+} // namespace SymEngine
