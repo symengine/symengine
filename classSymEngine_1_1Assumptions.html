@@ -96,6 +96,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">SymEngine::Assumptions Class Reference</div>  </div>
@@ -108,9 +109,10 @@ $(function() {
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1Assumptions__coll__graph.png" border="0" usemap="#aSymEngine_1_1Assumptions_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1Assumptions_coll__map" id="aSymEngine_1_1Assumptions_coll__map">
-<area shape="rect" title=" " alt="" coords="20,243,193,269"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/set.html" title=" " alt="" coords="5,95,208,136"/>
-<area shape="rect" title=" " alt="" coords="35,5,178,32"/>
+<area shape="rect" title=" " alt="" coords="597,93,771,120"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/unordered_map.html" title=" " alt="" coords="253,29,409,99"/>
+<area shape="rect" title=" " alt="" coords="5,93,148,120"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/set.html" title=" " alt="" coords="229,126,432,167"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -131,6 +133,30 @@ tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_rational</b> (c
 <tr class="memitem:abfe7d1e50a4b28c8a6d7ccf253e0dfbf"><td class="memItemLeft" align="right" valign="top"><a id="abfe7d1e50a4b28c8a6d7ccf253e0dfbf"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_integer</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
 <tr class="separator:abfe7d1e50a4b28c8a6d7ccf253e0dfbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a165b386334c87797b258d996c2fba3df"><td class="memItemLeft" align="right" valign="top"><a id="a165b386334c87797b258d996c2fba3df"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_positive</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:a165b386334c87797b258d996c2fba3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ec8b8ab672a2eb2217659981573412b"><td class="memItemLeft" align="right" valign="top"><a id="a2ec8b8ab672a2eb2217659981573412b"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonnegative</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:a2ec8b8ab672a2eb2217659981573412b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d3f2b9e1d1c40e58f8a0a9a90c10711"><td class="memItemLeft" align="right" valign="top"><a id="a5d3f2b9e1d1c40e58f8a0a9a90c10711"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_negative</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:a5d3f2b9e1d1c40e58f8a0a9a90c10711"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3feced7fd4675f618e88ef607d7eae26"><td class="memItemLeft" align="right" valign="top"><a id="a3feced7fd4675f618e88ef607d7eae26"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonpositive</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:a3feced7fd4675f618e88ef607d7eae26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90c61005654e14eb3fc6eefbf2535743"><td class="memItemLeft" align="right" valign="top"><a id="a90c61005654e14eb3fc6eefbf2535743"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonzero</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:a90c61005654e14eb3fc6eefbf2535743"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ab317c1dacec32061561eb7e0cf5b4a06"><td class="memItemLeft" align="right" valign="top"><a id="ab317c1dacec32061561eb7e0cf5b4a06"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_map</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> &amp;map, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>, bool value)</td></tr>
+<tr class="separator:ab317c1dacec32061561eb7e0cf5b4a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae553884d8678b2421ebba42a2842b668"><td class="memItemLeft" align="right" valign="top"><a id="ae553884d8678b2421ebba42a2842b668"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>from_map</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> &amp;map, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) const</td></tr>
+<tr class="separator:ae553884d8678b2421ebba42a2842b668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -146,10 +172,25 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a7986770b6e77198da5fc16f0d0ddecd8"><td class="memItemLeft" align="right" valign="top"><a id="a7986770b6e77198da5fc16f0d0ddecd8"></a>
 <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a>&#160;</td><td class="memItemRight" valign="bottom"><b>integer_symbols_</b></td></tr>
 <tr class="separator:a7986770b6e77198da5fc16f0d0ddecd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75e6a3f3460317a397279f3fd0cc2c92"><td class="memItemLeft" align="right" valign="top"><a id="a75e6a3f3460317a397279f3fd0cc2c92"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>positive_</b></td></tr>
+<tr class="separator:a75e6a3f3460317a397279f3fd0cc2c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee885ae09fbabe58a12c33638f896fe7"><td class="memItemLeft" align="right" valign="top"><a id="aee885ae09fbabe58a12c33638f896fe7"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nonnegative_</b></td></tr>
+<tr class="separator:aee885ae09fbabe58a12c33638f896fe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e2c7c733c1633a8efe2e09ac82a56fd"><td class="memItemLeft" align="right" valign="top"><a id="a7e2c7c733c1633a8efe2e09ac82a56fd"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>negative_</b></td></tr>
+<tr class="separator:a7e2c7c733c1633a8efe2e09ac82a56fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5212ac781cb1f1e3196aae3a614391e4"><td class="memItemLeft" align="right" valign="top"><a id="a5212ac781cb1f1e3196aae3a614391e4"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nonpositive_</b></td></tr>
+<tr class="separator:a5212ac781cb1f1e3196aae3a614391e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab48aea99cd75de1b546b871b46b79040"><td class="memItemLeft" align="right" valign="top"><a id="ab48aea99cd75de1b546b871b46b79040"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>nonzero_</b></td></tr>
+<tr class="separator:ab48aea99cd75de1b546b871b46b79040"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="assumptions_8h_source.html#l00009">9</a> of file <a class="el" href="assumptions_8h_source.html">assumptions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="assumptions_8h_source.html#l00013">13</a> of file <a class="el" href="assumptions_8h_source.html">assumptions.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="assumptions_8h_source.html">assumptions.h</a></li>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="assumptions_8cpp_source.html">assumptions.cpp</a></li>
