@@ -9,7 +9,9 @@ fi
 
 CLANG_FORMAT="clang-format"
 
-# use clang-format-11 if available
+# preferred versions in inverse order of preference:
+which "clang-format-13" > /dev/null && CLANG_FORMAT="clang-format-13"
+which "clang-format-12" > /dev/null && CLANG_FORMAT="clang-format-12"
 which "clang-format-11" > /dev/null && CLANG_FORMAT="clang-format-11"
 
 FILES=`git ls-files | grep -E "\.(cpp|h|hpp|c)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
