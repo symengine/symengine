@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - xeus-cling
-  - llvmdev
+  - llvmdev=5
   - gmp
   - mpfr
   - mpc
