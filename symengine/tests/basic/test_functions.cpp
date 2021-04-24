@@ -155,6 +155,11 @@ using SymEngine::rewrite_as_exp;
 using SymEngine::SymEngineException;
 using SymEngine::trigamma;
 using SymEngine::truncate;
+using SymEngine::Eq;
+using SymEngine::Conjugate;
+using SymEngine::rewrite_as_exp;
+using SymEngine::rewrite_as_sin;
+using SymEngine::mul;
 using SymEngine::unevaluated_expr;
 
 using namespace SymEngine::literals;
@@ -327,6 +332,10 @@ TEST_CASE("Sin: functions", "[functions]")
     r1 = rewrite_as_exp(sin(x));
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))), mul(integer(2), I));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(sin(x));
+    r2 = sin(x);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -451,6 +460,10 @@ TEST_CASE("Cos: functions", "[functions]")
 
     r1 = rewrite_as_exp(cos(x));
     r2 = div(add(exp(mul(I, x)), exp(mul(neg(I), x))), integer(2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(cos(x));
+    r2 = sin(unevaluated_expr(add(x, div(pi, integer(2)))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -578,6 +591,10 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))),
              mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(tan(x));
+    r2 = div(mul(integer(2), pow(sin(x), integer(2))), sin(mul(integer(2), x)));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -699,6 +716,10 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = rewrite_as_exp(cot(x));
     r2 = div(mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I),
              sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(cot(x));
+    r2 = div(sin(mul(integer(2), x)), mul(integer(2), pow(sin(x), integer(2))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -822,6 +843,10 @@ TEST_CASE("Csc: functions", "[functions]")
 
     r1 = rewrite_as_exp(csc(x));
     r2 = div(mul(integer(2), I), sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(csc(x));
+    r2 = div(integer(1), sin(x));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -947,6 +972,10 @@ TEST_CASE("Sec: functions", "[functions]")
 
     r1 = rewrite_as_exp(sec(x));
     r2 = div(integer(2), add(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(sec(x));
+    r2 = div(integer(1), sin(unevaluated_expr(add(x, div(pi, integer(2))))));
     REQUIRE(eq(*r1, *r2));
 }
 
