@@ -161,9 +161,9 @@ RCP<const Number> pow_number(const Complex &x, unsigned long n)
             r_re = tmp;
         }
         mask = mask << 1;
-        if (not (mask > 0 and n >= mask)) {
+        if (not(mask > 0 and n >= mask)) {
             break;
-	}
+        }
         // Multiply p by p
         tmp = p_re * p_re - p_im * p_im;
         p_im = 2 * p_re * p_im;
@@ -195,4 +195,4 @@ RCP<const Number> Complex::powcomp(const Integer &other) const
         return one->div(*pow_number(*this, -1 * other.as_int()));
     }
 }
-} // SymEngine
+} // namespace SymEngine
