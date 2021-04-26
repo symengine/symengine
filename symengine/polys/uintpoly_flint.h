@@ -219,7 +219,7 @@ bool divides_upoly(const UFlintPoly<Container, BaseType, Poly> &a,
         return false;
     }
 }
-}
+} // namespace SymEngine
 
 #endif // HAVE_SYMENGINE_FLINT
 

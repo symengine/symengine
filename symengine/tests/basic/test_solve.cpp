@@ -153,16 +153,18 @@ TEST_CASE("linear and quadratic polynomials", "[Solve]")
 
     auto b = symbol("b"), c = symbol("c");
     soln = solve(add({sqx, mul(b, x), c}), x);
-    REQUIRE(soln->__str__() == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
-                               "+ (-1/2)*sqrt(-4*c + b**2)}");
+    REQUIRE(soln->__str__()
+            == "{(-1/2)*b + (1/2)*sqrt(-4*c + b**2), (-1/2)*b "
+               "+ (-1/2)*sqrt(-4*c + b**2)}");
 
     soln = solve(add({sqx, mul(i3, x), c}), x);
     REQUIRE(soln->__str__()
             == "{-3/2 + (-1/2)*sqrt(9 - 4*c), -3/2 + (1/2)*sqrt(9 - 4*c)}");
 
     soln = solve(add({sqx, mul({i3, b, x}), c}), x);
-    REQUIRE(soln->__str__() == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
-                               "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
+    REQUIRE(soln->__str__()
+            == "{(-3/2)*b + (-1/2)*sqrt(-4*c + 9*b**2), "
+               "(-3/2)*b + (1/2)*sqrt(-4*c + 9*b**2)}");
 
     CHECK_THROWS_AS(solve_poly_quadratic({one}, reals), SymEngineException &);
 
@@ -505,9 +507,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
          add({mul(integer(3), x), mul(integer(3), y), mul(integer(3), z)})},
         {x, y, z});
     REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(1), integer(2), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(2), integer(3), integer(2),
+                            integer(2), integer(3), integer(3), integer(3),
+                            integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -517,9 +520,10 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
         {y, x, z});
 
     REQUIRE(solns.first
-            == DenseMatrix(3, 3, {integer(2), integer(1), integer(3),
-                                  integer(2), integer(2), integer(3),
-                                  integer(3), integer(3), integer(3)}));
+            == DenseMatrix(3, 3,
+                           {integer(2), integer(1), integer(3), integer(2),
+                            integer(2), integer(3), integer(3), integer(3),
+                            integer(3)}));
     REQUIRE(solns.second == DenseMatrix(3, 1, {zero, zero, zero}));
 
     solns = linear_eqns_to_matrix(
@@ -536,14 +540,15 @@ TEST_CASE("linear_eqns_to_matrix", "[Solve]")
                  mul(integer(6), t)}),
             integer(30))},
         {y, z, t, x});
-    REQUIRE(
-        solns.first
-        == DenseMatrix(4, 4, {integer(2), integer(3), integer(4), integer(1),
-                              integer(2), integer(3), integer(4), integer(2),
-                              integer(3), integer(3), integer(4), integer(3),
-                              integer(8), integer(7), integer(6), integer(9)}));
-    REQUIRE(solns.second == DenseMatrix(4, 1, {integer(10), integer(11),
-                                               integer(13), integer(30)}));
+    REQUIRE(solns.first
+            == DenseMatrix(4, 4,
+                           {integer(2), integer(3), integer(4), integer(1),
+                            integer(2), integer(3), integer(4), integer(2),
+                            integer(3), integer(3), integer(4), integer(3),
+                            integer(8), integer(7), integer(6), integer(9)}));
+    REQUIRE(solns.second
+            == DenseMatrix(
+                4, 1, {integer(10), integer(11), integer(13), integer(30)}));
 }
 
 TEST_CASE("is_a_LinearArgTrigEquation", "[Solve]")
@@ -635,11 +640,12 @@ TEST_CASE("trigonometric equations", "[Solve]")
 
     eqn = add(sin(x), cos(x));
     soln = solve(eqn, x);
-    req = set_union({imageset(n, sub(mul({i2, n, pi}), div(pi, integer(4))),
-                              interval(NegInf, Inf, true, true)),
-                     imageset(n, add(mul({i2, n, pi}),
-                                     div(mul(integer(3), pi), integer(4))),
-                              interval(NegInf, Inf, true, true))});
+    req = set_union(
+        {imageset(n, sub(mul({i2, n, pi}), div(pi, integer(4))),
+                  interval(NegInf, Inf, true, true)),
+         imageset(n,
+                  add(mul({i2, n, pi}), div(mul(integer(3), pi), integer(4))),
+                  interval(NegInf, Inf, true, true))});
     // REQUIRE(eq(*soln, *req)); // atan2(sqrt(2)/2, -sqrt(2)/2) is wrongly
     // computed as it can't idenfity `-sqrt(2)/2` as negative(should pass once
     // assumptions are implemented).

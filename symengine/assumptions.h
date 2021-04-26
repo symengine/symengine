@@ -40,6 +40,6 @@ public:
     tribool is_nonpositive(const RCP<const Basic> &symbol) const;
     tribool is_nonzero(const RCP<const Basic> &symbol) const;
 };
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_ASSUMPTIONS_H

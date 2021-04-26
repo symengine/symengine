@@ -37,12 +37,8 @@ public:
                 return a.first.degree() < b.first.degree();
         }
     };
-    GaloisFieldDict() SYMENGINE_NOEXCEPT
-    {
-    }
-    ~GaloisFieldDict() SYMENGINE_NOEXCEPT
-    {
-    }
+    GaloisFieldDict() SYMENGINE_NOEXCEPT {}
+    ~GaloisFieldDict() SYMENGINE_NOEXCEPT {}
     GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
         : dict_(std::move(other.dict_)),
           modulo_(std::move(other.modulo_))
@@ -638,6 +634,6 @@ inline RCP<const GaloisField> pow_upoly(const GaloisField &a, unsigned int p)
     auto dict = GaloisField::container_type::pow(a.get_poly(), p);
     return GaloisField::from_container(a.get_var(), std::move(dict));
 }
-}
+} // namespace SymEngine
 
 #endif

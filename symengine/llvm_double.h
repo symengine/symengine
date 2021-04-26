@@ -22,7 +22,7 @@ namespace legacy
 {
 class FunctionPassManager;
 }
-}
+} // namespace llvm
 
 namespace SymEngine
 {

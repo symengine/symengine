@@ -10,40 +10,40 @@
 #include <symengine/visitor.h>
 #include <symengine/assumptions.h>
 
-using SymEngine::print_stack_on_segfault;
-using SymEngine::RCP;
-using SymEngine::integer;
-using SymEngine::reals;
+using SymEngine::Add;
+using SymEngine::add;
 using SymEngine::Assumptions;
-using SymEngine::rational;
-using SymEngine::DenseMatrix;
 using SymEngine::Basic;
-using SymEngine::complex_double;
 using SymEngine::Complex;
+using SymEngine::complex_double;
+using SymEngine::conjugate;
+using SymEngine::CSRMatrix;
+using SymEngine::DenseMatrix;
+using SymEngine::diag;
+using SymEngine::down_cast;
+using SymEngine::eigen_values;
+using SymEngine::eye;
+using SymEngine::finiteset;
+using SymEngine::function_symbol;
+using SymEngine::integer;
+using SymEngine::is_a;
+using SymEngine::minus_one;
+using SymEngine::mul;
+using SymEngine::NotImplementedError;
+using SymEngine::one;
+using SymEngine::permutelist;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::rational;
+using SymEngine::RCP;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
+using SymEngine::reals;
+using SymEngine::set_basic;
+using SymEngine::sub;
 using SymEngine::symbol;
 using SymEngine::Symbol;
-using SymEngine::is_a;
-using SymEngine::set_basic;
-using SymEngine::Add;
-using SymEngine::minus_one;
-using SymEngine::CSRMatrix;
-using SymEngine::add;
-using SymEngine::sub;
-using SymEngine::eye;
-using SymEngine::diag;
-using SymEngine::vec_basic;
-using SymEngine::function_symbol;
-using SymEngine::permutelist;
 using SymEngine::SymEngineException;
-using SymEngine::NotImplementedError;
-using SymEngine::eigen_values;
-using SymEngine::finiteset;
-using SymEngine::one;
-using SymEngine::mul;
-using SymEngine::down_cast;
-using SymEngine::RealDouble;
-using SymEngine::real_double;
-using SymEngine::conjugate;
+using SymEngine::vec_basic;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -56,20 +56,24 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     REQUIRE(eq(*A.get(1, 1), *integer(-2)));
 
     A.set(1, 0, integer(0));
-    REQUIRE(A == DenseMatrix(
-                     2, 2, {integer(1), integer(0), integer(0), integer(-2)}));
+    REQUIRE(A
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(0), integer(0), integer(-2)}));
     REQUIRE(A != DenseMatrix(2, 1, {integer(1), integer(-2)}));
 
     A.set(0, 1, integer(-2));
-    REQUIRE(A == DenseMatrix(
-                     2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
+    REQUIRE(A
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(-2), integer(0), integer(-2)}));
 
     DenseMatrix C(A);
     C.set(0, 0, integer(0));
-    REQUIRE(A == DenseMatrix(
-                     2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
-    REQUIRE(C == DenseMatrix(
-                     2, 2, {integer(0), integer(-2), integer(0), integer(-2)}));
+    REQUIRE(A
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(-2), integer(0), integer(-2)}));
+    REQUIRE(C
+            == DenseMatrix(2, 2,
+                           {integer(0), integer(-2), integer(0), integer(-2)}));
 
     // Test for CSRMatrix
     std::vector<unsigned> p1{{0, 2, 3, 6}}, j1{{0, 2, 2, 0, 1, 2}}, p2, j2;
@@ -89,27 +93,31 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     REQUIRE(eq(*B.get(2, 1), *integer(5)));
 
     B.set(2, 1, integer(6));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(2), integer(3), integer(4),
-                            integer(6), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(2), integer(3), integer(4),
+                          integer(6), integer(6)}));
 
     B.set(0, 1, integer(1));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
-                           {integer(1), integer(1), integer(2), integer(3),
-                            integer(4), integer(6), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+                         {integer(1), integer(1), integer(2), integer(3),
+                          integer(4), integer(6), integer(6)}));
 
     B.set(1, 2, integer(7));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
-                           {integer(1), integer(1), integer(2), integer(7),
-                            integer(4), integer(6), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+                         {integer(1), integer(1), integer(2), integer(7),
+                          integer(4), integer(6), integer(6)}));
 
     B = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
                   {integer(1), integer(3), integer(4), integer(5), integer(6)});
 
     B.set(0, 2, integer(2));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(2), integer(3), integer(4),
-                            integer(5), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(2), integer(3), integer(4),
+                          integer(5), integer(6)}));
 
     B = CSRMatrix(3, 3); // 3x3 Zero matrix
 
@@ -124,18 +132,21 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     B.set(2, 1, integer(5));
     B.set(2, 2, integer(6));
 
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(2), integer(3), integer(4),
-                            integer(5), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(2), integer(3), integer(4),
+                          integer(5), integer(6)}));
 
     B.set(0, 0, integer(0));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 1, 2, 5}, {2, 2, 0, 1, 2},
-                           {integer(2), integer(3), integer(4), integer(5),
-                            integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(
+                3, 3, {0, 1, 2, 5}, {2, 2, 0, 1, 2},
+                {integer(2), integer(3), integer(4), integer(5), integer(6)}));
 
     B.set(2, 1, integer(0));
-    REQUIRE(B == CSRMatrix(3, 3, {0, 1, 2, 4}, {2, 2, 0, 2},
-                           {integer(2), integer(3), integer(4), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 1, 2, 4}, {2, 2, 0, 2},
+                         {integer(2), integer(3), integer(4), integer(6)}));
 }
 
 TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
@@ -147,23 +158,27 @@ TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     add_dense_dense(A, B, C);
 
-    REQUIRE(C == DenseMatrix(2, 2,
-                             {integer(2), integer(4), integer(6), integer(8)}));
+    REQUIRE(
+        C
+        == DenseMatrix(2, 2, {integer(2), integer(4), integer(6), integer(8)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(-1), integer(0), integer(2)});
     B = DenseMatrix(2, 2, {integer(1), integer(2), integer(-3), integer(0)});
     add_dense_dense(A, B, C);
 
-    REQUIRE(C == DenseMatrix(
-                     2, 2, {integer(2), integer(1), integer(-3), integer(2)}));
+    REQUIRE(C
+            == DenseMatrix(2, 2,
+                           {integer(2), integer(1), integer(-3), integer(2)}));
 
     A = DenseMatrix(2, 2, {integer(1), symbol("a"), integer(0), symbol("b")});
     B = DenseMatrix(2, 2, {symbol("c"), integer(2), integer(-3), integer(0)});
     add_dense_dense(A, B, C);
 
-    REQUIRE(C == DenseMatrix(2, 2, {add(integer(1), symbol("c")),
-                                    add(symbol("a"), integer(2)), integer(-3),
-                                    symbol("b")}));
+    REQUIRE(C
+            == DenseMatrix(2, 2,
+                           {add(integer(1), symbol("c")),
+                            add(symbol("a"), integer(2)), integer(-3),
+                            symbol("b")}));
 
     C = DenseMatrix(1, 4);
     A = DenseMatrix(1, 4, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
@@ -171,20 +186,25 @@ TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
     add_dense_dense(A, B, C);
 
     REQUIRE(C
-            == DenseMatrix(1, 4, {add(integer(3), symbol("a")),
-                                  add(symbol("b"), integer(2)),
-                                  add(symbol("c"), integer(-3)), symbol("d")}));
+            == DenseMatrix(1, 4,
+                           {add(integer(3), symbol("a")),
+                            add(symbol("b"), integer(2)),
+                            add(symbol("c"), integer(-3)), symbol("d")}));
 
     C = DenseMatrix(2, 3);
-    A = DenseMatrix(2, 3, {integer(7), integer(4), integer(-3), integer(-5),
-                           symbol("a"), symbol("b")});
-    B = DenseMatrix(2, 3, {integer(10), integer(13), integer(5), integer(-7),
-                           symbol("c"), symbol("d")});
+    A = DenseMatrix(2, 3,
+                    {integer(7), integer(4), integer(-3), integer(-5),
+                     symbol("a"), symbol("b")});
+    B = DenseMatrix(2, 3,
+                    {integer(10), integer(13), integer(5), integer(-7),
+                     symbol("c"), symbol("d")});
     add_dense_dense(A, B, C);
 
-    REQUIRE(C == DenseMatrix(2, 3, {integer(17), integer(17), integer(2),
-                                    integer(-12), add(symbol("a"), symbol("c")),
-                                    add(symbol("b"), symbol("d"))}));
+    REQUIRE(C
+            == DenseMatrix(2, 3,
+                           {integer(17), integer(17), integer(2), integer(-12),
+                            add(symbol("a"), symbol("c")),
+                            add(symbol("b"), symbol("d"))}));
 }
 
 TEST_CASE("test_add_dense_scalar(): matrices", "[matrices]")
@@ -197,8 +217,9 @@ TEST_CASE("test_add_dense_scalar(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     add_dense_scalar(A, k, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(3), integer(4), integer(5), integer(6)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(3), integer(4), integer(5), integer(6)}));
 }
 
 TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
@@ -209,8 +230,9 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     mul_dense_dense(A, B, A);
 
-    REQUIRE(A == DenseMatrix(2, 2,
-                             {integer(1), integer(2), integer(3), integer(4)}));
+    REQUIRE(
+        A
+        == DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)}));
 
     A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
     B = DenseMatrix(4, 1, {integer(1), integer(2), integer(3), integer(4)});
@@ -225,27 +247,31 @@ TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
     mul_dense_dense(A, B, C);
 
     REQUIRE(C
-            == DenseMatrix(4, 3, {integer(110), integer(200), integer(120),
-                                  integer(-33), integer(-60), integer(-36),
-                                  integer(77), integer(140), integer(84),
-                                  integer(-55), integer(-100), integer(-60)}));
+            == DenseMatrix(4, 3,
+                           {integer(110), integer(200), integer(120),
+                            integer(-33), integer(-60), integer(-36),
+                            integer(77), integer(140), integer(84),
+                            integer(-55), integer(-100), integer(-60)}));
 
-    A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
-                           symbol("q"), symbol("r"), symbol("u"), symbol("v"),
-                           symbol("w")});
+    A = DenseMatrix(3, 3,
+                    {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                     symbol("q"), symbol("r"), symbol("u"), symbol("v"),
+                     symbol("w")});
     B = DenseMatrix(3, 1, {symbol("x"), symbol("y"), symbol("z")});
     C = DenseMatrix(3, 1);
     mul_dense_dense(A, B, C);
 
-    REQUIRE(C == DenseMatrix(3, 1, {add(add(mul(symbol("a"), symbol("x")),
-                                            mul(symbol("b"), symbol("y"))),
-                                        mul(symbol("c"), symbol("z"))),
-                                    add(add(mul(symbol("p"), symbol("x")),
-                                            mul(symbol("q"), symbol("y"))),
-                                        mul(symbol("r"), symbol("z"))),
-                                    add(add(mul(symbol("u"), symbol("x")),
-                                            mul(symbol("v"), symbol("y"))),
-                                        mul(symbol("w"), symbol("z")))}));
+    REQUIRE(C
+            == DenseMatrix(3, 1,
+                           {add(add(mul(symbol("a"), symbol("x")),
+                                    mul(symbol("b"), symbol("y"))),
+                                mul(symbol("c"), symbol("z"))),
+                            add(add(mul(symbol("p"), symbol("x")),
+                                    mul(symbol("q"), symbol("y"))),
+                                mul(symbol("r"), symbol("z"))),
+                            add(add(mul(symbol("u"), symbol("x")),
+                                    mul(symbol("v"), symbol("y"))),
+                                mul(symbol("w"), symbol("z")))}));
 }
 
 TEST_CASE("test_elementwise_dense_dense_multiplication(): matrices",
@@ -257,32 +283,38 @@ TEST_CASE("test_elementwise_dense_dense_multiplication(): matrices",
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     elementwise_mul_dense_dense(A, B, A);
 
-    REQUIRE(A == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(4)}));
+    REQUIRE(
+        A
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(4)}));
 
     A = DenseMatrix(1, 4, {integer(1), integer(3), integer(7), integer(-5)});
     B = DenseMatrix(1, 4, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix C = DenseMatrix(1, 4);
     A.elementwise_mul_matrix(B, C);
 
-    REQUIRE(C == DenseMatrix(1, 4, {integer(1), integer(6), integer(21),
-                                    integer(-20)}));
+    REQUIRE(C
+            == DenseMatrix(
+                1, 4, {integer(1), integer(6), integer(21), integer(-20)}));
 
-    A = DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
-                           symbol("q"), symbol("r")});
-    B = DenseMatrix(3, 2, {symbol("x"), symbol("y"), symbol("z"), symbol("w"),
-                           symbol("k"), symbol("f")});
+    A = DenseMatrix(3, 2,
+                    {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                     symbol("q"), symbol("r")});
+    B = DenseMatrix(3, 2,
+                    {symbol("x"), symbol("y"), symbol("z"), symbol("w"),
+                     symbol("k"), symbol("f")});
     C = DenseMatrix(3, 2);
     B.elementwise_mul_matrix(A, C);
 
-    REQUIRE(C == DenseMatrix(3, 2, {
-                                       mul(symbol("a"), symbol("x")),
-                                       mul(symbol("b"), symbol("y")),
-                                       mul(symbol("c"), symbol("z")),
-                                       mul(symbol("p"), symbol("w")),
-                                       mul(symbol("q"), symbol("k")),
-                                       mul(symbol("r"), symbol("f")),
-                                   }));
+    REQUIRE(C
+            == DenseMatrix(3, 2,
+                           {
+                               mul(symbol("a"), symbol("x")),
+                               mul(symbol("b"), symbol("y")),
+                               mul(symbol("c"), symbol("z")),
+                               mul(symbol("p"), symbol("w")),
+                               mul(symbol("q"), symbol("k")),
+                               mul(symbol("r"), symbol("f")),
+                           }));
 }
 
 TEST_CASE("test_mul_dense_scalar(): matrices", "[matrices]")
@@ -295,8 +327,9 @@ TEST_CASE("test_mul_dense_scalar(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     mul_dense_scalar(A, k, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(2), integer(4), integer(6), integer(8)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(2), integer(4), integer(6), integer(8)}));
 }
 
 TEST_CASE("test_conjugate_dense(): matrices", "[matrices]")
@@ -311,9 +344,10 @@ TEST_CASE("test_conjugate_dense(): matrices", "[matrices]")
     A.conjugate(B);
     REQUIRE(B == A);
     C.conjugate(B);
-    REQUIRE(B == DenseMatrix(2, 2, {complex_double(std::complex<double>(8, -1)),
-                                    integer(2), SymEngine::conjugate(s1),
-                                    integer(4)}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {complex_double(std::complex<double>(8, -1)),
+                            integer(2), SymEngine::conjugate(s1), integer(4)}));
 
     DenseMatrix M1 = DenseMatrix(1, 1);
     DenseMatrix M2
@@ -323,13 +357,14 @@ TEST_CASE("test_conjugate_dense(): matrices", "[matrices]")
         M1 == DenseMatrix(1, 1, {complex_double(std::complex<double>(3, -4))}));
 
     DenseMatrix M3 = DenseMatrix(2, 1);
-    DenseMatrix M4
-        = DenseMatrix(2, 1, {complex_double(std::complex<double>(1, 2)),
-                             complex_double(std::complex<double>(0, 3))});
+    DenseMatrix M4 = DenseMatrix(2, 1,
+                                 {complex_double(std::complex<double>(1, 2)),
+                                  complex_double(std::complex<double>(0, 3))});
     M4.conjugate(M3);
-    REQUIRE(
-        M3 == DenseMatrix(2, 1, {complex_double(std::complex<double>(1, -2)),
-                                 complex_double(std::complex<double>(0, -3))}));
+    REQUIRE(M3
+            == DenseMatrix(2, 1,
+                           {complex_double(std::complex<double>(1, -2)),
+                            complex_double(std::complex<double>(0, -3))}));
 }
 
 TEST_CASE("test_conjugate CSR: matrices", "[matrices]")
@@ -347,10 +382,11 @@ TEST_CASE("test_conjugate CSR: matrices", "[matrices]")
                    integer(3), integer(4),
                    complex_double(std::complex<double>(5, 4))});
     A.conjugate(B);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
-                           {complex_double(std::complex<double>(0, 2)),
-                            conjugate(symbol("x")), integer(3), integer(4),
-                            complex_double(std::complex<double>(5, -4))}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+                         {complex_double(std::complex<double>(0, 2)),
+                          conjugate(symbol("x")), integer(3), integer(4),
+                          complex_double(std::complex<double>(5, -4))}));
 }
 
 TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
@@ -360,18 +396,22 @@ TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     transpose_dense(A, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(3), integer(2), integer(4)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(4)}));
 
-    A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
-                           symbol("q"), symbol("r"), symbol("u"), symbol("v"),
-                           symbol("w")});
+    A = DenseMatrix(3, 3,
+                    {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                     symbol("q"), symbol("r"), symbol("u"), symbol("v"),
+                     symbol("w")});
     B = DenseMatrix(3, 3);
     transpose_dense(A, B);
 
-    REQUIRE(B == DenseMatrix(3, 3, {symbol("a"), symbol("p"), symbol("u"),
-                                    symbol("b"), symbol("q"), symbol("v"),
-                                    symbol("c"), symbol("r"), symbol("w")}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {symbol("a"), symbol("p"), symbol("u"), symbol("b"),
+                            symbol("q"), symbol("v"), symbol("c"), symbol("r"),
+                            symbol("w")}));
 
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -391,33 +431,38 @@ TEST_CASE("conjugate_transpose_dense(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     conjugate_transpose_dense(A, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(3), integer(2), integer(4)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(4)}));
 
-    A = DenseMatrix(2, 2, {complex_double(std::complex<double>(1, 1)),
-                           complex_double(std::complex<double>(0, 14)),
-                           complex_double(std::complex<double>(-1, -1)),
-                           complex_double(std::complex<double>(2, -2))});
+    A = DenseMatrix(2, 2,
+                    {complex_double(std::complex<double>(1, 1)),
+                     complex_double(std::complex<double>(0, 14)),
+                     complex_double(std::complex<double>(-1, -1)),
+                     complex_double(std::complex<double>(2, -2))});
     A.conjugate_transpose(B);
 
     REQUIRE(B
-            == DenseMatrix(2, 2, {complex_double(std::complex<double>(1, -1)),
-                                  complex_double(std::complex<double>(-1, 1)),
-                                  complex_double(std::complex<double>(0, -14)),
-                                  complex_double(std::complex<double>(2, 2))}));
+            == DenseMatrix(2, 2,
+                           {complex_double(std::complex<double>(1, -1)),
+                            complex_double(std::complex<double>(-1, 1)),
+                            complex_double(std::complex<double>(0, -14)),
+                            complex_double(std::complex<double>(2, 2))}));
 
-    A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
-                           symbol("q"), symbol("r"), symbol("u"), symbol("v"),
-                           symbol("w")});
+    A = DenseMatrix(3, 3,
+                    {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+                     symbol("q"), symbol("r"), symbol("u"), symbol("v"),
+                     symbol("w")});
     B = DenseMatrix(3, 3);
     conjugate_transpose_dense(A, B);
 
-    REQUIRE(
-        B == DenseMatrix(3, 3, {conjugate(symbol("a")), conjugate(symbol("p")),
-                                conjugate(symbol("u")), conjugate(symbol("b")),
-                                conjugate(symbol("q")), conjugate(symbol("v")),
-                                conjugate(symbol("c")), conjugate(symbol("r")),
-                                conjugate(symbol("w"))}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {conjugate(symbol("a")), conjugate(symbol("p")),
+                            conjugate(symbol("u")), conjugate(symbol("b")),
+                            conjugate(symbol("q")), conjugate(symbol("v")),
+                            conjugate(symbol("c")), conjugate(symbol("r")),
+                            conjugate(symbol("w"))}));
 }
 
 TEST_CASE("conjugate_transpose CSR: matrices", "[matrices]")
@@ -428,42 +473,50 @@ TEST_CASE("conjugate_transpose CSR: matrices", "[matrices]")
     CSRMatrix B = CSRMatrix(3, 3);
 
     A.conjugate_transpose(B);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 4, 7}, {0, 2, 0, 2, 0, 1, 2},
-                           {integer(1), integer(4), integer(1), integer(6),
-                            integer(2), integer(3), integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 4, 7}, {0, 2, 0, 2, 0, 1, 2},
+                         {integer(1), integer(4), integer(1), integer(6),
+                          integer(2), integer(3), integer(6)}));
 
     A = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
                   {complex_double(std::complex<double>(0, -2)), symbol("x"),
                    integer(3), integer(4),
                    complex_double(std::complex<double>(5, 4))});
     A.conjugate_transpose(B);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 5}, {0, 2, 2, 1, 2},
-                           {complex_double(std::complex<double>(0, 2)),
-                            integer(3), integer(4), conjugate(symbol("x")),
-                            complex_double(std::complex<double>(5, -4))}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 5}, {0, 2, 2, 1, 2},
+                         {complex_double(std::complex<double>(0, 2)),
+                          integer(3), integer(4), conjugate(symbol("x")),
+                          complex_double(std::complex<double>(5, -4))}));
 }
 
 TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
-                                       symbol("p"), symbol("q"), symbol("r"),
-                                       symbol("u"), symbol("v"), symbol("w")});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {symbol("a"), symbol("b"), symbol("c"),
+                                 symbol("p"), symbol("q"), symbol("r"),
+                                 symbol("u"), symbol("v"), symbol("w")});
     DenseMatrix B = DenseMatrix(3, 2);
     submatrix_dense(A, B, 0, 1, 2, 2);
 
-    REQUIRE(B == DenseMatrix(3, 2, {symbol("b"), symbol("c"), symbol("q"),
-                                    symbol("r"), symbol("v"), symbol("w")}));
+    REQUIRE(B
+            == DenseMatrix(3, 2,
+                           {symbol("b"), symbol("c"), symbol("q"), symbol("r"),
+                            symbol("v"), symbol("w")}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(5), integer(6), integer(7), integer(8),
-                           integer(9), integer(10), integer(11), integer(12),
-                           integer(13), integer(14), integer(15), integer(16)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(5),
+                     integer(6), integer(7), integer(8), integer(9),
+                     integer(10), integer(11), integer(12), integer(13),
+                     integer(14), integer(15), integer(16)});
     B = DenseMatrix(3, 3);
     submatrix_dense(A, B, 1, 1, 3, 3);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(6), integer(7), integer(8),
-                                    integer(10), integer(11), integer(12),
-                                    integer(14), integer(15), integer(16)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(6), integer(7), integer(8), integer(10),
+                            integer(11), integer(12), integer(14), integer(15),
+                            integer(16)}));
 }
 
 TEST_CASE("test_row_join(): matrices", "[matrices]")
@@ -472,8 +525,10 @@ TEST_CASE("test_row_join(): matrices", "[matrices]")
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
     A.row_join(B);
-    REQUIRE(A == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
-                                    symbol("c"), symbol("d"), symbol("f")}));
+    REQUIRE(A
+            == DenseMatrix(2, 3,
+                           {symbol("a"), symbol("b"), symbol("e"), symbol("c"),
+                            symbol("d"), symbol("f")}));
 }
 
 TEST_CASE("test_col_join(): matrices", "[matrices]")
@@ -482,8 +537,10 @@ TEST_CASE("test_col_join(): matrices", "[matrices]")
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
     A.col_join(B);
-    REQUIRE(A == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
-                                    symbol("d"), symbol("e"), symbol("f")}));
+    REQUIRE(A
+            == DenseMatrix(3, 2,
+                           {symbol("a"), symbol("b"), symbol("c"), symbol("d"),
+                            symbol("e"), symbol("f")}));
 }
 
 TEST_CASE("test_row_insert(): matrices", "[matrices]")
@@ -492,18 +549,24 @@ TEST_CASE("test_row_insert(): matrices", "[matrices]")
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(1, 2, {symbol("e"), symbol("f")});
     A.row_insert(B, 0);
-    CHECK(A == DenseMatrix(3, 2, {symbol("e"), symbol("f"), symbol("a"),
-                                  symbol("b"), symbol("c"), symbol("d")}));
+    CHECK(A
+          == DenseMatrix(3, 2,
+                         {symbol("e"), symbol("f"), symbol("a"), symbol("b"),
+                          symbol("c"), symbol("d")}));
     DenseMatrix C = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     C.row_insert(B, 1);
-    CHECK(C == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("e"),
-                                  symbol("f"), symbol("c"), symbol("d")}));
+    CHECK(C
+          == DenseMatrix(3, 2,
+                         {symbol("a"), symbol("b"), symbol("e"), symbol("f"),
+                          symbol("c"), symbol("d")}));
     DenseMatrix D = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     D.row_insert(B, 2);
-    CHECK(D == DenseMatrix(3, 2, {symbol("a"), symbol("b"), symbol("c"),
-                                  symbol("d"), symbol("e"), symbol("f")}));
+    CHECK(D
+          == DenseMatrix(3, 2,
+                         {symbol("a"), symbol("b"), symbol("c"), symbol("d"),
+                          symbol("e"), symbol("f")}));
 }
 
 TEST_CASE("test_col_insert(): matrices", "[matrices]")
@@ -512,18 +575,24 @@ TEST_CASE("test_col_insert(): matrices", "[matrices]")
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix B = DenseMatrix(2, 1, {symbol("e"), symbol("f")});
     A.col_insert(B, 0);
-    CHECK(A == DenseMatrix(2, 3, {symbol("e"), symbol("a"), symbol("b"),
-                                  symbol("f"), symbol("c"), symbol("d")}));
+    CHECK(A
+          == DenseMatrix(2, 3,
+                         {symbol("e"), symbol("a"), symbol("b"), symbol("f"),
+                          symbol("c"), symbol("d")}));
     DenseMatrix C = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     C.col_insert(B, 1);
-    CHECK(C == DenseMatrix(2, 3, {symbol("a"), symbol("e"), symbol("b"),
-                                  symbol("c"), symbol("f"), symbol("d")}));
+    CHECK(C
+          == DenseMatrix(2, 3,
+                         {symbol("a"), symbol("e"), symbol("b"), symbol("c"),
+                          symbol("f"), symbol("d")}));
     DenseMatrix D = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     D.col_insert(B, 2);
-    CHECK(D == DenseMatrix(2, 3, {symbol("a"), symbol("b"), symbol("e"),
-                                  symbol("c"), symbol("d"), symbol("f")}));
+    CHECK(D
+          == DenseMatrix(2, 3,
+                         {symbol("a"), symbol("b"), symbol("e"), symbol("c"),
+                          symbol("d"), symbol("f")}));
 }
 
 TEST_CASE("test_row_del(): matrices", "[matrices]")
@@ -548,12 +617,14 @@ TEST_CASE("test_col_del(): matrices", "[matrices]")
 
 TEST_CASE("test_column_exchange_dense(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
-                                       symbol("p"), symbol("q"), symbol("r"),
-                                       symbol("u"), symbol("v"), symbol("w")});
-    DenseMatrix B = DenseMatrix(3, 3, {symbol("c"), symbol("b"), symbol("a"),
-                                       symbol("r"), symbol("q"), symbol("p"),
-                                       symbol("w"), symbol("v"), symbol("u")});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {symbol("a"), symbol("b"), symbol("c"),
+                                 symbol("p"), symbol("q"), symbol("r"),
+                                 symbol("u"), symbol("v"), symbol("w")});
+    DenseMatrix B = DenseMatrix(3, 3,
+                                {symbol("c"), symbol("b"), symbol("a"),
+                                 symbol("r"), symbol("q"), symbol("p"),
+                                 symbol("w"), symbol("v"), symbol("u")});
     column_exchange_dense(A, 0, 2);
     REQUIRE(A == B);
 }
@@ -566,23 +637,27 @@ TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     pivoted_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(
-                     2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(2), integer(0), integer(-2)}));
 
     A = DenseMatrix(2, 2, {integer(2), integer(3), integer(3), integer(4)});
     B = DenseMatrix(2, 2);
     pivoted_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2, {integer(1), div(integer(3), integer(2)),
-                                    integer(0), div(minus_one, integer(2))}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {integer(1), div(integer(3), integer(2)), integer(0),
+                            div(minus_one, integer(2))}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     B = DenseMatrix(2, 2);
     pivoted_gaussian_elimination(A, B, pl);
 
     REQUIRE(
-        B == DenseMatrix(
-                 2, 2, {integer(1), div(symbol("b"), symbol("a")), integer(0),
+        B
+        == DenseMatrix(2, 2,
+                       {integer(1), div(symbol("b"), symbol("a")), integer(0),
                         sub(symbol("d"),
                             mul(symbol("c"), div(symbol("b"), symbol("a"))))}));
 
@@ -592,9 +667,11 @@ TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
     B = DenseMatrix(3, 3);
     pivoted_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(1), integer(1), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(0)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
@@ -602,9 +679,11 @@ TEST_CASE("test_pivoted_gaussian_elimination(): matrices", "[matrices]")
     B = DenseMatrix(3, 3);
     pivoted_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                    integer(0), integer(1), integer(2),
-                                    integer(0), integer(0), integer(3)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(1), integer(1), integer(0),
+                            integer(1), integer(2), integer(0), integer(0),
+                            integer(3)}));
 }
 
 TEST_CASE("test_fraction_free_gaussian_elimination(): matrices", "[matrices]")
@@ -614,41 +693,48 @@ TEST_CASE("test_fraction_free_gaussian_elimination(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(
-                     2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(2), integer(0), integer(-2)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(2), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(2, 2, {symbol("a"), symbol("b"), integer(0),
-                                    sub(mul(symbol("a"), symbol("d")),
-                                        mul(symbol("b"), symbol("c")))}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {symbol("a"), symbol("b"), integer(0),
+                            sub(mul(symbol("a"), symbol("d")),
+                                mul(symbol("b"), symbol("c")))}));
 
     // Test case taken from :
     // Fraction-Free Algorithms for Linear and Polynomial Equations, George C
     // Nakos,
     // Peter R Turner et. al.
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(2), integer(2), integer(3), integer(4),
-                           integer(3), integer(3), integer(3), integer(4),
-                           integer(9), integer(8), integer(7), integer(6)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(2),
+                     integer(2), integer(3), integer(4), integer(3), integer(3),
+                     integer(3), integer(4), integer(9), integer(8), integer(7),
+                     integer(6)});
     B = DenseMatrix(4, 4);
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(
-                     4, 4, {integer(1), integer(2), integer(3), integer(4),
+    REQUIRE(B
+            == DenseMatrix(4, 4,
+                           {integer(1), integer(2), integer(3), integer(4),
                             integer(0), integer(-2), integer(-3), integer(-4),
                             integer(0), integer(0), integer(3), integer(4),
                             integer(0), integer(0), integer(0), integer(-10)}));
@@ -656,42 +742,49 @@ TEST_CASE("test_fraction_free_gaussian_elimination(): matrices", "[matrices]")
     // Test case taken from :
     // A SIMPLIFIED FRACTION-FREE INTEGER GAUSS ELIMINATION ALGORITHM
     // Peter R. Turner
-    A = DenseMatrix(4, 4, {integer(8), integer(7), integer(4), integer(1),
-                           integer(4), integer(6), integer(7), integer(3),
-                           integer(6), integer(3), integer(4), integer(6),
-                           integer(4), integer(5), integer(8), integer(2)});
+    A = DenseMatrix(4, 4,
+                    {integer(8), integer(7), integer(4), integer(1), integer(4),
+                     integer(6), integer(7), integer(3), integer(6), integer(3),
+                     integer(4), integer(6), integer(4), integer(5), integer(8),
+                     integer(2)});
     B = DenseMatrix(4, 4);
     fraction_free_gaussian_elimination(A, B);
 
     REQUIRE(
-        B == DenseMatrix(4, 4,
-                         {integer(8), integer(7), integer(4), integer(1),
-                          integer(0), integer(20), integer(40), integer(20),
-                          integer(0), integer(0), integer(110), integer(150),
-                          integer(0), integer(0), integer(0), integer(-450)}));
+        B
+        == DenseMatrix(4, 4,
+                       {integer(8), integer(7), integer(4), integer(1),
+                        integer(0), integer(20), integer(40), integer(20),
+                        integer(0), integer(0), integer(110), integer(150),
+                        integer(0), integer(0), integer(0), integer(-450)}));
 
     // Below two test cases are taken from:
     // http://www.mathworks.in/help/symbolic/mupad_ref/linalg-gausselim.html
-    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(-1), integer(1),
-                           integer(0), integer(1), integer(2), integer(-1),
-                           integer(4)});
+    A = DenseMatrix(3, 3,
+                    {integer(1), integer(2), integer(-1), integer(1),
+                     integer(0), integer(1), integer(2), integer(-1),
+                     integer(4)});
     B = DenseMatrix(3, 3);
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(2), integer(-1),
-                                    integer(0), integer(-2), integer(2),
-                                    integer(0), integer(0), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(2), integer(-1), integer(0),
+                            integer(-2), integer(2), integer(0), integer(0),
+                            integer(-2)}));
 
-    A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(-1), integer(0), integer(1), integer(0),
-                           integer(3), integer(5), integer(6), integer(9)});
+    A = DenseMatrix(3, 4,
+                    {integer(1), integer(2), integer(3), integer(4),
+                     integer(-1), integer(0), integer(1), integer(0),
+                     integer(3), integer(5), integer(6), integer(9)});
     B = DenseMatrix(3, 4);
     fraction_free_gaussian_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3),
-                                    integer(4), integer(0), integer(2),
-                                    integer(4), integer(4), integer(0),
-                                    integer(0), integer(-2), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(3, 4,
+                           {integer(1), integer(2), integer(3), integer(4),
+                            integer(0), integer(2), integer(4), integer(4),
+                            integer(0), integer(0), integer(-2), integer(-2)}));
 }
 
 TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
@@ -703,32 +796,37 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
     DenseMatrix B = DenseMatrix(2, 2);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(
-                     2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {integer(1), integer(2), integer(0), integer(-2)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(2), integer(2), integer(3), integer(4),
-                           integer(3), integer(3), integer(3), integer(4),
-                           integer(9), integer(8), integer(7), integer(6)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(2),
+                     integer(2), integer(3), integer(4), integer(3), integer(3),
+                     integer(3), integer(4), integer(9), integer(8), integer(7),
+                     integer(6)});
     B = DenseMatrix(4, 4);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(
-                     4, 4, {integer(1), integer(2), integer(3), integer(4),
+    REQUIRE(B
+            == DenseMatrix(4, 4,
+                           {integer(1), integer(2), integer(3), integer(4),
                             integer(0), integer(-2), integer(-3), integer(-4),
                             integer(0), integer(0), integer(3), integer(4),
                             integer(0), integer(0), integer(0), integer(-10)}));
 
-    A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(-1), integer(0), integer(1), integer(0),
-                           integer(3), integer(5), integer(6), integer(9)});
+    A = DenseMatrix(3, 4,
+                    {integer(1), integer(2), integer(3), integer(4),
+                     integer(-1), integer(0), integer(1), integer(0),
+                     integer(3), integer(5), integer(6), integer(9)});
     B = DenseMatrix(3, 4);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3),
-                                    integer(4), integer(0), integer(2),
-                                    integer(4), integer(4), integer(0),
-                                    integer(0), integer(-2), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(3, 4,
+                           {integer(1), integer(2), integer(3), integer(4),
+                            integer(0), integer(2), integer(4), integer(4),
+                            integer(0), integer(0), integer(-2), integer(-2)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
@@ -736,9 +834,11 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
     B = DenseMatrix(3, 3);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                    integer(0), integer(0), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(1), integer(1), integer(0),
+                            integer(0), integer(0), integer(0), integer(0),
+                            integer(0)}));
 
     // These tests won't work with fraction_free_gaussian_elimination
     A = DenseMatrix(3, 3,
@@ -747,9 +847,11 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
     B = DenseMatrix(3, 3);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(1), integer(1), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(0)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
@@ -757,9 +859,11 @@ TEST_CASE("test_pivoted_fraction_free_gaussian_elimination(): matrices",
     B = DenseMatrix(3, 3);
     pivoted_fraction_free_gaussian_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                    integer(0), integer(2), integer(4),
-                                    integer(0), integer(0), integer(6)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(1), integer(1), integer(0),
+                            integer(2), integer(4), integer(0), integer(0),
+                            integer(6)}));
 }
 
 TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
@@ -771,56 +875,68 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
     DenseMatrix B = DenseMatrix(2, 2);
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(1)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(2), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(0), integer(0), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(1)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), integer(0), symbol("c"), integer(0)});
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(2, 2,
-                             {integer(1), integer(0), integer(0), integer(0)}));
+    REQUIRE(
+        B
+        == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
-    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(-1),
-                           integer(7), integer(6), integer(4), integer(5),
-                           integer(2)});
+    A = DenseMatrix(3, 3,
+                    {integer(1), integer(2), integer(3), integer(-1),
+                     integer(7), integer(6), integer(4), integer(5),
+                     integer(2)});
     B = DenseMatrix(3, 3);
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(1)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(1)}));
 
-    A = DenseMatrix(3, 2, {integer(-9), integer(4), integer(3), integer(-1),
-                           integer(7), integer(6)});
+    A = DenseMatrix(3, 2,
+                    {integer(-9), integer(4), integer(3), integer(-1),
+                     integer(7), integer(6)});
     B = DenseMatrix(3, 2);
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0),
-                                    integer(1), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 2,
+                           {integer(1), integer(0), integer(0), integer(1),
+                            integer(0), integer(0)}));
 
     // These tests won't work with gauss_jordan_elimination
     A = DenseMatrix(3, 3,
@@ -829,9 +945,11 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
     B = DenseMatrix(3, 3);
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(1), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(0)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
@@ -839,9 +957,11 @@ TEST_CASE("test_pivoted_gauss_jordan_elimination(): matrices", "[matrices]")
     B = DenseMatrix(3, 3);
     pivoted_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(1)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(1)}));
 }
 
 TEST_CASE("test_fraction_free_gauss_jordan_elimination(): matrices",
@@ -852,34 +972,39 @@ TEST_CASE("test_fraction_free_gauss_jordan_elimination(): matrices",
     DenseMatrix B = DenseMatrix(2, 2);
     fraction_free_gauss_jordan_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(
-                     2, 2, {integer(-2), integer(0), integer(0), integer(-2)}));
+    REQUIRE(B
+            == DenseMatrix(2, 2,
+                           {integer(-2), integer(0), integer(0), integer(-2)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(2), integer(2), integer(3), integer(4),
-                           integer(3), integer(3), integer(3), integer(4),
-                           integer(9), integer(8), integer(7), integer(6)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(2),
+                     integer(2), integer(3), integer(4), integer(3), integer(3),
+                     integer(3), integer(4), integer(9), integer(8), integer(7),
+                     integer(6)});
     B = DenseMatrix(4, 4);
     fraction_free_gauss_jordan_elimination(A, B);
 
-    REQUIRE(B == DenseMatrix(
-                     4, 4, {integer(-10), integer(0), integer(0), integer(0),
+    REQUIRE(B
+            == DenseMatrix(4, 4,
+                           {integer(-10), integer(0), integer(0), integer(0),
                             integer(0), integer(-10), integer(0), integer(0),
                             integer(0), integer(0), integer(-10), integer(0),
                             integer(0), integer(0), integer(0), integer(-10)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4),
-                           integer(7), integer(2), integer(2), integer(4),
-                           integer(3), integer(6), integer(3), integer(4),
-                           integer(9), integer(5), integer(7), integer(5)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(7), integer(5), integer(4), integer(7),
+                     integer(2), integer(2), integer(4), integer(3), integer(6),
+                     integer(3), integer(4), integer(9), integer(5), integer(7),
+                     integer(5)});
     fraction_free_gauss_jordan_elimination(A, B);
 
     REQUIRE(
-        B == DenseMatrix(4, 4,
-                         {integer(-139), integer(0), integer(0), integer(0),
-                          integer(0), integer(-139), integer(0), integer(0),
-                          integer(0), integer(0), integer(-139), integer(0),
-                          integer(0), integer(0), integer(0), integer(-139)}));
+        B
+        == DenseMatrix(4, 4,
+                       {integer(-139), integer(0), integer(0), integer(0),
+                        integer(0), integer(-139), integer(0), integer(0),
+                        integer(0), integer(0), integer(-139), integer(0),
+                        integer(0), integer(0), integer(0), integer(-139)}));
 }
 
 TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
@@ -887,15 +1012,18 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
 {
     // These tests won't work with fraction_free_gauss_jordan_elimination
     permutelist pl;
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                       integer(2), integer(2), integer(2),
-                                       integer(3), integer(4), integer(3)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(1), integer(1), integer(2),
+                                 integer(2), integer(2), integer(3), integer(4),
+                                 integer(3)});
     DenseMatrix B = DenseMatrix(3, 3);
     pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(1), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(0)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(1), integer(1), integer(2), integer(2),
@@ -905,58 +1033,69 @@ TEST_CASE("test_pivoted_fraction_free_gauss_jordan_elimination(): matrices",
 
     // Here the diagonal entry is 6 although the det(A) = -6, this because we
     // have interchanged two rows
-    REQUIRE(B == DenseMatrix(3, 3, {integer(6), integer(0), integer(0),
-                                    integer(0), integer(6), integer(0),
-                                    integer(0), integer(0), integer(6)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(6), integer(0), integer(0), integer(0),
+                            integer(6), integer(0), integer(0), integer(0),
+                            integer(6)}));
 
-    A = DenseMatrix(3, 4, {integer(1), integer(1), integer(1), integer(6),
-                           integer(1), integer(1), integer(1), integer(8),
-                           integer(4), integer(6), integer(8), integer(18)});
+    A = DenseMatrix(3, 4,
+                    {integer(1), integer(1), integer(1), integer(6), integer(1),
+                     integer(1), integer(1), integer(8), integer(4), integer(6),
+                     integer(8), integer(18)});
     B = DenseMatrix(3, 4);
     pivoted_fraction_free_gauss_jordan_elimination(A, B, pl);
-    REQUIRE(B == DenseMatrix(3, 4,
-                             {integer(4), integer(0), integer(-4), integer(0),
-                              integer(0), integer(4), integer(8), integer(0),
-                              integer(0), integer(0), integer(0), integer(4)}));
+    REQUIRE(B
+            == DenseMatrix(3, 4,
+                           {integer(4), integer(0), integer(-4), integer(0),
+                            integer(0), integer(4), integer(8), integer(0),
+                            integer(0), integer(0), integer(0), integer(4)}));
 }
 
 TEST_CASE("reduced_row_echelon_form(): matrices", "[matrices]")
 {
     SymEngine::vec_uint pivots;
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
-                                       integer(2), integer(2), integer(2),
-                                       integer(3), integer(4), integer(3)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(1), integer(1), integer(2),
+                                 integer(2), integer(2), integer(3), integer(4),
+                                 integer(3)});
     DenseMatrix B = DenseMatrix(3, 3);
     reduced_row_echelon_form(A, B, pivots);
     reduced_row_echelon_form(A, B, pivots, true);
 
-    REQUIRE(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(B
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(1), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(0)}));
     pivots.clear();
 
-    A = DenseMatrix(3, 4, {integer(1), integer(1), integer(1), integer(6),
-                           integer(1), integer(1), integer(1), integer(8),
-                           integer(4), integer(6), integer(8), integer(18)});
+    A = DenseMatrix(3, 4,
+                    {integer(1), integer(1), integer(1), integer(6), integer(1),
+                     integer(1), integer(1), integer(8), integer(4), integer(6),
+                     integer(8), integer(18)});
     B = DenseMatrix(3, 4);
     reduced_row_echelon_form(A, B, pivots);
-    REQUIRE(B == DenseMatrix(3, 4,
-                             {integer(1), integer(0), integer(-1), integer(0),
-                              integer(0), integer(1), integer(2), integer(0),
-                              integer(0), integer(0), integer(0), integer(1)}));
+    REQUIRE(B
+            == DenseMatrix(3, 4,
+                           {integer(1), integer(0), integer(-1), integer(0),
+                            integer(0), integer(1), integer(2), integer(0),
+                            integer(0), integer(0), integer(0), integer(1)}));
 
     REQUIRE(SymEngine::unified_eq(pivots, {0, 1, 3}));
     pivots.clear();
 
-    A = DenseMatrix(3, 4, {integer(0), integer(1), integer(1), integer(6),
-                           integer(0), integer(1), integer(1), integer(8),
-                           integer(0), integer(6), integer(8), integer(18)});
+    A = DenseMatrix(3, 4,
+                    {integer(0), integer(1), integer(1), integer(6), integer(0),
+                     integer(1), integer(1), integer(8), integer(0), integer(6),
+                     integer(8), integer(18)});
     B = DenseMatrix(3, 4);
     reduced_row_echelon_form(A, B, pivots);
-    REQUIRE(B == DenseMatrix(3, 4,
-                             {integer(0), integer(1), integer(0), integer(0),
-                              integer(0), integer(0), integer(1), integer(0),
-                              integer(0), integer(0), integer(0), integer(1)}));
+    REQUIRE(B
+            == DenseMatrix(3, 4,
+                           {integer(0), integer(1), integer(0), integer(0),
+                            integer(0), integer(0), integer(1), integer(0),
+                            integer(0), integer(0), integer(0), integer(1)}));
 
     REQUIRE(SymEngine::unified_eq(pivots, {1, 2, 3}));
 }
@@ -972,16 +1111,18 @@ TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices",
 
     REQUIRE(x == DenseMatrix(2, 1, {integer(4), integer(1)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(2), integer(2), integer(3), integer(4),
-                           integer(3), integer(3), integer(3), integer(4),
-                           integer(9), integer(8), integer(7), integer(6)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(2),
+                     integer(2), integer(3), integer(4), integer(3), integer(3),
+                     integer(3), integer(4), integer(9), integer(8), integer(7),
+                     integer(6)});
     b = DenseMatrix(4, 1, {integer(10), integer(11), integer(13), integer(30)});
     x = DenseMatrix(4, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(4, 1,
-                             {integer(1), integer(1), integer(1), integer(1)}));
+    REQUIRE(
+        x
+        == DenseMatrix(4, 1, {integer(1), integer(1), integer(1), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     b = DenseMatrix(2, 1, {integer(1), integer(1)});
@@ -1001,8 +1142,9 @@ TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices",
     // simplified. See: https://github.com/sympy/symengine/issues/183
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
     b = DenseMatrix(
-        2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
-               mul(integer(2), mul(symbol("a"), symbol("b")))});
+        2, 1,
+        {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
+         mul(integer(2), mul(symbol("a"), symbol("b")))});
     x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
@@ -1023,8 +1165,9 @@ TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices",
     x = DenseMatrix(2, 2);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(
-                     2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
+    REQUIRE(x
+            == DenseMatrix(2, 2,
+                           {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
@@ -1037,16 +1180,18 @@ TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
 
     REQUIRE(x == DenseMatrix(2, 1, {integer(4), integer(1)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(2), integer(2), integer(3), integer(4),
-                           integer(3), integer(3), integer(3), integer(4),
-                           integer(9), integer(8), integer(7), integer(6)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(2),
+                     integer(2), integer(3), integer(4), integer(3), integer(3),
+                     integer(3), integer(4), integer(9), integer(8), integer(7),
+                     integer(6)});
     b = DenseMatrix(4, 1, {integer(10), integer(11), integer(13), integer(30)});
     x = DenseMatrix(4, 1);
     fraction_free_gauss_jordan_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(4, 1,
-                             {integer(1), integer(1), integer(1), integer(1)}));
+    REQUIRE(
+        x
+        == DenseMatrix(4, 1, {integer(1), integer(1), integer(1), integer(1)}));
 
     // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4,
     // 6])
@@ -1055,8 +1200,9 @@ TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
     x = DenseMatrix(2, 2);
     fraction_free_gauss_jordan_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(
-                     2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
+    REQUIRE(x
+            == DenseMatrix(2, 2,
+                           {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 TEST_CASE("test_fraction_free_LU(): matrices", "[matrices]")
@@ -1064,21 +1210,22 @@ TEST_CASE("test_fraction_free_LU(): matrices", "[matrices]")
     // Example 3, page 14, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
     // Fraction-free algorithms for linear and polynomial equations.
     // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
-    DenseMatrix A
-        = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                             integer(2), integer(2), integer(3), integer(4),
-                             integer(3), integer(3), integer(3), integer(4),
-                             integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix A = DenseMatrix(
+        4, 4,
+        {integer(1), integer(2), integer(3), integer(4), integer(2), integer(2),
+         integer(3), integer(4), integer(3), integer(3), integer(3), integer(4),
+         integer(9), integer(8), integer(7), integer(6)});
     DenseMatrix LU = DenseMatrix(4, 4);
     DenseMatrix U = DenseMatrix(4, 4);
     fraction_free_LU(A, LU);
 
     REQUIRE(
-        LU == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                                 integer(2), integer(-2), integer(-3),
-                                 integer(-4), integer(3), integer(-3),
-                                 integer(3), integer(4), integer(9),
-                                 integer(-10), integer(10), integer(-10)}));
+        LU
+        == DenseMatrix(4, 4,
+                       {integer(1), integer(2), integer(3), integer(4),
+                        integer(2), integer(-2), integer(-3), integer(-4),
+                        integer(3), integer(-3), integer(3), integer(4),
+                        integer(9), integer(-10), integer(10), integer(-10)}));
 
     DenseMatrix b = DenseMatrix(
         4, 1, {integer(10), integer(11), integer(13), integer(30)});
@@ -1089,47 +1236,57 @@ TEST_CASE("test_fraction_free_LU(): matrices", "[matrices]")
     // modified b from forward substitution. This will find the solutions.
     forward_substitution(LU, b, x);
 
-    REQUIRE(x == DenseMatrix(4, 1, {integer(10), integer(-9), integer(7),
-                                    integer(-10)}));
+    REQUIRE(x
+            == DenseMatrix(
+                4, 1, {integer(10), integer(-9), integer(7), integer(-10)}));
 
     back_substitution(LU, x, b);
 
-    REQUIRE(b == DenseMatrix(4, 1,
-                             {integer(1), integer(1), integer(1), integer(1)}));
+    REQUIRE(
+        b
+        == DenseMatrix(4, 1, {integer(1), integer(1), integer(1), integer(1)}));
 }
 
 TEST_CASE("test_LU(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
-                                       integer(2), integer(5), integer(6),
-                                       integer(8), integer(3), integer(1)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(3), integer(5), integer(2),
+                                 integer(5), integer(6), integer(8), integer(3),
+                                 integer(1)});
     DenseMatrix L = DenseMatrix(3, 3);
     DenseMatrix U = DenseMatrix(3, 3);
     LU(A, L, U);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(2), integer(1), integer(0),
-                                    integer(8), integer(21), integer(1)}));
-    REQUIRE(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
-                                    integer(0), integer(-1), integer(-4),
-                                    integer(0), integer(0), integer(45)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(2),
+                            integer(1), integer(0), integer(8), integer(21),
+                            integer(1)}));
+    REQUIRE(U
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(3), integer(5), integer(0),
+                            integer(-1), integer(-4), integer(0), integer(0),
+                            integer(45)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(6), integer(3),
-                           integer(3), integer(5), integer(6), integer(-5),
-                           integer(2), integer(4), integer(5), integer(6),
-                           integer(6), integer(-10), integer(2), integer(-30)});
+    A = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(6), integer(3), integer(3),
+                     integer(5), integer(6), integer(-5), integer(2),
+                     integer(4), integer(5), integer(6), integer(6),
+                     integer(-10), integer(2), integer(-30)});
     L = DenseMatrix(4, 4);
     U = DenseMatrix(4, 4);
     LU(A, L, U);
 
-    REQUIRE(
-        L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
-                                integer(3), integer(1), integer(0), integer(0),
-                                integer(2), integer(0), integer(1), integer(0),
-                                integer(6), integer(22),
-                                div(integer(-230), integer(7)), integer(1)}));
-    REQUIRE(U == DenseMatrix(
-                     4, 4, {integer(1), integer(2), integer(6), integer(3),
+    REQUIRE(L
+            == DenseMatrix(4, 4,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(3), integer(1), integer(0), integer(0),
+                            integer(2), integer(0), integer(1), integer(0),
+                            integer(6), integer(22),
+                            div(integer(-230), integer(7)), integer(1)}));
+    REQUIRE(U
+            == DenseMatrix(4, 4,
+                           {integer(1), integer(2), integer(6), integer(3),
                             integer(0), integer(-1), integer(-12), integer(-14),
                             integer(0), integer(0), integer(-7), integer(0),
                             integer(0), integer(0), integer(0), integer(260)}));
@@ -1146,21 +1303,26 @@ TEST_CASE("test_LU(): matrices", "[matrices]")
 
 TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
-                                       integer(2), integer(6), integer(6),
-                                       integer(8), integer(3), integer(1)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(3), integer(5), integer(2),
+                                 integer(6), integer(6), integer(8), integer(3),
+                                 integer(1)});
     DenseMatrix L = DenseMatrix(3, 3);
     DenseMatrix U = DenseMatrix(3, 3);
     permutelist pl;
     pivoted_LU(A, L, U, pl);
     REQUIRE(pl == permutelist({{2, 1}}));
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(8), integer(1), integer(0),
-                                    integer(2), integer(0), integer(1)}));
-    REQUIRE(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
-                                    integer(0), integer(-21), integer(-39),
-                                    integer(0), integer(0), integer(-4)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(8),
+                            integer(1), integer(0), integer(2), integer(0),
+                            integer(1)}));
+    REQUIRE(U
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(3), integer(5), integer(0),
+                            integer(-21), integer(-39), integer(0), integer(0),
+                            integer(-4)}));
 
     pl.clear();
 
@@ -1172,12 +1334,16 @@ TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
 
     REQUIRE(pl == permutelist({{1, 0}, {2, 1}}));
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(4), integer(1), integer(0),
-                                    integer(0), integer(0), integer(1)}));
-    REQUIRE(U == DenseMatrix(3, 3, {integer(2), integer(6), integer(6),
-                                    integer(0), integer(-21), integer(-23),
-                                    integer(0), integer(0), integer(5)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(4),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(1)}));
+    REQUIRE(U
+            == DenseMatrix(3, 3,
+                           {integer(2), integer(6), integer(6), integer(0),
+                            integer(-21), integer(-23), integer(0), integer(0),
+                            integer(5)}));
 
     A = DenseMatrix(3, 3,
                     {integer(0), integer(0), integer(0), integer(0), integer(0),
@@ -1192,20 +1358,27 @@ TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
     DenseMatrix D = DenseMatrix(3, 3);
     DenseMatrix U = DenseMatrix(3, 3);
 
-    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(5),
-                           integer(-3), integer(2), integer(6), integer(2),
-                           integer(1)});
+    A = DenseMatrix(3, 3,
+                    {integer(1), integer(2), integer(3), integer(5),
+                     integer(-3), integer(2), integer(6), integer(2),
+                     integer(1)});
     fraction_free_LDU(A, L, D, U);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(5), integer(-13), integer(0),
-                                    integer(6), integer(-10), integer(1)}));
-    REQUIRE(D == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(0), integer(-13), integer(0),
-                                    integer(0), integer(0), integer(-13)}));
-    REQUIRE(U == DenseMatrix(3, 3, {integer(1), integer(2), integer(3),
-                                    integer(0), integer(-13), integer(-13),
-                                    integer(0), integer(0), integer(91)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(5),
+                            integer(-13), integer(0), integer(6), integer(-10),
+                            integer(1)}));
+    REQUIRE(D
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(-13), integer(0), integer(0), integer(0),
+                            integer(-13)}));
+    REQUIRE(U
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(2), integer(3), integer(0),
+                            integer(-13), integer(-13), integer(0), integer(0),
+                            integer(91)}));
 
     A = DenseMatrix(3, 3,
                     {integer(1), integer(2), mul(integer(3), symbol("a")),
@@ -1214,45 +1387,54 @@ TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
                      mul(integer(2), symbol("b")), integer(1)});
     fraction_free_LDU(A, L, D, U);
 
-    REQUIRE(
-        L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(5),
-                                sub(mul(integer(-3), symbol("a")), integer(10)),
-                                integer(0), mul(integer(6), symbol("a")),
-                                add(mul(integer(-12), symbol("a")),
-                                    mul(integer(2), symbol("b"))),
-                                integer(1)}));
-    REQUIRE(D == DenseMatrix(
-                     3, 3, {integer(1), integer(0), integer(0), integer(0),
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(5),
+                            sub(mul(integer(-3), symbol("a")), integer(10)),
+                            integer(0), mul(integer(6), symbol("a")),
+                            add(mul(integer(-12), symbol("a")),
+                                mul(integer(2), symbol("b"))),
+                            integer(1)}));
+    REQUIRE(D
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
                             sub(mul(integer(-3), symbol("a")), integer(10)),
                             integer(0), integer(0), integer(0),
                             sub(mul(integer(-3), symbol("a")), integer(10))}));
     REQUIRE(U
             == DenseMatrix(
-                   3, 3,
-                   {integer(1), integer(2), mul(integer(3), symbol("a")),
-                    integer(0), sub(mul(integer(-3), symbol("a")), integer(10)),
-                    mul(integer(-13), symbol("a")), integer(0), integer(0),
-                    add(mul(mul(integer(13), symbol("a")),
-                            add(mul(integer(-12), symbol("a")),
-                                mul(integer(2), symbol("b")))),
-                        mul(sub(mul(integer(-3), symbol("a")), integer(10)),
-                            add(mul(integer(-18), pow(symbol("a"), integer(2))),
-                                integer(1))))}));
+                3, 3,
+                {integer(1), integer(2), mul(integer(3), symbol("a")),
+                 integer(0), sub(mul(integer(-3), symbol("a")), integer(10)),
+                 mul(integer(-13), symbol("a")), integer(0), integer(0),
+                 add(mul(mul(integer(13), symbol("a")),
+                         add(mul(integer(-12), symbol("a")),
+                             mul(integer(2), symbol("b")))),
+                     mul(sub(mul(integer(-3), symbol("a")), integer(10)),
+                         add(mul(integer(-18), pow(symbol("a"), integer(2))),
+                             integer(1))))}));
 
-    A = DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(-1),
-                           integer(4), integer(6), integer(-10), integer(-2),
-                           integer(9)});
+    A = DenseMatrix(3, 3,
+                    {integer(5), integer(3), integer(1), integer(-1),
+                     integer(4), integer(6), integer(-10), integer(-2),
+                     integer(9)});
     fraction_free_LDU(A, L, D, U);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(5), integer(0), integer(0),
-                                    integer(-1), integer(23), integer(0),
-                                    integer(-10), integer(20), integer(1)}));
-    REQUIRE(D == DenseMatrix(3, 3, {integer(5), integer(0), integer(0),
-                                    integer(0), integer(115), integer(0),
-                                    integer(0), integer(0), integer(23)}));
-    REQUIRE(U == DenseMatrix(3, 3, {integer(5), integer(3), integer(1),
-                                    integer(0), integer(23), integer(31),
-                                    integer(0), integer(0), integer(129)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(5), integer(0), integer(0), integer(-1),
+                            integer(23), integer(0), integer(-10), integer(20),
+                            integer(1)}));
+    REQUIRE(D
+            == DenseMatrix(3, 3,
+                           {integer(5), integer(0), integer(0), integer(0),
+                            integer(115), integer(0), integer(0), integer(0),
+                            integer(23)}));
+    REQUIRE(U
+            == DenseMatrix(3, 3,
+                           {integer(5), integer(3), integer(1), integer(0),
+                            integer(23), integer(31), integer(0), integer(0),
+                            integer(129)}));
 }
 
 TEST_CASE("test_QR(): matrices", "[matrices]")
@@ -1263,78 +1445,100 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     DenseMatrix Q1 = DenseMatrix(3, 3);
     DenseMatrix R1 = DenseMatrix(3, 3);
 
-    A = DenseMatrix(3, 3, {integer(12), integer(-51), integer(4), integer(6),
-                           integer(167), integer(-68), integer(-4), integer(24),
-                           integer(-41)});
+    A = DenseMatrix(3, 3,
+                    {integer(12), integer(-51), integer(4), integer(6),
+                     integer(167), integer(-68), integer(-4), integer(24),
+                     integer(-41)});
     QR(A, Q, R);
     A.QR(Q1, R1);
 
-    REQUIRE(Q == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
-                                    rational(-58, 175), rational(3, 7),
-                                    rational(158, 175), rational(6, 175),
-                                    rational(-2, 7), rational(6, 35),
-                                    rational(-33, 35)}));
-    REQUIRE(R == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
-                                    integer(0), integer(175), integer(-70),
-                                    integer(0), integer(0), integer(35)}));
-    REQUIRE(Q1 == DenseMatrix(3, 3, {rational(6, 7), rational(-69, 175),
-                                     rational(-58, 175), rational(3, 7),
-                                     rational(158, 175), rational(6, 175),
-                                     rational(-2, 7), rational(6, 35),
-                                     rational(-33, 35)}));
-    REQUIRE(R1 == DenseMatrix(3, 3, {integer(14), integer(21), integer(-14),
-                                     integer(0), integer(175), integer(-70),
-                                     integer(0), integer(0), integer(35)}));
+    REQUIRE(
+        Q
+        == DenseMatrix(3, 3,
+                       {rational(6, 7), rational(-69, 175), rational(-58, 175),
+                        rational(3, 7), rational(158, 175), rational(6, 175),
+                        rational(-2, 7), rational(6, 35), rational(-33, 35)}));
+    REQUIRE(R
+            == DenseMatrix(3, 3,
+                           {integer(14), integer(21), integer(-14), integer(0),
+                            integer(175), integer(-70), integer(0), integer(0),
+                            integer(35)}));
+    REQUIRE(
+        Q1
+        == DenseMatrix(3, 3,
+                       {rational(6, 7), rational(-69, 175), rational(-58, 175),
+                        rational(3, 7), rational(158, 175), rational(6, 175),
+                        rational(-2, 7), rational(6, 35), rational(-33, 35)}));
+    REQUIRE(R1
+            == DenseMatrix(3, 3,
+                           {integer(14), integer(21), integer(-14), integer(0),
+                            integer(175), integer(-70), integer(0), integer(0),
+                            integer(35)}));
 }
 
 TEST_CASE("test_LDL(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(
-        3, 3, {integer(4), integer(12), integer(-16), integer(12), integer(37),
-               integer(-43), integer(-16), integer(-43), integer(98)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(4), integer(12), integer(-16),
+                                 integer(12), integer(37), integer(-43),
+                                 integer(-16), integer(-43), integer(98)});
     DenseMatrix L = DenseMatrix(3, 3);
     DenseMatrix D = DenseMatrix(3, 3);
 
     LDL(A, L, D);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(3), integer(1), integer(0),
-                                    integer(-4), integer(5), integer(1)}));
-    REQUIRE(D == DenseMatrix(3, 3, {integer(4), integer(0), integer(0),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(9)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(3),
+                            integer(1), integer(0), integer(-4), integer(5),
+                            integer(1)}));
+    REQUIRE(D
+            == DenseMatrix(3, 3,
+                           {integer(4), integer(0), integer(0), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(9)}));
 
-    A = DenseMatrix(3, 3, {integer(25), integer(15), integer(-5), integer(15),
-                           integer(18), integer(0), integer(-5), integer(0),
-                           integer(11)});
+    A = DenseMatrix(3, 3,
+                    {integer(25), integer(15), integer(-5), integer(15),
+                     integer(18), integer(0), integer(-5), integer(0),
+                     integer(11)});
     LDL(A, L, D);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    div(integer(3), integer(5)), integer(1),
-                                    integer(0), div(integer(-1), integer(5)),
-                                    div(integer(1), integer(3)), integer(1)}));
-    REQUIRE(D == DenseMatrix(3, 3, {integer(25), integer(0), integer(0),
-                                    integer(0), integer(9), integer(0),
-                                    integer(0), integer(0), integer(9)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0),
+                            div(integer(3), integer(5)), integer(1), integer(0),
+                            div(integer(-1), integer(5)),
+                            div(integer(1), integer(3)), integer(1)}));
+    REQUIRE(D
+            == DenseMatrix(3, 3,
+                           {integer(25), integer(0), integer(0), integer(0),
+                            integer(9), integer(0), integer(0), integer(0),
+                            integer(9)}));
 }
 
 TEST_CASE("test_cholesky(): matrices", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(
-        3, 3, {integer(4), integer(12), integer(-16), integer(12), integer(37),
-               integer(-43), integer(-16), integer(-43), integer(98)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(4), integer(12), integer(-16),
+                                 integer(12), integer(37), integer(-43),
+                                 integer(-16), integer(-43), integer(98)});
     DenseMatrix L = DenseMatrix(3, 3);
     DenseMatrix L1 = DenseMatrix(3, 3);
 
     cholesky(A, L);
     A.cholesky(L1);
 
-    REQUIRE(L == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
-                                    integer(6), integer(1), integer(0),
-                                    integer(-8), integer(5), integer(3)}));
-    REQUIRE(L1 == DenseMatrix(3, 3, {integer(2), integer(0), integer(0),
-                                     integer(6), integer(1), integer(0),
-                                     integer(-8), integer(5), integer(3)}));
+    REQUIRE(L
+            == DenseMatrix(3, 3,
+                           {integer(2), integer(0), integer(0), integer(6),
+                            integer(1), integer(0), integer(-8), integer(5),
+                            integer(3)}));
+    REQUIRE(L1
+            == DenseMatrix(3, 3,
+                           {integer(2), integer(0), integer(0), integer(6),
+                            integer(1), integer(0), integer(-8), integer(5),
+                            integer(3)}));
 }
 
 TEST_CASE("test_trace(): matrices", "[matrices]")
@@ -1342,9 +1546,10 @@ TEST_CASE("test_trace(): matrices", "[matrices]")
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(1, 1, {symbol("y")});
-    DenseMatrix C = DenseMatrix(3, 3, {integer(0), integer(1), integer(2),
-                                       integer(3), integer(4), integer(5),
-                                       integer(6), integer(7), integer(-4)});
+    DenseMatrix C = DenseMatrix(3, 3,
+                                {integer(0), integer(1), integer(2), integer(3),
+                                 integer(4), integer(5), integer(6), integer(7),
+                                 integer(-4)});
 
     REQUIRE(eq(*A.trace(), *integer(5)));
     REQUIRE(eq(*B.trace(), *symbol("y")));
@@ -1363,8 +1568,9 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
     REQUIRE(eq(*det_bareis(M), *integer(-1)));
     REQUIRE(eq(*det_berkowitz(M), *integer(-1)));
 
-    M = DenseMatrix(2, 2, {symbol("x"), integer(1), symbol("y"),
-                           mul(integer(2), symbol("y"))});
+    M = DenseMatrix(
+        2, 2,
+        {symbol("x"), integer(1), symbol("y"), mul(integer(2), symbol("y"))});
     REQUIRE(
         eq(*det_bareis(M),
            *sub(mul(integer(2), mul(symbol("x"), symbol("y"))), symbol("y"))));
@@ -1375,30 +1581,34 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
     REQUIRE(eq(*det_bareis(M), *integer(1)));
     REQUIRE(eq(*det_berkowitz(M), *integer(1)));
 
-    M = DenseMatrix(4, 4, {integer(3), integer(-2), integer(0), integer(5),
-                           integer(-2), integer(1), integer(-2), integer(2),
-                           integer(0), integer(-2), integer(5), integer(0),
-                           integer(5), integer(0), integer(3), integer(4)});
+    M = DenseMatrix(4, 4,
+                    {integer(3), integer(-2), integer(0), integer(5),
+                     integer(-2), integer(1), integer(-2), integer(2),
+                     integer(0), integer(-2), integer(5), integer(0),
+                     integer(5), integer(0), integer(3), integer(4)});
     REQUIRE(eq(*det_bareis(M), *integer(-289)));
     REQUIRE(eq(*det_berkowitz(M), *integer(-289)));
 
-    M = DenseMatrix(4, 4, {integer(3), symbol("x"), symbol("z"), integer(59),
-                           integer(0), symbol("y"), integer(-20), integer(22),
-                           integer(0), integer(0), integer(5), integer(10),
-                           integer(0), integer(0), integer(0), integer(4)});
+    M = DenseMatrix(4, 4,
+                    {integer(3), symbol("x"), symbol("z"), integer(59),
+                     integer(0), symbol("y"), integer(-20), integer(22),
+                     integer(0), integer(0), integer(5), integer(10),
+                     integer(0), integer(0), integer(0), integer(4)});
     REQUIRE(eq(*det_bareis(M), *mul(integer(60), symbol("y"))));
 
-    M = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                           integer(5), integer(6), integer(7), integer(8),
-                           integer(9), integer(10), integer(11), integer(12),
-                           integer(13), integer(14), integer(15), integer(16)});
+    M = DenseMatrix(4, 4,
+                    {integer(1), integer(2), integer(3), integer(4), integer(5),
+                     integer(6), integer(7), integer(8), integer(9),
+                     integer(10), integer(11), integer(12), integer(13),
+                     integer(14), integer(15), integer(16)});
     REQUIRE(eq(*det_bareis(M), *integer(0)));
     REQUIRE(eq(*det_berkowitz(M), *integer(0)));
 
-    M = DenseMatrix(4, 4, {real_double(0.0), integer(0), integer(0), integer(1),
-                           integer(0), integer(11), integer(12), integer(1),
-                           integer(1), integer(1), integer(2), integer(1),
-                           integer(1), integer(0), integer(1), integer(1)});
+    M = DenseMatrix(4, 4,
+                    {real_double(0.0), integer(0), integer(0), integer(1),
+                     integer(0), integer(11), integer(12), integer(1),
+                     integer(1), integer(1), integer(2), integer(1), integer(1),
+                     integer(0), integer(1), integer(1)});
 
     r = det_bareis(M);
     REQUIRE(is_a<const RealDouble>(*r));
@@ -1494,11 +1704,13 @@ TEST_CASE("test_berkowitz(): matrices", "[matrices]")
     berkowitz(M, polys);
 
     REQUIRE(polys[2]
-            == DenseMatrix(4, 1, {integer(1), mul(integer(-2), x),
-                                  sub(sub(pow(x, integer(2)), mul(y, z)), y),
-                                  sub(mul(x, y), pow(z, integer(2)))}));
-    REQUIRE(polys[1] == DenseMatrix(3, 1, {integer(1), mul(integer(-1), x),
-                                           mul(integer(-1), y)}));
+            == DenseMatrix(4, 1,
+                           {integer(1), mul(integer(-2), x),
+                            sub(sub(pow(x, integer(2)), mul(y, z)), y),
+                            sub(mul(x, y), pow(z, integer(2)))}));
+    REQUIRE(polys[1]
+            == DenseMatrix(
+                3, 1, {integer(1), mul(integer(-1), x), mul(integer(-1), y)}));
     REQUIRE(polys[0] == DenseMatrix(2, 1, {integer(1), mul(integer(-1), x)}));
 
     polys.clear();
@@ -1508,8 +1720,9 @@ TEST_CASE("test_berkowitz(): matrices", "[matrices]")
                      integer(3), integer(1), integer(3), integer(6)});
     berkowitz(M, polys);
 
-    REQUIRE(polys[2] == DenseMatrix(4, 1, {integer(1), integer(-9), integer(9),
-                                           integer(-1)}));
+    REQUIRE(polys[2]
+            == DenseMatrix(4, 1,
+                           {integer(1), integer(-9), integer(9), integer(-1)}));
     REQUIRE(polys[1]
             == DenseMatrix(3, 1, {integer(1), integer(-3), integer(1)}));
     REQUIRE(polys[0] == DenseMatrix(2, 1, {integer(1), integer(-1)}));
@@ -1517,25 +1730,27 @@ TEST_CASE("test_berkowitz(): matrices", "[matrices]")
 
 TEST_CASE("test_solve_functions(): matrices", "[matrices]")
 {
-    DenseMatrix A
-        = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-                             integer(2), integer(2), integer(3), integer(4),
-                             integer(3), integer(3), integer(3), integer(4),
-                             integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix A = DenseMatrix(
+        4, 4,
+        {integer(1), integer(2), integer(3), integer(4), integer(2), integer(2),
+         integer(3), integer(4), integer(3), integer(3), integer(3), integer(4),
+         integer(9), integer(8), integer(7), integer(6)});
     DenseMatrix b = DenseMatrix(
         4, 1, {integer(10), integer(11), integer(13), integer(30)});
     DenseMatrix x = DenseMatrix(4, 1);
 
     fraction_free_LU_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(4, 1,
-                             {integer(1), integer(1), integer(1), integer(1)}));
+    REQUIRE(
+        x
+        == DenseMatrix(4, 1, {integer(1), integer(1), integer(1), integer(1)}));
 
     x = DenseMatrix(4, 1);
     LU_solve(A, b, x);
 
-    REQUIRE(x == DenseMatrix(4, 1,
-                             {integer(1), integer(1), integer(1), integer(1)}));
+    REQUIRE(
+        x
+        == DenseMatrix(4, 1, {integer(1), integer(1), integer(1), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
     b = DenseMatrix(2, 1, {integer(7), integer(26)});
@@ -1576,14 +1791,16 @@ TEST_CASE("test_char_poly(): matrices", "[matrices]")
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> t = symbol("t");
 
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                       integer(0), integer(1), integer(0),
-                                       integer(0), integer(0), integer(1)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(0), integer(0), integer(0),
+                                 integer(1), integer(0), integer(0), integer(0),
+                                 integer(1)});
     DenseMatrix B = DenseMatrix(4, 1);
     char_poly(A, B);
 
-    REQUIRE(B == DenseMatrix(
-                     4, 1, {integer(1), integer(-3), integer(3), integer(-1)}));
+    REQUIRE(B
+            == DenseMatrix(4, 1,
+                           {integer(1), integer(-3), integer(3), integer(-1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(0)});
     B = DenseMatrix(3, 1);
@@ -1601,10 +1818,11 @@ TEST_CASE("test_char_poly(): matrices", "[matrices]")
     B = DenseMatrix(3, 1);
     char_poly(A, B);
 
-    REQUIRE(
-        B == DenseMatrix(3, 1, {integer(1),
-                                add(mul(integer(-1), t), mul(integer(-1), x)),
-                                add(mul(integer(-1), mul(y, z)), mul(t, x))}));
+    REQUIRE(B
+            == DenseMatrix(3, 1,
+                           {integer(1),
+                            add(mul(integer(-1), t), mul(integer(-1), x)),
+                            add(mul(integer(-1), mul(y, z)), mul(t, x))}));
 }
 
 TEST_CASE("test_inverse(): matrices", "[matrices]")
@@ -1643,9 +1861,10 @@ TEST_CASE("test_inverse(): matrices", "[matrices]")
     mul_dense_dense(A, B, C);
     REQUIRE(C == I3);
 
-    A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31), integer(9),
-                           integer(71), integer(94), integer(59), integer(28),
-                           integer(65)});
+    A = DenseMatrix(3, 3,
+                    {integer(48), integer(49), integer(31), integer(9),
+                     integer(71), integer(94), integer(59), integer(28),
+                     integer(65)});
 
     inverse_fraction_free_LU(A, B);
     mul_dense_dense(A, B, C);
@@ -1686,11 +1905,13 @@ TEST_CASE("test_dot(): matrices", "[matrices]")
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     B = DenseMatrix(2, 2, {integer(5), integer(6), integer(7), integer(8)});
     dot(A, B, C);
-    CHECK(C == DenseMatrix(
-                   1, 4, {integer(23), integer(31), integer(34), integer(46)}));
+    CHECK(C
+          == DenseMatrix(1, 4,
+                         {integer(23), integer(31), integer(34), integer(46)}));
 
-    A = DenseMatrix(2, 3, {integer(1), integer(2), integer(3), integer(4),
-                           integer(5), integer(6)});
+    A = DenseMatrix(2, 3,
+                    {integer(1), integer(2), integer(3), integer(4), integer(5),
+                     integer(6)});
     B = DenseMatrix(2, 1, {integer(7), integer(8)});
     dot(A, B, C);
     CHECK(C == DenseMatrix(1, 3, {integer(39), integer(54), integer(69)}));
@@ -1717,9 +1938,10 @@ TEST_CASE("test_eigen_values(): matrices", "[matrices]")
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> t = symbol("t");
 
-    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                       integer(0), integer(1), integer(0),
-                                       integer(0), integer(0), integer(1)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(1), integer(0), integer(0), integer(0),
+                                 integer(1), integer(0), integer(0), integer(0),
+                                 integer(1)});
     auto vals = eigen_values(A);
     REQUIRE(eq(*vals, *finiteset({one})));
 
@@ -1850,9 +2072,10 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
 
     csr_scale_rows(A, X);
 
-    REQUIRE(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(2), integer(-3), integer(12),
-                            integer(15), integer(18)}));
+    REQUIRE(A
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(2), integer(-3), integer(12),
+                          integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
     CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
@@ -1867,9 +2090,10 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
 
     csr_scale_columns(A, X);
 
-    REQUIRE(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(6), integer(9), integer(4),
-                            integer(-5), integer(18)}));
+    REQUIRE(A
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(6), integer(9), integer(4),
+                          integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
     CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
@@ -1883,9 +2107,10 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
     CSRMatrix B = CSRMatrix(3, 3);
 
     csr_binop_csr_canonical(A, A, B, add);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(2), integer(4), integer(6), integer(8),
-                            integer(10), integer(12)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(2), integer(4), integer(6), integer(8),
+                          integer(10), integer(12)}));
 
     csr_binop_csr_canonical(A, A, B, sub);
     REQUIRE(B == CSRMatrix(3, 3));
@@ -1894,10 +2119,11 @@ TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
                             {integer(7), integer(8), integer(9)});
 
     csr_binop_csr_canonical(A, C, B, add);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 3, 6, 9}, {0, 1, 2, 0, 1, 2, 0, 1, 2},
-                           {integer(1), integer(7), integer(2), integer(8),
-                            integer(9), integer(3), integer(4), integer(5),
-                            integer(6)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 3, 6, 9}, {0, 1, 2, 0, 1, 2, 0, 1, 2},
+                         {integer(1), integer(7), integer(2), integer(8),
+                          integer(9), integer(3), integer(4), integer(5),
+                          integer(6)}));
 
     A = CSRMatrix(2, 2, {0, 1, 2}, {0, 1}, {integer(1), integer(2)});
     B = CSRMatrix(2, 2, {0, 1, 2}, {1, 0}, {integer(3), integer(4)});
@@ -1914,9 +2140,10 @@ TEST_CASE("test_csr_elementwise_mul(): matrices", "[matrices]")
     CSRMatrix B = CSRMatrix(3, 3);
 
     A.elementwise_mul_matrix(A, B);
-    REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-                           {integer(1), integer(4), integer(9), integer(16),
-                            integer(25), integer(36)}));
+    REQUIRE(B
+            == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+                         {integer(1), integer(4), integer(9), integer(16),
+                          integer(25), integer(36)}));
 }
 
 TEST_CASE("test_eye(): matrices", "[matrices]")
@@ -1924,24 +2151,32 @@ TEST_CASE("test_eye(): matrices", "[matrices]")
     DenseMatrix A(3, 3);
     eye(A);
 
-    REQUIRE(A == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(1)}));
+    REQUIRE(A
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(1), integer(0), integer(0), integer(0),
+                            integer(1)}));
 
     eye(A, 1);
-    REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(1), integer(0),
-                                    integer(0), integer(0), integer(1),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(3, 3,
+                           {integer(0), integer(1), integer(0), integer(0),
+                            integer(0), integer(1), integer(0), integer(0),
+                            integer(0)}));
 
     eye(A, -1);
-    REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
-                                    integer(1), integer(0), integer(0),
-                                    integer(0), integer(1), integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(3, 3,
+                           {integer(0), integer(0), integer(0), integer(1),
+                            integer(0), integer(0), integer(0), integer(1),
+                            integer(0)}));
 
     eye(A, -2);
-    REQUIRE(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
-                                    integer(0), integer(0), integer(0),
-                                    integer(1), integer(0), integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(3, 3,
+                           {integer(0), integer(0), integer(0), integer(0),
+                            integer(0), integer(0), integer(1), integer(0),
+                            integer(0)}));
 }
 
 TEST_CASE("Test is_lower", "[matrices]")
@@ -1954,10 +2189,11 @@ TEST_CASE("Test is_lower", "[matrices]")
                integer(0), integer(0),  integer(0),   integer(0),  integer(3)});
     REQUIRE(M.is_lower());
 
-    M = DenseMatrix(4, 4, {integer(3), symbol("x"), symbol("z"), integer(59),
-                           integer(0), symbol("y"), integer(-20), integer(22),
-                           integer(0), integer(0), integer(5), integer(10),
-                           integer(0), integer(0), integer(0), integer(4)});
+    M = DenseMatrix(4, 4,
+                    {integer(3), symbol("x"), symbol("z"), integer(59),
+                     integer(0), symbol("y"), integer(-20), integer(22),
+                     integer(0), integer(0), integer(5), integer(10),
+                     integer(0), integer(0), integer(0), integer(4)});
     REQUIRE(eq(*det_bareis(M), *mul(integer(60), symbol("y"))));
     REQUIRE(M.is_lower());
 
@@ -1977,10 +2213,11 @@ TEST_CASE("Test is_upper", "[matrices]")
          integer(12),  integer(40), integer(10), integer(54), integer(1)});
     REQUIRE(M.is_upper());
 
-    M = DenseMatrix(4, 4, {integer(3), integer(0), integer(0), integer(0),
-                           symbol("y"), symbol("y"), integer(0), integer(0),
-                           symbol("y"), integer(1), integer(20), integer(0),
-                           integer(56), symbol("y"), integer(43), integer(4)});
+    M = DenseMatrix(4, 4,
+                    {integer(3), integer(0), integer(0), integer(0),
+                     symbol("y"), symbol("y"), integer(0), integer(0),
+                     symbol("y"), integer(1), integer(20), integer(0),
+                     integer(56), symbol("y"), integer(43), integer(4)});
     REQUIRE(M.is_upper());
 
     vec_basic d{integer(1), integer(2), integer(3), integer(4), integer(5)};
@@ -1994,28 +2231,31 @@ TEST_CASE("test_diag(): matrices", "[matrices]")
     vec_basic d{integer(1), integer(2), integer(3)};
 
     diag(A, d);
-    REQUIRE(A == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-                                    integer(0), integer(2), integer(0),
-                                    integer(0), integer(0), integer(3)}));
+    REQUIRE(A
+            == DenseMatrix(3, 3,
+                           {integer(1), integer(0), integer(0), integer(0),
+                            integer(2), integer(0), integer(0), integer(0),
+                            integer(3)}));
 
     A = DenseMatrix(4, 4);
     diag(A, d, 1);
-    REQUIRE(A == DenseMatrix(4, 4,
-                             {integer(0), integer(1), integer(0), integer(0),
-                              integer(0), integer(0), integer(2), integer(0),
-                              integer(0), integer(0), integer(0), integer(3),
-                              integer(0), integer(0), integer(0), integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(4, 4,
+                           {integer(0), integer(1), integer(0), integer(0),
+                            integer(0), integer(0), integer(2), integer(0),
+                            integer(0), integer(0), integer(0), integer(3),
+                            integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(5, 5);
     diag(A, d, -2);
-    REQUIRE(
-        A == DenseMatrix(5, 5, {integer(0), integer(0), integer(0), integer(0),
-                                integer(0), integer(0), integer(0), integer(0),
-                                integer(0), integer(0), integer(1), integer(0),
-                                integer(0), integer(0), integer(0), integer(0),
-                                integer(2), integer(0), integer(0), integer(0),
-                                integer(0), integer(0), integer(3), integer(0),
-                                integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(
+                5, 5,
+                {integer(0), integer(0), integer(0), integer(0), integer(0),
+                 integer(0), integer(0), integer(0), integer(0), integer(0),
+                 integer(1), integer(0), integer(0), integer(0), integer(0),
+                 integer(0), integer(2), integer(0), integer(0), integer(0),
+                 integer(0), integer(0), integer(3), integer(0), integer(0)}));
 }
 
 TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
@@ -2023,18 +2263,24 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
     DenseMatrix A(1, 5);
     ones(A);
 
-    REQUIRE(A == DenseMatrix(1, 5, {integer(1), integer(1), integer(1),
-                                    integer(1), integer(1)}));
+    REQUIRE(A
+            == DenseMatrix(
+                1, 5,
+                {integer(1), integer(1), integer(1), integer(1), integer(1)}));
 
     A = DenseMatrix(2, 3);
     ones(A);
-    REQUIRE(A == DenseMatrix(2, 3, {integer(1), integer(1), integer(1),
-                                    integer(1), integer(1), integer(1)}));
+    REQUIRE(A
+            == DenseMatrix(2, 3,
+                           {integer(1), integer(1), integer(1), integer(1),
+                            integer(1), integer(1)}));
 
     A = DenseMatrix(3, 2);
     zeros(A);
-    REQUIRE(A == DenseMatrix(3, 2, {integer(0), integer(0), integer(0),
-                                    integer(0), integer(0), integer(0)}));
+    REQUIRE(A
+            == DenseMatrix(3, 2,
+                           {integer(0), integer(0), integer(0), integer(0),
+                            integer(0), integer(0)}));
 }
 
 TEST_CASE("Test Jacobian", "[matrices]")
@@ -2048,10 +2294,11 @@ TEST_CASE("Test Jacobian", "[matrices]")
     X = DenseMatrix(4, 1, {x, y, z, t});
     J = DenseMatrix(4, 4);
     jacobian(A, X, J);
-    const auto ref1 = DenseMatrix(
-        4, 4, {integer(1), integer(0), integer(1), integer(0), integer(0), z, y,
-               integer(0), z, integer(1), x, integer(1), integer(1), integer(1),
-               integer(0), integer(0)});
+    const auto ref1 = DenseMatrix(4, 4,
+                                  {integer(1), integer(0), integer(1),
+                                   integer(0), integer(0), z, y, integer(0), z,
+                                   integer(1), x, integer(1), integer(1),
+                                   integer(1), integer(0), integer(0)});
     REQUIRE(J == ref1);
     CSRMatrix Js = CSRMatrix::jacobian(A, X);
     std::vector<unsigned> Js_p1, Js_p2{{0, 2, 4, 8, 10}};
@@ -2075,9 +2322,10 @@ TEST_CASE("Test Jacobian", "[matrices]")
     X = DenseMatrix(3, 1, {x, y, z});
     J = DenseMatrix(4, 3);
     jacobian(A, X, J);
-    const auto ref2 = DenseMatrix(4, 3, {integer(1), integer(0), integer(1),
-                                         integer(0), z, y, z, integer(1), x,
-                                         integer(1), integer(1), integer(0)});
+    const auto ref2
+        = DenseMatrix(4, 3,
+                      {integer(1), integer(0), integer(1), integer(0), z, y, z,
+                       integer(1), x, integer(1), integer(1), integer(0)});
     REQUIRE(J == ref2);
     REQUIRE(CSRMatrix::jacobian(A, X) == ref2);
 
@@ -2121,13 +2369,15 @@ TEST_CASE("free_symbols: MatrixBase", "[matrices]")
     s = free_symbols(A);
     REQUIRE(s.size() == 1);
 
-    A = DenseMatrix(2, 2, {integer(2), mul(symbol("s"), integer(3)),
-                           sub(symbol("x"), symbol("y")), integer(4)});
+    A = DenseMatrix(2, 2,
+                    {integer(2), mul(symbol("s"), integer(3)),
+                     sub(symbol("x"), symbol("y")), integer(4)});
     s = free_symbols(A);
     REQUIRE(s.size() == 3);
 
-    A = DenseMatrix(2, 2, {integer(2), mul(symbol("x"), integer(3)),
-                           sub(symbol("x"), symbol("y")), integer(4)});
+    A = DenseMatrix(2, 2,
+                    {integer(2), mul(symbol("x"), integer(3)),
+                     sub(symbol("x"), symbol("y")), integer(4)});
     s = free_symbols(A);
     REQUIRE(s.size() == 2);
     REQUIRE(s.count(symbol("x")) == 1);
@@ -2277,9 +2527,10 @@ TEST_CASE("is_weakly_diagonally_dominant(): DenseMatrix", "[matrices]")
     DenseMatrix H
         = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
     DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
-    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
-                                       integer(2), integer(4), rational(1, 2),
-                                       integer(7), integer(-3), integer(5)});
+    DenseMatrix L = DenseMatrix(3, 3,
+                                {integer(2), integer(-1), integer(1),
+                                 integer(2), integer(4), rational(1, 2),
+                                 integer(7), integer(-3), integer(5)});
 
     REQUIRE(is_true(A.is_weakly_diagonally_dominant()));
     REQUIRE(is_false(B.is_weakly_diagonally_dominant()));
@@ -2309,9 +2560,10 @@ TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
     DenseMatrix H
         = DenseMatrix(2, 2, {integer(2), symbol("z"), c1, integer(3)});
     DenseMatrix K = DenseMatrix(1, 1, {integer(0)});
-    DenseMatrix L = DenseMatrix(3, 3, {integer(2), integer(-1), integer(1),
-                                       integer(2), integer(4), rational(1, 2),
-                                       integer(7), integer(-3), integer(5)});
+    DenseMatrix L = DenseMatrix(3, 3,
+                                {integer(2), integer(-1), integer(1),
+                                 integer(2), integer(4), rational(1, 2),
+                                 integer(7), integer(-3), integer(5)});
 
     REQUIRE(is_false(A.is_strictly_diagonally_dominant()));
     REQUIRE(is_false(B.is_strictly_diagonally_dominant()));
@@ -2327,21 +2579,24 @@ TEST_CASE("is_strictly_diagonally_dominant(): DenseMatrix", "[matrices]")
 
 TEST_CASE("definiteness: DenseMatrix", "[matrices]")
 {
-    DenseMatrix A = DenseMatrix(3, 3, {integer(2), integer(-1), integer(0),
-                                       integer(-1), integer(2), integer(-1),
-                                       integer(0), integer(-1), integer(2)});
+    DenseMatrix A = DenseMatrix(3, 3,
+                                {integer(2), integer(-1), integer(0),
+                                 integer(-1), integer(2), integer(-1),
+                                 integer(0), integer(-1), integer(2)});
     DenseMatrix B
         = DenseMatrix(2, 2, {integer(5), integer(4), integer(4), integer(5)});
-    DenseMatrix C = DenseMatrix(3, 3, {integer(2), integer(-1), integer(-1),
-                                       integer(-1), integer(2), integer(-1),
-                                       integer(-1), integer(-1), integer(2)});
+    DenseMatrix C = DenseMatrix(3, 3,
+                                {integer(2), integer(-1), integer(-1),
+                                 integer(-1), integer(2), integer(-1),
+                                 integer(-1), integer(-1), integer(2)});
     DenseMatrix D
         = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
     DenseMatrix E
         = DenseMatrix(2, 2, {integer(2), integer(3), integer(4), integer(8)});
     DenseMatrix F = DenseMatrix(
-        2, 2, {integer(1), Complex::from_two_nums(*integer(0), *integer(2)),
-               Complex::from_two_nums(*integer(0), *integer(-1)), integer(4)});
+        2, 2,
+        {integer(1), Complex::from_two_nums(*integer(0), *integer(2)),
+         Complex::from_two_nums(*integer(0), *integer(-1)), integer(4)});
     DenseMatrix G = DenseMatrix(
         2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     DenseMatrix H = DenseMatrix(
@@ -2354,9 +2609,10 @@ TEST_CASE("definiteness: DenseMatrix", "[matrices]")
          real_double(1.15859676366277), real_double(0.340359081555988),
          real_double(-0.00709135324903921), real_double(0.00233147902806909),
          real_double(0.340359081555988), real_double(0.928147644848199)});
-    DenseMatrix L = DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
-                                       integer(0), integer(1), integer(2),
-                                       integer(0), integer(2), integer(1)});
+    DenseMatrix L = DenseMatrix(3, 3,
+                                {integer(0), integer(0), integer(0), integer(0),
+                                 integer(1), integer(2), integer(0), integer(2),
+                                 integer(1)});
     DenseMatrix M
         = DenseMatrix(2, 2, {integer(-1), integer(0), integer(0), integer(23)});
     DenseMatrix N

@@ -219,4 +219,4 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const
     return Mul::from_dict(coef, std::move(surd));
 }
 
-} // SymEngine
+} // namespace SymEngine

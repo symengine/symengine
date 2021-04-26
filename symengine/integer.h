@@ -25,11 +25,9 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_INTEGER)
     //! Constructor of Integer using `integer_class`
     // explicit Integer(integer_class i);
-    Integer(const integer_class &_i) : i(_i)
-    {
-        SYMENGINE_ASSIGN_TYPEID()
-    }
-    Integer(integer_class &&_i) : i(std::move(_i))
+    Integer(const integer_class &_i)
+        : i(_i){SYMENGINE_ASSIGN_TYPEID()} Integer(integer_class && _i)
+        : i(std::move(_i))
     {
         SYMENGINE_ASSIGN_TYPEID()
     }
@@ -222,6 +220,6 @@ bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

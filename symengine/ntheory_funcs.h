@@ -26,6 +26,6 @@ public:
 
 RCP<const Basic> primepi(const RCP<const Basic> &arg);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

@@ -55,4 +55,4 @@ RCP<const Basic> primepi(const RCP<const Basic> &arg)
     return make_rcp<const PrimePi>(arg);
 }
 
-} // SymEngine
+} // namespace SymEngine

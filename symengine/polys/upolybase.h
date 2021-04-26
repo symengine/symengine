@@ -108,12 +108,8 @@ public:
     typedef Key key_type;
 
 public:
-    ODictWrapper() SYMENGINE_NOEXCEPT
-    {
-    }
-    ~ODictWrapper() SYMENGINE_NOEXCEPT
-    {
-    }
+    ODictWrapper() SYMENGINE_NOEXCEPT {}
+    ~ODictWrapper() SYMENGINE_NOEXCEPT {}
 
     ODictWrapper(const int &i)
     {
@@ -592,9 +588,7 @@ protected:
     long i_;
 
 public:
-    ContainerBaseIter(RCP<const T> ptr, long x) : ptr_{ptr}, i_{x}
-    {
-    }
+    ContainerBaseIter(RCP<const T> ptr, long x) : ptr_{ptr}, i_{x} {}
 
     bool operator==(const ContainerBaseIter &rhs)
     {
@@ -724,6 +718,6 @@ RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
     dict /= b.get_poly();
     return Poly::from_dict(a.get_var(), std::move(dict));
 }
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_UINT_BASE_H
