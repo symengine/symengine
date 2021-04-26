@@ -67,6 +67,8 @@ set(SRC
     printers/mathml.cpp
     printers/strprinter.cpp
     printers/latex.cpp
+    printers/unicode.cpp
+    printers/stringbox.cpp
     rational.cpp
     real_double.cpp
     rewrite.cpp
@@ -174,6 +176,7 @@ set(HEADERS
     printers/mathml.h
     printers/strprinter.h
     printers/latex.h
+    printers/unicode.h
     printers.h
     rational.h
     real_double.h

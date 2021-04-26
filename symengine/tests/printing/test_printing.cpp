@@ -3,6 +3,7 @@
 
 #include <symengine/matrix.h>
 #include <symengine/printers/strprinter.h>
+#include <symengine/printers/stringbox.h>
 #include <symengine/printers.h>
 #include <symengine/parser.h>
 #include <symengine/logic.h>
@@ -14,12 +15,14 @@ using SymEngine::Boolean;
 using SymEngine::ceiling;
 using SymEngine::Complex;
 using SymEngine::complex_double;
+using SymEngine::ComplexInf;
 using SymEngine::conditionset;
 using SymEngine::DenseMatrix;
 using SymEngine::Derivative;
 using SymEngine::diff;
 using SymEngine::div;
 using SymEngine::down_cast;
+using SymEngine::emptyset;
 using SymEngine::erf;
 using SymEngine::erfc;
 using SymEngine::Expression;
@@ -37,6 +40,7 @@ using SymEngine::integer_class;
 using SymEngine::integers;
 using SymEngine::interval;
 using SymEngine::julia_str;
+using SymEngine::lambertw;
 using SymEngine::latex;
 using SymEngine::loggamma;
 using SymEngine::logical_and;
@@ -44,12 +48,15 @@ using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::map_uint_mpz;
 using SymEngine::mul;
+using SymEngine::NaN;
 using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::parse;
+using SymEngine::pi;
 using SymEngine::piecewise;
 using SymEngine::pow;
+using SymEngine::primepi;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Rational;
 using SymEngine::rationals;
@@ -59,7 +66,9 @@ using SymEngine::real_double;
 using SymEngine::reals;
 using SymEngine::Set;
 using SymEngine::set_complement;
+using SymEngine::set_union;
 using SymEngine::Sin;
+using SymEngine::StringBox;
 using SymEngine::StrPrinter;
 using SymEngine::Subs;
 using SymEngine::symbol;
@@ -67,7 +76,10 @@ using SymEngine::Symbol;
 using SymEngine::truncate;
 using SymEngine::uexpr_poly;
 using SymEngine::UIntPoly;
+using SymEngine::unicode;
+using SymEngine::universalset;
 using SymEngine::zero;
+using SymEngine::zeta;
 
 using namespace SymEngine::literals;
 
@@ -730,4 +742,281 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l25) == "\\mathbb{Z}");
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
+}
+
+TEST_CASE("test_unicode()", "[unicode]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    std::string s;
+
+    s = unicode(*reals());
+    CHECK(s == "\u211D");
+
+    s = unicode(*rationals());
+    CHECK(s == "\u211A");
+
+    s = unicode(*integers());
+    CHECK(s == "\u2124");
+
+    s = unicode(*emptyset());
+    CHECK(s == "\u2205");
+
+    s = unicode(*universalset());
+    CHECK(s == "\U0001D54C");
+
+    s = unicode(*finiteset({integer(1), integer(2)}));
+    CHECK(s == "{1, 2}");
+
+    s = unicode(*finiteset(
+        {Rational::from_two_ints(*integer(1), *integer(2)), integer(-1)}));
+    CHECK(s == "\u23A71    \u23AB\n\u23A8\u2015, -1\u23AC\n\u23A92    \u23AD");
+
+    s = unicode(*reals()->contains(x));
+    CHECK(s == "x \u220A \u211D");
+
+    s = unicode(*interval(integer(0), integer(1)));
+    CHECK(s == "[0, 1]");
+
+    s = unicode(*interval(integer(-1), integer(1), true, false));
+    CHECK(s == "(-1, 1]");
+
+    auto rat = Rational::from_two_ints(*integer(2), *integer(21));
+    s = unicode(*interval(rat, integer(23), false, true));
+    CHECK(s
+          == "\u23A1 2    \u239E\n\u23A2\u2015\u2015, 23\u239F\n\u23A321    "
+             "\u23A0");
+
+    s = unicode(*set_union({integers(), finiteset({Rational::from_two_ints(
+                                            *integer(1), *integer(3))})}));
+    CHECK(s
+          == "    \u23A71\u23AB\n\u2124 \u222A \u23A8\u2015\u23AC\n    "
+             "\u23A93\u23AD");
+
+    s = unicode(*set_complement(reals(), rationals()));
+    CHECK(s == "\u211D \\ \u211A");
+
+    s = unicode(*imageset(x, add(x, integer(1)), interval(zero, one)));
+    CHECK(s == "{1 + x | x \u220A [0, 1]}");
+
+    s = unicode(*conditionset(
+        {x}, logical_and({reals()->contains(x), Ge(x, integer(9))})));
+    CHECK(s == "{x | 9 \u2264 x \u2227 x \u220A \u211D}");
+
+    s = unicode(NaN());
+    CHECK(s == "NaN");
+
+    s = unicode(*pi);
+    CHECK(s == "\U0001D70B");
+
+    s = unicode(*parse("e"));
+    CHECK(s == "\U0001D452");
+
+    s = unicode(*parse("EulerGamma"));
+    CHECK(s == "\U0001D6FE");
+
+    s = unicode(*parse("Catalan"));
+    CHECK(s == "\U0001D43A");
+
+    s = unicode(*parse("GoldenRatio"));
+    CHECK(s == "\U0001D719");
+
+    s = unicode(*lambertw(x));
+    CHECK(s == "W(x)");
+
+    s = unicode(*zeta(x));
+    CHECK(s == "\U0001D701(x, 1)");
+
+    s = unicode(*gamma(x));
+    CHECK(s == "\u0393(x)");
+
+    s = unicode(*lowergamma(x, y));
+    CHECK(s == "\U0001D6FE(x, y)");
+
+    s = unicode(*uppergamma(x, y));
+    CHECK(s == "\u0393(x, y)");
+
+    s = unicode(*beta(x, y));
+    CHECK(s == "B(y, x)");
+
+    s = unicode(*dirichlet_eta(x));
+    CHECK(s == "\U0001D702(x)");
+
+    s = unicode(*loggamma(x));
+    CHECK(s == "log \u0393(x)");
+
+    s = unicode(*primepi(x));
+    CHECK(s == "\U0001D70B(x)");
+
+    s = unicode(*abs(x));
+    CHECK(s == "\u2502x\u2502");
+
+    s = unicode(*floor(x));
+    CHECK(s == "\u230Ax\u230B");
+
+    s = unicode(*ceiling(x));
+    CHECK(s == "\u2308x\u2309");
+
+    auto c1 = Complex::from_two_nums(*integer(1), *integer(2));
+    s = unicode(*c1);
+    CHECK(s == "1 + 2\u22C5\U0001D456");
+
+    auto c2 = Complex::from_two_nums(*integer(-5), *integer(6));
+    s = unicode(*c2);
+    CHECK(s == "-5 + 6\u22C5\U0001D456");
+
+    auto c3 = Complex::from_two_nums(*integer(5), *integer(-6));
+    s = unicode(*c3);
+    CHECK(s == "5 - 6\u22C5\U0001D456");
+
+    auto c4 = Complex::from_two_nums(*integer(5), *integer(-1));
+    s = unicode(*c4);
+    CHECK(s == "5 - \U0001D456");
+
+    auto c5 = Complex::from_two_nums(*integer(0), *integer(-1));
+    s = unicode(*c5);
+    CHECK(s == "-\U0001D456");
+
+    auto c6 = Complex::from_two_nums(*integer(0), *integer(-2));
+    s = unicode(*c6);
+    CHECK(s == "-2\u22C5\U0001D456");
+
+    s = unicode(*infty());
+    CHECK(s == "\u221E");
+
+    s = unicode(*mul(integer(-1), infty()));
+    CHECK(s == "-\u221E");
+
+    s = unicode(*ComplexInf);
+    CHECK(s == "\U0001D467\u221E");
+
+    s = unicode(*Le(x, integer(0)));
+    CHECK(s == "x \u2264 0");
+
+    s = unicode(*Lt(x, integer(0)));
+    CHECK(s == "x < 0");
+
+    s = unicode(*Ne(x, integer(0)));
+    CHECK(s == "0 \u2260 x");
+
+    s = unicode(*Eq(x, integer(0)));
+    CHECK(s == "0 = x");
+
+    s = unicode(*parse("5 == 5"));
+    CHECK(s == "true");
+
+    s = unicode(*parse("5 != 5"));
+    CHECK(s == "false");
+
+    s = unicode(*logical_and(
+        {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
+    CHECK(s == "-1 \u2260 x \u2227 x < 2 \u2227 x < 0");
+
+    s = unicode(*logical_or(
+        {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
+    CHECK(s == "-1 \u2260 x \u2228 x < 2 \u2228 x < 0");
+
+    s = unicode(*logical_xor(
+        {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
+    CHECK(s == "-1 \u2260 x \u22BB x < 2 \u22BB x < 0");
+
+    s = unicode(*logical_not(logical_xor({Ne(x, y), Lt(x, y)})));
+    CHECK(s == "\u00AC(x < y \u22BB x \u2260 y)");
+
+    s = unicode(*integer(2));
+    CHECK(s == "2");
+
+    s = unicode(*real_double(2.25));
+    CHECK(s == "2.25");
+
+    s = unicode(*complex_double(std::complex<double>(2.25, -23)));
+    CHECK(s == "2.25 - 23.0\u22C5\U0001D456");
+
+    s = unicode(*Rational::from_two_ints(*integer(1), *integer(3)));
+    CHECK(s == "1\n\u2015\n3");
+
+    s = unicode(*Rational::from_two_ints(*integer(3), *integer(187)));
+    CHECK(s == " 3 \n\u2015\u2015\u2015\n187");
+
+    s = unicode(*Rational::from_two_ints(*integer(3), *integer(17)));
+    CHECK(s == " 3\n\u2015\u2015\n17");
+
+    s = unicode(*x);
+    CHECK(s == "x");
+
+    s = unicode(*add(integer(2), x));
+    CHECK(s == "2 + x");
+
+    s = unicode(*add(integer(-1), x));
+    CHECK(s == "-1 + x");
+
+    s = unicode(*add(Rational::from_two_ints(*integer(1), *integer(3)), x));
+    CHECK(s == "1    \n\u2015 + x\n3    ");
+
+    s = unicode(*mul(integer(2), x));
+    CHECK(s == "2\u22C5x");
+
+    s = unicode(*mul(integer(2), x));
+    CHECK(s == "2\u22C5x");
+
+    s = unicode(*mul(mul(integer(2), x), pow(y, integer(2))));
+    CHECK(s == "     2\n2\u22C5x\u22C5y ");
+
+    s = unicode(*mul(Rational::from_two_ints(*integer(2), *integer(5)), x));
+    CHECK(s == "2\u22C5x\n\u2015\u2015\u2015\n 5 ");
+
+    s = unicode(*div(y, x));
+    CHECK(s == "y\n\u2015\nx");
+
+    s = unicode(*sqrt(x));
+    CHECK(s == "  _\n\u2572\u2571x");
+
+    s = unicode(*pow(x, y));
+    CHECK(s == " y\nx ");
+
+    auto p = piecewise({{x, contains(x, reals())}});
+    s = unicode(*p);
+    CHECK(s == "{x if x \u220A \u211D");
+
+    p = piecewise(
+        {{integer(1), Lt(x, integer(0))}, {integer(0), Eq(x, integer(0))}});
+    s = unicode(*p);
+    CHECK(s == "\u23A71 if x < 0\n\u23A8          \n\u23A90 if 0 = x");
+
+    p = piecewise({{Rational::from_two_ints(*integer(1), *integer(123)),
+                    Lt(x, integer(0))},
+                   {integer(0), Eq(x, integer(0))}});
+    s = unicode(*p);
+    CHECK(s
+          == "\u23A7 1          \n\u23AA\u2015\u2015\u2015 if x < 0\n\u23A8123 "
+             "        \n\u23A9 0 if 0 = x ");
+    // FIXME: Test default
+
+    s = unicode(*function_symbol("f", x));
+    CHECK(s == "f(x)");
+}
+
+TEST_CASE("test_stringbox()", "[stringbox]")
+{
+    StringBox a("x");
+    CHECK(a.get_string() == "x");
+    StringBox b("-");
+    a.add_below(b);
+    CHECK(a.get_string() == "x\n-");
+    StringBox c("13");
+    a.add_below(c);
+    CHECK(a.get_string() == " x\n -\n13");
+    StringBox op("*");
+    a.add_right(op);
+    CHECK(a.get_string() == " x \n -*\n13 ");
+
+    StringBox s1("abcd");
+    StringBox s2("1234567890");
+    s1.add_below(s2);
+    CHECK(s1.get_string() == "   abcd   \n1234567890");
+
+    StringBox s3("12");
+    StringBox op2(" * ");
+    s3.add_right(op2);
+    CHECK(s3.get_string() == "12 * ");
 }
