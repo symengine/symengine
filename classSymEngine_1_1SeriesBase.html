@@ -734,34 +734,34 @@ template&lt;typename Poly , typename Coeff , typename Series &gt; </div>
 </div><div class="memdoc">
 <p>fast atan(x)</p>
 
-<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00283">283</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        Poly res_p(0);</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        <span class="keywordflow">if</span> (s == 0)</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        <span class="keywordflow">if</span> (s == var) {</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            <span class="keywordtype">int</span> <a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a> = 1;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            Poly monom(var), vsquare(var * var);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i += 2, <a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a> *= -1) {</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                res_p += monom * (Coeff(<a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a>) / Coeff(i));</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                monom *= vsquare;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            }</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        }</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        <span class="keyword">const</span> Poly p(Series::pow(s, 2, prec - 1) + 1);</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        res_p = Series::mul(Series::diff(s, var),</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                            Series::series_invert(p, var, prec - 1), prec - 1);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        <span class="keywordflow">if</span> (c == 0) {</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            <span class="comment">// atan(s) = integrate(diff(s)*(1+s**2))</span></div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            <span class="keywordflow">return</span> Series::integrate(res_p, var);</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;            <span class="keywordflow">return</span> Series::integrate(res_p, var) + Series::atan(c);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="ttc" id="anamespaceSymEngine_html_a354804803424321111913a4071ca837e"><div class="ttname"><a href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">SymEngine::sign</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sign(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sign.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00482">functions.cpp:482</a></div></div>
+<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00284">284</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    {</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        Poly res_p(0);</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        <span class="keywordflow">if</span> (s == 0)</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <span class="keywordflow">if</span> (s == var) {</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            <span class="keywordtype">int</span> <a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a> = 1;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            Poly monom(var), vsquare(var * var);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i += 2, <a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a> *= -1) {</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                res_p += monom * (Coeff(<a class="code" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a>) / Coeff(i));</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                monom *= vsquare;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            }</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        }</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        <span class="keyword">const</span> Poly p(Series::pow(s, 2, prec - 1) + 1);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        res_p = Series::mul(Series::diff(s, var),</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                            Series::series_invert(p, var, prec - 1), prec - 1);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        <span class="keywordflow">if</span> (c == 0) {</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            <span class="comment">// atan(s) = integrate(diff(s)*(1+s**2))</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            <span class="keywordflow">return</span> Series::integrate(res_p, var);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            <span class="keywordflow">return</span> Series::integrate(res_p, var) + Series::atan(c);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    }</div>
+<div class="ttc" id="anamespaceSymEngine_html_a354804803424321111913a4071ca837e"><div class="ttname"><a href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">SymEngine::sign</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sign(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sign.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00484">functions.cpp:484</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -808,40 +808,40 @@ template&lt;typename Poly , typename Coeff , typename Series &gt; </div>
 </div><div class="memdoc">
 <p>fast exp(x)</p>
 
-<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00519">519</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    {</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        Poly res_p(1);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        <span class="keywordflow">if</span> (s == 0)</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160; </div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;        <span class="keywordflow">if</span> (s == var) {</div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;            Coeff coef(1);</div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;            Poly monom(var);</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i++) {</div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;                coef /= i;</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;                res_p += monom * coef;</div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;                monom *= var;</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;            }</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;        }</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160; </div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
-<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;        Poly t = s + 1;</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;        <span class="keywordflow">if</span> (c != 0) {</div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;            <span class="comment">// exp(s) = exp(c)*exp(s-c)</span></div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;            t = s - c + 1;</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;        }</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;        <span class="keyword">auto</span> steps = step_list(prec);</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> step : steps) {</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;            res_p = Series::mul(res_p, t - Series::series_log(res_p, var, step),</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;                                step);</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;        }</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;        <span class="keywordflow">if</span> (c != 0) {</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;            <span class="keywordflow">return</span> res_p * Series::exp(c);</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;        }</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;    }</div>
+<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00520">520</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    {</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        Poly res_p(1);</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;        <span class="keywordflow">if</span> (s == 0)</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;        <span class="keywordflow">if</span> (s == var) {</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;            Coeff coef(1);</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;            Poly monom(var);</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i++) {</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;                coef /= i;</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;                res_p += monom * coef;</div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;                monom *= var;</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;            }</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;        }</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160; </div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;        Poly t = s + 1;</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;        <span class="keywordflow">if</span> (c != 0) {</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;            <span class="comment">// exp(s) = exp(c)*exp(s-c)</span></div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;            t = s - c + 1;</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;        }</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;        <span class="keyword">auto</span> steps = step_list(prec);</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> step : steps) {</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;            res_p = Series::mul(res_p, t - Series::series_log(res_p, var, step),</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;                                step);</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;        }</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;        <span class="keywordflow">if</span> (c != 0) {</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;            <span class="keywordflow">return</span> res_p * Series::exp(c);</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;        }</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -888,30 +888,30 @@ template&lt;typename Poly , typename Coeff , typename Series &gt; </div>
 </div><div class="memdoc">
 <p>fast log(1+x)</p>
 
-<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00492">492</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;    {</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        Poly res_p(0);</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <span class="keywordflow">if</span> (s == 1)</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        <span class="keywordflow">if</span> (s == var + 1) {</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;            Poly monom(var);</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i++) {</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;                res_p += monom * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;                monom *= var;</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;            }</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        }</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160; </div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        res_p = Series::mul(Series::diff(s, var),</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;                            Series::series_invert(s, var, prec), prec - 1);</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;        res_p = Series::integrate(res_p, var);</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160; </div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;        <span class="keywordflow">if</span> (c != 1) {</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;            res_p += Series::log(c);</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;        }</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        <span class="keywordflow">return</span> res_p;</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    }</div>
+<p class="definition">Definition at line <a class="el" href="series_8h_source.html#l00493">493</a> of file <a class="el" href="series_8h_source.html">series.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;    {</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        Poly res_p(0);</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <span class="keywordflow">if</span> (s == 1)</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        <span class="keywordflow">if</span> (s == var + 1) {</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;            Poly monom(var);</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; prec; i++) {</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;                res_p += monom * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;                monom *= var;</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;            }</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;            <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        }</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160; </div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        <span class="keyword">const</span> Coeff c(Series::find_cf(s, var, 0));</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;        res_p = Series::mul(Series::diff(s, var),</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;                            Series::series_invert(s, var, prec), prec - 1);</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;        res_p = Series::integrate(res_p, var);</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160; </div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;        <span class="keywordflow">if</span> (c != 1) {</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;            res_p += Series::log(c);</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        }</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="keywordflow">return</span> res_p;</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -353,7 +353,7 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8h_source.html#l00172">172</a> of file <a class="el" href="uexprpoly_8h_source.html">uexprpoly.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8h_source.html#l00160">160</a> of file <a class="el" href="uexprpoly_8h_source.html">uexprpoly.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0b141f942bbcf8f04134b857c5b95db3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b141f942bbcf8f04134b857c5b95db3">&#9670;&nbsp;</a></span>__hash__()</h2>
@@ -381,19 +381,19 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 
 <p>Implements <a class="el" href="classSymEngine_1_1UPolyBase.html#a62544578034038e1f3d109d9edb9460c">SymEngine::UPolyBase&lt; Cont, Poly &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00013">13</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    hash_t seed = SYMENGINE_UEXPRPOLY;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    seed += get_var()-&gt;hash();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_t temp = SYMENGINE_UEXPRPOLY;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        hash_combine&lt;Basic&gt;(temp, *(it.second.get_basic()));</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        seed += temp;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00011">11</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    hash_t seed = SYMENGINE_UEXPRPOLY;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    seed += get_var()-&gt;hash();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        hash_t temp = SYMENGINE_UEXPRPOLY;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_combine&lt;Basic&gt;(temp, *(it.second.get_basic()));</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        seed += temp;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    }</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -413,12 +413,12 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if integer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00065">65</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span> (get_poly().empty())</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00063">63</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span> (get_poly().empty())</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -438,12 +438,12 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>-1</code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00058">58</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;           and get_poly().get_dict().begin()-&gt;second == -1</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00056">56</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;           and get_poly().get_dict().begin()-&gt;second == -1</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -463,12 +463,12 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if mul </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00078">78</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first != 0</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 1</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 0;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00076">76</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first != 0</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 1</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 0;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -488,11 +488,11 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>1</code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00052">52</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00050">50</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -512,12 +512,12 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if pow </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00085">85</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 1</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 0;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00083">83</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 1</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -537,11 +537,11 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if symbol </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00072">72</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 1</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;           and get_poly().get_dict().begin()-&gt;second == 1;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00070">70</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 1</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;           and get_poly().get_dict().begin()-&gt;second == 1;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -561,10 +561,10 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code>0</code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00047">47</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> get_poly().empty();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8cpp_source.html#l00045">45</a> of file <a class="el" href="uexprpoly_8cpp_source.html">uexprpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> get_poly().empty();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -590,7 +590,7 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <p>Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="uexprpoly_8h_source.html#l00175">175</a> of file <a class="el" href="uexprpoly_8h_source.html">uexprpoly.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uexprpoly_8h_source.html#l00163">163</a> of file <a class="el" href="uexprpoly_8h_source.html">uexprpoly.h</a>.</p>
 
 </div>
 </div>

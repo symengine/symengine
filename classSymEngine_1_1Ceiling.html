@@ -277,11 +277,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l00655">655</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;{</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">ceiling</a>(arg);</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a39c4aa170bc123a990149a38662edf99"><div class="ttname"><a href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">SymEngine::ceiling</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ceiling(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Ceiling:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00660">functions.cpp:660</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l00657">657</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;{</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">ceiling</a>(arg);</div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a39c4aa170bc123a990149a38662edf99"><div class="ttname"><a href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">SymEngine::ceiling</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ceiling(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Ceiling:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00662">functions.cpp:662</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -302,34 +302,34 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l00626">626</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;{</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg)) {</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    }</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Constant&gt;(*arg)) {</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    }</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Floor&gt;(*arg)) {</div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    }</div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Ceiling&gt;(*arg)) {</div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    }</div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Truncate&gt;(*arg)) {</div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    }</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*arg) or is_a_Relational(*arg)) {</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;    }</div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*arg)) {</div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;        RCP&lt;const Number&gt; s = down_cast&lt;const Add &amp;&gt;(*arg).get_coef();</div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *s) and is_a&lt;Integer&gt;(*s)) {</div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;        }</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;    }</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l00628">628</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;{</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg)) {</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    }</div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Constant&gt;(*arg)) {</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    }</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Floor&gt;(*arg)) {</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;    }</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Ceiling&gt;(*arg)) {</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;    }</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Truncate&gt;(*arg)) {</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    }</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*arg) or is_a_Relational(*arg)) {</div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;    }</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*arg)) {</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;        RCP&lt;const Number&gt; s = down_cast&lt;const Add &amp;&gt;(*arg).get_coef();</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *s) and is_a&lt;Integer&gt;(*s)) {</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;        }</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;    }</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 </div><!-- fragment -->

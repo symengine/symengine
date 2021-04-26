@@ -277,11 +277,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01724">1724</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01725"></a><span class="lineno"> 1725</span>&#160;{</div>
-<div class="line"><a name="l01726"></a><span class="lineno"> 1726</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa9a8ead88fadfd214371b73a3a0f34fb">log</a>(a);</div>
-<div class="line"><a name="l01727"></a><span class="lineno"> 1727</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_aa9a8ead88fadfd214371b73a3a0f34fb"><div class="ttname"><a href="namespaceSymEngine.html#aa9a8ead88fadfd214371b73a3a0f34fb">SymEngine::log</a></div><div class="ttdeci">RCP&lt; const Basic &gt; log(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Returns the Natural Logarithm from argument arg</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01729">functions.cpp:1729</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01726">1726</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01727"></a><span class="lineno"> 1727</span>&#160;{</div>
+<div class="line"><a name="l01728"></a><span class="lineno"> 1728</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa9a8ead88fadfd214371b73a3a0f34fb">log</a>(a);</div>
+<div class="line"><a name="l01729"></a><span class="lineno"> 1729</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_aa9a8ead88fadfd214371b73a3a0f34fb"><div class="ttname"><a href="namespaceSymEngine.html#aa9a8ead88fadfd214371b73a3a0f34fb">SymEngine::log</a></div><div class="ttdeci">RCP&lt; const Basic &gt; log(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Returns the Natural Logarithm from argument arg</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01731">functions.cpp:1731</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -302,33 +302,33 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01696">1696</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;{</div>
-<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;    <span class="comment">//  log(0)</span></div>
-<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg) and down_cast&lt;const Integer &amp;&gt;(*arg).is_zero())</div>
-<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;    <span class="comment">//  log(1)</span></div>
-<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg) and down_cast&lt;const Integer &amp;&gt;(*arg).is_one())</div>
-<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;    <span class="comment">// log(E)</span></div>
-<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *E))</div>
-<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160; </div>
-<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg) and down_cast&lt;const Number &amp;&gt;(*arg).is_negative())</div>
-<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160; </div>
-<div class="line"><a name="l01711"></a><span class="lineno"> 1711</span>&#160;    <span class="comment">// log(Inf) is also handled here.</span></div>
-<div class="line"><a name="l01712"></a><span class="lineno"> 1712</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg) and not down_cast&lt;const Number &amp;&gt;(*arg).is_exact())</div>
-<div class="line"><a name="l01713"></a><span class="lineno"> 1713</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01714"></a><span class="lineno"> 1714</span>&#160; </div>
-<div class="line"><a name="l01715"></a><span class="lineno"> 1715</span>&#160;    <span class="comment">// log(3I) should be expanded to log(3) + I*pi/2</span></div>
-<div class="line"><a name="l01716"></a><span class="lineno"> 1716</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Complex&gt;(*arg) and down_cast&lt;const Complex &amp;&gt;(*arg).is_re_zero())</div>
-<div class="line"><a name="l01717"></a><span class="lineno"> 1717</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01718"></a><span class="lineno"> 1718</span>&#160;    <span class="comment">// log(num/den) = log(num) - log(den)</span></div>
-<div class="line"><a name="l01719"></a><span class="lineno"> 1719</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*arg))</div>
-<div class="line"><a name="l01720"></a><span class="lineno"> 1720</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01721"></a><span class="lineno"> 1721</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01722"></a><span class="lineno"> 1722</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01698">1698</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;{</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;    <span class="comment">//  log(0)</span></div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg) and down_cast&lt;const Integer &amp;&gt;(*arg).is_zero())</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;    <span class="comment">//  log(1)</span></div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg) and down_cast&lt;const Integer &amp;&gt;(*arg).is_one())</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;    <span class="comment">// log(E)</span></div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *E))</div>
+<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160; </div>
+<div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg) and down_cast&lt;const Number &amp;&gt;(*arg).is_negative())</div>
+<div class="line"><a name="l01711"></a><span class="lineno"> 1711</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01712"></a><span class="lineno"> 1712</span>&#160; </div>
+<div class="line"><a name="l01713"></a><span class="lineno"> 1713</span>&#160;    <span class="comment">// log(Inf) is also handled here.</span></div>
+<div class="line"><a name="l01714"></a><span class="lineno"> 1714</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg) and not down_cast&lt;const Number &amp;&gt;(*arg).is_exact())</div>
+<div class="line"><a name="l01715"></a><span class="lineno"> 1715</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01716"></a><span class="lineno"> 1716</span>&#160; </div>
+<div class="line"><a name="l01717"></a><span class="lineno"> 1717</span>&#160;    <span class="comment">// log(3I) should be expanded to log(3) + I*pi/2</span></div>
+<div class="line"><a name="l01718"></a><span class="lineno"> 1718</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Complex&gt;(*arg) and down_cast&lt;const Complex &amp;&gt;(*arg).is_re_zero())</div>
+<div class="line"><a name="l01719"></a><span class="lineno"> 1719</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01720"></a><span class="lineno"> 1720</span>&#160;    <span class="comment">// log(num/den) = log(num) - log(den)</span></div>
+<div class="line"><a name="l01721"></a><span class="lineno"> 1721</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*arg))</div>
+<div class="line"><a name="l01722"></a><span class="lineno"> 1722</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01723"></a><span class="lineno"> 1723</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01724"></a><span class="lineno"> 1724</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->

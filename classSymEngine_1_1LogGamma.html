@@ -280,11 +280,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03185">3185</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03186"></a><span class="lineno"> 3186</span>&#160;{</div>
-<div class="line"><a name="l03187"></a><span class="lineno"> 3187</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa65191cb3b4d8841ce3cfca888f730ef">loggamma</a>(arg);</div>
-<div class="line"><a name="l03188"></a><span class="lineno"> 3188</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_aa65191cb3b4d8841ce3cfca888f730ef"><div class="ttname"><a href="namespaceSymEngine.html#aa65191cb3b4d8841ce3cfca888f730ef">SymEngine::loggamma</a></div><div class="ttdeci">RCP&lt; const Basic &gt; loggamma(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize LogGamma:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03190">functions.cpp:3190</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03178">3178</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03179"></a><span class="lineno"> 3179</span>&#160;{</div>
+<div class="line"><a name="l03180"></a><span class="lineno"> 3180</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa65191cb3b4d8841ce3cfca888f730ef">loggamma</a>(arg);</div>
+<div class="line"><a name="l03181"></a><span class="lineno"> 3181</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_aa65191cb3b4d8841ce3cfca888f730ef"><div class="ttname"><a href="namespaceSymEngine.html#aa65191cb3b4d8841ce3cfca888f730ef">SymEngine::loggamma</a></div><div class="ttdeci">RCP&lt; const Basic &gt; loggamma(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize LogGamma:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03183">functions.cpp:3183</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -305,21 +305,21 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03165">3165</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03166"></a><span class="lineno"> 3166</span>&#160;{</div>
-<div class="line"><a name="l03167"></a><span class="lineno"> 3167</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg)) {</div>
-<div class="line"><a name="l03168"></a><span class="lineno"> 3168</span>&#160;        RCP&lt;const Integer&gt; arg_int = rcp_static_cast&lt;const Integer&gt;(arg);</div>
-<div class="line"><a name="l03169"></a><span class="lineno"> 3169</span>&#160;        <span class="keywordflow">if</span> (not arg_int-&gt;is_positive()) {</div>
-<div class="line"><a name="l03170"></a><span class="lineno"> 3170</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03171"></a><span class="lineno"> 3171</span>&#160;        }</div>
-<div class="line"><a name="l03172"></a><span class="lineno"> 3172</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(1), *arg_int) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2), *arg_int)</div>
-<div class="line"><a name="l03173"></a><span class="lineno"> 3173</span>&#160;            or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(3), *arg_int)) {</div>
-<div class="line"><a name="l03174"></a><span class="lineno"> 3174</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03175"></a><span class="lineno"> 3175</span>&#160;        }</div>
-<div class="line"><a name="l03176"></a><span class="lineno"> 3176</span>&#160;    }</div>
-<div class="line"><a name="l03177"></a><span class="lineno"> 3177</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l03178"></a><span class="lineno"> 3178</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00202">integer.h:202</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03158">3158</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03159"></a><span class="lineno"> 3159</span>&#160;{</div>
+<div class="line"><a name="l03160"></a><span class="lineno"> 3160</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*arg)) {</div>
+<div class="line"><a name="l03161"></a><span class="lineno"> 3161</span>&#160;        RCP&lt;const Integer&gt; arg_int = rcp_static_cast&lt;const Integer&gt;(arg);</div>
+<div class="line"><a name="l03162"></a><span class="lineno"> 3162</span>&#160;        <span class="keywordflow">if</span> (not arg_int-&gt;is_positive()) {</div>
+<div class="line"><a name="l03163"></a><span class="lineno"> 3163</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03164"></a><span class="lineno"> 3164</span>&#160;        }</div>
+<div class="line"><a name="l03165"></a><span class="lineno"> 3165</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(1), *arg_int) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2), *arg_int)</div>
+<div class="line"><a name="l03166"></a><span class="lineno"> 3166</span>&#160;            or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(3), *arg_int)) {</div>
+<div class="line"><a name="l03167"></a><span class="lineno"> 3167</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03168"></a><span class="lineno"> 3168</span>&#160;        }</div>
+<div class="line"><a name="l03169"></a><span class="lineno"> 3169</span>&#160;    }</div>
+<div class="line"><a name="l03170"></a><span class="lineno"> 3170</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l03171"></a><span class="lineno"> 3171</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>

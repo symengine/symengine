@@ -117,21 +117,21 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    fmpz_t mp;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;              <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if&lt;std::is_integral&lt;T&gt;::value</a></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                                          &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;T&gt;::value</a>,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                                      <span class="keywordtype">int</span>&gt;::type</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;              = 0&gt;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keyword">typename</span> T,</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral&lt;T&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;T&gt;::value</a>, <span class="keywordtype">int</span>&gt;::type</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        = 0&gt;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classSymEngine_1_1fmpz__wrapper.html">fmpz_wrapper</a>(<span class="keyword">const</span> T i)</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        fmpz_init(mp);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        fmpz_set_ui(mp, i);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;              <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if&lt;std::is_integral&lt;T&gt;::value</a></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                          &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;T&gt;::value</a>,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                                      <span class="keywordtype">int</span>&gt;::type</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;              = 0&gt;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">typename</span> T,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral&lt;T&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;T&gt;::value</a>, <span class="keywordtype">int</span>&gt;::type</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        = 0&gt;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classSymEngine_1_1fmpz__wrapper.html">fmpz_wrapper</a>(<span class="keyword">const</span> T i)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        fmpz_init(mp);</div>
@@ -399,21 +399,21 @@ $(function() {
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        fmpq_init(mp);</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        fmpq_set(mp, m);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    }</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;              <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if&lt;std::is_integral&lt;T&gt;::value</a></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                                          &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;T&gt;::value</a>,</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                                      <span class="keywordtype">int</span>&gt;::type</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;              = 0&gt;</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        <span class="keyword">typename</span> T,</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral&lt;T&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;T&gt;::value</a>, <span class="keywordtype">int</span>&gt;::type</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;        = 0&gt;</div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <a class="code" href="classSymEngine_1_1fmpq__wrapper.html">fmpq_wrapper</a>(<span class="keyword">const</span> T i)</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    {</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        fmpq_init(mp);</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        fmpz_set_ui(fmpq_numref(mp), i);</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;              <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if&lt;std::is_integral&lt;T&gt;::value</a></div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;                                          &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;T&gt;::value</a>,</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                                      <span class="keywordtype">int</span>&gt;::type</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;              = 0&gt;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="keyword">typename</span> T,</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral&lt;T&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;T&gt;::value</a>, <span class="keywordtype">int</span>&gt;::type</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        = 0&gt;</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <a class="code" href="classSymEngine_1_1fmpq__wrapper.html">fmpq_wrapper</a>(<span class="keyword">const</span> T i)</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    {</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        fmpq_init(mp);</div>
@@ -1100,7 +1100,7 @@ $(function() {
 <div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;    }</div>
 <div class="line"><a name="l01001"></a><span class="lineno"> 1001</span>&#160;};</div>
 <div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160; </div>
-<div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;} <span class="comment">// SymEngine</span></div>
+<div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160; </div>
 <div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_FLINT_WRAPPER_H</span></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
@@ -1113,6 +1113,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1mpq__view__flint_html"><div class="ttname"><a href="classSymEngine_1_1mpq__view__flint.html">SymEngine::mpq_view_flint</a></div><div class="ttdef"><b>Definition:</b> <a href="flint__wrapper_8h_source.html#l00457">flint_wrapper.h:458</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1mpz__view__flint_html"><div class="ttname"><a href="classSymEngine_1_1mpz__view__flint.html">SymEngine::mpz_view_flint</a></div><div class="ttdef"><b>Definition:</b> <a href="flint__wrapper_8h_source.html#l00235">flint_wrapper.h:236</a></div></div>
 <div class="ttc" id="aenable_if_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a></div></div>
+<div class="ttc" id="ais_integral_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral</a></div></div>
 <div class="ttc" id="ais_signed_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed</a></div></div>
 <div class="ttc" id="ais_unsigned_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>

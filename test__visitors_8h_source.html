@@ -483,32 +483,30 @@ $(function() {
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    <span class="keywordtype">void</span> check_power(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;base, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <a class="code" href="classSymEngine_1_1PolynomialVisitor.html">PolynomialVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;variables) : variables_(variables)</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    {</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    }</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x);</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Number.html">Number</a> &amp;x){};</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Constant.html">Constant</a> &amp;x){};</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Symbol.html">Symbol</a> &amp;x);</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Add.html">Add</a> &amp;x);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Mul.html">Mul</a> &amp;x);</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Set.html">Set</a> &amp;x)</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    {</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    };</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Relational.html">Relational</a> &amp;x)</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    {</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    };</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160; </div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    <span class="keywordtype">bool</span> apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b);</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;};</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160; </div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a5edc21801e92c0d5b42c66123a6ed621">is_polynomial</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;variables = {});</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;}</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_TEST_VISITORS_H</span></div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <a class="code" href="classSymEngine_1_1PolynomialVisitor.html">PolynomialVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;variables) : variables_(variables) {}</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x);</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Number.html">Number</a> &amp;x){};</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Constant.html">Constant</a> &amp;x){};</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Symbol.html">Symbol</a> &amp;x);</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Add.html">Add</a> &amp;x);</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Mul.html">Mul</a> &amp;x);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x);</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Set.html">Set</a> &amp;x)</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    {</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    };</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Relational.html">Relational</a> &amp;x)</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    {</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    };</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160; </div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    <span class="keywordtype">bool</span> apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b);</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;};</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a5edc21801e92c0d5b42c66123a6ed621">is_polynomial</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;variables = {});</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_TEST_VISITORS_H</span></div>
 <div class="ttc" id="aclassSymEngine_1_1ACos_html"><div class="ttname"><a href="classSymEngine_1_1ACos.html">SymEngine::ACos</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00421">functions.h:422</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ACot_html"><div class="ttname"><a href="classSymEngine_1_1ACot.html">SymEngine::ACot</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00485">functions.h:486</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ACoth_html"><div class="ttname"><a href="classSymEngine_1_1ACoth.html">SymEngine::ACoth</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00954">functions.h:955</a></div></div>

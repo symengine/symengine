@@ -277,11 +277,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MultiArgFunction.html#a0bc5ccbcaa3eb6217f7c43d862f05eb9">SymEngine::MultiArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03618">3618</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03619"></a><span class="lineno"> 3619</span>&#160;{</div>
-<div class="line"><a name="l03620"></a><span class="lineno"> 3620</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(a);</div>
-<div class="line"><a name="l03621"></a><span class="lineno"> 3621</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_ac173c8dd31830a8392c91aa7143b0428"><div class="ttname"><a href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03623">functions.cpp:3623</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03611">3611</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03612"></a><span class="lineno"> 3612</span>&#160;{</div>
+<div class="line"><a name="l03613"></a><span class="lineno"> 3613</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(a);</div>
+<div class="line"><a name="l03614"></a><span class="lineno"> 3614</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_ac173c8dd31830a8392c91aa7143b0428"><div class="ttname"><a href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03616">functions.cpp:3616</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -302,24 +302,24 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03599">3599</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03600"></a><span class="lineno"> 3600</span>&#160;{</div>
-<div class="line"><a name="l03601"></a><span class="lineno"> 3601</span>&#160;    <span class="keywordflow">if</span> (arg.size() &lt; 2)</div>
-<div class="line"><a name="l03602"></a><span class="lineno"> 3602</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03603"></a><span class="lineno"> 3603</span>&#160; </div>
-<div class="line"><a name="l03604"></a><span class="lineno"> 3604</span>&#160;    <span class="keywordtype">bool</span> non_number_exists = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03605"></a><span class="lineno"> 3605</span>&#160; </div>
-<div class="line"><a name="l03606"></a><span class="lineno"> 3606</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : arg) {</div>
-<div class="line"><a name="l03607"></a><span class="lineno"> 3607</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Complex&gt;(*p) or is_a&lt;Min&gt;(*p))</div>
-<div class="line"><a name="l03608"></a><span class="lineno"> 3608</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03609"></a><span class="lineno"> 3609</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*p))</div>
-<div class="line"><a name="l03610"></a><span class="lineno"> 3610</span>&#160;            non_number_exists = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l03611"></a><span class="lineno"> 3611</span>&#160;    }</div>
-<div class="line"><a name="l03612"></a><span class="lineno"> 3612</span>&#160;    <span class="keywordflow">if</span> (not <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/is_sorted.html">std::is_sorted</a>(arg.begin(), arg.end(), RCPBasicKeyLess()))</div>
-<div class="line"><a name="l03613"></a><span class="lineno"> 3613</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03614"></a><span class="lineno"> 3614</span>&#160; </div>
-<div class="line"><a name="l03615"></a><span class="lineno"> 3615</span>&#160;    <span class="keywordflow">return</span> non_number_exists; <span class="comment">// all arguments cant be numbers</span></div>
-<div class="line"><a name="l03616"></a><span class="lineno"> 3616</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03592">3592</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03593"></a><span class="lineno"> 3593</span>&#160;{</div>
+<div class="line"><a name="l03594"></a><span class="lineno"> 3594</span>&#160;    <span class="keywordflow">if</span> (arg.size() &lt; 2)</div>
+<div class="line"><a name="l03595"></a><span class="lineno"> 3595</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03596"></a><span class="lineno"> 3596</span>&#160; </div>
+<div class="line"><a name="l03597"></a><span class="lineno"> 3597</span>&#160;    <span class="keywordtype">bool</span> non_number_exists = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03598"></a><span class="lineno"> 3598</span>&#160; </div>
+<div class="line"><a name="l03599"></a><span class="lineno"> 3599</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : arg) {</div>
+<div class="line"><a name="l03600"></a><span class="lineno"> 3600</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Complex&gt;(*p) or is_a&lt;Min&gt;(*p))</div>
+<div class="line"><a name="l03601"></a><span class="lineno"> 3601</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03602"></a><span class="lineno"> 3602</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*p))</div>
+<div class="line"><a name="l03603"></a><span class="lineno"> 3603</span>&#160;            non_number_exists = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l03604"></a><span class="lineno"> 3604</span>&#160;    }</div>
+<div class="line"><a name="l03605"></a><span class="lineno"> 3605</span>&#160;    <span class="keywordflow">if</span> (not <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/is_sorted.html">std::is_sorted</a>(arg.begin(), arg.end(), RCPBasicKeyLess()))</div>
+<div class="line"><a name="l03606"></a><span class="lineno"> 3606</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03607"></a><span class="lineno"> 3607</span>&#160; </div>
+<div class="line"><a name="l03608"></a><span class="lineno"> 3608</span>&#160;    <span class="keywordflow">return</span> non_number_exists; <span class="comment">// all arguments cant be numbers</span></div>
+<div class="line"><a name="l03609"></a><span class="lineno"> 3609</span>&#160;}</div>
 <div class="ttc" id="ais_sorted_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/is_sorted.html">std::is_sorted</a></div><div class="ttdeci">T is_sorted(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 </div><!-- fragment -->

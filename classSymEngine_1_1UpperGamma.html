@@ -220,11 +220,11 @@ Static Public Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1TwoArgBasic.html#a07a4fa1616bc3633ab921279923edae3">SymEngine::TwoArgBasic&lt; BaseClass &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03111">3111</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03113"></a><span class="lineno"> 3113</span>&#160;{</div>
-<div class="line"><a name="l03114"></a><span class="lineno"> 3114</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083">uppergamma</a>(a, b);</div>
-<div class="line"><a name="l03115"></a><span class="lineno"> 3115</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_afd4e5ab0bad75561a69caf9036301083"><div class="ttname"><a href="namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083">SymEngine::uppergamma</a></div><div class="ttdeci">RCP&lt; const Basic &gt; uppergamma(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Canonicalize UpperGamma:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03117">functions.cpp:3117</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03104">3104</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03106"></a><span class="lineno"> 3106</span>&#160;{</div>
+<div class="line"><a name="l03107"></a><span class="lineno"> 3107</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083">uppergamma</a>(a, b);</div>
+<div class="line"><a name="l03108"></a><span class="lineno"> 3108</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_afd4e5ab0bad75561a69caf9036301083"><div class="ttname"><a href="namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083">SymEngine::uppergamma</a></div><div class="ttdeci">RCP&lt; const Basic &gt; uppergamma(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Canonicalize UpperGamma:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03110">functions.cpp:3110</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -255,24 +255,24 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03091">3091</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03093"></a><span class="lineno"> 3093</span>&#160;{</div>
-<div class="line"><a name="l03094"></a><span class="lineno"> 3094</span>&#160;    <span class="comment">// Only special values are evaluated</span></div>
-<div class="line"><a name="l03095"></a><span class="lineno"> 3095</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
-<div class="line"><a name="l03096"></a><span class="lineno"> 3096</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03097"></a><span class="lineno"> 3097</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s)</div>
-<div class="line"><a name="l03098"></a><span class="lineno"> 3098</span>&#160;        and down_cast&lt;const Integer &amp;&gt;(*s).as_integer_class() &gt; 1)</div>
-<div class="line"><a name="l03099"></a><span class="lineno"> 3099</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03100"></a><span class="lineno"> 3100</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, s)))</div>
-<div class="line"><a name="l03101"></a><span class="lineno"> 3101</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03102"></a><span class="lineno"> 3102</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_MPFR</span></div>
-<div class="line"><a name="l03103"></a><span class="lineno"> 3103</span>&#160;<span class="preprocessor">#if MPFR_VERSION_MAJOR &gt; 3</span></div>
-<div class="line"><a name="l03104"></a><span class="lineno"> 3104</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;RealMPFR&gt;(*s) &amp;&amp; is_a&lt;RealMPFR&gt;(*x))</div>
-<div class="line"><a name="l03105"></a><span class="lineno"> 3105</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03106"></a><span class="lineno"> 3106</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l03107"></a><span class="lineno"> 3107</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l03108"></a><span class="lineno"> 3108</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l03109"></a><span class="lineno"> 3109</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03084">3084</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03086"></a><span class="lineno"> 3086</span>&#160;{</div>
+<div class="line"><a name="l03087"></a><span class="lineno"> 3087</span>&#160;    <span class="comment">// Only special values are evaluated</span></div>
+<div class="line"><a name="l03088"></a><span class="lineno"> 3088</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
+<div class="line"><a name="l03089"></a><span class="lineno"> 3089</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03090"></a><span class="lineno"> 3090</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s)</div>
+<div class="line"><a name="l03091"></a><span class="lineno"> 3091</span>&#160;        and down_cast&lt;const Integer &amp;&gt;(*s).as_integer_class() &gt; 1)</div>
+<div class="line"><a name="l03092"></a><span class="lineno"> 3092</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03093"></a><span class="lineno"> 3093</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, s)))</div>
+<div class="line"><a name="l03094"></a><span class="lineno"> 3094</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03095"></a><span class="lineno"> 3095</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_MPFR</span></div>
+<div class="line"><a name="l03096"></a><span class="lineno"> 3096</span>&#160;<span class="preprocessor">#if MPFR_VERSION_MAJOR &gt; 3</span></div>
+<div class="line"><a name="l03097"></a><span class="lineno"> 3097</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;RealMPFR&gt;(*s) &amp;&amp; is_a&lt;RealMPFR&gt;(*x))</div>
+<div class="line"><a name="l03098"></a><span class="lineno"> 3098</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03099"></a><span class="lineno"> 3099</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l03100"></a><span class="lineno"> 3100</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l03101"></a><span class="lineno"> 3101</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l03102"></a><span class="lineno"> 3102</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00347">mul.cpp:347</a></div></div>
 </div><!-- fragment -->

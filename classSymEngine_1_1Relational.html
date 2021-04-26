@@ -289,16 +289,16 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00569">569</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;{</div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*lhs, *rhs))</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*lhs) and <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*rhs))</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*lhs) and is_a&lt;BooleanAtom&gt;(*rhs))</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00562">562</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;{</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*lhs, *rhs))</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*lhs) and <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*rhs))</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*lhs) and is_a&lt;BooleanAtom&gt;(*rhs))</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->

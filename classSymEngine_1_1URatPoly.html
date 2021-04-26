@@ -341,7 +341,7 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="uratpoly_8h_source.html#l00048">48</a> of file <a class="el" href="uratpoly_8h_source.html">uratpoly.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uratpoly_8h_source.html#l00038">38</a> of file <a class="el" href="uratpoly_8h_source.html">uratpoly.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a497962f409bfede6347d362a87164615"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a497962f409bfede6347d362a87164615">&#9670;&nbsp;</a></span>__hash__()</h2>
@@ -369,20 +369,20 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 
 <p>Implements <a class="el" href="classSymEngine_1_1UPolyBase.html#a62544578034038e1f3d109d9edb9460c">SymEngine::UPolyBase&lt; Container, Poly &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="uratpoly_8cpp_source.html#l00013">13</a> of file <a class="el" href="uratpoly_8cpp_source.html">uratpoly.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    hash_t seed = SYMENGINE_URATPOLY;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    seed += get_var()-&gt;hash();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_t temp = SYMENGINE_URATPOLY;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        hash_combine&lt;long long int&gt;(temp, mp_get_si(get_num(it.second)));</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        hash_combine&lt;long long int&gt;(temp, mp_get_si(get_den(it.second)));</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        seed += temp;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="uratpoly_8cpp_source.html#l00011">11</a> of file <a class="el" href="uratpoly_8cpp_source.html">uratpoly.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    hash_t seed = SYMENGINE_URATPOLY;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    seed += get_var()-&gt;hash();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        hash_t temp = SYMENGINE_URATPOLY;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_combine&lt;long long int&gt;(temp, mp_get_si(get_num(it.second)));</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        hash_combine&lt;long long int&gt;(temp, mp_get_si(get_den(it.second)));</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        seed += temp;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -408,7 +408,7 @@ static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom
 </div><div class="memdoc">
 <p>Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="uratpoly_8h_source.html#l00051">51</a> of file <a class="el" href="uratpoly_8h_source.html">uratpoly.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="uratpoly_8h_source.html#l00041">41</a> of file <a class="el" href="uratpoly_8h_source.html">uratpoly.h</a>.</p>
 
 </div>
 </div>

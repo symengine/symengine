@@ -302,13 +302,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classSymEngine_1_1Symbol.html#a2c311ebc8da6075e9527d0af8c4ec54b">SymEngine::Symbol</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00064">64</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;{</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Dummy&gt;(o))</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> ((<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() == down_cast&lt;const Dummy &amp;&gt;(o).<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>())</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                and (<a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> == down_cast&lt;const Dummy &amp;&gt;(o).get_index()));</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00062">62</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Dummy&gt;(o))</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> ((<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() == down_cast&lt;const Dummy &amp;&gt;(o).<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>())</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                and (<a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> == down_cast&lt;const Dummy &amp;&gt;(o).get_index()));</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
 <div class="ttc" id="aclassSymEngine_1_1Dummy_html_a5ef29edd29e741d1080474432630ea62"><div class="ttname"><a href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">SymEngine::Dummy::dummy_index</a></div><div class="ttdeci">size_t dummy_index</div><div class="ttdoc">Dummy index.</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00056">symbol.h:56</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Symbol_html_a440a2db68b0a83d06402c10b93db996c"><div class="ttname"><a href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">SymEngine::Symbol::get_name</a></div><div class="ttdeci">const std::string &amp; get_name() const</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00038">symbol.h:38</a></div></div>
 </div><!-- fragment -->
@@ -340,13 +340,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classSymEngine_1_1Symbol.html#a95ee709c183e00b390743139408d11e9">SymEngine::Symbol</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00056">56</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    hash_t seed = 0;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(seed, <a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(seed, <a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00054">54</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    hash_t seed = 0;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(seed, <a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>());</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(seed, <a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a4e6d1d6e0960fa8a827afb3f36c7d30d"><div class="ttname"><a href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">SymEngine::hash_combine</a></div><div class="ttdeci">void hash_combine(hash_t &amp;seed, const T &amp;v)</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00137">basic-inl.h:137</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -384,18 +384,18 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classSymEngine_1_1Symbol.html#a40832d0eb0cd6ea43bdfb6106a37012b">SymEngine::Symbol</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00072">72</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Dummy&gt;(o))</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">Dummy</a> &amp;s = down_cast&lt;const Dummy &amp;&gt;(o);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() == s.get_name()) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> == s.get_index())</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> &lt; s.get_index() ? -1 : 1;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() &lt; s.get_name() ? -1 : 1;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="ttc" id="aclassSymEngine_1_1Dummy_html_a07f7a924273e4e419e009c711f091b01"><div class="ttname"><a href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">SymEngine::Dummy::Dummy</a></div><div class="ttdeci">Dummy()</div><div class="ttdoc">Dummy Constructors.</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8cpp_source.html#l00042">symbol.cpp:42</a></div></div>
+<p class="definition">Definition at line <a class="el" href="symbol_8cpp_source.html#l00070">70</a> of file <a class="el" href="symbol_8cpp_source.html">symbol.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Dummy&gt;(o))</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">Dummy</a> &amp;s = down_cast&lt;const Dummy &amp;&gt;(o);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() == s.get_name()) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> == s.get_index())</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> &lt; s.get_index() ? -1 : 1;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c">get_name</a>() &lt; s.get_name() ? -1 : 1;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="ttc" id="aclassSymEngine_1_1Dummy_html_a07f7a924273e4e419e009c711f091b01"><div class="ttname"><a href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">SymEngine::Dummy::Dummy</a></div><div class="ttdeci">Dummy()</div><div class="ttdoc">Dummy Constructors.</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8cpp_source.html#l00040">symbol.cpp:40</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

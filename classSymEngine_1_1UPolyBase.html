@@ -269,7 +269,7 @@ Additional Inherited Members</h2></td></tr>
 class SymEngine::UPolyBase&lt; Container, Poly &gt;</h3>
 
 
-<p class="definition">Definition at line <a class="el" href="upolybase_8h_source.html#l00358">358</a> of file <a class="el" href="upolybase_8h_source.html">upolybase.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="upolybase_8h_source.html#l00354">354</a> of file <a class="el" href="upolybase_8h_source.html">upolybase.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aa3d426e37a052d0b8269d6b4d961054b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa3d426e37a052d0b8269d6b4d961054b">&#9670;&nbsp;</a></span>__eq__()</h2>
@@ -300,13 +300,13 @@ template&lt;typename Container , typename Poly &gt; </div>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="upolybase_8h_source.html#l00380">380</a> of file <a class="el" href="upolybase_8h_source.html">upolybase.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    {</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Poly&gt;(o))</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*var_, *(down_cast&lt;const Poly &amp;&gt;(o).var_))</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                   and poly_ == down_cast&lt;const Poly &amp;&gt;(o).poly_;</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    }</div>
+<p class="definition">Definition at line <a class="el" href="upolybase_8h_source.html#l00376">376</a> of file <a class="el" href="upolybase_8h_source.html">upolybase.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    {</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Poly&gt;(o))</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*var_, *(down_cast&lt;const Poly &amp;&gt;(o).var_))</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                   and poly_ == down_cast&lt;const Poly &amp;&gt;(o).poly_;</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    }</div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>

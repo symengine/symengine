@@ -104,105 +104,103 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;{</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#ad12f8d9f57fca3ef1c95bb20472ce259">    6</a></span>&#160;<a class="code" href="classSymEngine_1_1UExprPoly.html#ad12f8d9f57fca3ef1c95bb20472ce259">UExprPoly::UExprPoly</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, <a class="code" href="classSymEngine_1_1UExprDict.html">UExprDict</a> &amp;&amp;dict)</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    : <a class="code" href="classSymEngine_1_1USymEnginePoly.html">USymEnginePoly</a>(var, <a class="code" href="namespacestd.html">std</a>::move(dict))</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    SYMENGINE_ASSERT(is_canonical(get_poly()))</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">   13</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">UExprPoly::__hash__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    hash_t seed = SYMENGINE_UEXPRPOLY;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    seed += get_var()-&gt;hash();</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_t temp = SYMENGINE_UEXPRPOLY;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        hash_combine&lt;Basic&gt;(temp, *(it.second.get_basic()));</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        seed += temp;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="classSymEngine_1_1Expression.html">Expression</a> UExprPoly::max_coef()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> curr = get_poly().get_dict().begin()-&gt;second;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().get_dict())</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">if</span> (curr.<a class="code" href="classSymEngine_1_1Expression.html#a74b07ac2a42e18c318f71d7825af9504">get_basic</a>()-&gt;__cmp__(*it.second.get_basic()))</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            curr = it.second;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">return</span> curr;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">   36</a></span>&#160;<a class="code" href="classSymEngine_1_1Expression.html">Expression</a> <a class="code" href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">UExprPoly::eval</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> &amp;x)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> ans = 0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : get_poly().get_dict()) {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> temp;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        temp = pow(x, <a class="code" href="classSymEngine_1_1Expression.html">Expression</a>(p.first));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        ans += p.second * temp;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> ans;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">   47</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">UExprPoly::is_zero</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> get_poly().empty();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">   52</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">UExprPoly::is_one</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">   58</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">UExprPoly::is_minus_one</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;           and get_poly().get_dict().begin()-&gt;second == -1</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">   65</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">UExprPoly::is_integer</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span> (get_poly().empty())</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 0;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">   72</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">UExprPoly::is_symbol</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 1</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;           and get_poly().get_dict().begin()-&gt;second == 1;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">   78</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">UExprPoly::is_mul</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first != 0</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 1</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 0;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">   85</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">UExprPoly::is_pow</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 1</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 0;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;} <span class="comment">// SymEngine</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    : <a class="code" href="classSymEngine_1_1USymEnginePoly.html">USymEnginePoly</a>(</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;        var, <a class="code" href="namespacestd.html">std</a>::move(dict)){SYMENGINE_ASSIGN_TYPEID()</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;                                  SYMENGINE_ASSERT(is_canonical(get_poly()))}</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">   11</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">UExprPoly::__hash__</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    hash_t seed = SYMENGINE_UEXPRPOLY;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    seed += get_var()-&gt;hash();</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().dict_) {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        hash_t temp = SYMENGINE_UEXPRPOLY;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        hash_combine&lt;unsigned int&gt;(temp, it.first);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        hash_combine&lt;Basic&gt;(temp, *(it.second.get_basic()));</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        seed += temp;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    }</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;}</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<a class="code" href="classSymEngine_1_1Expression.html">Expression</a> UExprPoly::max_coef()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> curr = get_poly().get_dict().begin()-&gt;second;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : get_poly().get_dict())</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">if</span> (curr.<a class="code" href="classSymEngine_1_1Expression.html#a74b07ac2a42e18c318f71d7825af9504">get_basic</a>()-&gt;__cmp__(*it.second.get_basic()))</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            curr = it.second;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> curr;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">   34</a></span>&#160;<a class="code" href="classSymEngine_1_1Expression.html">Expression</a> <a class="code" href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">UExprPoly::eval</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> ans = 0;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : get_poly().get_dict()) {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <a class="code" href="classSymEngine_1_1Expression.html">Expression</a> temp;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        temp = pow(x, <a class="code" href="classSymEngine_1_1Expression.html">Expression</a>(p.first));</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        ans += p.second * temp;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> ans;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">   45</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">UExprPoly::is_zero</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> get_poly().empty();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">   50</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">UExprPoly::is_one</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">   56</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">UExprPoly::is_minus_one</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;           and get_poly().get_dict().begin()-&gt;second == -1</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;           and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">   63</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">UExprPoly::is_integer</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span> (get_poly().empty())</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 0;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">   70</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">UExprPoly::is_symbol</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first == 1</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;           and get_poly().get_dict().begin()-&gt;second == 1;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">   76</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">UExprPoly::is_mul</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;first != 0</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 1</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;           and get_poly().get_dict().begin()-&gt;second != 0;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">   83</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">UExprPoly::is_pow</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> get_poly().size() == 1 and get_poly().get_dict().begin()-&gt;second == 1</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 1</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;           and get_poly().get_dict().begin()-&gt;first != 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aclassSymEngine_1_1Expression_html"><div class="ttname"><a href="classSymEngine_1_1Expression.html">SymEngine::Expression</a></div><div class="ttdef"><b>Definition:</b> <a href="expression_8h_source.html#l00028">expression.h:29</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Expression_html_a74b07ac2a42e18c318f71d7825af9504"><div class="ttname"><a href="classSymEngine_1_1Expression.html#a74b07ac2a42e18c318f71d7825af9504">SymEngine::Expression::get_basic</a></div><div class="ttdeci">const RCP&lt; const Basic &gt; &amp; get_basic() const</div><div class="ttdoc">Method to get Basic from Expression.</div><div class="ttdef"><b>Definition:</b> <a href="expression_8h_source.html#l00271">expression.h:271</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Expression_html_a74b07ac2a42e18c318f71d7825af9504"><div class="ttname"><a href="classSymEngine_1_1Expression.html#a74b07ac2a42e18c318f71d7825af9504">SymEngine::Expression::get_basic</a></div><div class="ttdeci">const RCP&lt; const Basic &gt; &amp; get_basic() const</div><div class="ttdoc">Method to get Basic from Expression.</div><div class="ttdef"><b>Definition:</b> <a href="expression_8h_source.html#l00259">expression.h:259</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UExprDict_html"><div class="ttname"><a href="classSymEngine_1_1UExprDict.html">SymEngine::UExprDict</a></div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8h_source.html#l00015">uexprpoly.h:16</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a0b141f942bbcf8f04134b857c5b95db3"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">SymEngine::UExprPoly::__hash__</a></div><div class="ttdeci">hash_t __hash__() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00013">uexprpoly.cpp:13</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a3e0723f33b81b112a4efd1659e08b0d8"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">SymEngine::UExprPoly::is_zero</a></div><div class="ttdeci">bool is_zero() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00047">uexprpoly.cpp:47</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a511cd9b608439d4011838afd5b7ec401"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">SymEngine::UExprPoly::is_mul</a></div><div class="ttdeci">bool is_mul() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00078">uexprpoly.cpp:78</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a719e2cf77e036acf347bee9c43374327"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">SymEngine::UExprPoly::is_symbol</a></div><div class="ttdeci">bool is_symbol() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00072">uexprpoly.cpp:72</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a7f6c8965c128787e89346ad8488d9b0f"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">SymEngine::UExprPoly::is_integer</a></div><div class="ttdeci">bool is_integer() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00065">uexprpoly.cpp:65</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_ace2ad99f498bb62a27a345c0e717555f"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">SymEngine::UExprPoly::is_minus_one</a></div><div class="ttdeci">bool is_minus_one() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00058">uexprpoly.cpp:58</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a0b141f942bbcf8f04134b857c5b95db3"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a0b141f942bbcf8f04134b857c5b95db3">SymEngine::UExprPoly::__hash__</a></div><div class="ttdeci">hash_t __hash__() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00011">uexprpoly.cpp:11</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a3e0723f33b81b112a4efd1659e08b0d8"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a3e0723f33b81b112a4efd1659e08b0d8">SymEngine::UExprPoly::is_zero</a></div><div class="ttdeci">bool is_zero() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00045">uexprpoly.cpp:45</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a511cd9b608439d4011838afd5b7ec401"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a511cd9b608439d4011838afd5b7ec401">SymEngine::UExprPoly::is_mul</a></div><div class="ttdeci">bool is_mul() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00076">uexprpoly.cpp:76</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a719e2cf77e036acf347bee9c43374327"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a719e2cf77e036acf347bee9c43374327">SymEngine::UExprPoly::is_symbol</a></div><div class="ttdeci">bool is_symbol() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00070">uexprpoly.cpp:70</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_a7f6c8965c128787e89346ad8488d9b0f"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#a7f6c8965c128787e89346ad8488d9b0f">SymEngine::UExprPoly::is_integer</a></div><div class="ttdeci">bool is_integer() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00063">uexprpoly.cpp:63</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_ace2ad99f498bb62a27a345c0e717555f"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#ace2ad99f498bb62a27a345c0e717555f">SymEngine::UExprPoly::is_minus_one</a></div><div class="ttdeci">bool is_minus_one() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00056">uexprpoly.cpp:56</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_ad12f8d9f57fca3ef1c95bb20472ce259"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#ad12f8d9f57fca3ef1c95bb20472ce259">SymEngine::UExprPoly::UExprPoly</a></div><div class="ttdeci">UExprPoly(const RCP&lt; const Basic &gt; &amp;var, UExprDict &amp;&amp;dict)</div><div class="ttdoc">Constructor of UExprPoly class.</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00006">uexprpoly.cpp:6</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_ad2ba4dd40b004d350e4ce73b1d871e30"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">SymEngine::UExprPoly::eval</a></div><div class="ttdeci">Expression eval(const Expression &amp;x) const</div><div class="ttdoc">Evaluates the UExprPoly at value x.</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00036">uexprpoly.cpp:36</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_aeba18d67a07ad065c6a5f493ce11cb21"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">SymEngine::UExprPoly::is_one</a></div><div class="ttdeci">bool is_one() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00052">uexprpoly.cpp:52</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_aef329df869bfff3b1fff1d4c2eb0308d"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">SymEngine::UExprPoly::is_pow</a></div><div class="ttdeci">bool is_pow() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00085">uexprpoly.cpp:85</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_ad2ba4dd40b004d350e4ce73b1d871e30"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#ad2ba4dd40b004d350e4ce73b1d871e30">SymEngine::UExprPoly::eval</a></div><div class="ttdeci">Expression eval(const Expression &amp;x) const</div><div class="ttdoc">Evaluates the UExprPoly at value x.</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00034">uexprpoly.cpp:34</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_aeba18d67a07ad065c6a5f493ce11cb21"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#aeba18d67a07ad065c6a5f493ce11cb21">SymEngine::UExprPoly::is_one</a></div><div class="ttdeci">bool is_one() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00050">uexprpoly.cpp:50</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UExprPoly_html_aef329df869bfff3b1fff1d4c2eb0308d"><div class="ttname"><a href="classSymEngine_1_1UExprPoly.html#aef329df869bfff3b1fff1d4c2eb0308d">SymEngine::UExprPoly::is_pow</a></div><div class="ttdeci">bool is_pow() const</div><div class="ttdef"><b>Definition:</b> <a href="uexprpoly_8cpp_source.html#l00083">uexprpoly.cpp:83</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1USymEnginePoly_html"><div class="ttname"><a href="classSymEngine_1_1USymEnginePoly.html">SymEngine::USymEnginePoly</a></div><div class="ttdef"><b>Definition:</b> <a href="usymenginepoly_8h_source.html#l00011">usymenginepoly.h:12</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>

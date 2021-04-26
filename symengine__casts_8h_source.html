@@ -191,53 +191,52 @@ $(function() {
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">inline</span> To</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;numeric_cast(From f,</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;             <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;From&gt;::value</a></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                                      &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;To&gt;::value</a>)</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                                     || (<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;From&gt;::value</a></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                                         &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;To&gt;::value</a>)&gt;::type</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                 * = <span class="keyword">nullptr</span>)</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;{</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    SYMENGINE_ASSERT(f &lt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>());</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    SYMENGINE_ASSERT(f &gt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::min</a>());</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keyword">inline</span> To numeric_cast(</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    From f,</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;From&gt;::value</a></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                             &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;To&gt;::value</a>)&gt;::type * = <span class="keyword">nullptr</span>)</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_ASSERT</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// Above ifdef is needed to avoid a warning about unused typedefs</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/make_unsigned.html">std::make_unsigned&lt;From&gt;::type</a> unsigned_from_type;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    SYMENGINE_ASSERT(f &gt;= 0);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    SYMENGINE_ASSERT(<span class="keyword">static_cast&lt;</span>unsigned_from_type<span class="keyword">&gt;</span>(f)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                     &lt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>());</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword">inline</span> To numeric_cast(</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    From f,</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;From&gt;::value</a></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                             &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;To&gt;::value</a>)&gt;::type * = <span class="keyword">nullptr</span>)</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;{</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_ASSERT</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/make_unsigned.html">std::make_unsigned&lt;To&gt;::type</a> unsigned_to_type;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    SYMENGINE_ASSERT(</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        f &lt;= <span class="keyword">static_cast&lt;</span>unsigned_to_type<span class="keyword">&gt;</span>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>()));</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;} <span class="comment">// SymEngine</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_CASTS_H</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">inline</span> To numeric_cast(</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    From f,</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        (<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;From&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;To&gt;::value</a>)</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        || (<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;From&gt;::value</a> &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;To&gt;::value</a>)&gt;::type</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        * = <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;{</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    SYMENGINE_ASSERT(f &lt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>());</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    SYMENGINE_ASSERT(f &gt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::min</a>());</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">inline</span> To numeric_cast(</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    From f,</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;From&gt;::value</a></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                             &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;To&gt;::value</a>)&gt;::type * = <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;{</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_ASSERT</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">// Above ifdef is needed to avoid a warning about unused typedefs</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/make_unsigned.html">std::make_unsigned&lt;From&gt;::type</a> unsigned_from_type;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    SYMENGINE_ASSERT(f &gt;= 0);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    SYMENGINE_ASSERT(<span class="keyword">static_cast&lt;</span>unsigned_from_type<span class="keyword">&gt;</span>(f)</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                     &lt;= <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>());</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="keyword">inline</span> To numeric_cast(</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    From f,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned&lt;From&gt;::value</a></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                             &amp;&amp; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed&lt;To&gt;::value</a>)&gt;::type * = <span class="keyword">nullptr</span>)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;{</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_ASSERT</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/make_unsigned.html">std::make_unsigned&lt;To&gt;::type</a> unsigned_to_type;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    SYMENGINE_ASSERT(</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        f &lt;= <span class="keyword">static_cast&lt;</span>unsigned_to_type<span class="keyword">&gt;</span>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;To&gt;::max</a>()));</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(f);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;}</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_CASTS_H</span></div>
 <div class="ttc" id="aenable_if_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a></div></div>
 <div class="ttc" id="ais_signed_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_signed.html">std::is_signed</a></div></div>
 <div class="ttc" id="ais_unsigned_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_unsigned.html">std::is_unsigned</a></div></div>
