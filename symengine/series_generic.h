@@ -19,8 +19,8 @@ class UnivariateSeries
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},
     // {2, 1}} with var_ = "x" and prec_ = 5
 public:
-    using SeriesBase::pow;
     using SeriesBase::mul;
+    using SeriesBase::pow;
     IMPLEMENT_TYPEID(SYMENGINE_UNIVARIATESERIES)
     UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)
@@ -82,5 +82,5 @@ univariate_series(RCP<const Symbol> i, unsigned int prec, const UExprDict &s)
     return make_rcp<const UnivariateSeries>(std::move(s), i->get_name(), prec);
 }
 
-} // SymEngine
+} // namespace SymEngine
 #endif

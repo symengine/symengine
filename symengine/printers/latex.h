@@ -64,6 +64,6 @@ protected:
     virtual std::string print_div(const std::string &num,
                                   const std::string &den, bool paren);
 };
-}
+} // namespace SymEngine
 
 #endif // LATEX_H

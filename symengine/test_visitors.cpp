@@ -478,4 +478,4 @@ bool is_polynomial(const Basic &b, const set_basic &variables)
     PolynomialVisitor visitor(variables);
     return visitor.apply(b);
 }
-}
+} // namespace SymEngine

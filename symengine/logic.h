@@ -271,6 +271,6 @@ RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
 RCP<const Boolean> logical_nor(const set_boolean &s);
 RCP<const Boolean> logical_xor(const vec_boolean &s);
 RCP<const Boolean> logical_xnor(const vec_boolean &s);
-} // SymEngine
+} // namespace SymEngine
 
 #endif

@@ -7,12 +7,10 @@
 namespace SymEngine
 {
 
-Constant::Constant(const std::string &name) : name_{name}
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+Constant::Constant(const std::string &name)
+    : name_{name} {SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t Constant::__hash__() const
+      hash_t Constant::__hash__() const
 {
     hash_t seed = SYMENGINE_CONSTANT;
     hash_combine<std::string>(seed, name_);
@@ -64,7 +62,7 @@ RCP<const Basic> sqrt_(const RCP<const Basic> &arg)
 {
     return pow(arg, div(one, i2));
 }
-}
+} // namespace
 
 RCP<const Basic> i3 = integer(3);
 RCP<const Basic> i5 = integer(5);
@@ -129,4 +127,4 @@ umap_basic_basic inverse_tct = {
     {minus_one, mul(minus_one, pow(i2, i2))},
 };
 
-} // SymEngine
+} // namespace SymEngine

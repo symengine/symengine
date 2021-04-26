@@ -16,29 +16,17 @@ class UExprDict : public ODictWrapper<int, Expression, UExprDict>
 {
 
 public:
-    UExprDict() SYMENGINE_NOEXCEPT
-    {
-    }
-    ~UExprDict() SYMENGINE_NOEXCEPT
-    {
-    }
+    UExprDict() SYMENGINE_NOEXCEPT {}
+    ~UExprDict() SYMENGINE_NOEXCEPT {}
     UExprDict(UExprDict &&other) SYMENGINE_NOEXCEPT
         : ODictWrapper(std::move(other))
     {
     }
-    UExprDict(const int &i) : ODictWrapper(i)
-    {
-    }
-    UExprDict(const map_int_Expr &p) : ODictWrapper(p)
-    {
-    }
-    UExprDict(const Expression &expr) : ODictWrapper(expr)
-    {
-    }
+    UExprDict(const int &i) : ODictWrapper(i) {}
+    UExprDict(const map_int_Expr &p) : ODictWrapper(p) {}
+    UExprDict(const Expression &expr) : ODictWrapper(expr) {}
 
-    UExprDict(const std::string &s) : ODictWrapper(s)
-    {
-    }
+    UExprDict(const std::string &s) : ODictWrapper(s) {}
 
     UExprDict(const UExprDict &) = default;
     UExprDict &operator=(const UExprDict &) = default;
@@ -211,6 +199,6 @@ inline RCP<const UExprPoly> uexpr_poly(RCP<const Basic> i, map_int_Expr &&dict)
     return UExprPoly::from_dict(i, std::move(dict));
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

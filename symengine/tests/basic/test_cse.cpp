@@ -6,23 +6,23 @@
 #include <symengine/mul.h>
 #include <symengine/functions.h>
 
-using SymEngine::Basic;
-using SymEngine::symbol;
-using SymEngine::RCP;
-using SymEngine::pow;
 using SymEngine::add;
-using SymEngine::sub;
-using SymEngine::mul;
+using SymEngine::Basic;
+using SymEngine::cse;
 using SymEngine::div;
+using SymEngine::integer;
+using SymEngine::mul;
 using SymEngine::neg;
+using SymEngine::one;
+using SymEngine::pow;
+using SymEngine::RCP;
+using SymEngine::sin;
+using SymEngine::sqrt;
+using SymEngine::sub;
+using SymEngine::symbol;
+using SymEngine::unified_eq;
 using SymEngine::vec_basic;
 using SymEngine::vec_pair;
-using SymEngine::sqrt;
-using SymEngine::sin;
-using SymEngine::cse;
-using SymEngine::one;
-using SymEngine::unified_eq;
-using SymEngine::integer;
 
 TEST_CASE("CSE: simple", "[cse]")
 {

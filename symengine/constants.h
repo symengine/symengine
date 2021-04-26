@@ -76,6 +76,6 @@ extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
 
 // Not a Number
 extern SYMENGINE_EXPORT RCP<const NaN> Nan;
-} // SymEngine
+} // namespace SymEngine
 
 #endif

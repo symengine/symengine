@@ -21,59 +21,59 @@ using SymEngine::LLVMLongDoubleVisitor;
 #define xstr(s) str(s)
 #define str(s) #s
 
-using SymEngine::DenseMatrix;
-using SymEngine::CSRMatrix;
 using SymEngine::Basic;
-using SymEngine::RCP;
-using SymEngine::zero;
-using SymEngine::Symbol;
-using SymEngine::FunctionSymbol;
+using SymEngine::Complex;
+using SymEngine::ComplexBase;
+using SymEngine::ComplexDouble;
+using SymEngine::CSRMatrix;
+using SymEngine::DenseMatrix;
+using SymEngine::down_cast;
 using SymEngine::function_symbol;
-using SymEngine::Rational;
+using SymEngine::FunctionSymbol;
 using SymEngine::Integer;
 using SymEngine::integer_class;
-using SymEngine::rational_class;
-using SymEngine::Number;
-using SymEngine::ComplexBase;
-using SymEngine::Complex;
-using SymEngine::ComplexDouble;
-using SymEngine::RealDouble;
 using SymEngine::LambdaRealDoubleVisitor;
-using SymEngine::down_cast;
+using SymEngine::Number;
+using SymEngine::Rational;
+using SymEngine::rational_class;
+using SymEngine::RCP;
+using SymEngine::RealDouble;
+using SymEngine::Symbol;
+using SymEngine::zero;
 #ifdef HAVE_SYMENGINE_MPFR
-using SymEngine::RealMPFR;
 using SymEngine::mpfr_class;
+using SymEngine::RealMPFR;
 #endif // HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
 using SymEngine::ComplexMPC;
 #endif // HAVE_SYMENGINE_MPC
-using SymEngine::rcp_static_cast;
+using SymEngine::FiniteSet;
 using SymEngine::is_a;
+using SymEngine::rcp_static_cast;
 using SymEngine::RCPBasicKeyLess;
+using SymEngine::Set;
 using SymEngine::set_basic;
 using SymEngine::vec_basic;
 using SymEngine::vec_pair;
 using SymEngine::vec_sym;
-using SymEngine::Set;
-using SymEngine::FiniteSet;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
-using SymEngine::get_mpz_t;
 using SymEngine::get_mpq_t;
+using SymEngine::get_mpz_t;
 #endif
-using SymEngine::mp_get_ui;
-using SymEngine::mp_get_si;
-using SymEngine::eye;
+using SymEngine::ccode;
 using SymEngine::diag;
+using SymEngine::eye;
+using SymEngine::jscode;
+using SymEngine::julia_str;
+using SymEngine::latex;
+using SymEngine::mathml;
+using SymEngine::mp_get_si;
+using SymEngine::mp_get_ui;
+using SymEngine::numeric_cast;
 using SymEngine::ones;
-using SymEngine::zeros;
 using SymEngine::parse;
 using SymEngine::SymEngineException;
-using SymEngine::numeric_cast;
-using SymEngine::julia_str;
-using SymEngine::mathml;
-using SymEngine::latex;
-using SymEngine::ccode;
-using SymEngine::jscode;
+using SymEngine::zeros;
 
 namespace SymEngine
 {
@@ -88,7 +88,7 @@ static std::string _str(const Basic &a)
 {
     return a.__str__();
 }
-}
+} // namespace SymEngine
 
 extern "C" {
 

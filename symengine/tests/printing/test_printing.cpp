@@ -7,67 +7,67 @@
 #include <symengine/parser.h>
 #include <symengine/logic.h>
 
-using SymEngine::rcp_static_cast;
-using SymEngine::piecewise;
-using SymEngine::parse;
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::div;
-using SymEngine::Expression;
-using SymEngine::pow;
-using SymEngine::UIntPoly;
-using SymEngine::uexpr_poly;
-using SymEngine::mul;
-using SymEngine::integer;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::symbol;
-using SymEngine::Complex;
-using SymEngine::Rational;
-using SymEngine::Number;
 using SymEngine::add;
-using SymEngine::Symbol;
+using SymEngine::BaseVisitor;
+using SymEngine::Basic;
+using SymEngine::Boolean;
+using SymEngine::ceiling;
+using SymEngine::Complex;
+using SymEngine::complex_double;
+using SymEngine::conditionset;
+using SymEngine::DenseMatrix;
+using SymEngine::Derivative;
+using SymEngine::diff;
+using SymEngine::div;
+using SymEngine::down_cast;
 using SymEngine::erf;
 using SymEngine::erfc;
-using SymEngine::Integer;
-using SymEngine::DenseMatrix;
-using SymEngine::loggamma;
-using SymEngine::Subs;
-using SymEngine::Derivative;
+using SymEngine::Expression;
+using SymEngine::finiteset;
+using SymEngine::floor;
 using SymEngine::function_symbol;
 using SymEngine::I;
-using SymEngine::real_double;
-using SymEngine::complex_double;
-using SymEngine::BaseVisitor;
-using SymEngine::StrPrinter;
-using SymEngine::Sin;
-using SymEngine::integer_class;
-using SymEngine::map_uint_mpz;
+using SymEngine::imageset;
+using SymEngine::Inf;
 using SymEngine::Infty;
 using SymEngine::infty;
-using SymEngine::down_cast;
-using SymEngine::zero;
-using SymEngine::one;
-using SymEngine::finiteset;
-using SymEngine::set_complement;
-using SymEngine::Set;
-using SymEngine::interval;
-using SymEngine::reals;
+using SymEngine::integer;
+using SymEngine::Integer;
+using SymEngine::integer_class;
 using SymEngine::integers;
-using SymEngine::rationals;
-using SymEngine::Inf;
-using SymEngine::NegInf;
-using SymEngine::floor;
-using SymEngine::ceiling;
-using SymEngine::truncate;
-using SymEngine::conditionset;
-using SymEngine::Boolean;
+using SymEngine::interval;
+using SymEngine::julia_str;
+using SymEngine::latex;
+using SymEngine::loggamma;
 using SymEngine::logical_and;
 using SymEngine::logical_or;
 using SymEngine::logical_xor;
-using SymEngine::imageset;
-using SymEngine::latex;
-using SymEngine::diff;
-using SymEngine::julia_str;
+using SymEngine::map_uint_mpz;
+using SymEngine::mul;
+using SymEngine::NegInf;
+using SymEngine::Number;
+using SymEngine::one;
+using SymEngine::parse;
+using SymEngine::piecewise;
+using SymEngine::pow;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::Rational;
+using SymEngine::rationals;
+using SymEngine::RCP;
+using SymEngine::rcp_static_cast;
+using SymEngine::real_double;
+using SymEngine::reals;
+using SymEngine::Set;
+using SymEngine::set_complement;
+using SymEngine::Sin;
+using SymEngine::StrPrinter;
+using SymEngine::Subs;
+using SymEngine::symbol;
+using SymEngine::Symbol;
+using SymEngine::truncate;
+using SymEngine::uexpr_poly;
+using SymEngine::UIntPoly;
+using SymEngine::zero;
 
 using namespace SymEngine::literals;
 
@@ -83,7 +83,7 @@ public:
         str_ = "MySin(" + this->apply(x.get_arg()) + ")";
     }
 };
-}
+} // namespace SymEngine
 
 TEST_CASE("test_printing(): printing", "[printing]")
 {
@@ -594,12 +594,14 @@ TEST_CASE("test_mathml()", "[mathml]")
     REQUIRE(mathml(*x)
             == "<apply><power/><ci>x</ci><cn type=\"integer\">2</cn></apply>");
     RCP<const Basic> y = parse("3/2 * y");
-    REQUIRE(mathml(*y) == "<apply><times/><cn "
-                          "type=\"rational\">3<sep/>2</cn><ci>y</ci></apply>");
+    REQUIRE(mathml(*y)
+            == "<apply><times/><cn "
+               "type=\"rational\">3<sep/>2</cn><ci>y</ci></apply>");
     RCP<const Basic> z = parse("x^(y^(5/3))");
-    REQUIRE(mathml(*z) == "<apply><power/><ci>x</ci><apply><power/><ci>y</"
-                          "ci><cn "
-                          "type=\"rational\">5<sep/>3</cn></apply></apply>");
+    REQUIRE(mathml(*z)
+            == "<apply><power/><ci>x</ci><apply><power/><ci>y</"
+               "ci><cn "
+               "type=\"rational\">5<sep/>3</cn></apply></apply>");
     RCP<const Basic> w = parse("1 + 4 * x * y");
     REQUIRE(mathml(*w)
             == "<apply><plus/><cn type=\"integer\">1</cn><apply><times/><cn "
@@ -651,8 +653,9 @@ TEST_CASE("test_julia(): printing", "[printing]")
     CHECK(r == "2.0 + 3.0*im");
 #ifdef HAVE_SYMENGINE_MPC
     r = julia_str(*parse("2.00000000000000000000000000000000 + 3*I"));
-    CHECK(r == "2.00000000000000000000000000000000 + "
-               "3.00000000000000000000000000000000*im");
+    CHECK(r
+          == "2.00000000000000000000000000000000 + "
+             "3.00000000000000000000000000000000*im");
 #endif
 }
 
@@ -709,14 +712,17 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l16) == "\\frac{d}{d a} f\\left(a, 2\\right)");
     CHECK(latex(*l17)
           == "\\frac{\\partial^3}{\\partial a^3 } f\\left(a, 2\\right)");
-    CHECK(latex(*l18) == "\\frac{\\partial^3}{\\partial a^2 \\partial b } "
-                         "f\\left(a, b\\right)");
-    CHECK(latex(*l19) == "\\pi^2 + 2 e + \\sin{\\left(\\sqrt[10]{2}\\right)} + "
-                         "\\operatorname{asin}{\\left(\\sqrt{2}\\right)}");
-    CHECK(latex(*l20) == "4 \\left. \\frac{\\partial^2}{\\partial \\xi_1 "
-                         "\\partial \\xi_2 } f\\left(\\xi_1, "
-                         "\\xi_2\\right)\\right|_{\\substack{\\xi_1=2 a \\\\ "
-                         "\\xi_2=2 b}}");
+    CHECK(latex(*l18)
+          == "\\frac{\\partial^3}{\\partial a^2 \\partial b } "
+             "f\\left(a, b\\right)");
+    CHECK(latex(*l19)
+          == "\\pi^2 + 2 e + \\sin{\\left(\\sqrt[10]{2}\\right)} + "
+             "\\operatorname{asin}{\\left(\\sqrt{2}\\right)}");
+    CHECK(latex(*l20)
+          == "4 \\left. \\frac{\\partial^2}{\\partial \\xi_1 "
+             "\\partial \\xi_2 } f\\left(\\xi_1, "
+             "\\xi_2\\right)\\right|_{\\substack{\\xi_1=2 a \\\\ "
+             "\\xi_2=2 b}}");
     CHECK(latex(*l21) == "\\xi_1 + \\alpha + xi2");
     CHECK(latex(*l22) == "2 + 3 x^{10}");
     CHECK(latex(*l23) == "e^{x - y}");

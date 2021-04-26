@@ -78,5 +78,5 @@ public:
     RCP<const Number> rpow(const Number &other) const;
 };
 
-} // SymEngine
+} // namespace SymEngine
 #endif

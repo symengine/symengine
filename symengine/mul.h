@@ -139,6 +139,6 @@ RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b);
 //! Negation
 RCP<const Basic> neg(const RCP<const Basic> &a);
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

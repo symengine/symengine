@@ -2,17 +2,17 @@
 #include <symengine/assumptions.h>
 #include <symengine/sets.h>
 
-using SymEngine::RCP;
-using SymEngine::symbol;
-using SymEngine::Set;
+using SymEngine::Assumptions;
 using SymEngine::Basic;
-using SymEngine::reals;
-using SymEngine::rationals;
+using SymEngine::integer;
+using SymEngine::integers;
 using SymEngine::Number;
 using SymEngine::Rational;
-using SymEngine::integers;
-using SymEngine::integer;
-using SymEngine::Assumptions;
+using SymEngine::rationals;
+using SymEngine::RCP;
+using SymEngine::reals;
+using SymEngine::Set;
+using SymEngine::symbol;
 using SymEngine::SymEngineException;
 
 TEST_CASE("Test assumptions", "[assumptions]")

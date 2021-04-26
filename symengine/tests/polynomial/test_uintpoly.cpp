@@ -16,24 +16,24 @@ using SymEngine::UIntPolyPiranha;
 using SymEngine::UIntPolyFlint;
 #endif
 
-using SymEngine::SymEngineException;
-using SymEngine::UIntPoly;
+using SymEngine::add;
+using SymEngine::Basic;
+using SymEngine::integer;
+using SymEngine::integer_class;
+using SymEngine::make_rcp;
+using SymEngine::map_uint_mpz;
+using SymEngine::one;
+using SymEngine::Pow;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
 using SymEngine::Symbol;
 using SymEngine::symbol;
-using SymEngine::Pow;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::map_uint_mpz;
-using SymEngine::Basic;
-using SymEngine::one;
-using SymEngine::zero;
-using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;
-using SymEngine::integer_class;
+using SymEngine::SymEngineException;
 using SymEngine::UIntDict;
-using SymEngine::add;
+using SymEngine::UIntPoly;
+using SymEngine::vec_basic_eq_perm;
 using SymEngine::vec_integer_class;
+using SymEngine::zero;
 
 using namespace SymEngine::literals;
 

@@ -6,11 +6,11 @@
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_exception.h>
 
-using boost::multiprecision::numerator;
+using boost::mpl::int_;
 using boost::multiprecision::denominator;
 using boost::multiprecision::miller_rabin_test;
+using boost::multiprecision::numerator;
 using boost::multiprecision::detail::find_lsb;
-using boost::mpl::int_;
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
 
@@ -292,9 +292,7 @@ struct two_by_two_matrix {
         : data{{a, b}, {c, d}}
     {
     }
-    two_by_two_matrix() : data{{0, 0}, {0, 0}}
-    {
-    }
+    two_by_two_matrix() : data{{0, 0}, {0, 0}} {}
     two_by_two_matrix &operator=(const two_by_two_matrix &other)
     {
         this->data[0][0] = other.data[0][0];
@@ -600,6 +598,6 @@ int mp_kronecker(const integer_class &a, const integer_class &n)
     }
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif // SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP

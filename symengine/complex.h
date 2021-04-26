@@ -391,6 +391,6 @@ public:
     };
 };
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

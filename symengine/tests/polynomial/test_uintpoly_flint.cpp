@@ -13,29 +13,29 @@
 using SymEngine::UIntPolyPiranha;
 #endif
 
+using SymEngine::add;
+using SymEngine::Basic;
+using SymEngine::divides_upoly;
+using SymEngine::factors;
+using SymEngine::gcd_upoly;
+using SymEngine::integer;
+using SymEngine::integer_class;
+using SymEngine::lcm_upoly;
+using SymEngine::make_rcp;
+using SymEngine::map_uint_mpz;
+using SymEngine::one;
+using SymEngine::Pow;
+using SymEngine::pow_upoly;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::SymEngineException;
 using SymEngine::UIntPoly;
 using SymEngine::UIntPolyFlint;
-using SymEngine::Symbol;
-using SymEngine::add;
-using SymEngine::symbol;
-using SymEngine::Pow;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::map_uint_mpz;
-using SymEngine::Basic;
-using SymEngine::one;
-using SymEngine::zero;
-using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
-using SymEngine::integer_class;
-using SymEngine::gcd_upoly;
-using SymEngine::lcm_upoly;
-using SymEngine::divides_upoly;
-using SymEngine::pow_upoly;
-using SymEngine::factors;
 using SymEngine::vec_integer_class;
+using SymEngine::zero;
 
 using namespace SymEngine::literals;
 
@@ -298,17 +298,19 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
             factors(*UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})),
             std::runtime_error);
     } else {
-        auto factorcheck = [](
-            const std::vector<std::pair<RCP<const UIntPolyFlint>, long>> &fac,
-            const std::pair<RCP<const UIntPolyFlint>, long> &fac1) {
-            auto it = find_if(
-                fac.begin(), fac.end(),
-                [&fac1](const std::pair<RCP<const UIntPolyFlint>, long> &s) {
-                    return ((s.first->compare(*fac1.first) == 0)
-                            and (s.second == fac1.second));
-                });
-            return (it != fac.end());
-        };
+        auto factorcheck
+            = [](const std::vector<std::pair<RCP<const UIntPolyFlint>, long>>
+                     &fac,
+                 const std::pair<RCP<const UIntPolyFlint>, long> &fac1) {
+                  auto it = find_if(
+                      fac.begin(), fac.end(),
+                      [&fac1](
+                          const std::pair<RCP<const UIntPolyFlint>, long> &s) {
+                          return ((s.first->compare(*fac1.first) == 0)
+                                  and (s.second == fac1.second));
+                      });
+                  return (it != fac.end());
+              };
 
         auto fac = factors(
             *UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})); // 2*x + 1

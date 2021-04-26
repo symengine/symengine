@@ -383,9 +383,7 @@ private:
     void check_power(const Basic &base, const Basic &exp);
 
 public:
-    PolynomialVisitor(const set_basic &variables) : variables_(variables)
-    {
-    }
+    PolynomialVisitor(const set_basic &variables) : variables_(variables) {}
     void bvisit(const Basic &x);
     void bvisit(const Number &x){};
     void bvisit(const Constant &x){};
@@ -416,6 +414,6 @@ public:
  * are not variables will be considered to be constants.
  */
 bool is_polynomial(const Basic &b, const set_basic &variables = {});
-}
+} // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H
