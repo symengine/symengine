@@ -120,6 +120,10 @@ TEST_CASE("RealImag: Pow", "[as_real_imag]")
     REQUIRE(eq(*re, *div(one, i2)));
     REQUIRE(eq(*im, *div(sqrt(integer(3)), i2)));
 
+    as_real_imag(pow(add(i2, I), 2), outArg(re), outArg(im));
+    REQUIRE(eq(*re, *integer(3)));
+    REQUIRE(eq(*im, *integer(4)));
+
     as_real_imag(sqrt(neg(I)), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(sqrt(i2), i2)));
     REQUIRE(eq(*im, *neg(div(sqrt(i2), i2))));
