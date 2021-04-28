@@ -277,6 +277,8 @@ void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
                   const Ptr<RCP<const Basic>> &imag);
 
 RCP<const Basic> rewrite_as_exp(const RCP<const Basic> &x);
+RCP<const Basic> rewrite_as_sin(const RCP<const Basic> &x);
+RCP<const Basic> rewrite_as_cos(const RCP<const Basic> &x);
 
 // Common subexpression elimination of symbolic expressions
 // Return a vector of replacement pairs and a vector of reduced exprs
