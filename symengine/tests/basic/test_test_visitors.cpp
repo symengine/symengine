@@ -2,6 +2,7 @@
 #include <symengine/test_visitors.h>
 #include <symengine/sets.h>
 
+using SymEngine::abs;
 using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
@@ -23,8 +24,6 @@ using SymEngine::sin;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::tribool;
-using SymEngine::cos;
-using SymEngine::abs;
 
 TEST_CASE("Test is zero", "[is_zero]")
 {

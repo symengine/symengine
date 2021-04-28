@@ -133,9 +133,7 @@ class RewriteAsSin : public BaseVisitor<RewriteAsSin, TransformVisitor>
 public:
     using TransformVisitor::bvisit;
 
-    RewriteAsSin() : BaseVisitor<RewriteAsSin, TransformVisitor>()
-    {
-    }
+    RewriteAsSin() : BaseVisitor<RewriteAsSin, TransformVisitor>() {}
 
     void bvisit(const Cos &x)
     {
@@ -187,9 +185,7 @@ class RewriteAsCos : public BaseVisitor<RewriteAsCos, TransformVisitor>
 public:
     using TransformVisitor::bvisit;
 
-    RewriteAsCos() : BaseVisitor<RewriteAsCos, TransformVisitor>()
-    {
-    }
+    RewriteAsCos() : BaseVisitor<RewriteAsCos, TransformVisitor>() {}
 
     void bvisit(const Sin &x)
     {

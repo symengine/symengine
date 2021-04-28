@@ -152,18 +152,14 @@ using SymEngine::Eq;
 using SymEngine::floor;
 using SymEngine::mul;
 using SymEngine::NotImplementedError;
+using SymEngine::parse;
+using SymEngine::rewrite_as_cos;
 using SymEngine::rewrite_as_exp;
+using SymEngine::rewrite_as_sin;
 using SymEngine::SymEngineException;
 using SymEngine::trigamma;
 using SymEngine::truncate;
-using SymEngine::Eq;
-using SymEngine::Conjugate;
-using SymEngine::rewrite_as_exp;
-using SymEngine::rewrite_as_sin;
-using SymEngine::rewrite_as_cos;
-using SymEngine::mul;
 using SymEngine::unevaluated_expr;
-using SymEngine::parse;
 
 using namespace SymEngine::literals;
 
