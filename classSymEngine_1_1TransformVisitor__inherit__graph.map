@@ -1,11 +1,15 @@
 <map id="SymEngine::TransformVisitor" name="SymEngine::TransformVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="400,78,593,105"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="641,5,873,47"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="651,71,863,112"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="643,136,872,177"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="188,71,352,112"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,78,140,105"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1RewriteAsExp.html" title=" " alt="" coords="921,13,1100,39"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1EvalVisitor.html" title=" " alt="" coords="931,78,1091,105"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1RebuildVisitor.html" title=" " alt="" coords="922,143,1099,170"/>
+<area shape="rect" id="node1" title=" " alt="" coords="400,143,593,170"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="643,5,871,47"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="641,71,873,112"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="651,136,863,177"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="641,201,873,243"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="643,267,872,308"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="188,136,352,177"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,143,140,170"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1RewriteAsSin.html" title=" " alt="" coords="923,13,1098,39"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1RewriteAsExp.html" title=" " alt="" coords="921,78,1100,105"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1EvalVisitor.html" title=" " alt="" coords="931,143,1091,170"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1RewriteAsCos.html" title=" " alt="" coords="921,209,1100,235"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1RebuildVisitor.html" title=" " alt="" coords="922,274,1099,301"/>
 </map>

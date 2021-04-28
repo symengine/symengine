@@ -266,54 +266,56 @@ $(function() {
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                  <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;imag);</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;RCP&lt;const Basic&gt; rewrite_as_exp(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment">// Common subexpression elimination of symbolic expressions</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="comment">// Return a vector of replacement pairs and a vector of reduced exprs</span></div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="keywordtype">void</span> cse(vec_pair &amp;replacements, vec_basic &amp;reduced_exprs,</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;         <span class="keyword">const</span> vec_basic &amp;exprs);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;<a class="code" href="namespaceSymEngine.html#ad412c21e0a4b4454574243e62b799d61">operator&lt;&lt;</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;out, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">SymEngine::Basic</a> &amp;p);</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(hash_t &amp;seed, <span class="keyword">const</span> T &amp;v);</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *get_version();</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;RCP&lt;const Basic&gt; rewrite_as_sin(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x);</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;RCP&lt;const Basic&gt; rewrite_as_cos(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="comment">// Common subexpression elimination of symbolic expressions</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="comment">// Return a vector of replacement pairs and a vector of reduced exprs</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="keywordtype">void</span> cse(vec_pair &amp;replacements, vec_basic &amp;reduced_exprs,</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;         <span class="keyword">const</span> vec_basic &amp;exprs);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;<a class="code" href="namespaceSymEngine.html#ad412c21e0a4b4454574243e62b799d61">operator&lt;&lt;</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;out, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">SymEngine::Basic</a> &amp;p);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a4e6d1d6e0960fa8a827afb3f36c7d30d">hash_combine</a>(hash_t &amp;seed, <span class="keyword">const</span> T &amp;v);</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *get_version();</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacestd.html">std</a></div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;{</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="keyword">struct </span>hash&lt;<a class="code" href="namespaceSymEngine.html">SymEngine</a>::Basic&gt;;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;} <span class="comment">// namespace std</span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="preprocessor">#include &quot;basic-inl.h&quot;</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="comment">// Macro to define the type_code_id variable and its getter method</span></div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="preprocessor">#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \</span></div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="preprocessor">                                \</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">    const static TypeID type_code_id = SYMENGINE_ID;                           \</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="preprocessor">          \</span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="preprocessor">    virtual TypeID get_type_code() const                                       \</span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">        return type_code_id;                                                   \</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="preprocessor">    };                                                                         \</span></div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="preprocessor">    SYMENGINE_INCLUDE_METHODS(;)</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00338"></a><span class="lineno"><a class="line" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">  338</a></span>&#160;<span class="preprocessor">#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \</span></div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="preprocessor">                                \</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">    const static TypeID type_code_id = SYMENGINE_ID;                           \</span></div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="preprocessor">    SYMENGINE_INCLUDE_METHODS(;)</span></div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID</span></div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor">#define SYMENGINE_ASSIGN_TYPEID()</span></div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="preprocessor">#define SYMENGINE_ASSIGN_TYPEID() this-&gt;type_code_ = type_code_id;</span></div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacestd.html">std</a></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;{</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="keyword">struct </span>hash&lt;<a class="code" href="namespaceSymEngine.html">SymEngine</a>::Basic&gt;;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;} <span class="comment">// namespace std</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="preprocessor">#include &quot;basic-inl.h&quot;</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="comment">// Macro to define the type_code_id variable and its getter method</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="preprocessor">                                \</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="preprocessor">    const static TypeID type_code_id = SYMENGINE_ID;                           \</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="preprocessor">          \</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">    virtual TypeID get_type_code() const                                       \</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="preprocessor">        return type_code_id;                                                   \</span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">    };                                                                         \</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="preprocessor">    SYMENGINE_INCLUDE_METHODS(;)</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno"><a class="line" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">  340</a></span>&#160;<span class="preprocessor">#define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="preprocessor">                                \</span></div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">    const static TypeID type_code_id = SYMENGINE_ID;                           \</span></div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;<span class="preprocessor">    SYMENGINE_INCLUDE_METHODS(;)</span></div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="preprocessor">#ifdef WITH_SYMENGINE_VIRTUAL_TYPEID</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="preprocessor">#define SYMENGINE_ASSIGN_TYPEID()</span></div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="preprocessor">#define SYMENGINE_ASSIGN_TYPEID() this-&gt;type_code_ = type_code_id;</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aatomic_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/atomic/atomic.html">std::atomic</a></div></div>
 <div class="ttc" id="abasic_ostream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
