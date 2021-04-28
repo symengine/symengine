@@ -86,7 +86,8 @@ double R1()
     RCP<const Basic> g;
     RCP<const Basic> h = div(I, integer(2));
     auto t1 = std::chrono::high_resolution_clock::now();
-    g = expand(f(f(f(f(f(f(f(f(f(f(h)))))))))));
+    RCP<const Basic> real, imag;
+    as_real_imag(f(f(f(f(f(f(f(f(f(f(h)))))))))), outArg(real), outArg(imag));
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration<double>(t2 - t1).count();
 }

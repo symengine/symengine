@@ -32,6 +32,7 @@ using SymEngine::sech;
 using SymEngine::sin;
 using SymEngine::sinh;
 using SymEngine::sqrt;
+using SymEngine::sub;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
@@ -119,6 +120,11 @@ TEST_CASE("RealImag: Pow", "[as_real_imag]")
     as_real_imag(pow(I, rational(2, 3)), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(one, i2)));
     REQUIRE(eq(*im, *div(sqrt(integer(3)), i2)));
+
+    as_real_imag(pow(sub(add(i2, sqrt(i2)), sub(sqrt(i2), I)), 2), outArg(re),
+                 outArg(im));
+    REQUIRE(eq(*re, *integer(3)));
+    REQUIRE(eq(*im, *integer(4)));
 
     as_real_imag(sqrt(neg(I)), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(sqrt(i2), i2)));

@@ -36,6 +36,7 @@ int Constant::compare(const Basic &o) const
 RCP<const Integer> zero = integer(0);
 RCP<const Integer> one = integer(1);
 RCP<const Integer> minus_one = integer(-1);
+RCP<const Integer> two = integer(2);
 RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 
 RCP<const Constant> pi = constant("pi");
