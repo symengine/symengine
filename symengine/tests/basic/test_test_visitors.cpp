@@ -2,6 +2,7 @@
 #include <symengine/test_visitors.h>
 #include <symengine/sets.h>
 
+using SymEngine::abs;
 using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
@@ -59,6 +60,10 @@ TEST_CASE("Test is zero", "[is_zero]")
     REQUIRE(is_zero(*d1) == tribool::indeterminate);
     REQUIRE(is_zero(*boolTrue) == tribool::trifalse);
     REQUIRE(is_zero(*pi) == tribool::trifalse);
+    REQUIRE(is_indeterminate(is_zero(*abs(x))));
+    REQUIRE(is_indeterminate(is_zero(*conjugate(x))));
+    REQUIRE(is_indeterminate(is_zero(*sign(x))));
+    REQUIRE(is_indeterminate(is_zero(*primepi(x))));
 }
 
 TEST_CASE("Test is positive", "[is_positive]")

@@ -37,6 +37,23 @@ public:
     {
         is_zero_ = tribool::trifalse;
     };
+    void bvisit(const Abs &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Conjugate &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Sign &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const PrimePi &x)
+    {
+        // First prime is 2 so pi(x) is zero for x < 2
+        is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
+    };
 
     tribool apply(const Basic &b);
 };
