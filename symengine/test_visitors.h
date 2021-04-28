@@ -423,9 +423,7 @@ private:
     bool neither_ = false; // Neither rational or irrational (i.e. not real)
 
 public:
-    RationalVisitor(bool rational) : rational_{rational}
-    {
-    }
+    RationalVisitor(bool rational) : rational_{rational} {}
     void bvisit(const Basic &x)
     {
         is_rational_ = tribool::indeterminate;

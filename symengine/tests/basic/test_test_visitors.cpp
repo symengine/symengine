@@ -6,6 +6,7 @@ using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
 using SymEngine::Complex;
+using SymEngine::constant;
 using SymEngine::cos;
 using SymEngine::Inf;
 using SymEngine::integer;
@@ -17,19 +18,13 @@ using SymEngine::pi;
 using SymEngine::Rational;
 using SymEngine::rationals;
 using SymEngine::RCP;
+using SymEngine::real_double;
 using SymEngine::reals;
 using SymEngine::Set;
 using SymEngine::sin;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::tribool;
-using SymEngine::Complex;
-using SymEngine::pi;
-using SymEngine::constant;
-using SymEngine::boolTrue;
-using SymEngine::Inf;
-using SymEngine::Nan;
-using SymEngine::real_double;
 
 TEST_CASE("Test is zero", "[is_zero]")
 {
