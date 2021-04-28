@@ -7,6 +7,7 @@ using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
 using SymEngine::Complex;
+using SymEngine::constant;
 using SymEngine::cos;
 using SymEngine::Inf;
 using SymEngine::integer;
@@ -18,6 +19,7 @@ using SymEngine::pi;
 using SymEngine::Rational;
 using SymEngine::rationals;
 using SymEngine::RCP;
+using SymEngine::real_double;
 using SymEngine::reals;
 using SymEngine::Set;
 using SymEngine::sin;
@@ -500,4 +502,76 @@ TEST_CASE("Test is_polynomial", "[is_polynomial]")
     REQUIRE(!is_polynomial(*e23));
     REQUIRE(is_polynomial(*e23, {y}));
     REQUIRE(!is_polynomial(*rel1));
+}
+
+TEST_CASE("Test is_rational", "[is_rational]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Number> i1 = integer(0);
+    RCP<const Number> i2 = integer(3);
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Basic> irr1 = real_double(2.0);
+    RCP<const Basic> s1 = interval(i1, i2);
+    RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
+    RCP<const Basic> rel1 = Eq(x, i1);
+    RCP<const Symbol> t = symbol("t");
+    RCP<const Basic> f = function_symbol("f", t);
+    RCP<const Basic> d1 = f->diff(t);
+    RCP<const Basic> e1 = add(x, x);
+    RCP<const Basic> e2 = add(x, Inf);
+    RCP<const Basic> e3 = add(x, c1);
+
+    REQUIRE(is_indeterminate(is_rational(*x)));
+    REQUIRE(is_true(is_rational(*i1)));
+    REQUIRE(is_true(is_rational(*i2)));
+    REQUIRE(is_true(is_rational(*rat1)));
+    REQUIRE(is_false(is_rational(*s1)));
+    REQUIRE(is_false(is_rational(*c1)));
+    REQUIRE(is_false(is_rational(*rel1)));
+    REQUIRE(is_false(is_rational(*pi)));
+    REQUIRE(is_indeterminate(is_rational(*d1)));
+    REQUIRE(is_false(is_rational(*boolTrue)));
+    REQUIRE(is_indeterminate(is_rational(*e1)));
+    REQUIRE(is_indeterminate(is_rational(*e2)));
+    REQUIRE(is_indeterminate(is_rational(*e3)));
+    REQUIRE(is_false(is_rational(*Inf)));
+    REQUIRE(is_false(is_rational(*Nan)));
+    REQUIRE(is_false(is_rational(*irr1)));
+    REQUIRE(is_indeterminate(is_rational(*constant("catalan"))));
+}
+
+TEST_CASE("Test is_irrational", "[is_irrational]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Number> i1 = integer(0);
+    RCP<const Number> i2 = integer(3);
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Basic> irr1 = real_double(2.0);
+    RCP<const Basic> s1 = interval(i1, i2);
+    RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
+    RCP<const Basic> rel1 = Eq(x, i1);
+    RCP<const Symbol> t = symbol("t");
+    RCP<const Basic> f = function_symbol("f", t);
+    RCP<const Basic> d1 = f->diff(t);
+    RCP<const Basic> e1 = add(x, x);
+    RCP<const Basic> e2 = add(x, Inf);
+    RCP<const Basic> e3 = add(x, c1);
+
+    REQUIRE(is_indeterminate(is_irrational(*x)));
+    REQUIRE(is_false(is_irrational(*i1)));
+    REQUIRE(is_false(is_irrational(*i2)));
+    REQUIRE(is_false(is_irrational(*rat1)));
+    REQUIRE(is_false(is_irrational(*s1)));
+    REQUIRE(is_false(is_irrational(*c1)));
+    REQUIRE(is_false(is_irrational(*rel1)));
+    REQUIRE(is_true(is_irrational(*pi)));
+    REQUIRE(is_indeterminate(is_irrational(*d1)));
+    REQUIRE(is_false(is_irrational(*boolTrue)));
+    REQUIRE(is_indeterminate(is_irrational(*e1)));
+    REQUIRE(is_indeterminate(is_irrational(*e2)));
+    REQUIRE(is_indeterminate(is_irrational(*e3)));
+    REQUIRE(is_false(is_irrational(*Inf)));
+    REQUIRE(is_false(is_irrational(*Nan)));
+    REQUIRE(is_true(is_irrational(*irr1)));
+    REQUIRE(is_indeterminate(is_irrational(*constant("catalan"))));
 }
