@@ -578,7 +578,59 @@ $(function() {
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    <a class="code" href="classSymEngine_1_1PolynomialVisitor.html">PolynomialVisitor</a> visitor(variables);</div>
 <div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;}</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160; </div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;<span class="keywordtype">void</span> RationalVisitor::bvisit(<span class="keyword">const</span> Number &amp;x)</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;{</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    is_rational_ = tribool::trifalse;</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#ac1ffd806385fb08a9a48dd86a60915ee">is_a_Complex</a>(x) or is_a&lt;Infty&gt;(x) or is_a&lt;NaN&gt;(x)) {</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        neither_ = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    }</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;}</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160; </div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;<span class="keywordtype">void</span> RationalVisitor::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;{</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *pi) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *E) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *GoldenRatio)) {</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <span class="comment">// It is currently (2021) not known whether Catalan&#39;s constant</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        <span class="comment">// or Euler&#39;s constant are rational or irrational</span></div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        is_rational_ = tribool::trifalse;</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        is_rational_ = tribool::indeterminate;</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    }</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;}</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="keywordtype">void</span> RationalVisitor::bvisit(<span class="keyword">const</span> Add &amp;x)</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;{</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;    tribool b = tribool::tritrue;</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;        arg-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        b = andwk_tribool(b, is_rational_);</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        <span class="keywordflow">if</span> (is_indeterminate(b))</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;            <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    }</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;}</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160; </div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;tribool RationalVisitor::apply(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;{</div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    tribool result = is_rational_;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <span class="keywordflow">if</span> (not rational_ and not neither_) {</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        result = not_tribool(result);</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    }</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;}</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160; </div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;tribool is_rational(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;{</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;    RationalVisitor visitor(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;}</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160; </div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;tribool is_irrational(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;{</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;    RationalVisitor visitor(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;}</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00094">basic.h:95</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Complex_html_adacb67b50059961da56764fe0a9170fa"><div class="ttname"><a href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">SymEngine::Complex::from_two_nums</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_two_nums(const Number &amp;re, const Number &amp;im)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8cpp_source.html#l00109">complex.cpp:109</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1PolynomialVisitor_html"><div class="ttname"><a href="classSymEngine_1_1PolynomialVisitor.html">SymEngine::PolynomialVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8h_source.html#l00393">test_visitors.h:394</a></div></div>
