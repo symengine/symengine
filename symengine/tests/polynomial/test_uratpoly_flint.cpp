@@ -11,23 +11,23 @@
 #ifdef HAVE_SYMENGINE_PIRANHA
 using SymEngine::URatPolyPiranha;
 #endif
-using SymEngine::SymEngineException;
-using SymEngine::URatPolyFlint;
-using SymEngine::URatPoly;
-using SymEngine::UIntPoly;
+using SymEngine::add;
+using SymEngine::Basic;
+using SymEngine::integer;
+using SymEngine::make_rcp;
+using SymEngine::map_uint_mpq;
+using SymEngine::one;
+using SymEngine::Pow;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::rational_class;
+using SymEngine::RCP;
 using SymEngine::Symbol;
 using SymEngine::symbol;
-using SymEngine::Pow;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::map_uint_mpq;
-using SymEngine::Basic;
-using SymEngine::one;
+using SymEngine::SymEngineException;
+using SymEngine::UIntPoly;
+using SymEngine::URatPoly;
+using SymEngine::URatPolyFlint;
 using SymEngine::zero;
-using SymEngine::integer;
-using SymEngine::rational_class;
-using SymEngine::add;
 
 using namespace SymEngine::literals;
 using rc = rational_class;

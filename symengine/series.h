@@ -140,8 +140,9 @@ public:
         } else if (is_a<Integer>(other)) {
             if (other.is_negative()) {
                 p = Series::pow(
-                    p_, (numeric_cast<int>(
-                            down_cast<const Integer &>(other).neg()->as_int())),
+                    p_,
+                    (numeric_cast<int>(
+                        down_cast<const Integer &>(other).neg()->as_int())),
                     deg);
                 p = Series::series_invert(p, Series::var(var_), deg);
                 return make_rcp<Series>(p, var_, deg);
@@ -720,5 +721,5 @@ RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex,
                                                const RCP<const Symbol> &var,
                                                unsigned int prec);
 
-} // SymEngine
+} // namespace SymEngine
 #endif

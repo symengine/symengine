@@ -3,13 +3,13 @@
 #include <symengine/integer.h>
 #include <symengine/symengine_exception.h>
 
-using SymEngine::SymEngineException;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::RCP;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::isqrt;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::SymEngineException;
 
 TEST_CASE("isqrt: integer", "[integer]")
 {

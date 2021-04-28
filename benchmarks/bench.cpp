@@ -10,9 +10,9 @@
 #include <symengine/pow.h>
 
 using SymEngine::Basic;
-using SymEngine::symbol;
 using SymEngine::integer;
 using SymEngine::RCP;
+using SymEngine::symbol;
 
 NONIUS_BENCHMARK("expand1", [](nonius::chronometer meter) {
     auto x = symbol("x"), y = symbol("y"), z = symbol("z"), w = symbol("w");

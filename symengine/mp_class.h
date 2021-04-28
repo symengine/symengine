@@ -50,10 +50,9 @@ namespace SymEngine
 typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<>,
                                       boost::multiprecision::et_off>
     integer_class;
-typedef boost::multiprecision::
-    number<boost::multiprecision::cpp_rational_backend,
-           boost::multiprecision::et_off>
-        rational_class;
+typedef boost::multiprecision::number<
+    boost::multiprecision::cpp_rational_backend, boost::multiprecision::et_off>
+    rational_class;
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
 typedef piranha::rational rational_class;
@@ -82,7 +81,7 @@ inline rational_class operator"" _q(const char *str)
 {
     return rational_class(integer_class(str));
 }
-}
+} // namespace literals
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
@@ -116,9 +115,7 @@ inline void mp_set_d(integer_class &i, double a)
     mpz_set_d(i.get_mpz_t(), a);
 }
 
-inline void mp_demote(integer_class &i)
-{
-}
+inline void mp_demote(integer_class &i) {}
 
 inline bool mp_fits_ulong_p(const integer_class &i)
 {
@@ -308,9 +305,7 @@ inline piranha::integer mp_sqrt(const piranha::integer &i)
     return i.sqrt();
 }
 
-inline void mp_demote(piranha::integer &i)
-{
-}
+inline void mp_demote(piranha::integer &i) {}
 
 inline mpz_ptr get_mpz_t(piranha::integer &i)
 {
@@ -1169,7 +1164,7 @@ private:
 
 #endif // SYMENGINE_INTEGER_CLASS == Piranha or Flint or GMP or GMPXX
 
-} // SymEngine namespace
+} // namespace SymEngine
 
 #if !defined(HAVE_SYMENGINE_GMP) && defined(HAVE_SYMENGINE_BOOST)              \
     && BOOST_VERSION < 105900
@@ -1181,8 +1176,8 @@ template <>
 struct make_unsigned_imp<SymEngine::integer_class> {
     typedef SymEngine::integer_class type;
 };
-}
-}
+} // namespace detail
+} // namespace boost
 #endif
 
 #endif // SYMENGINE_INTEGER_CLASS_H

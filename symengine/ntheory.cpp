@@ -340,7 +340,7 @@ int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
     }
     return 0;
 }
-}
+} // namespace
 
 int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
                               const Integer &n, unsigned retries)
@@ -1745,4 +1745,4 @@ long mertens(const unsigned long a)
     }
     return mertens;
 }
-} // SymEngine
+} // namespace SymEngine

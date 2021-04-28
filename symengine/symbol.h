@@ -95,6 +95,6 @@ inline RCP<const Dummy> dummy(const std::string &name)
     return make_rcp<const Dummy>(name);
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 #endif

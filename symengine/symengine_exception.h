@@ -95,6 +95,6 @@ public:
     {
     }
 };
-}
+} // namespace SymEngine
 #endif // __cplusplus
 #endif // SYMENGINE_EXCEPTION_H

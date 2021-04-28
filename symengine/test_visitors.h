@@ -37,6 +37,23 @@ public:
     {
         is_zero_ = tribool::trifalse;
     };
+    void bvisit(const Abs &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Conjugate &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const Sign &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const PrimePi &x)
+    {
+        // First prime is 2 so pi(x) is zero for x < 2
+        is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
+    };
 
     tribool apply(const Basic &b);
 };
@@ -176,6 +193,55 @@ public:
     void bvisit(const Constant &x)
     {
         is_nonnegative_ = tribool::tritrue;
+    };
+
+    tribool apply(const Basic &b);
+};
+
+class IntegerVisitor : public BaseVisitor<IntegerVisitor>
+{
+private:
+    tribool is_integer_;
+    const Assumptions *assumptions_;
+
+public:
+    IntegerVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Basic &x)
+    {
+        is_integer_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x)
+    {
+        is_integer_ = tribool::tritrue;
+    };
+    void bvisit(const Number &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Set &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_integer_ = tribool::trifalse;
+    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Conjugate &x)
+    {
+        x.get_arg()->accept(*this);
+    };
+    void bvisit(const KroneckerDelta &x)
+    {
+        is_integer_ = tribool::tritrue;
     };
 
     tribool apply(const Basic &b);
@@ -334,9 +400,7 @@ private:
     void check_power(const Basic &base, const Basic &exp);
 
 public:
-    PolynomialVisitor(const set_basic &variables) : variables_(variables)
-    {
-    }
+    PolynomialVisitor(const set_basic &variables) : variables_(variables) {}
     void bvisit(const Basic &x);
     void bvisit(const Number &x){};
     void bvisit(const Constant &x){};
@@ -367,6 +431,53 @@ public:
  * are not variables will be considered to be constants.
  */
 bool is_polynomial(const Basic &b, const set_basic &variables = {});
-}
+
+class RationalVisitor : public BaseVisitor<RationalVisitor>
+{
+private:
+    bool rational_; // are we testing for rational or irrational?
+    tribool is_rational_;
+    bool neither_ = false; // Neither rational or irrational (i.e. not real)
+
+public:
+    RationalVisitor(bool rational) : rational_{rational} {}
+    void bvisit(const Basic &x)
+    {
+        is_rational_ = tribool::indeterminate;
+    };
+    void bvisit(const Symbol &x)
+    {
+        is_rational_ = tribool::indeterminate;
+    };
+    void bvisit(const Integer &x)
+    {
+        is_rational_ = tribool::tritrue;
+    };
+    void bvisit(const Rational &x)
+    {
+        is_rational_ = tribool::tritrue;
+    };
+    void bvisit(const Number &x);
+    void bvisit(const Set &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Relational &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Boolean &x)
+    {
+        is_rational_ = tribool::trifalse;
+        neither_ = true;
+    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+
+    tribool apply(const Basic &b);
+};
+} // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H

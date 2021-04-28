@@ -10,168 +10,171 @@
 #include <symengine/eval_mpfr.h>
 #include <symengine/logic.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/parser.h>
 
-using SymEngine::Basic;
-using SymEngine::Add;
-using SymEngine::Mul;
-using SymEngine::Pow;
-using SymEngine::Symbol;
-using SymEngine::symbol;
-using SymEngine::dummy;
-using SymEngine::umap_basic_num;
-using SymEngine::Integer;
-using SymEngine::integer;
-using SymEngine::multinomial_coefficients;
-using SymEngine::one;
-using SymEngine::minus_one;
-using SymEngine::zero;
-using SymEngine::sign;
-using SymEngine::conjugate;
-using SymEngine::sin;
-using SymEngine::Sin;
-using SymEngine::cos;
-using SymEngine::Cos;
-using SymEngine::tan;
-using SymEngine::Tan;
-using SymEngine::cot;
-using SymEngine::Cot;
-using SymEngine::csc;
-using SymEngine::Csc;
-using SymEngine::sec;
-using SymEngine::Sec;
-using SymEngine::ASin;
+using SymEngine::abs;
 using SymEngine::ACos;
-using SymEngine::ASec;
-using SymEngine::ACsc;
-using SymEngine::ATan;
-using SymEngine::ACot;
-using SymEngine::Sinh;
-using SymEngine::Cosh;
-using SymEngine::Sech;
-using SymEngine::Csch;
-using SymEngine::Tanh;
-using SymEngine::Coth;
-using SymEngine::ASinh;
-using SymEngine::ACosh;
-using SymEngine::ASech;
-using SymEngine::ACsch;
-using SymEngine::ATanh;
-using SymEngine::ACoth;
-using SymEngine::asin;
 using SymEngine::acos;
-using SymEngine::asec;
-using SymEngine::acsc;
-using SymEngine::atan;
+using SymEngine::ACosh;
+using SymEngine::acosh;
+using SymEngine::ACot;
 using SymEngine::acot;
+using SymEngine::ACoth;
+using SymEngine::acoth;
+using SymEngine::ACsc;
+using SymEngine::acsc;
+using SymEngine::ACsch;
+using SymEngine::acsch;
+using SymEngine::Add;
+using SymEngine::ASec;
+using SymEngine::asec;
+using SymEngine::ASech;
+using SymEngine::asech;
+using SymEngine::ASin;
+using SymEngine::asin;
+using SymEngine::ASinh;
+using SymEngine::asinh;
+using SymEngine::ATan;
+using SymEngine::atan;
 using SymEngine::ATan2;
 using SymEngine::atan2;
-using SymEngine::LambertW;
-using SymEngine::lambertw;
-using SymEngine::log;
-using SymEngine::exp;
-using SymEngine::function_symbol;
-using SymEngine::Derivative;
-using SymEngine::pi;
-using SymEngine::EulerGamma;
-using SymEngine::erf;
-using SymEngine::erfc;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::rcp_dynamic_cast;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::sqrt;
-using SymEngine::sinh;
-using SymEngine::csch;
-using SymEngine::cosh;
-using SymEngine::sech;
-using SymEngine::tanh;
-using SymEngine::coth;
-using SymEngine::asinh;
-using SymEngine::acsch;
-using SymEngine::acosh;
+using SymEngine::ATanh;
 using SymEngine::atanh;
-using SymEngine::acoth;
-using SymEngine::asech;
-using SymEngine::kronecker_delta;
-using SymEngine::KroneckerDelta;
-using SymEngine::levi_civita;
-using SymEngine::LeviCivita;
-using SymEngine::zeta;
-using SymEngine::Zeta;
-using SymEngine::dirichlet_eta;
-using SymEngine::Dirichlet_eta;
-using SymEngine::gamma;
-using SymEngine::Gamma;
-using SymEngine::loggamma;
-using SymEngine::LogGamma;
-using SymEngine::polygamma;
-using SymEngine::PolyGamma;
-using SymEngine::lowergamma;
-using SymEngine::LowerGamma;
-using SymEngine::uppergamma;
-using SymEngine::UpperGamma;
+using SymEngine::Basic;
 using SymEngine::Beta;
 using SymEngine::beta;
-using SymEngine::abs;
-using SymEngine::Subs;
-using SymEngine::FunctionWrapper;
-using SymEngine::vec_basic;
-using SymEngine::real_double;
-using SymEngine::complex_double;
-using SymEngine::RealDouble;
 using SymEngine::Complex;
+using SymEngine::complex_double;
 using SymEngine::ComplexDouble;
-using SymEngine::rational;
-using SymEngine::Number;
-using SymEngine::eval_double;
-using SymEngine::is_a;
-using SymEngine::neg;
-using SymEngine::pi;
-using SymEngine::max;
-using SymEngine::min;
-using SymEngine::Max;
-using SymEngine::Min;
-using SymEngine::Rational;
-using SymEngine::I;
-using SymEngine::E;
-using SymEngine::integer_class;
-using SymEngine::down_cast;
 using SymEngine::ComplexInf;
-using SymEngine::Inf;
-using SymEngine::NegInf;
-using SymEngine::Nan;
+using SymEngine::conjugate;
+using SymEngine::cos;
+using SymEngine::Cos;
+using SymEngine::Cosh;
+using SymEngine::cosh;
+using SymEngine::cot;
+using SymEngine::Cot;
+using SymEngine::Coth;
+using SymEngine::coth;
+using SymEngine::csc;
+using SymEngine::Csc;
+using SymEngine::Csch;
+using SymEngine::csch;
+using SymEngine::Derivative;
+using SymEngine::dirichlet_eta;
+using SymEngine::Dirichlet_eta;
+using SymEngine::down_cast;
+using SymEngine::dummy;
+using SymEngine::E;
+using SymEngine::erf;
 using SymEngine::Erf;
+using SymEngine::erfc;
 using SymEngine::Erfc;
+using SymEngine::EulerGamma;
+using SymEngine::eval_double;
+using SymEngine::exp;
+using SymEngine::function_symbol;
+using SymEngine::FunctionWrapper;
+using SymEngine::gamma;
+using SymEngine::Gamma;
+using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::integer_class;
+using SymEngine::is_a;
+using SymEngine::kronecker_delta;
+using SymEngine::KroneckerDelta;
+using SymEngine::LambertW;
+using SymEngine::lambertw;
+using SymEngine::levi_civita;
+using SymEngine::LeviCivita;
+using SymEngine::log;
+using SymEngine::loggamma;
+using SymEngine::LogGamma;
+using SymEngine::lowergamma;
+using SymEngine::LowerGamma;
+using SymEngine::make_rcp;
+using SymEngine::max;
+using SymEngine::Max;
+using SymEngine::min;
+using SymEngine::Min;
+using SymEngine::minus_one;
+using SymEngine::Mul;
+using SymEngine::multinomial_coefficients;
+using SymEngine::Nan;
+using SymEngine::neg;
+using SymEngine::NegInf;
+using SymEngine::Number;
+using SymEngine::one;
+using SymEngine::pi;
+using SymEngine::polygamma;
+using SymEngine::PolyGamma;
+using SymEngine::Pow;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::rational;
+using SymEngine::Rational;
+using SymEngine::RCP;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
+using SymEngine::sec;
+using SymEngine::Sec;
+using SymEngine::Sech;
+using SymEngine::sech;
+using SymEngine::sign;
+using SymEngine::sin;
+using SymEngine::Sin;
+using SymEngine::Sinh;
+using SymEngine::sinh;
+using SymEngine::sqrt;
+using SymEngine::Subs;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::tan;
+using SymEngine::Tan;
+using SymEngine::Tanh;
+using SymEngine::tanh;
+using SymEngine::umap_basic_num;
+using SymEngine::uppergamma;
+using SymEngine::UpperGamma;
+using SymEngine::vec_basic;
+using SymEngine::zero;
+using SymEngine::zeta;
+using SymEngine::Zeta;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
-using SymEngine::NotImplementedError;
-using SymEngine::SymEngineException;
-using SymEngine::digamma;
-using SymEngine::trigamma;
-using SymEngine::floor;
 using SymEngine::ceiling;
-using SymEngine::truncate;
-using SymEngine::Eq;
 using SymEngine::Conjugate;
-using SymEngine::rewrite_as_exp;
+using SymEngine::digamma;
+using SymEngine::Eq;
+using SymEngine::floor;
 using SymEngine::mul;
+using SymEngine::NotImplementedError;
+using SymEngine::parse;
+using SymEngine::rewrite_as_cos;
+using SymEngine::rewrite_as_exp;
+using SymEngine::rewrite_as_sin;
+using SymEngine::SymEngineException;
+using SymEngine::trigamma;
+using SymEngine::truncate;
 using SymEngine::unevaluated_expr;
 
 using namespace SymEngine::literals;
 
 #ifdef HAVE_SYMENGINE_MPFR
+using SymEngine::eval_mpfr;
+using SymEngine::mpfr_class;
 using SymEngine::real_mpfr;
 using SymEngine::RealMPFR;
-using SymEngine::mpfr_class;
-using SymEngine::eval_mpfr;
 #endif
 
 #ifdef HAVE_SYMENGINE_MPC
 using SymEngine::complex_mpc;
 using SymEngine::ComplexMPC;
-using SymEngine::mpc_class;
 using SymEngine::eval_mpc;
+using SymEngine::mpc_class;
 #endif
 
 TEST_CASE("Sin: functions", "[functions]")
@@ -328,6 +331,17 @@ TEST_CASE("Sin: functions", "[functions]")
     r1 = rewrite_as_exp(sin(x));
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))), mul(integer(2), I));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(sin(x));
+    r2 = sin(x);
+    REQUIRE(eq(*r1, *r2));
+    // Parsing to evaluate the unevaluated_expr
+    REQUIRE(eq(*parse(r1->__str__()), *sin(x)));
+
+    r1 = rewrite_as_cos(sin(x));
+    r2 = cos(unevaluated_expr(sub(x, div(pi, integer(2)))));
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*parse(r1->__str__()), *sin(x)));
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -453,6 +467,16 @@ TEST_CASE("Cos: functions", "[functions]")
     r1 = rewrite_as_exp(cos(x));
     r2 = div(add(exp(mul(I, x)), exp(mul(neg(I), x))), integer(2));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(cos(x));
+    r2 = sin(unevaluated_expr(add(x, div(pi, integer(2)))));
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*parse(r1->__str__()), *cos(x)));
+
+    r1 = rewrite_as_cos(cos(x));
+    r2 = cos(x);
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*parse(r1->__str__()), *cos(x)));
 }
 
 TEST_CASE("Tan: functions", "[functions]")
@@ -579,6 +603,14 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = div(sub(exp(mul(I, x)), exp(mul(neg(I), x))),
              mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(tan(x));
+    r2 = div(mul(integer(2), pow(sin(x), integer(2))), sin(mul(integer(2), x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_cos(tan(x));
+    r2 = div(cos(unevaluated_expr(sub(x, div(pi, integer(2))))), cos(x));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -700,6 +732,14 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = rewrite_as_exp(cot(x));
     r2 = div(mul(add(exp(mul(I, x)), exp(mul(neg(I), x))), I),
              sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(cot(x));
+    r2 = div(sin(mul(integer(2), x)), mul(integer(2), pow(sin(x), integer(2))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_cos(cot(x));
+    r2 = div(cos(x), cos(unevaluated_expr(sub(x, div(pi, integer(2))))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -823,6 +863,14 @@ TEST_CASE("Csc: functions", "[functions]")
 
     r1 = rewrite_as_exp(csc(x));
     r2 = div(mul(integer(2), I), sub(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(csc(x));
+    r2 = div(integer(1), sin(x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_cos(csc(x));
+    r2 = div(integer(1), cos(unevaluated_expr(sub(x, div(pi, integer(2))))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -948,6 +996,14 @@ TEST_CASE("Sec: functions", "[functions]")
 
     r1 = rewrite_as_exp(sec(x));
     r2 = div(integer(2), add(exp(mul(I, x)), exp(mul(neg(I), x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_sin(sec(x));
+    r2 = div(integer(1), sin(unevaluated_expr(add(x, div(pi, integer(2))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = rewrite_as_cos(sec(x));
+    r2 = div(integer(1), cos(x));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -3710,9 +3766,7 @@ TEST_CASE("Abs: functions", "[functions]")
 class MySin : public FunctionWrapper
 {
 public:
-    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg)
-    {
-    }
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {}
     RCP<const Number> eval(long bits) const
     {
         return real_double(::sin(eval_double(*get_vec()[0])));

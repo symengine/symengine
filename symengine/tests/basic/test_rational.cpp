@@ -4,20 +4,19 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/real_double.h>
 
-using SymEngine::Basic;
-using SymEngine::print_stack_on_segfault;
-using SymEngine::RCP;
+using SymEngine::ComplexInf;
 using SymEngine::Integer;
 using SymEngine::integer;
-using SymEngine::Rational;
-using SymEngine::rational;
-using SymEngine::RealDouble;
-using SymEngine::real_double;
-using SymEngine::Number;
 using SymEngine::is_a;
 using SymEngine::NotImplementedError;
+using SymEngine::Number;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::Rational;
+using SymEngine::rational;
+using SymEngine::RCP;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
 using SymEngine::SymEngineException;
-using SymEngine::ComplexInf;
 
 TEST_CASE("Rational", "[rational]")
 {

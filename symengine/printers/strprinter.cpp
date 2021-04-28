@@ -1164,4 +1164,4 @@ std::string julia_str(const Basic &x)
     JuliaStrPrinter strPrinter;
     return strPrinter.apply(x);
 }
-}
+} // namespace SymEngine

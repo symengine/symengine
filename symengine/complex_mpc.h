@@ -390,7 +390,7 @@ inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
 {
     return rcp(new ComplexMPC(std::move(x)));
 }
-}
+} // namespace SymEngine
 #else
 
 namespace SymEngine
@@ -400,7 +400,7 @@ class ComplexMPC : public ComplexBase
 public:
     IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_MPC)
 };
-}
+} // namespace SymEngine
 
 #endif // HAVE_SYMENGINE_MPC
 #endif // SymEngine

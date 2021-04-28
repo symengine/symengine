@@ -4,10 +4,7 @@
 namespace SymEngine
 {
 
-NaN::NaN()
-{
-    SYMENGINE_ASSIGN_TYPEID()
-}
+NaN::NaN(){SYMENGINE_ASSIGN_TYPEID()}
 
 hash_t NaN::__hash__() const
 {
@@ -234,4 +231,4 @@ Evaluate &NaN::get_eval() const
     return evaluate_NaN;
 }
 
-} // SymEngine
+} // namespace SymEngine

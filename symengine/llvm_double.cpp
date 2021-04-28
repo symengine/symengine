@@ -309,9 +309,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     {
     public:
         std::string &ss_;
-        MemoryBufferRefCallback(std::string &ss) : ss_(ss)
-        {
-        }
+        MemoryBufferRefCallback(std::string &ss) : ss_(ss) {}
 
         virtual void notifyObjectCompiled(const llvm::Module *M,
                                           llvm::MemoryBufferRef obj)
@@ -985,9 +983,7 @@ void LLVMVisitor::loads(const std::string &s)
         const std::string &s_;
 
     public:
-        MCJITObjectLoader(const std::string &s) : s_(s)
-        {
-        }
+        MCJITObjectLoader(const std::string &s) : s_(s) {}
         virtual void notifyObjectCompiled(const llvm::Module *M,
                                           llvm::MemoryBufferRef obj)
         {

@@ -11,9 +11,9 @@
 #include <symengine/eval_double.h>
 
 using SymEngine::Basic;
-using SymEngine::symbol;
 using SymEngine::integer;
 using SymEngine::RCP;
+using SymEngine::symbol;
 
 RCP<const Basic> get_eval_double_expression()
 {

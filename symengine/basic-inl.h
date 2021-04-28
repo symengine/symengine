@@ -161,7 +161,7 @@ std::string to_string(const T &value)
 #endif
 }
 
-} // SymEngine
+} // namespace SymEngine
 
 // std namespace functions
 namespace std
@@ -174,6 +174,6 @@ struct hash<SymEngine::Basic> {
         return static_cast<std::size_t>(b.hash());
     }
 };
-}
+} // namespace std
 
 #endif

@@ -13,9 +13,7 @@ namespace SymEngine
 {
 
 // Constructors
-DenseMatrix::DenseMatrix()
-{
-}
+DenseMatrix::DenseMatrix() {}
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
@@ -23,12 +21,9 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 }
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
-    : m_{l}, row_(row), col_(col)
-{
-    SYMENGINE_ASSERT(m_.size() == row * col)
-}
+    : m_{l}, row_(row), col_(col){SYMENGINE_ASSERT(m_.size() == row * col)}
 
-DenseMatrix::DenseMatrix(const vec_basic &column_elements)
+      DenseMatrix::DenseMatrix(const vec_basic &column_elements)
     : m_(column_elements), row_(static_cast<unsigned>(column_elements.size())),
       col_(1)
 {
@@ -145,12 +140,12 @@ tribool DenseMatrix::is_diagonal() const
     return cur;
 }
 
-tribool DenseMatrix::is_real() const
+tribool DenseMatrix::is_real(const Assumptions *assumptions) const
 {
-    auto A = *this;
+    RealVisitor visitor(assumptions);
     tribool cur = tribool::tritrue;
     for (auto &e : m_) {
-        cur = and_tribool(cur, SymEngine::is_real(*e));
+        cur = and_tribool(cur, visitor.apply(*e));
         if (is_false(cur)) {
             return cur;
         }
@@ -2061,4 +2056,4 @@ void zeros(DenseMatrix &A)
     }
 }
 
-} // SymEngine
+} // namespace SymEngine

@@ -205,7 +205,7 @@ public:
             return fqp_t(series_invert(res_p, var, prec) * ctroot);
     }
 };
-} // SymEngine
+} // namespace SymEngine
 
 #endif // HAVE_SYMENGINE_FLINT
 

@@ -6,34 +6,34 @@
 #include <symengine/complex_double.h>
 
 using SymEngine::Basic;
-using SymEngine::RCP;
-using SymEngine::make_rcp;
-using SymEngine::real_double;
+using SymEngine::Boolean;
+using SymEngine::boolFalse;
+using SymEngine::boolTrue;
 using SymEngine::complex_double;
+using SymEngine::ComplexInf;
 using SymEngine::Eq;
-using SymEngine::Ne;
+using SymEngine::Equality;
+using SymEngine::gamma;
 using SymEngine::Ge;
 using SymEngine::Gt;
-using SymEngine::Le;
-using SymEngine::Lt;
-using SymEngine::Equality;
-using SymEngine::zero;
-using SymEngine::one;
-using SymEngine::integer;
-using SymEngine::gamma;
 using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::integer;
+using SymEngine::Le;
+using SymEngine::logical_not;
+using SymEngine::Lt;
+using SymEngine::make_rcp;
+using SymEngine::Nan;
+using SymEngine::Ne;
+using SymEngine::NegInf;
+using SymEngine::one;
+using SymEngine::RCP;
+using SymEngine::rcp_static_cast;
+using SymEngine::real_double;
 using SymEngine::Symbol;
 using SymEngine::symbol;
-using SymEngine::Inf;
-using SymEngine::NegInf;
-using SymEngine::ComplexInf;
-using SymEngine::boolTrue;
-using SymEngine::boolFalse;
-using SymEngine::Boolean;
-using SymEngine::Nan;
-using SymEngine::logical_not;
-using SymEngine::rcp_static_cast;
 using SymEngine::SymEngineException;
+using SymEngine::zero;
 
 TEST_CASE("Hash Size for Relationals", "[Relationals]")
 {

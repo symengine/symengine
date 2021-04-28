@@ -59,6 +59,7 @@ inline RCP<const Constant> constant(const std::string &name)
 extern SYMENGINE_EXPORT RCP<const Integer> zero;
 extern SYMENGINE_EXPORT RCP<const Integer> one;
 extern SYMENGINE_EXPORT RCP<const Integer> minus_one;
+extern SYMENGINE_EXPORT RCP<const Integer> two;
 extern SYMENGINE_EXPORT RCP<const Number> I;
 
 // Symbolic Constants
@@ -75,6 +76,6 @@ extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
 
 // Not a Number
 extern SYMENGINE_EXPORT RCP<const NaN> Nan;
-} // SymEngine
+} // namespace SymEngine
 
 #endif

@@ -363,7 +363,7 @@ inline RCP<const RealMPFR> real_mpfr(mpfr_class x)
 {
     return rcp(new RealMPFR(std::move(x)));
 }
-}
+} // namespace SymEngine
 #else
 
 namespace SymEngine
@@ -373,7 +373,7 @@ class RealMPFR : public Number
 public:
     IMPLEMENT_TYPEID(SYMENGINE_REAL_MPFR)
 };
-}
+} // namespace SymEngine
 
 #endif // HAVE_SYMENGINE_MPFR
 #endif // SymEngine

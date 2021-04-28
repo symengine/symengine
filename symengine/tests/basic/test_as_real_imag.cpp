@@ -3,41 +3,42 @@
 #include <symengine/as_real_imag.cpp>
 #include <symengine/symengine_casts.h>
 
-using SymEngine::Basic;
-using SymEngine::rational;
-using SymEngine::one;
-using SymEngine::Complex;
-using SymEngine::Symbol;
-using SymEngine::I;
-using SymEngine::sqrt;
-using SymEngine::RCP;
 using SymEngine::Abs;
-using SymEngine::zero;
-using SymEngine::neg;
-using SymEngine::integer;
-using SymEngine::mul;
 using SymEngine::add;
+using SymEngine::asin;
+using SymEngine::asinh;
+using SymEngine::Basic;
+using SymEngine::Complex;
+using SymEngine::ComplexInf;
+using SymEngine::cos;
+using SymEngine::cosh;
+using SymEngine::cot;
+using SymEngine::coth;
+using SymEngine::csc;
+using SymEngine::csch;
+using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::integer;
+using SymEngine::minus_one;
+using SymEngine::mul;
+using SymEngine::Nan;
+using SymEngine::neg;
+using SymEngine::one;
+using SymEngine::rational;
 using SymEngine::Rational;
+using SymEngine::RCP;
+using SymEngine::sec;
+using SymEngine::sech;
+using SymEngine::sin;
+using SymEngine::sinh;
+using SymEngine::sqrt;
+using SymEngine::sub;
+using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
-using SymEngine::Nan;
-using SymEngine::Inf;
-using SymEngine::ComplexInf;
-using SymEngine::minus_one;
-using SymEngine::sin;
-using SymEngine::cos;
 using SymEngine::tan;
-using SymEngine::cot;
-using SymEngine::csc;
-using SymEngine::sec;
-using SymEngine::asin;
-using SymEngine::sinh;
-using SymEngine::cosh;
 using SymEngine::tanh;
-using SymEngine::coth;
-using SymEngine::csch;
-using SymEngine::sech;
-using SymEngine::asinh;
+using SymEngine::zero;
 
 TEST_CASE("RealImag: Number and Symbol", "[as_real_imag]")
 {
@@ -119,6 +120,11 @@ TEST_CASE("RealImag: Pow", "[as_real_imag]")
     as_real_imag(pow(I, rational(2, 3)), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(one, i2)));
     REQUIRE(eq(*im, *div(sqrt(integer(3)), i2)));
+
+    as_real_imag(pow(sub(add(i2, sqrt(i2)), sub(sqrt(i2), I)), 2), outArg(re),
+                 outArg(im));
+    REQUIRE(eq(*re, *integer(3)));
+    REQUIRE(eq(*im, *integer(4)));
 
     as_real_imag(sqrt(neg(I)), outArg(re), outArg(im));
     REQUIRE(eq(*re, *div(sqrt(i2), i2)));

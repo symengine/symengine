@@ -212,5 +212,5 @@ int mobius(const Integer &a);
 // Mertens Function
 // mertens(n) -> Sum of mobius(i) for i from 1 to n
 long mertens(const unsigned long a);
-}
+} // namespace SymEngine
 #endif

@@ -766,4 +766,4 @@ RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
     }
 }
 
-} // SymEngine
+} // namespace SymEngine

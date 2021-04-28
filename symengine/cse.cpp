@@ -315,9 +315,7 @@ public:
     set_basic adds;
     set_basic muls;
     set_basic seen_subexp;
-    OptsCSEVisitor(umap_basic_basic &opt_subs_) : opt_subs(opt_subs_)
-    {
-    }
+    OptsCSEVisitor(umap_basic_basic &opt_subs_) : opt_subs(opt_subs_) {}
     bool is_seen(const Basic &expr)
     {
         return (seen_subexp.find(expr.rcp_from_this()) != seen_subexp.end());
@@ -430,8 +428,8 @@ private:
     unsigned next_symbol_index = 0;
 
 public:
-    using TransformVisitor::result_;
     using TransformVisitor::bvisit;
+    using TransformVisitor::result_;
     RebuildVisitor(umap_basic_basic &subs_, umap_basic_basic &opt_subs_,
                    set_basic &to_eliminate_, set_basic &excluded_symbols_,
                    vec_pair &replacements_)
@@ -503,7 +501,6 @@ void tree_cse(vec_pair &replacements, vec_basic &reduced_exprs,
 
     std::function<void(RCP<const Basic> & expr)> find_repeated;
     find_repeated = [&](RCP<const Basic> expr) -> void {
-
         if (is_a_Number(*expr)) {
             return;
         }
@@ -555,4 +552,4 @@ void cse(vec_pair &replacements, vec_basic &reduced_exprs,
     // Main CSE algorithm.
     tree_cse(replacements, reduced_exprs, exprs, opt_subs);
 }
-}
+} // namespace SymEngine

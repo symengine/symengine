@@ -534,4 +534,4 @@ Evaluate &Infty::get_eval() const
     return evaluate_infty;
 }
 
-} // SymEngine
+} // namespace SymEngine
