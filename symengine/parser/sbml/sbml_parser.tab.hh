@@ -35,57 +35,64 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_PARSER_TAB_HH_INCLUDED
-# define YY_YY_PARSER_TAB_HH_INCLUDED
+#ifndef YY_SBML_SBML_PARSER_TAB_HH_INCLUDED
+# define YY_SBML_SBML_PARSER_TAB_HH_INCLUDED
 /* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
+#ifndef SBMLDEBUG
+# if defined YYDEBUG
 #if YYDEBUG
-extern int yydebug;
+#   define SBMLDEBUG 1
+#  else
+#   define SBMLDEBUG 0
+#  endif
+# else /* ! defined YYDEBUG */
+#  define SBMLDEBUG 0
+# endif /* ! defined YYDEBUG */
+#endif  /* ! defined SBMLDEBUG */
+#if SBMLDEBUG
+extern int sbmldebug;
 #endif
 /* "%code requires" blocks.  */
-#line 15 "parser.yy"
+#line 16 "sbml_parser.yy"
 
 
-#include "symengine/parser/parser.h"
+#include "symengine/parser/sbml/sbml_parser.h"
 
 
-#line 55 "parser.tab.hh"
+#line 63 "sbml_parser.tab.hh"
 
 /* Token kinds.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
+#ifndef SBMLTOKENTYPE
+# define SBMLTOKENTYPE
+  enum sbmltokentype
   {
-    YYEMPTY = -2,
+    SBMLEMPTY = -2,
     END_OF_FILE = 0,               /* END_OF_FILE  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
+    SBMLerror = 256,               /* error  */
+    SBMLUNDEF = 257,               /* "invalid token"  */
     IDENTIFIER = 258,              /* IDENTIFIER  */
     NUMERIC = 259,                 /* NUMERIC  */
-    IMPLICIT_MUL = 260,            /* IMPLICIT_MUL  */
-    EQ = 261,                      /* EQ  */
-    NE = 262,                      /* NE  */
+    AND = 260,                     /* AND  */
+    OR = 261,                      /* OR  */
+    EQ = 262,                      /* EQ  */
     LE = 263,                      /* LE  */
     GE = 264,                      /* GE  */
-    UMINUS = 265,                  /* UMINUS  */
-    UPLUS = 266,                   /* UPLUS  */
-    POW = 267,                     /* POW  */
-    NOT = 268                      /* NOT  */
+    NE = 265,                      /* NE  */
+    UMINUS = 266,                  /* UMINUS  */
+    UPLUS = 267                    /* UPLUS  */
   };
-  typedef enum yytokentype yytoken_kind_t;
+  typedef enum sbmltokentype sbmltoken_kind_t;
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef struct SymEngine::YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+#if ! defined SBMLSTYPE && ! defined SBMLSTYPE_IS_DECLARED
+typedef struct SymEngine::SBMLSTYPE SBMLSTYPE;
+# define SBMLSTYPE_IS_TRIVIAL 1
+# define SBMLSTYPE_IS_DECLARED 1
 #endif
 
 
 
-int yyparse (SymEngine::Parser &p);
+int sbmlparse (SymEngine::SbmlParser &p);
 
-#endif /* !YY_YY_PARSER_TAB_HH_INCLUDED  */
+#endif /* !YY_SBML_SBML_PARSER_TAB_HH_INCLUDED  */

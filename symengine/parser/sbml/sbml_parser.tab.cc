@@ -63,8 +63,14 @@
 /* Pull parsers.  */
 #define YYPULL 1
 
-
-
+/* Substitute the type names.  */
+#define YYSTYPE         SBMLSTYPE
+/* Substitute the variable and function names.  */
+#define yyparse         sbmlparse
+#define yylex           sbmllex
+#define yyerror         sbmlerror
+#define yydebug         sbmldebug
+#define yynerrs         sbmlnerrs
 
 
 # ifndef YY_CAST
@@ -88,7 +94,7 @@
 #  endif
 # endif
 
-#include "parser.tab.hh"
+#include "sbml_parser.tab.hh"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -98,92 +104,85 @@ enum yysymbol_kind_t
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_IDENTIFIER = 3,                 /* IDENTIFIER  */
   YYSYMBOL_NUMERIC = 4,                    /* NUMERIC  */
-  YYSYMBOL_IMPLICIT_MUL = 5,               /* IMPLICIT_MUL  */
-  YYSYMBOL_6_ = 6,                         /* '|'  */
-  YYSYMBOL_7_ = 7,                         /* '^'  */
-  YYSYMBOL_8_ = 8,                         /* '&'  */
-  YYSYMBOL_EQ = 9,                         /* EQ  */
-  YYSYMBOL_10_ = 10,                       /* '>'  */
-  YYSYMBOL_11_ = 11,                       /* '<'  */
+  YYSYMBOL_AND = 5,                        /* AND  */
+  YYSYMBOL_OR = 6,                         /* OR  */
+  YYSYMBOL_EQ = 7,                         /* EQ  */
+  YYSYMBOL_8_ = 8,                         /* '<'  */
+  YYSYMBOL_9_ = 9,                         /* '>'  */
+  YYSYMBOL_LE = 10,                        /* LE  */
+  YYSYMBOL_GE = 11,                        /* GE  */
   YYSYMBOL_NE = 12,                        /* NE  */
-  YYSYMBOL_LE = 13,                        /* LE  */
-  YYSYMBOL_GE = 14,                        /* GE  */
-  YYSYMBOL_15_ = 15,                       /* '-'  */
-  YYSYMBOL_16_ = 16,                       /* '+'  */
-  YYSYMBOL_17_ = 17,                       /* '*'  */
-  YYSYMBOL_18_ = 18,                       /* '/'  */
-  YYSYMBOL_UMINUS = 19,                    /* UMINUS  */
-  YYSYMBOL_UPLUS = 20,                     /* UPLUS  */
-  YYSYMBOL_POW = 21,                       /* POW  */
-  YYSYMBOL_NOT = 22,                       /* NOT  */
+  YYSYMBOL_13_ = 13,                       /* '+'  */
+  YYSYMBOL_14_ = 14,                       /* '-'  */
+  YYSYMBOL_15_ = 15,                       /* '*'  */
+  YYSYMBOL_16_ = 16,                       /* '/'  */
+  YYSYMBOL_17_ = 17,                       /* '%'  */
+  YYSYMBOL_UMINUS = 18,                    /* UMINUS  */
+  YYSYMBOL_UPLUS = 19,                     /* UPLUS  */
+  YYSYMBOL_20_ = 20,                       /* '!'  */
+  YYSYMBOL_21_ = 21,                       /* '^'  */
+  YYSYMBOL_22_ = 22,                       /* '@'  */
   YYSYMBOL_23_ = 23,                       /* '('  */
   YYSYMBOL_24_ = 24,                       /* ')'  */
-  YYSYMBOL_25_ = 25,                       /* '~'  */
-  YYSYMBOL_26_ = 26,                       /* ','  */
-  YYSYMBOL_YYACCEPT = 27,                  /* $accept  */
-  YYSYMBOL_st_expr = 28,                   /* st_expr  */
-  YYSYMBOL_expr = 29,                      /* expr  */
-  YYSYMBOL_leaf = 30,                      /* leaf  */
-  YYSYMBOL_func = 31,                      /* func  */
-  YYSYMBOL_expr_list = 32                  /* expr_list  */
+  YYSYMBOL_25_ = 25,                       /* ','  */
+  YYSYMBOL_YYACCEPT = 26,                  /* $accept  */
+  YYSYMBOL_st_expr = 27,                   /* st_expr  */
+  YYSYMBOL_expr = 28,                      /* expr  */
+  YYSYMBOL_expr_list = 29                  /* expr_list  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
 
 /* Unqualified %code blocks.  */
-#line 22 "parser.yy"
+#line 23 "sbml_parser.yy"
 
 #include "symengine/pow.h"
 #include "symengine/logic.h"
-#include "symengine/parser/parser.h"
+#include "symengine/parser/sbml/sbml_parser.h"
 
-using SymEngine::RCP;
-using SymEngine::Basic;
-using SymEngine::vec_basic;
-using SymEngine::rcp_static_cast;
-using SymEngine::mul;
-using SymEngine::pow;
-using SymEngine::add;
-using SymEngine::sub;
-using SymEngine::Lt;
-using SymEngine::Gt;
-using SymEngine::Le;
-using SymEngine::Ge;
-using SymEngine::Ne;
-using SymEngine::Eq;
-using SymEngine::set_boolean;
-using SymEngine::Boolean;
-using SymEngine::one;
-using SymEngine::vec_boolean;
+    using SymEngine::add;
+    using SymEngine::Basic;
+    using SymEngine::Boolean;
+    using SymEngine::Eq;
+    using SymEngine::Ge;
+    using SymEngine::Gt;
+    using SymEngine::Le;
+    using SymEngine::Lt;
+    using SymEngine::mul;
+    using SymEngine::Ne;
+    using SymEngine::one;
+    using SymEngine::pow;
+    using SymEngine::RCP;
+    using SymEngine::rcp_static_cast;
+    using SymEngine::set_boolean;
+    using SymEngine::sub;
+    using SymEngine::vec_basic;
+    using SymEngine::vec_boolean;
 
+#include "symengine/parser/sbml/sbml_tokenizer.h"
 
-#include "symengine/parser/tokenizer.h"
+    int yylex(SymEngine::SBMLSTYPE * yylval, SymEngine::SbmlParser & p)
+    {
+        return p.m_tokenizer.lex(*yylval);
+    } // ylex
 
-
-int yylex(SymEngine::YYSTYPE *yylval, SymEngine::Parser &p)
-{
-    return p.m_tokenizer.lex(*yylval);
-} // ylex
-
-void yyerror(SymEngine::Parser &p, const std::string &msg)
-{
-    throw SymEngine::ParseError(msg);
-}
+    void yyerror(SymEngine::SbmlParser & p, const std::string &msg)
+    {
+        throw SymEngine::ParseError(msg);
+    }
 
 // Force YYCOPY to not use memcopy, but rather copy the structs one by one,
 // which will cause C++ to call the proper copy constructors.
-# define YYCOPY(Dst, Src, Count)              \
-    do                                        \
-      {                                       \
-        YYPTRDIFF_T yyi;                      \
-        for (yyi = 0; yyi < (Count); yyi++)   \
-          (Dst)[yyi] = (Src)[yyi];            \
-      }                                       \
-    while (0)
+#define YYCOPY(Dst, Src, Count)                                                \
+    do {                                                                       \
+        YYPTRDIFF_T yyi;                                                       \
+        for (yyi = 0; yyi < (Count); yyi++)                                    \
+            (Dst)[yyi] = (Src)[yyi];                                           \
+    } while (0)
 
 
-#line 187 "parser.tab.cc"
+#line 186 "sbml_parser.tab.cc"
 
 #ifdef short
 # undef short
@@ -439,7 +438,7 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
-         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
+         || (defined SBMLSTYPE_IS_TRIVIAL && SBMLSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
@@ -498,21 +497,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  18
+#define YYFINAL  14
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   166
+#define YYLAST   117
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  27
+#define YYNTOKENS  26
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  6
+#define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  29
+#define YYNRULES  27
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  54
+#define YYNSTATES  52
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   268
+#define YYMAXUTOK   267
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -529,16 +528,16 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     8,     2,
-      23,    24,    17,    16,    26,    15,     2,    18,     2,     2,
+       2,     2,     2,    20,     2,     2,     2,    17,     2,     2,
+      23,    24,    15,    13,    25,    14,     2,    16,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      11,     2,    10,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     7,     2,     2,     2,     2,     2,
+       8,     2,     9,     2,    22,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     6,     2,    25,     2,     2,     2,
+       2,     2,     2,     2,    21,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -552,23 +551,23 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     9,    12,    13,    14,    19,    20,    21,    22
+       5,     6,     7,    10,    11,    12,    18,    19
 };
 
-#if YYDEBUG
+#if SBMLDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   107,   107,   115,   118,   121,   124,   129,   139,   142,
-     145,   148,   151,   154,   157,   160,   168,   176,   184,   187,
-     190,   193,   196,   201,   206,   212,   217,   224,   232,   238
+       0,    90,    90,    94,    95,    96,    97,    98,    99,   100,
+     101,   102,   103,   104,   105,   106,   107,   112,   117,   118,
+     119,   120,   122,   123,   124,   125,   129,   130
 };
 #endif
 
 /** Accessing symbol of state STATE.  */
 #define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
 
-#if YYDEBUG || 0
+#if SBMLDEBUG || 0
 /* The user-facing name of the symbol whose (internal) number is
    YYSYMBOL.  No bounds checking.  */
 static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
@@ -578,10 +577,9 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "END_OF_FILE", "error", "\"invalid token\"", "IDENTIFIER", "NUMERIC",
-  "IMPLICIT_MUL", "'|'", "'^'", "'&'", "EQ", "'>'", "'<'", "NE", "LE",
-  "GE", "'-'", "'+'", "'*'", "'/'", "UMINUS", "UPLUS", "POW", "NOT", "'('",
-  "')'", "'~'", "','", "$accept", "st_expr", "expr", "leaf", "func",
-  "expr_list", YY_NULLPTR
+  "AND", "OR", "EQ", "'<'", "'>'", "LE", "GE", "NE", "'+'", "'-'", "'*'",
+  "'/'", "'%'", "UMINUS", "UPLUS", "'!'", "'^'", "'@'", "'('", "')'",
+  "','", "$accept", "st_expr", "expr", "expr_list", YY_NULLPTR
 };
 
 static const char *
@@ -596,13 +594,13 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    (internal) symbol number NUM (which must be that of a token).  */
 static const yytype_int16 yytoknum[] =
 {
-       0,   256,   257,   258,   259,   260,   124,    94,    38,   261,
-      62,    60,   262,   263,   264,    45,    43,    42,    47,   265,
-     266,   267,   268,    40,    41,   126,    44
+       0,   256,   257,   258,   259,   260,   261,   262,    60,    62,
+     263,   264,   265,    43,    45,    42,    47,    37,   266,   267,
+      33,    94,    64,    40,    41,    44
 };
 #endif
 
-#define YYPACT_NINF (-14)
+#define YYPACT_NINF (-18)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -614,14 +612,14 @@ static const yytype_int16 yytoknum[] =
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-static const yytype_int16 yypact[] =
+static const yytype_int8 yypact[] =
 {
-      26,    -9,   -14,    23,    26,    26,    26,    26,    12,    65,
-     -14,   -14,    26,    26,    24,    24,    46,   -14,   -14,    26,
-      26,    26,    26,    26,    26,    26,    26,    26,    26,    26,
-      26,    26,    26,    65,   -13,    24,   -14,    80,    94,   107,
-      22,   118,   128,   137,   145,   -11,    29,    29,    24,    24,
-      24,   -14,    26,    65
+      30,   -13,   -18,    30,    30,    30,    30,     7,    69,    25,
+     -17,   -17,   -17,    49,   -18,    30,    30,    30,    30,    30,
+      30,    30,    30,    30,    30,    30,    30,    30,    30,    30,
+     -18,    69,   -16,   -18,    85,    85,    95,    95,    95,    95,
+      95,    95,    15,    15,   -17,   -17,   -17,   -18,   -18,   -18,
+      30,    69
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -629,24 +627,24 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    23,    25,    24,     0,     0,     0,     0,     0,     2,
-      22,    26,     0,     0,    19,    20,     0,    21,     1,     0,
+       0,    22,    23,     0,     0,     0,     0,     0,     2,     0,
+      20,    19,    21,     0,     1,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    29,     0,     7,    18,    15,    17,    16,
-      14,    10,     9,    11,    12,    13,     4,     3,     5,     6,
-       8,    27,     0,    28
+      25,    27,     0,    18,    17,    16,    15,    10,    11,    13,
+      14,    12,     3,     4,     5,     6,     7,     8,     9,    24,
+       0,    26
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -14,   -14,    -4,   -14,   -14,   -14
+     -18,   -18,    -3,   -18
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     8,     9,    10,    11,    34
+       0,     7,     8,    32
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -654,64 +652,54 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      14,    15,    16,    17,    28,    29,    30,    31,    33,    35,
-      32,    51,    18,    52,    12,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    46,    47,    48,    49,    50,     1,
-       2,     3,    23,    24,    25,    26,    27,    28,    29,    30,
-      31,     4,     5,    32,    13,    32,    30,    31,    53,     6,
-      32,     7,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    31,     0,     0,    32,     0,     0,
-      36,    19,    20,    21,    22,    23,    24,    25,    26,    27,
-      28,    29,    30,    31,     0,     0,    32,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,    30,    31,     0,
-       0,    32,    21,    22,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,     0,     0,    32,    22,    23,    24,    25,
-      26,    27,    28,    29,    30,    31,     0,     0,    32,    24,
-      25,    26,    27,    28,    29,    30,    31,     0,     0,    32,
-      25,    26,    27,    28,    29,    30,    31,     0,     0,    32,
-      26,    27,    28,    29,    30,    31,     0,     0,    32,    27,
-      28,    29,    30,    31,     0,     0,    32
+      10,    11,    12,    13,    28,    29,    31,    14,    49,    50,
+       9,     0,    34,    35,    36,    37,    38,    39,    40,    41,
+      42,    43,    44,    45,    46,    47,    48,     0,     1,     2,
+      25,    26,    27,     1,     2,     0,    28,    29,     3,     4,
+       0,     0,     0,     3,     4,     5,     0,    51,     6,    30,
+       5,     0,     0,     6,    15,    16,    17,    18,    19,    20,
+      21,    22,    23,    24,    25,    26,    27,     0,     0,     0,
+      28,    29,     0,    33,    15,    16,    17,    18,    19,    20,
+      21,    22,    23,    24,    25,    26,    27,     0,     0,     0,
+      28,    29,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,     0,     0,     0,    28,    29,    23,    24,
+      25,    26,    27,     0,     0,     0,    28,    29
 };
 
 static const yytype_int8 yycheck[] =
 {
-       4,     5,     6,     7,    15,    16,    17,    18,    12,    13,
-      21,    24,     0,    26,    23,    19,    20,    21,    22,    23,
-      24,    25,    26,    27,    28,    29,    30,    31,    32,     3,
-       4,     5,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    15,    16,    21,    21,    21,    17,    18,    52,    23,
-      21,    25,     6,     7,     8,     9,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    -1,    -1,    21,    -1,    -1,
-      24,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    -1,    -1,    21,     7,     8,     9,
-      10,    11,    12,    13,    14,    15,    16,    17,    18,    -1,
-      -1,    21,     8,     9,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,    -1,    -1,    21,     9,    10,    11,    12,
-      13,    14,    15,    16,    17,    18,    -1,    -1,    21,    11,
-      12,    13,    14,    15,    16,    17,    18,    -1,    -1,    21,
-      12,    13,    14,    15,    16,    17,    18,    -1,    -1,    21,
-      13,    14,    15,    16,    17,    18,    -1,    -1,    21,    14,
-      15,    16,    17,    18,    -1,    -1,    21
+       3,     4,     5,     6,    21,    22,     9,     0,    24,    25,
+      23,    -1,    15,    16,    17,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    29,    -1,     3,     4,
+      15,    16,    17,     3,     4,    -1,    21,    22,    13,    14,
+      -1,    -1,    -1,    13,    14,    20,    -1,    50,    23,    24,
+      20,    -1,    -1,    23,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    14,    15,    16,    17,    -1,    -1,    -1,
+      21,    22,    -1,    24,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    14,    15,    16,    17,    -1,    -1,    -1,
+      21,    22,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    -1,    -1,    -1,    21,    22,    13,    14,
+      15,    16,    17,    -1,    -1,    -1,    21,    22
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     4,     5,    15,    16,    23,    25,    28,    29,
-      30,    31,    23,    21,    29,    29,    29,    29,     0,     6,
-       7,     8,     9,    10,    11,    12,    13,    14,    15,    16,
-      17,    18,    21,    29,    32,    29,    24,    29,    29,    29,
-      29,    29,    29,    29,    29,    29,    29,    29,    29,    29,
-      29,    24,    26,    29
+       0,     3,     4,    13,    14,    20,    23,    27,    28,    23,
+      28,    28,    28,    28,     0,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    17,    21,    22,
+      24,    28,    29,    24,    28,    28,    28,    28,    28,    28,
+      28,    28,    28,    28,    28,    28,    28,    28,    28,    24,
+      25,    28
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    27,    28,    29,    29,    29,    29,    29,    29,    29,
-      29,    29,    29,    29,    29,    29,    29,    29,    29,    29,
-      29,    29,    29,    30,    30,    30,    30,    31,    32,    32
+       0,    26,    27,    28,    28,    28,    28,    28,    28,    28,
+      28,    28,    28,    28,    28,    28,    28,    28,    28,    28,
+      28,    28,    28,    28,    28,    28,    29,    29
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -719,14 +707,14 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     3,     3,     3,     3,     3,     3,     3,
        3,     3,     3,     3,     3,     3,     3,     3,     3,     2,
-       2,     2,     1,     1,     1,     1,     1,     4,     3,     1
+       2,     2,     1,     1,     4,     3,     3,     1
 };
 
 
 enum { YYENOMEM = -2 };
 
 #define yyerrok         (yyerrstatus = 0)
-#define yyclearin       (yychar = YYEMPTY)
+#define yyclearin       (yychar = SBMLEMPTY)
 
 #define YYACCEPT        goto yyacceptlab
 #define YYABORT         goto yyabortlab
@@ -737,7 +725,7 @@ enum { YYENOMEM = -2 };
 
 #define YYBACKUP(Token, Value)                                    \
   do                                                              \
-    if (yychar == YYEMPTY)                                        \
+    if (yychar == SBMLEMPTY)                                        \
       {                                                           \
         yychar = (Token);                                         \
         yylval = (Value);                                         \
@@ -753,12 +741,12 @@ enum { YYENOMEM = -2 };
   while (0)
 
 /* Backward compatibility with an undocumented macro.
-   Use YYerror or YYUNDEF. */
-#define YYERRCODE YYUNDEF
+   Use SBMLerror or SBMLUNDEF. */
+#define YYERRCODE SBMLUNDEF
 
 
 /* Enable debugging if requested.  */
-#if YYDEBUG
+#if SBMLDEBUG
 
 # ifndef YYFPRINTF
 #  include <stdio.h> /* INFRINGES ON USER NAME SPACE */
@@ -795,7 +783,7 @@ do {                                                                      \
 
 static void
 yy_symbol_value_print (FILE *yyo,
-                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, SymEngine::Parser &p)
+                       yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, SymEngine::SbmlParser &p)
 {
   FILE *yyoutput = yyo;
   YY_USE (yyoutput);
@@ -818,7 +806,7 @@ yy_symbol_value_print (FILE *yyo,
 
 static void
 yy_symbol_print (FILE *yyo,
-                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, SymEngine::Parser &p)
+                 yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, SymEngine::SbmlParser &p)
 {
   YYFPRINTF (yyo, "%s %s (",
              yykind < YYNTOKENS ? "token" : "nterm", yysymbol_name (yykind));
@@ -857,7 +845,7 @@ do {                                                            \
 
 static void
 yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp,
-                 int yyrule, SymEngine::Parser &p)
+                 int yyrule, SymEngine::SbmlParser &p)
 {
   int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -884,12 +872,12 @@ do {                                    \
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
 int yydebug;
-#else /* !YYDEBUG */
+#else /* !SBMLDEBUG */
 # define YYDPRINTF(Args) ((void) 0)
 # define YY_SYMBOL_PRINT(Title, Kind, Value, Location)
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
-#endif /* !YYDEBUG */
+#endif /* !SBMLDEBUG */
 
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
@@ -919,7 +907,7 @@ int yydebug;
 
 static void
 yydestruct (const char *yymsg,
-            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, SymEngine::Parser &p)
+            yysymbol_kind_t yykind, YYSTYPE *yyvaluep, SymEngine::SbmlParser &p)
 {
   YY_USE (yyvaluep);
   YY_USE (p);
@@ -942,7 +930,7 @@ yydestruct (const char *yymsg,
 `----------*/
 
 int
-yyparse (SymEngine::Parser &p)
+yyparse (SymEngine::SbmlParser &p)
 {
 /* Lookahead token kind.  */
 int yychar;
@@ -996,7 +984,7 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
-  yychar = YYEMPTY; /* Cause a token to be read.  */
+  yychar = SBMLEMPTY; /* Cause a token to be read.  */
   goto yysetstate;
 
 
@@ -1104,7 +1092,7 @@ yybackup:
   /* Not known => get a lookahead token if don't already have one.  */
 
   /* YYCHAR is either empty, or end-of-input, or a valid lookahead.  */
-  if (yychar == YYEMPTY)
+  if (yychar == SBMLEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
       yychar = yylex (&yylval, p);
@@ -1116,13 +1104,13 @@ yybackup:
       yytoken = YYSYMBOL_YYEOF;
       YYDPRINTF ((stderr, "Now at end of input.\n"));
     }
-  else if (yychar == YYerror)
+  else if (yychar == SBMLerror)
     {
       /* The scanner already issued an error message, process directly
          to error recovery.  But do not keep the error token as
          lookahead, it is too special and may lead us to an endless
          loop in error recovery. */
-      yychar = YYUNDEF;
+      yychar = SBMLUNDEF;
       yytoken = YYSYMBOL_YYerror;
       goto yyerrlab1;
     }
@@ -1159,7 +1147,7 @@ yybackup:
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 
   /* Discard the shifted token.  */
-  yychar = YYEMPTY;
+  yychar = SBMLEMPTY;
   goto yynewstate;
 
 
@@ -1195,216 +1183,172 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* st_expr: expr  */
-#line 108 "parser.yy"
-    {
-        (yyval.basic) = (yyvsp[0].basic);
-        p.res = (yyval.basic);
-    }
-#line 1204 "parser.tab.cc"
+#line 90 "sbml_parser.yy"
+           { (yyval.basic) = (yyvsp[0].basic); p.res = (yyval.basic); }
+#line 1189 "sbml_parser.tab.cc"
     break;
 
   case 3: /* expr: expr '+' expr  */
-#line 116 "parser.yy"
-        { (yyval.basic) = add((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1210 "parser.tab.cc"
+#line 94 "sbml_parser.yy"
+                    { (yyval.basic) = add((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1195 "sbml_parser.tab.cc"
     break;
 
   case 4: /* expr: expr '-' expr  */
-#line 119 "parser.yy"
-        { (yyval.basic) = sub((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1216 "parser.tab.cc"
+#line 95 "sbml_parser.yy"
+                    { (yyval.basic) = sub((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1201 "sbml_parser.tab.cc"
     break;
 
   case 5: /* expr: expr '*' expr  */
-#line 122 "parser.yy"
-        { (yyval.basic) = mul((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1222 "parser.tab.cc"
+#line 96 "sbml_parser.yy"
+                    { (yyval.basic) = mul((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1207 "sbml_parser.tab.cc"
     break;
 
   case 6: /* expr: expr '/' expr  */
-#line 125 "parser.yy"
-        { (yyval.basic) = div((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1228 "parser.tab.cc"
+#line 97 "sbml_parser.yy"
+                    { (yyval.basic) = div((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1213 "sbml_parser.tab.cc"
     break;
 
-  case 7: /* expr: IMPLICIT_MUL POW expr  */
-#line 130 "parser.yy"
-        {
-          auto tup = p.parse_implicit_mul((yyvsp[-2].string));
-          if (neq(*std::get<1>(tup), *one)) {
-            (yyval.basic) = mul(std::get<0>(tup), pow(std::get<1>(tup), (yyvsp[0].basic)));
-          } else {
-            (yyval.basic) = pow(std::get<0>(tup), (yyvsp[0].basic));
-          }
-        }
-#line 1241 "parser.tab.cc"
+  case 7: /* expr: expr '%' expr  */
+#line 98 "sbml_parser.yy"
+                    { (yyval.basic) = p.modulo((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1219 "sbml_parser.tab.cc"
     break;
 
-  case 8: /* expr: expr POW expr  */
-#line 140 "parser.yy"
-        { (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic)); }
-#line 1247 "parser.tab.cc"
+  case 8: /* expr: expr '^' expr  */
+#line 99 "sbml_parser.yy"
+                    { (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1225 "sbml_parser.tab.cc"
     break;
 
-  case 9: /* expr: expr '<' expr  */
-#line 143 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Lt((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1253 "parser.tab.cc"
+  case 9: /* expr: expr '@' expr  */
+#line 100 "sbml_parser.yy"
+                    { (yyval.basic) = pow((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1231 "sbml_parser.tab.cc"
     break;
 
-  case 10: /* expr: expr '>' expr  */
-#line 146 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Gt((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1259 "parser.tab.cc"
+  case 10: /* expr: expr '<' expr  */
+#line 101 "sbml_parser.yy"
+                    { (yyval.basic) = Lt((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1237 "sbml_parser.tab.cc"
     break;
 
-  case 11: /* expr: expr NE expr  */
-#line 149 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Ne((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1265 "parser.tab.cc"
+  case 11: /* expr: expr '>' expr  */
+#line 102 "sbml_parser.yy"
+                    { (yyval.basic) = Gt((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1243 "sbml_parser.tab.cc"
     break;
 
-  case 12: /* expr: expr LE expr  */
-#line 152 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Le((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1271 "parser.tab.cc"
+  case 12: /* expr: expr NE expr  */
+#line 103 "sbml_parser.yy"
+                   { (yyval.basic) = Ne((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1249 "sbml_parser.tab.cc"
     break;
 
-  case 13: /* expr: expr GE expr  */
-#line 155 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Ge((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1277 "parser.tab.cc"
+  case 13: /* expr: expr LE expr  */
+#line 104 "sbml_parser.yy"
+                   { (yyval.basic) = Le((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1255 "sbml_parser.tab.cc"
     break;
 
-  case 14: /* expr: expr EQ expr  */
-#line 158 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(Eq((yyvsp[-2].basic), (yyvsp[0].basic))); }
-#line 1283 "parser.tab.cc"
+  case 14: /* expr: expr GE expr  */
+#line 105 "sbml_parser.yy"
+                   { (yyval.basic) = Ge((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1261 "sbml_parser.tab.cc"
     break;
 
-  case 15: /* expr: expr '|' expr  */
-#line 161 "parser.yy"
-        {
+  case 15: /* expr: expr EQ expr  */
+#line 106 "sbml_parser.yy"
+                   { (yyval.basic) = Eq((yyvsp[-2].basic), (yyvsp[0].basic)); }
+#line 1267 "sbml_parser.tab.cc"
+    break;
+
+  case 16: /* expr: expr OR expr  */
+#line 107 "sbml_parser.yy"
+                   {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_or(s));
-        }
-#line 1294 "parser.tab.cc"
+            (yyval.basic) = logical_or(s); }
+#line 1277 "sbml_parser.tab.cc"
     break;
 
-  case 16: /* expr: expr '&' expr  */
-#line 169 "parser.yy"
-        {
+  case 17: /* expr: expr AND expr  */
+#line 112 "sbml_parser.yy"
+                    {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
             s.insert(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_and(s));
-        }
-#line 1305 "parser.tab.cc"
-    break;
-
-  case 17: /* expr: expr '^' expr  */
-#line 177 "parser.yy"
-        {
-            vec_boolean s;
-            s.push_back(rcp_static_cast<const Boolean>((yyvsp[-2].basic)));
-            s.push_back(rcp_static_cast<const Boolean>((yyvsp[0].basic)));
-            (yyval.basic) = rcp_static_cast<const Basic>(logical_xor(s));
-        }
-#line 1316 "parser.tab.cc"
+            (yyval.basic) = logical_and(s); }
+#line 1287 "sbml_parser.tab.cc"
     break;
 
   case 18: /* expr: '(' expr ')'  */
-#line 185 "parser.yy"
-        { (yyval.basic) = (yyvsp[-1].basic); }
-#line 1322 "parser.tab.cc"
+#line 117 "sbml_parser.yy"
+                   { (yyval.basic) = (yyvsp[-1].basic); }
+#line 1293 "sbml_parser.tab.cc"
     break;
 
   case 19: /* expr: '-' expr  */
-#line 188 "parser.yy"
-        { (yyval.basic) = neg((yyvsp[0].basic)); }
-#line 1328 "parser.tab.cc"
+#line 118 "sbml_parser.yy"
+                            { (yyval.basic) = neg((yyvsp[0].basic)); }
+#line 1299 "sbml_parser.tab.cc"
     break;
 
   case 20: /* expr: '+' expr  */
-#line 191 "parser.yy"
-        { (yyval.basic) = (yyvsp[0].basic); }
-#line 1334 "parser.tab.cc"
+#line 119 "sbml_parser.yy"
+                           { (yyval.basic) = (yyvsp[0].basic); }
+#line 1305 "sbml_parser.tab.cc"
     break;
 
-  case 21: /* expr: '~' expr  */
-#line 194 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic)))); }
-#line 1340 "parser.tab.cc"
+  case 21: /* expr: '!' expr  */
+#line 120 "sbml_parser.yy"
+               {
+            (yyval.basic) = logical_not(rcp_static_cast<const Boolean>((yyvsp[0].basic))); }
+#line 1312 "sbml_parser.tab.cc"
     break;
 
-  case 22: /* expr: leaf  */
-#line 197 "parser.yy"
-        { (yyval.basic) = rcp_static_cast<const Basic>((yyvsp[0].basic)); }
-#line 1346 "parser.tab.cc"
+  case 22: /* expr: IDENTIFIER  */
+#line 122 "sbml_parser.yy"
+                 { (yyval.basic) = p.parse_identifier((yyvsp[0].string)); }
+#line 1318 "sbml_parser.tab.cc"
     break;
 
-  case 23: /* leaf: IDENTIFIER  */
-#line 202 "parser.yy"
-    {
-        (yyval.basic) = p.parse_identifier((yyvsp[0].string));
-    }
-#line 1354 "parser.tab.cc"
+  case 23: /* expr: NUMERIC  */
+#line 123 "sbml_parser.yy"
+              { (yyval.basic) = p.parse_numeric((yyvsp[0].string)); }
+#line 1324 "sbml_parser.tab.cc"
     break;
 
-  case 24: /* leaf: IMPLICIT_MUL  */
-#line 207 "parser.yy"
-    {
-        auto tup = p.parse_implicit_mul((yyvsp[0].string));
-        (yyval.basic) = mul(std::get<0>(tup), std::get<1>(tup));
-    }
-#line 1363 "parser.tab.cc"
+  case 24: /* expr: IDENTIFIER '(' expr_list ')'  */
+#line 124 "sbml_parser.yy"
+                                   { (yyval.basic) = p.functionify((yyvsp[-3].string), (yyvsp[-1].basic_vec)); }
+#line 1330 "sbml_parser.tab.cc"
     break;
 
-  case 25: /* leaf: NUMERIC  */
-#line 213 "parser.yy"
-    {
-        (yyval.basic) = p.parse_numeric((yyvsp[0].string));
-    }
-#line 1371 "parser.tab.cc"
+  case 25: /* expr: IDENTIFIER '(' ')'  */
+#line 125 "sbml_parser.yy"
+                         { (yyval.basic) = p.functionify((yyvsp[-2].string)); }
+#line 1336 "sbml_parser.tab.cc"
     break;
 
-  case 26: /* leaf: func  */
-#line 218 "parser.yy"
-    {
-        (yyval.basic) = (yyvsp[0].basic);
-    }
-#line 1379 "parser.tab.cc"
+  case 26: /* expr_list: expr_list ',' expr  */
+#line 129 "sbml_parser.yy"
+                         { (yyval.basic_vec) = (yyvsp[-2].basic_vec); (yyval.basic_vec).push_back((yyvsp[0].basic)); }
+#line 1342 "sbml_parser.tab.cc"
     break;
 
-  case 27: /* func: IDENTIFIER '(' expr_list ')'  */
-#line 225 "parser.yy"
-    {
-        (yyval.basic) = p.functionify((yyvsp[-3].string), (yyvsp[-1].basic_vec));
-    }
-#line 1387 "parser.tab.cc"
-    break;
-
-  case 28: /* expr_list: expr_list ',' expr  */
-#line 233 "parser.yy"
-    {
-        (yyval.basic_vec) = (yyvsp[-2].basic_vec); // TODO : should make copy?
-        (yyval.basic_vec) .push_back((yyvsp[0].basic));
-    }
-#line 1396 "parser.tab.cc"
-    break;
-
-  case 29: /* expr_list: expr  */
-#line 239 "parser.yy"
-    {
-        (yyval.basic_vec) = vec_basic(1, (yyvsp[0].basic));
-    }
-#line 1404 "parser.tab.cc"
+  case 27: /* expr_list: expr  */
+#line 130 "sbml_parser.yy"
+           { (yyval.basic_vec) = vec_basic(1, (yyvsp[0].basic)); }
+#line 1348 "sbml_parser.tab.cc"
     break;
 
 
-#line 1408 "parser.tab.cc"
+#line 1352 "sbml_parser.tab.cc"
 
       default: break;
     }
@@ -1446,7 +1390,7 @@ yyreduce:
 yyerrlab:
   /* Make sure we have latest lookahead translation.  See comments at
      user semantic actions for why this is necessary.  */
-  yytoken = yychar == YYEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
+  yytoken = yychar == SBMLEMPTY ? YYSYMBOL_YYEMPTY : YYTRANSLATE (yychar);
   /* If not already recovering from an error, report this error.  */
   if (!yyerrstatus)
     {
@@ -1469,7 +1413,7 @@ yyerrlab:
         {
           yydestruct ("Error: discarding",
                       yytoken, &yylval, p);
-          yychar = YYEMPTY;
+          yychar = SBMLEMPTY;
         }
     }
 
@@ -1572,7 +1516,7 @@ yyexhaustedlab:
 | yyreturn -- parsing is finished, clean up and return.  |
 `-------------------------------------------------------*/
 yyreturn:
-  if (yychar != YYEMPTY)
+  if (yychar != SBMLEMPTY)
     {
       /* Make sure we have latest lookahead translation.  See comments at
          user semantic actions for why this is necessary.  */
