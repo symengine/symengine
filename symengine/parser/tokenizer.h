@@ -8,6 +8,7 @@ namespace SymEngine
 
 class Tokenizer
 {
+protected:
     unsigned char *cur;
     unsigned char *mar;
     unsigned char *tok;
