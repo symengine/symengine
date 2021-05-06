@@ -1,6 +1,6 @@
 %require "3.0"
 %define api.pure full
-%define api.value.type {struct SymEngine::YYSTYPE}
+%define api.value.type {struct SymEngine::ParserSType}
 %param {SymEngine::Parser &p}
 
 /*
@@ -47,7 +47,7 @@ using SymEngine::vec_boolean;
 #include "symengine/parser/tokenizer.h"
 
 
-int yylex(SymEngine::YYSTYPE *yylval, SymEngine::Parser &p)
+int yylex(SymEngine::ParserSType *yylval, SymEngine::Parser &p)
 {
     return p.m_tokenizer.lex(*yylval);
 } // ylex

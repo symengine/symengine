@@ -49,6 +49,7 @@ using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::parse;
 using SymEngine::ParseError;
+using SymEngine::ParserSType;
 using SymEngine::pi;
 using SymEngine::pow;
 using SymEngine::Rational;
@@ -59,7 +60,6 @@ using SymEngine::RealDouble;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::UIntPoly;
-using SymEngine::YYSTYPE;
 using SymEngine::zero;
 
 using namespace SymEngine::literals;
@@ -70,11 +70,11 @@ TEST_CASE("Parsing: internal data structures", "[parser]")
     RCP<const Basic> res = integer(5);
     REQUIRE(res->use_count() == 1);
 
-    struct YYSTYPE a;
+    struct ParserSType a;
     a.basic = res;
     REQUIRE(res->use_count() == 2);
     {
-        struct YYSTYPE b;
+        struct ParserSType b;
         b = a;
         REQUIRE(res->use_count() == 3);
     }

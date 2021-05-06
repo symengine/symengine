@@ -13,7 +13,7 @@ void Tokenizer::set_string(const std::string &str)
     cur = (unsigned char *)(&str[0]);
 }
 
-int Tokenizer::lex(YYSTYPE &yylval)
+int Tokenizer::lex(ParserSType &yylval)
 {
     for (;;) {
         tok = cur;

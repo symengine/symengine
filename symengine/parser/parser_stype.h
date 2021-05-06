@@ -7,20 +7,20 @@
 namespace SymEngine
 {
 
-struct YYSTYPE {
+struct ParserSType {
     SymEngine::RCP<const SymEngine::Basic> basic;
     SymEngine::vec_basic basic_vec;
     std::string string;
     // Constructor
-    YYSTYPE() = default;
+    ParserSType() = default;
     // Destructor
-    ~YYSTYPE() = default;
+    ~ParserSType() = default;
     // Copy constructor and assignment
-    YYSTYPE(const YYSTYPE &) = default;
-    YYSTYPE &operator=(const YYSTYPE &) = default;
+    ParserSType(const ParserSType &) = default;
+    ParserSType &operator=(const ParserSType &) = default;
     // Move constructor and assignment
-    YYSTYPE(YYSTYPE &&) = default;
-    YYSTYPE &operator=(YYSTYPE &&) = default;
+    ParserSType(ParserSType &&) = default;
+    ParserSType &operator=(ParserSType &&) = default;
 };
 
 } // namespace SymEngine

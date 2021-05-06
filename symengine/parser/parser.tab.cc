@@ -161,7 +161,7 @@ using SymEngine::vec_boolean;
 #include "symengine/parser/tokenizer.h"
 
 
-int yylex(SymEngine::YYSTYPE *yylval, SymEngine::Parser &p)
+int yylex(SymEngine::ParserSType *yylval, SymEngine::Parser &p)
 {
     return p.m_tokenizer.lex(*yylval);
 } // ylex

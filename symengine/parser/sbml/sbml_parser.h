@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <symengine/parser/sbml/sbml_tokenizer.h>
+#include <symengine/parser/parser_stype.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/logic.h>
