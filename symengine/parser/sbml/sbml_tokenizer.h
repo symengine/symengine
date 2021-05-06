@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_SBML_TOKENIZER_H
 #define SYMENGINE_SBML_TOKENIZER_H
 
-#include <symengine/parser/sbml/sbml_parser_stype.h>
+#include <symengine/parser/parser_stype.h>
 
 namespace SymEngine
 {
@@ -19,7 +19,7 @@ public:
 
     // Get next token. Token ID is returned as function result, the semantic
     // value is put into `yylval`.
-    int lex(SBMLSTYPE &yylval);
+    int lex(ParserSType &yylval);
 
     // Return the current token
     std::string token() const

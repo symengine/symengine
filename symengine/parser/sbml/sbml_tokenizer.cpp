@@ -15,7 +15,7 @@ void SbmlTokenizer::set_string(const std::string &str)
     cur = (unsigned char *)(&str[0]);
 }
 
-int SbmlTokenizer::lex(SBMLSTYPE &yylval)
+int SbmlTokenizer::lex(ParserSType &yylval)
 {
     for (;;) {
         tok = cur;

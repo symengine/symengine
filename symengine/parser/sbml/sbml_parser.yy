@@ -1,6 +1,6 @@
 %require "3.0"
 %define api.pure full
-%define api.value.type {struct SymEngine::SBMLSTYPE}
+%define api.value.type {struct SymEngine::ParserSType}
 %define api.prefix {sbml}
 %param {SymEngine::SbmlParser &p}
 
@@ -46,7 +46,7 @@
 
 #include "symengine/parser/sbml/sbml_tokenizer.h"
 
-    int yylex(SymEngine::SBMLSTYPE * yylval, SymEngine::SbmlParser & p)
+    int yylex(SymEngine::ParserSType * yylval, SymEngine::SbmlParser & p)
     {
         return p.m_tokenizer.lex(*yylval);
     } // ylex

@@ -86,7 +86,7 @@ extern int sbmldebug;
 
 /* Value type.  */
 #if ! defined SBMLSTYPE && ! defined SBMLSTYPE_IS_DECLARED
-typedef struct SymEngine::SBMLSTYPE SBMLSTYPE;
+typedef struct SymEngine::ParserSType SBMLSTYPE;
 # define SBMLSTYPE_IS_TRIVIAL 1
 # define SBMLSTYPE_IS_DECLARED 1
 #endif

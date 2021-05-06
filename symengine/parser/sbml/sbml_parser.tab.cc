@@ -162,7 +162,7 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 #include "symengine/parser/sbml/sbml_tokenizer.h"
 
-    int yylex(SymEngine::SBMLSTYPE * yylval, SymEngine::SbmlParser & p)
+    int yylex(SymEngine::ParserSType * yylval, SymEngine::SbmlParser & p)
     {
         return p.m_tokenizer.lex(*yylval);
     } // ylex
