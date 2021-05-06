@@ -330,56 +330,9 @@ RCP<const Basic> SbmlParser::parse_identifier(const std::string &expr)
     }
 }
 
-RCP<const Basic> SbmlParser::parse_numeric(const std::string &expr)
-{
-    const char *startptr = expr.c_str();
-    char *lendptr;
-    // if the expr is numeric, it's either a float or an integer
-    errno = 0;
-    long l = std::strtol(startptr, &lendptr, 0);
-
-    // Number is a long;
-    if (expr.find_first_of('.') == std::string::npos
-        && lendptr == startptr + expr.length()) {
-        if (errno != ERANGE) {
-            // No overflow in l
-            return integer(l);
-        } else {
-            return integer(integer_class(expr));
-        }
-    } else {
-#ifdef HAVE_SYMENGINE_MPFR
-        unsigned digits = 0;
-        for (size_t i = 0; i < expr.length(); ++i) {
-            if (expr[i] == '.' or expr[i] == '-')
-                continue;
-            if (expr[i] == 'E' or expr[i] == 'e')
-                break;
-            if (digits != 0 or expr[i] != '0') {
-                ++digits;
-            }
-        }
-        if (digits <= 15) {
-            char *endptr = 0;
-            double d = std::strtod(startptr, &endptr);
-            return real_double(d);
-        } else {
-            // mpmath.libmp.libmpf.dps_to_prec
-            long prec = std::max(
-                long(1), std::lround((digits + 1) * 3.3219280948873626));
-            return real_mpfr(mpfr_class(expr, prec));
-        }
-#else
-        char *endptr = 0;
-        double d = std::strtod(startptr, &endptr);
-        return real_double(d);
-#endif
-    }
-}
-
 SbmlParser::SbmlParser(
     const std::map<const std::string, const RCP<const Basic>> &parser_constants)
-    : local_parser_constants(parser_constants)
+    : Parser(parser_constants)
 {
 }
 

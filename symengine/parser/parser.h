@@ -29,7 +29,7 @@ namespace SymEngine
 
 class Parser
 {
-private:
+protected:
     std::string inp;
     std::map<const std::string, const RCP<const Basic>> local_parser_constants;
 
