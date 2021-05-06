@@ -27,8 +27,18 @@ namespace SymEngine
 
 */
 
+std::map<const std::string,
+         const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+init_parser_single_arg_functions();
+
 class Parser
 {
+private:
+    static const std::map<
+        const std::string,
+        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+        single_arg_functions_;
+
 protected:
     std::string inp;
     std::map<const std::string, const RCP<const Basic>> local_parser_constants;

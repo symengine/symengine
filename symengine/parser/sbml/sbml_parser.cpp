@@ -48,18 +48,12 @@ static std::string lowercase(const std::string &str)
 
 // reference :
 // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
-typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic> &);
-typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic> &,
-                                            const RCP<const Basic> &);
-typedef RCP<const Boolean> (*single_arg_boolean_func)(const RCP<const Basic> &);
 typedef RCP<const Boolean> (*double_arg_boolean_func)(const RCP<const Basic> &,
                                                       const RCP<const Basic> &);
 typedef RCP<const Basic> (*vector_arg_func)(const vec_basic &);
 
 // cast overloaded functions below to single_arg, double_arg before they can
 // be used in the map
-static single_arg_func single_casted_log = log;
-
 static double_arg_boolean_func double_casted_Eq = Eq;
 
 static vector_arg_func vector_casted_add = add;
@@ -90,6 +84,40 @@ static RCP<const Basic> root(const RCP<const Basic> &b,
 static RCP<const Basic> fact(const RCP<const Basic> &x)
 {
     return gamma(add(x, integer(1)));
+}
+
+static std::map<const std::string,
+                const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+init_sbml_parser_single_arg_functions()
+{
+    auto functions = init_parser_single_arg_functions();
+    functions.insert({"arcsin", asin});
+    functions.insert({"arccos", acos});
+    functions.insert({"arctan", atan});
+    functions.insert({"arcsec", asec});
+    functions.insert({"arccsc", acsc});
+    functions.insert({"arccot", acot});
+    functions.insert({"arcsinh", asinh});
+    functions.insert({"arccosh", acosh});
+    functions.insert({"arctanh", atanh});
+    functions.insert({"arcsech", asech});
+    functions.insert({"arccoth", acoth});
+    functions.insert({"arccsch", acsch});
+    functions.erase("log");
+    functions.insert({"log", log10});
+    functions.insert({"log10", log10});
+    functions.insert({"factorial", fact});
+    functions.insert({"root", sqrt});
+    functions.insert({"sqr", sqr});
+    functions.insert({"ceil", ceiling});
+    functions.erase("gamma");
+    functions.erase("erf");
+    functions.erase("erfc");
+    functions.erase("loggamma");
+    functions.erase("lambertw");
+    functions.erase("dirichlet_eta");
+    functions.erase("lambertw");
+    return functions;
 }
 
 static RCP<const Boolean> vec_ge(const vec_basic &x)
@@ -136,6 +164,10 @@ RCP<const Basic> SbmlParser::modulo(const RCP<const Basic> &a,
                       {sub(a, mul(b, floor(div(a, b)))), boolTrue}});
 }
 
+const std::map<const std::string,
+               const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+    SbmlParser::single_arg_functions_ = init_sbml_parser_single_arg_functions();
+
 RCP<const Basic> SbmlParser::functionify(const std::string &name)
 {
     const static std::map<const std::string, const RCP<const Basic>>
@@ -164,32 +196,6 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
             {"minus", sub}, {"divide", div}, {"pow", pow},
             {"power", pow}, {"root", root},  {"log", sbml_log},
         };
-    const static std::map<
-        const std::string,
-        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
-        single_arg_functions
-        = {{"sin", sin},         {"cos", cos},        {"tan", tan},
-           {"cot", cot},         {"csc", csc},        {"sec", sec},
-
-           {"asin", asin},       {"acos", acos},      {"atan", atan},
-           {"asec", asec},       {"acsc", acsc},      {"acot", acot},
-
-           {"arcsin", asin},     {"arccos", acos},    {"arctan", atan},
-           {"arcsec", asec},     {"arccsc", acsc},    {"arccot", acot},
-
-           {"sinh", sinh},       {"cosh", cosh},      {"tanh", tanh},
-           {"coth", coth},       {"sech", sech},      {"csch", csch},
-
-           {"asinh", asinh},     {"acosh", acosh},    {"atanh", atanh},
-           {"asech", asech},     {"acoth", acoth},    {"acsch", acsch},
-
-           {"arcsinh", asinh},   {"arccosh", acosh},  {"arctanh", atanh},
-           {"arcsech", asech},   {"arccoth", acoth},  {"arccsch", acsch},
-
-           {"sqr", sqr},         {"sqrt", sqrt},      {"root", sqrt},
-           {"abs", abs},         {"exp", exp},        {"ln", single_casted_log},
-           {"log", log10},       {"log10", log10},    {"ceil", ceiling},
-           {"ceiling", ceiling}, {"factorial", fact}, {"floor", floor}};
 
     const static std::map<const std::string,
                           const std::function<RCP<const Basic>(vec_basic &)>>
@@ -233,8 +239,8 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
 
     std::string lname = lowercase(name);
     if (params.size() == 1) {
-        auto it1 = single_arg_functions.find(lname);
-        if (it1 != single_arg_functions.end()) {
+        auto it1 = single_arg_functions_.find(lname);
+        if (it1 != single_arg_functions_.end()) {
             return it1->second(params[0]);
         }
         auto it3 = single_arg_boolean_boolean_functions.find(lname);
