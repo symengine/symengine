@@ -328,6 +328,26 @@ TEST_CASE("Parsing: functions", "[parser]")
     REQUIRE(eq(*res, *asin(sin(x))));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "arcsin(arccos(arctan(x)))";
+    res = parse(s);
+    REQUIRE(eq(*res, *asin(acos(atan(x)))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "arcsec(arccsc(arccot(x)))";
+    res = parse(s);
+    REQUIRE(eq(*res, *asec(acsc(acot(x)))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "arcsinh(arccosh(arctanh(x)))";
+    res = parse(s);
+    REQUIRE(eq(*res, *asinh(acosh(atanh(x)))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "arcsech(arccoth(arccsch(x)))";
+    res = parse(s);
+    REQUIRE(eq(*res, *asech(acoth(acsch(x)))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
     s = "floor(5.2)";
     res = parse(s);
     REQUIRE(eq(*res, *integer(5)));

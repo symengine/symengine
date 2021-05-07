@@ -91,18 +91,6 @@ static std::map<const std::string,
 init_sbml_parser_single_arg_functions()
 {
     auto functions = init_parser_single_arg_functions();
-    functions.insert({"arcsin", asin});
-    functions.insert({"arccos", acos});
-    functions.insert({"arctan", atan});
-    functions.insert({"arcsec", asec});
-    functions.insert({"arccsc", acsc});
-    functions.insert({"arccot", acot});
-    functions.insert({"arcsinh", asinh});
-    functions.insert({"arccosh", acosh});
-    functions.insert({"arctanh", atanh});
-    functions.insert({"arcsech", asech});
-    functions.insert({"arccoth", acoth});
-    functions.insert({"arccsch", acsch});
     functions.erase("log");
     functions.insert({"log", log10});
     functions.insert({"log10", log10});
