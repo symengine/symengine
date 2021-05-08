@@ -1,4 +1,6 @@
 #include <symengine/prime_sieve.h>
+#include <cmath>
+#include <valarray>
 
 namespace SymEngine
 {

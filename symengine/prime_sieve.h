@@ -1,6 +1,8 @@
 #ifndef SYMENGINE_PRIME_SIEVE_H
 #define SYMENGINE_PRIME_SIEVE_H
 
+#include <vector>
+
 // Sieve class stores all the primes upto a limit. When a prime or a list of
 // prime
 // is requested, if the prime is not there in the sieve, it is extended to hold
