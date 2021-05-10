@@ -171,6 +171,7 @@ set(HEADERS
     polys/usymenginepoly.h
     polys/msymenginepoly.h
     pow.h
+    prime_sieve.h
     printers/codegen.h
     printers/mathml.h
     printers/strprinter.h
