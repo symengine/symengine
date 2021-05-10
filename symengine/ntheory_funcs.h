@@ -42,8 +42,6 @@ public:
 
 RCP<const Basic> primorial(const RCP<const Basic> &arg);
 
-inline integer_class mp_primorial(unsigned long n);
-
 } // namespace SymEngine
 
 #endif

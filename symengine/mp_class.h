@@ -981,6 +981,8 @@ int mp_jacobi(const integer_class &a, const integer_class &n);
 
 int mp_kronecker(const integer_class &a, const integer_class &n);
 
+integer_class mp_primorial(unsigned long n);
+
 class mp_randstate
 {
 public:
