@@ -455,7 +455,7 @@ bool mp_perfect_square_p(const integer_class &i)
 integer_class mp_primorial(unsigned long n)
 {
     integer_class res = 1;
-    Sieve::iterator pi(n);
+    Sieve::iterator pi(static_cast<unsigned>(n));
     unsigned int p;
     while ((p = pi.next_prime()) <= n) {
         res *= p;
