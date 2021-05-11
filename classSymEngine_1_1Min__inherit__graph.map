@@ -1,7 +1,7 @@
 <map id="SymEngine::Min" name="SymEngine::Min">
-<area shape="rect" id="node1" title=" " alt="" coords="43,319,162,345"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="5,244,200,271"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,169,176,196"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="37,95,168,121"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,200,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="44,319,163,345"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="6,244,201,271"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="30,169,177,196"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="38,95,169,121"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,201,47"/>
 </map>
