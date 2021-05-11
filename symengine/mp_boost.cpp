@@ -293,6 +293,7 @@ struct two_by_two_matrix {
     {
     }
     two_by_two_matrix() : data{{0, 0}, {0, 0}} {}
+    two_by_two_matrix(const two_by_two_matrix &other) = default;
     two_by_two_matrix &operator=(const two_by_two_matrix &other)
     {
         this->data[0][0] = other.data[0][0];
