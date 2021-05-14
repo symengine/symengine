@@ -63,6 +63,7 @@ set(SRC
     polys/uintpoly.cpp
     polys/uratpoly.cpp
     pow.cpp
+    prime_sieve.cpp
     printers/codegen.cpp
     printers/mathml.cpp
     printers/strprinter.cpp
@@ -170,6 +171,7 @@ set(HEADERS
     polys/usymenginepoly.h
     polys/msymenginepoly.h
     pow.h
+    prime_sieve.h
     printers/codegen.h
     printers/mathml.h
     printers/strprinter.h
