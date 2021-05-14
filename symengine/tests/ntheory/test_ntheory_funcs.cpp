@@ -48,6 +48,8 @@ TEST_CASE("test_primepi(): ntheory_funcs", "[ntheory_funcs]")
                     SymEngineException &);
     REQUIRE(eq(*primepi(symbol("x")), *make_rcp<PrimePi>(symbol("x"))));
     REQUIRE(primepi(symbol("x"))->__str__() == "primepi(x)");
+    REQUIRE(eq(*PrimePi(symbol("x")).create(integer(2)), *integer(1)));
+    REQUIRE(not(PrimePi(symbol("x")).is_canonical(integer(1))));
 }
 
 TEST_CASE("test_primorial(): ntheory_funcs", "[ntheory_funcs]")
@@ -63,4 +65,6 @@ TEST_CASE("test_primorial(): ntheory_funcs", "[ntheory_funcs]")
     REQUIRE(is_a<Infty>(*primorial(Inf)));
     REQUIRE(eq(*primorial(symbol("x")), *make_rcp<Primorial>(symbol("x"))));
     REQUIRE(primorial(symbol("x"))->__str__() == "primorial(x)");
+    REQUIRE(eq(*Primorial(symbol("x")).create(integer(1)), *integer(1)));
+    REQUIRE(not(Primorial(symbol("x")).is_canonical(integer(1))));
 }
