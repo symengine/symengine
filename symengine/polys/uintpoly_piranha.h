@@ -184,7 +184,7 @@ public:
             if (it.second != 0)
                 p.insert(term(it.second, pmonomial{it.first}));
 
-        return std::move(p);
+        return p;
     }
 
     static RCP<const Poly> from_vec(const RCP<const Basic> &var,
