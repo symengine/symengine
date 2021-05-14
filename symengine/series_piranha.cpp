@@ -84,7 +84,7 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const
             Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
         }
     }
-    return std::move(Add::from_dict(zcoef, std::move(dict_)));
+    return Add::from_dict(zcoef, std::move(dict_));
 }
 
 umap_int_basic URatPSeriesPiranha::as_dict() const
@@ -232,7 +232,7 @@ RCP<const Basic> UPSeriesPiranha::as_basic() const
             Add::coef_dict_add_term(outArg(coef), dict_, one, term);
         }
     }
-    return std::move(Add::from_dict(one, std::move(dict_)));
+    return Add::from_dict(one, std::move(dict_));
 }
 
 umap_int_basic UPSeriesPiranha::as_dict() const
