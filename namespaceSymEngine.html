@@ -2071,6 +2071,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>idivnum</b> (const Pt
 <tr class="memitem:a4e7a1d5eaef71963b6d02646573f619d"><td class="memItemLeft" align="right" valign="top"><a id="a4e7a1d5eaef71963b6d02646573f619d"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_zero</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a4e7a1d5eaef71963b6d02646573f619d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad620db72bbdd39720cb3bce3499d3ce5"><td class="memItemLeft" align="right" valign="top"><a id="ad620db72bbdd39720cb3bce3499d3ce5"></a>
+tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonzero</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
+<tr class="separator:ad620db72bbdd39720cb3bce3499d3ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a729ca754c2d5fdf7e10f2fe7222b7b99"><td class="memItemLeft" align="right" valign="top"><a id="a729ca754c2d5fdf7e10f2fe7222b7b99"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_positive</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a729ca754c2d5fdf7e10f2fe7222b7b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3968,11 +3971,11 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>True if b is a polynomial in variables and false otherwise</dd></dl>
 <p>Check if b is a polynomial in variables. If no variables are specified all free symbols in b are considered to be variables. All symbols that are not variables will be considered to be constants. </p>
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00476">476</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;{</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    PolynomialVisitor visitor(variables);</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00486">486</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;{</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    PolynomialVisitor visitor(variables);</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
