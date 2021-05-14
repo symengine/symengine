@@ -154,7 +154,7 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_clear</b> = t
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ntheory_8h_source.html#l00110">110</a> of file <a class="el" href="ntheory_8h_source.html">ntheory.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00018">18</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0d2a47d29dda15aa0e061c9b69cb1d3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0d2a47d29dda15aa0e061c9b69cb1d3d">&#9670;&nbsp;</a></span>generate_primes()</h2>
@@ -196,17 +196,17 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_clear</b> = t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l00561">561</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;{</div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    _extend(limit);</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    <span class="keyword">auto</span> it = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    <span class="comment">// primes</span></div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    <span class="keywordflow">if</span> (_clear)</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;        clear();</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00077">77</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;{</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    _extend(limit);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">auto</span> it = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">// primes</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span> (_clear)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        clear();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
 <div class="ttc" id="aback_inserter_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a></div><div class="ttdeci">T back_inserter(T... args)</div></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="acopy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a></div><div class="ttdeci">T copy(T... args)</div></div>
@@ -217,8 +217,8 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_clear</b> = t
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="ntheory_8h_source.html">ntheory.h</a></li>
-<li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a></li>
+<li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a></li>
+<li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
