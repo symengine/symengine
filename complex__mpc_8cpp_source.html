@@ -590,7 +590,7 @@ $(function() {
 <div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160; </div>
 <div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;<span class="keyword">class </span>EvaluateMPC : <span class="keyword">public</span> Evaluate</div>
 <div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;{</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/sin.html">sin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/sin.html">sin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -599,7 +599,7 @@ $(function() {
 <div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;                MPFR_RNDN);</div>
 <div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;    }</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/cos.html">cos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/cos.html">cos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -608,7 +608,7 @@ $(function() {
 <div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;                MPFR_RNDN);</div>
 <div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    }</div>
-<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/tan.html">tan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/tan.html">tan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -617,7 +617,7 @@ $(function() {
 <div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;                MPFR_RNDN);</div>
 <div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;    }</div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a87b495de4d9aef4e2785d3414e6977aa">cot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a87b495de4d9aef4e2785d3414e6977aa">cot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -627,7 +627,7 @@ $(function() {
 <div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;    }</div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a1a35d45982072e8755a2b415bab129ba">sec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a1a35d45982072e8755a2b415bab129ba">sec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -637,7 +637,7 @@ $(function() {
 <div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    }</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aac2883235cc548f08ea23326353e0134">csc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aac2883235cc548f08ea23326353e0134">csc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -647,7 +647,7 @@ $(function() {
 <div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;    }</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/asin.html">asin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/asin.html">asin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -656,7 +656,7 @@ $(function() {
 <div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;    }</div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/acos.html">acos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/acos.html">acos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -665,7 +665,7 @@ $(function() {
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;    }</div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/atan.html">atan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/atan.html">atan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -674,7 +674,7 @@ $(function() {
 <div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;    }</div>
-<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aebcb782a4d69ba115c13a331bb5e4cba">acot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aebcb782a4d69ba115c13a331bb5e4cba">acot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -684,7 +684,7 @@ $(function() {
 <div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;        mpc_atan(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;    }</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a770eb76ede26403354e4c1ae810c3eb9">asec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a770eb76ede26403354e4c1ae810c3eb9">asec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -694,7 +694,7 @@ $(function() {
 <div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;        mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;    }</div>
-<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a441485eec265e862086e257b24f39619">acsc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a441485eec265e862086e257b24f39619">acsc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -704,7 +704,7 @@ $(function() {
 <div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;        mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;    }</div>
-<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/sinh.html">sinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/sinh.html">sinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -713,7 +713,7 @@ $(function() {
 <div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;    }</div>
-<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#abaf2d363a25f737f66c43961a2c9b189">csch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#abaf2d363a25f737f66c43961a2c9b189">csch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -723,7 +723,7 @@ $(function() {
 <div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    }</div>
-<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/cosh.html">cosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/cosh.html">cosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -732,7 +732,7 @@ $(function() {
 <div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;    }</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a4f5dc2e3fd1198f985c2dee59fbf848f">sech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a4f5dc2e3fd1198f985c2dee59fbf848f">sech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -742,7 +742,7 @@ $(function() {
 <div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;    }</div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/tanh.html">tanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/tanh.html">tanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -751,7 +751,7 @@ $(function() {
 <div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;                 MPFR_RNDN);</div>
 <div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;    }</div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a2a90d704dca9d038d809da659b455502">coth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a2a90d704dca9d038d809da659b455502">coth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -761,7 +761,7 @@ $(function() {
 <div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;    }</div>
-<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/asinh.html">asinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/asinh.html">asinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -770,7 +770,7 @@ $(function() {
 <div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;                  MPFR_RNDN);</div>
 <div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;    }</div>
-<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a79d78569325a57c3da3ff4de95ff53dd">acsch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a79d78569325a57c3da3ff4de95ff53dd">acsch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -780,7 +780,7 @@ $(function() {
 <div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;        mpc_asinh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;    }</div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/acosh.html">acosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/acosh.html">acosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -789,7 +789,7 @@ $(function() {
 <div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;                  MPFR_RNDN);</div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;    }</div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/atanh.html">atanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/atanh.html">atanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -798,7 +798,7 @@ $(function() {
 <div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;                  MPFR_RNDN);</div>
 <div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;    }</div>
-<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a6d8a501171dfc0dae4f98450268d0ab3">acoth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a6d8a501171dfc0dae4f98450268d0ab3">acoth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -808,7 +808,7 @@ $(function() {
 <div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;        mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;    }</div>
-<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#adb505bfa00177f523f101090335f6ca0">asech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#adb505bfa00177f523f101090335f6ca0">asech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -818,7 +818,7 @@ $(function() {
 <div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;        mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);</div>
 <div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    }</div>
-<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;        mpc_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -827,7 +827,7 @@ $(function() {
 <div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;                MPFR_RNDN);</div>
 <div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;        <span class="keywordflow">return</span> complex_mpc(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;    }</div>
-<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a3deecb23288ff261b9534dbe7291cf7b">abs</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a3deecb23288ff261b9534dbe7291cf7b">abs</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;        SYMENGINE_ASSERT(is_a&lt;ComplexMPC&gt;(x))</div>
 <div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;        mpfr_class t(down_cast&lt;const ComplexMPC &amp;&gt;(x).as_mpc().get_prec());</div>
@@ -836,7 +836,7 @@ $(function() {
 <div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;                MPFR_RNDN);</div>
 <div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;        <span class="keywordflow">return</span> real_mpfr(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;    }</div>
-<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a5427bd85fc080a17d0718a7d97353a49">gamma</a>(Basic <span class="keyword">const</span> &amp;aConst)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a5427bd85fc080a17d0718a7d97353a49">gamma</a>(Basic <span class="keyword">const</span> &amp;aConst)<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented.&quot;</span>);</div>
 <div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;    }</div>
