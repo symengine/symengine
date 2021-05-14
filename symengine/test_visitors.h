@@ -9,9 +9,14 @@ namespace SymEngine
 class ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
+    bool zero_; // true = testing for zero, false = testing for nonzero
     tribool is_zero_;
+    bool neither_ = false; // Neither zero nor non-zero, i.e. not a number
 
 public:
+    ZeroVisitor(bool zero) : zero_{zero}
+    {
+    }
     void bvisit(const Basic &x)
     {
         is_zero_ = tribool::indeterminate;
@@ -24,14 +29,17 @@ public:
     void bvisit(const Set &x)
     {
         is_zero_ = tribool::trifalse;
+        neither_ = true;
     };
     void bvisit(const Relational &x)
     {
         is_zero_ = tribool::trifalse;
+        neither_ = true;
     };
     void bvisit(const Boolean &x)
     {
         is_zero_ = tribool::trifalse;
+        neither_ = true;
     };
     void bvisit(const Constant &x)
     {
