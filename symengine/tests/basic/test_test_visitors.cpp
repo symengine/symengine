@@ -59,6 +59,15 @@ TEST_CASE("Test is zero", "[is_zero]")
     REQUIRE(is_indeterminate(is_zero(*conjugate(x))));
     REQUIRE(is_indeterminate(is_zero(*sign(x))));
     REQUIRE(is_indeterminate(is_zero(*primepi(x))));
+
+    const auto a1 = Assumptions({Eq(x, integer(0))});
+    REQUIRE(is_true(is_zero(*x, &a1)));
+
+    const auto a2 = Assumptions({Gt(x, integer(0))});
+    REQUIRE(is_false(is_zero(*x, &a2)));
+
+    const auto a3 = Assumptions({Ne(x, integer(0))});
+    REQUIRE(is_false(is_zero(*x, &a3)));
 }
 
 TEST_CASE("Test is positive", "[is_positive]")

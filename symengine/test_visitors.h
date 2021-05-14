@@ -10,16 +10,16 @@ class ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
     tribool is_zero_;
+    const Assumptions *assumptions_;
 
 public:
+    ZeroVisitor(const Assumptions *assumptions) : assumptions_(assumptions) {}
+
     void bvisit(const Basic &x)
     {
         is_zero_ = tribool::indeterminate;
     };
-    void bvisit(const Symbol &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Set &x)
     {
