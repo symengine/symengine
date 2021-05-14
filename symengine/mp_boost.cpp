@@ -5,6 +5,7 @@
 #include <cmath>
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/prime_sieve.h>
 
 using boost::mpl::int_;
 using boost::multiprecision::denominator;
@@ -450,6 +451,17 @@ bool mp_perfect_square_p(const integer_class &i)
     }
     integer_class root;
     return mp_root(root, i, 2);
+}
+
+integer_class mp_primorial(unsigned long n)
+{
+    integer_class res = 1;
+    Sieve::iterator pi(static_cast<unsigned>(n));
+    unsigned int p;
+    while ((p = pi.next_prime()) <= n) {
+        res *= p;
+    }
+    return res;
 }
 
 // according to the gmp documentation, the behavior of the

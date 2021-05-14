@@ -26,6 +26,22 @@ public:
 
 RCP<const Basic> primepi(const RCP<const Basic> &arg);
 
+class Primorial : public OneArgFunction
+{
+    /*! The primorial of n (n#)
+     * The product all primes up to n
+     * https://en.wikipedia.org/wiki/Primorial
+     **/
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_PRIMORIAL)
+    Primorial(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> primorial(const RCP<const Basic> &arg);
+
 } // namespace SymEngine
 
 #endif

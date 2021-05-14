@@ -99,6 +99,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"log", single_casted_log},
             {"zeta", single_casted_zeta},
             {"primepi", primepi},
+            {"primorial", primorial},
         };
     const static std::map<
         const std::string,

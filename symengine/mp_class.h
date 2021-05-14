@@ -293,6 +293,13 @@ inline rational_class mp_abs(const rational_class &i)
     return res;
 }
 
+inline integer_class mp_primorial(unsigned long n)
+{
+    integer_class res;
+    mpz_primorial_ui(res.get_mpz_t(), n);
+    return res;
+}
+
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 // Helper functions for piranha::integer
 inline piranha::integer mp_abs(const piranha::integer &i)
@@ -459,6 +466,13 @@ inline void mp_addmul(integer_class &r, const integer_class &a,
                       const integer_class &b)
 {
     piranha::math::multiply_accumulate(r, a, b);
+}
+
+inline integer_class mp_primorial(unsigned long n)
+{
+    integer_class res;
+    mpz_primorial_ui(get_mpz_t(res), n);
+    return res;
 }
 
 // Helper functions for piranha::rational
@@ -678,6 +692,13 @@ inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a,
                       const fmpz_wrapper &b)
 {
     fmpz_addmul(r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+}
+
+inline integer_class mp_primorial(unsigned long n)
+{
+    fmpz_wrapper res;
+    fmpz_primorial(res.get_fmpz_t(), n);
+    return res;
 }
 
 // helper functions for fmpq
@@ -959,6 +980,8 @@ int mp_legendre(const integer_class &a, const integer_class &n);
 int mp_jacobi(const integer_class &a, const integer_class &n);
 
 int mp_kronecker(const integer_class &a, const integer_class &n);
+
+integer_class mp_primorial(unsigned long n);
 
 class mp_randstate
 {
