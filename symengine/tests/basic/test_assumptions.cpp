@@ -35,6 +35,8 @@ TEST_CASE("Test assumptions", "[assumptions]")
     RCP<const Basic> rel10 = Ge(x, integer(-2));
     RCP<const Basic> rel11 = Lt(x, integer(-2));
     RCP<const Basic> rel12 = Gt(x, integer(-2));
+    RCP<const Basic> rel13 = Eq(x, integer(0));
+    RCP<const Basic> rel14 = Ne(x, integer(0));
 
     auto a1 = Assumptions({s1->contains(x)});
     REQUIRE(is_true(a1.is_real(x)));
@@ -64,6 +66,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a5.is_nonnegative(x)));
     REQUIRE(is_false(a5.is_positive(x)));
     REQUIRE(is_indeterminate(a5.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a5.is_zero(x)));
     REQUIRE(is_indeterminate(a5.is_rational(x)));
 
     auto a6 = Assumptions({rel2});
@@ -73,6 +76,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_true(a6.is_nonnegative(x)));
     REQUIRE(is_indeterminate(a6.is_positive(x)));
     REQUIRE(is_indeterminate(a6.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a6.is_zero(x)));
     REQUIRE(is_indeterminate(a6.is_rational(x)));
 
     auto a7 = Assumptions({rel3});
@@ -82,6 +86,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a7.is_nonnegative(x)));
     REQUIRE(is_indeterminate(a7.is_positive(x)));
     REQUIRE(is_indeterminate(a7.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a7.is_zero(x)));
     REQUIRE(is_indeterminate(a7.is_rational(x)));
 
     auto a8 = Assumptions({rel4});
@@ -100,6 +105,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_false(a9.is_nonnegative(x)));
     REQUIRE(is_false(a9.is_positive(x)));
     REQUIRE(is_true(a9.is_nonzero(x)));
+    REQUIRE(is_false(a9.is_zero(x)));
     REQUIRE(is_indeterminate(a9.is_rational(x)));
 
     auto a10 = Assumptions({rel6});
@@ -109,6 +115,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_true(a10.is_nonnegative(x)));
     REQUIRE(is_true(a10.is_positive(x)));
     REQUIRE(is_true(a10.is_nonzero(x)));
+    REQUIRE(is_false(a10.is_zero(x)));
     REQUIRE(is_indeterminate(a10.is_rational(x)));
 
     auto a11 = Assumptions({rel7});
@@ -118,6 +125,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a11.is_nonnegative(x)));
     REQUIRE(is_indeterminate(a11.is_positive(x)));
     REQUIRE(is_indeterminate(a11.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a11.is_zero(x)));
     REQUIRE(is_indeterminate(a11.is_rational(x)));
 
     auto a12 = Assumptions({rel8});
@@ -127,6 +135,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_true(a12.is_nonnegative(x)));
     REQUIRE(is_true(a12.is_positive(x)));
     REQUIRE(is_true(a12.is_nonzero(x)));
+    REQUIRE(is_false(a12.is_zero(x)));
     REQUIRE(is_indeterminate(a12.is_rational(x)));
 
     auto a13 = Assumptions({rel9});
@@ -136,6 +145,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_false(a13.is_nonnegative(x)));
     REQUIRE(is_false(a13.is_positive(x)));
     REQUIRE(is_true(a13.is_nonzero(x)));
+    REQUIRE(is_false(a13.is_zero(x)));
     REQUIRE(is_indeterminate(a13.is_rational(x)));
 
     auto a14 = Assumptions({rel10});
@@ -145,6 +155,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a14.is_nonnegative(x)));
     REQUIRE(is_indeterminate(a14.is_positive(x)));
     REQUIRE(is_indeterminate(a14.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a14.is_zero(x)));
     REQUIRE(is_indeterminate(a14.is_rational(x)));
 
     auto a15 = Assumptions({rel11});
@@ -154,6 +165,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_false(a15.is_nonnegative(x)));
     REQUIRE(is_false(a15.is_positive(x)));
     REQUIRE(is_true(a15.is_nonzero(x)));
+    REQUIRE(is_false(a15.is_zero(x)));
     REQUIRE(is_indeterminate(a15.is_rational(x)));
 
     auto a16 = Assumptions({rel12});
@@ -163,7 +175,32 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a16.is_nonnegative(x)));
     REQUIRE(is_indeterminate(a16.is_positive(x)));
     REQUIRE(is_indeterminate(a16.is_nonzero(x)));
+    REQUIRE(is_indeterminate(a16.is_zero(x)));
     REQUIRE(is_indeterminate(a16.is_rational(x)));
+
+    auto a17 = Assumptions({rel13});
+    REQUIRE(is_true(a17.is_real(x)));
+    REQUIRE(is_true(a17.is_rational(x)));
+    REQUIRE(is_true(a17.is_complex(x)));
+    REQUIRE(is_true(a17.is_integer(x)));
+    REQUIRE(is_true(a17.is_nonpositive(x)));
+    REQUIRE(is_false(a17.is_negative(x)));
+    REQUIRE(is_true(a17.is_nonnegative(x)));
+    REQUIRE(is_false(a17.is_positive(x)));
+    REQUIRE(is_false(a17.is_nonzero(x)));
+    REQUIRE(is_true(a17.is_zero(x)));
+
+    auto a18 = Assumptions({rel14});
+    REQUIRE(is_indeterminate(a18.is_real(x)));
+    REQUIRE(is_indeterminate(a18.is_rational(x)));
+    REQUIRE(is_indeterminate(a18.is_complex(x)));
+    REQUIRE(is_indeterminate(a18.is_integer(x)));
+    REQUIRE(is_indeterminate(a18.is_nonpositive(x)));
+    REQUIRE(is_indeterminate(a18.is_negative(x)));
+    REQUIRE(is_indeterminate(a18.is_nonnegative(x)));
+    REQUIRE(is_indeterminate(a18.is_positive(x)));
+    REQUIRE(is_true(a18.is_nonzero(x)));
+    REQUIRE(is_false(a18.is_zero(x)));
 
     CHECK_THROWS_AS(Assumptions({rel5, rel6}), SymEngineException &);
 }
