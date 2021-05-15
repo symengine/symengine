@@ -9,35 +9,35 @@ namespace SymEngine
 class ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
-    bool zero_; // true = testing for zero, false = testing for nonzero
     tribool is_zero_;
-    bool neither_ = false; // Neither zero nor non-zero, i.e. not a number
+    const Assumptions *assumptions_;
+
+    void error()
+    {
+        throw SymEngineException(
+            "Only numeric types allowed for is_zero/is_nonzero");
+    };
 
 public:
-    ZeroVisitor(bool zero) : zero_{zero} {}
+    ZeroVisitor(const Assumptions *assumptions) : assumptions_(assumptions) {}
+
     void bvisit(const Basic &x)
     {
         is_zero_ = tribool::indeterminate;
     };
-    void bvisit(const Symbol &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Set &x)
     {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
+        error();
     };
     void bvisit(const Relational &x)
     {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
+        error();
     };
     void bvisit(const Boolean &x)
     {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
+        error();
     };
     void bvisit(const Constant &x)
     {

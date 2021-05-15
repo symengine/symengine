@@ -11,26 +11,31 @@ void ZeroVisitor::bvisit(const Number &x)
     }
 }
 
+void ZeroVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_zero_ = assumptions_->is_zero(x.rcp_from_this());
+    } else {
+        is_zero_ = tribool::indeterminate;
+    }
+}
+
 tribool ZeroVisitor::apply(const Basic &b)
 {
     b.accept(*this);
-    tribool result = is_zero_;
-    if (not zero_ and not neither_) {
-        result = not_tribool(result);
-    }
-    return result;
+    return is_zero_;
 }
 
-tribool is_zero(const Basic &b)
+tribool is_zero(const Basic &b, const Assumptions *assumptions)
 {
-    ZeroVisitor visitor(true);
+    ZeroVisitor visitor(assumptions);
     return visitor.apply(b);
 }
 
-tribool is_nonzero(const Basic &b)
+tribool is_nonzero(const Basic &b, const Assumptions *assumptions)
 {
-    ZeroVisitor visitor(false);
-    return visitor.apply(b);
+    ZeroVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
 }
 
 void PositiveVisitor::bvisit(const Number &x)
