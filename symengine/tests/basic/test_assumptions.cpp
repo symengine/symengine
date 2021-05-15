@@ -37,6 +37,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     RCP<const Basic> rel12 = Gt(x, integer(-2));
     RCP<const Basic> rel13 = Eq(x, integer(0));
     RCP<const Basic> rel14 = Ne(x, integer(0));
+    RCP<const Basic> rel;
 
     auto a1 = Assumptions({s1->contains(x)});
     REQUIRE(is_true(a1.is_real(x)));
@@ -201,6 +202,11 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_indeterminate(a18.is_positive(x)));
     REQUIRE(is_true(a18.is_nonzero(x)));
     REQUIRE(is_false(a18.is_zero(x)));
+
+    rel = Eq(x, integer(1));
+    auto a = Assumptions({rel});
+    REQUIRE(is_true(a.is_nonzero(x)));
+    REQUIRE(is_false(a.is_zero(x)));
 
     CHECK_THROWS_AS(Assumptions({rel5, rel6}), SymEngineException &);
 }
