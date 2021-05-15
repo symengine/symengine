@@ -14,9 +14,7 @@ private:
     bool neither_ = false; // Neither zero nor non-zero, i.e. not a number
 
 public:
-    ZeroVisitor(bool zero) : zero_{zero}
-    {
-    }
+    ZeroVisitor(bool zero) : zero_{zero} {}
     void bvisit(const Basic &x)
     {
         is_zero_ = tribool::indeterminate;
