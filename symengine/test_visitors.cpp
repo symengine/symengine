@@ -91,6 +91,15 @@ tribool is_nonzero(const Basic &b, const Assumptions *assumptions)
     return not_tribool(visitor.apply(b));
 }
 
+void PositiveVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_positive_ = assumptions_->is_positive(x.rcp_from_this());
+    } else {
+        is_positive_ = tribool::indeterminate;
+    }
+}
+
 void PositiveVisitor::bvisit(const Number &x)
 {
     if (is_a_Complex(x)) {
@@ -108,10 +117,19 @@ tribool PositiveVisitor::apply(const Basic &b)
     return is_positive_;
 }
 
-tribool is_positive(const Basic &b)
+tribool is_positive(const Basic &b, const Assumptions *assumptions)
 {
-    PositiveVisitor visitor;
+    PositiveVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NonPositiveVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_nonpositive_ = assumptions_->is_nonpositive(x.rcp_from_this());
+    } else {
+        is_nonpositive_ = tribool::indeterminate;
+    }
 }
 
 void NonPositiveVisitor::bvisit(const Number &x)
@@ -131,10 +149,19 @@ tribool NonPositiveVisitor::apply(const Basic &b)
     return is_nonpositive_;
 }
 
-tribool is_nonpositive(const Basic &b)
+tribool is_nonpositive(const Basic &b, const Assumptions *assumptions)
 {
-    NonPositiveVisitor visitor;
+    NonPositiveVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NegativeVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_negative_ = assumptions_->is_negative(x.rcp_from_this());
+    } else {
+        is_negative_ = tribool::indeterminate;
+    }
 }
 
 void NegativeVisitor::bvisit(const Number &x)
@@ -154,10 +181,19 @@ tribool NegativeVisitor::apply(const Basic &b)
     return is_negative_;
 }
 
-tribool is_negative(const Basic &b)
+tribool is_negative(const Basic &b, const Assumptions *assumptions)
 {
-    NegativeVisitor visitor;
+    NegativeVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NonNegativeVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_nonnegative_ = assumptions_->is_nonnegative(x.rcp_from_this());
+    } else {
+        is_nonnegative_ = tribool::indeterminate;
+    }
 }
 
 void NonNegativeVisitor::bvisit(const Number &x)
@@ -177,9 +213,9 @@ tribool NonNegativeVisitor::apply(const Basic &b)
     return is_nonnegative_;
 }
 
-tribool is_nonnegative(const Basic &b)
+tribool is_nonnegative(const Basic &b, const Assumptions *assumptions)
 {
-    NonNegativeVisitor visitor;
+    NonNegativeVisitor visitor(assumptions);
     return visitor.apply(b);
 }
 

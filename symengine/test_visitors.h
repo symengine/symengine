@@ -36,12 +36,17 @@ class PositiveVisitor : public BaseVisitor<PositiveVisitor>
 {
 private:
     tribool is_positive_;
+    const Assumptions *assumptions_;
+
+    void error()
+    {
+        throw SymEngineException("Only numeric types allowed for is_positive");
+    };
 
 public:
-    void bvisit(const Symbol &x)
-    {
-        is_positive_ = tribool::indeterminate;
-    };
+    PositiveVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Constant &x)
     {
@@ -53,15 +58,15 @@ public:
     };
     void bvisit(const Set &x)
     {
-        is_positive_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Relational &x)
     {
-        is_positive_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Boolean &x)
     {
-        is_positive_ = tribool::trifalse;
+        error();
     };
 
     tribool apply(const Basic &b);
@@ -71,12 +76,17 @@ class NonPositiveVisitor : public BaseVisitor<NonPositiveVisitor>
 {
 private:
     tribool is_nonpositive_;
+    const Assumptions *assumptions_;
+
+    void error()
+    {
+        throw SymEngineException("Only numeric types allowed for is_negative");
+    };
 
 public:
-    void bvisit(const Symbol &x)
-    {
-        is_nonpositive_ = tribool::indeterminate;
-    };
+    NonPositiveVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Constant &x)
     {
@@ -88,15 +98,15 @@ public:
     };
     void bvisit(const Set &x)
     {
-        is_nonpositive_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Relational &x)
     {
-        is_nonpositive_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Boolean &x)
     {
-        is_nonpositive_ = tribool::trifalse;
+        error();
     };
 
     tribool apply(const Basic &b);
@@ -106,28 +116,33 @@ class NegativeVisitor : public BaseVisitor<NegativeVisitor>
 {
 private:
     tribool is_negative_;
+    const Assumptions *assumptions_;
+
+    void error()
+    {
+        throw SymEngineException("Only numeric types allowed for is_negative");
+    };
 
 public:
+    NegativeVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
     void bvisit(const Basic &x)
     {
         is_negative_ = tribool::indeterminate;
     };
-    void bvisit(const Symbol &x)
-    {
-        is_negative_ = tribool::indeterminate;
-    };
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Set &x)
     {
-        is_negative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Relational &x)
     {
-        is_negative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Boolean &x)
     {
-        is_negative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Constant &x)
     {
@@ -141,28 +156,34 @@ class NonNegativeVisitor : public BaseVisitor<NonNegativeVisitor>
 {
 private:
     tribool is_nonnegative_;
+    const Assumptions *assumptions_;
+
+    void error()
+    {
+        throw SymEngineException(
+            "Only numeric types allowed for is_nonnegative");
+    };
 
 public:
+    NonNegativeVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
     void bvisit(const Basic &x)
     {
         is_nonnegative_ = tribool::indeterminate;
     };
-    void bvisit(const Symbol &x)
-    {
-        is_nonnegative_ = tribool::indeterminate;
-    };
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Set &x)
     {
-        is_nonnegative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Relational &x)
     {
-        is_nonnegative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Boolean &x)
     {
-        is_nonnegative_ = tribool::trifalse;
+        error();
     };
     void bvisit(const Constant &x)
     {
