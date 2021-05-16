@@ -54,6 +54,7 @@ jobs:
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
             OS: ubuntu-16.04
+            WITH_LATEST_GCC: yes
             CC: gcc
 
           # Debug build shared lib (with BFD)

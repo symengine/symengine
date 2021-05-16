@@ -41,9 +41,9 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CXX=g++-4.8
         export GCOV_EXECUTABLE=gcov-4.8
     elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-        export CC=gcc-8
-        export CXX=g++-8
-        export GCOV_EXECUTABLE=gcov-8
+        export CC=gcc-9
+        export CXX=g++-9
+        export GCOV_EXECUTABLE=gcov-9
     elif [[ "${WITH_GCC_6}" == "yes" ]]; then
         export CC=gcc-6
         export CXX=g++-6
@@ -86,13 +86,13 @@ conda info -a
 # conda_pkgs="$conda_pkgs ccache"
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
-    conda_pkgs="$conda_pkgs boost=1.62";
+    conda_pkgs="$conda_pkgs boost=1.68";
 else
     conda_pkgs="$conda_pkgs gmp=6.1.1";
 fi
 
 if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
-    conda_pkgs="${conda_pkgs} boost=1.62"
+    conda_pkgs="${conda_pkgs} boost=1.68"
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then

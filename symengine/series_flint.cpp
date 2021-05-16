@@ -48,7 +48,7 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
             zcoef = integer(0);
     }
     mpq_clear(gc);
-    return std::move(Add::from_dict(zcoef, std::move(dict_)));
+    return Add::from_dict(zcoef, std::move(dict_));
 }
 
 umap_int_basic URatPSeriesFlint::as_dict() const

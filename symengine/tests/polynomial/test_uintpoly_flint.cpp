@@ -296,7 +296,7 @@ TEST_CASE("Factors of UIntPolyFlint", "[UIntPolyFlint]")
     if (__FLINT_RELEASE <= 20502) {
         CHECK_THROWS_AS(
             factors(*UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}})),
-            std::runtime_error);
+            std::runtime_error &);
     } else {
         auto factorcheck
             = [](const std::vector<std::pair<RCP<const UIntPolyFlint>, long>>

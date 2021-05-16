@@ -105,6 +105,7 @@ init_sbml_parser_single_arg_functions()
     functions.erase("lambertw");
     functions.erase("dirichlet_eta");
     functions.erase("lambertw");
+    functions.erase("primorial");
     return functions;
 }
 

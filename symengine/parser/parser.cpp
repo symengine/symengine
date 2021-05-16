@@ -110,6 +110,7 @@ init_parser_single_arg_functions()
         {"log", single_casted_log},
         {"zeta", single_casted_zeta},
         {"primepi", primepi},
+        {"primorial", primorial},
     };
 }
 

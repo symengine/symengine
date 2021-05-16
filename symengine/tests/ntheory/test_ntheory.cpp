@@ -2,6 +2,7 @@
 #include <chrono>
 
 #include <symengine/ntheory.h>
+#include <symengine/prime_sieve.h>
 #include <symengine/rational.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>

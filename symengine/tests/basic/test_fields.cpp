@@ -246,6 +246,9 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic",
     REQUIRE(d1 == d2);
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+    // suppress this clang warning, since self-assignment here is intentional
     d2 -= d2;
     REQUIRE(d2.dict_.empty());
     d1 = GaloisFieldDict::from_vec({1_z}, 7_z);
@@ -254,6 +257,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts, Negation : Basic",
     REQUIRE(d1 == d2);
     d2 = GaloisFieldDict::from_vec(b, 7_z);
     d2 %= d2;
+#pragma clang diagnostic pop
     REQUIRE(d2.dict_.empty());
     a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     b = {3_z, 2_z, 1_z};
