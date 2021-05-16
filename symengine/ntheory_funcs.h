@@ -42,6 +42,36 @@ public:
 
 RCP<const Basic> primorial(const RCP<const Basic> &arg);
 
+class Mobius : public OneArgFunction
+{
+    /*! The Möbius mu function
+     * https://en.wikipedia.org/wiki/Möbius_function
+     **/
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_MOBIUS)
+    Mobius(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> mobius(const RCP<const Basic> &arg);
+
+class Mertens : public OneArgFunction
+{
+    /*! The Mertens function (summatory moebius)
+     * https://en.wikipedia.org/wiki/Mertens_function
+     **/
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_MERTENS)
+    Mertens(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+RCP<const Basic> mertens(const RCP<const Basic> &arg);
+
 } // namespace SymEngine
 
 #endif
