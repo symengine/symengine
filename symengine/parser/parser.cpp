@@ -100,6 +100,8 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"zeta", single_casted_zeta},
             {"primepi", primepi},
             {"primorial", primorial},
+            {"mobius", mobius},
+            {"mertens", mertens},
         };
     const static std::map<
         const std::string,

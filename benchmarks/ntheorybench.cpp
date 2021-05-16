@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <symengine/ntheory.h>
+#include <symengine/ntheory_funcs.h>
 using std::cout;
 using std::endl;
 
@@ -16,7 +17,7 @@ void _bench_mertens(const unsigned long a)
 
     cout << "mertens(" << a << "):";
     t1 = std::chrono::high_resolution_clock::now();
-    mertens(a);
+    mertens(integer(a));
     t2 = std::chrono::high_resolution_clock::now();
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                 .count()
@@ -41,7 +42,7 @@ void _bench_mobius(const unsigned long a)
 {
     cout << "mobius(" << a << "): ";
     auto t1 = std::chrono::high_resolution_clock::now();
-    mobius(*integer(a));
+    mobius(integer(a));
     auto t2 = std::chrono::high_resolution_clock::now();
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                 .count()

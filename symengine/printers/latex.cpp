@@ -443,6 +443,8 @@ std::vector<std::string> init_latex_printer_names()
     names[SYMENGINE_GAMMA] = "\\Gamma";
     names[SYMENGINE_TRUNCATE] = "\\operatorname{truncate}";
     names[SYMENGINE_PRIMEPI] = "\\pi";
+    names[SYMENGINE_MOBIUS] = "\\mu";
+    names[SYMENGINE_MERTENS] = "\\operatorname{M}";
     return names;
 }
 
