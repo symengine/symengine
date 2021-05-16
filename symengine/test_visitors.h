@@ -12,54 +12,22 @@ private:
     tribool is_zero_;
     const Assumptions *assumptions_;
 
-    void error()
-    {
-        throw SymEngineException(
-            "Only numeric types allowed for is_zero/is_nonzero");
-    };
+    void error();
 
 public:
     ZeroVisitor(const Assumptions *assumptions) : assumptions_(assumptions) {}
 
-    void bvisit(const Basic &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
+    void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        error();
-    };
-    void bvisit(const Relational &x)
-    {
-        error();
-    };
-    void bvisit(const Boolean &x)
-    {
-        error();
-    };
-    void bvisit(const Constant &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Abs &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Conjugate &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Sign &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const PrimePi &x)
-    {
-        // First prime is 2 so pi(x) is zero for x < 2
-        is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Abs &x);
+    void bvisit(const Conjugate &x);
+    void bvisit(const Sign &x);
+    void bvisit(const PrimePi &x);
 
     tribool apply(const Basic &b);
 };

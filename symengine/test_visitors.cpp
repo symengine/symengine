@@ -2,6 +2,59 @@
 
 namespace SymEngine
 {
+
+void ZeroVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_zero/is_nonzero");
+}
+
+void ZeroVisitor::bvisit(const Basic &x)
+{
+    is_zero_ = tribool::indeterminate;
+}
+
+void ZeroVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Constant &x)
+{
+    is_zero_ = tribool::trifalse;
+}
+
+void ZeroVisitor::bvisit(const Abs &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const Conjugate &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const Sign &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const PrimePi &x)
+{
+    // First prime is 2 so pi(x) is zero for x < 2
+    is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
+}
+
 void ZeroVisitor::bvisit(const Number &x)
 {
     if (bool(x.is_zero())) {
