@@ -38,36 +38,18 @@ private:
     tribool is_positive_;
     const Assumptions *assumptions_;
 
-    void error()
-    {
-        throw SymEngineException("Only numeric types allowed for is_positive");
-    };
+    void error();
 
 public:
     PositiveVisitor(const Assumptions *assumptions)
         : assumptions_(assumptions){};
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Constant &x)
-    {
-        is_positive_ = tribool::tritrue;
-    };
-    void bvisit(const Basic &x)
-    {
-        is_positive_ = tribool::indeterminate;
-    };
-    void bvisit(const Set &x)
-    {
-        error();
-    };
-    void bvisit(const Relational &x)
-    {
-        error();
-    };
-    void bvisit(const Boolean &x)
-    {
-        error();
-    };
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
 
     tribool apply(const Basic &b);
 };
@@ -78,36 +60,18 @@ private:
     tribool is_nonpositive_;
     const Assumptions *assumptions_;
 
-    void error()
-    {
-        throw SymEngineException("Only numeric types allowed for is_negative");
-    };
+    void error();
 
 public:
     NonPositiveVisitor(const Assumptions *assumptions)
         : assumptions_(assumptions){};
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Constant &x)
-    {
-        is_nonpositive_ = tribool::trifalse;
-    };
-    void bvisit(const Basic &x)
-    {
-        is_nonpositive_ = tribool::indeterminate;
-    };
-    void bvisit(const Set &x)
-    {
-        error();
-    };
-    void bvisit(const Relational &x)
-    {
-        error();
-    };
-    void bvisit(const Boolean &x)
-    {
-        error();
-    };
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
 
     tribool apply(const Basic &b);
 };
@@ -118,36 +82,18 @@ private:
     tribool is_negative_;
     const Assumptions *assumptions_;
 
-    void error()
-    {
-        throw SymEngineException("Only numeric types allowed for is_negative");
-    };
+    void error();
 
 public:
     NegativeVisitor(const Assumptions *assumptions)
         : assumptions_(assumptions){};
-    void bvisit(const Basic &x)
-    {
-        is_negative_ = tribool::indeterminate;
-    };
+    void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        error();
-    };
-    void bvisit(const Relational &x)
-    {
-        error();
-    };
-    void bvisit(const Boolean &x)
-    {
-        error();
-    };
-    void bvisit(const Constant &x)
-    {
-        is_negative_ = tribool::trifalse;
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
 
     tribool apply(const Basic &b);
 };
@@ -158,37 +104,18 @@ private:
     tribool is_nonnegative_;
     const Assumptions *assumptions_;
 
-    void error()
-    {
-        throw SymEngineException(
-            "Only numeric types allowed for is_nonnegative");
-    };
+    void error();
 
 public:
     NonNegativeVisitor(const Assumptions *assumptions)
         : assumptions_(assumptions){};
-    void bvisit(const Basic &x)
-    {
-        is_nonnegative_ = tribool::indeterminate;
-    };
+    void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        error();
-    };
-    void bvisit(const Relational &x)
-    {
-        error();
-    };
-    void bvisit(const Boolean &x)
-    {
-        error();
-    };
-    void bvisit(const Constant &x)
-    {
-        is_nonnegative_ = tribool::tritrue;
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
 
     tribool apply(const Basic &b);
 };
