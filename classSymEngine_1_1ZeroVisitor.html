@@ -96,6 +96,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">SymEngine::ZeroVisitor Class Reference</div>  </div>
@@ -120,17 +121,21 @@ $(function() {
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1ZeroVisitor__coll__graph.png" border="0" usemap="#aSymEngine_1_1ZeroVisitor_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1ZeroVisitor_coll__map" id="aSymEngine_1_1ZeroVisitor_coll__map">
-<area shape="rect" title=" " alt="" coords="7,169,167,196"/>
-<area shape="rect" href="classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,80,169,121"/>
-<area shape="rect" href="classSymEngine_1_1Visitor.html" title=" " alt="" coords="20,5,155,32"/>
+<area shape="rect" title=" " alt="" coords="907,84,1067,111"/>
+<area shape="rect" href="classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="605,23,769,65"/>
+<area shape="rect" href="classSymEngine_1_1Visitor.html" title=" " alt="" coords="265,5,400,32"/>
+<area shape="rect" href="classSymEngine_1_1Assumptions.html" title=" " alt="" coords="600,113,773,140"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/unordered_map.html" title=" " alt="" coords="253,95,412,166"/>
+<area shape="rect" title=" " alt="" coords="5,160,149,187"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/set.html" title=" " alt="" coords="231,193,435,234"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a275955f56c043187a1ba58f242458684"><td class="memItemLeft" align="right" valign="top"><a id="a275955f56c043187a1ba58f242458684"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ZeroVisitor</b> (bool zero)</td></tr>
-<tr class="separator:a275955f56c043187a1ba58f242458684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55bd797a0e8f5fae5bb87de62b109d18"><td class="memItemLeft" align="right" valign="top"><a id="a55bd797a0e8f5fae5bb87de62b109d18"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ZeroVisitor</b> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions)</td></tr>
+<tr class="separator:a55bd797a0e8f5fae5bb87de62b109d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cfdb99fe69732db8b155744aeaff5a3"><td class="memItemLeft" align="right" valign="top"><a id="a6cfdb99fe69732db8b155744aeaff5a3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bvisit</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
 <tr class="separator:a6cfdb99fe69732db8b155744aeaff5a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,17 +173,20 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>bvisit</b> (const <a 
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>apply</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:ab45b7964f6465e38f2dbd81a6daf4483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a69160e9020e81562c16644e7fe244723"><td class="memItemLeft" align="right" valign="top"><a id="a69160e9020e81562c16644e7fe244723"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> ()</td></tr>
+<tr class="separator:a69160e9020e81562c16644e7fe244723"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a1db19174ce335f35ddd42e61ad86b808"><td class="memItemLeft" align="right" valign="top"><a id="a1db19174ce335f35ddd42e61ad86b808"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>zero_</b></td></tr>
-<tr class="separator:a1db19174ce335f35ddd42e61ad86b808"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a02c03cb21fe9ebf6d08ac88f7c0a46"><td class="memItemLeft" align="right" valign="top"><a id="a0a02c03cb21fe9ebf6d08ac88f7c0a46"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_zero_</b></td></tr>
 <tr class="separator:a0a02c03cb21fe9ebf6d08ac88f7c0a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae65a49d725a874c994b4e9adb68d752a"><td class="memItemLeft" align="right" valign="top"><a id="ae65a49d725a874c994b4e9adb68d752a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>neither_</b> = false</td></tr>
-<tr class="separator:ae65a49d725a874c994b4e9adb68d752a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c3fde102b1b5c11c5f57f4d1cbf223"><td class="memItemLeft" align="right" valign="top"><a id="ad5c3fde102b1b5c11c5f57f4d1cbf223"></a>
+const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>assumptions_</b></td></tr>
+<tr class="separator:ad5c3fde102b1b5c11c5f57f4d1cbf223"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">

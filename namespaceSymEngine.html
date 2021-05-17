@@ -2068,12 +2068,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>idivnum</b> (const Pt
 <tr class="separator:a002907d330f94b2da86bcc5ec1f998cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1998df939d1b28e0356a43f33433d9d3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">is_number_and_zero</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a1998df939d1b28e0356a43f33433d9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e7a1d5eaef71963b6d02646573f619d"><td class="memItemLeft" align="right" valign="top"><a id="a4e7a1d5eaef71963b6d02646573f619d"></a>
-tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_zero</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
-<tr class="separator:a4e7a1d5eaef71963b6d02646573f619d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad620db72bbdd39720cb3bce3499d3ce5"><td class="memItemLeft" align="right" valign="top"><a id="ad620db72bbdd39720cb3bce3499d3ce5"></a>
-tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_nonzero</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
-<tr class="separator:ad620db72bbdd39720cb3bce3499d3ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab930e860c8b1ff6cd03daff9c60c819a"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
+<tr class="memdesc:ab930e860c8b1ff6cd03daff9c60c819a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a number is zero.  <a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">More...</a><br /></td></tr>
+<tr class="separator:ab930e860c8b1ff6cd03daff9c60c819a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ffc26946356777955b29d4aaf210894"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a9ffc26946356777955b29d4aaf210894">is_nonzero</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr)</td></tr>
+<tr class="memdesc:a9ffc26946356777955b29d4aaf210894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a number is non-zero.  <a href="namespaceSymEngine.html#a9ffc26946356777955b29d4aaf210894">More...</a><br /></td></tr>
+<tr class="separator:a9ffc26946356777955b29d4aaf210894"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a729ca754c2d5fdf7e10f2fe7222b7b99"><td class="memItemLeft" align="right" valign="top"><a id="a729ca754c2d5fdf7e10f2fe7222b7b99"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_positive</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a729ca754c2d5fdf7e10f2fe7222b7b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3902,6 +3902,51 @@ template&lt;class T &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a9ffc26946356777955b29d4aaf210894"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ffc26946356777955b29d4aaf210894">&#9670;&nbsp;</a></span>is_nonzero()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tribool SymEngine::is_nonzero </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *&#160;</td>
+          <td class="paramname"><em>assumptions</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a number is non-zero. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a> </td></tr>
+    <tr><td class="paramname">assumptions</td><td><a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>tribool</dd></dl>
+<p>Check if b is non-zero. If b is not numeric an exception will be thrown. </p>
+
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00088">88</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;{</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    ZeroVisitor visitor(assumptions);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> not_tribool(visitor.apply(b));</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a1998df939d1b28e0356a43f33433d9d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1998df939d1b28e0356a43f33433d9d3">&#9670;&nbsp;</a></span>is_number_and_zero()</h2>
 
@@ -3971,11 +4016,56 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>True if b is a polynomial in variables and false otherwise</dd></dl>
 <p>Check if b is a polynomial in variables. If no variables are specified all free symbols in b are considered to be variables. All symbols that are not variables will be considered to be constants. </p>
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00486">486</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;{</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    PolynomialVisitor visitor(variables);</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00544">544</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;{</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    PolynomialVisitor visitor(variables);</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ab930e860c8b1ff6cd03daff9c60c819a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab930e860c8b1ff6cd03daff9c60c819a">&#9670;&nbsp;</a></span>is_zero()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tribool SymEngine::is_zero </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;&#160;</td>
+          <td class="paramname"><em>b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *&#160;</td>
+          <td class="paramname"><em>assumptions</em> = <code>nullptr</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a number is zero. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a> </td></tr>
+    <tr><td class="paramname">assumptions</td><td><a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>tribool</dd></dl>
+<p>Check if b is zero. If b is not numeric an exception will be thrown. </p>
+
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00082">82</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    ZeroVisitor visitor(assumptions);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
