@@ -210,7 +210,7 @@ public:
     void bvisit(const Not &x)
     {
         RCP<const Basic> a = apply(x.get_arg());
-        if( not is_a_Boolean(*a))
+        if (not is_a_Boolean(*a))
             throw SymEngineException("expected an object of type Boolean");
         result_ = logical_not(rcp_static_cast<const Boolean>(a));
     }
