@@ -609,7 +609,8 @@ TEST_CASE("Logic: subs", "[subs]")
         = logical_and({Gt(x, integer(1)), Lt(x, integer(3))});
     RCP<const Boolean> or_expr
         = logical_or({Gt(x, integer(1)), Lt(x, integer(3))});
-    RCP<const Boolean> not_expr = logical_not(or_expr);
+    RCP<const Boolean> not_expr = logical_not(
+        contains(x, interval(integer(1), integer(3), false, false)));
     RCP<const Boolean> xor_expr
         = logical_xor({Gt(x, integer(1)), Gt(x, integer(3))});
     RCP<const Basic> t;
@@ -628,6 +629,9 @@ TEST_CASE("Logic: subs", "[subs]")
 
     t = subs(not_expr, {{x, integer(2)}});
     REQUIRE(eq(*t, *boolFalse));
+
+    t = subs(not_expr, {{x, integer(5)}});
+    REQUIRE(eq(*t, *boolTrue));
 
     t = subs(xor_expr, {{x, integer(2)}});
     REQUIRE(eq(*t, *boolTrue));
