@@ -9,57 +9,25 @@ namespace SymEngine
 class ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
-    bool zero_; // true = testing for zero, false = testing for nonzero
     tribool is_zero_;
-    bool neither_ = false; // Neither zero nor non-zero, i.e. not a number
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    ZeroVisitor(bool zero) : zero_{zero} {}
-    void bvisit(const Basic &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
-    void bvisit(const Symbol &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
+    ZeroVisitor(const Assumptions *assumptions) : assumptions_(assumptions) {}
+
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_zero_ = tribool::trifalse;
-        neither_ = true;
-    };
-    void bvisit(const Constant &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Abs &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Conjugate &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Sign &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const PrimePi &x)
-    {
-        // First prime is 2 so pi(x) is zero for x < 2
-        is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Abs &x);
+    void bvisit(const Conjugate &x);
+    void bvisit(const Sign &x);
+    void bvisit(const PrimePi &x);
 
     tribool apply(const Basic &b);
 };

@@ -141,8 +141,24 @@ inline bool is_number_and_zero(const Basic &b)
     return is_a_Number(b) and down_cast<const Number &>(b).is_zero();
 }
 
-tribool is_zero(const Basic &b);
-tribool is_nonzero(const Basic &b);
+/**
+ * @brief Check if a number is zero
+ * @param b Basic
+ * @param assumptions Assumptions
+ * @returns tribool
+ *
+ * Check if b is zero. If b is not numeric an exception will be thrown.
+ */
+tribool is_zero(const Basic &b, const Assumptions *assumptions = nullptr);
+/**
+ * @brief Check if a number is non-zero
+ * @param b Basic
+ * @param assumptions Assumptions
+ * @returns tribool
+ *
+ * Check if b is non-zero. If b is not numeric an exception will be thrown.
+ */
+tribool is_nonzero(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_positive(const Basic &b);
 tribool is_nonpositive(const Basic &b);
 tribool is_negative(const Basic &b);
