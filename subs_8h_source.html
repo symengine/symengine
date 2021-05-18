@@ -292,300 +292,300 @@ $(function() {
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(rcp_static_cast&lt;const Boolean&gt;(a));</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        }</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        result_ = x.create(v);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        result_ = logical_and(v);</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    }</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;x)</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Or.html">Or</a> &amp;x)</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> v;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_boolean</a> v;</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : x.get_container()) {</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(apply(elem));</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        }</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        result_ = x.create(v);</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    }</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;x)</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    {</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        RCP&lt;const Basic&gt; s = apply(x.get_symbol());</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        RCP&lt;const Basic&gt; expr = apply(x.get_expr());</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="keyword">auto</span> bs_ = apply(x.get_baseset());</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keywordflow">if</span> (not is_a_Set(*bs_))</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Set&quot;</span>);</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        RCP&lt;const Set&gt; bs = rcp_static_cast&lt;const Set&gt;(bs_);</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="keywordflow">if</span> (s == x.get_symbol() and expr == x.get_expr()</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            and bs == x.get_baseset()) {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            result_ = x.create(s, expr, bs);</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        }</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    }</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    {</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> v;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : x.get_container()) {</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="keyword">auto</span> a = apply(elem);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="keywordflow">if</span> (not is_a_Set(*a))</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Set&quot;</span>);</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(rcp_static_cast&lt;const Set&gt;(a));</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        }</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        result_ = x.create(v);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    }</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &amp;pw)</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    {</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">PiecewiseVec</a> pwv;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        pwv.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(pw.get_vec().<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;expr_pred : pw.get_vec()) {</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> expr = apply(*expr_pred.first);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> pred = apply(*expr_pred.second);</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;            pwv.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/emplace_back.html">emplace_back</a>(</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(expr, rcp_static_cast&lt;const Boolean&gt;(pred)));</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        }</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        result_ = piecewise(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(pwv));</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    }</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        <span class="keyword">auto</span> expr = apply(x.get_arg());</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;sym : x.get_symbols()) {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            <span class="keyword">auto</span> s = apply(sym);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*s)) {</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Symbol&quot;</span>);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            }</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            expr = expr-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(s));</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        }</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        result_ = expr;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    }</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keyword">auto</span> expr = apply(x.get_arg());</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> new_subs_dict;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;sym : x.get_dict()) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(new_subs_dict, apply(sym.first), apply(sym.second));</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        result_ = subs(expr, new_subs_dict);</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    }</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    RCP&lt;const Basic&gt; apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    {</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        <span class="keywordflow">return</span> apply(x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>());</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    }</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    RCP&lt;const Basic&gt; apply(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x)</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    {</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;        <span class="keywordflow">if</span> (cache) {</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="keyword">auto</span> it = visited.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/find.html">find</a>(x);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            <span class="keywordflow">if</span> (it != visited.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/end.html">end</a>()) {</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                result_ = it-&gt;second;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                x-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(visited, x, result_);</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            }</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;            <span class="keyword">auto</span> it = subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/find.html">find</a>(x);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            <span class="keywordflow">if</span> (it != subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/end.html">end</a>()) {</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                result_ = it-&gt;second;</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                x-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            }</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        }</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <span class="keywordflow">return</span> result_;</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    }</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;};</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">  299</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">xreplace</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                                 <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;{</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <a class="code" href="classSymEngine_1_1XReplaceVisitor.html">XReplaceVisitor</a> s(subs_dict, cache);</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;}</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00306"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SubsVisitor.html">  306</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1SubsVisitor.html">SubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SubsVisitor, XReplaceVisitor&gt;</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;{</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160; </div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <a class="code" href="classSymEngine_1_1SubsVisitor.html">SubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict_, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SubsVisitor, XReplaceVisitor&gt;</a>(subs_dict_, cache)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    }</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x)</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    {</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        RCP&lt;const Basic&gt; base_new = apply(x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>());</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        RCP&lt;const Basic&gt; exp_new = apply(x.<a class="code" href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">get_exp</a>());</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keywordflow">if</span> (subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>() == 1 and is_a&lt;Pow&gt;(*((*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first))</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            and not is_a&lt;Add&gt;(</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                *down_cast&lt;const Pow &amp;&gt;(*(*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first)</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                     .get_exp())) {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;            <span class="keyword">auto</span> &amp;subs_first</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                = down_cast&lt;const Pow &amp;&gt;(*(*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first);</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*subs_first.get_base(), *base_new)) {</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                <span class="keyword">auto</span> newexpo = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(exp_new, subs_first.get_exp());</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*newexpo) or is_a&lt;Constant&gt;(*newexpo)) {</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                    result_ = pow((*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).second, newexpo);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                }</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        }</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keywordflow">if</span> (base_new == x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>() and exp_new == x.<a class="code" href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">get_exp</a>()) {</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;            result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;            result_ = pow(base_new, exp_new);</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        }</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    }</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    {</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        RCP&lt;const Symbol&gt; s;</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m, n;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordtype">bool</span> subs;</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;            <span class="comment">// If the derivative arg is to be replaced in its entirety, allow</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            <span class="comment">// it.</span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_arg(), *p.first)) {</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;                RCP&lt;const Basic&gt; t = p.second;</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;sym : x.get_symbols()) {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;                    <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*sym)) {</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error, expected a Symbol.&quot;</span>);</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                    }</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;                    t = t-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(sym));</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;                }</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                result_ = t;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;            }</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        }</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;            subs = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_arg()-&gt;subs({{p.first, p.second}}), *x.get_arg()))</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;            <span class="comment">// If p.first and p.second are symbols and arg_ is</span></div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;            <span class="comment">// independent of p.second, p.first can be replaced</span></div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*p.first) and is_a&lt;Symbol&gt;(*p.second)</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                    *x.get_arg()-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(p.second)),</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;                    *zero)) {</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            }</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;d : x.get_symbols()) {</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*d)) {</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                    s = rcp_static_cast&lt;const Symbol&gt;(d);</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                    <span class="comment">// If p.first or p.second has non zero derivates wrt to s</span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                    <span class="comment">// p.first cannot be replaced</span></div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *(p.first-&gt;diff(s)))</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                        || <a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *(p.second-&gt;diff(s)))) {</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                        subs = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                    }</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                    result_</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                        = make_rcp&lt;const Subs&gt;(x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), subs_dict_);</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                    <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                }</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;            }</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            <span class="keywordflow">if</span> (subs) {</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, p.first, p.second);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            }</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        }</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="keyword">auto</span> t = x.get_arg()-&gt;<a class="code" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">subs</a>(n);</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_symbols()) {</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            <span class="keyword">auto</span> t2 = p-&gt;subs(n);</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*t2)) {</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error, expected a Symbol.&quot;</span>);</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            }</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;            t = t-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(t2));</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        }</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        <span class="keywordflow">if</span> (m.empty()) {</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            result_ = t;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;            result_ = make_rcp&lt;const Subs&gt;(t, m);</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;        }</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    }</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160; </div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    {</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m, n;</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            <span class="keywordtype">bool</span> found = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : x.get_dict()) {</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(s.first-&gt;subs({{p.first, p.second}})), *(s.first))) {</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;                    found = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            <span class="keyword">auto</span> a = apply(elem);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">if</span> (not is_a_Boolean(*a))</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(rcp_static_cast&lt;const Boolean&gt;(a));</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        }</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        result_ = logical_or(v);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    }</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Not.html">Not</a> &amp;x)</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        RCP&lt;const Basic&gt; a = apply(x.get_arg());</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        <span class="keywordflow">if</span> (not is_a_Boolean(*a))</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        result_ = logical_not(rcp_static_cast&lt;const Boolean&gt;(a));</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    }</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Xor.html">Xor</a> &amp;x)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    {</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_boolean</a> v;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : x.get_container()) {</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            <span class="keyword">auto</span> a = apply(elem);</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            <span class="keywordflow">if</span> (not is_a_Boolean(*a))</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(rcp_static_cast&lt;const Boolean&gt;(a));</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        }</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        result_ = logical_xor(v);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    }</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;x)</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    {</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> v;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : x.get_container()) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(apply(elem));</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        result_ = x.create(v);</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    }</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;x)</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        RCP&lt;const Basic&gt; s = apply(x.get_symbol());</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        RCP&lt;const Basic&gt; expr = apply(x.get_expr());</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        <span class="keyword">auto</span> bs_ = apply(x.get_baseset());</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keywordflow">if</span> (not is_a_Set(*bs_))</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Set&quot;</span>);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        RCP&lt;const Set&gt; bs = rcp_static_cast&lt;const Set&gt;(bs_);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="keywordflow">if</span> (s == x.get_symbol() and expr == x.get_expr()</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            and bs == x.get_baseset()) {</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            result_ = x.create(s, expr, bs);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        }</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    }</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    {</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> v;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : x.get_container()) {</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;            <span class="keyword">auto</span> a = apply(elem);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            <span class="keywordflow">if</span> (not is_a_Set(*a))</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Set&quot;</span>);</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(rcp_static_cast&lt;const Set&gt;(a));</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        result_ = x.create(v);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    }</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &amp;pw)</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">PiecewiseVec</a> pwv;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        pwv.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(pw.get_vec().<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;expr_pred : pw.get_vec()) {</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> expr = apply(*expr_pred.first);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> pred = apply(*expr_pred.second);</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            pwv.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/emplace_back.html">emplace_back</a>(</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(expr, rcp_static_cast&lt;const Boolean&gt;(pred)));</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;        }</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;        result_ = piecewise(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(pwv));</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    }</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    {</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        <span class="keyword">auto</span> expr = apply(x.get_arg());</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;sym : x.get_symbols()) {</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="keyword">auto</span> s = apply(sym);</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*s)) {</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Symbol&quot;</span>);</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;            }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            expr = expr-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(s));</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        }</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        result_ = expr;</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    }</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160; </div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    {</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="keyword">auto</span> expr = apply(x.get_arg());</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> new_subs_dict;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;sym : x.get_dict()) {</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(new_subs_dict, apply(sym.first), apply(sym.second));</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        }</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        result_ = subs(expr, new_subs_dict);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    }</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    RCP&lt;const Basic&gt; apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    {</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        <span class="keywordflow">return</span> apply(x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>());</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    }</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    RCP&lt;const Basic&gt; apply(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x)</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    {</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        <span class="keywordflow">if</span> (cache) {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;            <span class="keyword">auto</span> it = visited.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/find.html">find</a>(x);</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;            <span class="keywordflow">if</span> (it != visited.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/end.html">end</a>()) {</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;                result_ = it-&gt;second;</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;                x-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(visited, x, result_);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;            }</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;            <span class="keyword">auto</span> it = subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/find.html">find</a>(x);</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;            <span class="keywordflow">if</span> (it != subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/end.html">end</a>()) {</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;                result_ = it-&gt;second;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                x-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;            }</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        }</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">return</span> result_;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    }</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;};</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00331"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">  331</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">xreplace</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                                 <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;{</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <a class="code" href="classSymEngine_1_1XReplaceVisitor.html">XReplaceVisitor</a> s(subs_dict, cache);</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;}</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SubsVisitor.html">  338</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1SubsVisitor.html">SubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SubsVisitor, XReplaceVisitor&gt;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;{</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <a class="code" href="classSymEngine_1_1SubsVisitor.html">SubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict_, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SubsVisitor, XReplaceVisitor&gt;</a>(subs_dict_, cache)</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    }</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x)</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        RCP&lt;const Basic&gt; base_new = apply(x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>());</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;        RCP&lt;const Basic&gt; exp_new = apply(x.<a class="code" href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">get_exp</a>());</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        <span class="keywordflow">if</span> (subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>() == 1 and is_a&lt;Pow&gt;(*((*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first))</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;            and not is_a&lt;Add&gt;(</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                *down_cast&lt;const Pow &amp;&gt;(*(*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first)</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;                     .get_exp())) {</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;            <span class="keyword">auto</span> &amp;subs_first</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;                = down_cast&lt;const Pow &amp;&gt;(*(*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).first);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*subs_first.get_base(), *base_new)) {</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                <span class="keyword">auto</span> newexpo = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(exp_new, subs_first.get_exp());</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*newexpo) or is_a&lt;Constant&gt;(*newexpo)) {</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;                    result_ = pow((*subs_dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>()).second, newexpo);</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;                    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;                }</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;            }</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        }</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        <span class="keywordflow">if</span> (base_new == x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>() and exp_new == x.<a class="code" href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">get_exp</a>()) {</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;            result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            result_ = pow(base_new, exp_new);</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        }</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    }</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    {</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        RCP&lt;const Symbol&gt; s;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m, n;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        <span class="keywordtype">bool</span> subs;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            <span class="comment">// If the derivative arg is to be replaced in its entirety, allow</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;            <span class="comment">// it.</span></div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_arg(), *p.first)) {</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                RCP&lt;const Basic&gt; t = p.second;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;sym : x.get_symbols()) {</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                    <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*sym)) {</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error, expected a Symbol.&quot;</span>);</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;                    }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;                    t = t-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(sym));</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                }</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                result_ = t;</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;                <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            }</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        }</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;            subs = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_arg()-&gt;subs({{p.first, p.second}}), *x.get_arg()))</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;            <span class="comment">// If p.first and p.second are symbols and arg_ is</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            <span class="comment">// independent of p.second, p.first can be replaced</span></div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*p.first) and is_a&lt;Symbol&gt;(*p.second)</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                    *x.get_arg()-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(p.second)),</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                    *zero)) {</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            }</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;d : x.get_symbols()) {</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*d)) {</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;                    s = rcp_static_cast&lt;const Symbol&gt;(d);</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                    <span class="comment">// If p.first or p.second has non zero derivates wrt to s</span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                    <span class="comment">// p.first cannot be replaced</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *(p.first-&gt;diff(s)))</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;                        || <a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *(p.second-&gt;diff(s)))) {</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;                        subs = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                    }</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;                    result_</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;                        = make_rcp&lt;const Subs&gt;(x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), subs_dict_);</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                    <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;                }</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;            }</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;            <span class="comment">// If p.first is not replaced in arg_ by dict_,</span></div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            <span class="comment">// store p.first in n to replace in arg_</span></div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            <span class="keywordflow">if</span> (not found) {</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;            <span class="keywordflow">if</span> (subs) {</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, p.first, p.second);</div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;            }</div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        }</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : x.get_dict()) {</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, s.first, apply(s.second));</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        }</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        RCP&lt;const Basic&gt; presub = x.get_arg()-&gt;subs(n);</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Subs&gt;(*presub)) {</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;q : down_cast&lt;const Subs &amp;&gt;(*presub).get_dict()) {</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, q.first, q.second);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;            }</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            result_ = down_cast&lt;const Subs &amp;&gt;(*presub).get_arg()-&gt;subs(m);</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;            result_ = presub-&gt;subs(m);</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        }</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    }</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;};</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        <span class="keyword">auto</span> t = x.get_arg()-&gt;<a class="code" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">subs</a>(n);</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_symbols()) {</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;            <span class="keyword">auto</span> t2 = p-&gt;subs(n);</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">if</span> (not is_a&lt;Symbol&gt;(*t2)) {</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;                <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error, expected a Symbol.&quot;</span>);</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;            }</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            t = t-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(t2));</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        }</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        <span class="keywordflow">if</span> (m.empty()) {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            result_ = t;</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;            result_ = make_rcp&lt;const Subs&gt;(t, m);</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        }</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    }</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
-<div class="line"><a name="l00445"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MSubsVisitor.html">  445</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;MSubsVisitor, XReplaceVisitor&gt;</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;{</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;MSubsVisitor, XReplaceVisitor&gt;</a>(d, cache)</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    {</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    }</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    {</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    }</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    {</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m = x.get_dict();</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;            m[p.first] = p.second;</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        }</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        result_ = <a class="code" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">msubs</a>(x.get_arg(), m);</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;    }</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;};</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160; </div>
-<div class="line"><a name="l00470"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SSubsVisitor.html">  470</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SSubsVisitor, SubsVisitor&gt;</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;{</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    <a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SSubsVisitor, SubsVisitor&gt;</a>(d, cache)</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    {</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    }</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160; </div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    {</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        apply(x.get_arg());</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;        <span class="keyword">auto</span> t = result_;</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/multiset.html">multiset_basic</a> m;</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_symbols()) {</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;            apply(p);</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;            m.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/multiset/insert.html">insert</a>(result_);</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        }</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        result_ = Derivative::create(t, m);</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    {</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m, n;</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;            <span class="keywordtype">bool</span> found = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : x.get_dict()) {</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(s.first-&gt;subs({{p.first, p.second}})), *(s.first))) {</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;                    found = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;                }</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;            }</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            <span class="comment">// If p.first is not replaced in arg_ by dict_,</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;            <span class="comment">// store p.first in n to replace in arg_</span></div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            <span class="keywordflow">if</span> (not found) {</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(n, p.first, p.second);</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;            }</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        }</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : x.get_dict()) {</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;            <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, s.first, apply(s.second));</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        }</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        RCP&lt;const Basic&gt; presub = x.get_arg()-&gt;subs(n);</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Subs&gt;(*presub)) {</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;q : down_cast&lt;const Subs &amp;&gt;(*presub).get_dict()) {</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;                <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(m, q.first, q.second);</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;            }</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            result_ = down_cast&lt;const Subs &amp;&gt;(*presub).get_arg()-&gt;subs(m);</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            result_ = presub-&gt;subs(m);</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        }</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    }</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;};</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
+<div class="line"><a name="l00477"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MSubsVisitor.html">  477</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;MSubsVisitor, XReplaceVisitor&gt;</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;{</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160; </div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    <a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;MSubsVisitor, XReplaceVisitor&gt;</a>(d, cache)</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    {</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    }</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160; </div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    {</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        result_ = x.<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>();</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    }</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
@@ -594,34 +594,66 @@ $(function() {
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
 <div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;            m[p.first] = p.second;</div>
 <div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        }</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        result_ = <a class="code" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">ssubs</a>(x.get_arg(), m);</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        result_ = <a class="code" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">msubs</a>(x.get_arg(), m);</div>
 <div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    }</div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;};</div>
 <div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160; </div>
-<div class="line"><a name="l00503"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">  503</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">msubs</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;{</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    <a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a> s(subs_dict, cache);</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;}</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160; </div>
-<div class="line"><a name="l00511"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">  511</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">ssubs</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;{</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;    <a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a> s(subs_dict, cache);</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;}</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160; </div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; subs(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;                             <span class="keyword">const</span> map_basic_basic &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;{</div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    SubsVisitor b(subs_dict, cache);</div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    <span class="keywordflow">return</span> b.apply(x);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;}</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160; </div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_SUBS_H</span></div>
+<div class="line"><a name="l00502"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SSubsVisitor.html">  502</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SSubsVisitor, SubsVisitor&gt;</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;{</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    <span class="keyword">using</span> XReplaceVisitor::bvisit;</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160; </div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    <a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d, <span class="keywordtype">bool</span> cache = <span class="keyword">true</span>)</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SSubsVisitor, SubsVisitor&gt;</a>(d, cache)</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    {</div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    }</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160; </div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;x)</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    {</div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;        apply(x.get_arg());</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;        <span class="keyword">auto</span> t = result_;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/multiset.html">multiset_basic</a> m;</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_symbols()) {</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;            apply(p);</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;            m.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/multiset/insert.html">insert</a>(result_);</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;        }</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        result_ = Derivative::create(t, m);</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    }</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160; </div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Subs.html">Subs</a> &amp;x)</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;    {</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> m = x.get_dict();</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : subs_dict_) {</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;            m[p.first] = p.second;</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;        }</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;        result_ = <a class="code" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">ssubs</a>(x.get_arg(), m);</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;    }</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;};</div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160; </div>
+<div class="line"><a name="l00535"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">  535</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">msubs</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;{</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    <a class="code" href="classSymEngine_1_1MSubsVisitor.html">MSubsVisitor</a> s(subs_dict, cache);</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;}</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160; </div>
+<div class="line"><a name="l00543"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">  543</a></span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">ssubs</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
+<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;{</div>
+<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    <a class="code" href="classSymEngine_1_1SSubsVisitor.html">SSubsVisitor</a> s(subs_dict, cache);</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    <span class="keywordflow">return</span> s.apply(x);</div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;}</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160; </div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;<span class="keyword">inline</span> RCP&lt;const Basic&gt; subs(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;                             <span class="keyword">const</span> map_basic_basic &amp;subs_dict, <span class="keywordtype">bool</span> cache)</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;{</div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    SubsVisitor b(subs_dict, cache);</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;    <span class="keywordflow">return</span> b.apply(x);</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;}</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160; </div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160; </div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_SUBS_H</span></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/begin.html">std::map::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html"><div class="ttname"><a href="classSymEngine_1_1Add.html">SymEngine::Add</a></div><div class="ttdoc">The base class for representing addition in symbolic expressions.</div><div class="ttdef"><b>Definition:</b> <a href="add_8h_source.html#l00026">add.h:27</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a307db20756a09c9f2bc7a5983e3ea3fb"><div class="ttname"><a href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">SymEngine::Add::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, umap_basic_num &amp;&amp;d)</div><div class="ttdoc">Create an appropriate instance from dictionary quickly.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00140">add.cpp:140</a></div></div>
@@ -638,22 +670,24 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1FunctionSymbol_html"><div class="ttname"><a href="classSymEngine_1_1FunctionSymbol.html">SymEngine::FunctionSymbol</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00635">functions.h:636</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1FunctionSymbol_html_aa4b49b270433cac5ef97561b155f37ab"><div class="ttname"><a href="classSymEngine_1_1FunctionSymbol.html#aa4b49b270433cac5ef97561b155f37ab">SymEngine::FunctionSymbol::create</a></div><div class="ttdeci">virtual RCP&lt; const Basic &gt; create(const vec_basic &amp;x) const</div><div class="ttdoc">Method to construct classes with canonicalization.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01862">functions.cpp:1862</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ImageSet_html"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html">SymEngine::ImageSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00374">sets.h:375</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1MSubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1MSubsVisitor.html">SymEngine::MSubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00445">subs.h:446</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1MSubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1MSubsVisitor.html">SymEngine::MSubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00477">subs.h:478</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html"><div class="ttname"><a href="classSymEngine_1_1Mul.html">SymEngine::Mul</a></div><div class="ttdef"><b>Definition:</b> <a href="mul_8h_source.html#l00073">mul.h:74</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_a770b81872d66430fb57217063de9a37c"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">SymEngine::Mul::as_base_exp</a></div><div class="ttdeci">static void as_base_exp(const RCP&lt; const Basic &gt; &amp;self, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;exp, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;base)</div><div class="ttdoc">Convert to a base and exponent form.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00315">mul.cpp:315</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ab8e2f2039c048fe0a09b346df85ba65d"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">SymEngine::Mul::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;d)</div><div class="ttdoc">Create a Mul from a dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00116">mul.cpp:116</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html">SymEngine::MultiArgFunction</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00143">functions.h:144</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html_a0bc5ccbcaa3eb6217f7c43d862f05eb9"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html#a0bc5ccbcaa3eb6217f7c43d862f05eb9">SymEngine::MultiArgFunction::create</a></div><div class="ttdeci">virtual RCP&lt; const Basic &gt; create(const vec_basic &amp;v) const =0</div><div class="ttdoc">Method to construct classes with canonicalization.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html_a7df8b2e0e3868a53c3004f0948f71c41"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html#a7df8b2e0e3868a53c3004f0948f71c41">SymEngine::MultiArgFunction::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00159">functions.h:159</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Not_html"><div class="ttname"><a href="classSymEngine_1_1Not.html">SymEngine::Not</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00145">logic.h:146</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html">SymEngine::OneArgFunction</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00021">functions.h:22</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html_a324b89e562d1f7c812a355d10f4583cc"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction::create</a></div><div class="ttdeci">virtual RCP&lt; const Basic &gt; create(const RCP&lt; const Basic &gt; &amp;arg) const =0</div><div class="ttdoc">Method to construct classes with canonicalization.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html_ad9a9339b325658981d6fa47c3e4414e5"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html#ad9a9339b325658981d6fa47c3e4414e5">SymEngine::OneArgFunction::get_arg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_arg() const</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00036">functions.h:36</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Or_html"><div class="ttname"><a href="classSymEngine_1_1Or.html">SymEngine::Or</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00126">logic.h:127</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Piecewise_html"><div class="ttname"><a href="classSymEngine_1_1Piecewise.html">SymEngine::Piecewise</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00082">logic.h:83</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html"><div class="ttname"><a href="classSymEngine_1_1Pow.html">SymEngine::Pow</a></div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00017">pow.h:18</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_a8210eaaee4900725026ce3beefbcf9b3"><div class="ttname"><a href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">SymEngine::Pow::get_exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_exp() const</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00042">pow.h:42</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_ab00b6e8bc69e4ce7a524d7af87771255"><div class="ttname"><a href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">SymEngine::Pow::get_base</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_base() const</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00037">pow.h:37</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1SSubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SSubsVisitor.html">SymEngine::SSubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00470">subs.h:471</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1SubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SubsVisitor.html">SymEngine::SubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00306">subs.h:307</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1SSubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SSubsVisitor.html">SymEngine::SSubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00502">subs.h:503</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1SubsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SubsVisitor.html">SymEngine::SubsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00338">subs.h:339</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Subs_html"><div class="ttname"><a href="classSymEngine_1_1Subs.html">SymEngine::Subs</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00738">functions.h:739</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1TwoArgBasic_html"><div class="ttname"><a href="classSymEngine_1_1TwoArgBasic.html">SymEngine::TwoArgBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00073">functions.h:74</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1TwoArgBasic_html_a07a4fa1616bc3633ab921279923edae3"><div class="ttname"><a href="classSymEngine_1_1TwoArgBasic.html#a07a4fa1616bc3633ab921279923edae3">SymEngine::TwoArgBasic::create</a></div><div class="ttdeci">virtual RCP&lt; const Basic &gt; create(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b) const =0</div><div class="ttdoc">Method to construct classes with canonicalization.</div></div>
@@ -661,6 +695,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1TwoArgBasic_html_a6d04c4b92c824e1afca902619a9f0a09"><div class="ttname"><a href="classSymEngine_1_1TwoArgBasic.html#a6d04c4b92c824e1afca902619a9f0a09">SymEngine::TwoArgBasic::get_arg2</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_arg2() const</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00096">functions.h:96</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html"><div class="ttname"><a href="classSymEngine_1_1Union.html">SymEngine::Union</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00281">sets.h:282</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1XReplaceVisitor_html"><div class="ttname"><a href="classSymEngine_1_1XReplaceVisitor.html">SymEngine::XReplaceVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00025">subs.h:26</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Xor_html"><div class="ttname"><a href="classSymEngine_1_1Xor.html">SymEngine::Xor</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00164">logic.h:165</a></div></div>
 <div class="ttc" id="aemplace_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/emplace_back.html">std::vector::emplace_back</a></div><div class="ttdeci">T emplace_back(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/end.html">std::map::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="afind_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/find.html">std::map::find</a></div><div class="ttdeci">T find(T... args)</div></div>
@@ -674,14 +709,15 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a16a102cafaa2be38a4fd095789b1a806"><div class="ttname"><a href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00426">mul.cpp:426</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a4d151bb8a6d437602ea9df3d32279a8d"><div class="ttname"><a href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">SymEngine::msubs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; msubs(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">Subs which treat f(t) and Derivative(f(t), t) as separate variables.</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00503">subs.h:503</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a4d151bb8a6d437602ea9df3d32279a8d"><div class="ttname"><a href="namespaceSymEngine.html#a4d151bb8a6d437602ea9df3d32279a8d">SymEngine::msubs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; msubs(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">Subs which treat f(t) and Derivative(f(t), t) as separate variables.</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00535">subs.h:535</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00270">pow.cpp:270</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00347">mul.cpp:347</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aaf56a84de825e1940da213fd1ae6ff65"><div class="ttname"><a href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">SymEngine::factor</a></div><div class="ttdeci">int factor(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, double B1)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00368">ntheory.cpp:368</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_abf5f5d7f025f8dc0a87fe3f912a94a22"><div class="ttname"><a href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">SymEngine::xreplace</a></div><div class="ttdeci">RCP&lt; const Basic &gt; xreplace(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">Mappings in the subs_dict are applied to the expression tree of x</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00299">subs.h:299</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_abf5f5d7f025f8dc0a87fe3f912a94a22"><div class="ttname"><a href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">SymEngine::xreplace</a></div><div class="ttdeci">RCP&lt; const Basic &gt; xreplace(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">Mappings in the subs_dict are applied to the expression tree of x</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00331">subs.h:331</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ae459921e036f06869a8d53b0f019c0c3"><div class="ttname"><a href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">SymEngine::ssubs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ssubs(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">SymPy compatible subs.</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00511">subs.h:511</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ae459921e036f06869a8d53b0f019c0c3"><div class="ttname"><a href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">SymEngine::ssubs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ssubs(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">SymPy compatible subs.</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00543">subs.h:543</a></div></div>
+<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
 <div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
 <div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; RCP&lt; const Boolean &gt;, RCPBasicKeyLess &gt;</a></div></div>
 <div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
