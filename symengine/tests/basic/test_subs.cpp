@@ -5,6 +5,9 @@
 
 using SymEngine::Add;
 using SymEngine::Basic;
+using SymEngine::Boolean;
+using SymEngine::boolFalse;
+using SymEngine::boolTrue;
 using SymEngine::ComplexInf;
 using SymEngine::down_cast;
 using SymEngine::dummy;
@@ -20,6 +23,10 @@ using SymEngine::interval;
 using SymEngine::is_a;
 using SymEngine::kronecker_delta;
 using SymEngine::levi_civita;
+using SymEngine::logical_and;
+using SymEngine::logical_not;
+using SymEngine::logical_or;
+using SymEngine::logical_xor;
 using SymEngine::map_basic_basic;
 using SymEngine::msubs;
 using SymEngine::Mul;
@@ -593,4 +600,42 @@ TEST_CASE("Cache: subs", "[subs]")
 
     t = msubs(g, {{f, i3}}, true);
     REQUIRE(eq(*t, *s));
+}
+
+TEST_CASE("Logic: subs", "[subs]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Boolean> and_expr
+        = logical_and({Gt(x, integer(1)), Lt(x, integer(3))});
+    RCP<const Boolean> or_expr
+        = logical_or({Gt(x, integer(1)), Lt(x, integer(3))});
+    RCP<const Boolean> not_expr = logical_not(
+        contains(x, interval(integer(1), integer(3), false, false)));
+    RCP<const Boolean> xor_expr
+        = logical_xor({Gt(x, integer(1)), Gt(x, integer(3))});
+    RCP<const Basic> t;
+
+    t = subs(and_expr, {{x, integer(2)}});
+    REQUIRE(eq(*t, *boolTrue));
+
+    t = subs(and_expr, {{x, integer(4)}});
+    REQUIRE(eq(*t, *boolFalse));
+
+    t = subs(or_expr, {{x, integer(2)}});
+    REQUIRE(eq(*t, *boolTrue));
+
+    t = subs(or_expr, {{x, integer(4)}});
+    REQUIRE(eq(*t, *boolTrue));
+
+    t = subs(not_expr, {{x, integer(2)}});
+    REQUIRE(eq(*t, *boolFalse));
+
+    t = subs(not_expr, {{x, integer(5)}});
+    REQUIRE(eq(*t, *boolTrue));
+
+    t = subs(xor_expr, {{x, integer(2)}});
+    REQUIRE(eq(*t, *boolTrue));
+
+    t = subs(xor_expr, {{x, integer(5)}});
+    REQUIRE(eq(*t, *boolFalse));
 }
