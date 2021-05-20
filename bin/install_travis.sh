@@ -144,10 +144,14 @@ if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs jupytext papermill xeus-cling"
 fi
 
+retry_on_error () {
+  "$@" || (sleep 5 && "$@") || (sleep 30 && "$@") || (sleep 120 && "$@")
+}
+
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then
-    conda create -q -p $our_install_dir ${conda_pkgs};
+    retry_on_error conda create -q -p $our_install_dir ${conda_pkgs};
 else
-    conda env create -q -p $our_install_dir --file ${CONDA_ENV_FILE};
+    retry_on_error conda env create -q -p $our_install_dir --file ${CONDA_ENV_FILE};
 fi
 source activate $our_install_dir;
 
