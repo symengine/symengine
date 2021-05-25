@@ -1,5 +1,9 @@
 <map id="SymEngine::NonNegativeVisitor" name="SymEngine::NonNegativeVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,169,216,196"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="29,80,193,121"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="43,5,178,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="907,84,1117,111"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="605,23,769,65"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="265,5,400,32"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Assumptions.html" title=" " alt="" coords="600,113,773,140"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="253,95,412,166"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,160,149,187"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="231,193,435,234"/>
 </map>

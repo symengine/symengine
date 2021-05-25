@@ -96,6 +96,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">SymEngine::NegativeVisitor Class Reference</div>  </div>
@@ -120,14 +121,21 @@ $(function() {
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1NegativeVisitor__coll__graph.png" border="0" usemap="#aSymEngine_1_1NegativeVisitor_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1NegativeVisitor_coll__map" id="aSymEngine_1_1NegativeVisitor_coll__map">
-<area shape="rect" title=" " alt="" coords="5,169,192,196"/>
-<area shape="rect" href="classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="17,80,181,121"/>
-<area shape="rect" href="classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,166,32"/>
+<area shape="rect" title=" " alt="" coords="907,84,1093,111"/>
+<area shape="rect" href="classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="605,23,769,65"/>
+<area shape="rect" href="classSymEngine_1_1Visitor.html" title=" " alt="" coords="265,5,400,32"/>
+<area shape="rect" href="classSymEngine_1_1Assumptions.html" title=" " alt="" coords="600,113,773,140"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/unordered_map.html" title=" " alt="" coords="253,95,412,166"/>
+<area shape="rect" title=" " alt="" coords="5,160,149,187"/>
+<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/set.html" title=" " alt="" coords="231,193,435,234"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a86486deb932aa1a4f42f18ac74dc94e2"><td class="memItemLeft" align="right" valign="top"><a id="a86486deb932aa1a4f42f18ac74dc94e2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>NegativeVisitor</b> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions)</td></tr>
+<tr class="separator:a86486deb932aa1a4f42f18ac74dc94e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a584b4e601a4e9caab27c65a1140971a2"><td class="memItemLeft" align="right" valign="top"><a id="a584b4e601a4e9caab27c65a1140971a2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bvisit</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
 <tr class="separator:a584b4e601a4e9caab27c65a1140971a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,15 +161,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>bvisit</b> (const <a 
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>apply</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:aa6b36e5145d242001f3624f6436acdd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a902dbdfc797c9cd9084f004a79bc31e1"><td class="memItemLeft" align="right" valign="top"><a id="a902dbdfc797c9cd9084f004a79bc31e1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>error</b> ()</td></tr>
+<tr class="separator:a902dbdfc797c9cd9084f004a79bc31e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a9db694054a015bc3d7c55f5e6a916c50"><td class="memItemLeft" align="right" valign="top"><a id="a9db694054a015bc3d7c55f5e6a916c50"></a>
 tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_negative_</b></td></tr>
 <tr class="separator:a9db694054a015bc3d7c55f5e6a916c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e8159fae29a0614d3c2a7b9093476f2"><td class="memItemLeft" align="right" valign="top"><a id="a0e8159fae29a0614d3c2a7b9093476f2"></a>
+const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>assumptions_</b></td></tr>
+<tr class="separator:a0e8159fae29a0614d3c2a7b9093476f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00105">105</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00079">79</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="test__visitors_8h_source.html">test_visitors.h</a></li>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a></li>
