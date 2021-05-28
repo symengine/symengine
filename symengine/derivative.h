@@ -46,6 +46,7 @@ public:
     void bvisit(const UnivariateSeries &self);
     void bvisit(const Max &self);
     void bvisit(const Min &self);
+    void bvisit(const Integral &self);
 #endif
     void bvisit(const Number &self);
     void bvisit(const Constant &self);
