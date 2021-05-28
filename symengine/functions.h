@@ -731,6 +731,46 @@ public:
                       const multiset_basic &x) const;
 };
 
+/*! Integral operator
+ *  Integral(f, x) represents the integral of `f` with respect to
+ *  `x`.
+ * */
+class Integral : public Basic
+{
+private:
+    RCP<const Basic> arg_;
+    RCP<const Basic> x_;
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_INTEGRAL)
+    Integral(const RCP<const Basic> &arg, const RCP<const Basic> &x);
+
+    static RCP<const Integral> create(const RCP<const Basic> &arg,
+                                      const RCP<const Basic> &x)
+    {
+        return make_rcp<const Integral>(arg, x);
+    }
+
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    inline RCP<const Basic> get_symbol() const
+    {
+        return x_;
+    }
+    virtual vec_basic get_args() const
+    {
+        vec_basic args = {arg_, x_};
+        return args;
+    }
+    bool is_canonical(const RCP<const Basic> &arg,
+                      const RCP<const Basic> &x) const;
+};
+
 /*! Subs operator
  *  Subs(f, {x1 : x2, y1: y2, ...}) represents `f` after substituting
  *  `x1` with `x2`, `y1` with `y2`, and so on.
