@@ -26,8 +26,8 @@ void RefineVisitor::bvisit(const Sign &x)
         result_ = integer(1);
     } else if (is_true(is_negative(*newarg, assumptions_))) {
         result_ = integer(-1);
-        //    } else if (is_true(is_zero(*newarg, assumptions_))) {
-        //        result_ = integer(0);
+    } else if (is_true(is_zero(*newarg, assumptions_))) {
+        result_ = integer(0);
     } else {
         result_ = sign(newarg);
     }

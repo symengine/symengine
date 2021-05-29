@@ -4,8 +4,10 @@
 using SymEngine::Assumptions;
 using SymEngine::integer;
 using SymEngine::integers;
+using SymEngine::pi;
 using SymEngine::reals;
 using SymEngine::symbol;
+using SymEngine::unevaluated_expr;
 
 TEST_CASE("Test refine", "[refine]")
 {
@@ -39,39 +41,43 @@ TEST_CASE("Test refine", "[refine]")
     auto a6 = Assumptions({Gt(x, integer(0))});
     REQUIRE(eq(*refine(expr, &a6), *integer(1)));
 
+    expr = sign(x);
+    auto a7 = Assumptions({Eq(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a7), *integer(0)));
+
     expr = sign(abs(x));
-    auto a7 = Assumptions({Gt(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a7), *integer(1)));
+    auto a8 = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a8), *integer(1)));
 
     expr = floor(x);
-    auto a8 = Assumptions({integers()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a8), *x));
+    auto a9 = Assumptions({integers()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a9), *x));
 
     expr = floor(x);
-    auto a9 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a9), *expr));
+    auto a10 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a10), *expr));
 
     expr = ceiling(x);
-    auto a10 = Assumptions({integers()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a10), *x));
+    auto a11 = Assumptions({integers()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a11), *x));
 
     expr = ceiling(x);
-    auto a11 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a11), *expr));
+    auto a12 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a12), *expr));
 
     expr = ceiling(neg(x));
-    auto a12 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a12), *neg(floor(x))));
+    auto a13 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a13), *neg(floor(x))));
 
     expr = floor(neg(x));
-    auto a13 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a13), *neg(ceiling(x))));
+    auto a14 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a14), *neg(ceiling(x))));
 
     expr = conjugate(x);
-    auto a14 = Assumptions({reals()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a14), *x));
+    auto a15 = Assumptions({reals()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a15), *x));
 
     expr = conjugate(x);
-    auto a15 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a15), *expr));
+    auto a16 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a16), *expr));
 }
