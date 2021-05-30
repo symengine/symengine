@@ -27,10 +27,16 @@ TEST_CASE("Test integrate", "[integrate]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> p = symbol("p");
 
     // Integrals fully solved by symengine
     REQUIRE(eq(*integrate(a, x), *mul(a, x)));
     REQUIRE(eq(*integrate(sin(a), x), *mul(sin(a), x)));
+    auto res = integrate(pow(div(a, x), p), x);
+    auto correct
+        = div(mul(mul(a, integer(-1)), pow(div(a, x), sub(p, integer(1)))),
+              sub(p, integer(1)));
+    REQUIRE(eq(*res, *correct));
 
     // Integrals partially solved by symengine
     REQUIRE(eq(*integrate(mul(x, a), x), *mul(a, make_rcp<Integral>(x, x))));
@@ -39,4 +45,6 @@ TEST_CASE("Test integrate", "[integrate]")
 
     // Integrals not yet solved by symengine
     REQUIRE(eq(*integrate(sin(x), x), Integral(sin(x), x)));
+    REQUIRE(eq(*integrate(sin(x), x)->get_args()[0], *sin(x)));
+    REQUIRE(eq(*integrate(sin(x), x)->get_args()[1], *x));
 }

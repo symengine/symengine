@@ -729,6 +729,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l10) == "\\left[-3, 3\\right]");
     CHECK(latex(*l11) == "\\mathrm{True}");
     CHECK(latex(*l12) == "\\mathrm{False}");
+    // FIXME: These tests are unstable between updates of symengine
     // CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
     //    CHECK(latex(*l14)
     //          == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
