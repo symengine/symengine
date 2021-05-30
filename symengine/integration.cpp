@@ -38,6 +38,31 @@ RCP<const Basic> integrate(const RCP<const Basic> &arg,
                                   std::move(factor_out)),
                    integrate(Mul::from_dict(one, std::move(keep)), x));
     }
+    if (is_a<Pow>(*arg)) {
+        // Int[(a_./x_)^p_,x_Symbol] := -a*(a/x)^(p-1)/(p-1) /;
+        // FreeQ[{a,p},x] && Not[IntegerQ[p]]
+        auto base = down_cast<const Pow &>(*arg).get_base();
+        auto p = down_cast<const Pow &>(*arg).get_exp();
+        if (is_a<Mul>(*base) and not has_symbol(*p, *x)
+            and not is_a<Integer>(*p)) {
+            map_basic_basic factor_out;
+            bool found = false;
+            for (const auto &pair : down_cast<const Mul &>(*base).get_dict()) {
+                if (eq(*pair.first, *x) and eq(*pair.second, *integer(-1))) {
+                    found = true;
+                } else {
+                    factor_out.insert(pair);
+                }
+            }
+            if (found) {
+                auto a
+                    = Mul::from_dict(down_cast<const Mul &>(*base).get_coef(),
+                                     std::move(factor_out));
+                auto pm1 = sub(p, integer(1));
+                return div(mul(mul(a, integer(-1)), pow(base, pm1)), pm1);
+            }
+        }
+    }
 
     return make_rcp<const Integral>(arg, x);
 }
