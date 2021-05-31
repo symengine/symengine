@@ -279,7 +279,7 @@ unsigned long mp_scan1(const integer_class &i)
     if (i == 0) {
         return ULONG_MAX;
     }
-    return find_lsb(i, int_<0>());
+    return find_lsb(i, {});
 }
 
 // define simple 2x2 matrix with exponentiation by repeated squaring
