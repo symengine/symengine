@@ -7,7 +7,6 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/prime_sieve.h>
 
-using boost::mpl::int_;
 using boost::multiprecision::denominator;
 using boost::multiprecision::miller_rabin_test;
 using boost::multiprecision::numerator;
