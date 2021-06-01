@@ -192,6 +192,7 @@ void DiffVisitor::bvisit(const Basic &self)
 DIFF0(UnivariateSeries)
 DIFF0(Max)
 DIFF0(Min)
+DIFF0(Integral)
 #endif
 
 void DiffVisitor::bvisit(const Number &self)

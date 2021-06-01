@@ -114,3 +114,7 @@ add_test(test_test_visitors ${PROJECT_BINARY_DIR}/test_test_visitors)
 add_executable(test_assumptions test_assumptions.cpp)
 target_link_libraries(test_assumptions symengine catch)
 add_test(test_assumptions ${PROJECT_BINARY_DIR}/test_assumptions)
+
+add_executable(test_integration test_integration.cpp)
+target_link_libraries(test_integration symengine catch)
+add_test(test_integration ${PROJECT_BINARY_DIR}/test_integration)
