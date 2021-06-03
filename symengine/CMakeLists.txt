@@ -84,6 +84,7 @@ set(SRC
     visitor.cpp
     test_visitors.cpp
     assumptions.cpp
+    refine.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -201,6 +202,7 @@ set(HEADERS
     visitor.h
     test_visitors.h
     assumptions.h
+    refine.h
 )
 
 include(GNUInstallDirs)
