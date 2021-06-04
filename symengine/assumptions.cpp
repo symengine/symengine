@@ -40,6 +40,7 @@ Assumptions::Assumptions(const set_basic &statements)
                     set_map(negative_, arg2, false);
                     set_map(nonpositive_, arg2, false);
                     set_map(nonzero_, arg2, true);
+                    set_map(zero_, arg2, false);
                 } else if (down_cast<const Number &>(*arg1).is_zero()) {
                     set_map(nonnegative_, arg2, true);
                     set_map(negative_, arg2, false);
@@ -52,6 +53,7 @@ Assumptions::Assumptions(const set_basic &statements)
                     set_map(negative_, arg1, true);
                     set_map(nonpositive_, arg1, true);
                     set_map(nonzero_, arg1, true);
+                    set_map(zero_, arg1, false);
                 } else if (down_cast<const Number &>(*arg2).is_zero()) {
                     set_map(nonpositive_, arg1, true);
                     set_map(positive_, arg1, false);
@@ -70,6 +72,7 @@ Assumptions::Assumptions(const set_basic &statements)
                     set_map(negative_, arg2, false);
                     set_map(nonpositive_, arg2, false);
                     set_map(nonzero_, arg2, true);
+                    set_map(zero_, arg2, false);
                 }
             } else if (is_a<Symbol>(*arg1) and is_a_Number(*arg2)) {
                 real_symbols_.insert(arg1);
@@ -79,6 +82,38 @@ Assumptions::Assumptions(const set_basic &statements)
                     set_map(negative_, arg1, true);
                     set_map(nonpositive_, arg1, true);
                     set_map(nonzero_, arg1, true);
+                    set_map(zero_, arg1, false);
+                }
+            }
+        } else if (is_a<Equality>(*s)) {
+            const Equality &equals = down_cast<const Equality &>(*s);
+            const auto arg1 = equals.get_arg1();
+            const auto arg2 = equals.get_arg2();
+            if (is_a_Number(*arg1) and is_a<Symbol>(*arg2)) {
+                complex_symbols_.insert(arg2);
+                if (down_cast<const Number &>(*arg1).is_zero()) {
+                    set_map(zero_, arg2, true);
+                    real_symbols_.insert(arg2);
+                    rational_symbols_.insert(arg2);
+                    integer_symbols_.insert(arg2);
+                    set_map(positive_, arg2, false);
+                    set_map(negative_, arg2, false);
+                    set_map(nonpositive_, arg2, true);
+                    set_map(nonnegative_, arg2, true);
+                    set_map(nonzero_, arg2, false);
+                } else {
+                    set_map(zero_, arg2, false);
+                    set_map(nonzero_, arg2, true);
+                }
+            }
+        } else if (is_a<Unequality>(*s)) {
+            const Unequality &uneq = down_cast<const Unequality &>(*s);
+            const auto arg1 = uneq.get_arg1();
+            const auto arg2 = uneq.get_arg2();
+            if (is_a_Number(*arg1) and is_a<Symbol>(*arg2)) {
+                if (down_cast<const Number &>(*arg1).is_zero()) {
+                    set_map(zero_, arg2, false);
+                    set_map(nonzero_, arg2, true);
                 }
             }
         }
@@ -156,4 +191,10 @@ tribool Assumptions::is_nonzero(const RCP<const Basic> &symbol) const
 {
     return from_map(nonzero_, symbol);
 }
+
+tribool Assumptions::is_zero(const RCP<const Basic> &symbol) const
+{
+    return from_map(zero_, symbol);
+}
+
 } // namespace SymEngine

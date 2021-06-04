@@ -25,6 +25,7 @@ using SymEngine::Set;
 using SymEngine::sin;
 using SymEngine::symbol;
 using SymEngine::Symbol;
+using SymEngine::SymEngineException;
 using SymEngine::tribool;
 
 TEST_CASE("Test is zero", "[is_zero]")
@@ -37,7 +38,6 @@ TEST_CASE("Test is zero", "[is_zero]")
     RCP<const Basic> s1 = interval(i1, i2);
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -47,18 +47,26 @@ TEST_CASE("Test is zero", "[is_zero]")
     REQUIRE(is_zero(*i2) == tribool::trifalse);
     REQUIRE(is_zero(*rat1) == tribool::trifalse);
     REQUIRE(is_zero(*rat2) == tribool::tritrue);
-    REQUIRE(is_zero(*s1) == tribool::trifalse);
+    REQUIRE_THROWS_AS(is_zero(*s1), SymEngineException &);
     REQUIRE(is_zero(*c1) == tribool::trifalse);
-    REQUIRE(is_zero(*rel1) == tribool::trifalse);
-    REQUIRE(is_zero(*rel2) == tribool::trifalse);
+    REQUIRE_THROWS_AS(is_zero(*rel1), SymEngineException &);
     REQUIRE(is_zero(*pi) == tribool::trifalse);
     REQUIRE(is_zero(*d1) == tribool::indeterminate);
-    REQUIRE(is_zero(*boolTrue) == tribool::trifalse);
+    REQUIRE_THROWS_AS(is_zero(*boolTrue), SymEngineException &);
     REQUIRE(is_zero(*pi) == tribool::trifalse);
     REQUIRE(is_indeterminate(is_zero(*abs(x))));
     REQUIRE(is_indeterminate(is_zero(*conjugate(x))));
     REQUIRE(is_indeterminate(is_zero(*sign(x))));
     REQUIRE(is_indeterminate(is_zero(*primepi(x))));
+
+    const auto a1 = Assumptions({Eq(x, integer(0))});
+    REQUIRE(is_true(is_zero(*x, &a1)));
+
+    const auto a2 = Assumptions({Gt(x, integer(0))});
+    REQUIRE(is_false(is_zero(*x, &a2)));
+
+    const auto a3 = Assumptions({Ne(x, integer(0))});
+    REQUIRE(is_false(is_zero(*x, &a3)));
 }
 
 TEST_CASE("Test is nonzero", "[is_nonzero]")
@@ -71,7 +79,6 @@ TEST_CASE("Test is nonzero", "[is_nonzero]")
     RCP<const Basic> s1 = interval(i1, i2);
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -81,13 +88,12 @@ TEST_CASE("Test is nonzero", "[is_nonzero]")
     REQUIRE(is_true(is_nonzero(*i2)));
     REQUIRE(is_true(is_nonzero(*rat1)));
     REQUIRE(is_false(is_nonzero(*rat2)));
-    REQUIRE(is_false(is_nonzero(*s1)));
+    REQUIRE_THROWS_AS(is_nonzero(*s1), SymEngineException &);
     REQUIRE(is_true(is_nonzero(*c1)));
-    REQUIRE(is_false(is_nonzero(*rel1)));
-    REQUIRE(is_false(is_nonzero(*rel2)));
+    REQUIRE_THROWS_AS(is_nonzero(*rel1), SymEngineException &);
     REQUIRE(is_true(is_nonzero(*pi)));
     REQUIRE(is_indeterminate(is_nonzero(*d1)));
-    REQUIRE(is_false(is_nonzero(*boolTrue)));
+    REQUIRE_THROWS_AS(is_nonzero(*boolTrue), SymEngineException &);
     REQUIRE(is_true(is_nonzero(*pi)));
 }
 
@@ -104,7 +110,6 @@ TEST_CASE("Test is positive", "[is_positive]")
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Number> c2 = Complex::from_two_nums(*i3, *i3);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -116,14 +121,22 @@ TEST_CASE("Test is positive", "[is_positive]")
     REQUIRE(is_true(is_positive(*rat1)));
     REQUIRE(is_false(is_positive(*rat2)));
     REQUIRE(is_false(is_positive(*rat3)));
-    REQUIRE(is_false(is_positive(*s1)));
+    REQUIRE_THROWS_AS(is_positive(*s1), SymEngineException &);
     REQUIRE(is_false(is_positive(*c1)));
     REQUIRE(is_false(is_positive(*c2)));
-    REQUIRE(is_false(is_positive(*rel1)));
-    REQUIRE(is_false(is_positive(*rel2)));
+    REQUIRE_THROWS_AS(is_positive(*rel1), SymEngineException &);
     REQUIRE(is_true(is_positive(*pi)));
     REQUIRE(is_indeterminate(is_positive(*d1)));
-    REQUIRE(is_false(is_positive(*boolTrue)));
+    REQUIRE_THROWS_AS(is_positive(*boolTrue), SymEngineException &);
+
+    const auto a1 = Assumptions({Lt(x, integer(0))});
+    REQUIRE(is_false(is_positive(*x, &a1)));
+
+    const auto a2 = Assumptions({Lt(x, integer(1))});
+    REQUIRE(is_indeterminate(is_positive(*x, &a2)));
+
+    const auto a3 = Assumptions({Gt(x, integer(1))});
+    REQUIRE(is_true(is_positive(*x, &a3)));
 }
 
 TEST_CASE("Test is non positive", "[is_nonpositive]")
@@ -139,7 +152,6 @@ TEST_CASE("Test is non positive", "[is_nonpositive]")
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Number> c2 = Complex::from_two_nums(*i3, *i3);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -151,14 +163,22 @@ TEST_CASE("Test is non positive", "[is_nonpositive]")
     REQUIRE(is_false(is_nonpositive(*rat1)));
     REQUIRE(is_true(is_nonpositive(*rat2)));
     REQUIRE(is_true(is_nonpositive(*rat3)));
-    REQUIRE(is_false(is_nonpositive(*s1)));
+    REQUIRE_THROWS_AS(is_nonpositive(*s1), SymEngineException &);
     REQUIRE(is_false(is_nonpositive(*c1)));
     REQUIRE(is_false(is_nonpositive(*c2)));
-    REQUIRE(is_false(is_nonpositive(*rel1)));
-    REQUIRE(is_false(is_nonpositive(*rel2)));
+    REQUIRE_THROWS_AS(is_nonpositive(*rel1), SymEngineException &);
     REQUIRE(is_false(is_nonpositive(*pi)));
     REQUIRE(is_indeterminate(is_nonpositive(*d1)));
-    REQUIRE(is_false(is_nonpositive(*boolTrue)));
+    REQUIRE_THROWS_AS(is_nonpositive(*boolTrue), SymEngineException &);
+
+    const auto a1 = Assumptions({Lt(x, integer(0))});
+    REQUIRE(is_true(is_nonpositive(*x, &a1)));
+
+    const auto a2 = Assumptions({Lt(x, integer(1))});
+    REQUIRE(is_indeterminate(is_nonpositive(*x, &a2)));
+
+    const auto a3 = Assumptions({Gt(x, integer(1))});
+    REQUIRE(is_false(is_nonpositive(*x, &a3)));
 }
 
 TEST_CASE("Test is negative", "[is_negative]")
@@ -174,7 +194,6 @@ TEST_CASE("Test is negative", "[is_negative]")
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Number> c2 = Complex::from_two_nums(*i3, *i3);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -186,14 +205,22 @@ TEST_CASE("Test is negative", "[is_negative]")
     REQUIRE(is_false(is_negative(*rat1)));
     REQUIRE(is_false(is_negative(*rat2)));
     REQUIRE(is_true(is_negative(*rat3)));
-    REQUIRE(is_false(is_negative(*s1)));
+    REQUIRE_THROWS_AS(is_negative(*s1), SymEngineException &);
     REQUIRE(is_false(is_negative(*c1)));
     REQUIRE(is_false(is_negative(*c2)));
-    REQUIRE(is_false(is_negative(*rel1)));
-    REQUIRE(is_false(is_negative(*rel2)));
+    REQUIRE_THROWS_AS(is_negative(*rel1), SymEngineException &);
     REQUIRE(is_false(is_negative(*pi)));
     REQUIRE(is_indeterminate(is_negative(*d1)));
-    REQUIRE(is_false(is_negative(*boolTrue)));
+    REQUIRE_THROWS_AS(is_negative(*boolTrue), SymEngineException &);
+
+    const auto a1 = Assumptions({Lt(x, integer(0))});
+    REQUIRE(is_true(is_negative(*x, &a1)));
+
+    const auto a2 = Assumptions({Lt(x, integer(1))});
+    REQUIRE(is_indeterminate(is_negative(*x, &a2)));
+
+    const auto a3 = Assumptions({Gt(x, integer(1))});
+    REQUIRE(is_false(is_negative(*x, &a3)));
 }
 
 TEST_CASE("Test is nonnegative", "[is_nonnegative]")
@@ -209,7 +236,6 @@ TEST_CASE("Test is nonnegative", "[is_nonnegative]")
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
     RCP<const Number> c2 = Complex::from_two_nums(*i3, *i3);
     RCP<const Basic> rel1 = Eq(x, i1);
-    RCP<const Basic> rel2 = Lt(x, i1);
     RCP<const Symbol> t = symbol("t");
     RCP<const Basic> f = function_symbol("f", t);
     RCP<const Basic> d1 = f->diff(t);
@@ -221,14 +247,22 @@ TEST_CASE("Test is nonnegative", "[is_nonnegative]")
     REQUIRE(is_true(is_nonnegative(*rat1)));
     REQUIRE(is_true(is_nonnegative(*rat2)));
     REQUIRE(is_false(is_nonnegative(*rat3)));
-    REQUIRE(is_false(is_nonnegative(*s1)));
+    REQUIRE_THROWS_AS(is_nonnegative(*s1), SymEngineException &);
     REQUIRE(is_false(is_nonnegative(*c1)));
     REQUIRE(is_false(is_nonnegative(*c2)));
-    REQUIRE(is_false(is_nonnegative(*rel1)));
-    REQUIRE(is_false(is_nonnegative(*rel2)));
+    REQUIRE_THROWS_AS(is_nonnegative(*rel1), SymEngineException &);
     REQUIRE(is_true(is_nonnegative(*pi)));
     REQUIRE(is_indeterminate(is_nonnegative(*d1)));
-    REQUIRE(is_false(is_nonnegative(*boolTrue)));
+    REQUIRE_THROWS_AS(is_nonnegative(*boolTrue), SymEngineException &);
+
+    const auto a1 = Assumptions({Lt(x, integer(0))});
+    REQUIRE(is_false(is_nonnegative(*x, &a1)));
+
+    const auto a2 = Assumptions({Lt(x, integer(1))});
+    REQUIRE(is_indeterminate(is_nonnegative(*x, &a2)));
+
+    const auto a3 = Assumptions({Gt(x, integer(1))});
+    REQUIRE(is_true(is_nonnegative(*x, &a3)));
 }
 
 TEST_CASE("Test is_integer", "[is_integer]")

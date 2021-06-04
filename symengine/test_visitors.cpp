@@ -2,6 +2,59 @@
 
 namespace SymEngine
 {
+
+void ZeroVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_zero/is_nonzero");
+}
+
+void ZeroVisitor::bvisit(const Basic &x)
+{
+    is_zero_ = tribool::indeterminate;
+}
+
+void ZeroVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void ZeroVisitor::bvisit(const Constant &x)
+{
+    is_zero_ = tribool::trifalse;
+}
+
+void ZeroVisitor::bvisit(const Abs &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const Conjugate &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const Sign &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ZeroVisitor::bvisit(const PrimePi &x)
+{
+    // First prime is 2 so pi(x) is zero for x < 2
+    is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
+}
+
 void ZeroVisitor::bvisit(const Number &x)
 {
     if (bool(x.is_zero())) {
@@ -11,26 +64,70 @@ void ZeroVisitor::bvisit(const Number &x)
     }
 }
 
+void ZeroVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_zero_ = assumptions_->is_zero(x.rcp_from_this());
+    } else {
+        is_zero_ = tribool::indeterminate;
+    }
+}
+
 tribool ZeroVisitor::apply(const Basic &b)
 {
     b.accept(*this);
-    tribool result = is_zero_;
-    if (not zero_ and not neither_) {
-        result = not_tribool(result);
+    return is_zero_;
+}
+
+tribool is_zero(const Basic &b, const Assumptions *assumptions)
+{
+    ZeroVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
+tribool is_nonzero(const Basic &b, const Assumptions *assumptions)
+{
+    ZeroVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
+}
+
+void PositiveVisitor::error()
+{
+    throw SymEngineException("Only numeric types allowed for is_positive");
+}
+
+void PositiveVisitor::bvisit(const Constant &x)
+{
+    is_positive_ = tribool::tritrue;
+}
+
+void PositiveVisitor::bvisit(const Basic &x)
+{
+    is_positive_ = tribool::indeterminate;
+}
+
+void PositiveVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void PositiveVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void PositiveVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void PositiveVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_positive_ = assumptions_->is_positive(x.rcp_from_this());
+    } else {
+        is_positive_ = tribool::indeterminate;
     }
-    return result;
-}
-
-tribool is_zero(const Basic &b)
-{
-    ZeroVisitor visitor(true);
-    return visitor.apply(b);
-}
-
-tribool is_nonzero(const Basic &b)
-{
-    ZeroVisitor visitor(false);
-    return visitor.apply(b);
 }
 
 void PositiveVisitor::bvisit(const Number &x)
@@ -50,10 +147,49 @@ tribool PositiveVisitor::apply(const Basic &b)
     return is_positive_;
 }
 
-tribool is_positive(const Basic &b)
+tribool is_positive(const Basic &b, const Assumptions *assumptions)
 {
-    PositiveVisitor visitor;
+    PositiveVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NonPositiveVisitor::error()
+{
+    throw SymEngineException("Only numeric types allowed for is_negative");
+}
+
+void NonPositiveVisitor::bvisit(const Constant &x)
+{
+    is_nonpositive_ = tribool::trifalse;
+}
+
+void NonPositiveVisitor::bvisit(const Basic &x)
+{
+    is_nonpositive_ = tribool::indeterminate;
+}
+
+void NonPositiveVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void NonPositiveVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void NonPositiveVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void NonPositiveVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_nonpositive_ = assumptions_->is_nonpositive(x.rcp_from_this());
+    } else {
+        is_nonpositive_ = tribool::indeterminate;
+    }
 }
 
 void NonPositiveVisitor::bvisit(const Number &x)
@@ -73,10 +209,49 @@ tribool NonPositiveVisitor::apply(const Basic &b)
     return is_nonpositive_;
 }
 
-tribool is_nonpositive(const Basic &b)
+tribool is_nonpositive(const Basic &b, const Assumptions *assumptions)
 {
-    NonPositiveVisitor visitor;
+    NonPositiveVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NegativeVisitor::error()
+{
+    throw SymEngineException("Only numeric types allowed for is_negative");
+}
+
+void NegativeVisitor::bvisit(const Basic &x)
+{
+    is_negative_ = tribool::indeterminate;
+}
+
+void NegativeVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void NegativeVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void NegativeVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void NegativeVisitor::bvisit(const Constant &x)
+{
+    is_negative_ = tribool::trifalse;
+}
+
+void NegativeVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_negative_ = assumptions_->is_negative(x.rcp_from_this());
+    } else {
+        is_negative_ = tribool::indeterminate;
+    }
 }
 
 void NegativeVisitor::bvisit(const Number &x)
@@ -96,10 +271,49 @@ tribool NegativeVisitor::apply(const Basic &b)
     return is_negative_;
 }
 
-tribool is_negative(const Basic &b)
+tribool is_negative(const Basic &b, const Assumptions *assumptions)
 {
-    NegativeVisitor visitor;
+    NegativeVisitor visitor(assumptions);
     return visitor.apply(b);
+}
+
+void NonNegativeVisitor::error()
+{
+    throw SymEngineException("Only numeric types allowed for is_nonnegative");
+}
+
+void NonNegativeVisitor::bvisit(const Basic &x)
+{
+    is_nonnegative_ = tribool::indeterminate;
+}
+
+void NonNegativeVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void NonNegativeVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void NonNegativeVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void NonNegativeVisitor::bvisit(const Constant &x)
+{
+    is_nonnegative_ = tribool::tritrue;
+}
+
+void NonNegativeVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_nonnegative_ = assumptions_->is_nonnegative(x.rcp_from_this());
+    } else {
+        is_nonnegative_ = tribool::indeterminate;
+    }
 }
 
 void NonNegativeVisitor::bvisit(const Number &x)
@@ -119,9 +333,9 @@ tribool NonNegativeVisitor::apply(const Basic &b)
     return is_nonnegative_;
 }
 
-tribool is_nonnegative(const Basic &b)
+tribool is_nonnegative(const Basic &b, const Assumptions *assumptions)
 {
-    NonNegativeVisitor visitor;
+    NonNegativeVisitor visitor(assumptions);
     return visitor.apply(b);
 }
 

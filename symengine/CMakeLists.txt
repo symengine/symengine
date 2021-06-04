@@ -83,6 +83,8 @@ set(SRC
     printers/sbml.cpp
     printers/strprinter.cpp
     printers/latex.cpp
+    printers/unicode.cpp
+    printers/stringbox.cpp
     rational.cpp
     real_double.cpp
     rewrite.cpp
@@ -97,6 +99,7 @@ set(SRC
     visitor.cpp
     test_visitors.cpp
     assumptions.cpp
+    refine.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -194,6 +197,7 @@ set(HEADERS
     printers/sbml.h
     printers/strprinter.h
     printers/latex.h
+    printers/unicode.h
     printers.h
     rational.h
     real_double.h
@@ -216,6 +220,7 @@ set(HEADERS
     visitor.h
     test_visitors.h
     assumptions.h
+    refine.h
 )
 
 include(GNUInstallDirs)
