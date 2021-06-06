@@ -48,12 +48,14 @@ static std::string lowercase(const std::string &str)
 
 // reference :
 // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
+typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic> &);
 typedef RCP<const Boolean> (*double_arg_boolean_func)(const RCP<const Basic> &,
                                                       const RCP<const Basic> &);
 typedef RCP<const Basic> (*vector_arg_func)(const vec_basic &);
 
 // cast overloaded functions below to single_arg, double_arg before they can
 // be used in the map
+static single_arg_func single_casted_log = log;
 static double_arg_boolean_func double_casted_Eq = Eq;
 
 static vector_arg_func vector_casted_add = add;
@@ -90,23 +92,58 @@ static std::map<const std::string,
                 const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
 init_sbml_parser_single_arg_functions()
 {
-    auto functions = init_parser_single_arg_functions();
-    functions.erase("log");
-    functions.insert({"log", log10});
-    functions.insert({"log10", log10});
-    functions.insert({"factorial", fact});
-    functions.insert({"root", sqrt});
-    functions.insert({"sqr", sqr});
-    functions.insert({"ceil", ceiling});
-    functions.erase("gamma");
-    functions.erase("erf");
-    functions.erase("erfc");
-    functions.erase("loggamma");
-    functions.erase("lambertw");
-    functions.erase("dirichlet_eta");
-    functions.erase("lambertw");
-    functions.erase("primorial");
-    return functions;
+    return {{"sin", sin},
+            {"cos", cos},
+            {"tan", tan},
+            {"cot", cot},
+            {"csc", csc},
+            {"sec", sec},
+
+            {"asin", asin},
+            {"arcsin", asin},
+            {"acos", acos},
+            {"arccos", acos},
+            {"atan", atan},
+            {"arctan", atan},
+            {"asec", asec},
+            {"arcsec", asec},
+            {"acsc", acsc},
+            {"arccsc", acsc},
+            {"acot", acot},
+            {"arccot", acot},
+
+            {"sinh", sinh},
+            {"cosh", cosh},
+            {"tanh", tanh},
+            {"coth", coth},
+            {"sech", sech},
+            {"csch", csch},
+
+            {"asinh", asinh},
+            {"arcsinh", asinh},
+            {"acosh", acosh},
+            {"arccosh", acosh},
+            {"atanh", atanh},
+            {"arctanh", atanh},
+            {"asech", asech},
+            {"arcsech", asech},
+            {"acoth", acoth},
+            {"arccoth", acoth},
+            {"acsch", acsch},
+            {"arccsch", acsch},
+
+            {"sqrt", sqrt},
+            {"abs", abs},
+            {"exp", exp},
+            {"floor", floor},
+            {"ceil", ceiling},
+            {"ceiling", ceiling},
+            {"ln", single_casted_log},
+            {"log", log10},
+            {"log10", log10},
+            {"factorial", fact},
+            {"root", sqrt},
+            {"sqr", sqr}};
 }
 
 static RCP<const Boolean> vec_ge(const vec_basic &x)
