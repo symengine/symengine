@@ -704,6 +704,8 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l25 = integers();
     RCP<const Basic> l26 = rationals();
     RCP<const Basic> l27 = primepi(symbol("x"));
+    RCP<const Basic> l28 = mobius(symbol("x"));
+    RCP<const Basic> l29 = mertens(symbol("x"));
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -742,6 +744,8 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l25) == "\\mathbb{Z}");
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
+    CHECK(latex(*l28) == "\\mu{\\left(x\\right)}");
+    CHECK(latex(*l29) == "\\operatorname{M}{\\left(x\\right)}");
 }
 
 TEST_CASE("test_unicode()", "[unicode]")
