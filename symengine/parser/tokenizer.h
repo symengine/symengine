@@ -1,7 +1,8 @@
 #ifndef SYMENGINE_TOKENIZER_H
 #define SYMENGINE_TOKENIZER_H
 
-#include <symengine/parser/parser_stype.h>
+#include <string>
+#include "parser.tab.hh"
 
 namespace SymEngine
 {
@@ -19,7 +20,7 @@ public:
 
     // Get next token. Token ID is returned as function result, the semantic
     // value is put into `yylval`.
-    int lex(YYSTYPE &yylval);
+    int lex(yy::parser::semantic_type *yylval);
 
     // Return the current token
     std::string token() const
