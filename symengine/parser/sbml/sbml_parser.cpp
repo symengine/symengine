@@ -1,6 +1,7 @@
 #include <symengine/parser.h>
 #include <symengine/parser/sbml/sbml_parser.h>
 #include <symengine/parser/sbml/sbml_parser.tab.hh>
+#include <symengine/parser/sbml/sbml_tokenizer.h>
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/functions.h>
@@ -33,8 +34,9 @@ RCP<const Basic> SbmlParser::parse(const std::string &input, bool convert_xor)
     if (convert_xor) {
         std::replace(inp.begin(), inp.end(), '^', '@');
     }
-    m_tokenizer.set_string(inp);
-    if (sbmlparse(*this) == 0)
+    m_tokenizer->set_string(inp);
+    sbml::parser p(*this);
+    if (p() == 0)
         return this->res;
     throw ParseError("Parsing Unsuccessful");
 }
@@ -364,8 +366,10 @@ RCP<const Basic> SbmlParser::parse_identifier(const std::string &expr)
 
 SbmlParser::SbmlParser(
     const std::map<const std::string, const RCP<const Basic>> &parser_constants)
-    : Parser(parser_constants)
+    : Parser(parser_constants), m_tokenizer{new SbmlTokenizer()}
 {
 }
+
+SbmlParser::~SbmlParser() = default;
 
 } // namespace SymEngine

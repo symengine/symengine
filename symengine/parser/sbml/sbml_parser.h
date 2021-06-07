@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <memory>
 
-#include <symengine/parser/sbml/sbml_tokenizer.h>
 #include <symengine/parser/parser.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
@@ -13,6 +12,8 @@
 
 namespace SymEngine
 {
+
+class SbmlTokenizer;
 
 class SbmlParser : public Parser
 {
@@ -23,7 +24,7 @@ private:
         single_arg_functions_;
 
 public:
-    SbmlTokenizer m_tokenizer;
+    std::unique_ptr<SbmlTokenizer> m_tokenizer;
     RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
 
     RCP<const Basic> modulo(const RCP<const Basic> &a,
@@ -34,6 +35,7 @@ public:
     explicit SbmlParser(const std::map<const std::string,
                                        const RCP<const Basic>> &parser_constants
                         = {});
+    ~SbmlParser();
 };
 
 } // namespace SymEngine

@@ -1,8 +1,8 @@
 #ifndef SYMENGINE_SBML_TOKENIZER_H
 #define SYMENGINE_SBML_TOKENIZER_H
 
-#include <symengine/parser/parser_stype.h>
 #include <symengine/parser/tokenizer.h>
+#include "sbml_parser.tab.hh"
 
 namespace SymEngine
 {
@@ -10,7 +10,7 @@ namespace SymEngine
 class SbmlTokenizer : public Tokenizer
 {
 public:
-    int lex(ParserSType &yylval);
+    int lex(sbml::parser::semantic_type *yylval);
 };
 
 } // namespace SymEngine

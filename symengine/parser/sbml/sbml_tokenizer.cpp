@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-int SbmlTokenizer::lex(ParserSType &yylval)
+int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
 {
     for (;;) {
         tok = cur;
@@ -107,7 +107,7 @@ int SbmlTokenizer::lex(ParserSType &yylval)
             ++cur;
 #line 33 "sbml_tokenizer.re"
             {
-                return sbmltokentype::END_OF_FILE;
+                return sbml::parser::token::yytokentype::END_OF_FILE;
             }
 #line 106 "sbml_tokenizer.cpp"
         yy4:
@@ -170,8 +170,8 @@ int SbmlTokenizer::lex(ParserSType &yylval)
         yy16 :
 #line 45 "sbml_tokenizer.re"
         {
-            yylval.string = token();
-            return sbmltokentype::NUMERIC;
+            yylval->emplace<std::string>() = token();
+            return sbml::parser::token::yytokentype::NUMERIC;
         }
 #line 154 "sbml_tokenizer.cpp"
         yy17:
@@ -196,8 +196,8 @@ int SbmlTokenizer::lex(ParserSType &yylval)
             }
 #line 44 "sbml_tokenizer.re"
             {
-                yylval.string = token();
-                return sbmltokentype::IDENTIFIER;
+                yylval->emplace<std::string>() = token();
+                return sbml::parser::token::yytokentype::IDENTIFIER;
             }
 #line 174 "sbml_tokenizer.cpp"
         yy23:
@@ -209,14 +209,14 @@ int SbmlTokenizer::lex(ParserSType &yylval)
             ++cur;
 #line 40 "sbml_tokenizer.re"
             {
-                return sbmltokentype::NE;
+                return sbml::parser::token::yytokentype::NE;
             }
 #line 183 "sbml_tokenizer.cpp"
         yy26:
             ++cur;
 #line 42 "sbml_tokenizer.re"
             {
-                return sbmltokentype::AND;
+                return sbml::parser::token::yytokentype::AND;
             }
 #line 188 "sbml_tokenizer.cpp"
         yy28:
@@ -261,28 +261,28 @@ int SbmlTokenizer::lex(ParserSType &yylval)
             ++cur;
 #line 38 "sbml_tokenizer.re"
             {
-                return sbmltokentype::LE;
+                return sbml::parser::token::yytokentype::LE;
             }
 #line 221 "sbml_tokenizer.cpp"
         yy35:
             ++cur;
 #line 41 "sbml_tokenizer.re"
             {
-                return sbmltokentype::EQ;
+                return sbml::parser::token::yytokentype::EQ;
             }
 #line 226 "sbml_tokenizer.cpp"
         yy37:
             ++cur;
 #line 39 "sbml_tokenizer.re"
             {
-                return sbmltokentype::GE;
+                return sbml::parser::token::yytokentype::GE;
             }
 #line 231 "sbml_tokenizer.cpp"
         yy39:
             ++cur;
 #line 43 "sbml_tokenizer.re"
             {
-                return sbmltokentype::OR;
+                return sbml::parser::token::yytokentype::OR;
             }
 #line 236 "sbml_tokenizer.cpp"
         yy41:

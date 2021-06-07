@@ -1055,3 +1055,17 @@ TEST_CASE("Parsing: errors", "[sbml_parser]")
     s = "x+%y+z";
     CHECK_THROWS_AS(parse_sbml(s), ParseError &);
 }
+
+TEST_CASE("Parsing: bison stack reallocation", "[sbml_parser]")
+{
+    std::size_t n{5000};
+    std::string s{};
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append("SiN(");
+    }
+    s.append("0");
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append(")");
+    }
+    REQUIRE(eq(*parse_sbml(s), *integer(0)));
+}

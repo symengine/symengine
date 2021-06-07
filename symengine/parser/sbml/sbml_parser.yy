@@ -1,16 +1,8 @@
-%require "3.0"
-%define api.pure full
-%define api.value.type {struct SymEngine::ParserSType}
-%define api.prefix {sbml}
+%require "3.2"
+%language "c++"
+%define api.value.type variant
+%define api.namespace {sbml}
 %param {SymEngine::SbmlParser &p}
-
-/*
-// Uncomment this to enable parser tracing:
-%define parse.trace
-%printer { fprintf(yyo, "%s", $$.c_str()); } <string>
-%printer { std::cerr << *$$; } <basic>
-*/
-
 
 %code requires // *.h
 {
@@ -25,50 +17,46 @@
 #include "symengine/logic.h"
 #include "symengine/parser/sbml/sbml_parser.h"
 
-    using SymEngine::add;
-    using SymEngine::Basic;
-    using SymEngine::Boolean;
-    using SymEngine::Eq;
-    using SymEngine::Ge;
-    using SymEngine::Gt;
-    using SymEngine::Le;
-    using SymEngine::Lt;
-    using SymEngine::mul;
-    using SymEngine::Ne;
-    using SymEngine::one;
-    using SymEngine::pow;
-    using SymEngine::RCP;
-    using SymEngine::rcp_static_cast;
-    using SymEngine::set_boolean;
-    using SymEngine::sub;
-    using SymEngine::vec_basic;
-    using SymEngine::vec_boolean;
+using SymEngine::add;
+using SymEngine::Basic;
+using SymEngine::Boolean;
+using SymEngine::Eq;
+using SymEngine::Ge;
+using SymEngine::Gt;
+using SymEngine::Le;
+using SymEngine::Lt;
+using SymEngine::mul;
+using SymEngine::Ne;
+using SymEngine::one;
+using SymEngine::pow;
+using SymEngine::RCP;
+using SymEngine::rcp_static_cast;
+using SymEngine::set_boolean;
+using SymEngine::sub;
+using SymEngine::vec_basic;
+using SymEngine::vec_boolean;
 
 #include "symengine/parser/sbml/sbml_tokenizer.h"
 
-    int yylex(SymEngine::ParserSType * yylval, SymEngine::SbmlParser & p)
-    {
-        return p.m_tokenizer.lex(*yylval);
-    } // ylex
+namespace sbml
+{
 
-    void yyerror(SymEngine::SbmlParser & p, const std::string &msg)
-    {
-        throw SymEngine::ParseError(msg);
-    }
+int yylex(sbml::parser::semantic_type* yylval, SymEngine::SbmlParser & p)
+{
+    return p.m_tokenizer->lex(yylval);
+}
 
-// Force YYCOPY to not use memcopy, but rather copy the structs one by one,
-// which will cause C++ to call the proper copy constructors.
-#define YYCOPY(Dst, Src, Count)                                                \
-    do {                                                                       \
-        YYPTRDIFF_T yyi;                                                       \
-        for (yyi = 0; yyi < (Count); yyi++)                                    \
-            (Dst)[yyi] = (Src)[yyi];                                           \
-    } while (0)
+void parser::error(const std::string &msg)
+{
+    throw SymEngine::ParseError(msg);
+}
 
-} // code
+}
 
-%token<string> IDENTIFIER
-%token<string> NUMERIC
+}
+
+%token<std::string> IDENTIFIER
+%token<std::string> NUMERIC
 %token END_OF_FILE 0
 
 %left AND OR
@@ -79,9 +67,9 @@
 %left '^' '@'
 %nonassoc '('
 
-%type<basic> st_expr
-%type<basic> expr
-%type<basic_vec> expr_list
+%type<SymEngine::RCP<const SymEngine::Basic>> st_expr
+%type<SymEngine::RCP<const SymEngine::Basic>> expr
+%type<SymEngine::vec_basic> expr_list
 
 %start st_expr
 

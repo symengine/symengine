@@ -4,7 +4,7 @@
 namespace SymEngine
 {
 
-int SbmlTokenizer::lex(ParserSType &yylval)
+int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
 {
     for (;;) {
         tok = cur;
@@ -30,19 +30,19 @@ int SbmlTokenizer::lex(ParserSType &yylval)
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
-            end { return sbmltokentype::END_OF_FILE; }
+            end { return sbml::parser::token::yytokentype::END_OF_FILE; }
             whitespace { continue; }
 
             // FIXME:
             operators { return tok[0]; }
-            le   { return sbmltokentype::LE; }
-            ge   { return sbmltokentype::GE; }
-            ne   { return sbmltokentype::NE; }
-            eqs  { return sbmltokentype::EQ; }
-            and  { return sbmltokentype::AND; }
-            or   { return sbmltokentype::OR; }
-            ident { yylval.string=token(); return sbmltokentype::IDENTIFIER; }
-            numeric { yylval.string=token(); return sbmltokentype::NUMERIC; }
+            le   { return sbml::parser::token::yytokentype::LE; }
+            ge   { return sbml::parser::token::yytokentype::GE; }
+            ne   { return sbml::parser::token::yytokentype::NE; }
+            eqs  { return sbml::parser::token::yytokentype::EQ; }
+            and  { return sbml::parser::token::yytokentype::AND; }
+            or   { return sbml::parser::token::yytokentype::OR; }
+            ident { yylval->emplace<std::string>() = token(); return sbml::parser::token::yytokentype::IDENTIFIER; }
+            numeric { yylval->emplace<std::string>() = token(); return sbml::parser::token::yytokentype::NUMERIC; }
         */
     }
 }
