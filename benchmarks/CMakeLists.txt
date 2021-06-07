@@ -88,6 +88,9 @@ if (BUILD_BENCHMARKS_GOOGLE)
 
     add_executable(visitor_init visitor_init.cpp)
     target_link_libraries(visitor_init symengine benchmark::benchmark)
+
+    add_executable(parsing_google parsing_google.cpp)
+    target_link_libraries(parsing_google symengine benchmark::benchmark)
 endif()
 
 add_executable(parsing parsing.cpp)
