@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/utilities/stream_fmt.h>
 
 namespace SymEngine
 {

@@ -12,6 +12,7 @@ typedef enum {
     SYMENGINE_NOT_IMPLEMENTED = 3,
     SYMENGINE_DOMAIN_ERROR = 4,
     SYMENGINE_PARSE_ERROR = 5,
+    SYMENGINE_SERIALIZATION_ERROR = 6,
 } symengine_exceptions_t;
 
 #ifdef __cplusplus
@@ -82,6 +83,15 @@ class ParseError : public SymEngineException
 public:
     ParseError(const std::string &msg)
         : SymEngineException(msg, SYMENGINE_PARSE_ERROR)
+    {
+    }
+};
+
+class SerializationError : public SymEngineException
+{
+public:
+    SerializationError(const std::string &msg)
+        : SymEngineException(msg, SYMENGINE_SERIALIZATION_ERROR)
     {
     }
 };

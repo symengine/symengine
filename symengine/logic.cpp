@@ -1,4 +1,5 @@
 #include <symengine/logic.h>
+#include <symengine/utilities/stream_fmt.h>
 
 namespace SymEngine
 {
