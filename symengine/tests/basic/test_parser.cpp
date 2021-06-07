@@ -921,3 +921,17 @@ TEST_CASE("Parsing: errors", "[parser]")
     s = "x+%y+z";
     CHECK_THROWS_AS(parse(s), ParseError &);
 }
+
+TEST_CASE("Parsing: bison stack reallocation", "[parser]")
+{
+    std::size_t n{100};
+    std::string s{};
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append("sin(");
+    }
+    s.append("0");
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append(")");
+    }
+    REQUIRE(eq(*parse(s), *integer(0)));
+}
