@@ -1,6 +1,6 @@
-%require "3.0"
-%define api.pure full
-%define api.value.type {struct SymEngine::ParserSType}
+%require "3.2"
+%language "c++"
+%define api.value.type variant
 %param {SymEngine::Parser &p}
 
 /*
@@ -43,38 +43,28 @@ using SymEngine::Boolean;
 using SymEngine::one;
 using SymEngine::vec_boolean;
 
-
 #include "symengine/parser/tokenizer.h"
 
-
-int yylex(SymEngine::ParserSType *yylval, SymEngine::Parser &p)
+namespace yy
 {
-    return p.m_tokenizer.lex(*yylval);
-} // ylex
 
-void yyerror(SymEngine::Parser &p, const std::string &msg)
+int yylex(yy::parser::semantic_type* yylval, SymEngine::Parser &p)
+{
+    return p.m_tokenizer->lex(yylval);
+}
+
+void parser::error(const std::string &msg)
 {
     throw SymEngine::ParseError(msg);
 }
 
-// Force YYCOPY to not use memcopy, but rather copy the structs one by one,
-// which will cause C++ to call the proper copy constructors.
-# define YYCOPY(Dst, Src, Count)              \
-    do                                        \
-      {                                       \
-        YYPTRDIFF_T yyi;                      \
-        for (yyi = 0; yyi < (Count); yyi++)   \
-          (Dst)[yyi] = (Src)[yyi];            \
-      }                                       \
-    while (0)
+}
 
-} // code
+}
 
-
-
-%token <string> IDENTIFIER
-%token <string> NUMERIC
-%token <string> IMPLICIT_MUL
+%token <std::string> IDENTIFIER
+%token <std::string> NUMERIC
+%token <std::string> IMPLICIT_MUL
 %token END_OF_FILE 0
 
 %left '|'
@@ -94,11 +84,11 @@ void yyerror(SymEngine::Parser &p, const std::string &msg)
 %right NOT
 %nonassoc '('
 
-%type <basic> st_expr
-%type <basic> expr
-%type <basic_vec> expr_list
-%type <basic> leaf
-%type <basic> func
+%type <SymEngine::RCP<const SymEngine::Basic>> st_expr
+%type <SymEngine::RCP<const SymEngine::Basic>> expr
+%type <SymEngine::vec_basic> expr_list
+%type <SymEngine::RCP<const SymEngine::Basic>> leaf
+%type <SymEngine::RCP<const SymEngine::Basic>> func
 
 %start st_expr
 

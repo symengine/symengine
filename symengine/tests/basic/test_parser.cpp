@@ -49,7 +49,6 @@ using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::parse;
 using SymEngine::ParseError;
-using SymEngine::ParserSType;
 using SymEngine::pi;
 using SymEngine::pow;
 using SymEngine::Rational;
@@ -63,23 +62,6 @@ using SymEngine::UIntPoly;
 using SymEngine::zero;
 
 using namespace SymEngine::literals;
-
-TEST_CASE("Parsing: internal data structures", "[parser]")
-{
-    std::string s;
-    RCP<const Basic> res = integer(5);
-    REQUIRE(res->use_count() == 1);
-
-    struct ParserSType a;
-    a.basic = res;
-    REQUIRE(res->use_count() == 2);
-    {
-        struct ParserSType b;
-        b = a;
-        REQUIRE(res->use_count() == 3);
-    }
-    REQUIRE(res->use_count() == 2);
-}
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -326,26 +308,6 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "asin(sin(x))";
     res = parse(s);
     REQUIRE(eq(*res, *asin(sin(x))));
-    REQUIRE(eq(*res, *parse(res->__str__())));
-
-    s = "arcsin(arccos(arctan(x)))";
-    res = parse(s);
-    REQUIRE(eq(*res, *asin(acos(atan(x)))));
-    REQUIRE(eq(*res, *parse(res->__str__())));
-
-    s = "arcsec(arccsc(arccot(x)))";
-    res = parse(s);
-    REQUIRE(eq(*res, *asec(acsc(acot(x)))));
-    REQUIRE(eq(*res, *parse(res->__str__())));
-
-    s = "arcsinh(arccosh(arctanh(x)))";
-    res = parse(s);
-    REQUIRE(eq(*res, *asinh(acosh(atanh(x)))));
-    REQUIRE(eq(*res, *parse(res->__str__())));
-
-    s = "arcsech(arccoth(arccsch(x)))";
-    res = parse(s);
-    REQUIRE(eq(*res, *asech(acoth(acsch(x)))));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     s = "floor(5.2)";
@@ -940,4 +902,18 @@ TEST_CASE("Parsing: errors", "[parser]")
 
     s = "x+%y+z";
     CHECK_THROWS_AS(parse(s), ParseError &);
+}
+
+TEST_CASE("Parsing: bison stack reallocation", "[parser]")
+{
+    std::size_t n{5000};
+    std::string s{};
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append("sin(");
+    }
+    s.append("0");
+    for (std::size_t i = 0; i < n; ++i) {
+        s.append(")");
+    }
+    REQUIRE(eq(*parse(s), *integer(0)));
 }

@@ -176,7 +176,6 @@ set(HEADERS
     number.h
     parser.h
     parser/parser.h
-    parser/parser_stype.h
     parser/tokenizer.h
     parser/sbml/sbml_parser.h
     parser/sbml/sbml_tokenizer.h
