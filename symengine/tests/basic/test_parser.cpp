@@ -59,27 +59,9 @@ using SymEngine::RealDouble;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::UIntPoly;
-using SymEngine::YYSTYPE;
 using SymEngine::zero;
 
 using namespace SymEngine::literals;
-
-TEST_CASE("Parsing: internal data structures", "[parser]")
-{
-    std::string s;
-    RCP<const Basic> res = integer(5);
-    REQUIRE(res->use_count() == 1);
-
-    struct YYSTYPE a;
-    a.basic = res;
-    REQUIRE(res->use_count() == 2);
-    {
-        struct YYSTYPE b;
-        b = a;
-        REQUIRE(res->use_count() == 3);
-    }
-    REQUIRE(res->use_count() == 2);
-}
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -924,7 +906,7 @@ TEST_CASE("Parsing: errors", "[parser]")
 
 TEST_CASE("Parsing: bison stack reallocation", "[parser]")
 {
-    std::size_t n{100};
+    std::size_t n{5000};
     std::string s{};
     for (std::size_t i = 0; i < n; ++i) {
         s.append("sin(");

@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <memory>
 
-#include <symengine/parser/tokenizer.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/logic.h>
@@ -27,6 +26,8 @@ namespace SymEngine
 
 */
 
+class Tokenizer;
+
 class Parser
 {
 private:
@@ -34,7 +35,7 @@ private:
     std::map<const std::string, const RCP<const Basic>> local_parser_constants;
 
 public:
-    Tokenizer m_tokenizer;
+    std::unique_ptr<Tokenizer> m_tokenizer;
     RCP<const Basic> res;
 
     RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
@@ -47,6 +48,7 @@ public:
     explicit Parser(const std::map<const std::string, const RCP<const Basic>>
                         &parser_constants
                     = {});
+    ~Parser();
 };
 
 } // namespace SymEngine

@@ -3,6 +3,7 @@
 #include <symengine/real_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/ntheory_funcs.h>
+#include <symengine/parser/tokenizer.h>
 
 namespace SymEngine
 {
@@ -24,8 +25,9 @@ RCP<const Basic> Parser::parse(const std::string &input, bool convert_xor)
     if (convert_xor) {
         std::replace(inp.begin(), inp.end(), '^', '@');
     }
-    m_tokenizer.set_string(inp);
-    if (yyparse(*this) == 0)
+    m_tokenizer->set_string(inp);
+    yy::parser p(*this);
+    if (p() == 0)
         return this->res;
     throw ParseError("Parsing Unsuccessful");
 }
@@ -323,8 +325,10 @@ Parser::parse_implicit_mul(const std::string &expr)
 
 Parser::Parser(
     const std::map<const std::string, const RCP<const Basic>> &parser_constants)
-    : local_parser_constants(parser_constants)
+    : local_parser_constants(parser_constants), m_tokenizer{new Tokenizer()}
 {
 }
+
+Parser::~Parser() = default;
 
 } // namespace SymEngine

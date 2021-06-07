@@ -161,7 +161,6 @@ set(HEADERS
     number.h
     parser.h
     parser/parser.h
-    parser/parser_stype.h
     parser/tokenizer.h
     polys/basic_conversions.h
     polys/cancel.h
