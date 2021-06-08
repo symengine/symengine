@@ -18,7 +18,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             whitespace = [ \t\v\n\r]+;
             dig = [0-9];
             char =  [\x80-\xff] | [a-zA-Z_];
-            operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"<"|">"|"&"|"%"|"!"|"@";
+            operators = "-"|"+"|"/"|"("|")"|"*"|","|"^"|"<"|">"|"%"|"!"|"@";
 
             le = "<=";
             ge = ">=";

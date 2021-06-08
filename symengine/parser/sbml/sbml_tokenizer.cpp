@@ -145,7 +145,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             yych = *++cur;
             if (yych == '&')
                 goto yy26;
-            goto yy10;
+            goto yy5;
         yy13:
             yych = *++cur;
             if (yych <= '/')
