@@ -750,7 +750,7 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "xor((x < y), (w >= z))";
-    res = parse_sbml(s, false);
+    res = parse_sbml(s);
     REQUIRE(eq(*res, *logical_xor({Lt(x, y), Le(z, w)})));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
@@ -777,18 +777,18 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "xor(!(x < y), (w >= z))";
-    res = parse_sbml(s, false);
+    res = parse_sbml(s);
     REQUIRE(eq(*res, *logical_xor({logical_not(Lt(x, y)), Le(z, w)})));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "(x < y) || xor((w >= z), (y == z))";
-    res = parse_sbml(s, false);
+    res = parse_sbml(s);
     REQUIRE(
         eq(*res, *logical_or({Lt(x, y), logical_xor({Le(z, w), Eq(y, z)})})));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "xor((x < y) && (w >= z), (y == z))";
-    res = parse_sbml(s, false);
+    res = parse_sbml(s);
     REQUIRE(
         eq(*res, *logical_xor({logical_and({Lt(x, y), Le(z, w)}), Eq(y, z)})));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
@@ -908,7 +908,7 @@ TEST_CASE("Parsing: local_constants", "[sbml_parser]")
     s = "exponentialE*pi";
     res = parser.parse(s);
     REQUIRE(eq(*res, *mul(pi, integer(3))));
-    res = parse_sbml(s, true, constants);
+    res = parse_sbml(s, constants);
     REQUIRE(eq(*res, *mul(pi, integer(3))));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
@@ -916,21 +916,21 @@ TEST_CASE("Parsing: local_constants", "[sbml_parser]")
     s = "ExponentialE*pi";
     res = parser.parse(s);
     REQUIRE(eq(*res, *mul(pi, E)));
-    res = parse_sbml(s, true, constants);
+    res = parse_sbml(s, constants);
     REQUIRE(eq(*res, *mul(pi, E)));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "ee";
     res = parser.parse(s);
     REQUIRE(eq(*res, *E));
-    res = parse_sbml(s, true, constants);
+    res = parse_sbml(s, constants);
     REQUIRE(eq(*res, *E));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "Ee";
     res = parser.parse(s);
     REQUIRE(eq(*res, *symbol("Ee")));
-    res = parse_sbml(s, true, constants);
+    res = parse_sbml(s, constants);
     REQUIRE(eq(*res, *symbol("Ee")));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 }

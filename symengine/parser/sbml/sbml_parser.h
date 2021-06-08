@@ -25,7 +25,7 @@ private:
 
 public:
     std::unique_ptr<SbmlTokenizer> m_tokenizer;
-    RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
+    RCP<const Basic> parse(const std::string &input);
 
     RCP<const Basic> modulo(const RCP<const Basic> &a,
                             const RCP<const Basic> &b);

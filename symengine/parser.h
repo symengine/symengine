@@ -12,7 +12,7 @@ parse(const std::string &s, bool convert_xor = true,
       = {});
 RCP<const Basic> parse_old(const std::string &s, bool convert_xor = true);
 RCP<const Basic>
-parse_sbml(const std::string &s, bool convert_xor = true,
+parse_sbml(const std::string &s,
            const std::map<const std::string, const RCP<const Basic>> &constants
            = {});
 } // namespace SymEngine

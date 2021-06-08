@@ -74,15 +74,13 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
                 }
             } else {
                 if (yych <= '^') {
-                    if (yych <= '?') {
+                    if (yych <= '@') {
                         if (yych <= '=')
                             goto yy18;
                         if (yych <= '>')
                             goto yy19;
                         goto yy4;
                     } else {
-                        if (yych <= '@')
-                            goto yy11;
                         if (yych <= 'Z')
                             goto yy20;
                         if (yych <= ']')
@@ -109,7 +107,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             {
                 return sbml::parser::token::yytokentype::END_OF_FILE;
             }
-#line 106 "sbml_tokenizer.cpp"
+#line 105 "sbml_tokenizer.cpp"
         yy4:
             ++cur;
         yy5 :
@@ -117,7 +115,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
         {
             throw SymEngine::ParseError("Unknown token: '" + token() + "'");
         }
-#line 112 "sbml_tokenizer.cpp"
+#line 111 "sbml_tokenizer.cpp"
         yy6:
             yych = *++cur;
             if (yybm[0 + yych] & 32) {
@@ -127,7 +125,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             {
                 continue;
             }
-#line 120 "sbml_tokenizer.cpp"
+#line 119 "sbml_tokenizer.cpp"
         yy9:
             yych = *++cur;
             if (yych == '=')
@@ -137,7 +135,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
         {
             return tok[0];
         }
-#line 127 "sbml_tokenizer.cpp"
+#line 126 "sbml_tokenizer.cpp"
         yy11:
             ++cur;
             goto yy10;
@@ -173,7 +171,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             yylval->emplace<std::string>() = token();
             return sbml::parser::token::yytokentype::NUMERIC;
         }
-#line 154 "sbml_tokenizer.cpp"
+#line 153 "sbml_tokenizer.cpp"
         yy17:
             yych = *++cur;
             if (yych == '=')
@@ -199,7 +197,7 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
                 yylval->emplace<std::string>() = token();
                 return sbml::parser::token::yytokentype::IDENTIFIER;
             }
-#line 174 "sbml_tokenizer.cpp"
+#line 173 "sbml_tokenizer.cpp"
         yy23:
             yych = *++cur;
             if (yych == '|')
@@ -211,14 +209,14 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             {
                 return sbml::parser::token::yytokentype::NE;
             }
-#line 183 "sbml_tokenizer.cpp"
+#line 182 "sbml_tokenizer.cpp"
         yy26:
             ++cur;
 #line 42 "sbml_tokenizer.re"
             {
                 return sbml::parser::token::yytokentype::AND;
             }
-#line 188 "sbml_tokenizer.cpp"
+#line 187 "sbml_tokenizer.cpp"
         yy28:
             yych = *(mar = ++cur);
             if (yych <= 'D') {
@@ -263,28 +261,28 @@ int SbmlTokenizer::lex(sbml::parser::semantic_type *yylval)
             {
                 return sbml::parser::token::yytokentype::LE;
             }
-#line 221 "sbml_tokenizer.cpp"
+#line 220 "sbml_tokenizer.cpp"
         yy35:
             ++cur;
 #line 41 "sbml_tokenizer.re"
             {
                 return sbml::parser::token::yytokentype::EQ;
             }
-#line 226 "sbml_tokenizer.cpp"
+#line 225 "sbml_tokenizer.cpp"
         yy37:
             ++cur;
 #line 39 "sbml_tokenizer.re"
             {
                 return sbml::parser::token::yytokentype::GE;
             }
-#line 231 "sbml_tokenizer.cpp"
+#line 230 "sbml_tokenizer.cpp"
         yy39:
             ++cur;
 #line 43 "sbml_tokenizer.re"
             {
                 return sbml::parser::token::yytokentype::OR;
             }
-#line 236 "sbml_tokenizer.cpp"
+#line 235 "sbml_tokenizer.cpp"
         yy41:
             yych = *++cur;
             if (yych <= '/')

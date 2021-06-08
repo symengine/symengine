@@ -21,19 +21,16 @@ namespace SymEngine
 {
 
 RCP<const Basic>
-parse_sbml(const std::string &s, bool convert_xor,
+parse_sbml(const std::string &s,
            const std::map<const std::string, const RCP<const Basic>> &constants)
 {
     SbmlParser p(constants);
-    return p.parse(s, convert_xor);
+    return p.parse(s);
 }
 
-RCP<const Basic> SbmlParser::parse(const std::string &input, bool convert_xor)
+RCP<const Basic> SbmlParser::parse(const std::string &input)
 {
     inp = input;
-    if (convert_xor) {
-        std::replace(inp.begin(), inp.end(), '^', '@');
-    }
     m_tokenizer->set_string(inp);
     sbml::parser p(*this);
     if (p() == 0)
