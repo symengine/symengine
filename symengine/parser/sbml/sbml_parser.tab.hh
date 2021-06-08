@@ -450,7 +450,7 @@ namespace sbml {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 26, ///< Number of tokens.
+        YYNTOKENS = 25, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // END_OF_FILE
         S_YYerror = 1,                           // error
@@ -474,14 +474,13 @@ namespace sbml {
         S_UPLUS = 19,                            // UPLUS
         S_20_ = 20,                              // '!'
         S_21_ = 21,                              // '^'
-        S_22_ = 22,                              // '@'
-        S_23_ = 23,                              // '('
-        S_24_ = 24,                              // ')'
-        S_25_ = 25,                              // ','
-        S_YYACCEPT = 26,                         // $accept
-        S_st_expr = 27,                          // st_expr
-        S_expr = 28,                             // expr
-        S_expr_list = 29                         // expr_list
+        S_22_ = 22,                              // '('
+        S_23_ = 23,                              // ')'
+        S_24_ = 24,                              // ','
+        S_YYACCEPT = 25,                         // $accept
+        S_st_expr = 26,                          // st_expr
+        S_expr = 27,                             // expr
+        S_expr_list = 28                         // expr_list
       };
     };
 
@@ -1274,7 +1273,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 117,     ///< Last index in yytable_.
+      yylast_ = 110,     ///< Last index in yytable_.
       yynnts_ = 4,  ///< Number of nonterminal symbols.
       yyfinal_ = 14 ///< Termination state number.
     };
@@ -1288,7 +1287,7 @@ switch (yykind)
 
 #line 4 "sbml_parser.yy"
 } // sbml
-#line 1292 "sbml_parser.tab.hh"
+#line 1291 "sbml_parser.tab.hh"
 
 
 

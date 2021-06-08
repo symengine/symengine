@@ -64,7 +64,7 @@ void parser::error(const std::string &msg)
 %left '+' '-'
 %left '*' '/' '%'
 %right UMINUS UPLUS '!'
-%left '^' '@'
+%left '^'
 %nonassoc '('
 
 %type<SymEngine::RCP<const SymEngine::Basic>> st_expr
@@ -85,7 +85,6 @@ expr
     | expr '/' expr { $$ = div($1, $3); }
     | expr '%' expr { $$ = p.modulo($1, $3); }
     | expr '^' expr { $$ = pow($1, $3); }
-    | expr '@' expr { $$ = pow($1, $3); }
     | expr '<' expr { $$ = Lt($1, $3); }
     | expr '>' expr { $$ = Gt($1, $3); }
     | expr NE expr { $$ = Ne($1, $3); }

@@ -765,131 +765,125 @@ namespace sbml {
 #line 766 "sbml_parser.tab.cc"
     break;
 
-  case 9: // expr: expr '@' expr
+  case 9: // expr: expr '<' expr
 #line 88 "sbml_parser.yy"
-                    { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = pow(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                    { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Lt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 772 "sbml_parser.tab.cc"
     break;
 
-  case 10: // expr: expr '<' expr
+  case 10: // expr: expr '>' expr
 #line 89 "sbml_parser.yy"
-                    { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Lt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                    { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Gt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 778 "sbml_parser.tab.cc"
     break;
 
-  case 11: // expr: expr '>' expr
+  case 11: // expr: expr NE expr
 #line 90 "sbml_parser.yy"
-                    { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Gt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Ne(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 784 "sbml_parser.tab.cc"
     break;
 
-  case 12: // expr: expr NE expr
+  case 12: // expr: expr LE expr
 #line 91 "sbml_parser.yy"
-                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Ne(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Le(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 790 "sbml_parser.tab.cc"
     break;
 
-  case 13: // expr: expr LE expr
+  case 13: // expr: expr GE expr
 #line 92 "sbml_parser.yy"
-                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Le(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Ge(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 796 "sbml_parser.tab.cc"
     break;
 
-  case 14: // expr: expr GE expr
+  case 14: // expr: expr EQ expr
 #line 93 "sbml_parser.yy"
-                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Ge(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Eq(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 802 "sbml_parser.tab.cc"
     break;
 
-  case 15: // expr: expr EQ expr
+  case 15: // expr: expr OR expr
 #line 94 "sbml_parser.yy"
-                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = Eq(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 808 "sbml_parser.tab.cc"
-    break;
-
-  case 16: // expr: expr OR expr
-#line 95 "sbml_parser.yy"
                    {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             s.insert(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = logical_or(s); }
-#line 818 "sbml_parser.tab.cc"
+#line 812 "sbml_parser.tab.cc"
     break;
 
-  case 17: // expr: expr AND expr
-#line 100 "sbml_parser.yy"
+  case 16: // expr: expr AND expr
+#line 99 "sbml_parser.yy"
                     {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             s.insert(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = logical_and(s); }
+#line 822 "sbml_parser.tab.cc"
+    break;
+
+  case 17: // expr: '(' expr ')'
+#line 104 "sbml_parser.yy"
+                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[1].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
 #line 828 "sbml_parser.tab.cc"
     break;
 
-  case 18: // expr: '(' expr ')'
+  case 18: // expr: '-' expr
 #line 105 "sbml_parser.yy"
-                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[1].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
+                            { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = neg(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 834 "sbml_parser.tab.cc"
     break;
 
-  case 19: // expr: '-' expr
+  case 19: // expr: '+' expr
 #line 106 "sbml_parser.yy"
-                            { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = neg(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+                           { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
 #line 840 "sbml_parser.tab.cc"
     break;
 
-  case 20: // expr: '+' expr
+  case 20: // expr: '!' expr
 #line 107 "sbml_parser.yy"
-                           { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
-#line 846 "sbml_parser.tab.cc"
-    break;
-
-  case 21: // expr: '!' expr
-#line 108 "sbml_parser.yy"
                {
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = logical_not(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
+#line 847 "sbml_parser.tab.cc"
+    break;
+
+  case 21: // expr: IDENTIFIER
+#line 109 "sbml_parser.yy"
+                 { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_identifier(yystack_[0].value.as < std::string > ()); }
 #line 853 "sbml_parser.tab.cc"
     break;
 
-  case 22: // expr: IDENTIFIER
+  case 22: // expr: NUMERIC
 #line 110 "sbml_parser.yy"
-                 { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_identifier(yystack_[0].value.as < std::string > ()); }
+              { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_numeric(yystack_[0].value.as < std::string > ()); }
 #line 859 "sbml_parser.tab.cc"
     break;
 
-  case 23: // expr: NUMERIC
+  case 23: // expr: IDENTIFIER '(' expr_list ')'
 #line 111 "sbml_parser.yy"
-              { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_numeric(yystack_[0].value.as < std::string > ()); }
+                                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.functionify(yystack_[3].value.as < std::string > (), yystack_[1].value.as < SymEngine::vec_basic > ()); }
 #line 865 "sbml_parser.tab.cc"
     break;
 
-  case 24: // expr: IDENTIFIER '(' expr_list ')'
+  case 24: // expr: IDENTIFIER '(' ')'
 #line 112 "sbml_parser.yy"
-                                   { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.functionify(yystack_[3].value.as < std::string > (), yystack_[1].value.as < SymEngine::vec_basic > ()); }
+                         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.functionify(yystack_[2].value.as < std::string > ()); }
 #line 871 "sbml_parser.tab.cc"
     break;
 
-  case 25: // expr: IDENTIFIER '(' ')'
-#line 113 "sbml_parser.yy"
-                         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.functionify(yystack_[2].value.as < std::string > ()); }
+  case 25: // expr_list: expr_list ',' expr
+#line 116 "sbml_parser.yy"
+                         { yylhs.value.as < SymEngine::vec_basic > () = yystack_[2].value.as < SymEngine::vec_basic > (); yylhs.value.as < SymEngine::vec_basic > ().push_back(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 877 "sbml_parser.tab.cc"
     break;
 
-  case 26: // expr_list: expr_list ',' expr
+  case 26: // expr_list: expr
 #line 117 "sbml_parser.yy"
-                         { yylhs.value.as < SymEngine::vec_basic > () = yystack_[2].value.as < SymEngine::vec_basic > (); yylhs.value.as < SymEngine::vec_basic > ().push_back(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
+           { yylhs.value.as < SymEngine::vec_basic > () = vec_basic(1, yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
 #line 883 "sbml_parser.tab.cc"
     break;
 
-  case 27: // expr_list: expr
-#line 118 "sbml_parser.yy"
-           { yylhs.value.as < SymEngine::vec_basic > () = vec_basic(1, yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 889 "sbml_parser.tab.cc"
-    break;
 
-
-#line 893 "sbml_parser.tab.cc"
+#line 887 "sbml_parser.tab.cc"
 
             default:
               break;
@@ -1074,103 +1068,100 @@ namespace sbml {
 
 
 
-  const signed char parser::yypact_ninf_ = -18;
+  const signed char parser::yypact_ninf_ = -20;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-      30,   -13,   -18,    30,    30,    30,    30,     7,    69,    25,
-     -17,   -17,   -17,    49,   -18,    30,    30,    30,    30,    30,
-      30,    30,    30,    30,    30,    30,    30,    30,    30,    30,
-     -18,    69,   -16,   -18,    85,    85,    95,    95,    95,    95,
-      95,    95,    15,    15,   -17,   -17,   -17,   -18,   -18,   -18,
-      30,    69
+      28,   -15,   -20,    28,    28,    28,    28,     8,    65,    24,
+     -12,   -12,   -12,    46,   -20,    28,    28,    28,    28,    28,
+      28,    28,    28,    28,    28,    28,    28,    28,    28,   -20,
+      65,   -19,   -20,    80,    80,    89,    89,    89,    89,    89,
+      89,    18,    18,   -12,   -12,   -12,   -20,   -20,    28,    65
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,    22,    23,     0,     0,     0,     0,     0,     2,     0,
-      20,    19,    21,     0,     1,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      25,    27,     0,    18,    17,    16,    15,    10,    11,    13,
-      14,    12,     3,     4,     5,     6,     7,     8,     9,    24,
-       0,    26
+       0,    21,    22,     0,     0,     0,     0,     0,     2,     0,
+      19,    18,    20,     0,     1,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,    24,
+      26,     0,    17,    16,    15,    14,     9,    10,    12,    13,
+      11,     3,     4,     5,     6,     7,     8,    23,     0,    25
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -18,   -18,    -3,   -18
+     -20,   -20,    -3,   -20
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     7,     8,    32
+       0,     7,     8,    31
   };
 
   const signed char
   parser::yytable_[] =
   {
-      10,    11,    12,    13,    28,    29,    31,    14,    49,    50,
-       9,     0,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    46,    47,    48,     0,     1,     2,
-      25,    26,    27,     1,     2,     0,    28,    29,     3,     4,
-       0,     0,     0,     3,     4,     5,     0,    51,     6,    30,
-       5,     0,     0,     6,    15,    16,    17,    18,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,     0,     0,     0,
-      28,    29,     0,    33,    15,    16,    17,    18,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,     0,     0,     0,
-      28,    29,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,     0,     0,     0,    28,    29,    23,    24,
-      25,    26,    27,     0,     0,     0,    28,    29
+      10,    11,    12,    13,    47,    48,    30,     9,    14,    28,
+       0,     0,    33,    34,    35,    36,    37,    38,    39,    40,
+      41,    42,    43,    44,    45,    46,     0,     1,     2,     0,
+       0,     1,     2,    25,    26,    27,     0,     3,     4,    28,
+       0,     3,     4,     0,     5,    49,     6,    29,     5,     0,
+       6,    15,    16,    17,    18,    19,    20,    21,    22,    23,
+      24,    25,    26,    27,     0,     0,     0,    28,     0,    32,
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,     0,     0,     0,    28,    17,    18,    19,
+      20,    21,    22,    23,    24,    25,    26,    27,     0,     0,
+       0,    28,    23,    24,    25,    26,    27,     0,     0,     0,
+      28
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       3,     4,     5,     6,    21,    22,     9,     0,    24,    25,
-      23,    -1,    15,    16,    17,    18,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,    -1,     3,     4,
-      15,    16,    17,     3,     4,    -1,    21,    22,    13,    14,
-      -1,    -1,    -1,    13,    14,    20,    -1,    50,    23,    24,
-      20,    -1,    -1,    23,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    14,    15,    16,    17,    -1,    -1,    -1,
-      21,    22,    -1,    24,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    14,    15,    16,    17,    -1,    -1,    -1,
-      21,    22,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    -1,    -1,    -1,    21,    22,    13,    14,
-      15,    16,    17,    -1,    -1,    -1,    21,    22
+       3,     4,     5,     6,    23,    24,     9,    22,     0,    21,
+      -1,    -1,    15,    16,    17,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    -1,     3,     4,    -1,
+      -1,     3,     4,    15,    16,    17,    -1,    13,    14,    21,
+      -1,    13,    14,    -1,    20,    48,    22,    23,    20,    -1,
+      22,     5,     6,     7,     8,     9,    10,    11,    12,    13,
+      14,    15,    16,    17,    -1,    -1,    -1,    21,    -1,    23,
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    -1,    -1,    -1,    21,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    17,    -1,    -1,
+      -1,    21,    13,    14,    15,    16,    17,    -1,    -1,    -1,
+      21
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,    13,    14,    20,    23,    27,    28,    23,
-      28,    28,    28,    28,     0,     5,     6,     7,     8,     9,
-      10,    11,    12,    13,    14,    15,    16,    17,    21,    22,
-      24,    28,    29,    24,    28,    28,    28,    28,    28,    28,
-      28,    28,    28,    28,    28,    28,    28,    28,    28,    24,
-      25,    28
+       0,     3,     4,    13,    14,    20,    22,    26,    27,    22,
+      27,    27,    27,    27,     0,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    17,    21,    23,
+      27,    28,    23,    27,    27,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    27,    27,    23,    24,    27
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    26,    27,    28,    28,    28,    28,    28,    28,    28,
-      28,    28,    28,    28,    28,    28,    28,    28,    28,    28,
-      28,    28,    28,    28,    28,    28,    29,    29
+       0,    25,    26,    27,    27,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    28,    28
   };
 
   const signed char
   parser::yyr2_[] =
   {
        0,     2,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3,     3,     3,     2,
-       2,     2,     1,     1,     4,     3,     3,     1
+       3,     3,     3,     3,     3,     3,     3,     3,     2,     2,
+       2,     1,     1,     4,     3,     3,     1
   };
 
 
@@ -1182,8 +1173,8 @@ namespace sbml {
   {
   "END_OF_FILE", "error", "\"invalid token\"", "IDENTIFIER", "NUMERIC",
   "AND", "OR", "EQ", "'<'", "'>'", "LE", "GE", "NE", "'+'", "'-'", "'*'",
-  "'/'", "'%'", "UMINUS", "UPLUS", "'!'", "'^'", "'@'", "'('", "')'",
-  "','", "$accept", "st_expr", "expr", "expr_list", YY_NULLPTR
+  "'/'", "'%'", "UMINUS", "UPLUS", "'!'", "'^'", "'('", "')'", "','",
+  "$accept", "st_expr", "expr", "expr_list", YY_NULLPTR
   };
 #endif
 
@@ -1193,8 +1184,8 @@ namespace sbml {
   parser::yyrline_[] =
   {
        0,    78,    78,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,   100,   105,   106,
-     107,   108,   110,   111,   112,   113,   117,   118
+      89,    90,    91,    92,    93,    94,    99,   104,   105,   106,
+     107,   109,   110,   111,   112,   116,   117
   };
 
   void
@@ -1237,9 +1228,9 @@ namespace sbml {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,    20,     2,     2,     2,    17,     2,     2,
-      23,    24,    15,    13,    25,    14,     2,    16,     2,     2,
+      22,    23,    15,    13,    24,    14,     2,    16,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       8,     2,     9,     2,    22,     2,     2,     2,     2,     2,
+       8,     2,     9,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,    21,     2,     2,     2,     2,     2,
@@ -1274,5 +1265,5 @@ namespace sbml {
 
 #line 4 "sbml_parser.yy"
 } // sbml
-#line 1278 "sbml_parser.tab.cc"
+#line 1269 "sbml_parser.tab.cc"
 
