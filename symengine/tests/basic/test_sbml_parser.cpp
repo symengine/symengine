@@ -605,6 +605,15 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     REQUIRE(eq(*res, *Ne(x, y)));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
+    s = "geq()";
+    REQUIRE_THROWS_WITH(
+        parse_sbml(s), "Parsing Unsuccessful: Function 'geq' has no arguments");
+
+    s = "geq(x)";
+    REQUIRE_THROWS_WITH(
+        parse_sbml(s),
+        "Parsing Unsuccessful: 'geq' must have at least 2 arguments");
+
     s = "geq(x, y)";
     res = parse_sbml(s);
     REQUIRE(eq(*res, *Le(y, x)));
@@ -831,6 +840,11 @@ TEST_CASE("Parsing: constants", "[sbml_parser]")
     REQUIRE(eq(*res, *mul(pi, E)));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
+    s = "exp(2*x)";
+    res = parse_sbml(s);
+    REQUIRE(eq(*res, *pow(E, mul(integer(2), x))));
+    REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
+
     s = "2*pI";
     res = parse_sbml(s);
     REQUIRE(eq(*res, *mul(integer(2), pi)));
@@ -1024,6 +1038,9 @@ TEST_CASE("Parsing: doubles", "[sbml_parser]")
 TEST_CASE("Parsing: errors", "[sbml_parser]")
 {
     std::string s;
+
+    s = "";
+    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
 
     s = "12x";
     CHECK_THROWS_AS(parse_sbml(s), ParseError &);
