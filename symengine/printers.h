@@ -8,6 +8,7 @@ namespace SymEngine
 std::string str(const Basic &x);
 std::string unicode(const Basic &x);
 std::string julia_str(const Basic &x);
+std::string sbml(const Basic &x);
 std::string ascii_art();
 
 std::string mathml(const Basic &x);

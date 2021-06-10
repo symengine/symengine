@@ -52,57 +52,76 @@ double_arg_func double_casted_zeta = zeta;
 single_arg_boolean_func single_casted_Eq = Eq;
 double_arg_boolean_func double_casted_Eq = Eq;
 
+std::map<const std::string,
+         const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+init_parser_single_arg_functions()
+{
+    return {
+        {"sin", sin},
+        {"cos", cos},
+        {"tan", tan},
+        {"cot", cot},
+        {"csc", csc},
+        {"sec", sec},
+
+        {"asin", asin},
+        {"arcsin", asin},
+        {"acos", acos},
+        {"arccos", acos},
+        {"atan", atan},
+        {"arctan", atan},
+        {"asec", asec},
+        {"arcsec", asec},
+        {"acsc", acsc},
+        {"arccsc", acsc},
+        {"acot", acot},
+        {"arccot", acot},
+
+        {"sinh", sinh},
+        {"cosh", cosh},
+        {"tanh", tanh},
+        {"coth", coth},
+        {"sech", sech},
+        {"csch", csch},
+
+        {"asinh", asinh},
+        {"arcsinh", asinh},
+        {"acosh", acosh},
+        {"arccosh", acosh},
+        {"atanh", atanh},
+        {"arctanh", atanh},
+        {"asech", asech},
+        {"arcsech", asech},
+        {"acoth", acoth},
+        {"arccoth", acoth},
+        {"acsch", acsch},
+        {"arccsch", acsch},
+
+        {"gamma", gamma},
+        {"sqrt", sqrt},
+        {"abs", abs},
+        {"exp", exp},
+        {"erf", erf},
+        {"erfc", erfc},
+        {"loggamma", loggamma},
+        {"lambertw", lambertw},
+        {"dirichlet_eta", dirichlet_eta},
+        {"floor", floor},
+        {"ceiling", ceiling},
+        {"ln", single_casted_log},
+        {"log", single_casted_log},
+        {"zeta", single_casted_zeta},
+        {"primepi", primepi},
+        {"primorial", primorial},
+    };
+}
+
+const std::map<const std::string,
+               const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+    Parser::single_arg_functions_ = init_parser_single_arg_functions();
+
 RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
 {
-    const static std::map<
-        const std::string,
-        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
-        single_arg_functions = {
-            {"sin", sin},
-            {"cos", cos},
-            {"tan", tan},
-            {"cot", cot},
-            {"csc", csc},
-            {"sec", sec},
-
-            {"asin", asin},
-            {"acos", acos},
-            {"atan", atan},
-            {"asec", asec},
-            {"acsc", acsc},
-            {"acot", acot},
-
-            {"sinh", sinh},
-            {"cosh", cosh},
-            {"tanh", tanh},
-            {"coth", coth},
-            {"sech", sech},
-            {"csch", csch},
-
-            {"asinh", asinh},
-            {"acosh", acosh},
-            {"atanh", atanh},
-            {"asech", asech},
-            {"acoth", acoth},
-            {"acsch", acsch},
-
-            {"gamma", gamma},
-            {"sqrt", sqrt},
-            {"abs", abs},
-            {"exp", exp},
-            {"erf", erf},
-            {"erfc", erfc},
-            {"loggamma", loggamma},
-            {"lambertw", lambertw},
-            {"dirichlet_eta", dirichlet_eta},
-            {"floor", floor},
-            {"ceiling", ceiling},
-            {"ln", single_casted_log},
-            {"log", single_casted_log},
-            {"zeta", single_casted_zeta},
-            {"primepi", primepi},
-            {"primorial", primorial},
-        };
     const static std::map<
         const std::string,
         const std::function<RCP<const Basic>(const RCP<const Basic> &,
@@ -172,8 +191,8 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         };
 
     if (params.size() == 1) {
-        auto it1 = single_arg_functions.find(name);
-        if (it1 != single_arg_functions.end()) {
+        auto it1 = single_arg_functions_.find(name);
+        if (it1 != single_arg_functions_.end()) {
             return it1->second(params[0]);
         }
         auto it2 = single_arg_boolean_functions.find(name);

@@ -19,6 +19,17 @@ if (WITH_GENERATE_PARSER)
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml/sbml_parser.tab.cc
+            COMMAND ${BISON_EXECUTABLE} -d sbml_parser.yy
+            DEPENDS parser/sbml/sbml_parser.yy
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml
+            )
+
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml/sbml_tokenizer.cpp
+            COMMAND ${RE2C_EXECUTABLE} -W  --no-generation-date -b sbml_tokenizer.re -o sbml_tokenizer.cpp
+            DEPENDS parser/sbml/sbml_tokenizer.re
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml
+            )
 endif()
 
 add_subdirectory(utilities/matchpycpp)
@@ -57,6 +68,9 @@ set(SRC
     parser/parser.tab.cc
     parser/parser.cpp
     parser/tokenizer.cpp
+    parser/sbml/sbml_parser.tab.cc
+    parser/sbml/sbml_parser.cpp
+    parser/sbml/sbml_tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
@@ -66,6 +80,7 @@ set(SRC
     prime_sieve.cpp
     printers/codegen.cpp
     printers/mathml.cpp
+    printers/sbml.cpp
     printers/strprinter.cpp
     printers/latex.cpp
     printers/unicode.cpp
@@ -162,6 +177,8 @@ set(HEADERS
     parser.h
     parser/parser.h
     parser/tokenizer.h
+    parser/sbml/sbml_parser.h
+    parser/sbml/sbml_tokenizer.h
     polys/basic_conversions.h
     polys/cancel.h
     polys/uexprpoly.h
@@ -176,6 +193,7 @@ set(HEADERS
     prime_sieve.h
     printers/codegen.h
     printers/mathml.h
+    printers/sbml.h
     printers/strprinter.h
     printers/latex.h
     printers/unicode.h
