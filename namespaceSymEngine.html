@@ -459,6 +459,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MathMLPrinter.html">MathMLPrinter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1SbmlPrinter.html">SbmlPrinter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1StringBox.html">StringBox</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1PrinterBasicCmp.html">PrinterBasicCmp</a></td></tr>
@@ -2113,6 +2115,9 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 <tr class="memitem:a4579d5ea86a33db578a1458e101a12f1"><td class="memItemLeft" align="right" valign="top"><a id="a4579d5ea86a33db578a1458e101a12f1"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parse_old</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s, bool convert_xor=true)</td></tr>
 <tr class="separator:a4579d5ea86a33db578a1458e101a12f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4050b1ff40bbf59569b4b3c731dba0"><td class="memItemLeft" align="right" valign="top"><a id="aff4050b1ff40bbf59569b4b3c731dba0"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parse_sbml</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&gt; &amp;constants={})</td></tr>
+<tr class="separator:aff4050b1ff40bbf59569b4b3c731dba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04f05d59902dc7431d4e7c7c61702662"><td class="memItemLeft" align="right" valign="top"><a id="a04f05d59902dc7431d4e7c7c61702662"></a>
 <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_find_gens_poly_pow</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;x, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;base)</td></tr>
 <tr class="separator:a04f05d59902dc7431d4e7c7c61702662"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2275,6 +2280,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>print_rational_class<
 <tr class="memitem:a91e0488d784a923e056a4c8a0b04707f"><td class="memItemLeft" align="right" valign="top"><a id="a91e0488d784a923e056a4c8a0b04707f"></a>
 <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mathml</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
 <tr class="separator:a91e0488d784a923e056a4c8a0b04707f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1608139b99850d27ff69bd1b2d54fb41"><td class="memItemLeft" align="right" valign="top"><a id="a1608139b99850d27ff69bd1b2d54fb41"></a>
+static <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>init_sbml_printer_names</b> ()</td></tr>
+<tr class="separator:a1608139b99850d27ff69bd1b2d54fb41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac17a94858339a1c694cb65ada3821ae3"><td class="memItemLeft" align="right" valign="top"><a id="ac17a94858339a1c694cb65ada3821ae3"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><b>sbml</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
+<tr class="separator:ac17a94858339a1c694cb65ada3821ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0abfe74379edd0eacdf5d82909c13b00"><td class="memItemLeft" align="right" valign="top"><a id="a0abfe74379edd0eacdf5d82909c13b00"></a>
 <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ascii_art</b> ()</td></tr>
 <tr class="separator:a0abfe74379edd0eacdf5d82909c13b00"><td class="memSeparator" colspan="2">&#160;</td></tr>
