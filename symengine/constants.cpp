@@ -111,20 +111,20 @@ umap_basic_basic inverse_cst = {
 };
 
 umap_basic_basic inverse_tct = {
-    {div(one, sq3), mul(i2, i3)},
-    {div(minus_one, sq3), mul(im2, i3)},
+    {div(one, sq3), integer(6)},
+    {div(minus_one, sq3), integer(-6)},
     {sq3, i3},
     {mul(minus_one, sq3), im3},
-    {add(one, sq2), div(pow(i2, i3), i3)},
-    {mul(minus_one, add(one, sq2)), div(pow(i2, i3), im3)},
-    {sub(sq2, one), pow(i2, i3)},
-    {sub(one, sq2), pow(im2, i3)},
-    {sub(i2, sq3), mul(mul(i2, i2), i3)},
-    {sub(sq3, i2), mul(mul(im2, i2), i3)},
+    {add(one, sq2), div(integer(8), i3)},
+    {mul(minus_one, add(one, sq2)), div(integer(8), im3)},
+    {sub(sq2, one), integer(8)},
+    {sub(one, sq2), integer(-8)},
+    {sub(i2, sq3), integer(12)},
+    {sub(sq3, i2), integer(-12)},
     {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
     {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
-    {one, pow(i2, i2)},
-    {minus_one, mul(minus_one, pow(i2, i2))},
+    {one, integer(4)},
+    {minus_one, integer(-4)},
 };
 
 } // namespace SymEngine
