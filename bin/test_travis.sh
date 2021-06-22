@@ -162,7 +162,7 @@ echo "Running make install:"
 make install
 
 if [[ "${TEST_CPP}" == "no" ]]; then
-    exit 0;
+    return 0;
 fi
 
 echo "=== Running tests in build directory:"
@@ -173,12 +173,12 @@ if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"
     curl --connect-timeout 10 --retry 5 -L https://codecov.io/bash -o codecov.sh
     bash codecov.sh -x $GCOV_EXECUTABLE 2>&1 | grep -v "has arcs to entry block" | grep -v "has arcs from exit block"
-    exit 0;
+    return 0;
 fi
 
 if [[ "${WITH_SANITIZE}" != "" ]]; then
     # currently compile_flags and link_flags below won't pick up -fsanitize=...
-    exit 0;
+    return 0;
 fi
 
 echo "=== Testing the installed SymEngine library simulating use by 3rd party lib"
