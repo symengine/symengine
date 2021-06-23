@@ -56,7 +56,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
 fi
 
 if [[ "$WITH_LLVM" != "" && "${TRAVIS_OS_NAME}" == "linux" && "$GITHUB_ACTIONS" == "true" ]]; then
-    wget http://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
+    wget -q http://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
     tar -xf binutils-2.32.tar.xz
     pushd binutils-2.32
     ./configure --disable-static --enable-shared --prefix=/usr
@@ -71,9 +71,9 @@ export our_install_dir="$HOME/our_usr"
 if [[ ! -d $HOME/conda_root/pkgs ]]; then
     rm -rf $HOME/conda_root
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+        wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
     else
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+        wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     fi
     bash miniconda.sh -b -p $HOME/conda_root
 fi
