@@ -1,11 +1,11 @@
 <map id="SymEngine::XReplaceVisitor" name="SymEngine::XReplaceVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="400,46,591,73"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="645,5,859,47"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="639,71,865,112"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="188,39,352,80"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,46,140,73"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1SubsVisitor.html" title=" " alt="" coords="919,13,1083,39"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="1136,5,1333,47"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="1381,13,1555,39"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1MSubsVisitor.html" title=" " alt="" coords="913,78,1088,105"/>
+<area shape="rect" id="node1" title=" " alt="" coords="424,46,631,73"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="685,5,921,47"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="679,71,927,112"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="199,39,376,80"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,46,151,73"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1SubsVisitor.html" title=" " alt="" coords="981,13,1157,39"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="1211,5,1425,47"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="1473,13,1657,39"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1MSubsVisitor.html" title=" " alt="" coords="975,78,1163,105"/>
 </map>

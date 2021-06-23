@@ -1,51 +1,51 @@
 <map id="SymEngine::Basic" name="SymEngine::Basic">
-<area shape="rect" id="node1" title="The lowest unit of symbolic representation." alt="" coords="249,669,380,696"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="428,17,629,58"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="428,101,629,142"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="447,202,610,243"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions." alt="" coords="469,340,589,367"/>
-<area shape="rect" id="node10" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="457,391,601,417"/>
-<area shape="rect" id="node18" href="$classSymEngine_1_1Constant.html" title=" " alt="" coords="453,509,604,536"/>
-<area shape="rect" id="node19" href="$classSymEngine_1_1Derivative.html" title=" " alt="" coords="451,560,607,587"/>
-<area shape="rect" id="node20" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="455,611,602,637"/>
-<area shape="rect" id="node23" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="428,662,629,703"/>
-<area shape="rect" id="node24" href="$classSymEngine_1_1Mul.html" title=" " alt="" coords="469,728,588,755"/>
-<area shape="rect" id="node25" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="457,788,600,815"/>
-<area shape="rect" id="node35" href="$classSymEngine_1_1Piecewise.html" title=" " alt="" coords="450,839,607,865"/>
-<area shape="rect" id="node36" href="$classSymEngine_1_1Pow.html" title=" " alt="" coords="467,889,590,916"/>
-<area shape="rect" id="node37" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="470,1201,587,1228"/>
-<area shape="rect" id="node47" href="$classSymEngine_1_1Subs.html" title=" " alt="" coords="465,1252,592,1279"/>
-<area shape="rect" id="node48" href="$classSymEngine_1_1Symbol.html" title=" " alt="" coords="458,1303,599,1329"/>
-<area shape="rect" id="node49" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="447,1354,610,1395"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,662,201,703"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1MIntPoly.html" title=" " alt="" coords="711,5,860,32"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1MExprPoly.html" title=" " alt="" coords="705,56,866,83"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1UExprPolyBase.html" title=" " alt="" coords="690,107,881,149"/>
-<area shape="rect" id="node11" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="698,173,873,214"/>
-<area shape="rect" id="node12" href="$classSymEngine_1_1And.html" title=" " alt="" coords="725,239,845,265"/>
-<area shape="rect" id="node13" href="$classSymEngine_1_1BooleanAtom.html" title=" " alt="" coords="698,289,873,316"/>
-<area shape="rect" id="node14" href="$classSymEngine_1_1Contains.html" title=" " alt="" coords="711,340,860,367"/>
-<area shape="rect" id="node15" href="$classSymEngine_1_1Not.html" title=" " alt="" coords="726,391,845,417"/>
-<area shape="rect" id="node16" href="$classSymEngine_1_1Or.html" title=" " alt="" coords="730,441,841,468"/>
-<area shape="rect" id="node17" href="$classSymEngine_1_1Xor.html" title=" " alt="" coords="727,492,844,519"/>
-<area shape="rect" id="node21" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="688,543,883,569"/>
-<area shape="rect" id="node22" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="690,593,881,620"/>
-<area shape="rect" id="node26" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="696,644,875,671"/>
-<area shape="rect" id="node27" href="$classSymEngine_1_1Infty.html" title=" " alt="" coords="724,695,847,721"/>
-<area shape="rect" id="node28" href="$classSymEngine_1_1Integer.html" title="Integer Class." alt="" coords="717,745,854,772"/>
-<area shape="rect" id="node29" href="$classSymEngine_1_1NaN.html" title=" " alt="" coords="723,796,847,823"/>
-<area shape="rect" id="node30" href="$classSymEngine_1_1NumberWrapper.html" title=" " alt="" coords="690,847,881,873"/>
-<area shape="rect" id="node31" href="$classSymEngine_1_1Rational.html" title="Rational Class." alt="" coords="713,897,858,924"/>
-<area shape="rect" id="node32" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="703,948,868,975"/>
-<area shape="rect" id="node33" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="704,999,867,1025"/>
-<area shape="rect" id="node34" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="677,1049,893,1076"/>
-<area shape="rect" id="node38" href="$classSymEngine_1_1Complement.html" title=" " alt="" coords="700,1100,871,1127"/>
-<area shape="rect" id="node39" href="$classSymEngine_1_1ConditionSet.html" title=" " alt="" coords="699,1151,871,1177"/>
-<area shape="rect" id="node40" href="$classSymEngine_1_1EmptySet.html" title=" " alt="" coords="708,1201,863,1228"/>
-<area shape="rect" id="node41" href="$classSymEngine_1_1FiniteSet.html" title=" " alt="" coords="711,1252,860,1279"/>
-<area shape="rect" id="node42" href="$classSymEngine_1_1ImageSet.html" title=" " alt="" coords="709,1303,862,1329"/>
-<area shape="rect" id="node43" href="$classSymEngine_1_1Integers.html" title=" " alt="" coords="713,1353,857,1380"/>
-<area shape="rect" id="node44" href="$classSymEngine_1_1Interval.html" title=" " alt="" coords="715,1404,855,1431"/>
-<area shape="rect" id="node45" href="$classSymEngine_1_1Rationals.html" title=" " alt="" coords="709,1455,861,1481"/>
-<area shape="rect" id="node46" href="$classSymEngine_1_1Reals.html" title=" " alt="" coords="720,1505,851,1532"/>
+<area shape="rect" id="node1" title="The lowest unit of symbolic representation." alt="" coords="260,669,399,696"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="447,17,663,58"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="447,101,663,142"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="468,202,641,243"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Add.html" title="The base class for representing addition in symbolic expressions." alt="" coords="491,340,619,367"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="477,391,633,417"/>
+<area shape="rect" id="node18" href="$classSymEngine_1_1Constant.html" title=" " alt="" coords="474,509,635,536"/>
+<area shape="rect" id="node19" href="$classSymEngine_1_1Derivative.html" title=" " alt="" coords="469,560,640,587"/>
+<area shape="rect" id="node20" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="475,611,634,637"/>
+<area shape="rect" id="node23" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="447,662,663,703"/>
+<area shape="rect" id="node24" href="$classSymEngine_1_1Mul.html" title=" " alt="" coords="491,728,618,755"/>
+<area shape="rect" id="node25" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="477,788,632,815"/>
+<area shape="rect" id="node35" href="$classSymEngine_1_1Piecewise.html" title=" " alt="" coords="471,839,639,865"/>
+<area shape="rect" id="node36" href="$classSymEngine_1_1Pow.html" title=" " alt="" coords="489,889,620,916"/>
+<area shape="rect" id="node37" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="493,1201,617,1228"/>
+<area shape="rect" id="node47" href="$classSymEngine_1_1Subs.html" title=" " alt="" coords="487,1252,622,1279"/>
+<area shape="rect" id="node48" href="$classSymEngine_1_1Symbol.html" title=" " alt="" coords="479,1303,631,1329"/>
+<area shape="rect" id="node49" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="468,1354,641,1395"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,662,212,703"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1MIntPoly.html" title=" " alt="" coords="748,5,908,32"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1MExprPoly.html" title=" " alt="" coords="742,56,914,83"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1UExprPolyBase.html" title=" " alt="" coords="727,107,929,149"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="735,173,921,214"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1And.html" title=" " alt="" coords="764,239,892,265"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1BooleanAtom.html" title=" " alt="" coords="733,289,923,316"/>
+<area shape="rect" id="node14" href="$classSymEngine_1_1Contains.html" title=" " alt="" coords="748,340,908,367"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1Not.html" title=" " alt="" coords="765,391,891,417"/>
+<area shape="rect" id="node16" href="$classSymEngine_1_1Or.html" title=" " alt="" coords="769,441,887,468"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1Xor.html" title=" " alt="" coords="765,492,891,519"/>
+<area shape="rect" id="node21" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="721,543,935,569"/>
+<area shape="rect" id="node22" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="725,593,931,620"/>
+<area shape="rect" id="node26" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="731,644,925,671"/>
+<area shape="rect" id="node27" href="$classSymEngine_1_1Infty.html" title=" " alt="" coords="762,695,894,721"/>
+<area shape="rect" id="node28" href="$classSymEngine_1_1Integer.html" title="Integer Class." alt="" coords="753,745,903,772"/>
+<area shape="rect" id="node29" href="$classSymEngine_1_1NaN.html" title=" " alt="" coords="763,796,893,823"/>
+<area shape="rect" id="node30" href="$classSymEngine_1_1NumberWrapper.html" title=" " alt="" coords="723,847,933,873"/>
+<area shape="rect" id="node31" href="$classSymEngine_1_1Rational.html" title="Rational Class." alt="" coords="749,897,907,924"/>
+<area shape="rect" id="node32" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="739,948,917,975"/>
+<area shape="rect" id="node33" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="743,999,913,1025"/>
+<area shape="rect" id="node34" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="711,1049,945,1076"/>
+<area shape="rect" id="node38" href="$classSymEngine_1_1Complement.html" title=" " alt="" coords="735,1100,921,1127"/>
+<area shape="rect" id="node39" href="$classSymEngine_1_1ConditionSet.html" title=" " alt="" coords="735,1151,921,1177"/>
+<area shape="rect" id="node40" href="$classSymEngine_1_1EmptySet.html" title=" " alt="" coords="745,1201,911,1228"/>
+<area shape="rect" id="node41" href="$classSymEngine_1_1FiniteSet.html" title=" " alt="" coords="748,1252,908,1279"/>
+<area shape="rect" id="node42" href="$classSymEngine_1_1ImageSet.html" title=" " alt="" coords="745,1303,911,1329"/>
+<area shape="rect" id="node43" href="$classSymEngine_1_1Integers.html" title=" " alt="" coords="750,1353,906,1380"/>
+<area shape="rect" id="node44" href="$classSymEngine_1_1Interval.html" title=" " alt="" coords="751,1404,905,1431"/>
+<area shape="rect" id="node45" href="$classSymEngine_1_1Rationals.html" title=" " alt="" coords="746,1455,910,1481"/>
+<area shape="rect" id="node46" href="$classSymEngine_1_1Reals.html" title=" " alt="" coords="759,1505,897,1532"/>
 </map>

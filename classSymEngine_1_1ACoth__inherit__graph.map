@@ -1,9 +1,9 @@
 <map id="SymEngine::ACoth" name="SymEngine::ACoth">
-<area shape="rect" id="node1" title=" " alt="" coords="39,483,174,509"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1InverseHyperbolicFunction.html" title=" " alt="" coords="5,393,208,435"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1HyperbolicBase.html" title=" " alt="" coords="12,319,201,345"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="11,244,202,271"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="33,169,180,196"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="41,95,172,121"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="9,5,205,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="45,483,187,509"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1InverseHyperbolicFunction.html" title=" " alt="" coords="5,393,227,435"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1HyperbolicBase.html" title=" " alt="" coords="13,319,219,345"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="13,244,219,271"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="37,169,195,196"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="47,95,185,121"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="13,5,219,47"/>
 </map>

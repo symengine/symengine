@@ -1,9 +1,9 @@
 <map id="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;" name="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="117,352,281,393"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,263,221,289"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="42,179,185,206"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="48,96,179,123"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="15,5,211,47"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="245,263,325,289"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="222,172,349,213"/>
+<area shape="rect" id="node1" title=" " alt="" coords="127,352,302,393"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,263,240,289"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,179,200,206"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="53,96,192,123"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="19,5,226,47"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="265,263,351,289"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="239,172,377,213"/>
 </map>

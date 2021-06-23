@@ -1,8 +1,8 @@
 <map id="SymEngine::ImageSet" name="SymEngine::ImageSet">
-<area shape="rect" id="node1" title=" " alt="" coords="192,291,345,317"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="45,179,162,206"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="38,96,169,123"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,201,47"/>
-<area shape="rect" id="node5" title=" " alt="" coords="185,172,352,213"/>
-<area shape="rect" id="node6" title=" " alt="" coords="376,172,543,213"/>
+<area shape="rect" id="node1" title=" " alt="" coords="199,291,365,317"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="47,179,171,206"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,96,178,123"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node5" title=" " alt="" coords="195,172,369,213"/>
+<area shape="rect" id="node6" title=" " alt="" coords="393,172,568,213"/>
 </map>

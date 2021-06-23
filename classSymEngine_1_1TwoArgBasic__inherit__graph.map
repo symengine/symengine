@@ -1,11 +1,11 @@
 <map id="SymEngine::TwoArgBasic&lt; BaseClass &gt;" name="SymEngine::TwoArgBasic&lt; BaseClass &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="140,173,315,214"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1ATan2.html" title=" " alt="" coords="363,5,569,32"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Beta.html" title=" " alt="" coords="367,56,565,83"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1KroneckerDelta.html" title=" " alt="" coords="373,107,559,149"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1LowerGamma.html" title=" " alt="" coords="377,173,555,214"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1PolyGamma.html" title=" " alt="" coords="381,238,551,279"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1UpperGamma.html" title=" " alt="" coords="377,303,555,345"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Zeta.html" title=" " alt="" coords="367,369,565,396"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,180,92,207"/>
+<area shape="rect" id="node1" title=" " alt="" coords="143,173,328,214"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1ATan2.html" title=" " alt="" coords="376,5,603,32"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Beta.html" title=" " alt="" coords="380,56,599,83"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1KroneckerDelta.html" title=" " alt="" coords="388,107,591,149"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1LowerGamma.html" title=" " alt="" coords="392,173,587,214"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1PolyGamma.html" title=" " alt="" coords="398,238,581,279"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1UpperGamma.html" title=" " alt="" coords="392,303,587,345"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Zeta.html" title=" " alt="" coords="380,369,599,396"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,180,95,207"/>
 </map>

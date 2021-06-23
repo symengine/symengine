@@ -1,6 +1,6 @@
 <map id="SymEngine::SeriesCoeffInterface" name="SymEngine::SeriesCoeffInterface">
-<area shape="rect" id="node1" title=" " alt="" coords="5,244,221,271"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="42,169,185,196"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="48,95,179,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="15,5,211,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,244,240,271"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,169,200,196"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="53,95,192,121"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="19,5,226,47"/>
 </map>

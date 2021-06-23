@@ -1,7 +1,7 @@
 <map id="SymEngine::RefineVisitor" name="SymEngine::RefineVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="31,333,203,360"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,244,229,285"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="21,169,214,196"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="35,80,199,121"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="50,5,185,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="37,333,224,360"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,244,256,285"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="25,169,236,196"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="42,80,219,121"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="58,5,203,32"/>
 </map>
