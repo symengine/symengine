@@ -669,6 +669,8 @@ if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
 
+add_subdirectory(matchpygen)
+
 # At the end we print a nice summary
 
 message("--------------------------------------------------------------------------------")
