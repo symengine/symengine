@@ -495,6 +495,7 @@ llvm::Function *LLVMVisitor::get_powi()
 {
     std::vector<llvm::Type *> arg_type;
     arg_type.push_back(get_float_type(&mod->getContext()));
+    arg_type.push_back(llvm::Type::getInt32Ty(mod->getContext()));
     return llvm::Intrinsic::getDeclaration(mod, llvm::Intrinsic::powi,
                                            arg_type);
 }
