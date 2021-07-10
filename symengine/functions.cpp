@@ -522,6 +522,13 @@ RCP<const Basic> sign(const RCP<const Basic> &arg)
         return mul(s,
                    make_rcp<const Sign>(Mul::from_dict(one, std::move(dict))));
     }
+    if (is_a<Pow>(*arg)) {
+        RCP<const Pow> pow_arg = rcp_static_cast<const Pow>(arg);
+        RCP<const Basic> s = sign(pow_arg->get_base());
+        if (not is_a<Sign>(*s) and not eq(*s, *pow_arg->get_base())) {
+            return sign(pow(s, pow_arg->get_exp()));
+        }
+    }
     return make_rcp<const Sign>(arg);
 }
 
@@ -1571,54 +1578,23 @@ RCP<const Basic> ATan2::create(const RCP<const Basic> &a,
 RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 {
     if (eq(*num, *zero)) {
-        if (is_a_Number(*den)) {
-            RCP<const Number> den_new = rcp_static_cast<const Number>(den);
-            if (den_new->is_negative())
-                return pi;
-            else if (den_new->is_positive())
-                return zero;
-            else {
-                return Nan;
-            }
+        if (eq(*den, *zero)) {
+            return Nan;
         }
+        return mul(div(pi, im2), sub(sign(den), one));
     } else if (eq(*den, *zero)) {
-        if (is_a_Number(*num)) {
-            RCP<const Number> num_new = rcp_static_cast<const Number>(num);
-            if (num_new->is_negative())
-                return div(pi, im2);
-            else
-                return div(pi, i2);
-        }
+        return mul(div(pi, i2), sign(num));
     }
-    RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
+    RCP<const Basic> divided = div(num, den);
+    RCP<const Basic> index_b;
+    bool b = inverse_lookup(inverse_tct, divided, outArg(index_b));
     if (b) {
-        // Ideally the answer should depend on the signs of `num` and `den`
-        // Currently is_positive() and is_negative() is not implemented for
-        // types other than `Number`
-        // Hence this will give exact answers in case when num and den are
-        // numbers in SymEngine sense and when num and den are positive.
-        // for the remaining cases in which we just return the value from
-        // the lookup table.
-        // TODO: update once is_positive() and is_negative() is implemented
-        // in `Basic`
-        if (is_a_Number(*den) and is_a_Number(*num)) {
-            RCP<const Number> den_new = rcp_static_cast<const Number>(den);
-            RCP<const Number> num_new = rcp_static_cast<const Number>(num);
-
-            if (den_new->is_positive()) {
-                return div(pi, index);
-            } else if (den_new->is_negative()) {
-                if (num_new->is_negative()) {
-                    return sub(div(pi, index), pi);
-                } else {
-                    return add(div(pi, index), pi);
-                }
-            } else {
-                return div(pi, index);
-            }
+        SYMENGINE_ASSERT(is_a_Number(*index_b));
+        RCP<const Number> index = rcp_static_cast<const Number>(index_b);
+        if (index->is_positive()) {
+            return add(div(pi, index), mul(div(pi, i2), sub(sign(den), one)));
         } else {
-            return div(pi, index);
+            return sub(div(pi, index), mul(div(pi, i2), sub(sign(den), one)));
         }
     } else {
         return make_rcp<const ATan2>(num, den);

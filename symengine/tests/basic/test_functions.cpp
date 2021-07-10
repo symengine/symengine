@@ -2218,7 +2218,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(add(one, sqrt(i2)), im1);
-    r2 = div(mul(pi, i3), integer(-8));
+    r2 = div(mul(pi, i5), integer(8));
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(sub(sqrt(i2), one), i1);
@@ -2230,7 +2230,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(sqrt(add(i5, mul(i2, sqrt(i5)))), im1);
-    r2 = div(mul(pi, im2), i5);
+    r2 = div(mul(pi, i3), i5);
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(y, x)->diff(x);
