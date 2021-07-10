@@ -113,8 +113,8 @@ fi
 if [[ "${WITH_FLINT}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_FLINT=${WITH_FLINT}"
 fi
-if [[ "${WITH_BENCHMARKS_NONIUS}" != "" ]]; then
-    cmake_line="$cmake_line -DBUILD_BENCHMARKS_NONIUS=${WITH_BENCHMARKS_NONIUS}"
+if [[ "${WITH_BENCHMARKS_GOOGLE}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS_GOOGLE=${WITH_BENCHMARKS_GOOGLE}"
 fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"

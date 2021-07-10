@@ -118,7 +118,6 @@ their default values indicated below:
         -DWITH_LLVM:BOOL=OFF \                        # Build with LLVM libraries
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
-        -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         -DBUILD_BENCHMARKS_GOOGLE:BOOL=OFF \          # Build with Google Benchmark benchmarks
         -DINTEGER_CLASS:STRING=gmp \                  # Choose storage type for Integer. one of gmp, gmpxx,
                                                         flint, piranha, boostmp
@@ -147,9 +146,8 @@ multiprecision integer and rational classes. This would make boost, the only
 dependency and all the code would be under permissive licenses, namely, MIT,
 BSD 3-clause and Boost License.
 
-The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
-(`WITH_PIRANHA`) depend on Boost, so they are off by default. The benchmarked
-code (both with and without Nonius) seems to depend on the order of which you
+Piranha (`WITH_PIRANHA`) depends on Boost, so it is off by default. The benchmarked
+code seems to depend on the order of which you
 execute the benchmarks in a given executable, due to internal malloc
 implementation. We have found that this order dependence is reduced by enabling
 `WITH_TCMALLOC=ON` and since it also speeds the benchmarks up, we recommend

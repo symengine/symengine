@@ -112,16 +112,19 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_LLVM: 6.0
-            WITH_BENCHMARKS_NONIUS: yes
             CC: clang
             OS: ubuntu-16.04
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
             EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-4.8-dev libgmp-dev llvm-6.0-dev"
 
           - BUILD_TYPE: Release
+            WITH_BENCHMARKS: yes
+            WITH_BENCHMARKS_GOOGLE: yes
             CC: clang
+            WITH_LLVM: 12
             OS: ubuntu-16.04
-            EXTRA_APT_PACKAGES: "clang libstdc++-4.8-dev libgmp-dev"
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-12 main'
+            EXTRA_APT_PACKAGES: "clang-12 llvm-12-dev libstdc++-4.8-dev libgmp-dev"
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 3.8
@@ -198,7 +201,7 @@ jobs:
       WITH_MPFR: ${{ matrix.WITH_MPFR }}
       BUILD_BENCHMARKS: ${{ matrix.BUILD_BENCHMARKS }}
       WITH_LLVM: ${{ matrix.WITH_LLVM }}
-      WITH_BENCHMARKS_NONIUS: ${{ matrix.WITH_BENCHMARKS_NONIUS }}
+      WITH_BENCHMARKS_GOOGLE: ${{ matrix.WITH_BENCHMARKS_GOOGLE }}
       WITH_SYMENGINE_RCP: ${{ matrix.WITH_SYMENGINE_RCP }}
       TEST_IN_TREE: ${{ matrix.TEST_IN_TREE }}
       WITH_SYMENGINE_THREAD_SAFE: ${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}
