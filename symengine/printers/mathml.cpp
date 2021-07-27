@@ -108,6 +108,11 @@ void MathMLPrinter::bvisit(const EmptySet &x)
     s << "<emptyset/>";
 }
 
+void MathMLPrinter::bvisit(const Complexes &x)
+{
+    s << "<complexes/>";
+}
+
 void MathMLPrinter::bvisit(const Reals &x)
 {
     s << "<reals/>";

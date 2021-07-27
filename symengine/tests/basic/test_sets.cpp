@@ -16,6 +16,8 @@ using SymEngine::boolFalse;
 using SymEngine::boolTrue;
 using SymEngine::Complement;
 using SymEngine::Complex;
+using SymEngine::Complexes;
+using SymEngine::complexes;
 using SymEngine::ConditionSet;
 using SymEngine::conditionset;
 using SymEngine::Contains;
@@ -227,6 +229,76 @@ TEST_CASE("Interval : Basic", "[basic]")
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), NotImplementedError &);
     CHECK_THROWS_AS(r5->diff(symbol("x")), SymEngineException &);
+}
+
+TEST_CASE("Complexes : Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Set> r0 = complexes();
+    RCP<const Set> r1 = reals();
+    RCP<const Set> r2 = interval(zero, one);
+    RCP<const Set> r3 = finiteset({zero, one, integer(2)});
+    RCP<const Number> i1 = integer(3);
+    RCP<const Number> i2 = integer(5);
+    RCP<const Number> c1 = Complex::from_two_nums(*i1, *i2);
+    RCP<const Set> r4 = finiteset({zero, one, integer(2), c1});
+    RCP<const Set> r5 = finiteset({c1});
+    RCP<const Set> r6 = set_union({r1, r5});
+    RCP<const Set> r7 = finiteset({real_double(2.0), c1, x});
+    RCP<const Set> r8 = finiteset({x});
+    RCP<const Set> r9 = set_union({r0, r8});
+    RCP<const Set> r12 = universalset();
+    RCP<const Set> r13 = emptyset();
+    RCP<const Set> r14 = set_complement(universalset(), complexes());
+
+    REQUIRE(is_a<Complexes>(*r0));
+    REQUIRE(not is_a<UniversalSet>(*r0));
+    REQUIRE(r1->is_subset(r0));
+    REQUIRE(r2->is_subset(r0));
+    REQUIRE(r1->is_proper_subset(r0));
+    REQUIRE(r2->is_proper_subset(r0));
+    REQUIRE(r0->is_superset(r1));
+    REQUIRE(r0->is_superset(r2));
+    REQUIRE(eq(*r0, *r0->set_intersection(r0)));
+    REQUIRE(eq(*r2, *r0->set_intersection(r2)));
+    REQUIRE(eq(*r2, *r2->set_intersection(r0)));
+    REQUIRE(eq(*r3, *r0->set_intersection(r3)));
+    REQUIRE(eq(*r3, *r3->set_intersection(r0)));
+    REQUIRE(eq(*r4, *r4->set_intersection(r0)));
+    REQUIRE(eq(*r4, *r0->set_intersection(r4)));
+    REQUIRE(eq(*r0, *r0->set_intersection(r12)));
+    REQUIRE(eq(*r0, *r12->set_intersection(r0)));
+    REQUIRE(eq(*r0, *r0->set_union(r0)));
+    REQUIRE(eq(*r0, *r0->set_union(r1)));
+    REQUIRE(eq(*r0, *r0->set_union(r2)));
+    REQUIRE(eq(*r0, *r2->set_union(r0)));
+    REQUIRE(eq(*r0, *r3->set_union(r0)));
+    REQUIRE(eq(*r0, *r0->set_union(r3)));
+    REQUIRE(eq(*r0, *r0->set_union(r4)));
+    REQUIRE(eq(*r0, *r4->set_union(r0)));
+    REQUIRE(eq(*r9, *r7->set_union(r0)));
+    REQUIRE(eq(*r12, *r0->set_union(r12)));
+    REQUIRE(eq(*r12, *r12->set_union(r0)));
+    REQUIRE(eq(*r0->set_complement(r2), *emptyset()));
+    REQUIRE(eq(*r0->set_complement(r0), *emptyset()));
+    REQUIRE(eq(*r0->set_complement(r13), *emptyset()));
+    REQUIRE(eq(*r0->set_complement(r12), *r14));
+    REQUIRE(eq(*r0->set_complement(r3), *emptyset()));
+    REQUIRE(eq(*r0->set_complement(r4), *emptyset()));
+    REQUIRE(eq(*r12->set_complement(r0), *emptyset()));
+    REQUIRE(eq(*r13->set_complement(r0), *r0));
+    REQUIRE(r0->__str__() == "Complexes");
+    REQUIRE(r0->__hash__() == complexes()->__hash__());
+    REQUIRE(not r0->is_proper_subset(r0));
+    REQUIRE(not r0->__eq__(*r2));
+    REQUIRE(r0->__eq__(*r0));
+    REQUIRE(r0->compare(*complexes()) == 0);
+    REQUIRE(eq(*r0->contains(zero), *boolTrue));
+    REQUIRE(eq(*r0->contains(c1), *boolTrue));
+    REQUIRE(eq(*r0->contains(r0), *boolFalse));
+    REQUIRE(eq(*r0->contains(x), *make_rcp<Contains>(x, r0)));
+    REQUIRE(r0->get_args().empty());
+    CHECK_THROWS_AS(r0->diff(symbol("x")), SymEngineException &);
 }
 
 TEST_CASE("Reals : Basic", "[basic]")
