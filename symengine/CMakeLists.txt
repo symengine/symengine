@@ -92,6 +92,7 @@ set(SRC
     series.cpp
     series_generic.cpp
     sets.cpp
+    set_funcs.cpp
     solve.cpp
     sparse_matrix.cpp
     symbol.cpp
