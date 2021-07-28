@@ -4,14 +4,17 @@
 using SymEngine::Assumptions;
 using SymEngine::integer;
 using SymEngine::integers;
+using SymEngine::max;
+using SymEngine::min;
 using SymEngine::pi;
 using SymEngine::reals;
 using SymEngine::symbol;
-using SymEngine::unevaluated_expr;
 
 TEST_CASE("Test refine", "[refine]")
 {
     auto x = symbol("x");
+    auto y = symbol("y");
+    auto z = symbol("z");
 
     auto expr = abs(x);
     auto a1 = Assumptions({Gt(x, integer(0))});
@@ -80,4 +83,46 @@ TEST_CASE("Test refine", "[refine]")
     expr = conjugate(x);
     auto a16 = Assumptions({});
     REQUIRE(eq(*refine(expr, &a16), *expr));
+
+    expr = max({integer(-1), x});
+    auto a17 = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a17), *x));
+
+    expr = max({integer(-1), x});
+    auto a18 = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a18), *x));
+
+    expr = max({integer(-1), x});
+    auto a19 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a19), *expr));
+
+    expr = max({x, y, z});
+    auto a20 = Assumptions(
+        {Ge(x, integer(0)), Ge(y, integer(0)), Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a20), *expr));
+
+    expr = max({x, y, z});
+    auto a21 = Assumptions({Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a21), *expr));
+
+    expr = min({integer(-1), x});
+    auto a22 = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a22), *integer(-1)));
+
+    expr = min({integer(-1), x});
+    auto a23 = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a23), *integer(-1)));
+
+    expr = min({integer(-1), x});
+    auto a24 = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a24), *expr));
+
+    expr = min({x, y, z});
+    auto a25 = Assumptions(
+        {Ge(x, integer(0)), Ge(y, integer(0)), Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a25), *expr));
+
+    expr = min({x, y, z});
+    auto a26 = Assumptions({Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a26), *expr));
 }

@@ -27,6 +27,8 @@ public:
     void bvisit(const Floor &x);
     void bvisit(const Ceiling &x);
     void bvisit(const Conjugate &x);
+    void bvisit(const Max &x);
+    void bvisit(const Min &x);
 };
 
 RCP<const Basic> refine(const RCP<const Basic> &x,
