@@ -889,7 +889,8 @@ void LLVMVisitor::bvisit(const Symbol &x)
         result_ = it->second;
         return;
     }
-    throw std::runtime_error("Symbol " + x.__str__()
+
+    throw SymEngineException("Symbol " + x.__str__()
                              + " not in the symbols vector.");
 }
 
@@ -941,9 +942,9 @@ void LLVMLongDoubleVisitor::visit(const Constant &x)
 }
 #endif
 
-void LLVMVisitor::bvisit(const Basic &)
+void LLVMVisitor::bvisit(const Basic &x)
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError(x.__str__());
 }
 
 const std::string &LLVMVisitor::dumps() const
