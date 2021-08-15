@@ -46,6 +46,7 @@ public:
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Constant &x);
+    void bvisit(const Add &x);
     void bvisit(const Basic &x);
     void bvisit(const Set &x);
     void bvisit(const Relational &x);
