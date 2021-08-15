@@ -149,13 +149,13 @@ jobs:
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
-          - BUILD_TYPE: Debug
-            WITH_SANITIZE: undefined
-            WITH_LLVM: 7.0
-            CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+#          - BUILD_TYPE: Debug
+#            WITH_SANITIZE: undefined
+#            WITH_LLVM: 7.0
+#            CC: clang
+#            OS: ubuntu-16.04
+#            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
+#            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
 
           - BUILD_TYPE: Debug
             WITH_SYMENGINE_RCP: yes
