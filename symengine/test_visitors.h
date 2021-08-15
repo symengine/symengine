@@ -400,6 +400,31 @@ public:
 
     tribool apply(const Basic &b);
 };
+
+class FiniteVisitor : public BaseVisitor<FiniteVisitor>
+{
+private:
+    tribool is_finite_;
+    const Assumptions *assumptions_;
+
+    void error();
+
+public:
+    FiniteVisitor(const Assumptions *assumptions) : assumptions_(assumptions){};
+
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Infty &x);
+    void bvisit(const NaN &x);
+    void bvisit(const Number &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+
+    tribool apply(const Basic &b);
+};
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H

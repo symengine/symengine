@@ -639,3 +639,38 @@ TEST_CASE("Test is_irrational", "[is_irrational]")
     REQUIRE(is_true(is_irrational(*irr1)));
     REQUIRE(is_indeterminate(is_irrational(*constant("catalan"))));
 }
+
+TEST_CASE("Test is_finite", "[is_finite]")
+{
+    auto x = symbol("x");
+
+    REQUIRE(is_false(is_finite(*Inf)));
+    REQUIRE(is_true(is_infinite(*Inf)));
+
+    REQUIRE_THROWS_AS(is_finite(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_infinite(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_finite(*Eq(symbol("x"), integer(1))),
+                      SymEngineException &);
+    REQUIRE_THROWS_AS(is_infinite(*Eq(symbol("x"), integer(1))),
+                      SymEngineException &);
+    REQUIRE_THROWS_AS(is_finite(*integers()), SymEngineException &);
+    REQUIRE_THROWS_AS(is_infinite(*integers()), SymEngineException &);
+    REQUIRE_THROWS_AS(is_finite(*Nan), SymEngineException &);
+    REQUIRE_THROWS_AS(is_infinite(*Nan), SymEngineException &);
+
+    REQUIRE(is_true(is_finite(*pi)));
+    REQUIRE(is_false(is_infinite(*pi)));
+
+    REQUIRE(is_true(is_finite(*integer(23))));
+    REQUIRE(is_false(is_infinite(*integer(23))));
+
+    REQUIRE(is_indeterminate(is_finite(*x)));
+    REQUIRE(is_indeterminate(is_infinite(*x)));
+
+    const auto a1 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(is_finite(*x, &a1)));
+    REQUIRE(is_false(is_infinite(*x, &a1)));
+
+    // Not yet supported
+    REQUIRE(is_indeterminate(is_finite(*add(x, x))));
+}

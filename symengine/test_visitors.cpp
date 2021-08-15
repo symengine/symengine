@@ -754,4 +754,78 @@ tribool is_irrational(const Basic &b)
     RationalVisitor visitor(false);
     return visitor.apply(b);
 }
+
+void FiniteVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_finite/is_infinite");
+}
+
+void FiniteVisitor::bvisit(const Basic &x)
+{
+    is_finite_ = tribool::indeterminate;
+}
+
+void FiniteVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_finite_ = assumptions_->is_complex(x.rcp_from_this());
+    } else {
+        is_finite_ = tribool::indeterminate;
+    }
+}
+
+void FiniteVisitor::bvisit(const Number &x)
+{
+    is_finite_ = tribool::tritrue;
+}
+
+void FiniteVisitor::bvisit(const Infty &x)
+{
+    is_finite_ = tribool::trifalse;
+}
+
+void FiniteVisitor::bvisit(const NaN &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Constant &x)
+{
+    is_finite_ = tribool::tritrue;
+}
+
+tribool FiniteVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_finite_;
+}
+
+tribool is_finite(const Basic &b, const Assumptions *assumptions)
+{
+    FiniteVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
+tribool is_infinite(const Basic &b, const Assumptions *assumptions)
+{
+    FiniteVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
+}
+
 } // namespace SymEngine
