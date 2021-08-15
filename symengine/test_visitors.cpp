@@ -828,4 +828,15 @@ tribool is_infinite(const Basic &b, const Assumptions *assumptions)
     return not_tribool(visitor.apply(b));
 }
 
+tribool is_even(const Basic &b, const Assumptions *assumptions)
+{
+    return is_integer(*div(b.rcp_from_this(), integer(2)), assumptions);
+}
+
+tribool is_odd(const Basic &b, const Assumptions *assumptions)
+{
+    return is_integer(*div(add(b.rcp_from_this(), integer(1)), integer(2)),
+                      assumptions);
+}
+
 } // namespace SymEngine

@@ -674,3 +674,18 @@ TEST_CASE("Test is_finite", "[is_finite]")
     // Not yet supported
     REQUIRE(is_indeterminate(is_finite(*add(x, x))));
 }
+
+TEST_CASE("Test is_even / is_odd", "[is_even]")
+{
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Number> c1 = Complex::from_two_nums(*integer(2), *integer(3));
+
+    REQUIRE(is_true(is_odd(*integer(3))));
+    REQUIRE(is_false(is_odd(*integer(2))));
+    REQUIRE(is_false(is_even(*integer(3))));
+    REQUIRE(is_true(is_even(*integer(2))));
+    REQUIRE(is_false(is_odd(*rat1)));
+    REQUIRE(is_false(is_even(*rat1)));
+    REQUIRE(is_false(is_odd(*c1)));
+    REQUIRE(is_false(is_even(*c1)));
+}
