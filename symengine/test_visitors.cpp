@@ -884,4 +884,104 @@ tribool is_odd(const Basic &b, const Assumptions *assumptions)
                       assumptions);
 }
 
+void AlgebraicVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_algebraic/is_transcendental");
+}
+
+void AlgebraicVisitor::bvisit(const Basic &x)
+{
+    is_algebraic_ = tribool::indeterminate;
+}
+
+void AlgebraicVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Add &x)
+{
+    // algebraic + algebraic = algebraic
+    // algebraic + transcendental = transcendental
+    // algebraic + transcendental + transcendental = indeterminate
+    tribool current = tribool::tritrue;
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        if (is_false(current) and is_false(is_algebraic_)) {
+            is_algebraic_ = tribool::indeterminate;
+            return;
+        }
+        current = andwk_tribool(current, is_algebraic_);
+        if (is_indeterminate(current)) {
+            is_algebraic_ = current;
+            return;
+        }
+    }
+    is_algebraic_ = current;
+}
+
+void AlgebraicVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_algebraic_ = assumptions_->is_rational(x.rcp_from_this());
+        if (is_false(is_algebraic_)) {
+            is_algebraic_ = tribool::indeterminate;
+        }
+    } else {
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const Constant &x)
+{
+    if (eq(x, *pi) or eq(x, *E)) {
+        is_algebraic_ = tribool::trifalse;
+    } else if (eq(x, *GoldenRatio)) {
+        is_algebraic_ = tribool::tritrue;
+    } else {
+        // It is unknown (2021) whether EulerGamma or Catalan are algebraic or
+        // transcendental
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const Integer &x)
+{
+    is_algebraic_ = tribool::tritrue;
+}
+
+void AlgebraicVisitor::bvisit(const Rational &x)
+{
+    is_algebraic_ = tribool::tritrue;
+}
+
+tribool AlgebraicVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_algebraic_;
+}
+
+tribool is_algebraic(const Basic &b, const Assumptions *assumptions)
+{
+    AlgebraicVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
+tribool is_transcendental(const Basic &b, const Assumptions *assumptions)
+{
+    AlgebraicVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
+}
+
 } // namespace SymEngine

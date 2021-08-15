@@ -6,9 +6,13 @@ using SymEngine::abs;
 using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
+using SymEngine::Catalan;
 using SymEngine::Complex;
 using SymEngine::constant;
 using SymEngine::cos;
+using SymEngine::E;
+using SymEngine::EulerGamma;
+using SymEngine::GoldenRatio;
 using SymEngine::Inf;
 using SymEngine::integer;
 using SymEngine::integers;
@@ -707,4 +711,49 @@ TEST_CASE("Test is_even / is_odd", "[is_even]")
     REQUIRE(is_false(is_even(*rat1)));
     REQUIRE(is_false(is_odd(*c1)));
     REQUIRE(is_false(is_even(*c1)));
+}
+
+TEST_CASE("Test is_algebraic/is_transcendental", "[is_algebraic]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+
+    REQUIRE(is_true(is_algebraic(*integer(23))));
+    REQUIRE(is_false(is_transcendental(*integer(23))));
+    REQUIRE(is_true(is_algebraic(*rat1)));
+    REQUIRE(is_false(is_transcendental(*rat1)));
+    REQUIRE_THROWS_AS(is_algebraic(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_transcendental(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_algebraic(*integers()), SymEngineException &);
+    REQUIRE_THROWS_AS(is_transcendental(*integers()), SymEngineException &);
+    REQUIRE_THROWS_AS(is_algebraic(*Eq(x, integer(1))), SymEngineException &);
+    REQUIRE_THROWS_AS(is_transcendental(*Eq(x, integer(1))),
+                      SymEngineException &);
+    REQUIRE(is_false(is_algebraic(*pi)));
+    REQUIRE(is_true(is_transcendental(*pi)));
+    REQUIRE(is_indeterminate(is_algebraic(*EulerGamma)));
+    REQUIRE(is_indeterminate(is_transcendental(*EulerGamma)));
+    REQUIRE(is_indeterminate(is_algebraic(*Catalan)));
+    REQUIRE(is_indeterminate(is_transcendental(*Catalan)));
+    REQUIRE(is_false(is_algebraic(*E)));
+    REQUIRE(is_true(is_transcendental(*E)));
+    REQUIRE(is_true(is_algebraic(*GoldenRatio)));
+    REQUIRE(is_false(is_transcendental(*GoldenRatio)));
+
+    REQUIRE(is_indeterminate(is_algebraic(*add(x, integer(1)))));
+
+    Assumptions a = Assumptions({integers()->contains(x)});
+    REQUIRE(is_true(is_algebraic(*x, &a)));
+
+    a = Assumptions({rationals()->contains(x), rationals()->contains(y)});
+    REQUIRE(is_true(is_algebraic(*x, &a)));
+    REQUIRE(is_true(is_algebraic(*add(x, integer(23)), &a)));
+    REQUIRE(is_true(is_algebraic(*add(x, add(y, integer(23))), &a)));
+    REQUIRE(is_true(is_transcendental(*add(x, add(y, pi)), &a)));
+    REQUIRE(is_indeterminate(is_transcendental(*add(x, add(E, pi)), &a)));
+
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(is_indeterminate(is_algebraic(*x, &a)));
+    REQUIRE(is_indeterminate(is_algebraic(*add(x, integer(23)), &a)));
 }

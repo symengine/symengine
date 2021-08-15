@@ -426,6 +426,32 @@ public:
     tribool apply(const Basic &b);
 };
 
+class AlgebraicVisitor : public BaseVisitor<AlgebraicVisitor>
+{
+private:
+    tribool is_algebraic_;
+    const Assumptions *assumptions_;
+
+    void error();
+
+public:
+    AlgebraicVisitor(const Assumptions *assumptions) : assumptions_(assumptions)
+    {
+    }
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x);
+    void bvisit(const Rational &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+
+    tribool apply(const Basic &b);
+};
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H
