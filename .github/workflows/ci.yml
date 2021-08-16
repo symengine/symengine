@@ -151,11 +151,11 @@ jobs:
     
           - BUILD_TYPE: Debug
             WITH_SANITIZE: undefined
-            WITH_LLVM: 7.0
+            WITH_LLVM: 13
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: "clang-13 llvm-13-dev"
 
           - BUILD_TYPE: Debug
             WITH_SYMENGINE_RCP: yes
@@ -219,6 +219,7 @@ jobs:
       OS: ${{ matrix.OS }}
       WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
       CC: ${{ matrix.CC }}
+      WITH_COTIRE: ${{ matrix.WITH_COTIRE }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
       WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
