@@ -9,7 +9,7 @@ if [[ "$(uname)" == "Linux" ]]; then
       sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
   fi
   sudo apt update
-  if [[ "$OS" == "ubuntu-16.04" ]]; then
+  if [[ "$OS" == "ubuntu-20.04" ]]; then
     sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
   else
     sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES

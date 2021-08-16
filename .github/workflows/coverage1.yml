@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   coverage1:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
         WITH_MPC: yes
         WITH_LLVM: 8.0
         USE_GLIBCXX_DEBUG: yes
-        OS: ubuntu-16.04
+        OS: ubuntu-20.04
         CC: gcc
-        EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
+        EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main'
         EXTRA_APT_PACKAGES: "clang-8 llvm-8-dev binutils-dev g++-8"

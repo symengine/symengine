@@ -12,14 +12,14 @@ jobs:
           # Debug build (with BFD)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_SYMENGINE_THREAD_SAFE: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
@@ -28,7 +28,7 @@ jobs:
             WITH_ECM: yes
             WITH_PRIMESIEVE: yes
             WITH_MPC: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
@@ -38,7 +38,7 @@ jobs:
             INTEGER_CLASS: flint
             WITH_MPC: yes
             TEST_IN_TREE: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
@@ -46,14 +46,14 @@ jobs:
             WITH_SYMENGINE_RCP: yes
             WITH_MPFR: yes
             INTEGER_CLASS: gmpxx
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD and INTEGER_CLASS from boostmp)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             WITH_LATEST_GCC: yes
             CC: gcc
 
@@ -61,18 +61,18 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Release build (with BFD)
           - WITH_BFD: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           # Release shared build (with BFD)
           - WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           ## In-tree builds (we just check a few configurations to make sure they work):
@@ -80,13 +80,13 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             TEST_IN_TREE: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
 
           - TEST_CLANG_FORMAT: yes
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             CC: gcc
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-11 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-11 main'
             EXTRA_APT_PACKAGES: clang-format-11
 
           - BUILD_TYPE: Debug
@@ -95,7 +95,7 @@ jobs:
             MAKEFLAGS: -j2
             BUILD_SHARED_LIBS: yes
             CC: gcc
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             EXTRA_APT_PACKAGES: "binutils-dev g++-4.8"
             # This is not used, but was in travis config
             # WITH_GCC_6: yes
@@ -106,7 +106,7 @@ jobs:
             INTEGER_CLASS: piranha
             MAKEFLAGS: -j2
             CC: gcc
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
             EXTRA_APT_PACKAGES: "g++-4.8"
 
           - BUILD_TYPE: Debug
@@ -114,14 +114,14 @@ jobs:
             WITH_LLVM: 6.0
             WITH_BENCHMARKS_NONIUS: yes
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main'
             EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-4.8-dev libgmp-dev llvm-6.0-dev"
 
           - BUILD_TYPE: Release
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_PACKAGES: "clang libstdc++-4.8-dev libgmp-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_PACKAGES: "clang libstdc++-9-dev libgmp-dev"
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 3.8
@@ -143,19 +143,19 @@ jobs:
 
           - BUILD_TYPE: Debug
             WITH_SANITIZE: address
-            WITH_LLVM: 7.0
+            WITH_LLVM: 13
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: "clang-13 llvm-13-dev"
     
           - BUILD_TYPE: Debug
             WITH_SANITIZE: undefined
-            WITH_LLVM: 7.0
+            WITH_LLVM: 13
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: "clang-13 llvm-13-dev"
 
           - BUILD_TYPE: Debug
             WITH_SYMENGINE_RCP: yes
@@ -163,13 +163,13 @@ jobs:
             WITH_SANITIZE: memory
             INTEGER_CLASS: boostmp
             CC: clang
-            OS: ubuntu-18.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-13 main'
+            EXTRA_APT_PACKAGES: "clang-13 llvm-13-dev"
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc
-            OS: ubuntu-16.04
+            OS: ubuntu-20.04
     
           - MSYSTEM: MINGW64
             ARCH: x86_64
