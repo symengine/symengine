@@ -10,7 +10,7 @@ if [[ "$(uname)" == "Linux" ]]; then
   fi
   sudo apt update
   if [[ "$OS" == "ubuntu-20.04" ]]; then
-    sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
+    sudo apt install binutils-dev g++-9 $EXTRA_APT_PACKAGES
   else
     sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES
   fi
