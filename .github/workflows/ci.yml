@@ -96,7 +96,7 @@ jobs:
             BUILD_SHARED_LIBS: yes
             CC: gcc
             OS: ubuntu-20.04
-            EXTRA_APT_PACKAGES: "binutils-dev g++-4.8"
+            EXTRA_APT_PACKAGES: "binutils-dev g++-9"
             # This is not used, but was in travis config
             # WITH_GCC_6: yes
 
@@ -107,7 +107,7 @@ jobs:
             MAKEFLAGS: -j2
             CC: gcc
             OS: ubuntu-20.04
-            EXTRA_APT_PACKAGES: "g++-4.8"
+            EXTRA_APT_PACKAGES: "g++-9"
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -116,7 +116,7 @@ jobs:
             CC: clang
             OS: ubuntu-20.04
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-9 main'
-            EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-4.8-dev libgmp-dev llvm-6.0-dev"
+            EXTRA_APT_PACKAGES: "clang-6.0 libstdc++-9-dev libgmp-dev llvm-6.0-dev"
 
           - BUILD_TYPE: Release
             CC: clang

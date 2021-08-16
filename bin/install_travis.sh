@@ -37,21 +37,21 @@ export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-        export CC=gcc-4.8
-        export CXX=g++-4.8
-        export GCOV_EXECUTABLE=gcov-4.8
-    elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
         export CC=gcc-9
         export CXX=g++-9
         export GCOV_EXECUTABLE=gcov-9
+    elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
+        export CC=gcc-11
+        export CXX=g++-11
+        export GCOV_EXECUTABLE=gcov-11
     elif [[ "${WITH_GCC_6}" == "yes" ]]; then
-        export CC=gcc-6
-        export CXX=g++-6
-        export GCOV_EXECUTABLE=gcov-6
+        export CC=gcc-10
+        export CXX=g++-10
+        export GCOV_EXECUTABLE=gcov-10
     else
-        export CC=gcc-4.7
-        export CXX=g++-4.7
-        export GCOV_EXECUTABLE=gcov-4.7
+        export CC=gcc-9
+        export CXX=g++-9
+        export GCOV_EXECUTABLE=gcov-9
     fi
 fi
 
