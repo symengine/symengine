@@ -164,7 +164,7 @@ jobs:
             INTEGER_CLASS: boostmp
             CC: clang
             OS: ubuntu-20.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
             EXTRA_APT_PACKAGES: "clang-12 llvm-12-dev"
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
