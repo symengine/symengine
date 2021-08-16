@@ -6,12 +6,12 @@ set -e
 set -x
 
 if [[ "${WITH_SANITIZE}" != "" ]]; then
-	export CXXFLAGS="-fsanitize=${WITH_SANITIZE}"
-	if [[ "${WITH_SANITIZE}" == "address" ]]; then
-	    export ASAN_OPTIONS=symbolize=1,detect_leaks=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
-	elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
-	    export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
-	elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
+        export CXXFLAGS="-fsanitize=${WITH_SANITIZE}"
+        if [[ "${WITH_SANITIZE}" == "address" ]]; then
+            export ASAN_OPTIONS=symbolize=1,detect_leaks=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
+        elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
+            export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-7/bin/llvm-symbolizer
+        elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
             LLVM_ORG_VER=12.0.1  # should match llvm-X-dev package.
@@ -46,20 +46,20 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
                   -DCMAKE_INSTALL_PREFIX=/opt/libcxx-12-msan  \
                   -DLIBCXXABI_LIBCXX_INCLUDES=/opt/libcxx-12-msan/include/c++/v1 \
                   -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx \
-                  /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
+                  /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
               echo "Current dir:"; \
               pwd; \
-              cmake --build . ;\
+              cmake --build . ; \
               cmake --build . --target install
             )
             if [ ! -e /opt/libcxx-12-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
-	    export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
+            export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
             export CXXFLAGS="$CXXFLAGS -fsanitize-memory-track-origins=2 -stdlib=libc++ -I/opt/libcxx-12-msan/include -I/opt/libcxx-12-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
             export LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 $LDFLAGS -Wl,-rpath,/opt/libcxx-12-msan/lib -L/opt/libcxx-12-msan/lib -lc++abi"
-	else
-	    2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
-	    exit 1
-	fi
+        else
+            2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
+            exit 1
+        fi
 elif [[ "${CC}" == *"clang"* ]] && [[ "$(uname)" == "Linux" ]]; then
     if [[ "${BUILD_TYPE}" == "Debug" ]]; then
         export CXXFLAGS="$CXXFLAGS -ftrapv"
