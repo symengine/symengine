@@ -150,6 +150,7 @@ jobs:
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
           - BUILD_TYPE: Debug
+            WITH_COTIRE: no
             WITH_SANITIZE: undefined
             WITH_LLVM: 12
             CC: clang
