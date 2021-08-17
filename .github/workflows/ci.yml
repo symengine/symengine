@@ -150,22 +150,24 @@ jobs:
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
           - BUILD_TYPE: Debug
+            WITH_COTIRE: no
             WITH_SANITIZE: undefined
-            WITH_LLVM: 7.0
+            WITH_LLVM: 12
             CC: clang
-            OS: ubuntu-16.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
+            EXTRA_APT_PACKAGES: "clang-12 llvm-12-dev"
 
           - BUILD_TYPE: Debug
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
+            WITH_COTIRE: no
             WITH_SANITIZE: memory
             INTEGER_CLASS: boostmp
             CC: clang
-            OS: ubuntu-18.04
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main'
-            EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
+            OS: ubuntu-20.04
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-12 main'
+            EXTRA_APT_PACKAGES: "clang-12 llvm-12-dev"
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc
@@ -218,6 +220,7 @@ jobs:
       OS: ${{ matrix.OS }}
       WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
       CC: ${{ matrix.CC }}
+      WITH_COTIRE: ${{ matrix.WITH_COTIRE }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
       WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
