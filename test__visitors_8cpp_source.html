@@ -854,7 +854,81 @@ $(function() {
 <div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;    RationalVisitor visitor(<span class="keyword">false</span>);</div>
 <div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
 <div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;}</div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160; </div>
+<div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::error()</div>
+<div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;{</div>
+<div class="line"><a name="l00760"></a><span class="lineno">  760</span>&#160;    <span class="keywordflow">throw</span> SymEngineException(</div>
+<div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160;        <span class="stringliteral">&quot;Only numeric types allowed for is_finite/is_infinite&quot;</span>);</div>
+<div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;}</div>
+<div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160; </div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;{</div>
+<div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;    is_finite_ = tribool::indeterminate;</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;}</div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160; </div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Symbol &amp;x)</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;{</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    <span class="keywordflow">if</span> (assumptions_) {</div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;        is_finite_ = assumptions_-&gt;is_complex(x.rcp_from_this());</div>
+<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;        is_finite_ = tribool::indeterminate;</div>
+<div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;    }</div>
+<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;}</div>
+<div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160; </div>
+<div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Number &amp;x)</div>
+<div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;{</div>
+<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160;    is_finite_ = tribool::tritrue;</div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;}</div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160; </div>
+<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Infty &amp;x)</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;{</div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;    is_finite_ = tribool::trifalse;</div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;}</div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160; </div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> NaN &amp;x)</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;{</div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    error();</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;}</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160; </div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Set &amp;x)</div>
+<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;{</div>
+<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;    error();</div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;}</div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160; </div>
+<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Relational &amp;x)</div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;{</div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;    error();</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;}</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160; </div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Boolean &amp;x)</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;{</div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;    error();</div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;}</div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160; </div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;<span class="keywordtype">void</span> FiniteVisitor::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;{</div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;    is_finite_ = tribool::tritrue;</div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;}</div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160; </div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;tribool FiniteVisitor::apply(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;{</div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;    <span class="keywordflow">return</span> is_finite_;</div>
+<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;}</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160; </div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;tribool is_finite(<span class="keyword">const</span> Basic &amp;b, <span class="keyword">const</span> Assumptions *assumptions)</div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;{</div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;    FiniteVisitor visitor(assumptions);</div>
+<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;}</div>
+<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160; </div>
+<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;tribool is_infinite(<span class="keyword">const</span> Basic &amp;b, <span class="keyword">const</span> Assumptions *assumptions)</div>
+<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;{</div>
+<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;    FiniteVisitor visitor(assumptions);</div>
+<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;    <span class="keywordflow">return</span> not_tribool(visitor.apply(b));</div>
+<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;}</div>
+<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160; </div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aclassSymEngine_1_1Assumptions_html"><div class="ttname"><a href="classSymEngine_1_1Assumptions.html">SymEngine::Assumptions</a></div><div class="ttdef"><b>Definition:</b> <a href="assumptions_8h_source.html#l00013">assumptions.h:14</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00094">basic.h:95</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Complex_html_adacb67b50059961da56764fe0a9170fa"><div class="ttname"><a href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">SymEngine::Complex::from_two_nums</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_two_nums(const Number &amp;re, const Number &amp;im)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8cpp_source.html#l00109">complex.cpp:109</a></div></div>
