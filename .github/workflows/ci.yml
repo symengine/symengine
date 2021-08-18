@@ -80,7 +80,6 @@ jobs:
             OS: ubuntu-20.04
             CC: clang
             WITH_LLVM: 13
-            WITH_COTIRE: no
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
             EXTRA_APT_PACKAGES: clang-13 llvm-13
 
@@ -159,7 +158,6 @@ jobs:
             EXTRA_APT_PACKAGES: "clang-7 llvm-7-dev"
     
           - BUILD_TYPE: Debug
-            WITH_COTIRE: no
             WITH_SANITIZE: undefined
             WITH_LLVM: 12
             CC: clang
