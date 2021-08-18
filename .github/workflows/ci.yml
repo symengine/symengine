@@ -75,6 +75,15 @@ jobs:
             OS: ubuntu-16.04
             CC: gcc
 
+          # Release build (recent LLVM+clang)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang
+            WITH_LLVM: 13
+            WITH_COTIRE: no
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: clang-13 llvm-13
+
           ## In-tree builds (we just check a few configurations to make sure they work):
           # Debug build
           - BUILD_TYPE: Debug
