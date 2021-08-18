@@ -170,6 +170,8 @@ tribool is_real(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_complex(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_rational(const Basic &b);
 tribool is_irrational(const Basic &b);
+tribool is_finite(const Basic &b, const Assumptions *assumptions = nullptr);
+tribool is_infinite(const Basic &b, const Assumptions *assumptions = nullptr);
 
 class NumberWrapper : public Number
 {
