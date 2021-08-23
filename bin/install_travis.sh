@@ -71,8 +71,8 @@ else
     conda_pkgs="$conda_pkgs gmp=6.1.1";
 fi
 
-if [[ "${WITH_BENCHMARKS_NONIUS}" == "yes" ]]; then
-    conda_pkgs="${conda_pkgs} boost=1.68"
+if [[ "${WITH_BENCHMARKS_GOOGLE}" == "yes" ]]; then
+    conda_pkgs="${conda_pkgs} benchmark"
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
