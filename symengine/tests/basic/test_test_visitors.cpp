@@ -100,6 +100,7 @@ TEST_CASE("Test is nonzero", "[is_nonzero]")
 TEST_CASE("Test is positive", "[is_positive]")
 {
     RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     RCP<const Number> i1 = integer(0);
     RCP<const Number> i2 = integer(3);
     RCP<const Number> i3 = integer(-2);
@@ -131,12 +132,30 @@ TEST_CASE("Test is positive", "[is_positive]")
 
     const auto a1 = Assumptions({Lt(x, integer(0))});
     REQUIRE(is_false(is_positive(*x, &a1)));
+    REQUIRE(is_false(is_positive(*add(x, integer(-1)), &a1)));
+    REQUIRE(is_indeterminate(is_positive(*add(x, integer(2)), &a1)));
 
     const auto a2 = Assumptions({Lt(x, integer(1))});
     REQUIRE(is_indeterminate(is_positive(*x, &a2)));
 
     const auto a3 = Assumptions({Gt(x, integer(1))});
     REQUIRE(is_true(is_positive(*x, &a3)));
+    REQUIRE(is_true(is_positive(*add(x, integer(2)), &a3)));
+    REQUIRE(is_indeterminate(is_positive(*add(x, integer(-1)), &a3)));
+
+    const auto a4 = Assumptions({reals()->contains(x), reals()->contains(y)});
+    REQUIRE(is_indeterminate(is_positive(*add(x, y), &a4)));
+
+    const auto a5 = Assumptions({Lt(x, integer(0)), Lt(y, integer(0))});
+    REQUIRE(is_false(is_positive(*add(x, mul(y, integer(2))), &a5)));
+    REQUIRE(is_true(
+        is_positive(*add(mul(x, integer(-2)), mul(y, integer(-2))), &a5)));
+
+    const auto a6 = Assumptions({Gt(x, integer(0)), Gt(y, integer(0))});
+    REQUIRE(is_false(
+        is_positive(*add(mul(x, integer(-2)), mul(y, integer(-2))), &a6)));
+    REQUIRE(is_true(
+        is_positive(*add(mul(x, integer(2)), mul(y, integer(2))), &a6)));
 }
 
 TEST_CASE("Test is non positive", "[is_nonpositive]")

@@ -141,6 +141,51 @@ void PositiveVisitor::bvisit(const Number &x)
     }
 }
 
+void PositiveVisitor::bvisit(const Add &x)
+{
+    // True if all are positive
+    // False if all are negative
+    auto coef = x.get_coef();
+    auto dict = x.get_dict();
+
+    bool can_be_true = true;
+    bool can_be_false = true;
+    if (coef->is_positive()) {
+        can_be_false = false;
+    } else if (coef->is_negative()) {
+        can_be_true = false;
+    }
+    NegativeVisitor neg_visitor(assumptions_);
+    for (const auto &p : dict) {
+        if (not can_be_true and not can_be_false) {
+            is_positive_ = tribool::indeterminate;
+            return;
+        }
+        p.first->accept(*this);
+        if ((p.second->is_positive() and is_true(is_positive_))
+            or (p.second->is_negative()
+                and is_true(neg_visitor.apply(*p.first)))) {
+            // key * value is positive
+            can_be_false = false;
+        } else if ((p.second->is_negative() and is_true(is_positive_))
+                   or (p.second->is_positive()
+                       and is_true(neg_visitor.apply(*p.first)))) {
+            // key * value is negative
+            can_be_true = false;
+        } else {
+            can_be_true = false;
+            can_be_false = false;
+        }
+    }
+    if (can_be_true) {
+        is_positive_ = tribool::tritrue;
+    } else if (can_be_false) {
+        is_positive_ = tribool::trifalse;
+    } else {
+        is_positive_ = tribool::indeterminate;
+    }
+}
+
 tribool PositiveVisitor::apply(const Basic &b)
 {
     b.accept(*this);
