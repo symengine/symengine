@@ -1513,7 +1513,7 @@ $(function() {
 <div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;    RCP&lt;const Set&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set</a></div>
 <div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;        = SymEngine::solve_poly(f-&gt;m, rcp_static_cast&lt;const Symbol&gt;(s-&gt;m));</div>
 <div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;    <span class="keywordflow">if</span> (not is_a&lt;FiniteSet&gt;(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set</a>)) {</div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;        <span class="keywordflow">return</span> SYMENGINE_RUNTIME_ERROR;</div>
+<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;        <span class="keywordflow">return</span> SYMENGINE_NOT_IMPLEMENTED;</div>
 <div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;    }</div>
 <div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;    r-&gt;m = down_cast&lt;const FiniteSet &amp;&gt;(*set).get_container();</div>
 <div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;    CWRAPPER_END</div>
