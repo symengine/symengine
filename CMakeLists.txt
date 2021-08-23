@@ -441,20 +441,8 @@ endif()
 set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
 
-set(BUILD_BENCHMARKS_NONIUS no
-    CACHE BOOL "Build SymEngine Nonius benchmarks")
-
 set(BUILD_BENCHMARKS_GOOGLE no
     CACHE BOOL "Build SymEngine Google Benchmark benchmarks")
-
-if (BUILD_BENCHMARKS)
-    if (BUILD_BENCHMARKS_NONIUS)
-        if(NOT WIN32)
-            set(WITH_PTHREAD yes)
-        endif()
-        set(WITH_BOOST yes)
-    endif()
-endif()
 
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
@@ -709,7 +697,6 @@ message("HAVE_SYMENGINE_STD_TO_STRING: ${HAVE_SYMENGINE_STD_TO_STRING}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
-message("BUILD_BENCHMARKS_NONIUS: ${BUILD_BENCHMARKS_NONIUS}")
 message("BUILD_BENCHMARKS_GOOGLE: ${BUILD_BENCHMARKS_GOOGLE}")
 
 message("WITH_GMP: ${HAVE_SYMENGINE_GMP}")

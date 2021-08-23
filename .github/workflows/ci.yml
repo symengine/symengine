@@ -132,11 +132,13 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_LLVM: 12
-            WITH_BENCHMARKS_NONIUS: yes
             CC: clang
             OS: ubuntu-20.04
 
           - BUILD_TYPE: Release
+            WITH_BENCHMARKS: yes
+            WITH_BENCHMARKS_GOOGLE: yes
+            WITH_LLVM: 12
             CC: clang
             OS: ubuntu-20.04
 
@@ -210,7 +212,8 @@ jobs:
       USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
       WITH_MPFR: ${{ matrix.WITH_MPFR }}
       WITH_LLVM: ${{ matrix.WITH_LLVM }}
-      WITH_BENCHMARKS_NONIUS: ${{ matrix.WITH_BENCHMARKS_NONIUS }}
+      WITH_BENCHMARKS: ${{ matrix.WITH_BENCHMARKS }}
+      WITH_BENCHMARKS_GOOGLE: ${{ matrix.WITH_BENCHMARKS_GOOGLE }}
       WITH_SYMENGINE_RCP: ${{ matrix.WITH_SYMENGINE_RCP }}
       TEST_IN_TREE: ${{ matrix.TEST_IN_TREE }}
       WITH_SYMENGINE_THREAD_SAFE: ${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}
@@ -235,7 +238,7 @@ jobs:
       WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
       WITH_MPC: ${{ matrix.WITH_MPC }}
       BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
-      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS_NONIUS }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.CONDA_ENV_FILE }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.TEST_CLANG_FORMAT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}
+      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.CONDA_ENV_FILE }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.TEST_CLANG_FORMAT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}
       CCACHE_DIR: 'D:\a\_temp\msys\msys64\home\runneradmin\.ccache'
 
     steps:
