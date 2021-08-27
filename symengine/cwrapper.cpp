@@ -859,17 +859,24 @@ size_t vecbasic_size(CVecBasic *self)
     return self->m.size();
 }
 
-CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d)
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::max(d->m);
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d)
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
     s->m = SymEngine::min(d->m);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_add_vec(basic s, const CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::add(d->m);
     CWRAPPER_END
 }
 
