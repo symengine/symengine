@@ -296,6 +296,16 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
                     d.erase(it);
                     m->power_num(outArg(*coef), d, exp_);
                 }
+	    } else if (eq(*it->first, *E)) {
+                RCP<const Number> p = rcp_static_cast<const Number>(it->second);
+                if (not p->is_exact()) {
+                    // Evaluate E**0.2, but not E**2
+                    RCP<const Basic> exp_ = p->get_eval().exp(*p);
+		    if (is_a_Number(*exp_)) {
+			imulnum(outArg(*coef), rcp_static_cast<const Number>(exp_));
+                        d.erase(it);
+		    }
+		}
             }
         }
     }
