@@ -1212,7 +1212,7 @@ void test_ascii_art()
 void test_functions()
 {
     basic pi, e, complex_inf;
-    basic minus_one, minus_half, zero, one, two, three, four;
+    basic minus_one, minus_half, zero, one, two, three, four, ten;
     basic pi_div_two, pi_div_four;
     basic e_minus_one;
     basic exp_minus_two;
@@ -1234,6 +1234,7 @@ void test_functions()
     basic_new_stack(e_minus_one);
     basic_new_stack(exp_minus_two);
     basic_new_stack(minus_half);
+    basic_new_stack(ten);
 
     basic_const_pi(pi);
     basic_const_E(e);
@@ -1244,6 +1245,7 @@ void test_functions()
     integer_set_si(one, 1);
     integer_set_si(minus_one, -1);
     integer_set_si(zero, 0);
+    integer_set_si(ten, 10);
 
     CVecBasic *vec = vecbasic_new();
 
@@ -1397,6 +1399,9 @@ void test_functions()
     basic_min(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
+    basic_add_vec(ans, vec);
+    SYMENGINE_C_ASSERT(basic_eq(ans, ten));
+
     basic_free_stack(ans);
     basic_free_stack(res);
     basic_free_stack(pi);
@@ -1413,6 +1418,7 @@ void test_functions()
     basic_free_stack(minus_half);
     basic_free_stack(exp_minus_two);
     basic_free_stack(complex_inf);
+    basic_free_stack(ten);
     vecbasic_free(vec);
 }
 

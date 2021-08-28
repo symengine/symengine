@@ -438,9 +438,11 @@ CWRAPPER_OUTPUT_TYPE vecbasic_erase(CVecBasic *self, size_t n);
 size_t vecbasic_size(CVecBasic *self);
 
 //! Assigns to s the max of the provided args.
-CWRAPPER_OUTPUT_TYPE basic_max(basic s, CVecBasic *d);
+CWRAPPER_OUTPUT_TYPE basic_max(basic s, const CVecBasic *d);
 //! Assigns to s the min of the provided args.
-CWRAPPER_OUTPUT_TYPE basic_min(basic s, CVecBasic *d);
+CWRAPPER_OUTPUT_TYPE basic_min(basic s, const CVecBasic *d);
+//! Adds together all the values in a vector
+CWRAPPER_OUTPUT_TYPE basic_add_vec(basic s, const CVecBasic *d);
 
 //! Wrappers for Matrices
 
