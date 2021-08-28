@@ -315,14 +315,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00593">593</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;{</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(o)) {</div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(o);</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    }</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00672">672</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160;{</div>
+<div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(o)) {</div>
+<div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(o);</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    }</div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -352,13 +352,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00585">585</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;{</div>
-<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    hash_t seed = SYMENGINE_FINITESET;</div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00664">664</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;{</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    hash_t seed = SYMENGINE_FINITESET;</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -389,13 +389,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00602">602</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;{</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;    <span class="comment">// compares two FiniteSet based on their length</span></div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    SYMENGINE_ASSERT(is_a&lt;FiniteSet&gt;(o))</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(o);</div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00681">681</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;{</div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;    <span class="comment">// compares two FiniteSet based on their length</span></div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;    SYMENGINE_ASSERT(is_a&lt;FiniteSet&gt;(o))</div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(o);</div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>

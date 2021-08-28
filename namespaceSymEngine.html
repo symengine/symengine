@@ -518,6 +518,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Interval.html">Interval</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Complexes.html">Complexes</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Reals.html">Reals</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Rationals.html">Rationals</a></td></tr>
@@ -2392,6 +2394,8 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;
 <tr class="memitem:a86f756bfa44ed4e5c91e063942d5e77a"><td class="memItemLeft" align="right" valign="top"><a id="a86f756bfa44ed4e5c91e063942d5e77a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_a_Set</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a86f756bfa44ed4e5c91e063942d5e77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1153035b0bb01c4d0cf585e236393449"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Complexes.html">Complexes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1153035b0bb01c4d0cf585e236393449">complexes</a> ()</td></tr>
+<tr class="separator:a1153035b0bb01c4d0cf585e236393449"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20fa00efb8df384d548f63a448a6aeac"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Reals.html">Reals</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a20fa00efb8df384d548f63a448a6aeac">reals</a> ()</td></tr>
 <tr class="separator:a20fa00efb8df384d548f63a448a6aeac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7ed31f65bb252b7b4b3f1f45fdeec34"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Rationals.html">Rationals</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ac7ed31f65bb252b7b4b3f1f45fdeec34">rationals</a> ()</td></tr>
@@ -2964,6 +2968,37 @@ cube root of <code>x</code> </dd></dl>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a1153035b0bb01c4d0cf585e236393449"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1153035b0bb01c4d0cf585e236393449">&#9670;&nbsp;</a></span>complexes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RCP&lt;const <a class="el" href="classSymEngine_1_1Complexes.html">Complexes</a>&gt; SymEngine::complexes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Complexes&gt; </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00466">466</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;{</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="keywordflow">return</span> Complexes::getInstance();</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a8f4604cdd696c1d067294bc78fec6231"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f4604cdd696c1d067294bc78fec6231">&#9670;&nbsp;</a></span>conditionset()</h2>
 
@@ -2991,74 +3026,74 @@ cube root of <code>x</code> </dd></dl>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01382">1382</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;{</div>
-<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
-<div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;    }</div>
-<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
-<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
-<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;        set_boolean newcont;</div>
-<div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;        set_basic present, others;</div>
-<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
-<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
-<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
-<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;                and is_a&lt;FiniteSet&gt;(</div>
-<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
-<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
-<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;                <span class="keyword">auto</span> fcont</div>
-<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
-<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
-<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
-<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;                    <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
-<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;                        others.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
-<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
-<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
-<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;                        <span class="comment">// conditions</span></div>
-<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
-<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;                        <span class="comment">// element of finiteset that surely fails in other</span></div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;                        <span class="comment">// conditions.</span></div>
-<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;                        <span class="keyword">auto</span> restCont = cont;</div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;                        restCont.erase(*it);</div>
-<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;                        map_basic_basic d;</div>
-<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;                        d[sym] = elem;</div>
-<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
-<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;                            present.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/insert.html">insert</a>(elem);</div>
-<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;                            others.insert(elem);</div>
-<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
-<div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
-<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
-<div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;                        }</div>
-<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;                    }</div>
-<div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;                }</div>
-<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;                newcont.insert(*it);</div>
-<div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;            }</div>
-<div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160;        }</div>
-<div class="line"><a name="l01434"></a><span class="lineno"> 1434</span>&#160;        <span class="keywordflow">if</span> (not present.empty()) {</div>
-<div class="line"><a name="l01435"></a><span class="lineno"> 1435</span>&#160;            newcont.insert(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
-<div class="line"><a name="l01436"></a><span class="lineno"> 1436</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
-<div class="line"><a name="l01437"></a><span class="lineno"> 1437</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(present), <a class="code" href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">conditionset</a>(sym, logical_and(newcont))});</div>
-<div class="line"><a name="l01438"></a><span class="lineno"> 1438</span>&#160;        }</div>
-<div class="line"><a name="l01439"></a><span class="lineno"> 1439</span>&#160;    }</div>
-<div class="line"><a name="l01440"></a><span class="lineno"> 1440</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
-<div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
-<div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160;    }</div>
-<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
-<div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01479">1479</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;{</div>
+<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><a name="l01483"></a><span class="lineno"> 1483</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
+<div class="line"><a name="l01486"></a><span class="lineno"> 1486</span>&#160;    }</div>
+<div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
+<div class="line"><a name="l01488"></a><span class="lineno"> 1488</span>&#160;        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
+<div class="line"><a name="l01489"></a><span class="lineno"> 1489</span>&#160;        set_boolean newcont;</div>
+<div class="line"><a name="l01490"></a><span class="lineno"> 1490</span>&#160;        set_basic present, others;</div>
+<div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
+<div class="line"><a name="l01492"></a><span class="lineno"> 1492</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
+<div class="line"><a name="l01493"></a><span class="lineno"> 1493</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
+<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;                and is_a&lt;FiniteSet&gt;(</div>
+<div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
+<div class="line"><a name="l01496"></a><span class="lineno"> 1496</span>&#160;                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
+<div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;                <span class="keyword">auto</span> fcont</div>
+<div class="line"><a name="l01498"></a><span class="lineno"> 1498</span>&#160;                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
+<div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160;                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
+<div class="line"><a name="l01500"></a><span class="lineno"> 1500</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
+<div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;                    <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
+<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;                        others.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160;                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
+<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
+<div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;                        <span class="comment">// conditions</span></div>
+<div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
+<div class="line"><a name="l01508"></a><span class="lineno"> 1508</span>&#160;                        <span class="comment">// element of finiteset that surely fails in other</span></div>
+<div class="line"><a name="l01509"></a><span class="lineno"> 1509</span>&#160;                        <span class="comment">// conditions.</span></div>
+<div class="line"><a name="l01510"></a><span class="lineno"> 1510</span>&#160;                        <span class="keyword">auto</span> restCont = cont;</div>
+<div class="line"><a name="l01511"></a><span class="lineno"> 1511</span>&#160;                        restCont.erase(*it);</div>
+<div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
+<div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;                        map_basic_basic d;</div>
+<div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;                        d[sym] = elem;</div>
+<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
+<div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;                            present.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;                            others.insert(elem);</div>
+<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;                        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
+<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
+<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;                        }</div>
+<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;                    }</div>
+<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;                }</div>
+<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;                newcont.insert(*it);</div>
+<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;            }</div>
+<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;        }</div>
+<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;        <span class="keywordflow">if</span> (not present.empty()) {</div>
+<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160;            newcont.insert(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
+<div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
+<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(present), <a class="code" href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">conditionset</a>(sym, logical_and(newcont))});</div>
+<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;        }</div>
+<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;    }</div>
+<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
+<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
+<div class="line"><a name="l01539"></a><span class="lineno"> 1539</span>&#160;    }</div>
+<div class="line"><a name="l01540"></a><span class="lineno"> 1540</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
+<div class="line"><a name="l01541"></a><span class="lineno"> 1541</span>&#160;}</div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a2eb0d05b781ff2948b07f612f83a82bc"><div class="ttname"><a href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00454">sets.h:454</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a5b43a939c87eecd5f2e74793b48850b5"><div class="ttname"><a href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">SymEngine::universalset</a></div><div class="ttdeci">RCP&lt; const UniversalSet &gt; universalset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00460">sets.h:460</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a8f4604cdd696c1d067294bc78fec6231"><div class="ttname"><a href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01382">sets.cpp:1382</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_abbdc2f1f3c92c9560d10a5b7998e33e3"><div class="ttname"><a href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00466">sets.h:466</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a2eb0d05b781ff2948b07f612f83a82bc"><div class="ttname"><a href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00490">sets.h:490</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a5b43a939c87eecd5f2e74793b48850b5"><div class="ttname"><a href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">SymEngine::universalset</a></div><div class="ttdeci">RCP&lt; const UniversalSet &gt; universalset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00496">sets.h:496</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a8f4604cdd696c1d067294bc78fec6231"><div class="ttname"><a href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01479">sets.cpp:1479</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_abbdc2f1f3c92c9560d10a5b7998e33e3"><div class="ttname"><a href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00502">sets.h:502</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3171,10 +3206,10 @@ cube root of <code>x</code> </dd></dl>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const EmptySet&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00454">454</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;{</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    <span class="keywordflow">return</span> EmptySet::getInstance();</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00490">490</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;{</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keywordflow">return</span> EmptySet::getInstance();</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3381,13 +3416,13 @@ cube root of <code>x</code> </dd></dl>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00466">466</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;{</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="keywordflow">if</span> (FiniteSet::is_canonical(container)) {</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const FiniteSet&gt;(container);</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    }</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00502">502</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;{</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">if</span> (FiniteSet::is_canonical(container)) {</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const FiniteSet&gt;(container);</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    }</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3693,10 +3728,10 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Reals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00448">448</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;{</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keywordflow">return</span> Integers::getInstance();</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00484">484</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;{</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    <span class="keywordflow">return</span> Integers::getInstance();</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3747,14 +3782,14 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00475">475</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;{</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    <span class="keywordflow">if</span> (Interval::is_canonical(start, end, left_open, right_open))</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const Interval&gt;(start, end, left_open, right_open);</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*start, *end) and not(left_open or right_open))</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>({start});</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00511">511</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;{</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <span class="keywordflow">if</span> (Interval::is_canonical(start, end, left_open, right_open))</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const Interval&gt;(start, end, left_open, right_open);</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*start, *end) and not(left_open or right_open))</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>({start});</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4787,10 +4822,10 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Rationals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00442">442</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;{</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <span class="keywordflow">return</span> Rationals::getInstance();</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00478">478</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;{</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;    <span class="keywordflow">return</span> Rationals::getInstance();</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4818,10 +4853,10 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Reals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00436">436</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;{</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    <span class="keywordflow">return</span> Reals::getInstance();</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00472">472</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;{</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="keywordflow">return</span> Reals::getInstance();</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5135,10 +5170,10 @@ template&lt;typename T , typename  = enable_if_t&lt;std::is_arithmetic&lt;T&gt;:
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const UniversalSet&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00460">460</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;{</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    <span class="keywordflow">return</span> UniversalSet::getInstance();</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00496">496</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;{</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    <span class="keywordflow">return</span> UniversalSet::getInstance();</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
