@@ -585,6 +585,9 @@ RCP<const Set> conditionset(const RCP<const Basic> &sym,
 
 RCP<const Basic> sup(const Set &s);
 RCP<const Basic> inf(const Set &s);
+RCP<const Set> boundary(const Set &s);
+RCP<const Set> interior(const Set &s);
+RCP<const Set> closure(const Set &s);
 
 } // namespace SymEngine
 #endif

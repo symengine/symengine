@@ -1213,3 +1213,62 @@ TEST_CASE("inf : Basic", "[basic]")
     r1 = imageset(x, mul(x, x), i1);
     CHECK_THROWS_AS(inf(*r1), NotImplementedError &);
 }
+
+TEST_CASE("boundary : Basic", "[basic]")
+{
+    auto i1 = interval(integer(1), integer(2));
+    auto i2 = interval(integer(3), integer(4));
+    REQUIRE(eq(*boundary(*emptyset()), *emptyset()));
+    REQUIRE(eq(*boundary(*universalset()), *emptyset()));
+    REQUIRE(eq(*boundary(*complexes()), *emptyset()));
+    REQUIRE(eq(*boundary(*reals()), *emptyset()));
+    REQUIRE(eq(*boundary(*rationals()), *reals()));
+    REQUIRE(eq(*boundary(*integers()), *integers()));
+    REQUIRE(eq(*boundary(*i1), *finiteset({integer(1), integer(2)})));
+    REQUIRE(eq(*boundary(*finiteset({integer(1), integer(2)})),
+               *finiteset({integer(1), integer(2)})));
+    REQUIRE(eq(*boundary(*set_union({i1, i2})),
+               *finiteset({integer(1), integer(2), integer(3), integer(4)})));
+
+    RCP<const Symbol> x = symbol("x");
+    auto r1 = imageset(x, mul(x, x), i1);
+    CHECK_THROWS_AS(boundary(*r1), NotImplementedError &);
+    CHECK_THROWS_AS(boundary(*rationals()->set_complement(reals())),
+                    NotImplementedError &);
+}
+
+TEST_CASE("closure : Basic", "[basic]")
+{
+    auto i1 = interval(integer(1), integer(2));
+    auto i2 = interval(integer(1), integer(2), true, true);
+    auto i3 = interval(integer(3), integer(4));
+    REQUIRE(eq(*closure(*emptyset()), *emptyset()));
+    REQUIRE(eq(*closure(*universalset()), *universalset()));
+    REQUIRE(eq(*closure(*complexes()), *complexes()));
+    REQUIRE(eq(*closure(*reals()), *reals()));
+    REQUIRE(eq(*closure(*rationals()), *reals()));
+    REQUIRE(eq(*closure(*integers()), *integers()));
+    REQUIRE(eq(*closure(*finiteset({integer(1), integer(2)})),
+               *finiteset({integer(1), integer(2)})));
+    REQUIRE(eq(*closure(*i1), *i1));
+    REQUIRE(eq(*closure(*i2), *i1));
+    REQUIRE(eq(*closure(*set_union({i1, i3})), *set_union({i1, i3})));
+}
+
+TEST_CASE("interior : Basic", "[basic]")
+{
+    auto i1 = interval(integer(1), integer(2));
+    auto i2 = interval(integer(1), integer(2), true, true);
+    auto i3 = interval(integer(3), integer(4));
+    auto i4 = interval(integer(3), integer(4), true, true);
+    REQUIRE(eq(*interior(*emptyset()), *emptyset()));
+    REQUIRE(eq(*interior(*universalset()), *universalset()));
+    REQUIRE(eq(*interior(*complexes()), *complexes()));
+    REQUIRE(eq(*interior(*reals()), *reals()));
+    REQUIRE(eq(*interior(*rationals()), *emptyset()));
+    REQUIRE(eq(*interior(*integers()), *emptyset()));
+    REQUIRE(eq(*interior(*finiteset({integer(1), integer(2)})), *emptyset()));
+    REQUIRE(eq(*interior(*i1), *i2));
+    REQUIRE(eq(*interior(*i2), *i2));
+    REQUIRE(eq(*interior(*set_union({i1, i3})), *set_union({i2, i4})));
+}
