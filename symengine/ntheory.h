@@ -151,15 +151,5 @@ vec_integer_class quadratic_residues(const Integer &a);
 bool is_quad_residue(const Integer &a, const Integer &p);
 //! Returns true if 'a' is a nth power residue of 'mod'
 bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod);
-//! Mobius Function
-// mu(n) = 1 if n is a square-free positive integer with an even number of prime
-// factors
-// mu(n) = −1 if n is a square-free positive integer with an odd number of prime
-// factors
-// mu(n) = 0 if n has a squared prime factor
-int mobius(const Integer &a);
-// Mertens Function
-// mertens(n) -> Sum of mobius(i) for i from 1 to n
-long mertens(const unsigned long a);
 } // namespace SymEngine
 #endif

@@ -743,6 +743,14 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
     s = "primorial(15.9)";
     res = parse(s);
     REQUIRE(eq(*res, *integer(30030)));
+
+    s = "mobius(28)";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(0)));
+
+    s = "mertens(28)";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(-1)));
 }
 
 TEST_CASE("Parsing: multi-arg functions", "[parser]")
