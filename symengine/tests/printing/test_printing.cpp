@@ -15,6 +15,7 @@ using SymEngine::Boolean;
 using SymEngine::ceiling;
 using SymEngine::Complex;
 using SymEngine::complex_double;
+using SymEngine::complexes;
 using SymEngine::ComplexInf;
 using SymEngine::conditionset;
 using SymEngine::DenseMatrix;
@@ -633,6 +634,8 @@ TEST_CASE("test_mathml()", "[mathml]")
     REQUIRE(b);
     RCP<const Basic> u = parse("sin(x)");
     REQUIRE(mathml(*u) == "<apply><sin/><ci>x</ci></apply>");
+    RCP<const Basic> b0 = complexes();
+    REQUIRE(mathml(*b0) == "<complexes/>");
     RCP<const Basic> b1 = reals();
     REQUIRE(mathml(*b1) == "<reals/>");
     RCP<const Basic> b2 = rationals();
@@ -704,6 +707,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l25 = integers();
     RCP<const Basic> l26 = rationals();
     RCP<const Basic> l27 = primepi(symbol("x"));
+    RCP<const Basic> l28 = complexes();
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -717,7 +721,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l10) == "\\left[-3, 3\\right]");
     CHECK(latex(*l11) == "\\mathrm{True}");
     CHECK(latex(*l12) == "\\mathrm{False}");
-    CHECK(latex(*l13) == "2 \\leq a \\wedge 5 \\leq b");
+    CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
     //    CHECK(latex(*l14)
     //          == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
     CHECK(latex(*l15) == "\\frac{\\partial}{\\partial a} f\\left(a, b\\right)");
@@ -742,6 +746,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l25) == "\\mathbb{Z}");
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
+    CHECK(latex(*l28) == "\\mathbb{C}");
 }
 
 TEST_CASE("test_unicode()", "[unicode]")
@@ -749,6 +754,9 @@ TEST_CASE("test_unicode()", "[unicode]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
     std::string s;
+
+    s = unicode(*complexes());
+    CHECK(s == "\u2102");
 
     s = unicode(*reals());
     CHECK(s == "\u211D");
@@ -921,7 +929,7 @@ TEST_CASE("test_unicode()", "[unicode]")
     CHECK(s == "-1 \u2260 x \u22BB x < 2 \u22BB x < 0");
 
     s = unicode(*logical_not(logical_xor({Ne(x, y), Lt(x, y)})));
-    CHECK(s == "\u00AC(x < y \u22BB x \u2260 y)");
+    CHECK(s == "\u00AC(x \u2260 y \u22BB x < y)");
 
     s = unicode(*integer(2));
     CHECK(s == "2");

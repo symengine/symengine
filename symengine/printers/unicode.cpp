@@ -270,6 +270,11 @@ void UnicodePrinter::bvisit(const Piecewise &x)
     box_ = box;
 }
 
+void UnicodePrinter::bvisit(const Complexes &x)
+{
+    box_ = StringBox("\u2102", 1);
+}
+
 void UnicodePrinter::bvisit(const Reals &x)
 {
     box_ = StringBox("\u211D", 1);

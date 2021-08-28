@@ -372,6 +372,11 @@ void StrPrinter::bvisit(const Piecewise &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complexes &x)
+{
+    str_ = "Complexes";
+}
+
 void StrPrinter::bvisit(const Reals &x)
 {
     str_ = "Reals";

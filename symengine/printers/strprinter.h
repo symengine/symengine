@@ -132,6 +132,7 @@ public:
     void bvisit(const Rational &x);
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
+    void bvisit(const Complexes &x);
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);

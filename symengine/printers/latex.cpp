@@ -369,6 +369,11 @@ void LatexPrinter::bvisit(const EmptySet &x)
     str_ = "\\emptyset";
 }
 
+void LatexPrinter::bvisit(const Complexes &x)
+{
+    str_ = "\\mathbb{C}";
+}
+
 void LatexPrinter::bvisit(const Reals &x)
 {
     str_ = "\\mathbb{R}";
