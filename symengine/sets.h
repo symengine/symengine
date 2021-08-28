@@ -582,5 +582,9 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 //! \return RCP<const Set>
 RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition);
+
+RCP<const Basic> sup(const Set &s);
+RCP<const Basic> inf(const Set &s);
+
 } // namespace SymEngine
 #endif

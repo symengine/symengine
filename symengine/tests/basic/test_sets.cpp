@@ -32,6 +32,7 @@ using SymEngine::Gt;
 using SymEngine::ImageSet;
 using SymEngine::imageset;
 using SymEngine::Inf;
+using SymEngine::infty;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Integers;
@@ -42,6 +43,8 @@ using SymEngine::is_a;
 using SymEngine::Le;
 using SymEngine::logical_and;
 using SymEngine::make_rcp;
+using SymEngine::max;
+using SymEngine::min;
 using SymEngine::mul;
 using SymEngine::NegInf;
 using SymEngine::Not;
@@ -64,6 +67,7 @@ using SymEngine::set_intersection;
 using SymEngine::set_set;
 using SymEngine::set_union;
 using SymEngine::sin;
+using SymEngine::sup;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::SymEngineException;
@@ -1146,4 +1150,66 @@ TEST_CASE("ImageSet : Basic", "[basic]")
 
     auto xD = dummy("x");
     REQUIRE(is_a<ImageSet>(*imageset(xD, mul(xD, xD), i1)));
+}
+
+TEST_CASE("sup : Basic", "[basic]")
+{
+    REQUIRE(eq(*sup(*reals()), *infty(1)));
+    REQUIRE(eq(*sup(*rationals()), *infty(1)));
+    REQUIRE(eq(*sup(*integers()), *infty(1)));
+    REQUIRE(eq(*sup(*interval(one, integer(2), true, true)), *integer(2)));
+    REQUIRE(eq(*sup(*interval(one, integer(2), false, false)), *integer(2)));
+
+    RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
+    RCP<const Set> r2 = finiteset({zero, one, integer(2)});
+    REQUIRE(eq(*sup(*r1), *max({one, symbol("x")})));
+    REQUIRE(eq(*sup(*r2), *integer(2)));
+
+    RCP<const Set> r3 = set_union(
+        {interval(integer(-1), integer(1)), finiteset({integer(-23)})});
+    REQUIRE(eq(*sup(*r3), *integer(1)));
+
+    RCP<const Number> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Set> r4 = set_union({integers(), finiteset({rat1})});
+    REQUIRE(eq(*sup(*r4), *infty(1)));
+
+    CHECK_THROWS_AS(sup(*emptyset()), SymEngineException &);
+    CHECK_THROWS_AS(sup(*rationals()->set_complement(reals())),
+                    NotImplementedError &);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Set> i1 = interval(zero, one);
+    r1 = imageset(x, mul(x, x), i1);
+    CHECK_THROWS_AS(sup(*r1), NotImplementedError &);
+}
+
+TEST_CASE("inf : Basic", "[basic]")
+{
+    REQUIRE(eq(*inf(*reals()), *infty(-1)));
+    REQUIRE(eq(*inf(*rationals()), *infty(-1)));
+    REQUIRE(eq(*inf(*integers()), *infty(-1)));
+    REQUIRE(eq(*inf(*interval(one, integer(2), true, true)), *integer(1)));
+    REQUIRE(eq(*inf(*interval(one, integer(2), false, false)), *integer(1)));
+
+    RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
+    RCP<const Set> r2 = finiteset({zero, one, integer(2)});
+    REQUIRE(eq(*inf(*r1), *min({zero, symbol("x")})));
+    REQUIRE(eq(*inf(*r2), *integer(0)));
+
+    RCP<const Set> r3 = set_union(
+        {interval(integer(-1), integer(1)), finiteset({integer(-23)})});
+    REQUIRE(eq(*inf(*r3), *integer(-23)));
+
+    RCP<const Number> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Set> r4 = set_union({integers(), finiteset({rat1})});
+    REQUIRE(eq(*inf(*r4), *infty(-1)));
+
+    CHECK_THROWS_AS(inf(*emptyset()), SymEngineException &);
+    CHECK_THROWS_AS(inf(*rationals()->set_complement(reals())),
+                    NotImplementedError &);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Set> i1 = interval(zero, one);
+    r1 = imageset(x, mul(x, x), i1);
+    CHECK_THROWS_AS(inf(*r1), NotImplementedError &);
 }
