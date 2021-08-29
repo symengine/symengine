@@ -493,8 +493,9 @@ CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
         return SYMENGINE_RUNTIME_ERROR;
+    CWRAPPER_BEGIN
     s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
-    return SYMENGINE_NO_EXCEPTION;
+    CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b)
