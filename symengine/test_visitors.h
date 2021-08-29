@@ -432,6 +432,7 @@ private:
     tribool is_algebraic_;
     const Assumptions *assumptions_;
 
+    void trans_nonzero_and_algebraic(const Basic &b);
     void error();
 
 public:
@@ -448,6 +449,9 @@ public:
     void bvisit(const Relational &x);
     void bvisit(const Boolean &x);
     void bvisit(const Constant &x);
+    void bvisit(const TrigFunction &x);
+    void bvisit(const HyperbolicFunction &x);
+    void bvisit(const LambertW &x);
 
     tribool apply(const Basic &b);
 };

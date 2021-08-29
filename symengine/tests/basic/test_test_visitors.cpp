@@ -756,4 +756,8 @@ TEST_CASE("Test is_algebraic/is_transcendental", "[is_algebraic]")
     a = Assumptions({reals()->contains(x)});
     REQUIRE(is_indeterminate(is_algebraic(*x, &a)));
     REQUIRE(is_indeterminate(is_algebraic(*add(x, integer(23)), &a)));
+
+    REQUIRE(is_true(is_transcendental(*sin(integer(1)))));
+    REQUIRE(is_true(is_transcendental(*sinh(integer(2)))));
+    REQUIRE(is_true(is_transcendental(*lambertw(integer(2)))));
 }

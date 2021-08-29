@@ -966,6 +966,35 @@ void AlgebraicVisitor::bvisit(const Rational &x)
     is_algebraic_ = tribool::tritrue;
 }
 
+void AlgebraicVisitor::trans_nonzero_and_algebraic(const Basic &b)
+{
+    // transcendental if b is algebraic and nonzero
+    b.accept(*this);
+    if (is_true(is_algebraic_) and is_nonzero(b)) {
+        is_algebraic_ = tribool::trifalse;
+    } else {
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const TrigFunction &x)
+{
+    // x algebraic and not 0 => sin(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
+void AlgebraicVisitor::bvisit(const HyperbolicFunction &x)
+{
+    // x algebraic and not 0 => sinh(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
+void AlgebraicVisitor::bvisit(const LambertW &x)
+{
+    // x algebraic and not 0 => W(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
 tribool AlgebraicVisitor::apply(const Basic &b)
 {
     b.accept(*this);
