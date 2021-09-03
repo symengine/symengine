@@ -454,15 +454,15 @@ Additional Inherited Members</h2></td></tr>
 <p>Rewrite as 2 terms. </p>
 <p>Example: if this=3*x**2*y**2*z**2<code>, then</code>a=x**2<code>and</code>b=3*y**2*z**2` </p>
 
-<p class="definition">Definition at line <a class="el" href="mul_8cpp_source.html#l00304">304</a> of file <a class="el" href="mul_8cpp_source.html">mul.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;{</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="comment">// Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2</span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keyword">auto</span> p = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    *a = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(p-&gt;first, p-&gt;second);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    map_basic_basic d = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p-&gt;first);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    *b = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="mul_8cpp_source.html#l00315">315</a> of file <a class="el" href="mul_8cpp_source.html">mul.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;{</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="comment">// Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keyword">auto</span> p = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>();</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    *a = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(p-&gt;first, p-&gt;second);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    map_basic_basic d = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p-&gt;first);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    *b = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;}</div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/begin.html">std::map::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ab8e2f2039c048fe0a09b346df85ba65d"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">SymEngine::Mul::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;d)</div><div class="ttdoc">Create a Mul from a dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00116">mul.cpp:116</a></div></div>
 <div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/erase.html">std::map::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>

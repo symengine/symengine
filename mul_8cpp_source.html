@@ -396,229 +396,240 @@ $(function() {
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                    d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(it);</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                    m-&gt;power_num(outArg(*coef), d, exp_);</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                }</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            }</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        }</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    }</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;}</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
-<div class="line"><a name="l00304"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">  304</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">Mul::as_two_terms</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;a,</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                       <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;b)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="comment">// Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2</span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keyword">auto</span> p = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    *a = pow(p-&gt;first, p-&gt;second);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p-&gt;first);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    *b = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*it-&gt;first, *E)) {</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                RCP&lt;const Number&gt; p = rcp_static_cast&lt;const Number&gt;(it-&gt;second);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                <span class="keywordflow">if</span> (not p-&gt;is_exact()) {</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                    <span class="comment">// Evaluate E**0.2, but not E**2</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;                    RCP&lt;const Basic&gt; exp_ = p-&gt;get_eval().exp(*p);</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*exp_)) {</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                        imulnum(outArg(*coef),</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                                rcp_static_cast&lt;const Number&gt;(exp_));</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                        d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(it);</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                    }</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                }</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            }</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    }</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
-<div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">  315</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<span class="keyword">self</span>,</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                      <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;                      <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;base)</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;{</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*<span class="keyword">self</span>)) {</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="comment">// Always ensure it is of form |num| &gt; |den|</span></div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <span class="comment">// in case of Integers den = 1</span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*<span class="keyword">self</span>)) {</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;            RCP&lt;const Rational&gt; self_new</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                = rcp_static_cast&lt;const Rational&gt;(<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;            <span class="keywordflow">if</span> (mp_abs(get_num(self_new-&gt;as_rational_class()))</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                &lt; mp_abs(get_den(self_new-&gt;as_rational_class()))) {</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = minus_one;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                *base = self_new-&gt;rdiv(*rcp_static_cast&lt;const Number&gt;(one));</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                *base = <span class="keyword">self</span>;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;            }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;            *base = <span class="keyword">self</span>;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        }</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Pow&gt;(*<span class="keyword">self</span>)) {</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = down_cast&lt;const Pow &amp;&gt;(*self).get_exp();</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        *base = down_cast&lt;const Pow &amp;&gt;(*self).get_base();</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        SYMENGINE_ASSERT(not is_a&lt;Mul&gt;(*<span class="keyword">self</span>));</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        *base = <span class="keyword">self</span>;</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    }</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;}</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">  347</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;{</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">SymEngine::map_basic_basic</a> d;</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    RCP&lt;const Number&gt; coef = one;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*a) and is_a&lt;Mul&gt;(*b)) {</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        RCP&lt;const Mul&gt; A = rcp_static_cast&lt;const Mul&gt;(a);</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        RCP&lt;const Mul&gt; B = rcp_static_cast&lt;const Mul&gt;(b);</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;        <span class="comment">// This is important optimization, as coef=1 if Mul is inside an Add.</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        <span class="comment">// To further speed this up, the upper level code could tell us that we</span></div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        <span class="comment">// are inside an Add, then we don&#39;t even have can simply skip the</span></div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="comment">// following two lines.</span></div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;        <span class="keywordflow">if</span> (not(A-&gt;get_coef()-&gt;is_one()) or not(B-&gt;get_coef()-&gt;is_one()))</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;            coef = <a class="code" href="namespaceSymEngine.html#a1f7b70ff3cc168dd61eeb32c7c48bf6d">mulnum</a>(A-&gt;get_coef(), B-&gt;get_coef());</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        d = A-&gt;get_dict();</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : B-&gt;get_dict())</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*a)) {</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        coef = (down_cast&lt;const Mul &amp;&gt;(*a)).get_coef();</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        d = (down_cast&lt;const Mul &amp;&gt;(*a)).get_dict();</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(b, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;        }</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*b)) {</div>
+<div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">  315</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">Mul::as_two_terms</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;a,</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;                       <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;b)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <span class="comment">// Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keyword">auto</span> p = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>();</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    *a = pow(p-&gt;first, p-&gt;second);</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p-&gt;first);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    *b = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;}</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">  326</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<span class="keyword">self</span>,</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                      <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                      <span class="keyword">const</span> Ptr&lt;RCP&lt;const Basic&gt;&gt; &amp;base)</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;{</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*<span class="keyword">self</span>)) {</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="comment">// Always ensure it is of form |num| &gt; |den|</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="comment">// in case of Integers den = 1</span></div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*<span class="keyword">self</span>)) {</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;            RCP&lt;const Rational&gt; self_new</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                = rcp_static_cast&lt;const Rational&gt;(<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            <span class="keywordflow">if</span> (mp_abs(get_num(self_new-&gt;as_rational_class()))</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;                &lt; mp_abs(get_den(self_new-&gt;as_rational_class()))) {</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = minus_one;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                *base = self_new-&gt;rdiv(*rcp_static_cast&lt;const Number&gt;(one));</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;                *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;                *base = <span class="keyword">self</span>;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;            }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;            *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            *base = <span class="keyword">self</span>;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        }</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Pow&gt;(*<span class="keyword">self</span>)) {</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = down_cast&lt;const Pow &amp;&gt;(*self).get_exp();</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        *base = down_cast&lt;const Pow &amp;&gt;(*self).get_base();</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        SYMENGINE_ASSERT(not is_a&lt;Mul&gt;(*<span class="keyword">self</span>));</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        *<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = one;</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;        *base = <span class="keyword">self</span>;</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    }</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;}</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160; </div>
+<div class="line"><a name="l00358"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">  358</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;{</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">SymEngine::map_basic_basic</a> d;</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    RCP&lt;const Number&gt; coef = one;</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*a) and is_a&lt;Mul&gt;(*b)) {</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        RCP&lt;const Mul&gt; A = rcp_static_cast&lt;const Mul&gt;(a);</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        RCP&lt;const Mul&gt; B = rcp_static_cast&lt;const Mul&gt;(b);</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        <span class="comment">// This is important optimization, as coef=1 if Mul is inside an Add.</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        <span class="comment">// To further speed this up, the upper level code could tell us that we</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;        <span class="comment">// are inside an Add, then we don&#39;t even have can simply skip the</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="comment">// following two lines.</span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        <span class="keywordflow">if</span> (not(A-&gt;get_coef()-&gt;is_one()) or not(B-&gt;get_coef()-&gt;is_one()))</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;            coef = <a class="code" href="namespaceSymEngine.html#a1f7b70ff3cc168dd61eeb32c7c48bf6d">mulnum</a>(A-&gt;get_coef(), B-&gt;get_coef());</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;        d = A-&gt;get_dict();</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : B-&gt;get_dict())</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*a)) {</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        coef = (down_cast&lt;const Mul &amp;&gt;(*b)).get_coef();</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        d = (down_cast&lt;const Mul &amp;&gt;(*b)).get_dict();</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        coef = (down_cast&lt;const Mul &amp;&gt;(*a)).get_coef();</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        d = (down_cast&lt;const Mul &amp;&gt;(*a)).get_dict();</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(a, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(b, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        }</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*b)) {</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(a, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        }</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(b, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        }</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    }</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;}</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<span class="keyword">const</span> vec_basic &amp;a)</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;{</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">SymEngine::map_basic_basic</a> d;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    RCP&lt;const Number&gt; coef = one;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : a) {</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*i)) {</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;            RCP&lt;const Mul&gt; A = rcp_static_cast&lt;const Mul&gt;(i);</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;            imulnum(outArg(coef), A-&gt;get_coef());</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : A-&gt;get_dict())</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*i)) {</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(i));</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(i, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        }</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    }</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;}</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
-<div class="line"><a name="l00426"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">  426</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;{</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">is_number_and_zero</a>(*b)) {</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">is_number_and_zero</a>(*a)) {</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;            <span class="keywordflow">return</span> Nan;</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;            <span class="keywordflow">return</span> ComplexInf;</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        }</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    }</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(a, pow(b, minus_one));</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;}</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160; </div>
-<div class="line"><a name="l00438"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">  438</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">neg</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;{</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, a);</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;}</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160; </div>
-<div class="line"><a name="l00443"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">  443</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">Mul::power_num</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Number&gt;&gt; &amp;coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d,</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                    <span class="keyword">const</span> RCP&lt;const Number&gt; &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>-&gt;is_zero()) {</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        <span class="comment">// (x*y)**(0.0) should return 1.0</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        imulnum(coef, <a class="code" href="namespaceSymEngine.html#a1ffa1e1c18b0e8f1b02d7e3f0392f336">pownum</a>(rcp_static_cast&lt;const Number&gt;(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), zero));</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    }</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    RCP&lt;const Basic&gt; new_coef;</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    RCP&lt;const Basic&gt; new_exp;</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)) {</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;        <span class="comment">// For eg. (3*y*(x**(1/2))**2 should be expanded to 9*x*y**2</span></div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;        new_coef = pow(coef_, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>) {</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;            new_exp = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(p.second, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*new_exp) and is_a&lt;Mul&gt;(*p.first)) {</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;                down_cast&lt;const Mul &amp;&gt;(*p.first).power_num(</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;                    coef, d, rcp_static_cast&lt;const Number&gt;(new_exp));</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;                <span class="comment">// No need for additional dict checks here.</span></div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;                <span class="comment">// The dict should be of standard form before this is</span></div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;                <span class="comment">// called.</span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;                Mul::dict_add_term_new(coef, d, new_exp, p.first);</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;            }</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        }</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">if</span> (coef_-&gt;is_negative()) {</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            <span class="comment">// (-3*x*y)**(1/2) -&gt; 3**(1/2)*(-x*y)**(1/2)</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;            new_coef = pow(coef_-&gt;mul(*minus_one), <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d1 = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;                                   <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(minus_one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d1)));</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (coef_-&gt;is_positive() and not coef_-&gt;is_one()) {</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;            <span class="comment">// (3*x*y)**(1/2) -&gt; 3**(1/2)*(x*y)**(1/2)</span></div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;            new_coef = pow(coef_, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d1 = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;                                   <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d1)));</div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;            <span class="comment">// ((1+2*I)*x*y)**(1/2) is kept as it is</span></div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;            new_coef = one;</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>());</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;        }</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    }</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*new_coef)) {</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        imulnum(coef, rcp_static_cast&lt;const Number&gt;(new_coef));</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*new_coef)) {</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        RCP&lt;const Mul&gt; tmp = rcp_static_cast&lt;const Mul&gt;(new_coef);</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        imulnum(coef, tmp-&gt;coef_);</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;q : tmp-&gt;dict_) {</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;            Mul::dict_add_term_new(coef, d, q.second, q.first);</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        }</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        RCP&lt;const Basic&gt; _exp, t;</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(new_coef, outArg(_exp), outArg(t));</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        Mul::dict_add_term_new(coef, d, _exp, t);</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    }</div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;}</div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160; </div>
-<div class="line"><a name="l00502"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">  502</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">Mul::get_args</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> args;</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    <span class="keywordflow">if</span> (not coef_-&gt;is_one()) {</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(<a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>() + 1);</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(coef_);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(<a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>());</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        coef = (down_cast&lt;const Mul &amp;&gt;(*b)).get_coef();</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        d = (down_cast&lt;const Mul &amp;&gt;(*b)).get_dict();</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(a, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        }</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        RCP&lt;const Basic&gt; t;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*a)) {</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(a));</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(a, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;        }</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*b)) {</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(b));</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(b, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;        }</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    }</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;}</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<span class="keyword">const</span> vec_basic &amp;a)</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;{</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">SymEngine::map_basic_basic</a> d;</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    RCP&lt;const Number&gt; coef = one;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : a) {</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*i)) {</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;            RCP&lt;const Mul&gt; A = rcp_static_cast&lt;const Mul&gt;(i);</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;            imulnum(outArg(coef), A-&gt;get_coef());</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : A-&gt;get_dict())</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;                Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*i)) {</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            imulnum(outArg(coef), rcp_static_cast&lt;const Number&gt;(i));</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;            RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;            RCP&lt;const Basic&gt; t;</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;            <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(i, outArg(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), outArg(t));</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            Mul::dict_add_term_new(outArg(coef), d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, t);</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        }</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    }</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;}</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">  437</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;{</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">is_number_and_zero</a>(*b)) {</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">is_number_and_zero</a>(*a)) {</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;            <span class="keywordflow">return</span> Nan;</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;            <span class="keywordflow">return</span> ComplexInf;</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        }</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    }</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(a, pow(b, minus_one));</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;}</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
+<div class="line"><a name="l00449"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">  449</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">neg</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;{</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, a);</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;}</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
+<div class="line"><a name="l00454"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">  454</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">Mul::power_num</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Number&gt;&gt; &amp;coef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;d,</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;                    <span class="keyword">const</span> RCP&lt;const Number&gt; &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>-&gt;is_zero()) {</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        <span class="comment">// (x*y)**(0.0) should return 1.0</span></div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        imulnum(coef, <a class="code" href="namespaceSymEngine.html#a1ffa1e1c18b0e8f1b02d7e3f0392f336">pownum</a>(rcp_static_cast&lt;const Number&gt;(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), zero));</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    }</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    RCP&lt;const Basic&gt; new_coef;</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    RCP&lt;const Basic&gt; new_exp;</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)) {</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        <span class="comment">// For eg. (3*y*(x**(1/2))**2 should be expanded to 9*x*y**2</span></div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        new_coef = pow(coef_, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>) {</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;            new_exp = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(p.second, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*new_exp) and is_a&lt;Mul&gt;(*p.first)) {</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;                down_cast&lt;const Mul &amp;&gt;(*p.first).power_num(</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;                    coef, d, rcp_static_cast&lt;const Number&gt;(new_exp));</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;                <span class="comment">// No need for additional dict checks here.</span></div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;                <span class="comment">// The dict should be of standard form before this is</span></div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;                <span class="comment">// called.</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;                Mul::dict_add_term_new(coef, d, new_exp, p.first);</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;            }</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        }</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;        <span class="keywordflow">if</span> (coef_-&gt;is_negative()) {</div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;            <span class="comment">// (-3*x*y)**(1/2) -&gt; 3**(1/2)*(-x*y)**(1/2)</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;            new_coef = pow(coef_-&gt;mul(*minus_one), <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d1 = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;                                   <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(minus_one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d1)));</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (coef_-&gt;is_positive() and not coef_-&gt;is_one()) {</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;            <span class="comment">// (3*x*y)**(1/2) -&gt; 3**(1/2)*(x*y)**(1/2)</span></div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;            new_coef = pow(coef_, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d1 = <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>,</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;                                   <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d1)));</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;            <span class="comment">// ((1+2*I)*x*y)**(1/2) is kept as it is</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;            new_coef = one;</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;            Mul::dict_add_term_new(coef, d, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>());</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        }</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    }</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*new_coef)) {</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        imulnum(coef, rcp_static_cast&lt;const Number&gt;(new_coef));</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*new_coef)) {</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        RCP&lt;const Mul&gt; tmp = rcp_static_cast&lt;const Mul&gt;(new_coef);</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        imulnum(coef, tmp-&gt;coef_);</div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;q : tmp-&gt;dict_) {</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;            Mul::dict_add_term_new(coef, d, q.second, q.first);</div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;        }</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        RCP&lt;const Basic&gt; _exp, t;</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        <a class="code" href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">Mul::as_base_exp</a>(new_coef, outArg(_exp), outArg(t));</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        Mul::dict_add_term_new(coef, d, _exp, t);</div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    }</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>) {</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.second, *one)) {</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;            args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(p.first);</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;            args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(make_rcp&lt;const Pow&gt;(p.first, p.second));</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        }</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    }</div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    <span class="keywordflow">return</span> args;</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;}</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160; </div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;}</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160; </div>
+<div class="line"><a name="l00513"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">  513</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">Mul::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> args;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <span class="keywordflow">if</span> (not coef_-&gt;is_one()) {</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(<a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>() + 1);</div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(coef_);</div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;        args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(<a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>());</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;    }</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : <a class="code" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>) {</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.second, *one)) {</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;            args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(p.first);</div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;            args.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(make_rcp&lt;const Pow&gt;(p.first, p.second));</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;        }</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;    }</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;    <span class="keywordflow">return</span> args;</div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;}</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160; </div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/begin.html">std::map::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00094">basic.h:95</a></div></div>
@@ -626,14 +637,14 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Mul_html"><div class="ttname"><a href="classSymEngine_1_1Mul.html">SymEngine::Mul</a></div><div class="ttdef"><b>Definition:</b> <a href="mul_8h_source.html#l00073">mul.h:74</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_a4218dc84c35feb16cbe4e3c2b82f844f"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a4218dc84c35feb16cbe4e3c2b82f844f">SymEngine::Mul::is_canonical</a></div><div class="ttdeci">bool is_canonical(const RCP&lt; const Number &gt; &amp;coef, const map_basic_basic &amp;dict) const</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00017">mul.cpp:17</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_a6bfba46699f9a48bc713972a8f22a33e"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a6bfba46699f9a48bc713972a8f22a33e">SymEngine::Mul::Mul</a></div><div class="ttdeci">Mul(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;dict)</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00010">mul.cpp:10</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Mul_html_a770b81872d66430fb57217063de9a37c"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">SymEngine::Mul::as_base_exp</a></div><div class="ttdeci">static void as_base_exp(const RCP&lt; const Basic &gt; &amp;self, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;exp, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;base)</div><div class="ttdoc">Convert to a base and exponent form.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00315">mul.cpp:315</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Mul_html_a770b81872d66430fb57217063de9a37c"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a770b81872d66430fb57217063de9a37c">SymEngine::Mul::as_base_exp</a></div><div class="ttdeci">static void as_base_exp(const RCP&lt; const Basic &gt; &amp;self, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;exp, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;base)</div><div class="ttdoc">Convert to a base and exponent form.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00326">mul.cpp:326</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_a92c226852b7225c483761ddb74e196ff"><div class="ttname"><a href="classSymEngine_1_1Mul.html#a92c226852b7225c483761ddb74e196ff">SymEngine::Mul::dict_add_term</a></div><div class="ttdeci">static void dict_add_term(map_basic_basic &amp;d, const RCP&lt; const Basic &gt; &amp;exp, const RCP&lt; const Basic &gt; &amp;t)</div><div class="ttdoc">Add terms to dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00151">mul.cpp:151</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Mul_html_aa4a64a32ae758274976ea2097384de79"><div class="ttname"><a href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">SymEngine::Mul::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00502">mul.cpp:502</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Mul_html_aa4a64a32ae758274976ea2097384de79"><div class="ttname"><a href="classSymEngine_1_1Mul.html#aa4a64a32ae758274976ea2097384de79">SymEngine::Mul::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00513">mul.cpp:513</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_aa9f6a1a362742db3d3b7792711746396"><div class="ttname"><a href="classSymEngine_1_1Mul.html#aa9f6a1a362742db3d3b7792711746396">SymEngine::Mul::__eq__</a></div><div class="ttdeci">virtual bool __eq__(const Basic &amp;o) const</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00090">mul.cpp:90</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Mul_html_aad7a77beff9e1c5eb7b956a072ff7df9"><div class="ttname"><a href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">SymEngine::Mul::as_two_terms</a></div><div class="ttdeci">void as_two_terms(const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;a, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;b) const</div><div class="ttdoc">Rewrite as 2 terms.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00304">mul.cpp:304</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Mul_html_aad7a77beff9e1c5eb7b956a072ff7df9"><div class="ttname"><a href="classSymEngine_1_1Mul.html#aad7a77beff9e1c5eb7b956a072ff7df9">SymEngine::Mul::as_two_terms</a></div><div class="ttdeci">void as_two_terms(const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;a, const Ptr&lt; RCP&lt; const Basic &gt;&gt; &amp;b) const</div><div class="ttdoc">Rewrite as 2 terms.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00315">mul.cpp:315</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ab8e2f2039c048fe0a09b346df85ba65d"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">SymEngine::Mul::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;d)</div><div class="ttdoc">Create a Mul from a dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00116">mul.cpp:116</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_abe0b8b540eef4be1aba2e135d01aed0f"><div class="ttname"><a href="classSymEngine_1_1Mul.html#abe0b8b540eef4be1aba2e135d01aed0f">SymEngine::Mul::__hash__</a></div><div class="ttdeci">virtual hash_t __hash__() const</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00079">mul.cpp:79</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Mul_html_ac117537ce827a19b79cd39324881d4b0"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">SymEngine::Mul::power_num</a></div><div class="ttdeci">void power_num(const Ptr&lt; RCP&lt; const Number &gt;&gt; &amp;coef, map_basic_basic &amp;d, const RCP&lt; const Number &gt; &amp;exp) const</div><div class="ttdoc">Power all terms with the exponent exp</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00443">mul.cpp:443</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Mul_html_ac117537ce827a19b79cd39324881d4b0"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ac117537ce827a19b79cd39324881d4b0">SymEngine::Mul::power_num</a></div><div class="ttdeci">void power_num(const Ptr&lt; RCP&lt; const Number &gt;&gt; &amp;coef, map_basic_basic &amp;d, const RCP&lt; const Number &gt; &amp;exp) const</div><div class="ttdoc">Power all terms with the exponent exp</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00454">mul.cpp:454</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ad6c047f55da77533ac66b60f737cb3e0"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">SymEngine::Mul::dict_</a></div><div class="ttdeci">map_basic_basic dict_</div><div class="ttdoc">The coefficient (e.g. 2 in 2*x*y)</div><div class="ttdef"><b>Definition:</b> <a href="mul_8h_source.html#l00078">mul.h:78</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ae918361c32ac53756616de7aa5785c9e"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ae918361c32ac53756616de7aa5785c9e">SymEngine::Mul::compare</a></div><div class="ttdeci">virtual int compare(const Basic &amp;o) const</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00099">mul.cpp:99</a></div></div>
 <div class="ttc" id="acomplex_8h_html"><div class="ttname"><a href="complex_8h.html">complex.h</a></div></div>
@@ -644,18 +655,18 @@ $(function() {
 <div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a16a102cafaa2be38a4fd095789b1a806"><div class="ttname"><a href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00426">mul.cpp:426</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a16a102cafaa2be38a4fd095789b1a806"><div class="ttname"><a href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00437">mul.cpp:437</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1998df939d1b28e0356a43f33433d9d3"><div class="ttname"><a href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">SymEngine::is_number_and_zero</a></div><div class="ttdeci">bool is_number_and_zero(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00139">number.h:139</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f7b70ff3cc168dd61eeb32c7c48bf6d"><div class="ttname"><a href="namespaceSymEngine.html#a1f7b70ff3cc168dd61eeb32c7c48bf6d">SymEngine::mulnum</a></div><div class="ttdeci">RCP&lt; const Number &gt; mulnum(const RCP&lt; const Number &gt; &amp;self, const RCP&lt; const Number &gt; &amp;other)</div><div class="ttdoc">Multiply self and other</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00093">number.h:93</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1ffa1e1c18b0e8f1b02d7e3f0392f336"><div class="ttname"><a href="namespaceSymEngine.html#a1ffa1e1c18b0e8f1b02d7e3f0392f336">SymEngine::pownum</a></div><div class="ttdeci">RCP&lt; const Number &gt; pownum(const RCP&lt; const Number &gt; &amp;self, const RCP&lt; const Number &gt; &amp;other)</div><div class="ttdoc">Raise self to power other</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00105">number.h:105</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00270">pow.cpp:270</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00347">mul.cpp:347</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00358">mul.cpp:358</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_aeb3fb08495ed47a074a19b8bbacb3db2"><div class="ttname"><a href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">SymEngine::neg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; neg(const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Negation.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00438">mul.cpp:438</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_aeb3fb08495ed47a074a19b8bbacb3db2"><div class="ttname"><a href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">SymEngine::neg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; neg(const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Negation.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00449">mul.cpp:449</a></div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
 <div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
