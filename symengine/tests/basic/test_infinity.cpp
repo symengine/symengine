@@ -12,6 +12,7 @@
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
 
+using SymEngine::add;
 using SymEngine::Basic;
 using SymEngine::Complex;
 using SymEngine::complex_double;
@@ -43,7 +44,6 @@ using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
 using SymEngine::zero;
-using SymEngine::add;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
