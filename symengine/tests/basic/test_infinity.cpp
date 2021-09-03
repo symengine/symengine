@@ -8,9 +8,11 @@
 #include <symengine/constants.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/functions.h>
+#include <symengine/add.h>
 #include <symengine/pow.h>
 #include <symengine/complex_double.h>
 
+using SymEngine::add;
 using SymEngine::Basic;
 using SymEngine::Complex;
 using SymEngine::complex_double;
@@ -329,6 +331,10 @@ TEST_CASE("Powers to Infinity", "[Infinity]")
     CHECK_THROWS_AS(integer(10)->pow(*c), SymEngineException &);
     CHECK_THROWS_AS(integer(-3)->pow(*c), SymEngineException &);
     CHECK_THROWS_AS(cx->pow(*c), NotImplementedError &);
+
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> r = exp(add(c, x));
+    CHECK_THROWS_AS(div(r, exp(x)), DomainError &);
 }
 
 TEST_CASE("Evaluate Class of Infinity", "[Infinity]")

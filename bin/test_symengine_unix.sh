@@ -13,6 +13,9 @@ if [[ "$(uname)" == "Linux" ]]; then
 fi
 
 if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
+  export conda_pkgs="clang-tools=11"
+  source bin/install_travis.sh
+  ln -sf $CONDA_PREFIX/bin/clang-format $CONDA_PREFIX/bin/clang-format-11
   source bin/travis_clang_format.sh
 elif [[ "$CONDA_ENV_FILE" == *"matchpycpp"* ]]; then
   source bin/install_travis.sh
