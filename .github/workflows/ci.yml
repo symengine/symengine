@@ -112,7 +112,7 @@ jobs:
             CC: gcc
 
           - TEST_CLANG_FORMAT: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-18.04
             CC: gcc
 
           - BUILD_TYPE: Debug
