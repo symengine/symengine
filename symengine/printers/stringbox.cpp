@@ -1,5 +1,6 @@
 #include <iterator>
 #include <sstream>
+#include <algorithm>
 #include <symengine/printers/stringbox.h>
 
 namespace SymEngine
