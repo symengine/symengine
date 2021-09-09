@@ -4,6 +4,7 @@
 
 using SymEngine::Assumptions;
 using SymEngine::Basic;
+using SymEngine::complexes;
 using SymEngine::integer;
 using SymEngine::integers;
 using SymEngine::Number;
@@ -38,6 +39,10 @@ TEST_CASE("Test assumptions", "[assumptions]")
     RCP<const Basic> rel13 = Eq(x, integer(0));
     RCP<const Basic> rel14 = Ne(x, integer(0));
     RCP<const Basic> rel;
+
+    Assumptions a = Assumptions({complexes()->contains(x)});
+    REQUIRE(is_true(a.is_complex(x)));
+    REQUIRE(is_indeterminate(a.is_real(x)));
 
     auto a1 = Assumptions({s1->contains(x)});
     REQUIRE(is_true(a1.is_real(x)));
@@ -204,7 +209,7 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_false(a18.is_zero(x)));
 
     rel = Eq(x, integer(1));
-    auto a = Assumptions({rel});
+    a = Assumptions({rel});
     REQUIRE(is_true(a.is_nonzero(x)));
     REQUIRE(is_false(a.is_zero(x)));
 
