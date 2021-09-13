@@ -38,6 +38,10 @@ SymEngine mailinglist: http://groups.google.com/group/symengine
 
     conda install symengine -c conda-forge
 
+### Conan package manager
+
+    conan install symengine/<version>@
+
 ### Building from source
 
 Install prerequisites.
