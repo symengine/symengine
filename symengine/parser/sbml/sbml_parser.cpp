@@ -206,8 +206,7 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name)
     if (l != zero_arg_functions.end()) {
         return l->second;
     }
-    throw ParseError("Parsing Unsuccessful: Function '" + name
-                     + "' has no arguments");
+    return function_symbol(name, vec_basic{});
 }
 
 RCP<const Basic> SbmlParser::functionify(const std::string &name,
