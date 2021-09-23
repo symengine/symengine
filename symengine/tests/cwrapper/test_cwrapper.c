@@ -2227,6 +2227,113 @@ void test_cse()
     vecbasic_free(reduced_exprs);
 }
 
+void test_sets()
+{
+    basic x, y, z, i, j, k;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(i);
+    basic_new_stack(j);
+    basic_new_stack(k);
+
+    integer_set_ui(i, 1);
+    integer_set_ui(j, 2);
+    integer_set_ui(k, 3);
+    basic_set_interval(x, i, j, 0, 0);
+    basic_set_interval(y, j, k, 0, 0);
+    basic_set_union(x, x, y);
+    basic_set_interval(y, i, k, 0, 0);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_emptyset(y);
+    basic_set_intersection(x, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_reals(x);
+    basic_set_rationals(y);
+    basic_set_union(y, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_reals(x);
+    basic_set_complexes(y);
+    basic_set_union(x, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_integers(x);
+    basic_set_rationals(y);
+    basic_set_union(x, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_emptyset(x);
+    basic_set_universalset(y);
+    basic_set_union(x, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
+    basic_set_interval(x, i, j, 0, 0);
+    basic_set_sup(y, x);
+    SYMENGINE_C_ASSERT(basic_eq(y, j));
+    basic_set_inf(y, x);
+    SYMENGINE_C_ASSERT(basic_eq(y, i));
+
+    basic_set_interval(x, i, j, 0, 0);
+    SYMENGINE_C_ASSERT(is_a_Set(x));
+    SYMENGINE_C_ASSERT(!is_a_Set(i));
+
+    basic_set_interval(x, i, j, 0, 0);
+    basic_set_interval(y, i, k, 0, 0);
+    SYMENGINE_C_ASSERT(basic_set_is_subset(x, y));
+    SYMENGINE_C_ASSERT(!basic_set_is_subset(y, x));
+    SYMENGINE_C_ASSERT(basic_set_is_proper_subset(x, y));
+    SYMENGINE_C_ASSERT(!basic_set_is_proper_subset(x, x));
+    SYMENGINE_C_ASSERT(!basic_set_is_superset(x, y));
+    SYMENGINE_C_ASSERT(basic_set_is_superset(y, x));
+    SYMENGINE_C_ASSERT(basic_set_is_proper_superset(y, x));
+    SYMENGINE_C_ASSERT(!basic_set_is_proper_superset(x, x));
+
+    basic_set_rationals(x);
+    basic_set_reals(y);
+    basic_set_boundary(z, x);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+    basic_set_closure(z, x);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+    basic_set_interior(z, x);
+    basic_set_emptyset(y);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+
+    basic_set_interval(x, i, i, 0, 0);
+    basic_set_interval(y, j, k, 0, 0);
+    basic_set_complement(z, x, y);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+
+    basic_set_interval(x, i, j, 0, 0);
+    bool_set_true(y);
+    basic_set_contains(z, x, i);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+    basic_set_contains(z, x, k);
+    bool_set_false(y);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+
+    CSetBasic *set = setbasic_new();
+    setbasic_insert(set, i);
+    setbasic_insert(set, j);
+    basic_set_finiteset(x, set);
+    bool_set_true(y);
+    basic_set_contains(z, x, i);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+    bool_set_false(y);
+    basic_set_contains(z, x, k);
+    SYMENGINE_C_ASSERT(basic_eq(z, y));
+
+    setbasic_free(set);
+    basic_free_stack(k);
+    basic_free_stack(j);
+    basic_free_stack(i);
+    basic_free_stack(z);
+    basic_free_stack(y);
+    basic_free_stack(x);
+}
+
 int main(int argc, char *argv[])
 {
     symengine_print_stack_on_segfault();
@@ -2268,5 +2375,6 @@ int main(int argc, char *argv[])
     test_matrix();
     test_lambda_double();
     test_cse();
+    test_sets();
     return 0;
 }
