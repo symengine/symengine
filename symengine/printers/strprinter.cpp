@@ -904,11 +904,6 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const DenseMatrix &x)
-{
-    str_ = x.__str__();
-}
-
 void StrPrinter::bvisit(const MIntPoly &x)
 {
     std::ostringstream s;
@@ -1045,12 +1040,6 @@ std::string StrPrinter::apply(const Basic &b)
     return str_;
 }
 
-std::string StrPrinter::apply(const DenseMatrix &b)
-{
-    this->bvisit(b);
-    return str_;
-}
-
 std::vector<std::string> init_str_printer_names()
 {
     std::vector<std::string> names;
@@ -1178,8 +1167,7 @@ std::string str(const Basic &x)
 
 std::string str(const DenseMatrix &x)
 {
-    StrPrinter strPrinter;
-    return strPrinter.apply(x);
+    return x.__str__();
 }
 
 std::string julia_str(const Basic &x)
