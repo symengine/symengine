@@ -1176,6 +1176,12 @@ std::string str(const Basic &x)
     return strPrinter.apply(x);
 }
 
+std::string str(const DenseMatrix &x)
+{
+    StrPrinter strPrinter;
+    return strPrinter.apply(x);
+}
+
 std::string julia_str(const Basic &x)
 {
     JuliaStrPrinter strPrinter;
