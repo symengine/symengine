@@ -2,6 +2,7 @@
 #define SYMENGINE_PRINTER_H
 
 #include <symengine/basic.h>
+#include <symengine/matrix.h>
 
 namespace SymEngine
 {
@@ -14,6 +15,7 @@ std::string ascii_art();
 std::string mathml(const Basic &x);
 
 std::string latex(const Basic &x);
+std::string latex(const DenseMatrix &x);
 
 std::string ccode(const Basic &x);
 std::string c89code(const Basic &x);

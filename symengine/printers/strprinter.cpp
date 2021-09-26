@@ -904,6 +904,11 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
+void StrPrinter::bvisit(const DenseMatrix &x)
+{
+    str_ = x.__str__();
+}
+
 void StrPrinter::bvisit(const MIntPoly &x)
 {
     std::ostringstream s;
@@ -1037,6 +1042,12 @@ std::string StrPrinter::apply(const RCP<const Basic> &b)
 std::string StrPrinter::apply(const Basic &b)
 {
     b.accept(*this);
+    return str_;
+}
+
+std::string StrPrinter::apply(const DenseMatrix &b)
+{
+    this->bvisit(b);
     return str_;
 }
 

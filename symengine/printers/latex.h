@@ -2,6 +2,7 @@
 #define LATEX_H
 
 #include <symengine/printers/strprinter.h>
+#include <symengine/matrix.h>
 
 namespace SymEngine
 {
@@ -50,6 +51,9 @@ public:
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
+
+    void bvisit(const DenseMatrix &x);
+    std::string apply2(const DenseMatrix &b); // overloading apply from StrPrinter does not work...
 
 private:
     static const std::vector<std::string> names_;

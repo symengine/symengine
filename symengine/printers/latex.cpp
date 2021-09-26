@@ -1,4 +1,6 @@
 #include <symengine/printers/latex.h>
+#include <symengine/printers.h>
+#include <symengine/basic.h>
 
 namespace SymEngine
 {
@@ -8,6 +10,13 @@ std::string latex(const Basic &x)
     LatexPrinter p;
     return p.apply(x);
 }
+
+std::string latex(const DenseMatrix &x)
+{
+    LatexPrinter p;
+    return p.apply2(x);
+}
+
 
 void print_rational_class(const rational_class &r, std::ostringstream &s)
 {
@@ -227,6 +236,61 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
 {
     std::ostringstream s;
     s << apply(x.get_arg1()) << " < " << apply(x.get_arg2());
+    str_ = s.str();
+}
+
+std::string LatexPrinter::apply2(const DenseMatrix &b)
+{
+    this->bvisit(b);
+    return str_;
+}
+
+void LatexPrinter::bvisit(const DenseMatrix &m) {
+    const int MAX_NUMBER_OF_ROWS = 24;
+    const int MAX_NUMBER_OF_COLUMNS = 16;
+    const int nrows = m.nrows();
+    const int ncols = m.ncols();
+    int nrows_display = nrows;
+    if (nrows > MAX_NUMBER_OF_ROWS) 
+        nrows_display = MAX_NUMBER_OF_ROWS - 2;
+    int ncols_display = MAX_NUMBER_OF_COLUMNS ;
+    if (ncols <ncols_display) 
+        ncols_display = ncols;
+
+    std::ostringstream s;
+    s << "\\left[\\begin{matrix}" << std::endl;
+
+    std::string end_of_line = " \\\\\n";
+    if (ncols_display<ncols) {
+        end_of_line = " & \\cdots "  + end_of_line;
+    }
+    for(int row_index = 0; row_index < nrows_display; row_index++) 
+    {       
+        for(int column_index = 0; column_index < ncols_display; column_index++) 
+        {       
+        RCP< const Basic> v = m.get(row_index, column_index);
+
+        if (v.is_null() ) 
+        {
+            // how to handle this? can happen if DenseMatrix has not been initialized. for now choose to print a question mark
+            s << "?";
+        } else {
+            s << latex(*v );
+        }
+        if (column_index<ncols_display-1)
+            s << " & ";
+        }
+        s << end_of_line;
+    }
+    if (nrows_display < nrows)  {
+        for(int column_index = 0; column_index < ncols_display; column_index++) {
+        s << " \\vdots ";
+        if (column_index<ncols_display-1)
+            s << " & ";
+        }
+    }
+    s << std::endl << "\\end{matrix}\\right]";
+
     str_ = s.str();
 }
 
