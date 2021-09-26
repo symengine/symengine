@@ -11,13 +11,6 @@ std::string latex(const Basic &x)
     return p.apply(x);
 }
 
-std::string latex(const DenseMatrix &x)
-{
-    LatexPrinter p;
-    return p.apply2(x);
-}
-
-
 void print_rational_class(const rational_class &r, std::ostringstream &s)
 {
     if (get_den(r) == 1) {
@@ -239,13 +232,7 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
     str_ = s.str();
 }
 
-std::string LatexPrinter::apply2(const DenseMatrix &b)
-{
-    this->bvisit(b);
-    return str_;
-}
-
-void LatexPrinter::bvisit(const DenseMatrix &m) {
+std::string latex(const DenseMatrix &m) {
     const int MAX_NUMBER_OF_ROWS = 24;
     const int MAX_NUMBER_OF_COLUMNS = 16;
     const int nrows = m.nrows();
@@ -272,7 +259,7 @@ void LatexPrinter::bvisit(const DenseMatrix &m) {
 
         if (v.is_null() ) 
         {
-            // how to handle this? can happen if DenseMatrix has not been initialized. for now choose to print a question mark
+            // element has not been initalized, show question mark
             s << "?";
         } else {
             s << latex(*v );
@@ -289,9 +276,9 @@ void LatexPrinter::bvisit(const DenseMatrix &m) {
             s << " & ";
         }
     }
-    s << std::endl << "\\end{matrix}\\right]";
+    s << "\\end{matrix}\\right]";
 
-    str_ = s.str();
+    return s.str();
 }
 
 void LatexPrinter::bvisit(const Interval &x)

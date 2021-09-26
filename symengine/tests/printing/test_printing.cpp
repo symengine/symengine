@@ -749,6 +749,18 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l28) == "\\mathbb{C}");
 }
 
+
+TEST_CASE("test_latex_matrix_printing()", "[latex]")
+{
+    Expression x("x");    
+    DenseMatrix d(3, 1, {integer(1), integer(2), x});
+    CHECK(latex(d) == "\\left[\\begin{matrix}\n1 \\\\\n2 \\\\\nx \\\\\n\\end{matrix}\\right]\n");
+
+    DenseMatrix d2(1, 1);
+    CHECK(latex(d2) == "\\left[\\begin{matrix}\n? \\\\\n\\end{matrix}\\right]\n");
+    
+}
+
 TEST_CASE("test_unicode()", "[unicode]")
 {
     RCP<const Basic> x = symbol("x");
