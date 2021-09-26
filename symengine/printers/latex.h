@@ -2,7 +2,6 @@
 #define LATEX_H
 
 #include <symengine/printers/strprinter.h>
-#include <symengine/matrix.h>
 
 namespace SymEngine
 {

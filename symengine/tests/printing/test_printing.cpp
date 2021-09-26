@@ -758,7 +758,6 @@ TEST_CASE("test_latex_matrix_printing()", "[latex]")
 
     DenseMatrix d2(1, 1);
     CHECK(latex(d2) == "\\left[\\begin{matrix}\n? \\\\\n\\end{matrix}\\right]\n");
-    
 }
 
 TEST_CASE("test_unicode()", "[unicode]")
