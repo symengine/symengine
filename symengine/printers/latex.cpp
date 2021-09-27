@@ -451,11 +451,9 @@ std::vector<std::string> init_latex_printer_names()
     return names;
 }
 
-const std::vector<std::string> LatexPrinter::names_
-    = init_latex_printer_names();
-
 void LatexPrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_latex_printer_names();
     std::ostringstream o;
     o << names_[x.get_type_code()] << "{";
     vec_basic vec = x.get_args();
