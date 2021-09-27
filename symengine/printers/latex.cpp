@@ -232,7 +232,7 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
     str_ = s.str();
 }
 
-std::string latex(const DenseMatrix &m, const int max_rows, const int max_cols)
+std::string latex(const DenseMatrix &m, const unsigned max_rows, const unsigned max_cols)
 {
     const int nrows = m.nrows();
     const int ncols = m.ncols();
