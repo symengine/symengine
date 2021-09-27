@@ -722,8 +722,6 @@ std::vector<fn> init_eval_double()
     return table;
 }
 
-const static std::vector<fn> table_eval_double = init_eval_double();
-
 double eval_double(const Basic &b)
 {
     EvalRealDoubleVisitorFinal v;
@@ -738,6 +736,7 @@ std::complex<double> eval_complex_double(const Basic &b)
 
 double eval_double_single_dispatch(const Basic &b)
 {
+    static const std::vector<fn> table_eval_double = init_eval_double();
     return table_eval_double[b.get_type_code()](b);
 }
 
