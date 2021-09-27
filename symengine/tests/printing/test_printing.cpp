@@ -752,10 +752,12 @@ TEST_CASE("test_latex_printing()", "[latex]")
 
 TEST_CASE("test_latex_matrix_printing()", "[latex]")
 {
-    Expression x("x");    
+    Expression x("x");
     DenseMatrix d(3, 1, {integer(1), integer(2), x});
-    CHECK(latex(d) == "\\left[\\begin{matrix}\n1 \\\\\n2 \\\\\nx \\\\\n\\end{matrix}\\right]\n");
-    CHECK(latex(d, 2) == "\\left[\\begin{matrix}\n1 \\\\\n\\vdots \\\\\n\\end{matrix}\\right]\n");
+    CHECK(latex(d)
+          == "\\left[\\begin{matrix}\n1 \\\\\n2 \\\\\nx \\\\\n\\end{matrix}\\right]\n");
+    CHECK(latex(d, 2)
+          == "\\left[\\begin{matrix}\n1 \\\\\n\\vdots \\\\\n\\end{matrix}\\right]\n");
 
     DenseMatrix d2(1, 1);
     CHECK(latex(d2) == "\\left[\\begin{matrix}\n? \\\\\n\\end{matrix}\\right]\n");
