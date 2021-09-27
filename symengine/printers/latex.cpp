@@ -234,12 +234,12 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
 
 std::string latex(const DenseMatrix &m, const unsigned max_rows, const unsigned max_cols)
 {
-    const int nrows = m.nrows();
-    const int ncols = m.ncols();
-    int nrows_display = nrows;
+    const unsigned int nrows = m.nrows();
+    const unsigned int ncols = m.ncols();
+    unsigned int nrows_display = nrows;
     if (nrows > max_rows)
         nrows_display = max_rows - 1;
-    int ncols_display = ncols;
+    unsigned int ncols_display = ncols;
     if (ncols > max_cols)
         ncols_display = max_cols - 1;
 
@@ -250,24 +250,24 @@ std::string latex(const DenseMatrix &m, const unsigned max_rows, const unsigned 
     if (ncols_display < ncols) {
         end_of_line = " & \\cdots "  + end_of_line;
     }
-    for(int row_index = 0; row_index < nrows_display; row_index++)  {       
-        for(int column_index = 0; column_index < ncols_display; column_index++) {       
-        RCP< const Basic> v = m.get(row_index, column_index);
+    for(unsigned int row_index = 0; row_index < nrows_display; row_index++)  {       
+        for(unsigned int column_index = 0; column_index < ncols_display; column_index++) {       
+            RCP< const Basic> v = m.get(row_index, column_index);
 
-        if (v.is_null() ) 
-        {
-            // element has not been initalized, show question mark
-            s << "?";
-        } else {
-            s << latex(*v );
-        }
-        if (column_index < ncols_display-1)
-            s << " & ";
+            if (v.is_null() ) 
+            {
+                // element has not been initalized
+                throw SymEngineException("cannot display uninitialized element");
+            } else {
+                s << latex(*v );
+            }
+            if (column_index < ncols_display-1)
+                s << " & ";
         }
         s << end_of_line;
     }
     if (nrows_display < nrows)  {
-        for(int column_index = 0; column_index < ncols_display;
+        for(unsigned int column_index = 0; column_index < ncols_display;
             column_index++) {
             s << "\\vdots";
             if (column_index < ncols_display-1)

@@ -760,7 +760,14 @@ TEST_CASE("test_latex_matrix_printing()", "[latex]")
           == "\\left[\\begin{matrix}\n1 \\\\\n\\vdots \\\\\n\\end{matrix}\\right]\n");
 
     DenseMatrix d2(1, 1);
-    CHECK(latex(d2) == "\\left[\\begin{matrix}\n? \\\\\n\\end{matrix}\\right]\n");
+    try {
+        latex(d2);
+        throw "displaying unitialized matrix failed to generate exception";
+    } 
+    catch (std::exception& e)
+    {
+        CHECK(std::string(e.what()) == "cannot display uninitialized element");
+    }
 }
 
 TEST_CASE("test_unicode()", "[unicode]")
