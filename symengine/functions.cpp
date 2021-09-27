@@ -40,11 +40,54 @@ extern RCP<const Basic> mC4;
 extern RCP<const Basic> mC5;
 extern RCP<const Basic> mC6;
 
-extern RCP<const Basic> sin_table[];
+// sin_table()[n] represents the value of sin(pi*n/12) for n = 0..23
+static const RCP<const Basic> *sin_table()
+{
+    static const RCP<const Basic> table[]
+        = {zero, C0,  C1,  C2,  C3,  C4,  one,       C4,  C3,  C2,  C1,  C0,
+           zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0};
+    return table;
+}
 
-extern umap_basic_basic inverse_cst;
+static const umap_basic_basic &inverse_cst()
+{
+    static const umap_basic_basic inverse_cst_ = {
+        {C3, i3},
+        {mC3, im3},
+        {C2, mul(i2, i2)},
+        {mC2, mul(im2, i2)},
+        {C4, integer(12)},
+        {mC4, integer(-12)},
+        {C5, i5},
+        {mC5, im5},
+        {C6, integer(10)},
+        {mC6, integer(-10)},
+        {div(one, i2), integer(6)},
+        {div(minus_one, i2), integer(-6)},
+    };
+    return inverse_cst_;
+}
 
-extern umap_basic_basic inverse_tct;
+static const umap_basic_basic &inverse_tct()
+{
+    static const umap_basic_basic inverse_tct_ = {
+        {div(one, sq3), mul(i2, i3)},
+        {div(minus_one, sq3), mul(im2, i3)},
+        {sq3, i3},
+        {mul(minus_one, sq3), im3},
+        {add(one, sq2), div(pow(i2, i3), i3)},
+        {mul(minus_one, add(one, sq2)), div(pow(i2, i3), im3)},
+        {sub(sq2, one), pow(i2, i3)},
+        {sub(one, sq2), pow(im2, i3)},
+        {sub(i2, sq3), mul(mul(i2, i2), i3)},
+        {sub(sq3, i2), mul(mul(im2, i2), i3)},
+        {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
+        {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
+        {one, pow(i2, i2)},
+        {minus_one, mul(minus_one, pow(i2, i2))},
+    };
+    return inverse_tct_;
+}
 
 Conjugate::Conjugate(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
@@ -434,7 +477,7 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
     }
 }
 
-bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+bool inverse_lookup(const umap_basic_basic &d, const RCP<const Basic> &t,
                     const Ptr<RCP<const Basic>> &index)
 {
     auto it = d.find(t);
@@ -856,7 +899,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
         }
     } else {
         if (eq(*ret_arg, *zero)) {
-            return mul(integer(sign), sin_table[index]);
+            return mul(integer(sign), sin_table()[index]);
         } else {
             // If ret_arg is the same as arg, a `Sin` instance is returned
             // Or else `sin` is called again.
@@ -924,7 +967,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
         }
     } else {
         if (eq(*ret_arg, *zero)) {
-            return mul(integer(sign), sin_table[(index + 6) % 24]);
+            return mul(integer(sign), sin_table()[(index + 6) % 24]);
         } else {
             if (sign == 1) {
                 if (neq(*ret_arg, *arg)) {
@@ -990,7 +1033,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
     } else {
         if (eq(*ret_arg, *zero)) {
             return mul(integer(sign),
-                       div(sin_table[index], sin_table[(index + 6) % 24]));
+                       div(sin_table()[index], sin_table()[(index + 6) % 24]));
         } else {
             if (sign == 1) {
                 if (neq(*ret_arg, *arg)) {
@@ -1054,7 +1097,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
     } else {
         if (eq(*ret_arg, *zero)) {
             return mul(integer(sign),
-                       div(sin_table[(index + 6) % 24], sin_table[index]));
+                       div(sin_table()[(index + 6) % 24], sin_table()[index]));
         } else {
             if (sign == 1) {
                 if (neq(*ret_arg, *arg)) {
@@ -1118,7 +1161,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
         }
     } else {
         if (eq(*ret_arg, *zero)) {
-            return mul(integer(sign), div(one, sin_table[index]));
+            return mul(integer(sign), div(one, sin_table()[index]));
         } else {
             if (sign == 1) {
                 if (neq(*ret_arg, *arg)) {
@@ -1182,7 +1225,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
         }
     } else {
         if (eq(*ret_arg, *zero)) {
-            return mul(integer(sign), div(one, sin_table[(index + 6) % 24]));
+            return mul(integer(sign), div(one, sin_table()[(index + 6) % 24]));
         } else {
             if (sign == 1) {
                 if (neq(*ret_arg, *arg)) {
@@ -1305,7 +1348,7 @@ bool ASin::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
+    if (inverse_lookup(inverse_cst(), get_arg(), outArg(index))) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1328,7 +1371,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, arg, outArg(index));
+    bool b = inverse_lookup(inverse_cst(), arg, outArg(index));
     if (b) {
         return div(pi, index);
     } else {
@@ -1347,7 +1390,7 @@ bool ACos::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
+    if (inverse_lookup(inverse_cst(), get_arg(), outArg(index))) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1370,7 +1413,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, arg, outArg(index));
+    bool b = inverse_lookup(inverse_cst(), arg, outArg(index));
     if (b) {
         return sub(div(pi, i2), div(pi, index));
     } else {
@@ -1389,7 +1432,7 @@ bool ASec::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index))) {
+    if (inverse_lookup(inverse_cst(), div(one, get_arg()), outArg(index))) {
         return false;
     } else if (is_a_Number(*arg)
                and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1410,7 +1453,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    bool b = inverse_lookup(inverse_cst(), div(one, arg), outArg(index));
     if (b) {
         return sub(div(pi, i2), div(pi, index));
     } else {
@@ -1429,7 +1472,7 @@ bool ACsc::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_cst, div(one, arg), outArg(index))) {
+    if (inverse_lookup(inverse_cst(), div(one, arg), outArg(index))) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1450,7 +1493,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    bool b = inverse_lookup(inverse_cst(), div(one, arg), outArg(index));
     if (b) {
         return div(pi, index);
     } else {
@@ -1469,7 +1512,7 @@ bool ATan::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_tct, get_arg(), outArg(index))) {
+    if (inverse_lookup(inverse_tct(), get_arg(), outArg(index))) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1492,7 +1535,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    bool b = inverse_lookup(inverse_tct(), arg, outArg(index));
     if (b) {
         return div(pi, index);
     } else {
@@ -1511,7 +1554,7 @@ bool ACot::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
         return false;
     RCP<const Basic> index;
-    if (inverse_lookup(inverse_tct, arg, outArg(index))) {
+    if (inverse_lookup(inverse_tct(), arg, outArg(index))) {
         return false;
     }
     if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
@@ -1534,7 +1577,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     }
 
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    bool b = inverse_lookup(inverse_tct(), arg, outArg(index));
     if (b) {
         return sub(div(pi, i2), div(pi, index));
     } else {
@@ -1555,7 +1598,7 @@ bool ATan2::is_canonical(const RCP<const Basic> &num,
     if (eq(*num, *zero) or eq(*num, *den) or eq(*num, *mul(minus_one, den)))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
+    bool b = inverse_lookup(inverse_tct(), div(num, den), outArg(index));
     if (b)
         return false;
     else
@@ -1591,7 +1634,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         }
     }
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
+    bool b = inverse_lookup(inverse_tct(), div(num, den), outArg(index));
     if (b) {
         // Ideally the answer should depend on the signs of `num` and `den`
         // Currently is_positive() and is_negative() is not implemented for
