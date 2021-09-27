@@ -232,7 +232,8 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
     str_ = s.str();
 }
 
-std::string latex(const DenseMatrix &m, const unsigned max_rows, const unsigned max_cols)
+std::string latex(const DenseMatrix &m, const unsigned max_rows,
+                  const unsigned max_cols)
 {
     const unsigned int nrows = m.nrows();
     const unsigned int ncols = m.ncols();
@@ -248,29 +249,30 @@ std::string latex(const DenseMatrix &m, const unsigned max_rows, const unsigned 
 
     std::string end_of_line = " \\\\\n";
     if (ncols_display < ncols) {
-        end_of_line = " & \\cdots "  + end_of_line;
+        end_of_line = " & \\cdots " + end_of_line;
     }
-    for(unsigned int row_index = 0; row_index < nrows_display; row_index++)  {       
-        for(unsigned int column_index = 0; column_index < ncols_display; column_index++) {       
-            RCP< const Basic> v = m.get(row_index, column_index);
+    for (unsigned int row_index = 0; row_index < nrows_display; row_index++) {
+        for (unsigned int column_index = 0; column_index < ncols_display;
+             column_index++) {
+            RCP<const Basic> v = m.get(row_index, column_index);
 
-            if (v.is_null() ) 
-            {
+            if (v.is_null()) {
                 // element has not been initalized
-                throw SymEngineException("cannot display uninitialized element");
+                throw SymEngineException(
+                    "cannot display uninitialized element");
             } else {
-                s << latex(*v );
+                s << latex(*v);
             }
-            if (column_index < ncols_display-1)
+            if (column_index < ncols_display - 1)
                 s << " & ";
         }
         s << end_of_line;
     }
-    if (nrows_display < nrows)  {
-        for(unsigned int column_index = 0; column_index < ncols_display;
-            column_index++) {
+    if (nrows_display < nrows) {
+        for (unsigned int column_index = 0; column_index < ncols_display;
+             column_index++) {
             s << "\\vdots";
-            if (column_index < ncols_display-1)
+            if (column_index < ncols_display - 1)
                 s << " & ";
         }
         s << end_of_line;
