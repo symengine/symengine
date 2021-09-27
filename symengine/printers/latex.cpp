@@ -232,17 +232,16 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
     str_ = s.str();
 }
 
-std::string latex(const DenseMatrix &m) {
-    const int MAX_NUMBER_OF_ROWS = 24;
-    const int MAX_NUMBER_OF_COLUMNS = 16;
+std::string latex(const DenseMatrix &m, const int max_rows, const int max_cols)
+{
     const int nrows = m.nrows();
     const int ncols = m.ncols();
     int nrows_display = nrows;
-    if (nrows > MAX_NUMBER_OF_ROWS) 
-        nrows_display = MAX_NUMBER_OF_ROWS - 2;
-    int ncols_display = MAX_NUMBER_OF_COLUMNS ;
-    if (ncols <ncols_display) 
-        ncols_display = ncols;
+    if (nrows > max_rows) 
+        nrows_display = max_rows - 1;
+    int ncols_display = ncols ;
+    if (ncols > max_cols) 
+        ncols_display = max_cols - 1;
 
     std::ostringstream s;
     s << "\\left[\\begin{matrix}" << std::endl;
@@ -271,12 +270,13 @@ std::string latex(const DenseMatrix &m) {
     }
     if (nrows_display < nrows)  {
         for(int column_index = 0; column_index < ncols_display; column_index++) {
-        s << " \\vdots ";
-        if (column_index<ncols_display-1)
-            s << " & ";
+            s << "\\vdots";
+            if (column_index<ncols_display-1)
+                s << " & ";
         }
+        s << end_of_line;
     }
-    s << "\\end{matrix}\\right]";
+    s << "\\end{matrix}\\right]\n";
 
     return s.str();
 }
