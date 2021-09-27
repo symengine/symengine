@@ -52,14 +52,6 @@ typedef RCP<const Boolean> (*double_arg_boolean_func)(const RCP<const Basic> &,
                                                       const RCP<const Basic> &);
 typedef RCP<const Basic> (*vector_arg_func)(const vec_basic &);
 
-// cast overloaded functions below to single_arg, double_arg before they can
-// be used in the map
-static single_arg_func single_casted_log = log;
-static double_arg_boolean_func double_casted_Eq = Eq;
-
-static vector_arg_func vector_casted_add = add;
-static vector_arg_func vector_casted_mul = mul;
-
 static RCP<const Basic> sqr(const RCP<const Basic> &x)
 {
     return pow(x, integer(2));
@@ -91,58 +83,62 @@ static std::map<const std::string,
                 const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
 init_sbml_parser_single_arg_functions()
 {
-    return {{"sin", sin},
-            {"cos", cos},
-            {"tan", tan},
-            {"cot", cot},
-            {"csc", csc},
-            {"sec", sec},
+    static const std::map<
+        const std::string,
+        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+        functions = {{"sin", sin},
+                     {"cos", cos},
+                     {"tan", tan},
+                     {"cot", cot},
+                     {"csc", csc},
+                     {"sec", sec},
 
-            {"asin", asin},
-            {"arcsin", asin},
-            {"acos", acos},
-            {"arccos", acos},
-            {"atan", atan},
-            {"arctan", atan},
-            {"asec", asec},
-            {"arcsec", asec},
-            {"acsc", acsc},
-            {"arccsc", acsc},
-            {"acot", acot},
-            {"arccot", acot},
+                     {"asin", asin},
+                     {"arcsin", asin},
+                     {"acos", acos},
+                     {"arccos", acos},
+                     {"atan", atan},
+                     {"arctan", atan},
+                     {"asec", asec},
+                     {"arcsec", asec},
+                     {"acsc", acsc},
+                     {"arccsc", acsc},
+                     {"acot", acot},
+                     {"arccot", acot},
 
-            {"sinh", sinh},
-            {"cosh", cosh},
-            {"tanh", tanh},
-            {"coth", coth},
-            {"sech", sech},
-            {"csch", csch},
+                     {"sinh", sinh},
+                     {"cosh", cosh},
+                     {"tanh", tanh},
+                     {"coth", coth},
+                     {"sech", sech},
+                     {"csch", csch},
 
-            {"asinh", asinh},
-            {"arcsinh", asinh},
-            {"acosh", acosh},
-            {"arccosh", acosh},
-            {"atanh", atanh},
-            {"arctanh", atanh},
-            {"asech", asech},
-            {"arcsech", asech},
-            {"acoth", acoth},
-            {"arccoth", acoth},
-            {"acsch", acsch},
-            {"arccsch", acsch},
+                     {"asinh", asinh},
+                     {"arcsinh", asinh},
+                     {"acosh", acosh},
+                     {"arccosh", acosh},
+                     {"atanh", atanh},
+                     {"arctanh", atanh},
+                     {"asech", asech},
+                     {"arcsech", asech},
+                     {"acoth", acoth},
+                     {"arccoth", acoth},
+                     {"acsch", acsch},
+                     {"arccsch", acsch},
 
-            {"sqrt", sqrt},
-            {"abs", abs},
-            {"exp", exp},
-            {"floor", floor},
-            {"ceil", ceiling},
-            {"ceiling", ceiling},
-            {"ln", single_casted_log},
-            {"log", log10},
-            {"log10", log10},
-            {"factorial", fact},
-            {"root", sqrt},
-            {"sqr", sqr}};
+                     {"sqrt", sqrt},
+                     {"abs", abs},
+                     {"exp", exp},
+                     {"floor", floor},
+                     {"ceil", ceiling},
+                     {"ceiling", ceiling},
+                     {"ln", (single_arg_func)log},
+                     {"log", log10},
+                     {"log10", log10},
+                     {"factorial", fact},
+                     {"root", sqrt},
+                     {"sqr", sqr}};
+    return functions;
 }
 
 static RCP<const Boolean> vec_ge(const vec_basic &x)
@@ -189,10 +185,6 @@ RCP<const Basic> SbmlParser::modulo(const RCP<const Basic> &a,
                       {sub(a, mul(b, floor(div(a, b)))), boolTrue}});
 }
 
-const std::map<const std::string,
-               const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
-    SbmlParser::single_arg_functions_ = init_sbml_parser_single_arg_functions();
-
 RCP<const Basic> SbmlParser::functionify(const std::string &name)
 {
     const static std::map<const std::string, const RCP<const Basic>>
@@ -226,8 +218,8 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
         multi_arg_functions = {
             {"max", max},
             {"min", min},
-            {"plus", vector_casted_add},
-            {"times", vector_casted_mul},
+            {"plus", (vector_arg_func)add},
+            {"times", (vector_arg_func)mul},
         };
 
     const static std::map<
@@ -241,7 +233,8 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
         const std::string,
         const std::function<RCP<const Boolean>(const RCP<const Basic> &,
                                                const RCP<const Basic> &)>>
-        double_arg_boolean_functions = {{"eq", double_casted_Eq}, {"neq", Ne}};
+        double_arg_boolean_functions
+        = {{"eq", (double_arg_boolean_func)Eq}, {"neq", Ne}};
 
     const static std::map<const std::string,
                           const std::function<RCP<const Boolean>(vec_basic &)>>
@@ -263,6 +256,7 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
 
     std::string lname = lowercase(name);
     if (params.size() == 1) {
+        auto single_arg_functions_ = init_sbml_parser_single_arg_functions();
         auto it1 = single_arg_functions_.find(lname);
         if (it1 != single_arg_functions_.end()) {
             return it1->second(params[0]);
