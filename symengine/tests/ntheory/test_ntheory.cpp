@@ -625,6 +625,9 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     RCP<const Integer> i93 = integer(93);
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i105 = integer(105);
+    RCP<const Integer> i5008 = integer(5008);
+    RCP<const Integer> i7519 = integer(7519);
+    RCP<const Integer> i10009 = integer(10009);
     RCP<const Integer> nthroot, rem;
     std::vector<RCP<const Integer>> roots, v;
 
@@ -640,6 +643,9 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
 
     REQUIRE(nthroot_mod(outArg(nthroot), i5, i1, i100) == true);
     REQUIRE(eq(*nthroot, *i5));
+
+    REQUIRE(nthroot_mod(outArg(nthroot), i7519, i2, i10009) == true);
+    REQUIRE(eq(*nthroot, *i5008));
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
     rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class()
