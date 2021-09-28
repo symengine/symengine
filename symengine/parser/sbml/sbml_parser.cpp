@@ -79,8 +79,8 @@ static RCP<const Basic> fact(const RCP<const Basic> &x)
     return gamma(add(x, integer(1)));
 }
 
-static std::map<const std::string,
-                const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+static const std::map<const std::string, const std::function<RCP<const Basic>(
+                                             const RCP<const Basic> &)>> &
 init_sbml_parser_single_arg_functions()
 {
     static const std::map<
@@ -256,7 +256,8 @@ RCP<const Basic> SbmlParser::functionify(const std::string &name,
 
     std::string lname = lowercase(name);
     if (params.size() == 1) {
-        auto single_arg_functions_ = init_sbml_parser_single_arg_functions();
+        const auto &single_arg_functions_
+            = init_sbml_parser_single_arg_functions();
         auto it1 = single_arg_functions_.find(lname);
         if (it1 != single_arg_functions_.end()) {
             return it1->second(params[0]);

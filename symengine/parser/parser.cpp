@@ -41,8 +41,8 @@ typedef RCP<const Boolean> (*single_arg_boolean_func)(const RCP<const Basic> &);
 typedef RCP<const Boolean> (*double_arg_boolean_func)(const RCP<const Basic> &,
                                                       const RCP<const Basic> &);
 
-static std::map<const std::string,
-                const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
+static const std::map<const std::string, const std::function<RCP<const Basic>(
+                                             const RCP<const Basic> &)>> &
 init_parser_single_arg_functions()
 {
     static const std::map<
@@ -180,7 +180,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         };
 
     if (params.size() == 1) {
-        auto single_arg_functions_ = init_parser_single_arg_functions();
+        const auto &single_arg_functions_ = init_parser_single_arg_functions();
         auto it1 = single_arg_functions_.find(name);
         if (it1 != single_arg_functions_.end()) {
             return it1->second(params[0]);
