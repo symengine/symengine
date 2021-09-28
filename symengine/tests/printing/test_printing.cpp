@@ -301,6 +301,7 @@ TEST_CASE("test_matrix(): printing", "[printing]")
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
+    REQUIRE(str(A) == "[1, 0]\n[0, 1]\n");
 }
 
 TEST_CASE("test_UIntPoly::from_dict(): printing", "[printing]")

@@ -16,7 +16,8 @@ std::string ascii_art();
 std::string mathml(const Basic &x);
 
 std::string latex(const Basic &x);
-std::string latex(const DenseMatrix &x, const int max_rows=24, const int max_cols=16);
+std::string latex(const DenseMatrix &x, const int max_rows=24,
+				  const int max_cols=16);
 
 std::string ccode(const Basic &x);
 std::string c89code(const Basic &x);
