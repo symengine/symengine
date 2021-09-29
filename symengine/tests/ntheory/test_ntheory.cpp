@@ -647,9 +647,8 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
 
     REQUIRE(nthroot_mod(outArg(nthroot), i7519, i2, i10009) == true);
     // The square root is +/- 5001 mod 10009.
-    if (!eq(*nthroot, *i5001)) {
-        REQUIRE(eq(*nthroot, *i5008));
-    }
+    bool sqrt_ok = eq(*nthroot, *i5001) || eq(*nthroot, *i5008);
+    REQUIRE(sqrt_ok);
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
     rem = integer(nthroot->as_integer_class() * nthroot->as_integer_class()
