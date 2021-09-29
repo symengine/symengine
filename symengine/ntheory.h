@@ -161,5 +161,12 @@ int mobius(const Integer &a);
 // Mertens Function
 // mertens(n) -> Sum of mobius(i) for i from 1 to n
 long mertens(const unsigned long a);
+
+integer_class mp_polygonal_number(const integer_class &s,
+                                  const integer_class &n);
+integer_class mp_principal_polygonal_root(const integer_class &s,
+                                          const integer_class &x);
+
 } // namespace SymEngine
+
 #endif

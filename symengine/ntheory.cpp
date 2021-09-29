@@ -4,7 +4,9 @@
 #include <symengine/prime_sieve.h>
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>
+#include <symengine/add.h>
 #include <symengine/mul.h>
+#include <symengine/pow.h>
 #ifdef HAVE_SYMENGINE_ECM
 #include <ecm.h>
 #endif // HAVE_SYMENGINE_ECM
@@ -1632,4 +1634,42 @@ long mertens(const unsigned long a)
     }
     return mertens;
 }
+
+/**
+ * @brief Numeric calculation of the n:th s-gonal number
+ * @param s Number of sides of the polygon. Must be greater than 2.
+ * @param n Must be greater than 0
+ * @returns The n:th s-gonal number
+ *
+ * A fast pure numeric calculation of the n:th s-gonal number. No bounds
+ * checking of the input is performed.
+ * See https://en.wikipedia.org/wiki/Polygonal_number for source of formula.
+ */
+integer_class mp_polygonal_number(const integer_class &s,
+                                  const integer_class &n)
+{
+    auto res = ((s - 2) * n * n - (s - 4) * n) / 2;
+    return res;
+}
+
+/**
+ * @brief Numeric calculation of the principal s-gonal root of x
+ * @param s Number of sides of the polygon. Must be greater than 2.
+ * @param x An integer greater than 0
+ * @returns The root
+ *
+ * A fast pure numeric calculation of the principal (i.e. positive) s-gonal root
+ * of x. No bounds checking of the input is performed.
+ * See https://en.wikipedia.org/wiki/Polygonal_number for source of formula.
+ */
+integer_class mp_principal_polygonal_root(const integer_class &s,
+                                          const integer_class &x)
+{
+    integer_class tmp;
+    mp_pow_ui(tmp, s - 4, 2);
+    integer_class root = mp_sqrt(8 * x * (s - 2) + tmp);
+    integer_class n = (root + s - 4) / (2 * (s - 2));
+    return n;
+}
+
 } // namespace SymEngine
