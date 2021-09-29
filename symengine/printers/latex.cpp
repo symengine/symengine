@@ -249,7 +249,7 @@ std::string latex(const DenseMatrix &m, const unsigned max_rows,
 
     std::string end_of_line = " \\\\\n";
     if (ncols_display < ncols) {
-        end_of_line = " & \\cdots " + end_of_line;
+        end_of_line = " & \\cdots" + end_of_line;
     }
     for (unsigned int row_index = 0; row_index < nrows_display; row_index++) {
         for (unsigned int column_index = 0; column_index < ncols_display;

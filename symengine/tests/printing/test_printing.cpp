@@ -761,6 +761,11 @@ TEST_CASE("test_latex_matrix_printing()", "[latex]")
           == "\\left[\\begin{matrix}\n1 \\\\\n\\vdots "
              "\\\\\n\\end{matrix}\\right]\n");
 
+    DenseMatrix m(1, 3, {x, integer(1), integer(2)});
+    CHECK(latex(m, 4, 2)
+          == "\\left[\\begin{matrix}\nx & \\cdots \\\\\n"
+             "\\end{matrix}\\right]\n");
+
     DenseMatrix d2(1, 1);
     try {
         latex(d2);
