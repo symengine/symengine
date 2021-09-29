@@ -450,7 +450,7 @@ public:
 // typedef double (*fn)(const Basic &);
 typedef std::function<double(const Basic &)> fn;
 
-std::vector<fn> init_eval_double()
+static inline std::vector<fn> init_eval_double()
 {
     std::vector<fn> table;
     table.assign(TypeID_Count, [](const Basic &x) -> double {
