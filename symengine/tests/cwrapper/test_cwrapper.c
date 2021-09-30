@@ -1367,6 +1367,14 @@ void test_functions()
     basic_log(res, res);
     SYMENGINE_C_ASSERT(basic_eq(res, ans));
 
+    real_double_set_d(res, 1.1);
+    basic_floor(res, res);
+    SYMENGINE_C_ASSERT(basic_eq(res, one));
+
+    real_double_set_d(res, 0.8);
+    basic_ceiling(res, res);
+    SYMENGINE_C_ASSERT(basic_eq(res, one));
+
     basic_gamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, one));
 

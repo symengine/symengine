@@ -343,6 +343,10 @@ CWRAPPER_OUTPUT_TYPE basic_cbrt(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
 //! Assigns s = log(a).
 CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
+//! Assigns s = floor(a).
+CWRAPPER_OUTPUT_TYPE basic_floor(basic s, const basic a);
+//! Assigns s = ceiling(a).
+CWRAPPER_OUTPUT_TYPE basic_ceiling(basic s, const basic a);
 
 //! Assigns s = atan2(a, b).
 CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
