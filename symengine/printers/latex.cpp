@@ -1,4 +1,6 @@
 #include <symengine/printers/latex.h>
+#include <symengine/printers.h>
+#include <symengine/basic.h>
 
 namespace SymEngine
 {
@@ -228,6 +230,56 @@ void LatexPrinter::bvisit(const StrictLessThan &x)
     std::ostringstream s;
     s << apply(x.get_arg1()) << " < " << apply(x.get_arg2());
     str_ = s.str();
+}
+
+std::string latex(const DenseMatrix &m, const unsigned max_rows,
+                  const unsigned max_cols)
+{
+    const unsigned int nrows = m.nrows();
+    const unsigned int ncols = m.ncols();
+    unsigned int nrows_display = nrows;
+    if (nrows > max_rows)
+        nrows_display = max_rows - 1;
+    unsigned int ncols_display = ncols;
+    if (ncols > max_cols)
+        ncols_display = max_cols - 1;
+
+    std::ostringstream s;
+    s << "\\left[\\begin{matrix}" << std::endl;
+
+    std::string end_of_line = " \\\\\n";
+    if (ncols_display < ncols) {
+        end_of_line = " & \\cdots" + end_of_line;
+    }
+    for (unsigned int row_index = 0; row_index < nrows_display; row_index++) {
+        for (unsigned int column_index = 0; column_index < ncols_display;
+             column_index++) {
+            RCP<const Basic> v = m.get(row_index, column_index);
+
+            if (v.is_null()) {
+                // element has not been initalized
+                throw SymEngineException(
+                    "cannot display uninitialized element");
+            } else {
+                s << latex(*v);
+            }
+            if (column_index < ncols_display - 1)
+                s << " & ";
+        }
+        s << end_of_line;
+    }
+    if (nrows_display < nrows) {
+        for (unsigned int column_index = 0; column_index < ncols_display;
+             column_index++) {
+            s << "\\vdots";
+            if (column_index < ncols_display - 1)
+                s << " & ";
+        }
+        s << end_of_line;
+    }
+    s << "\\end{matrix}\\right]\n";
+
+    return s.str();
 }
 
 void LatexPrinter::bvisit(const Interval &x)

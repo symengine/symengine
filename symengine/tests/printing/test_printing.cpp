@@ -301,6 +301,7 @@ TEST_CASE("test_matrix(): printing", "[printing]")
     DenseMatrix A
         = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
+    REQUIRE(str(A) == "[1, 0]\n[0, 1]\n");
 }
 
 TEST_CASE("test_UIntPoly::from_dict(): printing", "[printing]")
@@ -747,6 +748,31 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
     CHECK(latex(*l28) == "\\mathbb{C}");
+}
+
+TEST_CASE("test_latex_matrix_printing()", "[latex]")
+{
+    Expression x("x");
+    DenseMatrix d(3, 1, {integer(1), integer(2), x});
+    CHECK(latex(d)
+          == "\\left[\\begin{matrix}\n1 \\\\\n2 \\\\\nx "
+             "\\\\\n\\end{matrix}\\right]\n");
+    CHECK(latex(d, 2)
+          == "\\left[\\begin{matrix}\n1 \\\\\n\\vdots "
+             "\\\\\n\\end{matrix}\\right]\n");
+
+    DenseMatrix m(1, 3, {x, integer(1), integer(2)});
+    CHECK(latex(m, 4, 2)
+          == "\\left[\\begin{matrix}\nx & \\cdots \\\\\n"
+             "\\end{matrix}\\right]\n");
+
+    DenseMatrix d2(1, 1);
+    try {
+        latex(d2);
+        throw "displaying unitialized matrix failed to generate exception";
+    } catch (std::exception &e) {
+        CHECK(std::string(e.what()) == "cannot display uninitialized element");
+    }
 }
 
 TEST_CASE("test_unicode()", "[unicode]")
