@@ -1263,12 +1263,17 @@ $(function() {
 <div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
 <div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;}</div>
 <div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160; </div>
-<div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> DenseMatrix &amp;x)</div>
 <div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;{</div>
-<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;    JuliaStrPrinter strPrinter;</div>
-<div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160;}</div>
-<div class="line"><a name="l01173"></a><span class="lineno"> 1173</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;    <span class="keywordflow">return</span> x.__str__();</div>
+<div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;}</div>
+<div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160; </div>
+<div class="line"><a name="l01173"></a><span class="lineno"> 1173</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a name="l01174"></a><span class="lineno"> 1174</span>&#160;{</div>
+<div class="line"><a name="l01175"></a><span class="lineno"> 1175</span>&#160;    JuliaStrPrinter strPrinter;</div>
+<div class="line"><a name="l01176"></a><span class="lineno"> 1176</span>&#160;    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><a name="l01177"></a><span class="lineno"> 1177</span>&#160;}</div>
+<div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aassign_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/assign.html">std::vector::assign</a></div><div class="ttdeci">T assign(T... args)</div></div>
 <div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>

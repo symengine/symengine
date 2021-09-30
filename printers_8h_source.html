@@ -102,26 +102,30 @@ $(function() {
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define SYMENGINE_PRINTER_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="basic_8h.html">symengine/basic.h</a>&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> unicode(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> sbml(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> ascii_art();</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> mathml(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;symengine/matrix.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> DenseMatrix &amp;x);</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> unicode(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> sbml(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> ascii_art();</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> latex(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> mathml(<span class="keyword">const</span> Basic &amp;x);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> ccode(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> c89code(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> c99code(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> jscode(<span class="keyword">const</span> Basic &amp;x);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_PRINTER_H</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> latex(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> latex(<span class="keyword">const</span> DenseMatrix &amp;x, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> max_rows = 20,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                  <span class="keyword">const</span> <span class="keywordtype">unsigned</span> max_cols = 12);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> ccode(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> c89code(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> c99code(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> jscode(<span class="keyword">const</span> Basic &amp;x);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_PRINTER_H</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
