@@ -103,17 +103,6 @@ $(function() {
 <div class="title">SymEngine::Sieve Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Collaboration diagram for SymEngine::Sieve:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="classSymEngine_1_1Sieve__coll__graph.png" border="0" usemap="#aSymEngine_1_1Sieve_coll__map" alt="Collaboration graph"/></div>
-<map name="aSymEngine_1_1Sieve_coll__map" id="aSymEngine_1_1Sieve_coll__map">
-<area shape="rect" title=" " alt="" coords="26,95,165,121"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="5,5,185,32"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -142,9 +131,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>_extend</b> (u
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:a145f07564fe7af6ec4babfbdc057ff1e"><td class="memItemLeft" align="right" valign="top"><a id="a145f07564fe7af6ec4babfbdc057ff1e"></a>
-static <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_primes</b> = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29}</td></tr>
-<tr class="separator:a145f07564fe7af6ec4babfbdc057ff1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af03f84d20b2cdf63236cac208d7c0831"><td class="memItemLeft" align="right" valign="top"><a id="af03f84d20b2cdf63236cac208d7c0831"></a>
 static unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>_sieve_size</b> = 32 * 1024 * 8</td></tr>
 <tr class="separator:af03f84d20b2cdf63236cac208d7c0831"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,23 +182,25 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_clear</b> = t
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00079">79</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    _extend(limit);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">auto</span> it = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// primes</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span> (_clear)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        clear();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00087">87</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    _extend(limit);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keyword">auto</span> it = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="comment">// primes</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">if</span> (_clear)</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        clear();</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
 <div class="ttc" id="aback_inserter_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a></div><div class="ttdeci">T back_inserter(T... args)</div></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="acopy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a></div><div class="ttdeci">T copy(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
 <div class="ttc" id="aupper_bound_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a></div><div class="ttdeci">T upper_bound(T... args)</div></div>
+<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; unsigned &gt;</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

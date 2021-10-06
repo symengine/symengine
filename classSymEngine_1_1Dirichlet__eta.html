@@ -290,11 +290,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02813">2813</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02814"></a><span class="lineno"> 2814</span>&#160;{</div>
-<div class="line"><a name="l02815"></a><span class="lineno"> 2815</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aad833a78351ba7b22249695b5d1e7a2b">dirichlet_eta</a>(arg);</div>
-<div class="line"><a name="l02816"></a><span class="lineno"> 2816</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_aad833a78351ba7b22249695b5d1e7a2b"><div class="ttname"><a href="namespaceSymEngine.html#aad833a78351ba7b22249695b5d1e7a2b">SymEngine::dirichlet_eta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; dirichlet_eta(const RCP&lt; const Basic &gt; &amp;s)</div><div class="ttdoc">Create a new Dirichlet_eta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02818">functions.cpp:2818</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02856">2856</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02857"></a><span class="lineno"> 2857</span>&#160;{</div>
+<div class="line"><a name="l02858"></a><span class="lineno"> 2858</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aad833a78351ba7b22249695b5d1e7a2b">dirichlet_eta</a>(arg);</div>
+<div class="line"><a name="l02859"></a><span class="lineno"> 2859</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_aad833a78351ba7b22249695b5d1e7a2b"><div class="ttname"><a href="namespaceSymEngine.html#aad833a78351ba7b22249695b5d1e7a2b">SymEngine::dirichlet_eta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; dirichlet_eta(const RCP&lt; const Basic &gt; &amp;s)</div><div class="ttdoc">Create a new Dirichlet_eta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02861">functions.cpp:2861</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -347,15 +347,15 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02799">2799</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02800"></a><span class="lineno"> 2800</span>&#160;{</div>
-<div class="line"><a name="l02801"></a><span class="lineno"> 2801</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
-<div class="line"><a name="l02802"></a><span class="lineno"> 2802</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02803"></a><span class="lineno"> 2803</span>&#160;    <span class="keywordflow">if</span> (not(is_a&lt;Zeta&gt;(*<a class="code" href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">zeta</a>(s))))</div>
-<div class="line"><a name="l02804"></a><span class="lineno"> 2804</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02805"></a><span class="lineno"> 2805</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l02806"></a><span class="lineno"> 2806</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a227ea1d94f9ac72c4051a247ac54b1d1"><div class="ttname"><a href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">SymEngine::zeta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; zeta(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Create a new Zeta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02757">functions.cpp:2757</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02842">2842</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02843"></a><span class="lineno"> 2843</span>&#160;{</div>
+<div class="line"><a name="l02844"></a><span class="lineno"> 2844</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
+<div class="line"><a name="l02845"></a><span class="lineno"> 2845</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02846"></a><span class="lineno"> 2846</span>&#160;    <span class="keywordflow">if</span> (not(is_a&lt;Zeta&gt;(*<a class="code" href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">zeta</a>(s))))</div>
+<div class="line"><a name="l02847"></a><span class="lineno"> 2847</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02848"></a><span class="lineno"> 2848</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l02849"></a><span class="lineno"> 2849</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a227ea1d94f9ac72c4051a247ac54b1d1"><div class="ttname"><a href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">SymEngine::zeta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; zeta(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Create a new Zeta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02800">functions.cpp:2800</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>

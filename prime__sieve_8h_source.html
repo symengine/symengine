@@ -119,51 +119,50 @@ $(function() {
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> _primes;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> _extend(<span class="keywordtype">unsigned</span> limit);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> _sieve_size;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> _clear;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// Returns all primes up to the `limit` (including). The vector `primes`</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="comment">// should</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">// be empty on input and it will be filled with the primes.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Sieve.html#a0d2a47d29dda15aa0e061c9b69cb1d3d">generate_primes</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;primes, <span class="keywordtype">unsigned</span> limit);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">// Clear the array of primes stored</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// Set the sieve size in kilobytes. Set it to L1d cache size for best</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// performance.</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// Default value is 32.</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> set_sieve_size(<span class="keywordtype">unsigned</span> size);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// Set whether the sieve is cleared after the sieve is extended in internal</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// functions</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> set_clear(<span class="keywordtype">bool</span> clear);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Sieve_1_1iterator.html">   43</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">unsigned</span> _index;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">unsigned</span> _limit;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="comment">// Iterator that generates primes upto limit</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>(<span class="keywordtype">unsigned</span> limit);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="comment">// Iterator that generates primes with no limit.</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="comment">// Destructor</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        ~<a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="comment">// Next prime</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordtype">unsigned</span> next_prime();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    };</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;};</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}; <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassSymEngine_1_1Sieve_1_1iterator_html"><div class="ttname"><a href="classSymEngine_1_1Sieve_1_1iterator.html">SymEngine::Sieve::iterator</a></div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8h_source.html#l00043">prime_sieve.h:44</a></div></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> _extend(<span class="keywordtype">unsigned</span> limit);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> _sieve_size;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">bool</span> _clear;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="comment">// Returns all primes up to the `limit` (including). The vector `primes`</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="comment">// should</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="comment">// be empty on input and it will be filled with the primes.</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"></span>    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1Sieve.html#a0d2a47d29dda15aa0e061c9b69cb1d3d">generate_primes</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;primes, <span class="keywordtype">unsigned</span> limit);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="comment">// Clear the array of primes stored</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="comment">// Set the sieve size in kilobytes. Set it to L1d cache size for best</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="comment">// performance.</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">// Default value is 32.</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> set_sieve_size(<span class="keywordtype">unsigned</span> size);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">// Set whether the sieve is cleared after the sieve is extended in internal</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">// functions</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> set_clear(<span class="keywordtype">bool</span> clear);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Sieve_1_1iterator.html">   42</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">unsigned</span> _index;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">unsigned</span> _limit;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="comment">// Iterator that generates primes upto limit</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>(<span class="keywordtype">unsigned</span> limit);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="comment">// Iterator that generates primes with no limit.</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="comment">// Destructor</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        ~<a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">iterator</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="comment">// Next prime</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordtype">unsigned</span> next_prime();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    };</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;};</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}; <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassSymEngine_1_1Sieve_1_1iterator_html"><div class="ttname"><a href="classSymEngine_1_1Sieve_1_1iterator.html">SymEngine::Sieve::iterator</a></div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8h_source.html#l00042">prime_sieve.h:43</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Sieve_html"><div class="ttname"><a href="classSymEngine_1_1Sieve.html">SymEngine::Sieve</a></div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8h_source.html#l00018">prime_sieve.h:19</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Sieve_html_a0d2a47d29dda15aa0e061c9b69cb1d3d"><div class="ttname"><a href="classSymEngine_1_1Sieve.html#a0d2a47d29dda15aa0e061c9b69cb1d3d">SymEngine::Sieve::generate_primes</a></div><div class="ttdeci">static void generate_primes(std::vector&lt; unsigned &gt; &amp;primes, unsigned limit)</div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8cpp_source.html#l00079">prime_sieve.cpp:79</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Sieve_html_a0d2a47d29dda15aa0e061c9b69cb1d3d"><div class="ttname"><a href="classSymEngine_1_1Sieve.html#a0d2a47d29dda15aa0e061c9b69cb1d3d">SymEngine::Sieve::generate_primes</a></div><div class="ttdeci">static void generate_primes(std::vector&lt; unsigned &gt; &amp;primes, unsigned limit)</div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8cpp_source.html#l00087">prime_sieve.cpp:87</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; unsigned &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

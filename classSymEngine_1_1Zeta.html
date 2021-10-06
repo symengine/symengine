@@ -227,11 +227,11 @@ Static Public Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1TwoArgBasic.html#a07a4fa1616bc3633ab921279923edae3">SymEngine::TwoArgBasic&lt; BaseClass &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02751">2751</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02753"></a><span class="lineno"> 2753</span>&#160;{</div>
-<div class="line"><a name="l02754"></a><span class="lineno"> 2754</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">zeta</a>(a, b);</div>
-<div class="line"><a name="l02755"></a><span class="lineno"> 2755</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a227ea1d94f9ac72c4051a247ac54b1d1"><div class="ttname"><a href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">SymEngine::zeta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; zeta(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Create a new Zeta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02757">functions.cpp:2757</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02794">2794</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02796"></a><span class="lineno"> 2796</span>&#160;{</div>
+<div class="line"><a name="l02797"></a><span class="lineno"> 2797</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">zeta</a>(a, b);</div>
+<div class="line"><a name="l02798"></a><span class="lineno"> 2798</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a227ea1d94f9ac72c4051a247ac54b1d1"><div class="ttname"><a href="namespaceSymEngine.html#a227ea1d94f9ac72c4051a247ac54b1d1">SymEngine::zeta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; zeta(const RCP&lt; const Basic &gt; &amp;s, const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Create a new Zeta instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02800">functions.cpp:2800</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -326,19 +326,19 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02736">2736</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02738"></a><span class="lineno"> 2738</span>&#160;{</div>
-<div class="line"><a name="l02739"></a><span class="lineno"> 2739</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *zero))</div>
-<div class="line"><a name="l02740"></a><span class="lineno"> 2740</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02741"></a><span class="lineno"> 2741</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
-<div class="line"><a name="l02742"></a><span class="lineno"> 2742</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02743"></a><span class="lineno"> 2743</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s) and is_a&lt;Integer&gt;(*a)) {</div>
-<div class="line"><a name="l02744"></a><span class="lineno"> 2744</span>&#160;        <span class="keyword">auto</span> s_ = down_cast&lt;const Integer &amp;&gt;(*s).as_int();</div>
-<div class="line"><a name="l02745"></a><span class="lineno"> 2745</span>&#160;        <span class="keywordflow">if</span> (s_ &lt; 0 || s_ % 2 == 0)</div>
-<div class="line"><a name="l02746"></a><span class="lineno"> 2746</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02747"></a><span class="lineno"> 2747</span>&#160;    }</div>
-<div class="line"><a name="l02748"></a><span class="lineno"> 2748</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l02749"></a><span class="lineno"> 2749</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02779">2779</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02781"></a><span class="lineno"> 2781</span>&#160;{</div>
+<div class="line"><a name="l02782"></a><span class="lineno"> 2782</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *zero))</div>
+<div class="line"><a name="l02783"></a><span class="lineno"> 2783</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02784"></a><span class="lineno"> 2784</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*s, *one))</div>
+<div class="line"><a name="l02785"></a><span class="lineno"> 2785</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02786"></a><span class="lineno"> 2786</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*s) and is_a&lt;Integer&gt;(*a)) {</div>
+<div class="line"><a name="l02787"></a><span class="lineno"> 2787</span>&#160;        <span class="keyword">auto</span> s_ = down_cast&lt;const Integer &amp;&gt;(*s).as_int();</div>
+<div class="line"><a name="l02788"></a><span class="lineno"> 2788</span>&#160;        <span class="keywordflow">if</span> (s_ &lt; 0 || s_ % 2 == 0)</div>
+<div class="line"><a name="l02789"></a><span class="lineno"> 2789</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02790"></a><span class="lineno"> 2790</span>&#160;    }</div>
+<div class="line"><a name="l02791"></a><span class="lineno"> 2791</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l02792"></a><span class="lineno"> 2792</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>

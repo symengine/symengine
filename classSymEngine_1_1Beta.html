@@ -227,11 +227,11 @@ Static Public Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1TwoArgBasic.html#a07a4fa1616bc3633ab921279923edae3">SymEngine::TwoArgBasic&lt; BaseClass &gt;</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03234">3234</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03236"></a><span class="lineno"> 3236</span>&#160;{</div>
-<div class="line"><a name="l03237"></a><span class="lineno"> 3237</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2203e9e82d8b995e95ba5ce0efe5fe0c">beta</a>(a, b);</div>
-<div class="line"><a name="l03238"></a><span class="lineno"> 3238</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a2203e9e82d8b995e95ba5ce0efe5fe0c"><div class="ttname"><a href="namespaceSymEngine.html#a2203e9e82d8b995e95ba5ce0efe5fe0c">SymEngine::beta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; beta(const RCP&lt; const Basic &gt; &amp;x, const RCP&lt; const Basic &gt; &amp;y)</div><div class="ttdoc">Canonicalize Beta:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03240">functions.cpp:3240</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03277">3277</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03279"></a><span class="lineno"> 3279</span>&#160;{</div>
+<div class="line"><a name="l03280"></a><span class="lineno"> 3280</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2203e9e82d8b995e95ba5ce0efe5fe0c">beta</a>(a, b);</div>
+<div class="line"><a name="l03281"></a><span class="lineno"> 3281</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a2203e9e82d8b995e95ba5ce0efe5fe0c"><div class="ttname"><a href="namespaceSymEngine.html#a2203e9e82d8b995e95ba5ce0efe5fe0c">SymEngine::beta</a></div><div class="ttdeci">RCP&lt; const Basic &gt; beta(const RCP&lt; const Basic &gt; &amp;x, const RCP&lt; const Basic &gt; &amp;y)</div><div class="ttdoc">Canonicalize Beta:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03283">functions.cpp:3283</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -309,25 +309,25 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03208">3208</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l03209"></a><span class="lineno"> 3209</span>&#160;{</div>
-<div class="line"><a name="l03210"></a><span class="lineno"> 3210</span>&#160;    <span class="keywordflow">if</span> (x-&gt;__cmp__(*y) == -1) {</div>
-<div class="line"><a name="l03211"></a><span class="lineno"> 3211</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03212"></a><span class="lineno"> 3212</span>&#160;    }</div>
-<div class="line"><a name="l03213"></a><span class="lineno"> 3213</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*x)</div>
-<div class="line"><a name="l03214"></a><span class="lineno"> 3214</span>&#160;        or (is_a&lt;Rational&gt;(*x)</div>
-<div class="line"><a name="l03215"></a><span class="lineno"> 3215</span>&#160;            and (get_den(down_cast&lt;const Rational &amp;&gt;(*x).as_rational_class()))</div>
-<div class="line"><a name="l03216"></a><span class="lineno"> 3216</span>&#160;                    == 2)) {</div>
-<div class="line"><a name="l03217"></a><span class="lineno"> 3217</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*y)</div>
-<div class="line"><a name="l03218"></a><span class="lineno"> 3218</span>&#160;            or (is_a&lt;Rational&gt;(*y)</div>
-<div class="line"><a name="l03219"></a><span class="lineno"> 3219</span>&#160;                and (get_den(</div>
-<div class="line"><a name="l03220"></a><span class="lineno"> 3220</span>&#160;                        down_cast&lt;const Rational &amp;&gt;(*y).as_rational_class()))</div>
-<div class="line"><a name="l03221"></a><span class="lineno"> 3221</span>&#160;                        == 2)) {</div>
-<div class="line"><a name="l03222"></a><span class="lineno"> 3222</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l03223"></a><span class="lineno"> 3223</span>&#160;        }</div>
-<div class="line"><a name="l03224"></a><span class="lineno"> 3224</span>&#160;    }</div>
-<div class="line"><a name="l03225"></a><span class="lineno"> 3225</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l03226"></a><span class="lineno"> 3226</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l03251">3251</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l03252"></a><span class="lineno"> 3252</span>&#160;{</div>
+<div class="line"><a name="l03253"></a><span class="lineno"> 3253</span>&#160;    <span class="keywordflow">if</span> (x-&gt;__cmp__(*y) == -1) {</div>
+<div class="line"><a name="l03254"></a><span class="lineno"> 3254</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03255"></a><span class="lineno"> 3255</span>&#160;    }</div>
+<div class="line"><a name="l03256"></a><span class="lineno"> 3256</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*x)</div>
+<div class="line"><a name="l03257"></a><span class="lineno"> 3257</span>&#160;        or (is_a&lt;Rational&gt;(*x)</div>
+<div class="line"><a name="l03258"></a><span class="lineno"> 3258</span>&#160;            and (get_den(down_cast&lt;const Rational &amp;&gt;(*x).as_rational_class()))</div>
+<div class="line"><a name="l03259"></a><span class="lineno"> 3259</span>&#160;                    == 2)) {</div>
+<div class="line"><a name="l03260"></a><span class="lineno"> 3260</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*y)</div>
+<div class="line"><a name="l03261"></a><span class="lineno"> 3261</span>&#160;            or (is_a&lt;Rational&gt;(*y)</div>
+<div class="line"><a name="l03262"></a><span class="lineno"> 3262</span>&#160;                and (get_den(</div>
+<div class="line"><a name="l03263"></a><span class="lineno"> 3263</span>&#160;                        down_cast&lt;const Rational &amp;&gt;(*y).as_rational_class()))</div>
+<div class="line"><a name="l03264"></a><span class="lineno"> 3264</span>&#160;                        == 2)) {</div>
+<div class="line"><a name="l03265"></a><span class="lineno"> 3265</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l03266"></a><span class="lineno"> 3266</span>&#160;        }</div>
+<div class="line"><a name="l03267"></a><span class="lineno"> 3267</span>&#160;    }</div>
+<div class="line"><a name="l03268"></a><span class="lineno"> 3268</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l03269"></a><span class="lineno"> 3269</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>

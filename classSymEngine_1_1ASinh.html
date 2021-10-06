@@ -292,11 +292,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02574">2574</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02575"></a><span class="lineno"> 2575</span>&#160;{</div>
-<div class="line"><a name="l02576"></a><span class="lineno"> 2576</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">asinh</a>(arg);</div>
-<div class="line"><a name="l02577"></a><span class="lineno"> 2577</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a7fa6c02ee6b74e628b3f86bc4f2c610c"><div class="ttname"><a href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">SymEngine::asinh</a></div><div class="ttdeci">RCP&lt; const Basic &gt; asinh(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ASinh:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02333">functions.cpp:2333</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02617">2617</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02618"></a><span class="lineno"> 2618</span>&#160;{</div>
+<div class="line"><a name="l02619"></a><span class="lineno"> 2619</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">asinh</a>(arg);</div>
+<div class="line"><a name="l02620"></a><span class="lineno"> 2620</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a7fa6c02ee6b74e628b3f86bc4f2c610c"><div class="ttname"><a href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">SymEngine::asinh</a></div><div class="ttdeci">RCP&lt; const Basic &gt; asinh(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ASinh:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02376">functions.cpp:2376</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -317,24 +317,24 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02317">2317</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02318"></a><span class="lineno"> 2318</span>&#160;{</div>
-<div class="line"><a name="l02319"></a><span class="lineno"> 2319</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *zero) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *one) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *minus_one))</div>
-<div class="line"><a name="l02320"></a><span class="lineno"> 2320</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02321"></a><span class="lineno"> 2321</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg)) {</div>
-<div class="line"><a name="l02322"></a><span class="lineno"> 2322</span>&#160;        <span class="keywordflow">if</span> (down_cast&lt;const Number &amp;&gt;(*arg).is_negative()) {</div>
-<div class="line"><a name="l02323"></a><span class="lineno"> 2323</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02324"></a><span class="lineno"> 2324</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*arg).is_exact()) {</div>
-<div class="line"><a name="l02325"></a><span class="lineno"> 2325</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02326"></a><span class="lineno"> 2326</span>&#160;        }</div>
-<div class="line"><a name="l02327"></a><span class="lineno"> 2327</span>&#160;    }</div>
-<div class="line"><a name="l02328"></a><span class="lineno"> 2328</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a7c057cbaf1e06ea937374d6b9f4e29d8">could_extract_minus</a>(*arg))</div>
-<div class="line"><a name="l02329"></a><span class="lineno"> 2329</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02330"></a><span class="lineno"> 2330</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l02331"></a><span class="lineno"> 2331</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02360">2360</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02361"></a><span class="lineno"> 2361</span>&#160;{</div>
+<div class="line"><a name="l02362"></a><span class="lineno"> 2362</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *zero) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *one) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg, *minus_one))</div>
+<div class="line"><a name="l02363"></a><span class="lineno"> 2363</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02364"></a><span class="lineno"> 2364</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*arg)) {</div>
+<div class="line"><a name="l02365"></a><span class="lineno"> 2365</span>&#160;        <span class="keywordflow">if</span> (down_cast&lt;const Number &amp;&gt;(*arg).is_negative()) {</div>
+<div class="line"><a name="l02366"></a><span class="lineno"> 2366</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02367"></a><span class="lineno"> 2367</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not down_cast&lt;const Number &amp;&gt;(*arg).is_exact()) {</div>
+<div class="line"><a name="l02368"></a><span class="lineno"> 2368</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02369"></a><span class="lineno"> 2369</span>&#160;        }</div>
+<div class="line"><a name="l02370"></a><span class="lineno"> 2370</span>&#160;    }</div>
+<div class="line"><a name="l02371"></a><span class="lineno"> 2371</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a7c057cbaf1e06ea937374d6b9f4e29d8">could_extract_minus</a>(*arg))</div>
+<div class="line"><a name="l02372"></a><span class="lineno"> 2372</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02373"></a><span class="lineno"> 2373</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l02374"></a><span class="lineno"> 2374</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a7c057cbaf1e06ea937374d6b9f4e29d8"><div class="ttname"><a href="namespaceSymEngine.html#a7c057cbaf1e06ea937374d6b9f4e29d8">SymEngine::could_extract_minus</a></div><div class="ttdeci">bool could_extract_minus(const Basic &amp;arg)</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00282">functions.cpp:282</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a7c057cbaf1e06ea937374d6b9f4e29d8"><div class="ttname"><a href="namespaceSymEngine.html#a7c057cbaf1e06ea937374d6b9f4e29d8">SymEngine::could_extract_minus</a></div><div class="ttdeci">bool could_extract_minus(const Basic &amp;arg)</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00325">functions.cpp:325</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
