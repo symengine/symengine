@@ -50,8 +50,16 @@ RCP<const Boolean> BooleanAtom::logical_not() const
     return boolean(not this->get_val());
 }
 
-RCP<const BooleanAtom> boolTrue = make_rcp<BooleanAtom>(true);
-RCP<const BooleanAtom> boolFalse = make_rcp<BooleanAtom>(false);
+#define DEFINE_CONST_BOOL(n, v)                                                \
+    RCP<const BooleanAtom> n = []() {                                          \
+        static const RCP<const BooleanAtom> c = make_rcp<BooleanAtom>(v);      \
+        return c;                                                              \
+    }()
+
+DEFINE_CONST_BOOL(boolTrue, true);
+DEFINE_CONST_BOOL(boolFalse, false);
+
+#undef DEFINE_CONST_BOOL
 
 Contains::Contains(const RCP<const Basic> &expr, const RCP<const Set> &set)
     : expr_{expr}, set_{set} {SYMENGINE_ASSIGN_TYPEID()}

@@ -564,8 +564,45 @@ void UnicodePrinter::bvisit(const Ceiling &x)
     box_ = box;
 }
 
+static std::vector<std::string> init_unicode_printer_names()
+{
+    std::vector<std::string> names = init_str_printer_names();
+    names[SYMENGINE_LAMBERTW] = "W";
+    names[SYMENGINE_ZETA] = "\U0001D701";
+    names[SYMENGINE_DIRICHLET_ETA] = "\U0001D702";
+    names[SYMENGINE_LOWERGAMMA] = "\U0001D6FE";
+    names[SYMENGINE_UPPERGAMMA] = "\u0393";
+    names[SYMENGINE_BETA] = "B";
+    names[SYMENGINE_LOGGAMMA] = "log \u0393";
+    names[SYMENGINE_GAMMA] = "\u0393";
+    names[SYMENGINE_PRIMEPI] = "\U0001D70B";
+    return names;
+}
+
+static std::vector<size_t>
+init_unicode_printer_lengths(const std::vector<std::string> &names)
+{
+    std::vector<size_t> lengths;
+    for (auto &name : names) {
+        lengths.push_back(name.length());
+    }
+    lengths[SYMENGINE_LAMBERTW] = 1;
+    lengths[SYMENGINE_ZETA] = 1;
+    lengths[SYMENGINE_DIRICHLET_ETA] = 1;
+    lengths[SYMENGINE_LOWERGAMMA] = 1;
+    lengths[SYMENGINE_UPPERGAMMA] = 1;
+    lengths[SYMENGINE_BETA] = 1;
+    lengths[SYMENGINE_LOGGAMMA] = 5;
+    lengths[SYMENGINE_GAMMA] = 1;
+    lengths[SYMENGINE_PRIMEPI] = 1;
+    return lengths;
+}
+
 void UnicodePrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_unicode_printer_names();
+    static const std::vector<size_t> lengths_
+        = init_unicode_printer_lengths(names_);
     StringBox box(names_[x.get_type_code()], lengths_[x.get_type_code()]);
     vec_basic vec = x.get_args();
     StringBox args = apply(vec);
@@ -631,46 +668,6 @@ StringBox UnicodePrinter::apply(const Basic &b)
     b.accept(*this);
     return box_;
 }
-
-static std::vector<std::string> init_unicode_printer_names()
-{
-    std::vector<std::string> names = init_str_printer_names();
-    names[SYMENGINE_LAMBERTW] = "W";
-    names[SYMENGINE_ZETA] = "\U0001D701";
-    names[SYMENGINE_DIRICHLET_ETA] = "\U0001D702";
-    names[SYMENGINE_LOWERGAMMA] = "\U0001D6FE";
-    names[SYMENGINE_UPPERGAMMA] = "\u0393";
-    names[SYMENGINE_BETA] = "B";
-    names[SYMENGINE_LOGGAMMA] = "log \u0393";
-    names[SYMENGINE_GAMMA] = "\u0393";
-    names[SYMENGINE_PRIMEPI] = "\U0001D70B";
-    return names;
-}
-
-const std::vector<std::string> UnicodePrinter::names_
-    = init_unicode_printer_names();
-
-std::vector<size_t>
-init_unicode_printer_lengths(const std::vector<std::string> &names)
-{
-    std::vector<size_t> lengths;
-    for (auto &name : names) {
-        lengths.push_back(name.length());
-    }
-    lengths[SYMENGINE_LAMBERTW] = 1;
-    lengths[SYMENGINE_ZETA] = 1;
-    lengths[SYMENGINE_DIRICHLET_ETA] = 1;
-    lengths[SYMENGINE_LOWERGAMMA] = 1;
-    lengths[SYMENGINE_UPPERGAMMA] = 1;
-    lengths[SYMENGINE_BETA] = 1;
-    lengths[SYMENGINE_LOGGAMMA] = 5;
-    lengths[SYMENGINE_GAMMA] = 1;
-    lengths[SYMENGINE_PRIMEPI] = 1;
-    return lengths;
-}
-
-const std::vector<size_t> UnicodePrinter::lengths_
-    = init_unicode_printer_lengths(UnicodePrinter::names_);
 
 StringBox UnicodePrinter::print_mul()
 {

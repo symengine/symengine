@@ -3,11 +3,17 @@
 #include <cmath>
 #include <valarray>
 #include <algorithm>
+#include <vector>
 
 namespace SymEngine
 {
 
-std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
+static std::vector<unsigned> &sieve_primes()
+{
+    static std::vector<unsigned> primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
+    return primes;
+}
+
 bool Sieve::_clear = true;
 unsigned Sieve::_sieve_size = 32 * 1024 * 8; // 32K in bits
 
@@ -18,6 +24,7 @@ void Sieve::set_clear(bool clear)
 
 void Sieve::clear()
 {
+    std::vector<unsigned> &_primes = sieve_primes();
     _primes.erase(_primes.begin() + 10, _primes.end());
 }
 
@@ -32,6 +39,7 @@ void Sieve::set_sieve_size(unsigned size)
 
 void Sieve::_extend(unsigned limit)
 {
+    std::vector<unsigned> &_primes = sieve_primes();
 #ifdef HAVE_SYMENGINE_PRIMESIEVE
     if (_primes.back() < limit)
         primesieve::generate_primes(_primes.back() + 1, limit, &_primes);
@@ -79,6 +87,7 @@ void Sieve::_extend(unsigned limit)
 void Sieve::generate_primes(std::vector<unsigned> &primes, unsigned limit)
 {
     _extend(limit);
+    std::vector<unsigned> &_primes = sieve_primes();
     auto it = std::upper_bound(_primes.begin(), _primes.end(), limit);
     // find the first position greater than limit and reserve space for the
     // primes
@@ -108,6 +117,7 @@ Sieve::iterator::~iterator()
 
 unsigned Sieve::iterator::next_prime()
 {
+    std::vector<unsigned> &_primes = sieve_primes();
     if (_index >= _primes.size()) {
         unsigned extend_to = _primes[_index - 1] * 2;
         if (_limit > 0 and _limit < extend_to) {
@@ -118,7 +128,7 @@ unsigned Sieve::iterator::next_prime()
             return _limit + 1;
         }
     }
-    return SymEngine::Sieve::_primes[_index++];
+    return _primes[_index++];
 }
 
 }; // namespace SymEngine

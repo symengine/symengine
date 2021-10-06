@@ -17,12 +17,6 @@ class SbmlTokenizer;
 
 class SbmlParser : public Parser
 {
-private:
-    static const std::map<
-        const std::string,
-        const std::function<RCP<const Basic>(const RCP<const Basic> &)>>
-        single_arg_functions_;
-
 public:
     std::unique_ptr<SbmlTokenizer> m_tokenizer;
     RCP<const Basic> parse(const std::string &input);

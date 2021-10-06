@@ -103,8 +103,6 @@ public:
     PrecedenceEnum getPrecedence(const RCP<const Basic> &x);
 };
 
-std::vector<std::string> init_str_printer_names();
-
 class StrPrinter : public BaseVisitor<StrPrinter>
 {
 private:
