@@ -31,7 +31,7 @@ using SymEngine::map_basic_basic;
 using SymEngine::msubs;
 using SymEngine::Mul;
 using SymEngine::multinomial_coefficients;
-using SymEngine::NaN;
+using SymEngine::Nan;
 using SymEngine::one;
 using SymEngine::Pow;
 using SymEngine::print_stack_on_segfault;
