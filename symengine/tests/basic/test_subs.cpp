@@ -196,7 +196,7 @@ TEST_CASE("Mul: subs", "[subs]")
     d.clear();
     r1 = div(sin(x), x);
     d[x] = zero;
-    REQUIRE(eq(*r1->subs(d), *NaN));
+    REQUIRE(eq(*r1->subs(d), *Nan));
 }
 
 TEST_CASE("Pow: subs", "[subs]")
