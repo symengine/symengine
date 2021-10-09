@@ -31,6 +31,7 @@ using SymEngine::map_basic_basic;
 using SymEngine::msubs;
 using SymEngine::Mul;
 using SymEngine::multinomial_coefficients;
+using SymEngine::Nan;
 using SymEngine::one;
 using SymEngine::Pow;
 using SymEngine::print_stack_on_segfault;
@@ -191,6 +192,11 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = mul(i2, x);
     d[i2] = one;
     REQUIRE(eq(*r1->subs(d), *x));
+
+    d.clear();
+    r1 = div(sin(x), x);
+    d[x] = zero;
+    REQUIRE(eq(*r1->subs(d), *Nan));
 }
 
 TEST_CASE("Pow: subs", "[subs]")
