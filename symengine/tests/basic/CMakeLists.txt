@@ -122,3 +122,7 @@ add_test(test_assumptions ${PROJECT_BINARY_DIR}/test_assumptions)
 add_executable(test_refine test_refine.cpp)
 target_link_libraries(test_refine symengine catch)
 add_test(test_refine ${PROJECT_BINARY_DIR}/test_refine)
+
+add_executable(test_simplify test_simplify.cpp)
+target_link_libraries(test_simplify symengine catch)
+add_test(test_simplify ${PROJECT_BINARY_DIR}/test_simplify)
