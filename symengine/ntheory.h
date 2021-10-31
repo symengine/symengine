@@ -167,6 +167,20 @@ integer_class mp_polygonal_number(const integer_class &s,
 integer_class mp_principal_polygonal_root(const integer_class &s,
                                           const integer_class &x);
 
+/**
+ * @brief Decompose a positive integer into perfect powers
+ * @param n Integer to decompose
+ * @param lowest_exponent Can be set to find the perfect power with the
+ *        lowest exponent. Default is to find the highest exponent.
+ * @returns The base and exponent as a pair of integers.
+ *          (n, 1) if no perfect power exists.
+ *
+ * See https://en.wikipedia.org/wiki/Perfect_power
+ */
+std::pair<integer_class, integer_class>
+mp_perfect_power_decomposition(const integer_class &n,
+                               bool lowest_exponent = false);
+
 } // namespace SymEngine
 
 #endif
