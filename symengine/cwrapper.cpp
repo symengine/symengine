@@ -110,6 +110,10 @@ struct CRCPBasic {
     SymEngine::RCP<const SymEngine::Basic> m;
 };
 
+struct CSetBasic {
+    SymEngine::set_basic m;
+};
+
 static_assert(sizeof(CRCPBasic) == sizeof(CRCPBasic_C),
               "Size of 'basic' is not correct");
 static_assert(std::alignment_of<CRCPBasic>::value
@@ -660,6 +664,166 @@ void basic_str_free(char *s)
     delete[] s;
 }
 
+void bool_set_true(basic s)
+{
+    s->m = SymEngine::boolTrue;
+}
+
+void bool_set_false(basic s)
+{
+    s->m = SymEngine::boolFalse;
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_interval(basic s, const basic start,
+                                        const basic end, int left_open,
+                                        int right_open)
+{
+    SYMENGINE_ASSERT(is_a_Number(*(start->m)));
+    SYMENGINE_ASSERT(is_a_Number(*(end->m)));
+
+    CWRAPPER_BEGIN
+    s->m = SymEngine::interval(rcp_static_cast<const Number>(start->m),
+                               rcp_static_cast<const Number>(end->m),
+                               (bool)left_open, (bool)right_open);
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_finiteset(basic s, const CSetBasic *container)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::finiteset(container->m);
+    CWRAPPER_END
+}
+
+void basic_set_emptyset(basic s)
+{
+    s->m = SymEngine::emptyset();
+}
+
+void basic_set_universalset(basic s)
+{
+    s->m = SymEngine::emptyset();
+}
+
+void basic_set_complexes(basic s)
+{
+    s->m = SymEngine::complexes();
+}
+
+void basic_set_reals(basic s)
+{
+    s->m = SymEngine::reals();
+}
+
+void basic_set_rationals(basic s)
+{
+    s->m = SymEngine::rationals();
+}
+
+void basic_set_integers(basic s)
+{
+    s->m = SymEngine::integers();
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_union(basic s, const basic a, const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = rcp_static_cast<const Set>(a->m)->set_union(
+        rcp_static_cast<const Set>(b->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_intersection(basic s, const basic a,
+                                            const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = rcp_static_cast<const Set>(a->m)->set_intersection(
+        rcp_static_cast<const Set>(b->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_complement(basic s, const basic a, const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = rcp_static_cast<const Set>(a->m)->set_complement(
+        rcp_static_cast<const Set>(b->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_contains(basic s, const basic a, const basic b)
+{
+    CWRAPPER_BEGIN
+    s->m = rcp_static_cast<const Set>(a->m)->contains(b->m);
+    CWRAPPER_END
+}
+
+int basic_set_is_subset(const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
+    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
+    return rcp_static_cast<const Set>(a->m)->is_subset(
+        rcp_static_cast<const Set>(b->m));
+}
+
+int basic_set_is_proper_subset(const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
+    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
+    return rcp_static_cast<const Set>(a->m)->is_proper_subset(
+        rcp_static_cast<const Set>(b->m));
+}
+
+int basic_set_is_superset(const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
+    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
+    return rcp_static_cast<const Set>(a->m)->is_superset(
+        rcp_static_cast<const Set>(b->m));
+}
+
+int basic_set_is_proper_superset(const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
+    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
+    return rcp_static_cast<const Set>(a->m)->is_proper_superset(
+        rcp_static_cast<const Set>(b->m));
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_inf(basic s, const basic a)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::inf(*rcp_static_cast<const Set>(a->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_sup(basic s, const basic a)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::sup(*rcp_static_cast<const Set>(a->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_boundary(basic s, const basic a)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::boundary(*rcp_static_cast<const Set>(a->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_interior(basic s, const basic a)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::interior(*rcp_static_cast<const Set>(a->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_set_closure(basic s, const basic a)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::closure(*rcp_static_cast<const Set>(a->m));
+    CWRAPPER_END
+}
+
 int symengine_have_component(const char *c)
 {
 #ifdef HAVE_SYMENGINE_MPFR
@@ -752,6 +916,10 @@ int is_a_ComplexMPC(const basic c)
 #else
     return false;
 #endif // HAVE_SYMENGINE_MPC
+}
+int is_a_Set(const basic c)
+{
+    return SymEngine::is_a_Set(*(c->m));
 }
 
 // C wrapper for std::vector<int>
@@ -1251,10 +1419,6 @@ int sparse_matrix_eq(CSparseMatrix *lhs, CSparseMatrix *rhs)
 }
 
 // C Wrapper for set_basic
-
-struct CSetBasic {
-    SymEngine::set_basic m;
-};
 
 CSetBasic *setbasic_new()
 {
