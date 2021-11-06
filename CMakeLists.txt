@@ -318,6 +318,13 @@ if (WITH_MPC)
     set(PKGS ${PKGS} "MPC")
 endif()
 
+if (WITH_SYSTEM_CEREAL)
+    find_package(CEREAL REQUIRED)
+    include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
+else()
+    include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/cereal/include)
+endif()
+
 # PTHREAD
 set(WITH_PTHREAD no
 CACHE BOOL "Build with PTHREAD")

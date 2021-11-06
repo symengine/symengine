@@ -15,6 +15,7 @@
 #include <cereal/types/set.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/types/utility.hpp>
+#include <cereal/archives/portable_binary.hpp>
 
 namespace SymEngine
 {
