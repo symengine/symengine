@@ -1,6 +1,7 @@
 #include <symengine/printers.h>
 #include <symengine/subs.h>
 #include <symengine/serialize-cereal.h>
+#include <array>
 
 namespace SymEngine
 {
