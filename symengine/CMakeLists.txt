@@ -19,6 +19,17 @@ if (WITH_GENERATE_PARSER)
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
 
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml/sbml_parser.tab.cc
+            COMMAND ${BISON_EXECUTABLE} -d sbml_parser.yy
+            DEPENDS parser/sbml/sbml_parser.yy
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml
+            )
+
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml/sbml_tokenizer.cpp
+            COMMAND ${RE2C_EXECUTABLE} -W  --no-generation-date -b sbml_tokenizer.re -o sbml_tokenizer.cpp
+            DEPENDS parser/sbml/sbml_tokenizer.re
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser/sbml
+            )
 endif()
 
 add_subdirectory(utilities/matchpycpp)
@@ -57,16 +68,23 @@ set(SRC
     parser/parser.tab.cc
     parser/parser.cpp
     parser/tokenizer.cpp
+    parser/sbml/sbml_parser.tab.cc
+    parser/sbml/sbml_parser.cpp
+    parser/sbml/sbml_tokenizer.cpp
     polys/basic_conversions.cpp
     polys/msymenginepoly.cpp
     polys/uexprpoly.cpp
     polys/uintpoly.cpp
     polys/uratpoly.cpp
     pow.cpp
+    prime_sieve.cpp
     printers/codegen.cpp
     printers/mathml.cpp
+    printers/sbml.cpp
     printers/strprinter.cpp
     printers/latex.cpp
+    printers/unicode.cpp
+    printers/stringbox.cpp
     rational.cpp
     real_double.cpp
     rewrite.cpp
@@ -74,6 +92,7 @@ set(SRC
     series.cpp
     series_generic.cpp
     sets.cpp
+    set_funcs.cpp
     solve.cpp
     sparse_matrix.cpp
     symbol.cpp
@@ -81,6 +100,8 @@ set(SRC
     visitor.cpp
     test_visitors.cpp
     assumptions.cpp
+    refine.cpp
+    simplify.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -157,8 +178,9 @@ set(HEADERS
     number.h
     parser.h
     parser/parser.h
-    parser/parser_stype.h
     parser/tokenizer.h
+    parser/sbml/sbml_parser.h
+    parser/sbml/sbml_tokenizer.h
     polys/basic_conversions.h
     polys/cancel.h
     polys/uexprpoly.h
@@ -170,10 +192,13 @@ set(HEADERS
     polys/usymenginepoly.h
     polys/msymenginepoly.h
     pow.h
+    prime_sieve.h
     printers/codegen.h
     printers/mathml.h
+    printers/sbml.h
     printers/strprinter.h
     printers/latex.h
+    printers/unicode.h
     printers.h
     rational.h
     real_double.h
@@ -196,6 +221,8 @@ set(HEADERS
     visitor.h
     test_visitors.h
     assumptions.h
+    refine.h
+    simplify.h
 )
 
 include(GNUInstallDirs)
@@ -212,13 +239,6 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
-
-
-if (WITH_COTIRE)
-    # throws if CMAKE_VERSION < 2.8.12
-    include(cotire)
-    cotire(symengine)
-endif()
 
 include(GenerateExportHeader)
 generate_export_header(symengine)
@@ -293,4 +313,10 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
     add_subdirectory(utilities/matchpycpp/tests)
     add_subdirectory(utilities/matchpycpp/autogen_tests)
+endif()
+
+if (WITH_COTIRE)
+    # throws if CMAKE_VERSION < 2.8.12
+    include(cotire)
+    cotire(symengine)
 endif()

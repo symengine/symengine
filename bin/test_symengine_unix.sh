@@ -9,14 +9,13 @@ if [[ "$(uname)" == "Linux" ]]; then
       sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
   fi
   sudo apt update
-  if [[ "$OS" == "ubuntu-16.04" ]]; then
-    sudo apt install binutils-dev g++-4.7 $EXTRA_APT_PACKAGES
-  else
-    sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES
-  fi
+  sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES
 fi
 
 if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
+  export conda_pkgs="clang-tools=11"
+  source bin/install_travis.sh
+  ln -sf $CONDA_PREFIX/bin/clang-format $CONDA_PREFIX/bin/clang-format-11
   source bin/travis_clang_format.sh
 elif [[ "$CONDA_ENV_FILE" == *"matchpycpp"* ]]; then
   source bin/install_travis.sh
@@ -25,8 +24,13 @@ elif [[ "$MSYSTEM" != "" ]]; then
   export SOURCE_DIR=`pwd`
   export our_install_dir="$HOME/our_usr"
   export CMAKE_GENERATOR="Unix Makefiles"
-  export CC=gcc
-  export CXX=g++
+  export CXX="ccache g++"
+  export CC="ccache gcc"
+  export CCACHE_DIR=$HOME/.ccache
+  ccache -M 100M
+  ccache --version
+  ccache --zero-stats
+  ccache --show-stats
   source bin/test_travis.sh
 else
   source bin/install_travis.sh

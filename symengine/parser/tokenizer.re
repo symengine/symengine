@@ -1,4 +1,5 @@
 #include "tokenizer.h"
+
 #include "parser.tab.hh"
 
 namespace SymEngine
@@ -13,7 +14,7 @@ void Tokenizer::set_string(const std::string &str)
     cur = (unsigned char *)(&str[0]);
 }
 
-int Tokenizer::lex(YYSTYPE &yylval)
+int Tokenizer::lex(yy::parser::semantic_type* yylval)
 {
     for (;;) {
         tok = cur;
@@ -39,19 +40,19 @@ int Tokenizer::lex(YYSTYPE &yylval)
             implicitmul = numeric ident;
 
             * { throw SymEngine::ParseError("Unknown token: '"+token()+"'"); }
-            end { return yytokentype::END_OF_FILE; }
+            end { return yy::parser::token::yytokentype::END_OF_FILE; }
             whitespace { continue; }
 
             // FIXME:
             operators { return tok[0]; }
-            pows { return yytokentype::POW; }
-            le   { return yytokentype::LE; }
-            ge   { return yytokentype::GE; }
-            ne   { return yytokentype::NE; }
-            eqs  { return yytokentype::EQ; }
-            ident { yylval.string=token(); return yytokentype::IDENTIFIER; }
-            numeric { yylval.string=token(); return yytokentype::NUMERIC; }
-            implicitmul { yylval.string=token(); return yytokentype::IMPLICIT_MUL; }
+            pows { return yy::parser::token::yytokentype::POW; }
+            le   { return yy::parser::token::yytokentype::LE; }
+            ge   { return yy::parser::token::yytokentype::GE; }
+            ne   { return yy::parser::token::yytokentype::NE; }
+            eqs  { return yy::parser::token::yytokentype::EQ; }
+            ident { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::IDENTIFIER; }
+            numeric { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::NUMERIC; }
+            implicitmul { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::IMPLICIT_MUL; }
         */
     }
 }

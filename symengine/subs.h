@@ -93,10 +93,6 @@ public:
                 // TODO: Check if Mul::dict_add_term is enough
                 Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
             } else if (is_a_Number(*factor)) {
-                if (down_cast<const Number &>(*factor).is_zero()) {
-                    result_ = factor;
-                    return;
-                }
                 imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
             } else if (is_a<Mul>(*factor)) {
                 RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
@@ -192,7 +188,39 @@ public:
                 throw SymEngineException("expected an object of type Boolean");
             v.insert(rcp_static_cast<const Boolean>(a));
         }
-        result_ = x.create(v);
+        result_ = logical_and(v);
+    }
+
+    void bvisit(const Or &x)
+    {
+        set_boolean v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Boolean(*a))
+                throw SymEngineException("expected an object of type Boolean");
+            v.insert(rcp_static_cast<const Boolean>(a));
+        }
+        result_ = logical_or(v);
+    }
+
+    void bvisit(const Not &x)
+    {
+        RCP<const Basic> a = apply(x.get_arg());
+        if (not is_a_Boolean(*a))
+            throw SymEngineException("expected an object of type Boolean");
+        result_ = logical_not(rcp_static_cast<const Boolean>(a));
+    }
+
+    void bvisit(const Xor &x)
+    {
+        vec_boolean v;
+        for (const auto &elem : x.get_container()) {
+            auto a = apply(elem);
+            if (not is_a_Boolean(*a))
+                throw SymEngineException("expected an object of type Boolean");
+            v.push_back(rcp_static_cast<const Boolean>(a));
+        }
+        result_ = logical_xor(v);
     }
 
     void bvisit(const FiniteSet &x)

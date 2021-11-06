@@ -1,6 +1,6 @@
 name: Test myST tutorials
 
-on: [push, pull_request]
+on: workflow_dispatch
 
 jobs:
   test_tutorials:
@@ -20,5 +20,4 @@ jobs:
           WITH_SCIPY: yes
           BUILD_TUTORIALS: yes
           CONDA_ENV_FILE: "binder/environment.yml"
-          MAKEFLAGS: -j4
           our_install_dir: $HOME/our_usr/

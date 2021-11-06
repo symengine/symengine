@@ -5,8 +5,8 @@
 #include <cmath>
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/prime_sieve.h>
 
-using boost::mpl::int_;
 using boost::multiprecision::denominator;
 using boost::multiprecision::miller_rabin_test;
 using boost::multiprecision::numerator;
@@ -278,7 +278,7 @@ unsigned long mp_scan1(const integer_class &i)
     if (i == 0) {
         return ULONG_MAX;
     }
-    return find_lsb(i, int_<0>());
+    return find_lsb(i, {});
 }
 
 // define simple 2x2 matrix with exponentiation by repeated squaring
@@ -293,6 +293,7 @@ struct two_by_two_matrix {
     {
     }
     two_by_two_matrix() : data{{0, 0}, {0, 0}} {}
+    two_by_two_matrix(const two_by_two_matrix &other) = default;
     two_by_two_matrix &operator=(const two_by_two_matrix &other)
     {
         this->data[0][0] = other.data[0][0];
@@ -449,6 +450,17 @@ bool mp_perfect_square_p(const integer_class &i)
     }
     integer_class root;
     return mp_root(root, i, 2);
+}
+
+integer_class mp_primorial(unsigned long n)
+{
+    integer_class res = 1;
+    Sieve::iterator pi(static_cast<unsigned>(n));
+    unsigned int p;
+    while ((p = pi.next_prime()) <= n) {
+        res *= p;
+    }
+    return res;
 }
 
 // according to the gmp documentation, the behavior of the

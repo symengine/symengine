@@ -10,50 +10,24 @@ class ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
     tribool is_zero_;
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    void bvisit(const Basic &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
-    void bvisit(const Symbol &x)
-    {
-        is_zero_ = tribool::indeterminate;
-    };
+    ZeroVisitor(const Assumptions *assumptions) : assumptions_(assumptions) {}
+
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Constant &x)
-    {
-        is_zero_ = tribool::trifalse;
-    };
-    void bvisit(const Abs &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Conjugate &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const Sign &x)
-    {
-        x.get_arg()->accept(*this);
-    };
-    void bvisit(const PrimePi &x)
-    {
-        // First prime is 2 so pi(x) is zero for x < 2
-        is_zero_ = is_negative(*sub(x.get_arg(), integer(2)));
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Abs &x);
+    void bvisit(const Conjugate &x);
+    void bvisit(const Sign &x);
+    void bvisit(const PrimePi &x);
 
     tribool apply(const Basic &b);
 };
@@ -62,33 +36,21 @@ class PositiveVisitor : public BaseVisitor<PositiveVisitor>
 {
 private:
     tribool is_positive_;
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    void bvisit(const Symbol &x)
-    {
-        is_positive_ = tribool::indeterminate;
-    };
+    PositiveVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Constant &x)
-    {
-        is_positive_ = tribool::tritrue;
-    };
-    void bvisit(const Basic &x)
-    {
-        is_positive_ = tribool::indeterminate;
-    };
-    void bvisit(const Set &x)
-    {
-        is_positive_ = tribool::trifalse;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_positive_ = tribool::trifalse;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_positive_ = tribool::trifalse;
-    };
+    void bvisit(const Constant &x);
+    void bvisit(const Add &x);
+    void bvisit(const Basic &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
 
     tribool apply(const Basic &b);
 };
@@ -97,33 +59,20 @@ class NonPositiveVisitor : public BaseVisitor<NonPositiveVisitor>
 {
 private:
     tribool is_nonpositive_;
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    void bvisit(const Symbol &x)
-    {
-        is_nonpositive_ = tribool::indeterminate;
-    };
+    NonPositiveVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Constant &x)
-    {
-        is_nonpositive_ = tribool::trifalse;
-    };
-    void bvisit(const Basic &x)
-    {
-        is_nonpositive_ = tribool::indeterminate;
-    };
-    void bvisit(const Set &x)
-    {
-        is_nonpositive_ = tribool::trifalse;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_nonpositive_ = tribool::trifalse;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_nonpositive_ = tribool::trifalse;
-    };
+    void bvisit(const Constant &x);
+    void bvisit(const Basic &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
 
     tribool apply(const Basic &b);
 };
@@ -132,33 +81,20 @@ class NegativeVisitor : public BaseVisitor<NegativeVisitor>
 {
 private:
     tribool is_negative_;
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    void bvisit(const Basic &x)
-    {
-        is_negative_ = tribool::indeterminate;
-    };
-    void bvisit(const Symbol &x)
-    {
-        is_negative_ = tribool::indeterminate;
-    };
+    NegativeVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        is_negative_ = tribool::trifalse;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_negative_ = tribool::trifalse;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_negative_ = tribool::trifalse;
-    };
-    void bvisit(const Constant &x)
-    {
-        is_negative_ = tribool::trifalse;
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
 
     tribool apply(const Basic &b);
 };
@@ -167,33 +103,20 @@ class NonNegativeVisitor : public BaseVisitor<NonNegativeVisitor>
 {
 private:
     tribool is_nonnegative_;
+    const Assumptions *assumptions_;
+
+    void error();
 
 public:
-    void bvisit(const Basic &x)
-    {
-        is_nonnegative_ = tribool::indeterminate;
-    };
-    void bvisit(const Symbol &x)
-    {
-        is_nonnegative_ = tribool::indeterminate;
-    };
+    NonNegativeVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions){};
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
     void bvisit(const Number &x);
-    void bvisit(const Set &x)
-    {
-        is_nonnegative_ = tribool::trifalse;
-    };
-    void bvisit(const Relational &x)
-    {
-        is_nonnegative_ = tribool::trifalse;
-    };
-    void bvisit(const Boolean &x)
-    {
-        is_nonnegative_ = tribool::trifalse;
-    };
-    void bvisit(const Constant &x)
-    {
-        is_nonnegative_ = tribool::tritrue;
-    };
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
 
     tribool apply(const Basic &b);
 };
@@ -478,6 +401,61 @@ public:
 
     tribool apply(const Basic &b);
 };
+
+class FiniteVisitor : public BaseVisitor<FiniteVisitor>
+{
+private:
+    tribool is_finite_;
+    const Assumptions *assumptions_;
+
+    void error();
+
+public:
+    FiniteVisitor(const Assumptions *assumptions) : assumptions_(assumptions){};
+
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Infty &x);
+    void bvisit(const NaN &x);
+    void bvisit(const Number &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+
+    tribool apply(const Basic &b);
+};
+
+class AlgebraicVisitor : public BaseVisitor<AlgebraicVisitor>
+{
+private:
+    tribool is_algebraic_;
+    const Assumptions *assumptions_;
+
+    void trans_nonzero_and_algebraic(const Basic &b);
+    void error();
+
+public:
+    AlgebraicVisitor(const Assumptions *assumptions) : assumptions_(assumptions)
+    {
+    }
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x);
+    void bvisit(const Rational &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+    void bvisit(const TrigFunction &x);
+    void bvisit(const HyperbolicFunction &x);
+    void bvisit(const LambertW &x);
+
+    tribool apply(const Basic &b);
+};
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H

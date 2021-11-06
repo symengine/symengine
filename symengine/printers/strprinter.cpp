@@ -372,6 +372,11 @@ void StrPrinter::bvisit(const Piecewise &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complexes &x)
+{
+    str_ = "Complexes";
+}
+
 void StrPrinter::bvisit(const Reals &x)
 {
     str_ = "Reals";
@@ -850,6 +855,7 @@ std::string StrPrinter::apply(const vec_basic &d)
 
 void StrPrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_str_printer_names();
     std::ostringstream o;
     o << names_[x.get_type_code()];
     vec_basic vec = x.get_args();
@@ -1088,11 +1094,10 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_SIGN] = "sign";
     names[SYMENGINE_CONJUGATE] = "conjugate";
     names[SYMENGINE_PRIMEPI] = "primepi";
+    names[SYMENGINE_PRIMORIAL] = "primorial";
     names[SYMENGINE_UNEVALUATED_EXPR] = "";
     return names;
 }
-
-const std::vector<std::string> StrPrinter::names_ = init_str_printer_names();
 
 std::string StrPrinter::print_mul()
 {
@@ -1157,6 +1162,11 @@ std::string str(const Basic &x)
 {
     StrPrinter strPrinter;
     return strPrinter.apply(x);
+}
+
+std::string str(const DenseMatrix &x)
+{
+    return x.__str__();
 }
 
 std::string julia_str(const Basic &x)

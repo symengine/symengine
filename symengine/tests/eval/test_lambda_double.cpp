@@ -80,6 +80,7 @@ using SymEngine::tan;
 using SymEngine::tanh;
 using SymEngine::truncate;
 using SymEngine::vec_basic;
+using SymEngine::zeta;
 
 TEST_CASE("Evaluate to double", "[lambda_double]")
 {
@@ -443,6 +444,21 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
 
     d3 = v3.call({0.4, 2.0, 3.0});
     REQUIRE(::fabs((d - d3) / d) < 1e-12);
+}
+
+TEST_CASE("LLVMDoubleVisitor Exceptions", "[llvm_double]")
+{
+    RCP<const Basic> x, y, r;
+    x = symbol("x");
+    y = symbol("y");
+    r = add(x, zeta(x, y));
+    LLVMDoubleVisitor v;
+    CHECK_THROWS_AS(v.init({x, y}, *r), NotImplementedError &);
+    CHECK_THROWS_WITH(v.init({x, y}, *r), "zeta(x, y)");
+
+    r = add(x, pow(x, y));
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_WITH(v.init({x}, *r), "Symbol y not in the symbols vector.");
 }
 
 TEST_CASE("Check that our default LLVM passes give correct results",

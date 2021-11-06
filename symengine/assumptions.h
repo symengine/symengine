@@ -22,6 +22,7 @@ private:
     umap_basic_bool negative_;
     umap_basic_bool nonpositive_;
     umap_basic_bool nonzero_;
+    umap_basic_bool zero_;
 
     void set_map(umap_basic_bool &map, const RCP<const Basic> &symbol,
                  bool value);
@@ -39,6 +40,7 @@ public:
     tribool is_negative(const RCP<const Basic> &symbol) const;
     tribool is_nonpositive(const RCP<const Basic> &symbol) const;
     tribool is_nonzero(const RCP<const Basic> &symbol) const;
+    tribool is_zero(const RCP<const Basic> &symbol) const;
 };
 } // namespace SymEngine
 

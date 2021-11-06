@@ -300,9 +300,9 @@ public:
         return static_cast<Wrapper &>(*this);
     }
 
-    bool operator==(const Wrapper &other) const
+    friend bool operator==(const Wrapper &a, const Wrapper &b)
     {
-        return dict_ == other.dict_;
+        return a.dict_ == b.dict_;
     }
 
     bool operator!=(const Wrapper &other) const
@@ -590,9 +590,10 @@ protected:
 public:
     ContainerBaseIter(RCP<const T> ptr, long x) : ptr_{ptr}, i_{x} {}
 
-    bool operator==(const ContainerBaseIter &rhs)
+    friend bool operator==(const ContainerBaseIter &lhs,
+                           const ContainerBaseIter &rhs)
     {
-        return (ptr_ == rhs.ptr_) and (i_ == rhs.i_);
+        return (lhs.ptr_ == rhs.ptr_) and (lhs.i_ == rhs.i_);
     }
 
     bool operator!=(const ContainerBaseIter &rhs)

@@ -103,8 +103,6 @@ public:
     PrecedenceEnum getPrecedence(const RCP<const Basic> &x);
 };
 
-std::vector<std::string> init_str_printer_names();
-
 class StrPrinter : public BaseVisitor<StrPrinter>
 {
 private:
@@ -132,6 +130,7 @@ public:
     void bvisit(const Rational &x);
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
+    void bvisit(const Complexes &x);
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
