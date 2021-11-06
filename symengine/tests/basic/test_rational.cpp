@@ -4,6 +4,7 @@
 #include <symengine/symengine_exception.h>
 #include <symengine/real_double.h>
 
+using SymEngine::Basic;
 using SymEngine::ComplexInf;
 using SymEngine::Integer;
 using SymEngine::integer;

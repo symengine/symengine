@@ -7,6 +7,7 @@
 #include <symengine/utilities/stream_fmt.h>
 
 #include <cereal/cereal.hpp>
+#include <cereal/version.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/details/helpers.hpp>
@@ -250,7 +251,13 @@ inline void save_basic(Archive &ar, const FunctionWrapper &b)
 template <class Archive>
 inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
 {
+#if CEREAL_VERSION>=10301
+    std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
+        std::make_shared<RCP<const Basic>>(ptr));
+    uint32_t id = ar.registerSharedPointer(sharedPtr);
+#else
     uint32_t id = ar.registerSharedPointer(ptr.get());
+#endif
     ar(CEREAL_NVP(id));
 
     if (id & cereal::detail::msb_32bit) {
