@@ -146,12 +146,7 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
 endif()
 
 # Cotire
-if ((CMAKE_VERSION VERSION_GREATER 2.8.11) AND
-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|MSVC"))
-    set(WITH_COTIRE yes CACHE BOOL "Use cotire to speed up build")
-else()
-    set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
-endif()
+set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
 
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
