@@ -26,8 +26,11 @@ inline void save_basic(Archive &ar, const Basic &b)
 {
     const auto t_code = b.get_type_code();
     throw SerializationError(StreamFmt()
-                             << __FILE__ << ":" << __LINE__ << ": "
-                             << __PRETTY_FUNCTION__ << " not supported: "
+                             << __FILE__ << ":" << __LINE__
+#ifndef _MSC_VER
+                             << ": " << __PRETTY_FUNCTION__
+#endif
+                             << " not supported: "
                              << type_code_name(t_code) << " (" << t_code << ")"
 #if !defined(NDEBUG)
                              << ", " << b.__str__()
@@ -555,8 +558,10 @@ template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const FunctionWrapper> &)
 {
     throw SerializationError(StreamFmt()
-                             << __FILE__ << ":" << __LINE__ << ": "
-                             << __PRETTY_FUNCTION__
+                             << __FILE__ << ":" << __LINE__
+#ifndef _MSC_VER
+                             << ": " << __PRETTY_FUNCTION__
+#endif
                              << "Loading of this type is not implemented.");
 }
 template <class Archive, class T>
@@ -589,8 +594,10 @@ RCP<const Basic> load_basic(
                             int>::type * = nullptr)
 {
     throw SerializationError(StreamFmt()
-                             << __FILE__ << ":" << __LINE__ << ": "
-                             << __PRETTY_FUNCTION__
+                             << __FILE__ << ":" << __LINE__
+#ifndef _MSC_VER
+                             << ": " << __PRETTY_FUNCTION__
+#endif
                              << "Loading of this type is not implemented.");
 }
 
