@@ -1,2 +1,0 @@
-# due to lack of newline charcters, we want to exclude this from git grep etc.:
-nonius.h++ binary
