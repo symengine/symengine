@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SYMENGINE_SERIALIZE_CEREAL_H
+#define SYMENGINE_SERIALIZE_CEREAL_H
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -694,3 +695,4 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
     }
 }
 } // namespace SymEngine
+#endif // SYMENGINE_SERIALIZE_CEREAL_H
