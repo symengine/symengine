@@ -26,6 +26,7 @@ using SymEngine::minus_one;
 using SymEngine::mod;
 using SymEngine::mod_f;
 using SymEngine::mod_inverse;
+using SymEngine::mp_perfect_power_decomposition;
 using SymEngine::multiplicative_order;
 using SymEngine::Number;
 using SymEngine::one;
@@ -912,4 +913,30 @@ TEST_CASE("test_factor_trial_division(): ntheory", "[ntheory]")
     RCP<const Integer> f;
 
     REQUIRE(factor_trial_division(outArg(f), *i47) == 0);
+}
+
+TEST_CASE("test_perfect_power_decomposition(): ntheory", "[ntheory]")
+{
+    integer_class a;
+    std::pair<integer_class, integer_class> res;
+
+    a = 1745041;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 1321);
+    REQUIRE(res.second == 2);
+
+    a = 15;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 15);
+    REQUIRE(res.second == 1);
+
+    a = 1771561;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 11);
+    REQUIRE(res.second == 6);
+
+    a = 1771561;
+    res = mp_perfect_power_decomposition(a, true);
+    REQUIRE(res.first == 1331);
+    REQUIRE(res.second == 2);
 }
