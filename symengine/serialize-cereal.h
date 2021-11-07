@@ -652,8 +652,7 @@ void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, integer_class &intgr)
     ar(s);
     intgr = integer_class(s);
 }
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX || \
-    SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 // Following is an ugly hack for templated integer classes
 // Not sure why the other clean version doesn't work
 template <typename Archive>
@@ -661,7 +660,7 @@ void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const URatDict &urd)
 {
     size_t l = urd.size();
     ar(l);
-    for (auto &p: urd.dict_) {
+    for (auto &p : urd.dict_) {
         unsigned int first = p.first;
         ar(first);
         integer_class num = get_num(p.second);
