@@ -81,12 +81,12 @@ template <typename Archive>
 void save_basic(Archive &ar, const URatPoly &b)
 {
     ar(b.get_var());
-    const URatDict& urd = b.get_poly();
+    const URatDict &urd = b.get_poly();
     size_t l = urd.size();
     ar(l);
     for (auto &p : urd.dict_) {
         unsigned int first = p.first;
-        const rational_class& second = p.second;
+        const rational_class &second = p.second;
         ar(first);
         save_basic(ar, second);
     }
