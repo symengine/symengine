@@ -2066,6 +2066,9 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>mertens</b> (const un
 <tr class="memitem:abcb2e3a9648b190ce406481f00c46121"><td class="memItemLeft" align="right" valign="top">integer_class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#abcb2e3a9648b190ce406481f00c46121">mp_principal_polygonal_root</a> (const integer_class &amp;s, const integer_class &amp;x)</td></tr>
 <tr class="memdesc:abcb2e3a9648b190ce406481f00c46121"><td class="mdescLeft">&#160;</td><td class="mdescRight">Numeric calculation of the principal s-gonal root of x.  <a href="namespaceSymEngine.html#abcb2e3a9648b190ce406481f00c46121">More...</a><br /></td></tr>
 <tr class="separator:abcb2e3a9648b190ce406481f00c46121"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92cbc295ca4ec5d6b0b9ea4da2def010"><td class="memItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; integer_class, integer_class &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010">mp_perfect_power_decomposition</a> (const integer_class &amp;n, bool lowest_exponent=false)</td></tr>
+<tr class="memdesc:a92cbc295ca4ec5d6b0b9ea4da2def010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decompose a positive integer into perfect powers.  <a href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010">More...</a><br /></td></tr>
+<tr class="separator:a92cbc295ca4ec5d6b0b9ea4da2def010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a454113c8136ccb9892c27c5d208d199a"><td class="memItemLeft" align="right" valign="top"><a id="a454113c8136ccb9892c27c5d208d199a"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>primepi</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;arg)</td></tr>
 <tr class="separator:a454113c8136ccb9892c27c5d208d199a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4234,6 +4237,79 @@ template&lt;class T &gt; </div>
 <div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;    <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(arg), <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(base));</div>
 <div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;}</div>
 <div class="ttc" id="alog_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/log.html">std::log</a></div><div class="ttdeci">T log(T... args)</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a92cbc295ca4ec5d6b0b9ea4da2def010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92cbc295ca4ec5d6b0b9ea4da2def010">&#9670;&nbsp;</a></span>mp_perfect_power_decomposition()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; integer_class, integer_class &gt; SymEngine::mp_perfect_power_decomposition </td>
+          <td>(</td>
+          <td class="paramtype">const integer_class &amp;&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lowest_exponent</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decompose a positive integer into perfect powers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td><a class="el" href="classSymEngine_1_1Integer.html" title="Integer Class.">Integer</a> to decompose </td></tr>
+    <tr><td class="paramname">lowest_exponent</td><td>Can be set to find the perfect power with the lowest exponent. Default is to find the highest exponent. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The base and exponent as a pair of integers. (n, 1) if no perfect power exists.</dd></dl>
+<p>See <a href="https://en.wikipedia.org/wiki/Perfect_power">https://en.wikipedia.org/wiki/Perfect_power</a> </p>
+
+<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01676">1676</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;{</div>
+<div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;    <span class="comment">// From</span></div>
+<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;    <span class="comment">// https://codegolf.stackexchange.com/questions/1935/fastest-algorithm-for-decomposing-a-perfect-power</span></div>
+<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> p = 2;</div>
+<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;    integer_class intone, i, j, m, res;</div>
+<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    intone = 1;</div>
+<div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;integer_class, integer_class&gt;</a> respair;</div>
+<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(n, intone);</div>
+<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160; </div>
+<div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160;    <span class="keywordflow">while</span> ((intone &lt;&lt; p) &lt;= n) {</div>
+<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;        i = 2;</div>
+<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;        j = n;</div>
+<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;        <span class="keywordflow">while</span> (j &gt; i + 1) {</div>
+<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;            m = (i + j) / 2;</div>
+<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;            mp_pow_ui(res, m, p);</div>
+<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;            <span class="keywordflow">if</span> (res &gt; n)</div>
+<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;                j = m;</div>
+<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;                i = m;</div>
+<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;        }</div>
+<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;        mp_pow_ui(res, i, p);</div>
+<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;        <span class="keywordflow">if</span> (res == n) {</div>
+<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;            respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(i, p);</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            <span class="keywordflow">if</span> (lowest_exponent) {</div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;                <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;            }</div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;        }</div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;        p++;</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;    }</div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;    <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;}</div>
+<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -1752,7 +1752,41 @@ $(function() {
 <div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;    <span class="keywordflow">return</span> n;</div>
 <div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;}</div>
 <div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160; </div>
-<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;integer_class, integer_class&gt;</a></div>
+<div class="line"><a name="l01676"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010"> 1676</a></span>&#160;<a class="code" href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010">mp_perfect_power_decomposition</a>(<span class="keyword">const</span> integer_class &amp;n, <span class="keywordtype">bool</span> lowest_exponent)</div>
+<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;{</div>
+<div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;    <span class="comment">// From</span></div>
+<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;    <span class="comment">// https://codegolf.stackexchange.com/questions/1935/fastest-algorithm-for-decomposing-a-perfect-power</span></div>
+<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> p = 2;</div>
+<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;    integer_class intone, i, j, m, res;</div>
+<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    intone = 1;</div>
+<div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;integer_class, integer_class&gt;</a> respair;</div>
+<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(n, intone);</div>
+<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160; </div>
+<div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160;    <span class="keywordflow">while</span> ((intone &lt;&lt; p) &lt;= n) {</div>
+<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;        i = 2;</div>
+<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;        j = n;</div>
+<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;        <span class="keywordflow">while</span> (j &gt; i + 1) {</div>
+<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;            m = (i + j) / 2;</div>
+<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;            mp_pow_ui(res, m, p);</div>
+<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;            <span class="keywordflow">if</span> (res &gt; n)</div>
+<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;                j = m;</div>
+<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;                i = m;</div>
+<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;        }</div>
+<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;        mp_pow_ui(res, i, p);</div>
+<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;        <span class="keywordflow">if</span> (res == n) {</div>
+<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;            respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(i, p);</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            <span class="keywordflow">if</span> (lowest_exponent) {</div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;                <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;            }</div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;        }</div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;        p++;</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;    }</div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;    <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;}</div>
+<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160; </div>
+<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
@@ -1764,6 +1798,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1mp__randstate_html"><div class="ttname"><a href="classSymEngine_1_1mp__randstate.html">SymEngine::mp_randstate</a></div><div class="ttdef"><b>Definition:</b> <a href="mp__class_8h_source.html#l01157">mp_class.h:1158</a></div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/erase.html">std::vector::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
+<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
 <div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
 <div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
@@ -1800,6 +1835,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_a78cd7d9fe5866ae1cf7f2adf78940c15"><div class="ttname"><a href="namespaceSymEngine.html#a78cd7d9fe5866ae1cf7f2adf78940c15">SymEngine::multiplicative_order</a></div><div class="ttdeci">bool multiplicative_order(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;o, const RCP&lt; const Integer &gt; &amp;a, const RCP&lt; const Integer &gt; &amp;n)</div><div class="ttdoc">Multiplicative order. Return false if order does not exist.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00842">ntheory.cpp:842</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a88a7c4cbf086869ae2c0c4bc9d181787"><div class="ttname"><a href="namespaceSymEngine.html#a88a7c4cbf086869ae2c0c4bc9d181787">SymEngine::quotient_mod_f</a></div><div class="ttdeci">void quotient_mod_f(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;q, const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;r, const Integer &amp;n, const Integer &amp;d)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00100">ntheory.cpp:100</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a92cbc295ca4ec5d6b0b9ea4da2def010"><div class="ttname"><a href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010">SymEngine::mp_perfect_power_decomposition</a></div><div class="ttdeci">std::pair&lt; integer_class, integer_class &gt; mp_perfect_power_decomposition(const integer_class &amp;n, bool lowest_exponent)</div><div class="ttdoc">Decompose a positive integer into perfect powers.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01676">ntheory.cpp:1676</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a969eb0905c46f6486a1b7437aa9d3d63"><div class="ttname"><a href="namespaceSymEngine.html#a969eb0905c46f6486a1b7437aa9d3d63">SymEngine::primitive_root_list</a></div><div class="ttdeci">void primitive_root_list(std::vector&lt; RCP&lt; const Integer &gt;&gt; &amp;roots, const Integer &amp;n)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00764">ntheory.cpp:764</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a9b0de2f5516a819ee48b54f78ab23804"><div class="ttname"><a href="namespaceSymEngine.html#a9b0de2f5516a819ee48b54f78ab23804">SymEngine::factor_trial_division</a></div><div class="ttdeci">int factor_trial_division(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00421">ntheory.cpp:421</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aa62e9ba2232d0f8ec009f760cabf1451"><div class="ttname"><a href="namespaceSymEngine.html#aa62e9ba2232d0f8ec009f760cabf1451">SymEngine::factor_pollard_pm1_method</a></div><div class="ttdeci">int factor_pollard_pm1_method(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, unsigned B, unsigned retries)</div><div class="ttdoc">Factor using Pollard's p-1 method.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00296">ntheory.cpp:296</a></div></div>
@@ -1823,6 +1859,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_aff0d65ef819e6ee1328757e4acf3fb1e"><div class="ttname"><a href="namespaceSymEngine.html#aff0d65ef819e6ee1328757e4acf3fb1e">SymEngine::lucas2</a></div><div class="ttdeci">void lucas2(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;g, const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;s, unsigned long n)</div><div class="ttdoc">Lucas number n and n-1.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00134">ntheory.cpp:134</a></div></div>
 <div class="ttc" id="antheory_8h_html"><div class="ttname"><a href="ntheory_8h.html">ntheory.h</a></div></div>
 <div class="ttc" id="anumeric_limits_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits</a></div></div>
+<div class="ttc" id="apair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a></div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
 <div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
 <div class="ttc" id="arational_8h_html"><div class="ttname"><a href="rational_8h.html">rational.h</a></div></div>
