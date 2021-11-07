@@ -639,19 +639,65 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
     }
 }
 template <typename Archive>
-void serialize(Archive &ar, URatDict &urd)
+void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const integer_class &intgr)
 {
-    ar(urd.dict_);
+    std::ostringstream s;
+    s << intgr; // stream to string
+    ar(s.str());
 }
 template <typename Archive>
-void save(Archive &ar, const rational_class &rat)
+void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, integer_class &intgr)
+{
+    std::string s;
+    ar(s);
+    intgr = integer_class(s);
+}
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX || \
+    SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+// Following is an ugly hack for templated integer classes
+// Not sure why the other clean version doesn't work
+template <typename Archive>
+void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const URatDict &urd)
+{
+    size_t l = urd.size();
+    ar(l);
+    for (auto &p: urd.dict_) {
+        unsigned int first = p.first;
+        ar(first);
+        integer_class num = get_num(p.second);
+        integer_class den = get_den(p.second);
+        CEREAL_SAVE_FUNCTION_NAME(ar, num);
+        CEREAL_SAVE_FUNCTION_NAME(ar, den);
+    }
+}
+template <typename Archive>
+void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, URatDict &urd)
+{
+    std::map<unsigned int, rational_class> d;
+    size_t l;
+    unsigned int first;
+    rational_class second;
+    integer_class num;
+    integer_class den;
+    ar(l);
+    for (size_t i = 0; i < l; i++) {
+        ar(first);
+        CEREAL_LOAD_FUNCTION_NAME(ar, num);
+        CEREAL_LOAD_FUNCTION_NAME(ar, den);
+        d[first] = rational_class(num, den);
+    }
+    urd = URatDict(std::move(d));
+}
+#else
+template <typename Archive>
+void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const rational_class &rat)
 {
     integer_class num = get_num(rat);
     integer_class den = get_den(rat);
     ar(num, den);
 }
 template <typename Archive>
-void load(Archive &ar, rational_class &rat)
+void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, rational_class &rat)
 {
     integer_class num;
     integer_class den;
@@ -659,17 +705,9 @@ void load(Archive &ar, rational_class &rat)
     rat = rational_class(num, den);
 }
 template <typename Archive>
-void save(Archive &ar, const integer_class &intgr)
+void CEREAL_SERIALIZE_FUNCTION_NAME(Archive &ar, URatDict &urd)
 {
-    std::ostringstream s;
-    s << intgr; // stream to string
-    ar(s.str());
+    ar(urd.dict_);
 }
-template <typename Archive>
-void load(Archive &ar, integer_class &intgr)
-{
-    std::string s;
-    ar(s);
-    intgr = integer_class(s);
-}
+#endif
 } // namespace SymEngine
