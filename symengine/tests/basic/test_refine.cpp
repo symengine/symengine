@@ -12,6 +12,7 @@ using SymEngine::unevaluated_expr;
 TEST_CASE("Test refine", "[refine]")
 {
     auto x = symbol("x");
+    auto y = symbol("y");
 
     auto expr = abs(x);
     auto a1 = Assumptions({Gt(x, integer(0))});
@@ -80,4 +81,14 @@ TEST_CASE("Test refine", "[refine]")
     expr = conjugate(x);
     auto a16 = Assumptions({});
     REQUIRE(eq(*refine(expr, &a16), *expr));
+
+    expr = log(pow(x, y));
+    Assumptions a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+    a = Assumptions({reals()->contains(y), Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *mul(y, log(x))));
+
+    expr = log(pow(integer(2), y));
+    a = Assumptions({reals()->contains(y)});
+    REQUIRE(eq(*refine(expr, &a), *mul(y, log(integer(2)))));
 }

@@ -70,6 +70,23 @@ void RefineVisitor::bvisit(const Conjugate &x)
     }
 }
 
+void RefineVisitor::bvisit(const Log &x)
+{
+    auto farg = x.get_arg();
+    auto newarg = apply(farg);
+    if (is_a<Pow>(*newarg)) {
+        auto base = down_cast<const Pow &>(*newarg).get_base();
+        if (is_true(is_positive(*base, assumptions_))) {
+            auto exp = down_cast<const Pow &>(*newarg).get_exp();
+            if (is_true(is_real(*exp, assumptions_))) {
+                result_ = mul(exp, log(base));
+                return;
+            }
+        }
+    }
+    result_ = log(newarg);
+}
+
 RCP<const Basic> refine(const RCP<const Basic> &x,
                         const Assumptions *assumptions)
 {
