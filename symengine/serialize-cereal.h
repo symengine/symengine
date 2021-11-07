@@ -60,11 +60,36 @@ inline void save_basic(Archive &ar, const Pow &b)
     ar(b.get_base());
     ar(b.get_exp());
 }
-template <class Archive>
-inline void save_basic(Archive &ar, const URatPoly &b)
+template <typename Archive>
+void save_basic(Archive &ar, const integer_class &intgr)
+{
+    std::ostringstream s;
+    s << intgr; // stream to string
+    ar(s.str());
+}
+template <typename Archive>
+void save_basic(Archive &ar, const rational_class &rat)
+{
+    integer_class num = get_num(rat);
+    integer_class den = get_den(rat);
+    save_basic(ar, num);
+    save_basic(ar, den);
+}
+// Following is an ugly hack for templated integer classes
+// Not sure why a direct version doesn't work
+template <typename Archive>
+void save_basic(Archive &ar, const URatPoly &b)
 {
     ar(b.get_var());
-    ar(b.get_poly());
+    const URatDict& urd = b.get_poly();
+    size_t l = urd.size();
+    ar(l);
+    for (auto &p : urd.dict_) {
+        unsigned int first = p.first;
+        const rational_class& second = p.second;
+        ar(first);
+        save_basic(ar, second);
+    }
 }
 template <class Archive>
 inline void save_basic(Archive &ar, const Integer &b)
@@ -336,13 +361,43 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Pow> &)
     ar(exp);
     return make_rcp<const Pow>(base, exp);
 }
-template <class Archive>
-RCP<const Basic> load_basic(Archive &ar, RCP<const URatPoly> &)
+template <typename Archive>
+void load_basic(Archive &ar, integer_class &intgr)
+{
+    std::string str;
+    ar(str);
+    intgr = integer_class(std::move(str));
+}
+template <typename Archive>
+void load_basic(Archive &ar, const rational_class &rat)
+{
+    integer_class num, den;
+    load_basic(ar, num);
+    load_basic(ar, den);
+}
+// Following is an ugly hack for templated integer classes
+// Not sure why the other clean version doesn't work
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, const URatPoly &b)
 {
     RCP<const Basic> var;
-    URatDict poly;
-    ar(var, poly);
-    return make_rcp<const URatPoly>(var, std::move(poly));
+    size_t l;
+    ar(var);
+    ar(l);
+    std::map<unsigned, rational_class> d;
+    auto hint = d.begin();
+    for (size_t i = 0; i < l; i++) {
+        unsigned int first;
+        rational_class second;
+        ar(first);
+        load_basic(ar, second);
+#if !defined(__clang__) && (__GNUC__ == 4 && __GNUC_MINOR__ <= 7)
+        d.insert(hint, std::make_pair(std::move(first), std::move(second)));
+#else
+        d.emplace_hint(hint, std::move(first), std::move(second));
+#endif
+    }
+    return make_rcp<const URatPoly>(var, URatDict(std::move(d)));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
@@ -638,75 +693,4 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
         ptr = *sharedPtr.get();
     }
 }
-template <typename Archive>
-void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const integer_class &intgr)
-{
-    std::ostringstream s;
-    s << intgr; // stream to string
-    ar(s.str());
-}
-template <typename Archive>
-void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, integer_class &intgr)
-{
-    std::string s;
-    ar(s);
-    intgr = integer_class(s);
-}
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
-// Following is an ugly hack for templated integer classes
-// Not sure why the other clean version doesn't work
-template <typename Archive>
-void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const URatDict &urd)
-{
-    size_t l = urd.size();
-    ar(l);
-    for (auto &p : urd.dict_) {
-        unsigned int first = p.first;
-        ar(first);
-        integer_class num = get_num(p.second);
-        integer_class den = get_den(p.second);
-        CEREAL_SAVE_FUNCTION_NAME(ar, num);
-        CEREAL_SAVE_FUNCTION_NAME(ar, den);
-    }
-}
-template <typename Archive>
-void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, URatDict &urd)
-{
-    std::map<unsigned int, rational_class> d;
-    size_t l;
-    unsigned int first;
-    rational_class second;
-    integer_class num;
-    integer_class den;
-    ar(l);
-    for (size_t i = 0; i < l; i++) {
-        ar(first);
-        CEREAL_LOAD_FUNCTION_NAME(ar, num);
-        CEREAL_LOAD_FUNCTION_NAME(ar, den);
-        d[first] = rational_class(num, den);
-    }
-    urd = URatDict(std::move(d));
-}
-#else
-template <typename Archive>
-void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, const rational_class &rat)
-{
-    integer_class num = get_num(rat);
-    integer_class den = get_den(rat);
-    ar(num, den);
-}
-template <typename Archive>
-void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, rational_class &rat)
-{
-    integer_class num;
-    integer_class den;
-    ar(num, den);
-    rat = rational_class(num, den);
-}
-template <typename Archive>
-void CEREAL_SERIALIZE_FUNCTION_NAME(Archive &ar, URatDict &urd)
-{
-    ar(urd.dict_);
-}
-#endif
 } // namespace SymEngine
