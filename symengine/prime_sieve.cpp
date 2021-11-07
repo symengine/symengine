@@ -4,6 +4,7 @@
 #include <valarray>
 #include <algorithm>
 #include <vector>
+#include <iterator>
 
 namespace SymEngine
 {
