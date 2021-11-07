@@ -83,6 +83,14 @@ void RefineVisitor::bvisit(const Log &x)
                 return;
             }
         }
+    } else if (is_a<Integer>(*newarg)) {
+        auto base_exp = mp_perfect_power_decomposition(
+            down_cast<const Integer &>(*newarg).as_integer_class());
+        if (base_exp.second != 1) {
+            result_ = mul(make_rcp<const Integer>(base_exp.second),
+                          log(make_rcp<const Integer>(base_exp.first)));
+            return;
+        }
     }
     result_ = log(newarg);
 }

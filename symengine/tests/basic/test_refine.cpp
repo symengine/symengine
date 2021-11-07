@@ -91,4 +91,20 @@ TEST_CASE("Test refine", "[refine]")
     expr = log(pow(integer(2), y));
     a = Assumptions({reals()->contains(y)});
     REQUIRE(eq(*refine(expr, &a), *mul(y, log(integer(2)))));
+
+    expr = log(integer(8));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *mul(integer(3), log(integer(2)))));
+
+    expr = log(integer(23));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *log(integer(23))));
+
+    expr = log(integer(49));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *mul(integer(2), log(integer(7)))));
+
+    expr = div(log(integer(4)), integer(2));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *log(integer(2))));
 }
