@@ -54,7 +54,7 @@ std::string Basic::dumps() const
     unsigned short major = SYMENGINE_MAJOR_VERSION;
     unsigned short minor = SYMENGINE_MINOR_VERSION;
     cereal::PortableBinaryOutputArchive{oss}(major, minor,
-        this->rcp_from_this());
+                                             this->rcp_from_this());
     return oss.str();
 }
 
@@ -66,10 +66,12 @@ RCP<const Basic> Basic::loads(const std::string &serialized)
     cereal::PortableBinaryInputArchive iarchive{iss};
     iarchive(major, minor);
     if (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {
-	throw SerializationError(StreamFmt() << "SymEngine-"
-	    << SYMENGINE_MAJOR_VERSION << "." << SYMENGINE_MINOR_VERSION
-	    << " was asked to deserialize an object "
-	    << "created using SymEngine-" << major << "." << minor << ".");
+        throw SerializationError(StreamFmt()
+                                 << "SymEngine-" << SYMENGINE_MAJOR_VERSION
+                                 << "." << SYMENGINE_MINOR_VERSION
+                                 << " was asked to deserialize an object "
+                                 << "created using SymEngine-" << major << "."
+                                 << minor << ".");
     }
     iarchive(obj);
     return obj;

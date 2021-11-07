@@ -30,8 +30,8 @@ inline void save_basic(Archive &ar, const Basic &b)
 #ifndef _MSC_VER
                              << ": " << __PRETTY_FUNCTION__
 #endif
-                             << " not supported: "
-                             << type_code_name(t_code) << " (" << t_code << ")"
+                             << " not supported: " << type_code_name(t_code)
+                             << " (" << t_code << ")"
 #if !defined(NDEBUG)
                              << ", " << b.__str__()
 #endif
@@ -254,7 +254,7 @@ inline void save_basic(Archive &ar, const FunctionWrapper &b)
 template <class Archive>
 inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
 {
-#if CEREAL_VERSION>=10301
+#if CEREAL_VERSION >= 10301
     std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
         std::make_shared<RCP<const Basic>>(ptr));
     uint32_t id = ar.registerSharedPointer(sharedPtr);

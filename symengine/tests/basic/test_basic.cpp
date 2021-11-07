@@ -62,9 +62,9 @@ TEST_CASE("Test version", "[basic]")
 
 TEST_CASE("Test type_code_name", "[basic]")
 {
-    REQUIRE(type_code_name(SymEngine::SYMENGINE_UNEVALUATED_EXPR) == "UnevaluatedExpr");
+    REQUIRE(type_code_name(SymEngine::SYMENGINE_UNEVALUATED_EXPR)
+            == "UnevaluatedExpr");
 }
-
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
