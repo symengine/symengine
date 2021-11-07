@@ -61,19 +61,19 @@ inline void save_basic(Archive &ar, const Pow &b)
     ar(b.get_exp());
 }
 template <typename Archive>
-void save_basic(Archive &ar, const integer_class &intgr)
+void save_helper(Archive &ar, const integer_class &intgr)
 {
     std::ostringstream s;
     s << intgr; // stream to string
     ar(s.str());
 }
 template <typename Archive>
-void save_basic(Archive &ar, const rational_class &rat)
+void save_helper(Archive &ar, const rational_class &rat)
 {
     integer_class num = get_num(rat);
     integer_class den = get_den(rat);
-    save_basic(ar, num);
-    save_basic(ar, den);
+    save_helper(ar, num);
+    save_helper(ar, den);
 }
 // Following is an ugly hack for templated integer classes
 // Not sure why a direct version doesn't work
@@ -88,7 +88,7 @@ void save_basic(Archive &ar, const URatPoly &b)
         unsigned int first = p.first;
         const rational_class &second = p.second;
         ar(first);
-        save_basic(ar, second);
+        save_helper(ar, second);
     }
 }
 template <class Archive>
@@ -362,18 +362,18 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Pow> &)
     return make_rcp<const Pow>(base, exp);
 }
 template <typename Archive>
-void load_basic(Archive &ar, integer_class &intgr)
+void load_helper(Archive &ar, integer_class &intgr)
 {
-    std::string str;
-    ar(str);
-    intgr = integer_class(std::move(str));
+    std::string int_str;
+    ar(int_str);
+    intgr = integer_class(std::move(int_str));
 }
 template <typename Archive>
-void load_basic(Archive &ar, const rational_class &rat)
+void load_helper(Archive &ar, const rational_class &rat)
 {
     integer_class num, den;
-    load_basic(ar, num);
-    load_basic(ar, den);
+    load_helper(ar, num);
+    load_helper(ar, den);
 }
 // Following is an ugly hack for templated integer classes
 // Not sure why the other clean version doesn't work
@@ -390,7 +390,7 @@ RCP<const Basic> load_basic(Archive &ar, const URatPoly &b)
         unsigned int first;
         rational_class second;
         ar(first);
-        load_basic(ar, second);
+        load_helper(ar, second);
 #if !defined(__clang__) && (__GNUC__ == 4 && __GNUC_MINOR__ <= 7)
         d.insert(hint, std::make_pair(std::move(first), std::move(second)));
 #else
@@ -402,9 +402,9 @@ RCP<const Basic> load_basic(Archive &ar, const URatPoly &b)
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
 {
-    std::string name;
-    ar(name);
-    return integer(integer_class(name));
+    std::string int_str;
+    ar(int_str);
+    return integer(integer_class(int_str));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Constant> &)
