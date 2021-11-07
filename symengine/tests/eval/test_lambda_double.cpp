@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include <chrono>
+#include <array>
 
 #include <symengine/lambda_double.h>
 #include <symengine/symengine_exception.h>
