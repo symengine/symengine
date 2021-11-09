@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SYMENGINE_STREAM_FMT_H
+#define SYMENGINE_STREAM_FMT_H
+
 #include <sstream>
 #include <string>
 namespace SymEngine {
@@ -19,3 +21,5 @@ public:
     }
 };
 }
+
+#endif
