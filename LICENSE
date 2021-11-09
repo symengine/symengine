@@ -223,7 +223,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 -------------------------------------------------------------------------------
 
-All files in symengine/utilities/catch were taken from the Trilinos package
+All files in symengine/utilities/cereal were taken from the Cereal package
 and are licensed under the BSD-3-Clause license:
 
 Copyright (c) 2014, Randolph Voorhies, Shane Grant
