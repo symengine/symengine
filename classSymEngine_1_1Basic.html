@@ -96,6 +96,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
@@ -220,6 +221,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="separator:af03cfca16a93aaa0aff2382cc2b5087f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905153d35107acc23b37e04e1b430420"><td class="memItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">__str__</a> () const</td></tr>
 <tr class="separator:a905153d35107acc23b37e04e1b430420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a850ea3f6498b76e16e1490b81e76a4cb"><td class="memItemLeft" align="right" valign="top"><a id="a850ea3f6498b76e16e1490b81e76a4cb"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html#a850ea3f6498b76e16e1490b81e76a4cb">dumps</a> () const</td></tr>
+<tr class="memdesc:a850ea3f6498b76e16e1490b81e76a4cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a string of the instance serialized. <br /></td></tr>
+<tr class="separator:a850ea3f6498b76e16e1490b81e76a4cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a502ee14598f873fefff54fac433d48"><td class="memItemLeft" align="right" valign="top"><a id="a7a502ee14598f873fefff54fac433d48"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">subs</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict) const</td></tr>
 <tr class="memdesc:a7a502ee14598f873fefff54fac433d48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Substitutes 'subs_dict' into 'self'. <br /></td></tr>
@@ -261,6 +266,13 @@ RCP&lt; const T2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a clas
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>use_count</b> () const</td></tr>
 <tr class="separator:acbea1ba6881779f17a5b81c0fd0eb2d2 inherit pub_methods_classSymEngine_1_1EnableRCPFromThis"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:aaabaaf19212164326812baf28fab9ef5"><td class="memItemLeft" align="right" valign="top"><a id="aaabaaf19212164326812baf28fab9ef5"></a>
+static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html#aaabaaf19212164326812baf28fab9ef5">loads</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;)</td></tr>
+<tr class="memdesc:aaabaaf19212164326812baf28fab9ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an instance of a serialized string. <br /></td></tr>
+<tr class="separator:aaabaaf19212164326812baf28fab9ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:afc3cac9dbdf56974a961c8b2cdb4dfea"><td class="memItemLeft" align="right" valign="top"><a id="afc3cac9dbdf56974a961c8b2cdb4dfea"></a>
@@ -283,7 +295,7 @@ hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </pre> </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>Subclasses must implement <code><a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">__hash__()</a></code> and <code><a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f" title="Test equality.">__eq__()</a></code> </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00094">94</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00096">96</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ac6a957e2006026f74c08ae6795f5ff7f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6a957e2006026f74c08ae6795f5ff7f">&#9670;&nbsp;</a></span>__eq__()</h2>
@@ -402,10 +414,10 @@ hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 </div><div class="memdoc">
 <p>Returns string representation of <code>self</code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="basic_8cpp_source.html#l00022">22</a> of file <a class="el" href="basic_8cpp_source.html">basic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> str(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="basic_8cpp_source.html#l00046">46</a> of file <a class="el" href="basic_8cpp_source.html">basic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> str(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -473,7 +485,7 @@ hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Basic.html#ad33329dd4d791dd8fad544291be09a7c">hash_</a>;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html_ac950eca7e8403248252115bcba2e3ab1"><div class="ttname"><a href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic::__hash__</a></div><div class="ttdeci">virtual hash_t __hash__() const =0</div></div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_ad33329dd4d791dd8fad544291be09a7c"><div class="ttname"><a href="classSymEngine_1_1Basic.html#ad33329dd4d791dd8fad544291be09a7c">SymEngine::Basic::hash_</a></div><div class="ttdeci">hash_t hash_</div><div class="ttdoc">Private variables.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00105">basic.h:105</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_ad33329dd4d791dd8fad544291be09a7c"><div class="ttname"><a href="classSymEngine_1_1Basic.html#ad33329dd4d791dd8fad544291be09a7c">SymEngine::Basic::hash_</a></div><div class="ttdeci">hash_t hash_</div><div class="ttdoc">Private variables.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00107">basic.h:107</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

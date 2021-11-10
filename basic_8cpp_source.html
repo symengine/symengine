@@ -100,63 +100,124 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;symengine/printers.h&gt;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;symengine/subs.h&gt;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">    7</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">Basic::__cmp__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">auto</span> a = this-&gt;get_type_code();</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">auto</span> b = o.get_type_code();</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">if</span> (a == b) {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> this-&gt;<a class="code" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">compare</a>(o);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="comment">// We return the order given by the numerical value of the TypeID enum</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="comment">// type.</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <span class="comment">// The types don&#39;t need to be ordered in any given way, they just need</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="comment">// to be ordered.</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> a &lt; b ? -1 : 1;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">   22</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">Basic::__str__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> str(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">   27</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">Basic::subs</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> SymEngine::subs(this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), subs_dict);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;RCP&lt;const Basic&gt; Basic::xreplace(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;xreplace_dict)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">SymEngine::xreplace</a>(this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), xreplace_dict);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *get_version()</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> SYMENGINE_VERSION;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">   42</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">is_a_Atom</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(b) or is_a&lt;Symbol&gt;(b) or is_a&lt;Constant&gt;(b);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;symengine/serialize-cereal.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> type_code_name(TypeID <span class="keywordtype">id</span>)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#define STRINGIFY0(x) #x</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#define STRINGIFY(x) STRINGIFY0(x)</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">const</span> <span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/array.html">std::array</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                            <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(<a class="code" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID::TypeID_Count</a>) + 1&gt;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        type_names{{</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#define SYMENGINE_INCLUDE_ALL</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#define SYMENGINE_ENUM(type, Class) STRINGIFY(Class),</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;symengine/type_codes.inc&quot;</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#undef SYMENGINE_ENUM</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            <span class="stringliteral">&quot;TypeID_Count&quot;</span>}};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#undef SYMENGINE_INCLUDE_ALL</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#undef STRINGIFY0</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#undef STRINGIFY</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span> ((<span class="keywordtype">id</span> &lt; 0) || (<span class="keywordtype">id</span> &gt; <a class="code" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID::TypeID_Count</a>)) {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">throw</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/error/runtime_error.html">std::runtime_error</a>(<span class="stringliteral">&quot;type_id out of range&quot;</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> type_names[id];</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">   31</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">Basic::__cmp__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">auto</span> a = this-&gt;get_type_code();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">auto</span> b = o.get_type_code();</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">if</span> (a == b) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keywordflow">return</span> this-&gt;<a class="code" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">compare</a>(o);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="comment">// We return the order given by the numerical value of the TypeID enum</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="comment">// type.</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// The types don&#39;t need to be ordered in any given way, they just need</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">// to be ordered.</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> a &lt; b ? -1 : 1;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">   46</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">Basic::__str__</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">return</span> str(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#a850ea3f6498b76e16e1490b81e76a4cb">   51</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="code" href="classSymEngine_1_1Basic.html#a850ea3f6498b76e16e1490b81e76a4cb">Basic::dumps</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> oss;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major = SYMENGINE_MAJOR_VERSION;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> minor = SYMENGINE_MINOR_VERSION;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    cereal::PortableBinaryOutputArchive{oss}(major, minor,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                                             this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>());</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> oss.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#aaabaaf19212164326812baf28fab9ef5">   61</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="classSymEngine_1_1Basic.html#aaabaaf19212164326812baf28fab9ef5">Basic::loads</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;serialized)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;{</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major, minor;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    RCP&lt;const Basic&gt; obj;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a> iss(serialized);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    cereal::PortableBinaryInputArchive iarchive{iss};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    iarchive(major, minor);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordflow">throw</span> SerializationError(StreamFmt()</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;SymEngine-&quot;</span> &lt;&lt; SYMENGINE_MAJOR_VERSION</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; SYMENGINE_MINOR_VERSION</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot; was asked to deserialize an object &quot;</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;created using SymEngine-&quot;</span> &lt;&lt; major &lt;&lt; <span class="stringliteral">&quot;.&quot;</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                                 &lt;&lt; minor &lt;&lt; <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    iarchive(obj);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">return</span> obj;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">   80</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">Basic::subs</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_dict)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> SymEngine::subs(this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), subs_dict);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;RCP&lt;const Basic&gt; Basic::xreplace(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;xreplace_dict)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">SymEngine::xreplace</a>(this-&gt;<a class="code" href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">rcp_from_this</a>(), xreplace_dict);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">const</span> <span class="keywordtype">char</span> *get_version()</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> SYMENGINE_VERSION;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">   95</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">is_a_Atom</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;{</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(b) or is_a&lt;Symbol&gt;(b) or is_a&lt;Constant&gt;(b);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="ttc" id="aarray_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/array.html">std::array</a></div></div>
+<div class="ttc" id="abasic_istringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a></div></div>
+<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00094">basic.h:95</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_a7a502ee14598f873fefff54fac433d48"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">SymEngine::Basic::subs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; subs(const map_basic_basic &amp;subs_dict) const</div><div class="ttdoc">Substitutes 'subs_dict' into 'self'.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00027">basic.cpp:27</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00022">basic.cpp:22</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_adb2def25bca4104f085ae99c57af5ab3"><div class="ttname"><a href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">SymEngine::Basic::__cmp__</a></div><div class="ttdeci">int __cmp__(const Basic &amp;o) const</div><div class="ttdoc">Comparison operator.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00007">basic.cpp:7</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_a7a502ee14598f873fefff54fac433d48"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a7a502ee14598f873fefff54fac433d48">SymEngine::Basic::subs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; subs(const map_basic_basic &amp;subs_dict) const</div><div class="ttdoc">Substitutes 'subs_dict' into 'self'.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00080">basic.cpp:80</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_a850ea3f6498b76e16e1490b81e76a4cb"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a850ea3f6498b76e16e1490b81e76a4cb">SymEngine::Basic::dumps</a></div><div class="ttdeci">std::string dumps() const</div><div class="ttdoc">Returns a string of the instance serialized.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00051">basic.cpp:51</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00046">basic.cpp:46</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_aaabaaf19212164326812baf28fab9ef5"><div class="ttname"><a href="classSymEngine_1_1Basic.html#aaabaaf19212164326812baf28fab9ef5">SymEngine::Basic::loads</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; loads(const std::string &amp;)</div><div class="ttdoc">Creates an instance of a serialized string.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00061">basic.cpp:61</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_adb2def25bca4104f085ae99c57af5ab3"><div class="ttname"><a href="classSymEngine_1_1Basic.html#adb2def25bca4104f085ae99c57af5ab3">SymEngine::Basic::__cmp__</a></div><div class="ttdeci">int __cmp__(const Basic &amp;o) const</div><div class="ttdoc">Comparison operator.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00031">basic.cpp:31</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html_af03cfca16a93aaa0aff2382cc2b5087f"><div class="ttname"><a href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic::compare</a></div><div class="ttdeci">virtual int compare(const Basic &amp;o) const =0</div></div>
 <div class="ttc" id="aclassSymEngine_1_1EnableRCPFromThis_html_aed6b2bd25fd3fd124a5e97427f8372f2"><div class="ttname"><a href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">SymEngine::EnableRCPFromThis&lt; Basic &gt;::rcp_from_this</a></div><div class="ttdeci">RCP&lt; Basic &gt; rcp_from_this()</div><div class="ttdoc">Get RCP&lt;T&gt; pointer to self (it will cast the pointer to T)</div><div class="ttdef"><b>Definition:</b> <a href="symengine__rcp_8h_source.html#l00282">symengine_rcp.h:282</a></div></div>
 <div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a9b828cb692f763f05e2ee78d7cde30f0"><div class="ttname"><a href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">SymEngine::is_a_Atom</a></div><div class="ttdeci">bool is_a_Atom(const Basic &amp;b)</div><div class="ttdoc">Returns true if b is an atom. i.e. b.get_args returns an empty vector.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00042">basic.cpp:42</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2"><div class="ttname"><a href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">SymEngine::TypeID_Count</a></div><div class="ttdeci">@ TypeID_Count</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00053">basic.h:52</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a9b828cb692f763f05e2ee78d7cde30f0"><div class="ttname"><a href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">SymEngine::is_a_Atom</a></div><div class="ttdeci">bool is_a_Atom(const Basic &amp;b)</div><div class="ttdoc">Returns true if b is an atom. i.e. b.get_args returns an empty vector.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00095">basic.cpp:95</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf5f5d7f025f8dc0a87fe3f912a94a22"><div class="ttname"><a href="namespaceSymEngine.html#abf5f5d7f025f8dc0a87fe3f912a94a22">SymEngine::xreplace</a></div><div class="ttdeci">RCP&lt; const Basic &gt; xreplace(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">Mappings in the subs_dict are applied to the expression tree of x</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00327">subs.h:327</a></div></div>
+<div class="ttc" id="aruntime_error_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/error/runtime_error.html">std::runtime_error</a></div></div>
+<div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

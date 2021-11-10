@@ -835,6 +835,9 @@ template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ac5117c22ff62901ca0c6210310816bc1"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ac5117c22ff62901ca0c6210310816bc1">to_string</a> (const T &amp;value)</td></tr>
 <tr class="memdesc:ac5117c22ff62901ca0c6210310816bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">workaround for MinGW bug <br /></td></tr>
 <tr class="separator:ac5117c22ff62901ca0c6210310816bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a922a1abdb111bf17aaad8557c340e8e9"><td class="memItemLeft" align="right" valign="top"><a id="a922a1abdb111bf17aaad8557c340e8e9"></a>
+<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><b>type_code_name</b> (<a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">TypeID</a> id)</td></tr>
+<tr class="separator:a922a1abdb111bf17aaad8557c340e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77367965f68641f67109c39a1b6751cb"><td class="memItemLeft" align="right" valign="top"><a id="a77367965f68641f67109c39a1b6751cb"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>get_version</b> ()</td></tr>
 <tr class="separator:a77367965f68641f67109c39a1b6751cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2411,6 +2414,364 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="name
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">poly_mul</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;A, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;B, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;C)</td></tr>
 <tr class="memdesc:aab1d7303c130d7ef8cfa033236bbe4b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiply two polynomials: <code>C = A*B</code> <br /></td></tr>
 <tr class="separator:aab1d7303c130d7ef8cfa033236bbe4b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7746bd3c301df52623a0526ada2732db"><td class="memTemplParams" colspan="2"><a id="a7746bd3c301df52623a0526ada2732db"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a7746bd3c301df52623a0526ada2732db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
+<tr class="separator:a7746bd3c301df52623a0526ada2732db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a632d94d236ed5f59859532979d31d064"><td class="memTemplParams" colspan="2"><a id="a632d94d236ed5f59859532979d31d064"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a632d94d236ed5f59859532979d31d064"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Symbol.html">Symbol</a> &amp;b)</td></tr>
+<tr class="separator:a632d94d236ed5f59859532979d31d064"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06be93d4b64651df00c0fdea6f5a3235"><td class="memTemplParams" colspan="2"><a id="a06be93d4b64651df00c0fdea6f5a3235"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a06be93d4b64651df00c0fdea6f5a3235"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Mul.html">Mul</a> &amp;b)</td></tr>
+<tr class="separator:a06be93d4b64651df00c0fdea6f5a3235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28b3f7b8598698b95b82541d79d6d10f"><td class="memTemplParams" colspan="2"><a id="a28b3f7b8598698b95b82541d79d6d10f"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a28b3f7b8598698b95b82541d79d6d10f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Add.html">Add</a> &amp;b)</td></tr>
+<tr class="separator:a28b3f7b8598698b95b82541d79d6d10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a078722c057d45f05a27cbb90e675314f"><td class="memTemplParams" colspan="2"><a id="a078722c057d45f05a27cbb90e675314f"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a078722c057d45f05a27cbb90e675314f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Pow.html">Pow</a> &amp;b)</td></tr>
+<tr class="separator:a078722c057d45f05a27cbb90e675314f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eeb56593a9f07744404f9b709e8e910"><td class="memTemplParams" colspan="2"><a id="a8eeb56593a9f07744404f9b709e8e910"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:a8eeb56593a9f07744404f9b709e8e910"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_helper</b> (Archive &amp;ar, const integer_class &amp;intgr)</td></tr>
+<tr class="separator:a8eeb56593a9f07744404f9b709e8e910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a7f2fcd72adc8bd92c4d951943c697e"><td class="memTemplParams" colspan="2"><a id="a9a7f2fcd72adc8bd92c4d951943c697e"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:a9a7f2fcd72adc8bd92c4d951943c697e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_helper</b> (Archive &amp;ar, const rational_class &amp;rat)</td></tr>
+<tr class="separator:a9a7f2fcd72adc8bd92c4d951943c697e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14e4c6b30417b35dd6114f84f044ed67"><td class="memTemplParams" colspan="2"><a id="a14e4c6b30417b35dd6114f84f044ed67"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:a14e4c6b30417b35dd6114f84f044ed67"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1URatPoly.html">URatPoly</a> &amp;b)</td></tr>
+<tr class="separator:a14e4c6b30417b35dd6114f84f044ed67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad65d6f678337fac7aa0cdebb107f9bac"><td class="memTemplParams" colspan="2"><a id="ad65d6f678337fac7aa0cdebb107f9bac"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ad65d6f678337fac7aa0cdebb107f9bac"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &amp;b)</td></tr>
+<tr class="separator:ad65d6f678337fac7aa0cdebb107f9bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e0ee729bb92e1c3aaa4d80459fcefef"><td class="memTemplParams" colspan="2"><a id="a2e0ee729bb92e1c3aaa4d80459fcefef"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a2e0ee729bb92e1c3aaa4d80459fcefef"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1RealDouble.html">RealDouble</a> &amp;b)</td></tr>
+<tr class="separator:a2e0ee729bb92e1c3aaa4d80459fcefef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86a216ee371102a46773bd2a5d281deb"><td class="memTemplParams" colspan="2"><a id="a86a216ee371102a46773bd2a5d281deb"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a86a216ee371102a46773bd2a5d281deb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Rational.html">Rational</a> &amp;b)</td></tr>
+<tr class="separator:a86a216ee371102a46773bd2a5d281deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a015529b1c367a551415d55da368f4845"><td class="memTemplParams" colspan="2"><a id="a015529b1c367a551415d55da368f4845"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a015529b1c367a551415d55da368f4845"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1ComplexBase.html">ComplexBase</a> &amp;b)</td></tr>
+<tr class="separator:a015529b1c367a551415d55da368f4845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a460349d0ebd2e586085d8fcb8df55d7d"><td class="memTemplParams" colspan="2"><a id="a460349d0ebd2e586085d8fcb8df55d7d"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a460349d0ebd2e586085d8fcb8df55d7d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Interval.html">Interval</a> &amp;b)</td></tr>
+<tr class="separator:a460349d0ebd2e586085d8fcb8df55d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bddd2bf9d7a9fe40efaec67467b3065"><td class="memTemplParams" colspan="2"><a id="a9bddd2bf9d7a9fe40efaec67467b3065"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a9bddd2bf9d7a9fe40efaec67467b3065"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &amp;b)</td></tr>
+<tr class="separator:a9bddd2bf9d7a9fe40efaec67467b3065"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeec1c76a2e48954c1109e9eade73fd78"><td class="memTemplParams" colspan="2"><a id="aeec1c76a2e48954c1109e9eade73fd78"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aeec1c76a2e48954c1109e9eade73fd78"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &amp;b)</td></tr>
+<tr class="separator:aeec1c76a2e48954c1109e9eade73fd78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc64f3baedfa96c5c107c6a3abe025a0"><td class="memTemplParams" colspan="2"><a id="adc64f3baedfa96c5c107c6a3abe025a0"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:adc64f3baedfa96c5c107c6a3abe025a0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &amp;b)</td></tr>
+<tr class="separator:adc64f3baedfa96c5c107c6a3abe025a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae3ac9f5180a685f655a400312f3c26d"><td class="memTemplParams" colspan="2"><a id="aae3ac9f5180a685f655a400312f3c26d"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aae3ac9f5180a685f655a400312f3c26d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &amp;b)</td></tr>
+<tr class="separator:aae3ac9f5180a685f655a400312f3c26d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6c432bd8eeb3e5a89082a6b08b905c4"><td class="memTemplParams" colspan="2"><a id="ae6c432bd8eeb3e5a89082a6b08b905c4"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ae6c432bd8eeb3e5a89082a6b08b905c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1OneArgFunction.html">OneArgFunction</a> &amp;b)</td></tr>
+<tr class="separator:ae6c432bd8eeb3e5a89082a6b08b905c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88773ecfd2aef1b53688d6f23a08ff9"><td class="memTemplParams" colspan="2"><a id="ab88773ecfd2aef1b53688d6f23a08ff9"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ab88773ecfd2aef1b53688d6f23a08ff9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1TwoArgBasic.html">TwoArgFunction</a> &amp;b)</td></tr>
+<tr class="separator:ab88773ecfd2aef1b53688d6f23a08ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85dc970b3c2b8ac6337400178ddbf699"><td class="memTemplParams" colspan="2"><a id="a85dc970b3c2b8ac6337400178ddbf699"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a85dc970b3c2b8ac6337400178ddbf699"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Relational.html">Relational</a> &amp;b)</td></tr>
+<tr class="separator:a85dc970b3c2b8ac6337400178ddbf699"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb75b10441142a46a4cf6fce63a11c6"><td class="memTemplParams" colspan="2"><a id="addb75b10441142a46a4cf6fce63a11c6"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:addb75b10441142a46a4cf6fce63a11c6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1And.html">And</a> &amp;b)</td></tr>
+<tr class="separator:addb75b10441142a46a4cf6fce63a11c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67edd362310297569d903ed3e0481a68"><td class="memTemplParams" colspan="2"><a id="a67edd362310297569d903ed3e0481a68"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a67edd362310297569d903ed3e0481a68"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Or.html">Or</a> &amp;b)</td></tr>
+<tr class="separator:a67edd362310297569d903ed3e0481a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeaa9902be130163a923273fffbcef8c9"><td class="memTemplParams" colspan="2"><a id="aeaa9902be130163a923273fffbcef8c9"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aeaa9902be130163a923273fffbcef8c9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Xor.html">Xor</a> &amp;b)</td></tr>
+<tr class="separator:aeaa9902be130163a923273fffbcef8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a061f879f8ff45e36d928e77ae339c082"><td class="memTemplParams" colspan="2"><a id="a061f879f8ff45e36d928e77ae339c082"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a061f879f8ff45e36d928e77ae339c082"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Not.html">Not</a> &amp;b)</td></tr>
+<tr class="separator:a061f879f8ff45e36d928e77ae339c082"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5029aa9e896255787e88506cca2831f2"><td class="memTemplParams" colspan="2"><a id="a5029aa9e896255787e88506cca2831f2"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a5029aa9e896255787e88506cca2831f2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Contains.html">Contains</a> &amp;b)</td></tr>
+<tr class="separator:a5029aa9e896255787e88506cca2831f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a740f11311bf245a2bd2e0ad5de23c05a"><td class="memTemplParams" colspan="2"><a id="a740f11311bf245a2bd2e0ad5de23c05a"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a740f11311bf245a2bd2e0ad5de23c05a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &amp;b)</td></tr>
+<tr class="separator:a740f11311bf245a2bd2e0ad5de23c05a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3ecae836771a11019dff531124a030c"><td class="memTemplParams" colspan="2"><a id="af3ecae836771a11019dff531124a030c"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:af3ecae836771a11019dff531124a030c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Reals.html">Reals</a> &amp;b)</td></tr>
+<tr class="separator:af3ecae836771a11019dff531124a030c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a9bf61e909abe89555f1895eb87d744"><td class="memTemplParams" colspan="2"><a id="a8a9bf61e909abe89555f1895eb87d744"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a8a9bf61e909abe89555f1895eb87d744"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Rationals.html">Rationals</a> &amp;b)</td></tr>
+<tr class="separator:a8a9bf61e909abe89555f1895eb87d744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ae9a5100e79683c0df801a1852bb90b"><td class="memTemplParams" colspan="2"><a id="a7ae9a5100e79683c0df801a1852bb90b"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a7ae9a5100e79683c0df801a1852bb90b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1EmptySet.html">EmptySet</a> &amp;b)</td></tr>
+<tr class="separator:a7ae9a5100e79683c0df801a1852bb90b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeaed20a2de2e3ad7041898f07ada436"><td class="memTemplParams" colspan="2"><a id="adeaed20a2de2e3ad7041898f07ada436"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:adeaed20a2de2e3ad7041898f07ada436"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Integers.html">Integers</a> &amp;b)</td></tr>
+<tr class="separator:adeaed20a2de2e3ad7041898f07ada436"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc207b9ec052741e5b9e991ac0a28865"><td class="memTemplParams" colspan="2"><a id="acc207b9ec052741e5b9e991ac0a28865"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:acc207b9ec052741e5b9e991ac0a28865"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1UniversalSet.html">UniversalSet</a> &amp;b)</td></tr>
+<tr class="separator:acc207b9ec052741e5b9e991ac0a28865"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae555311038d2d01b1d28e082b2d814ea"><td class="memTemplParams" colspan="2"><a id="ae555311038d2d01b1d28e082b2d814ea"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ae555311038d2d01b1d28e082b2d814ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Union.html">Union</a> &amp;b)</td></tr>
+<tr class="separator:ae555311038d2d01b1d28e082b2d814ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1ae571d51cc66fd1d357110054c1a32"><td class="memTemplParams" colspan="2"><a id="ab1ae571d51cc66fd1d357110054c1a32"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ab1ae571d51cc66fd1d357110054c1a32"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Complement.html">Complement</a> &amp;b)</td></tr>
+<tr class="separator:ab1ae571d51cc66fd1d357110054c1a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e5f66a86b3337fb5ee597e46bb67422"><td class="memTemplParams" colspan="2"><a id="a7e5f66a86b3337fb5ee597e46bb67422"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a7e5f66a86b3337fb5ee597e46bb67422"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;b)</td></tr>
+<tr class="separator:a7e5f66a86b3337fb5ee597e46bb67422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf0e27cec41b6b693e1bbd7a5397a899"><td class="memTemplParams" colspan="2"><a id="aaf0e27cec41b6b693e1bbd7a5397a899"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aaf0e27cec41b6b693e1bbd7a5397a899"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;b)</td></tr>
+<tr class="separator:aaf0e27cec41b6b693e1bbd7a5397a899"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe542d036c17878282d004c5ed1f203f"><td class="memTemplParams" colspan="2"><a id="abe542d036c17878282d004c5ed1f203f"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:abe542d036c17878282d004c5ed1f203f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &amp;b)</td></tr>
+<tr class="separator:abe542d036c17878282d004c5ed1f203f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f6b0e93893ba6f6b0c565dcf2a814be"><td class="memTemplParams" colspan="2"><a id="a2f6b0e93893ba6f6b0c565dcf2a814be"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a2f6b0e93893ba6f6b0c565dcf2a814be"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1GaloisField.html">GaloisField</a> &amp;b)</td></tr>
+<tr class="separator:a2f6b0e93893ba6f6b0c565dcf2a814be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3c9e502e5def4f1ca9a830b7dee14df"><td class="memTemplParams" colspan="2"><a id="ac3c9e502e5def4f1ca9a830b7dee14df"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ac3c9e502e5def4f1ca9a830b7dee14df"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1SeriesCoeffInterface.html">SeriesCoeffInterface</a> &amp;)</td></tr>
+<tr class="separator:ac3c9e502e5def4f1ca9a830b7dee14df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00af02287b4add6d548afd6b7fec32a8"><td class="memTemplParams" colspan="2"><a id="a00af02287b4add6d548afd6b7fec32a8"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a00af02287b4add6d548afd6b7fec32a8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1MultiArgFunction.html">MultiArgFunction</a> &amp;b)</td></tr>
+<tr class="separator:a00af02287b4add6d548afd6b7fec32a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb5de7e8926e240ca15a049bb859de7a"><td class="memTemplParams" colspan="2"><a id="acb5de7e8926e240ca15a049bb859de7a"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:acb5de7e8926e240ca15a049bb859de7a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1FunctionSymbol.html">FunctionSymbol</a> &amp;b)</td></tr>
+<tr class="separator:acb5de7e8926e240ca15a049bb859de7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b827fddee7015e0fff2495ec5a1f5bf"><td class="memTemplParams" colspan="2"><a id="a8b827fddee7015e0fff2495ec5a1f5bf"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a8b827fddee7015e0fff2495ec5a1f5bf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Derivative.html">Derivative</a> &amp;b)</td></tr>
+<tr class="separator:a8b827fddee7015e0fff2495ec5a1f5bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a708f994abcfec947d3bae7894439f122"><td class="memTemplParams" colspan="2"><a id="a708f994abcfec947d3bae7894439f122"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a708f994abcfec947d3bae7894439f122"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1Subs.html">Subs</a> &amp;b)</td></tr>
+<tr class="separator:a708f994abcfec947d3bae7894439f122"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7587dd51fde34f617a571ffb6c728665"><td class="memTemplParams" colspan="2"><a id="a7587dd51fde34f617a571ffb6c728665"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a7587dd51fde34f617a571ffb6c728665"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1NumberWrapper.html">NumberWrapper</a> &amp;b)</td></tr>
+<tr class="separator:a7587dd51fde34f617a571ffb6c728665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad03a7e0ab915319c8d4374cadcc76b5f"><td class="memTemplParams" colspan="2"><a id="ad03a7e0ab915319c8d4374cadcc76b5f"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ad03a7e0ab915319c8d4374cadcc76b5f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1FunctionWrapper.html">FunctionWrapper</a> &amp;b)</td></tr>
+<tr class="separator:ad03a7e0ab915319c8d4374cadcc76b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5716966adf448da920176eb54378c33"><td class="memTemplParams" colspan="2"><a id="ad5716966adf448da920176eb54378c33"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ad5716966adf448da920176eb54378c33"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>save_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; const &amp;ptr)</td></tr>
+<tr class="separator:ad5716966adf448da920176eb54378c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb0bf0b3e0f1d7331b24848b10cbd2d6"><td class="memTemplParams" colspan="2"><a id="abb0bf0b3e0f1d7331b24848b10cbd2d6"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:abb0bf0b3e0f1d7331b24848b10cbd2d6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#abb0bf0b3e0f1d7331b24848b10cbd2d6">CEREAL_SAVE_FUNCTION_NAME</a> (Archive &amp;ar, RCP&lt; const T &gt; const &amp;ptr)</td></tr>
+<tr class="memdesc:abb0bf0b3e0f1d7331b24848b10cbd2d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saving for SymEngine::RCP. <br /></td></tr>
+<tr class="separator:abb0bf0b3e0f1d7331b24848b10cbd2d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5357c67167fee6498d8375d80248c65"><td class="memTemplParams" colspan="2"><a id="aa5357c67167fee6498d8375d80248c65"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aa5357c67167fee6498d8375d80248c65"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1RealDouble.html">RealDouble</a> &gt; &amp;)</td></tr>
+<tr class="separator:aa5357c67167fee6498d8375d80248c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb34ed55f6124e1ae29b2dca3440d07"><td class="memTemplParams" colspan="2"><a id="abdb34ed55f6124e1ae29b2dca3440d07"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:abdb34ed55f6124e1ae29b2dca3440d07"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;)</td></tr>
+<tr class="separator:abdb34ed55f6124e1ae29b2dca3440d07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f96bdbd44eb778e147ea1b9cf66e479"><td class="memTemplParams" colspan="2"><a id="a8f96bdbd44eb778e147ea1b9cf66e479"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a8f96bdbd44eb778e147ea1b9cf66e479"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt; &amp;)</td></tr>
+<tr class="separator:a8f96bdbd44eb778e147ea1b9cf66e479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45820556adbc4a451355adff45530824"><td class="memTemplParams" colspan="2"><a id="a45820556adbc4a451355adff45530824"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a45820556adbc4a451355adff45530824"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Symbol.html">Symbol</a> &gt; &amp;)</td></tr>
+<tr class="separator:a45820556adbc4a451355adff45530824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02e4f06cd4cdfa703ae37e99272daa51"><td class="memTemplParams" colspan="2"><a id="a02e4f06cd4cdfa703ae37e99272daa51"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a02e4f06cd4cdfa703ae37e99272daa51"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Mul.html">Mul</a> &gt; &amp;)</td></tr>
+<tr class="separator:a02e4f06cd4cdfa703ae37e99272daa51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fdaf09aee141c6e76aa6257d0171007"><td class="memTemplParams" colspan="2"><a id="a4fdaf09aee141c6e76aa6257d0171007"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a4fdaf09aee141c6e76aa6257d0171007"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Add.html">Add</a> &gt; &amp;)</td></tr>
+<tr class="separator:a4fdaf09aee141c6e76aa6257d0171007"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa25cdf18cdc3d75007a8a3341a2adf3"><td class="memTemplParams" colspan="2"><a id="aaa25cdf18cdc3d75007a8a3341a2adf3"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aaa25cdf18cdc3d75007a8a3341a2adf3"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Pow.html">Pow</a> &gt; &amp;)</td></tr>
+<tr class="separator:aaa25cdf18cdc3d75007a8a3341a2adf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa70d7e0f14c77b860de9b17c43c1b834"><td class="memTemplParams" colspan="2"><a id="aa70d7e0f14c77b860de9b17c43c1b834"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:aa70d7e0f14c77b860de9b17c43c1b834"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_helper</b> (Archive &amp;ar, integer_class &amp;intgr)</td></tr>
+<tr class="separator:aa70d7e0f14c77b860de9b17c43c1b834"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63081486d769755f146c8b780a468819"><td class="memTemplParams" colspan="2"><a id="a63081486d769755f146c8b780a468819"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:a63081486d769755f146c8b780a468819"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_helper</b> (Archive &amp;ar, const rational_class &amp;rat)</td></tr>
+<tr class="separator:a63081486d769755f146c8b780a468819"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4054f3d5da5090b8dd19518b0d2c2d7"><td class="memTemplParams" colspan="2"><a id="ab4054f3d5da5090b8dd19518b0d2c2d7"></a>
+template&lt;typename Archive &gt; </td></tr>
+<tr class="memitem:ab4054f3d5da5090b8dd19518b0d2c2d7"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, const <a class="el" href="classSymEngine_1_1URatPoly.html">URatPoly</a> &amp;b)</td></tr>
+<tr class="separator:ab4054f3d5da5090b8dd19518b0d2c2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac405f0adc86f7e3b2eab9da4aff35f38"><td class="memTemplParams" colspan="2"><a id="ac405f0adc86f7e3b2eab9da4aff35f38"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ac405f0adc86f7e3b2eab9da4aff35f38"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;)</td></tr>
+<tr class="separator:ac405f0adc86f7e3b2eab9da4aff35f38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8dedd1203be6200483a1af609b87d8"><td class="memTemplParams" colspan="2"><a id="a7d8dedd1203be6200483a1af609b87d8"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a7d8dedd1203be6200483a1af609b87d8"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;)</td></tr>
+<tr class="separator:a7d8dedd1203be6200483a1af609b87d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e69ea1e8035629b7f82a716beb03d1a"><td class="memTemplParams" colspan="2"><a id="a9e69ea1e8035629b7f82a716beb03d1a"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a9e69ea1e8035629b7f82a716beb03d1a"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Rational.html">Rational</a> &gt; &amp;)</td></tr>
+<tr class="separator:a9e69ea1e8035629b7f82a716beb03d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7b5195768f26dfe20d9f4757f2a4654"><td class="memTemplParams" colspan="2"><a id="ae7b5195768f26dfe20d9f4757f2a4654"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ae7b5195768f26dfe20d9f4757f2a4654"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Complex.html">Complex</a> &gt; &amp;)</td></tr>
+<tr class="separator:ae7b5195768f26dfe20d9f4757f2a4654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a214dbcf423796e5f5957491ca70cff4a"><td class="memTemplParams" colspan="2"><a id="a214dbcf423796e5f5957491ca70cff4a"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a214dbcf423796e5f5957491ca70cff4a"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1ComplexBase.html">ComplexBase</a> &gt; &amp;)</td></tr>
+<tr class="separator:a214dbcf423796e5f5957491ca70cff4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f53e2c51aee270eb41a5903e933f2a9"><td class="memTemplParams" colspan="2"><a id="a1f53e2c51aee270eb41a5903e933f2a9"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a1f53e2c51aee270eb41a5903e933f2a9"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Interval.html">Interval</a> &gt; &amp;)</td></tr>
+<tr class="separator:a1f53e2c51aee270eb41a5903e933f2a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c291bb0774293795c9065acf2433fed"><td class="memTemplParams" colspan="2"><a id="a9c291bb0774293795c9065acf2433fed"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a9c291bb0774293795c9065acf2433fed"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &amp;)</td></tr>
+<tr class="separator:a9c291bb0774293795c9065acf2433fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f71c58fa8949fafb21ac7a465778e74"><td class="memTemplParams" colspan="2"><a id="a0f71c58fa8949fafb21ac7a465778e74"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a0f71c58fa8949fafb21ac7a465778e74"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1And.html">And</a> &gt; &amp;)</td></tr>
+<tr class="separator:a0f71c58fa8949fafb21ac7a465778e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8edd61625b75983fb8a142dfe4b8e25"><td class="memTemplParams" colspan="2"><a id="ac8edd61625b75983fb8a142dfe4b8e25"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ac8edd61625b75983fb8a142dfe4b8e25"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Or.html">Or</a> &gt; &amp;)</td></tr>
+<tr class="separator:ac8edd61625b75983fb8a142dfe4b8e25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4e0f582c0dc8a56991434780d3785bd"><td class="memTemplParams" colspan="2"><a id="ad4e0f582c0dc8a56991434780d3785bd"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ad4e0f582c0dc8a56991434780d3785bd"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Xor.html">Xor</a> &gt; &amp;)</td></tr>
+<tr class="separator:ad4e0f582c0dc8a56991434780d3785bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dabc4b31761ebd526c9cb4f5d6757be"><td class="memTemplParams" colspan="2"><a id="a1dabc4b31761ebd526c9cb4f5d6757be"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a1dabc4b31761ebd526c9cb4f5d6757be"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Not.html">Not</a> &gt; &amp;)</td></tr>
+<tr class="separator:a1dabc4b31761ebd526c9cb4f5d6757be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adadeae8ba4193e773679aaecd8cceaa2"><td class="memTemplParams" colspan="2"><a id="adadeae8ba4193e773679aaecd8cceaa2"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:adadeae8ba4193e773679aaecd8cceaa2"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &gt; &amp;)</td></tr>
+<tr class="separator:adadeae8ba4193e773679aaecd8cceaa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa442de8f08f68572507746b3a35b0bbe"><td class="memTemplParams" colspan="2"><a id="aa442de8f08f68572507746b3a35b0bbe"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:aa442de8f08f68572507746b3a35b0bbe"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Contains.html">Contains</a> &gt; &amp;)</td></tr>
+<tr class="separator:aa442de8f08f68572507746b3a35b0bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f97d79638634be06449317f582605d6"><td class="memTemplParams" colspan="2"><a id="a2f97d79638634be06449317f582605d6"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a2f97d79638634be06449317f582605d6"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Reals.html">Reals</a> &gt; &amp;)</td></tr>
+<tr class="separator:a2f97d79638634be06449317f582605d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8353c2bb71294d0afdd19d2519f40b2"><td class="memTemplParams" colspan="2"><a id="ad8353c2bb71294d0afdd19d2519f40b2"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:ad8353c2bb71294d0afdd19d2519f40b2"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Rationals.html">Rationals</a> &gt; &amp;)</td></tr>
+<tr class="separator:ad8353c2bb71294d0afdd19d2519f40b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10a3cbfe195067f8778f0c085c8261ce"><td class="memTemplParams" colspan="2"><a id="a10a3cbfe195067f8778f0c085c8261ce"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a10a3cbfe195067f8778f0c085c8261ce"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1EmptySet.html">EmptySet</a> &gt; &amp;)</td></tr>
+<tr class="separator:a10a3cbfe195067f8778f0c085c8261ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a048dc84bf5d4124246c1b64a5f068992"><td class="memTemplParams" colspan="2"><a id="a048dc84bf5d4124246c1b64a5f068992"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a048dc84bf5d4124246c1b64a5f068992"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Integers.html">Integers</a> &gt; &amp;)</td></tr>
+<tr class="separator:a048dc84bf5d4124246c1b64a5f068992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cbc78bbcece52a8a3657f3cbab52eee"><td class="memTemplParams" colspan="2"><a id="a1cbc78bbcece52a8a3657f3cbab52eee"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a1cbc78bbcece52a8a3657f3cbab52eee"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1UniversalSet.html">UniversalSet</a> &gt; &amp;)</td></tr>
+<tr class="separator:a1cbc78bbcece52a8a3657f3cbab52eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b5d6d691f70a1b17cbf14ce7c657258"><td class="memTemplParams" colspan="2"><a id="a6b5d6d691f70a1b17cbf14ce7c657258"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a6b5d6d691f70a1b17cbf14ce7c657258"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Union.html">Union</a> &gt; &amp;)</td></tr>
+<tr class="separator:a6b5d6d691f70a1b17cbf14ce7c657258"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a056280ea22f7886f381cf84b71eb2bf3"><td class="memTemplParams" colspan="2"><a id="a056280ea22f7886f381cf84b71eb2bf3"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a056280ea22f7886f381cf84b71eb2bf3"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Complement.html">Complement</a> &gt; &amp;)</td></tr>
+<tr class="separator:a056280ea22f7886f381cf84b71eb2bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3684784b357a4d927e4658f1ab889053"><td class="memTemplParams" colspan="2"><a id="a3684784b357a4d927e4658f1ab889053"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a3684784b357a4d927e4658f1ab889053"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &gt; &amp;)</td></tr>
+<tr class="separator:a3684784b357a4d927e4658f1ab889053"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaf77a07bb721011fd42bce172ec3f09"><td class="memTemplParams" colspan="2"><a id="adaf77a07bb721011fd42bce172ec3f09"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:adaf77a07bb721011fd42bce172ec3f09"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &gt; &amp;)</td></tr>
+<tr class="separator:adaf77a07bb721011fd42bce172ec3f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a819f0155f17dfdfd90878054c4686d63"><td class="memTemplParams" colspan="2"><a id="a819f0155f17dfdfd90878054c4686d63"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a819f0155f17dfdfd90878054c4686d63"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &gt; &amp;)</td></tr>
+<tr class="separator:a819f0155f17dfdfd90878054c4686d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5727cf001d683d3ba3c5668d299dbdbd"><td class="memTemplParams" colspan="2"><a id="a5727cf001d683d3ba3c5668d299dbdbd"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a5727cf001d683d3ba3c5668d299dbdbd"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Derivative.html">Derivative</a> &gt; &amp;)</td></tr>
+<tr class="separator:a5727cf001d683d3ba3c5668d299dbdbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29cab534628fb97406370698e6ffc3b5"><td class="memTemplParams" colspan="2"><a id="a29cab534628fb97406370698e6ffc3b5"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a29cab534628fb97406370698e6ffc3b5"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1Subs.html">Subs</a> &gt; &amp;)</td></tr>
+<tr class="separator:a29cab534628fb97406370698e6ffc3b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab72f64ee78c06de8ad36973d08ae1859"><td class="memTemplParams" colspan="2"><a id="ab72f64ee78c06de8ad36973d08ae1859"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:ab72f64ee78c06de8ad36973d08ae1859"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const T &gt; &amp;, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1OneArgFunction.html">OneArgFunction</a>, T &gt;::value, int &gt;::type *=nullptr)</td></tr>
+<tr class="separator:ab72f64ee78c06de8ad36973d08ae1859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d7770d46006f7e35d23e856a419d24f"><td class="memTemplParams" colspan="2"><a id="a7d7770d46006f7e35d23e856a419d24f"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:a7d7770d46006f7e35d23e856a419d24f"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const T &gt; &amp;, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1TwoArgBasic.html">TwoArgFunction</a>, T &gt;::value, int &gt;::type *=nullptr)</td></tr>
+<tr class="separator:a7d7770d46006f7e35d23e856a419d24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d37a68695d6d94ddda60168f71fbf60"><td class="memTemplParams" colspan="2"><a id="a4d37a68695d6d94ddda60168f71fbf60"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a4d37a68695d6d94ddda60168f71fbf60"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1FunctionSymbol.html">FunctionSymbol</a> &gt; &amp;)</td></tr>
+<tr class="separator:a4d37a68695d6d94ddda60168f71fbf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749f6a47c442f86f4865e4b08a3f8562"><td class="memTemplParams" colspan="2"><a id="a749f6a47c442f86f4865e4b08a3f8562"></a>
+template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a749f6a47c442f86f4865e4b08a3f8562"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const <a class="el" href="classSymEngine_1_1FunctionWrapper.html">FunctionWrapper</a> &gt; &amp;)</td></tr>
+<tr class="separator:a749f6a47c442f86f4865e4b08a3f8562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2464a350c7ee9ef935bdc720a6c10b92"><td class="memTemplParams" colspan="2"><a id="a2464a350c7ee9ef935bdc720a6c10b92"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:a2464a350c7ee9ef935bdc720a6c10b92"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const T &gt; &amp;, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1MultiArgFunction.html">MultiArgFunction</a>, T &gt;::value, int &gt;::type *=nullptr)</td></tr>
+<tr class="separator:a2464a350c7ee9ef935bdc720a6c10b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1f5771e239ae40adab44a68da56a423"><td class="memTemplParams" colspan="2"><a id="aa1f5771e239ae40adab44a68da56a423"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:aa1f5771e239ae40adab44a68da56a423"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const T &gt; &amp;, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1Relational.html">Relational</a>, T &gt;::value, int &gt;::type *=nullptr)</td></tr>
+<tr class="separator:aa1f5771e239ae40adab44a68da56a423"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a072a1b477bece1fcf63162e4b02ade2c"><td class="memTemplParams" colspan="2"><a id="a072a1b477bece1fcf63162e4b02ade2c"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:a072a1b477bece1fcf63162e4b02ade2c"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>load_basic</b> (Archive &amp;ar, RCP&lt; const T &gt; &amp;, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; not(<a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1Relational.html">Relational</a>, T &gt;::value or <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1OneArgFunction.html">OneArgFunction</a>, T &gt;::value or <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1MultiArgFunction.html">MultiArgFunction</a>, T &gt;::value or <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a>&lt; <a class="el" href="classSymEngine_1_1TwoArgBasic.html">TwoArgFunction</a>, T &gt;::value), int &gt;::type *=nullptr)</td></tr>
+<tr class="separator:a072a1b477bece1fcf63162e4b02ade2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1c47937407db2b8ecdf793afcd6194"><td class="memTemplParams" colspan="2"><a id="abc1c47937407db2b8ecdf793afcd6194"></a>
+template&lt;class Archive , class T &gt; </td></tr>
+<tr class="memitem:abc1c47937407db2b8ecdf793afcd6194"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#abc1c47937407db2b8ecdf793afcd6194">CEREAL_LOAD_FUNCTION_NAME</a> (Archive &amp;ar, RCP&lt; const T &gt; &amp;ptr)</td></tr>
+<tr class="memdesc:abc1c47937407db2b8ecdf793afcd6194"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loading for SymEngine::RCP. <br /></td></tr>
+<tr class="separator:abc1c47937407db2b8ecdf793afcd6194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93312143972e9e7a768b04c4244fc28c"><td class="memItemLeft" align="right" valign="top"><a id="a93312143972e9e7a768b04c4244fc28c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>needs_symbolic_constants</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;ex, const RCP&lt; const <a class="el" href="classSymEngine_1_1Symbol.html">Symbol</a> &gt; &amp;var)</td></tr>
 <tr class="separator:a93312143972e9e7a768b04c4244fc28c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4519,7 +4880,7 @@ template&lt;class T &gt; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    out &lt;&lt; p.<a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">__str__</a>();</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> out;</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00022">basic.cpp:22</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00046">basic.cpp:46</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
