@@ -52,6 +52,8 @@ enum TypeID {
     TypeID_Count
 };
 
+std::string type_code_name(TypeID id);
+
 #include "basic-methods.inc"
 
 class Visitor;
@@ -178,6 +180,12 @@ public:
     /*! Returns string representation of `self`.
      */
     std::string __str__() const;
+
+    //! Returns a string of the instance serialized.
+    std::string dumps() const;
+
+    //! Creates an instance of a serialized string.
+    static RCP<const Basic> loads(const std::string &);
 
     //! Substitutes 'subs_dict' into 'self'.
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;

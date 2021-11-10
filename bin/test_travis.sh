@@ -52,6 +52,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
               pwd; \
               cmake --build . -j 2; \
               cmake --build . --target install
+              cp /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi/include/* /opt/libcxx-12-msan/include/
             )
             if [ ! -e /opt/libcxx-12-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
             export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer

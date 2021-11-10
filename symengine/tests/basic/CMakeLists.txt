@@ -68,6 +68,10 @@ add_executable(test_parser test_parser.cpp)
 target_link_libraries(test_parser symengine catch)
 add_test(test_parser ${PROJECT_BINARY_DIR}/test_parser)
 
+add_executable(test_serialize-cereal test_serialize-cereal.cpp)
+target_link_libraries(test_serialize-cereal symengine catch)
+add_test(test_serialize-cereal ${PROJECT_BINARY_DIR}/test_serialize-cereal)
+
 add_executable(test_sbml_parser test_sbml_parser.cpp)
 target_link_libraries(test_sbml_parser symengine catch)
 add_test(test_sbml_parser ${PROJECT_BINARY_DIR}/test_sbml_parser)
