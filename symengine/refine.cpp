@@ -70,6 +70,32 @@ void RefineVisitor::bvisit(const Conjugate &x)
     }
 }
 
+void RefineVisitor::bvisit(const Pow &x)
+{
+    auto exp = x.get_exp();
+    auto newexp = apply(exp);
+    auto base = x.get_base();
+    auto newbase = apply(base);
+    // Handle cases when (x**k)**n = x**(k*n) or = abs(x)**(k*n)
+    if (is_a<Pow>(*newbase) and is_a_Number(*newexp)) {
+        const Pow &inner_pow = down_cast<const Pow &>(*newbase);
+        auto inner_exp = inner_pow.get_exp();
+        auto inner_base = inner_pow.get_base();
+        if (is_true(is_real(*inner_base, assumptions_))
+            and is_a_Number(*inner_exp)
+            and not down_cast<const Number &>(*inner_exp).is_complex()
+            and not down_cast<const Number &>(*newexp).is_complex()) {
+            if (is_true(is_positive(*inner_base, assumptions_))) {
+                result_ = pow(inner_base, mul(newexp, inner_exp));
+            } else {
+                result_ = pow(abs(inner_base), mul(newexp, inner_exp));
+            }
+            return;
+        }
+    }
+    result_ = pow(newbase, newexp);
+}
+
 void RefineVisitor::bvisit(const Log &x)
 {
     auto farg = x.get_arg();
