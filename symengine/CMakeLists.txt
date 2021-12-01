@@ -224,7 +224,13 @@ set(HEADERS
     assumptions.h
     refine.h
     simplify.h
+    utilities/stream_fmt.h
 )
+
+if (NOT WITH_SYSTEM_CEREAL)
+  file(GLOB_RECURSE CEREAL_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "utilities/cereal/include/*")
+  set(HEADERS ${HEADERS} ${CEREAL_HEADERS})
+endif()
 
 include(GNUInstallDirs)
 

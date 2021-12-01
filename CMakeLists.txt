@@ -313,12 +313,14 @@ if (WITH_MPC)
     set(PKGS ${PKGS} "MPC")
 endif()
 
+set(WITH_SYSTEM_CEREAL no CACHE BOOL "Build with system cereal instead of vendored files")
 if (WITH_SYSTEM_CEREAL)
     find_package(CEREAL REQUIRED)
-    include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
+    set(PKGS ${PKGS} "CEREAL")
 else()
-    include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/cereal/include)
+    set(CEREAL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/cereal/include")
 endif()
+include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
 
 # PTHREAD
 set(WITH_PTHREAD no
@@ -614,6 +616,9 @@ set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 if (TARGET teuchos)
     set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS}
                            ${PROJECT_SOURCE_DIR}/symengine/utilities/teuchos ${PROJECT_BINARY_DIR}/symengine/utilities/teuchos)
+endif()
+if (NOT WITH_SYSTEM_CEREAL)
+    set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/symengine/utilities/cereal/include)
 endif()
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
