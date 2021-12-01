@@ -174,6 +174,9 @@ tribool is_finite(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_infinite(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_even(const Basic &b, const Assumptions *assumptions = nullptr);
 tribool is_odd(const Basic &b, const Assumptions *assumptions = nullptr);
+tribool is_algebraic(const Basic &b, const Assumptions *assumptions = nullptr);
+tribool is_transcendental(const Basic &b,
+                          const Assumptions *assumptions = nullptr);
 
 class NumberWrapper : public Number
 {

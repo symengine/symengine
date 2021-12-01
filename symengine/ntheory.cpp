@@ -1672,4 +1672,38 @@ integer_class mp_principal_polygonal_root(const integer_class &s,
     return n;
 }
 
+std::pair<integer_class, integer_class>
+mp_perfect_power_decomposition(const integer_class &n, bool lowest_exponent)
+{
+    // From
+    // https://codegolf.stackexchange.com/questions/1935/fastest-algorithm-for-decomposing-a-perfect-power
+    unsigned long p = 2;
+    integer_class intone, i, j, m, res;
+    intone = 1;
+    std::pair<integer_class, integer_class> respair;
+    respair = std::make_pair(n, intone);
+
+    while ((intone << p) <= n) {
+        i = 2;
+        j = n;
+        while (j > i + 1) {
+            m = (i + j) / 2;
+            mp_pow_ui(res, m, p);
+            if (res > n)
+                j = m;
+            else
+                i = m;
+        }
+        mp_pow_ui(res, i, p);
+        if (res == n) {
+            respair = std::make_pair(i, p);
+            if (lowest_exponent) {
+                return respair;
+            }
+        }
+        p++;
+    }
+    return respair;
+}
+
 } // namespace SymEngine

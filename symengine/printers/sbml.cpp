@@ -23,8 +23,6 @@ static std::vector<std::string> init_sbml_printer_names()
     return names;
 }
 
-const std::vector<std::string> SbmlPrinter::names_ = init_sbml_printer_names();
-
 void SbmlPrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                              const RCP<const Basic> &b)
 {
@@ -130,6 +128,7 @@ void SbmlPrinter::bvisit(const Constant &x)
 
 void SbmlPrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_sbml_printer_names();
     std::ostringstream o;
     vec_basic vec = x.get_args();
     if (x.get_type_code() == SYMENGINE_GAMMA) {

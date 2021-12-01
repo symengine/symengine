@@ -96,6 +96,31 @@ void RefineVisitor::bvisit(const Pow &x)
     result_ = pow(newbase, newexp);
 }
 
+void RefineVisitor::bvisit(const Log &x)
+{
+    auto farg = x.get_arg();
+    auto newarg = apply(farg);
+    if (is_a<Pow>(*newarg)) {
+        auto base = down_cast<const Pow &>(*newarg).get_base();
+        if (is_true(is_positive(*base, assumptions_))) {
+            auto exp = down_cast<const Pow &>(*newarg).get_exp();
+            if (is_true(is_real(*exp, assumptions_))) {
+                result_ = mul(exp, log(base));
+                return;
+            }
+        }
+    } else if (is_a<Integer>(*newarg)) {
+        auto base_exp = mp_perfect_power_decomposition(
+            down_cast<const Integer &>(*newarg).as_integer_class());
+        if (base_exp.second != 1) {
+            result_ = mul(make_rcp<const Integer>(base_exp.second),
+                          log(make_rcp<const Integer>(base_exp.first)));
+            return;
+        }
+    }
+    result_ = log(newarg);
+}
+
 RCP<const Basic> refine(const RCP<const Basic> &x,
                         const Assumptions *assumptions)
 {

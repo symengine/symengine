@@ -23,8 +23,6 @@ std::vector<std::string> init_mathml_printer_names()
     names[SYMENGINE_ASECH] = "arcsech";
     return names;
 }
-const std::vector<std::string> MathMLPrinter::names_
-    = init_mathml_printer_names();
 
 void MathMLPrinter::bvisit(const Basic &x)
 {
@@ -278,6 +276,7 @@ void MathMLPrinter::bvisit(const Constant &x)
 
 void MathMLPrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_mathml_printer_names();
     s << "<apply>";
     s << "<" << names_[x.get_type_code()] << "/>";
     const auto &args = x.get_args();
