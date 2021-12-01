@@ -1,8 +1,7 @@
 <map id="SymEngine::Derivative" name="SymEngine::Derivative">
-<area shape="rect" id="node1" title=" " alt="" coords="595,78,765,105"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="335,13,473,39"/>
+<area shape="rect" id="node1" title=" " alt="" coords="125,228,295,255"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="41,124,179,151"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/multiset.html" title=" " alt="" coords="295,63,513,119"/>
-<area shape="rect" id="node5" title=" " alt="" coords="33,78,185,105"/>
-<area shape="rect" id="node6" title=" " alt="" coords="317,144,491,185"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/multiset.html" title=" " alt="" coords="203,109,422,165"/>
+<area shape="rect" id="node5" title=" " alt="" coords="237,13,389,39"/>
 </map>

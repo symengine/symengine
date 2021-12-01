@@ -1,8 +1,7 @@
 <map id="SymEngine::ComplexDouble" name="SymEngine::ComplexDouble">
-<area shape="rect" id="node1" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="163,337,369,364"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="12,248,205,275"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="31,172,186,199"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,96,178,123"/>
+<area shape="rect" id="node1" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="5,319,212,345"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="12,244,205,271"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="31,169,186,196"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,95,178,121"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/numeric/complex.html" title=" " alt="" coords="229,248,409,275"/>
 </map>

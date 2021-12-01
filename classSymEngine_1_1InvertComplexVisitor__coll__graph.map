@@ -1,8 +1,5 @@
 <map id="SymEngine::InvertComplexVisitor" name="SymEngine::InvertComplexVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="500,104,699,145"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="200,5,391,47"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,13,151,39"/>
-<area shape="rect" id="node4" title=" " alt="" coords="208,71,383,112"/>
-<area shape="rect" id="node5" title=" " alt="" coords="208,136,383,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="208,201,383,243"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,169,204,211"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="9,80,200,121"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="32,5,177,32"/>
 </map>

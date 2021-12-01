@@ -1,8 +1,7 @@
 <map id="SymEngine::Mul" name="SymEngine::Mul">
-<area shape="rect" id="node1" title=" " alt="" coords="627,78,753,105"/>
+<area shape="rect" id="node1" title=" " alt="" coords="623,46,749,73"/>
 <area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="363,13,501,39"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
 <area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map.html" title=" " alt="" coords="325,63,539,119"/>
 <area shape="rect" id="node5" title=" " alt="" coords="33,78,185,105"/>
-<area shape="rect" id="node6" title=" " alt="" coords="345,144,519,185"/>
 </map>

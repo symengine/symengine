@@ -1,6 +1,6 @@
 <map id="SymEngine::Assumptions" name="SymEngine::Assumptions">
-<area shape="rect" id="node1" title=" " alt="" coords="631,109,817,136"/>
-<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="263,45,430,115"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,109,157,136"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="240,142,453,183"/>
+<area shape="rect" id="node1" title=" " alt="" coords="631,95,817,121"/>
+<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="240,38,453,79"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,95,157,121"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="263,113,430,183"/>
 </map>

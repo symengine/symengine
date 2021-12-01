@@ -18,8 +18,8 @@
 <area shape="rect" id="node114" href="$classSymEngine_1_1Subs.html" title=" " alt="" coords="487,1576,622,1603"/>
 <area shape="rect" id="node115" href="$classSymEngine_1_1Symbol.html" title=" " alt="" coords="479,1753,631,1780"/>
 <area shape="rect" id="node117" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="468,2003,641,2045"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1MIntPoly.html" title=" " alt="" coords="748,80,908,107"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1MExprPoly.html" title=" " alt="" coords="742,131,914,157"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1MExprPoly.html" title=" " alt="" coords="742,80,914,107"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1MIntPoly.html" title=" " alt="" coords="748,131,908,157"/>
 <area shape="rect" id="node8" href="$classSymEngine_1_1UExprPolyBase.html" title=" " alt="" coords="727,182,929,223"/>
 <area shape="rect" id="node9" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1001,35,1216,91"/>
 <area shape="rect" id="node10" href="$classSymEngine_1_1UExprPoly.html" title=" " alt="" coords="1301,5,1472,32"/>
@@ -119,12 +119,12 @@
 <area shape="rect" id="node118" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="730,1956,926,2012"/>
 <area shape="rect" id="node122" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="730,2036,926,2092"/>
 <area shape="rect" id="node126" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="730,2117,926,2158"/>
-<area shape="rect" id="node119" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="1011,1963,1206,2005"/>
+<area shape="rect" id="node119" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="1013,1963,1204,2005"/>
 <area shape="rect" id="node120" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1279,1956,1494,2012"/>
-<area shape="rect" id="node121" href="$classSymEngine_1_1URatPoly.html" title=" " alt="" coords="1549,1971,1712,1997"/>
-<area shape="rect" id="node123" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="1013,2043,1204,2085"/>
+<area shape="rect" id="node121" href="$classSymEngine_1_1UIntPoly.html" title=" " alt="" coords="1551,1971,1710,1997"/>
+<area shape="rect" id="node123" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="1011,2043,1206,2085"/>
 <area shape="rect" id="node124" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1279,2036,1494,2092"/>
-<area shape="rect" id="node125" href="$classSymEngine_1_1UIntPoly.html" title=" " alt="" coords="1551,2051,1710,2077"/>
+<area shape="rect" id="node125" href="$classSymEngine_1_1URatPoly.html" title=" " alt="" coords="1549,2051,1712,2077"/>
 <area shape="rect" id="node127" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="993,2117,1224,2158"/>
 <area shape="rect" id="node128" href="$classSymEngine_1_1GaloisField.html" title=" " alt="" coords="1299,2124,1474,2151"/>
 </map>

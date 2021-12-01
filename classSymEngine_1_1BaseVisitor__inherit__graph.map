@@ -1,14 +1,14 @@
 <map id="SymEngine::BaseVisitor&lt; Derived, Base &gt;" name="SymEngine::BaseVisitor&lt; Derived, Base &gt;">
 <area shape="rect" id="node1" title=" " alt="" coords="199,173,376,215"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="435,5,659,47"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="424,71,671,112"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="424,5,671,47"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1BasicToMPolyBase.html" title=" " alt="" coords="435,71,659,112"/>
 <area shape="rect" id="node7" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="426,136,669,177"/>
 <area shape="rect" id="node9" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="436,202,659,258"/>
 <area shape="rect" id="node11" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="436,282,659,338"/>
 <area shape="rect" id="node13" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="438,362,657,418"/>
 <area shape="rect" id="node2" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,181,151,207"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BasicToMIntPoly.html" title=" " alt="" coords="731,13,941,39"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BasicToMExprPoly.html" title=" " alt="" coords="725,78,947,105"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BasicToMExprPoly.html" title=" " alt="" coords="725,13,947,39"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BasicToMIntPoly.html" title=" " alt="" coords="731,78,941,105"/>
 <area shape="rect" id="node8" href="$classSymEngine_1_1BasicToUExprPoly.html" title=" " alt="" coords="727,143,945,170"/>
 <area shape="rect" id="node10" href="$classSymEngine_1_1BasicToUIntPoly.html" title=" " alt="" coords="733,209,939,251"/>
 <area shape="rect" id="node12" href="$classSymEngine_1_1BasicToURatPoly.html" title=" " alt="" coords="730,289,942,331"/>

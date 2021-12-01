@@ -1,9 +1,8 @@
 <map id="SymEngine::Add" name="SymEngine::Add">
-<area shape="rect" id="node1" title="The base class for representing addition in symbolic expressions." alt="" coords="661,86,789,113"/>
+<area shape="rect" id="node1" title="The base class for representing addition in symbolic expressions." alt="" coords="657,50,785,77"/>
 <area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="380,13,519,39"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
 <area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="325,64,573,135"/>
-<area shape="rect" id="node5" title=" " alt="" coords="33,79,185,106"/>
-<area shape="rect" id="node6" title=" " alt="" coords="24,130,193,157"/>
-<area shape="rect" id="node7" title=" " alt="" coords="362,159,537,200"/>
+<area shape="rect" id="node5" title=" " alt="" coords="33,78,185,105"/>
+<area shape="rect" id="node6" title=" " alt="" coords="24,129,193,155"/>
 </map>
