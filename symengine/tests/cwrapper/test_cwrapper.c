@@ -100,6 +100,16 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
     basic_str_free(s);
 
+    unsigned long size = 0;
+    basic deserialized;
+
+    const char *serialized = basic_dumps(e, &size);
+    basic_new_stack(deserialized);
+    basic_loads(deserialized, serialized, size);
+    SYMENGINE_C_ASSERT(basic_eq(deserialized, e) == 1);
+    basic_str_free(serialized);
+    basic_free_stack(deserialized);
+
     rational_set_si(e, 100, 47);
     s = basic_str(e);
 

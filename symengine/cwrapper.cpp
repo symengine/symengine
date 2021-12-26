@@ -493,6 +493,23 @@ dcomplex complex_double_get(const basic s)
     return d;
 }
 
+const char *basic_dumps(const basic s, unsigned long *size)
+{
+    std::string str = s->m->dumps();
+    *size = str.length();
+    auto cc = new char[*size];
+    str.copy(cc, *size);
+    return cc;
+}
+
+CWRAPPER_OUTPUT_TYPE basic_loads(basic s, const char *c, unsigned long size)
+{
+    CWRAPPER_BEGIN
+    std::string data(c, size);
+    s->m = Basic::loads(data);
+    CWRAPPER_END
+}
+
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
