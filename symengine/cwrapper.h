@@ -364,6 +364,11 @@ CWRAPPER_OUTPUT_TYPE basic_beta(basic s, const basic a, const basic b);
 //! Assigns s = polygamma(a, b).
 CWRAPPER_OUTPUT_TYPE basic_polygamma(basic s, const basic a, const basic b);
 
+//! Serialize an expression
+const char *basic_dumps(const basic s, unsigned long *size);
+//! Deserialize an expression
+CWRAPPER_OUTPUT_TYPE basic_loads(basic s, const char *c, unsigned long size);
+
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
