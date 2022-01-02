@@ -2,6 +2,10 @@
 #include <symengine/printers/strprinter.h>
 #include <symengine/printers/unicode.h>
 
+// Macro to let string literals be unicode const char in all C++ standards
+// Otherwise u8"" would be char8_t in C++20
+#define U8(x) reinterpret_cast<const char *>(u8##x)
+
 namespace SymEngine
 {
 //! Less operator `(<)` using cmp:
@@ -18,8 +22,8 @@ struct PrinterBasicCmp {
 void UnicodePrinter::bvisit(const Basic &x)
 {
     std::ostringstream s;
-    s << "<" << typeName<Basic>(x) << " instance at " << (const void *)this
-      << ">";
+    s << U8("<") << typeName<Basic>(x) << U8(" instance at ")
+      << (const void *)this << U8(">");
     StringBox box(s.str());
     box_ = box;
 }
@@ -32,16 +36,16 @@ void UnicodePrinter::bvisit(const Symbol &x)
 void UnicodePrinter::bvisit(const Infty &x)
 {
     if (x.is_negative_infinity())
-        box_ = StringBox("-\u221E", 2);
+        box_ = StringBox(U8("-\u221E"), 2);
     else if (x.is_positive_infinity())
-        box_ = StringBox("\u221E", 1);
+        box_ = StringBox(U8("\u221E"), 1);
     else
-        box_ = StringBox("\U0001D467\u221E", 2);
+        box_ = StringBox(U8("\U0001D467\u221E"), 2);
 }
 
 void UnicodePrinter::bvisit(const NaN &x)
 {
-    box_ = StringBox("NaN");
+    box_ = StringBox(U8("NaN"));
 }
 
 void UnicodePrinter::bvisit(const Integer &x)
@@ -71,14 +75,14 @@ void UnicodePrinter::bvisit(const Complex &x)
         s << x.real_;
         // Since Complex is in canonical form, imaginary_ is not 0.
         if (mp_sign(x.imaginary_) == 1) {
-            s << " + ";
+            s << U8(" + ");
         } else {
-            s << " - ";
+            s << U8(" - ");
         }
         // If imaginary_ is not 1 or -1, print the absolute value
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << mp_abs(x.imaginary_);
-            s << "\u22C5" << get_imag_symbol();
+            s << U8("\u22C5") << get_imag_symbol();
             mul = true;
         } else {
             s << get_imag_symbol();
@@ -86,13 +90,13 @@ void UnicodePrinter::bvisit(const Complex &x)
     } else {
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
-            s << "\u22C5" << get_imag_symbol();
+            s << U8("\u22C5") << get_imag_symbol();
             mul = true;
         } else {
             if (mp_sign(x.imaginary_) == 1) {
                 s << get_imag_symbol();
             } else {
-                s << "-" << get_imag_symbol();
+                s << U8("-") << get_imag_symbol();
             }
         }
     }
@@ -113,12 +117,12 @@ void UnicodePrinter::bvisit(const ComplexDouble &x)
 {
     std::string str = print_double(x.i.real());
     if (x.i.imag() < 0) {
-        str += " - " + print_double(-x.i.imag());
+        str += U8(" - ") + print_double(-x.i.imag());
     } else {
-        str += " + " + print_double(x.i.imag());
+        str += U8(" + ") + print_double(x.i.imag());
     }
     auto len = str.length();
-    str += "\u22C5" + get_imag_symbol();
+    str += U8("\u22C5") + get_imag_symbol();
     box_ = StringBox(str, len + 2);
 }
 
@@ -135,7 +139,7 @@ void UnicodePrinter::bvisit(const Equality &x)
 void UnicodePrinter::bvisit(const Unequality &x)
 {
     StringBox box = apply(x.get_arg1());
-    StringBox eq(" \u2260 ", 3);
+    StringBox eq(U8(" \u2260 "), 3);
     box.add_right(eq);
     StringBox rhs = apply(x.get_arg2());
     box.add_right(rhs);
@@ -145,7 +149,7 @@ void UnicodePrinter::bvisit(const Unequality &x)
 void UnicodePrinter::bvisit(const LessThan &x)
 {
     StringBox box = apply(x.get_arg1());
-    StringBox eq(" \u2264 ", 3);
+    StringBox eq(U8(" \u2264 "), 3);
     box.add_right(eq);
     StringBox rhs = apply(x.get_arg2());
     box.add_right(rhs);
@@ -194,7 +198,7 @@ void UnicodePrinter::bvisit(const And &x)
 {
     auto container = x.get_container();
     StringBox box = apply(*container.begin());
-    StringBox op(" \u2227 ", 3);
+    StringBox op(U8(" \u2227 "), 3);
     for (auto it = ++(container.begin()); it != container.end(); ++it) {
         box.add_right(op);
         StringBox next = apply(*it);
@@ -207,7 +211,7 @@ void UnicodePrinter::bvisit(const Or &x)
 {
     auto container = x.get_container();
     StringBox box = apply(*container.begin());
-    StringBox op(" \u2228 ", 3);
+    StringBox op(U8(" \u2228 "), 3);
     for (auto it = ++(container.begin()); it != container.end(); ++it) {
         box.add_right(op);
         StringBox next = apply(*it);
@@ -220,7 +224,7 @@ void UnicodePrinter::bvisit(const Xor &x)
 {
     auto container = x.get_container();
     StringBox box = apply(*container.begin());
-    StringBox op(" \u22BB ", 3);
+    StringBox op(U8(" \u22BB "), 3);
     for (auto it = ++(container.begin()); it != container.end(); ++it) {
         box.add_right(op);
         StringBox next = apply(*it);
@@ -231,7 +235,7 @@ void UnicodePrinter::bvisit(const Xor &x)
 
 void UnicodePrinter::bvisit(const Not &x)
 {
-    StringBox box("\u00AC", 1);
+    StringBox box(U8("\u00AC"), 1);
     StringBox expr = apply(*x.get_arg());
     expr.enclose_parens();
     box.add_right(expr);
@@ -241,7 +245,7 @@ void UnicodePrinter::bvisit(const Not &x)
 void UnicodePrinter::bvisit(const Contains &x)
 {
     StringBox s = apply(x.get_expr());
-    StringBox op(" \u220A ", 3);
+    StringBox op(U8(" \u220A "), 3);
     s.add_right(op);
     auto right = apply(x.get_set());
     s.add_right(right);
@@ -272,39 +276,39 @@ void UnicodePrinter::bvisit(const Piecewise &x)
 
 void UnicodePrinter::bvisit(const Complexes &x)
 {
-    box_ = StringBox("\u2102", 1);
+    box_ = StringBox(U8("\u2102"), 1);
 }
 
 void UnicodePrinter::bvisit(const Reals &x)
 {
-    box_ = StringBox("\u211D", 1);
+    box_ = StringBox(U8("\u211D"), 1);
 }
 
 void UnicodePrinter::bvisit(const Rationals &x)
 {
-    box_ = StringBox("\u211A", 1);
+    box_ = StringBox(U8("\u211A"), 1);
 }
 
 void UnicodePrinter::bvisit(const Integers &x)
 {
-    box_ = StringBox("\u2124", 1);
+    box_ = StringBox(U8("\u2124"), 1);
 }
 
 void UnicodePrinter::bvisit(const EmptySet &x)
 {
-    box_ = StringBox("\u2205", 1);
+    box_ = StringBox(U8("\u2205"), 1);
 }
 
 void UnicodePrinter::bvisit(const UniversalSet &x)
 {
-    box_ = StringBox("\U0001D54C", 1);
+    box_ = StringBox(U8("\U0001D54C"), 1);
 }
 
 void UnicodePrinter::bvisit(const Union &x)
 {
     auto container = x.get_container();
     StringBox box = apply(*container.begin());
-    StringBox op(" \u222A ", 3);
+    StringBox op(U8(" \u222A "), 3);
     for (auto it = ++(container.begin()); it != container.end(); ++it) {
         box.add_right(op);
         StringBox next = apply(*it);
@@ -316,7 +320,7 @@ void UnicodePrinter::bvisit(const Union &x)
 void UnicodePrinter::bvisit(const Complement &x)
 {
     StringBox box = apply(*x.get_universe());
-    StringBox op(" \\ ");
+    StringBox op(U8(" \\ "));
     box.add_right(op);
     StringBox rhs = apply(*x.get_container());
     box.add_right(rhs);
@@ -330,7 +334,7 @@ void UnicodePrinter::bvisit(const ImageSet &x)
     box.add_right(bar);
     StringBox symbol = apply(*x.get_symbol());
     box.add_right(symbol);
-    StringBox in(" \u220A ", 3);
+    StringBox in(U8(" \u220A "), 3);
     box.add_right(in);
     StringBox base = apply(*x.get_baseset());
     box.add_right(base);
@@ -517,15 +521,15 @@ void UnicodePrinter::bvisit(const Constant &x)
     // NOTE: Using italics for constants which is very common in mathematics
     // typesetting. (It goes against the ISO typesetting-standard though.)
     if (eq(x, *pi)) {
-        box_ = StringBox("\U0001D70B", 1);
+        box_ = StringBox(U8("\U0001D70B"), 1);
     } else if (eq(x, *E)) {
-        box_ = StringBox("\U0001D452", 1);
+        box_ = StringBox(U8("\U0001D452"), 1);
     } else if (eq(x, *EulerGamma)) {
-        box_ = StringBox("\U0001D6FE", 1);
+        box_ = StringBox(U8("\U0001D6FE"), 1);
     } else if (eq(x, *Catalan)) {
-        box_ = StringBox("\U0001D43A", 1);
+        box_ = StringBox(U8("\U0001D43A"), 1);
     } else if (eq(x, *GoldenRatio)) {
-        box_ = StringBox("\U0001D719", 1);
+        box_ = StringBox(U8("\U0001D719"), 1);
     }
 }
 
@@ -568,14 +572,14 @@ static std::vector<std::string> init_unicode_printer_names()
 {
     std::vector<std::string> names = init_str_printer_names();
     names[SYMENGINE_LAMBERTW] = "W";
-    names[SYMENGINE_ZETA] = "\U0001D701";
-    names[SYMENGINE_DIRICHLET_ETA] = "\U0001D702";
-    names[SYMENGINE_LOWERGAMMA] = "\U0001D6FE";
-    names[SYMENGINE_UPPERGAMMA] = "\u0393";
-    names[SYMENGINE_BETA] = "B";
-    names[SYMENGINE_LOGGAMMA] = "log \u0393";
-    names[SYMENGINE_GAMMA] = "\u0393";
-    names[SYMENGINE_PRIMEPI] = "\U0001D70B";
+    names[SYMENGINE_ZETA] = U8("\U0001D701");
+    names[SYMENGINE_DIRICHLET_ETA] = U8("\U0001D702");
+    names[SYMENGINE_LOWERGAMMA] = U8("\U0001D6FE");
+    names[SYMENGINE_UPPERGAMMA] = U8("\u0393");
+    names[SYMENGINE_BETA] = U8("B");
+    names[SYMENGINE_LOGGAMMA] = U8("log \u0393");
+    names[SYMENGINE_GAMMA] = U8("\u0393");
+    names[SYMENGINE_PRIMEPI] = U8("\U0001D70B");
     return names;
 }
 
@@ -671,12 +675,12 @@ StringBox UnicodePrinter::apply(const Basic &b)
 
 StringBox UnicodePrinter::print_mul()
 {
-    return StringBox("\u22C5", 1);
+    return StringBox(U8("\u22C5"), 1);
 }
 
 std::string UnicodePrinter::get_imag_symbol()
 {
-    return "\U0001D456";
+    return U8("\U0001D456");
 }
 
 std::string unicode(const Basic &x)
