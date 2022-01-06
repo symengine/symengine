@@ -102,6 +102,7 @@ set(SRC
     assumptions.cpp
     refine.cpp
     simplify.cpp
+    tuple.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -225,6 +226,7 @@ set(HEADERS
     refine.h
     simplify.h
     utilities/stream_fmt.h
+    tuple.h
 )
 
 if (NOT WITH_SYSTEM_CEREAL)

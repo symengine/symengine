@@ -50,6 +50,7 @@ public:
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
+    void bvisit(const Tuple &x);
 
 private:
     static const std::vector<std::string> names_;
