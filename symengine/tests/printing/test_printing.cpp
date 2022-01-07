@@ -50,6 +50,8 @@ using SymEngine::logical_xor;
 using SymEngine::map_uint_mpz;
 using SymEngine::mul;
 using SymEngine::NaN;
+using SymEngine::naturals;
+using SymEngine::naturals0;
 using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
@@ -752,6 +754,10 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
     CHECK(latex(*l28) == "\\mathbb{C}");
+    RCP<const Basic> l = naturals();
+    CHECK(latex(*l) == "\\mathbb{N}");
+    l = naturals0();
+    CHECK(latex(*l) == "\\mathbb{N}_0");
 }
 
 TEST_CASE("test_latex_matrix_printing()", "[latex]")
@@ -796,6 +802,12 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*integers());
     CHECK(s == U8("\u2124"));
+
+    s = unicode(*naturals());
+    CHECK(s == U8("\u2115"));
+
+    s = unicode(*naturals0());
+    CHECK(s == U8("\u2115\u2080"));
 
     s = unicode(*emptyset());
     CHECK(s == U8("\u2205"));

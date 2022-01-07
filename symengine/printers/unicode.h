@@ -34,6 +34,8 @@ public:
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
+    void bvisit(const Naturals &x);
+    void bvisit(const Naturals0 &x);
     void bvisit(const EmptySet &x);
     void bvisit(const UniversalSet &x);
     void bvisit(const Piecewise &x);
