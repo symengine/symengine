@@ -1353,6 +1353,8 @@ TEST_CASE("sup : Basic", "[basic]")
     REQUIRE(eq(*sup(*reals()), *infty(1)));
     REQUIRE(eq(*sup(*rationals()), *infty(1)));
     REQUIRE(eq(*sup(*integers()), *infty(1)));
+    REQUIRE(eq(*sup(*naturals()), *infty(1)));
+    REQUIRE(eq(*sup(*naturals0()), *infty(1)));
     REQUIRE(eq(*sup(*interval(one, integer(2), true, true)), *integer(2)));
     REQUIRE(eq(*sup(*interval(one, integer(2), false, false)), *integer(2)));
 
@@ -1384,6 +1386,8 @@ TEST_CASE("inf : Basic", "[basic]")
     REQUIRE(eq(*inf(*reals()), *infty(-1)));
     REQUIRE(eq(*inf(*rationals()), *infty(-1)));
     REQUIRE(eq(*inf(*integers()), *infty(-1)));
+    REQUIRE(eq(*inf(*naturals()), *integer(1)));
+    REQUIRE(eq(*inf(*naturals0()), *integer(0)));
     REQUIRE(eq(*inf(*interval(one, integer(2), true, true)), *integer(1)));
     REQUIRE(eq(*inf(*interval(one, integer(2), false, false)), *integer(1)));
 
@@ -1420,6 +1424,8 @@ TEST_CASE("boundary : Basic", "[basic]")
     REQUIRE(eq(*boundary(*reals()), *emptyset()));
     REQUIRE(eq(*boundary(*rationals()), *reals()));
     REQUIRE(eq(*boundary(*integers()), *integers()));
+    REQUIRE(eq(*boundary(*naturals()), *naturals()));
+    REQUIRE(eq(*boundary(*naturals0()), *naturals0()));
     REQUIRE(eq(*boundary(*i1), *finiteset({integer(1), integer(2)})));
     REQUIRE(eq(*boundary(*finiteset({integer(1), integer(2)})),
                *finiteset({integer(1), integer(2)})));
@@ -1444,6 +1450,8 @@ TEST_CASE("closure : Basic", "[basic]")
     REQUIRE(eq(*closure(*reals()), *reals()));
     REQUIRE(eq(*closure(*rationals()), *reals()));
     REQUIRE(eq(*closure(*integers()), *integers()));
+    REQUIRE(eq(*closure(*naturals()), *naturals()));
+    REQUIRE(eq(*closure(*naturals0()), *naturals0()));
     REQUIRE(eq(*closure(*finiteset({integer(1), integer(2)})),
                *finiteset({integer(1), integer(2)})));
     REQUIRE(eq(*closure(*i1), *i1));
@@ -1463,6 +1471,8 @@ TEST_CASE("interior : Basic", "[basic]")
     REQUIRE(eq(*interior(*reals()), *reals()));
     REQUIRE(eq(*interior(*rationals()), *emptyset()));
     REQUIRE(eq(*interior(*integers()), *emptyset()));
+    REQUIRE(eq(*interior(*naturals()), *emptyset()));
+    REQUIRE(eq(*interior(*naturals0()), *emptyset()));
     REQUIRE(eq(*interior(*finiteset({integer(1), integer(2)})), *emptyset()));
     REQUIRE(eq(*interior(*i1), *i2));
     REQUIRE(eq(*interior(*i2), *i2));
