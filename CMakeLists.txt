@@ -26,12 +26,6 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-#Boost.multiprecision build segfaults if -O3 optimization is on
-#which it is by default for cmake Release mode. Remove -O3 from flags.
-if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-endif()
-
 # Enable C++11 support in all compilers. SymEngine will not compile unless
 # the C++11 support is enabled.
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel|SunPRO")
