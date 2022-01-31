@@ -613,9 +613,7 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "geq(x)";
-    REQUIRE_THROWS_WITH(
-        parse_sbml(s),
-        "Parsing Unsuccessful: 'geq' must have at least 2 arguments");
+    REQUIRE_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "geq(x, y)";
     res = parse_sbml(s);
