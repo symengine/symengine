@@ -117,10 +117,10 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(
         v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)),
-        NotImplementedError &);
+        NotImplementedError);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
 
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
@@ -211,7 +211,7 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
     REQUIRE(::fabs(d.imag() - 0.0) < 1e-12);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
 }
 
 TEST_CASE("Evaluate functions", "[lambda_gamma]")
@@ -341,7 +341,7 @@ TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
 {
 
     RCP<const Basic> x, y, z, r, a, b;
-    double d, d2, d3;
+    double d, d2;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
@@ -454,11 +454,11 @@ TEST_CASE("LLVMDoubleVisitor Exceptions", "[llvm_double]")
     y = symbol("y");
     r = add(x, zeta(x, y));
     LLVMDoubleVisitor v;
-    CHECK_THROWS_AS(v.init({x, y}, *r), NotImplementedError &);
+    CHECK_THROWS_AS(v.init({x, y}, *r), NotImplementedError);
     CHECK_THROWS_WITH(v.init({x, y}, *r), "zeta(x, y)");
 
     r = add(x, pow(x, y));
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
     CHECK_THROWS_WITH(v.init({x}, *r), "Symbol y not in the symbols vector.");
 }
 
@@ -512,7 +512,6 @@ TEST_CASE("Check that our default LLVM passes give correct results",
     }
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
     SymEngine::LLVMLongDoubleVisitor v3;
-    long double d3, mpfr_d;
 #endif
     LLVMFloatVisitor v4;
     for (auto &arg : vec) {
@@ -523,6 +522,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         // Check only for 6 digits with floats
         REQUIRE(::fabs((d - d4) / d) < 1e-6);
 #if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
+        long double d3, mpfr_d;
         v3.init({x, y, z}, *arg);
         d3 = v3.call({0.4l, 2.0l, 3.0l});
         map_basic_basic subs_dict = {
