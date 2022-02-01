@@ -175,7 +175,7 @@ TEST_CASE("Testing MExprPoly::eval", "[MExprPoly]")
         = {{x, Expression(0)}, {y, Expression(0)}, {z, Expression(0)}};
     std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> m2
         = {{x, ex}, {y, why}, {z, zee}};
-    // CHECK_THROWS_AS(p->eval(m1), SymEngineException&);
+    // CHECK_THROWS_AS(p->eval(m1), SymEngineException);
     REQUIRE(p->eval(m2)
             == expr1 * pow(ex, 2) + expr2 * pow(why, 2) + expr3 * pow(zee, 2)
                    + expr4 * ex * why * zee + expr1 * ex * why
