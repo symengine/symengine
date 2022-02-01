@@ -213,5 +213,5 @@ TEST_CASE("Test assumptions", "[assumptions]")
     REQUIRE(is_true(a.is_nonzero(x)));
     REQUIRE(is_false(a.is_zero(x)));
 
-    CHECK_THROWS_AS(Assumptions({rel5, rel6}), SymEngineException &);
+    CHECK_THROWS_AS(Assumptions({rel5, rel6}), SymEngineException);
 }

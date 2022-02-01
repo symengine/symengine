@@ -50,7 +50,7 @@ TEST_CASE("test_primepi(): ntheory_funcs", "[ntheory_funcs]")
     REQUIRE(is_a<Infty>(*primepi(Inf)));
     REQUIRE(eq(*primepi(mul(integer(-1), Inf)), *integer(0)));
     CHECK_THROWS_AS(*primepi(Complex::from_two_nums(*integer(1), *integer(1))),
-                    SymEngineException &);
+                    SymEngineException);
     REQUIRE(eq(*primepi(symbol("x")), *make_rcp<PrimePi>(symbol("x"))));
     REQUIRE(primepi(symbol("x"))->__str__() == "primepi(x)");
     REQUIRE(eq(*PrimePi(symbol("x")).create(integer(2)), *integer(1)));
@@ -59,7 +59,7 @@ TEST_CASE("test_primepi(): ntheory_funcs", "[ntheory_funcs]")
 
 TEST_CASE("test_primorial(): ntheory_funcs", "[ntheory_funcs]")
 {
-    CHECK_THROWS_AS(*primorial(integer(0)), SymEngineException &);
+    CHECK_THROWS_AS(*primorial(integer(0)), SymEngineException);
     REQUIRE(eq(*primorial(integer(1)), *integer(1)));
     REQUIRE(eq(*primorial(integer(2)), *integer(2)));
     REQUIRE(eq(*primorial(integer(3)), *integer(6)));
@@ -94,8 +94,8 @@ TEST_CASE("test_polygonal_number(): ntheory", "[ntheory]")
     REQUIRE(eq(*polygonal_number(i5, i5), *i35));
     REQUIRE(eq(*polygonal_number(i3, s1), *div(add(s1, pow(s1, i2)), i2)));
     REQUIRE(eq(*polygonal_number(i4, s1), *mul(s1, s1)));
-    CHECK_THROWS_AS(*polygonal_number(integer(0), integer(2)), DomainError &);
-    CHECK_THROWS_AS(*polygonal_number(integer(3), integer(0)), DomainError &);
+    CHECK_THROWS_AS(*polygonal_number(integer(0), integer(2)), DomainError);
+    CHECK_THROWS_AS(*polygonal_number(integer(3), integer(0)), DomainError);
 }
 
 TEST_CASE("test_principal_polygonal_root(): ntheory", "[ntheory]")
@@ -122,7 +122,7 @@ TEST_CASE("test_principal_polygonal_root(): ntheory", "[ntheory]")
                *div(add(m1, sqrt(add(i1, mul(i8, s1)))), i2)));
     REQUIRE(eq(*principal_polygonal_root(i4, s1), *sqrt(s1)));
     CHECK_THROWS_AS(*principal_polygonal_root(integer(0), integer(2)),
-                    DomainError &);
+                    DomainError);
     CHECK_THROWS_AS(*principal_polygonal_root(integer(3), integer(0)),
-                    DomainError &);
+                    DomainError);
 }

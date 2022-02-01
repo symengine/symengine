@@ -613,9 +613,7 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "geq(x)";
-    REQUIRE_THROWS_WITH(
-        parse_sbml(s),
-        "Parsing Unsuccessful: 'geq' must have at least 2 arguments");
+    REQUIRE_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "geq(x, y)";
     res = parse_sbml(s);
@@ -1048,34 +1046,34 @@ TEST_CASE("Parsing: errors", "[sbml_parser]")
     std::string s;
 
     s = "";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "12x";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "x+y+";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "x + (y))";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "x + max((3, 2+1)";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "2..33 + 2";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "(2)(3)";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "sin(x y)";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "max(,3,2)";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 
     s = "x+%y+z";
-    CHECK_THROWS_AS(parse_sbml(s), ParseError &);
+    CHECK_THROWS_AS(parse_sbml(s), ParseError);
 }
 
 TEST_CASE("Parsing: bison stack reallocation", "[sbml_parser]")

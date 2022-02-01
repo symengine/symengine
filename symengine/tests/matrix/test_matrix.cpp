@@ -1348,7 +1348,7 @@ TEST_CASE("test_pivoted_LU(): matrices", "[matrices]")
     A = DenseMatrix(3, 3,
                     {integer(0), integer(0), integer(0), integer(0), integer(0),
                      integer(0), integer(8), integer(3), integer(1)});
-    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), SymEngineException &);
+    CHECK_THROWS_AS(pivoted_LU(A, L, U, pl), SymEngineException);
 }
 
 TEST_CASE("test_fraction_free_LDU(): matrices", "[matrices]")
@@ -1672,7 +1672,7 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
                            integer(1)});
     REQUIRE(eq(*det_bareis(M), *integer(350)));
 
-    CHECK_THROWS_AS(M.rank(), NotImplementedError &);
+    CHECK_THROWS_AS(M.rank(), NotImplementedError);
 }
 
 TEST_CASE("test_berkowitz(): matrices", "[matrices]")
@@ -1781,7 +1781,7 @@ TEST_CASE("test_solve_functions(): matrices", "[matrices]")
     A = DenseMatrix(2, 2, {integer(19), integer(-5), integer(-4), integer(1)});
     b = DenseMatrix(2, 1, {integer(3), integer(-3)});
     x = DenseMatrix(2, 1);
-    CHECK_THROWS_AS(LDL_solve(A, b, x), SymEngineException &);
+    CHECK_THROWS_AS(LDL_solve(A, b, x), SymEngineException);
 }
 
 TEST_CASE("test_char_poly(): matrices", "[matrices]")
@@ -1918,7 +1918,7 @@ TEST_CASE("test_dot(): matrices", "[matrices]")
 
     A = DenseMatrix(2, 3);
     B = DenseMatrix(4, 5);
-    CHECK_THROWS_AS(dot(A, B, C), SymEngineException &);
+    CHECK_THROWS_AS(dot(A, B, C), SymEngineException);
 }
 
 TEST_CASE("test_cross(): matrices", "[matrices]")
@@ -2078,7 +2078,7 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
                           integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
 }
 
 TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
@@ -2096,7 +2096,7 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
                           integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException &);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), SymEngineException);
 }
 
 TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
@@ -2314,8 +2314,8 @@ TEST_CASE("Test Jacobian", "[matrices]")
     REQUIRE(Js == ref1);
 
     X = DenseMatrix(4, 1, {f, y, z, t});
-    CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException &);
-    CHECK_THROWS_AS(CSRMatrix::jacobian(A, X), SymEngineException &);
+    CHECK_THROWS_AS(jacobian(A, X, J), SymEngineException);
+    CHECK_THROWS_AS(CSRMatrix::jacobian(A, X), SymEngineException);
 
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});

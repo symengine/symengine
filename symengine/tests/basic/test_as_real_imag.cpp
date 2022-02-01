@@ -70,7 +70,7 @@ TEST_CASE("RealImag: Number and Symbol", "[as_real_imag]")
     // Symbol
     CHECK_THROWS_AS(
         as_real_imag(mul(add(i2, I), symbol("x")), outArg(re), outArg(im)),
-        SymEngineException &);
+        SymEngineException);
 }
 
 TEST_CASE("RealImag: Mul", "[as_real_imag]")
@@ -93,7 +93,7 @@ TEST_CASE("RealImag: Mul", "[as_real_imag]")
 
     CHECK_THROWS_AS(as_real_imag(mul(add(i2, I), add(i2, mul(symbol("x"), I))),
                                  outArg(re), outArg(im)),
-                    SymEngineException &);
+                    SymEngineException);
 }
 
 TEST_CASE("RealImag: Add", "[as_real_imag]")
@@ -135,7 +135,7 @@ TEST_CASE("RealImag: Pow", "[as_real_imag]")
     REQUIRE(eq(*im, *div(sqrt(i2), i2)));
 
     CHECK_THROWS_AS(as_real_imag(pow(I, symbol("x")), outArg(re), outArg(im)),
-                    SymEngineException &);
+                    SymEngineException);
 }
 
 TEST_CASE("RealImag: Trigonometric functions", "[as_real_imag]")
@@ -262,9 +262,9 @@ TEST_CASE("RealImag: Trigonometric functions", "[as_real_imag]")
                          add(pow(sin(one), i2), pow(sinh(i2), i2)))));
 
     CHECK_THROWS_AS(as_real_imag(asin(i2), outArg(re), outArg(im)),
-                    SymEngineException &);
+                    SymEngineException);
     CHECK_THROWS_AS(as_real_imag(asinh(i2), outArg(re), outArg(im)),
-                    SymEngineException &);
+                    SymEngineException);
 }
 
 TEST_CASE("RealImag: Absolute Value Function", "[as_real_imag]")
