@@ -645,7 +645,7 @@ TEST_CASE("Naturals : Basic", "[basic]")
     REQUIRE(r1->get_args().empty());
     REQUIRE(r1->__str__() == "Naturals");
     REQUIRE(r1->__hash__() == naturals()->__hash__());
-    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException &);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("Naturals0 : Basic", "[basic]")
@@ -740,7 +740,7 @@ TEST_CASE("Naturals0 : Basic", "[basic]")
     REQUIRE(r1->get_args().empty());
     REQUIRE(r1->__str__() == "Naturals0");
     REQUIRE(r1->__hash__() == naturals0()->__hash__());
-    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException &);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), SymEngineException);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
