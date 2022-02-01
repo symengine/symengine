@@ -1,17 +1,17 @@
 <map id="/home/runner/work/symengine/symengine/symengine/rational.h" name="/home/runner/work/symengine/symengine/symengine/rational.h">
 <area shape="rect" id="node1" title=" " alt="" coords="3151,5,3391,47"/>
-<area shape="rect" id="node2" href="$complex_8h.html" title=" " alt="" coords="725,95,971,136"/>
+<area shape="rect" id="node2" href="$complex_8h.html" title=" " alt="" coords="726,95,973,136"/>
 <area shape="rect" id="node28" href="$upolybase_8h_source.html" title=" " alt="" coords="2712,585,2933,641"/>
 <area shape="rect" id="node47" href="$integer_8cpp_source.html" title=" " alt="" coords="3008,95,3259,136"/>
 <area shape="rect" id="node48" href="$ntheory_8cpp_source.html" title=" " alt="" coords="3283,95,3536,136"/>
 <area shape="rect" id="node49" href="$number_8cpp_source.html" title=" " alt="" coords="3561,95,3815,136"/>
 <area shape="rect" id="node50" href="$rational_8cpp_source.html" title=" " alt="" coords="3839,95,4094,136"/>
-<area shape="rect" id="node3" href="$add_8cpp.html" title="Definitions for arithmatic." alt="" coords="733,184,963,225"/>
+<area shape="rect" id="node3" href="$add_8cpp.html" title="Definitions for arithmatic." alt="" coords="735,184,964,225"/>
 <area shape="rect" id="node4" href="$complex_8cpp_source.html" title=" " alt="" coords="5,184,267,225"/>
 <area shape="rect" id="node5" href="$constants_8cpp_source.html" title=" " alt="" coords="291,184,559,225"/>
 <area shape="rect" id="node6" href="$infinity_8cpp_source.html" title=" " alt="" coords="579,489,827,530"/>
-<area shape="rect" id="node7" href="$mul_8cpp_source.html" title=" " alt="" coords="987,184,1218,225"/>
-<area shape="rect" id="node8" href="$pow_8cpp_source.html" title=" " alt="" coords="1242,184,1473,225"/>
+<area shape="rect" id="node7" href="$mul_8cpp_source.html" title=" " alt="" coords="989,184,1219,225"/>
+<area shape="rect" id="node8" href="$pow_8cpp_source.html" title=" " alt="" coords="1243,184,1474,225"/>
 <area shape="rect" id="node9" href="$real__double_8h_source.html" title=" " alt="" coords="635,273,856,329"/>
 <area shape="rect" id="node38" href="$sets_8h.html" title=" " alt="" coords="3553,184,3775,225"/>
 <area shape="rect" id="node10" href="$complex__double_8h_source.html" title=" " alt="" coords="1105,377,1340,433"/>
@@ -19,21 +19,21 @@
 <area shape="rect" id="node11" href="$complex__double_8cpp_source.html" title=" " alt="" coords="1373,481,1608,537"/>
 <area shape="rect" id="node13" href="$expression_8h.html" title=" " alt="" coords="2261,489,2523,530"/>
 <area shape="rect" id="node36" href="$real__double_8cpp_source.html" title=" " alt="" coords="851,481,1072,537"/>
-<area shape="rect" id="node37" href="$real__mpfr_8h_source.html" title=" " alt="" coords="1097,489,1349,530"/>
+<area shape="rect" id="node37" href="$real__mpfr_8h_source.html" title=" " alt="" coords="1096,489,1349,530"/>
 <area shape="rect" id="node14" href="$uexprpoly_8h_source.html" title=" " alt="" coords="2315,793,2536,849"/>
 <area shape="rect" id="node26" href="$uintpoly__piranha_8cpp_source.html" title=" " alt="" coords="2069,793,2291,849"/>
 <area shape="rect" id="node27" href="$uintpoly__piranha_8h.html" title=" " alt="" coords="2365,689,2587,745"/>
-<area shape="rect" id="node15" href="$dense__matrix_8cpp_source.html" title=" " alt="" coords="2300,1195,2521,1251"/>
+<area shape="rect" id="node15" href="$dense__matrix_8cpp_source.html" title=" " alt="" coords="2337,1195,2559,1251"/>
 <area shape="rect" id="node16" href="$solve_8h.html" title=" " alt="" coords="2461,905,2686,946"/>
 <area shape="rect" id="node19" href="$visitor_8h.html" title=" " alt="" coords="3099,1001,3330,1043"/>
-<area shape="rect" id="node17" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="1900,1001,2164,1043"/>
+<area shape="rect" id="node17" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="1899,1001,2165,1043"/>
 <area shape="rect" id="node18" href="$solve_8cpp_source.html" title=" " alt="" coords="2847,1202,3087,1243"/>
 <area shape="rect" id="node20" href="$as__real__imag_8cpp_source.html" title=" " alt="" coords="2856,1091,3077,1147"/>
 <area shape="rect" id="node21" href="$cse_8cpp_source.html" title=" " alt="" coords="3101,1098,3328,1139"/>
-<area shape="rect" id="node22" href="$derivative_8cpp_source.html" title=" " alt="" coords="3438,1202,3709,1243"/>
+<area shape="rect" id="node22" href="$derivative_8cpp_source.html" title=" " alt="" coords="3439,1202,3710,1243"/>
 <area shape="rect" id="node23" href="$sparse__matrix_8cpp_source.html" title=" " alt="" coords="2611,1091,2832,1147"/>
-<area shape="rect" id="node24" href="$subs_8h_source.html" title=" " alt="" coords="3672,1098,3893,1139"/>
-<area shape="rect" id="node25" href="$visitor_8cpp_source.html" title=" " alt="" coords="3403,1098,3648,1139"/>
+<area shape="rect" id="node24" href="$subs_8h_source.html" title=" " alt="" coords="3673,1098,3895,1139"/>
+<area shape="rect" id="node25" href="$visitor_8cpp_source.html" title=" " alt="" coords="3402,1098,3649,1139"/>
 <area shape="rect" id="node29" href="$fields_8h.html" title=" " alt="" coords="2759,905,2985,946"/>
 <area shape="rect" id="node31" href="$uintpoly__flint_8h.html" title=" " alt="" coords="3355,793,3576,849"/>
 <area shape="rect" id="node33" href="$usymenginepoly_8h_source.html" title=" " alt="" coords="2712,689,2933,745"/>
