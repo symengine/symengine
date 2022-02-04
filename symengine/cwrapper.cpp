@@ -1068,6 +1068,13 @@ CWRAPPER_OUTPUT_TYPE basic_add_vec(basic s, const CVecBasic *d)
     CWRAPPER_END
 }
 
+CWRAPPER_OUTPUT_TYPE basic_mul_vec(basic s, const CVecBasic *d)
+{
+    CWRAPPER_BEGIN
+    s->m = SymEngine::mul(d->m);
+    CWRAPPER_END
+}
+
 // C wrapper for Matrix
 
 struct CDenseMatrix {
