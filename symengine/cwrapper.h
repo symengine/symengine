@@ -509,6 +509,9 @@ CWRAPPER_OUTPUT_TYPE basic_min(basic s, const CVecBasic *d);
 //! Adds together all the values in a vector
 CWRAPPER_OUTPUT_TYPE basic_add_vec(basic s, const CVecBasic *d);
 
+//! Multiples all the values in a vector
+CWRAPPER_OUTPUT_TYPE basic_mul_vec(basic s, const CVecBasic *d);
+
 //! Wrappers for Matrices
 
 typedef struct CDenseMatrix CDenseMatrix;
