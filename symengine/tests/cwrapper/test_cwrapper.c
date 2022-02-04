@@ -1247,7 +1247,6 @@ void test_functions()
     basic_new_stack(ten);
     basic_new_stack(twenty_four);
 
-
     basic_const_pi(pi);
     basic_const_E(e);
     basic_const_complex_infinity(complex_inf);
