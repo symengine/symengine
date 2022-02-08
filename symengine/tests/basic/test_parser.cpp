@@ -45,11 +45,13 @@ using SymEngine::min;
 using SymEngine::minus_one;
 using SymEngine::Mul;
 using SymEngine::Ne;
+using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::parse;
 using SymEngine::ParseError;
 using SymEngine::pi;
+using SymEngine::piecewise;
 using SymEngine::pow;
 using SymEngine::Rational;
 using SymEngine::rational;
@@ -602,6 +604,21 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *logical_not(Lt(x, y))));
     REQUIRE(eq(*res, *parse(res->__str__())));
+
+    {
+        s = "Piecewise((x, x <= 2), (y, And(x > 2, x <= 5)), (x+y, True))";
+        res = parse(s);
+
+        auto cond1 = Le(x, integer(2));
+        auto cond2 = logical_and({Gt(x, integer(2)), Le(x, integer(5))});
+        auto p = piecewise({{x, cond1}, {y, cond2}, {add(x, y), boolTrue}});
+
+        REQUIRE(eq(*res, *p));
+    }
+    s = "Piecewise((2x, True))";
+    res = parse(s);
+    REQUIRE(eq(*res, *piecewise({{mul(integer(2), x), boolTrue}})));
+    REQUIRE(eq(*res, *parse(res->__str__())));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
@@ -651,6 +668,11 @@ TEST_CASE("Parsing: constants", "[parser]")
     REQUIRE(eq(*res, *Inf));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "-oo";
+    res = parse(s);
+    REQUIRE(eq(*res, *NegInf));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
     s = "1/oo + 2";
     res = parse(s);
     REQUIRE(eq(*res, *integer(2)));
@@ -659,6 +681,11 @@ TEST_CASE("Parsing: constants", "[parser]")
     s = "zoo";
     res = parse(s);
     REQUIRE(eq(*res, *ComplexInf));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "True";
+    res = parse(s);
+    REQUIRE(eq(*res, *boolTrue));
     REQUIRE(eq(*res, *parse(res->__str__())));
 }
 
@@ -901,6 +928,9 @@ TEST_CASE("Parsing: errors", "[parser]")
     CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "x+%y+z";
+    CHECK_THROWS_AS(parse(s), ParseError);
+
+    s = "Piecewise((x, y))";
     CHECK_THROWS_AS(parse(s), ParseError);
 }
 

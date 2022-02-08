@@ -1,4 +1,4 @@
-// A Bison parser, made by GNU Bison 3.7.5.
+// A Bison parser, made by GNU Bison 3.8.2.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
@@ -15,7 +15,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // As a special exception, you may create a larger work that contains
 // part or all of the Bison parser skeleton and distribute that work
@@ -44,9 +44,11 @@
 // Unqualified %code blocks.
 #line 22 "parser.yy"
 
+#include "symengine/basic.h"
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 #include "symengine/parser/parser.h"
+#include "symengine/utilities/stream_fmt.h"
 
 using SymEngine::RCP;
 using SymEngine::Basic;
@@ -85,7 +87,7 @@ void parser::error(const std::string &msg)
 }
 
 
-#line 89 "parser.tab.cc"
+#line 91 "parser.tab.cc"
 
 
 #ifndef YY_
@@ -158,7 +160,7 @@ void parser::error(const std::string &msg)
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 162 "parser.tab.cc"
+#line 164 "parser.tab.cc"
 
   /// Build a parser object.
   parser::parser (SymEngine::Parser &p_yyarg)
@@ -177,9 +179,9 @@ namespace yy {
   parser::syntax_error::~syntax_error () YY_NOEXCEPT YY_NOTHROW
   {}
 
-  /*---------------.
-  | symbol kinds.  |
-  `---------------*/
+  /*---------.
+  | symbol.  |
+  `---------*/
 
   // basic_symbol.
   template <typename Base>
@@ -189,10 +191,15 @@ namespace yy {
   {
     switch (this->kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.copy< SymEngine::PiecewiseVec > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.copy< SymEngine::RCP<const SymEngine::Basic> > (YY_MOVE (that.value));
         break;
 
@@ -200,6 +207,11 @@ namespace yy {
         value.copy< SymEngine::vec_basic > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.copy< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -214,12 +226,14 @@ namespace yy {
 
 
 
+
   template <typename Base>
   parser::symbol_kind_type
   parser::basic_symbol<Base>::type_get () const YY_NOEXCEPT
   {
     return this->kind ();
   }
+
 
   template <typename Base>
   bool
@@ -235,10 +249,15 @@ namespace yy {
     super_type::move (s);
     switch (this->kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.move< SymEngine::PiecewiseVec > (YY_MOVE (s.value));
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.move< SymEngine::RCP<const SymEngine::Basic> > (YY_MOVE (s.value));
         break;
 
@@ -246,6 +265,11 @@ namespace yy {
         value.move< SymEngine::vec_basic > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.move< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (YY_MOVE (s.value));
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -259,25 +283,27 @@ namespace yy {
   }
 
   // by_kind.
-  parser::by_kind::by_kind ()
+  parser::by_kind::by_kind () YY_NOEXCEPT
     : kind_ (symbol_kind::S_YYEMPTY)
   {}
 
 #if 201103L <= YY_CPLUSPLUS
-  parser::by_kind::by_kind (by_kind&& that)
+  parser::by_kind::by_kind (by_kind&& that) YY_NOEXCEPT
     : kind_ (that.kind_)
   {
     that.clear ();
   }
 #endif
 
-  parser::by_kind::by_kind (const by_kind& that)
+  parser::by_kind::by_kind (const by_kind& that) YY_NOEXCEPT
     : kind_ (that.kind_)
   {}
 
-  parser::by_kind::by_kind (token_kind_type t)
+  parser::by_kind::by_kind (token_kind_type t) YY_NOEXCEPT
     : kind_ (yytranslate_ (t))
   {}
+
+
 
   void
   parser::by_kind::clear () YY_NOEXCEPT
@@ -298,11 +324,13 @@ namespace yy {
     return kind_;
   }
 
+
   parser::symbol_kind_type
   parser::by_kind::type_get () const YY_NOEXCEPT
   {
     return this->kind ();
   }
+
 
 
   // by_state.
@@ -348,10 +376,15 @@ namespace yy {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.YY_MOVE_OR_COPY< SymEngine::PiecewiseVec > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.YY_MOVE_OR_COPY< SymEngine::RCP<const SymEngine::Basic> > (YY_MOVE (that.value));
         break;
 
@@ -359,6 +392,11 @@ namespace yy {
         value.YY_MOVE_OR_COPY< SymEngine::vec_basic > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.YY_MOVE_OR_COPY< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -380,10 +418,15 @@ namespace yy {
   {
     switch (that.kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.move< SymEngine::PiecewiseVec > (YY_MOVE (that.value));
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.move< SymEngine::RCP<const SymEngine::Basic> > (YY_MOVE (that.value));
         break;
 
@@ -391,6 +434,11 @@ namespace yy {
         value.move< SymEngine::vec_basic > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.move< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (YY_MOVE (that.value));
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -412,10 +460,15 @@ namespace yy {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.copy< SymEngine::PiecewiseVec > (that.value);
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.copy< SymEngine::RCP<const SymEngine::Basic> > (that.value);
         break;
 
@@ -423,6 +476,11 @@ namespace yy {
         value.copy< SymEngine::vec_basic > (that.value);
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.copy< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (that.value);
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -442,10 +500,15 @@ namespace yy {
     state = that.state;
     switch (that.kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.move< SymEngine::PiecewiseVec > (that.value);
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.move< SymEngine::RCP<const SymEngine::Basic> > (that.value);
         break;
 
@@ -453,6 +516,11 @@ namespace yy {
         value.move< SymEngine::vec_basic > (that.value);
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.move< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (that.value);
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -517,7 +585,7 @@ namespace yy {
   }
 
   void
-  parser::yypop_ (int n)
+  parser::yypop_ (int n) YY_NOEXCEPT
   {
     yystack_.pop (n);
   }
@@ -560,13 +628,13 @@ namespace yy {
   }
 
   bool
-  parser::yy_pact_value_is_default_ (int yyvalue)
+  parser::yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yypact_ninf_;
   }
 
   bool
-  parser::yy_table_value_is_error_ (int yyvalue)
+  parser::yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT
   {
     return yyvalue == yytable_ninf_;
   }
@@ -712,10 +780,15 @@ namespace yy {
          when using variants.  */
       switch (yyr1_[yyn])
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        yylhs.value.emplace< SymEngine::PiecewiseVec > ();
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         yylhs.value.emplace< SymEngine::RCP<const SymEngine::Basic> > ();
         break;
 
@@ -723,6 +796,11 @@ namespace yy {
         yylhs.value.emplace< SymEngine::vec_basic > ();
         break;
 
+      case symbol_kind::S_epair: // epair
+        yylhs.value.emplace< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > ();
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -744,40 +822,40 @@ namespace yy {
           switch (yyn)
             {
   case 2: // st_expr: expr
-#line 98 "parser.yy"
+#line 104 "parser.yy"
     {
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ();
         p.res = yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > ();
     }
-#line 753 "parser.tab.cc"
+#line 831 "parser.tab.cc"
     break;
 
   case 3: // expr: expr '+' expr
-#line 106 "parser.yy"
+#line 112 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = add(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 759 "parser.tab.cc"
+#line 837 "parser.tab.cc"
     break;
 
   case 4: // expr: expr '-' expr
-#line 109 "parser.yy"
+#line 115 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = sub(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 765 "parser.tab.cc"
+#line 843 "parser.tab.cc"
     break;
 
   case 5: // expr: expr '*' expr
-#line 112 "parser.yy"
+#line 118 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = mul(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 771 "parser.tab.cc"
+#line 849 "parser.tab.cc"
     break;
 
   case 6: // expr: expr '/' expr
-#line 115 "parser.yy"
+#line 121 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = div(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 777 "parser.tab.cc"
+#line 855 "parser.tab.cc"
     break;
 
   case 7: // expr: IMPLICIT_MUL POW expr
-#line 120 "parser.yy"
+#line 126 "parser.yy"
         {
           auto tup = p.parse_implicit_mul(yystack_[2].value.as < std::string > ());
           if (neq(*std::get<1>(tup), *one)) {
@@ -786,174 +864,221 @@ namespace yy {
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = pow(std::get<0>(tup), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ());
           }
         }
-#line 790 "parser.tab.cc"
+#line 868 "parser.tab.cc"
     break;
 
   case 8: // expr: expr POW expr
-#line 130 "parser.yy"
+#line 136 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = pow(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 796 "parser.tab.cc"
+#line 874 "parser.tab.cc"
     break;
 
   case 9: // expr: expr '<' expr
-#line 133 "parser.yy"
+#line 139 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Lt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 802 "parser.tab.cc"
+#line 880 "parser.tab.cc"
     break;
 
   case 10: // expr: expr '>' expr
-#line 136 "parser.yy"
+#line 142 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Gt(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 808 "parser.tab.cc"
+#line 886 "parser.tab.cc"
     break;
 
   case 11: // expr: expr NE expr
-#line 139 "parser.yy"
+#line 145 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Ne(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 814 "parser.tab.cc"
+#line 892 "parser.tab.cc"
     break;
 
   case 12: // expr: expr LE expr
-#line 142 "parser.yy"
+#line 148 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Le(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 820 "parser.tab.cc"
+#line 898 "parser.tab.cc"
     break;
 
   case 13: // expr: expr GE expr
-#line 145 "parser.yy"
+#line 151 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Ge(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 826 "parser.tab.cc"
+#line 904 "parser.tab.cc"
     break;
 
   case 14: // expr: expr EQ expr
-#line 148 "parser.yy"
+#line 154 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(Eq(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > (), yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ())); }
-#line 832 "parser.tab.cc"
+#line 910 "parser.tab.cc"
     break;
 
   case 15: // expr: expr '|' expr
-#line 151 "parser.yy"
+#line 157 "parser.yy"
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             s.insert(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(logical_or(s));
         }
-#line 843 "parser.tab.cc"
+#line 921 "parser.tab.cc"
     break;
 
   case 16: // expr: expr '&' expr
-#line 159 "parser.yy"
+#line 165 "parser.yy"
         {
             set_boolean s;
             s.insert(rcp_static_cast<const Boolean>(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             s.insert(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(logical_and(s));
         }
-#line 854 "parser.tab.cc"
+#line 932 "parser.tab.cc"
     break;
 
   case 17: // expr: expr '^' expr
-#line 167 "parser.yy"
+#line 173 "parser.yy"
         {
             vec_boolean s;
             s.push_back(rcp_static_cast<const Boolean>(yystack_[2].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             s.push_back(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()));
             yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(logical_xor(s));
         }
-#line 865 "parser.tab.cc"
+#line 943 "parser.tab.cc"
     break;
 
   case 18: // expr: '(' expr ')'
-#line 175 "parser.yy"
+#line 181 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[1].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
-#line 871 "parser.tab.cc"
+#line 949 "parser.tab.cc"
     break;
 
   case 19: // expr: '-' expr
-#line 178 "parser.yy"
+#line 184 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = neg(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 877 "parser.tab.cc"
+#line 955 "parser.tab.cc"
     break;
 
   case 20: // expr: '+' expr
-#line 181 "parser.yy"
+#line 187 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > (); }
-#line 883 "parser.tab.cc"
+#line 961 "parser.tab.cc"
     break;
 
   case 21: // expr: '~' expr
-#line 184 "parser.yy"
+#line 190 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(logical_not(rcp_static_cast<const Boolean>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()))); }
-#line 889 "parser.tab.cc"
+#line 967 "parser.tab.cc"
     break;
 
   case 22: // expr: leaf
-#line 187 "parser.yy"
+#line 193 "parser.yy"
         { yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = rcp_static_cast<const Basic>(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ()); }
-#line 895 "parser.tab.cc"
+#line 973 "parser.tab.cc"
     break;
 
   case 23: // leaf: IDENTIFIER
-#line 192 "parser.yy"
+#line 198 "parser.yy"
     {
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_identifier(yystack_[0].value.as < std::string > ());
     }
-#line 903 "parser.tab.cc"
+#line 981 "parser.tab.cc"
     break;
 
   case 24: // leaf: IMPLICIT_MUL
-#line 197 "parser.yy"
+#line 203 "parser.yy"
     {
         auto tup = p.parse_implicit_mul(yystack_[0].value.as < std::string > ());
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = mul(std::get<0>(tup), std::get<1>(tup));
     }
-#line 912 "parser.tab.cc"
+#line 990 "parser.tab.cc"
     break;
 
   case 25: // leaf: NUMERIC
-#line 203 "parser.yy"
+#line 209 "parser.yy"
     {
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.parse_numeric(yystack_[0].value.as < std::string > ());
     }
-#line 920 "parser.tab.cc"
+#line 998 "parser.tab.cc"
     break;
 
   case 26: // leaf: func
-#line 208 "parser.yy"
+#line 214 "parser.yy"
     {
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ();
     }
-#line 928 "parser.tab.cc"
+#line 1006 "parser.tab.cc"
     break;
 
-  case 27: // func: IDENTIFIER '(' expr_list ')'
-#line 215 "parser.yy"
+  case 27: // leaf: pwise
+#line 219 "parser.yy"
+    {
+        yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ();
+    }
+#line 1014 "parser.tab.cc"
+    break;
+
+  case 28: // func: IDENTIFIER '(' expr_list ')'
+#line 226 "parser.yy"
     {
         yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = p.functionify(yystack_[3].value.as < std::string > (), yystack_[1].value.as < SymEngine::vec_basic > ());
     }
-#line 936 "parser.tab.cc"
+#line 1022 "parser.tab.cc"
     break;
 
-  case 28: // expr_list: expr_list ',' expr
-#line 223 "parser.yy"
+  case 29: // epair: '(' expr ',' expr ')'
+#line 234 "parser.yy"
+    {
+        auto logical_expr = yystack_[1].value.as < SymEngine::RCP<const SymEngine::Basic> > ();
+        if (!SymEngine::is_a_sub<Boolean>(*logical_expr)) {
+            throw SymEngine::ParseError(SymEngine::StreamFmt() << "Not of Boolean type in Piecewise arguments: "
+                                        << logical_expr->__str__());
+        }
+        yylhs.value.as < std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > () = std::make_pair(yystack_[3].value.as < SymEngine::RCP<const SymEngine::Basic> > (), rcp_static_cast<const Boolean>(logical_expr));
+    }
+#line 1035 "parser.tab.cc"
+    break;
+
+  case 30: // piecewise_list: piecewise_list ',' epair
+#line 246 "parser.yy"
+    {
+       yylhs.value.as < SymEngine::PiecewiseVec > () = yystack_[2].value.as < SymEngine::PiecewiseVec > ();
+       yylhs.value.as < SymEngine::PiecewiseVec > () .push_back(yystack_[0].value.as < std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > ());
+    }
+#line 1044 "parser.tab.cc"
+    break;
+
+  case 31: // piecewise_list: epair
+#line 252 "parser.yy"
+    {
+       yylhs.value.as < SymEngine::PiecewiseVec > () = SymEngine::PiecewiseVec(1, yystack_[0].value.as < std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > ());
+    }
+#line 1052 "parser.tab.cc"
+    break;
+
+  case 32: // pwise: PIECEWISE '(' piecewise_list ')'
+#line 259 "parser.yy"
+    {
+        assert(yystack_[3].value.as < std::string > () == "Piecewise");
+        yylhs.value.as < SymEngine::RCP<const SymEngine::Basic> > () = piecewise(std::move(yystack_[1].value.as < SymEngine::PiecewiseVec > ()));
+    }
+#line 1061 "parser.tab.cc"
+    break;
+
+  case 33: // expr_list: expr_list ',' expr
+#line 268 "parser.yy"
     {
         yylhs.value.as < SymEngine::vec_basic > () = yystack_[2].value.as < SymEngine::vec_basic > (); // TODO : should make copy?
         yylhs.value.as < SymEngine::vec_basic > () .push_back(yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ());
     }
-#line 945 "parser.tab.cc"
+#line 1070 "parser.tab.cc"
     break;
 
-  case 29: // expr_list: expr
-#line 229 "parser.yy"
+  case 34: // expr_list: expr
+#line 274 "parser.yy"
     {
         yylhs.value.as < SymEngine::vec_basic > () = vec_basic(1, yystack_[0].value.as < SymEngine::RCP<const SymEngine::Basic> > ());
     }
-#line 953 "parser.tab.cc"
+#line 1078 "parser.tab.cc"
     break;
 
 
-#line 957 "parser.tab.cc"
+#line 1082 "parser.tab.cc"
 
             default:
               break;
@@ -1138,105 +1263,121 @@ namespace yy {
 
 
 
-  const signed char parser::yypact_ninf_ = -14;
+
+
+
+
+  const signed char parser::yypact_ninf_ = -13;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const short
   parser::yypact_[] =
   {
-      26,    -9,   -14,    23,    26,    26,    26,    26,    12,    65,
-     -14,   -14,    26,    26,    24,    24,    46,   -14,   -14,    26,
-      26,    26,    26,    26,    26,    26,    26,    26,    26,    26,
-      26,    26,    26,    65,   -13,    24,   -14,    80,    94,   107,
-      22,   118,   128,   137,   145,   -11,    29,    29,    24,    24,
-      24,   -14,    26,    65
+      29,    28,    50,   -13,    54,    29,    29,    29,    29,    77,
+     110,   -13,   -13,   -13,    68,    29,    29,    71,    71,    72,
+     -13,   -13,    29,    29,    29,    29,    29,    29,    29,    29,
+      29,    29,    29,    29,    29,    29,    29,   -13,   -12,   110,
+     -11,    71,   -13,   125,   139,   152,    25,   163,   173,   -10,
+     181,    32,    53,    53,    71,    71,    71,    51,   -13,    68,
+     -13,    29,    29,   -13,   110,    91,   -13
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,    23,    25,    24,     0,     0,     0,     0,     0,     2,
-      22,    26,     0,     0,    19,    20,     0,    21,     1,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    29,     0,     7,    18,    15,    17,    16,
-      14,    10,     9,    11,    12,    13,     4,     3,     5,     6,
-       8,    27,     0,    28
+       0,     0,    23,    25,    24,     0,     0,     0,     0,     0,
+       2,    22,    26,    27,     0,     0,     0,    19,    20,     0,
+      21,     1,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    31,     0,    34,
+       0,     7,    18,    15,    17,    16,    14,    10,     9,    11,
+      12,    13,     4,     3,     5,     6,     8,     0,    32,     0,
+      28,     0,     0,    30,    33,     0,    29
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -14,   -14,    -4,   -14,   -14,   -14
+     -13,   -13,    -5,   -13,   -13,    36,   -13,   -13,   -13
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     8,     9,    10,    11,    34
+       0,     9,    10,    11,    12,    37,    38,    13,    40
   };
 
   const signed char
   parser::yytable_[] =
   {
-      14,    15,    16,    17,    28,    29,    30,    31,    33,    35,
-      32,    51,    18,    52,    12,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,    46,    47,    48,    49,    50,     1,
-       2,     3,    23,    24,    25,    26,    27,    28,    29,    30,
-      31,     4,     5,    32,    13,    32,    30,    31,    53,     6,
-      32,     7,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    31,     0,     0,    32,     0,     0,
-      36,    19,    20,    21,    22,    23,    24,    25,    26,    27,
-      28,    29,    30,    31,     0,     0,    32,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,    30,    31,     0,
-       0,    32,    21,    22,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,     0,     0,    32,    22,    23,    24,    25,
-      26,    27,    28,    29,    30,    31,     0,     0,    32,    24,
-      25,    26,    27,    28,    29,    30,    31,     0,     0,    32,
-      25,    26,    27,    28,    29,    30,    31,     0,     0,    32,
-      26,    27,    28,    29,    30,    31,     0,     0,    32,    27,
-      28,    29,    30,    31,     0,     0,    32
+      17,    18,    19,    20,    29,    30,    31,    32,    33,    34,
+      39,    41,    35,    58,    60,    59,    61,    43,    44,    45,
+      46,    47,    48,    49,    50,    51,    52,    53,    54,    55,
+      56,    57,     1,     2,     3,     4,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,     5,     6,    35,    31,    32,
+      33,    34,    14,     7,    35,     8,    64,    65,    22,    23,
+      24,    25,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    33,    34,    35,    15,    35,    16,    21,    62,    22,
+      23,    24,    25,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,    36,    35,    35,    63,     0,    42,    22,    23,
+      24,    25,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,     0,     0,    35,     0,     0,    66,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+       0,     0,    35,    23,    24,    25,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,     0,     0,    35,    24,    25,
+      26,    27,    28,    29,    30,    31,    32,    33,    34,     0,
+       0,    35,    25,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,     0,     0,    35,    27,    28,    29,    30,    31,
+      32,    33,    34,     0,     0,    35,    28,    29,    30,    31,
+      32,    33,    34,     0,     0,    35,    30,    31,    32,    33,
+      34,     0,     0,    35
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       4,     5,     6,     7,    15,    16,    17,    18,    12,    13,
-      21,    24,     0,    26,    23,    19,    20,    21,    22,    23,
-      24,    25,    26,    27,    28,    29,    30,    31,    32,     3,
-       4,     5,    10,    11,    12,    13,    14,    15,    16,    17,
-      18,    15,    16,    21,    21,    21,    17,    18,    52,    23,
-      21,    25,     6,     7,     8,     9,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    -1,    -1,    21,    -1,    -1,
-      24,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    -1,    -1,    21,     7,     8,     9,
-      10,    11,    12,    13,    14,    15,    16,    17,    18,    -1,
-      -1,    21,     8,     9,    10,    11,    12,    13,    14,    15,
-      16,    17,    18,    -1,    -1,    21,     9,    10,    11,    12,
-      13,    14,    15,    16,    17,    18,    -1,    -1,    21,    11,
-      12,    13,    14,    15,    16,    17,    18,    -1,    -1,    21,
-      12,    13,    14,    15,    16,    17,    18,    -1,    -1,    21,
-      13,    14,    15,    16,    17,    18,    -1,    -1,    21,    14,
-      15,    16,    17,    18,    -1,    -1,    21
+       5,     6,     7,     8,    14,    15,    16,    17,    18,    19,
+      15,    16,    22,    25,    25,    27,    27,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,     3,     4,     5,     6,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    16,    17,    22,    16,    17,
+      18,    19,    24,    24,    22,    26,    61,    62,     7,     8,
+       9,    10,    11,    12,    13,    14,    15,    16,    17,    18,
+      19,    18,    19,    22,    24,    22,    22,     0,    27,     7,
+       8,     9,    10,    11,    12,    13,    14,    15,    16,    17,
+      18,    19,    24,    22,    22,    59,    -1,    25,     7,     8,
+       9,    10,    11,    12,    13,    14,    15,    16,    17,    18,
+      19,    -1,    -1,    22,    -1,    -1,    25,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    17,    18,    19,
+      -1,    -1,    22,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    -1,    -1,    22,     9,    10,
+      11,    12,    13,    14,    15,    16,    17,    18,    19,    -1,
+      -1,    22,    10,    11,    12,    13,    14,    15,    16,    17,
+      18,    19,    -1,    -1,    22,    12,    13,    14,    15,    16,
+      17,    18,    19,    -1,    -1,    22,    13,    14,    15,    16,
+      17,    18,    19,    -1,    -1,    22,    15,    16,    17,    18,
+      19,    -1,    -1,    22
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,     5,    15,    16,    23,    25,    28,    29,
-      30,    31,    23,    21,    29,    29,    29,    29,     0,     6,
-       7,     8,     9,    10,    11,    12,    13,    14,    15,    16,
-      17,    18,    21,    29,    32,    29,    24,    29,    29,    29,
-      29,    29,    29,    29,    29,    29,    29,    29,    29,    29,
-      29,    24,    26,    29
+       0,     3,     4,     5,     6,    16,    17,    24,    26,    29,
+      30,    31,    32,    35,    24,    24,    22,    30,    30,    30,
+      30,     0,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    22,    24,    33,    34,    30,
+      36,    30,    25,    30,    30,    30,    30,    30,    30,    30,
+      30,    30,    30,    30,    30,    30,    30,    30,    25,    27,
+      25,    27,    27,    33,    30,    30,    25
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    27,    28,    29,    29,    29,    29,    29,    29,    29,
-      29,    29,    29,    29,    29,    29,    29,    29,    29,    29,
-      29,    29,    29,    30,    30,    30,    30,    31,    32,    32
+       0,    28,    29,    30,    30,    30,    30,    30,    30,    30,
+      30,    30,    30,    30,    30,    30,    30,    30,    30,    30,
+      30,    30,    30,    31,    31,    31,    31,    31,    32,    33,
+      34,    34,    35,    36,    36
   };
 
   const signed char
@@ -1244,7 +1385,8 @@ namespace yy {
   {
        0,     2,     1,     3,     3,     3,     3,     3,     3,     3,
        3,     3,     3,     3,     3,     3,     3,     3,     3,     2,
-       2,     2,     1,     1,     1,     1,     1,     4,     3,     1
+       2,     2,     1,     1,     1,     1,     1,     1,     4,     5,
+       3,     1,     4,     3,     1
   };
 
 
@@ -1254,22 +1396,23 @@ namespace yy {
   const char*
   const parser::yytname_[] =
   {
-  "END_OF_FILE", "error", "\"invalid token\"", "IDENTIFIER", "NUMERIC",
-  "IMPLICIT_MUL", "'|'", "'^'", "'&'", "EQ", "'>'", "'<'", "NE", "LE",
-  "GE", "'-'", "'+'", "'*'", "'/'", "UMINUS", "UPLUS", "POW", "NOT", "'('",
-  "')'", "'~'", "','", "$accept", "st_expr", "expr", "leaf", "func",
-  "expr_list", YY_NULLPTR
+  "END_OF_FILE", "error", "\"invalid token\"", "PIECEWISE", "IDENTIFIER",
+  "NUMERIC", "IMPLICIT_MUL", "'|'", "'^'", "'&'", "EQ", "'>'", "'<'", "NE",
+  "LE", "GE", "'-'", "'+'", "'*'", "'/'", "UMINUS", "UPLUS", "POW", "NOT",
+  "'('", "')'", "'~'", "','", "$accept", "st_expr", "expr", "leaf", "func",
+  "epair", "piecewise_list", "pwise", "expr_list", YY_NULLPTR
   };
 #endif
 
 
 #if YYDEBUG
-  const unsigned char
+  const short
   parser::yyrline_[] =
   {
-       0,    97,    97,   105,   108,   111,   114,   119,   129,   132,
-     135,   138,   141,   144,   147,   150,   158,   166,   174,   177,
-     180,   183,   186,   191,   196,   202,   207,   214,   222,   228
+       0,   103,   103,   111,   114,   117,   120,   125,   135,   138,
+     141,   144,   147,   150,   153,   156,   164,   172,   180,   183,
+     186,   189,   192,   197,   202,   208,   213,   218,   225,   233,
+     245,   251,   258,   267,   273
   };
 
   void
@@ -1300,7 +1443,7 @@ namespace yy {
 #endif // YYDEBUG
 
   parser::symbol_kind_type
-  parser::yytranslate_ (int t)
+  parser::yytranslate_ (int t) YY_NOEXCEPT
   {
     // YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to
     // TOKEN-NUM as returned by yylex.
@@ -1311,16 +1454,16 @@ namespace yy {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     8,     2,
-      23,    24,    17,    16,    26,    15,     2,    18,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     9,     2,
+      24,    25,    18,    17,    27,    16,     2,    19,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      11,     2,    10,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     7,     2,     2,     2,     2,     2,
+      12,     2,    11,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     6,     2,    25,     2,     2,     2,
+       2,     2,     2,     2,     8,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     7,     2,    26,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1334,19 +1477,19 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     9,    12,    13,    14,    19,    20,    21,    22
+       5,     6,    10,    13,    14,    15,    20,    21,    22,    23
     };
     // Last valid token kind.
-    const int code_max = 268;
+    const int code_max = 269;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
     else if (t <= code_max)
-      return YY_CAST (symbol_kind_type, translate_table[t]);
+      return static_cast <symbol_kind_type> (translate_table[t]);
     else
       return symbol_kind::S_YYUNDEF;
   }
 
 } // yy
-#line 1352 "parser.tab.cc"
+#line 1495 "parser.tab.cc"
 

@@ -23,6 +23,7 @@
 #include "symengine/pow.h"
 #include "symengine/logic.h"
 #include "symengine/parser/parser.h"
+#include "symengine/utilities/stream_fmt.h"
 
 using SymEngine::RCP;
 using SymEngine::Basic;
@@ -62,6 +63,7 @@ void parser::error(const std::string &msg)
 
 }
 
+%token <std::string> PIECEWISE
 %token <std::string> IDENTIFIER
 %token <std::string> NUMERIC
 %token <std::string> IMPLICIT_MUL
@@ -87,6 +89,9 @@ void parser::error(const std::string &msg)
 %type <SymEngine::RCP<const SymEngine::Basic>> st_expr
 %type <SymEngine::RCP<const SymEngine::Basic>> expr
 %type <SymEngine::vec_basic> expr_list
+%type <SymEngine::PiecewiseVec> piecewise_list
+%type <std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>>> epair
+%type <SymEngine::RCP<const SymEngine::Basic>> pwise
 %type <SymEngine::RCP<const SymEngine::Basic>> leaf
 %type <SymEngine::RCP<const SymEngine::Basic>> func
 
@@ -208,12 +213,51 @@ leaf:
     {
         $$ = $1;
     }
+|
+    pwise
+    {
+        $$ = $1;
+    }
 ;
 
 func:
     IDENTIFIER '(' expr_list ')'
     {
         $$ = p.functionify($1, $3);
+    }
+;
+
+
+epair:
+    '(' expr ',' expr ')'
+    {
+        auto logical_expr = $4;
+        if (!SymEngine::is_a_sub<Boolean>(*logical_expr)) {
+            throw SymEngine::ParseError(SymEngine::StreamFmt() << "Not of Boolean type in Piecewise arguments: "
+                                        << logical_expr->__str__());
+        }
+        $$ = std::make_pair($2, rcp_static_cast<const Boolean>(logical_expr));
+    }
+;
+
+piecewise_list:
+    piecewise_list ',' epair
+    {
+       $$ = $1;
+       $$ .push_back($3);
+    }
+|
+    epair
+    {
+       $$ = SymEngine::PiecewiseVec(1, $1);
+    }
+;
+
+pwise:
+    PIECEWISE '(' piecewise_list ')'
+    {
+        assert($1 == "Piecewise");
+        $$ = piecewise(std::move($3));
     }
 ;
 
