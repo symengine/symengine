@@ -692,6 +692,11 @@ void DiffVisitor::bvisit(const Set &self)
     throw SymEngineException("Derivative doesn't exist.");
 }
 
+void DiffVisitor::bvisit(const Tuple &self)
+{
+    throw SymEngineException("Derivative doesn't exist.");
+}
+
 void DiffVisitor::bvisit(const Boolean &self)
 {
     throw SymEngineException("Derivative doesn't exist.");

@@ -75,6 +75,7 @@ using SymEngine::Subs;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::truncate;
+using SymEngine::tuple;
 using SymEngine::uexpr_poly;
 using SymEngine::UIntPoly;
 using SymEngine::unicode;
@@ -752,6 +753,11 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
     CHECK(latex(*l28) == "\\mathbb{C}");
+
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> l = tuple({i1, i2});
+    CHECK(latex(*l) == "\\left(1, 2\\right)");
 }
 
 TEST_CASE("test_latex_matrix_printing()", "[latex]")
@@ -1035,6 +1041,12 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*function_symbol("f", x));
     CHECK(s == U8("f(x)"));
+
+    s = unicode(*tuple({integer(1), integer(2)}));
+    CHECK(s == U8("(1, 2)"));
+
+    s = unicode(*tuple({}));
+    CHECK(s == U8("()"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")

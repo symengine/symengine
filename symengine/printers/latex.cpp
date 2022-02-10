@@ -594,4 +594,13 @@ void LatexPrinter::bvisit(const Piecewise &x)
     }
     str_ = s.str();
 }
+
+void LatexPrinter::bvisit(const Tuple &x)
+{
+    std::ostringstream o;
+    vec_basic vec = x.get_args();
+    o << parenthesize(apply(vec));
+    str_ = o.str();
+}
+
 } // namespace SymEngine
