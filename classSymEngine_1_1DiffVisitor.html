@@ -250,6 +250,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9e151850ede94833751b5778e5a0c393"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c48d88f1acf9aefe0b88e54f1dff945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DiffVisitor.html#a9c48d88f1acf9aefe0b88e54f1dff945">bvisit</a> (const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &amp;self)</td></tr>
 <tr class="separator:a9c48d88f1acf9aefe0b88e54f1dff945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced7b4e1746e4d97c5dd6438662955f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DiffVisitor.html#aced7b4e1746e4d97c5dd6438662955f6">bvisit</a> (const <a class="el" href="classSymEngine_1_1Tuple.html">Tuple</a> &amp;self)</td></tr>
+<tr class="separator:aced7b4e1746e4d97c5dd6438662955f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5f16911e6c00fcc90b0b8c276411146"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DiffVisitor.html#aa5f16911e6c00fcc90b0b8c276411146">bvisit</a> (const <a class="el" href="classSymEngine_1_1Boolean.html">Boolean</a> &amp;self)</td></tr>
 <tr class="separator:aa5f16911e6c00fcc90b0b8c276411146"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f55ea6d7d714144396fe1a7a7e2f152"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DiffVisitor.html#a9f55ea6d7d714144396fe1a7a7e2f152">bvisit</a> (const <a class="el" href="classSymEngine_1_1GaloisField.html">GaloisField</a> &amp;self)</td></tr>
@@ -334,11 +336,11 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00721">721</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>{</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    apply(b.rcp_from_this());</div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>    <span class="keywordflow">return</span> result_;</div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00726">726</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>{</div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>    apply(b.rcp_from_this());</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    <span class="keywordflow">return</span> result_;</div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -358,21 +360,21 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00727">727</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>{</div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    <span class="keywordflow">if</span> (not cache) {</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>        b-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>        <span class="keywordflow">return</span> result_;</div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>    }</div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>    <span class="keyword">auto</span> it = visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(b);</div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>    <span class="keywordflow">if</span> (it == visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00732">732</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>{</div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>    <span class="keywordflow">if</span> (not cache) {</div>
 <div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>        b-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>        <a class="code hl_function" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(visited, b, result_);</div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>        result_ = it-&gt;second;</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    }</div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>    <span class="keywordflow">return</span> result_;</div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>}</div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>        <span class="keywordflow">return</span> result_;</div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>    }</div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>    <span class="keyword">auto</span> it = visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(b);</div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    <span class="keywordflow">if</span> (it == visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span>        b-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>        <a class="code hl_function" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(visited, b, result_);</div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>        result_ = it-&gt;second;</div>
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>    }</div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>    <span class="keywordflow">return</span> result_;</div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>}</div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">std::unordered_map::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="afind_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">std::unordered_map::find</a></div><div class="ttdeci">T find(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
@@ -380,7 +382,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a443583ceafd56f5d6c773f7ea779af3a" name="a443583ceafd56f5d6c773f7ea779af3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a443583ceafd56f5d6c773f7ea779af3a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a443583ceafd56f5d6c773f7ea779af3a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -409,7 +411,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a2e368fa71c80a5b92bcef27e82f3a87f" name="a2e368fa71c80a5b92bcef27e82f3a87f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e368fa71c80a5b92bcef27e82f3a87f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e368fa71c80a5b92bcef27e82f3a87f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -439,7 +441,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a19991dd00927c695a0b26fb4a1210511" name="a19991dd00927c695a0b26fb4a1210511"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19991dd00927c695a0b26fb4a1210511">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a19991dd00927c695a0b26fb4a1210511">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -463,7 +465,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad250036a8ef071da97db101752f62ba3" name="ad250036a8ef071da97db101752f62ba3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad250036a8ef071da97db101752f62ba3">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad250036a8ef071da97db101752f62ba3">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -488,7 +490,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a2cb2c9fbce6486cfa0f6bac3347476ea" name="a2cb2c9fbce6486cfa0f6bac3347476ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cb2c9fbce6486cfa0f6bac3347476ea">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cb2c9fbce6486cfa0f6bac3347476ea">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -512,7 +514,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a6505bbfb5f78f4923b5d6cb277118150" name="a6505bbfb5f78f4923b5d6cb277118150"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6505bbfb5f78f4923b5d6cb277118150">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6505bbfb5f78f4923b5d6cb277118150">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -539,7 +541,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a0d4acdf3075955d2a164ed0b6192e02c" name="a0d4acdf3075955d2a164ed0b6192e02c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d4acdf3075955d2a164ed0b6192e02c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d4acdf3075955d2a164ed0b6192e02c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -566,7 +568,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a54663c96e7ab6fa6f5d6501d56681306" name="a54663c96e7ab6fa6f5d6501d56681306"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54663c96e7ab6fa6f5d6501d56681306">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a54663c96e7ab6fa6f5d6501d56681306">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -618,7 +620,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aafa3c8df44f65b73d601c7cf3d503cee" name="aafa3c8df44f65b73d601c7cf3d503cee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aafa3c8df44f65b73d601c7cf3d503cee">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aafa3c8df44f65b73d601c7cf3d503cee">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -645,7 +647,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a8df433f2fd2a5d75821c4a8baf4e6289" name="a8df433f2fd2a5d75821c4a8baf4e6289"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8df433f2fd2a5d75821c4a8baf4e6289">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8df433f2fd2a5d75821c4a8baf4e6289">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -671,7 +673,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="acebc555c314dfaabd7d9cbfb5bfd4fac" name="acebc555c314dfaabd7d9cbfb5bfd4fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acebc555c314dfaabd7d9cbfb5bfd4fac">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acebc555c314dfaabd7d9cbfb5bfd4fac">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -695,7 +697,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a91f94dd2620bab6ebc81c9f40ea33f4e" name="a91f94dd2620bab6ebc81c9f40ea33f4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91f94dd2620bab6ebc81c9f40ea33f4e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a91f94dd2620bab6ebc81c9f40ea33f4e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -719,7 +721,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a1a14d386c776b53cae357aec78022bdc" name="a1a14d386c776b53cae357aec78022bdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a14d386c776b53cae357aec78022bdc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[13/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a14d386c776b53cae357aec78022bdc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[13/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -743,7 +745,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7a612d37820f5dbefd6e705b7b2d0311" name="a7a612d37820f5dbefd6e705b7b2d0311"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a612d37820f5dbefd6e705b7b2d0311">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[14/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a612d37820f5dbefd6e705b7b2d0311">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[14/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -769,7 +771,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7bd14cd7d4755554eedda814cdb6b7a7" name="a7bd14cd7d4755554eedda814cdb6b7a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bd14cd7d4755554eedda814cdb6b7a7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[15/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bd14cd7d4755554eedda814cdb6b7a7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[15/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -793,7 +795,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9e151850ede94833751b5778e5a0c393" name="a9e151850ede94833751b5778e5a0c393"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e151850ede94833751b5778e5a0c393">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[16/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e151850ede94833751b5778e5a0c393">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[16/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -827,7 +829,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aa5f16911e6c00fcc90b0b8c276411146" name="aa5f16911e6c00fcc90b0b8c276411146"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5f16911e6c00fcc90b0b8c276411146">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[17/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5f16911e6c00fcc90b0b8c276411146">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[17/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -842,15 +844,15 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00695">695</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>{</div>
-<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Derivative doesn&#39;t exist.&quot;</span>);</div>
-<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00700">700</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>{</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Derivative doesn&#39;t exist.&quot;</span>);</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a0c414deea1b1e4cd0b38f8fed221689c" name="a0c414deea1b1e4cd0b38f8fed221689c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c414deea1b1e4cd0b38f8fed221689c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[18/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c414deea1b1e4cd0b38f8fed221689c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[18/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -873,7 +875,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a21083ed76f1796e4e10683e3284adb5d" name="a21083ed76f1796e4e10683e3284adb5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21083ed76f1796e4e10683e3284adb5d">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[19/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a21083ed76f1796e4e10683e3284adb5d">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[19/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -898,7 +900,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="accb7ac29e8916e5b17e7da2124bbc5fa" name="accb7ac29e8916e5b17e7da2124bbc5fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#accb7ac29e8916e5b17e7da2124bbc5fa">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[20/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#accb7ac29e8916e5b17e7da2124bbc5fa">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[20/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -923,7 +925,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="add28bdf28ca917615c997cc228846852" name="add28bdf28ca917615c997cc228846852"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add28bdf28ca917615c997cc228846852">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[21/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#add28bdf28ca917615c997cc228846852">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[21/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -951,7 +953,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a8851f30fa19826f46661ead81ad95148" name="a8851f30fa19826f46661ead81ad95148"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8851f30fa19826f46661ead81ad95148">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[22/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8851f30fa19826f46661ead81ad95148">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[22/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -975,7 +977,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af328d3e603c026ab0a9515f48c2a3264" name="af328d3e603c026ab0a9515f48c2a3264"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af328d3e603c026ab0a9515f48c2a3264">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[23/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af328d3e603c026ab0a9515f48c2a3264">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[23/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1001,7 +1003,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a951027bc28abf3fef61fc19c99555f93" name="a951027bc28abf3fef61fc19c99555f93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a951027bc28abf3fef61fc19c99555f93">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[24/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a951027bc28abf3fef61fc19c99555f93">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[24/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1029,7 +1031,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af27015f8b1383bb4ea18248936adb1bd" name="af27015f8b1383bb4ea18248936adb1bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af27015f8b1383bb4ea18248936adb1bd">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[25/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af27015f8b1383bb4ea18248936adb1bd">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[25/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1079,7 +1081,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ac54f342b7dade9fe79a7a4ce8b9ac813" name="ac54f342b7dade9fe79a7a4ce8b9ac813"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac54f342b7dade9fe79a7a4ce8b9ac813">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[26/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54f342b7dade9fe79a7a4ce8b9ac813">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[26/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1108,7 +1110,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a4699ab9d6c9b34818cd65dc8c34d9223" name="a4699ab9d6c9b34818cd65dc8c34d9223"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4699ab9d6c9b34818cd65dc8c34d9223">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[27/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4699ab9d6c9b34818cd65dc8c34d9223">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[27/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1135,7 +1137,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a20313330bd4b6939c4588a9e8e387db3" name="a20313330bd4b6939c4588a9e8e387db3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20313330bd4b6939c4588a9e8e387db3">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[28/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a20313330bd4b6939c4588a9e8e387db3">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[28/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1158,7 +1160,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9f55ea6d7d714144396fe1a7a7e2f152" name="a9f55ea6d7d714144396fe1a7a7e2f152"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f55ea6d7d714144396fe1a7a7e2f152">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[29/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f55ea6d7d714144396fe1a7a7e2f152">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[29/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1173,21 +1175,21 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00700">700</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>{</div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    GaloisFieldDict d;</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    <span class="keywordflow">if</span> (<span class="keyword">self</span>.get_var()-&gt;__eq__(*x)) {</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>        d = <span class="keyword">self</span>.get_poly().gf_diff();</div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>        result_ = GaloisField::from_dict(<span class="keyword">self</span>.get_var(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>        result_ = GaloisField::from_dict(<span class="keyword">self</span>.get_var(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>    }</div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00705">705</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>{</div>
+<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>    GaloisFieldDict d;</div>
+<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>    <span class="keywordflow">if</span> (<span class="keyword">self</span>.get_var()-&gt;__eq__(*x)) {</div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>        d = <span class="keyword">self</span>.get_poly().gf_diff();</div>
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>        result_ = GaloisField::from_dict(<span class="keyword">self</span>.get_var(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>        result_ = GaloisField::from_dict(<span class="keyword">self</span>.get_var(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    }</div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a9266b479c20c51fbd5461d175487446e" name="a9266b479c20c51fbd5461d175487446e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9266b479c20c51fbd5461d175487446e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[30/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9266b479c20c51fbd5461d175487446e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[30/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1212,7 +1214,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="adc1aed33d6d6be62c0cf5375de146037" name="adc1aed33d6d6be62c0cf5375de146037"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc1aed33d6d6be62c0cf5375de146037">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[31/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adc1aed33d6d6be62c0cf5375de146037">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[31/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1242,7 +1244,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="abc967846f1a4036582778eed9c5b54a1" name="abc967846f1a4036582778eed9c5b54a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc967846f1a4036582778eed9c5b54a1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[32/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abc967846f1a4036582778eed9c5b54a1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[32/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1266,7 +1268,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aa24a612dbe4df75d73ebb759588548c0" name="aa24a612dbe4df75d73ebb759588548c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa24a612dbe4df75d73ebb759588548c0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[33/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa24a612dbe4df75d73ebb759588548c0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[33/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1290,7 +1292,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af108ceb4dffa122364b8166c3c4148be" name="af108ceb4dffa122364b8166c3c4148be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af108ceb4dffa122364b8166c3c4148be">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[34/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af108ceb4dffa122364b8166c3c4148be">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[34/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1313,7 +1315,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9e22617326af3fd4cb7ca92e8b1fbf30" name="a9e22617326af3fd4cb7ca92e8b1fbf30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e22617326af3fd4cb7ca92e8b1fbf30">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[35/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e22617326af3fd4cb7ca92e8b1fbf30">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[35/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1333,7 +1335,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="adf8578ad0cebf5bf551e23afbb68e7e1" name="adf8578ad0cebf5bf551e23afbb68e7e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf8578ad0cebf5bf551e23afbb68e7e1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[36/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adf8578ad0cebf5bf551e23afbb68e7e1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[36/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1356,7 +1358,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7d005ed9f597c2de0bb7bb81b48a7030" name="a7d005ed9f597c2de0bb7bb81b48a7030"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d005ed9f597c2de0bb7bb81b48a7030">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[37/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d005ed9f597c2de0bb7bb81b48a7030">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[37/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1376,7 +1378,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a50ae1684b140d399404744bbb823f76a" name="a50ae1684b140d399404744bbb823f76a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50ae1684b140d399404744bbb823f76a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[38/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a50ae1684b140d399404744bbb823f76a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[38/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1399,7 +1401,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a861489d23853623225975ed22351f654" name="a861489d23853623225975ed22351f654"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a861489d23853623225975ed22351f654">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[39/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a861489d23853623225975ed22351f654">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[39/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1458,7 +1460,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aa307b492a30f410c2235215dd2b7b700" name="aa307b492a30f410c2235215dd2b7b700"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa307b492a30f410c2235215dd2b7b700">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[40/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa307b492a30f410c2235215dd2b7b700">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[40/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1481,7 +1483,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a4c03cb7e707a8fee02c40ffc224bece5" name="a4c03cb7e707a8fee02c40ffc224bece5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c03cb7e707a8fee02c40ffc224bece5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[41/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c03cb7e707a8fee02c40ffc224bece5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[41/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1504,7 +1506,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a23ae7b42806accc960cd1b7af0cd201f" name="a23ae7b42806accc960cd1b7af0cd201f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23ae7b42806accc960cd1b7af0cd201f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[42/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a23ae7b42806accc960cd1b7af0cd201f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[42/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1527,7 +1529,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af538498bf2dea3ecea0e8c249b414653" name="af538498bf2dea3ecea0e8c249b414653"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af538498bf2dea3ecea0e8c249b414653">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[43/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af538498bf2dea3ecea0e8c249b414653">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[43/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1542,20 +1544,20 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00711">711</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>{</div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    PiecewiseVec v = <span class="keyword">self</span>.get_vec();</div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : v) {</div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>        apply(p.first);</div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>        p.first = result_;</div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>    }</div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    result_ = piecewise(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(v));</div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00716">716</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>{</div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    PiecewiseVec v = <span class="keyword">self</span>.get_vec();</div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : v) {</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        apply(p.first);</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>        p.first = result_;</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    }</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    result_ = piecewise(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(v));</div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a5baa2233c9f3709bdbdfa7a0120b0a51" name="a5baa2233c9f3709bdbdfa7a0120b0a51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5baa2233c9f3709bdbdfa7a0120b0a51">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[44/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5baa2233c9f3709bdbdfa7a0120b0a51">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[44/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1578,7 +1580,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a032e70ec76f009db23941210a08a9988" name="a032e70ec76f009db23941210a08a9988"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a032e70ec76f009db23941210a08a9988">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[45/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a032e70ec76f009db23941210a08a9988">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[45/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1610,7 +1612,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a04e593f6cf6f257a3d407276143e307f" name="a04e593f6cf6f257a3d407276143e307f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a04e593f6cf6f257a3d407276143e307f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[46/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a04e593f6cf6f257a3d407276143e307f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[46/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1636,7 +1638,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="abf368f68b595b464cc36fdccea7aea35" name="abf368f68b595b464cc36fdccea7aea35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf368f68b595b464cc36fdccea7aea35">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[47/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abf368f68b595b464cc36fdccea7aea35">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[47/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1664,7 +1666,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9c48d88f1acf9aefe0b88e54f1dff945" name="a9c48d88f1acf9aefe0b88e54f1dff945"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c48d88f1acf9aefe0b88e54f1dff945">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[48/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c48d88f1acf9aefe0b88e54f1dff945">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[48/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1687,7 +1689,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a12f22f922dc6ac4c701ac79953ea866f" name="a12f22f922dc6ac4c701ac79953ea866f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12f22f922dc6ac4c701ac79953ea866f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[49/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a12f22f922dc6ac4c701ac79953ea866f">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[49/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1712,7 +1714,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a978d10debd28738564eb9e23ace6ddd5" name="a978d10debd28738564eb9e23ace6ddd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a978d10debd28738564eb9e23ace6ddd5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[50/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a978d10debd28738564eb9e23ace6ddd5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[50/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1737,7 +1739,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a504641740acd700cca654757ac599303" name="a504641740acd700cca654757ac599303"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a504641740acd700cca654757ac599303">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[51/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a504641740acd700cca654757ac599303">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[51/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1781,7 +1783,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="adafeb7f02317059467be8c2c63fb5602" name="adafeb7f02317059467be8c2c63fb5602"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adafeb7f02317059467be8c2c63fb5602">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[52/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adafeb7f02317059467be8c2c63fb5602">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[52/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1808,7 +1810,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a441a09febcf8d47a366e9ed855f192fc" name="a441a09febcf8d47a366e9ed855f192fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a441a09febcf8d47a366e9ed855f192fc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[53/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a441a09febcf8d47a366e9ed855f192fc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[53/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1833,7 +1835,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aa08ac1c73986744446711e43a814dc1c" name="aa08ac1c73986744446711e43a814dc1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa08ac1c73986744446711e43a814dc1c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[54/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa08ac1c73986744446711e43a814dc1c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[54/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1856,8 +1858,31 @@ Protected Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="aced7b4e1746e4d97c5dd6438662955f6" name="aced7b4e1746e4d97c5dd6438662955f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aced7b4e1746e4d97c5dd6438662955f6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[55/63]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::DiffVisitor::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Tuple.html">Tuple</a> &amp;&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00695">695</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>{</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Derivative doesn&#39;t exist.&quot;</span>);</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a6b2d11dec05bc5fee1f997e224b5bba0" name="a6b2d11dec05bc5fee1f997e224b5bba0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b2d11dec05bc5fee1f997e224b5bba0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[55/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b2d11dec05bc5fee1f997e224b5bba0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[56/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1880,7 +1905,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a76b30f6af51f581a0b996c19770e84e5" name="a76b30f6af51f581a0b996c19770e84e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76b30f6af51f581a0b996c19770e84e5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[56/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a76b30f6af51f581a0b996c19770e84e5">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[57/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1903,7 +1928,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a1e04c86361d60e6b1941f393ce8b583e" name="a1e04c86361d60e6b1941f393ce8b583e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e04c86361d60e6b1941f393ce8b583e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[57/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e04c86361d60e6b1941f393ce8b583e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[58/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1926,7 +1951,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a73a52a17321047429a479424cab1a738" name="a73a52a17321047429a479424cab1a738"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73a52a17321047429a479424cab1a738">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[58/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a73a52a17321047429a479424cab1a738">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[59/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1949,7 +1974,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a3d7bacda62cbcf15422488201cb3150b" name="a3d7bacda62cbcf15422488201cb3150b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d7bacda62cbcf15422488201cb3150b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[59/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d7bacda62cbcf15422488201cb3150b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[60/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1969,7 +1994,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a624f9f878a98cc30e302bd2eb4ab69ad" name="a624f9f878a98cc30e302bd2eb4ab69ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a624f9f878a98cc30e302bd2eb4ab69ad">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[60/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a624f9f878a98cc30e302bd2eb4ab69ad">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[61/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1992,7 +2017,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a8e3a347e1cfa8942ed14560c4d53c4cb" name="a8e3a347e1cfa8942ed14560c4d53c4cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e3a347e1cfa8942ed14560c4d53c4cb">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[61/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e3a347e1cfa8942ed14560c4d53c4cb">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[62/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2015,7 +2040,7 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a id="afa75e8aeddbf71d956a80935cef6ef84" name="afa75e8aeddbf71d956a80935cef6ef84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa75e8aeddbf71d956a80935cef6ef84">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[62/62]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa75e8aeddbf71d956a80935cef6ef84">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[63/63]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

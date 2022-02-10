@@ -555,6 +555,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Truncate.html">Truncate</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Tuple.html">Tuple</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1two__by__two__matrix.html">two_by_two_matrix</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1TwoArgBasic.html">TwoArgBasic</a></td></tr>
@@ -2338,6 +2340,8 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 <tr class="memitem:a5edc21801e92c0d5b42c66123a6ed621"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a5edc21801e92c0d5b42c66123a6ed621">is_polynomial</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;variables={})</td></tr>
 <tr class="memdesc:a5edc21801e92c0d5b42c66123a6ed621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if expression is a polynomial.  <a href="namespaceSymEngine.html#a5edc21801e92c0d5b42c66123a6ed621">More...</a><br /></td></tr>
 <tr class="separator:a5edc21801e92c0d5b42c66123a6ed621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1735333a9e5ec69d8520efacd641da5a"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1735333a9e5ec69d8520efacd641da5a">tuple</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;arg)</td></tr>
+<tr class="separator:a1735333a9e5ec69d8520efacd641da5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab83ec7940ad851065fc6426159a538f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ab83ec7940ad851065fc6426159a538f9">preorder_traversal</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v)</td></tr>
 <tr class="separator:ab83ec7940ad851065fc6426159a538f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac430ea4710b14ff8dd96a8a0d4792aac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ac430ea4710b14ff8dd96a8a0d4792aac">postorder_traversal</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v)</td></tr>
@@ -5027,12 +5031,12 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00310">310</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>{</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <a class="code hl_class" href="classSymEngine_1_1AtomsVisitor.html">AtomsVisitor</a>&lt;Args...&gt; visitor;</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>};</div>
-<div class="ttc" id="aclassSymEngine_1_1AtomsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1AtomsVisitor.html">SymEngine::AtomsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00277">visitor.h:278</a></div></div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00311">311</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>{</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <a class="code hl_class" href="classSymEngine_1_1AtomsVisitor.html">AtomsVisitor</a>&lt;Args...&gt; visitor;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>};</div>
+<div class="ttc" id="aclassSymEngine_1_1AtomsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1AtomsVisitor.html">SymEngine::AtomsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00278">visitor.h:279</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -6847,7 +6851,7 @@ template&lt;class Archive , class T &gt; </div>
 <div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    }</div>
 <div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordflow">return</span> v.count;</div>
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1CountOpsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1CountOpsVisitor.html">SymEngine::CountOpsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00316">visitor.h:317</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1CountOpsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1CountOpsVisitor.html">SymEngine::CountOpsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00317">visitor.h:318</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -7841,11 +7845,11 @@ template&lt;class Archive , class T &gt; </div>
 
 <p>Differentiation w.r.t symbols. </p>
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00743">743</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>{</div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>    <a class="code hl_class" href="classSymEngine_1_1DiffVisitor.html">DiffVisitor</a> v(x, cache);</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>    <span class="keywordflow">return</span> v.apply(arg);</div>
-<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00748">748</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>{</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span>    <a class="code hl_class" href="classSymEngine_1_1DiffVisitor.html">DiffVisitor</a> v(x, cache);</div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span>    <span class="keywordflow">return</span> v.apply(arg);</div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1DiffVisitor_html"><div class="ttname"><a href="classSymEngine_1_1DiffVisitor.html">SymEngine::DiffVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="derivative_8h_source.html#l00024">derivative.h:25</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -12533,7 +12537,7 @@ template&lt;typename Poly , typename Container &gt; </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_class" href="classSymEngine_1_1HasSymbolVisitor.html">HasSymbolVisitor</a> v(ptrFromRef(x));</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> v.apply(b);</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1HasSymbolVisitor_html"><div class="ttname"><a href="classSymEngine_1_1HasSymbolVisitor.html">SymEngine::HasSymbolVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00091">visitor.h:92</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1HasSymbolVisitor_html"><div class="ttname"><a href="classSymEngine_1_1HasSymbolVisitor.html">SymEngine::HasSymbolVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00092">visitor.h:93</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13753,63 +13757,63 @@ template&lt;typename To , typename From &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01044">1044</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>{</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(<a class="code hl_enumvalue" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a>, <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    <span class="keywordflow">return</span> names;</div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01052">1052</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>{</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(<a class="code hl_enumvalue" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a>, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -16087,12 +16091,12 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01172">1172</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>{</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    <a class="code hl_class" href="classSymEngine_1_1JuliaStrPrinter.html">JuliaStrPrinter</a> strPrinter;</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1JuliaStrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1JuliaStrPrinter.html">SymEngine::JuliaStrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00197">strprinter.h:198</a></div></div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01180">1180</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>{</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>    <a class="code hl_class" href="classSymEngine_1_1JuliaStrPrinter.html">JuliaStrPrinter</a> strPrinter;</div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>}</div>
+<div class="ttc" id="aclassSymEngine_1_1JuliaStrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1JuliaStrPrinter.html">SymEngine::JuliaStrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00198">strprinter.h:199</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -29516,15 +29520,15 @@ template&lt;typename Archive &gt; </div>
 <p>SymPy style differentiation for non-symbol variables. </p>
 <p >SymPy style differentiation w.r.t non-symbols and symbols. </p>
 
-<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00758">758</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span>{</div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span>    <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*x)) {</div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>        <span class="keywordflow">return</span> arg-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(x), cache);</div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>        RCP&lt;const Symbol&gt; d = get_dummy(*arg, <span class="stringliteral">&quot;x&quot;</span>);</div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>        <span class="keywordflow">return</span> ssubs(ssubs(arg, {{x, d}})-&gt;diff(d, cache), {{d, x}});</div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    }</div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>}</div>
+<p class="definition">Definition at line <a class="el" href="derivative_8cpp_source.html#l00763">763</a> of file <a class="el" href="derivative_8cpp_source.html">derivative.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>{</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*x)) {</div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>        <span class="keywordflow">return</span> arg-&gt;diff(rcp_static_cast&lt;const Symbol&gt;(x), cache);</div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>        RCP&lt;const Symbol&gt; d = get_dummy(*arg, <span class="stringliteral">&quot;x&quot;</span>);</div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span>        <span class="keywordflow">return</span> ssubs(ssubs(arg, {{x, d}})-&gt;diff(d, cache), {{d, x}});</div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span>    }</div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -31253,11 +31257,11 @@ square root of <code>x</code> </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01161">1161</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>{</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>    <a class="code hl_class" href="classSymEngine_1_1StrPrinter.html">StrPrinter</a> strPrinter;</div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01169">1169</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>{</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>    <a class="code hl_class" href="classSymEngine_1_1StrPrinter.html">StrPrinter</a> strPrinter;</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1StrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1StrPrinter.html">SymEngine::StrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00106">strprinter.h:107</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -31278,10 +31282,10 @@ square root of <code>x</code> </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01167">1167</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>{</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>    <span class="keywordflow">return</span> x.__str__();</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01175">1175</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>{</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    <span class="keywordflow">return</span> x.__str__();</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -32431,6 +32435,29 @@ template&lt;typename T &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a1735333a9e5ec69d8520efacd641da5a" name="a1735333a9e5ec69d8520efacd641da5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1735333a9e5ec69d8520efacd641da5a">&#9670;&nbsp;</a></span>tuple()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; SymEngine::tuple </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="tuple_8cpp_source.html#l00042">42</a> of file <a class="el" href="tuple_8cpp_source.html">tuple.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordflow">return</span> make_rcp&lt;const Tuple&gt;(arg);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a922a1abdb111bf17aaad8557c340e8e9" name="a922a1abdb111bf17aaad8557c340e8e9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a922a1abdb111bf17aaad8557c340e8e9">&#9670;&nbsp;</a></span>type_code_name()</h2>
 
@@ -32673,11 +32700,11 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00686">686</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>{</div>
-<div class="line"><a id="l00688" name="l00688"></a><span class="lineno">  688</span>    <a class="code hl_class" href="classSymEngine_1_1UnicodePrinter.html">UnicodePrinter</a> printer;</div>
-<div class="line"><a id="l00689" name="l00689"></a><span class="lineno">  689</span>    <span class="keywordflow">return</span> printer.apply(x).get_string();</div>
-<div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00694">694</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span>{</div>
+<div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span>    <a class="code hl_class" href="classSymEngine_1_1UnicodePrinter.html">UnicodePrinter</a> printer;</div>
+<div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    <span class="keywordflow">return</span> printer.apply(x).get_string();</div>
+<div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1UnicodePrinter_html"><div class="ttname"><a href="classSymEngine_1_1UnicodePrinter.html">SymEngine::UnicodePrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="unicode_8h_source.html#l00010">unicode.h:11</a></div></div>
 </div><!-- fragment -->
 </div>

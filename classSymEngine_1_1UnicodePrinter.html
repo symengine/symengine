@@ -214,6 +214,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a885862e40ae1d1e81efda1b07c757586"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add236113ca5acf66927040fa80b4cc9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1UnicodePrinter.html#add236113ca5acf66927040fa80b4cc9d">bvisit</a> (const <a class="el" href="classSymEngine_1_1StrictLessThan.html">StrictLessThan</a> &amp;x)</td></tr>
 <tr class="separator:add236113ca5acf66927040fa80b4cc9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4cfd717055a7e8556299b5f428f5c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1UnicodePrinter.html#aff4cfd717055a7e8556299b5f428f5c6">bvisit</a> (const <a class="el" href="classSymEngine_1_1Tuple.html">Tuple</a> &amp;x)</td></tr>
+<tr class="separator:aff4cfd717055a7e8556299b5f428f5c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb9d6599322034b89680aa6c90656878"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSymEngine_1_1StringBox.html">StringBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1UnicodePrinter.html#adb9d6599322034b89680aa6c90656878">apply</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
 <tr class="separator:adb9d6599322034b89680aa6c90656878"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab89d0ccab91980cb7c12ff306e8ed000"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSymEngine_1_1StringBox.html">StringBox</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1UnicodePrinter.html#ab89d0ccab91980cb7c12ff306e8ed000">apply</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;v)</td></tr>
@@ -319,11 +321,11 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00670">670</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>{</div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>    <span class="keywordflow">return</span> box_;</div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00678">678</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>{</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>    <span class="keywordflow">return</span> box_;</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -343,11 +345,11 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00664">664</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>{</div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    <span class="keywordflow">return</span> box_;</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00672">672</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>{</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>    <span class="keywordflow">return</span> box_;</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -369,7 +371,7 @@ Static Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00536">536</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
 <div class="fragment"><div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>{</div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>    StringBox box;</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>    StringBox box(<span class="stringliteral">&quot;&quot;</span>);</div>
 <div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>    StringBox comma(<span class="stringliteral">&quot;, &quot;</span>);</div>
 <div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = d.begin(); p != d.end(); p++) {</div>
 <div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>        <span class="keywordflow">if</span> (p != d.begin()) {</div>
@@ -384,7 +386,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a5eab255b3a1aa2a83c7983f48a103a27" name="a5eab255b3a1aa2a83c7983f48a103a27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5eab255b3a1aa2a83c7983f48a103a27">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eab255b3a1aa2a83c7983f48a103a27">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -409,7 +411,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a3a8bb01fe7e2a3d4a18aff284fd6866e" name="a3a8bb01fe7e2a3d4a18aff284fd6866e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a8bb01fe7e2a3d4a18aff284fd6866e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a8bb01fe7e2a3d4a18aff284fd6866e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -479,7 +481,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ae398cbbb9365e7d8b8d760cadfa999c2" name="ae398cbbb9365e7d8b8d760cadfa999c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae398cbbb9365e7d8b8d760cadfa999c2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae398cbbb9365e7d8b8d760cadfa999c2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -511,7 +513,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a4776c4f8b55e5d9299d79ae0c9ff3831" name="a4776c4f8b55e5d9299d79ae0c9ff3831"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4776c4f8b55e5d9299d79ae0c9ff3831">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4776c4f8b55e5d9299d79ae0c9ff3831">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -540,7 +542,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a3f59fef71eb05134beea79115cc1bb82" name="a3f59fef71eb05134beea79115cc1bb82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f59fef71eb05134beea79115cc1bb82">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f59fef71eb05134beea79115cc1bb82">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -567,7 +569,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a77c60a62c21ecd6a6b76a7035557b4bb" name="a77c60a62c21ecd6a6b76a7035557b4bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77c60a62c21ecd6a6b76a7035557b4bb">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77c60a62c21ecd6a6b76a7035557b4bb">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -592,7 +594,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a651590d91efb5d85bdabb643b6a087f9" name="a651590d91efb5d85bdabb643b6a087f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a651590d91efb5d85bdabb643b6a087f9">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a651590d91efb5d85bdabb643b6a087f9">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -620,7 +622,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a44c2bfd535f0d0744ea14ccbab1a7a09" name="a44c2bfd535f0d0744ea14ccbab1a7a09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44c2bfd535f0d0744ea14ccbab1a7a09">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a44c2bfd535f0d0744ea14ccbab1a7a09">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -682,7 +684,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ab9acc11a9bd440573aed166d20657b29" name="ab9acc11a9bd440573aed166d20657b29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9acc11a9bd440573aed166d20657b29">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9acc11a9bd440573aed166d20657b29">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -713,7 +715,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad13d4ef861775120ff60cfe71c3d84a2" name="ad13d4ef861775120ff60cfe71c3d84a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad13d4ef861775120ff60cfe71c3d84a2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad13d4ef861775120ff60cfe71c3d84a2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -736,7 +738,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a38fe2527a7576ddcb27ed3870ab2440c" name="a38fe2527a7576ddcb27ed3870ab2440c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38fe2527a7576ddcb27ed3870ab2440c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a38fe2527a7576ddcb27ed3870ab2440c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -765,7 +767,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ae853b4bea71b7126a3c3719451182b59" name="ae853b4bea71b7126a3c3719451182b59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae853b4bea71b7126a3c3719451182b59">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae853b4bea71b7126a3c3719451182b59">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -800,7 +802,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a9c9eb76c882db0c1580e6a77396bd506" name="a9c9eb76c882db0c1580e6a77396bd506"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c9eb76c882db0c1580e6a77396bd506">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[13/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c9eb76c882db0c1580e6a77396bd506">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[13/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -829,7 +831,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a626f4b40a4fbb38933ad19cb2cf8b523" name="a626f4b40a4fbb38933ad19cb2cf8b523"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a626f4b40a4fbb38933ad19cb2cf8b523">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[14/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a626f4b40a4fbb38933ad19cb2cf8b523">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[14/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -852,7 +854,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a963690aa636f18f0a70a37a940af7376" name="a963690aa636f18f0a70a37a940af7376"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a963690aa636f18f0a70a37a940af7376">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[15/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a963690aa636f18f0a70a37a940af7376">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[15/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -880,7 +882,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad2154e3a520d1a060c13addf65546a1a" name="ad2154e3a520d1a060c13addf65546a1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2154e3a520d1a060c13addf65546a1a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[16/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2154e3a520d1a060c13addf65546a1a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[16/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -916,7 +918,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ab8fe93f97e6d7a89ff13f82c1d750639" name="ab8fe93f97e6d7a89ff13f82c1d750639"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8fe93f97e6d7a89ff13f82c1d750639">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[17/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8fe93f97e6d7a89ff13f82c1d750639">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[17/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -941,7 +943,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a300d53551075686a5b1ab2b2fab8a7af" name="a300d53551075686a5b1ab2b2fab8a7af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a300d53551075686a5b1ab2b2fab8a7af">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[18/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a300d53551075686a5b1ab2b2fab8a7af">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[18/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -973,7 +975,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a712cf308cd62794c19727f90ab921e72" name="a712cf308cd62794c19727f90ab921e72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a712cf308cd62794c19727f90ab921e72">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[19/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a712cf308cd62794c19727f90ab921e72">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[19/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1011,7 +1013,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad4c03e701fe7932ce3c8f25406bff9a2" name="ad4c03e701fe7932ce3c8f25406bff9a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4c03e701fe7932ce3c8f25406bff9a2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[20/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4c03e701fe7932ce3c8f25406bff9a2">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[20/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1045,7 +1047,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="acb15a3989db23b237a57d12e07799a2e" name="acb15a3989db23b237a57d12e07799a2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb15a3989db23b237a57d12e07799a2e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[21/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#acb15a3989db23b237a57d12e07799a2e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[21/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1073,7 +1075,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a4d137ae1790f3db0a69de8e157bd5491" name="a4d137ae1790f3db0a69de8e157bd5491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d137ae1790f3db0a69de8e157bd5491">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[22/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d137ae1790f3db0a69de8e157bd5491">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[22/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1098,7 +1100,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad2ce3e7640ff665f6beb74cd029e2520" name="ad2ce3e7640ff665f6beb74cd029e2520"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2ce3e7640ff665f6beb74cd029e2520">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[23/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2ce3e7640ff665f6beb74cd029e2520">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[23/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1121,7 +1123,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="af793f9d061c129d1fc0dacd16cc77bf7" name="af793f9d061c129d1fc0dacd16cc77bf7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af793f9d061c129d1fc0dacd16cc77bf7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[24/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af793f9d061c129d1fc0dacd16cc77bf7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[24/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1159,7 +1161,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a885862e40ae1d1e81efda1b07c757586" name="a885862e40ae1d1e81efda1b07c757586"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a885862e40ae1d1e81efda1b07c757586">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[25/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a885862e40ae1d1e81efda1b07c757586">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[25/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1187,7 +1189,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a3f4f232897bd8a3ae2263bc99c1a8b74" name="a3f4f232897bd8a3ae2263bc99c1a8b74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f4f232897bd8a3ae2263bc99c1a8b74">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[26/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f4f232897bd8a3ae2263bc99c1a8b74">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[26/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1281,7 +1283,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a0a91d9bb309f125fa80515fca6bea596" name="a0a91d9bb309f125fa80515fca6bea596"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a91d9bb309f125fa80515fca6bea596">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[27/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a91d9bb309f125fa80515fca6bea596">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[27/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1304,7 +1306,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a15ad374ed43a776e2db2fe9b4aca3451" name="a15ad374ed43a776e2db2fe9b4aca3451"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15ad374ed43a776e2db2fe9b4aca3451">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[28/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a15ad374ed43a776e2db2fe9b4aca3451">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[28/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1331,7 +1333,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="afc81357a94b57e4c21aea833daeb18dc" name="afc81357a94b57e4c21aea833daeb18dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc81357a94b57e4c21aea833daeb18dc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[29/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afc81357a94b57e4c21aea833daeb18dc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[29/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1362,7 +1364,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7ecd34f392fbd1babf865090d35a11cf" name="a7ecd34f392fbd1babf865090d35a11cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ecd34f392fbd1babf865090d35a11cf">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[30/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ecd34f392fbd1babf865090d35a11cf">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[30/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1402,7 +1404,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a2b0bc68b8095a732a778e9b2ac1b4b34" name="a2b0bc68b8095a732a778e9b2ac1b4b34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b0bc68b8095a732a778e9b2ac1b4b34">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[31/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b0bc68b8095a732a778e9b2ac1b4b34">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[31/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1425,7 +1427,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a7d0d36cd772a804feb55388584309cb0" name="a7d0d36cd772a804feb55388584309cb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7d0d36cd772a804feb55388584309cb0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[32/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d0d36cd772a804feb55388584309cb0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[32/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1455,7 +1457,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="aecedbcae23fd83a7c5d834b869d06fec" name="aecedbcae23fd83a7c5d834b869d06fec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecedbcae23fd83a7c5d834b869d06fec">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[33/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aecedbcae23fd83a7c5d834b869d06fec">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[33/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1478,7 +1480,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad93d480dc8f1b5ea1fddcf6faf5f4180" name="ad93d480dc8f1b5ea1fddcf6faf5f4180"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad93d480dc8f1b5ea1fddcf6faf5f4180">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[34/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad93d480dc8f1b5ea1fddcf6faf5f4180">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[34/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1501,7 +1503,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ac93e2bcd095d61cfe3d31a0505742ac1" name="ac93e2bcd095d61cfe3d31a0505742ac1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac93e2bcd095d61cfe3d31a0505742ac1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[35/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac93e2bcd095d61cfe3d31a0505742ac1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[35/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1524,7 +1526,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="add236113ca5acf66927040fa80b4cc9d" name="add236113ca5acf66927040fa80b4cc9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add236113ca5acf66927040fa80b4cc9d">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[36/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#add236113ca5acf66927040fa80b4cc9d">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[36/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1552,7 +1554,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ad9b4751b12a6710f13a2d35075953933" name="ad9b4751b12a6710f13a2d35075953933"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9b4751b12a6710f13a2d35075953933">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[37/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9b4751b12a6710f13a2d35075953933">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[37/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1574,8 +1576,34 @@ Static Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="aff4cfd717055a7e8556299b5f428f5c6" name="aff4cfd717055a7e8556299b5f428f5c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff4cfd717055a7e8556299b5f428f5c6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[38/42]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::UnicodePrinter::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Tuple.html">Tuple</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00638">638</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>{</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    StringBox args = apply(vec);</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>    args.enclose_parens();</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>    box_ = args;</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a2832cdec8bd98d7bca7d5f1b797a1137" name="a2832cdec8bd98d7bca7d5f1b797a1137"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2832cdec8bd98d7bca7d5f1b797a1137">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[38/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2832cdec8bd98d7bca7d5f1b797a1137">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[39/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1603,7 +1631,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a8a84f44b3d439afe6e5ecf292977f3e0" name="a8a84f44b3d439afe6e5ecf292977f3e0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a84f44b3d439afe6e5ecf292977f3e0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[39/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a84f44b3d439afe6e5ecf292977f3e0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[40/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1634,7 +1662,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a1fdb1de1d3595ef3594e46956e738a19" name="a1fdb1de1d3595ef3594e46956e738a19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fdb1de1d3595ef3594e46956e738a19">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[40/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fdb1de1d3595ef3594e46956e738a19">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[41/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1657,7 +1685,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="ab902eaae04fb141cecabefd7f0cfe6ba" name="ab902eaae04fb141cecabefd7f0cfe6ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab902eaae04fb141cecabefd7f0cfe6ba">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[41/41]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab902eaae04fb141cecabefd7f0cfe6ba">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[42/42]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1710,10 +1738,10 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00681">681</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>{</div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>    <span class="keywordflow">return</span> U8(<span class="stringliteral">&quot;\U0001D456&quot;</span>);</div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00689">689</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00690" name="l00690"></a><span class="lineno">  690</span>{</div>
+<div class="line"><a id="l00691" name="l00691"></a><span class="lineno">  691</span>    <span class="keywordflow">return</span> U8(<span class="stringliteral">&quot;\U0001D456&quot;</span>);</div>
+<div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1751,17 +1779,17 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00651">651</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>{</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>    Precedence prec;</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt;= precedenceEnum) {</div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>        <span class="keyword">auto</span> box = apply(x);</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        box.enclose_parens();</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <span class="keywordflow">return</span> box;</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>        <span class="keywordflow">return</span> apply(x);</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>    }</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00659">659</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>{</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>    Precedence prec;</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt;= precedenceEnum) {</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>        <span class="keyword">auto</span> box = apply(x);</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        box.enclose_parens();</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>        <span class="keywordflow">return</span> box;</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>        <span class="keywordflow">return</span> apply(x);</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>    }</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1799,17 +1827,17 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00638">638</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>{</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    Precedence prec;</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt; precedenceEnum) {</div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>        <span class="keyword">auto</span> box = apply(x);</div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>        box.enclose_parens();</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>        <span class="keywordflow">return</span> box;</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>        <span class="keywordflow">return</span> apply(x);</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>    }</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00646">646</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>{</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>    Precedence prec;</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt; precedenceEnum) {</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>        <span class="keyword">auto</span> box = apply(x);</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        box.enclose_parens();</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>        <span class="keywordflow">return</span> box;</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        <span class="keywordflow">return</span> apply(x);</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>    }</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1836,10 +1864,10 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00676">676</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span>{</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>    <span class="keywordflow">return</span> StringBox(U8(<span class="stringliteral">&quot;\u22C5&quot;</span>), 1);</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00684">684</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00685" name="l00685"></a><span class="lineno">  685</span>{</div>
+<div class="line"><a id="l00686" name="l00686"></a><span class="lineno">  686</span>    <span class="keywordflow">return</span> StringBox(U8(<span class="stringliteral">&quot;\u22C5&quot;</span>), 1);</div>
+<div class="line"><a id="l00687" name="l00687"></a><span class="lineno">  687</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

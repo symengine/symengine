@@ -694,7 +694,16 @@ $(function() {
 <div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    }</div>
 <div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
 <div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>}</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span><span class="keywordtype">void</span> LatexPrinter::bvisit(<span class="keyword">const</span> Tuple &amp;x)</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>{</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>    o &lt;&lt; parenthesize(apply(vec));</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>}</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span> </div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>

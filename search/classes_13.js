@@ -22,9 +22,10 @@ var searchData=
   ['truncate_19',['Truncate',['../classSymEngine_1_1Truncate.html',1,'SymEngine']]],
   ['try_5fto_5flock_5ft_20',['try_to_lock_t',['http://en.cppreference.com/w/cpp/thread/lock_tag_t.html',1,'std']]],
   ['tuple_21',['tuple',['http://en.cppreference.com/w/cpp/utility/tuple.html',1,'std']]],
-  ['two_5fby_5ftwo_5fmatrix_22',['two_by_two_matrix',['../structSymEngine_1_1two__by__two__matrix.html',1,'SymEngine']]],
-  ['twoargbasic_23',['TwoArgBasic',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
-  ['twoargbasic_3c_20boolean_20_3e_24',['TwoArgBasic&lt; Boolean &gt;',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
-  ['type_5findex_25',['type_index',['http://en.cppreference.com/w/cpp/types/type_index.html',1,'std']]],
-  ['type_5finfo_26',['type_info',['http://en.cppreference.com/w/cpp/types/type_info.html',1,'std']]]
+  ['tuple_22',['Tuple',['../classSymEngine_1_1Tuple.html',1,'SymEngine']]],
+  ['two_5fby_5ftwo_5fmatrix_23',['two_by_two_matrix',['../structSymEngine_1_1two__by__two__matrix.html',1,'SymEngine']]],
+  ['twoargbasic_24',['TwoArgBasic',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
+  ['twoargbasic_3c_20boolean_20_3e_25',['TwoArgBasic&lt; Boolean &gt;',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
+  ['type_5findex_26',['type_index',['http://en.cppreference.com/w/cpp/types/type_index.html',1,'std']]],
+  ['type_5finfo_27',['type_info',['http://en.cppreference.com/w/cpp/types/type_info.html',1,'std']]]
 ];
