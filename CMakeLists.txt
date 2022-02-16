@@ -26,12 +26,6 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-#Boost.multiprecision build segfaults if -O3 optimization is on
-#which it is by default for cmake Release mode. Remove -O3 from flags.
-if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-endif()
-
 # Enable C++11 support in all compilers. SymEngine will not compile unless
 # the C++11 support is enabled.
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel|SunPRO")
@@ -146,12 +140,7 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
 endif()
 
 # Cotire
-if ((CMAKE_VERSION VERSION_GREATER 2.8.11) AND
-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|MSVC"))
-    set(WITH_COTIRE yes CACHE BOOL "Use cotire to speed up build")
-else()
-    set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
-endif()
+set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
 
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
@@ -317,6 +306,15 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
     set(PKGS ${PKGS} "MPC")
 endif()
+
+set(WITH_SYSTEM_CEREAL no CACHE BOOL "Build with system cereal instead of vendored files")
+if (WITH_SYSTEM_CEREAL)
+    find_package(CEREAL REQUIRED)
+    set(PKGS ${PKGS} "CEREAL")
+else()
+    set(CEREAL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/cereal/include")
+endif()
+include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
 
 # PTHREAD
 set(WITH_PTHREAD no
@@ -612,6 +610,9 @@ set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
 if (TARGET teuchos)
     set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS}
                            ${PROJECT_SOURCE_DIR}/symengine/utilities/teuchos ${PROJECT_BINARY_DIR}/symengine/utilities/teuchos)
+endif()
+if (NOT WITH_SYSTEM_CEREAL)
+    set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/symengine/utilities/cereal/include)
 endif()
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in

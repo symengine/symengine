@@ -1002,6 +1002,14 @@ void StrPrinter::bvisit(const MExprPoly &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Tuple &x)
+{
+    std::ostringstream o;
+    vec_basic vec = x.get_args();
+    o << parenthesize(apply(vec));
+    str_ = o.str();
+}
+
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
                                        PrecedenceEnum precedenceEnum)
 {

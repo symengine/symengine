@@ -36,6 +36,7 @@ int Tokenizer::lex(yy::parser::semantic_type* yylval)
             ne = "!=";
             eqs = "==";
             ident = char (char | dig)*;
+            pwise = "Piecewise";
             numeric = (dig*"."?dig+([eE][-+]?dig+)?) | (dig+".");
             implicitmul = numeric ident;
 
@@ -50,6 +51,7 @@ int Tokenizer::lex(yy::parser::semantic_type* yylval)
             ge   { return yy::parser::token::yytokentype::GE; }
             ne   { return yy::parser::token::yytokentype::NE; }
             eqs  { return yy::parser::token::yytokentype::EQ; }
+            pwise { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::PIECEWISE; }
             ident { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::IDENTIFIER; }
             numeric { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::NUMERIC; }
             implicitmul { yylval->emplace<std::string>() = token(); return yy::parser::token::yytokentype::IMPLICIT_MUL; }

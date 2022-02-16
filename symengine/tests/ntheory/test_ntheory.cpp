@@ -26,6 +26,7 @@ using SymEngine::minus_one;
 using SymEngine::mod;
 using SymEngine::mod_f;
 using SymEngine::mod_inverse;
+using SymEngine::mp_perfect_power_decomposition;
 using SymEngine::multiplicative_order;
 using SymEngine::Number;
 using SymEngine::one;
@@ -262,7 +263,7 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
     REQUIRE((divides(*i1001, *f) and not eq(*f, *i1) and not eq(*f, *i1001)));
 
-    CHECK_THROWS_AS(factor_lehman_method(outArg(f), *i1), SymEngineException &);
+    CHECK_THROWS_AS(factor_lehman_method(outArg(f), *i1), SymEngineException);
 }
 
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
@@ -295,7 +296,7 @@ TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     CHECK_THROWS_AS(factor_pollard_pm1_method(outArg(f), *i2),
-                    SymEngineException &);
+                    SymEngineException);
 #endif
 }
 
@@ -329,7 +330,7 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
     CHECK_THROWS_AS(factor_pollard_rho_method(outArg(f), *i2),
-                    SymEngineException &);
+                    SymEngineException);
 #endif
 }
 
@@ -473,10 +474,10 @@ TEST_CASE("test_crt(): ntheory", "[ntheory]")
 
     r = {integer(21), integer(31), integer(6), integer(17)};
     m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
-    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException &);
+    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException);
 
     m = {};
-    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException &);
+    CHECK_THROWS_AS(crt(outArg(g), r, m), SymEngineException);
 }
 
 TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
@@ -769,7 +770,7 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
     REQUIRE(quadratic_residues(*a7) == i7);
     REQUIRE(quadratic_residues(*a100) == i100);
 
-    CHECK_THROWS_AS(quadratic_residues(*zero), SymEngineException &);
+    CHECK_THROWS_AS(quadratic_residues(*zero), SymEngineException);
 }
 
 TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
@@ -811,7 +812,7 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     REQUIRE(is_quad_residue(*t89, *a100) == true);
     REQUIRE(is_quad_residue(*t3, *a100) == false);
 
-    CHECK_THROWS_AS(is_quad_residue(*t3, *t0), SymEngineException &);
+    CHECK_THROWS_AS(is_quad_residue(*t3, *t0), SymEngineException);
 }
 
 TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
@@ -877,7 +878,7 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     REQUIRE(mobius(*i9) == 0);
     REQUIRE(mobius(*i10) == 1);
 
-    CHECK_THROWS_AS(mobius(*minus_one), SymEngineException &);
+    CHECK_THROWS_AS(mobius(*minus_one), SymEngineException);
 }
 
 TEST_CASE("test_mertens(): ntheory", "[ntheory]")
@@ -912,4 +913,30 @@ TEST_CASE("test_factor_trial_division(): ntheory", "[ntheory]")
     RCP<const Integer> f;
 
     REQUIRE(factor_trial_division(outArg(f), *i47) == 0);
+}
+
+TEST_CASE("test_perfect_power_decomposition(): ntheory", "[ntheory]")
+{
+    integer_class a;
+    std::pair<integer_class, integer_class> res;
+
+    a = 1745041;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 1321);
+    REQUIRE(res.second == 2);
+
+    a = 15;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 15);
+    REQUIRE(res.second == 1);
+
+    a = 1771561;
+    res = mp_perfect_power_decomposition(a);
+    REQUIRE(res.first == 11);
+    REQUIRE(res.second == 6);
+
+    a = 1771561;
+    res = mp_perfect_power_decomposition(a, true);
+    REQUIRE(res.first == 1331);
+    REQUIRE(res.second == 2);
 }

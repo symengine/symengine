@@ -5,6 +5,7 @@ using SymEngine::Assumptions;
 using SymEngine::integer;
 using SymEngine::integers;
 using SymEngine::pi;
+using SymEngine::Rational;
 using SymEngine::reals;
 using SymEngine::symbol;
 using SymEngine::unevaluated_expr;
@@ -12,6 +13,7 @@ using SymEngine::unevaluated_expr;
 TEST_CASE("Test refine", "[refine]")
 {
     auto x = symbol("x");
+    auto y = symbol("y");
 
     auto expr = abs(x);
     auto a1 = Assumptions({Gt(x, integer(0))});
@@ -80,4 +82,54 @@ TEST_CASE("Test refine", "[refine]")
     expr = conjugate(x);
     auto a16 = Assumptions({});
     REQUIRE(eq(*refine(expr, &a16), *expr));
+
+    expr = pow(x, integer(2));
+    Assumptions a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = pow(pow(x, integer(2)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = pow(pow(x, integer(2)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *abs(x)));
+
+    expr = pow(pow(x, integer(2)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    expr = pow(pow(x, integer(6)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *pow(abs(x), integer(3))));
+
+    expr = log(pow(x, y));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+    a = Assumptions({reals()->contains(y), Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *mul(y, log(x))));
+
+    expr = log(pow(integer(2), y));
+    a = Assumptions({reals()->contains(y)});
+    REQUIRE(eq(*refine(expr, &a), *mul(y, log(integer(2)))));
+
+    expr = log(integer(8));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *mul(integer(3), log(integer(2)))));
+
+    expr = log(integer(23));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *log(integer(23))));
+
+    expr = log(integer(49));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *mul(integer(2), log(integer(7)))));
+
+    expr = div(log(integer(4)), integer(2));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *log(integer(2))));
 }

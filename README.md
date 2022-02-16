@@ -120,6 +120,8 @@ their default values indicated below:
         -DWITH_MPFR:BOOL=OFF \                        # Install with MPFR library
         -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
         -DWITH_LLVM:BOOL=OFF \                        # Build with LLVM libraries
+        -DWITH_SYSTEM_CEREAL:BOOL=OFF \               # Build with cereal headers from the system instead of
+                                                        the vendored copy
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_GOOGLE:BOOL=OFF \          # Build with Google Benchmark benchmarks

@@ -1,4 +1,4 @@
-// A Bison parser, made by GNU Bison 3.7.5.
+// A Bison parser, made by GNU Bison 3.8.2.
 
 // Skeleton interface for Bison LALR(1) parsers in C++
 
@@ -15,7 +15,7 @@
 // GNU General Public License for more details.
 
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // As a special exception, you may create a larger work that contains
 // part or all of the Bison parser skeleton and distribute that work
@@ -122,12 +122,18 @@
 # define YY_USE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+#if defined __GNUC__ && ! defined __ICC && 406 <= __GNUC__ * 100 + __GNUC_MINOR__
+# if __GNUC__ * 100 + __GNUC_MINOR__ < 407
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")
+# else
+#  define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                           \
     _Pragma ("GCC diagnostic push")                                     \
     _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
+# endif
 # define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
@@ -180,7 +186,7 @@
 #endif
 
 namespace yy {
-#line 184 "parser.tab.hh"
+#line 190 "parser.tab.hh"
 
 
 
@@ -189,39 +195,44 @@ namespace yy {
   class parser
   {
   public:
-#ifndef YYSTYPE
+#ifdef YYSTYPE
+# ifdef __GNUC__
+#  pragma GCC message "bison: do not #define YYSTYPE in C++, use %define api.value.type"
+# endif
+    typedef YYSTYPE value_type;
+#else
   /// A buffer to store and retrieve objects.
   ///
   /// Sort of a variant, but does not keep track of the nature
   /// of the stored data, since that knowledge is available
   /// via the current parser state.
-  class semantic_type
+  class value_type
   {
   public:
     /// Type of *this.
-    typedef semantic_type self_type;
+    typedef value_type self_type;
 
     /// Empty construction.
-    semantic_type () YY_NOEXCEPT
-      : yybuffer_ ()
+    value_type () YY_NOEXCEPT
+      : yyraw_ ()
     {}
 
     /// Construct and fill.
     template <typename T>
-    semantic_type (YY_RVREF (T) t)
+    value_type (YY_RVREF (T) t)
     {
       new (yyas_<T> ()) T (YY_MOVE (t));
     }
 
 #if 201103L <= YY_CPLUSPLUS
     /// Non copyable.
-    semantic_type (const self_type&) = delete;
+    value_type (const self_type&) = delete;
     /// Non copyable.
     self_type& operator= (const self_type&) = delete;
 #endif
 
     /// Destruction, allowed only if empty.
-    ~semantic_type () YY_NOEXCEPT
+    ~value_type () YY_NOEXCEPT
     {}
 
 # if 201103L <= YY_CPLUSPLUS
@@ -345,7 +356,7 @@ namespace yy {
   private:
 #if YY_CPLUSPLUS < 201103L
     /// Non copyable.
-    semantic_type (const self_type&);
+    value_type (const self_type&);
     /// Non copyable.
     self_type& operator= (const self_type&);
 #endif
@@ -355,7 +366,7 @@ namespace yy {
     T*
     yyas_ () YY_NOEXCEPT
     {
-      void *yyp = yybuffer_.yyraw;
+      void *yyp = yyraw_;
       return static_cast<T*> (yyp);
      }
 
@@ -364,26 +375,34 @@ namespace yy {
     const T*
     yyas_ () const YY_NOEXCEPT
     {
-      const void *yyp = yybuffer_.yyraw;
+      const void *yyp = yyraw_;
       return static_cast<const T*> (yyp);
      }
 
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // piecewise_list
+      char dummy1[sizeof (SymEngine::PiecewiseVec)];
+
       // st_expr
       // expr
       // leaf
       // func
-      char dummy1[sizeof (SymEngine::RCP<const SymEngine::Basic>)];
+      // pwise
+      char dummy2[sizeof (SymEngine::RCP<const SymEngine::Basic>)];
 
       // expr_list
-      char dummy2[sizeof (SymEngine::vec_basic)];
+      char dummy3[sizeof (SymEngine::vec_basic)];
 
+      // epair
+      char dummy4[sizeof (std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>>)];
+
+      // PIECEWISE
       // IDENTIFIER
       // NUMERIC
       // IMPLICIT_MUL
-      char dummy3[sizeof (std::string)];
+      char dummy5[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -393,15 +412,16 @@ namespace yy {
     union
     {
       /// Strongest alignment constraints.
-      long double yyalign_me;
+      long double yyalign_me_;
       /// A buffer large enough to store any of the semantic values.
-      char yyraw[size];
-    } yybuffer_;
+      char yyraw_[size];
+    };
   };
 
-#else
-    typedef YYSTYPE semantic_type;
 #endif
+    /// Backward compatibility (Bison 3.8).
+    typedef value_type semantic_type;
+
 
     /// Syntax errors thrown from user actions.
     struct syntax_error : std::runtime_error
@@ -426,24 +446,25 @@ namespace yy {
     END_OF_FILE = 0,               // END_OF_FILE
     YYerror = 256,                 // error
     YYUNDEF = 257,                 // "invalid token"
-    IDENTIFIER = 258,              // IDENTIFIER
-    NUMERIC = 259,                 // NUMERIC
-    IMPLICIT_MUL = 260,            // IMPLICIT_MUL
-    EQ = 261,                      // EQ
-    NE = 262,                      // NE
-    LE = 263,                      // LE
-    GE = 264,                      // GE
-    UMINUS = 265,                  // UMINUS
-    UPLUS = 266,                   // UPLUS
-    POW = 267,                     // POW
-    NOT = 268                      // NOT
+    PIECEWISE = 258,               // PIECEWISE
+    IDENTIFIER = 259,              // IDENTIFIER
+    NUMERIC = 260,                 // NUMERIC
+    IMPLICIT_MUL = 261,            // IMPLICIT_MUL
+    EQ = 262,                      // EQ
+    NE = 263,                      // NE
+    LE = 264,                      // LE
+    GE = 265,                      // GE
+    UMINUS = 266,                  // UMINUS
+    UPLUS = 267,                   // UPLUS
+    POW = 268,                     // POW
+    NOT = 269                      // NOT
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
     };
 
     /// Token kind, as returned by yylex.
-    typedef token::yytokentype token_kind_type;
+    typedef token::token_kind_type token_kind_type;
 
     /// Backward compatibility alias (Bison 3.6).
     typedef token_kind_type token_type;
@@ -453,41 +474,45 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 27, ///< Number of tokens.
+        YYNTOKENS = 28, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // END_OF_FILE
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
-        S_IDENTIFIER = 3,                        // IDENTIFIER
-        S_NUMERIC = 4,                           // NUMERIC
-        S_IMPLICIT_MUL = 5,                      // IMPLICIT_MUL
-        S_6_ = 6,                                // '|'
-        S_7_ = 7,                                // '^'
-        S_8_ = 8,                                // '&'
-        S_EQ = 9,                                // EQ
-        S_10_ = 10,                              // '>'
-        S_11_ = 11,                              // '<'
-        S_NE = 12,                               // NE
-        S_LE = 13,                               // LE
-        S_GE = 14,                               // GE
-        S_15_ = 15,                              // '-'
-        S_16_ = 16,                              // '+'
-        S_17_ = 17,                              // '*'
-        S_18_ = 18,                              // '/'
-        S_UMINUS = 19,                           // UMINUS
-        S_UPLUS = 20,                            // UPLUS
-        S_POW = 21,                              // POW
-        S_NOT = 22,                              // NOT
-        S_23_ = 23,                              // '('
-        S_24_ = 24,                              // ')'
-        S_25_ = 25,                              // '~'
-        S_26_ = 26,                              // ','
-        S_YYACCEPT = 27,                         // $accept
-        S_st_expr = 28,                          // st_expr
-        S_expr = 29,                             // expr
-        S_leaf = 30,                             // leaf
-        S_func = 31,                             // func
-        S_expr_list = 32                         // expr_list
+        S_PIECEWISE = 3,                         // PIECEWISE
+        S_IDENTIFIER = 4,                        // IDENTIFIER
+        S_NUMERIC = 5,                           // NUMERIC
+        S_IMPLICIT_MUL = 6,                      // IMPLICIT_MUL
+        S_7_ = 7,                                // '|'
+        S_8_ = 8,                                // '^'
+        S_9_ = 9,                                // '&'
+        S_EQ = 10,                               // EQ
+        S_11_ = 11,                              // '>'
+        S_12_ = 12,                              // '<'
+        S_NE = 13,                               // NE
+        S_LE = 14,                               // LE
+        S_GE = 15,                               // GE
+        S_16_ = 16,                              // '-'
+        S_17_ = 17,                              // '+'
+        S_18_ = 18,                              // '*'
+        S_19_ = 19,                              // '/'
+        S_UMINUS = 20,                           // UMINUS
+        S_UPLUS = 21,                            // UPLUS
+        S_POW = 22,                              // POW
+        S_NOT = 23,                              // NOT
+        S_24_ = 24,                              // '('
+        S_25_ = 25,                              // ')'
+        S_26_ = 26,                              // '~'
+        S_27_ = 27,                              // ','
+        S_YYACCEPT = 28,                         // $accept
+        S_st_expr = 29,                          // st_expr
+        S_expr = 30,                             // expr
+        S_leaf = 31,                             // leaf
+        S_func = 32,                             // func
+        S_epair = 33,                            // epair
+        S_piecewise_list = 34,                   // piecewise_list
+        S_pwise = 35,                            // pwise
+        S_expr_list = 36                         // expr_list
       };
     };
 
@@ -510,7 +535,7 @@ namespace yy {
       typedef Base super_type;
 
       /// Default constructor.
-      basic_symbol ()
+      basic_symbol () YY_NOEXCEPT
         : value ()
       {}
 
@@ -522,10 +547,15 @@ namespace yy {
       {
         switch (this->kind ())
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.move< SymEngine::PiecewiseVec > (std::move (that.value));
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.move< SymEngine::RCP<const SymEngine::Basic> > (std::move (that.value));
         break;
 
@@ -533,6 +563,11 @@ namespace yy {
         value.move< SymEngine::vec_basic > (std::move (that.value));
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.move< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -561,6 +596,18 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, SymEngine::PiecewiseVec&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const SymEngine::PiecewiseVec& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, SymEngine::RCP<const SymEngine::Basic>&& v)
         : Base (t)
         , value (std::move (v))
@@ -585,6 +632,18 @@ namespace yy {
 #endif
 
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>>&& v)
+        : Base (t)
+        , value (std::move (v))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>>& v)
+        : Base (t)
+        , value (v)
+      {}
+#endif
+
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v)
         : Base (t)
         , value (std::move (v))
@@ -602,6 +661,8 @@ namespace yy {
         clear ();
       }
 
+
+
       /// Destroy contents, and record that is empty.
       void clear () YY_NOEXCEPT
       {
@@ -618,10 +679,15 @@ namespace yy {
         // Value type destructor.
 switch (yykind)
     {
+      case symbol_kind::S_piecewise_list: // piecewise_list
+        value.template destroy< SymEngine::PiecewiseVec > ();
+        break;
+
       case symbol_kind::S_st_expr: // st_expr
       case symbol_kind::S_expr: // expr
       case symbol_kind::S_leaf: // leaf
       case symbol_kind::S_func: // func
+      case symbol_kind::S_pwise: // pwise
         value.template destroy< SymEngine::RCP<const SymEngine::Basic> > ();
         break;
 
@@ -629,6 +695,11 @@ switch (yykind)
         value.template destroy< SymEngine::vec_basic > ();
         break;
 
+      case symbol_kind::S_epair: // epair
+        value.template destroy< std::pair<SymEngine::RCP<const SymEngine::Basic>, SymEngine::RCP<const SymEngine::Boolean>> > ();
+        break;
+
+      case symbol_kind::S_PIECEWISE: // PIECEWISE
       case symbol_kind::S_IDENTIFIER: // IDENTIFIER
       case symbol_kind::S_NUMERIC: // NUMERIC
       case symbol_kind::S_IMPLICIT_MUL: // IMPLICIT_MUL
@@ -661,7 +732,7 @@ switch (yykind)
       void move (basic_symbol& s);
 
       /// The semantic value.
-      semantic_type value;
+      value_type value;
 
     private:
 #if YY_CPLUSPLUS < 201103L
@@ -673,22 +744,24 @@ switch (yykind)
     /// Type access provider for token (enum) based symbols.
     struct by_kind
     {
-      /// Default constructor.
-      by_kind ();
-
-#if 201103L <= YY_CPLUSPLUS
-      /// Move constructor.
-      by_kind (by_kind&& that);
-#endif
-
-      /// Copy constructor.
-      by_kind (const by_kind& that);
-
       /// The symbol kind as needed by the constructor.
       typedef token_kind_type kind_type;
 
+      /// Default constructor.
+      by_kind () YY_NOEXCEPT;
+
+#if 201103L <= YY_CPLUSPLUS
+      /// Move constructor.
+      by_kind (by_kind&& that) YY_NOEXCEPT;
+#endif
+
+      /// Copy constructor.
+      by_kind (const by_kind& that) YY_NOEXCEPT;
+
       /// Constructor from (external) token numbers.
-      by_kind (kind_type t);
+      by_kind (kind_type t) YY_NOEXCEPT;
+
+
 
       /// Record that this symbol is empty.
       void clear () YY_NOEXCEPT;
@@ -718,23 +791,23 @@ switch (yykind)
       typedef basic_symbol<by_kind> super_type;
 
       /// Empty symbol.
-      symbol_type () {}
+      symbol_type () YY_NOEXCEPT {}
 
       /// Constructor for valueless symbols, and symbols from each type.
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok)
-        : super_type(token_type (tok))
+        : super_type (token_kind_type (tok))
 #else
       symbol_type (int tok)
-        : super_type(token_type (tok))
+        : super_type (token_kind_type (tok))
 #endif
       {}
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v)
-        : super_type(token_type (tok), std::move (v))
+        : super_type (token_kind_type (tok), std::move (v))
 #else
       symbol_type (int tok, const std::string& v)
-        : super_type(token_type (tok), v)
+        : super_type (token_kind_type (tok), v)
 #endif
       {}
     };
@@ -786,7 +859,7 @@ switch (yykind)
 #endif // #if YYDEBUG || 0
 
 
-    // Implementation of make_symbol for each symbol type.
+    // Implementation of make_symbol for each token kind.
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
@@ -830,6 +903,21 @@ switch (yykind)
       make_YYUNDEF ()
       {
         return symbol_type (token::YYUNDEF);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PIECEWISE (std::string v)
+      {
+        return symbol_type (token::PIECEWISE, std::move (v));
+      }
+#else
+      static
+      symbol_type
+      make_PIECEWISE (const std::string& v)
+      {
+        return symbol_type (token::PIECEWISE, v);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1018,19 +1106,19 @@ switch (yykind)
 
     /// Whether the given \c yypact_ value indicates a defaulted state.
     /// \param yyvalue   the value to check
-    static bool yy_pact_value_is_default_ (int yyvalue);
+    static bool yy_pact_value_is_default_ (int yyvalue) YY_NOEXCEPT;
 
     /// Whether the given \c yytable_ value indicates a syntax error.
     /// \param yyvalue   the value to check
-    static bool yy_table_value_is_error_ (int yyvalue);
+    static bool yy_table_value_is_error_ (int yyvalue) YY_NOEXCEPT;
 
     static const signed char yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token kind \a t to a symbol kind.
     /// In theory \a t should be a token_kind_type, but character literals
-    /// are valid, yet not members of the token_type enum.
-    static symbol_kind_type yytranslate_ (int t);
+    /// are valid, yet not members of the token_kind_type enum.
+    static symbol_kind_type yytranslate_ (int t) YY_NOEXCEPT;
 
 #if YYDEBUG || 0
     /// For a symbol, its name in clear.
@@ -1061,20 +1149,20 @@ switch (yykind)
 
     static const signed char yycheck_[];
 
-    // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
-    // symbol of state STATE-NUM.
+    // YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
+    // state STATE-NUM.
     static const signed char yystos_[];
 
-    // YYR1[YYN] -- Symbol number of symbol that rule YYN derives.
+    // YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.
     static const signed char yyr1_[];
 
-    // YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.
+    // YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.
     static const signed char yyr2_[];
 
 
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const unsigned char yyrline_[];
+    static const short yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -1167,7 +1255,7 @@ switch (yykind)
       typedef typename S::size_type size_type;
       typedef typename std::ptrdiff_t index_type;
 
-      stack (size_type n = 200)
+      stack (size_type n = 200) YY_NOEXCEPT
         : seq_ (n)
       {}
 
@@ -1246,7 +1334,7 @@ switch (yykind)
       class slice
       {
       public:
-        slice (const stack& stack, index_type range)
+        slice (const stack& stack, index_type range) YY_NOEXCEPT
           : stack_ (stack)
           , range_ (range)
         {}
@@ -1296,14 +1384,14 @@ switch (yykind)
     void yypush_ (const char* m, state_type s, YY_MOVE_REF (symbol_type) sym);
 
     /// Pop \a n symbols from the stack.
-    void yypop_ (int n = 1);
+    void yypop_ (int n = 1) YY_NOEXCEPT;
 
     /// Constants.
     enum
     {
-      yylast_ = 166,     ///< Last index in yytable_.
-      yynnts_ = 6,  ///< Number of nonterminal symbols.
-      yyfinal_ = 18 ///< Termination state number.
+      yylast_ = 203,     ///< Last index in yytable_.
+      yynnts_ = 9,  ///< Number of nonterminal symbols.
+      yyfinal_ = 21 ///< Termination state number.
     };
 
 
@@ -1314,7 +1402,7 @@ switch (yykind)
 
 
 } // yy
-#line 1318 "parser.tab.hh"
+#line 1406 "parser.tab.hh"
 
 
 

@@ -68,6 +68,9 @@ public:
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
+
+    void bvisit(const Tuple &x);
+
     StringBox apply(const RCP<const Basic> &b);
     StringBox apply(const vec_basic &v);
     StringBox apply(const Basic &b);

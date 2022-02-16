@@ -14,7 +14,9 @@ Assumptions::Assumptions(const set_basic &statements)
             const auto expr = contains.get_expr();
             const auto set = contains.get_set();
             if (is_a<Symbol>(*expr)) {
-                if (is_a<Reals>(*set)) {
+                if (is_a<Complexes>(*set)) {
+                    complex_symbols_.insert(expr);
+                } else if (is_a<Reals>(*set)) {
                     complex_symbols_.insert(expr);
                     real_symbols_.insert(expr);
                 } else if (is_a<Rationals>(*set)) {
