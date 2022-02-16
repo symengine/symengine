@@ -294,6 +294,16 @@ void UnicodePrinter::bvisit(const Integers &x)
     box_ = StringBox(U8("\u2124"), 1);
 }
 
+void UnicodePrinter::bvisit(const Naturals &x)
+{
+    box_ = StringBox(U8("\u2115"), 1);
+}
+
+void UnicodePrinter::bvisit(const Naturals0 &x)
+{
+    box_ = StringBox(U8("\u2115\u2080"), 2);
+}
+
 void UnicodePrinter::bvisit(const EmptySet &x)
 {
     box_ = StringBox(U8("\u2205"), 1);

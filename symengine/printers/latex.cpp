@@ -441,6 +441,16 @@ void LatexPrinter::bvisit(const Integers &x)
     str_ = "\\mathbb{Z}";
 }
 
+void LatexPrinter::bvisit(const Naturals &x)
+{
+    str_ = "\\mathbb{N}";
+}
+
+void LatexPrinter::bvisit(const Naturals0 &x)
+{
+    str_ = "\\mathbb{N}_0";
+}
+
 void LatexPrinter::bvisit(const FiniteSet &x)
 {
     std::ostringstream s;

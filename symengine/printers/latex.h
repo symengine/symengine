@@ -26,6 +26,8 @@ public:
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
+    void bvisit(const Naturals &x);
+    void bvisit(const Naturals0 &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const ConditionSet &x);
     void bvisit(const Contains &x);

@@ -392,6 +392,16 @@ void StrPrinter::bvisit(const Integers &x)
     str_ = "Integers";
 }
 
+void StrPrinter::bvisit(const Naturals &x)
+{
+    str_ = "Naturals";
+}
+
+void StrPrinter::bvisit(const Naturals0 &x)
+{
+    str_ = "Naturals0";
+}
+
 void StrPrinter::bvisit(const EmptySet &x)
 {
     str_ = "EmptySet";

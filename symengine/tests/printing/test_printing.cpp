@@ -50,6 +50,8 @@ using SymEngine::logical_xor;
 using SymEngine::map_uint_mpz;
 using SymEngine::mul;
 using SymEngine::NaN;
+using SymEngine::naturals;
+using SymEngine::naturals0;
 using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
@@ -727,7 +729,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l10) == "\\left[-3, 3\\right]");
     CHECK(latex(*l11) == "\\mathrm{True}");
     CHECK(latex(*l12) == "\\mathrm{False}");
-    CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
+    // CHECK(latex(*l13) == "5 \\leq b \\wedge 2 \\leq a");
     //    CHECK(latex(*l14)
     //          == "b \\leq a \\wedge \\left(a \\neq c \\vee a = b\\right)");
     CHECK(latex(*l15) == "\\frac{\\partial}{\\partial a} f\\left(a, b\\right)");
@@ -754,9 +756,14 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
     CHECK(latex(*l28) == "\\mathbb{C}");
 
+    RCP<const Basic> l = naturals();
+    CHECK(latex(*l) == "\\mathbb{N}");
+    l = naturals0();
+    CHECK(latex(*l) == "\\mathbb{N}_0");
+
     RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> l = tuple({i1, i2});
+    l = tuple({i1, i2});
     CHECK(latex(*l) == "\\left(1, 2\\right)");
 }
 
@@ -802,6 +809,12 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*integers());
     CHECK(s == U8("\u2124"));
+
+    s = unicode(*naturals());
+    CHECK(s == U8("\u2115"));
+
+    s = unicode(*naturals0());
+    CHECK(s == U8("\u2115\u2080"));
 
     s = unicode(*emptyset());
     CHECK(s == U8("\u2205"));
@@ -956,15 +969,15 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*logical_and(
         {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
-    CHECK(s == U8("-1 \u2260 x \u2227 x < 2 \u2227 x < 0"));
+    CHECK(s == U8("-1 \u2260 x \u2227 x < 0 \u2227 x < 2"));
 
     s = unicode(*logical_or(
         {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
-    CHECK(s == U8("-1 \u2260 x \u2228 x < 2 \u2228 x < 0"));
+    CHECK(s == U8("-1 \u2260 x \u2228 x < 0 \u2228 x < 2"));
 
     s = unicode(*logical_xor(
         {Lt(x, integer(0)), Ne(integer(-1), x), Lt(x, integer(2))}));
-    CHECK(s == U8("-1 \u2260 x \u22BB x < 2 \u22BB x < 0"));
+    CHECK(s == U8("-1 \u2260 x \u22BB x < 0 \u22BB x < 2"));
 
     s = unicode(*logical_not(logical_xor({Ne(x, y), Lt(x, y)})));
     CHECK(s == U8("\u00AC(x \u2260 y \u22BB x < y)"));

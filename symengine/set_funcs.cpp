@@ -38,6 +38,16 @@ public:
         sup_ = infty(1);
     };
 
+    void bvisit(const Naturals &x)
+    {
+        sup_ = infty(1);
+    };
+
+    void bvisit(const Naturals0 &x)
+    {
+        sup_ = infty(1);
+    };
+
     void bvisit(const Interval &x)
     {
         sup_ = x.get_end();
@@ -106,6 +116,16 @@ public:
     void bvisit(const Integers &x)
     {
         inf_ = infty(-1);
+    };
+
+    void bvisit(const Naturals &x)
+    {
+        inf_ = integer(1);
+    };
+
+    void bvisit(const Naturals0 &x)
+    {
+        inf_ = integer(0);
     };
 
     void bvisit(const Interval &x)
@@ -197,6 +217,16 @@ public:
     void bvisit(const Integers &x)
     {
         boundary_ = integers();
+    };
+
+    void bvisit(const Naturals &x)
+    {
+        boundary_ = naturals();
+    };
+
+    void bvisit(const Naturals0 &x)
+    {
+        boundary_ = naturals0();
     };
 
     void bvisit(const Interval &x)

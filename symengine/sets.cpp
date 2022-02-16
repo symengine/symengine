@@ -156,10 +156,17 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
             return emptyset();
         }
     }
-    if (is_a<Integers>(*o)) {
+    if (is_a<Integers>(*o) or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         if (is_a_Number(*start_) and is_a_Number(*end_)) {
             auto first = SymEngine::ceiling(start_);
             auto last = SymEngine::floor(end_);
+            if (is_a<Naturals>(*o)
+                and not down_cast<const Integer &>(*first).is_positive()) {
+                first = integer(1);
+            } else if (is_a<Naturals0>(*o)
+                       and down_cast<const Integer &>(*first).is_negative()) {
+                first = integer(0);
+            }
             if (eq(*first, *start_) and left_open_) {
                 first = add(first, integer(1));
             }
@@ -232,7 +239,8 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<FiniteSet>(*o)
         or is_a<Union>(*o) or is_a<Complexes>(*o) or is_a<Reals>(*o)
-        or is_a<Rationals>(*o) or is_a<Integers>(*o)) {
+        or is_a<Rationals>(*o) or is_a<Integers>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
     }
     return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
@@ -264,7 +272,8 @@ vec_basic Interval::get_args() const
 RCP<const Set> Complexes::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Complexes>(*o)
-        or is_a<Reals>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)) {
+        or is_a<Reals>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return o;
     } else if (is_a<FiniteSet>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -277,7 +286,8 @@ RCP<const Set> Complexes::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> Complexes::set_union(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Complexes>(*o)
-        or is_a<Reals>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)) {
+        or is_a<Reals>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return complexes();
     } else if (is_a<FiniteSet>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
@@ -289,7 +299,8 @@ RCP<const Set> Complexes::set_union(const RCP<const Set> &o) const
 RCP<const Set> Complexes::set_complement(const RCP<const Set> &o) const
 {
     if (is_a<EmptySet>(*o) or is_a<Complexes>(*o) or is_a<Reals>(*o)
-        or is_a<Rationals>(*o) or is_a<Integers>(*o) or is_a<Interval>(*o)) {
+        or is_a<Rationals>(*o) or is_a<Integers>(*o) or is_a<Interval>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return emptyset();
     }
     if (is_a<UniversalSet>(*o)) {
@@ -338,7 +349,8 @@ const RCP<const Complexes> &Complexes::getInstance()
 RCP<const Set> Reals::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
-        or is_a<Rationals>(*o) or is_a<Integers>(*o)) {
+        or is_a<Rationals>(*o) or is_a<Integers>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return o;
     } else if (is_a<FiniteSet>(*o) or is_a<Complexes>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -351,7 +363,8 @@ RCP<const Set> Reals::set_intersection(const RCP<const Set> &o) const
 RCP<const Set> Reals::set_union(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o) or is_a<EmptySet>(*o) or is_a<Reals>(*o)
-        or is_a<Integers>(*o) or is_a<Rationals>(*o)) {
+        or is_a<Integers>(*o) or is_a<Rationals>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return reals();
     } else if (is_a<FiniteSet>(*o) or is_a<Complexes>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
@@ -363,7 +376,8 @@ RCP<const Set> Reals::set_union(const RCP<const Set> &o) const
 RCP<const Set> Reals::set_complement(const RCP<const Set> &o) const
 {
     if (is_a<EmptySet>(*o) or is_a<Reals>(*o) or is_a<Rationals>(*o)
-        or is_a<Integers>(*o) or is_a<Interval>(*o)) {
+        or is_a<Integers>(*o) or is_a<Interval>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return emptyset();
     }
     if (is_a<UniversalSet>(*o) or is_a<Complexes>(*o)) {
@@ -414,7 +428,8 @@ const RCP<const Reals> &Reals::getInstance()
 
 RCP<const Set> Rationals::set_intersection(const RCP<const Set> &o) const
 {
-    if (is_a<EmptySet>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)) {
+    if (is_a<EmptySet>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return o;
     } else if (is_a<FiniteSet>(*o) or is_a<Reals>(*o) or is_a<Complexes>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
@@ -426,7 +441,8 @@ RCP<const Set> Rationals::set_intersection(const RCP<const Set> &o) const
 
 RCP<const Set> Rationals::set_union(const RCP<const Set> &o) const
 {
-    if (is_a<EmptySet>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)) {
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return rationals();
     } else if (is_a<FiniteSet>(*o) or is_a<Reals>(*o) or is_a<Complexes>(*o)) {
         return (*o).set_union(rcp_from_this_cast<const Set>());
@@ -437,7 +453,8 @@ RCP<const Set> Rationals::set_union(const RCP<const Set> &o) const
 
 RCP<const Set> Rationals::set_complement(const RCP<const Set> &o) const
 {
-    if (is_a<EmptySet>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)) {
+    if (is_a<EmptySet>(*o) or is_a<Rationals>(*o) or is_a<Integers>(*o)
+        or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         return emptyset();
     }
     if (is_a<UniversalSet>(*o) or is_a<Complexes>(*o) or is_a<Reals>(*o)
@@ -487,7 +504,8 @@ const RCP<const Rationals> &Rationals::getInstance()
 
 RCP<const Set> Integers::set_intersection(const RCP<const Set> &o) const
 {
-    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return o;
     } else if (is_a<Complexes>(*o) or is_a<Reals>(*o) or is_a<Rationals>(*o)) {
         return integers();
@@ -501,7 +519,8 @@ RCP<const Set> Integers::set_intersection(const RCP<const Set> &o) const
 
 RCP<const Set> Integers::set_union(const RCP<const Set> &o) const
 {
-    if (is_a<Integers>(*o) or is_a<EmptySet>(*o)) {
+    if (is_a<Integers>(*o) or is_a<EmptySet>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return integers();
     } else if (is_a<Complexes>(*o)) {
         return complexes();
@@ -520,7 +539,8 @@ RCP<const Set> Integers::set_union(const RCP<const Set> &o) const
 
 RCP<const Set> Integers::set_complement(const RCP<const Set> &o) const
 {
-    if (is_a<EmptySet>(*o) or is_a<Integers>(*o)) {
+    if (is_a<EmptySet>(*o) or is_a<Integers>(*o) or is_a<Naturals>(*o)
+        or is_a<Naturals0>(*o)) {
         return emptyset();
     }
     if (is_a<UniversalSet>(*o) or is_a<Rationals>(*o) or is_a<Reals>(*o)
@@ -567,6 +587,175 @@ int Integers::compare(const Basic &o) const
 const RCP<const Integers> &Integers::getInstance()
 {
     const static auto a = make_rcp<const Integers>();
+    return a;
+}
+
+RCP<const Set> Naturals::set_intersection(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Naturals>(*o)) {
+        return o;
+    } else if (is_a<Naturals0>(*o) or is_a<Integers>(*o) or is_a<Complexes>(*o)
+               or is_a<Reals>(*o) or is_a<Rationals>(*o)) {
+        return naturals();
+    } else if (is_a<FiniteSet>(*o) or is_a<Interval>(*o)) {
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Naturals::set_union(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o)) {
+        return naturals();
+    } else if (is_a<Naturals>(*o) or is_a<Naturals0>(*o) or is_a<Integers>(*o)
+               or is_a<Complexes>(*o) or is_a<Reals>(*o) or is_a<Rationals>(*o)
+               or is_a<UniversalSet>(*o)) {
+        return o;
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_union(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Naturals::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Naturals>(*o)) {
+        return emptyset();
+    }
+    if (is_a<Naturals0>(*o)) {
+        finiteset({zero});
+    }
+    if (is_a<UniversalSet>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)
+        or is_a<Reals>(*o) or is_a<Complexes>(*o)) {
+        return make_rcp<const Complement>(o, naturals());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Boolean> Naturals::contains(const RCP<const Basic> &a) const
+{
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    } else if (is_a<Integer>(*a)
+               and down_cast<const Integer &>(*a).is_positive()) {
+        return boolean(true);
+    } else {
+        return boolean(false);
+    }
+}
+
+hash_t Naturals::__hash__() const
+{
+    hash_t seed = SYMENGINE_NATURALS;
+    return seed;
+}
+
+bool Naturals::__eq__(const Basic &o) const
+{
+    if (is_a<Naturals>(o))
+        return true;
+    return false;
+}
+
+int Naturals::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Naturals>(o))
+    return 0;
+}
+
+const RCP<const Naturals> &Naturals::getInstance()
+{
+    const static auto a = make_rcp<const Naturals>();
+    return a;
+}
+
+RCP<const Set> Naturals0::set_intersection(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
+        return o;
+    } else if (is_a<Integers>(*o) or is_a<Complexes>(*o) or is_a<Reals>(*o)
+               or is_a<Rationals>(*o)) {
+        return naturals0();
+    } else if (is_a<FiniteSet>(*o) or is_a<Interval>(*o)) {
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Naturals0::set_union(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Naturals>(*o)) {
+        return naturals0();
+    } else if (is_a<Naturals0>(*o) or is_a<Integers>(*o) or is_a<Complexes>(*o)
+               or is_a<Reals>(*o) or is_a<Rationals>(*o)
+               or is_a<UniversalSet>(*o)) {
+        return o;
+    } else if (is_a<FiniteSet>(*o)) {
+        return (*o).set_union(rcp_from_this_cast<const Set>());
+    } else {
+        return SymEngine::make_set_union({rcp_from_this_cast<const Set>(), o});
+    }
+}
+
+RCP<const Set> Naturals0::set_complement(const RCP<const Set> &o) const
+{
+    if (is_a<EmptySet>(*o) or is_a<Naturals0>(*o) or is_a<Naturals>(*o)) {
+        return emptyset();
+    }
+    if (is_a<UniversalSet>(*o) or is_a<Integers>(*o) or is_a<Rationals>(*o)
+        or is_a<Reals>(*o) or is_a<Complexes>(*o)) {
+        return make_rcp<const Complement>(o, naturals());
+    }
+    return SymEngine::set_complement_helper(rcp_from_this_cast<const Set>(), o);
+}
+
+RCP<const Boolean> Naturals0::contains(const RCP<const Basic> &a) const
+{
+    if (not is_a_Number(*a)) {
+        if (is_a_Set(*a)) {
+            return boolean(false);
+        } else {
+            return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
+        }
+    } else if (is_a<Integer>(*a)
+               and (not down_cast<const Integer &>(*a).is_negative())) {
+        return boolean(true);
+    } else {
+        return boolean(false);
+    }
+}
+
+hash_t Naturals0::__hash__() const
+{
+    hash_t seed = SYMENGINE_NATURALS0;
+    return seed;
+}
+
+bool Naturals0::__eq__(const Basic &o) const
+{
+    if (is_a<Naturals0>(o))
+        return true;
+    return false;
+}
+
+int Naturals0::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Naturals0>(o))
+    return 0;
+}
+
+const RCP<const Naturals0> &Naturals0::getInstance()
+{
+    const static auto a = make_rcp<const Naturals0>();
     return a;
 }
 
@@ -799,18 +988,30 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
                 {rationals(), finiteset(container)});
         }
     }
-    if (is_a<Integers>(*o)) {
+    if (is_a<Integers>(*o) or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         set_basic container;
         for (const auto &elem : container_) {
-            if (!is_a<Integer>(*elem)) {
-                container.insert(elem);
+            if (is_a<Integers>(*o)) {
+                if (not is_a<Integer>(*elem)) {
+                    container.insert(elem);
+                }
+            } else if (is_a<Naturals>(*o)) {
+                if (not(is_a<Integer>(*elem)
+                        and down_cast<const Integer &>(*elem).is_positive())) {
+                    container.insert(elem);
+                }
+            } else {
+                if (not(is_a<Integer>(*elem)
+                        and not down_cast<const Integer &>(*elem)
+                                    .is_negative())) {
+                    container.insert(elem);
+                }
             }
         }
         if (container.empty()) {
-            return integers();
+            return o;
         } else {
-            return SymEngine::make_set_union(
-                {integers(), finiteset(container)});
+            return SymEngine::make_set_union({o, finiteset(container)});
         }
     }
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
@@ -875,12 +1076,20 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
             }
         }
     }
-    if (is_a<Integers>(*o)) {
+    if (is_a<Integers>(*o) or is_a<Naturals>(*o) or is_a<Naturals0>(*o)) {
         set_basic kept_integers;
         set_basic others;
         for (const auto &elem : container_) {
             if (is_a_Number(*elem)) {
-                if (is_a<Integer>(*elem)) {
+                if (is_a<Integers>(*o) and is_a<Integer>(*elem)) {
+                    kept_integers.insert(elem);
+                } else if (is_a<Naturals>(*o) and is_a<Integer>(*elem)
+                           and down_cast<const Integer &>(*elem)
+                                   .is_positive()) {
+                    kept_integers.insert(elem);
+                } else if (is_a<Naturals0>(*o) and is_a<Integer>(*elem)
+                           and (not down_cast<const Integer &>(*elem)
+                                        .is_negative())) {
                     kept_integers.insert(elem);
                 }
             } else {
