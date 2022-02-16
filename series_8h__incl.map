@@ -1,9 +1,9 @@
 <map id="/home/runner/work/symengine/symengine/symengine/series.h" name="/home/runner/work/symengine/symengine/symengine/series.h">
 <area shape="rect" id="node1" title=" " alt="" coords="1315,5,1544,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="1284,95,1327,121"/>
-<area shape="rect" id="node3" href="$integer_8h.html" title=" " alt="" coords="1351,95,1507,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="1285,95,1328,121"/>
+<area shape="rect" id="node3" href="$integer_8h.html" title=" " alt="" coords="1352,95,1507,121"/>
 <area shape="rect" id="node20" href="$symengine__exception_8h_source.html" title=" " alt="" coords="1767,393,1937,435"/>
-<area shape="rect" id="node4" href="$number_8h.html" title=" " alt="" coords="1252,169,1412,196"/>
+<area shape="rect" id="node4" href="$number_8h.html" title=" " alt="" coords="1253,169,1411,196"/>
 <area shape="rect" id="node23" href="$symengine__casts_8h_source.html" title=" " alt="" coords="819,557,989,599"/>
 <area shape="rect" id="node5" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="973,319,1117,345"/>
 <area shape="rect" id="node41" href="$assumptions_8h_source.html" title=" " alt="" coords="1235,244,1429,271"/>
@@ -34,10 +34,10 @@
 <area shape="rect" id="node24" title=" " alt="" coords="1083,654,1163,681"/>
 <area shape="rect" id="node25" title=" " alt="" coords="805,654,864,681"/>
 <area shape="rect" id="node26" href="$symengine__assert_8h_source.html" title=" " alt="" coords="888,647,1059,688"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1879,654,1950,681"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1974,654,2061,681"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1877,654,1947,681"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1971,654,2058,681"/>
 <area shape="rect" id="node33" title=" " alt="" coords="1187,654,1245,681"/>
 <area shape="rect" id="node34" title=" " alt="" coords="1269,654,1341,681"/>
 <area shape="rect" id="node35" title=" " alt="" coords="1365,647,1557,688"/>
-<area shape="rect" id="node36" title=" " alt="" coords="1582,647,1855,688"/>
+<area shape="rect" id="node36" title=" " alt="" coords="1581,647,1853,688"/>
 </map>
