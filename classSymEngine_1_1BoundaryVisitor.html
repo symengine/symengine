@@ -142,6 +142,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac69d08940c5795c3327580339af53cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51b398191cc31266e70ba8a64f568ba0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1BoundaryVisitor.html#a51b398191cc31266e70ba8a64f568ba0">bvisit</a> (const <a class="el" href="classSymEngine_1_1Integers.html">Integers</a> &amp;x)</td></tr>
 <tr class="separator:a51b398191cc31266e70ba8a64f568ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adede74fde88d708578d39ebd22fa2086"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1BoundaryVisitor.html#adede74fde88d708578d39ebd22fa2086">bvisit</a> (const <a class="el" href="classSymEngine_1_1Naturals.html">Naturals</a> &amp;x)</td></tr>
+<tr class="separator:adede74fde88d708578d39ebd22fa2086"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5944c19a96ae4ed1672ca548be193b44"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1BoundaryVisitor.html#a5944c19a96ae4ed1672ca548be193b44">bvisit</a> (const <a class="el" href="classSymEngine_1_1Naturals0.html">Naturals0</a> &amp;x)</td></tr>
+<tr class="separator:a5944c19a96ae4ed1672ca548be193b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa20ad2238f3ca539fe464a09c129692e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1BoundaryVisitor.html#aa20ad2238f3ca539fe464a09c129692e">bvisit</a> (const <a class="el" href="classSymEngine_1_1Interval.html">Interval</a> &amp;x)</td></tr>
 <tr class="separator:aa20ad2238f3ca539fe464a09c129692e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827d741b0c3d7ea260ef4c42c8b4ac48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1BoundaryVisitor.html#a827d741b0c3d7ea260ef4c42c8b4ac48">bvisit</a> (const <a class="el" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;x)</td></tr>
@@ -162,7 +166,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00162">162</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00182">182</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6bc02eff6ded33e2c32639ae6bc43cb8" name="a6bc02eff6ded33e2c32639ae6bc43cb8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6bc02eff6ded33e2c32639ae6bc43cb8">&#9670;&nbsp;</a></span>BoundaryVisitor()</h2>
@@ -187,8 +191,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00168">168</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00188">188</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -217,16 +221,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00240">240</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        s.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordflow">return</span> boundary_;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00270">270</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    {</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        s.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        <span class="keywordflow">return</span> boundary_;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="abab26facb92ef5829d0c48450e555041" name="abab26facb92ef5829d0c48450e555041"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abab26facb92ef5829d0c48450e555041">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abab26facb92ef5829d0c48450e555041">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,13 +253,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00170">170</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00190">190</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a77fd51e5e5b5c5f82d7f28a6db80ef2b" name="a77fd51e5e5b5c5f82d7f28a6db80ef2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77fd51e5e5b5c5f82d7f28a6db80ef2b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77fd51e5e5b5c5f82d7f28a6db80ef2b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -278,15 +282,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00230">230</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    {</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;inf for Complement not implemented&quot;</span>);</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00260">260</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;inf for Complement not implemented&quot;</span>);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="ae0d537b2bbc7960841825dbc960bfdf6" name="ae0d537b2bbc7960841825dbc960bfdf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0d537b2bbc7960841825dbc960bfdf6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0d537b2bbc7960841825dbc960bfdf6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -309,16 +313,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00182">182</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    };</div>
-<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00490">sets.h:490</a></div></div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00202">202</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00562">sets.h:562</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a037e749e5d41056de86f52029dfd664c" name="a037e749e5d41056de86f52029dfd664c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a037e749e5d41056de86f52029dfd664c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a037e749e5d41056de86f52029dfd664c">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -341,15 +345,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00172">172</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    {</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00192">192</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    {</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a827d741b0c3d7ea260ef4c42c8b4ac48" name="a827d741b0c3d7ea260ef4c42c8b4ac48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a827d741b0c3d7ea260ef4c42c8b4ac48">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a827d741b0c3d7ea260ef4c42c8b4ac48">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,15 +376,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00207">207</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        boundary_ = rcp_static_cast&lt;const Set&gt;(x.rcp_from_this());</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00237">237</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        boundary_ = rcp_static_cast&lt;const Set&gt;(x.rcp_from_this());</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a7ffb539f84cc64ac58cb0c956d4b6a19" name="a7ffb539f84cc64ac58cb0c956d4b6a19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ffb539f84cc64ac58cb0c956d4b6a19">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ffb539f84cc64ac58cb0c956d4b6a19">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -403,15 +407,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00235">235</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;inf for ImageSet not implemented&quot;</span>);</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00265">265</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;inf for ImageSet not implemented&quot;</span>);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a51b398191cc31266e70ba8a64f568ba0" name="a51b398191cc31266e70ba8a64f568ba0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51b398191cc31266e70ba8a64f568ba0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a51b398191cc31266e70ba8a64f568ba0">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -434,16 +438,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00197">197</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">integers</a>();</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    };</div>
-<div class="ttc" id="anamespaceSymEngine_html_a457fa9fcfa4597cb9233f3476055beb8"><div class="ttname"><a href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">SymEngine::integers</a></div><div class="ttdeci">RCP&lt; const Integers &gt; integers()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00484">sets.h:484</a></div></div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00217">217</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">integers</a>();</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a457fa9fcfa4597cb9233f3476055beb8"><div class="ttname"><a href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">SymEngine::integers</a></div><div class="ttdeci">RCP&lt; const Integers &gt; integers()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00544">sets.h:544</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="aa20ad2238f3ca539fe464a09c129692e" name="aa20ad2238f3ca539fe464a09c129692e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa20ad2238f3ca539fe464a09c129692e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa20ad2238f3ca539fe464a09c129692e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -466,16 +470,80 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00202">202</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    {</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({x.get_start(), x.get_end()});</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    };</div>
-<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00502">sets.h:502</a></div></div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00232">232</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    {</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({x.get_start(), x.get_end()});</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00574">sets.h:574</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="adede74fde88d708578d39ebd22fa2086" name="adede74fde88d708578d39ebd22fa2086"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adede74fde88d708578d39ebd22fa2086">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/14]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::BoundaryVisitor::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Naturals.html">Naturals</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00222">222</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a7b40cca2cbf240d8790fc43c77f6f7e5">naturals</a>();</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a7b40cca2cbf240d8790fc43c77f6f7e5"><div class="ttname"><a href="namespaceSymEngine.html#a7b40cca2cbf240d8790fc43c77f6f7e5">SymEngine::naturals</a></div><div class="ttdeci">RCP&lt; const Naturals &gt; naturals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00550">sets.h:550</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a5944c19a96ae4ed1672ca548be193b44" name="a5944c19a96ae4ed1672ca548be193b44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5944c19a96ae4ed1672ca548be193b44">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/14]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::BoundaryVisitor::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Naturals0.html">Naturals0</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00227">227</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    {</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a2fe935ea1994c509d036339d8ab759e5">naturals0</a>();</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a2fe935ea1994c509d036339d8ab759e5"><div class="ttname"><a href="namespaceSymEngine.html#a2fe935ea1994c509d036339d8ab759e5">SymEngine::naturals0</a></div><div class="ttdeci">RCP&lt; const Naturals0 &gt; naturals0()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00556">sets.h:556</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="ac69d08940c5795c3327580339af53cc1" name="ac69d08940c5795c3327580339af53cc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac69d08940c5795c3327580339af53cc1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac69d08940c5795c3327580339af53cc1">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -498,16 +566,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00192">192</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    {</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">reals</a>();</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    };</div>
-<div class="ttc" id="anamespaceSymEngine_html_a14a11e12a2224a195a84d9d1943ba9fd"><div class="ttname"><a href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00472">sets.h:472</a></div></div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00212">212</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">reals</a>();</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    };</div>
+<div class="ttc" id="anamespaceSymEngine_html_a14a11e12a2224a195a84d9d1943ba9fd"><div class="ttname"><a href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00532">sets.h:532</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a7e752522c1db8ef71967f3544f085dc7" name="a7e752522c1db8ef71967f3544f085dc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e752522c1db8ef71967f3544f085dc7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e752522c1db8ef71967f3544f085dc7">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -530,15 +598,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00187">187</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00207">207</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a3293e0e5e7fd52e2d8163e67be2bdd46" name="a3293e0e5e7fd52e2d8163e67be2bdd46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3293e0e5e7fd52e2d8163e67be2bdd46">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[11/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3293e0e5e7fd52e2d8163e67be2bdd46">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[13/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -561,30 +629,30 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00212">212</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    {</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        set_set boundary_sets;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keyword">const</span> set_set &amp;sets = x.get_container();</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = sets.begin(); it != sets.end(); ++it) {</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            set_set interior_sets;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> interit = sets.begin(); interit != sets.end();</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                 ++interit) {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                <span class="keywordflow">if</span> (it != interit) {</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                    interior_sets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(interior(**interit));</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                }</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            }</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            boundary_sets.insert(</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                set_complement(apply(**it), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">set_union</a>(interior_sets)));</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        }</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        boundary_ = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">set_union</a>(boundary_sets);</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00242">242</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        set_set boundary_sets;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">const</span> set_set &amp;sets = x.get_container();</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = sets.begin(); it != sets.end(); ++it) {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            set_set interior_sets;</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> interit = sets.begin(); interit != sets.end();</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                 ++interit) {</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                <span class="keywordflow">if</span> (it != interit) {</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                    interior_sets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(interior(**interit));</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            }</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            boundary_sets.insert(</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                set_complement(apply(**it), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">set_union</a>(interior_sets)));</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        }</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        boundary_ = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">set_union</a>(boundary_sets);</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    };</div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="aset_union_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">std::set_union</a></div><div class="ttdeci">T set_union(T... args)</div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="aed6c6a0e5cf2764d60217818ba02be1a" name="aed6c6a0e5cf2764d60217818ba02be1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed6c6a0e5cf2764d60217818ba02be1a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[12/12]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aed6c6a0e5cf2764d60217818ba02be1a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[14/14]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -607,10 +675,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00177">177</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00197">197</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        boundary_ = <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -635,7 +703,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00165">165</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="set__funcs_8cpp_source.html#l00185">185</a> of file <a class="el" href="set__funcs_8cpp_source.html">set_funcs.cpp</a>.</p>
 
 </div>
 </div>

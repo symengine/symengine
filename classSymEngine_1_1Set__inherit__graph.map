@@ -1,5 +1,5 @@
 <map id="SymEngine::Set" name="SymEngine::Set">
-<area shape="rect" id="node1" title=" " alt="" coords="447,284,571,311"/>
+<area shape="rect" id="node1" title=" " alt="" coords="447,335,571,361"/>
 <area shape="rect" id="node4" href="$classSymEngine_1_1Complement.html" title=" " alt="" coords="619,5,805,32"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1Complexes.html" title=" " alt="" coords="625,56,799,83"/>
 <area shape="rect" id="node6" href="$classSymEngine_1_1ConditionSet.html" title=" " alt="" coords="619,107,805,133"/>
@@ -8,10 +8,12 @@
 <area shape="rect" id="node9" href="$classSymEngine_1_1ImageSet.html" title=" " alt="" coords="629,259,795,285"/>
 <area shape="rect" id="node10" href="$classSymEngine_1_1Integers.html" title=" " alt="" coords="634,309,790,336"/>
 <area shape="rect" id="node11" href="$classSymEngine_1_1Interval.html" title=" " alt="" coords="635,360,789,387"/>
-<area shape="rect" id="node12" href="$classSymEngine_1_1Rationals.html" title=" " alt="" coords="630,411,794,437"/>
-<area shape="rect" id="node13" href="$classSymEngine_1_1Reals.html" title=" " alt="" coords="643,461,781,488"/>
-<area shape="rect" id="node14" href="$classSymEngine_1_1Union.html" title=" " alt="" coords="641,512,783,539"/>
-<area shape="rect" id="node15" href="$classSymEngine_1_1UniversalSet.html" title=" " alt="" coords="619,563,805,589"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="260,284,399,311"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,277,212,318"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1Naturals.html" title=" " alt="" coords="633,411,791,437"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1Naturals0.html" title=" " alt="" coords="629,461,795,488"/>
+<area shape="rect" id="node14" href="$classSymEngine_1_1Rationals.html" title=" " alt="" coords="630,512,794,539"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1Reals.html" title=" " alt="" coords="643,563,781,589"/>
+<area shape="rect" id="node16" href="$classSymEngine_1_1Union.html" title=" " alt="" coords="641,613,783,640"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1UniversalSet.html" title=" " alt="" coords="619,664,805,691"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="260,335,399,361"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,327,212,369"/>
 </map>

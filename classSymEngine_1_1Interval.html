@@ -486,7 +486,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>{</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(start_, end_, <span class="keyword">false</span>, <span class="keyword">false</span>);</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_aed504b13420b07bf1bb0da023485de8d"><div class="ttname"><a href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">SymEngine::interval</a></div><div class="ttdeci">RCP&lt; const Set &gt; interval(const RCP&lt; const Number &gt; &amp;start, const RCP&lt; const Number &gt; &amp;end, const bool left_open=false, const bool right_open=false)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00511">sets.h:511</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_aed504b13420b07bf1bb0da023485de8d"><div class="ttname"><a href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">SymEngine::interval</a></div><div class="ttdeci">RCP&lt; const Set &gt; interval(const RCP&lt; const Number &gt; &amp;start, const RCP&lt; const Number &gt; &amp;end, const bool left_open=false, const bool right_open=false)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00583">sets.h:583</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -618,10 +618,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Set.html#a6c37911feafff49dc48582f5076c8b3f">SymEngine::Set</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00259">259</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>{</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keywordflow">return</span> {start_, end_, boolean(left_open_), boolean(right_open_)};</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00267">267</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>{</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    <span class="keywordflow">return</span> {start_, end_, boolean(left_open_), boolean(right_open_)};</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -897,23 +897,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Set.html">SymEngine::Set</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00241">241</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>{</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        set_set cont;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({start_, other.start_}), *start_)) {</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            cont.insert(<a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(other.get_start(), start_,</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                                 other.get_left_open(), not left_open_));</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        }</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({end_, other.end_}), *end_)) {</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            cont.insert(<a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(end_, other.get_end(), not right_open_,</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                                 other.get_right_open()));</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        }</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keywordflow">return</span> SymEngine::set_union(cont);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    }</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordflow">return</span> SymEngine::set_complement_helper(rcp_from_this_cast&lt;const Set&gt;(), o);</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00249">249</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>{</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        set_set cont;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({start_, other.start_}), *start_)) {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            cont.insert(<a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(other.get_start(), start_,</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                                 other.get_left_open(), not left_open_));</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({end_, other.end_}), *end_)) {</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            cont.insert(<a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(end_, other.get_end(), not right_open_,</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>                                 other.get_right_open()));</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keywordflow">return</span> SymEngine::set_union(cont);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    }</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keywordflow">return</span> SymEngine::set_complement_helper(rcp_from_this_cast&lt;const Set&gt;(), o);</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -987,42 +987,49 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        }</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">if</span> (is_a&lt;Integers&gt;(*o)) {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">if</span> (is_a&lt;Integers&gt;(*o) or is_a&lt;Naturals&gt;(*o) or is_a&lt;Naturals0&gt;(*o)) {</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*start_) and <a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*end_)) {</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keyword">auto</span> first = <a class="code hl_function" href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">SymEngine::ceiling</a>(start_);</div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>            <span class="keyword">auto</span> last = <a class="code hl_function" href="namespaceSymEngine.html#a8d243e3a9146c0b0641bced63fc79254">SymEngine::floor</a>(end_);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*first, *start_) and left_open_) {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(first, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1));</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            }</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*last, *end_) and right_open_) {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                last = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(last, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(-1));</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a2aadb3a6ac5bc33af97dd42ea096276d">Lt</a>(last, first), *boolTrue)) {</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            }</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            set_basic container;</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="keywordflow">while</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a0a7185d0fb25140df9797a462bde11c6">Ge</a>(last, first), *boolTrue)) {</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                container.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(first);</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(first, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1));</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container);</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            <span class="keywordflow">return</span> SymEngine::set_intersection(</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        }</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    }</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(*o) or is_a&lt;EmptySet&gt;(*o) or is_a&lt;FiniteSet&gt;(*o)</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        or is_a&lt;Union&gt;(*o) or is_a&lt;Rationals&gt;(*o) or is_a&lt;Reals&gt;(*o)</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        or is_a&lt;Complexes&gt;(*o)) {</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        <span class="keywordflow">return</span> (*o).set_intersection(rcp_from_this_cast&lt;const Set&gt;());</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    }</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Not implemented Intersection class&quot;</span>);</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>}</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="keywordflow">if</span> (is_a&lt;Naturals&gt;(*o)</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                and not down_cast&lt;const Integer &amp;&gt;(*first).is_positive()) {</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Naturals0&gt;(*o)</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                       and down_cast&lt;const Integer &amp;&gt;(*first).is_negative()) {</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(0);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            }</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*first, *start_) and left_open_) {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(first, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1));</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>            }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*last, *end_) and right_open_) {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                last = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(last, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(-1));</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a2aadb3a6ac5bc33af97dd42ea096276d">Lt</a>(last, first), *boolTrue)) {</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            }</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            set_basic container;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordflow">while</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a0a7185d0fb25140df9797a462bde11c6">Ge</a>(last, first), *boolTrue)) {</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                container.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(first);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                first = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(first, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1));</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>            }</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>            <span class="keywordflow">return</span> SymEngine::set_intersection(</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        }</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    }</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(*o) or is_a&lt;EmptySet&gt;(*o) or is_a&lt;FiniteSet&gt;(*o)</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        or is_a&lt;Union&gt;(*o) or is_a&lt;Rationals&gt;(*o) or is_a&lt;Reals&gt;(*o)</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        or is_a&lt;Complexes&gt;(*o)) {</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        <span class="keywordflow">return</span> (*o).set_intersection(rcp_from_this_cast&lt;const Set&gt;());</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Not implemented Intersection class&quot;</span>);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>}</div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a0a7185d0fb25140df9797a462bde11c6"><div class="ttname"><a href="namespaceSymEngine.html#a0a7185d0fb25140df9797a462bde11c6">SymEngine::Ge</a></div><div class="ttdeci">RCP&lt; const Boolean &gt; Ge(const RCP&lt; const Basic &gt; &amp;lhs, const RCP&lt; const Basic &gt; &amp;rhs)</div><div class="ttdoc">Convenience function returning LessThan object.</div><div class="ttdef"><b>Definition:</b> <a href="logic_8cpp_source.html#l00691">logic.cpp:691</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00490">sets.h:490</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00502">sets.h:502</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00562">sets.h:562</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00574">sets.h:574</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2aadb3a6ac5bc33af97dd42ea096276d"><div class="ttname"><a href="namespaceSymEngine.html#a2aadb3a6ac5bc33af97dd42ea096276d">SymEngine::Lt</a></div><div class="ttdeci">RCP&lt; const Boolean &gt; Lt(const RCP&lt; const Basic &gt; &amp;lhs, const RCP&lt; const Basic &gt; &amp;rhs)</div><div class="ttdoc">Returns the canonicalized StrictLessThan object from the arguments.</div><div class="ttdef"><b>Definition:</b> <a href="logic_8cpp_source.html#l00715">logic.cpp:715</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a39c4aa170bc123a990149a38662edf99"><div class="ttname"><a href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">SymEngine::ceiling</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ceiling(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Ceiling:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00705">functions.cpp:705</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a8d243e3a9146c0b0641bced63fc79254"><div class="ttname"><a href="namespaceSymEngine.html#a8d243e3a9146c0b0641bced63fc79254">SymEngine::floor</a></div><div class="ttdeci">RCP&lt; const Basic &gt; floor(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Floor:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00611">functions.cpp:611</a></div></div>
@@ -1058,47 +1065,48 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Set.html">SymEngine::Set</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00199">199</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>{</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        RCP&lt;const Basic&gt; start_start, end_end, m;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        RCP&lt;const Number&gt; start, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordtype">bool</span> left_open, right_open;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        start_start = <a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;start_, other.start_});</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        end_end = <a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;end_, other.end_});</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        m = <a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({start_start, end_end});</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        <span class="keywordflow">if</span> ((<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *start_start) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *m)</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>             and ((<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *this-&gt;end_) and this-&gt;right_open_)</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                  or (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *other.end_) and other.right_open_)))</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            or (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *m) and not <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *start_start))) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <span class="keywordflow">return</span> SymEngine::make_set_union(</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;start_, other.start_}), *this-&gt;start_)) {</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                start = this-&gt;start_;</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                start = other.start_;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            }</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;end_, other.end_}), *this-&gt;end_)) {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = this-&gt;end_;</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = other.end_;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            }</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            left_open = ((<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;start_, *start) or this-&gt;left_open_)</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                         and (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*other.start_, *start) or other.left_open_));</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            right_open = ((<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;end_, *end) or this-&gt;right_open_)</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                          and (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*other.end_, *end) or other.right_open_));</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(start, end, left_open, right_open);</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        }</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    }</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(*o) or is_a&lt;EmptySet&gt;(*o) or is_a&lt;FiniteSet&gt;(*o)</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        or is_a&lt;Union&gt;(*o) or is_a&lt;Complexes&gt;(*o) or is_a&lt;Reals&gt;(*o)</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        or is_a&lt;Rationals&gt;(*o) or is_a&lt;Integers&gt;(*o)) {</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        <span class="keywordflow">return</span> (*o).set_union(rcp_from_this_cast&lt;const Set&gt;());</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    }</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">return</span> SymEngine::make_set_union({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00206">206</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>{</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        RCP&lt;const Basic&gt; start_start, end_end, m;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        RCP&lt;const Number&gt; start, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordtype">bool</span> left_open, right_open;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        start_start = <a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;start_, other.start_});</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        end_end = <a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;end_, other.end_});</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        m = <a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({start_start, end_end});</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keywordflow">if</span> ((<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *start_start) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *m)</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>             and ((<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *this-&gt;end_) and this-&gt;right_open_)</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                  or (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *other.end_) and other.right_open_)))</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            or (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *m) and not <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *start_start))) {</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            <span class="keywordflow">return</span> SymEngine::make_set_union(</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;start_, other.start_}), *this-&gt;start_)) {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                start = this-&gt;start_;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                start = other.start_;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;end_, other.end_}), *this-&gt;end_)) {</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = this-&gt;end_;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = other.end_;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            }</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            left_open = ((<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;start_, *start) or this-&gt;left_open_)</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                         and (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*other.start_, *start) or other.left_open_));</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            right_open = ((<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;end_, *end) or this-&gt;right_open_)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                          and (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*other.end_, *end) or other.right_open_));</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#aed504b13420b07bf1bb0da023485de8d">interval</a>(start, end, left_open, right_open);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        }</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(*o) or is_a&lt;EmptySet&gt;(*o) or is_a&lt;FiniteSet&gt;(*o)</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        or is_a&lt;Union&gt;(*o) or is_a&lt;Complexes&gt;(*o) or is_a&lt;Reals&gt;(*o)</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        or is_a&lt;Rationals&gt;(*o) or is_a&lt;Integers&gt;(*o) or is_a&lt;Naturals&gt;(*o)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        or is_a&lt;Naturals0&gt;(*o)) {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <span class="keywordflow">return</span> (*o).set_union(rcp_from_this_cast&lt;const Set&gt;());</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    }</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">return</span> SymEngine::make_set_union({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
