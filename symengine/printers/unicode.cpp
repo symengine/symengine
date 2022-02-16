@@ -545,7 +545,7 @@ void UnicodePrinter::bvisit(const Constant &x)
 
 StringBox UnicodePrinter::apply(const vec_basic &d)
 {
-    StringBox box;
+    StringBox box("");
     StringBox comma(", ");
     for (auto p = d.begin(); p != d.end(); p++) {
         if (p != d.begin()) {
@@ -643,6 +643,14 @@ void UnicodePrinter::bvisit(const FunctionSymbol &x)
     args.enclose_parens();
     box.add_right(args);
     box_ = box;
+}
+
+void UnicodePrinter::bvisit(const Tuple &x)
+{
+    vec_basic vec = x.get_args();
+    StringBox args = apply(vec);
+    args.enclose_parens();
+    box_ = args;
 }
 
 StringBox UnicodePrinter::parenthesizeLT(const RCP<const Basic> &x,

@@ -8,7 +8,7 @@ endif()
 
 if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.tab.cc
-                      COMMAND ${BISON_EXECUTABLE} -d parser.yy
+                      COMMAND ${BISON_EXECUTABLE} -Wcounterexamples -d parser.yy
                       DEPENDS parser/parser.yy
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
@@ -102,6 +102,7 @@ set(SRC
     assumptions.cpp
     refine.cpp
     simplify.cpp
+    tuple.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -225,6 +226,7 @@ set(HEADERS
     refine.h
     simplify.h
     utilities/stream_fmt.h
+    tuple.h
 )
 
 if (NOT WITH_SYSTEM_CEREAL)
