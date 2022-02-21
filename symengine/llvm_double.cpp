@@ -699,8 +699,8 @@ void LLVMVisitor::bvisit(const Infty &x)
 
 void LLVMVisitor::bvisit(const NaN &x)
 {
-    result_ = llvm::ConstantFP::getSNaN(get_float_type(&mod->getContext()),
-                                        /*negative=*/false, /*payload=*/0);
+    result_ = llvm::ConstantFP::getNaN(get_float_type(&mod->getContext()),
+                                       /*negative=*/false, /*payload=*/0);
 }
 
 void LLVMVisitor::bvisit(const BooleanAtom &x)
