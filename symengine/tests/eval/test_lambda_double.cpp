@@ -347,7 +347,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     {
         double out[2];
         LLVMDoubleVisitor v;
-        v.init({}, {*Nan, *Inf});
+        bool symbolic_cse = false;
+        int opt_level = 0;
+        v.init({}, {Nan, Inf}, symbolic_cse, opt_level);
         v.call(out, {});
         REQUIRE(std::isnan(out[0]));
         REQUIRE(std::isinf(out[1]));
