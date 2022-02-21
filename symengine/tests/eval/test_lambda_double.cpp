@@ -1,4 +1,6 @@
 #include "catch.hpp"
+#include "symengine/constants.h"
+#include "symengine/nan.h"
 #include <chrono>
 #include <array>
 
@@ -49,6 +51,7 @@ using SymEngine::Eq;
 using SymEngine::evalf;
 using SymEngine::floor;
 using SymEngine::gamma;
+using SymEngine::Inf;
 using SymEngine::integer;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::LambdaRealDoubleVisitor;
@@ -61,6 +64,7 @@ using SymEngine::map_basic_basic;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::mul;
+using SymEngine::Nan;
 using SymEngine::Ne;
 using SymEngine::NegInf;
 using SymEngine::NotImplementedError;
@@ -274,6 +278,12 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
             REQUIRE(::fabs(d - ref) < 1e-12);
         }
     }
+    v.init({}, *Nan);
+    REQUIRE(std::isnan(v.call({})));
+    v.init({}, *Inf);
+    std::isinf(v.call({}));
+    v.init({}, *NegInf);
+    REQUIRE(std::isinf(v.call({})));
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
@@ -333,6 +343,13 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         d3 = v3.call({1.4, 3.0, -1.0});
         REQUIRE(::fabs((d - d2)) < 1e-12);
         REQUIRE(::fabs((d - d3)) < 1e-12);
+    }
+    {
+        double out[2];
+        LLVMDoubleVisitor v;
+        v.init({}, {*Nan, *Inf});
+        v.call(out, {}) REQUIRE(std::isnan(out[0]));
+        REQUIRE(std::isinf(out[1]));
     }
 }
 
