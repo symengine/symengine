@@ -348,7 +348,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         double out[2];
         LLVMDoubleVisitor v;
         v.init({}, {*Nan, *Inf});
-        v.call(out, {}) REQUIRE(std::isnan(out[0]));
+        v.call(out, {});
+        REQUIRE(std::isnan(out[0]));
         REQUIRE(std::isinf(out[1]));
     }
 }
