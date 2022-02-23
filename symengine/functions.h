@@ -295,7 +295,7 @@ bool handle_minus(const RCP<const Basic> &arg,
 /*! returns `true` if the given argument `t` is found in the
  *   lookup table `d`. It also returns the value in `index`
  **/
-bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+bool inverse_lookup(const umap_basic_basic &d, const RCP<const Basic> &t,
                     const Ptr<RCP<const Basic>> &index);
 
 // \return true of conjugate has to be returned finally else false

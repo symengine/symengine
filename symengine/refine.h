@@ -29,6 +29,8 @@ public:
     void bvisit(const Conjugate &x);
     void bvisit(const Max &x);
     void bvisit(const Min &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Log &x);
 };
 
 RCP<const Basic> refine(const RCP<const Basic> &x,

@@ -46,6 +46,7 @@ public:
     void bvisit(const Symbol &x);
     void bvisit(const Number &x);
     void bvisit(const Constant &x);
+    void bvisit(const Add &x);
     void bvisit(const Basic &x);
     void bvisit(const Set &x);
     void bvisit(const Relational &x);
@@ -400,6 +401,61 @@ public:
 
     tribool apply(const Basic &b);
 };
+
+class FiniteVisitor : public BaseVisitor<FiniteVisitor>
+{
+private:
+    tribool is_finite_;
+    const Assumptions *assumptions_;
+
+    void error();
+
+public:
+    FiniteVisitor(const Assumptions *assumptions) : assumptions_(assumptions){};
+
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Infty &x);
+    void bvisit(const NaN &x);
+    void bvisit(const Number &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+
+    tribool apply(const Basic &b);
+};
+
+class AlgebraicVisitor : public BaseVisitor<AlgebraicVisitor>
+{
+private:
+    tribool is_algebraic_;
+    const Assumptions *assumptions_;
+
+    void trans_nonzero_and_algebraic(const Basic &b);
+    void error();
+
+public:
+    AlgebraicVisitor(const Assumptions *assumptions) : assumptions_(assumptions)
+    {
+    }
+
+    void bvisit(const Basic &x);
+    void bvisit(const Add &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x);
+    void bvisit(const Rational &x);
+    void bvisit(const Set &x);
+    void bvisit(const Relational &x);
+    void bvisit(const Boolean &x);
+    void bvisit(const Constant &x);
+    void bvisit(const TrigFunction &x);
+    void bvisit(const HyperbolicFunction &x);
+    void bvisit(const LambertW &x);
+
+    tribool apply(const Basic &b);
+};
+
 } // namespace SymEngine
 
 #endif // SYMENGINE_TEST_VISITORS_H

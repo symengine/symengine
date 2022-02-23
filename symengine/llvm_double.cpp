@@ -495,7 +495,9 @@ llvm::Function *LLVMVisitor::get_powi()
 {
     std::vector<llvm::Type *> arg_type;
     arg_type.push_back(get_float_type(&mod->getContext()));
+#if (LLVM_VERSION_MAJOR > 12)
     arg_type.push_back(llvm::Type::getInt32Ty(mod->getContext()));
+#endif
     return llvm::Intrinsic::getDeclaration(mod, llvm::Intrinsic::powi,
                                            arg_type);
 }
@@ -889,7 +891,8 @@ void LLVMVisitor::bvisit(const Symbol &x)
         result_ = it->second;
         return;
     }
-    throw std::runtime_error("Symbol " + x.__str__()
+
+    throw SymEngineException("Symbol " + x.__str__()
                              + " not in the symbols vector.");
 }
 
@@ -941,9 +944,9 @@ void LLVMLongDoubleVisitor::visit(const Constant &x)
 }
 #endif
 
-void LLVMVisitor::bvisit(const Basic &)
+void LLVMVisitor::bvisit(const Basic &x)
 {
-    throw std::runtime_error("Not implemented.");
+    throw NotImplementedError(x.__str__());
 }
 
 const std::string &LLVMVisitor::dumps() const

@@ -60,6 +60,12 @@ TEST_CASE("Test version", "[basic]")
     REQUIRE(std::strcmp(SymEngine::get_version(), SYMENGINE_VERSION) == 0);
 }
 
+TEST_CASE("Test type_code_name", "[basic]")
+{
+    REQUIRE(type_code_name(SymEngine::SYMENGINE_UNEVALUATED_EXPR)
+            == "UnevaluatedExpr");
+}
+
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
@@ -77,6 +83,23 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 
     // This checks that the hash of the Symbols are ordered:
     REQUIRE(hash_fn(*x) < hash_fn(*y));
+}
+
+TEST_CASE("Symbol string serialization: Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> x2
+        = rcp_static_cast<const Symbol>(Basic::loads(x->dumps()));
+    RCP<const Symbol> y = symbol("y");
+
+    REQUIRE(x->__eq__(*x));
+    REQUIRE(x->__eq__(*x2));
+    REQUIRE(not(x2->__eq__(*y)));
+    REQUIRE(x2->__neq__(*y));
+
+    std::hash<Basic> hash_fn;
+    // Hashes of x and x2 must be the same:
+    REQUIRE(hash_fn(*x) == hash_fn(*x2));
 }
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
@@ -713,7 +736,7 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r1->__cmp__(*r2) != 0);
     CHECK(r1->__cmp__(*r1) == 0);
 
-    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError &);
+    CHECK_THROWS_AS(r2->expand_as_exp(), NotImplementedError);
 
     r1 = pi;
     r2 = EulerGamma;
@@ -909,11 +932,11 @@ TEST_CASE("Complex: Basic", "[basic]")
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = Rational::from_two_ints(4, 5);
-    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError &);
+    CHECK_THROWS_AS(c2->div(*c1), NotImplementedError);
 
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = integer(3);
-    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError &);
+    CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")

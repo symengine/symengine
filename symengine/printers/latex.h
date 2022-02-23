@@ -22,9 +22,12 @@ public:
     void bvisit(const Interval &x);
     void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
+    void bvisit(const Complexes &x);
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
+    void bvisit(const Naturals &x);
+    void bvisit(const Naturals0 &x);
     void bvisit(const FiniteSet &x);
     void bvisit(const ConditionSet &x);
     void bvisit(const Contains &x);
@@ -49,6 +52,7 @@ public:
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
+    void bvisit(const Tuple &x);
 
 private:
     static const std::vector<std::string> names_;

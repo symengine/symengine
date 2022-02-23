@@ -191,6 +191,35 @@ public:
     }
 };
 
+class Complexes : public Set
+{
+public:
+    Complexes()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_COMPLEXES)
+    void operator=(Complexes const &) = delete;
+    const static RCP<const Complexes> &getInstance();
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&...args);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+};
+
 class Reals : public Set
 {
 public:
@@ -261,6 +290,64 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_INTEGERS)
     void operator=(Integers const &) = delete;
     const static RCP<const Integers> &getInstance();
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&...args);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+};
+
+class Naturals : public Set
+{
+public:
+    Naturals()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_NATURALS)
+    void operator=(Naturals const &) = delete;
+    const static RCP<const Naturals> &getInstance();
+    virtual hash_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&...args);
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_complement(const RCP<const Set> &o) const;
+    virtual RCP<const Boolean> contains(const RCP<const Basic> &a) const;
+};
+
+class Naturals0 : public Set
+{
+public:
+    Naturals0()
+    {
+        SYMENGINE_ASSIGN_TYPEID()
+    }
+
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_NATURALS0)
+    void operator=(Naturals0 const &) = delete;
+    const static RCP<const Naturals0> &getInstance();
     virtual hash_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -425,11 +512,20 @@ inline bool is_a_Set(const Basic &b)
             || b.get_type_code() == SYMENGINE_COMPLEMENT
             || b.get_type_code() == SYMENGINE_CONDITIONSET
             || b.get_type_code() == SYMENGINE_INTERVAL
+            || b.get_type_code() == SYMENGINE_COMPLEXES
             || b.get_type_code() == SYMENGINE_REALS
             || b.get_type_code() == SYMENGINE_RATIONALS
             || b.get_type_code() == SYMENGINE_INTEGERS
+            || b.get_type_code() == SYMENGINE_NATURALS
+            || b.get_type_code() == SYMENGINE_NATURALS0
             || b.get_type_code() == SYMENGINE_UNION
             || b.get_type_code() == SYMENGINE_IMAGESET);
+}
+
+//! \return RCP<const Complexes>
+inline RCP<const Complexes> complexes()
+{
+    return Complexes::getInstance();
 }
 
 //! \return RCP<const Reals>
@@ -444,10 +540,22 @@ inline RCP<const Rationals> rationals()
     return Rationals::getInstance();
 }
 
-//! \return RCP<const Reals>
+//! \return RCP<const Integers>
 inline RCP<const Integers> integers()
 {
     return Integers::getInstance();
+}
+
+//! \return RCP<const Naturals>
+inline RCP<const Naturals> naturals()
+{
+    return Naturals::getInstance();
+}
+
+//! \return RCP<const Naturals>
+inline RCP<const Naturals0> naturals0()
+{
+    return Naturals0::getInstance();
 }
 
 //! \return RCP<const EmptySet>
@@ -546,5 +654,12 @@ RCP<const Set> set_complement(const RCP<const Set> &universe,
 //! \return RCP<const Set>
 RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition);
+
+RCP<const Basic> sup(const Set &s);
+RCP<const Basic> inf(const Set &s);
+RCP<const Set> boundary(const Set &s);
+RCP<const Set> interior(const Set &s);
+RCP<const Set> closure(const Set &s);
+
 } // namespace SymEngine
 #endif

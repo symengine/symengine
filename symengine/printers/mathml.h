@@ -21,6 +21,7 @@ public:
     void bvisit(const Interval &x);
     void bvisit(const Piecewise &x);
     void bvisit(const EmptySet &x);
+    void bvisit(const Complexes &x);
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);

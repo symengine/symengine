@@ -93,10 +93,6 @@ public:
                 // TODO: Check if Mul::dict_add_term is enough
                 Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
             } else if (is_a_Number(*factor)) {
-                if (down_cast<const Number &>(*factor).is_zero()) {
-                    result_ = factor;
-                    return;
-                }
                 imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
             } else if (is_a<Mul>(*factor)) {
                 RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);

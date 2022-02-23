@@ -293,6 +293,12 @@ TEST_CASE("Mul: arit", "[arit]")
               real_double(0.2)});
     REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 0.03) < 1e-12);
 
+    r1 = real_double(0.1);
+    r2 = div(exp(add(x, r1)), exp(x));
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(down_cast<const RealDouble &>(*r2).i - 1.10517091807565)
+            < 1e-10);
+
     // Real * 0 = 0 * Real = 0
     r1 = real_double(0.0);
     r2 = integer(0);
@@ -357,7 +363,7 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(s.size() == 2);
 
     CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0)),
-                    SymEngineException &);
+                    SymEngineException);
 
     r1 = mul({});
     REQUIRE(eq(*r1, *one));

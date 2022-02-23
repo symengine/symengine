@@ -6,9 +6,13 @@ using SymEngine::abs;
 using SymEngine::Assumptions;
 using SymEngine::Basic;
 using SymEngine::boolTrue;
+using SymEngine::Catalan;
 using SymEngine::Complex;
 using SymEngine::constant;
 using SymEngine::cos;
+using SymEngine::E;
+using SymEngine::EulerGamma;
+using SymEngine::GoldenRatio;
 using SymEngine::Inf;
 using SymEngine::integer;
 using SymEngine::integers;
@@ -47,12 +51,12 @@ TEST_CASE("Test is zero", "[is_zero]")
     REQUIRE(is_zero(*i2) == tribool::trifalse);
     REQUIRE(is_zero(*rat1) == tribool::trifalse);
     REQUIRE(is_zero(*rat2) == tribool::tritrue);
-    REQUIRE_THROWS_AS(is_zero(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_zero(*s1), SymEngineException);
     REQUIRE(is_zero(*c1) == tribool::trifalse);
-    REQUIRE_THROWS_AS(is_zero(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_zero(*rel1), SymEngineException);
     REQUIRE(is_zero(*pi) == tribool::trifalse);
     REQUIRE(is_zero(*d1) == tribool::indeterminate);
-    REQUIRE_THROWS_AS(is_zero(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_zero(*boolTrue), SymEngineException);
     REQUIRE(is_zero(*pi) == tribool::trifalse);
     REQUIRE(is_indeterminate(is_zero(*abs(x))));
     REQUIRE(is_indeterminate(is_zero(*conjugate(x))));
@@ -88,18 +92,19 @@ TEST_CASE("Test is nonzero", "[is_nonzero]")
     REQUIRE(is_true(is_nonzero(*i2)));
     REQUIRE(is_true(is_nonzero(*rat1)));
     REQUIRE(is_false(is_nonzero(*rat2)));
-    REQUIRE_THROWS_AS(is_nonzero(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonzero(*s1), SymEngineException);
     REQUIRE(is_true(is_nonzero(*c1)));
-    REQUIRE_THROWS_AS(is_nonzero(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonzero(*rel1), SymEngineException);
     REQUIRE(is_true(is_nonzero(*pi)));
     REQUIRE(is_indeterminate(is_nonzero(*d1)));
-    REQUIRE_THROWS_AS(is_nonzero(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonzero(*boolTrue), SymEngineException);
     REQUIRE(is_true(is_nonzero(*pi)));
 }
 
 TEST_CASE("Test is positive", "[is_positive]")
 {
     RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     RCP<const Number> i1 = integer(0);
     RCP<const Number> i2 = integer(3);
     RCP<const Number> i3 = integer(-2);
@@ -121,22 +126,40 @@ TEST_CASE("Test is positive", "[is_positive]")
     REQUIRE(is_true(is_positive(*rat1)));
     REQUIRE(is_false(is_positive(*rat2)));
     REQUIRE(is_false(is_positive(*rat3)));
-    REQUIRE_THROWS_AS(is_positive(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_positive(*s1), SymEngineException);
     REQUIRE(is_false(is_positive(*c1)));
     REQUIRE(is_false(is_positive(*c2)));
-    REQUIRE_THROWS_AS(is_positive(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_positive(*rel1), SymEngineException);
     REQUIRE(is_true(is_positive(*pi)));
     REQUIRE(is_indeterminate(is_positive(*d1)));
-    REQUIRE_THROWS_AS(is_positive(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_positive(*boolTrue), SymEngineException);
 
     const auto a1 = Assumptions({Lt(x, integer(0))});
     REQUIRE(is_false(is_positive(*x, &a1)));
+    REQUIRE(is_false(is_positive(*add(x, integer(-1)), &a1)));
+    REQUIRE(is_indeterminate(is_positive(*add(x, integer(2)), &a1)));
 
     const auto a2 = Assumptions({Lt(x, integer(1))});
     REQUIRE(is_indeterminate(is_positive(*x, &a2)));
 
     const auto a3 = Assumptions({Gt(x, integer(1))});
     REQUIRE(is_true(is_positive(*x, &a3)));
+    REQUIRE(is_true(is_positive(*add(x, integer(2)), &a3)));
+    REQUIRE(is_indeterminate(is_positive(*add(x, integer(-1)), &a3)));
+
+    const auto a4 = Assumptions({reals()->contains(x), reals()->contains(y)});
+    REQUIRE(is_indeterminate(is_positive(*add(x, y), &a4)));
+
+    const auto a5 = Assumptions({Lt(x, integer(0)), Lt(y, integer(0))});
+    REQUIRE(is_false(is_positive(*add(x, mul(y, integer(2))), &a5)));
+    REQUIRE(is_true(
+        is_positive(*add(mul(x, integer(-2)), mul(y, integer(-2))), &a5)));
+
+    const auto a6 = Assumptions({Gt(x, integer(0)), Gt(y, integer(0))});
+    REQUIRE(is_false(
+        is_positive(*add(mul(x, integer(-2)), mul(y, integer(-2))), &a6)));
+    REQUIRE(is_true(
+        is_positive(*add(mul(x, integer(2)), mul(y, integer(2))), &a6)));
 }
 
 TEST_CASE("Test is non positive", "[is_nonpositive]")
@@ -163,13 +186,13 @@ TEST_CASE("Test is non positive", "[is_nonpositive]")
     REQUIRE(is_false(is_nonpositive(*rat1)));
     REQUIRE(is_true(is_nonpositive(*rat2)));
     REQUIRE(is_true(is_nonpositive(*rat3)));
-    REQUIRE_THROWS_AS(is_nonpositive(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonpositive(*s1), SymEngineException);
     REQUIRE(is_false(is_nonpositive(*c1)));
     REQUIRE(is_false(is_nonpositive(*c2)));
-    REQUIRE_THROWS_AS(is_nonpositive(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonpositive(*rel1), SymEngineException);
     REQUIRE(is_false(is_nonpositive(*pi)));
     REQUIRE(is_indeterminate(is_nonpositive(*d1)));
-    REQUIRE_THROWS_AS(is_nonpositive(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonpositive(*boolTrue), SymEngineException);
 
     const auto a1 = Assumptions({Lt(x, integer(0))});
     REQUIRE(is_true(is_nonpositive(*x, &a1)));
@@ -205,13 +228,13 @@ TEST_CASE("Test is negative", "[is_negative]")
     REQUIRE(is_false(is_negative(*rat1)));
     REQUIRE(is_false(is_negative(*rat2)));
     REQUIRE(is_true(is_negative(*rat3)));
-    REQUIRE_THROWS_AS(is_negative(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_negative(*s1), SymEngineException);
     REQUIRE(is_false(is_negative(*c1)));
     REQUIRE(is_false(is_negative(*c2)));
-    REQUIRE_THROWS_AS(is_negative(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_negative(*rel1), SymEngineException);
     REQUIRE(is_false(is_negative(*pi)));
     REQUIRE(is_indeterminate(is_negative(*d1)));
-    REQUIRE_THROWS_AS(is_negative(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_negative(*boolTrue), SymEngineException);
 
     const auto a1 = Assumptions({Lt(x, integer(0))});
     REQUIRE(is_true(is_negative(*x, &a1)));
@@ -247,13 +270,13 @@ TEST_CASE("Test is nonnegative", "[is_nonnegative]")
     REQUIRE(is_true(is_nonnegative(*rat1)));
     REQUIRE(is_true(is_nonnegative(*rat2)));
     REQUIRE(is_false(is_nonnegative(*rat3)));
-    REQUIRE_THROWS_AS(is_nonnegative(*s1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonnegative(*s1), SymEngineException);
     REQUIRE(is_false(is_nonnegative(*c1)));
     REQUIRE(is_false(is_nonnegative(*c2)));
-    REQUIRE_THROWS_AS(is_nonnegative(*rel1), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonnegative(*rel1), SymEngineException);
     REQUIRE(is_true(is_nonnegative(*pi)));
     REQUIRE(is_indeterminate(is_nonnegative(*d1)));
-    REQUIRE_THROWS_AS(is_nonnegative(*boolTrue), SymEngineException &);
+    REQUIRE_THROWS_AS(is_nonnegative(*boolTrue), SymEngineException);
 
     const auto a1 = Assumptions({Lt(x, integer(0))});
     REQUIRE(is_false(is_nonnegative(*x, &a1)));
@@ -638,4 +661,103 @@ TEST_CASE("Test is_irrational", "[is_irrational]")
     REQUIRE(is_false(is_irrational(*Nan)));
     REQUIRE(is_true(is_irrational(*irr1)));
     REQUIRE(is_indeterminate(is_irrational(*constant("catalan"))));
+}
+
+TEST_CASE("Test is_finite", "[is_finite]")
+{
+    auto x = symbol("x");
+
+    REQUIRE(is_false(is_finite(*Inf)));
+    REQUIRE(is_true(is_infinite(*Inf)));
+
+    REQUIRE_THROWS_AS(is_finite(*boolTrue), SymEngineException);
+    REQUIRE_THROWS_AS(is_infinite(*boolTrue), SymEngineException);
+    REQUIRE_THROWS_AS(is_finite(*Eq(symbol("x"), integer(1))),
+                      SymEngineException);
+    REQUIRE_THROWS_AS(is_infinite(*Eq(symbol("x"), integer(1))),
+                      SymEngineException);
+    REQUIRE_THROWS_AS(is_finite(*integers()), SymEngineException);
+    REQUIRE_THROWS_AS(is_infinite(*integers()), SymEngineException);
+    REQUIRE_THROWS_AS(is_finite(*Nan), SymEngineException);
+    REQUIRE_THROWS_AS(is_infinite(*Nan), SymEngineException);
+
+    REQUIRE(is_true(is_finite(*pi)));
+    REQUIRE(is_false(is_infinite(*pi)));
+
+    REQUIRE(is_true(is_finite(*integer(23))));
+    REQUIRE(is_false(is_infinite(*integer(23))));
+
+    REQUIRE(is_indeterminate(is_finite(*x)));
+    REQUIRE(is_indeterminate(is_infinite(*x)));
+
+    const auto a1 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(is_finite(*x, &a1)));
+    REQUIRE(is_false(is_infinite(*x, &a1)));
+
+    // Not yet supported
+    REQUIRE(is_indeterminate(is_finite(*add(x, x))));
+}
+
+TEST_CASE("Test is_even / is_odd", "[is_even]")
+{
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+    RCP<const Number> c1 = Complex::from_two_nums(*integer(2), *integer(3));
+
+    REQUIRE(is_true(is_odd(*integer(3))));
+    REQUIRE(is_false(is_odd(*integer(2))));
+    REQUIRE(is_false(is_even(*integer(3))));
+    REQUIRE(is_true(is_even(*integer(2))));
+    REQUIRE(is_false(is_odd(*rat1)));
+    REQUIRE(is_false(is_even(*rat1)));
+    REQUIRE(is_false(is_odd(*c1)));
+    REQUIRE(is_false(is_even(*c1)));
+}
+
+TEST_CASE("Test is_algebraic/is_transcendental", "[is_algebraic]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
+
+    REQUIRE(is_true(is_algebraic(*integer(23))));
+    REQUIRE(is_false(is_transcendental(*integer(23))));
+    REQUIRE(is_true(is_algebraic(*rat1)));
+    REQUIRE(is_false(is_transcendental(*rat1)));
+    REQUIRE_THROWS_AS(is_algebraic(*boolTrue), SymEngineException);
+    REQUIRE_THROWS_AS(is_transcendental(*boolTrue), SymEngineException);
+    REQUIRE_THROWS_AS(is_algebraic(*integers()), SymEngineException);
+    REQUIRE_THROWS_AS(is_transcendental(*integers()), SymEngineException);
+    REQUIRE_THROWS_AS(is_algebraic(*Eq(x, integer(1))), SymEngineException);
+    REQUIRE_THROWS_AS(is_transcendental(*Eq(x, integer(1))),
+                      SymEngineException);
+    REQUIRE(is_false(is_algebraic(*pi)));
+    REQUIRE(is_true(is_transcendental(*pi)));
+    REQUIRE(is_indeterminate(is_algebraic(*EulerGamma)));
+    REQUIRE(is_indeterminate(is_transcendental(*EulerGamma)));
+    REQUIRE(is_indeterminate(is_algebraic(*Catalan)));
+    REQUIRE(is_indeterminate(is_transcendental(*Catalan)));
+    REQUIRE(is_false(is_algebraic(*E)));
+    REQUIRE(is_true(is_transcendental(*E)));
+    REQUIRE(is_true(is_algebraic(*GoldenRatio)));
+    REQUIRE(is_false(is_transcendental(*GoldenRatio)));
+
+    REQUIRE(is_indeterminate(is_algebraic(*add(x, integer(1)))));
+
+    Assumptions a = Assumptions({integers()->contains(x)});
+    REQUIRE(is_true(is_algebraic(*x, &a)));
+
+    a = Assumptions({rationals()->contains(x), rationals()->contains(y)});
+    REQUIRE(is_true(is_algebraic(*x, &a)));
+    REQUIRE(is_true(is_algebraic(*add(x, integer(23)), &a)));
+    REQUIRE(is_true(is_algebraic(*add(x, add(y, integer(23))), &a)));
+    REQUIRE(is_true(is_transcendental(*add(x, add(y, pi)), &a)));
+    REQUIRE(is_indeterminate(is_transcendental(*add(x, add(E, pi)), &a)));
+
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(is_indeterminate(is_algebraic(*x, &a)));
+    REQUIRE(is_indeterminate(is_algebraic(*add(x, integer(23)), &a)));
+
+    REQUIRE(is_true(is_transcendental(*sin(integer(1)))));
+    REQUIRE(is_true(is_transcendental(*sinh(integer(2)))));
+    REQUIRE(is_true(is_transcendental(*lambertw(integer(2)))));
 }

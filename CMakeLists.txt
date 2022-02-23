@@ -5,7 +5,7 @@ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverrid
 project(symengine)
 
 set(SYMENGINE_MAJOR_VERSION 0)
-set(SYMENGINE_MINOR_VERSION 7)
+set(SYMENGINE_MINOR_VERSION 9)
 set(SYMENGINE_PATCH_VERSION 0)
 set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
@@ -25,12 +25,6 @@ endif ()
 
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
-
-#Boost.multiprecision build segfaults if -O3 optimization is on
-#which it is by default for cmake Release mode. Remove -O3 from flags.
-if (("${INTEGER_CLASS}" MATCHES "boostmp") AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-endif()
 
 # Enable C++11 support in all compilers. SymEngine will not compile unless
 # the C++11 support is enabled.
@@ -146,12 +140,7 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
 endif()
 
 # Cotire
-if ((CMAKE_VERSION VERSION_GREATER 2.8.11) AND
-    (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU|MSVC"))
-    set(WITH_COTIRE yes CACHE BOOL "Use cotire to speed up build")
-else()
-    set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
-endif()
+set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
 
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
@@ -318,6 +307,15 @@ if (WITH_MPC)
     set(PKGS ${PKGS} "MPC")
 endif()
 
+set(WITH_SYSTEM_CEREAL no CACHE BOOL "Build with system cereal instead of vendored files")
+if (WITH_SYSTEM_CEREAL)
+    find_package(CEREAL REQUIRED)
+    set(PKGS ${PKGS} "CEREAL")
+else()
+    set(CEREAL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/cereal/include")
+endif()
+include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
+
 # PTHREAD
 set(WITH_PTHREAD no
 CACHE BOOL "Build with PTHREAD")
@@ -441,20 +439,8 @@ endif()
 set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
 
-set(BUILD_BENCHMARKS_NONIUS no
-    CACHE BOOL "Build SymEngine Nonius benchmarks")
-
 set(BUILD_BENCHMARKS_GOOGLE no
     CACHE BOOL "Build SymEngine Google Benchmark benchmarks")
-
-if (BUILD_BENCHMARKS)
-    if (BUILD_BENCHMARKS_NONIUS)
-        if(NOT WIN32)
-            set(WITH_PTHREAD yes)
-        endif()
-        set(WITH_BOOST yes)
-    endif()
-endif()
 
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
@@ -504,10 +490,8 @@ set(BUILD_DOXYGEN no
 if (BUILD_DOXYGEN)
     find_package(Doxygen REQUIRED)
     if(DOXYGEN_FOUND)
-        configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile
-            ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile @ONLY)
         add_custom_target(doc ALL
-            ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile
+            ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxygen/Doxyfile-prj.cfg
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
             COMMENT "Generating API documentation with Doxygen" VERBATIM)
         install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/html/ DESTINATION doc)
@@ -625,6 +609,9 @@ if (TARGET teuchos)
     set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS}
                            ${PROJECT_SOURCE_DIR}/symengine/utilities/teuchos ${PROJECT_BINARY_DIR}/symengine/utilities/teuchos)
 endif()
+if (NOT WITH_SYSTEM_CEREAL)
+    set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/symengine/utilities/cereal/include)
+endif()
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
@@ -709,7 +696,6 @@ message("HAVE_SYMENGINE_STD_TO_STRING: ${HAVE_SYMENGINE_STD_TO_STRING}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
-message("BUILD_BENCHMARKS_NONIUS: ${BUILD_BENCHMARKS_NONIUS}")
 message("BUILD_BENCHMARKS_GOOGLE: ${BUILD_BENCHMARKS_GOOGLE}")
 
 message("WITH_GMP: ${HAVE_SYMENGINE_GMP}")

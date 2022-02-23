@@ -19,7 +19,6 @@ class Sieve
 {
 
 private:
-    static std::vector<unsigned> _primes;
     static void _extend(unsigned limit);
     static unsigned _sieve_size;
     static bool _clear;

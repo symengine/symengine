@@ -1,6 +1,11 @@
 #include <iterator>
 #include <sstream>
+#include <algorithm>
 #include <symengine/printers/stringbox.h>
+
+// Macro to let string literals be unicode const char in all C++ standards
+// Otherwise u8"" would be char8_t in C++20
+#define U8(x) reinterpret_cast<const char *>(u8##x)
 
 namespace SymEngine
 {
@@ -35,7 +40,7 @@ void StringBox::add_below_unicode_line(StringBox &other)
     auto new_width = std::max(width_, other.width_);
     std::string bar;
     for (unsigned i = 0; i < new_width; i++) {
-        bar.append("\u2015");
+        bar.append(U8("\u2015"));
     }
     StringBox barbox(bar, new_width);
     add_below(barbox);
@@ -84,8 +89,8 @@ void StringBox::add_power(StringBox &other)
 void StringBox::enclose_abs()
 {
     for (std::string &line : lines_) {
-        line.insert(0, "\u2502");
-        line.append("\u2502");
+        line.insert(0, U8("\u2502"));
+        line.append(U8("\u2502"));
     }
     width_ += 2;
 }
@@ -113,10 +118,10 @@ void StringBox::add_left_parens()
     if (lines_.size() == 1) {
         lines_[0].insert(0, "(");
     } else {
-        lines_[0].insert(0, "\u239B");
-        lines_.back().insert(0, "\u239D");
+        lines_[0].insert(0, U8("\u239B"));
+        lines_.back().insert(0, U8("\u239D"));
         for (unsigned i = 1; i < lines_.size() - 1; i++) {
-            lines_[i].insert(0, "\u239C");
+            lines_[i].insert(0, U8("\u239C"));
         }
     }
     width_ += 1;
@@ -127,10 +132,10 @@ void StringBox::add_right_parens()
     if (lines_.size() == 1) {
         lines_[0].append(")");
     } else {
-        lines_[0].append("\u239E");
-        lines_.back().append("\u23A0");
+        lines_[0].append(U8("\u239E"));
+        lines_.back().append(U8("\u23A0"));
         for (unsigned i = 1; i < lines_.size() - 1; i++) {
-            lines_[i].append("\u239F");
+            lines_[i].append(U8("\u239F"));
         }
     }
     width_ += 1;
@@ -141,10 +146,10 @@ void StringBox::add_left_sqbracket()
     if (lines_.size() == 1) {
         lines_[0].insert(0, "[");
     } else {
-        lines_[0].insert(0, "\u23A1");
-        lines_.back().insert(0, "\u23A3");
+        lines_[0].insert(0, U8("\u23A1"));
+        lines_.back().insert(0, U8("\u23A3"));
         for (unsigned i = 1; i < lines_.size() - 1; i++) {
-            lines_[i].insert(0, "\u23A2");
+            lines_[i].insert(0, U8("\u23A2"));
         }
     }
     width_ += 1;
@@ -155,18 +160,19 @@ void StringBox::add_left_curly()
     if (lines_.size() == 1) {
         lines_[0].insert(0, "{");
     } else if (lines_.size() == 2) {
-        lines_[0].insert(0, "\u23A7");
-        lines_[1].insert(0, "\u23A9");
-        lines_.insert(lines_.begin() + 1, "\u23A8" + std::string(width_, ' '));
+        lines_[0].insert(0, U8("\u23A7"));
+        lines_[1].insert(0, U8("\u23A9"));
+        lines_.insert(lines_.begin() + 1,
+                      U8("\u23A8") + std::string(width_, ' '));
     } else {
-        lines_[0].insert(0, "\u23A7");
-        lines_.back().insert(0, "\u23A9");
+        lines_[0].insert(0, U8("\u23A7"));
+        lines_.back().insert(0, U8("\u23A9"));
         std::size_t mid = lines_.size() / 2;
         for (std::size_t i = 1; i < lines_.size() - 1; i++) {
             if (i == mid) {
-                lines_[i].insert(0, "\u23A8");
+                lines_[i].insert(0, U8("\u23A8"));
             } else {
-                lines_[i].insert(0, "\u23AA");
+                lines_[i].insert(0, U8("\u23AA"));
             }
         }
     }
@@ -178,18 +184,19 @@ void StringBox::add_right_curly()
     if (lines_.size() == 1) {
         lines_[0].append("}");
     } else if (lines_.size() == 2) {
-        lines_[0].append("\u23AB");
-        lines_[1].append("\u23AD");
-        lines_.insert(lines_.begin() + 1, std::string(width_, ' ') + "\u23AC");
+        lines_[0].append(U8("\u23AB"));
+        lines_[1].append(U8("\u23AD"));
+        lines_.insert(lines_.begin() + 1,
+                      std::string(width_, ' ') + U8("\u23AC"));
     } else {
-        lines_[0].append("\u23AB");
-        lines_.back().append("\u23AD");
+        lines_[0].append(U8("\u23AB"));
+        lines_.back().append(U8("\u23AD"));
         std::size_t mid = lines_.size() / 2;
         for (std::size_t i = 1; i < lines_.size() - 1; i++) {
             if (i == mid) {
-                lines_[i].append("\u23AC");
+                lines_[i].append(U8("\u23AC"));
             } else {
-                lines_[i].append("\u23AA");
+                lines_[i].append(U8("\u23AA"));
             }
         }
     }
@@ -201,10 +208,10 @@ void StringBox::add_right_sqbracket()
     if (lines_.size() == 1) {
         lines_[0].append("]");
     } else {
-        lines_[0].append("\u23A4");
-        lines_.back().append("\u23A5");
+        lines_[0].append(U8("\u23A4"));
+        lines_.back().append(U8("\u23A5"));
         for (unsigned i = 1; i < lines_.size() - 1; i++) {
-            lines_[i].append("\u23A6");
+            lines_[i].append(U8("\u23A6"));
         }
     }
     width_ += 1;
@@ -212,22 +219,22 @@ void StringBox::add_right_sqbracket()
 
 void StringBox::enclose_floor()
 {
-    lines_.back().insert(0, "\u230A");
-    lines_.back().append("\u230B");
+    lines_.back().insert(0, U8("\u230A"));
+    lines_.back().append(U8("\u230B"));
     for (unsigned i = 0; i < lines_.size() - 1; i++) {
-        lines_[i].insert(0, "\u2502");
-        lines_[i].append("\u2502");
+        lines_[i].insert(0, U8("\u2502"));
+        lines_[i].append(U8("\u2502"));
     }
     width_ += 2;
 }
 
 void StringBox::enclose_ceiling()
 {
-    lines_[0].insert(0, "\u2308");
-    lines_[0].append("\u2309");
+    lines_[0].insert(0, U8("\u2308"));
+    lines_[0].append(U8("\u2309"));
     for (unsigned i = 1; i < lines_.size(); i++) {
-        lines_[i].insert(0, "\u2502");
-        lines_[i].append("\u2502");
+        lines_[i].insert(0, U8("\u2502"));
+        lines_[i].append(U8("\u2502"));
     }
     width_ += 2;
 }
@@ -238,9 +245,9 @@ void StringBox::enclose_sqrt()
     std::size_t i = len;
     for (std::string &line : lines_) {
         if (i == 1) {
-            line.insert(0, "\u2572\u2571" + std::string(len - i, ' '));
+            line.insert(0, U8("\u2572\u2571") + std::string(len - i, ' '));
         } else {
-            line.insert(0, std::string(i, ' ') + "\u2571"
+            line.insert(0, std::string(i, ' ') + U8("\u2571")
                                + std::string(len - i, ' '));
         }
         i--;

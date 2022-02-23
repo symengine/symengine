@@ -30,9 +30,12 @@ public:
     void bvisit(const Rational &x);
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
+    void bvisit(const Complexes &x);
     void bvisit(const Reals &x);
     void bvisit(const Rationals &x);
     void bvisit(const Integers &x);
+    void bvisit(const Naturals &x);
+    void bvisit(const Naturals0 &x);
     void bvisit(const EmptySet &x);
     void bvisit(const UniversalSet &x);
     void bvisit(const Piecewise &x);
@@ -67,6 +70,9 @@ public:
     void bvisit(const Unequality &x);
     void bvisit(const LessThan &x);
     void bvisit(const StrictLessThan &x);
+
+    void bvisit(const Tuple &x);
+
     StringBox apply(const RCP<const Basic> &b);
     StringBox apply(const vec_basic &v);
     StringBox apply(const Basic &b);

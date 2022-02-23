@@ -372,6 +372,11 @@ void StrPrinter::bvisit(const Piecewise &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Complexes &x)
+{
+    str_ = "Complexes";
+}
+
 void StrPrinter::bvisit(const Reals &x)
 {
     str_ = "Reals";
@@ -385,6 +390,16 @@ void StrPrinter::bvisit(const Rationals &x)
 void StrPrinter::bvisit(const Integers &x)
 {
     str_ = "Integers";
+}
+
+void StrPrinter::bvisit(const Naturals &x)
+{
+    str_ = "Naturals";
+}
+
+void StrPrinter::bvisit(const Naturals0 &x)
+{
+    str_ = "Naturals0";
 }
 
 void StrPrinter::bvisit(const EmptySet &x)
@@ -850,6 +865,7 @@ std::string StrPrinter::apply(const vec_basic &d)
 
 void StrPrinter::bvisit(const Function &x)
 {
+    static const std::vector<std::string> names_ = init_str_printer_names();
     std::ostringstream o;
     o << names_[x.get_type_code()];
     vec_basic vec = x.get_args();
@@ -996,6 +1012,14 @@ void StrPrinter::bvisit(const MExprPoly &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Tuple &x)
+{
+    std::ostringstream o;
+    vec_basic vec = x.get_args();
+    o << parenthesize(apply(vec));
+    str_ = o.str();
+}
+
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
                                        PrecedenceEnum precedenceEnum)
 {
@@ -1093,8 +1117,6 @@ std::vector<std::string> init_str_printer_names()
     return names;
 }
 
-const std::vector<std::string> StrPrinter::names_ = init_str_printer_names();
-
 std::string StrPrinter::print_mul()
 {
     return "*";
@@ -1158,6 +1180,11 @@ std::string str(const Basic &x)
 {
     StrPrinter strPrinter;
     return strPrinter.apply(x);
+}
+
+std::string str(const DenseMatrix &x)
+{
+    return x.__str__();
 }
 
 std::string julia_str(const Basic &x)

@@ -1,5 +1,6 @@
 #include "catch.hpp"
 #include <chrono>
+#include <array>
 
 #include <symengine/lambda_double.h>
 #include <symengine/symengine_exception.h>
@@ -80,6 +81,7 @@ using SymEngine::tan;
 using SymEngine::tanh;
 using SymEngine::truncate;
 using SymEngine::vec_basic;
+using SymEngine::zeta;
 
 TEST_CASE("Evaluate to double", "[lambda_double]")
 {
@@ -115,10 +117,10 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(
         v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)),
-        NotImplementedError &);
+        NotImplementedError);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
 
     // Piecewise
     auto int1 = interval(NegInf, integer(2), true, false);
@@ -209,7 +211,7 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
     REQUIRE(::fabs(d.imag() - 0.0) < 1e-12);
 
     // Undefined symbols raise an exception
-    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException &);
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
 }
 
 TEST_CASE("Evaluate functions", "[lambda_gamma]")
@@ -260,9 +262,17 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     };
 
     for (unsigned i = 0; i < testvec.size(); i++) {
-        v.init({x}, *std::get<0>(testvec[i]));
-        d = v.call({std::get<1>(testvec[i])});
-        REQUIRE(::fabs(d - std::get<2>(testvec[i])) < 1e-12);
+        RCP<const Basic> expr1 = std::get<0>(testvec[i]);
+        RCP<const Basic> expr2
+            = Basic::loads(expr1->dumps()); // test serialization
+        const auto arg = std::get<1>(testvec[i]);
+        const auto ref = std::get<2>(testvec[i]);
+        std::array<RCP<const Basic>, 2> exprs{{expr1, expr2}};
+        for (auto expr : exprs) {
+            v.init({x}, *expr);
+            d = v.call({arg});
+            REQUIRE(::fabs(d - ref) < 1e-12);
+        }
     }
 }
 
@@ -331,7 +341,7 @@ TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
 {
 
     RCP<const Basic> x, y, z, r, a, b;
-    double d, d2, d3;
+    double d, d2;
     x = symbol("x");
     y = symbol("y");
     z = symbol("z");
@@ -437,6 +447,21 @@ TEST_CASE("Check llvm save and load", "[llvm_double]")
     REQUIRE(::fabs((d - d3) / d) < 1e-12);
 }
 
+TEST_CASE("LLVMDoubleVisitor Exceptions", "[llvm_double]")
+{
+    RCP<const Basic> x, y, r;
+    x = symbol("x");
+    y = symbol("y");
+    r = add(x, zeta(x, y));
+    LLVMDoubleVisitor v;
+    CHECK_THROWS_AS(v.init({x, y}, *r), NotImplementedError);
+    CHECK_THROWS_WITH(v.init({x, y}, *r), "zeta(x, y)");
+
+    r = add(x, pow(x, y));
+    CHECK_THROWS_AS(v.init({x}, *r), SymEngineException);
+    CHECK_THROWS_WITH(v.init({x}, *r), "Symbol y not in the symbols vector.");
+}
+
 TEST_CASE("Check that our default LLVM passes give correct results",
           "[llvm_double]")
 {
@@ -487,7 +512,6 @@ TEST_CASE("Check that our default LLVM passes give correct results",
     }
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
     SymEngine::LLVMLongDoubleVisitor v3;
-    long double d3, mpfr_d;
 #endif
     LLVMFloatVisitor v4;
     for (auto &arg : vec) {
@@ -498,6 +522,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         // Check only for 6 digits with floats
         REQUIRE(::fabs((d - d4) / d) < 1e-6);
 #if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
+        long double d3, mpfr_d;
         v3.init({x, y, z}, *arg);
         d3 = v3.call({0.4l, 2.0l, 3.0l});
         map_basic_basic subs_dict = {

@@ -141,6 +141,51 @@ void PositiveVisitor::bvisit(const Number &x)
     }
 }
 
+void PositiveVisitor::bvisit(const Add &x)
+{
+    // True if all are positive
+    // False if all are negative
+    auto coef = x.get_coef();
+    auto dict = x.get_dict();
+
+    bool can_be_true = true;
+    bool can_be_false = true;
+    if (coef->is_positive()) {
+        can_be_false = false;
+    } else if (coef->is_negative()) {
+        can_be_true = false;
+    }
+    NegativeVisitor neg_visitor(assumptions_);
+    for (const auto &p : dict) {
+        if (not can_be_true and not can_be_false) {
+            is_positive_ = tribool::indeterminate;
+            return;
+        }
+        p.first->accept(*this);
+        if ((p.second->is_positive() and is_true(is_positive_))
+            or (p.second->is_negative()
+                and is_true(neg_visitor.apply(*p.first)))) {
+            // key * value is positive
+            can_be_false = false;
+        } else if ((p.second->is_negative() and is_true(is_positive_))
+                   or (p.second->is_positive()
+                       and is_true(neg_visitor.apply(*p.first)))) {
+            // key * value is negative
+            can_be_true = false;
+        } else {
+            can_be_true = false;
+            can_be_false = false;
+        }
+    }
+    if (can_be_true) {
+        is_positive_ = tribool::tritrue;
+    } else if (can_be_false) {
+        is_positive_ = tribool::trifalse;
+    } else {
+        is_positive_ = tribool::indeterminate;
+    }
+}
+
 tribool PositiveVisitor::apply(const Basic &b)
 {
     b.accept(*this);
@@ -754,4 +799,218 @@ tribool is_irrational(const Basic &b)
     RationalVisitor visitor(false);
     return visitor.apply(b);
 }
+
+void FiniteVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_finite/is_infinite");
+}
+
+void FiniteVisitor::bvisit(const Basic &x)
+{
+    is_finite_ = tribool::indeterminate;
+}
+
+void FiniteVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_finite_ = assumptions_->is_complex(x.rcp_from_this());
+    } else {
+        is_finite_ = tribool::indeterminate;
+    }
+}
+
+void FiniteVisitor::bvisit(const Number &x)
+{
+    is_finite_ = tribool::tritrue;
+}
+
+void FiniteVisitor::bvisit(const Infty &x)
+{
+    is_finite_ = tribool::trifalse;
+}
+
+void FiniteVisitor::bvisit(const NaN &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void FiniteVisitor::bvisit(const Constant &x)
+{
+    is_finite_ = tribool::tritrue;
+}
+
+tribool FiniteVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_finite_;
+}
+
+tribool is_finite(const Basic &b, const Assumptions *assumptions)
+{
+    FiniteVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
+tribool is_infinite(const Basic &b, const Assumptions *assumptions)
+{
+    FiniteVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
+}
+
+tribool is_even(const Basic &b, const Assumptions *assumptions)
+{
+    return is_integer(*div(b.rcp_from_this(), integer(2)), assumptions);
+}
+
+tribool is_odd(const Basic &b, const Assumptions *assumptions)
+{
+    return is_integer(*div(add(b.rcp_from_this(), integer(1)), integer(2)),
+                      assumptions);
+}
+
+void AlgebraicVisitor::error()
+{
+    throw SymEngineException(
+        "Only numeric types allowed for is_algebraic/is_transcendental");
+}
+
+void AlgebraicVisitor::bvisit(const Basic &x)
+{
+    is_algebraic_ = tribool::indeterminate;
+}
+
+void AlgebraicVisitor::bvisit(const Set &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Relational &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Boolean &x)
+{
+    error();
+}
+
+void AlgebraicVisitor::bvisit(const Add &x)
+{
+    // algebraic + algebraic = algebraic
+    // algebraic + transcendental = transcendental
+    // algebraic + transcendental + transcendental = indeterminate
+    tribool current = tribool::tritrue;
+    for (const auto &arg : x.get_args()) {
+        arg->accept(*this);
+        if (is_false(current) and is_false(is_algebraic_)) {
+            is_algebraic_ = tribool::indeterminate;
+            return;
+        }
+        current = andwk_tribool(current, is_algebraic_);
+        if (is_indeterminate(current)) {
+            is_algebraic_ = current;
+            return;
+        }
+    }
+    is_algebraic_ = current;
+}
+
+void AlgebraicVisitor::bvisit(const Symbol &x)
+{
+    if (assumptions_) {
+        is_algebraic_ = assumptions_->is_rational(x.rcp_from_this());
+        if (is_false(is_algebraic_)) {
+            is_algebraic_ = tribool::indeterminate;
+        }
+    } else {
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const Constant &x)
+{
+    if (eq(x, *pi) or eq(x, *E)) {
+        is_algebraic_ = tribool::trifalse;
+    } else if (eq(x, *GoldenRatio)) {
+        is_algebraic_ = tribool::tritrue;
+    } else {
+        // It is unknown (2021) whether EulerGamma or Catalan are algebraic or
+        // transcendental
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const Integer &x)
+{
+    is_algebraic_ = tribool::tritrue;
+}
+
+void AlgebraicVisitor::bvisit(const Rational &x)
+{
+    is_algebraic_ = tribool::tritrue;
+}
+
+void AlgebraicVisitor::trans_nonzero_and_algebraic(const Basic &b)
+{
+    // transcendental if b is algebraic and nonzero
+    b.accept(*this);
+    if (is_true(is_algebraic_) and is_nonzero(b)) {
+        is_algebraic_ = tribool::trifalse;
+    } else {
+        is_algebraic_ = tribool::indeterminate;
+    }
+}
+
+void AlgebraicVisitor::bvisit(const TrigFunction &x)
+{
+    // x algebraic and not 0 => sin(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
+void AlgebraicVisitor::bvisit(const HyperbolicFunction &x)
+{
+    // x algebraic and not 0 => sinh(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
+void AlgebraicVisitor::bvisit(const LambertW &x)
+{
+    // x algebraic and not 0 => W(x) transcendental
+    trans_nonzero_and_algebraic(*x.get_arg());
+}
+
+tribool AlgebraicVisitor::apply(const Basic &b)
+{
+    b.accept(*this);
+    return is_algebraic_;
+}
+
+tribool is_algebraic(const Basic &b, const Assumptions *assumptions)
+{
+    AlgebraicVisitor visitor(assumptions);
+    return visitor.apply(b);
+}
+
+tribool is_transcendental(const Basic &b, const Assumptions *assumptions)
+{
+    AlgebraicVisitor visitor(assumptions);
+    return not_tribool(visitor.apply(b));
+}
+
 } // namespace SymEngine

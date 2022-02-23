@@ -31,7 +31,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
                   /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
               echo "Current dir:"; \
               pwd; \
-              cmake --build . ;\
+              cmake --build . -j 2 ;\
               cmake --build . --target install
             )
             echo "=== Building libc++abi instrumented with memory-sanitizer"
@@ -50,8 +50,9 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
                   /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
               echo "Current dir:"; \
               pwd; \
-              cmake --build . ; \
+              cmake --build . -j 2; \
               cmake --build . --target install
+              cp /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi/include/* /opt/libcxx-12-msan/include/
             )
             if [ ! -e /opt/libcxx-12-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
             export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
@@ -72,7 +73,7 @@ elif [[ "$(uname)" == "Linux" ]]; then
     fi
 fi
 
-echo "=== Generating cmake command from environtment variables"
+echo "=== Generating cmake command from environment variables"
 
 # Shippable currently does not clean the directory after previous builds
 # (https://github.com/Shippable/support/issues/238), so
@@ -122,8 +123,8 @@ fi
 if [[ "${WITH_FLINT}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_FLINT=${WITH_FLINT}"
 fi
-if [[ "${WITH_BENCHMARKS_NONIUS}" != "" ]]; then
-    cmake_line="$cmake_line -DBUILD_BENCHMARKS_NONIUS=${WITH_BENCHMARKS_NONIUS}"
+if [[ "${WITH_BENCHMARKS_GOOGLE}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS_GOOGLE=${WITH_BENCHMARKS_GOOGLE}"
 fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
@@ -167,11 +168,13 @@ cmake $cmake_line ${SOURCE_DIR}
 
 echo "=== Running build scripts for SymEngine"
 pwd
-echo "Running make" $MAKEFLAGS ":"
-make VERBOSE=1
+echo "Running make:"
+make -j2 VERBOSE=1
 
 echo "Running make install:"
 make install
+
+ccache --show-stats
 
 if [[ "${TEST_CPP}" == "no" ]]; then
     return 0;

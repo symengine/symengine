@@ -25,6 +25,7 @@
 #include <symengine/matrix.h>
 #include <symengine/ntheory_funcs.h>
 #include <symengine/symengine_casts.h>
+#include <symengine/tuple.h>
 
 namespace SymEngine
 {

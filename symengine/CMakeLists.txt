@@ -8,7 +8,7 @@ endif()
 
 if (WITH_GENERATE_PARSER)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.tab.cc
-                      COMMAND ${BISON_EXECUTABLE} -d parser.yy
+                      COMMAND ${BISON_EXECUTABLE} -Wcounterexamples -d parser.yy
                       DEPENDS parser/parser.yy
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/parser
                      )
@@ -92,6 +92,7 @@ set(SRC
     series.cpp
     series_generic.cpp
     sets.cpp
+    set_funcs.cpp
     solve.cpp
     sparse_matrix.cpp
     symbol.cpp
@@ -100,6 +101,8 @@ set(SRC
     test_visitors.cpp
     assumptions.cpp
     refine.cpp
+    simplify.cpp
+    tuple.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -202,6 +205,7 @@ set(HEADERS
     real_double.h
     real_mpfr.h
     rings.h
+    serialize-cereal.h
     series_flint.h
     series_generic.h
     series.h
@@ -220,7 +224,15 @@ set(HEADERS
     test_visitors.h
     assumptions.h
     refine.h
+    simplify.h
+    utilities/stream_fmt.h
+    tuple.h
 )
+
+if (NOT WITH_SYSTEM_CEREAL)
+  file(GLOB_RECURSE CEREAL_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "utilities/cereal/include/*")
+  set(HEADERS ${HEADERS} ${CEREAL_HEADERS})
+endif()
 
 include(GNUInstallDirs)
 
@@ -236,13 +248,6 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
-
-
-if (WITH_COTIRE)
-    # throws if CMAKE_VERSION < 2.8.12
-    include(cotire)
-    cotire(symengine)
-endif()
 
 include(GenerateExportHeader)
 generate_export_header(symengine)
@@ -317,4 +322,10 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
     add_subdirectory(utilities/matchpycpp/tests)
     add_subdirectory(utilities/matchpycpp/autogen_tests)
+endif()
+
+if (WITH_COTIRE)
+    # throws if CMAKE_VERSION < 2.8.12
+    include(cotire)
+    cotire(symengine)
 endif()
