@@ -123,6 +123,27 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
     }
 }
 
+RCP<const Basic> piecewise(const PiecewiseVec &vec)
+{
+    PiecewiseVec new_vec;
+    for (auto &p: vec) {
+        if (eq(*p.second, *boolFalse)) {
+            continue;
+        } else if (eq(*p.second, *boolTrue)) {
+            new_vec.push_back(p);
+            break;
+        } else {
+            new_vec.push_back(p);
+        }
+    }
+    if (new_vec.size() == 0) {
+        return Nan;
+    } else if (new_vec.size() == 0 and eq(*new_vec[0].second, *boolTrue)) {
+        return new_vec[0].first;
+    }
+    return make_rcp<Piecewise>(std::move(new_vec));
+}
+
 Piecewise::Piecewise(PiecewiseVec &&vec)
     : vec_(vec){SYMENGINE_ASSIGN_TYPEID()}
 
