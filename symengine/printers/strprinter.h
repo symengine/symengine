@@ -148,6 +148,7 @@ public:
     void bvisit(const Xor &x);
     void bvisit(const Not &x);
     void bvisit(const Union &x);
+    void bvisit(const Intersection &x);
     void bvisit(const Complement &x);
     void bvisit(const ImageSet &x);
     void bvisit(const Add &x);

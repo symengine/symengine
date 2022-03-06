@@ -418,6 +418,15 @@ void StrPrinter::bvisit(const Union &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const Intersection &x)
+{
+    std::ostringstream s;
+    vec_basic vec = x.get_args();
+    s << "Intersection";
+    s << parenthesize(apply(vec));
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Complement &x)
 {
     std::ostringstream s;

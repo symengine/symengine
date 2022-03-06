@@ -1108,6 +1108,11 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     i3 = interval(one, integer(3), true, true);
     r1 = set_intersection({r2, i3});
     REQUIRE(eq(*r1, *e));
+
+    auto s1 = reals();
+    auto s2 = finiteset({symbol("x")});
+    auto s3 = set_intersection({s1, s2});
+    REQUIRE(s3->__str__() == "Intersection(Reals, {x})");
 }
 
 TEST_CASE("set_complement : Basic", "[basic]")
