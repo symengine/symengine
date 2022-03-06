@@ -392,6 +392,13 @@ void LatexPrinter::bvisit(const Union &x)
     str_ = s.str();
 }
 
+void LatexPrinter::bvisit(const Intersection &x)
+{
+    std::ostringstream s;
+    print_with_args(x, "\\cap", s);
+    str_ = s.str();
+}
+
 void LatexPrinter::bvisit(const Complement &x)
 {
     std::ostringstream s;
