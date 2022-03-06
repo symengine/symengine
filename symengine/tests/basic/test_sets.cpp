@@ -1113,6 +1113,9 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     auto s2 = finiteset({symbol("x")});
     auto s3 = set_intersection({s1, s2});
     REQUIRE(s3->__str__() == "Intersection(Reals, {x})");
+    REQUIRE(!s3->__eq__(*s1));
+
+    REQUIRE(eq(*s3->set_intersection(s1), *s3));
 }
 
 TEST_CASE("set_complement : Basic", "[basic]")
