@@ -324,8 +324,8 @@ TEST_CASE("Reals : Basic", "[basic]")
     RCP<const Set> r7 = finiteset({real_double(2.0), c1, x});
     RCP<const Set> r8 = finiteset({c1, x});
     RCP<const Set> r9 = set_union({r1, r8});
-    // RCP<const Set> r10 = finiteset({real_double(2.0), x});
-    // RCP<const Set> r11 = set_intersection({r10, r1});
+    RCP<const Set> r10 = finiteset({real_double(2.0), x});
+    RCP<const Set> r11 = set_intersection({r10, r1});
     RCP<const Set> r12 = universalset();
     RCP<const Set> r13 = emptyset();
     RCP<const Set> r14 = set_complement(universalset(), reals());
@@ -346,8 +346,7 @@ TEST_CASE("Reals : Basic", "[basic]")
     REQUIRE(eq(*r1, *r12->set_intersection(r1)));
     REQUIRE(eq(*r13, *r1->set_intersection(r5)));
     REQUIRE(eq(*r13, *r5->set_intersection(r1)));
-    // Following doesn't work since we cannot yet create the set intersection
-    // REQUIRE(eq(*r11, *r1->set_intersection(r7)));
+    REQUIRE(eq(*r11, *r1->set_intersection(r7)));
     REQUIRE(eq(*r1, *r1->set_union(r1)));
     REQUIRE(eq(*r1, *r1->set_union(r2)));
     REQUIRE(eq(*r1, *r2->set_union(r1)));
@@ -1036,10 +1035,12 @@ TEST_CASE("Complement : Basic", "[basic]")
     REQUIRE(r2->compare(*r1) == 1);
     REQUIRE(r1->compare(*r2) == -1);
 
-    CHECK_THROWS_AS(r2->set_intersection(finiteset({symbol("x")})),
-                    SymEngineException);
-    CHECK_THROWS_AS(r2->set_intersection(finiteset({zero, integer(2)})),
-                    SymEngineException);
+    auto r5 = r2->set_intersection(finiteset({symbol("x")}));
+    auto r6 = set_intersection({r2, finiteset({symbol("x")})});
+    REQUIRE(eq(*r5, *r6));
+    auto r7 = r2->set_intersection(finiteset({zero, integer(2)}));
+    auto r8 = set_intersection({r2, finiteset({zero, integer(2)})});
+    REQUIRE(eq(*r7, *r8));
 
     r2 = set_complement(i1, f1);
     REQUIRE(is_a<Complement>(*r2));
@@ -1084,9 +1085,13 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     r1 = set_intersection({r2, interval(integer(-10), integer(10))});
     REQUIRE(eq(*r1, *r2));
 
-    CHECK_THROWS_AS(set_intersection({finiteset({symbol("x"), symbol("y")}),
-                                      interval(integer(-10), integer(10))}),
-                    SymEngineException);
+    auto r3 = finiteset({symbol("x"), symbol("y")});
+    auto r4 = interval(integer(-10), integer(10));
+    auto r5 = set_intersection({r3, r4});
+    auto r6 = r3->set_intersection(r4);
+    auto r7 = r4->set_intersection(r3);
+    REQUIRE(eq(*r5, *r6));
+    REQUIRE(eq(*r5, *r7));
 
     // One of the arg is Union
     i1 = interval(zero, one);
@@ -1292,7 +1297,7 @@ TEST_CASE("ImageSet : Basic", "[basic]")
     REQUIRE(is_a<Union>(*r1));
     REQUIRE(eq(*r1, *set_union({r1, finiteset({one})})));
 
-    CHECK_THROWS_AS(r1->set_intersection(i1), SymEngineException);
+    REQUIRE(eq(*r1->set_intersection(i1), *set_intersection({r1, i1})));
 
     r1 = imageset(x, one, i1);
     REQUIRE(eq(*r1, *finiteset({one})));

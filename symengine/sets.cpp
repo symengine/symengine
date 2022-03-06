@@ -112,6 +112,22 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
     return boolean(true);
 }
 
+RCP<const Set> make_set_union(const set_set &in)
+{
+    if (in.size() > 1) {
+        return make_rcp<const Union>(in);
+    }
+    return *in.begin();
+}
+
+RCP<const Set> make_set_intersection(const set_set &in)
+{
+    if (in.size() > 1) {
+        return make_rcp<const Intersection>(in);
+    }
+    return *in.begin();
+}
+
 RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
@@ -192,15 +208,7 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         or is_a<Complexes>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw SymEngineException("Not implemented Intersection class");
-}
-
-RCP<const Set> make_set_union(const set_set &in)
-{
-    if (in.size() > 1) {
-        return make_rcp<const Union>(in);
-    }
-    return *in.begin();
+    return make_set_intersection({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
@@ -1038,7 +1046,8 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
             if (eq(*contain, *boolTrue))
                 container.insert(a);
             if (is_a<Contains>(*contain))
-                throw SymEngineException("Not implemented");
+                return make_set_intersection(
+                    {rcp_from_this_cast<const Set>(), o});
         }
         return finiteset(container);
     }
@@ -1065,14 +1074,14 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
             if (others.empty()) {
                 return emptyset();
             } else {
-                return SymEngine::set_intersection({o, finiteset(others)});
+                return SymEngine::make_set_intersection({o, finiteset(others)});
             }
         } else {
             if (others.empty()) {
                 return finiteset(kept);
             } else {
                 others.insert(kept.begin(), kept.end());
-                return SymEngine::set_intersection({o, finiteset(others)});
+                return SymEngine::make_set_intersection({o, finiteset(others)});
             }
         }
     }
@@ -1100,7 +1109,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
             if (others.empty()) {
                 return emptyset();
             } else {
-                return SymEngine::set_intersection(
+                return SymEngine::make_set_intersection(
                     {integers(), finiteset(others)});
             }
         } else {
@@ -1108,7 +1117,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
                 return finiteset(kept_integers);
             } else {
                 others.insert(kept_integers.begin(), kept_integers.end());
-                return SymEngine::set_intersection(
+                return SymEngine::make_set_intersection(
                     {integers(), finiteset(others)});
             }
         }
@@ -1116,7 +1125,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
     if (is_a<UniversalSet>(*o) or is_a<EmptySet>(*o) or is_a<Union>(*o)) {
         return (*o).set_intersection(rcp_from_this_cast<const Set>());
     }
-    throw SymEngineException("Not implemented Intersection class");
+    return make_set_intersection({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> FiniteSet::set_complement(const RCP<const Set> &o) const
@@ -1283,6 +1292,109 @@ vec_basic Union::get_args() const
     return v;
 }
 
+Intersection::Intersection(const set_set &in)
+    : container_(in){SYMENGINE_ASSIGN_TYPEID()
+                         SYMENGINE_ASSERT(Intersection::is_canonical(in))}
+
+      hash_t Intersection::__hash__() const
+{
+    hash_t seed = SYMENGINE_INTERSECTION;
+    for (const auto &a : container_)
+        hash_combine<Basic>(seed, *a);
+    return seed;
+}
+
+bool Intersection::__eq__(const Basic &o) const
+{
+    if (is_a<Intersection>(o)) {
+        const Intersection &other = down_cast<const Intersection &>(o);
+        return unified_eq(container_, other.container_);
+    }
+    return false;
+}
+
+bool Intersection::is_canonical(const set_set &in)
+{
+    if (in.size() <= 1)
+        return false;
+    int count = 0;
+    for (const auto &s : in) {
+        if (is_a<FiniteSet>(*s)) {
+            count++;
+        }
+        if (count >= 2)
+            return false;
+    }
+    return true;
+}
+
+int Intersection::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Intersection>(o))
+    const Intersection &other = down_cast<const Intersection &>(o);
+    return unified_compare(container_, other.container_);
+}
+
+RCP<const Set> Intersection::set_union(const RCP<const Set> &o) const
+{
+    set_set container;
+    for (auto &a : container_) {
+        container.insert(a->set_union(o));
+    }
+    return SymEngine::set_intersection(container);
+}
+
+RCP<const Set> Intersection::set_intersection(const RCP<const Set> &o) const
+{
+    set_set container(container_);
+    for (auto iter = container.begin(); iter != container.end(); ++iter) {
+        auto temp = o->set_intersection(*iter);
+        // If we are able to do intersection with `*iter`, we replace `*iter`
+        // with the result of intersection.
+        auto un = SymEngine::make_set_intersection({o, *iter});
+        if (not eq(*temp, *un)) {
+            iter = container.erase(iter);
+            container.insert(temp);
+            return SymEngine::set_intersection(container);
+        }
+    }
+    container.insert(o);
+    return SymEngine::make_set_intersection(container);
+}
+
+RCP<const Set> Intersection::set_complement(const RCP<const Set> &o) const
+{
+    set_set container;
+    for (auto &a : container_) {
+        container.insert(a->set_complement(o));
+    }
+    return SymEngine::set_intersection(container);
+}
+
+RCP<const Boolean> Intersection::contains(const RCP<const Basic> &o) const
+{
+    for (auto &a : container_) {
+        auto contain = a->contains(o);
+        if (eq(*contain, *boolTrue)) {
+            return boolean(true);
+        }
+        if (is_a<Contains>(*contain))
+            throw NotImplementedError("Not implemented");
+    }
+    return boolean(false);
+}
+
+RCP<const Set> Intersection::create(const set_set &in) const
+{
+    return SymEngine::set_intersection(in);
+}
+
+vec_basic Intersection::get_args() const
+{
+    vec_basic v(container_.begin(), container_.end());
+    return v;
+}
+
 Complement::Complement(const RCP<const Set> &universe,
                        const RCP<const Set> &container)
     : universe_(universe), container_(container){SYMENGINE_ASSIGN_TYPEID()}
@@ -1403,7 +1515,7 @@ RCP<const Set> ConditionSet::set_intersection(const RCP<const Set> &o) const
     if (not is_a<ConditionSet>(*o)) {
         return conditionset(sym, logical_and({condition_, o->contains(sym)}));
     }
-    throw SymEngineException("Not implemented Intersection class");
+    return make_set_intersection({rcp_from_this_cast<const Set>(), o});
 }
 
 RCP<const Set> ConditionSet::set_complement(const RCP<const Set> &o) const
@@ -1573,8 +1685,7 @@ RCP<const Set> set_intersection(const set_set &in)
             for (const auto &fset : fsets) {
                 auto contain = fset->contains(fselement);
                 if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
-                    throw SymEngineException(
-                        "Not implemented Intersection class");
+                    return make_set_intersection(incopy);
                 }
                 present = present and eq(*contain, *boolTrue);
             }
@@ -1583,8 +1694,7 @@ RCP<const Set> set_intersection(const set_set &in)
             for (const auto &oset : othersets) {
                 auto contain = oset->contains(fselement);
                 if (not(eq(*contain, *boolTrue) or eq(*contain, *boolFalse))) {
-                    throw SymEngineException(
-                        "Not implemented Intersection class");
+                    return make_set_intersection(incopy);
                 }
                 present = present and eq(*contain, *boolTrue);
             }
@@ -1635,11 +1745,7 @@ RCP<const Set> set_intersection(const set_set &in)
         return temp;
     }
 
-    if (incopy.size() == 1) {
-        return *incopy.begin();
-    } else {
-        throw SymEngineException("Not implemented Intersection class");
-    }
+    return make_set_intersection(incopy);
 }
 
 // helper to avoid redundant code
