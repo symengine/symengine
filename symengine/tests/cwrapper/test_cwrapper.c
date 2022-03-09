@@ -103,7 +103,7 @@ void test_cwrapper()
     unsigned long size = 0;
     basic deserialized;
 
-    const char *serialized = basic_dumps(e, &size);
+    char *serialized = basic_dumps(e, &size);
     basic_new_stack(deserialized);
     basic_loads(deserialized, serialized, size);
     SYMENGINE_C_ASSERT(basic_eq(deserialized, e) == 1);

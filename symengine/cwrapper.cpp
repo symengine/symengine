@@ -493,7 +493,7 @@ dcomplex complex_double_get(const basic s)
     return d;
 }
 
-const char *basic_dumps(const basic s, unsigned long *size)
+char *basic_dumps(const basic s, unsigned long *size)
 {
     std::string str = s->m->dumps();
     *size = str.length();
