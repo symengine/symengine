@@ -560,7 +560,13 @@ public:
                 "LambdaDouble can only represent real valued infinity");
         }
     }
-
+    void bvisit(const NaN &nan)
+    {
+        assert(&nan == &(*Nan) /* singleton, or do we support NaN quiet/singaling nan with payload? */);
+        result_ = [](const double * /* x  */) {
+            return std::numeric_limits<double>::signaling_NaN();
+        };
+    }
     void bvisit(const Contains &cts)
     {
         const auto fn_expr = apply(*cts.get_expr());
