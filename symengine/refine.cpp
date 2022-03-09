@@ -121,6 +121,16 @@ void RefineVisitor::bvisit(const Log &x)
     result_ = log(newarg);
 }
 
+void RefineVisitor::bvisit(const Interval &x)
+{
+    if (eq(*x.get_start(), *SymEngine::infty(-1))
+        and eq(*x.get_end(), *SymEngine::infty(1))) {
+        result_ = reals();
+        return;
+    }
+    result_ = x.rcp_from_this();
+}
+
 RCP<const Basic> refine(const RCP<const Basic> &x,
                         const Assumptions *assumptions)
 {

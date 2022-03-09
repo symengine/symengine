@@ -2,6 +2,7 @@
 #include <symengine/refine.h>
 
 using SymEngine::Assumptions;
+using SymEngine::infty;
 using SymEngine::integer;
 using SymEngine::integers;
 using SymEngine::pi;
@@ -132,4 +133,10 @@ TEST_CASE("Test refine", "[refine]")
     expr = div(log(integer(4)), integer(2));
     a = Assumptions({});
     REQUIRE(eq(*refine(expr, &a), *log(integer(2))));
+
+    expr = interval(infty(-1), infty(1));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *reals()));
+    expr = interval(integer(1), integer(2));
+    REQUIRE(eq(*refine(expr, &a), *expr));
 }
