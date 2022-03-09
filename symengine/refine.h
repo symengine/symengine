@@ -27,6 +27,8 @@ public:
     void bvisit(const Floor &x);
     void bvisit(const Ceiling &x);
     void bvisit(const Conjugate &x);
+    void bvisit(const Max &x);
+    void bvisit(const Min &x);
     void bvisit(const Pow &x);
     void bvisit(const Log &x);
     void bvisit(const Interval &x);

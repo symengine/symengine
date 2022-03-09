@@ -5,87 +5,148 @@ using SymEngine::Assumptions;
 using SymEngine::infty;
 using SymEngine::integer;
 using SymEngine::integers;
+using SymEngine::max;
+using SymEngine::min;
 using SymEngine::pi;
 using SymEngine::Rational;
 using SymEngine::reals;
 using SymEngine::symbol;
-using SymEngine::unevaluated_expr;
 
 TEST_CASE("Test refine", "[refine]")
 {
     auto x = symbol("x");
     auto y = symbol("y");
+    auto z = symbol("z");
 
     auto expr = abs(x);
-    auto a1 = Assumptions({Gt(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a1), *x));
+    Assumptions a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
 
     expr = abs(x);
-    auto a2 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a2), *expr));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = abs(x);
-    auto a3 = Assumptions({Le(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a3), *neg(x)));
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *neg(x)));
 
     expr = abs(conjugate(x));
-    auto a3b = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a3b), *abs(x)));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *abs(x)));
 
     expr = sign(x);
-    auto a4 = Assumptions({Lt(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a4), *integer(-1)));
+    a = Assumptions({Lt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(-1)));
 
     expr = sign(x);
-    auto a5 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a5), *expr));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = sign(x);
-    auto a6 = Assumptions({Gt(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a6), *integer(1)));
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(1)));
 
     expr = sign(x);
-    auto a7 = Assumptions({Eq(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a7), *integer(0)));
+    a = Assumptions({Eq(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(0)));
 
     expr = sign(abs(x));
-    auto a8 = Assumptions({Gt(x, integer(0))});
-    REQUIRE(eq(*refine(expr, &a8), *integer(1)));
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(1)));
 
     expr = floor(x);
-    auto a9 = Assumptions({integers()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a9), *x));
+    a = Assumptions({integers()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *x));
 
     expr = floor(x);
-    auto a10 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a10), *expr));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = ceiling(x);
-    auto a11 = Assumptions({integers()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a11), *x));
+    a = Assumptions({integers()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *x));
 
     expr = ceiling(x);
-    auto a12 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a12), *expr));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = ceiling(neg(x));
-    auto a13 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a13), *neg(floor(x))));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *neg(floor(x))));
 
     expr = floor(neg(x));
-    auto a14 = Assumptions({});
-    REQUIRE(eq(*refine(expr, &a14), *neg(ceiling(x))));
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *neg(ceiling(x))));
 
     expr = conjugate(x);
-    auto a15 = Assumptions({reals()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a15), *x));
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = max({integer(-1), x});
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    expr = max({integer(-1), x});
+    a = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    expr = max({integer(-1), x});
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = max({x, y, z});
+    a = Assumptions({Ge(x, integer(0)), Ge(y, integer(0)), Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = max({x, y, z});
+    a = Assumptions({Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = max({integer(1), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(1)));
+
+    expr = max({integer(-1), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = min({integer(-1), x});
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(-1)));
+
+    expr = min({integer(-1), x});
+    a = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(-1)));
+
+    expr = min({integer(-1), x});
+    a = Assumptions({});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = min({x, y, z});
+    a = Assumptions({Ge(x, integer(0)), Ge(y, integer(0)), Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = min({x, y, z});
+    a = Assumptions({Ge(z, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = min({integer(1), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    expr = min({integer(-1), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = conjugate(x);
     auto a16 = Assumptions({});
     REQUIRE(eq(*refine(expr, &a16), *expr));
 
     expr = pow(x, integer(2));
-    Assumptions a = Assumptions({});
+    a = Assumptions({});
     REQUIRE(eq(*refine(expr, &a), *expr));
 
     expr = pow(pow(x, integer(2)),
