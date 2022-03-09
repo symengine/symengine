@@ -797,377 +797,383 @@ $(function() {
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span>    }</div>
 <div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>}</div>
 <div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span> </div>
-<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> BooleanAtom &amp;x)</div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> NaN &amp;x)</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>{</div>
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> val = x.get_val();</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    set_double(val ? 1.0 : 0.0);</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    result_ = llvm::ConstantFP::getNaN(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>                                       <span class="comment">/*negative=*/</span><span class="keyword">false</span>, <span class="comment">/*payload=*/</span>0);</div>
 <div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>}</div>
 <div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span> </div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Log &amp;x)</div>
+<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> BooleanAtom &amp;x)</div>
 <div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>{</div>
-<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
-<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>                              llvm::Intrinsic::log, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    result_ = r;</div>
-<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>}</div>
-<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span> </div>
-<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span><span class="preprocessor">#define SYMENGINE_LOGIC_FUNCTION(Class, method)                                \</span></div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span><span class="preprocessor">    void LLVMVisitor::bvisit(const Class &amp;x)                                   \</span></div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span><span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span><span class="preprocessor">        llvm::Value *value = nullptr;                                          \</span></div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span><span class="preprocessor">        llvm::Value *tmp;                                                      \</span></div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span><span class="preprocessor">        set_double(0.0);                                                       \</span></div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span><span class="preprocessor">        llvm::Value *zero_val = result_;                                       \</span></div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span><span class="preprocessor">        for (auto &amp;p : x.get_container()) {                                    \</span></div>
-<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span><span class="preprocessor">            tmp = builder-&gt;CreateFCmpONE(apply(*p), zero_val);                 \</span></div>
-<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span><span class="preprocessor">            if (value == nullptr) {                                            \</span></div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span><span class="preprocessor">                value = tmp;                                                   \</span></div>
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span><span class="preprocessor">            } else {                                                           \</span></div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span><span class="preprocessor">                value = builder-&gt;method(value, tmp);                           \</span></div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="preprocessor">            }                                                                  \</span></div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span><span class="preprocessor">        }                                                                      \</span></div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span><span class="preprocessor">        result_ = builder-&gt;CreateUIToFP(value,                                 \</span></div>
-<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span><span class="preprocessor">                                        get_float_type(&amp;mod-&gt;getContext()));   \</span></div>
-<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span><span class="preprocessor">    }</span></div>
-<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span> </div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>SYMENGINE_LOGIC_FUNCTION(And, CreateAnd);</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>SYMENGINE_LOGIC_FUNCTION(Or, CreateOr);</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>SYMENGINE_LOGIC_FUNCTION(Xor, CreateXor);</div>
-<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span> </div>
-<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Not &amp;x)</div>
-<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>{</div>
-<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>    builder-&gt;CreateNot(apply(*x.get_arg()));</div>
-<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>}</div>
-<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span> </div>
-<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span><span class="preprocessor">#define SYMENGINE_RELATIONAL_FUNCTION(Class, method)                           \</span></div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span><span class="preprocessor">    void LLVMVisitor::bvisit(const Class &amp;x)                                   \</span></div>
-<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span><span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span><span class="preprocessor">        llvm::Value *left = apply(*x.get_arg1());                              \</span></div>
-<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span><span class="preprocessor">        llvm::Value *right = apply(*x.get_arg2());                             \</span></div>
-<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span><span class="preprocessor">        result_ = builder-&gt;method(left, right);                                \</span></div>
-<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span><span class="preprocessor">        result_ = builder-&gt;CreateUIToFP(result_,                               \</span></div>
-<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span><span class="preprocessor">                                        get_float_type(&amp;mod-&gt;getContext()));   \</span></div>
-<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span><span class="preprocessor">    }</span></div>
-<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span> </div>
-<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span>SYMENGINE_RELATIONAL_FUNCTION(Equality, CreateFCmpOEQ);</div>
-<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span>SYMENGINE_RELATIONAL_FUNCTION(Unequality, CreateFCmpONE);</div>
-<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span>SYMENGINE_RELATIONAL_FUNCTION(LessThan, CreateFCmpOLE);</div>
-<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span>SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);</div>
-<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span> </div>
-<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span><span class="preprocessor">#define _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                         \</span></div>
-<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span><span class="preprocessor">    void LLVMDoubleVisitor::visit(const Class &amp;x)                              \</span></div>
-<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span><span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext, basic_args.size()); \</span></div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span><span class="preprocessor">        std::vector&lt;llvm::Value *&gt; args;                                       \</span></div>
-<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span><span class="preprocessor">        for (const auto &amp;arg : basic_args) {                                   \</span></div>
-<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span><span class="preprocessor">            args.push_back(apply(*arg));                                       \</span></div>
-<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span><span class="preprocessor">        }                                                                      \</span></div>
-<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span><span class="preprocessor">        auto r = builder-&gt;CreateCall(func, args);                              \</span></div>
-<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span><span class="preprocessor">        r-&gt;setTailCall(true);                                                  \</span></div>
-<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span><span class="preprocessor">        result_ = r;                                                           \</span></div>
-<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span><span class="preprocessor">    }                                                                          \</span></div>
-<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span><span class="preprocessor">    void LLVMFloatVisitor::visit(const Class &amp;x)                               \</span></div>
-<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span><span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
-<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext + std::string(&quot;f&quot;</span>),  \</div>
-<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span>                                                     basic_args.size());       \</div>
-<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>        std::vector&lt;llvm::Value *&gt; args;                                       \</div>
-<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span>        for (const auto &amp;arg : basic_args) {                                   \</div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>            args.push_back(apply(*arg));                                       \</div>
-<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>        }                                                                      \</div>
-<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>        auto r = builder-&gt;CreateCall(func, args);                              \</div>
-<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>        r-&gt;setTailCall(true);                                                  \</div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>        result_ = r;                                                           \</div>
-<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>    }</div>
-<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span> </div>
-<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span><span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
-<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span><span class="preprocessor">#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \</span></div>
-<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span><span class="preprocessor">    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \</span></div>
-<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span><span class="preprocessor">    void LLVMLongDoubleVisitor::visit(const Class &amp;x)                          \</span></div>
-<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span><span class="preprocessor">    {                                                                          \</span></div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext + std::string(&quot;l&quot;</span>),  \</div>
-<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>                                                     basic_args.size());       \</div>
-<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>        std::vector&lt;llvm::Value *&gt; args;                                       \</div>
-<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>        for (const auto &amp;arg : basic_args) {                                   \</div>
-<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span>            args.push_back(apply(*arg));                                       \</div>
-<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>        }                                                                      \</div>
-<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>        auto r = builder-&gt;CreateCall(func, args);                              \</div>
-<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>        r-&gt;setTailCall(true);                                                  \</div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>        result_ = r;                                                           \</div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>    }</div>
-<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span><span class="preprocessor">#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \</span></div>
-<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span><span class="preprocessor">    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)</span></div>
-<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span> </div>
-<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tan, <a class="code hl_function" href="namespaceSymEngine.html#a6e5f23d059e1621822b81d41b8363601">tan</a>)</div>
-<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASin, <a class="code hl_function" href="namespaceSymEngine.html#a690281de28708c8cef39f5ae73611872">asin</a>)</div>
-<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACos, <a class="code hl_function" href="namespaceSymEngine.html#a0a98ed704f86e941a5086a46465b2a5b">acos</a>)</div>
-<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan, <a class="code hl_function" href="namespaceSymEngine.html#a7f679b584c73a42368d795a4315c0be4">atan</a>)</div>
-<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, <a class="code hl_function" href="namespaceSymEngine.html#a375f5fe3cb27618965e5ed38d864e7f1">atan2</a>)</div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sinh, <a class="code hl_function" href="namespaceSymEngine.html#ae24e5db43005e29f95bf5ecc8789f812">sinh</a>)</div>
-<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Cosh, <a class="code hl_function" href="namespaceSymEngine.html#a769e7739efb7721d2a0757114e5d5ee8">cosh</a>)</div>
-<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tanh, <a class="code hl_function" href="namespaceSymEngine.html#a8346955fed5e42cb443055b3264089f3">tanh</a>)</div>
-<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASinh, <a class="code hl_function" href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">asinh</a>)</div>
-<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACosh, <a class="code hl_function" href="namespaceSymEngine.html#aa077500b689f21abfefa66ee545946e5">acosh</a>)</div>
-<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATanh, <a class="code hl_function" href="namespaceSymEngine.html#a8a6d05bb97e9647eea7ae3c304a8a391">atanh</a>)</div>
-<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Gamma, tgamma)</div>
-<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)</div>
-<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, <a class="code hl_function" href="namespaceSymEngine.html#ac51d8c7a02041f2c0a6daa8905e20b0d">erf</a>)</div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, <a class="code hl_function" href="namespaceSymEngine.html#a8f9a1131b360ff67d1e9d61c142bd895">erfc</a>)</div>
-<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span> </div>
-<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Abs &amp;x)</div>
-<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>{</div>
-<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
-<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span>                              llvm::Intrinsic::fabs, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    result_ = r;</div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>}</div>
-<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span> </div>
-<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Min &amp;x)</div>
-<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>{</div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    llvm::Value *value = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>                              llvm::Intrinsic::minnum, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : x.get_vec()) {</div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>        <span class="keywordflow">if</span> (value != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>            <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(value);</div>
-<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*arg));</div>
-<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>            <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>            r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>            value = r;</div>
-<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>            value = apply(*arg);</div>
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>        }</div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>    }</div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>    result_ = value;</div>
-<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>}</div>
-<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span> </div>
-<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Max &amp;x)</div>
-<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>{</div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    llvm::Value *value = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>                              llvm::Intrinsic::maxnum, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : x.get_vec()) {</div>
-<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>        <span class="keywordflow">if</span> (value != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>            <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(value);</div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*arg));</div>
-<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>            <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>            r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>            value = r;</div>
-<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>            value = apply(*arg);</div>
-<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>        }</div>
-<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>    }</div>
-<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>    result_ = value;</div>
-<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>}</div>
-<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span> </div>
-<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Symbol &amp;x)</div>
-<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>{</div>
-<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>    <span class="keywordtype">unsigned</span> i = 0;</div>
-<div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;symb : symbols) {</div>
-<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *symb)) {</div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>            result_ = symbol_ptrs[i];</div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>        }</div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>        ++i;</div>
-<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>    }</div>
-<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>    <span class="keyword">auto</span> it = replacement_symbol_ptrs.find(x.rcp_from_this());</div>
-<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>    <span class="keywordflow">if</span> (it != replacement_symbol_ptrs.end()) {</div>
-<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>        result_ = it-&gt;second;</div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>    }</div>
-<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span> </div>
-<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Symbol &quot;</span> + x.__str__()</div>
-<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>                             + <span class="stringliteral">&quot; not in the symbols vector.&quot;</span>);</div>
-<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>}</div>
-<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span> </div>
-<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>llvm::Function *LLVMVisitor::get_external_function(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name,</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>                                                   <span class="keywordtype">size_t</span> nargs)</div>
-<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>{</div>
-<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Type *&gt;</a> func_args(nargs,</div>
-<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>                                        get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()));</div>
-<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span>    llvm::FunctionType *func_type = llvm::FunctionType::get(</div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>        get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()), func_args, <span class="comment">/*isVarArgs=*/</span><span class="keyword">false</span>);</div>
-<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span> </div>
-<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>    llvm::Function *func = <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getFunction(name);</div>
-<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    <span class="keywordflow">if</span> (!func) {</div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>        func = llvm::Function::Create(</div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>            func_type, llvm::GlobalValue::ExternalLinkage, name, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>        func-&gt;setCallingConv(llvm::CallingConv::C);</div>
-<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>    }</div>
-<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="preprocessor">#if (LLVM_VERSION_MAJOR &lt; 5)</span></div>
-<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>    llvm::AttributeSet func_attr_set;</div>
-<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>    {</div>
-<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>        llvm::SmallVector&lt;llvm::AttributeSet, 4&gt; attrs;</div>
-<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>        llvm::AttributeSet attr_set;</div>
-<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>        {</div>
-<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span>            llvm::AttrBuilder attr_builder;</div>
-<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>            attr_builder.addAttribute(llvm::Attribute::NoUnwind);</div>
-<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>            attr_set</div>
-<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>                = llvm::AttributeSet::get(<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext(), ~0U, attr_builder);</div>
-<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>        }</div>
-<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span> </div>
-<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>        attrs.push_back(attr_set);</div>
-<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>        func_attr_set = llvm::AttributeSet::get(<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext(), attrs);</div>
-<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    }</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    func-&gt;setAttributes(func_attr_set);</div>
-<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>    func-&gt;addFnAttr(llvm::Attribute::NoUnwind);</div>
-<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>    <span class="keywordflow">return</span> func;</div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>}</div>
-<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span> </div>
-<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
-<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>{</div>
-<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>    set_double(eval_double(x));</div>
-<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>}</div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span> </div>
-<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span><span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
-<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="keywordtype">void</span> LLVMLongDoubleVisitor::visit(<span class="keyword">const</span> Constant &amp;x)</div>
+<div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> val = x.get_val();</div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>    set_double(val ? 1.0 : 0.0);</div>
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>}</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span> </div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Log &amp;x)</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>{</div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
+<div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>                              llvm::Intrinsic::log, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    result_ = r;</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>}</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span> </div>
+<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span><span class="preprocessor">#define SYMENGINE_LOGIC_FUNCTION(Class, method)                                \</span></div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span><span class="preprocessor">    void LLVMVisitor::bvisit(const Class &amp;x)                                   \</span></div>
+<div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span><span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span><span class="preprocessor">        llvm::Value *value = nullptr;                                          \</span></div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span><span class="preprocessor">        llvm::Value *tmp;                                                      \</span></div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span><span class="preprocessor">        set_double(0.0);                                                       \</span></div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span><span class="preprocessor">        llvm::Value *zero_val = result_;                                       \</span></div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="preprocessor">        for (auto &amp;p : x.get_container()) {                                    \</span></div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span><span class="preprocessor">            tmp = builder-&gt;CreateFCmpONE(apply(*p), zero_val);                 \</span></div>
+<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span><span class="preprocessor">            if (value == nullptr) {                                            \</span></div>
+<div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span><span class="preprocessor">                value = tmp;                                                   \</span></div>
+<div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span><span class="preprocessor">            } else {                                                           \</span></div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span><span class="preprocessor">                value = builder-&gt;method(value, tmp);                           \</span></div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span><span class="preprocessor">            }                                                                  \</span></div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span><span class="preprocessor">        }                                                                      \</span></div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span><span class="preprocessor">        result_ = builder-&gt;CreateUIToFP(value,                                 \</span></div>
+<div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span><span class="preprocessor">                                        get_float_type(&amp;mod-&gt;getContext()));   \</span></div>
+<div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span><span class="preprocessor">    }</span></div>
+<div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span> </div>
+<div class="line"><a id="l00743" name="l00743"></a><span class="lineno">  743</span>SYMENGINE_LOGIC_FUNCTION(And, CreateAnd);</div>
+<div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>SYMENGINE_LOGIC_FUNCTION(Or, CreateOr);</div>
+<div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>SYMENGINE_LOGIC_FUNCTION(Xor, CreateXor);</div>
+<div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span> </div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Not &amp;x)</div>
+<div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span>{</div>
+<div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>    builder-&gt;CreateNot(apply(*x.get_arg()));</div>
+<div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>}</div>
+<div class="line"><a id="l00751" name="l00751"></a><span class="lineno">  751</span> </div>
+<div class="line"><a id="l00752" name="l00752"></a><span class="lineno">  752</span><span class="preprocessor">#define SYMENGINE_RELATIONAL_FUNCTION(Class, method)                           \</span></div>
+<div class="line"><a id="l00753" name="l00753"></a><span class="lineno">  753</span><span class="preprocessor">    void LLVMVisitor::bvisit(const Class &amp;x)                                   \</span></div>
+<div class="line"><a id="l00754" name="l00754"></a><span class="lineno">  754</span><span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a id="l00755" name="l00755"></a><span class="lineno">  755</span><span class="preprocessor">        llvm::Value *left = apply(*x.get_arg1());                              \</span></div>
+<div class="line"><a id="l00756" name="l00756"></a><span class="lineno">  756</span><span class="preprocessor">        llvm::Value *right = apply(*x.get_arg2());                             \</span></div>
+<div class="line"><a id="l00757" name="l00757"></a><span class="lineno">  757</span><span class="preprocessor">        result_ = builder-&gt;method(left, right);                                \</span></div>
+<div class="line"><a id="l00758" name="l00758"></a><span class="lineno">  758</span><span class="preprocessor">        result_ = builder-&gt;CreateUIToFP(result_,                               \</span></div>
+<div class="line"><a id="l00759" name="l00759"></a><span class="lineno">  759</span><span class="preprocessor">                                        get_float_type(&amp;mod-&gt;getContext()));   \</span></div>
+<div class="line"><a id="l00760" name="l00760"></a><span class="lineno">  760</span><span class="preprocessor">    }</span></div>
+<div class="line"><a id="l00761" name="l00761"></a><span class="lineno">  761</span> </div>
+<div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>SYMENGINE_RELATIONAL_FUNCTION(Equality, CreateFCmpOEQ);</div>
+<div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>SYMENGINE_RELATIONAL_FUNCTION(Unequality, CreateFCmpONE);</div>
+<div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span>SYMENGINE_RELATIONAL_FUNCTION(LessThan, CreateFCmpOLE);</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);</div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span> </div>
+<div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span><span class="preprocessor">#define _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                         \</span></div>
+<div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span><span class="preprocessor">    void LLVMDoubleVisitor::visit(const Class &amp;x)                              \</span></div>
+<div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span><span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a id="l00770" name="l00770"></a><span class="lineno">  770</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
+<div class="line"><a id="l00771" name="l00771"></a><span class="lineno">  771</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext, basic_args.size()); \</span></div>
+<div class="line"><a id="l00772" name="l00772"></a><span class="lineno">  772</span><span class="preprocessor">        std::vector&lt;llvm::Value *&gt; args;                                       \</span></div>
+<div class="line"><a id="l00773" name="l00773"></a><span class="lineno">  773</span><span class="preprocessor">        for (const auto &amp;arg : basic_args) {                                   \</span></div>
+<div class="line"><a id="l00774" name="l00774"></a><span class="lineno">  774</span><span class="preprocessor">            args.push_back(apply(*arg));                                       \</span></div>
+<div class="line"><a id="l00775" name="l00775"></a><span class="lineno">  775</span><span class="preprocessor">        }                                                                      \</span></div>
+<div class="line"><a id="l00776" name="l00776"></a><span class="lineno">  776</span><span class="preprocessor">        auto r = builder-&gt;CreateCall(func, args);                              \</span></div>
+<div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span><span class="preprocessor">        r-&gt;setTailCall(true);                                                  \</span></div>
+<div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span><span class="preprocessor">        result_ = r;                                                           \</span></div>
+<div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span><span class="preprocessor">    }                                                                          \</span></div>
+<div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span><span class="preprocessor">    void LLVMFloatVisitor::visit(const Class &amp;x)                               \</span></div>
+<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span><span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
+<div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext + std::string(&quot;f&quot;</span>),  \</div>
+<div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>                                                     basic_args.size());       \</div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>        std::vector&lt;llvm::Value *&gt; args;                                       \</div>
+<div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span>        for (const auto &amp;arg : basic_args) {                                   \</div>
+<div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>            args.push_back(apply(*arg));                                       \</div>
+<div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>        }                                                                      \</div>
+<div class="line"><a id="l00789" name="l00789"></a><span class="lineno">  789</span>        auto r = builder-&gt;CreateCall(func, args);                              \</div>
+<div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>        r-&gt;setTailCall(true);                                                  \</div>
+<div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>        result_ = r;                                                           \</div>
+<div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    }</div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span> </div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span><span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
+<div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span><span class="preprocessor">#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \</span></div>
+<div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span><span class="preprocessor">    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \</span></div>
+<div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span><span class="preprocessor">    void LLVMLongDoubleVisitor::visit(const Class &amp;x)                          \</span></div>
+<div class="line"><a id="l00798" name="l00798"></a><span class="lineno">  798</span><span class="preprocessor">    {                                                                          \</span></div>
+<div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span><span class="preprocessor">        vec_basic basic_args = x.get_args();                                   \</span></div>
+<div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span><span class="preprocessor">        llvm::Function *func = get_external_function(#ext + std::string(&quot;l&quot;</span>),  \</div>
+<div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>                                                     basic_args.size());       \</div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>        std::vector&lt;llvm::Value *&gt; args;                                       \</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>        for (const auto &amp;arg : basic_args) {                                   \</div>
+<div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>            args.push_back(apply(*arg));                                       \</div>
+<div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>        }                                                                      \</div>
+<div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>        auto r = builder-&gt;CreateCall(func, args);                              \</div>
+<div class="line"><a id="l00807" name="l00807"></a><span class="lineno">  807</span>        r-&gt;setTailCall(true);                                                  \</div>
+<div class="line"><a id="l00808" name="l00808"></a><span class="lineno">  808</span>        result_ = r;                                                           \</div>
+<div class="line"><a id="l00809" name="l00809"></a><span class="lineno">  809</span>    }</div>
+<div class="line"><a id="l00810" name="l00810"></a><span class="lineno">  810</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">#define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \</span></div>
+<div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="preprocessor">    _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)</span></div>
+<div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span> </div>
+<div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tan, <a class="code hl_function" href="namespaceSymEngine.html#a6e5f23d059e1621822b81d41b8363601">tan</a>)</div>
+<div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASin, <a class="code hl_function" href="namespaceSymEngine.html#a690281de28708c8cef39f5ae73611872">asin</a>)</div>
+<div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACos, <a class="code hl_function" href="namespaceSymEngine.html#a0a98ed704f86e941a5086a46465b2a5b">acos</a>)</div>
+<div class="line"><a id="l00818" name="l00818"></a><span class="lineno">  818</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan, <a class="code hl_function" href="namespaceSymEngine.html#a7f679b584c73a42368d795a4315c0be4">atan</a>)</div>
+<div class="line"><a id="l00819" name="l00819"></a><span class="lineno">  819</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATan2, <a class="code hl_function" href="namespaceSymEngine.html#a375f5fe3cb27618965e5ed38d864e7f1">atan2</a>)</div>
+<div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Sinh, <a class="code hl_function" href="namespaceSymEngine.html#ae24e5db43005e29f95bf5ecc8789f812">sinh</a>)</div>
+<div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Cosh, <a class="code hl_function" href="namespaceSymEngine.html#a769e7739efb7721d2a0757114e5d5ee8">cosh</a>)</div>
+<div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Tanh, <a class="code hl_function" href="namespaceSymEngine.html#a8346955fed5e42cb443055b3264089f3">tanh</a>)</div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ASinh, <a class="code hl_function" href="namespaceSymEngine.html#a7fa6c02ee6b74e628b3f86bc4f2c610c">asinh</a>)</div>
+<div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ACosh, <a class="code hl_function" href="namespaceSymEngine.html#aa077500b689f21abfefa66ee545946e5">acosh</a>)</div>
+<div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(ATanh, <a class="code hl_function" href="namespaceSymEngine.html#a8a6d05bb97e9647eea7ae3c304a8a391">atanh</a>)</div>
+<div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Gamma, tgamma)</div>
+<div class="line"><a id="l00827" name="l00827"></a><span class="lineno">  827</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(LogGamma, lgamma)</div>
+<div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erf, <a class="code hl_function" href="namespaceSymEngine.html#ac51d8c7a02041f2c0a6daa8905e20b0d">erf</a>)</div>
+<div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>SYMENGINE_MACRO_EXTERNAL_FUNCTION(Erfc, <a class="code hl_function" href="namespaceSymEngine.html#a8f9a1131b360ff67d1e9d61c142bd895">erfc</a>)</div>
+<div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span> </div>
+<div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Abs &amp;x)</div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span>{</div>
+<div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
+<div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>                              llvm::Intrinsic::fabs, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>    result_ = r;</div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>}</div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span> </div>
+<div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Min &amp;x)</div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>{</div>
+<div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span>    llvm::Value *value = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l00848" name="l00848"></a><span class="lineno">  848</span>                              llvm::Intrinsic::minnum, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : x.get_vec()) {</div>
+<div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>        <span class="keywordflow">if</span> (value != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>            <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(value);</div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*arg));</div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>            <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>            r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span>            value = r;</div>
+<div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>            value = apply(*arg);</div>
+<div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>        }</div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    }</div>
+<div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span>    result_ = value;</div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>}</div>
+<div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span> </div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Max &amp;x)</div>
+<div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>{</div>
+<div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>    llvm::Value *value = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>                              llvm::Intrinsic::maxnum, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : x.get_vec()) {</div>
+<div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>        <span class="keywordflow">if</span> (value != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a id="l00872" name="l00872"></a><span class="lineno">  872</span>            <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(value);</div>
+<div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>            args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*arg));</div>
+<div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>            <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>            r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span>            value = r;</div>
+<div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>            value = apply(*arg);</div>
+<div class="line"><a id="l00880" name="l00880"></a><span class="lineno">  880</span>        }</div>
+<div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>    }</div>
+<div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>    result_ = value;</div>
+<div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>}</div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span> </div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Symbol &amp;x)</div>
+<div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>{</div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>    <span class="keywordtype">unsigned</span> i = 0;</div>
+<div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;symb : symbols) {</div>
+<div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *symb)) {</div>
+<div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>            result_ = symbol_ptrs[i];</div>
+<div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>        }</div>
+<div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span>        ++i;</div>
+<div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>    }</div>
+<div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>    <span class="keyword">auto</span> it = replacement_symbol_ptrs.find(x.rcp_from_this());</div>
+<div class="line"><a id="l00896" name="l00896"></a><span class="lineno">  896</span>    <span class="keywordflow">if</span> (it != replacement_symbol_ptrs.end()) {</div>
+<div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>        result_ = it-&gt;second;</div>
+<div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>    }</div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span> </div>
+<div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span>    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Symbol &quot;</span> + x.__str__()</div>
+<div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>                             + <span class="stringliteral">&quot; not in the symbols vector.&quot;</span>);</div>
+<div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>}</div>
+<div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span> </div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>llvm::Function *LLVMVisitor::get_external_function(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name,</div>
+<div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>                                                   <span class="keywordtype">size_t</span> nargs)</div>
+<div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>{</div>
+<div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Type *&gt;</a> func_args(nargs,</div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>                                        get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()));</div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>    llvm::FunctionType *func_type = llvm::FunctionType::get(</div>
+<div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>        get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()), func_args, <span class="comment">/*isVarArgs=*/</span><span class="keyword">false</span>);</div>
+<div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span> </div>
+<div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span>    llvm::Function *func = <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getFunction(name);</div>
+<div class="line"><a id="l00914" name="l00914"></a><span class="lineno">  914</span>    <span class="keywordflow">if</span> (!func) {</div>
+<div class="line"><a id="l00915" name="l00915"></a><span class="lineno">  915</span>        func = llvm::Function::Create(</div>
+<div class="line"><a id="l00916" name="l00916"></a><span class="lineno">  916</span>            func_type, llvm::GlobalValue::ExternalLinkage, name, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l00917" name="l00917"></a><span class="lineno">  917</span>        func-&gt;setCallingConv(llvm::CallingConv::C);</div>
+<div class="line"><a id="l00918" name="l00918"></a><span class="lineno">  918</span>    }</div>
+<div class="line"><a id="l00919" name="l00919"></a><span class="lineno">  919</span><span class="preprocessor">#if (LLVM_VERSION_MAJOR &lt; 5)</span></div>
+<div class="line"><a id="l00920" name="l00920"></a><span class="lineno">  920</span>    llvm::AttributeSet func_attr_set;</div>
+<div class="line"><a id="l00921" name="l00921"></a><span class="lineno">  921</span>    {</div>
+<div class="line"><a id="l00922" name="l00922"></a><span class="lineno">  922</span>        llvm::SmallVector&lt;llvm::AttributeSet, 4&gt; attrs;</div>
+<div class="line"><a id="l00923" name="l00923"></a><span class="lineno">  923</span>        llvm::AttributeSet attr_set;</div>
+<div class="line"><a id="l00924" name="l00924"></a><span class="lineno">  924</span>        {</div>
+<div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>            llvm::AttrBuilder attr_builder;</div>
+<div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span>            attr_builder.addAttribute(llvm::Attribute::NoUnwind);</div>
+<div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>            attr_set</div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>                = llvm::AttributeSet::get(<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext(), ~0U, attr_builder);</div>
+<div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span>        }</div>
+<div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span> </div>
+<div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>        attrs.push_back(attr_set);</div>
+<div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span>        func_attr_set = llvm::AttributeSet::get(<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext(), attrs);</div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    }</div>
+<div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    func-&gt;setAttributes(func_attr_set);</div>
+<div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    func-&gt;addFnAttr(llvm::Attribute::NoUnwind);</div>
+<div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>    <span class="keywordflow">return</span> func;</div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>}</div>
+<div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span> </div>
+<div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
 <div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span>{</div>
-<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    convert_from_mpfr(x);</div>
+<div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>    set_double(eval_double(x));</div>
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>}</div>
-<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span> </div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span> </div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="keywordtype">void</span> LLVMLongDoubleVisitor::visit(<span class="keyword">const</span> Constant &amp;x)</div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span>{</div>
-<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>    <span class="keywordflow">throw</span> NotImplementedError(x.__str__());</div>
+<div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>    convert_from_mpfr(x);</div>
 <div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>}</div>
-<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span> </div>
-<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span><span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;LLVMVisitor::dumps()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span><span class="keyword"></span>{</div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>    <span class="keywordflow">return</span> membuffer;</div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>};</div>
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span> </div>
-<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span><span class="keywordtype">void</span> LLVMVisitor::loads(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>{</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>    membuffer = s;</div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>    llvm::InitializeNativeTarget();</div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>    llvm::InitializeNativeTargetAsmPrinter();</div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>    llvm::InitializeNativeTargetAsmParser();</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>    context = std::make_shared&lt;llvm::LLVMContext&gt;();</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span> </div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    <span class="comment">// Create some module to put our function into it.</span></div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::Module&gt;</a> module</div>
-<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>        = make_unique&lt;llvm::Module&gt;(<span class="stringliteral">&quot;SymEngine&quot;</span>, *context);</div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    module-&gt;setDataLayout(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>    <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a> = module.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr/get.html">get</a>();</div>
+<div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00952" name="l00952"></a><span class="lineno">  952</span> </div>
+<div class="line"><a id="l00953" name="l00953"></a><span class="lineno">  953</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span>{</div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>    <span class="keywordflow">throw</span> NotImplementedError(x.__str__());</div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>}</div>
+<div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span> </div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span><span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;LLVMVisitor::dumps()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span><span class="keyword"></span>{</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>    <span class="keywordflow">return</span> membuffer;</div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>};</div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span> </div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span><span class="keywordtype">void</span> LLVMVisitor::loads(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>{</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    membuffer = s;</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>    llvm::InitializeNativeTarget();</div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>    llvm::InitializeNativeTargetAsmPrinter();</div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    llvm::InitializeNativeTargetAsmParser();</div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>    context = std::make_shared&lt;llvm::LLVMContext&gt;();</div>
 <div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span> </div>
-<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>    <span class="comment">// Only defining the prototype for the function here.</span></div>
-<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>    <span class="comment">// Since we know where the function is stored that&#39;s enough</span></div>
-<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>    <span class="comment">// llvm::ObjectCache is designed for caching objects, but it</span></div>
-<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>    <span class="comment">// is used here for loading one specific object.</span></div>
-<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    <span class="keyword">auto</span> F = get_function_type(context.get());</div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>    <span class="comment">// Create some module to put our function into it.</span></div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::Module&gt;</a> module</div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>        = make_unique&lt;llvm::Module&gt;(<span class="stringliteral">&quot;SymEngine&quot;</span>, *context);</div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span>    module-&gt;setDataLayout(<span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>    <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a> = module.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr/get.html">get</a>();</div>
 <div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span> </div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> error;</div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>    executionengine = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/shared_ptr.html">std::shared_ptr&lt;llvm::ExecutionEngine&gt;</a>(</div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>        llvm::EngineBuilder(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(module))</div>
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>            .setEngineKind(llvm::EngineKind::Kind::JIT)</div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)</div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>            .setErrorStr(&amp;error)</div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>            .create());</div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span> </div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    <span class="keyword">class </span>MCJITObjectLoader : <span class="keyword">public</span> llvm::ObjectCache</div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>    {</div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>        <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s_;</div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span> </div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>        MCJITObjectLoader(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s) : s_(s) {}</div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>                                          llvm::MemoryBufferRef obj)</div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>        {</div>
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>        }</div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span> </div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        <span class="comment">// No need to check M because there is only one function</span></div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>        <span class="comment">// Return it after reading from the file.</span></div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>        <span class="keyword">virtual</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
-<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>        getObject(<span class="keyword">const</span> llvm::Module *M)</div>
-<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>        {</div>
-<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>            <span class="keywordflow">return</span> llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));</div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>        }</div>
-<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>    };</div>
-<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span> </div>
-<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>    MCJITObjectLoader loader(s);</div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>    executionengine-&gt;setObjectCache(&amp;loader);</div>
-<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>    executionengine-&gt;finalizeObject();</div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    <span class="comment">// Set func to compiled function pointer</span></div>
-<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>    func = (intptr_t)executionengine-&gt;getPointerToFunction(F);</div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>}</div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span> </div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Floor &amp;x)</div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>{</div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>                              llvm::Intrinsic::floor, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>    result_ = r;</div>
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>}</div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span> </div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Ceiling &amp;x)</div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>{</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>                              llvm::Intrinsic::ceil, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    result_ = r;</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>}</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span> </div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> UnevaluatedExpr &amp;x)</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>{</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    apply(*x.get_arg());</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>}</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span> </div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Truncate &amp;x)</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>{</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    llvm::Function *fun;</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>                              llvm::Intrinsic::trunc, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    result_ = r;</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>}</div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span> </div>
-<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>llvm::Type *LLVMDoubleVisitor::get_float_type(llvm::LLVMContext *context)</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>{</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    <span class="keywordflow">return</span> llvm::Type::getDoubleTy(*context);</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>}</div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span> </div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>llvm::Type *LLVMFloatVisitor::get_float_type(llvm::LLVMContext *context)</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>{</div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>    <span class="keywordflow">return</span> llvm::Type::getFloatTy(*context);</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>}</div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span> </div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span><span class="preprocessor">#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE)</span></div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>llvm::Type *LLVMLongDoubleVisitor::get_float_type(llvm::LLVMContext *context)</div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>    <span class="comment">// Only defining the prototype for the function here.</span></div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>    <span class="comment">// Since we know where the function is stored that&#39;s enough</span></div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    <span class="comment">// llvm::ObjectCache is designed for caching objects, but it</span></div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>    <span class="comment">// is used here for loading one specific object.</span></div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span>    <span class="keyword">auto</span> F = get_function_type(context.get());</div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span> </div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> error;</div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>    executionengine = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/shared_ptr.html">std::shared_ptr&lt;llvm::ExecutionEngine&gt;</a>(</div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>        llvm::EngineBuilder(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(module))</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            .setEngineKind(llvm::EngineKind::Kind::JIT)</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)</div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>            .setErrorStr(&amp;error)</div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>            .create());</div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span> </div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>    <span class="keyword">class </span>MCJITObjectLoader : <span class="keyword">public</span> llvm::ObjectCache</div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>    {</div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>        <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s_;</div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span> </div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        MCJITObjectLoader(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s) : s_(s) {}</div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>                                          llvm::MemoryBufferRef obj)</div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>        {</div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>        }</div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span> </div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span>        <span class="comment">// No need to check M because there is only one function</span></div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>        <span class="comment">// Return it after reading from the file.</span></div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>        <span class="keyword">virtual</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>        getObject(<span class="keyword">const</span> llvm::Module *M)</div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>        {</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>            <span class="keywordflow">return</span> llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));</div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>        }</div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>    };</div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span> </div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>    MCJITObjectLoader loader(s);</div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>    executionengine-&gt;setObjectCache(&amp;loader);</div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>    executionengine-&gt;finalizeObject();</div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>    <span class="comment">// Set func to compiled function pointer</span></div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>    func = (intptr_t)executionengine-&gt;getPointerToFunction(F);</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>}</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span> </div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Floor &amp;x)</div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>{</div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>                              llvm::Intrinsic::floor, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>    result_ = r;</div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>}</div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span> </div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Ceiling &amp;x)</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>{</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>                              llvm::Intrinsic::ceil, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    result_ = r;</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>}</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span> </div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> UnevaluatedExpr &amp;x)</div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>{</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    apply(*x.get_arg());</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>}</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span> </div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span><span class="keywordtype">void</span> LLVMVisitor::bvisit(<span class="keyword">const</span> Truncate &amp;x)</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>{</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> args;</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>    llvm::Function *fun;</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span>    args.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*x.get_arg()));</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>    fun = get_float_intrinsic(get_float_type(&amp;<a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>-&gt;getContext()),</div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>                              llvm::Intrinsic::trunc, 1, <a class="code hl_function" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    <span class="keyword">auto</span> r = builder-&gt;CreateCall(fun, args);</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    r-&gt;setTailCall(<span class="keyword">true</span>);</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>    result_ = r;</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>}</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span> </div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>llvm::Type *LLVMDoubleVisitor::get_float_type(llvm::LLVMContext *context)</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>{</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    <span class="keywordflow">return</span> llvm::Type::getDoubleTy(*context);</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>}</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span> </div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>llvm::Type *LLVMFloatVisitor::get_float_type(llvm::LLVMContext *context)</div>
 <div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>{</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    <span class="keywordflow">return</span> llvm::Type::getX86_FP80Ty(*context);</div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    <span class="keywordflow">return</span> llvm::Type::getFloatTy(*context);</div>
 <div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>}</div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span> </div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span> </div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span><span class="preprocessor">#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE)</span></div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>llvm::Type *LLVMLongDoubleVisitor::get_float_type(llvm::LLVMContext *context)</div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>{</div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    <span class="keywordflow">return</span> llvm::Type::getX86_FP80Ty(*context);</div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>}</div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span> </div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aassign_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/assign.html">std::string::assign</a></div><div class="ttdeci">T assign(T... args)</div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>

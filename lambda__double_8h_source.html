@@ -660,113 +660,119 @@ $(function() {
 <div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                <span class="stringliteral">&quot;LambdaDouble can only represent real valued infinity&quot;</span>);</div>
 <div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>        }</div>
 <div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>    }</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span> </div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Contains.html">Contains</a> &amp;cts)</div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>    {</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        <span class="keyword">const</span> <span class="keyword">auto</span> fn_expr = apply(*cts.get_expr());</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        <span class="keyword">const</span> <span class="keyword">auto</span> set = cts.get_set();</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*set)) {</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>            <span class="keyword">const</span> <span class="keyword">auto</span> &amp;interv = down_cast&lt;const Interval &amp;&gt;(*set);</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>            <span class="keyword">const</span> <span class="keyword">auto</span> fn_start = apply(*interv.get_start());</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>            <span class="keyword">const</span> <span class="keyword">auto</span> fn_end = apply(*interv.get_end());</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>            <span class="keyword">const</span> <span class="keywordtype">bool</span> left_open = interv.get_left_open();</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>            <span class="keyword">const</span> <span class="keywordtype">bool</span> right_open = interv.get_right_open();</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>            result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> *x) {</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_expr = fn_expr(x);</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_start = fn_start(x);</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_end = fn_end(x);</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                <span class="keywordtype">bool</span> left_ok, right_ok;</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>                <span class="keywordflow">if</span> (val_start == -<a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;double&gt;::infinity</a>()) {</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>                    left_ok = !<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/isnan.html">std::isnan</a>(val_expr);</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>                    left_ok = (left_open) ? (val_start &lt; val_expr)</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                                          : (val_start &lt;= val_expr);</div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                }</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>                <span class="keywordflow">if</span> (val_end == <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;double&gt;::infinity</a>()) {</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                    right_ok = !<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/isnan.html">std::isnan</a>(val_expr);</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1NaN.html">NaN</a> &amp;nan)</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>    {</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>        assert(&amp;nan == &amp;(*Nan) <span class="comment">/* singleton, or do we support NaN quiet/singaling nan with payload? */</span>);</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        result_ = [](<span class="keyword">const</span> <span class="keywordtype">double</span> * <span class="comment">/* x  */</span>) {</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>            <span class="keywordflow">return</span> <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits/signaling_NaN.html">std::numeric_limits&lt;double&gt;::signaling_NaN</a>();</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        };</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>    }</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Contains.html">Contains</a> &amp;cts)</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    {</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>        <span class="keyword">const</span> <span class="keyword">auto</span> fn_expr = apply(*cts.get_expr());</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>        <span class="keyword">const</span> <span class="keyword">auto</span> set = cts.get_set();</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>        <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*set)) {</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>            <span class="keyword">const</span> <span class="keyword">auto</span> &amp;interv = down_cast&lt;const Interval &amp;&gt;(*set);</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>            <span class="keyword">const</span> <span class="keyword">auto</span> fn_start = apply(*interv.get_start());</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>            <span class="keyword">const</span> <span class="keyword">auto</span> fn_end = apply(*interv.get_end());</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>            <span class="keyword">const</span> <span class="keywordtype">bool</span> left_open = interv.get_left_open();</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>            <span class="keyword">const</span> <span class="keywordtype">bool</span> right_open = interv.get_right_open();</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>            result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> *x) {</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_expr = fn_expr(x);</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_start = fn_start(x);</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                <span class="keyword">const</span> <span class="keyword">auto</span> val_end = fn_end(x);</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                <span class="keywordtype">bool</span> left_ok, right_ok;</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>                <span class="keywordflow">if</span> (val_start == -<a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;double&gt;::infinity</a>()) {</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                    left_ok = !<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/isnan.html">std::isnan</a>(val_expr);</div>
 <div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                    right_ok = (right_open) ? (val_expr &lt; val_end)</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                                            : (val_expr &lt;= val_end);</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                    left_ok = (left_open) ? (val_start &lt; val_expr)</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                                          : (val_start &lt;= val_expr);</div>
 <div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                }</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                <span class="keywordflow">return</span> (left_ok &amp;&amp; right_ok) ? 1.0 : 0.0;</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>            };</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;LambdaDoubleVisitor: only ``Interval`` &quot;</span></div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                                     <span class="stringliteral">&quot;implemented for ``Contains``.&quot;</span>);</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>        }</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    }</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span> </div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &amp;ba)</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>    {</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>        <span class="keyword">const</span> <span class="keywordtype">bool</span> val = ba.get_val();</div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>        result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> * <span class="comment">/* x */</span>) { <span class="keywordflow">return</span> (val) ? 1.0 : 0.0; };</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                <span class="keywordflow">if</span> (val_end == <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;double&gt;::infinity</a>()) {</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                    right_ok = !<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/isnan.html">std::isnan</a>(val_expr);</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                    right_ok = (right_open) ? (val_expr &lt; val_end)</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                                            : (val_expr &lt;= val_end);</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>                }</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>                <span class="keywordflow">return</span> (left_ok &amp;&amp; right_ok) ? 1.0 : 0.0;</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>            };</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;LambdaDoubleVisitor: only ``Interval`` &quot;</span></div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>                                     <span class="stringliteral">&quot;implemented for ``Contains``.&quot;</span>);</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>        }</div>
 <div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>    }</div>
 <div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span> </div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &amp;pw)</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &amp;ba)</div>
 <div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>    {</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>        SYMENGINE_ASSERT_MSG(</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>            <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*pw.get_vec().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>().second, *boolTrue),</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>            <span class="stringliteral">&quot;LambdaDouble requires a (Expr, True) at the end of Piecewise&quot;</span>);</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>        <span class="keyword">const</span> <span class="keywordtype">bool</span> val = ba.get_val();</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>        result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> * <span class="comment">/* x */</span>) { <span class="keywordflow">return</span> (val) ? 1.0 : 0.0; };</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>    }</div>
 <div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span> </div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;fn&gt;</a> applys;</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;fn&gt;</a> preds;</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;expr_pred : pw.get_vec()) {</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            applys.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*expr_pred.first));</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>            preds.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*expr_pred.second));</div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>        }</div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> *x) {</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0;; ++i) {</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>                <span class="keywordflow">if</span> (preds[i](x) == 1.0) {</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                    <span class="keywordflow">return</span> applys[i](x);</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>                }</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            }</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>            <span class="keywordflow">throw</span> SymEngineException(</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>                <span class="stringliteral">&quot;Unexpectedly reached end of Piecewise function.&quot;</span>);</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>        };</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>    }</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>};</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span> </div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno"><a class="line" href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">  629</a></span><span class="keyword">class </span><a class="code hl_class" href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">LambdaComplexDoubleVisitor</a></div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>    : <span class="keyword">public</span> <a class="code hl_class" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;LambdaComplexDoubleVisitor,</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>                         LambdaDoubleVisitor&lt;std::complex&lt;double&gt;&gt;&gt;</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>{</div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>    <span class="comment">// Classes not implemented are</span></div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>    <span class="comment">// Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta</span></div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>    <span class="comment">// LeviCivita, KroneckerDelta, FunctionSymbol, LambertW</span></div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>    <span class="comment">// Derivative, ATan2, Gamma</span></div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span> </div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>    <span class="keyword">using</span> LambdaDoubleVisitor::bvisit;</div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span> </div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Complex.html">Complex</a> &amp;x)</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>    {</div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>        <span class="keywordtype">double</span> t1 = mp_get_d(x.<a class="code hl_variable" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>), t2 = mp_get_d(x.imaginary_);</div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) {</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>            <span class="keywordflow">return</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(t1, t2);</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>        };</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>    };</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span> </div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1ComplexDouble.html">ComplexDouble</a> &amp;x)</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>    {</div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> tmp = x.i;</div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) { <span class="keywordflow">return</span> tmp; };</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Piecewise.html">Piecewise</a> &amp;pw)</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>    {</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>        SYMENGINE_ASSERT_MSG(</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*pw.get_vec().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>().second, *boolTrue),</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>            <span class="stringliteral">&quot;LambdaDouble requires a (Expr, True) at the end of Piecewise&quot;</span>);</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span> </div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;fn&gt;</a> applys;</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;fn&gt;</a> preds;</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;expr_pred : pw.get_vec()) {</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            applys.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*expr_pred.first));</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>            preds.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(apply(*expr_pred.second));</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        }</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>        result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> *x) {</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0;; ++i) {</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>                <span class="keywordflow">if</span> (preds[i](x) == 1.0) {</div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>                    <span class="keywordflow">return</span> applys[i](x);</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>                }</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>            }</div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>            <span class="keywordflow">throw</span> SymEngineException(</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>                <span class="stringliteral">&quot;Unexpectedly reached end of Piecewise function.&quot;</span>);</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>        };</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>    }</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>};</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span> </div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno"><a class="line" href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">  635</a></span><span class="keyword">class </span><a class="code hl_class" href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">LambdaComplexDoubleVisitor</a></div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>    : <span class="keyword">public</span> <a class="code hl_class" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;LambdaComplexDoubleVisitor,</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>                         LambdaDoubleVisitor&lt;std::complex&lt;double&gt;&gt;&gt;</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>{</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>    <span class="comment">// Classes not implemented are</span></div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    <span class="comment">// Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta</span></div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>    <span class="comment">// LeviCivita, KroneckerDelta, FunctionSymbol, LambertW</span></div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>    <span class="comment">// Derivative, ATan2, Gamma</span></div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span> </div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>    <span class="keyword">using</span> LambdaDoubleVisitor::bvisit;</div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span> </div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1Complex.html">Complex</a> &amp;x)</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>    {</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>        <span class="keywordtype">double</span> t1 = mp_get_d(x.<a class="code hl_variable" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>), t2 = mp_get_d(x.imaginary_);</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) {</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>            <span class="keywordflow">return</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(t1, t2);</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>        };</div>
 <div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>    };</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_MPC</span></div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1ComplexMPC.html">ComplexMPC</a> &amp;x)</div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span> </div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1ComplexDouble.html">ComplexDouble</a> &amp;x)</div>
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>    {</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        mpfr_class t(x.get_prec());</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <span class="keywordtype">double</span> real, imag;</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>        mpc_real(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>        real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>        mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>        imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> tmp(real, imag);</div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) { <span class="keywordflow">return</span> tmp; };</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>    }</div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>};</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span><span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_LAMBDA_DOUBLE_H</span></div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> tmp = x.i;</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) { <span class="keywordflow">return</span> tmp; };</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>    };</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_MPC</span></div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1ComplexMPC.html">ComplexMPC</a> &amp;x)</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>    {</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>        mpfr_class t(x.get_prec());</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>        <span class="keywordtype">double</span> real, imag;</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>        mpc_real(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>        real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>        mpc_imag(t.get_mpfr_t(), x.as_mpc().get_mpc_t(), MPFR_RNDN);</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>        imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> tmp(real, imag);</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        result_ = [=](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> *x) { <span class="keywordflow">return</span> tmp; };</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>    }</div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>};</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span><span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_LAMBDA_DOUBLE_H</span></div>
 <div class="ttc" id="aacos_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/acos.html">std::acos</a></div><div class="ttdeci">T acos(T... args)</div></div>
 <div class="ttc" id="aacosh_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/acosh.html">std::acosh</a></div><div class="ttdeci">T acosh(T... args)</div></div>
 <div class="ttc" id="aasin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/asin.html">std::asin</a></div><div class="ttdeci">T asin(T... args)</div></div>
@@ -821,7 +827,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Infty_html"><div class="ttname"><a href="classSymEngine_1_1Infty.html">SymEngine::Infty</a></div><div class="ttdef"><b>Definition:</b> <a href="infinity_8h_source.html#l00020">infinity.h:21</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Integer_html"><div class="ttname"><a href="classSymEngine_1_1Integer.html">SymEngine::Integer</a></div><div class="ttdoc">Integer Class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00018">integer.h:19</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Integer_html_a0a7f55abb94df0cbfa2c248f4545cacc"><div class="ttname"><a href="classSymEngine_1_1Integer.html#a0a7f55abb94df0cbfa2c248f4545cacc">SymEngine::Integer::as_integer_class</a></div><div class="ttdeci">const integer_class &amp; as_integer_class() const</div><div class="ttdoc">Convert to integer_class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00048">integer.h:48</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1LambdaComplexDoubleVisitor_html"><div class="ttname"><a href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">SymEngine::LambdaComplexDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="lambda__double_8h_source.html#l00629">lambda_double.h:632</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1LambdaComplexDoubleVisitor_html"><div class="ttname"><a href="classSymEngine_1_1LambdaComplexDoubleVisitor.html">SymEngine::LambdaComplexDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="lambda__double_8h_source.html#l00635">lambda_double.h:638</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1LambdaDoubleVisitor_html"><div class="ttname"><a href="classSymEngine_1_1LambdaDoubleVisitor.html">SymEngine::LambdaDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="lambda__double_8h_source.html#l00014">lambda_double.h:15</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1LambdaRealDoubleVisitor_html"><div class="ttname"><a href="classSymEngine_1_1LambdaRealDoubleVisitor.html">SymEngine::LambdaRealDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="lambda__double_8h_source.html#l00366">lambda_double.h:368</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1LessThan_html"><div class="ttname"><a href="classSymEngine_1_1LessThan.html">SymEngine::LessThan</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00212">logic.h:213</a></div></div>
@@ -831,6 +837,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Min_html"><div class="ttname"><a href="classSymEngine_1_1Min.html">SymEngine::Min</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l01273">functions.h:1274</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html"><div class="ttname"><a href="classSymEngine_1_1Mul.html">SymEngine::Mul</a></div><div class="ttdef"><b>Definition:</b> <a href="mul_8h_source.html#l00073">mul.h:74</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html_a7df8b2e0e3868a53c3004f0948f71c41"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html#a7df8b2e0e3868a53c3004f0948f71c41">SymEngine::MultiArgFunction::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00159">functions.h:159</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1NaN_html"><div class="ttname"><a href="classSymEngine_1_1NaN.html">SymEngine::NaN</a></div><div class="ttdef"><b>Definition:</b> <a href="nan_8h_source.html#l00019">nan.h:20</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Not_html"><div class="ttname"><a href="classSymEngine_1_1Not.html">SymEngine::Not</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00145">logic.h:146</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html_a6242b4e6d3e3ec1e118cef3a1fd2118b"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html#a6242b4e6d3e3ec1e118cef3a1fd2118b">SymEngine::OneArgFunction::get_arg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_arg() const</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00036">functions.h:36</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html_a78317a5ebd922b700ff25d81af38a1d1"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html#a78317a5ebd922b700ff25d81af38a1d1">SymEngine::OneArgFunction::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00040">functions.h:40</a></div></div>
@@ -886,6 +893,7 @@ $(function() {
 <div class="ttc" id="apow_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a></div><div class="ttdeci">T pow(T... args)</div></div>
 <div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
 <div class="ttc" id="aresize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/resize.html">std::vector::resize</a></div><div class="ttdeci">T resize(T... args)</div></div>
+<div class="ttc" id="asignaling_NaN_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/numeric_limits/signaling_NaN.html">std::numeric_limits::signaling_NaN</a></div><div class="ttdeci">T signaling_NaN(T... args)</div></div>
 <div class="ttc" id="asin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/sin.html">std::sin</a></div><div class="ttdeci">T sin(T... args)</div></div>
 <div class="ttc" id="asinh_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/sinh.html">std::sinh</a></div><div class="ttdeci">T sinh(T... args)</div></div>
 <div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
