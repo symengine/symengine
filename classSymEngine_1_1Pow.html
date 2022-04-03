@@ -271,7 +271,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    SYMENGINE_ASSERT(<a class="code hl_function" href="classSymEngine_1_1Pow.html#ad6923294a9965748c972f568b435dadb">is_canonical</a>(*base, *<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>))</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_ad6923294a9965748c972f568b435dadb"><div class="ttname"><a href="classSymEngine_1_1Pow.html#ad6923294a9965748c972f568b435dadb">SymEngine::Pow::is_canonical</a></div><div class="ttdeci">bool is_canonical(const Basic &amp;base, const Basic &amp;exp) const</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00017">pow.cpp:17</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00270">pow.cpp:270</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -309,14 +309,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00071">71</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>{</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keywordflow">if</span> (is_a&lt;Pow&gt;(o) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base_, *(down_cast&lt;const Pow &amp;&gt;(o).base_))</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*exp_, *(down_cast&lt;const Pow &amp;&gt;(o).exp_)))</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00072">72</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>{</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">if</span> (is_a&lt;Pow&gt;(o) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base_, *(down_cast&lt;const Pow &amp;&gt;(o).base_))</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*exp_, *(down_cast&lt;const Pow &amp;&gt;(o).exp_)))</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -347,13 +347,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00063">63</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>{</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    hash_t seed = SYMENGINE_POW;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    hash_combine&lt;Basic&gt;(seed, *base_);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    hash_combine&lt;Basic&gt;(seed, *exp_);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00064">64</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>{</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    hash_t seed = SYMENGINE_POW;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    hash_combine&lt;Basic&gt;(seed, *base_);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    hash_combine&lt;Basic&gt;(seed, *exp_);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -440,16 +440,16 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00080">80</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>{</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    SYMENGINE_ASSERT(is_a&lt;Pow&gt;(o))</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">const</span> <a class="code hl_function" href="classSymEngine_1_1Pow.html#a208a035e436b0bcb6a9ad8faa07b4055">Pow</a> &amp;s = down_cast&lt;const Pow &amp;&gt;(o);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordtype">int</span> base_cmp = base_-&gt;__cmp__(*s.base_);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">if</span> (base_cmp == 0)</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keywordflow">return</span> exp_-&gt;__cmp__(*s.exp_);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">return</span> base_cmp;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00081">81</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>{</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    SYMENGINE_ASSERT(is_a&lt;Pow&gt;(o))</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">const</span> <a class="code hl_function" href="classSymEngine_1_1Pow.html#a208a035e436b0bcb6a9ad8faa07b4055">Pow</a> &amp;s = down_cast&lt;const Pow &amp;&gt;(o);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">int</span> base_cmp = base_-&gt;__cmp__(*s.base_);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span> (base_cmp == 0)</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">return</span> exp_-&gt;__cmp__(*s.exp_);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keywordflow">return</span> base_cmp;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_a208a035e436b0bcb6a9ad8faa07b4055"><div class="ttname"><a href="classSymEngine_1_1Pow.html#a208a035e436b0bcb6a9ad8faa07b4055">SymEngine::Pow::Pow</a></div><div class="ttdeci">Pow(const RCP&lt; const Basic &gt; &amp;base, const RCP&lt; const Basic &gt; &amp;exp)</div><div class="ttdoc">Pow Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00010">pow.cpp:10</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -481,10 +481,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#a6544293931047d6d9097e81f7d306cae">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00265">265</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>{</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keywordflow">return</span> {base_, exp_};</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>}</div>
+<p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00266">266</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>{</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    <span class="keywordflow">return</span> {base_, exp_};</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -617,11 +617,12 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        and is_a&lt;Integer&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>))</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// e.g. 0.5^2.0 should be represented as 0.25</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(base) and not down_cast&lt;const Number &amp;&gt;(base).is_exact()</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        and <a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>) and not down_cast&lt;const Number &amp;&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>).is_exact())</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(base) and <a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        and (not down_cast&lt;const Number &amp;&gt;(base).is_exact()</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>             or not down_cast&lt;const Number &amp;&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>).is_exact()))</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1998df939d1b28e0356a43f33433d9d3"><div class="ttname"><a href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">SymEngine::is_number_and_zero</a></div><div class="ttdeci">bool is_number_and_zero(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00139">number.h:139</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
