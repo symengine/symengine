@@ -197,6 +197,14 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = div(sin(x), x);
     d[x] = zero;
     REQUIRE(eq(*r1->subs(d), *Nan));
+
+    d.clear();
+    r1 = mul(real_double(2.0), x);
+    // xreplace with an empty mapping dict should be a no-op
+    r2 = r1->xreplace(d);
+    std::cout << "r1: " << *r1 << std::endl;
+    std::cout << "r2: " << *r2 << std::endl;
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Pow: subs", "[subs]")
