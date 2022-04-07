@@ -168,7 +168,7 @@ bool Piecewise::is_canonical(const PiecewiseVec &vec)
         } else if (conditions.find(p.second) == conditions.end()) {
             conditions.insert(p.second);
         } else {
-            return false
+            return false;
         }
     }
     if (vec.size() == 0) {
