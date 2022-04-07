@@ -88,6 +88,7 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_PIECEWISE)
     //! Constructor
     Piecewise(PiecewiseVec &&vec);
+    bool is_canonical(const PiecewiseVec &vec);
     hash_t __hash__() const;
     const PiecewiseVec &get_vec() const;
     virtual vec_basic get_args() const;
