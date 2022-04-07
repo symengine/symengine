@@ -127,7 +127,7 @@ RCP<const Basic> piecewise(const PiecewiseVec &vec)
 {
     PiecewiseVec new_vec;
     set_boolean conditions;
-    for (auto &p: vec) {
+    for (auto &p : vec) {
         if (eq(*p.second, *boolFalse)) {
             continue;
         } else if (eq(*p.second, *boolTrue)) {
@@ -147,8 +147,7 @@ RCP<const Basic> piecewise(const PiecewiseVec &vec)
     return make_rcp<Piecewise>(std::move(new_vec));
 }
 
-Piecewise::Piecewise(PiecewiseVec &&vec)
-    : vec_(vec)
+Piecewise::Piecewise(PiecewiseVec &&vec) : vec_(vec)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(vec_));
@@ -158,7 +157,7 @@ bool Piecewise::is_canonical(const PiecewiseVec &vec)
 {
     set_boolean conditions;
     bool found_true = false;
-    for (auto &p: vec) {
+    for (auto &p : vec) {
         if (found_true) {
             return false;
         }
