@@ -155,7 +155,9 @@ TEST_CASE("Piecewise", "[logic]")
 
     REQUIRE(eq(*q, *p));
 
-    q = piecewise({{one, boolTrue}}) REQUIRE(eq(*q, *one));
+    q = piecewise({{one, boolTrue}});
+
+    REQUIRE(eq(*q, *one));
 
     CHECK_THROWS_AS(piecewise({{one, boolFalse}}), DomainError);
 }
