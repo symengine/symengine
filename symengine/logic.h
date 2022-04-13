@@ -88,6 +88,7 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_PIECEWISE)
     //! Constructor
     Piecewise(PiecewiseVec &&vec);
+    bool is_canonical(const PiecewiseVec &vec);
     hash_t __hash__() const;
     const PiecewiseVec &get_vec() const;
     virtual vec_basic get_args() const;
@@ -98,10 +99,7 @@ public:
 
 // Vec is vector of pairs of RCP<const Basic> and RCP<const Boolean> to
 // represent (Expr, Condition) pairs
-inline RCP<const Basic> piecewise(PiecewiseVec &&vec)
-{
-    return make_rcp<Piecewise>(std::move(vec));
-}
+RCP<const Basic> piecewise(const PiecewiseVec &vec);
 
 class And : public Boolean
 {

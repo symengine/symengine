@@ -12,6 +12,7 @@ using SymEngine::boolFalse;
 using SymEngine::boolTrue;
 using SymEngine::contains;
 using SymEngine::Contains;
+using SymEngine::DomainError;
 using SymEngine::eq;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -98,6 +99,7 @@ TEST_CASE("Piecewise", "[logic]")
     auto int1 = interval(integer(1), integer(2), true, false);
     auto int2 = interval(integer(2), integer(5), true, false);
     auto int3 = interval(integer(5), integer(10), true, false);
+    auto int4 = interval(integer(10), integer(12), true, false);
     auto p = piecewise({{x, contains(x, int1)},
                         {y, contains(x, int2)},
                         {add(x, y), contains(x, int3)}});
@@ -117,6 +119,47 @@ TEST_CASE("Piecewise", "[logic]")
 
     REQUIRE((p->diff(x))->__hash__() == q->__hash__());
     REQUIRE(eq(*p->diff(x), *q));
+
+    auto q2 = piecewise({
+        {one, contains(x, int1)},
+        {zero, contains(x, int2)},
+        {one, contains(x, int3)},
+        {one, contains(x, int2)},
+    });
+
+    REQUIRE(eq(*q2, *q));
+
+    q2 = piecewise({
+        {one, contains(x, int1)},
+        {zero, contains(x, int2)},
+        {one, boolFalse},
+        {one, contains(x, int3)},
+    });
+
+    REQUIRE(eq(*q2, *q));
+
+    p = piecewise({
+        {one, contains(x, int1)},
+        {zero, contains(x, int2)},
+        {one, contains(x, int3)},
+        {one, boolTrue},
+    });
+
+    q = piecewise({
+        {one, contains(x, int1)},
+        {zero, contains(x, int2)},
+        {one, contains(x, int3)},
+        {one, boolTrue},
+        {one, contains(x, int4)},
+    });
+
+    REQUIRE(eq(*q, *p));
+
+    q = piecewise({{one, boolTrue}});
+
+    REQUIRE(eq(*q, *one));
+
+    CHECK_THROWS_AS(piecewise({{one, boolFalse}}), DomainError);
 }
 
 TEST_CASE("And, Or : Basic", "[basic]")

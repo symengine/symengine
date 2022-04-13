@@ -123,10 +123,63 @@ RCP<const Boolean> contains(const RCP<const Basic> &expr,
     }
 }
 
-Piecewise::Piecewise(PiecewiseVec &&vec)
-    : vec_(vec){SYMENGINE_ASSIGN_TYPEID()}
+RCP<const Basic> piecewise(const PiecewiseVec &vec)
+{
+    PiecewiseVec new_vec;
+    set_boolean conditions;
+    for (auto &p : vec) {
+        if (eq(*p.second, *boolFalse)) {
+            continue;
+        } else if (eq(*p.second, *boolTrue)) {
+            new_vec.push_back(p);
+            conditions.insert(p.second);
+            break;
+        } else if (conditions.find(p.second) == conditions.end()) {
+            new_vec.push_back(p);
+            conditions.insert(p.second);
+        }
+    }
+    if (new_vec.size() == 0) {
+        throw DomainError("piecewise undefined for this domain.");
+    } else if (new_vec.size() == 1 and eq(*new_vec[0].second, *boolTrue)) {
+        return new_vec[0].first;
+    }
+    return make_rcp<Piecewise>(std::move(new_vec));
+}
 
-      hash_t Piecewise::__hash__() const
+Piecewise::Piecewise(PiecewiseVec &&vec) : vec_(vec)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(vec_));
+}
+
+bool Piecewise::is_canonical(const PiecewiseVec &vec)
+{
+    set_boolean conditions;
+    bool found_true = false;
+    for (auto &p : vec) {
+        if (found_true) {
+            return false;
+        }
+        if (eq(*p.second, *boolFalse)) {
+            return false;
+        } else if (eq(*p.second, *boolTrue)) {
+            found_true = true;
+        } else if (conditions.find(p.second) == conditions.end()) {
+            conditions.insert(p.second);
+        } else {
+            return false;
+        }
+    }
+    if (vec.size() == 0) {
+        return false;
+    } else if (vec.size() == 1 and eq(*vec[0].second, *boolTrue)) {
+        return false;
+    }
+    return true;
+}
+
+hash_t Piecewise::__hash__() const
 {
     hash_t seed = this->get_type_code();
     for (auto &p : vec_) {
