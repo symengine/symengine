@@ -236,7 +236,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00126">126</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00124">124</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a92bb13b4156bf627ac3996f364cec32a" name="a92bb13b4156bf627ac3996f364cec32a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92bb13b4156bf627ac3996f364cec32a">&#9670;&nbsp;</a></span>Or()</h2>
@@ -254,12 +254,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00235">235</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                           : container_{s}</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>{</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    SYMENGINE_ASSIGN_TYPEID()</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    SYMENGINE_ASSERT(is_canonical(s));</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00288">288</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                           : container_{s}</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>{</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    SYMENGINE_ASSIGN_TYPEID()</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    SYMENGINE_ASSERT(is_canonical(s));</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -300,11 +300,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00255">255</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>{</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keywordflow">return</span> is_a&lt;Or&gt;(o)</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>           and unified_eq(container_, down_cast&lt;const Or &amp;&gt;(o).get_container());</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00308">308</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>{</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>    <span class="keywordflow">return</span> is_a&lt;Or&gt;(o)</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>           and unified_eq(container_, down_cast&lt;const Or &amp;&gt;(o).get_container());</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -334,13 +334,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00241">241</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>{</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    hash_t seed = SYMENGINE_OR;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00294">294</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>{</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    hash_t seed = SYMENGINE_OR;</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -428,12 +428,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00261">261</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>{</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>    SYMENGINE_ASSERT(is_a&lt;Or&gt;(o))</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_,</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                           down_cast&lt;const Or &amp;&gt;(o).get_container());</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00314">314</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>{</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    SYMENGINE_ASSERT(is_a&lt;Or&gt;(o))</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_,</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                           down_cast&lt;const Or &amp;&gt;(o).get_container());</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -465,11 +465,11 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#a6544293931047d6d9097e81f7d306cae">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00249">249</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>{</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    vec_basic v(container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(), container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keywordflow">return</span> v;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00302">302</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>{</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    vec_basic v(container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(), container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">return</span> v;</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>}</div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/begin.html">std::set::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/end.html">std::set::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 </div><!-- fragment -->
@@ -490,10 +490,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00282">282</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>{</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keywordflow">return</span> container_;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00335">335</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>{</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>    <span class="keywordflow">return</span> container_;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -513,19 +513,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00268">268</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>{</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    <span class="keywordflow">if</span> (container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &gt;= 2) {</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*a) or is_a&lt;Or&gt;(*a))</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <span class="keywordflow">if</span> (container_.find(SymEngine::logical_not(a)) != container_.end())</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        }</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00321">321</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>{</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keywordflow">if</span> (container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &gt;= 2) {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <span class="keywordflow">if</span> (is_a&lt;BooleanAtom&gt;(*a) or is_a&lt;Or&gt;(*a))</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keywordflow">if</span> (container_.find(SymEngine::logical_not(a)) != container_.end())</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        }</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    }</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>}</div>
 <div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/size.html">std::set::size</a></div><div class="ttdeci">T size(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -555,15 +555,15 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classSymEngine_1_1Boolean.html">SymEngine::Boolean</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00287">287</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>{</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="keyword">auto</span> container = this-&gt;get_container();</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    set_boolean cont;</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container) {</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        cont.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(SymEngine::logical_not(a));</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>    }</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    <span class="keywordflow">return</span> make_rcp&lt;const And&gt;(cont);</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00340">340</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>{</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keyword">auto</span> container = this-&gt;get_container();</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    set_boolean cont;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container) {</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>        cont.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(SymEngine::logical_not(a));</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    }</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    <span class="keywordflow">return</span> make_rcp&lt;const And&gt;(cont);</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>}</div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -589,7 +589,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00129">129</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00127">127</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
 
 </div>
 </div>
@@ -614,7 +614,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p >Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00132">132</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="logic_8h_source.html#l00130">130</a> of file <a class="el" href="logic_8h_source.html">logic.h</a>.</p>
 
 </div>
 </div>
