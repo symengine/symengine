@@ -335,10 +335,12 @@ if (WITH_PIRANHA)
 endif()
 
 if (WITH_PTHREAD)
-    find_package(Threads)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads)
+    set(PTHREAD_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
     set(LIBS ${LIBS} ${CMAKE_THREAD_LIBS_INIT})
     set(HAVE_SYMENGINE_PTHREAD yes)
+    set(PKGS ${PKGS} "PTHREAD")
 endif()
 
 if (WITH_MPFR)
@@ -643,7 +645,6 @@ install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cma
               #cmake/FindMPFR.cmake
               #cmake/FindPIRANHA.cmake
               #cmake/FindPRIMESIEVE.cmake
-              #cmake/FindPTHREAD.cmake
               #cmake/FindTCMALLOC.cmake
               #cmake/LibFindMacros.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
@@ -760,6 +761,9 @@ if (WITH_BOOST)
 endif()
 
 message("WITH_PTHREAD: ${WITH_PTHREAD}")
+if (WITH_PTHREAD)
+    message("PTHREAD_LIBRARIES: ${PTHREAD_LIBRARIES}")
+endif()
 
 message("WITH_MPC: ${WITH_MPC}")
 if (WITH_MPC)
