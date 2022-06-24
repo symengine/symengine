@@ -7,6 +7,7 @@
 using std::string;
 
 using SymEngine::Basic;
+using SymEngine::complex_double;
 using SymEngine::Integer;
 using SymEngine::is_a;
 using SymEngine::Number;
@@ -57,4 +58,6 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(
         se::pow(se::symbol("y"), se::integer(2)));
     check_string_serialization_roundtrip(se::reals());
+    check_string_serialization_roundtrip(
+        complex_double(std::complex<double>(4, 5)));
 }
