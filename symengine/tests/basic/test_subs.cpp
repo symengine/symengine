@@ -16,6 +16,7 @@ using SymEngine::erf;
 using SymEngine::finiteset;
 using SymEngine::function_symbol;
 using SymEngine::gamma;
+using SymEngine::I;
 using SymEngine::imageset;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -65,6 +66,26 @@ TEST_CASE("Symbol: subs", "[subs]")
     d[x] = y;
     REQUIRE(eq(*r1->subs(d), *r2));
     REQUIRE(neq(*r1->subs(d), *r1));
+}
+
+TEST_CASE("Number: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1 = add(x, i2);
+    RCP<const Basic> r2 = add(x, i4);
+    map_basic_basic d;
+    d[i2] = i4;
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
+
+    r1 = mul(x, add(i2, I));
+    r2 = mul(x, sub(i2, I));
+    d[I] = neg(I);
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
 }
 
 TEST_CASE("Add: subs", "[subs]")
