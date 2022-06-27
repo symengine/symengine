@@ -1,12 +1,13 @@
 <map id="SymEngine::FunctionWrapper" name="SymEngine::FunctionWrapper">
-<area shape="rect" id="node1" title=" " alt="" coords="289,455,502,481"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1FunctionSymbol.html" title=" " alt="" coords="292,379,499,405"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="197,289,410,316"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,193,188,219"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,96,178,123"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="212,185,395,227"/>
-<area shape="rect" id="node8" title=" " alt="" coords="227,96,379,123"/>
-<area shape="rect" id="node9" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="440,289,527,316"/>
-<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="419,185,558,227"/>
+<area shape="rect" id="node1" title=" " alt="" coords="289,544,502,571"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1FunctionSymbol.html" title=" " alt="" coords="292,468,499,495"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="197,379,410,405"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,282,188,309"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,185,178,212"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node7" title=" " alt="" coords="52,5,165,32"/>
+<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="212,275,395,316"/>
+<area shape="rect" id="node9" title=" " alt="" coords="227,185,379,212"/>
+<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="440,379,527,405"/>
+<area shape="rect" id="node11" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="419,275,558,316"/>
 </map>

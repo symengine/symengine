@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classSymEngine_1_1mpq__view__flint.html" title=" " alt="" coords="5,5,176,47"/>
+<area shape="rect" id="node1" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,31,183,57"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1CSRMatrix.html" title=" " alt="" coords="239,5,409,32"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1DenseMatrix.html" title=" " alt="" coords="231,56,417,83"/>
 </map>

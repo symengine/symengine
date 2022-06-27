@@ -25,9 +25,11 @@ var searchData=
   ['funcargtracker_22',['FuncArgTracker',['../classSymEngine_1_1FuncArgTracker.html',1,'SymEngine']]],
   ['function_23',['function',['http://en.cppreference.com/w/cpp/utility/functional/function.html',1,'std']]],
   ['function_24',['Function',['../classSymEngine_1_1Function.html',1,'SymEngine']]],
-  ['function_3c_20t_28const_20t_20_2ax_29_3e_25',['function&lt; T(const T *x)&gt;',['http://en.cppreference.com/w/cpp/utility/functional/function.html',1,'std']]],
-  ['functionsymbol_26',['FunctionSymbol',['../classSymEngine_1_1FunctionSymbol.html',1,'SymEngine']]],
-  ['functionwrapper_27',['FunctionWrapper',['../classSymEngine_1_1FunctionWrapper.html',1,'SymEngine']]],
-  ['future_28',['future',['http://en.cppreference.com/w/cpp/thread/future.html',1,'std']]],
-  ['future_5ferror_29',['future_error',['http://en.cppreference.com/w/cpp/thread/future_error.html',1,'std']]]
+  ['function_3c_20double_28const_20double_20_2ax_29_3e_25',['function&lt; double(const double *x)&gt;',['http://en.cppreference.com/w/cpp/utility/functional/function.html',1,'std']]],
+  ['function_3c_20std_3a_3acomplex_3c_20double_20_3e_28const_20std_3a_3acomplex_3c_20double_20_3e_20_2ax_29_3e_26',['function&lt; std::complex&lt; double &gt;(const std::complex&lt; double &gt; *x)&gt;',['http://en.cppreference.com/w/cpp/utility/functional/function.html',1,'std']]],
+  ['function_3c_20t_28const_20t_20_2ax_29_3e_27',['function&lt; T(const T *x)&gt;',['http://en.cppreference.com/w/cpp/utility/functional/function.html',1,'std']]],
+  ['functionsymbol_28',['FunctionSymbol',['../classSymEngine_1_1FunctionSymbol.html',1,'SymEngine']]],
+  ['functionwrapper_29',['FunctionWrapper',['../classSymEngine_1_1FunctionWrapper.html',1,'SymEngine']]],
+  ['future_30',['future',['http://en.cppreference.com/w/cpp/thread/future.html',1,'std']]],
+  ['future_5ferror_31',['future_error',['http://en.cppreference.com/w/cpp/thread/future_error.html',1,'std']]]
 ];

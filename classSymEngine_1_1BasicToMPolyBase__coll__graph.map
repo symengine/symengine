@@ -1,8 +1,12 @@
 <map id="SymEngine::BasicToMPolyBase&lt; P, V &gt;" name="SymEngine::BasicToMPolyBase&lt; P, V &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="576,57,800,98"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="240,5,456,32"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,5,154,32"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="241,57,455,98"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,108,157,135"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="240,122,456,193"/>
+<area shape="rect" id="node1" title=" " alt="" coords="788,106,1012,147"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="449,5,665,32"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="172,5,317,32"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set" title=" " alt="" coords="450,57,663,98"/>
+<area shape="rect" id="node5" title=" " alt="" coords="169,108,321,135"/>
+<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="449,122,665,193"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="445,217,668,303"/>
+<area shape="rect" id="node7" title=" " alt="" coords="157,213,332,254"/>
+<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="180,279,309,305"/>
+<area shape="rect" id="node9" title=" " alt="" coords="5,279,44,305"/>
 </map>

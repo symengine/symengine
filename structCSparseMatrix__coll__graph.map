@@ -1,7 +1,8 @@
 <map id="CSparseMatrix" name="CSparseMatrix">
-<area shape="rect" id="node1" title=" " alt="" coords="97,288,214,315"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1CSRMatrix.html" title=" " alt="" coords="70,199,241,225"/>
+<area shape="rect" id="node1" title=" " alt="" coords="238,303,355,329"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1CSRMatrix.html" title=" " alt="" coords="211,213,382,240"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,102,183,129"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="207,95,389,136"/>
-<area shape="rect" id="node5" title=" " alt="" coords="222,5,374,32"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="207,102,387,129"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="411,95,593,136"/>
+<area shape="rect" id="node6" title=" " alt="" coords="426,5,578,32"/>
 </map>

@@ -1,6 +1,8 @@
 <map id="SymEngine::UExprPolyBase&lt; Cont, Poly &gt;" name="SymEngine::UExprPolyBase&lt; Cont, Poly &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="7,259,210,300"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="22,169,195,211"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,95,178,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="98,380,301,421"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="113,289,286,331"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,193,178,219"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="52,5,165,32"/>
+<area shape="rect" id="node6" title=" " alt="" coords="203,185,377,227"/>
 </map>

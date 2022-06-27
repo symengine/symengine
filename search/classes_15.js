@@ -5,8 +5,17 @@ var searchData=
   ['value_5fcompare_2',['value_compare',['http://en.cppreference.com/w/cpp/container/map/value_compare.html',1,'std::map&lt; K, T &gt;::value_compare'],['http://en.cppreference.com/w/cpp/container/multimap/value_compare.html',1,'std::multimap&lt; K, T &gt;::value_compare']]],
   ['vec_5fhash_3',['vec_hash',['../structSymEngine_1_1vec__hash.html',1,'SymEngine']]],
   ['vector_4',['vector',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
-  ['vector_3c_20rcp_3c_20const_20basic_20_3e_20_3e_5',['vector&lt; RCP&lt; const Basic &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
-  ['vector_3c_20rcp_3c_20const_20boolean_20_3e_20_3e_6',['vector&lt; RCP&lt; const Boolean &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
-  ['vector_3c_20std_3a_3apair_3c_20rcp_3c_20const_20basic_20_3e_2c_20rcp_3c_20const_20boolean_20_3e_20_3e_20_3e_7',['vector&lt; std::pair&lt; RCP&lt; const Basic &gt;, RCP&lt; const Boolean &gt; &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
-  ['visitor_8',['Visitor',['../classSymEngine_1_1Visitor.html',1,'SymEngine']]]
+  ['vector_3c_20double_20_3e_5',['vector&lt; double &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20int_20_3e_6',['vector&lt; int &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20integer_5fclass_20_3e_7',['vector&lt; integer_class &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20rcp_3c_20const_20basic_20_3e_20_3e_8',['vector&lt; RCP&lt; const Basic &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20rcp_3c_20const_20boolean_20_3e_20_3e_9',['vector&lt; RCP&lt; const Boolean &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20size_5ft_20_3e_10',['vector&lt; size_t &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20std_3a_3acomplex_3c_20double_20_3e_20_3e_11',['vector&lt; std::complex&lt; double &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20std_3a_3afunction_20_3e_12',['vector&lt; std::function &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20std_3a_3apair_3c_20rcp_3c_20const_20basic_20_3e_2c_20rcp_3c_20const_20boolean_20_3e_20_3e_20_3e_13',['vector&lt; std::pair&lt; RCP&lt; const Basic &gt;, RCP&lt; const Boolean &gt; &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20std_3a_3aset_3c_20unsigned_20_3e_20_3e_14',['vector&lt; std::set&lt; unsigned &gt; &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20std_3a_3astring_20_3e_15',['vector&lt; std::string &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['vector_3c_20unsigned_20_3e_16',['vector&lt; unsigned &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
+  ['visitor_17',['Visitor',['../classSymEngine_1_1Visitor.html',1,'SymEngine']]]
 ];

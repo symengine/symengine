@@ -1,7 +1,7 @@
 <map id="SymEngine::EvalRealDoubleVisitorFinal" name="SymEngine::EvalRealDoubleVisitorFinal">
-<area shape="rect" id="node1" title=" " alt="" coords="14,348,221,389"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EvalRealDoubleVisitor.html" title=" " alt="" coords="5,244,229,300"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="8,155,227,196"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="9,80,225,107"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="45,5,190,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="42,363,249,404"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1EvalRealDoubleVisitor.html" title=" " alt="" coords="33,259,257,315"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="5,169,285,211"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,80,259,121"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="73,5,218,32"/>
 </map>

@@ -1,7 +1,8 @@
 <map id="SymEngine::StrPrinter" name="SymEngine::StrPrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="89,200,253,227"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,96,183,137"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="19,13,164,39"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="212,103,299,130"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="189,5,327,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="149,289,313,316"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,185,183,227"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,96,167,123"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="285,193,471,219"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="237,96,324,123"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="211,5,350,47"/>
 </map>

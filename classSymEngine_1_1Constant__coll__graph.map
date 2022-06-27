@@ -1,7 +1,8 @@
 <map id="SymEngine::Constant" name="SymEngine::Constant">
-<area shape="rect" id="node1" title=" " alt="" coords="112,185,273,212"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="55,96,194,123"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="248,96,335,123"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="237,5,375,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="133,275,295,301"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="77,185,215,212"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="52,5,165,32"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="255,185,341,212"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string" title=" " alt="" coords="237,95,375,136"/>
 </map>

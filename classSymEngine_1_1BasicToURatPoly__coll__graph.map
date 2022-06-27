@@ -1,6 +1,7 @@
 <map id="SymEngine::BasicToURatPoly&lt; Poly &gt;" name="SymEngine::BasicToURatPoly&lt; Poly &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="11,273,223,315"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="5,169,228,225"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="28,80,205,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="44,5,189,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="119,291,331,332"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="114,185,337,241"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,81,224,123"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="42,5,187,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="249,81,423,123"/>
 </map>

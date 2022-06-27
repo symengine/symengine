@@ -1,8 +1,13 @@
 <map id="SymEngine::GaloisField" name="SymEngine::GaloisField">
-<area shape="rect" id="node1" title=" " alt="" coords="33,437,208,464"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="5,348,236,389"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="23,259,219,300"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="34,169,207,211"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="51,95,190,121"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="17,5,224,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="203,589,377,616"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="175,499,405,540"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="181,393,399,449"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="175,303,405,344"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,206,178,233"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node7" title=" " alt="" coords="52,5,165,32"/>
+<area shape="rect" id="node8" title=" " alt="" coords="203,199,377,240"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1GaloisFieldDict.html" title=" " alt="" coords="401,206,603,233"/>
+<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="426,95,578,136"/>
+<area shape="rect" id="node11" title=" " alt="" coords="448,5,556,32"/>
 </map>

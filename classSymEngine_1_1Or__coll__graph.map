@@ -1,8 +1,9 @@
 <map id="SymEngine::Or" name="SymEngine::Or">
-<area shape="rect" id="node1" title=" " alt="" coords="157,289,276,316"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="31,193,187,219"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,96,178,123"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="211,185,441,227"/>
-<area shape="rect" id="node6" title=" " alt="" coords="241,96,411,123"/>
+<area shape="rect" id="node1" title=" " alt="" coords="157,379,276,405"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="31,282,187,309"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,185,178,212"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="52,5,165,32"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set" title=" " alt="" coords="211,275,441,316"/>
+<area shape="rect" id="node7" title=" " alt="" coords="241,185,411,212"/>
 </map>

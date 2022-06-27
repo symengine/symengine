@@ -1,6 +1,7 @@
 <map id="SymEngine::UniversalSet" name="SymEngine::UniversalSet">
-<area shape="rect" id="node1" title=" " alt="" coords="15,244,202,271"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="47,169,171,196"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,95,178,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="15,337,202,364"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="47,261,171,288"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,185,178,212"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="52,5,165,32"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="SymEngine::LambdaComplexDoubleVisitor" name="SymEngine::LambdaComplexDoubleVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="1040,20,1253,61"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="753,5,992,76"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1LambdaDoubleVisitor.html" title=" " alt="" coords="424,27,705,54"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="199,13,376,69"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1049,20,1263,61"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="763,5,1001,76"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1LambdaDoubleVisitor.html" title=" " alt="" coords="472,20,715,61"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="199,13,424,69"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,27,151,54"/>
 </map>

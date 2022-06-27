@@ -1,4 +1,9 @@
 <map id="SymEngine::MExprDict" name="SymEngine::MExprDict">
-<area shape="rect" id="node1" title=" " alt="" coords="17,109,188,136"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UDictWrapper.html" title=" " alt="" coords="5,5,200,61"/>
+<area shape="rect" id="node1" title=" " alt="" coords="71,423,242,449"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UDictWrapper.html" title=" " alt="" coords="59,317,254,373"/>
+<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="67,199,246,255"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="5,109,135,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="51,13,89,39"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1Expression.html" title=" " alt="" coords="159,109,333,136"/>
+<area shape="rect" id="node7" title=" " alt="" coords="159,5,333,47"/>
 </map>

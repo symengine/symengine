@@ -1,5 +1,9 @@
 <map id="SymEngine::FuncArgTracker" name="SymEngine::FuncArgTracker">
-<area shape="rect" id="node1" title=" " alt="" coords="5,199,207,225"/>
-<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="15,95,197,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="30,5,182,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="731,123,932,149"/>
+<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="293,5,521,91"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,27,180,69"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="316,115,499,157"/>
+<area shape="rect" id="node5" title=" " alt="" coords="17,123,169,149"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="330,181,485,222"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set" title=" " alt="" coords="13,188,172,215"/>
 </map>

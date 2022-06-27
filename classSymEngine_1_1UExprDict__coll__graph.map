@@ -1,4 +1,7 @@
 <map id="SymEngine::UExprDict" name="SymEngine::UExprDict">
-<area shape="rect" id="node1" title=" " alt="" coords="32,95,200,121"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1ODictWrapper.html" title=" " alt="" coords="5,5,227,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="32,379,200,405"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1ODictWrapper.html" title=" " alt="" coords="5,288,227,329"/>
+<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map" title=" " alt="" coords="13,199,219,225"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Expression.html" title=" " alt="" coords="29,109,203,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="29,5,203,47"/>
 </map>
