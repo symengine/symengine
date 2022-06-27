@@ -428,12 +428,15 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Complex> &)
     ar(num, den);
     return Complex::from_two_nums(*num, *den);
 }
-template <class Archive>
-RCP<const Basic> load_basic(Archive &ar, RCP<const ComplexBase> &)
+template <class Archive, class T>
+RCP<const Basic>
+load_basic(Archive &ar, RCP<const T> &,
+           typename std::enable_if<std::is_base_of<ComplexBase, T>::value,
+                                   int>::type * = nullptr)
 {
     RCP<const Number> num, den;
     ar(num, den);
-    return num->div(*den);
+    return addnum(num, mulnum(I, den));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Interval> &)
@@ -644,6 +647,7 @@ template <class Archive, class T>
 RCP<const Basic> load_basic(
     Archive &ar, RCP<const T> &,
     typename std::enable_if<not(std::is_base_of<Relational, T>::value
+                                or std::is_base_of<ComplexBase, T>::value
                                 or std::is_base_of<OneArgFunction, T>::value
                                 or std::is_base_of<MultiArgFunction, T>::value
                                 or std::is_base_of<TwoArgFunction, T>::value),
