@@ -296,6 +296,17 @@ public:
         result_ = subs(expr, new_subs_dict);
     }
 
+    void bvisit(const ComplexBase &x)
+    {
+        auto it = subs_dict_.find(I);
+        if (it != subs_dict_.end()) {
+            result_ = add(apply(x.real_part()),
+                          mul(apply(x.imaginary_part()), it->second));
+        } else {
+            result_ = x.rcp_from_this();
+        }
+    }
+
     RCP<const Basic> apply(const Basic &x)
     {
         return apply(x.rcp_from_this());
