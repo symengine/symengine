@@ -20,6 +20,7 @@ using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::FunctionSymbol;
 using SymEngine::has_symbol;
+using SymEngine::I;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
@@ -588,6 +589,10 @@ TEST_CASE("Diff: Basic", "[basic]")
     // Test that this doesn't segfault
     r1 = pow(sqrt(div(x, i3)), real_double(2.0));
     r1 = diff(r1, x);
+
+    r1 = diff(pow(neg(x), I), x);
+    r2 = mul(neg(I), pow(neg(x), sub(I, one)));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("compare: Basic", "[basic]")

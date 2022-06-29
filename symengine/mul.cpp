@@ -471,7 +471,7 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
             }
         }
     } else {
-        if (coef_->is_negative()) {
+        if (coef_->is_negative() and not coef_->is_minus_one()) {
             // (-3*x*y)**(1/2) -> 3**(1/2)*(-x*y)**(1/2)
             new_coef = pow(coef_->mul(*minus_one), exp);
             map_basic_basic d1 = dict_;
