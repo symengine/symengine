@@ -571,7 +571,7 @@ $(function() {
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>            }</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>        }</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>        <span class="keywordflow">if</span> (coef_-&gt;is_negative()) {</div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>        <span class="keywordflow">if</span> (coef_-&gt;is_negative() and not coef_-&gt;is_minus_one()) {</div>
 <div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>            <span class="comment">// (-3*x*y)**(1/2) -&gt; 3**(1/2)*(-x*y)**(1/2)</span></div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>            new_coef = pow(coef_-&gt;mul(*minus_one), <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>);</div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>            <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d1 = <a class="code hl_variable" href="classSymEngine_1_1Mul.html#ad6c047f55da77533ac66b60f737cb3e0">dict_</a>;</div>
