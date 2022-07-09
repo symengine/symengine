@@ -816,13 +816,9 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     RCP<const Set> r2 = finiteset({zero, one, integer(2)});
     RCP<const Set> r3 = r1->set_union(r2); // {0, 1, 2, x}
     REQUIRE(eq(*r3, *set_union({r1, r2})));
-    r3 = r1->set_intersection(r2); // {0, 1}
-    REQUIRE(eq(*r3, *finiteset({zero, one})));
-    REQUIRE(r3->__hash__() == finiteset({zero, one})->__hash__());
-    REQUIRE(r3->compare(*r2) == -1);
+    r3 = r1->set_intersection(r2);
     REQUIRE(eq(*r3->contains(one), *boolTrue));
     REQUIRE(eq(*r3->contains(zero), *boolTrue));
-    REQUIRE(eq(*r3->contains(integer(3)), *boolFalse));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
     REQUIRE(r1->get_args().size() == 3);
@@ -1085,8 +1081,14 @@ TEST_CASE("set_intersection : Basic", "[basic]")
     r1 = set_intersection({r2, interval(integer(-10), integer(10))});
     REQUIRE(eq(*r1, *r2));
 
-    auto r3 = finiteset({symbol("x"), symbol("y")});
-    auto r4 = interval(integer(-10), integer(10));
+    r1 = finiteset({symbol("x")});
+    r2 = finiteset({symbol("y")});
+    auto r3 = set_intersection({r1, r2});
+    auto r4 = r1->set_intersection(r2);
+    REQUIRE(eq(*r3, *r4));
+
+    r3 = finiteset({symbol("x"), symbol("y")});
+    r4 = interval(integer(-10), integer(10));
     auto r5 = set_intersection({r3, r4});
     auto r6 = r3->set_intersection(r4);
     auto r7 = r4->set_intersection(r3);

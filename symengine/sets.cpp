@@ -1031,13 +1031,8 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
-        const FiniteSet &other = down_cast<const FiniteSet &>(*o);
-        set_basic container;
-        std::set_intersection(container_.begin(), container_.end(),
-                              other.container_.begin(), other.container_.end(),
-                              std::inserter(container, container.begin()),
-                              RCPBasicKeyLess{});
-        return finiteset(container);
+        return SymEngine::set_intersection(
+            {rcp_from_this_cast<const Set>(), o});
     }
     if (is_a<Interval>(*o)) {
         set_basic container;
@@ -1317,14 +1312,6 @@ bool Intersection::is_canonical(const set_set &in)
 {
     if (in.size() <= 1)
         return false;
-    int count = 0;
-    for (const auto &s : in) {
-        if (is_a<FiniteSet>(*s)) {
-            count++;
-        }
-        if (count >= 2)
-            return false;
-    }
     return true;
 }
 
