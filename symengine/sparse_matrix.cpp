@@ -159,6 +159,19 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     }
 }
 
+tribool CSRMatrix::is_real(const Assumptions *assumptions) const
+{
+    RealVisitor visitor(assumptions);
+    tribool cur = tribool::tritrue;
+    for (auto &e : x_) {
+        cur = and_tribool(cur, visitor.apply(*e));
+        if (is_false(cur)) {
+            return cur;
+        }
+    }
+    return cur;
+}
+
 unsigned CSRMatrix::rank() const
 {
     throw NotImplementedError("Not Implemented");
