@@ -70,6 +70,7 @@ RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
 
 tribool is_real(const MatrixExpr &m);
 tribool is_symmetric(const MatrixExpr &m);
+tribool is_square(const MatrixExpr &m);
 
 } // namespace SymEngine
 

@@ -83,3 +83,22 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
     REQUIRE(is_true(is_symmetric(*Zx)));
     REQUIRE(is_indeterminate(is_symmetric(*Zxy)));
 }
+
+TEST_CASE("Test is_square", "[is_square]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto n2 = integer(2);
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z52 = zero_matrix(n5, n2);
+    auto Z5 = zero_matrix(n5, n5);
+    auto Zx = zero_matrix(x, x);
+    auto Zxy = zero_matrix(x, y);
+
+    REQUIRE(is_true(is_square(*I5)));
+    REQUIRE(is_false(is_square(*Z52)));
+    REQUIRE(is_true(is_square(*Z5)));
+    REQUIRE(is_true(is_square(*Zx)));
+    REQUIRE(is_indeterminate(is_square(*Zxy)));
+}

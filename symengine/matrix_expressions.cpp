@@ -155,8 +155,7 @@ public:
 
     void bvisit(const ZeroMatrix &x)
     {
-        auto diff = sub(x.nrows(), x.ncols());
-        is_symmetric_ = is_zero(*diff);
+        is_symmetric_ = is_square(x);
     };
 
     tribool apply(const MatrixExpr &s)
@@ -169,6 +168,40 @@ public:
 tribool is_symmetric(const MatrixExpr &m)
 {
     MatrixSymmetricVisitor visitor;
+    return visitor.apply(m);
+}
+
+class MatrixSquareVisitor : public BaseVisitor<MatrixSquareVisitor>
+{
+private:
+    tribool is_square_;
+
+public:
+    MatrixSquareVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_square_ = tribool::tritrue;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        auto diff = sub(x.nrows(), x.ncols());
+        is_square_ = is_zero(*diff);
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_square_;
+    };
+};
+
+tribool is_square(const MatrixExpr &m)
+{
+    MatrixSquareVisitor visitor;
     return visitor.apply(m);
 }
 
