@@ -238,4 +238,37 @@ tribool is_square(const MatrixExpr &m)
     return visitor.apply(m);
 }
 
+class MatrixDiagonalVisitor : public BaseVisitor<MatrixDiagonalVisitor>
+{
+private:
+    tribool is_diagonal_;
+
+public:
+    MatrixDiagonalVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_diagonal_ = tribool::tritrue;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        is_diagonal_ = is_square(x);
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_diagonal_;
+    };
+};
+
+tribool is_diagonal(const MatrixExpr &m)
+{
+    MatrixDiagonalVisitor visitor;
+    return visitor.apply(m);
+}
+
 } // namespace SymEngine
