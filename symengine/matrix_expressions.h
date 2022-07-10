@@ -68,6 +68,7 @@ public:
 RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
                                   const RCP<const Basic> &n);
 
+tribool is_zero(const MatrixExpr &m);
 tribool is_real(const MatrixExpr &m);
 tribool is_symmetric(const MatrixExpr &m);
 tribool is_square(const MatrixExpr &m);

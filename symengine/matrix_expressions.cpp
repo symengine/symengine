@@ -105,6 +105,39 @@ RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
     return make_rcp<const ZeroMatrix>(m, n);
 }
 
+class MatrixZeroVisitor : public BaseVisitor<MatrixZeroVisitor>
+{
+private:
+    tribool is_zero_;
+
+public:
+    MatrixZeroVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_zero_ = tribool::trifalse;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        is_zero_ = tribool::tritrue;
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_zero_;
+    };
+};
+
+tribool is_zero(const MatrixExpr &m)
+{
+    MatrixZeroVisitor visitor;
+    return visitor.apply(m);
+}
+
 class MatrixRealVisitor : public BaseVisitor<MatrixRealVisitor>
 {
 private:

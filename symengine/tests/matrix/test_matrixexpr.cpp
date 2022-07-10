@@ -55,6 +55,16 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
     CHECK_THROWS_AS(zero_matrix(integer(1), rat1), DomainError);
 }
 
+TEST_CASE("Test is_zero", "[is_zero]")
+{
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z5 = zero_matrix(n5, n5);
+
+    REQUIRE(is_false(is_zero(*I5)));
+    REQUIRE(is_true(is_zero(*Z5)));
+}
+
 TEST_CASE("Test is_real", "[is_real]")
 {
     auto n5 = integer(5);
