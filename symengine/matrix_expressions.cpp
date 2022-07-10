@@ -105,6 +105,45 @@ RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
     return make_rcp<const ZeroMatrix>(m, n);
 }
 
+hash_t Trace::__hash__() const
+{
+    hash_t seed = SYMENGINE_TRACE;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Trace::__eq__(const Basic &o) const
+{
+    return (is_a<Trace>(o) && arg_->__eq__(*down_cast<const Trace &>(o).arg_));
+}
+
+int Trace::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Trace>(o));
+
+    return arg_->compare(*down_cast<const Trace &>(o).arg_);
+}
+
+vec_basic Trace::get_args() const
+{
+    return {arg_};
+}
+
+RCP<const Basic> trace(const RCP<const MatrixExpr> &arg)
+{
+    if (is_a<IdentityMatrix>(*arg)) {
+        return down_cast<const IdentityMatrix &>(*arg).size();
+    } else if (is_a<ZeroMatrix>(*arg)) {
+        tribool sq = is_square(*arg);
+        if (is_true(sq)) {
+            return zero;
+        } else if (is_false(sq)) {
+            throw DomainError("Trace is only valid for square matrices");
+        }
+    }
+    return make_rcp<const Trace>(arg);
+}
+
 class MatrixZeroVisitor : public BaseVisitor<MatrixZeroVisitor>
 {
 private:

@@ -6,10 +6,13 @@ using SymEngine::DomainError;
 using SymEngine::eq;
 using SymEngine::identity_matrix;
 using SymEngine::integer;
+using SymEngine::is_a;
 using SymEngine::is_real;
 using SymEngine::is_true;
 using SymEngine::Rational;
 using SymEngine::symbol;
+using SymEngine::Trace;
+using SymEngine::zero;
 
 TEST_CASE("Test IdentityMatrix", "[IdentityMatrix]")
 {
@@ -53,6 +56,36 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
     auto rat1 = Rational::from_two_ints(*integer(1), *integer(2));
     CHECK_THROWS_AS(zero_matrix(rat1, integer(1)), DomainError);
     CHECK_THROWS_AS(zero_matrix(integer(1), rat1), DomainError);
+}
+
+TEST_CASE("Test Trace", "[Trace]")
+{
+    auto n1 = integer(1);
+    auto n2 = integer(2);
+    auto x = symbol("x");
+
+    auto Z1 = zero_matrix(n1, n1);
+    auto Z2 = zero_matrix(n2, n2);
+    auto Z3 = zero_matrix(n2, n1);
+    auto Z4 = zero_matrix(x, n2);
+    auto Z5 = zero_matrix(x, n1);
+    REQUIRE(eq(*trace(Z1), *zero));
+    REQUIRE(eq(*trace(Z2), *zero));
+    CHECK_THROWS_AS(trace(Z3), DomainError);
+    auto tr1 = trace(Z4);
+    auto tr2 = trace(Z5);
+    REQUIRE(is_a<Trace>(*tr1));
+    REQUIRE(tr1->get_args().size() == 1);
+
+    auto I1 = identity_matrix(x);
+    REQUIRE(eq(*trace(I1), *x));
+
+    REQUIRE(tr1->compare(*tr1) == 0);
+    REQUIRE(eq(*tr1, *tr1));
+    REQUIRE(!eq(*tr1, *tr2));
+    REQUIRE(tr1->__hash__() != tr2->__hash__());
+    REQUIRE(tr1->compare(*tr2) == 1);
+    REQUIRE(tr2->compare(*tr1) == -1);
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")
