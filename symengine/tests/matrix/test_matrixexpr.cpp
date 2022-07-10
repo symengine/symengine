@@ -1,7 +1,10 @@
 #include "catch.hpp"
 #include <symengine/matrix_expressions.h>
 #include <symengine/rational.h>
+#include <symengine/complex.h>
 
+using SymEngine::Complex;
+using SymEngine::diagonal_matrix;
 using SymEngine::DomainError;
 using SymEngine::eq;
 using SymEngine::identity_matrix;
@@ -9,6 +12,7 @@ using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::is_real;
 using SymEngine::is_true;
+using SymEngine::one;
 using SymEngine::Rational;
 using SymEngine::symbol;
 using SymEngine::Trace;
@@ -58,6 +62,21 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
     CHECK_THROWS_AS(zero_matrix(integer(1), rat1), DomainError);
 }
 
+TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
+{
+    auto i1 = integer(1);
+    auto i2 = integer(23);
+    auto diag1 = diagonal_matrix({i1, i2});
+    auto diag2 = diagonal_matrix({i2, i1});
+    REQUIRE(!eq(*diag1, *diag2));
+    REQUIRE(eq(*diag1, *diag1));
+    REQUIRE(diag1->__hash__() != diag2->__hash__());
+    REQUIRE(diag1->compare(*diag2) == -1);
+    REQUIRE(diag2->compare(*diag1) == 1);
+    REQUIRE(diag2->compare(*diag2) == 0);
+    REQUIRE(diag1->get_args().size() == 2);
+}
+
 TEST_CASE("Test Trace", "[Trace]")
 {
     auto n1 = integer(1);
@@ -93,19 +112,32 @@ TEST_CASE("Test is_zero", "[is_zero]")
     auto n5 = integer(5);
     auto I5 = identity_matrix(n5);
     auto Z5 = zero_matrix(n5, n5);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto D2 = diagonal_matrix({integer(0), integer(0)});
+    auto D3 = diagonal_matrix({integer(0), integer(0), symbol("x")});
 
     REQUIRE(is_false(is_zero(*I5)));
     REQUIRE(is_true(is_zero(*Z5)));
+    REQUIRE(is_false(is_zero(*D1)));
+    REQUIRE(is_true(is_zero(*D2)));
+    REQUIRE(is_indeterminate(is_zero(*D3)));
 }
 
 TEST_CASE("Test is_real", "[is_real]")
 {
+    auto c1 = Complex::from_two_nums(*one, *one);
     auto n5 = integer(5);
     auto I5 = identity_matrix(n5);
     auto Z5 = zero_matrix(n5, n5);
+    auto D1 = diagonal_matrix({integer(0), integer(0), symbol("x")});
+    auto D2 = diagonal_matrix({integer(23), integer(0)});
+    auto D3 = diagonal_matrix({integer(23), c1, integer(0)});
 
     REQUIRE(is_true(is_real(*I5)));
     REQUIRE(is_true(is_real(*Z5)));
+    REQUIRE(is_indeterminate(is_real(*D1)));
+    REQUIRE(is_true(is_real(*D2)));
+    REQUIRE(is_false(is_real(*D3)));
 }
 
 TEST_CASE("Test is_symmetric", "[is_symmetric]")
@@ -119,12 +151,14 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
     auto Z5 = zero_matrix(n5, n5);
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
 
     REQUIRE(is_true(is_symmetric(*I5)));
     REQUIRE(is_false(is_symmetric(*Z52)));
     REQUIRE(is_true(is_symmetric(*Z5)));
     REQUIRE(is_true(is_symmetric(*Zx)));
     REQUIRE(is_indeterminate(is_symmetric(*Zxy)));
+    REQUIRE(is_true(is_symmetric(*D1)));
 }
 
 TEST_CASE("Test is_square", "[is_square]")
@@ -138,12 +172,14 @@ TEST_CASE("Test is_square", "[is_square]")
     auto Z5 = zero_matrix(n5, n5);
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
 
     REQUIRE(is_true(is_square(*I5)));
     REQUIRE(is_false(is_square(*Z52)));
     REQUIRE(is_true(is_square(*Z5)));
     REQUIRE(is_true(is_square(*Zx)));
     REQUIRE(is_indeterminate(is_square(*Zxy)));
+    REQUIRE(is_true(is_square(*D1)));
 }
 
 TEST_CASE("Test is_diagonal", "[is_diagonal]")
@@ -157,10 +193,12 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     auto Z5 = zero_matrix(n5, n5);
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
 
     REQUIRE(is_true(is_diagonal(*I5)));
     REQUIRE(is_false(is_diagonal(*Z52)));
     REQUIRE(is_true(is_diagonal(*Z5)));
     REQUIRE(is_true(is_diagonal(*Zx)));
     REQUIRE(is_indeterminate(is_diagonal(*Zxy)));
+    REQUIRE(is_true(is_diagonal(*D1)));
 }

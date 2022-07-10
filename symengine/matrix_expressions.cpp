@@ -105,6 +105,35 @@ RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
     return make_rcp<const ZeroMatrix>(m, n);
 }
 
+hash_t DiagonalMatrix::__hash__() const
+{
+    hash_t seed = SYMENGINE_DIAGONALMATRIX;
+    for (const auto &a : diag_)
+        hash_combine<Basic>(seed, *a);
+    return seed;
+}
+
+bool DiagonalMatrix::__eq__(const Basic &o) const
+{
+    if (is_a<DiagonalMatrix>(o)) {
+        const DiagonalMatrix &other = down_cast<const DiagonalMatrix &>(o);
+        return unified_eq(diag_, other.diag_);
+    }
+    return false;
+}
+
+int DiagonalMatrix::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<DiagonalMatrix>(o));
+    const DiagonalMatrix &other = down_cast<const DiagonalMatrix &>(o);
+    return unified_compare(diag_, other.diag_);
+}
+
+RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container)
+{
+    return make_rcp<const DiagonalMatrix>(container);
+}
+
 hash_t Trace::__hash__() const
 {
     hash_t seed = SYMENGINE_TRACE;
@@ -164,6 +193,20 @@ public:
         is_zero_ = tribool::tritrue;
     };
 
+    void bvisit(const DiagonalMatrix &x)
+    {
+        tribool current = tribool::tritrue;
+        for (auto &e : x.get_container()) {
+            tribool next = is_zero(*e);
+            if (is_false(next)) {
+                is_zero_ = next;
+                return;
+            }
+            current = andwk_tribool(current, next);
+        }
+        is_zero_ = current;
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -197,6 +240,20 @@ public:
         is_real_ = tribool::tritrue;
     };
 
+    void bvisit(const DiagonalMatrix &x)
+    {
+        tribool current = tribool::tritrue;
+        for (auto &e : x.get_container()) {
+            tribool next = is_real(*e);
+            if (is_false(next)) {
+                is_real_ = next;
+                return;
+            }
+            current = andwk_tribool(current, next);
+        }
+        is_real_ = current;
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -228,6 +285,11 @@ public:
     void bvisit(const ZeroMatrix &x)
     {
         is_symmetric_ = is_square(x);
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        is_symmetric_ = tribool::tritrue;
     };
 
     tribool apply(const MatrixExpr &s)
@@ -264,6 +326,11 @@ public:
         is_square_ = is_zero(*diff);
     };
 
+    void bvisit(const DiagonalMatrix &x)
+    {
+        is_square_ = tribool::tritrue;
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -295,6 +362,11 @@ public:
     void bvisit(const ZeroMatrix &x)
     {
         is_diagonal_ = is_square(x);
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        is_diagonal_ = tribool::tritrue;
     };
 
     tribool apply(const MatrixExpr &s)

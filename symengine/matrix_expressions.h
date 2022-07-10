@@ -68,6 +68,35 @@ public:
 RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
                                   const RCP<const Basic> &n);
 
+class DiagonalMatrix : public MatrixExpr
+{
+private:
+    vec_basic diag_;
+
+public:
+    DiagonalMatrix(const vec_basic &container) : diag_(container)
+    {
+        SYMENGINE_ASSIGN_TYPEID();
+    }
+
+    IMPLEMENT_TYPEID(SYMENGINE_DIAGONALMATRIX)
+    hash_t __hash__() const override;
+    bool __eq__(const Basic &o) const override;
+    int compare(const Basic &o) const override;
+
+    vec_basic get_args() const override
+    {
+        return vec_basic(diag_.begin(), diag_.end());
+    }
+
+    inline const vec_basic &get_container() const
+    {
+        return diag_;
+    }
+};
+
+RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container);
+
 class Trace : public Basic
 {
 private:
