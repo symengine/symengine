@@ -489,4 +489,54 @@ tribool is_upper(const MatrixExpr &m)
     return visitor.apply(m);
 }
 
+class MatrixToeplitzVisitor : public BaseVisitor<MatrixToeplitzVisitor>
+{
+private:
+    tribool is_toeplitz_;
+
+public:
+    MatrixToeplitzVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_toeplitz_ = tribool::tritrue;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        is_toeplitz_ = tribool::tritrue;
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        tribool current = tribool::tritrue;
+        auto vec = x.get_container();
+        auto first = vec[0];
+        for (auto it = vec.begin() + 1; it != vec.end(); ++it) {
+            auto diff = sub(first, *it);
+            tribool next = is_zero(*diff);
+            if (is_false(next)) {
+                is_toeplitz_ = next;
+                return;
+            }
+            current = andwk_tribool(current, next);
+        }
+        is_toeplitz_ = current;
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_toeplitz_;
+    };
+};
+
+tribool is_toeplitz(const MatrixExpr &m)
+{
+    MatrixToeplitzVisitor visitor;
+    return visitor.apply(m);
+}
+
 } // namespace SymEngine

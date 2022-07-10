@@ -124,6 +124,7 @@ tribool is_square(const MatrixExpr &m);
 tribool is_diagonal(const MatrixExpr &m);
 tribool is_lower(const MatrixExpr &m);
 tribool is_upper(const MatrixExpr &m);
+tribool is_toeplitz(const MatrixExpr &m);
 
 } // namespace SymEngine
 

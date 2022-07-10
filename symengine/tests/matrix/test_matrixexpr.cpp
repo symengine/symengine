@@ -247,3 +247,28 @@ TEST_CASE("Test is_upper", "[is_upper]")
     REQUIRE(is_indeterminate(is_upper(*Zxy)));
     REQUIRE(is_true(is_upper(*D1)));
 }
+
+TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto n2 = integer(2);
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z52 = zero_matrix(n5, n2);
+    auto Z5 = zero_matrix(n5, n5);
+    auto Zx = zero_matrix(x, x);
+    auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto D2 = diagonal_matrix({integer(23), integer(23)});
+    auto D3 = diagonal_matrix({x, y, integer(23)});
+
+    REQUIRE(is_true(is_toeplitz(*I5)));
+    REQUIRE(is_true(is_toeplitz(*Z52)));
+    REQUIRE(is_true(is_toeplitz(*Z5)));
+    REQUIRE(is_true(is_toeplitz(*Zx)));
+    REQUIRE(is_true(is_toeplitz(*Zxy)));
+    REQUIRE(is_false(is_toeplitz(*D1)));
+    REQUIRE(is_true(is_toeplitz(*D2)));
+    REQUIRE(is_indeterminate(is_toeplitz(*D3)));
+}
