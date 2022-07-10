@@ -105,6 +105,9 @@ TEST_CASE("Test Trace", "[Trace]")
     REQUIRE(tr1->__hash__() != tr2->__hash__());
     REQUIRE(tr1->compare(*tr2) == 1);
     REQUIRE(tr2->compare(*tr1) == -1);
+
+    auto D1 = diagonal_matrix({integer(2), integer(23)});
+    REQUIRE(eq(*trace(D1), *integer(25)));
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")

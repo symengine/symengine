@@ -158,19 +158,50 @@ vec_basic Trace::get_args() const
     return {arg_};
 }
 
-RCP<const Basic> trace(const RCP<const MatrixExpr> &arg)
+class MatrixTraceVisitor : public BaseVisitor<MatrixTraceVisitor>
 {
-    if (is_a<IdentityMatrix>(*arg)) {
-        return down_cast<const IdentityMatrix &>(*arg).size();
-    } else if (is_a<ZeroMatrix>(*arg)) {
-        tribool sq = is_square(*arg);
+private:
+    RCP<const Basic> trace_;
+
+public:
+    MatrixTraceVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        trace_ = x.size();
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        tribool sq = is_square(x);
         if (is_true(sq)) {
-            return zero;
+            trace_ = zero;
         } else if (is_false(sq)) {
             throw DomainError("Trace is only valid for square matrices");
+        } else {
+            auto arg = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
+            trace_ = make_rcp<const Trace>(arg);
         }
-    }
-    return make_rcp<const Trace>(arg);
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        trace_ = add(x.get_container());
+    };
+
+    RCP<const Basic> apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return trace_;
+    };
+};
+
+RCP<const Basic> trace(const RCP<const MatrixExpr> &arg)
+{
+    MatrixTraceVisitor visitor;
+    return visitor.apply(*arg);
 }
 
 class MatrixZeroVisitor : public BaseVisitor<MatrixZeroVisitor>
