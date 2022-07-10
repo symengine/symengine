@@ -103,6 +103,7 @@ set(SRC
     refine.cpp
     simplify.cpp
     tuple.cpp
+    matrix_expressions.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -228,6 +229,7 @@ set(HEADERS
     simplify.h
     utilities/stream_fmt.h
     tuple.h
+    matrix_expressions.h
 )
 
 if (NOT WITH_SYSTEM_CEREAL)

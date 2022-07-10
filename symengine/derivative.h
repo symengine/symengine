@@ -112,6 +112,7 @@ public:
     void bvisit(const Beta &self);
     void bvisit(const Set &self);
     void bvisit(const Tuple &self);
+    void bvisit(const IdentityMatrix &self);
     void bvisit(const Boolean &self);
     void bvisit(const GaloisField &self);
     void bvisit(const Piecewise &self);
