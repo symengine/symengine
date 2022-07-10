@@ -205,3 +205,45 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     REQUIRE(is_indeterminate(is_diagonal(*Zxy)));
     REQUIRE(is_true(is_diagonal(*D1)));
 }
+
+TEST_CASE("Test is_lower", "[is_lower]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto n2 = integer(2);
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z52 = zero_matrix(n5, n2);
+    auto Z5 = zero_matrix(n5, n5);
+    auto Zx = zero_matrix(x, x);
+    auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
+
+    REQUIRE(is_true(is_lower(*I5)));
+    REQUIRE(is_false(is_lower(*Z52)));
+    REQUIRE(is_true(is_lower(*Z5)));
+    REQUIRE(is_true(is_lower(*Zx)));
+    REQUIRE(is_indeterminate(is_lower(*Zxy)));
+    REQUIRE(is_true(is_lower(*D1)));
+}
+
+TEST_CASE("Test is_upper", "[is_upper]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto n2 = integer(2);
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z52 = zero_matrix(n5, n2);
+    auto Z5 = zero_matrix(n5, n5);
+    auto Zx = zero_matrix(x, x);
+    auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
+
+    REQUIRE(is_true(is_upper(*I5)));
+    REQUIRE(is_false(is_upper(*Z52)));
+    REQUIRE(is_true(is_upper(*Z5)));
+    REQUIRE(is_true(is_upper(*Zx)));
+    REQUIRE(is_indeterminate(is_upper(*Zxy)));
+    REQUIRE(is_true(is_upper(*D1)));
+}

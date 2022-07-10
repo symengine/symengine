@@ -122,6 +122,8 @@ tribool is_real(const MatrixExpr &m);
 tribool is_symmetric(const MatrixExpr &m);
 tribool is_square(const MatrixExpr &m);
 tribool is_diagonal(const MatrixExpr &m);
+tribool is_lower(const MatrixExpr &m);
+tribool is_upper(const MatrixExpr &m);
 
 } // namespace SymEngine
 

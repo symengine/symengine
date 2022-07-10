@@ -413,4 +413,80 @@ tribool is_diagonal(const MatrixExpr &m)
     return visitor.apply(m);
 }
 
+class MatrixLowerVisitor : public BaseVisitor<MatrixLowerVisitor>
+{
+private:
+    tribool is_lower_;
+
+public:
+    MatrixLowerVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_lower_ = tribool::tritrue;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        is_lower_ = is_square(x);
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        is_lower_ = tribool::tritrue;
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_lower_;
+    };
+};
+
+tribool is_lower(const MatrixExpr &m)
+{
+    MatrixLowerVisitor visitor;
+    return visitor.apply(m);
+}
+
+class MatrixUpperVisitor : public BaseVisitor<MatrixUpperVisitor>
+{
+private:
+    tribool is_upper_;
+
+public:
+    MatrixUpperVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        is_upper_ = tribool::tritrue;
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        is_upper_ = is_square(x);
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        is_upper_ = tribool::tritrue;
+    };
+
+    tribool apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return is_upper_;
+    };
+};
+
+tribool is_upper(const MatrixExpr &m)
+{
+    MatrixUpperVisitor visitor;
+    return visitor.apply(m);
+}
+
 } // namespace SymEngine
