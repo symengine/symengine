@@ -136,6 +136,9 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     sum = matrix_add({Z1, I1, D1, Z1});
     vec = vec_basic({I1, D1});
     REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
+    sum = matrix_add({sum, D2});
+    vec = vec_basic({I1, D3});
+    REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
     sum = matrix_add({Z1, D1});
     REQUIRE(eq(*sum, *D1));
     sum = matrix_add({D1, D2});

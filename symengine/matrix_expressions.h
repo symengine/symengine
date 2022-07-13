@@ -144,19 +144,27 @@ public:
     {
         return vec_basic(terms_.begin(), terms_.end());
     }
+    inline const vec_basic &get_terms() const
+    {
+        return terms_;
+    }
 };
 
 RCP<const MatrixExpr> matrix_add(const vec_basic &terms);
 
 std::pair<RCP<const Basic>, RCP<const Basic>> size(const MatrixExpr &m);
-tribool is_zero(const MatrixExpr &m);
-tribool is_real(const MatrixExpr &m);
-tribool is_symmetric(const MatrixExpr &m);
-tribool is_square(const MatrixExpr &m);
-tribool is_diagonal(const MatrixExpr &m);
-tribool is_lower(const MatrixExpr &m);
-tribool is_upper(const MatrixExpr &m);
-tribool is_toeplitz(const MatrixExpr &m);
+tribool is_zero(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_real(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_symmetric(const MatrixExpr &m,
+                     const Assumptions *assumptions = nullptr);
+tribool is_square(const MatrixExpr &m,
+                  const Assumptions *assumptions = nullptr);
+tribool is_diagonal(const MatrixExpr &m,
+                    const Assumptions *assumptions = nullptr);
+tribool is_lower(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_upper(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_toeplitz(const MatrixExpr &m,
+                    const Assumptions *assumptions = nullptr);
 
 } // namespace SymEngine
 

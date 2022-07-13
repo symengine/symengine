@@ -282,7 +282,7 @@ bool MatrixAdd::is_canonical(const vec_basic terms) const
     }
     size_t num_diag = 0;
     for (auto term : terms) {
-        if (is_a<ZeroMatrix>(*term)) {
+        if (is_a<ZeroMatrix>(*term) || is_a<MatrixAdd>(*term)) {
             return false;
         } else if (is_a<DiagonalMatrix>(*term)) {
             num_diag++;
@@ -302,9 +302,19 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
     if (terms.size() == 1) {
         return rcp_static_cast<const MatrixExpr>(terms[0]);
     }
+    // extract nested MatrixAdd
+    vec_basic expanded;
+    for (auto &term : terms) {
+        if (is_a<const MatrixAdd>(*term)) {
+            auto container = down_cast<const MatrixAdd &>(*term).get_terms();
+            expanded.insert(expanded.end(), container.begin(), container.end());
+        } else {
+            expanded.push_back(term);
+        }
+    }
     // Check sizes
-    auto sz = size(down_cast<const MatrixExpr &>(*terms[0]));
-    for (auto it = terms.begin() + 1; it != terms.end(); ++it) {
+    auto sz = size(down_cast<const MatrixExpr &>(*expanded[0]));
+    for (auto it = expanded.begin() + 1; it != expanded.end(); ++it) {
         auto cursize = size(down_cast<const MatrixExpr &>(**it));
         auto rowdiff = sub(sz.first, cursize.first);
         tribool rowmatch = is_zero(*rowdiff);
@@ -320,7 +330,7 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
     vec_basic keep;
     RCP<const DiagonalMatrix> diag;
     RCP<const ZeroMatrix> zero;
-    for (auto &term : terms) {
+    for (auto &term : expanded) {
         if (is_a<ZeroMatrix>(*term)) {
             zero = rcp_static_cast<const ZeroMatrix>(term);
         } else if (is_a<DiagonalMatrix>(*term)) {
@@ -356,9 +366,13 @@ class MatrixZeroVisitor : public BaseVisitor<MatrixZeroVisitor>
 {
 private:
     tribool is_zero_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixZeroVisitor() {}
+    MatrixZeroVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -380,7 +394,7 @@ public:
     {
         tribool current = tribool::tritrue;
         for (auto &e : x.get_container()) {
-            tribool next = is_zero(*e);
+            tribool next = is_zero(*e, assumptions_);
             if (is_false(next)) {
                 is_zero_ = next;
                 return;
@@ -390,6 +404,11 @@ public:
         is_zero_ = current;
     };
 
+    void bvisit(const MatrixAdd &x)
+    {
+        is_zero_ = tribool::indeterminate;
+    }
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -397,9 +416,9 @@ public:
     };
 };
 
-tribool is_zero(const MatrixExpr &m)
+tribool is_zero(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixZeroVisitor visitor;
+    MatrixZeroVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -407,9 +426,13 @@ class MatrixRealVisitor : public BaseVisitor<MatrixRealVisitor>
 {
 private:
     tribool is_real_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixRealVisitor() {}
+    MatrixRealVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -431,7 +454,7 @@ public:
     {
         tribool current = tribool::tritrue;
         for (auto &e : x.get_container()) {
-            tribool next = is_real(*e);
+            tribool next = is_real(*e, assumptions_);
             if (is_false(next)) {
                 is_real_ = next;
                 return;
@@ -448,9 +471,9 @@ public:
     };
 };
 
-tribool is_real(const MatrixExpr &m)
+tribool is_real(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixRealVisitor visitor;
+    MatrixRealVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -458,9 +481,13 @@ class MatrixSymmetricVisitor : public BaseVisitor<MatrixSymmetricVisitor>
 {
 private:
     tribool is_symmetric_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixSymmetricVisitor() {}
+    MatrixSymmetricVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -475,7 +502,7 @@ public:
 
     void bvisit(const ZeroMatrix &x)
     {
-        is_symmetric_ = is_square(x);
+        is_symmetric_ = is_square(x, assumptions_);
     };
 
     void bvisit(const DiagonalMatrix &x)
@@ -490,9 +517,9 @@ public:
     };
 };
 
-tribool is_symmetric(const MatrixExpr &m)
+tribool is_symmetric(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixSymmetricVisitor visitor;
+    MatrixSymmetricVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -500,9 +527,13 @@ class MatrixSquareVisitor : public BaseVisitor<MatrixSquareVisitor>
 {
 private:
     tribool is_square_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixSquareVisitor() {}
+    MatrixSquareVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -518,7 +549,7 @@ public:
     void bvisit(const ZeroMatrix &x)
     {
         auto diff = sub(x.nrows(), x.ncols());
-        is_square_ = is_zero(*diff);
+        is_square_ = is_zero(*diff, assumptions_);
     };
 
     void bvisit(const DiagonalMatrix &x)
@@ -533,9 +564,9 @@ public:
     };
 };
 
-tribool is_square(const MatrixExpr &m)
+tribool is_square(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixSquareVisitor visitor;
+    MatrixSquareVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -543,9 +574,13 @@ class MatrixDiagonalVisitor : public BaseVisitor<MatrixDiagonalVisitor>
 {
 private:
     tribool is_diagonal_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixDiagonalVisitor() {}
+    MatrixDiagonalVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -560,7 +595,7 @@ public:
 
     void bvisit(const ZeroMatrix &x)
     {
-        is_diagonal_ = is_square(x);
+        is_diagonal_ = is_square(x, assumptions_);
     };
 
     void bvisit(const DiagonalMatrix &x)
@@ -575,9 +610,9 @@ public:
     };
 };
 
-tribool is_diagonal(const MatrixExpr &m)
+tribool is_diagonal(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixDiagonalVisitor visitor;
+    MatrixDiagonalVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -585,9 +620,13 @@ class MatrixLowerVisitor : public BaseVisitor<MatrixLowerVisitor>
 {
 private:
     tribool is_lower_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixLowerVisitor() {}
+    MatrixLowerVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -602,7 +641,7 @@ public:
 
     void bvisit(const ZeroMatrix &x)
     {
-        is_lower_ = is_square(x);
+        is_lower_ = is_square(x, assumptions_);
     };
 
     void bvisit(const DiagonalMatrix &x)
@@ -617,9 +656,9 @@ public:
     };
 };
 
-tribool is_lower(const MatrixExpr &m)
+tribool is_lower(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixLowerVisitor visitor;
+    MatrixLowerVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -627,9 +666,13 @@ class MatrixUpperVisitor : public BaseVisitor<MatrixUpperVisitor>
 {
 private:
     tribool is_upper_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixUpperVisitor() {}
+    MatrixUpperVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -644,7 +687,7 @@ public:
 
     void bvisit(const ZeroMatrix &x)
     {
-        is_upper_ = is_square(x);
+        is_upper_ = is_square(x, assumptions_);
     };
 
     void bvisit(const DiagonalMatrix &x)
@@ -659,9 +702,9 @@ public:
     };
 };
 
-tribool is_upper(const MatrixExpr &m)
+tribool is_upper(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixUpperVisitor visitor;
+    MatrixUpperVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
@@ -669,9 +712,13 @@ class MatrixToeplitzVisitor : public BaseVisitor<MatrixToeplitzVisitor>
 {
 private:
     tribool is_toeplitz_;
+    const Assumptions *assumptions_;
 
 public:
-    MatrixToeplitzVisitor() {}
+    MatrixToeplitzVisitor(const Assumptions *assumptions)
+        : assumptions_(assumptions)
+    {
+    }
 
     void bvisit(const Basic &x){};
     void bvisit(const MatrixExpr &x)
@@ -700,7 +747,7 @@ public:
         auto first = vec[0];
         for (auto it = vec.begin() + 1; it != vec.end(); ++it) {
             auto diff = sub(first, *it);
-            tribool next = is_zero(*diff);
+            tribool next = is_zero(*diff, assumptions_);
             if (is_false(next)) {
                 is_toeplitz_ = next;
                 return;
@@ -717,9 +764,9 @@ public:
     };
 };
 
-tribool is_toeplitz(const MatrixExpr &m)
+tribool is_toeplitz(const MatrixExpr &m, const Assumptions *assumptions)
 {
-    MatrixToeplitzVisitor visitor;
+    MatrixToeplitzVisitor visitor(assumptions);
     return visitor.apply(m);
 }
 
