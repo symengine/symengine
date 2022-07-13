@@ -334,7 +334,7 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
         if (is_a<ZeroMatrix>(*term)) {
             zero = rcp_static_cast<const ZeroMatrix>(term);
         } else if (is_a<DiagonalMatrix>(*term)) {
-            if (is_null(diag)) {
+            if (diag.is_null()) {
                 diag = rcp_static_cast<const DiagonalMatrix>(term);
             } else {
                 vec_basic container;
@@ -350,13 +350,13 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
             keep.push_back(term);
         }
     }
-    if (!is_null(diag)) {
+    if (!diag.is_null()) {
         keep.push_back(diag);
     }
     if (keep.size() == 1) {
         return rcp_static_cast<const MatrixExpr>(keep[0]);
     }
-    if (keep.size() == 0 && !is_null(zero)) {
+    if (keep.size() == 0 && !zero.is_null()) {
         return zero;
     }
     return make_rcp<const MatrixAdd>(keep);
