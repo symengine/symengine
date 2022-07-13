@@ -204,6 +204,89 @@ RCP<const Basic> trace(const RCP<const MatrixExpr> &arg)
     return visitor.apply(*arg);
 }
 
+hash_t MatrixAdd::__hash__() const
+{
+    hash_t seed = SYMENGINE_MATRIXADD;
+    for (const auto &a : terms_) {
+        hash_combine<Basic>(seed, *a);
+    }
+    return seed;
+}
+
+bool MatrixAdd::__eq__(const Basic &o) const
+{
+    if (is_a<MatrixAdd>(o)) {
+        const MatrixAdd &other = down_cast<const MatrixAdd &>(o);
+        return unified_eq(terms_, other.terms_);
+    }
+    return false;
+}
+
+int MatrixAdd::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<MatrixAdd>(o));
+    const MatrixAdd &other = down_cast<const MatrixAdd &>(o);
+    return unified_compare(terms_, other.terms_);
+}
+
+RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
+{
+    if (terms.size() == 0) {
+        throw DomainError("Empty sum of matrices");
+    }
+    if (terms.size() == 1) {
+        return rcp_static_cast<const MatrixExpr>(terms[0]);
+    }
+    // Check sizes
+    auto sz = size(down_cast<const MatrixExpr &>(*terms[0]));
+    for (auto it = terms.begin() + 1; it != terms.end(); ++it) {
+        auto cursize = size(down_cast<const MatrixExpr &>(**it));
+        auto rowdiff = sub(sz.first, cursize.first);
+        tribool rowmatch = is_zero(*rowdiff);
+        if (is_false(rowmatch)) {
+            throw DomainError("Matrix dimension mismatch");
+        }
+        auto coldiff = sub(sz.second, cursize.second);
+        tribool colmatch = is_zero(*coldiff);
+        if (is_false(colmatch)) {
+            throw DomainError("Matrix dimension mismatch");
+        }
+    }
+    vec_basic keep;
+    RCP<const DiagonalMatrix> diag;
+    RCP<const ZeroMatrix> zero;
+    for (auto &term : terms) {
+        if (is_a<ZeroMatrix>(*term)) {
+            zero = rcp_static_cast<const ZeroMatrix>(term);
+        } else if (is_a<DiagonalMatrix>(*term)) {
+            if (is_null(diag)) {
+                diag = rcp_static_cast<const DiagonalMatrix>(term);
+            } else {
+                vec_basic container;
+                for (size_t i = 0; i < diag->get_container().size(); i++) {
+                    container.push_back(
+                        add(diag->get_container()[i],
+                            down_cast<const DiagonalMatrix &>(*term)
+                                .get_container()[i]));
+                }
+                diag = make_rcp<const DiagonalMatrix>(container);
+            }
+        } else {
+            keep.push_back(term);
+        }
+    }
+    if (!is_null(diag)) {
+        keep.push_back(diag);
+    }
+    if (keep.size() == 1) {
+        return rcp_static_cast<const MatrixExpr>(keep[0]);
+    }
+    if (keep.size() == 0 && !is_null(zero)) {
+        return zero;
+    }
+    return make_rcp<const MatrixAdd>(keep);
+}
+
 class MatrixZeroVisitor : public BaseVisitor<MatrixZeroVisitor>
 {
 private:
@@ -536,6 +619,48 @@ public:
 tribool is_toeplitz(const MatrixExpr &m)
 {
     MatrixToeplitzVisitor visitor;
+    return visitor.apply(m);
+}
+
+class MatrixSizeVisitor : public BaseVisitor<MatrixSizeVisitor>
+{
+private:
+    RCP<const Basic> nrows_;
+    RCP<const Basic> ncols_;
+
+public:
+    MatrixSizeVisitor() {}
+
+    void bvisit(const Basic &x){};
+
+    void bvisit(const IdentityMatrix &x)
+    {
+        nrows_ = x.size();
+        ncols_ = x.size();
+    };
+
+    void bvisit(const ZeroMatrix &x)
+    {
+        nrows_ = x.nrows();
+        ncols_ = x.ncols();
+    };
+
+    void bvisit(const DiagonalMatrix &x)
+    {
+        nrows_ = integer(x.get_container().size());
+        ncols_ = nrows_;
+    };
+
+    std::pair<RCP<const Basic>, RCP<const Basic>> apply(const MatrixExpr &s)
+    {
+        s.accept(*this);
+        return std::make_pair(nrows_, ncols_);
+    };
+};
+
+std::pair<RCP<const Basic>, RCP<const Basic>> size(const MatrixExpr &m)
+{
+    MatrixSizeVisitor visitor;
     return visitor.apply(m);
 }
 

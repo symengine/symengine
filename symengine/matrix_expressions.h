@@ -117,6 +117,30 @@ public:
 
 RCP<const Basic> trace(const RCP<const MatrixExpr> &arg);
 
+class MatrixAdd : public MatrixExpr
+{
+private:
+    vec_basic terms_;
+
+public:
+    MatrixAdd(const vec_basic &terms) : terms_(terms)
+    {
+        SYMENGINE_ASSIGN_TYPEID();
+    }
+
+    IMPLEMENT_TYPEID(SYMENGINE_MATRIXADD)
+    hash_t __hash__() const override;
+    bool __eq__(const Basic &o) const override;
+    int compare(const Basic &o) const override;
+    vec_basic get_args() const override
+    {
+        return vec_basic(terms_.begin(), terms_.end());
+    }
+};
+
+RCP<const MatrixExpr> matrix_add(const vec_basic &terms);
+
+std::pair<RCP<const Basic>, RCP<const Basic>> size(const MatrixExpr &m);
 tribool is_zero(const MatrixExpr &m);
 tribool is_real(const MatrixExpr &m);
 tribool is_symmetric(const MatrixExpr &m);

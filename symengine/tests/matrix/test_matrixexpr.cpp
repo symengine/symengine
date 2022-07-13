@@ -12,10 +12,14 @@ using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::is_real;
 using SymEngine::is_true;
+using SymEngine::make_rcp;
+using SymEngine::matrix_add;
+using SymEngine::MatrixAdd;
 using SymEngine::one;
 using SymEngine::Rational;
 using SymEngine::symbol;
 using SymEngine::Trace;
+using SymEngine::vec_basic;
 using SymEngine::zero;
 
 TEST_CASE("Test IdentityMatrix", "[IdentityMatrix]")
@@ -108,6 +112,41 @@ TEST_CASE("Test Trace", "[Trace]")
 
     auto D1 = diagonal_matrix({integer(2), integer(23)});
     REQUIRE(eq(*trace(D1), *integer(25)));
+}
+
+TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
+{
+    auto i1 = integer(3);
+    auto i2 = integer(5);
+    auto Z1 = zero_matrix(i1, i1);
+    auto Z2 = zero_matrix(i2, i2);
+    auto I1 = identity_matrix(i1);
+    auto I2 = identity_matrix(i2);
+    auto D1 = diagonal_matrix({integer(2), integer(23), integer(-2)});
+    auto D2 = diagonal_matrix({integer(-1), integer(5), integer(0)});
+    auto D3 = diagonal_matrix({integer(1), integer(28), integer(-2)});
+
+    auto sum = matrix_add({Z1, I1});
+    REQUIRE(eq(*sum, *I1));
+    sum = matrix_add({Z1, I1, Z1, Z1});
+    REQUIRE(eq(*sum, *I1));
+    sum = matrix_add({I1, I1});
+    auto vec = vec_basic({I1, I1});
+    REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
+    sum = matrix_add({Z1, I1, D1, Z1});
+    vec = vec_basic({I1, D1});
+    REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
+    sum = matrix_add({Z1, D1});
+    REQUIRE(eq(*sum, *D1));
+    sum = matrix_add({D1, D2});
+    REQUIRE(eq(*sum, *D3));
+    sum = matrix_add({Z1, Z1, Z1});
+    REQUIRE(eq(*sum, *Z1));
+
+    CHECK_THROWS_AS(matrix_add({Z1, Z2}), DomainError);
+    CHECK_THROWS_AS(matrix_add({Z2, D1}), DomainError);
+    CHECK_THROWS_AS(matrix_add({D1, Z2, D1}), DomainError);
+    CHECK_THROWS_AS(matrix_add({D1, I2}), DomainError);
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")

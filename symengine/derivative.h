@@ -115,6 +115,7 @@ public:
     void bvisit(const IdentityMatrix &self);
     void bvisit(const ZeroMatrix &self);
     void bvisit(const DiagonalMatrix &self);
+    void bvisit(const MatrixAdd &self);
     void bvisit(const Trace &self);
     void bvisit(const Boolean &self);
     void bvisit(const GaloisField &self);
