@@ -167,6 +167,14 @@ int DiagonalMatrix::compare(const Basic &o) const
     return unified_compare(diag_, other.diag_);
 }
 
+bool DiagonalMatrix::is_canonical(const vec_basic &container) const
+{
+    if (container.size() == 0) {
+        return false;
+    }
+    return true;
+}
+
 RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container)
 {
     return make_rcp<const DiagonalMatrix>(container);
@@ -685,6 +693,10 @@ public:
     {
         tribool current = tribool::tritrue;
         auto vec = x.get_container();
+        if (vec.size() == 1) {
+            is_toeplitz_ = tribool::tritrue;
+            return;
+        }
         auto first = vec[0];
         for (auto it = vec.begin() + 1; it != vec.end(); ++it) {
             auto diff = sub(first, *it);

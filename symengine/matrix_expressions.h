@@ -81,12 +81,14 @@ public:
     DiagonalMatrix(const vec_basic &container) : diag_(container)
     {
         SYMENGINE_ASSIGN_TYPEID();
+        SYMENGINE_ASSERT(is_canonical(container));
     }
 
     IMPLEMENT_TYPEID(SYMENGINE_DIAGONALMATRIX)
     hash_t __hash__() const override;
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
+    bool is_canonical(const vec_basic &container) const;
 
     vec_basic get_args() const override
     {

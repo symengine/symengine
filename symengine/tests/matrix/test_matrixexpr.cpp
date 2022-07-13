@@ -301,6 +301,7 @@ TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
     auto D1 = diagonal_matrix({integer(0), integer(23)});
     auto D2 = diagonal_matrix({integer(23), integer(23)});
     auto D3 = diagonal_matrix({x, y, integer(23)});
+    auto D4 = diagonal_matrix({x});
 
     REQUIRE(is_true(is_toeplitz(*I5)));
     REQUIRE(is_true(is_toeplitz(*Z52)));
@@ -310,6 +311,7 @@ TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
     REQUIRE(is_false(is_toeplitz(*D1)));
     REQUIRE(is_true(is_toeplitz(*D2)));
     REQUIRE(is_indeterminate(is_toeplitz(*D3)));
+    REQUIRE(is_true(is_toeplitz(*D4)));
 }
 
 TEST_CASE("Test size", "[size]")
