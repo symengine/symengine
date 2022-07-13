@@ -27,6 +27,20 @@ vec_basic IdentityMatrix::get_args() const
     return {n_};
 }
 
+bool IdentityMatrix::is_canonical(const RCP<const Basic> &n) const
+{
+    if (is_a_Number(*n)) {
+        if (is_a<Integer>(*n)) {
+            if (down_cast<const Integer &>(*n).is_negative()) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
 RCP<const MatrixExpr> identity_matrix(const RCP<const Basic> &n)
 {
     if (is_a_Number(*n)) {
@@ -74,6 +88,30 @@ int ZeroMatrix::compare(const Basic &o) const
 vec_basic ZeroMatrix::get_args() const
 {
     return {m_, n_};
+}
+
+bool ZeroMatrix::is_canonical(const RCP<const Basic> &m,
+                              const RCP<const Basic> &n) const
+{
+    if (is_a_Number(*m)) {
+        if (is_a<Integer>(*m)) {
+            if (down_cast<const Integer &>(*m).is_negative()) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    if (is_a_Number(*n)) {
+        if (is_a<Integer>(*n)) {
+            if (down_cast<const Integer &>(*n).is_negative()) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return true;
 }
 
 RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
@@ -227,6 +265,25 @@ int MatrixAdd::compare(const Basic &o) const
     SYMENGINE_ASSERT(is_a<MatrixAdd>(o));
     const MatrixAdd &other = down_cast<const MatrixAdd &>(o);
     return unified_compare(terms_, other.terms_);
+}
+
+bool MatrixAdd::is_canonical(const vec_basic terms) const
+{
+    if (terms.size() < 2) {
+        return false;
+    }
+    size_t num_diag = 0;
+    for (auto term : terms) {
+        if (is_a<ZeroMatrix>(*term)) {
+            return false;
+        } else if (is_a<DiagonalMatrix>(*term)) {
+            num_diag++;
+        }
+    }
+    if (num_diag > 1) {
+        return false;
+    }
+    return true;
 }
 
 RCP<const MatrixExpr> matrix_add(const vec_basic &terms)

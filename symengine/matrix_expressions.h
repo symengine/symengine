@@ -20,6 +20,7 @@ public:
     IdentityMatrix(const RCP<const Basic> &n) : n_(n)
     {
         SYMENGINE_ASSIGN_TYPEID();
+        SYMENGINE_ASSERT(is_canonical(n));
     }
 
     IMPLEMENT_TYPEID(SYMENGINE_IDENTITYMATRIX)
@@ -27,6 +28,7 @@ public:
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
     vec_basic get_args() const override;
+    bool is_canonical(const RCP<const Basic> &n) const;
 
     inline const RCP<const Basic> &size() const
     {
@@ -53,6 +55,8 @@ public:
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
     vec_basic get_args() const override;
+    bool is_canonical(const RCP<const Basic> &m,
+                      const RCP<const Basic> &n) const;
 
     inline const RCP<const Basic> &nrows() const
     {
@@ -126,12 +130,14 @@ public:
     MatrixAdd(const vec_basic &terms) : terms_(terms)
     {
         SYMENGINE_ASSIGN_TYPEID();
+        SYMENGINE_ASSERT(is_canonical(terms));
     }
 
     IMPLEMENT_TYPEID(SYMENGINE_MATRIXADD)
     hash_t __hash__() const override;
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
+    bool is_canonical(const vec_basic terms) const;
     vec_basic get_args() const override
     {
         return vec_basic(terms_.begin(), terms_.end());
