@@ -510,6 +510,12 @@ public:
         is_symmetric_ = tribool::tritrue;
     };
 
+    void bvisit(const MatrixAdd &x)
+    {
+        // MatrixAdd can currently only be diagonal+identity
+        is_symmetric_ = tribool::tritrue;
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -557,6 +563,16 @@ public:
         is_square_ = tribool::tritrue;
     };
 
+    void bvisit(const MatrixAdd &x)
+    {
+        for (auto &elt : x.get_terms()) {
+            elt->accept(*this);
+            if (not is_indeterminate(is_square_)) {
+                return;
+            }
+        }
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -600,6 +616,12 @@ public:
 
     void bvisit(const DiagonalMatrix &x)
     {
+        is_diagonal_ = tribool::tritrue;
+    };
+
+    void bvisit(const MatrixAdd &x)
+    {
+        // MatrixAdd can currently only be diagonal+identity
         is_diagonal_ = tribool::tritrue;
     };
 
@@ -649,6 +671,12 @@ public:
         is_lower_ = tribool::tritrue;
     };
 
+    void bvisit(const MatrixAdd &x)
+    {
+        // MatrixAdd can currently only be diagonal+identity
+        is_lower_ = tribool::tritrue;
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -692,6 +720,12 @@ public:
 
     void bvisit(const DiagonalMatrix &x)
     {
+        is_upper_ = tribool::tritrue;
+    };
+
+    void bvisit(const MatrixAdd &x)
+    {
+        // MatrixAdd can currently only be diagonal+identity
         is_upper_ = tribool::tritrue;
     };
 

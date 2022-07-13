@@ -197,6 +197,8 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto I1 = identity_matrix(n2);
+    auto A1 = matrix_add({D1, I1});
 
     REQUIRE(is_true(is_symmetric(*I5)));
     REQUIRE(is_false(is_symmetric(*Z52)));
@@ -204,6 +206,7 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
     REQUIRE(is_true(is_symmetric(*Zx)));
     REQUIRE(is_indeterminate(is_symmetric(*Zxy)));
     REQUIRE(is_true(is_symmetric(*D1)));
+    REQUIRE(is_true(is_symmetric(*A1)));
 }
 
 TEST_CASE("Test is_square", "[is_square]")
@@ -218,6 +221,8 @@ TEST_CASE("Test is_square", "[is_square]")
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto I1 = identity_matrix(n2);
+    auto A1 = matrix_add({D1, I1});
 
     REQUIRE(is_true(is_square(*I5)));
     REQUIRE(is_false(is_square(*Z52)));
@@ -225,6 +230,7 @@ TEST_CASE("Test is_square", "[is_square]")
     REQUIRE(is_true(is_square(*Zx)));
     REQUIRE(is_indeterminate(is_square(*Zxy)));
     REQUIRE(is_true(is_square(*D1)));
+    REQUIRE(is_true(is_square(*A1)));
 }
 
 TEST_CASE("Test is_diagonal", "[is_diagonal]")
@@ -239,6 +245,8 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto I1 = identity_matrix(n2);
+    auto A1 = matrix_add({D1, I1});
 
     REQUIRE(is_true(is_diagonal(*I5)));
     REQUIRE(is_false(is_diagonal(*Z52)));
@@ -246,6 +254,7 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     REQUIRE(is_true(is_diagonal(*Zx)));
     REQUIRE(is_indeterminate(is_diagonal(*Zxy)));
     REQUIRE(is_true(is_diagonal(*D1)));
+    REQUIRE(is_true(is_diagonal(*A1)));
 }
 
 TEST_CASE("Test is_lower", "[is_lower]")
@@ -260,6 +269,8 @@ TEST_CASE("Test is_lower", "[is_lower]")
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto I1 = identity_matrix(n2);
+    auto A1 = matrix_add({D1, I1});
 
     REQUIRE(is_true(is_lower(*I5)));
     REQUIRE(is_false(is_lower(*Z52)));
@@ -267,6 +278,7 @@ TEST_CASE("Test is_lower", "[is_lower]")
     REQUIRE(is_true(is_lower(*Zx)));
     REQUIRE(is_indeterminate(is_lower(*Zxy)));
     REQUIRE(is_true(is_lower(*D1)));
+    REQUIRE(is_true(is_lower(*A1)));
 }
 
 TEST_CASE("Test is_upper", "[is_upper]")
@@ -281,6 +293,8 @@ TEST_CASE("Test is_upper", "[is_upper]")
     auto Zx = zero_matrix(x, x);
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
+    auto I1 = identity_matrix(n2);
+    auto A1 = matrix_add({D1, I1});
 
     REQUIRE(is_true(is_upper(*I5)));
     REQUIRE(is_false(is_upper(*Z52)));
@@ -288,6 +302,7 @@ TEST_CASE("Test is_upper", "[is_upper]")
     REQUIRE(is_true(is_upper(*Zx)));
     REQUIRE(is_indeterminate(is_upper(*Zxy)));
     REQUIRE(is_true(is_upper(*D1)));
+    REQUIRE(is_true(is_upper(*A1)));
 }
 
 TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
