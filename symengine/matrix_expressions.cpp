@@ -353,6 +353,10 @@ public:
     MatrixZeroVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_zero_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -400,6 +404,10 @@ public:
     MatrixRealVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_real_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -447,6 +455,10 @@ public:
     MatrixSymmetricVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_symmetric_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -485,6 +497,10 @@ public:
     MatrixSquareVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_square_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -524,6 +540,10 @@ public:
     MatrixDiagonalVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_diagonal_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -562,6 +582,10 @@ public:
     MatrixLowerVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_lower_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -600,6 +624,10 @@ public:
     MatrixUpperVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_upper_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
@@ -638,6 +666,10 @@ public:
     MatrixToeplitzVisitor() {}
 
     void bvisit(const Basic &x){};
+    void bvisit(const MatrixExpr &x)
+    {
+        is_toeplitz_ = tribool::indeterminate;
+    };
 
     void bvisit(const IdentityMatrix &x)
     {
