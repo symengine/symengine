@@ -41,6 +41,8 @@ TEST_CASE("Test IdentityMatrix", "[IdentityMatrix]")
     CHECK_THROWS_AS(identity_matrix(integer(-1)), DomainError);
     auto rat1 = Rational::from_two_ints(*integer(1), *integer(2));
     CHECK_THROWS_AS(identity_matrix(rat1), DomainError);
+
+    REQUIRE(I1->__str__() == "I");
 }
 
 TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
@@ -64,6 +66,8 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
     auto rat1 = Rational::from_two_ints(*integer(1), *integer(2));
     CHECK_THROWS_AS(zero_matrix(rat1, integer(1)), DomainError);
     CHECK_THROWS_AS(zero_matrix(integer(1), rat1), DomainError);
+
+    REQUIRE(Z1->__str__() == "0");
 }
 
 TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
