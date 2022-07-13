@@ -311,3 +311,36 @@ TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
     REQUIRE(is_true(is_toeplitz(*D2)));
     REQUIRE(is_indeterminate(is_toeplitz(*D3)));
 }
+
+TEST_CASE("Test size", "[size]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto n2 = integer(2);
+    auto n5 = integer(5);
+    auto I5 = identity_matrix(n5);
+    auto Z52 = zero_matrix(n5, n2);
+    auto Z5 = zero_matrix(n5, n5);
+    auto Zx = zero_matrix(x, x);
+    auto Zxy = zero_matrix(x, y);
+    auto D1 = diagonal_matrix({integer(0), integer(23)});
+
+    auto sz = size(*I5);
+    REQUIRE(eq(*sz.first, *n5));
+    REQUIRE(eq(*sz.second, *n5));
+    sz = size(*Z52);
+    REQUIRE(eq(*sz.first, *n5));
+    REQUIRE(eq(*sz.second, *n2));
+    sz = size(*Z5);
+    REQUIRE(eq(*sz.first, *n5));
+    REQUIRE(eq(*sz.second, *n5));
+    sz = size(*Zx);
+    REQUIRE(eq(*sz.first, *x));
+    REQUIRE(eq(*sz.second, *x));
+    sz = size(*Zxy);
+    REQUIRE(eq(*sz.first, *x));
+    REQUIRE(eq(*sz.second, *y));
+    sz = size(*D1);
+    REQUIRE(eq(*sz.first, *n2));
+    REQUIRE(eq(*sz.second, *n2));
+}
