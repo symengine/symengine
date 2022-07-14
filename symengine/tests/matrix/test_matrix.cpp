@@ -2460,6 +2460,19 @@ TEST_CASE("is_real(): DenseMatrix", "[matrices]")
     REQUIRE(is_false(C.is_real(&a1)));
 }
 
+TEST_CASE("is_real(): CSRMatrix", "[matrices]")
+{
+    std::vector<unsigned> p1{{0, 2, 3, 6}}, j1{{0, 2, 2, 0, 1, 2}};
+    vec_basic x1{{integer(1), integer(2), integer(3), integer(4), integer(5),
+                  integer(6)}};
+    CSRMatrix A = CSRMatrix(3, 3, p1, j1, x1);
+    REQUIRE(is_true(A.is_real()));
+    vec_basic x2{{integer(1), integer(2), integer(3), integer(4), integer(5),
+                  symbol("x")}};
+    A = CSRMatrix(3, 3, p1, j1, x2);
+    REQUIRE(is_indeterminate(A.is_real()));
+}
+
 TEST_CASE("is_symmetric(): DenseMatrix", "[matrices]")
 {
     auto c1 = complex_double(std::complex<double>(2, 1));
