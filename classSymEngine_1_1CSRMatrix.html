@@ -156,6 +156,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1cdb9f18cc143cba248e195d57c2d52e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580353ab3af4bb73adc2081336186caa"><td class="memItemLeft" align="right" valign="top">virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1CSRMatrix.html#a580353ab3af4bb73adc2081336186caa">ncols</a> () const</td></tr>
 <tr class="separator:a580353ab3af4bb73adc2081336186caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23b3c29d275d1a0c6d1e938eda4bee43"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1CSRMatrix.html#a23b3c29d275d1a0c6d1e938eda4bee43">is_real</a> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr) const override</td></tr>
+<tr class="separator:a23b3c29d275d1a0c6d1e938eda4bee43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dd056d979655a4769c2f80f42c92109"><td class="memItemLeft" align="right" valign="top">virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1CSRMatrix.html#a5dd056d979655a4769c2f80f42c92109">rank</a> () const</td></tr>
 <tr class="separator:a5dd056d979655a4769c2f80f42c92109"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9f9b1fb7179f1c2f7aac058f7c8c2a3"><td class="memItemLeft" align="right" valign="top">virtual RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1CSRMatrix.html#ad9f9b1fb7179f1c2f7aac058f7c8c2a3">det</a> () const</td></tr>
@@ -207,6 +209,9 @@ virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>ncols</b>
 <tr class="separator:a9d25f7a869319efef591cab5f41f682c inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78cd79e6c797cf1bf85bceffff1f159a inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixBase.html#a78cd79e6c797cf1bf85bceffff1f159a">eq</a> (const <a class="el" href="classSymEngine_1_1MatrixBase.html">MatrixBase</a> &amp;other) const</td></tr>
 <tr class="separator:a78cd79e6c797cf1bf85bceffff1f159a inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ecc22e8dc1b4e805ad9f3d01668b2a8 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top"><a id="a4ecc22e8dc1b4e805ad9f3d01668b2a8" name="a4ecc22e8dc1b4e805ad9f3d01668b2a8"></a>
+virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_real</b> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr) const =0</td></tr>
+<tr class="separator:a4ecc22e8dc1b4e805ad9f3d01668b2a8 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa393961326eb5586dbddb795cb1b7ef6 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top"><a id="aa393961326eb5586dbddb795cb1b7ef6" name="aa393961326eb5586dbddb795cb1b7ef6"></a>
 virtual RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (unsigned i, unsigned j) const =0</td></tr>
 <tr class="separator:aa393961326eb5586dbddb795cb1b7ef6 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,7 +327,7 @@ Friends</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00341">341</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00344">344</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8485ddca78eeb633afa70b029b18562d" name="a8485ddca78eeb633afa70b029b18562d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8485ddca78eeb633afa70b029b18562d">&#9670;&nbsp;</a></span>CSRMatrix() <span class="overload">[1/4]</span></h2>
@@ -522,10 +527,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00177">177</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  178</span>{</div>
-<div class="line"><span class="lineno">  179</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  180</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00190">190</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  191</span>{</div>
+<div class="line"><span class="lineno">  192</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  193</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -565,10 +570,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00198">198</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  199</span>{</div>
-<div class="line"><span class="lineno">  200</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  201</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00211">211</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  212</span>{</div>
+<div class="line"><span class="lineno">  213</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  214</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -623,10 +628,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00319">319</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  320</span>{</div>
-<div class="line"><span class="lineno">  321</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  322</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00332">332</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  333</span>{</div>
+<div class="line"><span class="lineno">  334</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  335</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -656,20 +661,20 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00210">210</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  211</span>{</div>
-<div class="line"><span class="lineno">  212</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
-<div class="line"><span class="lineno">  213</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
-<div class="line"><span class="lineno">  214</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(p_), j(j_);</div>
-<div class="line"><span class="lineno">  215</span>        vec_basic x(x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
-<div class="line"><span class="lineno">  216</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); ++i) {</div>
-<div class="line"><span class="lineno">  217</span>            x[i] = <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
-<div class="line"><span class="lineno">  218</span>        }</div>
-<div class="line"><span class="lineno">  219</span>        r = CSRMatrix(col_, row_, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
-<div class="line"><span class="lineno">  220</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  221</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  222</span>    }</div>
-<div class="line"><span class="lineno">  223</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00223">223</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  224</span>{</div>
+<div class="line"><span class="lineno">  225</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
+<div class="line"><span class="lineno">  226</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
+<div class="line"><span class="lineno">  227</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(p_), j(j_);</div>
+<div class="line"><span class="lineno">  228</span>        vec_basic x(x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
+<div class="line"><span class="lineno">  229</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); ++i) {</div>
+<div class="line"><span class="lineno">  230</span>            x[i] = <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
+<div class="line"><span class="lineno">  231</span>        }</div>
+<div class="line"><span class="lineno">  232</span>        r = CSRMatrix(col_, row_, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
+<div class="line"><span class="lineno">  233</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  234</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  235</span>    }</div>
+<div class="line"><span class="lineno">  236</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
 <div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
 </div><!-- fragment -->
@@ -701,15 +706,15 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00263">263</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  264</span>{</div>
-<div class="line"><span class="lineno">  265</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
-<div class="line"><span class="lineno">  266</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
-<div class="line"><span class="lineno">  267</span>        r = this-&gt;transpose(<span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">  268</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  269</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  270</span>    }</div>
-<div class="line"><span class="lineno">  271</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00276">276</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  277</span>{</div>
+<div class="line"><span class="lineno">  278</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
+<div class="line"><span class="lineno">  279</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
+<div class="line"><span class="lineno">  280</span>        r = this-&gt;transpose(<span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">  281</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  282</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  283</span>    }</div>
+<div class="line"><span class="lineno">  284</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -753,16 +758,16 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00415">415</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  418</span>{</div>
-<div class="line"><span class="lineno">  419</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
-<div class="line"><span class="lineno">  420</span>        <span class="keywordflow">if</span> (p_[i] &gt; p_[i + 1])</div>
-<div class="line"><span class="lineno">  421</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  422</span>    }</div>
-<div class="line"><span class="lineno">  423</span> </div>
-<div class="line"><span class="lineno">  424</span>    <span class="keywordflow">return</span> csr_has_sorted_indices(p_, j_, row_)</div>
-<div class="line"><span class="lineno">  425</span>           and not csr_has_duplicates(p_, j_, row_);</div>
-<div class="line"><span class="lineno">  426</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00428">428</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  431</span>{</div>
+<div class="line"><span class="lineno">  432</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
+<div class="line"><span class="lineno">  433</span>        <span class="keywordflow">if</span> (p_[i] &gt; p_[i + 1])</div>
+<div class="line"><span class="lineno">  434</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  435</span>    }</div>
+<div class="line"><span class="lineno">  436</span> </div>
+<div class="line"><span class="lineno">  437</span>    <span class="keywordflow">return</span> csr_has_sorted_indices(p_, j_, row_)</div>
+<div class="line"><span class="lineno">  438</span>           and not csr_has_duplicates(p_, j_, row_);</div>
+<div class="line"><span class="lineno">  439</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -806,16 +811,16 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00389">389</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  392</span>{</div>
-<div class="line"><span class="lineno">  393</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
-<div class="line"><span class="lineno">  394</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = p_[i]; j + 1 &lt; p_[i + 1]; j++) {</div>
-<div class="line"><span class="lineno">  395</span>            <span class="keywordflow">if</span> (j_[j] == j_[j + 1])</div>
-<div class="line"><span class="lineno">  396</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  397</span>        }</div>
-<div class="line"><span class="lineno">  398</span>    }</div>
-<div class="line"><span class="lineno">  399</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  400</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00402">402</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  405</span>{</div>
+<div class="line"><span class="lineno">  406</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
+<div class="line"><span class="lineno">  407</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = p_[i]; j + 1 &lt; p_[i + 1]; j++) {</div>
+<div class="line"><span class="lineno">  408</span>            <span class="keywordflow">if</span> (j_[j] == j_[j + 1])</div>
+<div class="line"><span class="lineno">  409</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  410</span>        }</div>
+<div class="line"><span class="lineno">  411</span>    }</div>
+<div class="line"><span class="lineno">  412</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  413</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -859,16 +864,16 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00402">402</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  405</span>{</div>
-<div class="line"><span class="lineno">  406</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
-<div class="line"><span class="lineno">  407</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = p_[i]; jj &lt; p_[i + 1] - 1; jj++) {</div>
-<div class="line"><span class="lineno">  408</span>            <span class="keywordflow">if</span> (j_[jj] &gt; j_[jj + 1])</div>
-<div class="line"><span class="lineno">  409</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  410</span>        }</div>
-<div class="line"><span class="lineno">  411</span>    }</div>
-<div class="line"><span class="lineno">  412</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  413</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00415">415</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  418</span>{</div>
+<div class="line"><span class="lineno">  419</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
+<div class="line"><span class="lineno">  420</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = p_[i]; jj &lt; p_[i + 1] - 1; jj++) {</div>
+<div class="line"><span class="lineno">  421</span>            <span class="keywordflow">if</span> (j_[jj] &gt; j_[jj + 1])</div>
+<div class="line"><span class="lineno">  422</span>                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  423</span>        }</div>
+<div class="line"><span class="lineno">  424</span>    }</div>
+<div class="line"><span class="lineno">  425</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  426</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -918,32 +923,32 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00359">359</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  362</span>{</div>
-<div class="line"><span class="lineno">  363</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;unsigned, RCP&lt;const Basic&gt;</a>&gt;&gt; temp;</div>
-<div class="line"><span class="lineno">  364</span> </div>
-<div class="line"><span class="lineno">  365</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
-<div class="line"><span class="lineno">  366</span>        <span class="keywordtype">unsigned</span> row_start = p_[i];</div>
-<div class="line"><span class="lineno">  367</span>        <span class="keywordtype">unsigned</span> row_end = p_[i + 1];</div>
-<div class="line"><span class="lineno">  368</span> </div>
-<div class="line"><span class="lineno">  369</span>        temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
-<div class="line"><span class="lineno">  370</span> </div>
-<div class="line"><span class="lineno">  371</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = row_start; jj &lt; row_end; jj++) {</div>
-<div class="line"><span class="lineno">  372</span>            temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(j_[jj], x_[jj]));</div>
-<div class="line"><span class="lineno">  373</span>        }</div>
-<div class="line"><span class="lineno">  374</span> </div>
-<div class="line"><span class="lineno">  375</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(),</div>
-<div class="line"><span class="lineno">  376</span>                  [](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;x,</div>
-<div class="line"><span class="lineno">  377</span>                     <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;y) {</div>
-<div class="line"><span class="lineno">  378</span>                      return x.first &lt; y.first;</div>
-<div class="line"><span class="lineno">  379</span>                  });</div>
-<div class="line"><span class="lineno">  380</span> </div>
-<div class="line"><span class="lineno">  381</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = row_start, n = 0; jj &lt; row_end; jj++, n++) {</div>
-<div class="line"><span class="lineno">  382</span>            j_[jj] = temp[n].first;</div>
-<div class="line"><span class="lineno">  383</span>            x_[jj] = temp[n].second;</div>
-<div class="line"><span class="lineno">  384</span>        }</div>
-<div class="line"><span class="lineno">  385</span>    }</div>
-<div class="line"><span class="lineno">  386</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00372">372</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  375</span>{</div>
+<div class="line"><span class="lineno">  376</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;unsigned, RCP&lt;const Basic&gt;</a>&gt;&gt; temp;</div>
+<div class="line"><span class="lineno">  377</span> </div>
+<div class="line"><span class="lineno">  378</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
+<div class="line"><span class="lineno">  379</span>        <span class="keywordtype">unsigned</span> row_start = p_[i];</div>
+<div class="line"><span class="lineno">  380</span>        <span class="keywordtype">unsigned</span> row_end = p_[i + 1];</div>
+<div class="line"><span class="lineno">  381</span> </div>
+<div class="line"><span class="lineno">  382</span>        temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
+<div class="line"><span class="lineno">  383</span> </div>
+<div class="line"><span class="lineno">  384</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = row_start; jj &lt; row_end; jj++) {</div>
+<div class="line"><span class="lineno">  385</span>            temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(j_[jj], x_[jj]));</div>
+<div class="line"><span class="lineno">  386</span>        }</div>
+<div class="line"><span class="lineno">  387</span> </div>
+<div class="line"><span class="lineno">  388</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(),</div>
+<div class="line"><span class="lineno">  389</span>                  [](<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;x,</div>
+<div class="line"><span class="lineno">  390</span>                     <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;y) {</div>
+<div class="line"><span class="lineno">  391</span>                      return x.first &lt; y.first;</div>
+<div class="line"><span class="lineno">  392</span>                  });</div>
+<div class="line"><span class="lineno">  393</span> </div>
+<div class="line"><span class="lineno">  394</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = row_start, n = 0; jj &lt; row_end; jj++, n++) {</div>
+<div class="line"><span class="lineno">  395</span>            j_[jj] = temp[n].first;</div>
+<div class="line"><span class="lineno">  396</span>            x_[jj] = temp[n].second;</div>
+<div class="line"><span class="lineno">  397</span>        }</div>
+<div class="line"><span class="lineno">  398</span>    }</div>
+<div class="line"><span class="lineno">  399</span>}</div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
@@ -1000,38 +1005,38 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00324">324</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  327</span>{</div>
-<div class="line"><span class="lineno">  328</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
-<div class="line"><span class="lineno">  329</span>    <span class="keywordtype">unsigned</span> row_end = 0;</div>
-<div class="line"><span class="lineno">  330</span>    <span class="keywordtype">unsigned</span> jj = 0, j = 0;</div>
-<div class="line"><span class="lineno">  331</span>    RCP&lt;const Basic&gt; x = zero;</div>
-<div class="line"><span class="lineno">  332</span> </div>
-<div class="line"><span class="lineno">  333</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
-<div class="line"><span class="lineno">  334</span>        jj = row_end;</div>
-<div class="line"><span class="lineno">  335</span>        row_end = p_[i + 1];</div>
-<div class="line"><span class="lineno">  336</span> </div>
-<div class="line"><span class="lineno">  337</span>        <span class="keywordflow">while</span> (jj &lt; row_end) {</div>
-<div class="line"><span class="lineno">  338</span>            j = j_[jj];</div>
-<div class="line"><span class="lineno">  339</span>            x = x_[jj];</div>
-<div class="line"><span class="lineno">  340</span>            jj++;</div>
-<div class="line"><span class="lineno">  341</span> </div>
-<div class="line"><span class="lineno">  342</span>            <span class="keywordflow">while</span> (jj &lt; row_end and j_[jj] == j) {</div>
-<div class="line"><span class="lineno">  343</span>                x = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(x, x_[jj]);</div>
-<div class="line"><span class="lineno">  344</span>                jj++;</div>
-<div class="line"><span class="lineno">  345</span>            }</div>
-<div class="line"><span class="lineno">  346</span> </div>
-<div class="line"><span class="lineno">  347</span>            j_[nnz] = j;</div>
-<div class="line"><span class="lineno">  348</span>            x_[nnz] = x;</div>
-<div class="line"><span class="lineno">  349</span>            nnz++;</div>
-<div class="line"><span class="lineno">  350</span>        }</div>
-<div class="line"><span class="lineno">  351</span>        p_[i + 1] = nnz;</div>
-<div class="line"><span class="lineno">  352</span>    }</div>
-<div class="line"><span class="lineno">  353</span> </div>
-<div class="line"><span class="lineno">  354</span>    <span class="comment">// Resize to discard unnecessary elements</span></div>
-<div class="line"><span class="lineno">  355</span>    j_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(nnz);</div>
-<div class="line"><span class="lineno">  356</span>    x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(nnz);</div>
-<div class="line"><span class="lineno">  357</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00337">337</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  340</span>{</div>
+<div class="line"><span class="lineno">  341</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
+<div class="line"><span class="lineno">  342</span>    <span class="keywordtype">unsigned</span> row_end = 0;</div>
+<div class="line"><span class="lineno">  343</span>    <span class="keywordtype">unsigned</span> jj = 0, j = 0;</div>
+<div class="line"><span class="lineno">  344</span>    RCP&lt;const Basic&gt; x = zero;</div>
+<div class="line"><span class="lineno">  345</span> </div>
+<div class="line"><span class="lineno">  346</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
+<div class="line"><span class="lineno">  347</span>        jj = row_end;</div>
+<div class="line"><span class="lineno">  348</span>        row_end = p_[i + 1];</div>
+<div class="line"><span class="lineno">  349</span> </div>
+<div class="line"><span class="lineno">  350</span>        <span class="keywordflow">while</span> (jj &lt; row_end) {</div>
+<div class="line"><span class="lineno">  351</span>            j = j_[jj];</div>
+<div class="line"><span class="lineno">  352</span>            x = x_[jj];</div>
+<div class="line"><span class="lineno">  353</span>            jj++;</div>
+<div class="line"><span class="lineno">  354</span> </div>
+<div class="line"><span class="lineno">  355</span>            <span class="keywordflow">while</span> (jj &lt; row_end and j_[jj] == j) {</div>
+<div class="line"><span class="lineno">  356</span>                x = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(x, x_[jj]);</div>
+<div class="line"><span class="lineno">  357</span>                jj++;</div>
+<div class="line"><span class="lineno">  358</span>            }</div>
+<div class="line"><span class="lineno">  359</span> </div>
+<div class="line"><span class="lineno">  360</span>            j_[nnz] = j;</div>
+<div class="line"><span class="lineno">  361</span>            x_[nnz] = x;</div>
+<div class="line"><span class="lineno">  362</span>            nnz++;</div>
+<div class="line"><span class="lineno">  363</span>        }</div>
+<div class="line"><span class="lineno">  364</span>        p_[i + 1] = nnz;</div>
+<div class="line"><span class="lineno">  365</span>    }</div>
+<div class="line"><span class="lineno">  366</span> </div>
+<div class="line"><span class="lineno">  367</span>    <span class="comment">// Resize to discard unnecessary elements</span></div>
+<div class="line"><span class="lineno">  368</span>    j_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(nnz);</div>
+<div class="line"><span class="lineno">  369</span>    x_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(nnz);</div>
+<div class="line"><span class="lineno">  370</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aresize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/resize.html">std::vector::resize</a></div><div class="ttdeci">T resize(T... args)</div></div>
 </div><!-- fragment -->
@@ -1062,10 +1067,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00167">167</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  168</span>{</div>
-<div class="line"><span class="lineno">  169</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  170</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00180">180</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  181</span>{</div>
+<div class="line"><span class="lineno">  182</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  183</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1105,14 +1110,14 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00187">187</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  189</span>{</div>
-<div class="line"><span class="lineno">  190</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
-<div class="line"><span class="lineno">  191</span>        <span class="keyword">auto</span> &amp;o = down_cast&lt;const CSRMatrix &amp;&gt;(other);</div>
-<div class="line"><span class="lineno">  192</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
-<div class="line"><span class="lineno">  193</span>        csr_binop_csr_canonical(*<span class="keyword">this</span>, o, r, <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>);</div>
-<div class="line"><span class="lineno">  194</span>    }</div>
-<div class="line"><span class="lineno">  195</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00200">200</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  202</span>{</div>
+<div class="line"><span class="lineno">  203</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
+<div class="line"><span class="lineno">  204</span>        <span class="keyword">auto</span> &amp;o = down_cast&lt;const CSRMatrix &amp;&gt;(other);</div>
+<div class="line"><span class="lineno">  205</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
+<div class="line"><span class="lineno">  206</span>        csr_binop_csr_canonical(*<span class="keyword">this</span>, o, r, <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>);</div>
+<div class="line"><span class="lineno">  207</span>    }</div>
+<div class="line"><span class="lineno">  208</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -1214,10 +1219,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00307">307</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  308</span>{</div>
-<div class="line"><span class="lineno">  309</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  310</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00320">320</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  321</span>{</div>
+<div class="line"><span class="lineno">  322</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  323</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1247,10 +1252,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00301">301</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  302</span>{</div>
-<div class="line"><span class="lineno">  303</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  304</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00314">314</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  315</span>{</div>
+<div class="line"><span class="lineno">  316</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  317</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1306,52 +1311,52 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00428">428</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  432</span>{</div>
-<div class="line"><span class="lineno">  433</span>    <span class="comment">// cast is okay, because CSRMatrix indices are unsigned.</span></div>
-<div class="line"><span class="lineno">  434</span>    <span class="keywordtype">unsigned</span> nnz = numeric_cast&lt;unsigned&gt;(x.size());</div>
-<div class="line"><span class="lineno">  435</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p_ = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(row + 1, 0);</div>
-<div class="line"><span class="lineno">  436</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> j_ = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(nnz);</div>
-<div class="line"><span class="lineno">  437</span>    vec_basic x_ = vec_basic(nnz);</div>
-<div class="line"><span class="lineno">  438</span> </div>
-<div class="line"><span class="lineno">  439</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = 0; n &lt; nnz; n++) {</div>
-<div class="line"><span class="lineno">  440</span>        p_[i[n]]++;</div>
-<div class="line"><span class="lineno">  441</span>    }</div>
-<div class="line"><span class="lineno">  442</span> </div>
-<div class="line"><span class="lineno">  443</span>    <span class="comment">// cumsum the nnz per row to get p</span></div>
-<div class="line"><span class="lineno">  444</span>    <span class="keywordtype">unsigned</span> temp;</div>
-<div class="line"><span class="lineno">  445</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0, cumsum = 0; i &lt; row; i++) {</div>
-<div class="line"><span class="lineno">  446</span>        temp = p_[i];</div>
-<div class="line"><span class="lineno">  447</span>        p_[i] = cumsum;</div>
-<div class="line"><span class="lineno">  448</span>        cumsum += temp;</div>
-<div class="line"><span class="lineno">  449</span>    }</div>
-<div class="line"><span class="lineno">  450</span>    p_[row] = nnz;</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00441">441</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  445</span>{</div>
+<div class="line"><span class="lineno">  446</span>    <span class="comment">// cast is okay, because CSRMatrix indices are unsigned.</span></div>
+<div class="line"><span class="lineno">  447</span>    <span class="keywordtype">unsigned</span> nnz = numeric_cast&lt;unsigned&gt;(x.size());</div>
+<div class="line"><span class="lineno">  448</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p_ = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(row + 1, 0);</div>
+<div class="line"><span class="lineno">  449</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> j_ = <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(nnz);</div>
+<div class="line"><span class="lineno">  450</span>    vec_basic x_ = vec_basic(nnz);</div>
 <div class="line"><span class="lineno">  451</span> </div>
-<div class="line"><span class="lineno">  452</span>    <span class="comment">// write j, x into j_, x_</span></div>
-<div class="line"><span class="lineno">  453</span>    <span class="keywordtype">unsigned</span> row_, dest_;</div>
-<div class="line"><span class="lineno">  454</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = 0; n &lt; nnz; n++) {</div>
-<div class="line"><span class="lineno">  455</span>        row_ = i[n];</div>
-<div class="line"><span class="lineno">  456</span>        dest_ = p_[row_];</div>
-<div class="line"><span class="lineno">  457</span> </div>
-<div class="line"><span class="lineno">  458</span>        j_[dest_] = j[n];</div>
-<div class="line"><span class="lineno">  459</span>        x_[dest_] = x[n];</div>
-<div class="line"><span class="lineno">  460</span> </div>
-<div class="line"><span class="lineno">  461</span>        p_[row_]++;</div>
+<div class="line"><span class="lineno">  452</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = 0; n &lt; nnz; n++) {</div>
+<div class="line"><span class="lineno">  453</span>        p_[i[n]]++;</div>
+<div class="line"><span class="lineno">  454</span>    }</div>
+<div class="line"><span class="lineno">  455</span> </div>
+<div class="line"><span class="lineno">  456</span>    <span class="comment">// cumsum the nnz per row to get p</span></div>
+<div class="line"><span class="lineno">  457</span>    <span class="keywordtype">unsigned</span> temp;</div>
+<div class="line"><span class="lineno">  458</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0, cumsum = 0; i &lt; row; i++) {</div>
+<div class="line"><span class="lineno">  459</span>        temp = p_[i];</div>
+<div class="line"><span class="lineno">  460</span>        p_[i] = cumsum;</div>
+<div class="line"><span class="lineno">  461</span>        cumsum += temp;</div>
 <div class="line"><span class="lineno">  462</span>    }</div>
-<div class="line"><span class="lineno">  463</span> </div>
-<div class="line"><span class="lineno">  464</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0, last = 0; i &lt;= row; i++) {</div>
-<div class="line"><span class="lineno">  465</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(p_[i], last);</div>
-<div class="line"><span class="lineno">  466</span>    }</div>
-<div class="line"><span class="lineno">  467</span> </div>
-<div class="line"><span class="lineno">  468</span>    <span class="comment">// sort indices</span></div>
-<div class="line"><span class="lineno">  469</span>    csr_sort_indices(p_, j_, x_, row);</div>
-<div class="line"><span class="lineno">  470</span>    <span class="comment">// Remove duplicates</span></div>
-<div class="line"><span class="lineno">  471</span>    csr_sum_duplicates(p_, j_, x_, row);</div>
-<div class="line"><span class="lineno">  472</span> </div>
-<div class="line"><span class="lineno">  473</span>    CSRMatrix B</div>
-<div class="line"><span class="lineno">  474</span>        = CSRMatrix(row, col, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p_), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j_), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x_));</div>
-<div class="line"><span class="lineno">  475</span>    <span class="keywordflow">return</span> B;</div>
-<div class="line"><span class="lineno">  476</span>}</div>
+<div class="line"><span class="lineno">  463</span>    p_[row] = nnz;</div>
+<div class="line"><span class="lineno">  464</span> </div>
+<div class="line"><span class="lineno">  465</span>    <span class="comment">// write j, x into j_, x_</span></div>
+<div class="line"><span class="lineno">  466</span>    <span class="keywordtype">unsigned</span> row_, dest_;</div>
+<div class="line"><span class="lineno">  467</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = 0; n &lt; nnz; n++) {</div>
+<div class="line"><span class="lineno">  468</span>        row_ = i[n];</div>
+<div class="line"><span class="lineno">  469</span>        dest_ = p_[row_];</div>
+<div class="line"><span class="lineno">  470</span> </div>
+<div class="line"><span class="lineno">  471</span>        j_[dest_] = j[n];</div>
+<div class="line"><span class="lineno">  472</span>        x_[dest_] = x[n];</div>
+<div class="line"><span class="lineno">  473</span> </div>
+<div class="line"><span class="lineno">  474</span>        p_[row_]++;</div>
+<div class="line"><span class="lineno">  475</span>    }</div>
+<div class="line"><span class="lineno">  476</span> </div>
+<div class="line"><span class="lineno">  477</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0, last = 0; i &lt;= row; i++) {</div>
+<div class="line"><span class="lineno">  478</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(p_[i], last);</div>
+<div class="line"><span class="lineno">  479</span>    }</div>
+<div class="line"><span class="lineno">  480</span> </div>
+<div class="line"><span class="lineno">  481</span>    <span class="comment">// sort indices</span></div>
+<div class="line"><span class="lineno">  482</span>    csr_sort_indices(p_, j_, x_, row);</div>
+<div class="line"><span class="lineno">  483</span>    <span class="comment">// Remove duplicates</span></div>
+<div class="line"><span class="lineno">  484</span>    csr_sum_duplicates(p_, j_, x_, row);</div>
+<div class="line"><span class="lineno">  485</span> </div>
+<div class="line"><span class="lineno">  486</span>    CSRMatrix B</div>
+<div class="line"><span class="lineno">  487</span>        = CSRMatrix(row, col, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p_), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j_), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x_));</div>
+<div class="line"><span class="lineno">  488</span>    <span class="keywordflow">return</span> B;</div>
+<div class="line"><span class="lineno">  489</span>}</div>
 <div class="ttc" id="aswap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a></div><div class="ttdeci">T swap(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -1446,10 +1451,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00172">172</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>{</div>
-<div class="line"><span class="lineno">  174</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  175</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00185">185</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  186</span>{</div>
+<div class="line"><span class="lineno">  187</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  188</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1477,6 +1482,47 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">   86</span>        <span class="keywordflow">return</span> csr_has_canonical_format(p_, j_, row_);</div>
 <div class="line"><span class="lineno">   87</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   88</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a23b3c29d275d1a0c6d1e938eda4bee43" name="a23b3c29d275d1a0c6d1e938eda4bee43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23b3c29d275d1a0c6d1e938eda4bee43">&#9670;&nbsp;</a></span>is_real()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tribool SymEngine::CSRMatrix::is_real </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *&#160;</td>
+          <td class="paramname"><em>assumptions</em> = <code>nullptr</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00162">162</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>{</div>
+<div class="line"><span class="lineno">  164</span>    RealVisitor visitor(assumptions);</div>
+<div class="line"><span class="lineno">  165</span>    tribool cur = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x_) {</div>
+<div class="line"><span class="lineno">  167</span>        cur = and_tribool(cur, visitor.apply(*e));</div>
+<div class="line"><span class="lineno">  168</span>        <span class="keywordflow">if</span> (is_false(cur)) {</div>
+<div class="line"><span class="lineno">  169</span>            <span class="keywordflow">return</span> cur;</div>
+<div class="line"><span class="lineno">  170</span>        }</div>
+<div class="line"><span class="lineno">  171</span>    }</div>
+<div class="line"><span class="lineno">  172</span>    <span class="keywordflow">return</span> cur;</div>
+<div class="line"><span class="lineno">  173</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1520,20 +1566,20 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00503">503</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  505</span>{</div>
-<div class="line"><span class="lineno">  506</span>    SYMENGINE_ASSERT(A.col_ == 1);</div>
-<div class="line"><span class="lineno">  507</span>    SYMENGINE_ASSERT(x.col_ == 1);</div>
-<div class="line"><span class="lineno">  508</span>    vec_sym syms;</div>
-<div class="line"><span class="lineno">  509</span>    syms.reserve(x.row_);</div>
-<div class="line"><span class="lineno">  510</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;dx : x.m_) {</div>
-<div class="line"><span class="lineno">  511</span>        <span class="keywordflow">if</span> (!is_a&lt;Symbol&gt;(*dx)) {</div>
-<div class="line"><span class="lineno">  512</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;&#39;x&#39; must contain Symbols only&quot;</span>);</div>
-<div class="line"><span class="lineno">  513</span>        }</div>
-<div class="line"><span class="lineno">  514</span>        syms.push_back(rcp_static_cast&lt;const Symbol&gt;(dx));</div>
-<div class="line"><span class="lineno">  515</span>    }</div>
-<div class="line"><span class="lineno">  516</span>    <span class="keywordflow">return</span> CSRMatrix::jacobian(A.m_, syms, diff_cache);</div>
-<div class="line"><span class="lineno">  517</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00516">516</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  518</span>{</div>
+<div class="line"><span class="lineno">  519</span>    SYMENGINE_ASSERT(A.col_ == 1);</div>
+<div class="line"><span class="lineno">  520</span>    SYMENGINE_ASSERT(x.col_ == 1);</div>
+<div class="line"><span class="lineno">  521</span>    vec_sym syms;</div>
+<div class="line"><span class="lineno">  522</span>    syms.reserve(x.row_);</div>
+<div class="line"><span class="lineno">  523</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;dx : x.m_) {</div>
+<div class="line"><span class="lineno">  524</span>        <span class="keywordflow">if</span> (!is_a&lt;Symbol&gt;(*dx)) {</div>
+<div class="line"><span class="lineno">  525</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;&#39;x&#39; must contain Symbols only&quot;</span>);</div>
+<div class="line"><span class="lineno">  526</span>        }</div>
+<div class="line"><span class="lineno">  527</span>        syms.push_back(rcp_static_cast&lt;const Symbol&gt;(dx));</div>
+<div class="line"><span class="lineno">  528</span>    }</div>
+<div class="line"><span class="lineno">  529</span>    <span class="keywordflow">return</span> CSRMatrix::jacobian(A.m_, syms, diff_cache);</div>
+<div class="line"><span class="lineno">  530</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1577,29 +1623,29 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00478">478</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  480</span>{</div>
-<div class="line"><span class="lineno">  481</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> nrows = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(exprs.size());</div>
-<div class="line"><span class="lineno">  482</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> ncols = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(x.size());</div>
-<div class="line"><span class="lineno">  483</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(1, 0), j;</div>
-<div class="line"><span class="lineno">  484</span>    vec_basic elems;</div>
-<div class="line"><span class="lineno">  485</span>    p.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows + 1);</div>
-<div class="line"><span class="lineno">  486</span>    j.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows);</div>
-<div class="line"><span class="lineno">  487</span>    elems.reserve(nrows);</div>
-<div class="line"><span class="lineno">  488</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; nrows; ++ri) {</div>
-<div class="line"><span class="lineno">  489</span>        p.push_back(p.back());</div>
-<div class="line"><span class="lineno">  490</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ci = 0; ci &lt; ncols; ++ci) {</div>
-<div class="line"><span class="lineno">  491</span>            <span class="keyword">auto</span> elem = exprs[ri]-&gt;diff(x[ci], diff_cache);</div>
-<div class="line"><span class="lineno">  492</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*elem))) {</div>
-<div class="line"><span class="lineno">  493</span>                p.back()++;</div>
-<div class="line"><span class="lineno">  494</span>                j.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(ci);</div>
-<div class="line"><span class="lineno">  495</span>                elems.emplace_back(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elem));</div>
-<div class="line"><span class="lineno">  496</span>            }</div>
-<div class="line"><span class="lineno">  497</span>        }</div>
-<div class="line"><span class="lineno">  498</span>    }</div>
-<div class="line"><span class="lineno">  499</span>    <span class="keywordflow">return</span> CSRMatrix(nrows, ncols, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j),</div>
-<div class="line"><span class="lineno">  500</span>                     <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elems));</div>
-<div class="line"><span class="lineno">  501</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00491">491</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  493</span>{</div>
+<div class="line"><span class="lineno">  494</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> nrows = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(exprs.size());</div>
+<div class="line"><span class="lineno">  495</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> ncols = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(x.size());</div>
+<div class="line"><span class="lineno">  496</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(1, 0), j;</div>
+<div class="line"><span class="lineno">  497</span>    vec_basic elems;</div>
+<div class="line"><span class="lineno">  498</span>    p.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows + 1);</div>
+<div class="line"><span class="lineno">  499</span>    j.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows);</div>
+<div class="line"><span class="lineno">  500</span>    elems.reserve(nrows);</div>
+<div class="line"><span class="lineno">  501</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; nrows; ++ri) {</div>
+<div class="line"><span class="lineno">  502</span>        p.push_back(p.back());</div>
+<div class="line"><span class="lineno">  503</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ci = 0; ci &lt; ncols; ++ci) {</div>
+<div class="line"><span class="lineno">  504</span>            <span class="keyword">auto</span> elem = exprs[ri]-&gt;diff(x[ci], diff_cache);</div>
+<div class="line"><span class="lineno">  505</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*elem))) {</div>
+<div class="line"><span class="lineno">  506</span>                p.back()++;</div>
+<div class="line"><span class="lineno">  507</span>                j.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(ci);</div>
+<div class="line"><span class="lineno">  508</span>                elems.emplace_back(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elem));</div>
+<div class="line"><span class="lineno">  509</span>            }</div>
+<div class="line"><span class="lineno">  510</span>        }</div>
+<div class="line"><span class="lineno">  511</span>    }</div>
+<div class="line"><span class="lineno">  512</span>    <span class="keywordflow">return</span> CSRMatrix(nrows, ncols, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j),</div>
+<div class="line"><span class="lineno">  513</span>                     <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elems));</div>
+<div class="line"><span class="lineno">  514</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
 </div><!-- fragment -->
@@ -1641,10 +1687,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00289">289</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  290</span>{</div>
-<div class="line"><span class="lineno">  291</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  292</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00302">302</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  303</span>{</div>
+<div class="line"><span class="lineno">  304</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  305</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1684,10 +1730,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00283">283</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  284</span>{</div>
-<div class="line"><span class="lineno">  285</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  286</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00296">296</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  297</span>{</div>
+<div class="line"><span class="lineno">  298</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  299</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1727,10 +1773,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00295">295</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  296</span>{</div>
-<div class="line"><span class="lineno">  297</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  298</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00308">308</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  309</span>{</div>
+<div class="line"><span class="lineno">  310</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  311</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1770,10 +1816,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00182">182</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  183</span>{</div>
-<div class="line"><span class="lineno">  184</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  185</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00195">195</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  196</span>{</div>
+<div class="line"><span class="lineno">  197</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  198</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1813,10 +1859,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00204">204</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  205</span>{</div>
-<div class="line"><span class="lineno">  206</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  207</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00217">217</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  218</span>{</div>
+<div class="line"><span class="lineno">  219</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  220</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1845,10 +1891,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00367">367</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  368</span>    {</div>
-<div class="line"><span class="lineno">  369</span>        <span class="keywordflow">return</span> col_;</div>
-<div class="line"><span class="lineno">  370</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00370">370</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  371</span>    {</div>
+<div class="line"><span class="lineno">  372</span>        <span class="keywordflow">return</span> col_;</div>
+<div class="line"><span class="lineno">  373</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1877,10 +1923,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00363">363</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  364</span>    {</div>
-<div class="line"><span class="lineno">  365</span>        <span class="keywordflow">return</span> row_;</div>
-<div class="line"><span class="lineno">  366</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00366">366</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  367</span>    {</div>
+<div class="line"><span class="lineno">  368</span>        <span class="keywordflow">return</span> row_;</div>
+<div class="line"><span class="lineno">  369</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1948,10 +1994,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00313">313</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  314</span>{</div>
-<div class="line"><span class="lineno">  315</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  316</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00326">326</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  327</span>{</div>
+<div class="line"><span class="lineno">  328</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  329</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1980,10 +2026,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00162">162</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  163</span>{</div>
-<div class="line"><span class="lineno">  164</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  165</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00175">175</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  176</span>{</div>
+<div class="line"><span class="lineno">  177</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  178</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2144,10 +2190,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00274">274</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  278</span>{</div>
-<div class="line"><span class="lineno">  279</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  280</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00287">287</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  291</span>{</div>
+<div class="line"><span class="lineno">  292</span>    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  293</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2167,31 +2213,31 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00236">236</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  237</span>{</div>
-<div class="line"><span class="lineno">  238</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nnz = j_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
-<div class="line"><span class="lineno">  239</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(col_ + 1, 0), j(nnz), tmp(col_, 0);</div>
-<div class="line"><span class="lineno">  240</span>    vec_basic x(nnz);</div>
-<div class="line"><span class="lineno">  241</span> </div>
-<div class="line"><span class="lineno">  242</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; nnz; ++i)</div>
-<div class="line"><span class="lineno">  243</span>        p[j_[i] + 1]++;</div>
-<div class="line"><span class="lineno">  244</span>    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/partial_sum.html">std::partial_sum</a>(p.begin(), p.end(), p.begin());</div>
-<div class="line"><span class="lineno">  245</span> </div>
-<div class="line"><span class="lineno">  246</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; row_; ++ri) {</div>
-<div class="line"><span class="lineno">  247</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = p_[ri]; i &lt; p_[ri + 1]; ++i) {</div>
-<div class="line"><span class="lineno">  248</span>            <span class="keyword">const</span> <span class="keyword">auto</span> ci = j_[i];</div>
-<div class="line"><span class="lineno">  249</span>            <span class="keyword">const</span> <span class="keywordtype">unsigned</span> k = p[ci] + tmp[ci];</div>
-<div class="line"><span class="lineno">  250</span>            j[k] = ri;</div>
-<div class="line"><span class="lineno">  251</span>            <span class="keywordflow">if</span> (conjugate) {</div>
-<div class="line"><span class="lineno">  252</span>                x[k] = <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
-<div class="line"><span class="lineno">  253</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  254</span>                x[k] = x_[i];</div>
-<div class="line"><span class="lineno">  255</span>            }</div>
-<div class="line"><span class="lineno">  256</span>            tmp[ci]++;</div>
-<div class="line"><span class="lineno">  257</span>        }</div>
-<div class="line"><span class="lineno">  258</span>    }</div>
-<div class="line"><span class="lineno">  259</span>    <span class="keywordflow">return</span> CSRMatrix(col_, row_, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
-<div class="line"><span class="lineno">  260</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00249">249</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  250</span>{</div>
+<div class="line"><span class="lineno">  251</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nnz = j_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
+<div class="line"><span class="lineno">  252</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(col_ + 1, 0), j(nnz), tmp(col_, 0);</div>
+<div class="line"><span class="lineno">  253</span>    vec_basic x(nnz);</div>
+<div class="line"><span class="lineno">  254</span> </div>
+<div class="line"><span class="lineno">  255</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; nnz; ++i)</div>
+<div class="line"><span class="lineno">  256</span>        p[j_[i] + 1]++;</div>
+<div class="line"><span class="lineno">  257</span>    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/partial_sum.html">std::partial_sum</a>(p.begin(), p.end(), p.begin());</div>
+<div class="line"><span class="lineno">  258</span> </div>
+<div class="line"><span class="lineno">  259</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; row_; ++ri) {</div>
+<div class="line"><span class="lineno">  260</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = p_[ri]; i &lt; p_[ri + 1]; ++i) {</div>
+<div class="line"><span class="lineno">  261</span>            <span class="keyword">const</span> <span class="keyword">auto</span> ci = j_[i];</div>
+<div class="line"><span class="lineno">  262</span>            <span class="keyword">const</span> <span class="keywordtype">unsigned</span> k = p[ci] + tmp[ci];</div>
+<div class="line"><span class="lineno">  263</span>            j[k] = ri;</div>
+<div class="line"><span class="lineno">  264</span>            <span class="keywordflow">if</span> (conjugate) {</div>
+<div class="line"><span class="lineno">  265</span>                x[k] = <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
+<div class="line"><span class="lineno">  266</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  267</span>                x[k] = x_[i];</div>
+<div class="line"><span class="lineno">  268</span>            }</div>
+<div class="line"><span class="lineno">  269</span>            tmp[ci]++;</div>
+<div class="line"><span class="lineno">  270</span>        }</div>
+<div class="line"><span class="lineno">  271</span>    }</div>
+<div class="line"><span class="lineno">  272</span>    <span class="keywordflow">return</span> CSRMatrix(col_, row_, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
+<div class="line"><span class="lineno">  273</span>}</div>
 <div class="ttc" id="apartial_sum_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/partial_sum.html">std::partial_sum</a></div><div class="ttdeci">T partial_sum(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -2222,15 +2268,15 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00226">226</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  227</span>{</div>
-<div class="line"><span class="lineno">  228</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
-<div class="line"><span class="lineno">  229</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
-<div class="line"><span class="lineno">  230</span>        r = this-&gt;transpose();</div>
-<div class="line"><span class="lineno">  231</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  232</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
-<div class="line"><span class="lineno">  233</span>    }</div>
-<div class="line"><span class="lineno">  234</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00239">239</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  240</span>{</div>
+<div class="line"><span class="lineno">  241</span>    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
+<div class="line"><span class="lineno">  242</span>        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
+<div class="line"><span class="lineno">  243</span>        r = this-&gt;transpose();</div>
+<div class="line"><span class="lineno">  244</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  245</span>        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
+<div class="line"><span class="lineno">  246</span>    }</div>
+<div class="line"><span class="lineno">  247</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2281,86 +2327,86 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00676">676</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  680</span>{</div>
-<div class="line"><span class="lineno">  681</span>    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_</div>
-<div class="line"><span class="lineno">  682</span>                     and C.col_ == A.col_);</div>
-<div class="line"><span class="lineno">  683</span> </div>
-<div class="line"><span class="lineno">  684</span>    <span class="comment">// Method that works for canonical CSR matrices</span></div>
-<div class="line"><span class="lineno">  685</span>    C.p_[0] = 0;</div>
-<div class="line"><span class="lineno">  686</span>    C.j_.clear();</div>
-<div class="line"><span class="lineno">  687</span>    C.x_.clear();</div>
-<div class="line"><span class="lineno">  688</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
-<div class="line"><span class="lineno">  689</span>    <span class="keywordtype">unsigned</span> A_pos, B_pos, A_end, B_end;</div>
-<div class="line"><span class="lineno">  690</span> </div>
-<div class="line"><span class="lineno">  691</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
-<div class="line"><span class="lineno">  692</span>        A_pos = A.p_[i];</div>
-<div class="line"><span class="lineno">  693</span>        B_pos = B.p_[i];</div>
-<div class="line"><span class="lineno">  694</span>        A_end = A.p_[i + 1];</div>
-<div class="line"><span class="lineno">  695</span>        B_end = B.p_[i + 1];</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00689">689</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  693</span>{</div>
+<div class="line"><span class="lineno">  694</span>    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_</div>
+<div class="line"><span class="lineno">  695</span>                     and C.col_ == A.col_);</div>
 <div class="line"><span class="lineno">  696</span> </div>
-<div class="line"><span class="lineno">  697</span>        <span class="comment">// while not finished with either row</span></div>
-<div class="line"><span class="lineno">  698</span>        <span class="keywordflow">while</span> (A_pos &lt; A_end and B_pos &lt; B_end) {</div>
-<div class="line"><span class="lineno">  699</span>            <span class="keywordtype">unsigned</span> A_j = A.j_[A_pos];</div>
-<div class="line"><span class="lineno">  700</span>            <span class="keywordtype">unsigned</span> B_j = B.j_[B_pos];</div>
-<div class="line"><span class="lineno">  701</span> </div>
-<div class="line"><span class="lineno">  702</span>            <span class="keywordflow">if</span> (A_j == B_j) {</div>
-<div class="line"><span class="lineno">  703</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  704</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
-<div class="line"><span class="lineno">  705</span>                    C.j_.push_back(A_j);</div>
-<div class="line"><span class="lineno">  706</span>                    C.x_.push_back(result);</div>
-<div class="line"><span class="lineno">  707</span>                    nnz++;</div>
-<div class="line"><span class="lineno">  708</span>                }</div>
-<div class="line"><span class="lineno">  709</span>                A_pos++;</div>
-<div class="line"><span class="lineno">  710</span>                B_pos++;</div>
-<div class="line"><span class="lineno">  711</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (A_j &lt; B_j) {</div>
-<div class="line"><span class="lineno">  712</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
-<div class="line"><span class="lineno">  713</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
-<div class="line"><span class="lineno">  714</span>                    C.j_.push_back(A_j);</div>
-<div class="line"><span class="lineno">  715</span>                    C.x_.push_back(result);</div>
-<div class="line"><span class="lineno">  716</span>                    nnz++;</div>
-<div class="line"><span class="lineno">  717</span>                }</div>
-<div class="line"><span class="lineno">  718</span>                A_pos++;</div>
-<div class="line"><span class="lineno">  719</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  720</span>                <span class="comment">// B_j &lt; A_j</span></div>
-<div class="line"><span class="lineno">  721</span>                RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  722</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
-<div class="line"><span class="lineno">  723</span>                    C.j_.push_back(B_j);</div>
-<div class="line"><span class="lineno">  724</span>                    C.x_.push_back(result);</div>
-<div class="line"><span class="lineno">  725</span>                    nnz++;</div>
-<div class="line"><span class="lineno">  726</span>                }</div>
-<div class="line"><span class="lineno">  727</span>                B_pos++;</div>
-<div class="line"><span class="lineno">  728</span>            }</div>
-<div class="line"><span class="lineno">  729</span>        }</div>
-<div class="line"><span class="lineno">  730</span> </div>
-<div class="line"><span class="lineno">  731</span>        <span class="comment">// tail</span></div>
-<div class="line"><span class="lineno">  732</span>        <span class="keywordflow">while</span> (A_pos &lt; A_end) {</div>
-<div class="line"><span class="lineno">  733</span>            RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
-<div class="line"><span class="lineno">  734</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
-<div class="line"><span class="lineno">  735</span>                C.j_.push_back(A.j_[A_pos]);</div>
-<div class="line"><span class="lineno">  736</span>                C.x_.push_back(result);</div>
-<div class="line"><span class="lineno">  737</span>                nnz++;</div>
-<div class="line"><span class="lineno">  738</span>            }</div>
-<div class="line"><span class="lineno">  739</span>            A_pos++;</div>
-<div class="line"><span class="lineno">  740</span>        }</div>
-<div class="line"><span class="lineno">  741</span>        <span class="keywordflow">while</span> (B_pos &lt; B_end) {</div>
-<div class="line"><span class="lineno">  742</span>            RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  743</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
-<div class="line"><span class="lineno">  744</span>                C.j_.push_back(B.j_[B_pos]);</div>
-<div class="line"><span class="lineno">  745</span>                C.x_.push_back(result);</div>
-<div class="line"><span class="lineno">  746</span>                nnz++;</div>
-<div class="line"><span class="lineno">  747</span>            }</div>
-<div class="line"><span class="lineno">  748</span>            B_pos++;</div>
-<div class="line"><span class="lineno">  749</span>        }</div>
-<div class="line"><span class="lineno">  750</span> </div>
-<div class="line"><span class="lineno">  751</span>        C.p_[i + 1] = nnz;</div>
-<div class="line"><span class="lineno">  752</span>    }</div>
-<div class="line"><span class="lineno">  753</span> </div>
-<div class="line"><span class="lineno">  754</span>    <span class="comment">// It&#39;s enough to check for duplicates as the column indices</span></div>
-<div class="line"><span class="lineno">  755</span>    <span class="comment">// remain sorted after the above operations</span></div>
-<div class="line"><span class="lineno">  756</span>    <span class="keywordflow">if</span> (CSRMatrix::csr_has_duplicates(C.p_, C.j_, A.row_))</div>
-<div class="line"><span class="lineno">  757</span>        CSRMatrix::csr_sum_duplicates(C.p_, C.j_, C.x_, A.row_);</div>
-<div class="line"><span class="lineno">  758</span>}</div>
+<div class="line"><span class="lineno">  697</span>    <span class="comment">// Method that works for canonical CSR matrices</span></div>
+<div class="line"><span class="lineno">  698</span>    C.p_[0] = 0;</div>
+<div class="line"><span class="lineno">  699</span>    C.j_.clear();</div>
+<div class="line"><span class="lineno">  700</span>    C.x_.clear();</div>
+<div class="line"><span class="lineno">  701</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
+<div class="line"><span class="lineno">  702</span>    <span class="keywordtype">unsigned</span> A_pos, B_pos, A_end, B_end;</div>
+<div class="line"><span class="lineno">  703</span> </div>
+<div class="line"><span class="lineno">  704</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
+<div class="line"><span class="lineno">  705</span>        A_pos = A.p_[i];</div>
+<div class="line"><span class="lineno">  706</span>        B_pos = B.p_[i];</div>
+<div class="line"><span class="lineno">  707</span>        A_end = A.p_[i + 1];</div>
+<div class="line"><span class="lineno">  708</span>        B_end = B.p_[i + 1];</div>
+<div class="line"><span class="lineno">  709</span> </div>
+<div class="line"><span class="lineno">  710</span>        <span class="comment">// while not finished with either row</span></div>
+<div class="line"><span class="lineno">  711</span>        <span class="keywordflow">while</span> (A_pos &lt; A_end and B_pos &lt; B_end) {</div>
+<div class="line"><span class="lineno">  712</span>            <span class="keywordtype">unsigned</span> A_j = A.j_[A_pos];</div>
+<div class="line"><span class="lineno">  713</span>            <span class="keywordtype">unsigned</span> B_j = B.j_[B_pos];</div>
+<div class="line"><span class="lineno">  714</span> </div>
+<div class="line"><span class="lineno">  715</span>            <span class="keywordflow">if</span> (A_j == B_j) {</div>
+<div class="line"><span class="lineno">  716</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], B.x_[B_pos]);</div>
+<div class="line"><span class="lineno">  717</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  718</span>                    C.j_.push_back(A_j);</div>
+<div class="line"><span class="lineno">  719</span>                    C.x_.push_back(result);</div>
+<div class="line"><span class="lineno">  720</span>                    nnz++;</div>
+<div class="line"><span class="lineno">  721</span>                }</div>
+<div class="line"><span class="lineno">  722</span>                A_pos++;</div>
+<div class="line"><span class="lineno">  723</span>                B_pos++;</div>
+<div class="line"><span class="lineno">  724</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (A_j &lt; B_j) {</div>
+<div class="line"><span class="lineno">  725</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
+<div class="line"><span class="lineno">  726</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  727</span>                    C.j_.push_back(A_j);</div>
+<div class="line"><span class="lineno">  728</span>                    C.x_.push_back(result);</div>
+<div class="line"><span class="lineno">  729</span>                    nnz++;</div>
+<div class="line"><span class="lineno">  730</span>                }</div>
+<div class="line"><span class="lineno">  731</span>                A_pos++;</div>
+<div class="line"><span class="lineno">  732</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  733</span>                <span class="comment">// B_j &lt; A_j</span></div>
+<div class="line"><span class="lineno">  734</span>                RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
+<div class="line"><span class="lineno">  735</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  736</span>                    C.j_.push_back(B_j);</div>
+<div class="line"><span class="lineno">  737</span>                    C.x_.push_back(result);</div>
+<div class="line"><span class="lineno">  738</span>                    nnz++;</div>
+<div class="line"><span class="lineno">  739</span>                }</div>
+<div class="line"><span class="lineno">  740</span>                B_pos++;</div>
+<div class="line"><span class="lineno">  741</span>            }</div>
+<div class="line"><span class="lineno">  742</span>        }</div>
+<div class="line"><span class="lineno">  743</span> </div>
+<div class="line"><span class="lineno">  744</span>        <span class="comment">// tail</span></div>
+<div class="line"><span class="lineno">  745</span>        <span class="keywordflow">while</span> (A_pos &lt; A_end) {</div>
+<div class="line"><span class="lineno">  746</span>            RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
+<div class="line"><span class="lineno">  747</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  748</span>                C.j_.push_back(A.j_[A_pos]);</div>
+<div class="line"><span class="lineno">  749</span>                C.x_.push_back(result);</div>
+<div class="line"><span class="lineno">  750</span>                nnz++;</div>
+<div class="line"><span class="lineno">  751</span>            }</div>
+<div class="line"><span class="lineno">  752</span>            A_pos++;</div>
+<div class="line"><span class="lineno">  753</span>        }</div>
+<div class="line"><span class="lineno">  754</span>        <span class="keywordflow">while</span> (B_pos &lt; B_end) {</div>
+<div class="line"><span class="lineno">  755</span>            RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
+<div class="line"><span class="lineno">  756</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  757</span>                C.j_.push_back(B.j_[B_pos]);</div>
+<div class="line"><span class="lineno">  758</span>                C.x_.push_back(result);</div>
+<div class="line"><span class="lineno">  759</span>                nnz++;</div>
+<div class="line"><span class="lineno">  760</span>            }</div>
+<div class="line"><span class="lineno">  761</span>            B_pos++;</div>
+<div class="line"><span class="lineno">  762</span>        }</div>
+<div class="line"><span class="lineno">  763</span> </div>
+<div class="line"><span class="lineno">  764</span>        C.p_[i + 1] = nnz;</div>
+<div class="line"><span class="lineno">  765</span>    }</div>
+<div class="line"><span class="lineno">  766</span> </div>
+<div class="line"><span class="lineno">  767</span>    <span class="comment">// It&#39;s enough to check for duplicates as the column indices</span></div>
+<div class="line"><span class="lineno">  768</span>    <span class="comment">// remain sorted after the above operations</span></div>
+<div class="line"><span class="lineno">  769</span>    <span class="keywordflow">if</span> (CSRMatrix::csr_has_duplicates(C.p_, C.j_, A.row_))</div>
+<div class="line"><span class="lineno">  770</span>        CSRMatrix::csr_sum_duplicates(C.p_, C.j_, C.x_, A.row_);</div>
+<div class="line"><span class="lineno">  771</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2398,37 +2444,37 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00609">609</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  610</span>{</div>
-<div class="line"><span class="lineno">  611</span>    <span class="keywordtype">unsigned</span> N = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(A.row_, A.col_);</div>
-<div class="line"><span class="lineno">  612</span> </div>
-<div class="line"><span class="lineno">  613</span>    SYMENGINE_ASSERT(D.nrows() == N and D.ncols() == 1);</div>
-<div class="line"><span class="lineno">  614</span> </div>
-<div class="line"><span class="lineno">  615</span>    <span class="keywordtype">unsigned</span> row_start;</div>
-<div class="line"><span class="lineno">  616</span>    <span class="keywordtype">unsigned</span> row_end;</div>
-<div class="line"><span class="lineno">  617</span>    RCP&lt;const Basic&gt; diag;</div>
-<div class="line"><span class="lineno">  618</span> </div>
-<div class="line"><span class="lineno">  619</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; N; i++) {</div>
-<div class="line"><span class="lineno">  620</span>        row_start = A.p_[i];</div>
-<div class="line"><span class="lineno">  621</span>        row_end = A.p_[i + 1];</div>
-<div class="line"><span class="lineno">  622</span>        diag = zero;</div>
-<div class="line"><span class="lineno">  623</span>        <span class="keywordtype">unsigned</span> jj;</div>
-<div class="line"><span class="lineno">  624</span> </div>
-<div class="line"><span class="lineno">  625</span>        <span class="keywordflow">while</span> (row_start &lt;= row_end) {</div>
-<div class="line"><span class="lineno">  626</span>            jj = (row_start + row_end) / 2;</div>
-<div class="line"><span class="lineno">  627</span>            <span class="keywordflow">if</span> (A.j_[jj] == i) {</div>
-<div class="line"><span class="lineno">  628</span>                diag = A.x_[jj];</div>
-<div class="line"><span class="lineno">  629</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  630</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (A.j_[jj] &lt; i) {</div>
-<div class="line"><span class="lineno">  631</span>                row_start = jj + 1;</div>
-<div class="line"><span class="lineno">  632</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  633</span>                row_end = jj - 1;</div>
-<div class="line"><span class="lineno">  634</span>            }</div>
-<div class="line"><span class="lineno">  635</span>        }</div>
-<div class="line"><span class="lineno">  636</span> </div>
-<div class="line"><span class="lineno">  637</span>        D.set(i, 0, diag);</div>
-<div class="line"><span class="lineno">  638</span>    }</div>
-<div class="line"><span class="lineno">  639</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00622">622</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  623</span>{</div>
+<div class="line"><span class="lineno">  624</span>    <span class="keywordtype">unsigned</span> N = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(A.row_, A.col_);</div>
+<div class="line"><span class="lineno">  625</span> </div>
+<div class="line"><span class="lineno">  626</span>    SYMENGINE_ASSERT(D.nrows() == N and D.ncols() == 1);</div>
+<div class="line"><span class="lineno">  627</span> </div>
+<div class="line"><span class="lineno">  628</span>    <span class="keywordtype">unsigned</span> row_start;</div>
+<div class="line"><span class="lineno">  629</span>    <span class="keywordtype">unsigned</span> row_end;</div>
+<div class="line"><span class="lineno">  630</span>    RCP&lt;const Basic&gt; diag;</div>
+<div class="line"><span class="lineno">  631</span> </div>
+<div class="line"><span class="lineno">  632</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; N; i++) {</div>
+<div class="line"><span class="lineno">  633</span>        row_start = A.p_[i];</div>
+<div class="line"><span class="lineno">  634</span>        row_end = A.p_[i + 1];</div>
+<div class="line"><span class="lineno">  635</span>        diag = zero;</div>
+<div class="line"><span class="lineno">  636</span>        <span class="keywordtype">unsigned</span> jj;</div>
+<div class="line"><span class="lineno">  637</span> </div>
+<div class="line"><span class="lineno">  638</span>        <span class="keywordflow">while</span> (row_start &lt;= row_end) {</div>
+<div class="line"><span class="lineno">  639</span>            jj = (row_start + row_end) / 2;</div>
+<div class="line"><span class="lineno">  640</span>            <span class="keywordflow">if</span> (A.j_[jj] == i) {</div>
+<div class="line"><span class="lineno">  641</span>                diag = A.x_[jj];</div>
+<div class="line"><span class="lineno">  642</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  643</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (A.j_[jj] &lt; i) {</div>
+<div class="line"><span class="lineno">  644</span>                row_start = jj + 1;</div>
+<div class="line"><span class="lineno">  645</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  646</span>                row_end = jj - 1;</div>
+<div class="line"><span class="lineno">  647</span>            }</div>
+<div class="line"><span class="lineno">  648</span>        }</div>
+<div class="line"><span class="lineno">  649</span> </div>
+<div class="line"><span class="lineno">  650</span>        D.set(i, 0, diag);</div>
+<div class="line"><span class="lineno">  651</span>    }</div>
+<div class="line"><span class="lineno">  652</span>}</div>
 <div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -2473,39 +2519,39 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00519">519</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  520</span>{</div>
-<div class="line"><span class="lineno">  521</span>    <span class="comment">// method that uses O(n) temp storage</span></div>
-<div class="line"><span class="lineno">  522</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> mask(A.col_, -1);</div>
-<div class="line"><span class="lineno">  523</span>    C.p_[0] = 0;</div>
-<div class="line"><span class="lineno">  524</span> </div>
-<div class="line"><span class="lineno">  525</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
-<div class="line"><span class="lineno">  526</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
-<div class="line"><span class="lineno">  527</span>        <span class="comment">// npy_intp row_nnz = 0;</span></div>
-<div class="line"><span class="lineno">  528</span>        <span class="keywordtype">unsigned</span> row_nnz = 0;</div>
-<div class="line"><span class="lineno">  529</span> </div>
-<div class="line"><span class="lineno">  530</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++) {</div>
-<div class="line"><span class="lineno">  531</span>            <span class="keywordtype">unsigned</span> j = A.j_[jj];</div>
-<div class="line"><span class="lineno">  532</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = B.p_[j]; kk &lt; B.p_[j + 1]; kk++) {</div>
-<div class="line"><span class="lineno">  533</span>                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
-<div class="line"><span class="lineno">  534</span>                <span class="keywordflow">if</span> (mask[k] != i) {</div>
-<div class="line"><span class="lineno">  535</span>                    mask[k] = i;</div>
-<div class="line"><span class="lineno">  536</span>                    row_nnz++;</div>
-<div class="line"><span class="lineno">  537</span>                }</div>
-<div class="line"><span class="lineno">  538</span>            }</div>
-<div class="line"><span class="lineno">  539</span>        }</div>
-<div class="line"><span class="lineno">  540</span> </div>
-<div class="line"><span class="lineno">  541</span>        <span class="keywordtype">unsigned</span> next_nnz = nnz + row_nnz;</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00532">532</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  533</span>{</div>
+<div class="line"><span class="lineno">  534</span>    <span class="comment">// method that uses O(n) temp storage</span></div>
+<div class="line"><span class="lineno">  535</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> mask(A.col_, -1);</div>
+<div class="line"><span class="lineno">  536</span>    C.p_[0] = 0;</div>
+<div class="line"><span class="lineno">  537</span> </div>
+<div class="line"><span class="lineno">  538</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
+<div class="line"><span class="lineno">  539</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
+<div class="line"><span class="lineno">  540</span>        <span class="comment">// npy_intp row_nnz = 0;</span></div>
+<div class="line"><span class="lineno">  541</span>        <span class="keywordtype">unsigned</span> row_nnz = 0;</div>
 <div class="line"><span class="lineno">  542</span> </div>
-<div class="line"><span class="lineno">  543</span>        <span class="comment">// Addition overflow: http://www.cplusplus.com/articles/DE18T05o/</span></div>
-<div class="line"><span class="lineno">  544</span>        <span class="keywordflow">if</span> (next_nnz &lt; nnz) {</div>
-<div class="line"><span class="lineno">  545</span>            <span class="keywordflow">throw</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/error/overflow_error.html">std::overflow_error</a>(<span class="stringliteral">&quot;nnz of the result is too large&quot;</span>);</div>
-<div class="line"><span class="lineno">  546</span>        }</div>
-<div class="line"><span class="lineno">  547</span> </div>
-<div class="line"><span class="lineno">  548</span>        nnz = next_nnz;</div>
-<div class="line"><span class="lineno">  549</span>        C.p_[i + 1] = nnz;</div>
-<div class="line"><span class="lineno">  550</span>    }</div>
-<div class="line"><span class="lineno">  551</span>}</div>
+<div class="line"><span class="lineno">  543</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++) {</div>
+<div class="line"><span class="lineno">  544</span>            <span class="keywordtype">unsigned</span> j = A.j_[jj];</div>
+<div class="line"><span class="lineno">  545</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = B.p_[j]; kk &lt; B.p_[j + 1]; kk++) {</div>
+<div class="line"><span class="lineno">  546</span>                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
+<div class="line"><span class="lineno">  547</span>                <span class="keywordflow">if</span> (mask[k] != i) {</div>
+<div class="line"><span class="lineno">  548</span>                    mask[k] = i;</div>
+<div class="line"><span class="lineno">  549</span>                    row_nnz++;</div>
+<div class="line"><span class="lineno">  550</span>                }</div>
+<div class="line"><span class="lineno">  551</span>            }</div>
+<div class="line"><span class="lineno">  552</span>        }</div>
+<div class="line"><span class="lineno">  553</span> </div>
+<div class="line"><span class="lineno">  554</span>        <span class="keywordtype">unsigned</span> next_nnz = nnz + row_nnz;</div>
+<div class="line"><span class="lineno">  555</span> </div>
+<div class="line"><span class="lineno">  556</span>        <span class="comment">// Addition overflow: http://www.cplusplus.com/articles/DE18T05o/</span></div>
+<div class="line"><span class="lineno">  557</span>        <span class="keywordflow">if</span> (next_nnz &lt; nnz) {</div>
+<div class="line"><span class="lineno">  558</span>            <span class="keywordflow">throw</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/error/overflow_error.html">std::overflow_error</a>(<span class="stringliteral">&quot;nnz of the result is too large&quot;</span>);</div>
+<div class="line"><span class="lineno">  559</span>        }</div>
+<div class="line"><span class="lineno">  560</span> </div>
+<div class="line"><span class="lineno">  561</span>        nnz = next_nnz;</div>
+<div class="line"><span class="lineno">  562</span>        C.p_[i + 1] = nnz;</div>
+<div class="line"><span class="lineno">  563</span>    }</div>
+<div class="line"><span class="lineno">  564</span>}</div>
 <div class="ttc" id="aoverflow_error_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/error/overflow_error.html">std::overflow_error</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -2550,58 +2596,58 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00555">555</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  556</span>{</div>
-<div class="line"><span class="lineno">  557</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a> <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>(A.col_, -1);</div>
-<div class="line"><span class="lineno">  558</span>    vec_basic sums(A.col_, zero);</div>
-<div class="line"><span class="lineno">  559</span> </div>
-<div class="line"><span class="lineno">  560</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
-<div class="line"><span class="lineno">  561</span> </div>
-<div class="line"><span class="lineno">  562</span>    C.p_[0] = 0;</div>
-<div class="line"><span class="lineno">  563</span> </div>
-<div class="line"><span class="lineno">  564</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
-<div class="line"><span class="lineno">  565</span>        <span class="keywordtype">int</span> head = -2;</div>
-<div class="line"><span class="lineno">  566</span>        <span class="keywordtype">unsigned</span> length = 0;</div>
-<div class="line"><span class="lineno">  567</span> </div>
-<div class="line"><span class="lineno">  568</span>        <span class="keywordtype">unsigned</span> jj_start = A.p_[i];</div>
-<div class="line"><span class="lineno">  569</span>        <span class="keywordtype">unsigned</span> jj_end = A.p_[i + 1];</div>
-<div class="line"><span class="lineno">  570</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = jj_start; jj &lt; jj_end; jj++) {</div>
-<div class="line"><span class="lineno">  571</span>            <span class="keywordtype">unsigned</span> j = A.j_[jj];</div>
-<div class="line"><span class="lineno">  572</span>            RCP&lt;const Basic&gt; v = A.x_[jj];</div>
-<div class="line"><span class="lineno">  573</span> </div>
-<div class="line"><span class="lineno">  574</span>            <span class="keywordtype">unsigned</span> kk_start = B.p_[j];</div>
-<div class="line"><span class="lineno">  575</span>            <span class="keywordtype">unsigned</span> kk_end = B.p_[j + 1];</div>
-<div class="line"><span class="lineno">  576</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = kk_start; kk &lt; kk_end; kk++) {</div>
-<div class="line"><span class="lineno">  577</span>                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
-<div class="line"><span class="lineno">  578</span> </div>
-<div class="line"><span class="lineno">  579</span>                sums[k] = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(sums[k], <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00568">568</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  569</span>{</div>
+<div class="line"><span class="lineno">  570</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a> <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>(A.col_, -1);</div>
+<div class="line"><span class="lineno">  571</span>    vec_basic sums(A.col_, zero);</div>
+<div class="line"><span class="lineno">  572</span> </div>
+<div class="line"><span class="lineno">  573</span>    <span class="keywordtype">unsigned</span> nnz = 0;</div>
+<div class="line"><span class="lineno">  574</span> </div>
+<div class="line"><span class="lineno">  575</span>    C.p_[0] = 0;</div>
+<div class="line"><span class="lineno">  576</span> </div>
+<div class="line"><span class="lineno">  577</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
+<div class="line"><span class="lineno">  578</span>        <span class="keywordtype">int</span> head = -2;</div>
+<div class="line"><span class="lineno">  579</span>        <span class="keywordtype">unsigned</span> length = 0;</div>
 <div class="line"><span class="lineno">  580</span> </div>
-<div class="line"><span class="lineno">  581</span>                <span class="keywordflow">if</span> (next[k] == -1) {</div>
-<div class="line"><span class="lineno">  582</span>                    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[k] = head;</div>
-<div class="line"><span class="lineno">  583</span>                    head = k;</div>
-<div class="line"><span class="lineno">  584</span>                    length++;</div>
-<div class="line"><span class="lineno">  585</span>                }</div>
-<div class="line"><span class="lineno">  586</span>            }</div>
-<div class="line"><span class="lineno">  587</span>        }</div>
-<div class="line"><span class="lineno">  588</span> </div>
-<div class="line"><span class="lineno">  589</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = 0; jj &lt; length; jj++) {</div>
-<div class="line"><span class="lineno">  590</span> </div>
-<div class="line"><span class="lineno">  591</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*sums[head]))) {</div>
-<div class="line"><span class="lineno">  592</span>                C.j_[nnz] = head;</div>
-<div class="line"><span class="lineno">  593</span>                C.x_[nnz] = sums[head];</div>
-<div class="line"><span class="lineno">  594</span>                nnz++;</div>
-<div class="line"><span class="lineno">  595</span>            }</div>
-<div class="line"><span class="lineno">  596</span> </div>
-<div class="line"><span class="lineno">  597</span>            <span class="keywordtype">unsigned</span> temp = head;</div>
-<div class="line"><span class="lineno">  598</span>            head = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[head];</div>
-<div class="line"><span class="lineno">  599</span> </div>
-<div class="line"><span class="lineno">  600</span>            <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[temp] = -1; <span class="comment">// clear arrays</span></div>
-<div class="line"><span class="lineno">  601</span>            sums[temp] = zero;</div>
-<div class="line"><span class="lineno">  602</span>        }</div>
+<div class="line"><span class="lineno">  581</span>        <span class="keywordtype">unsigned</span> jj_start = A.p_[i];</div>
+<div class="line"><span class="lineno">  582</span>        <span class="keywordtype">unsigned</span> jj_end = A.p_[i + 1];</div>
+<div class="line"><span class="lineno">  583</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = jj_start; jj &lt; jj_end; jj++) {</div>
+<div class="line"><span class="lineno">  584</span>            <span class="keywordtype">unsigned</span> j = A.j_[jj];</div>
+<div class="line"><span class="lineno">  585</span>            RCP&lt;const Basic&gt; v = A.x_[jj];</div>
+<div class="line"><span class="lineno">  586</span> </div>
+<div class="line"><span class="lineno">  587</span>            <span class="keywordtype">unsigned</span> kk_start = B.p_[j];</div>
+<div class="line"><span class="lineno">  588</span>            <span class="keywordtype">unsigned</span> kk_end = B.p_[j + 1];</div>
+<div class="line"><span class="lineno">  589</span>            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = kk_start; kk &lt; kk_end; kk++) {</div>
+<div class="line"><span class="lineno">  590</span>                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
+<div class="line"><span class="lineno">  591</span> </div>
+<div class="line"><span class="lineno">  592</span>                sums[k] = <a class="code hl_function" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(sums[k], <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
+<div class="line"><span class="lineno">  593</span> </div>
+<div class="line"><span class="lineno">  594</span>                <span class="keywordflow">if</span> (next[k] == -1) {</div>
+<div class="line"><span class="lineno">  595</span>                    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[k] = head;</div>
+<div class="line"><span class="lineno">  596</span>                    head = k;</div>
+<div class="line"><span class="lineno">  597</span>                    length++;</div>
+<div class="line"><span class="lineno">  598</span>                }</div>
+<div class="line"><span class="lineno">  599</span>            }</div>
+<div class="line"><span class="lineno">  600</span>        }</div>
+<div class="line"><span class="lineno">  601</span> </div>
+<div class="line"><span class="lineno">  602</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = 0; jj &lt; length; jj++) {</div>
 <div class="line"><span class="lineno">  603</span> </div>
-<div class="line"><span class="lineno">  604</span>        C.p_[i + 1] = nnz;</div>
-<div class="line"><span class="lineno">  605</span>    }</div>
-<div class="line"><span class="lineno">  606</span>}</div>
+<div class="line"><span class="lineno">  604</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*sums[head]))) {</div>
+<div class="line"><span class="lineno">  605</span>                C.j_[nnz] = head;</div>
+<div class="line"><span class="lineno">  606</span>                C.x_[nnz] = sums[head];</div>
+<div class="line"><span class="lineno">  607</span>                nnz++;</div>
+<div class="line"><span class="lineno">  608</span>            }</div>
+<div class="line"><span class="lineno">  609</span> </div>
+<div class="line"><span class="lineno">  610</span>            <span class="keywordtype">unsigned</span> temp = head;</div>
+<div class="line"><span class="lineno">  611</span>            head = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[head];</div>
+<div class="line"><span class="lineno">  612</span> </div>
+<div class="line"><span class="lineno">  613</span>            <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[temp] = -1; <span class="comment">// clear arrays</span></div>
+<div class="line"><span class="lineno">  614</span>            sums[temp] = zero;</div>
+<div class="line"><span class="lineno">  615</span>        }</div>
+<div class="line"><span class="lineno">  616</span> </div>
+<div class="line"><span class="lineno">  617</span>        C.p_[i + 1] = nnz;</div>
+<div class="line"><span class="lineno">  618</span>    }</div>
+<div class="line"><span class="lineno">  619</span>}</div>
 <div class="ttc" id="anext_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a></div><div class="ttdeci">T next(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -2640,21 +2686,21 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00657">657</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  658</span>{</div>
-<div class="line"><span class="lineno">  659</span>    SYMENGINE_ASSERT(A.col_ == X.nrows() and X.ncols() == 1);</div>
-<div class="line"><span class="lineno">  660</span> </div>
-<div class="line"><span class="lineno">  661</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> nnz = A.p_[A.row_];</div>
-<div class="line"><span class="lineno">  662</span>    <span class="keywordtype">unsigned</span> i;</div>
-<div class="line"><span class="lineno">  663</span> </div>
-<div class="line"><span class="lineno">  664</span>    <span class="keywordflow">for</span> (i = 0; i &lt; A.col_; i++) {</div>
-<div class="line"><span class="lineno">  665</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
-<div class="line"><span class="lineno">  666</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
-<div class="line"><span class="lineno">  667</span>    }</div>
-<div class="line"><span class="lineno">  668</span> </div>
-<div class="line"><span class="lineno">  669</span>    <span class="keywordflow">for</span> (i = 0; i &lt; nnz; i++)</div>
-<div class="line"><span class="lineno">  670</span>        A.x_[i] = <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[i], X.get(A.j_[i], 0));</div>
-<div class="line"><span class="lineno">  671</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00670">670</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  671</span>{</div>
+<div class="line"><span class="lineno">  672</span>    SYMENGINE_ASSERT(A.col_ == X.nrows() and X.ncols() == 1);</div>
+<div class="line"><span class="lineno">  673</span> </div>
+<div class="line"><span class="lineno">  674</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> nnz = A.p_[A.row_];</div>
+<div class="line"><span class="lineno">  675</span>    <span class="keywordtype">unsigned</span> i;</div>
+<div class="line"><span class="lineno">  676</span> </div>
+<div class="line"><span class="lineno">  677</span>    <span class="keywordflow">for</span> (i = 0; i &lt; A.col_; i++) {</div>
+<div class="line"><span class="lineno">  678</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
+<div class="line"><span class="lineno">  679</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
+<div class="line"><span class="lineno">  680</span>    }</div>
+<div class="line"><span class="lineno">  681</span> </div>
+<div class="line"><span class="lineno">  682</span>    <span class="keywordflow">for</span> (i = 0; i &lt; nnz; i++)</div>
+<div class="line"><span class="lineno">  683</span>        A.x_[i] = <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[i], X.get(A.j_[i], 0));</div>
+<div class="line"><span class="lineno">  684</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2692,17 +2738,17 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00643">643</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  644</span>{</div>
-<div class="line"><span class="lineno">  645</span>    SYMENGINE_ASSERT(A.row_ == X.nrows() and X.ncols() == 1);</div>
-<div class="line"><span class="lineno">  646</span> </div>
-<div class="line"><span class="lineno">  647</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
-<div class="line"><span class="lineno">  648</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
-<div class="line"><span class="lineno">  649</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
-<div class="line"><span class="lineno">  650</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++)</div>
-<div class="line"><span class="lineno">  651</span>            A.x_[jj] = <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[jj], X.get(i, 0));</div>
-<div class="line"><span class="lineno">  652</span>    }</div>
-<div class="line"><span class="lineno">  653</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sparse__matrix_8cpp_source.html#l00656">656</a> of file <a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  657</span>{</div>
+<div class="line"><span class="lineno">  658</span>    SYMENGINE_ASSERT(A.row_ == X.nrows() and X.ncols() == 1);</div>
+<div class="line"><span class="lineno">  659</span> </div>
+<div class="line"><span class="lineno">  660</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
+<div class="line"><span class="lineno">  661</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
+<div class="line"><span class="lineno">  662</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
+<div class="line"><span class="lineno">  663</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++)</div>
+<div class="line"><span class="lineno">  664</span>            A.x_[jj] = <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[jj], X.get(i, 0));</div>
+<div class="line"><span class="lineno">  665</span>    }</div>
+<div class="line"><span class="lineno">  666</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2727,7 +2773,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00478">478</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00485">485</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -2751,7 +2797,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00474">474</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00481">481</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -2775,7 +2821,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00473">473</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00480">480</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -2799,7 +2845,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00477">477</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00484">484</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -2823,7 +2869,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00475">475</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00482">482</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>

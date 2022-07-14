@@ -163,8 +163,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afcb5f20d9d2a00e1c731ab7da873649d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab79b2d51f2fd6c2a2b74c5764f5b424a"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DenseMatrix.html#ab79b2d51f2fd6c2a2b74c5764f5b424a">is_diagonal</a> () const</td></tr>
 <tr class="separator:ab79b2d51f2fd6c2a2b74c5764f5b424a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9256c85ffee2f6a0cd8984e87abfd408"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DenseMatrix.html#a9256c85ffee2f6a0cd8984e87abfd408">is_real</a> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr) const</td></tr>
-<tr class="separator:a9256c85ffee2f6a0cd8984e87abfd408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cd2767e660031929626e46e2f7d20f2"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DenseMatrix.html#a2cd2767e660031929626e46e2f7d20f2">is_real</a> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr) const override</td></tr>
+<tr class="separator:a2cd2767e660031929626e46e2f7d20f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3e482586f87a82c7e2680ddb3c5f4fe"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DenseMatrix.html#ab3e482586f87a82c7e2680ddb3c5f4fe">is_symmetric</a> () const</td></tr>
 <tr class="separator:ab3e482586f87a82c7e2680ddb3c5f4fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af92cc975bef14b682f65681b5a55d4d5"><td class="memItemLeft" align="right" valign="top">virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1DenseMatrix.html#af92cc975bef14b682f65681b5a55d4d5">is_hermitian</a> () const</td></tr>
@@ -240,6 +240,9 @@ virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>ncols</b>
 <tr class="separator:a9d25f7a869319efef591cab5f41f682c inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78cd79e6c797cf1bf85bceffff1f159a inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixBase.html#a78cd79e6c797cf1bf85bceffff1f159a">eq</a> (const <a class="el" href="classSymEngine_1_1MatrixBase.html">MatrixBase</a> &amp;other) const</td></tr>
 <tr class="separator:a78cd79e6c797cf1bf85bceffff1f159a inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ecc22e8dc1b4e805ad9f3d01668b2a8 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top"><a id="a4ecc22e8dc1b4e805ad9f3d01668b2a8" name="a4ecc22e8dc1b4e805ad9f3d01668b2a8"></a>
+virtual tribool&#160;</td><td class="memItemRight" valign="bottom"><b>is_real</b> (const <a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions=nullptr) const =0</td></tr>
+<tr class="separator:a4ecc22e8dc1b4e805ad9f3d01668b2a8 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa393961326eb5586dbddb795cb1b7ef6 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top"><a id="aa393961326eb5586dbddb795cb1b7ef6" name="aa393961326eb5586dbddb795cb1b7ef6"></a>
 virtual RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (unsigned i, unsigned j) const =0</td></tr>
 <tr class="separator:aa393961326eb5586dbddb795cb1b7ef6 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -436,7 +439,7 @@ Friends</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00102">102</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00104">104</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a379da1b77da25dadb46694dfd3b323cb" name="a379da1b77da25dadb46694dfd3b323cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a379da1b77da25dadb46694dfd3b323cb">&#9670;&nbsp;</a></span>DenseMatrix() <span class="overload">[1/4]</span></h2>
@@ -1432,8 +1435,8 @@ Friends</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a9256c85ffee2f6a0cd8984e87abfd408" name="a9256c85ffee2f6a0cd8984e87abfd408"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9256c85ffee2f6a0cd8984e87abfd408">&#9670;&nbsp;</a></span>is_real()</h2>
+<a id="a2cd2767e660031929626e46e2f7d20f2" name="a2cd2767e660031929626e46e2f7d20f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cd2767e660031929626e46e2f7d20f2">&#9670;&nbsp;</a></span>is_real()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1451,10 +1454,12 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="dense__matrix_8cpp_source.html#l00143">143</a> of file <a class="el" href="dense__matrix_8cpp_source.html">dense_matrix.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  144</span>{</div>
@@ -1968,10 +1973,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00127">127</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  128</span>    {</div>
-<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">return</span> col_;</div>
-<div class="line"><span class="lineno">  130</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00129">129</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  130</span>    {</div>
+<div class="line"><span class="lineno">  131</span>        <span class="keywordflow">return</span> col_;</div>
+<div class="line"><span class="lineno">  132</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2000,10 +2005,10 @@ Friends</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MatrixBase.html">SymEngine::MatrixBase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00123">123</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  124</span>    {</div>
-<div class="line"><span class="lineno">  125</span>        <span class="keywordflow">return</span> row_;</div>
-<div class="line"><span class="lineno">  126</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00125">125</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  126</span>    {</div>
+<div class="line"><span class="lineno">  127</span>        <span class="keywordflow">return</span> row_;</div>
+<div class="line"><span class="lineno">  128</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5883,7 +5888,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00334">334</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00337">337</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -5899,7 +5904,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00327">327</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00330">330</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -5923,7 +5928,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00331">331</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00334">334</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
@@ -5947,7 +5952,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00333">333</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00336">336</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 
 </div>
 </div>
