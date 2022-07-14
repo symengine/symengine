@@ -5,9 +5,12 @@
 
 using SymEngine::Complex;
 using SymEngine::diagonal_matrix;
+using SymEngine::DiagonalMatrix;
 using SymEngine::DomainError;
+using SymEngine::down_cast;
 using SymEngine::eq;
 using SymEngine::identity_matrix;
+using SymEngine::IdentityMatrix;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::is_real;
@@ -21,6 +24,7 @@ using SymEngine::symbol;
 using SymEngine::Trace;
 using SymEngine::vec_basic;
 using SymEngine::zero;
+using SymEngine::ZeroMatrix;
 
 TEST_CASE("Test IdentityMatrix", "[IdentityMatrix]")
 {
@@ -43,6 +47,8 @@ TEST_CASE("Test IdentityMatrix", "[IdentityMatrix]")
     CHECK_THROWS_AS(identity_matrix(rat1), DomainError);
 
     REQUIRE(I1->__str__() == "I");
+    REQUIRE(!down_cast<const IdentityMatrix &>(*I1).is_canonical(integer(-1)));
+    REQUIRE(!down_cast<const IdentityMatrix &>(*I1).is_canonical(rat1));
 }
 
 TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
@@ -68,6 +74,12 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
     CHECK_THROWS_AS(zero_matrix(integer(1), rat1), DomainError);
 
     REQUIRE(Z1->__str__() == "0");
+    REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(integer(2),
+                                                             integer(-1)));
+    REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(integer(-1),
+                                                             integer(1)));
+    REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(rat1, integer(2)));
+    REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(integer(2), rat1));
 }
 
 TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
@@ -78,11 +90,13 @@ TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
     auto diag2 = diagonal_matrix({i2, i1});
     REQUIRE(!eq(*diag1, *diag2));
     REQUIRE(eq(*diag1, *diag1));
+    REQUIRE(!eq(*diag1, *i1));
     REQUIRE(diag1->__hash__() != diag2->__hash__());
     REQUIRE(diag1->compare(*diag2) == -1);
     REQUIRE(diag2->compare(*diag1) == 1);
     REQUIRE(diag2->compare(*diag2) == 0);
     REQUIRE(diag1->get_args().size() == 2);
+    REQUIRE(!down_cast<const DiagonalMatrix &>(*diag1).is_canonical({}));
 }
 
 TEST_CASE("Test Trace", "[Trace]")
@@ -124,6 +138,7 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     auto i2 = integer(5);
     auto Z1 = zero_matrix(i1, i1);
     auto Z2 = zero_matrix(i2, i2);
+    auto Z3 = zero_matrix(i2, i1);
     auto I1 = identity_matrix(i1);
     auto I2 = identity_matrix(i2);
     auto D1 = diagonal_matrix({integer(2), integer(23), integer(-2)});
@@ -143,17 +158,22 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     sum = matrix_add({sum, D2});
     vec = vec_basic({I1, D3});
     REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
+    REQUIRE(sum->__hash__() == make_rcp<const MatrixAdd>(vec)->__hash__());
     sum = matrix_add({Z1, D1});
     REQUIRE(eq(*sum, *D1));
     sum = matrix_add({D1, D2});
     REQUIRE(eq(*sum, *D3));
     sum = matrix_add({Z1, Z1, Z1});
     REQUIRE(eq(*sum, *Z1));
+    sum = matrix_add({I1});
+    REQUIRE(eq(*sum, *I1));
 
     CHECK_THROWS_AS(matrix_add({Z1, Z2}), DomainError);
     CHECK_THROWS_AS(matrix_add({Z2, D1}), DomainError);
     CHECK_THROWS_AS(matrix_add({D1, Z2, D1}), DomainError);
     CHECK_THROWS_AS(matrix_add({D1, I2}), DomainError);
+    CHECK_THROWS_AS(matrix_add({Z2, Z3}), DomainError);
+    CHECK_THROWS_AS(matrix_add({}), DomainError);
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")

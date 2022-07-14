@@ -48,6 +48,7 @@ public:
         : m_(m), n_(n)
     {
         SYMENGINE_ASSIGN_TYPEID();
+        SYMENGINE_ASSERT(is_canonical(m, n));
     }
 
     IMPLEMENT_TYPEID(SYMENGINE_ZEROMATRIX)
