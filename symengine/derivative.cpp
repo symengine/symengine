@@ -717,6 +717,11 @@ void DiffVisitor::bvisit(const MatrixAdd &self)
     throw SymEngineException("Derivative doesn't exist.");
 }
 
+void DiffVisitor::bvisit(const HadamardProduct &self)
+{
+    throw SymEngineException("Derivative doesn't exist.");
+}
+
 void DiffVisitor::bvisit(const Trace &self)
 {
     throw SymEngineException("Derivative doesn't exist.");

@@ -9,6 +9,8 @@ using SymEngine::DiagonalMatrix;
 using SymEngine::DomainError;
 using SymEngine::down_cast;
 using SymEngine::eq;
+using SymEngine::hadamard_product;
+using SymEngine::HadamardProduct;
 using SymEngine::identity_matrix;
 using SymEngine::IdentityMatrix;
 using SymEngine::integer;
@@ -174,6 +176,43 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     CHECK_THROWS_AS(matrix_add({D1, I2}), DomainError);
     CHECK_THROWS_AS(matrix_add({Z2, Z3}), DomainError);
     CHECK_THROWS_AS(matrix_add({}), DomainError);
+}
+
+TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
+{
+    auto i1 = integer(3);
+    auto i2 = integer(5);
+    auto Z1 = zero_matrix(i1, i1);
+    auto Z2 = zero_matrix(i2, i2);
+    auto Z3 = zero_matrix(i2, i1);
+    auto I1 = identity_matrix(i1);
+    auto I2 = identity_matrix(i2);
+    auto D1 = diagonal_matrix({integer(2), integer(23), integer(-2)});
+    auto D2 = diagonal_matrix({integer(-1), integer(5), integer(0)});
+    auto D3 = diagonal_matrix({integer(-2), integer(115), integer(0)});
+
+    auto prod = hadamard_product({Z1, I1});
+    REQUIRE(eq(*prod, *Z1));
+    prod = hadamard_product({I1, Z1, Z1});
+    REQUIRE(eq(*prod, *Z1));
+    prod = hadamard_product({I1, I1});
+    REQUIRE(eq(*prod, *I1));
+    prod = hadamard_product({I1, D1});
+    auto vec = vec_basic({I1, D1});
+    REQUIRE(eq(*prod, *make_rcp<const HadamardProduct>(vec)));
+    REQUIRE(prod->__hash__()
+            == make_rcp<const HadamardProduct>(vec)->__hash__());
+    prod = hadamard_product({D1, D2});
+    REQUIRE(eq(*prod, *D3));
+    prod = hadamard_product({I1});
+    REQUIRE(eq(*prod, *I1));
+
+    CHECK_THROWS_AS(hadamard_product({Z1, Z2}), DomainError);
+    CHECK_THROWS_AS(hadamard_product({Z2, D1}), DomainError);
+    CHECK_THROWS_AS(hadamard_product({D1, Z2, D1}), DomainError);
+    CHECK_THROWS_AS(hadamard_product({D1, I2}), DomainError);
+    CHECK_THROWS_AS(hadamard_product({Z2, Z3}), DomainError);
+    CHECK_THROWS_AS(hadamard_product({}), DomainError);
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")
