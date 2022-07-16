@@ -19,6 +19,7 @@ using SymEngine::is_real;
 using SymEngine::is_true;
 using SymEngine::make_rcp;
 using SymEngine::matrix_add;
+using SymEngine::matrix_symbol;
 using SymEngine::MatrixAdd;
 using SymEngine::one;
 using SymEngine::Rational;
@@ -82,6 +83,23 @@ TEST_CASE("Test ZeroMatrix", "[ZeroMatrix]")
                                                              integer(1)));
     REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(rat1, integer(2)));
     REQUIRE(!down_cast<const ZeroMatrix &>(*Z1).is_canonical(integer(2), rat1));
+}
+
+TEST_CASE("Test MatrixSymbol", "[MatrixSymbol]")
+{
+    auto n1 = integer(1);
+    auto n2 = integer(2);
+    auto x = symbol("x");
+
+    auto A = matrix_symbol("A");
+    auto B = matrix_symbol("B");
+    REQUIRE(!eq(*A, *B));
+    REQUIRE(eq(*A, *A));
+    REQUIRE(A->__hash__() != B->__hash__());
+    REQUIRE(A->compare(*B) == -1);
+    REQUIRE(B->compare(*A) == 1);
+    REQUIRE(A->compare(*A) == 0);
+    REQUIRE(A->get_args().size() == 0);
 }
 
 TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
@@ -310,6 +328,9 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     auto D1 = diagonal_matrix({integer(0), integer(23)});
     auto I1 = identity_matrix(n2);
     auto A1 = matrix_add({D1, I1});
+    auto H1 = hadamard_product({I1, D1});
+    auto S1 = matrix_symbol("S1");
+    auto H2 = hadamard_product({S1, D1});
 
     REQUIRE(is_true(is_diagonal(*I5)));
     REQUIRE(is_false(is_diagonal(*Z52)));
@@ -318,6 +339,8 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     REQUIRE(is_indeterminate(is_diagonal(*Zxy)));
     REQUIRE(is_true(is_diagonal(*D1)));
     REQUIRE(is_true(is_diagonal(*A1)));
+    REQUIRE(is_true(is_diagonal(*H1)));
+    REQUIRE(is_true(is_diagonal(*H2)));
 }
 
 TEST_CASE("Test is_lower", "[is_lower]")

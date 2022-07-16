@@ -114,6 +114,7 @@ public:
     void bvisit(const Tuple &self);
     void bvisit(const IdentityMatrix &self);
     void bvisit(const ZeroMatrix &self);
+    void bvisit(const MatrixSymbol &self);
     void bvisit(const DiagonalMatrix &self);
     void bvisit(const MatrixAdd &self);
     void bvisit(const HadamardProduct &self);

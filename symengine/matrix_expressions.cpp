@@ -143,6 +143,34 @@ RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
     return make_rcp<const ZeroMatrix>(m, n);
 }
 
+hash_t MatrixSymbol::__hash__() const
+{
+    hash_t seed = SYMENGINE_MATRIXSYMBOL;
+    hash_combine(seed, name_);
+    return seed;
+}
+
+bool MatrixSymbol::__eq__(const Basic &o) const
+{
+    return (is_a<MatrixSymbol>(o)
+            && name_ == down_cast<const MatrixSymbol &>(o).name_);
+}
+
+int MatrixSymbol::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<MatrixSymbol>(o));
+
+    const MatrixSymbol &s = down_cast<const MatrixSymbol &>(o);
+    if (name_ == s.name_)
+        return 0;
+    return name_ < s.name_ ? -1 : 1;
+}
+
+RCP<const MatrixExpr> matrix_symbol(const std::string &name)
+{
+    return make_rcp<const MatrixSymbol>(name);
+}
+
 hash_t DiagonalMatrix::__hash__() const
 {
     hash_t seed = SYMENGINE_DIAGONALMATRIX;
@@ -298,6 +326,9 @@ void check_matching_sizes(const vec_basic &vec)
 {
     auto sz = size(down_cast<const MatrixExpr &>(*vec[0]));
     for (auto it = vec.begin() + 1; it != vec.end(); ++it) {
+        if (sz.first.is_null()) {
+            continue;
+        }
         auto cursize = size(down_cast<const MatrixExpr &>(**it));
         auto rowdiff = sub(sz.first, cursize.first);
         tribool rowmatch = is_zero(*rowdiff);
@@ -606,6 +637,28 @@ private:
     tribool is_symmetric_;
     const Assumptions *assumptions_;
 
+    void check_vector(const vec_basic &vec)
+    {
+        bool found_nonsym = false;
+        for (auto &elt : vec) {
+            elt->accept(*this);
+            if (is_indeterminate(is_symmetric_)) {
+                return;
+            } else if (is_false(is_symmetric_)) {
+                if (found_nonsym) {
+                    return;
+                } else {
+                    found_nonsym = true;
+                }
+            }
+        }
+        if (found_nonsym) {
+            is_symmetric_ = tribool::trifalse;
+        } else {
+            is_symmetric_ = tribool::tritrue;
+        }
+    };
+
 public:
     MatrixSymmetricVisitor(const Assumptions *assumptions)
         : assumptions_(assumptions)
@@ -635,8 +688,12 @@ public:
 
     void bvisit(const MatrixAdd &x)
     {
-        // MatrixAdd can currently only be diagonal+identity
-        is_symmetric_ = tribool::tritrue;
+        check_vector(x.get_terms());
+    };
+
+    void bvisit(const HadamardProduct &x)
+    {
+        check_vector(x.get_factors());
     };
 
     tribool apply(const MatrixExpr &s)
@@ -657,6 +714,16 @@ class MatrixSquareVisitor : public BaseVisitor<MatrixSquareVisitor>
 private:
     tribool is_square_;
     const Assumptions *assumptions_;
+
+    void check_vector(const vec_basic &vec)
+    {
+        for (auto &elt : vec) {
+            elt->accept(*this);
+            if (not is_indeterminate(is_square_)) {
+                return;
+            }
+        }
+    }
 
 public:
     MatrixSquareVisitor(const Assumptions *assumptions)
@@ -688,13 +755,13 @@ public:
 
     void bvisit(const MatrixAdd &x)
     {
-        for (auto &elt : x.get_terms()) {
-            elt->accept(*this);
-            if (not is_indeterminate(is_square_)) {
-                return;
-            }
-        }
+        check_vector(x.get_terms());
     };
+
+    void bvisit(const HadamardProduct &x)
+    {
+        check_vector(x.get_factors());
+    }
 
     tribool apply(const MatrixExpr &s)
     {
@@ -744,16 +811,37 @@ public:
 
     void bvisit(const MatrixAdd &x)
     {
-        // MatrixAdd can currently only be
-        // diagonal+identity+hadamard(diag+identity)
-        is_diagonal_ = tribool::tritrue;
+        bool found_nondiag = false;
+        for (auto &elt : x.get_terms()) {
+            elt->accept(*this);
+            if (is_indeterminate(is_diagonal_)) {
+                return;
+            } else if (is_false(is_diagonal_)) {
+                if (found_nondiag) {
+                    return;
+                } else {
+                    found_nondiag = true;
+                }
+            }
+        }
+        if (found_nondiag) {
+            is_diagonal_ = tribool::trifalse;
+        } else {
+            is_diagonal_ = tribool::tritrue;
+        }
     };
 
     void bvisit(const HadamardProduct &x)
     {
-        // HadamardProduct can currently only be
-        // diagonal*identity*matrix_add(diag+identity)
-        is_diagonal_ = tribool::tritrue;
+        // diag x (diag | nodiag | indeterminate) x ... = diag
+        // (indet | nodiag) x (indet | nodiag) x ... = indeterminate
+        for (auto &elt : x.get_factors()) {
+            elt->accept(*this);
+            if (is_true(is_diagonal_)) {
+                return;
+            }
+        }
+        is_diagonal_ = tribool::indeterminate;
     };
 
     tribool apply(const MatrixExpr &s)
@@ -804,16 +892,37 @@ public:
 
     void bvisit(const MatrixAdd &x)
     {
-        // MatrixAdd can currently only be
-        // diagonal+identity+hadamard(diag+identity)
-        is_lower_ = tribool::tritrue;
+        bool found_nonlower = false;
+        for (auto &elt : x.get_terms()) {
+            elt->accept(*this);
+            if (is_indeterminate(is_lower_)) {
+                return;
+            } else if (is_false(is_lower_)) {
+                if (found_nonlower) {
+                    return;
+                } else {
+                    found_nonlower = true;
+                }
+            }
+        }
+        if (found_nonlower) {
+            is_lower_ = tribool::trifalse;
+        } else {
+            is_lower_ = tribool::tritrue;
+        }
     };
 
     void bvisit(const HadamardProduct &x)
     {
-        // HadamardProduct can currently only be
-        // diagonal*identity*matrix_add(diag+identity)
-        is_lower_ = tribool::tritrue;
+        // lower x (lower | nolower | indeterminate) x ... = lower
+        // (indet | nolower) x (indet | nocwlower) x ... = indeterminate
+        for (auto &elt : x.get_factors()) {
+            elt->accept(*this);
+            if (is_true(is_lower_)) {
+                return;
+            }
+        }
+        is_lower_ = tribool::indeterminate;
     };
 
     tribool apply(const MatrixExpr &s)
@@ -864,16 +973,35 @@ public:
 
     void bvisit(const MatrixAdd &x)
     {
-        // MatrixAdd can currently only be
-        // diagonal+identity+hadamard(diag+identity)
-        is_upper_ = tribool::tritrue;
+        bool found_nonupper = false;
+        for (auto &elt : x.get_terms()) {
+            elt->accept(*this);
+            if (is_indeterminate(is_upper_)) {
+                return;
+            } else if (is_false(is_upper_)) {
+                if (found_nonupper) {
+                    return;
+                } else {
+                    found_nonupper = true;
+                }
+            }
+        }
+        if (found_nonupper) {
+            is_upper_ = tribool::trifalse;
+        } else {
+            is_upper_ = tribool::tritrue;
+        }
     };
 
     void bvisit(const HadamardProduct &x)
     {
-        // HadamardProduct can currently only be
-        // diagonal*identity*matrix_add(diag+identity)
-        is_upper_ = tribool::tritrue;
+        for (auto &elt : x.get_factors()) {
+            elt->accept(*this);
+            if (is_true(is_upper_)) {
+                return;
+            }
+        }
+        is_upper_ = tribool::indeterminate;
     };
 
     tribool apply(const MatrixExpr &s)
@@ -972,6 +1100,10 @@ public:
     {
         nrows_ = x.nrows();
         ncols_ = x.ncols();
+    };
+
+    void bvisit(const MatrixSymbol &x){
+        // Do not initialize nrows_ and ncols_
     };
 
     void bvisit(const DiagonalMatrix &x)
