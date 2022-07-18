@@ -169,12 +169,15 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     auto D1 = diagonal_matrix({integer(2), integer(23), integer(-2)});
     auto D2 = diagonal_matrix({integer(-1), integer(5), integer(0)});
     auto D3 = diagonal_matrix({integer(1), integer(28), integer(-2)});
+    auto D4 = diagonal_matrix({integer(2), integer(10)});
     auto A1 = immutable_dense_matrix(
         2, 2, {integer(1), integer(2), integer(3), integer(4)});
     auto A2 = immutable_dense_matrix(
         2, 2, {integer(2), integer(4), integer(6), integer(9)});
     auto A3 = immutable_dense_matrix(
         2, 2, {integer(3), integer(6), integer(9), integer(13)});
+    auto A4 = immutable_dense_matrix(
+        2, 2, {integer(3), integer(2), integer(3), integer(14)});
 
     auto sum = matrix_add({Z1, I1});
     REQUIRE(eq(*sum, *I1));
@@ -200,6 +203,10 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     REQUIRE(eq(*sum, *I1));
     sum = matrix_add({A1, A2});
     REQUIRE(eq(*sum, *A3));
+    sum = matrix_add({D4, A1});
+    REQUIRE(eq(*sum, *A4));
+    sum = matrix_add({A1, D4});
+    REQUIRE(eq(*sum, *A4));
 
     CHECK_THROWS_AS(matrix_add({Z1, Z2}), DomainError);
     CHECK_THROWS_AS(matrix_add({Z2, D1}), DomainError);
@@ -221,6 +228,8 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
     auto D1 = diagonal_matrix({integer(2), integer(23), integer(-2)});
     auto D2 = diagonal_matrix({integer(-1), integer(5), integer(0)});
     auto D3 = diagonal_matrix({integer(-2), integer(115), integer(0)});
+    auto D4 = diagonal_matrix({integer(10), integer(20)});
+    auto D5 = diagonal_matrix({integer(10), integer(80)});
     auto A1 = immutable_dense_matrix(
         2, 2, {integer(1), integer(2), integer(3), integer(4)});
     auto A2 = immutable_dense_matrix(
@@ -245,6 +254,8 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
     REQUIRE(eq(*prod, *I1));
     prod = hadamard_product({A1, A2});
     REQUIRE(eq(*prod, *A3));
+    prod = hadamard_product({D4, A1});
+    REQUIRE(eq(*prod, *D5));
 
     CHECK_THROWS_AS(hadamard_product({Z1, Z2}), DomainError);
     CHECK_THROWS_AS(hadamard_product({Z2, D1}), DomainError);

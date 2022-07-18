@@ -392,6 +392,9 @@ bool MatrixAdd::is_canonical(const vec_basic terms) const
     if (num_diag > 1 || num_dense > 1) {
         return false;
     }
+    if (num_diag == 1 && num_dense == 1) {
+        return false;
+    }
     return true;
 }
 
@@ -475,7 +478,24 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
         }
     }
     if (!diag.is_null()) {
-        keep.push_back(diag);
+        if (!dense.is_null()) {
+            // Add diagonal with dense matrix
+            auto vec = dense->get_values();
+            vec_basic sum;
+            for (size_t i = 0; i < dense->nrows(); i++) {
+                for (size_t j = 0; j < dense->ncols(); j++) {
+                    if (i == j) {
+                        sum.push_back(add(dense->get(i, j), diag->get(i)));
+                    } else {
+                        sum.push_back(dense->get(i, j));
+                    }
+                }
+            }
+            dense = make_rcp<const ImmutableDenseMatrix>(dense->nrows(),
+                                                         dense->ncols(), sum);
+        } else {
+            keep.push_back(diag);
+        }
     }
     if (!dense.is_null()) {
         keep.push_back(dense);
@@ -534,6 +554,9 @@ bool HadamardProduct::is_canonical(const vec_basic factors) const
         }
     }
     if (num_diag > 1 || num_ident > 1 || num_dense > 1) {
+        return false;
+    }
+    if (num_diag == 1 && num_dense == 1) {
         return false;
     }
     return true;
@@ -603,11 +626,20 @@ RCP<const MatrixExpr> hadamard_product(const vec_basic &factors)
             keep.push_back(factor);
         }
     }
+    if (!dense.is_null()) {
+        if (!diag.is_null()) {
+            // Multiply diagonal with dense matrix
+            vec_basic product;
+            for (size_t i = 0; i < dense->nrows(); i++) {
+                product.push_back(mul(dense->get(i, i), diag->get(i)));
+            }
+            diag = make_rcp<const DiagonalMatrix>(product);
+        } else {
+            keep.push_back(dense);
+        }
+    }
     if (!diag.is_null()) {
         keep.push_back(diag);
-    }
-    if (!dense.is_null()) {
-        keep.push_back(dense);
     }
     if (keep.size() == 1) {
         return rcp_static_cast<const MatrixExpr>(keep[0]);

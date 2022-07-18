@@ -129,6 +129,11 @@ public:
     {
         return diag_;
     }
+
+    inline RCP<const Basic> get(size_t i) const
+    {
+        return diag_[i];
+    }
 };
 
 RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container);
