@@ -116,6 +116,7 @@ public:
     void bvisit(const ZeroMatrix &self);
     void bvisit(const MatrixSymbol &self);
     void bvisit(const DiagonalMatrix &self);
+    void bvisit(const ImmutableDenseMatrix &self);
     void bvisit(const MatrixAdd &self);
     void bvisit(const HadamardProduct &self);
     void bvisit(const Trace &self);

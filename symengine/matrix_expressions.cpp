@@ -1,5 +1,6 @@
 #include <symengine/matrix_expressions.h>
 #include <symengine/visitor.h>
+#include <symengine/test_visitors.h>
 
 namespace SymEngine
 {
@@ -208,6 +209,63 @@ RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container)
     return make_rcp<const DiagonalMatrix>(container);
 }
 
+hash_t ImmutableDenseMatrix::__hash__() const
+{
+    hash_t seed = SYMENGINE_IMMUTABLEDENSEMATRIX;
+    hash_combine(seed, m_);
+    hash_combine(seed, n_);
+    for (const auto &a : values_) {
+        hash_combine<Basic>(seed, *a);
+    }
+    return seed;
+}
+
+bool ImmutableDenseMatrix::__eq__(const Basic &o) const
+{
+    if (is_a<ImmutableDenseMatrix>(o)) {
+        const ImmutableDenseMatrix &other
+            = down_cast<const ImmutableDenseMatrix &>(o);
+        if (m_ != other.m_ || n_ != other.n_) {
+            return false;
+        }
+        return unified_eq(values_, other.values_);
+    }
+    return false;
+}
+
+int ImmutableDenseMatrix::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<ImmutableDenseMatrix>(o));
+    const ImmutableDenseMatrix &other
+        = down_cast<const ImmutableDenseMatrix &>(o);
+    if (m_ < other.m_) {
+        return -1;
+    } else if (m_ > other.m_) {
+        return 1;
+    }
+    if (n_ < other.n_) {
+        return -1;
+    } else if (n_ > other.n_) {
+        return 1;
+    }
+    return unified_compare(values_, other.values_);
+}
+
+bool ImmutableDenseMatrix::is_canonical(size_t m, size_t n,
+                                        const vec_basic &values) const
+{
+    if (m < 1 || n < 1 || values.size() == 0) {
+        return false;
+    }
+    return true;
+}
+
+RCP<const MatrixExpr> immutable_dense_matrix(size_t m, size_t n,
+                                             const vec_basic &container)
+{
+    return make_rcp<const ImmutableDenseMatrix>(m, n, container);
+}
+
 hash_t Trace::__hash__() const
 {
     hash_t seed = SYMENGINE_TRACE;
@@ -309,14 +367,17 @@ bool MatrixAdd::is_canonical(const vec_basic terms) const
         return false;
     }
     size_t num_diag = 0;
+    size_t num_dense = 0;
     for (auto term : terms) {
         if (is_a<ZeroMatrix>(*term) || is_a<MatrixAdd>(*term)) {
             return false;
         } else if (is_a<DiagonalMatrix>(*term)) {
             num_diag++;
+        } else if (is_a<ImmutableDenseMatrix>(*term)) {
+            num_dense++;
         }
     }
-    if (num_diag > 1) {
+    if (num_diag > 1 || num_dense > 1) {
         return false;
     }
     return true;
@@ -364,6 +425,7 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
     check_matching_sizes(expanded);
     vec_basic keep;
     RCP<const DiagonalMatrix> diag;
+    RCP<const ImmutableDenseMatrix> dense;
     RCP<const ZeroMatrix> zero;
     for (auto &term : expanded) {
         if (is_a<ZeroMatrix>(*term)) {
@@ -381,27 +443,30 @@ RCP<const MatrixExpr> matrix_add(const vec_basic &terms)
                 }
                 diag = make_rcp<const DiagonalMatrix>(container);
             }
-            auto sz = size(down_cast<const MatrixExpr &>(*expanded[0]));
-            for (auto it = expanded.begin() + 1; it != expanded.end(); ++it) {
-                auto cursize = size(down_cast<const MatrixExpr &>(**it));
-                auto rowdiff = sub(sz.first, cursize.first);
-                tribool rowmatch = is_zero(*rowdiff);
-                if (is_false(rowmatch)) {
-                    throw DomainError("Matrix dimension mismatch");
+        } else if (is_a<ImmutableDenseMatrix>(*term)) {
+            if (dense.is_null()) {
+                dense = rcp_static_cast<const ImmutableDenseMatrix>(term);
+            } else {
+                const vec_basic &vec1
+                    = down_cast<const ImmutableDenseMatrix &>(*term)
+                          .get_values();
+                const vec_basic &vec2 = dense->get_values();
+                vec_basic sum(vec1.size());
+                for (size_t i = 0; i < vec1.size(); i++) {
+                    sum[i] = add(vec1[i], vec2[i]);
                 }
-                auto coldiff = sub(sz.second, cursize.second);
-                tribool colmatch = is_zero(*coldiff);
-                if (is_false(colmatch)) {
-                    throw DomainError("Matrix dimension mismatch");
-                }
+                dense = make_rcp<const ImmutableDenseMatrix>(
+                    dense->nrows(), dense->ncols(), sum);
             }
-
         } else {
             keep.push_back(term);
         }
     }
     if (!diag.is_null()) {
         keep.push_back(diag);
+    }
+    if (!dense.is_null()) {
+        keep.push_back(dense);
     }
     if (keep.size() == 1) {
         return rcp_static_cast<const MatrixExpr>(keep[0]);
@@ -443,17 +508,20 @@ bool HadamardProduct::is_canonical(const vec_basic factors) const
         return false;
     }
     size_t num_diag = 0;
+    size_t num_dense = 0;
     size_t num_ident = 0;
     for (auto factor : factors) {
         if (is_a<ZeroMatrix>(*factor) || is_a<HadamardProduct>(*factor)) {
             return false;
         } else if (is_a<DiagonalMatrix>(*factor)) {
             num_diag++;
+        } else if (is_a<ImmutableDenseMatrix>(*factor)) {
+            num_dense++;
         } else if (is_a<IdentityMatrix>(*factor)) {
             num_ident++;
         }
     }
-    if (num_diag > 1 || num_ident > 1) {
+    if (num_diag > 1 || num_ident > 1 || num_dense > 1) {
         return false;
     }
     return true;
@@ -481,6 +549,7 @@ RCP<const MatrixExpr> hadamard_product(const vec_basic &factors)
     check_matching_sizes(expanded);
     vec_basic keep;
     RCP<const DiagonalMatrix> diag;
+    RCP<const ImmutableDenseMatrix> dense;
     bool have_identity = false;
     for (auto &factor : expanded) {
         if (is_a<ZeroMatrix>(*factor)) {
@@ -503,12 +572,30 @@ RCP<const MatrixExpr> hadamard_product(const vec_basic &factors)
                 }
                 diag = make_rcp<const DiagonalMatrix>(container);
             }
+        } else if (is_a<ImmutableDenseMatrix>(*factor)) {
+            if (dense.is_null()) {
+                dense = rcp_static_cast<const ImmutableDenseMatrix>(factor);
+            } else {
+                const vec_basic &vec1
+                    = down_cast<const ImmutableDenseMatrix &>(*factor)
+                          .get_values();
+                const vec_basic &vec2 = dense->get_values();
+                vec_basic product(vec1.size());
+                for (size_t i = 0; i < vec1.size(); i++) {
+                    product[i] = mul(vec1[i], vec2[i]);
+                }
+                dense = make_rcp<const ImmutableDenseMatrix>(
+                    dense->nrows(), dense->ncols(), product);
+            }
         } else {
             keep.push_back(factor);
         }
     }
     if (!diag.is_null()) {
         keep.push_back(diag);
+    }
+    if (!dense.is_null()) {
+        keep.push_back(dense);
     }
     if (keep.size() == 1) {
         return rcp_static_cast<const MatrixExpr>(keep[0]);
@@ -557,6 +644,18 @@ public:
         }
         is_zero_ = current;
     };
+
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        ZeroVisitor visitor(assumptions_);
+        is_zero_ = tribool::tritrue;
+        for (auto &e : x.get_values()) {
+            is_zero_ = and_tribool(is_zero_, visitor.apply(*e));
+            if (is_false(is_zero_)) {
+                return;
+            }
+        }
+    }
 
     void bvisit(const MatrixAdd &x)
     {
@@ -617,6 +716,20 @@ public:
         }
         is_real_ = current;
     };
+
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        RealVisitor visitor(assumptions_);
+        tribool cur = tribool::tritrue;
+        for (auto &e : x.get_values()) {
+            cur = and_tribool(cur, visitor.apply(*e));
+            if (is_false(cur)) {
+                is_real_ = cur;
+                return;
+            }
+        }
+        is_real_ = cur;
+    }
 
     tribool apply(const MatrixExpr &s)
     {
@@ -686,6 +799,31 @@ public:
         is_symmetric_ = tribool::tritrue;
     };
 
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        size_t nrows = x.nrows();
+        size_t ncols = x.ncols();
+        if (nrows != ncols) {
+            is_symmetric_ = tribool::trifalse;
+            return;
+        }
+        ZeroVisitor visitor(assumptions_);
+        is_symmetric_ = tribool::tritrue;
+        for (size_t i = 0; i < ncols; i++) {
+            for (size_t j = 0; j <= i; j++) {
+                if (j != i) {
+                    auto e1 = x.get(i, j);
+                    auto e2 = x.get(j, i);
+                    is_symmetric_ = and_tribool(is_symmetric_,
+                                                visitor.apply(*sub(e1, e2)));
+                }
+                if (is_false(is_symmetric_)) {
+                    return;
+                }
+            }
+        }
+    };
+
     void bvisit(const MatrixAdd &x)
     {
         check_vector(x.get_terms());
@@ -753,6 +891,15 @@ public:
         is_square_ = tribool::tritrue;
     };
 
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        if (x.nrows() == x.ncols()) {
+            is_square_ = tribool::tritrue;
+        } else {
+            is_square_ = tribool::trifalse;
+        }
+    };
+
     void bvisit(const MatrixAdd &x)
     {
         check_vector(x.get_terms());
@@ -807,6 +954,31 @@ public:
     void bvisit(const DiagonalMatrix &x)
     {
         is_diagonal_ = tribool::tritrue;
+    };
+
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        if (x.nrows() != x.ncols()) {
+            is_diagonal_ = tribool::trifalse;
+            return;
+        }
+        size_t ncols = x.ncols();
+        size_t offset;
+        ZeroVisitor visitor(assumptions_);
+        is_diagonal_ = tribool::tritrue;
+        for (size_t i = 0; i < ncols; i++) {
+            offset = i * ncols;
+            for (size_t j = 0; j < ncols; j++) {
+                if (j != i) {
+                    auto &e = x.get_values()[offset];
+                    is_diagonal_ = and_tribool(is_diagonal_, visitor.apply(*e));
+                    if (is_false(is_diagonal_)) {
+                        return;
+                    }
+                }
+                offset++;
+            }
+        }
     };
 
     void bvisit(const MatrixAdd &x)
@@ -890,6 +1062,26 @@ public:
         is_lower_ = tribool::tritrue;
     };
 
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        size_t nrows = x.nrows();
+        size_t ncols = x.ncols();
+        if (nrows != ncols) {
+            is_lower_ = tribool::trifalse;
+            return;
+        }
+        ZeroVisitor visitor(assumptions_);
+        is_lower_ = tribool::tritrue;
+        for (size_t i = 0; i < nrows; i++) {
+            for (size_t j = i + 1; j < nrows; j++) {
+                is_lower_ = and_tribool(is_lower_, visitor.apply(*x.get(i, j)));
+                if (is_false(is_lower_)) {
+                    return;
+                }
+            }
+        }
+    }
+
     void bvisit(const MatrixAdd &x)
     {
         bool found_nonlower = false;
@@ -970,6 +1162,26 @@ public:
     {
         is_upper_ = tribool::tritrue;
     };
+
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        size_t nrows = x.nrows();
+        size_t ncols = x.ncols();
+        if (nrows != ncols) {
+            is_upper_ = tribool::trifalse;
+            return;
+        }
+        ZeroVisitor visitor(assumptions_);
+        is_upper_ = tribool::tritrue;
+        for (size_t i = 1; i < nrows; i++) {
+            for (size_t j = 0; j < i; j++) {
+                is_upper_ = and_tribool(is_upper_, visitor.apply(*x.get(i, j)));
+                if (is_false(is_upper_)) {
+                    return;
+                }
+            }
+        }
+    }
 
     void bvisit(const MatrixAdd &x)
     {
@@ -1066,6 +1278,39 @@ public:
         is_toeplitz_ = current;
     };
 
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        size_t i_start, j_start, i, j;
+        ZeroVisitor visitor(assumptions_);
+        is_toeplitz_ = tribool::tritrue;
+        // Loop over all diagonals
+        for (size_t w = 0; w < std::max(x.nrows(), x.ncols()) - 1; w++) {
+            // Loop over diagonals starting from the first row and the first
+            // column
+            for (size_t k = 0; k < 2; k++) {
+                if (k == 0 && w <= x.ncols()) {
+                    i_start = 0;
+                    j_start = w;
+                } else if (k == 1 && w <= x.nrows() && w != 0) {
+                    i_start = w;
+                    j_start = 0;
+                } else {
+                    continue;
+                }
+                auto first = x.get(i_start, j_start);
+                // Loop along the diagonal
+                for (i = i_start + 1, j = j_start + 1;
+                     i < x.nrows() && j < x.ncols(); i++, j++) {
+                    is_toeplitz_ = and_tribool(
+                        is_toeplitz_, visitor.apply(*sub(first, x.get(i, j))));
+                    if (is_false(is_toeplitz_)) {
+                        return;
+                    }
+                }
+            }
+        }
+    };
+
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
@@ -1110,6 +1355,12 @@ public:
     {
         nrows_ = integer(x.get_container().size());
         ncols_ = nrows_;
+    };
+
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        nrows_ = integer(x.nrows());
+        ncols_ = integer(x.ncols());
     };
 
     std::pair<RCP<const Basic>, RCP<const Basic>> apply(const MatrixExpr &s)
