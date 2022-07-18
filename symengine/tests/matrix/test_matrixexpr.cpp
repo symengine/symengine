@@ -151,6 +151,10 @@ TEST_CASE("Test Trace", "[Trace]")
 
     auto D1 = diagonal_matrix({integer(2), integer(23)});
     REQUIRE(eq(*trace(D1), *integer(25)));
+
+    auto A1 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(23), integer(5), integer(9)});
+    REQUIRE(eq(*trace(A1), *integer(11)));
 }
 
 TEST_CASE("Test MatrixAdd", "[MatrixAdd]")

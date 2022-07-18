@@ -323,6 +323,18 @@ public:
         trace_ = add(x.get_container());
     };
 
+    void bvisit(const ImmutableDenseMatrix &x)
+    {
+        if (x.nrows() != x.ncols()) {
+            throw DomainError("Trace is only valid for square matrices");
+        }
+        vec_basic diag;
+        for (size_t i = 0; i < x.nrows(); i++) {
+            diag.push_back(x.get(i, i));
+        }
+        trace_ = add(diag);
+    }
+
     RCP<const Basic> apply(const MatrixExpr &s)
     {
         s.accept(*this);
