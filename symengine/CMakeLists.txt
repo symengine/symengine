@@ -110,6 +110,7 @@ set(SRC
     matrices/immutable_dense_matrix.cpp
     matrices/matrix_add.cpp
     matrices/hadamard_product.cpp
+    matrices/conjugate_matrix.cpp
     matrices/trace.cpp
     matrices/size.cpp
     matrices/is_zero.cpp
@@ -254,6 +255,7 @@ set(HEADERS
     matrices/immutable_dense_matrix.h
     matrices/matrix_add.h
     matrices/hadamard_product.h
+    matrices/conjugate_matrix.h
     matrices/trace.h
     matrices/is_zero.h
     matrices/is_real.h

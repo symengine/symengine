@@ -119,6 +119,7 @@ public:
     void bvisit(const ImmutableDenseMatrix &self);
     void bvisit(const MatrixAdd &self);
     void bvisit(const HadamardProduct &self);
+    void bvisit(const ConjugateMatrix &self);
     void bvisit(const Trace &self);
     void bvisit(const Boolean &self);
     void bvisit(const GaloisField &self);

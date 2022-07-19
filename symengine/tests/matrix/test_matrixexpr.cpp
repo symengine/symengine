@@ -6,6 +6,7 @@
 
 using SymEngine::add;
 using SymEngine::Complex;
+using SymEngine::ConjugateMatrix;
 using SymEngine::diagonal_matrix;
 using SymEngine::DiagonalMatrix;
 using SymEngine::DomainError;
@@ -190,6 +191,60 @@ TEST_CASE("Test Trace", "[Trace]")
     auto MA1 = matrix_add({S1, A1});
     auto correct = add(make_rcp<const Trace>(S1), integer(11));
     REQUIRE(eq(*trace(MA1), *correct));
+}
+
+TEST_CASE("Test ConjugateMatrix", "[ConjugateMatrix]")
+{
+    auto n1 = integer(1);
+    auto n2 = integer(2);
+    auto x = symbol("x");
+    auto c1 = Complex::from_two_nums(*one, *one);
+    auto c2 = Complex::from_two_nums(*one, *integer(-1));
+
+    auto Z1 = zero_matrix(n1, n1);
+    auto Z2 = zero_matrix(n2, n1);
+    REQUIRE(eq(*conjugate_matrix(Z1), *Z1));
+    REQUIRE(eq(*conjugate_matrix(Z2), *Z2));
+
+    auto I1 = identity_matrix(x);
+    REQUIRE(eq(*conjugate_matrix(I1), *I1));
+
+    auto A = matrix_symbol("A");
+    auto B = matrix_symbol("B");
+    auto conj1 = conjugate_matrix(A);
+    auto conj2 = conjugate_matrix(B);
+    REQUIRE(conj1->compare(*conj1) == 0);
+    REQUIRE(eq(*conj1, *conj1));
+    REQUIRE(!eq(*conj1, *conj2));
+    REQUIRE(conj1->__hash__() != conj2->__hash__());
+    REQUIRE(conj1->compare(*conj2) == -1);
+    REQUIRE(conj2->compare(*conj1) == 1);
+
+    auto D1 = diagonal_matrix({integer(2), integer(23)});
+    auto D2 = diagonal_matrix({integer(2), c1});
+    auto D3 = diagonal_matrix({integer(2), c2});
+    REQUIRE(eq(*conjugate_matrix(D1), *D1));
+    REQUIRE(eq(*conjugate_matrix(D2), *D3));
+
+    auto A1 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(23), integer(5), integer(9)});
+    auto A2 = immutable_dense_matrix(2, 2, {c1, integer(23), c1, integer(9)});
+    auto A3 = immutable_dense_matrix(2, 2, {c2, integer(23), c2, integer(9)});
+    REQUIRE(eq(*conjugate_matrix(A1), *A1));
+    REQUIRE(eq(*conjugate_matrix(A2), *A3));
+
+    auto A_conj = conjugate_matrix(A);
+    REQUIRE(is_a<ConjugateMatrix>(*A_conj));
+    REQUIRE(eq(*down_cast<const ConjugateMatrix &>(*A_conj).get_arg(), *A));
+    REQUIRE(eq(*conjugate_matrix(A_conj), *A));
+
+    auto MA1 = matrix_add({A, B});
+    REQUIRE(eq(*conjugate_matrix(MA1),
+               *matrix_add({conjugate_matrix(A), conjugate_matrix(B)})));
+
+    auto HP1 = hadamard_product({A, B});
+    REQUIRE(eq(*conjugate_matrix(HP1),
+               *hadamard_product({conjugate_matrix(A), conjugate_matrix(B)})));
 }
 
 TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
