@@ -149,7 +149,7 @@ public:
         : m_(m), n_(n), values_(values)
     {
         SYMENGINE_ASSIGN_TYPEID();
-        SYMENGINE_ASSERT(is_canonical(container));
+        SYMENGINE_ASSERT(is_canonical(m, n, values));
     }
 
     IMPLEMENT_TYPEID(SYMENGINE_IMMUTABLEDENSEMATRIX)
