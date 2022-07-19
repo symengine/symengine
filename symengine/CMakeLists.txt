@@ -103,7 +103,23 @@ set(SRC
     refine.cpp
     simplify.cpp
     tuple.cpp
-    matrix_expressions.cpp
+    matrices/identity_matrix.cpp
+    matrices/matrix_symbol.cpp
+    matrices/zero_matrix.cpp
+    matrices/diagonal_matrix.cpp
+    matrices/immutable_dense_matrix.cpp
+    matrices/matrix_add.cpp
+    matrices/hadamard_product.cpp
+    matrices/trace.cpp
+    matrices/size.cpp
+    matrices/is_zero.cpp
+    matrices/is_real.cpp
+    matrices/is_symmetric.cpp
+    matrices/is_square.cpp
+    matrices/is_diagonal.cpp
+    matrices/is_lower.cpp
+    matrices/is_upper.cpp
+    matrices/is_toeplitz.cpp
 )
 
 if ("${SYMENGINE_INTEGER_CLASS}" STREQUAL "BOOSTMP")
@@ -230,6 +246,23 @@ set(HEADERS
     utilities/stream_fmt.h
     tuple.h
     matrix_expressions.h
+    matrices/matrix_expr.h
+    matrices/identity_matrix.h
+    matrices/matrix_symbol.h
+    matrices/zero_matrix.h
+    matrices/diagonal_matrix.h
+    matrices/immutable_dense_matrix.h
+    matrices/matrix_add.h
+    matrices/hadamard_product.h
+    matrices/trace.h
+    matrices/is_zero.h
+    matrices/is_real.h
+    matrices/is_symmetric.h
+    matrices/is_square.h
+    matrices/is_diagonal.h
+    matrices/is_lower.h
+    matrices/is_upper.h
+    matrices/is_toeplitz.h
 )
 
 if (NOT WITH_SYSTEM_CEREAL)
