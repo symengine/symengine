@@ -2,7 +2,9 @@
 #include <symengine/matrix_expressions.h>
 #include <symengine/rational.h>
 #include <symengine/complex.h>
+#include <symengine/add.h>
 
+using SymEngine::add;
 using SymEngine::Complex;
 using SymEngine::diagonal_matrix;
 using SymEngine::DiagonalMatrix;
@@ -155,6 +157,11 @@ TEST_CASE("Test Trace", "[Trace]")
     auto A1 = immutable_dense_matrix(
         2, 2, {integer(2), integer(23), integer(5), integer(9)});
     REQUIRE(eq(*trace(A1), *integer(11)));
+
+    auto S1 = matrix_symbol("A");
+    auto MA1 = matrix_add({S1, A1});
+    auto correct = add(make_rcp<const Trace>(S1), integer(11));
+    REQUIRE(eq(*trace(MA1), *correct));
 }
 
 TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
