@@ -16,6 +16,7 @@ using SymEngine::HadamardProduct;
 using SymEngine::identity_matrix;
 using SymEngine::IdentityMatrix;
 using SymEngine::immutable_dense_matrix;
+using SymEngine::ImmutableDenseMatrix;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::is_real;
@@ -122,6 +123,28 @@ TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
     REQUIRE(!down_cast<const DiagonalMatrix &>(*diag1).is_canonical({}));
 }
 
+TEST_CASE("Test ImmutableDenseMatrix", "[ImmutableDenseMatrix]")
+{
+    auto A1 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(23), integer(5), integer(9)});
+    auto A2 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(23), integer(5), integer(10)});
+    auto A3 = immutable_dense_matrix(1, 2, {one, zero});
+    auto A4 = immutable_dense_matrix(2, 1, {one, zero});
+
+    REQUIRE(!eq(*A1, *A2));
+    REQUIRE(eq(*A1, *A1));
+    REQUIRE(!eq(*A1, *A3));
+    REQUIRE(A1->compare(*A2) == -1);
+    REQUIRE(A3->compare(*A2) == -1);
+    REQUIRE(A2->compare(*A3) == 1);
+    REQUIRE(A4->compare(*A2) == -1);
+    REQUIRE(A2->compare(*A4) == 1);
+    REQUIRE(A1->__hash__() != A2->__hash__());
+    REQUIRE(
+        !down_cast<const ImmutableDenseMatrix &>(*A1).is_canonical(0, 0, {}));
+}
+
 TEST_CASE("Test Trace", "[Trace]")
 {
     auto n1 = integer(1);
@@ -156,7 +179,9 @@ TEST_CASE("Test Trace", "[Trace]")
 
     auto A1 = immutable_dense_matrix(
         2, 2, {integer(2), integer(23), integer(5), integer(9)});
+    auto A2 = immutable_dense_matrix(1, 2, {integer(5), integer(9)});
     REQUIRE(eq(*trace(A1), *integer(11)));
+    CHECK_THROWS_AS(trace(A2), DomainError);
 
     auto S1 = matrix_symbol("A");
     auto MA1 = matrix_add({S1, A1});
@@ -185,6 +210,7 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
         2, 2, {integer(3), integer(6), integer(9), integer(13)});
     auto A4 = immutable_dense_matrix(
         2, 2, {integer(3), integer(2), integer(3), integer(14)});
+    auto S1 = matrix_symbol("S1");
 
     auto sum = matrix_add({Z1, I1});
     REQUIRE(eq(*sum, *I1));
@@ -196,10 +222,14 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     sum = matrix_add({Z1, I1, D1, Z1});
     vec = vec_basic({I1, D1});
     REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
-    sum = matrix_add({sum, D2});
+    auto sum2 = matrix_add({sum, D2});
     vec = vec_basic({I1, D3});
-    REQUIRE(eq(*sum, *make_rcp<const MatrixAdd>(vec)));
-    REQUIRE(sum->__hash__() == make_rcp<const MatrixAdd>(vec)->__hash__());
+    REQUIRE(eq(*sum2, *make_rcp<const MatrixAdd>(vec)));
+    REQUIRE(sum2->__hash__() == make_rcp<const MatrixAdd>(vec)->__hash__());
+    REQUIRE(!eq(*sum, *sum2));
+    REQUIRE(sum->compare(*sum) == 0);
+    REQUIRE(sum2->compare(*sum) == -1);
+    REQUIRE(sum->compare(*sum2) == 1);
     sum = matrix_add({Z1, D1});
     REQUIRE(eq(*sum, *D1));
     sum = matrix_add({D1, D2});
@@ -221,6 +251,12 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     CHECK_THROWS_AS(matrix_add({D1, I2}), DomainError);
     CHECK_THROWS_AS(matrix_add({Z2, Z3}), DomainError);
     CHECK_THROWS_AS(matrix_add({}), DomainError);
+
+    const MatrixAdd &x = down_cast<const MatrixAdd &>(*matrix_add({S1, I1}));
+    REQUIRE(!x.is_canonical({D1}));
+    REQUIRE(!x.is_canonical({D1, Z1}));
+    REQUIRE(!x.is_canonical({A1, A2}));
+    REQUIRE(!x.is_canonical({A1, D4}));
 }
 
 TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
@@ -243,6 +279,7 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
         2, 2, {integer(2), integer(4), integer(6), integer(9)});
     auto A3 = immutable_dense_matrix(
         2, 2, {integer(2), integer(8), integer(18), integer(36)});
+    auto S1 = matrix_symbol("S1");
 
     auto prod = hadamard_product({Z1, I1});
     REQUIRE(eq(*prod, *Z1));
@@ -255,6 +292,14 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
     REQUIRE(eq(*prod, *make_rcp<const HadamardProduct>(vec)));
     REQUIRE(prod->__hash__()
             == make_rcp<const HadamardProduct>(vec)->__hash__());
+    auto prod2 = hadamard_product({I1, D2});
+    REQUIRE(prod->compare(*prod2) == 1);
+    REQUIRE(prod2->compare(*prod) == -1);
+    REQUIRE(prod->compare(*prod) == 0);
+    REQUIRE(!eq(*prod, *I1));
+    prod = hadamard_product({prod, prod2});
+    vec = vec_basic({D3, I1});
+    REQUIRE(!eq(*prod, *make_rcp<const HadamardProduct>(vec)));
     prod = hadamard_product({D1, D2});
     REQUIRE(eq(*prod, *D3));
     prod = hadamard_product({I1});
@@ -270,6 +315,13 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
     CHECK_THROWS_AS(hadamard_product({D1, I2}), DomainError);
     CHECK_THROWS_AS(hadamard_product({Z2, Z3}), DomainError);
     CHECK_THROWS_AS(hadamard_product({}), DomainError);
+
+    const HadamardProduct &x
+        = down_cast<const HadamardProduct &>(*hadamard_product({S1, D2}));
+    REQUIRE(!x.is_canonical({D2}));
+    REQUIRE(!x.is_canonical({Z1, D2}));
+    REQUIRE(!x.is_canonical({A1, A2}));
+    REQUIRE(!x.is_canonical({A1, D4}));
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")
@@ -284,6 +336,7 @@ TEST_CASE("Test is_zero", "[is_zero]")
     auto Dense1 = immutable_dense_matrix(2, 2, {zero, zero, zero, zero});
     auto Dense2 = immutable_dense_matrix(2, 2, {zero, zero, zero, integer(1)});
     auto Dense3 = immutable_dense_matrix(2, 2, {zero, zero, zero, x});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_false(is_zero(*I5)));
     REQUIRE(is_true(is_zero(*Z5)));
@@ -293,6 +346,7 @@ TEST_CASE("Test is_zero", "[is_zero]")
     REQUIRE(is_true(is_zero(*Dense1)));
     REQUIRE(is_false(is_zero(*Dense2)));
     REQUIRE(is_indeterminate(is_zero(*Dense3)));
+    REQUIRE(is_indeterminate(is_zero(*S1)));
 }
 
 TEST_CASE("Test is_real", "[is_real]")
@@ -310,6 +364,7 @@ TEST_CASE("Test is_real", "[is_real]")
         2, 2, {integer(1), integer(1), integer(1), c1});
     auto Dense3
         = immutable_dense_matrix(2, 2, {integer(1), integer(1), integer(1), x});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_real(*I5)));
     REQUIRE(is_true(is_real(*Z5)));
@@ -319,6 +374,7 @@ TEST_CASE("Test is_real", "[is_real]")
     REQUIRE(is_true(is_real(*Dense1)));
     REQUIRE(is_false(is_real(*Dense2)));
     REQUIRE(is_indeterminate(is_real(*Dense3)));
+    REQUIRE(is_indeterminate(is_real(*S1)));
 }
 
 TEST_CASE("Test is_symmetric", "[is_symmetric]")
@@ -342,6 +398,7 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
         = immutable_dense_matrix(2, 2, {integer(1), x, integer(2), integer(3)});
     auto Dense4 = immutable_dense_matrix(
         2, 2, {integer(1), integer(0), integer(2), integer(3)});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_symmetric(*I5)));
     REQUIRE(is_false(is_symmetric(*Z52)));
@@ -354,6 +411,7 @@ TEST_CASE("Test is_symmetric", "[is_symmetric]")
     REQUIRE(is_true(is_symmetric(*Dense2)));
     REQUIRE(is_indeterminate(is_symmetric(*Dense3)));
     REQUIRE(is_false(is_symmetric(*Dense4)));
+    REQUIRE(is_indeterminate(is_symmetric(*S1)));
 }
 
 TEST_CASE("Test is_square", "[is_square]")
@@ -372,6 +430,7 @@ TEST_CASE("Test is_square", "[is_square]")
     auto A1 = matrix_add({D1, I1});
     auto Dense1 = immutable_dense_matrix(2, 2, {integer(1), x, y, integer(2)});
     auto Dense2 = immutable_dense_matrix(2, 1, {integer(1), x});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_square(*I5)));
     REQUIRE(is_false(is_square(*Z52)));
@@ -382,6 +441,7 @@ TEST_CASE("Test is_square", "[is_square]")
     REQUIRE(is_true(is_square(*A1)));
     REQUIRE(is_true(is_square(*Dense1)));
     REQUIRE(is_false(is_square(*Dense2)));
+    REQUIRE(is_indeterminate(is_square(*S1)));
 }
 
 TEST_CASE("Test is_diagonal", "[is_diagonal]")
@@ -422,6 +482,7 @@ TEST_CASE("Test is_diagonal", "[is_diagonal]")
     REQUIRE(is_true(is_diagonal(*Dense2)));
     REQUIRE(is_indeterminate(is_diagonal(*Dense3)));
     REQUIRE(is_false(is_diagonal(*Dense4)));
+    REQUIRE(is_indeterminate(is_diagonal(*S1)));
 }
 
 TEST_CASE("Test is_lower", "[is_lower]")
@@ -449,6 +510,7 @@ TEST_CASE("Test is_lower", "[is_lower]")
         = immutable_dense_matrix(3, 3,
                                  {integer(1), integer(0), integer(0),
                                   integer(2), integer(3), integer(2), x, x, x});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_lower(*I5)));
     REQUIRE(is_false(is_lower(*Z52)));
@@ -462,6 +524,7 @@ TEST_CASE("Test is_lower", "[is_lower]")
     REQUIRE(is_indeterminate(is_lower(*Dense3)));
     REQUIRE(is_true(is_lower(*Dense4)));
     REQUIRE(is_false(is_lower(*Dense5)));
+    REQUIRE(is_indeterminate(is_lower(*S1)));
 }
 
 TEST_CASE("Test is_upper", "[is_upper]")
@@ -488,6 +551,7 @@ TEST_CASE("Test is_upper", "[is_upper]")
         = immutable_dense_matrix(3, 3,
                                  {integer(1), integer(0), integer(0),
                                   integer(2), integer(3), integer(2), x, x, x});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_upper(*I5)));
     REQUIRE(is_false(is_upper(*Z52)));
@@ -501,6 +565,7 @@ TEST_CASE("Test is_upper", "[is_upper]")
     REQUIRE(is_indeterminate(is_upper(*Dense3)));
     REQUIRE(is_true(is_upper(*Dense4)));
     REQUIRE(is_false(is_upper(*Dense5)));
+    REQUIRE(is_indeterminate(is_upper(*S1)));
 }
 
 TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
@@ -531,6 +596,7 @@ TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
         = immutable_dense_matrix(4, 2,
                                  {one, zero, integer(2), one, integer(4),
                                   integer(2), integer(5), integer(4)});
+    auto S1 = matrix_symbol("S1");
 
     REQUIRE(is_true(is_toeplitz(*I5)));
     REQUIRE(is_true(is_toeplitz(*Z52)));
@@ -547,6 +613,7 @@ TEST_CASE("Test is_toeplitz", "[is_toeplitz]")
     REQUIRE(is_indeterminate(is_toeplitz(*Dense4)));
     REQUIRE(is_false(is_toeplitz(*Dense5)));
     REQUIRE(is_true(is_toeplitz(*Dense6)));
+    REQUIRE(is_indeterminate(is_toeplitz(*S1)));
 }
 
 TEST_CASE("Test size", "[size]")

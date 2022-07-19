@@ -395,7 +395,7 @@ int MatrixAdd::compare(const Basic &o) const
     return unified_compare(terms_, other.terms_);
 }
 
-bool MatrixAdd::is_canonical(const vec_basic terms) const
+bool MatrixAdd::is_canonical(const vec_basic &terms) const
 {
     if (terms.size() < 2) {
         return false;
@@ -556,7 +556,7 @@ int HadamardProduct::compare(const Basic &o) const
     return unified_compare(factors_, other.factors_);
 }
 
-bool HadamardProduct::is_canonical(const vec_basic factors) const
+bool HadamardProduct::is_canonical(const vec_basic &factors) const
 {
     if (factors.size() < 2) {
         return false;

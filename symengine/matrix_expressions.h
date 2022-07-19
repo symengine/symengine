@@ -225,7 +225,7 @@ public:
     hash_t __hash__() const override;
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
-    bool is_canonical(const vec_basic terms) const;
+    bool is_canonical(const vec_basic &terms) const;
     vec_basic get_args() const override
     {
         return vec_basic(terms_.begin(), terms_.end());
@@ -254,7 +254,7 @@ public:
     hash_t __hash__() const override;
     bool __eq__(const Basic &o) const override;
     int compare(const Basic &o) const override;
-    bool is_canonical(const vec_basic factors) const;
+    bool is_canonical(const vec_basic &factors) const;
     vec_basic get_args() const override
     {
         return vec_basic(factors_.begin(), factors_.end());
