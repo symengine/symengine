@@ -19,6 +19,17 @@ bool Transpose::__eq__(const Basic &o) const
             && arg_->__eq__(*down_cast<const Transpose &>(o).arg_));
 }
 
+bool Transpose::is_canonical(const RCP<const MatrixExpr> &arg) const
+{
+    if (is_a<IdentityMatrix>(*arg) || is_a<ZeroMatrix>(*arg)
+        || is_a<DiagonalMatrix>(*arg) || is_a<ImmutableDenseMatrix>(*arg)
+        || is_a<Transpose>(*arg) || is_a<MatrixAdd>(*arg)
+        || is_a<HadamardProduct>(*arg)) {
+        return false;
+    }
+    return true;
+}
+
 int Transpose::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Transpose>(o));

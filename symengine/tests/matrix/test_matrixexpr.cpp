@@ -293,6 +293,10 @@ TEST_CASE("Test Transpose", "[Transpose]")
     auto HP1 = hadamard_product({A, B});
     REQUIRE(
         eq(*transpose(HP1), *hadamard_product({transpose(A), transpose(B)})));
+
+    auto H1 = transpose(conjugate_matrix(A));
+    auto H2 = conjugate_matrix(transpose(A));
+    REQUIRE(eq(*H1, *H2));
 }
 
 TEST_CASE("Test MatrixAdd", "[MatrixAdd]")

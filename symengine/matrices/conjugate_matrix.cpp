@@ -19,6 +19,19 @@ bool ConjugateMatrix::__eq__(const Basic &o) const
             && arg_->__eq__(*down_cast<const ConjugateMatrix &>(o).arg_));
 }
 
+bool ConjugateMatrix::is_canonical(const RCP<const MatrixExpr> &arg) const
+{
+    // NOTE: For conjugate transpose always have the conjugate operation first
+    // i.e. transpose(conjugate(A))
+    if (is_a<IdentityMatrix>(*arg) || is_a<ZeroMatrix>(*arg)
+        || is_a<DiagonalMatrix>(*arg) || is_a<ImmutableDenseMatrix>(*arg)
+        || is_a<ConjugateMatrix>(*arg) || is_a<Transpose>(*arg)
+        || is_a<MatrixAdd>(*arg) || is_a<HadamardProduct>(*arg)) {
+        return false;
+    }
+    return true;
+}
+
 int ConjugateMatrix::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<ConjugateMatrix>(o));
@@ -81,6 +94,14 @@ public:
     void bvisit(const ConjugateMatrix &x)
     {
         conjugate_ = x.get_arg();
+    };
+
+    void bvisit(const Transpose &x)
+    {
+        // Shift order to transpose(conj(A))
+        auto arg = x.get_arg();
+        auto conj = make_rcp<const ConjugateMatrix>(arg);
+        conjugate_ = make_rcp<const Transpose>(conj);
     };
 
     void bvisit(const MatrixAdd &x)
