@@ -14,6 +14,7 @@
 #include <symengine/matrices/hadamard_product.h>
 #include <symengine/matrices/trace.h>
 #include <symengine/matrices/conjugate_matrix.h>
+#include <symengine/matrices/transpose.h>
 #include <symengine/matrices/is_zero.h>
 #include <symengine/matrices/is_real.h>
 #include <symengine/matrices/is_symmetric.h>

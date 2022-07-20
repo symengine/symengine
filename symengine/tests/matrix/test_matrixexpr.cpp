@@ -33,6 +33,7 @@ using SymEngine::one;
 using SymEngine::Rational;
 using SymEngine::symbol;
 using SymEngine::Trace;
+using SymEngine::Transpose;
 using SymEngine::vec_basic;
 using SymEngine::zero;
 using SymEngine::ZeroMatrix;
@@ -245,6 +246,53 @@ TEST_CASE("Test ConjugateMatrix", "[ConjugateMatrix]")
     auto HP1 = hadamard_product({A, B});
     REQUIRE(eq(*conjugate_matrix(HP1),
                *hadamard_product({conjugate_matrix(A), conjugate_matrix(B)})));
+}
+
+TEST_CASE("Test Transpose", "[Transpose]")
+{
+    auto n1 = integer(1);
+    auto n2 = integer(2);
+    auto x = symbol("x");
+
+    auto Z1 = zero_matrix(n1, n1);
+    auto Z2 = zero_matrix(n2, n1);
+    auto Z3 = zero_matrix(n1, n2);
+    REQUIRE(eq(*transpose(Z1), *Z1));
+    REQUIRE(eq(*transpose(Z2), *Z3));
+
+    auto I1 = identity_matrix(x);
+    REQUIRE(eq(*transpose(I1), *I1));
+
+    auto A = matrix_symbol("A");
+    auto B = matrix_symbol("B");
+    auto AT = transpose(A);
+    auto BT = transpose(B);
+    REQUIRE(AT->compare(*AT) == 0);
+    REQUIRE(eq(*AT, *AT));
+    REQUIRE(!eq(*AT, *BT));
+    REQUIRE(AT->__hash__() != BT->__hash__());
+    REQUIRE(AT->compare(*BT) == -1);
+    REQUIRE(BT->compare(*AT) == 1);
+
+    auto D1 = diagonal_matrix({integer(2), integer(23)});
+    REQUIRE(eq(*transpose(D1), *D1));
+
+    auto A1 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(23), integer(5), integer(9)});
+    auto A1T = immutable_dense_matrix(
+        2, 2, {integer(2), integer(5), integer(23), integer(9)});
+    REQUIRE(eq(*transpose(A1), *A1T));
+
+    REQUIRE(is_a<Transpose>(*AT));
+    REQUIRE(eq(*down_cast<const Transpose &>(*AT).get_arg(), *A));
+    REQUIRE(eq(*transpose(AT), *A));
+
+    auto MA1 = matrix_add({A, B});
+    REQUIRE(eq(*transpose(MA1), *matrix_add({transpose(A), transpose(B)})));
+
+    auto HP1 = hadamard_product({A, B});
+    REQUIRE(
+        eq(*transpose(HP1), *hadamard_product({transpose(A), transpose(B)})));
 }
 
 TEST_CASE("Test MatrixAdd", "[MatrixAdd]")

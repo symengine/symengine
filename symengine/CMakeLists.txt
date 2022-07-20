@@ -111,6 +111,7 @@ set(SRC
     matrices/matrix_add.cpp
     matrices/hadamard_product.cpp
     matrices/conjugate_matrix.cpp
+    matrices/transpose.cpp
     matrices/trace.cpp
     matrices/size.cpp
     matrices/is_zero.cpp
@@ -256,6 +257,7 @@ set(HEADERS
     matrices/matrix_add.h
     matrices/hadamard_product.h
     matrices/conjugate_matrix.h
+    matrices/transpose.h
     matrices/trace.h
     matrices/is_zero.h
     matrices/is_real.h
