@@ -59,21 +59,26 @@ bool MatrixAdd::is_canonical(const vec_basic &terms) const
 
 void check_matching_sizes(const vec_basic &vec)
 {
-    auto sz = size(down_cast<const MatrixExpr &>(*vec[0]));
-    for (auto it = vec.begin() + 1; it != vec.end(); ++it) {
-        if (sz.first.is_null()) {
+    for (size_t i = 0; i < vec.size() - 1; i++) {
+        auto first_size = size(down_cast<const MatrixExpr &>(*vec[i]));
+        if (first_size.first.is_null()) {
             continue;
         }
-        auto cursize = size(down_cast<const MatrixExpr &>(**it));
-        auto rowdiff = sub(sz.first, cursize.first);
-        tribool rowmatch = is_zero(*rowdiff);
-        if (is_false(rowmatch)) {
-            throw DomainError("Matrix dimension mismatch");
-        }
-        auto coldiff = sub(sz.second, cursize.second);
-        tribool colmatch = is_zero(*coldiff);
-        if (is_false(colmatch)) {
-            throw DomainError("Matrix dimension mismatch");
+        for (size_t j = 1; j < vec.size(); j++) {
+            auto second_size = size(down_cast<const MatrixExpr &>(*vec[j]));
+            if (second_size.first.is_null()) {
+                continue;
+            }
+            auto rowdiff = sub(first_size.first, second_size.first);
+            tribool rowmatch = is_zero(*rowdiff);
+            if (is_false(rowmatch)) {
+                throw DomainError("Matrix dimension mismatch");
+            }
+            auto coldiff = sub(first_size.second, second_size.second);
+            tribool colmatch = is_zero(*coldiff);
+            if (is_false(colmatch)) {
+                throw DomainError("Matrix dimension mismatch");
+            }
         }
     }
 }
