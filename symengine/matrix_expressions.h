@@ -12,6 +12,7 @@
 #include <symengine/matrices/immutable_dense_matrix.h>
 #include <symengine/matrices/matrix_add.h>
 #include <symengine/matrices/hadamard_product.h>
+#include <symengine/matrices/matrix_mul.h>
 #include <symengine/matrices/trace.h>
 #include <symengine/matrices/conjugate_matrix.h>
 #include <symengine/matrices/transpose.h>

@@ -27,8 +27,10 @@ using SymEngine::is_symmetric;
 using SymEngine::is_true;
 using SymEngine::make_rcp;
 using SymEngine::matrix_add;
+using SymEngine::matrix_mul;
 using SymEngine::matrix_symbol;
 using SymEngine::MatrixAdd;
+using SymEngine::MatrixMul;
 using SymEngine::one;
 using SymEngine::Rational;
 using SymEngine::symbol;
@@ -430,6 +432,84 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
         = down_cast<const HadamardProduct &>(*hadamard_product({S1, D2}));
     REQUIRE(!x.is_canonical({D2}));
     REQUIRE(!x.is_canonical({Z1, D2}));
+    REQUIRE(!x.is_canonical({A1, A2}));
+    REQUIRE(!x.is_canonical({A1, D4}));
+}
+
+TEST_CASE("Test MatrixMul", "[MatrixMul]")
+{
+    auto i1 = integer(2);
+    auto i2 = integer(5);
+    auto Z1 = zero_matrix(i1, i1);
+    auto Z2 = zero_matrix(i2, i2);
+    auto Z3 = zero_matrix(i2, i1);
+    auto I1 = identity_matrix(i1);
+    auto I2 = identity_matrix(i2);
+    auto D1 = diagonal_matrix({integer(2), integer(3), integer(-2)});
+    auto D2 = diagonal_matrix({integer(-1), integer(2), integer(5)});
+    auto D3 = diagonal_matrix({integer(-2), integer(6), integer(-10)});
+    auto D4 = diagonal_matrix({integer(4), integer(36), integer(100)});
+    auto D5 = diagonal_matrix({integer(2), integer(-3)});
+    auto A1 = immutable_dense_matrix(
+        2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    auto A2 = immutable_dense_matrix(
+        2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    auto A3 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(4), integer(-9), integer(-12)});
+    auto A4 = immutable_dense_matrix(
+        2, 2, {integer(2), integer(-6), integer(6), integer(-12)});
+    auto A5 = immutable_dense_matrix(
+        2, 2, {integer(-16), integer(-20), integer(-30), integer(-36)});
+    auto A6 = immutable_dense_matrix(
+        2, 2, {integer(14), integer(20), integer(-45), integer(-66)});
+    auto S1 = matrix_symbol("S1");
+
+    auto prod = matrix_mul({Z1, I1});
+    REQUIRE(eq(*prod, *Z1));
+    prod = matrix_mul({I1, I1, Z1, Z1});
+    REQUIRE(eq(*prod, *Z1));
+    prod = matrix_mul({I1, I1});
+    REQUIRE(eq(*prod, *I1));
+    prod = matrix_mul({I1, A1});
+    REQUIRE(eq(*prod, *A1));
+    prod = matrix_mul({A1, I1});
+    REQUIRE(eq(*prod, *A1));
+    prod = matrix_mul({I1, A1, I1});
+    REQUIRE(eq(*prod, *A1));
+    prod = matrix_mul({D1, D2});
+    REQUIRE(eq(*prod, *D3));
+    auto vec = vec_basic({D1, S1, D2});
+    prod = matrix_mul(vec);
+    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(vec)));
+    prod = matrix_mul({D1, D2, D3});
+    REQUIRE(eq(*prod, *D4));
+    prod = matrix_mul({D5, A2});
+    REQUIRE(eq(*prod, *A3));
+    prod = matrix_mul({A2, D5});
+    REQUIRE(eq(*prod, *A4));
+    prod = matrix_mul({A2, A3});
+    REQUIRE(eq(*prod, *A5));
+    prod = matrix_mul({A3, A2});
+    REQUIRE(eq(*prod, *A6));
+    prod = matrix_mul({A3});
+    REQUIRE(eq(*prod, *A3));
+    prod = matrix_mul({S1, A1});
+    vec = vec_basic({S1, A1});
+    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(vec)));
+    auto prod2 = matrix_mul({prod, S1});
+    REQUIRE(!eq(*prod, *prod2));
+    REQUIRE(prod->compare(*prod) == 0);
+    REQUIRE(prod2->compare(*prod) == 1);
+    REQUIRE(prod->compare(*prod2) == -1);
+
+    CHECK_THROWS_AS(matrix_mul({Z1, Z2}), DomainError);
+    CHECK_THROWS_AS(matrix_mul({Z2, D1}), DomainError);
+    CHECK_THROWS_AS(matrix_mul({}), DomainError);
+    REQUIRE(prod->__hash__() == make_rcp<const MatrixMul>(vec)->__hash__());
+
+    const MatrixMul &x = down_cast<const MatrixMul &>(*matrix_mul({S1, A1}));
+    REQUIRE(!x.is_canonical({D1}));
+    REQUIRE(!x.is_canonical({D1, Z1}));
     REQUIRE(!x.is_canonical({A1, A2}));
     REQUIRE(!x.is_canonical({A1, D4}));
 }

@@ -51,6 +51,9 @@ bool ImmutableDenseMatrix::is_canonical(size_t m, size_t n,
     if (m < 1 || n < 1 || values.size() == 0) {
         return false;
     }
+    if (m * n != values.size()) {
+        return false;
+    }
     return true;
 }
 
