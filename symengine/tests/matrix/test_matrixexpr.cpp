@@ -819,6 +819,12 @@ TEST_CASE("Test size", "[size]")
     auto Zxy = zero_matrix(x, y);
     auto D1 = diagonal_matrix({integer(0), integer(23)});
     auto Dense1 = immutable_dense_matrix(1, 2, {one, one});
+    auto A = matrix_symbol("A");
+    auto ADD1 = matrix_add({A, D1});
+    auto ADD2 = matrix_add({A, D1, A});
+    auto HAD1 = hadamard_product({A, A, Dense1});
+    auto MUL1 = matrix_mul({A, D1, A});
+    auto MUL2 = matrix_mul({A, D1});
 
     auto sz = size(*I5);
     REQUIRE(eq(*sz.first, *n5));
@@ -840,5 +846,20 @@ TEST_CASE("Test size", "[size]")
     REQUIRE(eq(*sz.second, *n2));
     sz = size(*Dense1);
     REQUIRE(eq(*sz.first, *integer(1)));
+    REQUIRE(eq(*sz.second, *integer(2)));
+    sz = size(*ADD1);
+    REQUIRE(eq(*sz.first, *n2));
+    REQUIRE(eq(*sz.second, *n2));
+    sz = size(*ADD2);
+    REQUIRE(eq(*sz.first, *n2));
+    REQUIRE(eq(*sz.second, *n2));
+    sz = size(*HAD1);
+    REQUIRE(eq(*sz.first, *integer(1)));
+    REQUIRE(eq(*sz.second, *integer(2)));
+    sz = size(*MUL1);
+    REQUIRE(sz.first.is_null());
+    REQUIRE(sz.second.is_null());
+    sz = size(*MUL2);
+    REQUIRE(sz.first.is_null());
     REQUIRE(eq(*sz.second, *integer(2)));
 }
