@@ -13,6 +13,7 @@ namespace SymEngine
 hash_t MatrixMul::__hash__() const
 {
     hash_t seed = SYMENGINE_MATRIXMUL;
+    hash_combine<Basic>(seed, *scalar_);
     for (const auto &a : factors_) {
         hash_combine<Basic>(seed, *a);
     }
@@ -23,6 +24,9 @@ bool MatrixMul::__eq__(const Basic &o) const
 {
     if (is_a<MatrixMul>(o)) {
         const MatrixMul &other = down_cast<const MatrixMul &>(o);
+        if (!eq(*scalar_, *other.scalar_)) {
+            return false;
+        }
         return unified_eq(factors_, other.factors_);
     }
     return false;
@@ -32,12 +36,17 @@ int MatrixMul::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<MatrixMul>(o));
     const MatrixMul &other = down_cast<const MatrixMul &>(o);
+    int cmp_scalar = scalar_->compare(*other.scalar_);
+    if (cmp_scalar != 0) {
+        return cmp_scalar;
+    }
     return unified_compare(factors_, other.factors_);
 }
 
-bool MatrixMul::is_canonical(const vec_basic &factors) const
+bool MatrixMul::is_canonical(const RCP<const Basic> &scalar,
+                             const vec_basic &factors) const
 {
-    if (factors.size() < 2) {
+    if (factors.size() == 0 || (factors.size() == 1 && eq(*scalar, *one))) {
         return false;
     }
     size_t num_diag = 0;
@@ -167,15 +176,20 @@ RCP<const MatrixExpr> matrix_mul(const vec_basic &factors)
         return rcp_static_cast<const MatrixExpr>(factors[0]);
     }
 
-    // extract nested MatrixMul
+    // extract nested MatrixMul and scalars
     vec_basic expanded;
+    RCP<const Basic> scalar = one;
     for (auto &factor : factors) {
         if (is_a<const MatrixMul>(*factor)) {
             auto container
                 = down_cast<const MatrixMul &>(*factor).get_factors();
+            scalar = mul(scalar,
+                         down_cast<const MatrixMul &>(*factor).get_scalar());
             expanded.insert(expanded.end(), container.begin(), container.end());
-        } else {
+        } else if (is_a_MatrixExpr(*factor)) {
             expanded.push_back(factor);
+        } else {
+            scalar = mul(scalar, factor);
         }
     }
 
@@ -187,6 +201,7 @@ RCP<const MatrixExpr> matrix_mul(const vec_basic &factors)
             return rcp_static_cast<const MatrixExpr>(factor);
         }
     }
+
     vec_basic keep;
     RCP<const DiagonalMatrix> diag;
     RCP<const ImmutableDenseMatrix> dense;
@@ -231,13 +246,13 @@ RCP<const MatrixExpr> matrix_mul(const vec_basic &factors)
     } else if (!dense.is_null()) {
         keep.push_back(dense);
     }
-    if (keep.size() == 1) {
+    if (keep.size() == 1 && eq(*scalar, *one)) {
         return rcp_static_cast<const MatrixExpr>(keep[0]);
     }
     if (keep.size() == 0 && !ident.is_null()) {
         return ident;
     }
-    return make_rcp<const MatrixMul>(keep);
+    return make_rcp<const MatrixMul>(scalar, keep);
 }
 
 } // namespace SymEngine

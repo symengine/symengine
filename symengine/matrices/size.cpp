@@ -48,7 +48,11 @@ private:
 public:
     MatrixSizeVisitor() {}
 
-    void bvisit(const Basic &x){};
+    void bvisit(const Basic &x)
+    {
+        nrows_.reset();
+        ncols_.reset();
+    };
 
     void bvisit(const IdentityMatrix &x)
     {

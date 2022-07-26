@@ -480,7 +480,7 @@ TEST_CASE("Test MatrixMul", "[MatrixMul]")
     REQUIRE(eq(*prod, *D3));
     auto vec = vec_basic({D1, S1, D2});
     prod = matrix_mul(vec);
-    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(vec)));
+    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(one, vec)));
     prod = matrix_mul({D1, D2, D3});
     REQUIRE(eq(*prod, *D4));
     prod = matrix_mul({D5, A2});
@@ -495,23 +495,27 @@ TEST_CASE("Test MatrixMul", "[MatrixMul]")
     REQUIRE(eq(*prod, *A3));
     prod = matrix_mul({S1, A1});
     vec = vec_basic({S1, A1});
-    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(vec)));
+    REQUIRE(eq(*prod, *make_rcp<const MatrixMul>(one, vec)));
     auto prod2 = matrix_mul({prod, S1});
     REQUIRE(!eq(*prod, *prod2));
     REQUIRE(prod->compare(*prod) == 0);
     REQUIRE(prod2->compare(*prod) == 1);
     REQUIRE(prod->compare(*prod2) == -1);
+    REQUIRE(prod->__hash__()
+            == make_rcp<const MatrixMul>(one, vec)->__hash__());
+    prod = matrix_mul({i1, S1, i2});
+    REQUIRE(
+        eq(*down_cast<const MatrixMul &>(*prod).get_scalar(), *integer(10)));
 
     CHECK_THROWS_AS(matrix_mul({Z1, Z2}), DomainError);
     CHECK_THROWS_AS(matrix_mul({Z2, D1}), DomainError);
     CHECK_THROWS_AS(matrix_mul({}), DomainError);
-    REQUIRE(prod->__hash__() == make_rcp<const MatrixMul>(vec)->__hash__());
 
     const MatrixMul &x = down_cast<const MatrixMul &>(*matrix_mul({S1, A1}));
-    REQUIRE(!x.is_canonical({D1}));
-    REQUIRE(!x.is_canonical({D1, Z1}));
-    REQUIRE(!x.is_canonical({A1, A2}));
-    REQUIRE(!x.is_canonical({A1, D4}));
+    REQUIRE(x.is_canonical(i1, {D1}));
+    REQUIRE(!x.is_canonical(i1, {D1, Z1}));
+    REQUIRE(!x.is_canonical(i1, {A1, A2}));
+    REQUIRE(!x.is_canonical(i1, {A1, D4}));
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")
