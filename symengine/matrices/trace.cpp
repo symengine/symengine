@@ -38,7 +38,7 @@ private:
     void trace_error()
     {
         throw DomainError("Trace is only valid for square matrices");
-    };
+    }
 
 public:
     MatrixTraceVisitor() {}
@@ -49,12 +49,12 @@ public:
     {
         auto arg = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
         trace_ = make_rcp<const Trace>(arg);
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         trace_ = x.size();
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
@@ -67,12 +67,12 @@ public:
             auto arg = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
             trace_ = make_rcp<const Trace>(arg);
         }
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         trace_ = add(x.get_container());
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -95,13 +95,13 @@ public:
             sum = add(sum, trace_);
         }
         trace_ = sum;
-    };
+    }
 
     RCP<const Basic> apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return trace_;
-    };
+    }
 };
 
 RCP<const Basic> trace(const RCP<const MatrixExpr> &arg)

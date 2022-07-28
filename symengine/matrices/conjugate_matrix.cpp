@@ -58,17 +58,17 @@ public:
     {
         auto arg = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
         conjugate_ = make_rcp<const ConjugateMatrix>(arg);
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         conjugate_ = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         conjugate_ = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
@@ -78,7 +78,7 @@ public:
             conj[i] = conjugate(diag[i]);
         }
         conjugate_ = make_rcp<const DiagonalMatrix>(conj);
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -89,12 +89,12 @@ public:
         }
         conjugate_
             = make_rcp<const ImmutableDenseMatrix>(x.nrows(), x.ncols(), conj);
-    };
+    }
 
     void bvisit(const ConjugateMatrix &x)
     {
         conjugate_ = x.get_arg();
-    };
+    }
 
     void bvisit(const Transpose &x)
     {
@@ -102,7 +102,7 @@ public:
         auto arg = x.get_arg();
         auto conj = make_rcp<const ConjugateMatrix>(arg);
         conjugate_ = make_rcp<const Transpose>(conj);
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
@@ -112,7 +112,7 @@ public:
             conj.push_back(conjugate_);
         }
         conjugate_ = make_rcp<const MatrixAdd>(conj);
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
@@ -122,13 +122,13 @@ public:
             conj.push_back(conjugate_);
         }
         conjugate_ = make_rcp<const HadamardProduct>(conj);
-    };
+    }
 
     RCP<const MatrixExpr> apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return conjugate_;
-    };
+    }
 };
 
 RCP<const MatrixExpr> conjugate_matrix(const RCP<const MatrixExpr> &arg)

@@ -31,7 +31,7 @@ private:
         } else {
             is_symmetric_ = tribool::tritrue;
         }
-    };
+    }
 
 public:
     MatrixSymmetricVisitor(const Assumptions *assumptions)
@@ -43,22 +43,22 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_symmetric_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_symmetric_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         is_symmetric_ = is_square(x, assumptions_);
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         is_symmetric_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -83,23 +83,23 @@ public:
                 }
             }
         }
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
         check_vector(x.get_terms());
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
         check_vector(x.get_factors());
-    };
+    }
 
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return is_symmetric_;
-    };
+    }
 };
 
 tribool is_symmetric(const MatrixExpr &m, const Assumptions *assumptions)

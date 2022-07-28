@@ -21,17 +21,17 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_real_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_real_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         is_real_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
@@ -45,7 +45,7 @@ public:
             current = andwk_tribool(current, next);
         }
         is_real_ = current;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -65,7 +65,7 @@ public:
     {
         s.accept(*this);
         return is_real_;
-    };
+    }
 };
 
 tribool is_real(const MatrixExpr &m, const Assumptions *assumptions)

@@ -21,17 +21,17 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_toeplitz_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_toeplitz_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         is_toeplitz_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
@@ -52,7 +52,7 @@ public:
             current = andwk_tribool(current, next);
         }
         is_toeplitz_ = current;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -85,13 +85,13 @@ public:
                 }
             }
         }
-    };
+    }
 
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return is_toeplitz_;
-    };
+    }
 };
 
 tribool is_toeplitz(const MatrixExpr &m, const Assumptions *assumptions)

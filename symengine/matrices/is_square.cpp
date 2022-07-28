@@ -31,23 +31,23 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_square_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_square_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         auto diff = sub(x.nrows(), x.ncols());
         is_square_ = is_zero(*diff, assumptions_);
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         is_square_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -56,12 +56,12 @@ public:
         } else {
             is_square_ = tribool::trifalse;
         }
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
         check_vector(x.get_terms());
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
@@ -72,7 +72,7 @@ public:
     {
         s.accept(*this);
         return is_square_;
-    };
+    }
 };
 
 tribool is_square(const MatrixExpr &m, const Assumptions *assumptions)

@@ -56,22 +56,22 @@ public:
     {
         auto arg = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
         transpose_ = make_rcp<const Transpose>(arg);
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         transpose_ = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         transpose_ = make_rcp<const ZeroMatrix>(x.ncols(), x.nrows());
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         transpose_ = rcp_static_cast<const MatrixExpr>(x.rcp_from_this());
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -84,12 +84,12 @@ public:
 
         transpose_
             = make_rcp<const ImmutableDenseMatrix>(x.ncols(), x.nrows(), t);
-    };
+    }
 
     void bvisit(const Transpose &x)
     {
         transpose_ = x.get_arg();
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
@@ -99,7 +99,7 @@ public:
             t.push_back(transpose_);
         }
         transpose_ = make_rcp<const MatrixAdd>(t);
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
@@ -109,13 +109,13 @@ public:
             t.push_back(transpose_);
         }
         transpose_ = make_rcp<const HadamardProduct>(t);
-    };
+    }
 
     RCP<const MatrixExpr> apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return transpose_;
-    };
+    }
 };
 
 RCP<const MatrixExpr> transpose(const RCP<const MatrixExpr> &arg)

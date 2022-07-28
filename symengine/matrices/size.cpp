@@ -43,7 +43,7 @@ private:
         }
         nrows_ = rows;
         ncols_ = cols;
-    };
+    }
 
 public:
     MatrixSizeVisitor() {}
@@ -52,49 +52,49 @@ public:
     {
         nrows_.reset();
         ncols_.reset();
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         nrows_ = x.size();
         ncols_ = x.size();
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         nrows_ = x.nrows();
         ncols_ = x.ncols();
-    };
+    }
 
     void bvisit(const MatrixSymbol &x)
     {
         nrows_.reset();
         ncols_.reset();
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         nrows_ = integer(x.get_container().size());
         ncols_ = nrows_;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
         nrows_ = integer(x.nrows());
         ncols_ = integer(x.ncols());
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
         auto vec = x.get_terms();
         all_same_size(vec);
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
         auto vec = x.get_factors();
         all_same_size(vec);
-    };
+    }
 
     void bvisit(const MatrixMul &x)
     {
@@ -103,13 +103,13 @@ public:
         auto row = nrows_;
         vec.back()->accept(*this);
         nrows_ = row;
-    };
+    }
 
     std::pair<RCP<const Basic>, RCP<const Basic>> apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return std::make_pair(nrows_, ncols_);
-    };
+    }
 };
 
 std::pair<RCP<const Basic>, RCP<const Basic>> size(const MatrixExpr &m)

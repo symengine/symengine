@@ -21,22 +21,22 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_diagonal_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_diagonal_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         is_diagonal_ = is_square(x, assumptions_);
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         is_diagonal_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -61,7 +61,7 @@ public:
                 offset++;
             }
         }
-    };
+    }
 
     void bvisit(const MatrixAdd &x)
     {
@@ -83,7 +83,7 @@ public:
         } else {
             is_diagonal_ = tribool::tritrue;
         }
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
@@ -96,13 +96,13 @@ public:
             }
         }
         is_diagonal_ = tribool::indeterminate;
-    };
+    }
 
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return is_diagonal_;
-    };
+    }
 };
 
 tribool is_diagonal(const MatrixExpr &m, const Assumptions *assumptions)

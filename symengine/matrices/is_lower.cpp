@@ -21,22 +21,22 @@ public:
     void bvisit(const MatrixExpr &x)
     {
         is_lower_ = tribool::indeterminate;
-    };
+    }
 
     void bvisit(const IdentityMatrix &x)
     {
         is_lower_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ZeroMatrix &x)
     {
         is_lower_ = is_square(x, assumptions_);
-    };
+    }
 
     void bvisit(const DiagonalMatrix &x)
     {
         is_lower_ = tribool::tritrue;
-    };
+    }
 
     void bvisit(const ImmutableDenseMatrix &x)
     {
@@ -78,7 +78,7 @@ public:
         } else {
             is_lower_ = tribool::tritrue;
         }
-    };
+    }
 
     void bvisit(const HadamardProduct &x)
     {
@@ -91,13 +91,13 @@ public:
             }
         }
         is_lower_ = tribool::indeterminate;
-    };
+    }
 
     tribool apply(const MatrixExpr &s)
     {
         s.accept(*this);
         return is_lower_;
-    };
+    }
 };
 
 tribool is_lower(const MatrixExpr &m, const Assumptions *assumptions)
