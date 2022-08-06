@@ -243,6 +243,7 @@ enum tribool { indeterminate = -1, trifalse = 0, tritrue = 1 };
 inline bool is_true(tribool x);
 inline bool is_false(tribool x);
 inline bool is_indeterminate(tribool x);
+inline tribool tribool_from_bool(bool x);
 inline tribool and_tribool(tribool a, tribool b);
 inline tribool not_tribool(tribool a);
 inline tribool andwk_tribool(tribool a, tribool b);

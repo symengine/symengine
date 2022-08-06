@@ -64,6 +64,15 @@ inline bool is_indeterminate(tribool x)
     return x == tribool::indeterminate;
 }
 
+inline tribool tribool_from_bool(bool x)
+{
+    if (x) {
+        return tribool::tritrue;
+    } else {
+        return tribool::trifalse;
+    }
+}
+
 inline tribool and_tribool(tribool a, tribool b)
 {
     if (!(a & b)) {
