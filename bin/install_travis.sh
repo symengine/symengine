@@ -72,7 +72,7 @@ else
 fi
 
 if [[ "${WITH_BENCHMARKS_GOOGLE}" == "yes" ]]; then
-    conda_pkgs="${conda_pkgs} benchmark"
+    conda_pkgs="${conda_pkgs} benchmark=1.6.1"
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
