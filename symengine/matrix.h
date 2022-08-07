@@ -118,15 +118,15 @@ public:
     // and throw an exception if a method is not applicable.
 
     // Get and set elements
-    virtual RCP<const Basic> get(unsigned i, unsigned j) const;
-    virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
+    RCP<const Basic> get(unsigned i, unsigned j) const override;
+    void set(unsigned i, unsigned j, const RCP<const Basic> &e) override;
     virtual vec_basic as_vec_basic() const;
 
-    virtual unsigned nrows() const
+    unsigned nrows() const override
     {
         return row_;
     }
-    virtual unsigned ncols() const
+    unsigned ncols() const override
     {
         return col_;
     }
@@ -135,8 +135,7 @@ public:
     virtual bool is_upper() const;
     virtual tribool is_zero() const;
     virtual tribool is_diagonal() const;
-    virtual tribool is_real(const Assumptions *assumptions
-                            = nullptr) const override;
+    tribool is_real(const Assumptions *assumptions = nullptr) const override;
     virtual tribool is_symmetric() const;
     virtual tribool is_hermitian() const;
     virtual tribool is_weakly_diagonally_dominant() const;
@@ -145,63 +144,62 @@ public:
     virtual tribool is_negative_definite() const;
 
     RCP<const Basic> trace() const;
-    virtual unsigned rank() const;
-    virtual RCP<const Basic> det() const;
-    virtual void inv(MatrixBase &result) const;
+    unsigned rank() const override;
+    RCP<const Basic> det() const override;
+    void inv(MatrixBase &result) const override;
 
     // Matrix addition
-    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
+    void add_matrix(const MatrixBase &other, MatrixBase &result) const override;
 
     // Matrix multiplication
-    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+    void mul_matrix(const MatrixBase &other, MatrixBase &result) const override;
 
     // Matrix elementwise Multiplication
-    virtual void elementwise_mul_matrix(const MatrixBase &other,
-                                        MatrixBase &result) const;
+    void elementwise_mul_matrix(const MatrixBase &other,
+                                MatrixBase &result) const override;
 
     // Add a scalar
-    virtual void add_scalar(const RCP<const Basic> &k,
-                            MatrixBase &result) const;
+    void add_scalar(const RCP<const Basic> &k,
+                    MatrixBase &result) const override;
 
     // Multiply by a scalar
-    virtual void mul_scalar(const RCP<const Basic> &k,
-                            MatrixBase &result) const;
+    void mul_scalar(const RCP<const Basic> &k,
+                    MatrixBase &result) const override;
 
     // Matrix conjugate
-    virtual void conjugate(MatrixBase &result) const;
+    void conjugate(MatrixBase &result) const override;
 
     // Matrix transpose
-    virtual void transpose(MatrixBase &result) const;
+    void transpose(MatrixBase &result) const override;
 
     // Matrix conjugate transpose
-    virtual void conjugate_transpose(MatrixBase &result) const;
+    void conjugate_transpose(MatrixBase &result) const override;
 
     // Extract out a submatrix
-    virtual void submatrix(MatrixBase &result, unsigned row_start,
-                           unsigned col_start, unsigned row_end,
-                           unsigned col_end, unsigned row_step = 1,
-                           unsigned col_step = 1) const;
+    void submatrix(MatrixBase &result, unsigned row_start, unsigned col_start,
+                   unsigned row_end, unsigned col_end, unsigned row_step = 1,
+                   unsigned col_step = 1) const override;
 
     // LU factorization
-    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+    void LU(MatrixBase &L, MatrixBase &U) const override;
 
     // LDL factorization
-    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+    void LDL(MatrixBase &L, MatrixBase &D) const override;
 
     // Solve Ax = b using LU factorization
-    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+    void LU_solve(const MatrixBase &b, MatrixBase &x) const override;
 
     // Fraction free LU factorization
-    virtual void FFLU(MatrixBase &LU) const;
+    void FFLU(MatrixBase &LU) const override;
 
     // Fraction free LDU factorization
-    virtual void FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const;
+    void FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const override;
 
     // QR factorization
-    virtual void QR(MatrixBase &Q, MatrixBase &R) const;
+    void QR(MatrixBase &Q, MatrixBase &R) const override;
 
     // Cholesky decomposition
-    virtual void cholesky(MatrixBase &L) const;
+    void cholesky(MatrixBase &L) const override;
 
     // Return the Jacobian of the matrix
     friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
@@ -357,82 +355,79 @@ public:
 
     bool is_canonical() const;
 
-    virtual bool eq(const MatrixBase &other) const;
+    bool eq(const MatrixBase &other) const override;
 
     // Get and set elements
-    virtual RCP<const Basic> get(unsigned i, unsigned j) const;
-    virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
+    RCP<const Basic> get(unsigned i, unsigned j) const override;
+    void set(unsigned i, unsigned j, const RCP<const Basic> &e) override;
 
-    virtual unsigned nrows() const
+    unsigned nrows() const override
     {
         return row_;
     }
-    virtual unsigned ncols() const
+    unsigned ncols() const override
     {
         return col_;
     }
 
-    virtual tribool is_real(const Assumptions *assumptions
-                            = nullptr) const override;
-
-    virtual unsigned rank() const;
-    virtual RCP<const Basic> det() const;
-    virtual void inv(MatrixBase &result) const;
+    tribool is_real(const Assumptions *assumptions = nullptr) const override;
+    unsigned rank() const override;
+    RCP<const Basic> det() const override;
+    void inv(MatrixBase &result) const override;
 
     // Matrix addition
-    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
+    void add_matrix(const MatrixBase &other, MatrixBase &result) const override;
 
     // Matrix Multiplication
-    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+    void mul_matrix(const MatrixBase &other, MatrixBase &result) const override;
 
     // Matrix elementwise Multiplication
-    virtual void elementwise_mul_matrix(const MatrixBase &other,
-                                        MatrixBase &result) const;
+    void elementwise_mul_matrix(const MatrixBase &other,
+                                MatrixBase &result) const override;
 
     // Add a scalar
-    virtual void add_scalar(const RCP<const Basic> &k,
-                            MatrixBase &result) const;
+    void add_scalar(const RCP<const Basic> &k,
+                    MatrixBase &result) const override;
 
     // Multiply by a scalar
-    virtual void mul_scalar(const RCP<const Basic> &k,
-                            MatrixBase &result) const;
+    void mul_scalar(const RCP<const Basic> &k,
+                    MatrixBase &result) const override;
 
     // Matrix conjugate
-    virtual void conjugate(MatrixBase &result) const;
+    void conjugate(MatrixBase &result) const override;
 
     // Matrix transpose
-    virtual void transpose(MatrixBase &result) const;
+    void transpose(MatrixBase &result) const override;
     CSRMatrix transpose(bool conjugate = false) const;
 
     // Matrix conjugate transpose
-    virtual void conjugate_transpose(MatrixBase &result) const;
+    void conjugate_transpose(MatrixBase &result) const override;
 
     // Extract out a submatrix
-    virtual void submatrix(MatrixBase &result, unsigned row_start,
-                           unsigned col_start, unsigned row_end,
-                           unsigned col_end, unsigned row_step = 1,
-                           unsigned col_step = 1) const;
+    void submatrix(MatrixBase &result, unsigned row_start, unsigned col_start,
+                   unsigned row_end, unsigned col_end, unsigned row_step = 1,
+                   unsigned col_step = 1) const override;
 
     // LU factorization
-    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+    void LU(MatrixBase &L, MatrixBase &U) const override;
 
     // LDL factorization
-    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+    void LDL(MatrixBase &L, MatrixBase &D) const override;
 
     // Solve Ax = b using LU factorization
-    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+    void LU_solve(const MatrixBase &b, MatrixBase &x) const override;
 
     // Fraction free LU factorization
-    virtual void FFLU(MatrixBase &LU) const;
+    void FFLU(MatrixBase &LU) const override;
 
     // Fraction free LDU factorization
-    virtual void FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const;
+    void FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const override;
 
     // QR factorization
-    virtual void QR(MatrixBase &Q, MatrixBase &R) const;
+    void QR(MatrixBase &Q, MatrixBase &R) const override;
 
     // Cholesky decomposition
-    virtual void cholesky(MatrixBase &L) const;
+    void cholesky(MatrixBase &L) const override;
 
     static void csr_sum_duplicates(std::vector<unsigned> &p_,
                                    std::vector<unsigned> &j_, vec_basic &x_,
