@@ -1037,7 +1037,7 @@ void AlgebraicVisitor::trans_nonzero_and_algebraic(const Basic &b)
 {
     // transcendental if b is algebraic and nonzero
     b.accept(*this);
-    if (is_true(is_algebraic_) and is_nonzero(b)) {
+    if (is_true(is_algebraic_) and is_true(is_nonzero(b))) {
         is_algebraic_ = tribool::trifalse;
     } else {
         is_algebraic_ = tribool::indeterminate;
