@@ -471,9 +471,76 @@ void RealVisitor::bvisit(const Add &x)
     for (const auto &arg : x.get_args()) {
         arg->accept(*this);
         b = andwk_tribool(b, is_real_);
-        if (is_indeterminate(b))
-            return;
+        if (is_indeterminate(b)) {
+            break;
+        }
     }
+    is_real_ = b;
+}
+
+void RealVisitor::check_power(const RCP<const Basic> &base,
+                              const RCP<const Basic> &exp)
+{
+    if (is_true(is_zero(*exp, assumptions_))) {
+        // exp == 0 => true
+        is_real_ = tribool::tritrue;
+        return;
+    }
+    base->accept(*this);
+    if (is_true(is_real_)) {
+        if (is_true(is_integer(*exp, assumptions_))) {
+            // base is real and exp is integer => true
+            is_real_ = tribool::tritrue;
+        } else if (is_true(is_nonnegative(*base, assumptions_))) {
+            // base >= 0 and exp is real => true
+            exp->accept(*this);
+            if (is_false(is_real_)) {
+                is_real_ = tribool::indeterminate;
+            }
+        } else {
+            is_real_ = tribool::indeterminate;
+        }
+    } else if (is_false(is_real_) && is_true(is_complex(*base, assumptions_))
+               && is_true(is_zero(*sub(exp, integer(1)), assumptions_))) {
+        // base is not real but complex and exp = 1 => false
+        is_real_ = tribool::trifalse;
+    } else {
+        is_real_ = tribool::indeterminate;
+    }
+}
+
+void RealVisitor::bvisit(const Mul &x)
+{
+    unsigned non_real = 0;
+    tribool b = tribool_from_bool(!x.get_coef()->is_complex());
+    if (is_false(b)) {
+        non_real++;
+    }
+    for (const auto &p : x.get_dict()) {
+        this->check_power(p.first, p.second);
+        if (is_false(is_real_)) {
+            non_real++;
+            if (non_real > 1) {
+                is_real_ = tribool::indeterminate;
+                return;
+            }
+        }
+        b = andwk_tribool(b, is_real_);
+        if (is_indeterminate(b)) {
+            is_real_ = tribool::indeterminate;
+            return;
+        }
+    }
+    if (non_real == 1) {
+        is_real_ = tribool::trifalse;
+    } else {
+        is_real_ = b;
+    }
+}
+
+void RealVisitor::bvisit(const Pow &x)
+{
+    this->check_power(x.get_base(), x.get_exp());
 }
 
 tribool RealVisitor::apply(const Basic &b)

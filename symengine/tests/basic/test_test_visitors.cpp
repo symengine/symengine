@@ -8,6 +8,7 @@ using SymEngine::Basic;
 using SymEngine::boolTrue;
 using SymEngine::Catalan;
 using SymEngine::Complex;
+using SymEngine::complexes;
 using SymEngine::constant;
 using SymEngine::cos;
 using SymEngine::E;
@@ -359,6 +360,11 @@ TEST_CASE("Test is_real", "[is_real]")
     RCP<const Basic> e2 = add(x, Inf);
     RCP<const Basic> e3 = add(x, c1);
     RCP<const Basic> e4 = add(x, y);
+    RCP<const Basic> e5 = pow(integer(2), x);
+    RCP<const Basic> e6 = pow(integer(-1), x);
+    RCP<const Basic> e7 = mul(x, y);
+    RCP<const Basic> e8 = mul(c1, x);
+    RCP<const Basic> e9 = pow(i2, c1);
 
     REQUIRE(is_indeterminate(is_real(*x)));
     REQUIRE(is_true(is_real(*i1)));
@@ -373,6 +379,11 @@ TEST_CASE("Test is_real", "[is_real]")
     REQUIRE(is_indeterminate(is_real(*e1)));
     REQUIRE(is_indeterminate(is_real(*e2)));
     REQUIRE(is_indeterminate(is_real(*e3)));
+    REQUIRE(is_indeterminate(is_real(*e5)));
+    REQUIRE(is_indeterminate(is_real(*e6)));
+    REQUIRE(is_indeterminate(is_real(*e7)));
+    REQUIRE(is_indeterminate(is_real(*e8)));
+    REQUIRE(is_indeterminate(is_real(*e9)));
     REQUIRE(is_false(is_real(*Inf)));
     REQUIRE(is_false(is_real(*Nan)));
 
@@ -385,6 +396,18 @@ TEST_CASE("Test is_real", "[is_real]")
     const auto a3
         = Assumptions({rationals()->contains(x), rationals()->contains(y)});
     REQUIRE(is_true(is_real(*e4, &a3)));
+
+    const auto a4 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_true(is_real(*e5, &a4)));
+
+    const auto a5 = Assumptions({complexes()->contains(x)});
+    REQUIRE(is_indeterminate(is_real(*e5, &a5)));
+
+    const auto a6 = Assumptions({reals()->contains(x), reals()->contains(y)});
+    REQUIRE(is_true(is_real(*e7, &a6)));
+
+    const auto a7 = Assumptions({reals()->contains(x)});
+    REQUIRE(is_false(is_real(*e8, &a7)));
 }
 
 TEST_CASE("Test is_complex", "[is_complex]")

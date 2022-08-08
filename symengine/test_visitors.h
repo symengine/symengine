@@ -176,6 +176,8 @@ private:
     tribool is_real_;
     const Assumptions *assumptions_;
 
+    void check_power(const RCP<const Basic> &base, const RCP<const Basic> &exp);
+
 public:
     RealVisitor(const Assumptions *assumptions) : assumptions_(assumptions){};
     void bvisit(const Basic &x)
@@ -198,6 +200,8 @@ public:
     };
     void bvisit(const Constant &x);
     void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
 
     tribool apply(const Basic &b);
 };
