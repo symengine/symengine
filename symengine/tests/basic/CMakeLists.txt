@@ -134,3 +134,7 @@ add_test(test_simplify ${PROJECT_BINARY_DIR}/test_simplify)
 add_executable(test_tuple test_tuple.cpp)
 target_link_libraries(test_tuple symengine catch)
 add_test(test_tuple ${PROJECT_BINARY_DIR}/test_tuple)
+
+add_executable(test_tribool test_tribool.cpp)
+target_link_libraries(test_tribool symengine catch)
+add_test(test_tribool ${PROJECT_BINARY_DIR}/test_tribool)

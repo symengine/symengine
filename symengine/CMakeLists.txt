@@ -219,6 +219,7 @@ set(HEADERS
     symengine_casts.h
     symengine_exception.h
     symengine_rcp.h
+    tribool.h
     type_codes.inc
     visitor.h
     test_visitors.h
