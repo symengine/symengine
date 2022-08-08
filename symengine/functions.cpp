@@ -1595,7 +1595,7 @@ ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 bool ATan2::is_canonical(const RCP<const Basic> &num,
                          const RCP<const Basic> &den) const
 {
-    if (eq(*num, *zero) or eq(*num, *den) or eq(*num, *mul(minus_one, den)))
+    if (eq(*num, *zero))
         return false;
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct(), div(num, den), outArg(index));
