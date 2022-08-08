@@ -170,7 +170,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00316">316</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00320">320</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a15a1d1e03eb00ab983d2a2f7d58a3f80" name="a15a1d1e03eb00ab983d2a2f7d58a3f80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a15a1d1e03eb00ab983d2a2f7d58a3f80">&#9670;&nbsp;</a></span>PolynomialVisitor()</h2>
@@ -196,8 +196,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00326">326</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  326</span>: variables_(variables) {}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00330">330</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  330</span>: variables_(variables) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -218,11 +218,11 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00739">739</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  740</span>{</div>
-<div class="line"><span class="lineno">  741</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  742</span>    <span class="keywordflow">return</span> is_polynomial_;</div>
-<div class="line"><span class="lineno">  743</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00806">806</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  807</span>{</div>
+<div class="line"><span class="lineno">  808</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  809</span>    <span class="keywordflow">return</span> is_polynomial_;</div>
+<div class="line"><span class="lineno">  810</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -242,14 +242,14 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00674">674</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  675</span>{</div>
-<div class="line"><span class="lineno">  676</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
-<div class="line"><span class="lineno">  677</span>        arg-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  678</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
-<div class="line"><span class="lineno">  679</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  680</span>    }</div>
-<div class="line"><span class="lineno">  681</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00741">741</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  742</span>{</div>
+<div class="line"><span class="lineno">  743</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
+<div class="line"><span class="lineno">  744</span>        arg-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  745</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
+<div class="line"><span class="lineno">  746</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  747</span>    }</div>
+<div class="line"><span class="lineno">  748</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -269,19 +269,19 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00660">660</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  661</span>{</div>
-<div class="line"><span class="lineno">  662</span>    <span class="keyword">auto</span> old_allowed = variables_allowed_;</div>
-<div class="line"><span class="lineno">  663</span>    variables_allowed_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  664</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
-<div class="line"><span class="lineno">  665</span>        p-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  666</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
-<div class="line"><span class="lineno">  667</span>            variables_allowed_ = old_allowed;</div>
-<div class="line"><span class="lineno">  668</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  669</span>        }</div>
-<div class="line"><span class="lineno">  670</span>    }</div>
-<div class="line"><span class="lineno">  671</span>    variables_allowed_ = old_allowed;</div>
-<div class="line"><span class="lineno">  672</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00727">727</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  728</span>{</div>
+<div class="line"><span class="lineno">  729</span>    <span class="keyword">auto</span> old_allowed = variables_allowed_;</div>
+<div class="line"><span class="lineno">  730</span>    variables_allowed_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  731</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
+<div class="line"><span class="lineno">  732</span>        p-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  733</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
+<div class="line"><span class="lineno">  734</span>            variables_allowed_ = old_allowed;</div>
+<div class="line"><span class="lineno">  735</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  736</span>        }</div>
+<div class="line"><span class="lineno">  737</span>    }</div>
+<div class="line"><span class="lineno">  738</span>    variables_allowed_ = old_allowed;</div>
+<div class="line"><span class="lineno">  739</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -309,8 +309,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00329">329</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  329</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00333">333</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  333</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -330,14 +330,14 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00683">683</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  684</span>{</div>
-<div class="line"><span class="lineno">  685</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
-<div class="line"><span class="lineno">  686</span>        this-&gt;check_power(*p.first, *p.second);</div>
-<div class="line"><span class="lineno">  687</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
-<div class="line"><span class="lineno">  688</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  689</span>    }</div>
-<div class="line"><span class="lineno">  690</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00750">750</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  751</span>{</div>
+<div class="line"><span class="lineno">  752</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  753</span>        this-&gt;check_power(*p.first, *p.second);</div>
+<div class="line"><span class="lineno">  754</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
+<div class="line"><span class="lineno">  755</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  756</span>    }</div>
+<div class="line"><span class="lineno">  757</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -365,8 +365,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00328">328</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  328</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00332">332</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  332</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -386,10 +386,10 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00717">717</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  718</span>{</div>
-<div class="line"><span class="lineno">  719</span>    check_power(*x.get_base(), *x.get_exp());</div>
-<div class="line"><span class="lineno">  720</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00784">784</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  785</span>{</div>
+<div class="line"><span class="lineno">  786</span>    check_power(*x.get_base(), *x.get_exp());</div>
+<div class="line"><span class="lineno">  787</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -417,10 +417,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00338">338</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  339</span>    {</div>
-<div class="line"><span class="lineno">  340</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  341</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00342">342</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  343</span>    {</div>
+<div class="line"><span class="lineno">  344</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  345</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -448,10 +448,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00334">334</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  335</span>    {</div>
-<div class="line"><span class="lineno">  336</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  337</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00338">338</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  339</span>    {</div>
+<div class="line"><span class="lineno">  340</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  341</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -471,22 +471,22 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00722">722</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  723</span>{</div>
-<div class="line"><span class="lineno">  724</span>    <span class="keywordflow">if</span> (variables_allowed_)</div>
-<div class="line"><span class="lineno">  725</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  726</span> </div>
-<div class="line"><span class="lineno">  727</span>    <span class="keywordflow">if</span> (variables_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) { <span class="comment">// All symbols are variables</span></div>
-<div class="line"><span class="lineno">  728</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  729</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  730</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : variables_) {</div>
-<div class="line"><span class="lineno">  731</span>            <span class="keywordflow">if</span> (x.__eq__(*elem)) {</div>
-<div class="line"><span class="lineno">  732</span>                is_polynomial_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  733</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  734</span>            }</div>
-<div class="line"><span class="lineno">  735</span>        }</div>
-<div class="line"><span class="lineno">  736</span>    }</div>
-<div class="line"><span class="lineno">  737</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00789">789</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  790</span>{</div>
+<div class="line"><span class="lineno">  791</span>    <span class="keywordflow">if</span> (variables_allowed_)</div>
+<div class="line"><span class="lineno">  792</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  793</span> </div>
+<div class="line"><span class="lineno">  794</span>    <span class="keywordflow">if</span> (variables_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) { <span class="comment">// All symbols are variables</span></div>
+<div class="line"><span class="lineno">  795</span>        is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  796</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  797</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : variables_) {</div>
+<div class="line"><span class="lineno">  798</span>            <span class="keywordflow">if</span> (x.__eq__(*elem)) {</div>
+<div class="line"><span class="lineno">  799</span>                is_polynomial_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  800</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  801</span>            }</div>
+<div class="line"><span class="lineno">  802</span>        }</div>
+<div class="line"><span class="lineno">  803</span>    }</div>
+<div class="line"><span class="lineno">  804</span>}</div>
 <div class="ttc" id="aempty_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/empty.html">std::set::empty</a></div><div class="ttdeci">T empty(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -525,30 +525,30 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00692">692</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  693</span>{</div>
-<div class="line"><span class="lineno">  694</span>    <span class="keywordflow">if</span> (variables_allowed_) {</div>
-<div class="line"><span class="lineno">  695</span>        variables_allowed_ = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  696</span>        <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  697</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
-<div class="line"><span class="lineno">  698</span>            variables_allowed_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  699</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  700</span>        }</div>
-<div class="line"><span class="lineno">  701</span>        base.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  702</span>        variables_allowed_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  703</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
-<div class="line"><span class="lineno">  704</span>            is_polynomial_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  705</span>            base.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  706</span>            is_polynomial_ = is_polynomial_ and is_a&lt;Integer&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)</div>
-<div class="line"><span class="lineno">  707</span>                             and down_cast&lt;const Integer &amp;&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>).is_positive();</div>
-<div class="line"><span class="lineno">  708</span>        }</div>
-<div class="line"><span class="lineno">  709</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  710</span>        base.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  711</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
-<div class="line"><span class="lineno">  712</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  713</span>        <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  714</span>    }</div>
-<div class="line"><span class="lineno">  715</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00759">759</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  760</span>{</div>
+<div class="line"><span class="lineno">  761</span>    <span class="keywordflow">if</span> (variables_allowed_) {</div>
+<div class="line"><span class="lineno">  762</span>        variables_allowed_ = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  763</span>        <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  764</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
+<div class="line"><span class="lineno">  765</span>            variables_allowed_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  766</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  767</span>        }</div>
+<div class="line"><span class="lineno">  768</span>        base.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  769</span>        variables_allowed_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  770</span>        <span class="keywordflow">if</span> (!is_polynomial_) {</div>
+<div class="line"><span class="lineno">  771</span>            is_polynomial_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  772</span>            base.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  773</span>            is_polynomial_ = is_polynomial_ and is_a&lt;Integer&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)</div>
+<div class="line"><span class="lineno">  774</span>                             and down_cast&lt;const Integer &amp;&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>).is_positive();</div>
+<div class="line"><span class="lineno">  775</span>        }</div>
+<div class="line"><span class="lineno">  776</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  777</span>        base.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  778</span>        <span class="keywordflow">if</span> (!is_polynomial_)</div>
+<div class="line"><span class="lineno">  779</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  780</span>        <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  781</span>    }</div>
+<div class="line"><span class="lineno">  782</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -574,7 +574,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00319">319</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00323">323</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>
@@ -598,7 +598,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00321">321</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00325">325</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>
@@ -622,7 +622,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00320">320</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00324">324</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>

@@ -97,6 +97,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle"><div class="title">SymEngine::RealVisitor Class Reference</div></div>
 </div><!--header-->
@@ -150,8 +151,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a37eac024b77f7df62ea0ae1e362120bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f5135c522b7180a25f347fd189a654"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html#af4f5135c522b7180a25f347fd189a654">bvisit</a> (const <a class="el" href="classSymEngine_1_1Add.html">Add</a> &amp;x)</td></tr>
 <tr class="separator:af4f5135c522b7180a25f347fd189a654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1451fb05b49980c90126d76cefbab283"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html#a1451fb05b49980c90126d76cefbab283">bvisit</a> (const <a class="el" href="classSymEngine_1_1Mul.html">Mul</a> &amp;x)</td></tr>
+<tr class="separator:a1451fb05b49980c90126d76cefbab283"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab11bc4d2dfd43ce226349752dad22c2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html#ab11bc4d2dfd43ce226349752dad22c2d">bvisit</a> (const <a class="el" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x)</td></tr>
+<tr class="separator:ab11bc4d2dfd43ce226349752dad22c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d3564242fc8535f11891c7cd18d55f2"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html#a2d3564242fc8535f11891c7cd18d55f2">apply</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="separator:a2d3564242fc8535f11891c7cd18d55f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a49cc4500d92fe5741978f642d14cac95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1RealVisitor.html#a49cc4500d92fe5741978f642d14cac95">check_power</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;base, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;<a class="el" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)</td></tr>
+<tr class="separator:a49cc4500d92fe5741978f642d14cac95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -188,8 +198,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00180">180</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  180</span>: assumptions_(assumptions){};</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00182">182</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  182</span>: assumptions_(assumptions){};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -210,16 +220,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00479">479</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  480</span>{</div>
-<div class="line"><span class="lineno">  481</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  482</span>    <span class="keywordflow">return</span> is_real_;</div>
-<div class="line"><span class="lineno">  483</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00546">546</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  547</span>{</div>
+<div class="line"><span class="lineno">  548</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  549</span>    <span class="keywordflow">return</span> is_real_;</div>
+<div class="line"><span class="lineno">  550</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="af4f5135c522b7180a25f347fd189a654" name="af4f5135c522b7180a25f347fd189a654"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4f5135c522b7180a25f347fd189a654">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af4f5135c522b7180a25f347fd189a654">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[1/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -240,15 +250,17 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  471</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
 <div class="line"><span class="lineno">  472</span>        arg-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><span class="lineno">  473</span>        b = andwk_tribool(b, is_real_);</div>
-<div class="line"><span class="lineno">  474</span>        <span class="keywordflow">if</span> (is_indeterminate(b))</div>
-<div class="line"><span class="lineno">  475</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  476</span>    }</div>
-<div class="line"><span class="lineno">  477</span>}</div>
+<div class="line"><span class="lineno">  474</span>        <span class="keywordflow">if</span> (is_indeterminate(b)) {</div>
+<div class="line"><span class="lineno">  475</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  476</span>        }</div>
+<div class="line"><span class="lineno">  477</span>    }</div>
+<div class="line"><span class="lineno">  478</span>    is_real_ = b;</div>
+<div class="line"><span class="lineno">  479</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a9198d5a87e82b8a014099e5807a2b56a" name="a9198d5a87e82b8a014099e5807a2b56a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9198d5a87e82b8a014099e5807a2b56a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9198d5a87e82b8a014099e5807a2b56a">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[2/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,15 +283,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00181">181</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  182</span>    {</div>
-<div class="line"><span class="lineno">  183</span>        is_real_ = tribool::indeterminate;</div>
-<div class="line"><span class="lineno">  184</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00183">183</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  184</span>    {</div>
+<div class="line"><span class="lineno">  185</span>        is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  186</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a459578f84db7751bdc0cc566b2966411" name="a459578f84db7751bdc0cc566b2966411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a459578f84db7751bdc0cc566b2966411">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a459578f84db7751bdc0cc566b2966411">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[3/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,15 +314,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00195">195</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  196</span>    {</div>
-<div class="line"><span class="lineno">  197</span>        is_real_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  198</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00197">197</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>    {</div>
+<div class="line"><span class="lineno">  199</span>        is_real_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  200</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a37eac024b77f7df62ea0ae1e362120bc" name="a37eac024b77f7df62ea0ae1e362120bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37eac024b77f7df62ea0ae1e362120bc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a37eac024b77f7df62ea0ae1e362120bc">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[4/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,8 +350,55 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a1451fb05b49980c90126d76cefbab283" name="a1451fb05b49980c90126d76cefbab283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1451fb05b49980c90126d76cefbab283">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/10]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::RealVisitor::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Mul.html">Mul</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00512">512</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  513</span>{</div>
+<div class="line"><span class="lineno">  514</span>    <span class="keywordtype">unsigned</span> non_real = 0;</div>
+<div class="line"><span class="lineno">  515</span>    tribool b = tribool_from_bool(!x.get_coef()-&gt;is_complex());</div>
+<div class="line"><span class="lineno">  516</span>    <span class="keywordflow">if</span> (is_false(b)) {</div>
+<div class="line"><span class="lineno">  517</span>        non_real++;</div>
+<div class="line"><span class="lineno">  518</span>    }</div>
+<div class="line"><span class="lineno">  519</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  520</span>        this-&gt;check_power(p.first, p.second);</div>
+<div class="line"><span class="lineno">  521</span>        <span class="keywordflow">if</span> (is_false(is_real_)) {</div>
+<div class="line"><span class="lineno">  522</span>            non_real++;</div>
+<div class="line"><span class="lineno">  523</span>            <span class="keywordflow">if</span> (non_real &gt; 1) {</div>
+<div class="line"><span class="lineno">  524</span>                is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  525</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  526</span>            }</div>
+<div class="line"><span class="lineno">  527</span>        }</div>
+<div class="line"><span class="lineno">  528</span>        b = andwk_tribool(b, is_real_);</div>
+<div class="line"><span class="lineno">  529</span>        <span class="keywordflow">if</span> (is_indeterminate(b)) {</div>
+<div class="line"><span class="lineno">  530</span>            is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  531</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  532</span>        }</div>
+<div class="line"><span class="lineno">  533</span>    }</div>
+<div class="line"><span class="lineno">  534</span>    <span class="keywordflow">if</span> (non_real == 1) {</div>
+<div class="line"><span class="lineno">  535</span>        is_real_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  536</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  537</span>        is_real_ = b;</div>
+<div class="line"><span class="lineno">  538</span>    }</div>
+<div class="line"><span class="lineno">  539</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a91726ef3c7bf638bb2466f32a7b7467e" name="a91726ef3c7bf638bb2466f32a7b7467e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91726ef3c7bf638bb2466f32a7b7467e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[5/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a91726ef3c7bf638bb2466f32a7b7467e">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,8 +425,31 @@ Private Attributes</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="ab11bc4d2dfd43ce226349752dad22c2d" name="ab11bc4d2dfd43ce226349752dad22c2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab11bc4d2dfd43ce226349752dad22c2d">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/10]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::RealVisitor::bvisit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSymEngine_1_1Pow.html">Pow</a> &amp;&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00541">541</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  542</span>{</div>
+<div class="line"><span class="lineno">  543</span>    this-&gt;check_power(x.get_base(), x.get_exp());</div>
+<div class="line"><span class="lineno">  544</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ae73aa8b88ac31f5d6a52e65c6ba35b7b" name="ae73aa8b88ac31f5d6a52e65c6ba35b7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae73aa8b88ac31f5d6a52e65c6ba35b7b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[6/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73aa8b88ac31f5d6a52e65c6ba35b7b">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,15 +472,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00191">191</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  192</span>    {</div>
-<div class="line"><span class="lineno">  193</span>        is_real_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  194</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00193">193</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  194</span>    {</div>
+<div class="line"><span class="lineno">  195</span>        is_real_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  196</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="ae7f329c365ec734ababcb001bc9867c6" name="ae7f329c365ec734ababcb001bc9867c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7f329c365ec734ababcb001bc9867c6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[7/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7f329c365ec734ababcb001bc9867c6">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[9/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,15 +503,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00187">187</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  188</span>    {</div>
-<div class="line"><span class="lineno">  189</span>        is_real_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  190</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00189">189</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  190</span>    {</div>
+<div class="line"><span class="lineno">  191</span>        is_real_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  192</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a520ee5071d5712be363a546020aeb6ce" name="a520ee5071d5712be363a546020aeb6ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a520ee5071d5712be363a546020aeb6ce">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[8/8]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a520ee5071d5712be363a546020aeb6ce">&#9670;&nbsp;</a></span>bvisit() <span class="overload">[10/10]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -452,6 +534,76 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  445</span>        is_real_ = tribool::indeterminate;</div>
 <div class="line"><span class="lineno">  446</span>    }</div>
 <div class="line"><span class="lineno">  447</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a49cc4500d92fe5741978f642d14cac95" name="a49cc4500d92fe5741978f642d14cac95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49cc4500d92fe5741978f642d14cac95">&#9670;&nbsp;</a></span>check_power()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SymEngine::RealVisitor::check_power </td>
+          <td>(</td>
+          <td class="paramtype">const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>base</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>exp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00481">481</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  483</span>{</div>
+<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, assumptions_))) {</div>
+<div class="line"><span class="lineno">  485</span>        <span class="comment">// exp == 0 =&gt; true</span></div>
+<div class="line"><span class="lineno">  486</span>        is_real_ = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  487</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  488</span>    }</div>
+<div class="line"><span class="lineno">  489</span>    base-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  490</span>    <span class="keywordflow">if</span> (is_true(is_real_)) {</div>
+<div class="line"><span class="lineno">  491</span>        <span class="keywordflow">if</span> (is_true(is_integer(*<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, assumptions_))) {</div>
+<div class="line"><span class="lineno">  492</span>            <span class="comment">// base is real and exp is integer =&gt; true</span></div>
+<div class="line"><span class="lineno">  493</span>            is_real_ = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  494</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_true(is_nonnegative(*base, assumptions_))) {</div>
+<div class="line"><span class="lineno">  495</span>            <span class="comment">// base &gt;= 0 and exp is real =&gt; true</span></div>
+<div class="line"><span class="lineno">  496</span>            <a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  497</span>            <span class="keywordflow">if</span> (is_false(is_real_)) {</div>
+<div class="line"><span class="lineno">  498</span>                is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  499</span>            }</div>
+<div class="line"><span class="lineno">  500</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  501</span>            is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  502</span>        }</div>
+<div class="line"><span class="lineno">  503</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_false(is_real_) &amp;&amp; is_true(is_complex(*base, assumptions_))</div>
+<div class="line"><span class="lineno">  504</span>               &amp;&amp; is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1)), assumptions_))) {</div>
+<div class="line"><span class="lineno">  505</span>        <span class="comment">// base is not real but complex and exp = 1 =&gt; false</span></div>
+<div class="line"><span class="lineno">  506</span>        is_real_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  507</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  508</span>        is_real_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  509</span>    }</div>
+<div class="line"><span class="lineno">  510</span>}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

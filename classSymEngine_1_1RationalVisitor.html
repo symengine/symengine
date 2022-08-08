@@ -164,7 +164,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00358">358</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00362">362</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8a9f5d5771f1bca6414a88d8d6678e85" name="a8a9f5d5771f1bca6414a88d8d6678e85"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8a9f5d5771f1bca6414a88d8d6678e85">&#9670;&nbsp;</a></span>RationalVisitor()</h2>
@@ -190,8 +190,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00366">366</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  366</span>: rational_{<a class="code hl_function" href="namespaceSymEngine.html#a95903c12d6aeba7f070da7207a17149d">rational</a>} {}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00370">370</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  370</span>: rational_{<a class="code hl_function" href="namespaceSymEngine.html#a95903c12d6aeba7f070da7207a17149d">rational</a>} {}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a95903c12d6aeba7f070da7207a17149d"><div class="ttname"><a href="namespaceSymEngine.html#a95903c12d6aeba7f070da7207a17149d">SymEngine::rational</a></div><div class="ttdeci">RCP&lt; const Number &gt; rational(long n, long d)</div><div class="ttdoc">convenience creator from two longs</div><div class="ttdef"><b>Definition:</b> <a href="rational_8h_source.html#l00328">rational.h:328</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -213,15 +213,15 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00781">781</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  782</span>{</div>
-<div class="line"><span class="lineno">  783</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  784</span>    tribool result = is_rational_;</div>
-<div class="line"><span class="lineno">  785</span>    <span class="keywordflow">if</span> (not rational_ and not neither_) {</div>
-<div class="line"><span class="lineno">  786</span>        result = not_tribool(result);</div>
-<div class="line"><span class="lineno">  787</span>    }</div>
-<div class="line"><span class="lineno">  788</span>    <span class="keywordflow">return</span> result;</div>
-<div class="line"><span class="lineno">  789</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00848">848</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  849</span>{</div>
+<div class="line"><span class="lineno">  850</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  851</span>    tribool result = is_rational_;</div>
+<div class="line"><span class="lineno">  852</span>    <span class="keywordflow">if</span> (not rational_ and not neither_) {</div>
+<div class="line"><span class="lineno">  853</span>        result = not_tribool(result);</div>
+<div class="line"><span class="lineno">  854</span>    }</div>
+<div class="line"><span class="lineno">  855</span>    <span class="keywordflow">return</span> result;</div>
+<div class="line"><span class="lineno">  856</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -241,16 +241,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00770">770</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  771</span>{</div>
-<div class="line"><span class="lineno">  772</span>    tribool b = tribool::tritrue;</div>
-<div class="line"><span class="lineno">  773</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
-<div class="line"><span class="lineno">  774</span>        arg-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  775</span>        b = andwk_tribool(b, is_rational_);</div>
-<div class="line"><span class="lineno">  776</span>        <span class="keywordflow">if</span> (is_indeterminate(b))</div>
-<div class="line"><span class="lineno">  777</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  778</span>    }</div>
-<div class="line"><span class="lineno">  779</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00837">837</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  838</span>{</div>
+<div class="line"><span class="lineno">  839</span>    tribool b = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  840</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;arg : x.get_args()) {</div>
+<div class="line"><span class="lineno">  841</span>        arg-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  842</span>        b = andwk_tribool(b, is_rational_);</div>
+<div class="line"><span class="lineno">  843</span>        <span class="keywordflow">if</span> (is_indeterminate(b))</div>
+<div class="line"><span class="lineno">  844</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  845</span>    }</div>
+<div class="line"><span class="lineno">  846</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -278,10 +278,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00367">367</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  368</span>    {</div>
-<div class="line"><span class="lineno">  369</span>        is_rational_ = tribool::indeterminate;</div>
-<div class="line"><span class="lineno">  370</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00371">371</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  372</span>    {</div>
+<div class="line"><span class="lineno">  373</span>        is_rational_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  374</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -309,11 +309,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00394">394</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  395</span>    {</div>
-<div class="line"><span class="lineno">  396</span>        is_rational_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  397</span>        neither_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  398</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00398">398</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  399</span>    {</div>
+<div class="line"><span class="lineno">  400</span>        is_rational_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  401</span>        neither_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  402</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -333,16 +333,16 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00759">759</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  760</span>{</div>
-<div class="line"><span class="lineno">  761</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *pi) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *E) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *GoldenRatio)) {</div>
-<div class="line"><span class="lineno">  762</span>        <span class="comment">// It is currently (2021) not known whether Catalan&#39;s constant</span></div>
-<div class="line"><span class="lineno">  763</span>        <span class="comment">// or Euler&#39;s constant are rational or irrational</span></div>
-<div class="line"><span class="lineno">  764</span>        is_rational_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  765</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  766</span>        is_rational_ = tribool::indeterminate;</div>
-<div class="line"><span class="lineno">  767</span>    }</div>
-<div class="line"><span class="lineno">  768</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00826">826</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  827</span>{</div>
+<div class="line"><span class="lineno">  828</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *pi) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *E) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *GoldenRatio)) {</div>
+<div class="line"><span class="lineno">  829</span>        <span class="comment">// It is currently (2021) not known whether Catalan&#39;s constant</span></div>
+<div class="line"><span class="lineno">  830</span>        <span class="comment">// or Euler&#39;s constant are rational or irrational</span></div>
+<div class="line"><span class="lineno">  831</span>        is_rational_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  832</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  833</span>        is_rational_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  834</span>    }</div>
+<div class="line"><span class="lineno">  835</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -371,10 +371,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00375">375</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  376</span>    {</div>
-<div class="line"><span class="lineno">  377</span>        is_rational_ = tribool::tritrue;</div>
-<div class="line"><span class="lineno">  378</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00379">379</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  380</span>    {</div>
+<div class="line"><span class="lineno">  381</span>        is_rational_ = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  382</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -394,13 +394,13 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00751">751</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  752</span>{</div>
-<div class="line"><span class="lineno">  753</span>    is_rational_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  754</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#ac1ffd806385fb08a9a48dd86a60915ee">is_a_Complex</a>(x) or is_a&lt;Infty&gt;(x) or is_a&lt;NaN&gt;(x)) {</div>
-<div class="line"><span class="lineno">  755</span>        neither_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  756</span>    }</div>
-<div class="line"><span class="lineno">  757</span>}</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00818">818</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  819</span>{</div>
+<div class="line"><span class="lineno">  820</span>    is_rational_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  821</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#ac1ffd806385fb08a9a48dd86a60915ee">is_a_Complex</a>(x) or is_a&lt;Infty&gt;(x) or is_a&lt;NaN&gt;(x)) {</div>
+<div class="line"><span class="lineno">  822</span>        neither_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  823</span>    }</div>
+<div class="line"><span class="lineno">  824</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_ac1ffd806385fb08a9a48dd86a60915ee"><div class="ttname"><a href="namespaceSymEngine.html#ac1ffd806385fb08a9a48dd86a60915ee">SymEngine::is_a_Complex</a></div><div class="ttdeci">bool is_a_Complex(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8h_source.html#l00024">complex.h:24</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -429,10 +429,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00379">379</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  380</span>    {</div>
-<div class="line"><span class="lineno">  381</span>        is_rational_ = tribool::tritrue;</div>
-<div class="line"><span class="lineno">  382</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00383">383</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  384</span>    {</div>
+<div class="line"><span class="lineno">  385</span>        is_rational_ = tribool::tritrue;</div>
+<div class="line"><span class="lineno">  386</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -460,11 +460,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00389">389</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  390</span>    {</div>
-<div class="line"><span class="lineno">  391</span>        is_rational_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  392</span>        neither_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  393</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00393">393</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  394</span>    {</div>
+<div class="line"><span class="lineno">  395</span>        is_rational_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  396</span>        neither_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  397</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -492,11 +492,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00384">384</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  385</span>    {</div>
-<div class="line"><span class="lineno">  386</span>        is_rational_ = tribool::trifalse;</div>
-<div class="line"><span class="lineno">  387</span>        neither_ = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  388</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00388">388</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  389</span>    {</div>
+<div class="line"><span class="lineno">  390</span>        is_rational_ = tribool::trifalse;</div>
+<div class="line"><span class="lineno">  391</span>        neither_ = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  392</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -524,10 +524,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00371">371</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  372</span>    {</div>
-<div class="line"><span class="lineno">  373</span>        is_rational_ = tribool::indeterminate;</div>
-<div class="line"><span class="lineno">  374</span>    };</div>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00375">375</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  376</span>    {</div>
+<div class="line"><span class="lineno">  377</span>        is_rational_ = tribool::indeterminate;</div>
+<div class="line"><span class="lineno">  378</span>    };</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -552,7 +552,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00362">362</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00366">366</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>
@@ -576,7 +576,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00363">363</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00367">367</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>
@@ -600,7 +600,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00361">361</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="test__visitors_8h_source.html#l00365">365</a> of file <a class="el" href="test__visitors_8h_source.html">test_visitors.h</a>.</p>
 
 </div>
 </div>
