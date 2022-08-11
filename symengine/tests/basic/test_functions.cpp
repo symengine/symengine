@@ -4167,26 +4167,27 @@ TEST_CASE("mod: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
-    RCP<const Basic> rd = real_double(0.32);
     RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> i3 = integer(3);
-    RCP<const Basic> c = Complex::from_two_nums(*one, *one);
 
     RCP<const Basic> res;
 
     res = mod(x, y);
-    REQUIRE(is_a<Mod>(*res));        // mod(x, y) is a Mod
+    REQUIRE(is_a<Mod>(*res)); // mod(x, y) is a Mod
+    CHECK(res->__str__() == "Mod(x, y)");
+    RCP<const Basic> deserialized = Basic::loads(res->dumps());
+    REQUIRE(is_a<Mod>(*deserialized));
+    REQUIRE(eq(*res, *deserialized));
 
     res = mod(mul(i2, x), mul(i2, y));
     REQUIRE(eq(*res, *mul(i2, mod(x, y)))); // mod(2*x, 2*y) == 2*mod(y, x)
-    REQUIRE(is_a<Mul>(*res));        // mod(2*x, 2*y) is a Mul
+    REQUIRE(is_a<Mul>(*res));               // mod(2*x, 2*y) is a Mul
 
     res = mod(x, x);
     REQUIRE(eq(*res, *zero)); // mod(x, x) == 0
     REQUIRE(is_a_Number(*res));
     CHECK_THROWS_AS(mod(x, zero), SymEngineException);
-    CHECK_THROWS_AS(mod(zero, zero), SymEngineException); // or should this return 0?
+    CHECK_THROWS_AS(mod(zero, zero),
+                    SymEngineException); // or should this return 0?
 }
 
 TEST_CASE("test_dummy", "[Dummy]")

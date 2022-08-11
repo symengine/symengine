@@ -146,6 +146,11 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     v.init({x, y, z}, *mod1);
     d = v.call({1.4, 3.0, -1.0});
     REQUIRE(::fabs(d - 0.2) < 1e-15);
+    // Mod behaviour should matche that of fmod:
+    REQUIRE(::fabs(v.call({0.0, +3.1, +2.0}) - 1.1) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, +3.1, -2.0}) - 1.1) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, -3.1, +2.0}) + 1.1) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, -3.1, -2.0}) + 1.1) < 1e-15);
 }
 
 TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
@@ -333,8 +338,7 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
                           {add(x, y), boolTrue}}));
     exprs.push_back(r);
 
-    exprs.push_back(mod(y, x+z));
-
+    exprs.push_back(mod(y, add(x, z)));
 
     for (auto &expr : exprs) {
         LambdaRealDoubleVisitor v;
@@ -363,6 +367,19 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         v.call(out, {});
         REQUIRE(std::isnan(out[0]));
         REQUIRE(std::isinf(out[1]));
+    }
+    {
+        double out[4];
+        LLVMDoubleVisitor v;
+        v.init({x, y}, {mod(x, y), mod(x, neg(y)), mod(neg(x), y),
+                        mod(neg(x), neg(y))});
+        double args[2]{3.1, 2.0};
+        v.call(out, args);
+        // output should match the behaviour of fmod
+        REQUIRE(::fabs(out[0] - 1.1) < 1e-15);
+        REQUIRE(::fabs(out[1] - 1.1) < 1e-15);
+        REQUIRE(::fabs(out[2] + 1.1) < 1e-15);
+        REQUIRE(::fabs(out[3] + 1.1) < 1e-15);
     }
 }
 

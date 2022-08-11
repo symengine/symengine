@@ -1114,6 +1114,7 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_PRIMEPI] = "primepi";
     names[SYMENGINE_PRIMORIAL] = "primorial";
     names[SYMENGINE_UNEVALUATED_EXPR] = "";
+    names[SYMENGINE_MOD] = "Mod";
     return names;
 }
 

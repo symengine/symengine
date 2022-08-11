@@ -3737,18 +3737,20 @@ Mod::Mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
     SYMENGINE_ASSERT(is_canonical(a, b))
 }
 
-bool Mod::is_canonical(const RCP<const Basic> &a, const RCP<Basic> &b) const
+bool Mod::is_canonical(const RCP<const Basic> &a,
+                       const RCP<const Basic> &b) const
 {
     bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
     return !both_numbers;
 }
 
-RCP<const Basic> Mod::create(const RCP<const Basic> &a, const RCP<Basic> &b) const
+RCP<const Basic> Mod::create(const RCP<const Basic> &a,
+                             const RCP<const Basic> &b) const
 {
     return mod(a, b);
 }
 
-RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<Basic> &b) const
+RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (eq(*b, *zero)) {
         throw SymEngineException("Modulo division by zero.");
@@ -3756,15 +3758,36 @@ RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<Basic> &b) const
     if (eq(*a, *b)) {
         return zero;
     }
-    bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
+    bool a_num{is_a_Number(*a)}, b_num{is_a_Number(*b)};
+    bool both_numbers = a_num && b_num;
     if (both_numbers) {
         if (is_a<Integer>(*a) && is_a<Integer>(*b)) {
-            return mod(*down_cast<const Integer &>(*a), *down_cast<const Integer &>(*b));
+            return mod(down_cast<const Integer &>(*a),
+                       down_cast<const Integer &>(*b));
         } else {
-            throw SymEngineException("TODO: Modulo operator canonicalization only for integers.");
+            throw SymEngineException(
+                "TODO: Modulo operator canonicalization only for integers.");
         }
     }
-    return make_rcp<const Mod>(a, b);
+    auto coeff_ = [](const RCP<const Basic> x) -> RCP<const Integer> {
+        RCP<const Integer> coeff{one};
+        if (is_a<Integer>(*x)) {
+            coeff = rcp_static_cast<const Integer>(x);
+        } else if (is_a<Mul>(*x)) {
+            auto c = rcp_static_cast<const Mul>(x)->get_coef();
+            if (is_a<Integer>(*c)) {
+                coeff = rcp_static_cast<const Integer>(c);
+            }
+        }
+        return coeff;
+    };
+    RCP<const Integer> coeff_num{coeff_(a)}, coeff_denom{coeff_(b)};
+    RCP<const Integer> gcd_ = gcd(*coeff_num, *coeff_denom);
+    if (gcd_->is_one()) {
+        return make_rcp<const Mod>(a, b);
+    } else {
+        return mul(gcd_, make_rcp<const Mod>(div(a, gcd_), div(b, gcd_)));
+    }
 }
 
 UnevaluatedExpr::UnevaluatedExpr(const RCP<const Basic> &arg)

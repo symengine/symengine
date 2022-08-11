@@ -104,12 +104,13 @@ public:
     void bvisit(const Ceiling &x);
     void bvisit(const Truncate &x);
     void bvisit(const Sign &x);
+    void bvisit(const UnevaluatedExpr &x);
+    void bvisit(const Mod &x);
     // Return the compiled function as a binary string which can be loaded using
     // `load`
     const std::string &dumps() const;
     // Load a previously compiled function from a string
     void loads(const std::string &s);
-    void bvisit(const UnevaluatedExpr &x);
 };
 
 class LLVMDoubleVisitor : public LLVMVisitor

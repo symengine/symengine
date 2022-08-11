@@ -10,6 +10,17 @@
 namespace SymEngine
 {
 
+namespace /* anonymous */
+{
+template <typename T>
+struct is_complex_t : public std::false_type {
+};
+
+template <typename T>
+struct is_complex_t<std::complex<T>> : public std::true_type {
+};
+} // namespace
+
 template <typename T>
 class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
 {
@@ -190,10 +201,16 @@ public:
         }
     }
 
-    void bvisit(const Mod &x) {
+    void bvisit(const Mod &x)
+    {
         fn num = apply(*(x.get_arg1()));
         fn den = apply(*(x.get_arg2()));
-        result_ = [=](const T *x) { return std::fmod(num(x), den(x)); };
+        if constexpr (is_complex_t<T>::value) {
+            throw SymEngineException(
+                "Mod with complex arguments not supported");
+        } else {
+            result_ = [=](const T *x) { return std::fmod(num(x), den(x)); };
+        }
     }
 
     void bvisit(const Sin &x)

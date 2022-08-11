@@ -1285,25 +1285,6 @@ public:
 //! Canonicalize Min:
 RCP<const Basic> min(const vec_basic &arg);
 
-class Mod : public TwoArgFunction
-{
-    //! Modulo function, behaviour matches C's fmod in libm.
-public:
-    using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(SYMENGINE_MOD)
-    //! Mod Constructor
-    Mod(const RCP<const Basic> &a, const RCP<const Basic> &b);
-    //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &s,
-                      const RCP<const Basic> &x) const;
-    //! \return canonicalized `LowerGamma`
-    virtual RCP<const Basic> create(const RCP<const Basic> &a,
-                                    const RCP<const Basic> &b) const;
-};
-
-//! Canonicalize Min:
-RCP<const Basic> min(const vec_basic &arg);
-
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 
@@ -1320,6 +1301,25 @@ public:
 };
 
 RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
+
+class Mod : public TwoArgFunction
+{
+    //! Modulo function, behaviour matches C's fmod in libm.
+public:
+    using TwoArgFunction::create;
+    IMPLEMENT_TYPEID(SYMENGINE_MOD)
+    //! Mod Constructor
+    Mod(const RCP<const Basic> &a, const RCP<const Basic> &b);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &a,
+                      const RCP<const Basic> &b) const;
+    //! \return canonicalized `Mod`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
+};
+
+//! Canonicalize Mod:
+RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
 } // namespace SymEngine
 

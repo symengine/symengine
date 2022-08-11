@@ -407,11 +407,6 @@ TEST_CASE("Parsing: functions", "[parser]")
     REQUIRE(eq(*res, *atan2(x, y)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
-    s = "Mod(x, y)";
-    res = parse(s);
-    REQUIRE(eq(*res, *mod(x, y)));
-    REQUIRE(eq(*res, *parse(res->__str__())));
-
     s = "Eq(x)";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, integer(0))));
