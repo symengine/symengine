@@ -3730,6 +3730,43 @@ RCP<const Basic> min(const vec_basic &arg)
     }
 }
 
+Mod::Mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+    : TwoArgFunction(a, b)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(a, b))
+}
+
+bool Mod::is_canonical(const RCP<const Basic> &a, const RCP<Basic> &b) const
+{
+    bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
+    return !both_numbers;
+}
+
+RCP<const Basic> Mod::create(const RCP<const Basic> &a, const RCP<Basic> &b) const
+{
+    return mod(a, b);
+}
+
+RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<Basic> &b) const
+{
+    if (eq(*b, *zero)) {
+        throw SymEngineException("Modulo division by zero.");
+    }
+    if (eq(*a, *b)) {
+        return zero;
+    }
+    bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
+    if (both_numbers) {
+        if (is_a<Integer>(*a) && is_a<Integer>(*b)) {
+            return mod(*down_cast<const Integer &>(*a), *down_cast<const Integer &>(*b));
+        } else {
+            throw SymEngineException("TODO: Modulo operator canonicalization only for integers.");
+        }
+    }
+    return make_rcp<const Mod>(a, b);
+}
+
 UnevaluatedExpr::UnevaluatedExpr(const RCP<const Basic> &arg)
     : OneArgFunction(arg)
 {

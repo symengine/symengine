@@ -190,6 +190,12 @@ public:
         }
     }
 
+    void bvisit(const Mod &x) {
+        fn num = apply(*(x.get_arg1()));
+        fn den = apply(*(x.get_arg2()));
+        result_ = [=](const T *x) { return std::fmod(num(x), den(x)); };
+    }
+
     void bvisit(const Sin &x)
     {
         fn tmp = apply(*(x.get_arg()));

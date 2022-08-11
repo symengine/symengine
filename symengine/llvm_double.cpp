@@ -551,6 +551,16 @@ void LLVMVisitor::bvisit(const Pow &x)
     result_ = r;
 }
 
+void LLVMVisitor::bvisit(const Mod &x)
+{
+    std::vector<llvm::Value *> args {{ apply(*x.get_arg1()), apply(*x.get_arg2()) }};
+    llvm::Function *fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                                              llvm::Intrinsic::frem, 1, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
 void LLVMVisitor::bvisit(const Sin &x)
 {
     std::vector<llvm::Value *> args;

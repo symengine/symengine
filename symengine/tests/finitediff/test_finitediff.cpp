@@ -31,7 +31,6 @@ TEST_CASE("finitediff: generate_fdiff_weights_vector", "[finitediff]")
                     integer(4), integer(5), integer(6)};
     auto weights7 = generate_fdiff_weights_vector(grid7, 2, integer(3));
     REQUIRE(weights7.size() == 3 * 7);
-
     REQUIRE(eq(*weights7[7], *div(integer(-1), integer(60))));
     REQUIRE(eq(*weights7[8], *div(integer(3), integer(20))));
     REQUIRE(eq(*weights7[9], *div(integer(-3), integer(4))));

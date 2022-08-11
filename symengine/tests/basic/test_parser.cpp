@@ -43,6 +43,7 @@ using SymEngine::make_rcp;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::minus_one;
+using SymEngine::mod;
 using SymEngine::Mul;
 using SymEngine::Ne;
 using SymEngine::NegInf;
@@ -406,6 +407,11 @@ TEST_CASE("Parsing: functions", "[parser]")
     REQUIRE(eq(*res, *atan2(x, y)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "Mod(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mod(x, y)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
     s = "Eq(x)";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, integer(0))));
@@ -618,6 +624,11 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "Piecewise((2x, True))";
     res = parse(s);
     REQUIRE(eq(*res, *piecewise({{mul(integer(2), x), boolTrue}})));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "Mod(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mod(x, y)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 }
 

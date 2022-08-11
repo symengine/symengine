@@ -63,6 +63,7 @@ using SymEngine::Lt;
 using SymEngine::map_basic_basic;
 using SymEngine::max;
 using SymEngine::min;
+using SymEngine::mod;
 using SymEngine::mul;
 using SymEngine::Nan;
 using SymEngine::Ne;
@@ -139,6 +140,12 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     REQUIRE(::fabs(d - 3.3) < 1e-12);
     d = v.call({5.5, 3.3});
     REQUIRE(::fabs(d - 8.8) < 1e-12);
+
+    // Modulo
+    auto mod1 = mod(y, add(x, z));
+    v.init({x, y, z}, *mod1);
+    d = v.call({1.4, 3.0, -1.0});
+    REQUIRE(::fabs(d - 0.2) < 1e-15);
 }
 
 TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
@@ -325,6 +332,9 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
                           {a, logical_and(s)},
                           {add(x, y), boolTrue}}));
     exprs.push_back(r);
+
+    exprs.push_back(mod(y, x+z));
+
 
     for (auto &expr : exprs) {
         LambdaRealDoubleVisitor v;
