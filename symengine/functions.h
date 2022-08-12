@@ -1302,14 +1302,14 @@ public:
 
 RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
 
-class Mod : public TwoArgFunction
+class TruncMod : public TwoArgFunction
 {
     //! Modulo function, behaviour matches C's fmod in libm.
 public:
     using TwoArgFunction::create;
-    IMPLEMENT_TYPEID(SYMENGINE_MOD)
+    IMPLEMENT_TYPEID(SYMENGINE_TRUNC_MOD)
     //! Mod Constructor
-    Mod(const RCP<const Basic> &a, const RCP<const Basic> &b);
+    TruncMod(const RCP<const Basic> &a, const RCP<const Basic> &b);
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &a,
                       const RCP<const Basic> &b) const;
@@ -1319,7 +1319,28 @@ public:
 };
 
 //! Canonicalize Mod:
-RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<const Basic> &b);
+RCP<const Basic> trunc_mod(const RCP<const Basic> &a,
+                           const RCP<const Basic> &b);
+
+class FloorMod : public TwoArgFunction
+{
+    //! Modulo function, behaviour matches C's fmod in libm.
+public:
+    using TwoArgFunction::create;
+    IMPLEMENT_TYPEID(SYMENGINE_FLOOR_MOD)
+    //! Mod Constructor
+    FloorMod(const RCP<const Basic> &a, const RCP<const Basic> &b);
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &a,
+                      const RCP<const Basic> &b) const;
+    //! \return canonicalized `Mod`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
+};
+
+//! Canonicalize Mod:
+RCP<const Basic> floor_mod(const RCP<const Basic> &a,
+                           const RCP<const Basic> &b);
 
 } // namespace SymEngine
 

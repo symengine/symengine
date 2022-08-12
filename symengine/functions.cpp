@@ -3730,27 +3730,50 @@ RCP<const Basic> min(const vec_basic &arg)
     }
 }
 
-Mod::Mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+TruncMod::TruncMod(const RCP<const Basic> &a, const RCP<const Basic> &b)
     : TwoArgFunction(a, b)
 {
     SYMENGINE_ASSIGN_TYPEID()
     SYMENGINE_ASSERT(is_canonical(a, b))
 }
 
-bool Mod::is_canonical(const RCP<const Basic> &a,
-                       const RCP<const Basic> &b) const
+bool TruncMod::is_canonical(const RCP<const Basic> &a,
+                            const RCP<const Basic> &b) const
 {
     bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
     return !both_numbers;
 }
 
-RCP<const Basic> Mod::create(const RCP<const Basic> &a,
-                             const RCP<const Basic> &b) const
+RCP<const Basic> TruncMod::create(const RCP<const Basic> &a,
+                                  const RCP<const Basic> &b) const
 {
-    return mod(a, b);
+    return trunc_mod(a, b);
 }
 
-RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+FloorMod::FloorMod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+    : TwoArgFunction(a, b)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(a, b))
+}
+
+bool FloorMod::is_canonical(const RCP<const Basic> &a,
+                            const RCP<const Basic> &b) const
+{
+    bool both_numbers = is_a_Number(*a) && is_a_Number(*b);
+    return !both_numbers;
+}
+
+RCP<const Basic> FloorMod::create(const RCP<const Basic> &a,
+                                  const RCP<const Basic> &b) const
+{
+    return floor_mod(a, b);
+}
+
+namespace /* anonymous */
+{
+template <typename Mod>
+RCP<const Basic> mod_(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (eq(*b, *zero)) {
         throw SymEngineException("Modulo division by zero.");
@@ -3788,6 +3811,17 @@ RCP<const Basic> mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else {
         return mul(gcd_, make_rcp<const Mod>(div(a, gcd_), div(b, gcd_)));
     }
+}
+} // namespace
+
+RCP<const Basic> trunc_mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    return mod_<TruncMod>(a, b);
+}
+
+RCP<const Basic> floor_mod(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    return mod_<FloorMod>(a, b);
 }
 
 UnevaluatedExpr::UnevaluatedExpr(const RCP<const Basic> &arg)

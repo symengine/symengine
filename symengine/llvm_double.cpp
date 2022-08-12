@@ -1056,12 +1056,26 @@ void LLVMVisitor::bvisit(const Truncate &x)
     result_ = r;
 }
 
-void LLVMVisitor::bvisit(const Mod &x)
+void LLVMVisitor::bvisit(const TruncMod &x)
 {
-    llvm::Value *a{apply(*x.get_arg1())}, *b{apply(*x.get_arg2())};
+    llvm::Value *a{apply(*x.get_arg1())};
+    llvm::Value *b{apply(*x.get_arg2())};
+    result_ = builder->CreateFRem(a, b);
+}
 
-    auto r = builder->CreateFRem(a, b);
-    result_ = r;
+void LLVMVisitor::bvisit(const FloorMod &x)
+{
+    llvm::Value *a{apply(*x.get_arg1())};
+    llvm::Value *b{apply(*x.get_arg2())};
+    // Formula: a - floor(a/b)*b
+    // TODO: avoid cancellation? perhaps Payne-Hanek is applicable
+    llvm::Function *floor_fun{get_float_intrinsic(
+        get_float_type(&mod->getContext()), llvm::Intrinsic::floor, 1, mod)};
+    auto a_b = builder->CreateFDiv(a, b);
+    std::vector<llvm::Value *> floor_args{a_b};
+    auto fl_ab = builder->CreateCall(floor_fun, floor_args);
+    // fl_ab->setTailCall(true);
+    result_ = builder->CreateFSub(a, builder->CreateFMul(fl_ab, b));
 }
 
 llvm::Type *LLVMDoubleVisitor::get_float_type(llvm::LLVMContext *context)

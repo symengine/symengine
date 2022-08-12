@@ -18,6 +18,7 @@ using SymEngine::E;
 using SymEngine::Eq;
 using SymEngine::erf;
 using SymEngine::erfc;
+using SymEngine::floor_mod;
 using SymEngine::from_basic;
 using SymEngine::function_symbol;
 using SymEngine::gamma;
@@ -43,7 +44,6 @@ using SymEngine::make_rcp;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::minus_one;
-using SymEngine::mod;
 using SymEngine::Mul;
 using SymEngine::Ne;
 using SymEngine::NegInf;
@@ -61,6 +61,7 @@ using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::trunc_mod;
 using SymEngine::UIntPoly;
 using SymEngine::zero;
 
@@ -621,9 +622,14 @@ TEST_CASE("Parsing: functions", "[parser]")
     REQUIRE(eq(*res, *piecewise({{mul(integer(2), x), boolTrue}})));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
-    s = "Mod(x, y)";
+    s = "TruncMod(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *mod(x, y)));
+    REQUIRE(eq(*res, *trunc_mod(x, y)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "FloorMod(x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *floor_mod(x, y)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 }
 

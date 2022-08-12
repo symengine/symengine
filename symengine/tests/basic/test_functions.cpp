@@ -73,6 +73,8 @@ using SymEngine::Erfc;
 using SymEngine::EulerGamma;
 using SymEngine::eval_double;
 using SymEngine::exp;
+using SymEngine::floor_mod;
+using SymEngine::FloorMod;
 using SymEngine::function_symbol;
 using SymEngine::FunctionWrapper;
 using SymEngine::gamma;
@@ -100,8 +102,6 @@ using SymEngine::Max;
 using SymEngine::min;
 using SymEngine::Min;
 using SymEngine::minus_one;
-using SymEngine::mod;
-using SymEngine::Mod;
 using SymEngine::Mul;
 using SymEngine::multinomial_coefficients;
 using SymEngine::Nan;
@@ -137,6 +137,8 @@ using SymEngine::tan;
 using SymEngine::Tan;
 using SymEngine::Tanh;
 using SymEngine::tanh;
+using SymEngine::trunc_mod;
+using SymEngine::TruncMod;
 using SymEngine::umap_basic_num;
 using SymEngine::uppergamma;
 using SymEngine::UpperGamma;
@@ -4163,7 +4165,8 @@ TEST_CASE("min: functions", "[functions]")
     CHECK_THROWS_AS(min({c}), SymEngineException);
 }
 
-TEST_CASE("mod: functions", "[functions]")
+template <typename Mod, typename F>
+void test_modulo(F mod, std::string func_str)
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -4173,7 +4176,7 @@ TEST_CASE("mod: functions", "[functions]")
 
     res = mod(x, y);
     REQUIRE(is_a<Mod>(*res)); // mod(x, y) is a Mod
-    CHECK(res->__str__() == "Mod(x, y)");
+    CHECK(res->__str__() == func_str + "(x, y)");
     RCP<const Basic> deserialized = Basic::loads(res->dumps());
     REQUIRE(is_a<Mod>(*deserialized));
     REQUIRE(eq(*res, *deserialized));
@@ -4188,6 +4191,12 @@ TEST_CASE("mod: functions", "[functions]")
     CHECK_THROWS_AS(mod(x, zero), SymEngineException);
     CHECK_THROWS_AS(mod(zero, zero),
                     SymEngineException); // or should this return 0?
+}
+
+TEST_CASE("trunc_mod: functions", "[functions]")
+{
+    test_modulo<TruncMod>(trunc_mod, "TruncMod");
+    test_modulo<FloorMod>(floor_mod, "FloorMod");
 }
 
 TEST_CASE("test_dummy", "[Dummy]")

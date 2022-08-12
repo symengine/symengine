@@ -125,7 +125,8 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
             {"polygamma", polygamma},
             {"kronecker_delta", kronecker_delta},
             {"atan2", atan2},
-            {"Mod", (double_arg_func)mod},
+            {"TruncMod", (double_arg_func)trunc_mod},
+            {"FloorMod", (double_arg_func)floor_mod},
         };
 
     const static std::map<const std::string,

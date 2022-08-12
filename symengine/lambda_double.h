@@ -201,15 +201,31 @@ public:
         }
     }
 
-    void bvisit(const Mod &x)
+    void bvisit(const TruncMod &x)
     {
         fn num = apply(*(x.get_arg1()));
         fn den = apply(*(x.get_arg2()));
         if constexpr (is_complex_t<T>::value) {
             throw SymEngineException(
-                "Mod with complex arguments not supported");
+                "TruncMod with complex arguments not supported");
         } else {
             result_ = [=](const T *x) { return std::fmod(num(x), den(x)); };
+        }
+    }
+
+    void bvisit(const FloorMod &x)
+    {
+        fn num = apply(*(x.get_arg1()));
+        fn den = apply(*(x.get_arg2()));
+        if constexpr (is_complex_t<T>::value) {
+            throw SymEngineException(
+                "FloorMod with complex arguments not supported");
+        } else {
+            // Formula: a - floor(a/b)*b
+            // TODO: avoid cancellation? perhaps Payne-Hanek is applicable
+            result_ = [=](const T *x) {
+                return num(x) - std::floor(num(x) / den(x)) * den(x);
+            };
         }
     }
 

@@ -50,6 +50,7 @@ using SymEngine::E;
 using SymEngine::Eq;
 using SymEngine::evalf;
 using SymEngine::floor;
+using SymEngine::floor_mod;
 using SymEngine::gamma;
 using SymEngine::Inf;
 using SymEngine::integer;
@@ -63,7 +64,6 @@ using SymEngine::Lt;
 using SymEngine::map_basic_basic;
 using SymEngine::max;
 using SymEngine::min;
-using SymEngine::mod;
 using SymEngine::mul;
 using SymEngine::Nan;
 using SymEngine::Ne;
@@ -84,6 +84,7 @@ using SymEngine::symbol;
 using SymEngine::SymEngineException;
 using SymEngine::tan;
 using SymEngine::tanh;
+using SymEngine::trunc_mod;
 using SymEngine::truncate;
 using SymEngine::vec_basic;
 using SymEngine::zeta;
@@ -141,15 +142,26 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     d = v.call({5.5, 3.3});
     REQUIRE(::fabs(d - 8.8) < 1e-12);
 
-    // Modulo
-    auto mod1 = mod(y, add(x, z));
-    v.init({x, y, z}, *mod1);
+    // Truncating Modulo
+    auto trunc_mod1 = trunc_mod(y, add(x, z));
+    v.init({x, y, z}, *trunc_mod1);
     d = v.call({1.4, 3.0, -1.0});
     REQUIRE(::fabs(d - 0.2) < 1e-15);
-    // Mod behaviour should matche that of fmod:
+    // TruncMod behaviour should match that of libm's fmod:
     REQUIRE(::fabs(v.call({0.0, +3.1, +2.0}) - 1.1) < 1e-15);
     REQUIRE(::fabs(v.call({0.0, +3.1, -2.0}) - 1.1) < 1e-15);
     REQUIRE(::fabs(v.call({0.0, -3.1, +2.0}) + 1.1) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, -3.1, -2.0}) + 1.1) < 1e-15);
+
+    // Floorating Modulo
+    auto floor_mod1 = floor_mod(y, add(x, z));
+    v.init({x, y, z}, *floor_mod1);
+    d = v.call({1.4, 3.0, -1.0});
+    REQUIRE(::fabs(d - 0.2) < 1e-15);
+    // FloorMod behaviour should match that of Python's % operator:
+    REQUIRE(::fabs(v.call({0.0, +3.1, +2.0}) - 1.1) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, +3.1, -2.0}) + 0.9) < 1e-15);
+    REQUIRE(::fabs(v.call({0.0, -3.1, +2.0}) - 0.9) < 1e-15);
     REQUIRE(::fabs(v.call({0.0, -3.1, -2.0}) + 1.1) < 1e-15);
 }
 
@@ -338,7 +350,8 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
                           {add(x, y), boolTrue}}));
     exprs.push_back(r);
 
-    exprs.push_back(mod(y, add(x, z)));
+    exprs.push_back(trunc_mod(y, add(x, z)));
+    exprs.push_back(floor_mod(y, add(x, z)));
 
     for (auto &expr : exprs) {
         LambdaRealDoubleVisitor v;
@@ -371,14 +384,23 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     {
         double out[4];
         LLVMDoubleVisitor v;
-        v.init({x, y}, {mod(x, y), mod(x, neg(y)), mod(neg(x), y),
-                        mod(neg(x), neg(y))});
+        v.init({x, y}, {trunc_mod(x, y), trunc_mod(x, neg(y)),
+                        trunc_mod(neg(x), y), trunc_mod(neg(x), neg(y))});
         double args[2]{3.1, 2.0};
         v.call(out, args);
         // output should match the behaviour of fmod
         REQUIRE(::fabs(out[0] - 1.1) < 1e-15);
         REQUIRE(::fabs(out[1] - 1.1) < 1e-15);
         REQUIRE(::fabs(out[2] + 1.1) < 1e-15);
+        REQUIRE(::fabs(out[3] + 1.1) < 1e-15);
+
+        v.init({x, y}, {floor_mod(x, y), floor_mod(x, neg(y)),
+                        floor_mod(neg(x), y), floor_mod(neg(x), neg(y))});
+        v.call(out, args);
+        // output should match the behaviour of python's %-operator
+        REQUIRE(::fabs(out[0] - 1.1) < 1e-15);
+        REQUIRE(::fabs(out[1] + 0.9) < 1e-15);
+        REQUIRE(::fabs(out[2] - 0.9) < 1e-15);
         REQUIRE(::fabs(out[3] + 1.1) < 1e-15);
     }
 }
