@@ -8,6 +8,7 @@
 #include <symengine/parser/parser.h>
 
 using SymEngine::Add;
+using SymEngine::And;
 using SymEngine::Basic;
 using SymEngine::boolFalse;
 using SymEngine::boolTrue;
