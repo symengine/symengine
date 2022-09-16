@@ -8,7 +8,6 @@
 #include <symengine/parser/parser.h>
 
 using SymEngine::Add;
-using SymEngine::And;
 using SymEngine::Basic;
 using SymEngine::boolFalse;
 using SymEngine::boolTrue;
@@ -414,7 +413,7 @@ TEST_CASE("Parsing: functions", "[parser]")
 
     s = "And(Equality(x), Unequality(y, 1))";
     res = parse(s);
-    CHECK(eq(*res, *And({Eq(x, integer(0)), Ne(y, integer(1))})));
+    CHECK(eq(*res, *logical_and({Eq(x, integer(0)), Ne(y, integer(1))})));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     s = "Eq(x, y)";
