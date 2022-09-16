@@ -194,10 +194,6 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         }
         auto it2 = single_arg_boolean_functions.find(name);
         if (it2 != single_arg_boolean_functions.end()) {
-            if (!is_a_Boolean(*params[0])) {
-                throw ParseError(
-                    "Boolean function received non-boolean arguments");
-            }
             return it2->second(params[0]);
         }
         auto it3 = single_arg_boolean_boolean_functions.find(name);
