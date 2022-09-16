@@ -140,6 +140,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         const std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
             {"Eq", (single_arg_boolean_func)Eq},
+            {"Equality", (single_arg_boolean_func)Eq},
         };
     const static std::map<
         const std::string,
@@ -154,11 +155,17 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
                                                const RCP<const Basic> &)>>
         double_arg_boolean_functions = {
             {"Eq", (double_arg_boolean_func)Eq},
+            {"Equality", (double_arg_boolean_func)Eq},
             {"Ne", Ne},
+            {"Unequality", Ne},
             {"Ge", Ge},
+            {"GreaterThan", Ge},
             {"Gt", Gt},
+            {"StrictGreaterThan", Gt},
             {"Le", Le},
+            {"LessThan", Le},
             {"Lt", Lt},
+            {"StrictLessThan", Lt},
         };
 
     const static std::map<
