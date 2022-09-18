@@ -411,6 +411,11 @@ TEST_CASE("Parsing: functions", "[parser]")
     CHECK(eq(*res, *Eq(x, integer(0))));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "And(Equality(x), Unequality(y, 1))";
+    res = parse(s);
+    CHECK(eq(*res, *logical_and({Eq(x, integer(0)), Ne(y, integer(1))})));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
     s = "Eq(x, y)";
     res = parse(s);
     CHECK(eq(*res, *Eq(x, y)));
@@ -931,6 +936,9 @@ TEST_CASE("Parsing: errors", "[parser]")
     CHECK_THROWS_AS(parse(s), ParseError);
 
     s = "Piecewise((x, y))";
+    CHECK_THROWS_AS(parse(s), ParseError);
+
+    s = "And(x, y)";
     CHECK_THROWS_AS(parse(s), ParseError);
 }
 

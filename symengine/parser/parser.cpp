@@ -140,6 +140,7 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         const std::function<RCP<const Boolean>(const RCP<const Basic> &)>>
         single_arg_boolean_functions = {
             {"Eq", (single_arg_boolean_func)Eq},
+            {"Equality", (single_arg_boolean_func)Eq},
         };
     const static std::map<
         const std::string,
@@ -154,11 +155,17 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
                                                const RCP<const Basic> &)>>
         double_arg_boolean_functions = {
             {"Eq", (double_arg_boolean_func)Eq},
+            {"Equality", (double_arg_boolean_func)Eq},
             {"Ne", Ne},
+            {"Unequality", Ne},
             {"Ge", Ge},
+            {"GreaterThan", Ge},
             {"Gt", Gt},
+            {"StrictGreaterThan", Gt},
             {"Le", Le},
+            {"LessThan", Le},
             {"Lt", Lt},
+            {"StrictLessThan", Lt},
         };
 
     const static std::map<
@@ -191,6 +198,10 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
         }
         auto it3 = single_arg_boolean_boolean_functions.find(name);
         if (it3 != single_arg_boolean_boolean_functions.end()) {
+            if (!is_a_Boolean(*params[0])) {
+                throw ParseError(
+                    "Boolean function received non-boolean arguments");
+            }
             return it3->second(rcp_static_cast<const Boolean>(params[0]));
         }
     }
@@ -215,6 +226,10 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
     if (it2 != multi_arg_vec_boolean_functions.end()) {
         vec_boolean p;
         for (auto &v : params) {
+            if (!is_a_Boolean(*v)) {
+                throw ParseError(
+                    "Boolean function received non-boolean arguments");
+            }
             p.push_back(rcp_static_cast<const Boolean>(v));
         }
         return it2->second(p);
@@ -224,6 +239,10 @@ RCP<const Basic> Parser::functionify(const std::string &name, vec_basic &params)
     if (it3 != multi_arg_set_boolean_functions.end()) {
         set_boolean s;
         for (auto &v : params) {
+            if (!is_a_Boolean(*v)) {
+                throw ParseError(
+                    "Boolean function received non-boolean arguments");
+            }
             s.insert(rcp_static_cast<const Boolean>(v));
         }
         return it3->second(s);
