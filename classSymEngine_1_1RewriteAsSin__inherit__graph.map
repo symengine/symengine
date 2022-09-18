@@ -1,7 +1,7 @@
 <map id="SymEngine::RewriteAsSin" name="SymEngine::RewriteAsSin">
-<area shape="rect" id="node1" title=" " alt="" coords="37,333,227,360"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,244,259,285"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="27,169,237,196"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="43,80,221,121"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="59,5,205,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="37,328,227,353"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,240,259,280"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="27,167,237,192"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="43,79,221,119"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="59,5,205,31"/>
 </map>

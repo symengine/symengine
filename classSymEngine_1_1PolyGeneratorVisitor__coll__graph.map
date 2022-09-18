@@ -1,8 +1,8 @@
 <map id="SymEngine::PolyGeneratorVisitor" name="SymEngine::PolyGeneratorVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="640,45,836,87"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="319,5,505,47"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="17,13,163,39"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="288,71,536,141"/>
-<area shape="rect" id="node5" title=" " alt="" coords="14,78,166,105"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,129,175,155"/>
+<area shape="rect" id="node1" title=" " alt="" coords="640,45,836,85"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="319,5,505,45"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="17,13,163,38"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="288,69,536,139"/>
+<area shape="rect" id="node5" title=" " alt="" coords="14,77,166,102"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,126,175,151"/>
 </map>

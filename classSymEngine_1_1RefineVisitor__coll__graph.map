@@ -1,12 +1,12 @@
 <map id="SymEngine::RefineVisitor" name="SymEngine::RefineVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="1259,77,1445,103"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="865,31,1116,72"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="476,27,687,54"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="200,5,377,47"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,13,151,39"/>
-<area shape="rect" id="node6" title=" " alt="" coords="201,71,376,112"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1Assumptions.html" title=" " alt="" coords="897,106,1084,133"/>
-<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set" title=" " alt="" coords="475,115,688,156"/>
-<area shape="rect" id="node9" title=" " alt="" coords="213,153,365,179"/>
-<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map" title=" " alt="" coords="498,191,665,261"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1259,78,1445,103"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="865,31,1116,71"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="476,27,687,53"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="200,5,377,45"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,13,151,38"/>
+<area shape="rect" id="node6" title=" " alt="" coords="201,69,376,109"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1Assumptions.html" title=" " alt="" coords="897,106,1084,131"/>
+<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="475,113,688,153"/>
+<area shape="rect" id="node9" title=" " alt="" coords="213,150,365,175"/>
+<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="498,189,665,259"/>
 </map>

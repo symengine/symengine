@@ -1,9 +1,9 @@
 <map id="SymEngine::ComplexBase" name="SymEngine::ComplexBase">
-<area shape="rect" id="node1" title="ComplexBase Class for deriving all complex classes." alt="" coords="197,244,391,271"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="5,319,167,345"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="191,319,397,345"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="421,319,612,345"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="217,169,371,196"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="225,95,363,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="191,5,397,47"/>
+<area shape="rect" id="node1" title="ComplexBase Class for deriving all complex classes." alt="" coords="197,240,391,265"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="5,313,167,339"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="191,313,397,339"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="421,313,612,339"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="217,167,371,192"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="225,93,363,119"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="191,5,397,45"/>
 </map>

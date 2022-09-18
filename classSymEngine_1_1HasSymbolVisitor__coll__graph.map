@@ -1,7 +1,7 @@
 <map id="SymEngine::HasSymbolVisitor" name="SymEngine::HasSymbolVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="739,61,957,87"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="424,5,671,47"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="200,13,375,39"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,13,151,39"/>
-<area shape="rect" id="node5" title=" " alt="" coords="464,71,631,112"/>
+<area shape="rect" id="node1" title=" " alt="" coords="739,59,957,85"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="424,5,671,45"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="200,13,375,38"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,13,151,38"/>
+<area shape="rect" id="node5" title=" " alt="" coords="464,69,631,109"/>
 </map>

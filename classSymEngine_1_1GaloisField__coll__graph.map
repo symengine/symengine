@@ -1,13 +1,10 @@
 <map id="SymEngine::GaloisField" name="SymEngine::GaloisField">
-<area shape="rect" id="node1" title=" " alt="" coords="203,589,377,616"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="175,499,405,540"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="181,393,399,449"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="175,303,405,344"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,206,178,233"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
-<area shape="rect" id="node7" title=" " alt="" coords="52,5,165,32"/>
-<area shape="rect" id="node8" title=" " alt="" coords="203,199,377,240"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1GaloisFieldDict.html" title=" " alt="" coords="401,206,603,233"/>
-<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="426,95,578,136"/>
-<area shape="rect" id="node11" title=" " alt="" coords="448,5,556,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="112,553,287,579"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="84,464,315,504"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="101,375,297,415"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="113,285,286,325"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,190,178,215"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,93,212,133"/>
+<area shape="rect" id="node7" title=" " alt="" coords="52,5,165,31"/>
+<area shape="rect" id="node8" title=" " alt="" coords="203,183,377,223"/>
 </map>

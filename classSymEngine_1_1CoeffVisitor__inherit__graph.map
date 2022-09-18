@@ -1,6 +1,6 @@
 <map id="SymEngine::CoeffVisitor" name="SymEngine::CoeffVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="19,244,198,271"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,155,212,196"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="21,80,196,107"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="36,5,181,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="19,240,198,265"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,152,212,192"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="21,79,196,104"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="36,5,181,31"/>
 </map>

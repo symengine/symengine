@@ -1,10 +1,10 @@
 <map id="SymEngine::LeviCivita" name="SymEngine::LeviCivita">
-<area shape="rect" id="node1" title=" " alt="" coords="121,455,289,481"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="98,379,311,405"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,282,188,309"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,185,178,212"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,95,212,136"/>
-<area shape="rect" id="node6" title=" " alt="" coords="52,5,165,32"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector" title=" " alt="" coords="212,275,395,316"/>
-<area shape="rect" id="node8" title=" " alt="" coords="227,185,379,212"/>
+<area shape="rect" id="node1" title=" " alt="" coords="121,448,289,473"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MultiArgFunction.html" title=" " alt="" coords="98,373,311,399"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,278,188,303"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,183,178,208"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,93,212,133"/>
+<area shape="rect" id="node6" title=" " alt="" coords="52,5,165,31"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="212,271,395,311"/>
+<area shape="rect" id="node8" title=" " alt="" coords="227,183,379,208"/>
 </map>

@@ -1,9 +1,5 @@
 <map id="SymEngine::UIntPoly" name="SymEngine::UIntPoly">
-<area shape="rect" id="node1" title=" " alt="" coords="33,556,192,583"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="5,452,220,508"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="17,363,208,404"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="15,259,211,315"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="26,169,199,211"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="43,95,182,121"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="9,5,216,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="33,196,192,221"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="5,93,220,148"/>
+<area shape="rect" id="node3" title=" " alt="" coords="22,5,203,45"/>
 </map>

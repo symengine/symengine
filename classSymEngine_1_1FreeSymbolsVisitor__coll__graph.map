@@ -1,8 +1,8 @@
 <map id="SymEngine::FreeSymbolsVisitor" name="SymEngine::FreeSymbolsVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="549,78,779,105"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="275,5,453,47"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,13,154,39"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set" title=" " alt="" coords="257,71,471,112"/>
-<area shape="rect" id="node5" title=" " alt="" coords="5,117,157,143"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_set" title=" " alt="" coords="240,137,488,193"/>
+<area shape="rect" id="node1" title=" " alt="" coords="549,77,779,102"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="275,5,453,45"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,13,154,38"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="257,69,471,109"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,115,157,141"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_set.html" title=" " alt="" coords="240,134,488,189"/>
 </map>

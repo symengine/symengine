@@ -1,7 +1,7 @@
 <map id="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;" name="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="35,319,210,360"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,244,240,271"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,169,200,196"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="53,95,192,121"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="19,5,226,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="35,313,210,353"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,240,240,265"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,167,200,192"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="53,93,192,119"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="19,5,226,45"/>
 </map>

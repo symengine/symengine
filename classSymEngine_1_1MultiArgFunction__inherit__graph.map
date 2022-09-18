@@ -1,11 +1,11 @@
 <map id="SymEngine::MultiArgFunction" name="SymEngine::MultiArgFunction">
-<area shape="rect" id="node1" title=" " alt="" coords="304,244,517,271"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1FunctionSymbol.html" title=" " alt="" coords="9,319,215,345"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1LeviCivita.html" title=" " alt="" coords="240,319,408,345"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1Max.html" title=" " alt="" coords="432,319,563,345"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Min.html" title=" " alt="" coords="587,319,714,345"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="331,169,490,196"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="341,95,480,121"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="307,5,514,47"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1FunctionWrapper.html" title=" " alt="" coords="5,393,219,420"/>
+<area shape="rect" id="node1" title=" " alt="" coords="304,240,517,265"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1FunctionSymbol.html" title=" " alt="" coords="9,313,215,339"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1LeviCivita.html" title=" " alt="" coords="240,313,408,339"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1Max.html" title=" " alt="" coords="432,313,563,339"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Min.html" title=" " alt="" coords="587,313,714,339"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="331,167,490,192"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="341,93,480,119"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="307,5,514,45"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1FunctionWrapper.html" title=" " alt="" coords="5,387,219,412"/>
 </map>

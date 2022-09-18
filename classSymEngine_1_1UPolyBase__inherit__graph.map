@@ -1,10 +1,13 @@
 <map id="SymEngine::UPolyBase&lt; Container, Poly &gt;" name="SymEngine::UPolyBase&lt; Container, Poly &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="447,93,620,134"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="668,5,864,61"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="668,85,864,141"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="668,166,864,207"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="260,100,399,127"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,93,212,134"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="914,13,1105,54"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="912,93,1107,134"/>
+<area shape="rect" id="node1" title=" " alt="" coords="447,131,620,171"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="668,5,887,60"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="679,84,875,139"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="679,163,875,217"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="679,242,875,282"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="260,139,399,164"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,131,212,171"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="955,91,1145,131"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="953,170,1147,210"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="935,242,1165,282"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1GaloisField.html" title=" " alt="" coords="1213,249,1388,275"/>
 </map>

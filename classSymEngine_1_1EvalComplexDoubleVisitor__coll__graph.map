@@ -1,7 +1,7 @@
 <map id="SymEngine::EvalComplexDoubleVisitor" name="SymEngine::EvalComplexDoubleVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="115,291,349,332"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="123,185,341,241"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,81,232,123"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="46,5,191,32"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/numeric/complex" title=" " alt="" coords="257,89,437,115"/>
+<area shape="rect" id="node1" title=" " alt="" coords="129,287,363,327"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="137,183,355,237"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,80,183,120"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,5,167,31"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/numeric/complex.html" title=" " alt="" coords="207,87,387,113"/>
 </map>
