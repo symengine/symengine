@@ -11,19 +11,13 @@ namespace SymEngine
 class SimplifyVisitor : public BaseVisitor<SimplifyVisitor, TransformVisitor>
 {
 private:
-    const Assumptions *assumptions_;
-
     std::pair<RCP<const Basic>, RCP<const Basic>>
     simplify_pow(const RCP<const Basic> &e, const RCP<const Basic> &b);
 
 public:
     using TransformVisitor::bvisit;
 
-    SimplifyVisitor(const Assumptions *assumptions)
-        : BaseVisitor<SimplifyVisitor, TransformVisitor>(),
-          assumptions_(assumptions)
-    {
-    }
+    SimplifyVisitor() : BaseVisitor<SimplifyVisitor, TransformVisitor>() {}
 
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
