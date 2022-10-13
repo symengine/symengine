@@ -12,6 +12,7 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <symengine/symengine_rcp.h>
+#include <ios>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
@@ -113,6 +114,19 @@ inline double mp_get_d(const integer_class &i)
 inline void mp_set_d(integer_class &i, double a)
 {
     mpz_set_d(i.get_mpz_t(), a);
+}
+
+inline void mp_set_str(integer_class &i, const std::string &a)
+{
+    mpz_set_str(i.get_mpz_t(), a.c_str(), 0);
+}
+
+inline std::string mp_get_hex_str(const integer_class &i)
+{
+    char *c = mpz_get_str(NULL, 16, i.get_mpz_t());
+    std::string r = std::string(c);
+    free(c);
+    return r;
 }
 
 inline void mp_demote(integer_class &i) {}
@@ -452,6 +466,22 @@ inline void mp_set_d(piranha::integer &i, double a)
     i = a;
 }
 
+inline void mp_set_str(integer_class &i, const std::string &a)
+{
+    mpz_t m;
+    mpz_init(m);
+    mpz_set_str(m, a.c_str(), 0);
+    i = integer_class(m);
+}
+
+inline std::string mp_get_hex_str(const integer_class &i)
+{
+    char *c = mpz_get_str(NULL, 16, i.get_mpz_view());
+    std::string r = std::string(c);
+    free(c);
+    return r;
+}
+
 inline bool mp_fits_ulong_p(const piranha::integer &i)
 {
     return mpz_fits_ulong_p(i.get_mpz_view()) != 0;
@@ -573,6 +603,19 @@ inline double mp_get_d(const fmpz_wrapper &i)
 inline void mp_set_d(fmpz_wrapper &i, double a)
 {
     return fmpz_set_d(i.get_fmpz_t(), a);
+}
+
+inline void mp_set_str(fmpz_wrapper &i, const std::string &a)
+{
+    fmpz_set_str(i.get_fmpz_t(), a.c_str(), 0);
+}
+
+inline std::string mp_get_hex_str(const fmpz_wrapper &i)
+{
+    char *c = fmpz_get_str(NULL, 16, i.get_fmpz_t());
+    std::string r = std::string(c);
+    free(c);
+    return r;
 }
 
 inline fmpz_wrapper mp_abs(const fmpz_wrapper &i)
@@ -784,6 +827,20 @@ inline double mp_get_d(const integer_class &i)
 inline void mp_set_d(integer_class &i, double a)
 {
     i.assign(a);
+}
+
+inline void mp_set_str(integer_class &i, const std::string &a)
+{
+    i = integer_class(a.c_str());
+}
+
+inline std::string mp_get_hex_str(const integer_class &i)
+{
+    if (mp_sign(i) >= 0) {
+        return i.str(0, std::ios_base::hex);
+    } else {
+        return std::string("-") + (-i).str(0, std::ios_base::hex);
+    }
 }
 
 inline unsigned long mp_get_ui(const integer_class &i)
