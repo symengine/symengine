@@ -30319,7 +30319,7 @@ template&lt;typename Archive &gt; </div>
 <p class="definition">Definition at line <a class="el" href="simplify_8cpp_source.html#l00054">54</a> of file <a class="el" href="simplify_8cpp_source.html">simplify.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   56</span>{</div>
 <div class="line"><span class="lineno">   57</span>    <span class="keyword">auto</span> expr = refine(x, assumptions);</div>
-<div class="line"><span class="lineno">   58</span>    <a class="code hl_class" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a> b(assumptions);</div>
+<div class="line"><span class="lineno">   58</span>    <a class="code hl_class" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a> b;</div>
 <div class="line"><span class="lineno">   59</span>    <span class="keywordflow">return</span> b.apply(expr);</div>
 <div class="line"><span class="lineno">   60</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1SimplifyVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SimplifyVisitor.html">SymEngine::SimplifyVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="simplify_8h_source.html#l00011">simplify.h:12</a></div></div>
