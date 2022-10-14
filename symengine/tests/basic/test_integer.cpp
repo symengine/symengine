@@ -7,6 +7,8 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::isqrt;
+using SymEngine::mp_get_hex_str;
+using SymEngine::mp_set_str;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::SymEngineException;
@@ -89,4 +91,28 @@ TEST_CASE("fix#461: integer", "[integer]")
     integer_class val(12345);
     ir = integer(val);
     REQUIRE(val == ir->as_integer_class());
+
+    mp_set_str(val, std::string("0x12345"));
+    ir = integer(val);
+    CHECK(val == ir->as_integer_class());
+    CHECK(ir->__str__() == "74565");
+    CHECK(mp_get_hex_str(val) == "12345");
+
+    mp_set_str(val, std::string("-0x12345"));
+    ir = integer(val);
+    CHECK(val == ir->as_integer_class());
+    CHECK(ir->__str__() == "-74565");
+    CHECK(mp_get_hex_str(val) == "-12345");
+
+    mp_set_str(val, std::string("12345"));
+    ir = integer(val);
+    CHECK(val == ir->as_integer_class());
+    CHECK(ir->__str__() == "12345");
+    CHECK(mp_get_hex_str(val) == "3039");
+
+    mp_set_str(val, std::string("-12345"));
+    ir = integer(val);
+    CHECK(val == ir->as_integer_class());
+    CHECK(ir->__str__() == "-12345");
+    CHECK(mp_get_hex_str(val) == "-3039");
 }
