@@ -55,7 +55,7 @@ RCP<const Basic> simplify(const RCP<const Basic> &x,
                           const Assumptions *assumptions)
 {
     auto expr = refine(x, assumptions);
-    SimplifyVisitor b(assumptions);
+    SimplifyVisitor b;
     return b.apply(expr);
 }
 
