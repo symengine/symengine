@@ -1,6 +1,7 @@
+#include <symengine/basic.h>
+#include <symengine/assumptions.h>
 #include <symengine/visitor.h>
 #include <symengine/test_visitors.h>
-#include <symengine/matrices/is_toeplitz.h>
 
 namespace SymEngine
 {

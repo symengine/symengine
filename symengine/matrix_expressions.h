@@ -2,6 +2,7 @@
 #define SYMENGINE_MATRIXEXPR_H
 
 #include <symengine/basic.h>
+#include <symengine/assumptions.h>
 #include <symengine/integer.h>
 #include <symengine/matrices/matrix_expr.h>
 #include <symengine/matrices/size.h>
@@ -16,14 +17,24 @@
 #include <symengine/matrices/trace.h>
 #include <symengine/matrices/conjugate_matrix.h>
 #include <symengine/matrices/transpose.h>
-#include <symengine/matrices/is_zero.h>
-#include <symengine/matrices/is_real.h>
-#include <symengine/matrices/is_symmetric.h>
-#include <symengine/matrices/is_square.h>
-#include <symengine/matrices/is_diagonal.h>
-#include <symengine/matrices/is_lower.h>
-#include <symengine/matrices/is_upper.h>
-#include <symengine/matrices/is_toeplitz.h>
 #include <symengine/matrices/size.h>
+
+namespace SymEngine
+{
+
+tribool is_diagonal(const MatrixExpr &m,
+                    const Assumptions *assumptions = nullptr);
+tribool is_lower(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_real(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_square(const MatrixExpr &m,
+                  const Assumptions *assumptions = nullptr);
+tribool is_symmetric(const MatrixExpr &m,
+                     const Assumptions *assumptions = nullptr);
+tribool is_toeplitz(const MatrixExpr &m,
+                    const Assumptions *assumptions = nullptr);
+tribool is_upper(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+tribool is_zero(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+
+}; // namespace SymEngine
 
 #endif

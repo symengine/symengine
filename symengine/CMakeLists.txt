@@ -261,14 +261,6 @@ set(HEADERS
     matrices/conjugate_matrix.h
     matrices/transpose.h
     matrices/trace.h
-    matrices/is_zero.h
-    matrices/is_real.h
-    matrices/is_symmetric.h
-    matrices/is_square.h
-    matrices/is_diagonal.h
-    matrices/is_lower.h
-    matrices/is_upper.h
-    matrices/is_toeplitz.h
 )
 
 if (NOT WITH_SYSTEM_CEREAL)

@@ -1,4 +1,5 @@
-#include <symengine/matrices/is_real.h>
+#include <symengine/basic.h>
+#include <symengine/assumptions.h>
 #include <symengine/visitor.h>
 #include <symengine/test_visitors.h>
 
