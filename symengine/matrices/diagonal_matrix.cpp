@@ -1,4 +1,7 @@
 #include <symengine/matrices/diagonal_matrix.h>
+#include <symengine/matrices/zero_matrix.h>
+#include <symengine/matrices/identity_matrix.h>
+#include <symengine/integer.h>
 
 namespace SymEngine
 {
@@ -27,9 +30,35 @@ int DiagonalMatrix::compare(const Basic &o) const
     return unified_compare(diag_, other.diag_);
 }
 
+bool is_zero_vec(const vec_basic &container)
+{
+    for (auto &e : container) {
+        if (!(is_a<Integer>(*e) && down_cast<const Integer &>(*e).is_zero())) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_identity_vec(const vec_basic &container)
+{
+    for (auto &e : container) {
+        if (!(is_a<Integer>(*e) && down_cast<const Integer &>(*e).is_one())) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool DiagonalMatrix::is_canonical(const vec_basic &container) const
 {
     if (container.size() == 0) {
+        return false;
+    }
+    if (is_zero_vec(container)) {
+        return false;
+    }
+    if (is_identity_vec(container)) {
         return false;
     }
     return true;
@@ -37,7 +66,14 @@ bool DiagonalMatrix::is_canonical(const vec_basic &container) const
 
 RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container)
 {
-    return make_rcp<const DiagonalMatrix>(container);
+    if (is_zero_vec(container)) {
+        return make_rcp<const ZeroMatrix>(integer(container.size()),
+                                          integer(container.size()));
+    } else if (is_identity_vec(container)) {
+        return make_rcp<const IdentityMatrix>(integer(container.size()));
+    } else {
+        return make_rcp<const DiagonalMatrix>(container);
+    }
 }
 
 } // namespace SymEngine

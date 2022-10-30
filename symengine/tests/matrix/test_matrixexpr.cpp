@@ -128,6 +128,14 @@ TEST_CASE("Test DiagonalMatrix", "[DiagonalMatrix]")
     REQUIRE(diag2->compare(*diag2) == 0);
     REQUIRE(diag1->get_args().size() == 2);
     REQUIRE(!down_cast<const DiagonalMatrix &>(*diag1).is_canonical({}));
+
+    auto diag3 = diagonal_matrix({zero, zero, zero});
+    auto z3 = zero_matrix(integer(3), integer(3));
+    REQUIRE(eq(*diag3, *z3));
+
+    auto diag4 = diagonal_matrix({one, one, one, one});
+    auto ident4 = identity_matrix(integer(4));
+    REQUIRE(eq(*diag4, *ident4));
 }
 
 TEST_CASE("Test ImmutableDenseMatrix", "[ImmutableDenseMatrix]")
@@ -150,6 +158,23 @@ TEST_CASE("Test ImmutableDenseMatrix", "[ImmutableDenseMatrix]")
     REQUIRE(A1->__hash__() != A2->__hash__());
     REQUIRE(
         !down_cast<const ImmutableDenseMatrix &>(*A1).is_canonical(0, 0, {}));
+
+    auto A5 = immutable_dense_matrix(2, 2, {zero, zero, zero, zero});
+    auto Z2 = zero_matrix(integer(2), integer(2));
+    REQUIRE(eq(*A5, *Z2));
+
+    auto A6 = immutable_dense_matrix(2, 2, {one, zero, zero, one});
+    auto I2 = identity_matrix(integer(2));
+    REQUIRE(eq(*A6, *I2));
+
+    auto A7
+        = immutable_dense_matrix(2, 2, {integer(2), zero, zero, symbol("x")});
+    auto D2 = diagonal_matrix({integer(2), symbol("x")});
+    REQUIRE(eq(*A7, *D2));
+
+    auto A8 = immutable_dense_matrix(1, 1, {integer(2)});
+    auto D1 = diagonal_matrix({integer(2)});
+    REQUIRE(eq(*A8, *D1));
 }
 
 TEST_CASE("Test Trace", "[Trace]")

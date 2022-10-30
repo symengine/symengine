@@ -41,6 +41,9 @@ public:
     }
 };
 
+bool is_zero_vec(const vec_basic &container);
+bool is_identity_vec(const vec_basic &container);
+
 RCP<const MatrixExpr> diagonal_matrix(const vec_basic &container);
 
 } // namespace SymEngine
