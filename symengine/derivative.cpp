@@ -694,62 +694,62 @@ void DiffVisitor::bvisit(const Set &self)
 
 void DiffVisitor::bvisit(const Tuple &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const IdentityMatrix &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const ZeroMatrix &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const MatrixSymbol &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const DiagonalMatrix &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const ImmutableDenseMatrix &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const MatrixAdd &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const HadamardProduct &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const MatrixMul &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const ConjugateMatrix &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const Transpose &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const Trace &self)
 {
-    throw SymEngineException("Derivative doesn't exist.");
+    throw NotImplementedError("Derivative not implemented");
 }
 
 void DiffVisitor::bvisit(const Boolean &self)
