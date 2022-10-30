@@ -33,6 +33,7 @@ using SymEngine::MatrixAdd;
 using SymEngine::MatrixMul;
 using SymEngine::one;
 using SymEngine::Rational;
+using SymEngine::RCP;
 using SymEngine::symbol;
 using SymEngine::Trace;
 using SymEngine::Transpose;
@@ -348,6 +349,7 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     auto A4 = immutable_dense_matrix(
         2, 2, {integer(3), integer(2), integer(3), integer(14)});
     auto S1 = matrix_symbol("S1");
+    auto S2 = matrix_symbol("S2");
 
     auto sum = matrix_add({Z1, I1});
     REQUIRE(eq(*sum, *I1));
@@ -381,6 +383,17 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     REQUIRE(eq(*sum, *A4));
     sum = matrix_add({A1, D4});
     REQUIRE(eq(*sum, *A4));
+    sum = matrix_add({matrix_mul({i1, S1}), matrix_mul({i2, S2})});
+    auto terms = sum->get_args();
+    REQUIRE(terms.size() == 2);
+    auto f1 = terms[0]->get_args();
+    REQUIRE(f1.size() == 2);
+    REQUIRE(eq(*f1[0], *i1));
+    REQUIRE(eq(*f1[1], *S1));
+    auto f2 = terms[1]->get_args();
+    REQUIRE(f2.size() == 2);
+    REQUIRE(eq(*f2[0], *i2));
+    REQUIRE(eq(*f2[1], *S2));
 
     CHECK_THROWS_AS(matrix_add({Z1, Z2}), DomainError);
     CHECK_THROWS_AS(matrix_add({Z2, D1}), DomainError);
@@ -389,11 +402,12 @@ TEST_CASE("Test MatrixAdd", "[MatrixAdd]")
     CHECK_THROWS_AS(matrix_add({Z2, Z3}), DomainError);
     CHECK_THROWS_AS(matrix_add({}), DomainError);
 
-    const MatrixAdd &x = down_cast<const MatrixAdd &>(*matrix_add({S1, I1}));
-    REQUIRE(!x.is_canonical({D1}));
-    REQUIRE(!x.is_canonical({D1, Z1}));
-    REQUIRE(!x.is_canonical({A1, A2}));
-    REQUIRE(!x.is_canonical({A1, D4}));
+    vec_basic dummyvec{S1, I1};
+    RCP<const MatrixAdd> x = make_rcp<MatrixAdd>(dummyvec);
+    REQUIRE(!x->is_canonical({D1}));
+    REQUIRE(!x->is_canonical({D1, Z1}));
+    REQUIRE(!x->is_canonical({A1, A2}));
+    REQUIRE(!x->is_canonical({A1, D4}));
 }
 
 TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
@@ -453,12 +467,12 @@ TEST_CASE("Test HadamardProduct", "[HadamardProduct]")
     CHECK_THROWS_AS(hadamard_product({Z2, Z3}), DomainError);
     CHECK_THROWS_AS(hadamard_product({}), DomainError);
 
-    const HadamardProduct &x
-        = down_cast<const HadamardProduct &>(*hadamard_product({S1, D2}));
-    REQUIRE(!x.is_canonical({D2}));
-    REQUIRE(!x.is_canonical({Z1, D2}));
-    REQUIRE(!x.is_canonical({A1, A2}));
-    REQUIRE(!x.is_canonical({A1, D4}));
+    vec_basic dummyvec{S1, D2};
+    RCP<const HadamardProduct> x = make_rcp<HadamardProduct>(dummyvec);
+    REQUIRE(!x->is_canonical({D2}));
+    REQUIRE(!x->is_canonical({Z1, D2}));
+    REQUIRE(!x->is_canonical({A1, A2}));
+    REQUIRE(!x->is_canonical({A1, D4}));
 }
 
 TEST_CASE("Test MatrixMul", "[MatrixMul]")
@@ -536,11 +550,12 @@ TEST_CASE("Test MatrixMul", "[MatrixMul]")
     CHECK_THROWS_AS(matrix_mul({Z2, D1}), DomainError);
     CHECK_THROWS_AS(matrix_mul({}), DomainError);
 
-    const MatrixMul &x = down_cast<const MatrixMul &>(*matrix_mul({S1, A1}));
-    REQUIRE(x.is_canonical(i1, {D1}));
-    REQUIRE(!x.is_canonical(i1, {D1, Z1}));
-    REQUIRE(!x.is_canonical(i1, {A1, A2}));
-    REQUIRE(!x.is_canonical(i1, {A1, D4}));
+    vec_basic dummyvec{S1, A1};
+    RCP<const MatrixMul> x = make_rcp<MatrixMul>(i1, dummyvec);
+    REQUIRE(x->is_canonical(i1, {D1}));
+    REQUIRE(!x->is_canonical(i1, {D1, Z1}));
+    REQUIRE(!x->is_canonical(i1, {A1, A2}));
+    REQUIRE(!x->is_canonical(i1, {A1, D4}));
 }
 
 TEST_CASE("Test is_zero", "[is_zero]")

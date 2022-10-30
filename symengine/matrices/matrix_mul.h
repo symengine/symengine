@@ -35,7 +35,7 @@ public:
         if (!eq(*scalar_, *one)) {
             args.push_back(scalar_);
         }
-        args.insert(args.begin(), factors_.begin(), factors_.end());
+        args.insert(args.end(), factors_.begin(), factors_.end());
         return args;
     }
     inline const vec_basic &get_factors() const
