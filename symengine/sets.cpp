@@ -112,7 +112,7 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
     return boolean(true);
 }
 
-RCP<const Set> make_set_union(const set_set &in)
+static RCP<const Set> make_set_union(const set_set &in)
 {
     if (in.size() > 1) {
         return make_rcp<const Union>(in);
