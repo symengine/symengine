@@ -120,7 +120,7 @@ static RCP<const Set> make_set_union(const set_set &in)
     return *in.begin();
 }
 
-RCP<const Set> make_set_intersection(const set_set &in)
+static RCP<const Set> make_set_intersection(const set_set &in)
 {
     if (in.size() > 1) {
         return make_rcp<const Intersection>(in);
