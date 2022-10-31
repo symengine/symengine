@@ -337,6 +337,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1IntegerVisitor.html">IntegerVisitor</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Intersection.html">Intersection</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Interval.html">Interval</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1InverseHyperbolicFunction.html">InverseHyperbolicFunction</a></td></tr>
@@ -2229,8 +2231,10 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 <tr class="separator:ab76e73dc817f10363849907da4b7c212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add1657982aae06a5e8a90e5524724d7d"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#add1657982aae06a5e8a90e5524724d7d">closure</a> (const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &amp;s)</td></tr>
 <tr class="separator:add1657982aae06a5e8a90e5524724d7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afca26df476c20359f9d88ab2363ca057"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#afca26df476c20359f9d88ab2363ca057">make_set_union</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</td></tr>
-<tr class="separator:afca26df476c20359f9d88ab2363ca057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc5a15dd3fc6232e7ab22b52c3c6170f"><td class="memItemLeft" align="right" valign="top">static RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#adc5a15dd3fc6232e7ab22b52c3c6170f">make_set_union</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</td></tr>
+<tr class="separator:adc5a15dd3fc6232e7ab22b52c3c6170f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a305901e8814d4d7cee8a2b52f42e23a1"><td class="memItemLeft" align="right" valign="top">static RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a305901e8814d4d7cee8a2b52f42e23a1">make_set_intersection</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</td></tr>
+<tr class="separator:a305901e8814d4d7cee8a2b52f42e23a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad84087b2c3be9c7dc348f094297c0820"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ad84087b2c3be9c7dc348f094297c0820">set_union</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</td></tr>
 <tr class="separator:ad84087b2c3be9c7dc348f094297c0820"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6cf35a531bcaf92eabd0c9f5e8996f8"><td class="memItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ac6cf35a531bcaf92eabd0c9f5e8996f8">set_intersection</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</td></tr>
@@ -3642,14 +3646,14 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00652">652</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  653</span>{</div>
-<div class="line"><span class="lineno">  654</span>    <span class="keywordflow">if</span> (i &lt; 0) {</div>
-<div class="line"><span class="lineno">  655</span>        <span class="keywordflow">return</span> <span class="charliteral">&#39;-&#39;</span>;</div>
-<div class="line"><span class="lineno">  656</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  657</span>        <span class="keywordflow">return</span> <span class="charliteral">&#39;+&#39;</span>;</div>
-<div class="line"><span class="lineno">  658</span>    }</div>
-<div class="line"><span class="lineno">  659</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00661">661</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  662</span>{</div>
+<div class="line"><span class="lineno">  663</span>    <span class="keywordflow">if</span> (i &lt; 0) {</div>
+<div class="line"><span class="lineno">  664</span>        <span class="keywordflow">return</span> <span class="charliteral">&#39;-&#39;</span>;</div>
+<div class="line"><span class="lineno">  665</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  666</span>        <span class="keywordflow">return</span> <span class="charliteral">&#39;+&#39;</span>;</div>
+<div class="line"><span class="lineno">  667</span>    }</div>
+<div class="line"><span class="lineno">  668</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4487,7 +4491,7 @@ template&lt;typename caller &gt; </div>
 <div class="line"><span class="lineno">  548</span>        <span class="keywordflow">return</span> <span class="keywordtype">boolean</span>(not op_x_notx);</div>
 <div class="line"><span class="lineno">  549</span>    <span class="keywordflow">return</span> make_rcp&lt;const caller&gt;(args);</div>
 <div class="line"><span class="lineno">  550</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00574">sets.h:574</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a1b8c2b9f1acc378637f8246c26f2a44d"><div class="ttname"><a href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00602">sets.h:602</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -6263,10 +6267,10 @@ template&lt;class Archive , class T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Complexes&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00526">526</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  527</span>{</div>
-<div class="line"><span class="lineno">  528</span>    <span class="keywordflow">return</span> Complexes::getInstance();</div>
-<div class="line"><span class="lineno">  529</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00554">554</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  555</span>{</div>
+<div class="line"><span class="lineno">  556</span>    <span class="keywordflow">return</span> Complexes::getInstance();</div>
+<div class="line"><span class="lineno">  557</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -6297,70 +6301,70 @@ template&lt;class Archive , class T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01688">1688</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1690</span>{</div>
-<div class="line"><span class="lineno"> 1691</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><span class="lineno"> 1692</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><span class="lineno"> 1693</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (eq(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><span class="lineno"> 1694</span>        <span class="keywordflow">return</span> universalset();</div>
-<div class="line"><span class="lineno"> 1695</span>    }</div>
-<div class="line"><span class="lineno"> 1696</span>    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
-<div class="line"><span class="lineno"> 1697</span>        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
-<div class="line"><span class="lineno"> 1698</span>        set_boolean newcont;</div>
-<div class="line"><span class="lineno"> 1699</span>        set_basic present, others;</div>
-<div class="line"><span class="lineno"> 1700</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
-<div class="line"><span class="lineno"> 1701</span>            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
-<div class="line"><span class="lineno"> 1702</span>                and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
-<div class="line"><span class="lineno"> 1703</span>                and is_a&lt;FiniteSet&gt;(</div>
-<div class="line"><span class="lineno"> 1704</span>                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
-<div class="line"><span class="lineno"> 1705</span>                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
-<div class="line"><span class="lineno"> 1706</span>                <span class="keyword">auto</span> fcont</div>
-<div class="line"><span class="lineno"> 1707</span>                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
-<div class="line"><span class="lineno"> 1708</span>                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
-<div class="line"><span class="lineno"> 1709</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
-<div class="line"><span class="lineno"> 1710</span>                    <span class="keywordflow">if</span> (not(is_a_Number(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
-<div class="line"><span class="lineno"> 1711</span>                        others.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
-<div class="line"><span class="lineno"> 1712</span>                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1713</span>                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
-<div class="line"><span class="lineno"> 1714</span>                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
-<div class="line"><span class="lineno"> 1715</span>                        <span class="comment">// conditions</span></div>
-<div class="line"><span class="lineno"> 1716</span>                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
-<div class="line"><span class="lineno"> 1717</span>                        <span class="comment">// element of finiteset that surely fails in other</span></div>
-<div class="line"><span class="lineno"> 1718</span>                        <span class="comment">// conditions.</span></div>
-<div class="line"><span class="lineno"> 1719</span>                        <span class="keyword">auto</span> restCont = cont;</div>
-<div class="line"><span class="lineno"> 1720</span>                        restCont.erase(*it);</div>
-<div class="line"><span class="lineno"> 1721</span>                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
-<div class="line"><span class="lineno"> 1722</span>                        map_basic_basic d;</div>
-<div class="line"><span class="lineno"> 1723</span>                        d[sym] = elem;</div>
-<div class="line"><span class="lineno"> 1724</span>                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
-<div class="line"><span class="lineno"> 1725</span>                        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><span class="lineno"> 1726</span>                            present.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/map/insert.html">insert</a>(elem);</div>
-<div class="line"><span class="lineno"> 1727</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><span class="lineno"> 1728</span>                            others.insert(elem);</div>
-<div class="line"><span class="lineno"> 1729</span>                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1730</span>                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
-<div class="line"><span class="lineno"> 1731</span>                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
-<div class="line"><span class="lineno"> 1732</span>                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1733</span>                        }</div>
-<div class="line"><span class="lineno"> 1734</span>                    }</div>
-<div class="line"><span class="lineno"> 1735</span>                }</div>
-<div class="line"><span class="lineno"> 1736</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1737</span>                newcont.insert(*it);</div>
-<div class="line"><span class="lineno"> 1738</span>            }</div>
-<div class="line"><span class="lineno"> 1739</span>        }</div>
-<div class="line"><span class="lineno"> 1740</span>        <span class="keywordflow">if</span> (not present.empty()) {</div>
-<div class="line"><span class="lineno"> 1741</span>            newcont.insert(<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(others)-&gt;contains(sym));</div>
-<div class="line"><span class="lineno"> 1742</span>            <span class="keywordflow">return</span> SymEngine::set_union(</div>
-<div class="line"><span class="lineno"> 1743</span>                {<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(present), <a class="code hl_function" href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">conditionset</a>(sym, logical_and(newcont))});</div>
-<div class="line"><span class="lineno"> 1744</span>        }</div>
-<div class="line"><span class="lineno"> 1745</span>    }</div>
-<div class="line"><span class="lineno"> 1746</span>    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
-<div class="line"><span class="lineno"> 1747</span>        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
-<div class="line"><span class="lineno"> 1748</span>    }</div>
-<div class="line"><span class="lineno"> 1749</span>    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
-<div class="line"><span class="lineno"> 1750</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00562">sets.h:562</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a8f4604cdd696c1d067294bc78fec6231"><div class="ttname"><a href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01688">sets.cpp:1688</a></div></div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01781">1781</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1783</span>{</div>
+<div class="line"><span class="lineno"> 1784</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><span class="lineno"> 1785</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><span class="lineno"> 1786</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (eq(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><span class="lineno"> 1787</span>        <span class="keywordflow">return</span> universalset();</div>
+<div class="line"><span class="lineno"> 1788</span>    }</div>
+<div class="line"><span class="lineno"> 1789</span>    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
+<div class="line"><span class="lineno"> 1790</span>        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
+<div class="line"><span class="lineno"> 1791</span>        set_boolean newcont;</div>
+<div class="line"><span class="lineno"> 1792</span>        set_basic present, others;</div>
+<div class="line"><span class="lineno"> 1793</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
+<div class="line"><span class="lineno"> 1794</span>            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
+<div class="line"><span class="lineno"> 1795</span>                and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
+<div class="line"><span class="lineno"> 1796</span>                and is_a&lt;FiniteSet&gt;(</div>
+<div class="line"><span class="lineno"> 1797</span>                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
+<div class="line"><span class="lineno"> 1798</span>                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
+<div class="line"><span class="lineno"> 1799</span>                <span class="keyword">auto</span> fcont</div>
+<div class="line"><span class="lineno"> 1800</span>                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
+<div class="line"><span class="lineno"> 1801</span>                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
+<div class="line"><span class="lineno"> 1802</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
+<div class="line"><span class="lineno"> 1803</span>                    <span class="keywordflow">if</span> (not(is_a_Number(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
+<div class="line"><span class="lineno"> 1804</span>                        others.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><span class="lineno"> 1805</span>                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno"> 1806</span>                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
+<div class="line"><span class="lineno"> 1807</span>                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
+<div class="line"><span class="lineno"> 1808</span>                        <span class="comment">// conditions</span></div>
+<div class="line"><span class="lineno"> 1809</span>                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
+<div class="line"><span class="lineno"> 1810</span>                        <span class="comment">// element of finiteset that surely fails in other</span></div>
+<div class="line"><span class="lineno"> 1811</span>                        <span class="comment">// conditions.</span></div>
+<div class="line"><span class="lineno"> 1812</span>                        <span class="keyword">auto</span> restCont = cont;</div>
+<div class="line"><span class="lineno"> 1813</span>                        restCont.erase(*it);</div>
+<div class="line"><span class="lineno"> 1814</span>                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
+<div class="line"><span class="lineno"> 1815</span>                        map_basic_basic d;</div>
+<div class="line"><span class="lineno"> 1816</span>                        d[sym] = elem;</div>
+<div class="line"><span class="lineno"> 1817</span>                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
+<div class="line"><span class="lineno"> 1818</span>                        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><span class="lineno"> 1819</span>                            present.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/map/insert.html">insert</a>(elem);</div>
+<div class="line"><span class="lineno"> 1820</span>                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><span class="lineno"> 1821</span>                            others.insert(elem);</div>
+<div class="line"><span class="lineno"> 1822</span>                        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno"> 1823</span>                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
+<div class="line"><span class="lineno"> 1824</span>                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
+<div class="line"><span class="lineno"> 1825</span>                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1826</span>                        }</div>
+<div class="line"><span class="lineno"> 1827</span>                    }</div>
+<div class="line"><span class="lineno"> 1828</span>                }</div>
+<div class="line"><span class="lineno"> 1829</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno"> 1830</span>                newcont.insert(*it);</div>
+<div class="line"><span class="lineno"> 1831</span>            }</div>
+<div class="line"><span class="lineno"> 1832</span>        }</div>
+<div class="line"><span class="lineno"> 1833</span>        <span class="keywordflow">if</span> (not present.empty()) {</div>
+<div class="line"><span class="lineno"> 1834</span>            newcont.insert(<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(others)-&gt;contains(sym));</div>
+<div class="line"><span class="lineno"> 1835</span>            <span class="keywordflow">return</span> SymEngine::set_union(</div>
+<div class="line"><span class="lineno"> 1836</span>                {<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(present), <a class="code hl_function" href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">conditionset</a>(sym, logical_and(newcont))});</div>
+<div class="line"><span class="lineno"> 1837</span>        }</div>
+<div class="line"><span class="lineno"> 1838</span>    }</div>
+<div class="line"><span class="lineno"> 1839</span>    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
+<div class="line"><span class="lineno"> 1840</span>        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
+<div class="line"><span class="lineno"> 1841</span>    }</div>
+<div class="line"><span class="lineno"> 1842</span>    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
+<div class="line"><span class="lineno"> 1843</span>}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a1701788a930ea06ed8acaa1edde0e261"><div class="ttname"><a href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00590">sets.h:590</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a8f4604cdd696c1d067294bc78fec6231"><div class="ttname"><a href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01781">sets.cpp:1781</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -8681,10 +8685,10 @@ template&lt;typename To , typename From &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const EmptySet&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00562">562</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  563</span>{</div>
-<div class="line"><span class="lineno">  564</span>    <span class="keywordflow">return</span> EmptySet::getInstance();</div>
-<div class="line"><span class="lineno">  565</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00590">590</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  591</span>{</div>
+<div class="line"><span class="lineno">  592</span>    <span class="keywordflow">return</span> EmptySet::getInstance();</div>
+<div class="line"><span class="lineno">  593</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -10226,13 +10230,13 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00574">574</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  575</span>{</div>
-<div class="line"><span class="lineno">  576</span>    <span class="keywordflow">if</span> (FiniteSet::is_canonical(container)) {</div>
-<div class="line"><span class="lineno">  577</span>        <span class="keywordflow">return</span> make_rcp&lt;const FiniteSet&gt;(container);</div>
-<div class="line"><span class="lineno">  578</span>    }</div>
-<div class="line"><span class="lineno">  579</span>    <span class="keywordflow">return</span> emptyset();</div>
-<div class="line"><span class="lineno">  580</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00602">602</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  603</span>{</div>
+<div class="line"><span class="lineno">  604</span>    <span class="keywordflow">if</span> (FiniteSet::is_canonical(container)) {</div>
+<div class="line"><span class="lineno">  605</span>        <span class="keywordflow">return</span> make_rcp&lt;const FiniteSet&gt;(container);</div>
+<div class="line"><span class="lineno">  606</span>    }</div>
+<div class="line"><span class="lineno">  607</span>    <span class="keywordflow">return</span> emptyset();</div>
+<div class="line"><span class="lineno">  608</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13122,48 +13126,48 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00596">596</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  599</span>{</div>
-<div class="line"><span class="lineno">  600</span>    <span class="keywordflow">if</span> (not is_a_sub&lt;Symbol&gt;(*sym))</div>
-<div class="line"><span class="lineno">  601</span>        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;first arg is expected to be a symbol&quot;</span>);</div>
-<div class="line"><span class="lineno">  602</span> </div>
-<div class="line"><span class="lineno">  603</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*expr, *sym) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base, *<a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>()))</div>
-<div class="line"><span class="lineno">  604</span>        <span class="keywordflow">return</span> base;</div>
-<div class="line"><span class="lineno">  605</span> </div>
-<div class="line"><span class="lineno">  606</span>    <span class="keywordflow">if</span> (is_a_Number(*expr))</div>
-<div class="line"><span class="lineno">  607</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({expr});</div>
-<div class="line"><span class="lineno">  608</span>    <span class="keywordflow">if</span> (is_a_Set(*expr)) {</div>
-<div class="line"><span class="lineno">  609</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>Set &amp;<span class="keyword">&gt;</span>(*expr).get_args()) {</div>
-<div class="line"><span class="lineno">  610</span>            <span class="keywordflow">if</span> (not(is_a_Number(*s) or is_a&lt;Constant&gt;(*s)</div>
-<div class="line"><span class="lineno">  611</span>                    or is_a_Boolean(*s))) {</div>
-<div class="line"><span class="lineno">  612</span>                <span class="keywordflow">return</span> make_rcp&lt;const ImageSet&gt;(sym, expr, base);</div>
-<div class="line"><span class="lineno">  613</span>            }</div>
-<div class="line"><span class="lineno">  614</span>        }</div>
-<div class="line"><span class="lineno">  615</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({expr});</div>
-<div class="line"><span class="lineno">  616</span>    }</div>
-<div class="line"><span class="lineno">  617</span> </div>
-<div class="line"><span class="lineno">  618</span>    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*base)) {</div>
-<div class="line"><span class="lineno">  619</span>        map_basic_basic d;</div>
-<div class="line"><span class="lineno">  620</span>        set_basic temp;</div>
-<div class="line"><span class="lineno">  621</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s :</div>
-<div class="line"><span class="lineno">  622</span>             down_cast&lt;const FiniteSet &amp;&gt;(*base).get_container()) {</div>
-<div class="line"><span class="lineno">  623</span>            d[sym] = s;</div>
-<div class="line"><span class="lineno">  624</span>            temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr-&gt;subs(d));</div>
-<div class="line"><span class="lineno">  625</span>            d.clear();</div>
-<div class="line"><span class="lineno">  626</span>        }</div>
-<div class="line"><span class="lineno">  627</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(temp);</div>
-<div class="line"><span class="lineno">  628</span>    }</div>
-<div class="line"><span class="lineno">  629</span> </div>
-<div class="line"><span class="lineno">  630</span>    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(*base)) {</div>
-<div class="line"><span class="lineno">  631</span>        <span class="keyword">const</span> ImageSet &amp;imbase = down_cast&lt;const ImageSet &amp;&gt;(*base);</div>
-<div class="line"><span class="lineno">  632</span>        map_basic_basic d;</div>
-<div class="line"><span class="lineno">  633</span>        d[sym] = imbase.get_expr();</div>
-<div class="line"><span class="lineno">  634</span>        <span class="keywordflow">return</span> imageset(imbase.get_symbol(), <a class="code hl_function" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a>(expr-&gt;subs(d)),</div>
-<div class="line"><span class="lineno">  635</span>                        imbase.get_baseset());</div>
-<div class="line"><span class="lineno">  636</span>    }</div>
-<div class="line"><span class="lineno">  637</span> </div>
-<div class="line"><span class="lineno">  638</span>    <span class="keywordflow">return</span> make_rcp&lt;const ImageSet&gt;(sym, expr, base);</div>
-<div class="line"><span class="lineno">  639</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00624">624</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  627</span>{</div>
+<div class="line"><span class="lineno">  628</span>    <span class="keywordflow">if</span> (not is_a_sub&lt;Symbol&gt;(*sym))</div>
+<div class="line"><span class="lineno">  629</span>        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;first arg is expected to be a symbol&quot;</span>);</div>
+<div class="line"><span class="lineno">  630</span> </div>
+<div class="line"><span class="lineno">  631</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*expr, *sym) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base, *<a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>()))</div>
+<div class="line"><span class="lineno">  632</span>        <span class="keywordflow">return</span> base;</div>
+<div class="line"><span class="lineno">  633</span> </div>
+<div class="line"><span class="lineno">  634</span>    <span class="keywordflow">if</span> (is_a_Number(*expr))</div>
+<div class="line"><span class="lineno">  635</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({expr});</div>
+<div class="line"><span class="lineno">  636</span>    <span class="keywordflow">if</span> (is_a_Set(*expr)) {</div>
+<div class="line"><span class="lineno">  637</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>Set &amp;<span class="keyword">&gt;</span>(*expr).get_args()) {</div>
+<div class="line"><span class="lineno">  638</span>            <span class="keywordflow">if</span> (not(is_a_Number(*s) or is_a&lt;Constant&gt;(*s)</div>
+<div class="line"><span class="lineno">  639</span>                    or is_a_Boolean(*s))) {</div>
+<div class="line"><span class="lineno">  640</span>                <span class="keywordflow">return</span> make_rcp&lt;const ImageSet&gt;(sym, expr, base);</div>
+<div class="line"><span class="lineno">  641</span>            }</div>
+<div class="line"><span class="lineno">  642</span>        }</div>
+<div class="line"><span class="lineno">  643</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({expr});</div>
+<div class="line"><span class="lineno">  644</span>    }</div>
+<div class="line"><span class="lineno">  645</span> </div>
+<div class="line"><span class="lineno">  646</span>    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*base)) {</div>
+<div class="line"><span class="lineno">  647</span>        map_basic_basic d;</div>
+<div class="line"><span class="lineno">  648</span>        set_basic temp;</div>
+<div class="line"><span class="lineno">  649</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s :</div>
+<div class="line"><span class="lineno">  650</span>             down_cast&lt;const FiniteSet &amp;&gt;(*base).get_container()) {</div>
+<div class="line"><span class="lineno">  651</span>            d[sym] = s;</div>
+<div class="line"><span class="lineno">  652</span>            temp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr-&gt;subs(d));</div>
+<div class="line"><span class="lineno">  653</span>            d.clear();</div>
+<div class="line"><span class="lineno">  654</span>        }</div>
+<div class="line"><span class="lineno">  655</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(temp);</div>
+<div class="line"><span class="lineno">  656</span>    }</div>
+<div class="line"><span class="lineno">  657</span> </div>
+<div class="line"><span class="lineno">  658</span>    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(*base)) {</div>
+<div class="line"><span class="lineno">  659</span>        <span class="keyword">const</span> ImageSet &amp;imbase = down_cast&lt;const ImageSet &amp;&gt;(*base);</div>
+<div class="line"><span class="lineno">  660</span>        map_basic_basic d;</div>
+<div class="line"><span class="lineno">  661</span>        d[sym] = imbase.get_expr();</div>
+<div class="line"><span class="lineno">  662</span>        <span class="keywordflow">return</span> imageset(imbase.get_symbol(), <a class="code hl_function" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a>(expr-&gt;subs(d)),</div>
+<div class="line"><span class="lineno">  663</span>                        imbase.get_baseset());</div>
+<div class="line"><span class="lineno">  664</span>    }</div>
+<div class="line"><span class="lineno">  665</span> </div>
+<div class="line"><span class="lineno">  666</span>    <span class="keywordflow">return</span> make_rcp&lt;const ImageSet&gt;(sym, expr, base);</div>
+<div class="line"><span class="lineno">  667</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13645,41 +13649,41 @@ template&lt;typename To , typename From &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="latex_8cpp_source.html#l00480">480</a> of file <a class="el" href="latex_8cpp_source.html">latex.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  481</span>{</div>
-<div class="line"><span class="lineno">  482</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names = init_str_printer_names();</div>
-<div class="line"><span class="lineno">  483</span> </div>
-<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
-<div class="line"><span class="lineno">  485</span>        <span class="keywordflow">if</span> (names[i] != <span class="stringliteral">&quot;&quot;</span>) {</div>
-<div class="line"><span class="lineno">  486</span>            names[i] = <span class="stringliteral">&quot;\\operatorname{&quot;</span> + names[i] + <span class="stringliteral">&quot;}&quot;</span>;</div>
-<div class="line"><span class="lineno">  487</span>        }</div>
-<div class="line"><span class="lineno">  488</span>    }</div>
-<div class="line"><span class="lineno">  489</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;\\sin&quot;</span>;</div>
-<div class="line"><span class="lineno">  490</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;\\cos&quot;</span>;</div>
-<div class="line"><span class="lineno">  491</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;\\tan&quot;</span>;</div>
-<div class="line"><span class="lineno">  492</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;\\cot&quot;</span>;</div>
-<div class="line"><span class="lineno">  493</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;\\csc&quot;</span>;</div>
-<div class="line"><span class="lineno">  494</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;\\sec&quot;</span>;</div>
-<div class="line"><span class="lineno">  495</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;\\operatorname{atan_2}&quot;</span>;</div>
-<div class="line"><span class="lineno">  496</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;\\sinh&quot;</span>;</div>
-<div class="line"><span class="lineno">  497</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;\\cosh&quot;</span>;</div>
-<div class="line"><span class="lineno">  498</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;\\tanh&quot;</span>;</div>
-<div class="line"><span class="lineno">  499</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;\\coth&quot;</span>;</div>
-<div class="line"><span class="lineno">  500</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;\\log&quot;</span>;</div>
-<div class="line"><span class="lineno">  501</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;\\zeta&quot;</span>;</div>
-<div class="line"><span class="lineno">  502</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;\\operatorname{W}&quot;</span>;</div>
-<div class="line"><span class="lineno">  503</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;\\eta&quot;</span>;</div>
-<div class="line"><span class="lineno">  504</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;\\delta_&quot;</span>;</div>
-<div class="line"><span class="lineno">  505</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;\\varepsilon_&quot;</span>;</div>
-<div class="line"><span class="lineno">  506</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;\\gamma&quot;</span>;</div>
-<div class="line"><span class="lineno">  507</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;\\Gamma&quot;</span>;</div>
-<div class="line"><span class="lineno">  508</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;\\operatorname{B}&quot;</span>;</div>
-<div class="line"><span class="lineno">  509</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;\\log&quot;</span>;</div>
-<div class="line"><span class="lineno">  510</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;\\Gamma&quot;</span>;</div>
-<div class="line"><span class="lineno">  511</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;\\operatorname{truncate}&quot;</span>;</div>
-<div class="line"><span class="lineno">  512</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;\\pi&quot;</span>;</div>
-<div class="line"><span class="lineno">  513</span>    <span class="keywordflow">return</span> names;</div>
-<div class="line"><span class="lineno">  514</span>}</div>
+<p class="definition">Definition at line <a class="el" href="latex_8cpp_source.html#l00487">487</a> of file <a class="el" href="latex_8cpp_source.html">latex.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  488</span>{</div>
+<div class="line"><span class="lineno">  489</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names = init_str_printer_names();</div>
+<div class="line"><span class="lineno">  490</span> </div>
+<div class="line"><span class="lineno">  491</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
+<div class="line"><span class="lineno">  492</span>        <span class="keywordflow">if</span> (names[i] != <span class="stringliteral">&quot;&quot;</span>) {</div>
+<div class="line"><span class="lineno">  493</span>            names[i] = <span class="stringliteral">&quot;\\operatorname{&quot;</span> + names[i] + <span class="stringliteral">&quot;}&quot;</span>;</div>
+<div class="line"><span class="lineno">  494</span>        }</div>
+<div class="line"><span class="lineno">  495</span>    }</div>
+<div class="line"><span class="lineno">  496</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;\\sin&quot;</span>;</div>
+<div class="line"><span class="lineno">  497</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;\\cos&quot;</span>;</div>
+<div class="line"><span class="lineno">  498</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;\\tan&quot;</span>;</div>
+<div class="line"><span class="lineno">  499</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;\\cot&quot;</span>;</div>
+<div class="line"><span class="lineno">  500</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;\\csc&quot;</span>;</div>
+<div class="line"><span class="lineno">  501</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;\\sec&quot;</span>;</div>
+<div class="line"><span class="lineno">  502</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;\\operatorname{atan_2}&quot;</span>;</div>
+<div class="line"><span class="lineno">  503</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;\\sinh&quot;</span>;</div>
+<div class="line"><span class="lineno">  504</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;\\cosh&quot;</span>;</div>
+<div class="line"><span class="lineno">  505</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;\\tanh&quot;</span>;</div>
+<div class="line"><span class="lineno">  506</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;\\coth&quot;</span>;</div>
+<div class="line"><span class="lineno">  507</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;\\log&quot;</span>;</div>
+<div class="line"><span class="lineno">  508</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;\\zeta&quot;</span>;</div>
+<div class="line"><span class="lineno">  509</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;\\operatorname{W}&quot;</span>;</div>
+<div class="line"><span class="lineno">  510</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;\\eta&quot;</span>;</div>
+<div class="line"><span class="lineno">  511</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;\\delta_&quot;</span>;</div>
+<div class="line"><span class="lineno">  512</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;\\varepsilon_&quot;</span>;</div>
+<div class="line"><span class="lineno">  513</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;\\gamma&quot;</span>;</div>
+<div class="line"><span class="lineno">  514</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;\\Gamma&quot;</span>;</div>
+<div class="line"><span class="lineno">  515</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;\\operatorname{B}&quot;</span>;</div>
+<div class="line"><span class="lineno">  516</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;\\log&quot;</span>;</div>
+<div class="line"><span class="lineno">  517</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;\\Gamma&quot;</span>;</div>
+<div class="line"><span class="lineno">  518</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;\\operatorname{truncate}&quot;</span>;</div>
+<div class="line"><span class="lineno">  519</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;\\pi&quot;</span>;</div>
+<div class="line"><span class="lineno">  520</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><span class="lineno">  521</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13777,63 +13781,63 @@ template&lt;typename To , typename From &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01062">1062</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1063</span>{</div>
-<div class="line"><span class="lineno"> 1064</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
-<div class="line"><span class="lineno"> 1065</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(TypeID_Count, <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1066</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1067</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1068</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1069</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1070</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1071</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1072</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1073</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1074</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1075</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1076</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1077</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1078</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1079</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1080</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1081</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1082</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1083</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1084</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1085</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1086</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1087</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1088</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1089</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1090</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1091</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1092</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1093</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1094</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1095</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1096</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1097</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1098</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1099</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1100</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1101</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1102</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1103</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1104</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1105</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1106</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1107</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1108</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1109</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1110</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1111</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1112</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1113</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1114</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1115</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1116</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1117</span>    <span class="keywordflow">return</span> names;</div>
-<div class="line"><span class="lineno"> 1118</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01071">1071</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1072</span>{</div>
+<div class="line"><span class="lineno"> 1073</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
+<div class="line"><span class="lineno"> 1074</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(TypeID_Count, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><span class="lineno"> 1075</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1076</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1077</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1078</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1079</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1080</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1081</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1082</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1083</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1084</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1085</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1086</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1087</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1088</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1089</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1090</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1091</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1092</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1093</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1094</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1095</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1096</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1097</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1098</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1099</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1100</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1101</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1102</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1103</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1104</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1105</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1106</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1107</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1108</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1109</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1110</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1111</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1112</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1113</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1114</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1115</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1116</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1117</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1118</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1119</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1120</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1121</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1122</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1123</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1124</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1125</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1126</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><span class="lineno"> 1127</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13861,23 +13865,23 @@ template&lt;typename To , typename From &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00597">597</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  598</span>{</div>
-<div class="line"><span class="lineno">  599</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;size_t&gt;</a> lengths;</div>
-<div class="line"><span class="lineno">  600</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;name : names) {</div>
-<div class="line"><span class="lineno">  601</span>        lengths.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(name.length());</div>
-<div class="line"><span class="lineno">  602</span>    }</div>
-<div class="line"><span class="lineno">  603</span>    lengths[SYMENGINE_LAMBERTW] = 1;</div>
-<div class="line"><span class="lineno">  604</span>    lengths[SYMENGINE_ZETA] = 1;</div>
-<div class="line"><span class="lineno">  605</span>    lengths[SYMENGINE_DIRICHLET_ETA] = 1;</div>
-<div class="line"><span class="lineno">  606</span>    lengths[SYMENGINE_LOWERGAMMA] = 1;</div>
-<div class="line"><span class="lineno">  607</span>    lengths[SYMENGINE_UPPERGAMMA] = 1;</div>
-<div class="line"><span class="lineno">  608</span>    lengths[SYMENGINE_BETA] = 1;</div>
-<div class="line"><span class="lineno">  609</span>    lengths[SYMENGINE_LOGGAMMA] = 5;</div>
-<div class="line"><span class="lineno">  610</span>    lengths[SYMENGINE_GAMMA] = 1;</div>
-<div class="line"><span class="lineno">  611</span>    lengths[SYMENGINE_PRIMEPI] = 1;</div>
-<div class="line"><span class="lineno">  612</span>    <span class="keywordflow">return</span> lengths;</div>
-<div class="line"><span class="lineno">  613</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00610">610</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  611</span>{</div>
+<div class="line"><span class="lineno">  612</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;size_t&gt;</a> lengths;</div>
+<div class="line"><span class="lineno">  613</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;name : names) {</div>
+<div class="line"><span class="lineno">  614</span>        lengths.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(name.length());</div>
+<div class="line"><span class="lineno">  615</span>    }</div>
+<div class="line"><span class="lineno">  616</span>    lengths[SYMENGINE_LAMBERTW] = 1;</div>
+<div class="line"><span class="lineno">  617</span>    lengths[SYMENGINE_ZETA] = 1;</div>
+<div class="line"><span class="lineno">  618</span>    lengths[SYMENGINE_DIRICHLET_ETA] = 1;</div>
+<div class="line"><span class="lineno">  619</span>    lengths[SYMENGINE_LOWERGAMMA] = 1;</div>
+<div class="line"><span class="lineno">  620</span>    lengths[SYMENGINE_UPPERGAMMA] = 1;</div>
+<div class="line"><span class="lineno">  621</span>    lengths[SYMENGINE_BETA] = 1;</div>
+<div class="line"><span class="lineno">  622</span>    lengths[SYMENGINE_LOGGAMMA] = 5;</div>
+<div class="line"><span class="lineno">  623</span>    lengths[SYMENGINE_GAMMA] = 1;</div>
+<div class="line"><span class="lineno">  624</span>    lengths[SYMENGINE_PRIMEPI] = 1;</div>
+<div class="line"><span class="lineno">  625</span>    <span class="keywordflow">return</span> lengths;</div>
+<div class="line"><span class="lineno">  626</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -13904,20 +13908,20 @@ template&lt;typename To , typename From &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00581">581</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  582</span>{</div>
-<div class="line"><span class="lineno">  583</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names = init_str_printer_names();</div>
-<div class="line"><span class="lineno">  584</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;W&quot;</span>;</div>
-<div class="line"><span class="lineno">  585</span>    names[SYMENGINE_ZETA] = U8(<span class="stringliteral">&quot;\U0001D701&quot;</span>);</div>
-<div class="line"><span class="lineno">  586</span>    names[SYMENGINE_DIRICHLET_ETA] = U8(<span class="stringliteral">&quot;\U0001D702&quot;</span>);</div>
-<div class="line"><span class="lineno">  587</span>    names[SYMENGINE_LOWERGAMMA] = U8(<span class="stringliteral">&quot;\U0001D6FE&quot;</span>);</div>
-<div class="line"><span class="lineno">  588</span>    names[SYMENGINE_UPPERGAMMA] = U8(<span class="stringliteral">&quot;\u0393&quot;</span>);</div>
-<div class="line"><span class="lineno">  589</span>    names[SYMENGINE_BETA] = U8(<span class="stringliteral">&quot;B&quot;</span>);</div>
-<div class="line"><span class="lineno">  590</span>    names[SYMENGINE_LOGGAMMA] = U8(<span class="stringliteral">&quot;log \u0393&quot;</span>);</div>
-<div class="line"><span class="lineno">  591</span>    names[SYMENGINE_GAMMA] = U8(<span class="stringliteral">&quot;\u0393&quot;</span>);</div>
-<div class="line"><span class="lineno">  592</span>    names[SYMENGINE_PRIMEPI] = U8(<span class="stringliteral">&quot;\U0001D70B&quot;</span>);</div>
-<div class="line"><span class="lineno">  593</span>    <span class="keywordflow">return</span> names;</div>
-<div class="line"><span class="lineno">  594</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00594">594</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  595</span>{</div>
+<div class="line"><span class="lineno">  596</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names = init_str_printer_names();</div>
+<div class="line"><span class="lineno">  597</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;W&quot;</span>;</div>
+<div class="line"><span class="lineno">  598</span>    names[SYMENGINE_ZETA] = U8(<span class="stringliteral">&quot;\U0001D701&quot;</span>);</div>
+<div class="line"><span class="lineno">  599</span>    names[SYMENGINE_DIRICHLET_ETA] = U8(<span class="stringliteral">&quot;\U0001D702&quot;</span>);</div>
+<div class="line"><span class="lineno">  600</span>    names[SYMENGINE_LOWERGAMMA] = U8(<span class="stringliteral">&quot;\U0001D6FE&quot;</span>);</div>
+<div class="line"><span class="lineno">  601</span>    names[SYMENGINE_UPPERGAMMA] = U8(<span class="stringliteral">&quot;\u0393&quot;</span>);</div>
+<div class="line"><span class="lineno">  602</span>    names[SYMENGINE_BETA] = U8(<span class="stringliteral">&quot;B&quot;</span>);</div>
+<div class="line"><span class="lineno">  603</span>    names[SYMENGINE_LOGGAMMA] = U8(<span class="stringliteral">&quot;log \u0393&quot;</span>);</div>
+<div class="line"><span class="lineno">  604</span>    names[SYMENGINE_GAMMA] = U8(<span class="stringliteral">&quot;\u0393&quot;</span>);</div>
+<div class="line"><span class="lineno">  605</span>    names[SYMENGINE_PRIMEPI] = U8(<span class="stringliteral">&quot;\U0001D70B&quot;</span>);</div>
+<div class="line"><span class="lineno">  606</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><span class="lineno">  607</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -14062,10 +14066,10 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Integers&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00544">544</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  545</span>{</div>
-<div class="line"><span class="lineno">  546</span>    <span class="keywordflow">return</span> Integers::getInstance();</div>
-<div class="line"><span class="lineno">  547</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00572">572</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  573</span>{</div>
+<div class="line"><span class="lineno">  574</span>    <span class="keywordflow">return</span> Integers::getInstance();</div>
+<div class="line"><span class="lineno">  575</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -14140,14 +14144,14 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Set&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00583">583</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  587</span>{</div>
-<div class="line"><span class="lineno">  588</span>    <span class="keywordflow">if</span> (Interval::is_canonical(start, end, left_open, right_open))</div>
-<div class="line"><span class="lineno">  589</span>        <span class="keywordflow">return</span> make_rcp&lt;const Interval&gt;(start, end, left_open, right_open);</div>
-<div class="line"><span class="lineno">  590</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*start, *end) and not(left_open or right_open))</div>
-<div class="line"><span class="lineno">  591</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({start});</div>
-<div class="line"><span class="lineno">  592</span>    <span class="keywordflow">return</span> emptyset();</div>
-<div class="line"><span class="lineno">  593</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00611">611</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  615</span>{</div>
+<div class="line"><span class="lineno">  616</span>    <span class="keywordflow">if</span> (Interval::is_canonical(start, end, left_open, right_open))</div>
+<div class="line"><span class="lineno">  617</span>        <span class="keywordflow">return</span> make_rcp&lt;const Interval&gt;(start, end, left_open, right_open);</div>
+<div class="line"><span class="lineno">  618</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*start, *end) and not(left_open or right_open))</div>
+<div class="line"><span class="lineno">  619</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>({start});</div>
+<div class="line"><span class="lineno">  620</span>    <span class="keywordflow">return</span> emptyset();</div>
+<div class="line"><span class="lineno">  621</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -14825,23 +14829,24 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00507">507</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  508</span>{</div>
-<div class="line"><span class="lineno">  509</span>    <span class="keywordflow">return</span> (b.get_type_code() == SYMENGINE_EMPTYSET</div>
-<div class="line"><span class="lineno">  510</span>            || b.get_type_code() == SYMENGINE_UNIVERSALSET</div>
-<div class="line"><span class="lineno">  511</span>            || b.get_type_code() == SYMENGINE_FINITESET</div>
-<div class="line"><span class="lineno">  512</span>            || b.get_type_code() == SYMENGINE_COMPLEMENT</div>
-<div class="line"><span class="lineno">  513</span>            || b.get_type_code() == SYMENGINE_CONDITIONSET</div>
-<div class="line"><span class="lineno">  514</span>            || b.get_type_code() == SYMENGINE_INTERVAL</div>
-<div class="line"><span class="lineno">  515</span>            || b.get_type_code() == SYMENGINE_COMPLEXES</div>
-<div class="line"><span class="lineno">  516</span>            || b.get_type_code() == SYMENGINE_REALS</div>
-<div class="line"><span class="lineno">  517</span>            || b.get_type_code() == SYMENGINE_RATIONALS</div>
-<div class="line"><span class="lineno">  518</span>            || b.get_type_code() == SYMENGINE_INTEGERS</div>
-<div class="line"><span class="lineno">  519</span>            || b.get_type_code() == SYMENGINE_NATURALS</div>
-<div class="line"><span class="lineno">  520</span>            || b.get_type_code() == SYMENGINE_NATURALS0</div>
-<div class="line"><span class="lineno">  521</span>            || b.get_type_code() == SYMENGINE_UNION</div>
-<div class="line"><span class="lineno">  522</span>            || b.get_type_code() == SYMENGINE_IMAGESET);</div>
-<div class="line"><span class="lineno">  523</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00534">534</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  535</span>{</div>
+<div class="line"><span class="lineno">  536</span>    <span class="keywordflow">return</span> (b.get_type_code() == SYMENGINE_EMPTYSET</div>
+<div class="line"><span class="lineno">  537</span>            || b.get_type_code() == SYMENGINE_UNIVERSALSET</div>
+<div class="line"><span class="lineno">  538</span>            || b.get_type_code() == SYMENGINE_FINITESET</div>
+<div class="line"><span class="lineno">  539</span>            || b.get_type_code() == SYMENGINE_COMPLEMENT</div>
+<div class="line"><span class="lineno">  540</span>            || b.get_type_code() == SYMENGINE_CONDITIONSET</div>
+<div class="line"><span class="lineno">  541</span>            || b.get_type_code() == SYMENGINE_INTERVAL</div>
+<div class="line"><span class="lineno">  542</span>            || b.get_type_code() == SYMENGINE_COMPLEXES</div>
+<div class="line"><span class="lineno">  543</span>            || b.get_type_code() == SYMENGINE_REALS</div>
+<div class="line"><span class="lineno">  544</span>            || b.get_type_code() == SYMENGINE_RATIONALS</div>
+<div class="line"><span class="lineno">  545</span>            || b.get_type_code() == SYMENGINE_INTEGERS</div>
+<div class="line"><span class="lineno">  546</span>            || b.get_type_code() == SYMENGINE_NATURALS</div>
+<div class="line"><span class="lineno">  547</span>            || b.get_type_code() == SYMENGINE_NATURALS0</div>
+<div class="line"><span class="lineno">  548</span>            || b.get_type_code() == SYMENGINE_UNION</div>
+<div class="line"><span class="lineno">  549</span>            || b.get_type_code() == SYMENGINE_INTERSECTION</div>
+<div class="line"><span class="lineno">  550</span>            || b.get_type_code() == SYMENGINE_IMAGESET);</div>
+<div class="line"><span class="lineno">  551</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -16113,12 +16118,12 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01190">1190</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1191</span>{</div>
-<div class="line"><span class="lineno"> 1192</span>    <a class="code hl_class" href="classSymEngine_1_1JuliaStrPrinter.html">JuliaStrPrinter</a> strPrinter;</div>
-<div class="line"><span class="lineno"> 1193</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><span class="lineno"> 1194</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1JuliaStrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1JuliaStrPrinter.html">SymEngine::JuliaStrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00200">strprinter.h:201</a></div></div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01199">1199</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1200</span>{</div>
+<div class="line"><span class="lineno"> 1201</span>    <a class="code hl_class" href="classSymEngine_1_1JuliaStrPrinter.html">JuliaStrPrinter</a> strPrinter;</div>
+<div class="line"><span class="lineno"> 1202</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><span class="lineno"> 1203</span>}</div>
+<div class="ttc" id="aclassSymEngine_1_1JuliaStrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1JuliaStrPrinter.html">SymEngine::JuliaStrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00201">strprinter.h:202</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -17506,7 +17511,7 @@ template&lt;class Archive &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  516</span>{</div>
 <div class="line"><span class="lineno">  517</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">integers</a>();</div>
 <div class="line"><span class="lineno">  518</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a457fa9fcfa4597cb9233f3476055beb8"><div class="ttname"><a href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">SymEngine::integers</a></div><div class="ttdeci">RCP&lt; const Integers &gt; integers()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00544">sets.h:544</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a457fa9fcfa4597cb9233f3476055beb8"><div class="ttname"><a href="namespaceSymEngine.html#a457fa9fcfa4597cb9233f3476055beb8">SymEngine::integers</a></div><div class="ttdeci">RCP&lt; const Integers &gt; integers()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00572">sets.h:572</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -17840,7 +17845,7 @@ template&lt;class Archive &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  506</span>{</div>
 <div class="line"><span class="lineno">  507</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a807d6773c71d46c87ff3db3e33e35a7b">rationals</a>();</div>
 <div class="line"><span class="lineno">  508</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a807d6773c71d46c87ff3db3e33e35a7b"><div class="ttname"><a href="namespaceSymEngine.html#a807d6773c71d46c87ff3db3e33e35a7b">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00538">sets.h:538</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a807d6773c71d46c87ff3db3e33e35a7b"><div class="ttname"><a href="namespaceSymEngine.html#a807d6773c71d46c87ff3db3e33e35a7b">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00566">sets.h:566</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -17913,7 +17918,7 @@ template&lt;class Archive &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  501</span>{</div>
 <div class="line"><span class="lineno">  502</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">reals</a>();</div>
 <div class="line"><span class="lineno">  503</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a14a11e12a2224a195a84d9d1943ba9fd"><div class="ttname"><a href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00532">sets.h:532</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a14a11e12a2224a195a84d9d1943ba9fd"><div class="ttname"><a href="namespaceSymEngine.html#a14a11e12a2224a195a84d9d1943ba9fd">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00560">sets.h:560</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -18322,7 +18327,7 @@ template&lt;class Archive &gt; </div>
 <div class="fragment"><div class="line"><span class="lineno">  521</span>{</div>
 <div class="line"><span class="lineno">  522</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">universalset</a>();</div>
 <div class="line"><span class="lineno">  523</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a293577237f4457095754cba4461360a6"><div class="ttname"><a href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">SymEngine::universalset</a></div><div class="ttdeci">RCP&lt; const UniversalSet &gt; universalset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00568">sets.h:568</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a293577237f4457095754cba4461360a6"><div class="ttname"><a href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">SymEngine::universalset</a></div><div class="ttdeci">RCP&lt; const UniversalSet &gt; universalset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00596">sets.h:596</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -19187,29 +19192,71 @@ template&lt;typename T , typename... Args&gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="afca26df476c20359f9d88ab2363ca057" name="afca26df476c20359f9d88ab2363ca057"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afca26df476c20359f9d88ab2363ca057">&#9670;&#160;</a></span>make_set_union()</h2>
+<a id="a305901e8814d4d7cee8a2b52f42e23a1" name="a305901e8814d4d7cee8a2b52f42e23a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a305901e8814d4d7cee8a2b52f42e23a1">&#9670;&#160;</a></span>make_set_intersection()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt; SymEngine::make_set_union </td>
+          <td class="memname">static RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt; SymEngine::make_set_intersection </td>
           <td>(</td>
           <td class="paramtype">const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;&#160;</td>
           <td class="paramname"><em>in</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00198">198</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  199</span>{</div>
-<div class="line"><span class="lineno">  200</span>    <span class="keywordflow">if</span> (in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &gt; 1) {</div>
-<div class="line"><span class="lineno">  201</span>        <span class="keywordflow">return</span> make_rcp&lt;const Union&gt;(in);</div>
-<div class="line"><span class="lineno">  202</span>    }</div>
-<div class="line"><span class="lineno">  203</span>    <span class="keywordflow">return</span> *in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
-<div class="line"><span class="lineno">  204</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00123">123</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>{</div>
+<div class="line"><span class="lineno">  125</span>    <span class="keywordflow">if</span> (in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &gt; 1) {</div>
+<div class="line"><span class="lineno">  126</span>        <span class="keywordflow">return</span> make_rcp&lt;const Intersection&gt;(in);</div>
+<div class="line"><span class="lineno">  127</span>    }</div>
+<div class="line"><span class="lineno">  128</span>    <span class="keywordflow">return</span> *in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
+<div class="line"><span class="lineno">  129</span>}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="adc5a15dd3fc6232e7ab22b52c3c6170f" name="adc5a15dd3fc6232e7ab22b52c3c6170f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc5a15dd3fc6232e7ab22b52c3c6170f">&#9670;&#160;</a></span>make_set_union()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static RCP&lt; const <a class="el" href="classSymEngine_1_1Set.html">Set</a> &gt; SymEngine::make_set_union </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;&#160;</td>
+          <td class="paramname"><em>in</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l00115">115</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>{</div>
+<div class="line"><span class="lineno">  117</span>    <span class="keywordflow">if</span> (in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &gt; 1) {</div>
+<div class="line"><span class="lineno">  118</span>        <span class="keywordflow">return</span> make_rcp&lt;const Union&gt;(in);</div>
+<div class="line"><span class="lineno">  119</span>    }</div>
+<div class="line"><span class="lineno">  120</span>    <span class="keywordflow">return</span> *in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
+<div class="line"><span class="lineno">  121</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -23099,10 +23146,10 @@ template&lt;typename Poly &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Naturals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00550">550</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  551</span>{</div>
-<div class="line"><span class="lineno">  552</span>    <span class="keywordflow">return</span> Naturals::getInstance();</div>
-<div class="line"><span class="lineno">  553</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00578">578</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  579</span>{</div>
+<div class="line"><span class="lineno">  580</span>    <span class="keywordflow">return</span> Naturals::getInstance();</div>
+<div class="line"><span class="lineno">  581</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -23130,10 +23177,10 @@ template&lt;typename Poly &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Naturals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00556">556</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  557</span>{</div>
-<div class="line"><span class="lineno">  558</span>    <span class="keywordflow">return</span> Naturals0::getInstance();</div>
-<div class="line"><span class="lineno">  559</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00584">584</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  585</span>{</div>
+<div class="line"><span class="lineno">  586</span>    <span class="keywordflow">return</span> Naturals0::getInstance();</div>
+<div class="line"><span class="lineno">  587</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -27171,10 +27218,10 @@ template&lt;typename Poly &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Rationals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00538">538</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  539</span>{</div>
-<div class="line"><span class="lineno">  540</span>    <span class="keywordflow">return</span> Rationals::getInstance();</div>
-<div class="line"><span class="lineno">  541</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00566">566</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  567</span>{</div>
+<div class="line"><span class="lineno">  568</span>    <span class="keywordflow">return</span> Rationals::getInstance();</div>
+<div class="line"><span class="lineno">  569</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -27225,10 +27272,10 @@ template&lt;typename Poly &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Reals&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00532">532</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  533</span>{</div>
-<div class="line"><span class="lineno">  534</span>    <span class="keywordflow">return</span> Reals::getInstance();</div>
-<div class="line"><span class="lineno">  535</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00560">560</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  561</span>{</div>
+<div class="line"><span class="lineno">  562</span>    <span class="keywordflow">return</span> Reals::getInstance();</div>
+<div class="line"><span class="lineno">  563</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -29990,11 +30037,11 @@ template&lt;typename Archive &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01681">1681</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1683</span>{</div>
-<div class="line"><span class="lineno"> 1684</span>    <span class="comment">// represents universe - container</span></div>
-<div class="line"><span class="lineno"> 1685</span>    <span class="keywordflow">return</span> container-&gt;set_complement(universe);</div>
-<div class="line"><span class="lineno"> 1686</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01774">1774</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1776</span>{</div>
+<div class="line"><span class="lineno"> 1777</span>    <span class="comment">// represents universe - container</span></div>
+<div class="line"><span class="lineno"> 1778</span>    <span class="keywordflow">return</span> container-&gt;set_complement(universe);</div>
+<div class="line"><span class="lineno"> 1779</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -30024,39 +30071,39 @@ template&lt;typename Archive &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01646">1646</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1648</span>{</div>
-<div class="line"><span class="lineno"> 1649</span>    <span class="keywordflow">if</span> (is_a&lt;Union&gt;(*universe)) {</div>
-<div class="line"><span class="lineno"> 1650</span>        <span class="keyword">auto</span> univ = down_cast&lt;const Union &amp;&gt;(*universe).get_container();</div>
-<div class="line"><span class="lineno"> 1651</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> container_;</div>
-<div class="line"><span class="lineno"> 1652</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : univ) {</div>
-<div class="line"><span class="lineno"> 1653</span>            container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(container-&gt;set_complement(a));</div>
-<div class="line"><span class="lineno"> 1654</span>        }</div>
-<div class="line"><span class="lineno"> 1655</span>        <span class="keywordflow">return</span> SymEngine::set_union(container_);</div>
-<div class="line"><span class="lineno"> 1656</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*universe)) {</div>
-<div class="line"><span class="lineno"> 1657</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><span class="lineno"> 1658</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*universe)) {</div>
-<div class="line"><span class="lineno"> 1659</span>        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*universe);</div>
-<div class="line"><span class="lineno"> 1660</span>        set_basic container_;</div>
-<div class="line"><span class="lineno"> 1661</span>        set_basic rest;</div>
-<div class="line"><span class="lineno"> 1662</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : other.get_container()) {</div>
-<div class="line"><span class="lineno"> 1663</span>            <span class="keyword">auto</span> contain = container-&gt;contains(a);</div>
-<div class="line"><span class="lineno"> 1664</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse)) {</div>
-<div class="line"><span class="lineno"> 1665</span>                container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a);</div>
-<div class="line"><span class="lineno"> 1666</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
-<div class="line"><span class="lineno"> 1667</span>                rest.insert(a);</div>
-<div class="line"><span class="lineno"> 1668</span>            }</div>
-<div class="line"><span class="lineno"> 1669</span>        }</div>
-<div class="line"><span class="lineno"> 1670</span>        <span class="keywordflow">if</span> (rest.empty()) {</div>
-<div class="line"><span class="lineno"> 1671</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container_);</div>
-<div class="line"><span class="lineno"> 1672</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1673</span>            <span class="keywordflow">return</span> SymEngine::set_union(</div>
-<div class="line"><span class="lineno"> 1674</span>                {<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container_),</div>
-<div class="line"><span class="lineno"> 1675</span>                 make_rcp&lt;const Complement&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(rest), container)});</div>
-<div class="line"><span class="lineno"> 1676</span>        }</div>
-<div class="line"><span class="lineno"> 1677</span>    }</div>
-<div class="line"><span class="lineno"> 1678</span>    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(universe, container);</div>
-<div class="line"><span class="lineno"> 1679</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01739">1739</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1741</span>{</div>
+<div class="line"><span class="lineno"> 1742</span>    <span class="keywordflow">if</span> (is_a&lt;Union&gt;(*universe)) {</div>
+<div class="line"><span class="lineno"> 1743</span>        <span class="keyword">auto</span> univ = down_cast&lt;const Union &amp;&gt;(*universe).get_container();</div>
+<div class="line"><span class="lineno"> 1744</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> container_;</div>
+<div class="line"><span class="lineno"> 1745</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : univ) {</div>
+<div class="line"><span class="lineno"> 1746</span>            container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(container-&gt;set_complement(a));</div>
+<div class="line"><span class="lineno"> 1747</span>        }</div>
+<div class="line"><span class="lineno"> 1748</span>        <span class="keywordflow">return</span> SymEngine::set_union(container_);</div>
+<div class="line"><span class="lineno"> 1749</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*universe)) {</div>
+<div class="line"><span class="lineno"> 1750</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><span class="lineno"> 1751</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*universe)) {</div>
+<div class="line"><span class="lineno"> 1752</span>        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*universe);</div>
+<div class="line"><span class="lineno"> 1753</span>        set_basic container_;</div>
+<div class="line"><span class="lineno"> 1754</span>        set_basic rest;</div>
+<div class="line"><span class="lineno"> 1755</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : other.get_container()) {</div>
+<div class="line"><span class="lineno"> 1756</span>            <span class="keyword">auto</span> contain = container-&gt;contains(a);</div>
+<div class="line"><span class="lineno"> 1757</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse)) {</div>
+<div class="line"><span class="lineno"> 1758</span>                container_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a);</div>
+<div class="line"><span class="lineno"> 1759</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
+<div class="line"><span class="lineno"> 1760</span>                rest.insert(a);</div>
+<div class="line"><span class="lineno"> 1761</span>            }</div>
+<div class="line"><span class="lineno"> 1762</span>        }</div>
+<div class="line"><span class="lineno"> 1763</span>        <span class="keywordflow">if</span> (rest.empty()) {</div>
+<div class="line"><span class="lineno"> 1764</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container_);</div>
+<div class="line"><span class="lineno"> 1765</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno"> 1766</span>            <span class="keywordflow">return</span> SymEngine::set_union(</div>
+<div class="line"><span class="lineno"> 1767</span>                {<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(container_),</div>
+<div class="line"><span class="lineno"> 1768</span>                 make_rcp&lt;const Complement&gt;(<a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(rest), container)});</div>
+<div class="line"><span class="lineno"> 1769</span>        }</div>
+<div class="line"><span class="lineno"> 1770</span>    }</div>
+<div class="line"><span class="lineno"> 1771</span>    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(universe, container);</div>
+<div class="line"><span class="lineno"> 1772</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -30114,115 +30161,109 @@ template&lt;typename Archive &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01535">1535</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1536</span>{</div>
-<div class="line"><span class="lineno"> 1537</span>    <span class="comment">// https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection</span></div>
-<div class="line"><span class="lineno"> 1538</span>    <span class="keywordflow">if</span> (in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>())</div>
-<div class="line"><span class="lineno"> 1539</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">universalset</a>();</div>
-<div class="line"><span class="lineno"> 1540</span> </div>
-<div class="line"><span class="lineno"> 1541</span>    <span class="comment">// Global rules</span></div>
-<div class="line"><span class="lineno"> 1542</span>    <span class="comment">// If found any emptyset then return emptyset</span></div>
-<div class="line"><span class="lineno"> 1543</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> incopy;</div>
-<div class="line"><span class="lineno"> 1544</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : in) {</div>
-<div class="line"><span class="lineno"> 1545</span>        <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*input)) {</div>
-<div class="line"><span class="lineno"> 1546</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
-<div class="line"><span class="lineno"> 1547</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;UniversalSet&gt;(*input)) {</div>
-<div class="line"><span class="lineno"> 1548</span>            incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(input);</div>
-<div class="line"><span class="lineno"> 1549</span>        }</div>
-<div class="line"><span class="lineno"> 1550</span>    }</div>
-<div class="line"><span class="lineno"> 1551</span> </div>
-<div class="line"><span class="lineno"> 1552</span>    <span class="keywordflow">if</span> (incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>())</div>
-<div class="line"><span class="lineno"> 1553</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">universalset</a>();</div>
-<div class="line"><span class="lineno"> 1554</span>    <span class="keywordflow">if</span> (incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() == 1)</div>
-<div class="line"><span class="lineno"> 1555</span>        <span class="keywordflow">return</span> *incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
-<div class="line"><span class="lineno"> 1556</span> </div>
-<div class="line"><span class="lineno"> 1557</span>    <span class="comment">// Handle finite sets</span></div>
-<div class="line"><span class="lineno"> 1558</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Set&gt;</a>&gt; fsets, othersets;</div>
-<div class="line"><span class="lineno"> 1559</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : incopy) {</div>
-<div class="line"><span class="lineno"> 1560</span>        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*input)) {</div>
-<div class="line"><span class="lineno"> 1561</span>            fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
-<div class="line"><span class="lineno"> 1562</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1563</span>            othersets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
-<div class="line"><span class="lineno"> 1564</span>        }</div>
-<div class="line"><span class="lineno"> 1565</span>    }</div>
-<div class="line"><span class="lineno"> 1566</span>    <span class="keywordflow">if</span> (fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() != 0) {</div>
-<div class="line"><span class="lineno"> 1567</span>        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
-<div class="line"><span class="lineno"> 1568</span>        <span class="keyword">auto</span> cont = fs.get_container();</div>
-<div class="line"><span class="lineno"> 1569</span>        fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
-<div class="line"><span class="lineno"> 1570</span>        set_basic finalfs;</div>
-<div class="line"><span class="lineno"> 1571</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fselement : cont) {</div>
-<div class="line"><span class="lineno"> 1572</span>            <span class="keywordtype">bool</span> present = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno"> 1573</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fset : fsets) {</div>
-<div class="line"><span class="lineno"> 1574</span>                <span class="keyword">auto</span> contain = fset-&gt;contains(fselement);</div>
-<div class="line"><span class="lineno"> 1575</span>                <span class="keywordflow">if</span> (not(<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse))) {</div>
-<div class="line"><span class="lineno"> 1576</span>                    <span class="keywordflow">throw</span> SymEngineException(</div>
-<div class="line"><span class="lineno"> 1577</span>                        <span class="stringliteral">&quot;Not implemented Intersection class&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1578</span>                }</div>
-<div class="line"><span class="lineno"> 1579</span>                present = present and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue);</div>
-<div class="line"><span class="lineno"> 1580</span>            }</div>
-<div class="line"><span class="lineno"> 1581</span>            <span class="keywordflow">if</span> (!present)</div>
-<div class="line"><span class="lineno"> 1582</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno"> 1583</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;oset : othersets) {</div>
-<div class="line"><span class="lineno"> 1584</span>                <span class="keyword">auto</span> contain = oset-&gt;contains(fselement);</div>
-<div class="line"><span class="lineno"> 1585</span>                <span class="keywordflow">if</span> (not(<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse))) {</div>
-<div class="line"><span class="lineno"> 1586</span>                    <span class="keywordflow">throw</span> SymEngineException(</div>
-<div class="line"><span class="lineno"> 1587</span>                        <span class="stringliteral">&quot;Not implemented Intersection class&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1588</span>                }</div>
-<div class="line"><span class="lineno"> 1589</span>                present = present and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue);</div>
-<div class="line"><span class="lineno"> 1590</span>            }</div>
-<div class="line"><span class="lineno"> 1591</span>            <span class="keywordflow">if</span> (present)</div>
-<div class="line"><span class="lineno"> 1592</span>                finalfs.insert(fselement);</div>
-<div class="line"><span class="lineno"> 1593</span>        }</div>
-<div class="line"><span class="lineno"> 1594</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(finalfs);</div>
-<div class="line"><span class="lineno"> 1595</span>    }</div>
-<div class="line"><span class="lineno"> 1596</span> </div>
-<div class="line"><span class="lineno"> 1597</span>    <span class="comment">// If any of the sets is union, then return a Union of Intersections</span></div>
-<div class="line"><span class="lineno"> 1598</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
-<div class="line"><span class="lineno"> 1599</span>        <span class="keywordflow">if</span> (is_a&lt;Union&gt;(**it)) {</div>
-<div class="line"><span class="lineno"> 1600</span>            <span class="keyword">auto</span> container = down_cast&lt;const Union &amp;&gt;(**it).get_container();</div>
-<div class="line"><span class="lineno"> 1601</span>            incopy.erase(it);</div>
-<div class="line"><span class="lineno"> 1602</span>            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
-<div class="line"><span class="lineno"> 1603</span>            set_set usets;</div>
-<div class="line"><span class="lineno"> 1604</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c : container) {</div>
-<div class="line"><span class="lineno"> 1605</span>                usets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(SymEngine::set_intersection({c, other}));</div>
-<div class="line"><span class="lineno"> 1606</span>            }</div>
-<div class="line"><span class="lineno"> 1607</span>            <span class="keywordflow">return</span> SymEngine::set_union(usets);</div>
-<div class="line"><span class="lineno"> 1608</span>        }</div>
-<div class="line"><span class="lineno"> 1609</span>    }</div>
-<div class="line"><span class="lineno"> 1610</span> </div>
-<div class="line"><span class="lineno"> 1611</span>    <span class="comment">// Simplify and return a `Complement` if any of the sets is a complement</span></div>
-<div class="line"><span class="lineno"> 1612</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
-<div class="line"><span class="lineno"> 1613</span>        <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(**it)) {</div>
-<div class="line"><span class="lineno"> 1614</span>            <span class="keyword">auto</span> container</div>
-<div class="line"><span class="lineno"> 1615</span>                = down_cast&lt;const Complement &amp;&gt;(**it).get_container();</div>
-<div class="line"><span class="lineno"> 1616</span>            <span class="keyword">auto</span> universe = down_cast&lt;const Complement &amp;&gt;(**it).get_universe();</div>
-<div class="line"><span class="lineno"> 1617</span>            incopy.erase(it);</div>
-<div class="line"><span class="lineno"> 1618</span>            incopy.insert(universe);</div>
-<div class="line"><span class="lineno"> 1619</span>            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
-<div class="line"><span class="lineno"> 1620</span>            <span class="keywordflow">return</span> SymEngine::set_complement(other, container);</div>
-<div class="line"><span class="lineno"> 1621</span>        }</div>
-<div class="line"><span class="lineno"> 1622</span>    }</div>
-<div class="line"><span class="lineno"> 1623</span> </div>
-<div class="line"><span class="lineno"> 1624</span>    <span class="comment">// Pair-wise rules</span></div>
-<div class="line"><span class="lineno"> 1625</span>    <span class="comment">// TO-DO: needs the following improvement once Intersection</span></div>
-<div class="line"><span class="lineno"> 1626</span>    <span class="comment">// class is implemented.</span></div>
-<div class="line"><span class="lineno"> 1627</span>    <span class="comment">// input_oset if found to be not simplified, then skip this</span></div>
-<div class="line"><span class="lineno"> 1628</span>    <span class="comment">// pair.</span></div>
-<div class="line"><span class="lineno"> 1629</span>    <span class="keywordflow">if</span> (incopy.size() &gt; 1) {</div>
-<div class="line"><span class="lineno"> 1630</span>        <span class="keyword">auto</span> temp = *incopy.begin();</div>
-<div class="line"><span class="lineno"> 1631</span>        <span class="keyword">auto</span> it = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a>(incopy.begin());</div>
-<div class="line"><span class="lineno"> 1632</span>        <span class="keywordflow">for</span> (; it != incopy.end(); ++it) {</div>
-<div class="line"><span class="lineno"> 1633</span>            temp = temp-&gt;set_intersection(*it);</div>
-<div class="line"><span class="lineno"> 1634</span>        }</div>
-<div class="line"><span class="lineno"> 1635</span>        <span class="keywordflow">return</span> temp;</div>
-<div class="line"><span class="lineno"> 1636</span>    }</div>
-<div class="line"><span class="lineno"> 1637</span> </div>
-<div class="line"><span class="lineno"> 1638</span>    <span class="keywordflow">if</span> (incopy.size() == 1) {</div>
-<div class="line"><span class="lineno"> 1639</span>        <span class="keywordflow">return</span> *incopy.begin();</div>
-<div class="line"><span class="lineno"> 1640</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno"> 1641</span>        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Not implemented Intersection class&quot;</span>);</div>
-<div class="line"><span class="lineno"> 1642</span>    }</div>
-<div class="line"><span class="lineno"> 1643</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01634">1634</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1635</span>{</div>
+<div class="line"><span class="lineno"> 1636</span>    <span class="comment">// https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection</span></div>
+<div class="line"><span class="lineno"> 1637</span>    <span class="keywordflow">if</span> (in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>())</div>
+<div class="line"><span class="lineno"> 1638</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">universalset</a>();</div>
+<div class="line"><span class="lineno"> 1639</span> </div>
+<div class="line"><span class="lineno"> 1640</span>    <span class="comment">// Global rules</span></div>
+<div class="line"><span class="lineno"> 1641</span>    <span class="comment">// If found any emptyset then return emptyset</span></div>
+<div class="line"><span class="lineno"> 1642</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> incopy;</div>
+<div class="line"><span class="lineno"> 1643</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : in) {</div>
+<div class="line"><span class="lineno"> 1644</span>        <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*input)) {</div>
+<div class="line"><span class="lineno"> 1645</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1701788a930ea06ed8acaa1edde0e261">emptyset</a>();</div>
+<div class="line"><span class="lineno"> 1646</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;UniversalSet&gt;(*input)) {</div>
+<div class="line"><span class="lineno"> 1647</span>            incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(input);</div>
+<div class="line"><span class="lineno"> 1648</span>        }</div>
+<div class="line"><span class="lineno"> 1649</span>    }</div>
+<div class="line"><span class="lineno"> 1650</span> </div>
+<div class="line"><span class="lineno"> 1651</span>    <span class="keywordflow">if</span> (incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>())</div>
+<div class="line"><span class="lineno"> 1652</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a293577237f4457095754cba4461360a6">universalset</a>();</div>
+<div class="line"><span class="lineno"> 1653</span>    <span class="keywordflow">if</span> (incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() == 1)</div>
+<div class="line"><span class="lineno"> 1654</span>        <span class="keywordflow">return</span> *incopy.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
+<div class="line"><span class="lineno"> 1655</span> </div>
+<div class="line"><span class="lineno"> 1656</span>    <span class="comment">// Handle finite sets</span></div>
+<div class="line"><span class="lineno"> 1657</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Set&gt;</a>&gt; fsets, othersets;</div>
+<div class="line"><span class="lineno"> 1658</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : incopy) {</div>
+<div class="line"><span class="lineno"> 1659</span>        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*input)) {</div>
+<div class="line"><span class="lineno"> 1660</span>            fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
+<div class="line"><span class="lineno"> 1661</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno"> 1662</span>            othersets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
+<div class="line"><span class="lineno"> 1663</span>        }</div>
+<div class="line"><span class="lineno"> 1664</span>    }</div>
+<div class="line"><span class="lineno"> 1665</span>    <span class="keywordflow">if</span> (fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() != 0) {</div>
+<div class="line"><span class="lineno"> 1666</span>        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><span class="lineno"> 1667</span>        <span class="keyword">auto</span> cont = fs.get_container();</div>
+<div class="line"><span class="lineno"> 1668</span>        fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(fsets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><span class="lineno"> 1669</span>        set_basic finalfs;</div>
+<div class="line"><span class="lineno"> 1670</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fselement : cont) {</div>
+<div class="line"><span class="lineno"> 1671</span>            <span class="keywordtype">bool</span> present = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno"> 1672</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fset : fsets) {</div>
+<div class="line"><span class="lineno"> 1673</span>                <span class="keyword">auto</span> contain = fset-&gt;contains(fselement);</div>
+<div class="line"><span class="lineno"> 1674</span>                <span class="keywordflow">if</span> (not(<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse))) {</div>
+<div class="line"><span class="lineno"> 1675</span>                    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
+<div class="line"><span class="lineno"> 1676</span>                }</div>
+<div class="line"><span class="lineno"> 1677</span>                present = present and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue);</div>
+<div class="line"><span class="lineno"> 1678</span>            }</div>
+<div class="line"><span class="lineno"> 1679</span>            <span class="keywordflow">if</span> (!present)</div>
+<div class="line"><span class="lineno"> 1680</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno"> 1681</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;oset : othersets) {</div>
+<div class="line"><span class="lineno"> 1682</span>                <span class="keyword">auto</span> contain = oset-&gt;contains(fselement);</div>
+<div class="line"><span class="lineno"> 1683</span>                <span class="keywordflow">if</span> (not(<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue) or <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse))) {</div>
+<div class="line"><span class="lineno"> 1684</span>                    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
+<div class="line"><span class="lineno"> 1685</span>                }</div>
+<div class="line"><span class="lineno"> 1686</span>                present = present and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue);</div>
+<div class="line"><span class="lineno"> 1687</span>            }</div>
+<div class="line"><span class="lineno"> 1688</span>            <span class="keywordflow">if</span> (present)</div>
+<div class="line"><span class="lineno"> 1689</span>                finalfs.insert(fselement);</div>
+<div class="line"><span class="lineno"> 1690</span>        }</div>
+<div class="line"><span class="lineno"> 1691</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(finalfs);</div>
+<div class="line"><span class="lineno"> 1692</span>    }</div>
+<div class="line"><span class="lineno"> 1693</span> </div>
+<div class="line"><span class="lineno"> 1694</span>    <span class="comment">// If any of the sets is union, then return a Union of Intersections</span></div>
+<div class="line"><span class="lineno"> 1695</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
+<div class="line"><span class="lineno"> 1696</span>        <span class="keywordflow">if</span> (is_a&lt;Union&gt;(**it)) {</div>
+<div class="line"><span class="lineno"> 1697</span>            <span class="keyword">auto</span> container = down_cast&lt;const Union &amp;&gt;(**it).get_container();</div>
+<div class="line"><span class="lineno"> 1698</span>            incopy.erase(it);</div>
+<div class="line"><span class="lineno"> 1699</span>            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
+<div class="line"><span class="lineno"> 1700</span>            set_set usets;</div>
+<div class="line"><span class="lineno"> 1701</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c : container) {</div>
+<div class="line"><span class="lineno"> 1702</span>                usets.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(SymEngine::set_intersection({c, other}));</div>
+<div class="line"><span class="lineno"> 1703</span>            }</div>
+<div class="line"><span class="lineno"> 1704</span>            <span class="keywordflow">return</span> SymEngine::set_union(usets);</div>
+<div class="line"><span class="lineno"> 1705</span>        }</div>
+<div class="line"><span class="lineno"> 1706</span>    }</div>
+<div class="line"><span class="lineno"> 1707</span> </div>
+<div class="line"><span class="lineno"> 1708</span>    <span class="comment">// Simplify and return a `Complement` if any of the sets is a complement</span></div>
+<div class="line"><span class="lineno"> 1709</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
+<div class="line"><span class="lineno"> 1710</span>        <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(**it)) {</div>
+<div class="line"><span class="lineno"> 1711</span>            <span class="keyword">auto</span> container</div>
+<div class="line"><span class="lineno"> 1712</span>                = down_cast&lt;const Complement &amp;&gt;(**it).get_container();</div>
+<div class="line"><span class="lineno"> 1713</span>            <span class="keyword">auto</span> universe = down_cast&lt;const Complement &amp;&gt;(**it).get_universe();</div>
+<div class="line"><span class="lineno"> 1714</span>            incopy.erase(it);</div>
+<div class="line"><span class="lineno"> 1715</span>            incopy.insert(universe);</div>
+<div class="line"><span class="lineno"> 1716</span>            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
+<div class="line"><span class="lineno"> 1717</span>            <span class="keywordflow">return</span> SymEngine::set_complement(other, container);</div>
+<div class="line"><span class="lineno"> 1718</span>        }</div>
+<div class="line"><span class="lineno"> 1719</span>    }</div>
+<div class="line"><span class="lineno"> 1720</span> </div>
+<div class="line"><span class="lineno"> 1721</span>    <span class="comment">// Pair-wise rules</span></div>
+<div class="line"><span class="lineno"> 1722</span>    <span class="comment">// TO-DO: needs the following improvement once Intersection</span></div>
+<div class="line"><span class="lineno"> 1723</span>    <span class="comment">// class is implemented.</span></div>
+<div class="line"><span class="lineno"> 1724</span>    <span class="comment">// input_oset if found to be not simplified, then skip this</span></div>
+<div class="line"><span class="lineno"> 1725</span>    <span class="comment">// pair.</span></div>
+<div class="line"><span class="lineno"> 1726</span>    <span class="keywordflow">if</span> (incopy.size() &gt; 1) {</div>
+<div class="line"><span class="lineno"> 1727</span>        <span class="keyword">auto</span> temp = *incopy.begin();</div>
+<div class="line"><span class="lineno"> 1728</span>        <span class="keyword">auto</span> it = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a>(incopy.begin());</div>
+<div class="line"><span class="lineno"> 1729</span>        <span class="keywordflow">for</span> (; it != incopy.end(); ++it) {</div>
+<div class="line"><span class="lineno"> 1730</span>            temp = temp-&gt;set_intersection(*it);</div>
+<div class="line"><span class="lineno"> 1731</span>        }</div>
+<div class="line"><span class="lineno"> 1732</span>        <span class="keywordflow">return</span> temp;</div>
+<div class="line"><span class="lineno"> 1733</span>    }</div>
+<div class="line"><span class="lineno"> 1734</span> </div>
+<div class="line"><span class="lineno"> 1735</span>    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
+<div class="line"><span class="lineno"> 1736</span>}</div>
 <div class="ttc" id="aempty_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/empty.html">std::set::empty</a></div><div class="ttdeci">T empty(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -30243,34 +30284,34 @@ template&lt;typename Archive &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01506">1506</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1507</span>{</div>
-<div class="line"><span class="lineno"> 1508</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> input;</div>
-<div class="line"><span class="lineno"> 1509</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> combined_FiniteSet;</div>
-<div class="line"><span class="lineno"> 1510</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); it != in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++it) {</div>
-<div class="line"><span class="lineno"> 1511</span>        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(**it)) {</div>
-<div class="line"><span class="lineno"> 1512</span>            <span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(**it);</div>
-<div class="line"><span class="lineno"> 1513</span>            combined_FiniteSet.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(other.get_container().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(),</div>
-<div class="line"><span class="lineno"> 1514</span>                                      other.get_container().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
-<div class="line"><span class="lineno"> 1515</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(**it)) {</div>
-<div class="line"><span class="lineno"> 1516</span>            <span class="keywordflow">return</span> universalset();</div>
-<div class="line"><span class="lineno"> 1517</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;EmptySet&gt;(**it)) {</div>
-<div class="line"><span class="lineno"> 1518</span>            input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(*it);</div>
-<div class="line"><span class="lineno"> 1519</span>        }</div>
-<div class="line"><span class="lineno"> 1520</span>    }</div>
-<div class="line"><span class="lineno"> 1521</span>    <span class="keywordflow">if</span> (input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
-<div class="line"><span class="lineno"> 1522</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(combined_FiniteSet);</div>
-<div class="line"><span class="lineno"> 1523</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() == 1 &amp;&amp; combined_FiniteSet.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
-<div class="line"><span class="lineno"> 1524</span>        <span class="keywordflow">return</span> *input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
-<div class="line"><span class="lineno"> 1525</span>    }</div>
-<div class="line"><span class="lineno"> 1526</span>    <span class="comment">// Now we rely on respective containers&#39; own rules</span></div>
-<div class="line"><span class="lineno"> 1527</span>    <span class="comment">// TODO: Improve it to O(log n)</span></div>
-<div class="line"><span class="lineno"> 1528</span>    RCP&lt;const Set&gt; combined_Rest = <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(combined_FiniteSet);</div>
-<div class="line"><span class="lineno"> 1529</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); it != input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++it) {</div>
-<div class="line"><span class="lineno"> 1530</span>        combined_Rest = combined_Rest-&gt;set_union(*it);</div>
-<div class="line"><span class="lineno"> 1531</span>    }</div>
-<div class="line"><span class="lineno"> 1532</span>    <span class="keywordflow">return</span> combined_Rest;</div>
-<div class="line"><span class="lineno"> 1533</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01605">1605</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1606</span>{</div>
+<div class="line"><span class="lineno"> 1607</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> input;</div>
+<div class="line"><span class="lineno"> 1608</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> combined_FiniteSet;</div>
+<div class="line"><span class="lineno"> 1609</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); it != in.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++it) {</div>
+<div class="line"><span class="lineno"> 1610</span>        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(**it)) {</div>
+<div class="line"><span class="lineno"> 1611</span>            <span class="keyword">const</span> <a class="code hl_class" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(**it);</div>
+<div class="line"><span class="lineno"> 1612</span>            combined_FiniteSet.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(other.get_container().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(),</div>
+<div class="line"><span class="lineno"> 1613</span>                                      other.get_container().<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
+<div class="line"><span class="lineno"> 1614</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(**it)) {</div>
+<div class="line"><span class="lineno"> 1615</span>            <span class="keywordflow">return</span> universalset();</div>
+<div class="line"><span class="lineno"> 1616</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;EmptySet&gt;(**it)) {</div>
+<div class="line"><span class="lineno"> 1617</span>            input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(*it);</div>
+<div class="line"><span class="lineno"> 1618</span>        }</div>
+<div class="line"><span class="lineno"> 1619</span>    }</div>
+<div class="line"><span class="lineno"> 1620</span>    <span class="keywordflow">if</span> (input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
+<div class="line"><span class="lineno"> 1621</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(combined_FiniteSet);</div>
+<div class="line"><span class="lineno"> 1622</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() == 1 &amp;&amp; combined_FiniteSet.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
+<div class="line"><span class="lineno"> 1623</span>        <span class="keywordflow">return</span> *input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>();</div>
+<div class="line"><span class="lineno"> 1624</span>    }</div>
+<div class="line"><span class="lineno"> 1625</span>    <span class="comment">// Now we rely on respective containers&#39; own rules</span></div>
+<div class="line"><span class="lineno"> 1626</span>    <span class="comment">// TODO: Improve it to O(log n)</span></div>
+<div class="line"><span class="lineno"> 1627</span>    RCP&lt;const Set&gt; combined_Rest = <a class="code hl_function" href="namespaceSymEngine.html#a1b8c2b9f1acc378637f8246c26f2a44d">finiteset</a>(combined_FiniteSet);</div>
+<div class="line"><span class="lineno"> 1628</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); it != input.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++it) {</div>
+<div class="line"><span class="lineno"> 1629</span>        combined_Rest = combined_Rest-&gt;set_union(*it);</div>
+<div class="line"><span class="lineno"> 1630</span>    }</div>
+<div class="line"><span class="lineno"> 1631</span>    <span class="keywordflow">return</span> combined_Rest;</div>
+<div class="line"><span class="lineno"> 1632</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1FiniteSet_html"><div class="ttname"><a href="classSymEngine_1_1FiniteSet.html">SymEngine::FiniteSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00115">sets.h:116</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -31434,11 +31475,11 @@ square root of <code>x</code> </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01179">1179</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1180</span>{</div>
-<div class="line"><span class="lineno"> 1181</span>    <a class="code hl_class" href="classSymEngine_1_1StrPrinter.html">StrPrinter</a> strPrinter;</div>
-<div class="line"><span class="lineno"> 1182</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><span class="lineno"> 1183</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01188">1188</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1189</span>{</div>
+<div class="line"><span class="lineno"> 1190</span>    <a class="code hl_class" href="classSymEngine_1_1StrPrinter.html">StrPrinter</a> strPrinter;</div>
+<div class="line"><span class="lineno"> 1191</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><span class="lineno"> 1192</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1StrPrinter_html"><div class="ttname"><a href="classSymEngine_1_1StrPrinter.html">SymEngine::StrPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8h_source.html#l00106">strprinter.h:107</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -31459,10 +31500,10 @@ square root of <code>x</code> </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01185">1185</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1186</span>{</div>
-<div class="line"><span class="lineno"> 1187</span>    <span class="keywordflow">return</span> x.__str__();</div>
-<div class="line"><span class="lineno"> 1188</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l01194">1194</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno"> 1195</span>{</div>
+<div class="line"><span class="lineno"> 1196</span>    <span class="keywordflow">return</span> x.__str__();</div>
+<div class="line"><span class="lineno"> 1197</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -32912,11 +32953,11 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00704">704</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  705</span>{</div>
-<div class="line"><span class="lineno">  706</span>    <a class="code hl_class" href="classSymEngine_1_1UnicodePrinter.html">UnicodePrinter</a> printer;</div>
-<div class="line"><span class="lineno">  707</span>    <span class="keywordflow">return</span> printer.apply(x).get_string();</div>
-<div class="line"><span class="lineno">  708</span>}</div>
+<p class="definition">Definition at line <a class="el" href="unicode_8cpp_source.html#l00717">717</a> of file <a class="el" href="unicode_8cpp_source.html">unicode.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  718</span>{</div>
+<div class="line"><span class="lineno">  719</span>    <a class="code hl_class" href="classSymEngine_1_1UnicodePrinter.html">UnicodePrinter</a> printer;</div>
+<div class="line"><span class="lineno">  720</span>    <span class="keywordflow">return</span> printer.apply(x).get_string();</div>
+<div class="line"><span class="lineno">  721</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1UnicodePrinter_html"><div class="ttname"><a href="classSymEngine_1_1UnicodePrinter.html">SymEngine::UnicodePrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="unicode_8h_source.html#l00010">unicode.h:11</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -33771,10 +33812,10 @@ template&lt;typename T , typename  = enable_if_t&lt;std::is_arithmetic&lt;T&gt;:
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const UniversalSet&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00568">568</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  569</span>{</div>
-<div class="line"><span class="lineno">  570</span>    <span class="keywordflow">return</span> UniversalSet::getInstance();</div>
-<div class="line"><span class="lineno">  571</span>}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8h_source.html#l00596">596</a> of file <a class="el" href="sets_8h_source.html">sets.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  597</span>{</div>
+<div class="line"><span class="lineno">  598</span>    <span class="keywordflow">return</span> UniversalSet::getInstance();</div>
+<div class="line"><span class="lineno">  599</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -33918,60 +33959,60 @@ template&lt;typename P &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00725">725</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  726</span>{</div>
-<div class="line"><span class="lineno">  727</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  728</span>    <span class="comment">// bool variable needed to take care of cases like -5, -x, -3*x etc.</span></div>
-<div class="line"><span class="lineno">  729</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  730</span>    <span class="comment">// we iterate over the map in reverse order so that highest degree gets</span></div>
-<div class="line"><span class="lineno">  731</span>    <span class="comment">// printed first</span></div>
-<div class="line"><span class="lineno">  732</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = x.obegin(); it != x.oend(); ++it) {</div>
-<div class="line"><span class="lineno">  733</span>        <span class="keyword">auto</span> m = it-&gt;second;</div>
-<div class="line"><span class="lineno">  734</span>        <span class="comment">// if exponent is 0, then print only coefficient</span></div>
-<div class="line"><span class="lineno">  735</span>        <span class="keywordflow">if</span> (it-&gt;first == 0) {</div>
-<div class="line"><span class="lineno">  736</span>            <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  737</span>                s &lt;&lt; m;</div>
-<div class="line"><span class="lineno">  738</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  739</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(m);</div>
-<div class="line"><span class="lineno">  740</span>            }</div>
-<div class="line"><span class="lineno">  741</span>            first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  742</span>            <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  743</span>        }</div>
-<div class="line"><span class="lineno">  744</span>        <span class="comment">// if the coefficient of a term is +1 or -1</span></div>
-<div class="line"><span class="lineno">  745</span>        <span class="keywordflow">if</span> (mp_abs(m) == 1) {</div>
-<div class="line"><span class="lineno">  746</span>            <span class="comment">// in cases of -x, print -x</span></div>
-<div class="line"><span class="lineno">  747</span>            <span class="comment">// in cases of x**2 - x, print - x</span></div>
-<div class="line"><span class="lineno">  748</span>            <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  749</span>                <span class="keywordflow">if</span> (m == -1)</div>
-<div class="line"><span class="lineno">  750</span>                    s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
-<div class="line"><span class="lineno">  751</span>                s &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  752</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  753</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><span class="lineno">  754</span>                  &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  755</span>            }</div>
-<div class="line"><span class="lineno">  756</span>        }</div>
-<div class="line"><span class="lineno">  757</span>        <span class="comment">// same logic is followed as above</span></div>
-<div class="line"><span class="lineno">  758</span>        <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  759</span>            <span class="comment">// in cases of -2*x, print -2*x</span></div>
-<div class="line"><span class="lineno">  760</span>            <span class="comment">// in cases of x**2 - 2*x, print - 2*x</span></div>
-<div class="line"><span class="lineno">  761</span>            <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  762</span>                s &lt;&lt; m &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  763</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  764</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(m) &lt;&lt; <span class="stringliteral">&quot;*&quot;</span></div>
-<div class="line"><span class="lineno">  765</span>                  &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  766</span>            }</div>
-<div class="line"><span class="lineno">  767</span>        }</div>
-<div class="line"><span class="lineno">  768</span>        <span class="comment">// if exponent is not 1, print the exponent;</span></div>
-<div class="line"><span class="lineno">  769</span>        <span class="keywordflow">if</span> (it-&gt;first != 1) {</div>
-<div class="line"><span class="lineno">  770</span>            s &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; it-&gt;first;</div>
-<div class="line"><span class="lineno">  771</span>        }</div>
-<div class="line"><span class="lineno">  772</span>        <span class="comment">// corner cases of only first term handled successfully, switch the bool</span></div>
-<div class="line"><span class="lineno">  773</span>        first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  774</span>    }</div>
-<div class="line"><span class="lineno">  775</span>    <span class="keywordflow">if</span> (x.size() == 0)</div>
-<div class="line"><span class="lineno">  776</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
-<div class="line"><span class="lineno">  777</span>    <span class="keywordflow">return</span> s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  778</span>}</div>
+<p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00734">734</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  735</span>{</div>
+<div class="line"><span class="lineno">  736</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  737</span>    <span class="comment">// bool variable needed to take care of cases like -5, -x, -3*x etc.</span></div>
+<div class="line"><span class="lineno">  738</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  739</span>    <span class="comment">// we iterate over the map in reverse order so that highest degree gets</span></div>
+<div class="line"><span class="lineno">  740</span>    <span class="comment">// printed first</span></div>
+<div class="line"><span class="lineno">  741</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = x.obegin(); it != x.oend(); ++it) {</div>
+<div class="line"><span class="lineno">  742</span>        <span class="keyword">auto</span> m = it-&gt;second;</div>
+<div class="line"><span class="lineno">  743</span>        <span class="comment">// if exponent is 0, then print only coefficient</span></div>
+<div class="line"><span class="lineno">  744</span>        <span class="keywordflow">if</span> (it-&gt;first == 0) {</div>
+<div class="line"><span class="lineno">  745</span>            <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  746</span>                s &lt;&lt; m;</div>
+<div class="line"><span class="lineno">  747</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  748</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(m);</div>
+<div class="line"><span class="lineno">  749</span>            }</div>
+<div class="line"><span class="lineno">  750</span>            first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  751</span>            <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  752</span>        }</div>
+<div class="line"><span class="lineno">  753</span>        <span class="comment">// if the coefficient of a term is +1 or -1</span></div>
+<div class="line"><span class="lineno">  754</span>        <span class="keywordflow">if</span> (mp_abs(m) == 1) {</div>
+<div class="line"><span class="lineno">  755</span>            <span class="comment">// in cases of -x, print -x</span></div>
+<div class="line"><span class="lineno">  756</span>            <span class="comment">// in cases of x**2 - x, print - x</span></div>
+<div class="line"><span class="lineno">  757</span>            <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  758</span>                <span class="keywordflow">if</span> (m == -1)</div>
+<div class="line"><span class="lineno">  759</span>                    s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
+<div class="line"><span class="lineno">  760</span>                s &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  761</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  762</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><span class="lineno">  763</span>                  &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  764</span>            }</div>
+<div class="line"><span class="lineno">  765</span>        }</div>
+<div class="line"><span class="lineno">  766</span>        <span class="comment">// same logic is followed as above</span></div>
+<div class="line"><span class="lineno">  767</span>        <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  768</span>            <span class="comment">// in cases of -2*x, print -2*x</span></div>
+<div class="line"><span class="lineno">  769</span>            <span class="comment">// in cases of x**2 - 2*x, print - 2*x</span></div>
+<div class="line"><span class="lineno">  770</span>            <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  771</span>                s &lt;&lt; m &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  772</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  773</span>                s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(m) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(m) &lt;&lt; <span class="stringliteral">&quot;*&quot;</span></div>
+<div class="line"><span class="lineno">  774</span>                  &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  775</span>            }</div>
+<div class="line"><span class="lineno">  776</span>        }</div>
+<div class="line"><span class="lineno">  777</span>        <span class="comment">// if exponent is not 1, print the exponent;</span></div>
+<div class="line"><span class="lineno">  778</span>        <span class="keywordflow">if</span> (it-&gt;first != 1) {</div>
+<div class="line"><span class="lineno">  779</span>            s &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; it-&gt;first;</div>
+<div class="line"><span class="lineno">  780</span>        }</div>
+<div class="line"><span class="lineno">  781</span>        <span class="comment">// corner cases of only first term handled successfully, switch the bool</span></div>
+<div class="line"><span class="lineno">  782</span>        first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  783</span>    }</div>
+<div class="line"><span class="lineno">  784</span>    <span class="keywordflow">if</span> (x.size() == 0)</div>
+<div class="line"><span class="lineno">  785</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><span class="lineno">  786</span>    <span class="keywordflow">return</span> s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  787</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
