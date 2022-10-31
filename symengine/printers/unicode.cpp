@@ -327,6 +327,19 @@ void UnicodePrinter::bvisit(const Union &x)
     box_ = box;
 }
 
+void UnicodePrinter::bvisit(const Intersection &x)
+{
+    auto container = x.get_container();
+    StringBox box = apply(*container.begin());
+    StringBox op(U8(" \u2229 "), 3);
+    for (auto it = ++(container.begin()); it != container.end(); ++it) {
+        box.add_right(op);
+        StringBox next = apply(*it);
+        box.add_right(next);
+    }
+    box_ = box;
+}
+
 void UnicodePrinter::bvisit(const Complement &x)
 {
     StringBox box = apply(*x.get_universe());

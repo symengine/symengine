@@ -42,6 +42,7 @@ public:
     void bvisit(const FiniteSet &x);
     void bvisit(const ConditionSet &x);
     void bvisit(const Union &x);
+    void bvisit(const Intersection &x);
     void bvisit(const Complement &x);
     void bvisit(const ImageSet &x);
     void bvisit(const Contains &x);

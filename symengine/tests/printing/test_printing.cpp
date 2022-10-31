@@ -69,6 +69,7 @@ using SymEngine::real_double;
 using SymEngine::reals;
 using SymEngine::Set;
 using SymEngine::set_complement;
+using SymEngine::set_intersection;
 using SymEngine::set_union;
 using SymEngine::Sin;
 using SymEngine::StringBox;
@@ -765,6 +766,11 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> i2 = integer(2);
     l = tuple({i1, i2});
     CHECK(latex(*l) == "\\left(1, 2\\right)");
+
+    auto s1 = reals();
+    auto s2 = finiteset({symbol("x")});
+    auto s3 = set_intersection({s1, s2});
+    CHECK(latex(*s3) == "\\mathbb{R} \\cap \\left{x\\right}");
 }
 
 TEST_CASE("test_latex_matrix_printing()", "[latex]")
@@ -851,6 +857,9 @@ TEST_CASE("test_unicode()", "[unicode]")
     CHECK(s
           == U8("    \u23A71\u23AB\n\u2124 \u222A \u23A8\u2015\u23AC\n    "
                 u8"\u23A93\u23AD"));
+
+    s = unicode(*set_intersection({reals(), finiteset({symbol("x")})}));
+    CHECK(s == U8("\u211D \u2229 {x}"));
 
     s = unicode(*set_complement(reals(), rationals()));
     CHECK(s == U8("\u211D \\ \u211A"));
