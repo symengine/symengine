@@ -17,7 +17,8 @@ jobs:
             WITH_LLVM: 12
             USE_GLIBCXX_DEBUG: yes
             OS: ubuntu-22.04
-            CC: gcc
+            CC: gcc-12
+            EXTRA_APT_PACKAGES: g++-12 gcc-12 gcov-12
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -138,9 +139,9 @@ jobs:
           - BUILD_TYPE: Release
             WITH_BENCHMARKS: yes
             WITH_BENCHMARKS_GOOGLE: yes
-            WITH_LLVM: 12
+            WITH_LLVM: 14
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 3.8

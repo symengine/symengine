@@ -18,6 +18,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
             LLVM_ORG_VER=15.0.4  # should match llvm-X-dev package.
             export CC=clang-15
             export CXX=clang++-15
+            export PATH="/usr/lib/llvm-15/bin:$PATH"  # llvm-config
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
             ( \
               set -xe; \
