@@ -3,6 +3,7 @@
 
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_casts.h>
+#include <cstring>
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 #include <symengine/mp_wrapper.h>
 #endif
@@ -123,9 +124,11 @@ inline void mp_set_str(integer_class &i, const std::string &a)
 
 inline std::string mp_get_hex_str(const integer_class &i)
 {
+    void (*freefunc)(void *, size_t);
+    mp_get_memory_functions(NULL, NULL, &freefunc);
     char *c = mpz_get_str(NULL, 16, i.get_mpz_t());
     std::string r = std::string(c);
-    free(c);
+    freefunc(c, strlen(c) + 1);
     return r;
 }
 
@@ -476,9 +479,12 @@ inline void mp_set_str(integer_class &i, const std::string &a)
 
 inline std::string mp_get_hex_str(const integer_class &i)
 {
+
+    void (*freefunc)(void *, size_t);
+    mp_get_memory_functions(NULL, NULL, &freefunc);
     char *c = mpz_get_str(NULL, 16, i.get_mpz_view());
     std::string r = std::string(c);
-    free(c);
+    freefunc(c, strlen(c) + 1);
     return r;
 }
 
@@ -612,9 +618,11 @@ inline void mp_set_str(fmpz_wrapper &i, const std::string &a)
 
 inline std::string mp_get_hex_str(const fmpz_wrapper &i)
 {
+    void (*freefunc)(void *, size_t);
+    mp_get_memory_functions(NULL, NULL, &freefunc);
     char *c = fmpz_get_str(NULL, 16, i.get_fmpz_t());
     std::string r = std::string(c);
-    free(c);
+    freefunc(c, strlen(c) + 1);
     return r;
 }
 
