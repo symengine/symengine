@@ -18,7 +18,7 @@ jobs:
             USE_GLIBCXX_DEBUG: yes
             OS: ubuntu-22.04
             CC: gcc-12
-            EXTRA_APT_PACKAGES: g++-12 gcc-12 gcov-12
+            EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -74,9 +74,10 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
             WITH_LATEST_GCC: yes
-            CC: gcc
+            CC: gcc-12
+            EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           # Debug build shared lib (with BFD)
           - BUILD_TYPE: Debug

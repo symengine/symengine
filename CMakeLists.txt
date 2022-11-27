@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
 
-project(symengine)
+project(symengine LANGUAGES C CXX)
 
 set(SYMENGINE_MAJOR_VERSION 0)
 set(SYMENGINE_MINOR_VERSION 9)
