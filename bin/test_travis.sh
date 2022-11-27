@@ -182,8 +182,8 @@ SymEngine_DIR="${our_install_dir}/lib/cmake/symengine"
 if [[ "${MSYSTEM}" != "" ]]; then
   SymEngine_DIR="${our_install_dir}/CMake"
 fi
-compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=LINK`
 
 ${CXX} -std=c++0x $compile_flags expand1.cpp -o expand1 $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
