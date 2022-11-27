@@ -16,7 +16,7 @@ jobs:
             WITH_MPC: yes
             WITH_LLVM: 12
             USE_GLIBCXX_DEBUG: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
             CC: gcc
 
           - BUILD_TYPE: Debug
