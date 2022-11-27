@@ -174,13 +174,16 @@ jobs:
             OS: ubuntu-20.04
 
           - BUILD_TYPE: Debug
+            WITH_SANITIZE: memory
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
             WITH_COTIRE: no
-            WITH_SANITIZE: memory
+            WITH_LLVM: 15
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main'
+            EXTRA_APT_PACKAGES: clang-15 llvm-15
             INTEGER_CLASS: boostmp
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc

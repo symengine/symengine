@@ -15,49 +15,27 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
         elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
-            LLVM_ORG_VER=12.0.1  # should match llvm-X-dev package.
-            export CC=clang-12
-            export CXX=clang++-12
+            LLVM_ORG_VER=15.0.4  # should match llvm-X-dev package.
+            export CC=clang-15
+            export CXX=clang++-15
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
             ( \
               set -xe; \
               mkdir /tmp/build_libcxx; \
-              cd /tmp/build_libcxx; \
               cmake \
                   -DCMAKE_BUILD_TYPE=Debug \
+                  -DCMAKE_INSTALL_PREFIX=/opt/libcxx-15-msan \
                   -DLLVM_USE_SANITIZER=MemoryWithOrigins \
-                  -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-12 \
-                  -DCMAKE_INSTALL_PREFIX=/opt/libcxx-12-msan \
-                  /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx; \
-              echo "Current dir:"; \
-              pwd; \
-              cmake --build . -j 2 ;\
-              cmake --build . --target install
+                  -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;compiler-rt" \
+                  -S /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/runtimes \
+                  -B /tmp/build_libcxx; \
+              cmake --build /tmp/build_libcxx -j 2 ;\
+              cmake --build /tmp/build_libcxx --target install
             )
-            echo "=== Building libc++abi instrumented with memory-sanitizer"
-            ( \
-              set -xe;
-              mkdir /tmp/build_libcxxabi; \
-              cd /tmp/build_libcxxabi; \
-              cmake \
-                  -DCMAKE_BUILD_TYPE=Debug \
-                  -DCMAKE_MODULE_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx/cmake/Modules \
-                  -DLLVM_USE_SANITIZER=MemoryWithOrigins  \
-                  -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-12 \
-                  -DCMAKE_INSTALL_PREFIX=/opt/libcxx-12-msan  \
-                  -DLIBCXXABI_LIBCXX_INCLUDES=/opt/libcxx-12-msan/include/c++/v1 \
-                  -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx \
-                  /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi; \
-              echo "Current dir:"; \
-              pwd; \
-              cmake --build . -j 2; \
-              cmake --build . --target install
-              cp /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxxabi/include/* /opt/libcxx-12-msan/include/
-            )
-            if [ ! -e /opt/libcxx-12-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
-            export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
-            export CXXFLAGS="$CXXFLAGS -fsanitize-memory-track-origins=2 -stdlib=libc++ -I/opt/libcxx-12-msan/include -I/opt/libcxx-12-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
-            export LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 $LDFLAGS -Wl,-rpath,/opt/libcxx-12-msan/lib -L/opt/libcxx-12-msan/lib -lc++abi"
+            if [ ! -e /opt/libcxx-15-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
+            export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-15/bin/llvm-symbolizer
+            export CXXFLAGS="$CXXFLAGS -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -nostdinc++ -isystem /opt/libcxx-15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
+            export LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval $LDFLAGS -Wl,-rpath,/opt/libcxx-15-msan/lib -L/opt/libcxx-15-msan/lib -lc++abi"
         else
             2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
             exit 1

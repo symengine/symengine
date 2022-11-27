@@ -103,6 +103,8 @@ if [[ "${WITH_LLVM}" == "12" ]]; then
     export LLVM_DIR=/usr/lib/llvm-12/share/llvm/
 elif [[ "${WITH_LLVM}" == "13" ]]; then
     export LLVM_DIR=/usr/lib/llvm-13/share/llvm/
+elif [[ "${WITH_LLVM}" == "15" ]]; then
+    export LLVM_DIR=/usr/lib/llvm-15/share/llvm/
 elif [[ ! -z "${WITH_LLVM}" ]]; then
     conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
     export LLVM_DIR=$our_install_dir/share/llvm/
