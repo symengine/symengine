@@ -41,7 +41,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CXX=g++-12
         export GCOV_EXECUTABLE=gcov-12
     else
-        if grep grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
+        if grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
             export CC=gcc-11
             export CXX=g++-11
             export GCOV_EXECUTABLE=gcov-11

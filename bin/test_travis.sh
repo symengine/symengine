@@ -32,6 +32,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
                   -DCMAKE_INSTALL_PREFIX=$LIBCXX_15_MSAN_ROOT \
                   -DLLVM_USE_SANITIZER=MemoryWithOrigins \
                   -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;compiler-rt" \
+                  -DCOMPILER_RT_BUILD_ORC=OFF \
                   -S /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/runtimes \
                   -B /tmp/build_libcxx; \
               cmake --build /tmp/build_libcxx --verbose -j 2 ;\
@@ -202,10 +203,11 @@ SymEngine_DIR="${our_install_dir}/lib/cmake/symengine"
 if [[ "${MSYSTEM}" != "" ]]; then
   SymEngine_DIR="${our_install_dir}/CMake"
 fi
+cmake --version
 compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=COMPILE`
 link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=LINK`
 
-${CXX} -std=c++0x $compile_flags expand1.cpp -o expand1 $link_flags
+${CXX} -std=c++14 $compile_flags expand1.cpp -o expand1 $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./expand1
 
