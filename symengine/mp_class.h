@@ -990,6 +990,9 @@ inline rational_class mp_abs(const rational_class &i)
 
 inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
 {
+    if (b == 0) {
+        return (a == 0);
+    }
     return a % b == 0;
 }
 

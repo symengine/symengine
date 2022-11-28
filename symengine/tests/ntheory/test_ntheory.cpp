@@ -231,6 +231,11 @@ TEST_CASE("test_factor(): ntheory", "[ntheory]")
     REQUIRE(not divides(*i1001, *i6));
     REQUIRE(factor(outArg(f), *i900) > 0);
     REQUIRE(divides(*i900, *f));
+
+    REQUIRE(divides(*one, *one));
+    REQUIRE(divides(*zero, *one));
+    REQUIRE(!divides(*one, *zero));
+    REQUIRE(divides(*zero, *zero));
 }
 
 TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
