@@ -51,6 +51,14 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
  -O1 \
  -glldb \
  -DHAVE_GCC_ABI_DEMANGLE=no"
+            export CFLAGS="$CFLAGS \
+ -fsanitize=memory \
+ -fsanitize-memory-track-origins=2 \
+ -fsanitize-memory-param-retval \
+ -fno-omit-frame-pointer \
+ -fno-optimize-sibling-calls \
+ -O1 \
+ -glldb"
             export LDFLAGS="$LDFLAGS \
  -fsanitize=memory \
  -fsanitize-memory-track-origins=2 \
