@@ -122,14 +122,14 @@ jobs:
             WITH_PIRANHA: yes
             BUILD_SHARED_LIBS: yes
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_PIRANHA: yes
             INTEGER_CLASS: piranha
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes

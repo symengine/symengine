@@ -3,13 +3,18 @@
 if [[ "$(uname)" == "Linux" ]]; then
   sudo apt update
   sudo apt install software-properties-common
-  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  if ! grep grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
+      sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  fi
   if [[ "$EXTRA_APT_REPOSITORY" != "" ]]; then
       sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 15CF4D18AF4F7421
       sudo add-apt-repository "$EXTRA_APT_REPOSITORY"
   fi
   sudo apt update
-  sudo apt install binutils-dev g++ $EXTRA_APT_PACKAGES
+  if [[ "$WITH_LATEST_GCC" != "yes" ]]; then
+      EXTRA_APT_PACKAGES="$EXTRA_APT_PACKAGES g++"
+  fi
+  sudo apt install binutils-dev $EXTRA_APT_PACKAGES
 fi
 
 if [[ "$TEST_CLANG_FORMAT" == "yes" ]]; then
