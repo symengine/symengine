@@ -157,9 +157,7 @@ void StrPrinter::bvisit(const Infty &x)
 
 void StrPrinter::bvisit(const NaN &x)
 {
-    std::ostringstream s;
-    s << "nan";
-    str_ = s.str();
+    str_ = "nan";
 }
 
 void StrPrinter::bvisit(const Integer &x)
