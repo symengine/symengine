@@ -1156,9 +1156,7 @@ void JuliaStrPrinter::bvisit(const Constant &x)
 
 void JuliaStrPrinter::bvisit(const NaN &x)
 {
-    std::ostringstream s;
-    s << "NaN";
-    str_ = s.str();
+    str_ = "NaN";
 }
 
 void JuliaStrPrinter::bvisit(const Infty &x)
