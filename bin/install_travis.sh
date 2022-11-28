@@ -41,9 +41,15 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
         export CXX=g++-12
         export GCOV_EXECUTABLE=gcov-12
     else
-        export CC=gcc-9
-        export CXX=g++-9
-        export GCOV_EXECUTABLE=gcov-9
+        if grep grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
+            export CC=gcc-11
+            export CXX=g++-11
+            export GCOV_EXECUTABLE=gcov-11
+        else
+            export CC=gcc-9
+            export CXX=g++-9
+            export GCOV_EXECUTABLE=gcov-9
+        fi
     fi
 fi
 
@@ -77,7 +83,7 @@ if [[ "${WITH_BENCHMARKS_GOOGLE}" == "yes" ]]; then
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs piranha=0.11 cmake=3.25.0"
+    conda_pkgs="$conda_pkgs piranha=0.11 cmake=3.24.3"
 fi
 
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
@@ -107,7 +113,7 @@ elif [[ "${WITH_LLVM}" == "13" ]]; then
 elif [[ "${WITH_LLVM}" == "15" ]]; then
     export LLVM_DIR=/usr/lib/llvm-15/share/llvm/
 elif [[ ! -z "${WITH_LLVM}" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.25.0"
+    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
     export LLVM_DIR=$our_install_dir/share/llvm/
 fi
 

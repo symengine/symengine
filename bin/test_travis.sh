@@ -26,7 +26,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
             ( \
               set -xe; \
               mkdir /tmp/build_libcxx; \
-              cmake \
+              CXXFLAGS="$CXXFLAGS -nostdinc++" cmake \
                   $cmake_line \
                   -DCMAKE_BUILD_TYPE=Debug \
                   -DCMAKE_INSTALL_PREFIX=$LIBCXX_15_MSAN_ROOT \
