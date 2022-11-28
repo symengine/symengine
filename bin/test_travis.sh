@@ -6,37 +6,57 @@ set -e
 set -x
 
 if [[ "${WITH_SANITIZE}" != "" ]]; then
-        export CXXFLAGS="-fsanitize=${WITH_SANITIZE}"
+        export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
         if [[ "${WITH_SANITIZE}" == "address" ]]; then
             export ASAN_OPTIONS=symbolize=1,detect_leaks=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
         elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
             export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
-            export CXXFLAGS="-std=c++20"
+            export CXXFLAGS="$CXXFLAGS -std=c++20"
         elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
-            LLVM_ORG_VER=15.0.4  # should match llvm-X-dev package.
+            LLVM_ORG_VER=15.0.5  # should match llvm-X-dev package.
             export CC=clang-15
             export CXX=clang++-15
-            export PATH="/usr/lib/llvm-15/bin:$PATH"  # llvm-config
+            which $CXX
+            cmake_line="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+            LIBCXX_15_MSAN_ROOT=/opt/libcxx-15-msan
+            # export PATH="/usr/lib/llvm-15/bin:$PATH"  # llvm-config
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
             ( \
               set -xe; \
               mkdir /tmp/build_libcxx; \
               cmake \
+                  $cmake_line \
                   -DCMAKE_BUILD_TYPE=Debug \
-                  -DCMAKE_INSTALL_PREFIX=/opt/libcxx-15-msan \
+                  -DCMAKE_INSTALL_PREFIX=$LIBCXX_15_MSAN_ROOT \
                   -DLLVM_USE_SANITIZER=MemoryWithOrigins \
                   -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;compiler-rt" \
                   -S /tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/runtimes \
                   -B /tmp/build_libcxx; \
-              cmake --build /tmp/build_libcxx -j 2 ;\
+              cmake --build /tmp/build_libcxx --verbose -j 2 ;\
               cmake --build /tmp/build_libcxx --target install
             )
-            if [ ! -e /opt/libcxx-15-msan/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
+            if [ ! -e $LIBCXX_15_MSAN_ROOT/lib/libc++abi.so ]; then >&2 echo "Failed to build libcxx++abi?"; exit 1; fi
             export MSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-15/bin/llvm-symbolizer
-            export CXXFLAGS="$CXXFLAGS -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -nostdinc++ -isystem /opt/libcxx-15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
-            export LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval $LDFLAGS -Wl,-rpath,/opt/libcxx-15-msan/lib -L/opt/libcxx-15-msan/lib -lc++abi"
+            export CXXFLAGS="$CXXFLAGS \
+ -fsanitize-memory-track-origins=2 \
+ -fsanitize-memory-param-retval \
+ -stdlib=libc++ \
+ -nostdinc++ \
+ -isystem $LIBCXX_15_MSAN_ROOT/include/c++/v1 \
+ -fno-omit-frame-pointer \
+ -fno-optimize-sibling-calls \
+ -O1 \
+ -glldb \
+ -DHAVE_GCC_ABI_DEMANGLE=no"
+            export LDFLAGS="$LDFLAGS \
+ -fsanitize=memory \
+ -fsanitize-memory-track-origins=2 \
+ -fsanitize-memory-param-retval $LDFLAGS \
+ -Wl,-rpath,$LIBCXX_15_MSAN_ROOT/lib \
+ -L$LIBCXX_15_MSAN_ROOT/lib \
+ -lc++abi"
         else
             2>&1 echo "Unknown sanitize option: ${WITH_SANITIZE}"
             exit 1
@@ -65,7 +85,7 @@ if [[ "${TEST_IN_TREE}" != "yes" ]]; then
 fi
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
+cmake_line="$cmake_line -DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi

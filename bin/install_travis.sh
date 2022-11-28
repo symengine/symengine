@@ -67,6 +67,7 @@ conda info -a
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
     conda_pkgs="$conda_pkgs boost=1.80.0";
+    export CXXFLAGS="-Wno-error=cpp"  # boost-1.80 pragma-warns about 1.82 req. c++14
 else
     conda_pkgs="$conda_pkgs gmp=6.2.1";
 fi
