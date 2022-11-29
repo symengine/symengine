@@ -213,8 +213,11 @@ if [[ "${MSYSTEM}" != "" ]]; then
 fi
 cmake --version
 compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=LINK | sed 's/Boost::/boost_/g'`
-
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=LINK`
+if [[ $link_flags == *-lBoost::* ]]; then
+    # work-around for "Boost::" being part of library names
+    link_flags="-L${our_install_dir}/lib `echo $link_flags | sed 's/Boost::/boost_/g'`"
+fi
 ${CXX} -std=c++14 $compile_flags expand1.cpp -o expand1 $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./expand1
