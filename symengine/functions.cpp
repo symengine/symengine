@@ -2025,6 +2025,48 @@ int Derivative::compare(const Basic &o) const
     return cmp;
 }
 
+Integral::Integral(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+    : arg_{arg}, x_{x}
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg, x))
+}
+
+bool Integral::is_canonical(const RCP<const Basic> &arg,
+                            const RCP<const Basic> &x) const
+{
+    if (not is_a<Symbol>(*x))
+        return false;
+    return true;
+}
+
+hash_t Integral::__hash__() const
+{
+    hash_t seed = SYMENGINE_INTEGRAL;
+    hash_combine<Basic>(seed, *arg_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool Integral::__eq__(const Basic &o) const
+{
+    if (is_a<Integral>(o) and eq(*arg_, *(down_cast<const Integral &>(o).arg_))
+        and eq(*x_, *(down_cast<const Integral &>(o).x_)))
+        return true;
+    return false;
+}
+
+int Integral::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Integral>(o))
+    const Integral &s = down_cast<const Integral &>(o);
+    int cmp = arg_->__cmp__(*(s.arg_));
+    if (cmp != 0)
+        return cmp;
+    cmp = x_->__cmp__(*(s.x_));
+    return cmp;
+}
+
 // Subs class
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
