@@ -37,13 +37,19 @@ export GCOV_EXECUTABLE=gcov
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-        export CC=gcc-10
-        export CXX=g++-10
-        export GCOV_EXECUTABLE=gcov-10
+        export CC=gcc-12
+        export CXX=g++-12
+        export GCOV_EXECUTABLE=gcov-12
     else
-        export CC=gcc-9
-        export CXX=g++-9
-        export GCOV_EXECUTABLE=gcov-9
+        if grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
+            export CC=gcc-11
+            export CXX=g++-11
+            export GCOV_EXECUTABLE=gcov-11
+        else
+            export CC=gcc-9
+            export CXX=g++-9
+            export GCOV_EXECUTABLE=gcov-9
+        fi
     fi
 fi
 
@@ -66,45 +72,48 @@ conda config --add channels conda-forge --force
 conda info -a
 
 if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
-    conda_pkgs="$conda_pkgs boost=1.68";
+    conda_pkgs="$conda_pkgs boost=1.80.0";
+    export CXXFLAGS="-Wno-error=cpp"  # boost-1.80 pragma-warns about 1.82 req. c++14
 else
-    conda_pkgs="$conda_pkgs gmp=6.1.1";
+    conda_pkgs="$conda_pkgs gmp=6.2.1";
 fi
 
 if [[ "${WITH_BENCHMARKS_GOOGLE}" == "yes" ]]; then
-    conda_pkgs="${conda_pkgs} benchmark=1.6.1"
+    conda_pkgs="${conda_pkgs} benchmark=1.7.1"
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs piranha=0.8 cmake=3.10.0"
+    conda_pkgs="$conda_pkgs piranha=0.11 cmake=3.24.3"
 fi
 
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs primesieve=5.6.0"
+    conda_pkgs="$conda_pkgs primesieve=8.0"
 fi
 
 if [[ "${WITH_MPFR}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs mpfr=3.1.4"
+    conda_pkgs="$conda_pkgs mpfr=4.1.0"
 fi
 
 if [[ "${WITH_MPC}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs mpc=1.0.3"
+    conda_pkgs="$conda_pkgs mpc=1.2.1"
 fi
 
 if [[ "${WITH_FLINT}" == "yes" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
-    conda_pkgs="$conda_pkgs libflint=2.5.2"
+    conda_pkgs="$conda_pkgs libflint=2.9.0"
 fi
 
 if [[ "${WITH_ARB}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs arb=2.8.1"
+    conda_pkgs="$conda_pkgs arb=2.23.0"
 fi
 
 if [[ "${WITH_LLVM}" == "12" ]]; then
     export LLVM_DIR=/usr/lib/llvm-12/share/llvm/
 elif [[ "${WITH_LLVM}" == "13" ]]; then
     export LLVM_DIR=/usr/lib/llvm-13/share/llvm/
+elif [[ "${WITH_LLVM}" == "15" ]]; then
+    export LLVM_DIR=/usr/lib/llvm-15/share/llvm/
 elif [[ ! -z "${WITH_LLVM}" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.10.0"
+    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
     export LLVM_DIR=$our_install_dir/share/llvm/
 fi
 
@@ -113,7 +122,7 @@ if [[ "${WITH_ECM}" == "yes" ]]; then
 fi
 
 if [[ "${BUILD_DOXYGEN}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs doxygen=1.8.13"
+    conda_pkgs="$conda_pkgs doxygen=1.9.5"
 fi
 
 if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
@@ -144,7 +153,7 @@ ccache --show-stats
 
 if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
     git clone https://github.com/wbhart/flint2;
-    cd flint2 && git checkout v2.8.0 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j2 install && cd ..;
+    cd flint2 && git checkout v2.9.0 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j2 install && cd ..;
 fi
 
 cd $SOURCE_DIR;

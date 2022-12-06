@@ -16,8 +16,9 @@ jobs:
             WITH_MPC: yes
             WITH_LLVM: 12
             USE_GLIBCXX_DEBUG: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
             CC: gcc
+            EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -73,9 +74,10 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
             WITH_LATEST_GCC: yes
             CC: gcc
+            EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           # Debug build shared lib (with BFD)
           - BUILD_TYPE: Debug
@@ -120,14 +122,14 @@ jobs:
             WITH_PIRANHA: yes
             BUILD_SHARED_LIBS: yes
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_PIRANHA: yes
             INTEGER_CLASS: piranha
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -138,9 +140,9 @@ jobs:
           - BUILD_TYPE: Release
             WITH_BENCHMARKS: yes
             WITH_BENCHMARKS_GOOGLE: yes
-            WITH_LLVM: 12
+            WITH_LLVM: 14
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 3.8
@@ -174,13 +176,15 @@ jobs:
             OS: ubuntu-20.04
 
           - BUILD_TYPE: Debug
+            WITH_SANITIZE: memory
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
             WITH_COTIRE: no
-            WITH_SANITIZE: memory
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main'
+            EXTRA_APT_PACKAGES: clang-15
             INTEGER_CLASS: boostmp
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc
