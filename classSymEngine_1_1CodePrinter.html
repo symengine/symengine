@@ -473,10 +473,10 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00198">198</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1066</span>{</div>
-<div class="line"><span class="lineno"> 1067</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno"> 1068</span>    <span class="keywordflow">return</span> str_;</div>
-<div class="line"><span class="lineno"> 1069</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno"> 1064</span>{</div>
+<div class="line"><span class="lineno"> 1065</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno"> 1066</span>    <span class="keywordflow">return</span> str_;</div>
+<div class="line"><span class="lineno"> 1067</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -497,10 +497,10 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00196">196</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1060</span>{</div>
-<div class="line"><span class="lineno"> 1061</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno"> 1062</span>    <span class="keywordflow">return</span> str_;</div>
-<div class="line"><span class="lineno"> 1063</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno"> 1058</span>{</div>
+<div class="line"><span class="lineno"> 1059</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno"> 1060</span>    <span class="keywordflow">return</span> str_;</div>
+<div class="line"><span class="lineno"> 1061</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -521,16 +521,16 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00197">197</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  864</span>{</div>
-<div class="line"><span class="lineno">  865</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  866</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = d.begin(); p != d.end(); p++) {</div>
-<div class="line"><span class="lineno">  867</span>        <span class="keywordflow">if</span> (p != d.begin()) {</div>
-<div class="line"><span class="lineno">  868</span>            o &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
-<div class="line"><span class="lineno">  869</span>        }</div>
-<div class="line"><span class="lineno">  870</span>        o &lt;&lt; this-&gt;apply(*p);</div>
-<div class="line"><span class="lineno">  871</span>    }</div>
-<div class="line"><span class="lineno">  872</span>    <span class="keywordflow">return</span> o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  873</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  862</span>{</div>
+<div class="line"><span class="lineno">  863</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  864</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = d.begin(); p != d.end(); p++) {</div>
+<div class="line"><span class="lineno">  865</span>        <span class="keywordflow">if</span> (p != d.begin()) {</div>
+<div class="line"><span class="lineno">  866</span>            o &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
+<div class="line"><span class="lineno">  867</span>        }</div>
+<div class="line"><span class="lineno">  868</span>        o &lt;&lt; this-&gt;apply(*p);</div>
+<div class="line"><span class="lineno">  869</span>    }</div>
+<div class="line"><span class="lineno">  870</span>    <span class="keywordflow">return</span> o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  871</span>}</div>
 <div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
 </div><!-- fragment -->
@@ -578,40 +578,40 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00154">154</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  520</span>{</div>
-<div class="line"><span class="lineno">  521</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  522</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  523</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;RCP&lt;const Basic&gt;</a>, RCP&lt;const Number&gt;, PrinterBasicCmp&gt; dict(</div>
-<div class="line"><span class="lineno">  524</span>        x.get_dict().begin(), x.get_dict().end());</div>
-<div class="line"><span class="lineno">  525</span> </div>
-<div class="line"><span class="lineno">  526</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(x.get_coef()), *zero)) {</div>
-<div class="line"><span class="lineno">  527</span>        o &lt;&lt; this-&gt;apply(x.get_coef());</div>
-<div class="line"><span class="lineno">  528</span>        first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  529</span>    }</div>
-<div class="line"><span class="lineno">  530</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : dict) {</div>
-<div class="line"><span class="lineno">  531</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> t;</div>
-<div class="line"><span class="lineno">  532</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *one)) {</div>
-<div class="line"><span class="lineno">  533</span>            t = parenthesizeLT(p.first, PrecedenceEnum::Add);</div>
-<div class="line"><span class="lineno">  534</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *minus_one)) {</div>
-<div class="line"><span class="lineno">  535</span>            t = <span class="stringliteral">&quot;-&quot;</span> + parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
-<div class="line"><span class="lineno">  536</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  537</span>            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + print_mul()</div>
-<div class="line"><span class="lineno">  538</span>                + parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
-<div class="line"><span class="lineno">  539</span>        }</div>
-<div class="line"><span class="lineno">  540</span> </div>
-<div class="line"><span class="lineno">  541</span>        <span class="keywordflow">if</span> (not first) {</div>
-<div class="line"><span class="lineno">  542</span>            <span class="keywordflow">if</span> (t[0] == <span class="charliteral">&#39;-&#39;</span>) {</div>
-<div class="line"><span class="lineno">  543</span>                o &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; t.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1);</div>
-<div class="line"><span class="lineno">  544</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  545</span>                o &lt;&lt; <span class="stringliteral">&quot; + &quot;</span> &lt;&lt; t;</div>
-<div class="line"><span class="lineno">  546</span>            }</div>
-<div class="line"><span class="lineno">  547</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  548</span>            o &lt;&lt; t;</div>
-<div class="line"><span class="lineno">  549</span>            first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  550</span>        }</div>
-<div class="line"><span class="lineno">  551</span>    }</div>
-<div class="line"><span class="lineno">  552</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  553</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  518</span>{</div>
+<div class="line"><span class="lineno">  519</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  520</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  521</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;RCP&lt;const Basic&gt;</a>, RCP&lt;const Number&gt;, PrinterBasicCmp&gt; dict(</div>
+<div class="line"><span class="lineno">  522</span>        x.get_dict().begin(), x.get_dict().end());</div>
+<div class="line"><span class="lineno">  523</span> </div>
+<div class="line"><span class="lineno">  524</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(x.get_coef()), *zero)) {</div>
+<div class="line"><span class="lineno">  525</span>        o &lt;&lt; this-&gt;apply(x.get_coef());</div>
+<div class="line"><span class="lineno">  526</span>        first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  527</span>    }</div>
+<div class="line"><span class="lineno">  528</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : dict) {</div>
+<div class="line"><span class="lineno">  529</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> t;</div>
+<div class="line"><span class="lineno">  530</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *one)) {</div>
+<div class="line"><span class="lineno">  531</span>            t = parenthesizeLT(p.first, PrecedenceEnum::Add);</div>
+<div class="line"><span class="lineno">  532</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *minus_one)) {</div>
+<div class="line"><span class="lineno">  533</span>            t = <span class="stringliteral">&quot;-&quot;</span> + parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
+<div class="line"><span class="lineno">  534</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  535</span>            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + print_mul()</div>
+<div class="line"><span class="lineno">  536</span>                + parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
+<div class="line"><span class="lineno">  537</span>        }</div>
+<div class="line"><span class="lineno">  538</span> </div>
+<div class="line"><span class="lineno">  539</span>        <span class="keywordflow">if</span> (not first) {</div>
+<div class="line"><span class="lineno">  540</span>            <span class="keywordflow">if</span> (t[0] == <span class="charliteral">&#39;-&#39;</span>) {</div>
+<div class="line"><span class="lineno">  541</span>                o &lt;&lt; <span class="stringliteral">&quot; - &quot;</span> &lt;&lt; t.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1);</div>
+<div class="line"><span class="lineno">  542</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  543</span>                o &lt;&lt; <span class="stringliteral">&quot; + &quot;</span> &lt;&lt; t;</div>
+<div class="line"><span class="lineno">  544</span>            }</div>
+<div class="line"><span class="lineno">  545</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  546</span>            o &lt;&lt; t;</div>
+<div class="line"><span class="lineno">  547</span>            first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  548</span>        }</div>
+<div class="line"><span class="lineno">  549</span>    }</div>
+<div class="line"><span class="lineno">  550</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  551</span>}</div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
@@ -637,17 +637,17 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00146">146</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  299</span>{</div>
-<div class="line"><span class="lineno">  300</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  301</span>    <span class="keyword">auto</span> container = x.get_container();</div>
-<div class="line"><span class="lineno">  302</span>    s &lt;&lt; <span class="stringliteral">&quot;And(&quot;</span>;</div>
-<div class="line"><span class="lineno">  303</span>    s &lt;&lt; apply(*container.begin());</div>
-<div class="line"><span class="lineno">  304</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
-<div class="line"><span class="lineno">  305</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
-<div class="line"><span class="lineno">  306</span>    }</div>
-<div class="line"><span class="lineno">  307</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  308</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  309</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  297</span>{</div>
+<div class="line"><span class="lineno">  298</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  299</span>    <span class="keyword">auto</span> container = x.get_container();</div>
+<div class="line"><span class="lineno">  300</span>    s &lt;&lt; <span class="stringliteral">&quot;And(&quot;</span>;</div>
+<div class="line"><span class="lineno">  301</span>    s &lt;&lt; apply(*container.begin());</div>
+<div class="line"><span class="lineno">  302</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
+<div class="line"><span class="lineno">  303</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
+<div class="line"><span class="lineno">  304</span>    }</div>
+<div class="line"><span class="lineno">  305</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  306</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  307</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -717,13 +717,13 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00145">145</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  290</span>{</div>
-<div class="line"><span class="lineno">  291</span>    <span class="keywordflow">if</span> (x.get_val()) {</div>
-<div class="line"><span class="lineno">  292</span>        str_ = <span class="stringliteral">&quot;True&quot;</span>;</div>
-<div class="line"><span class="lineno">  293</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  294</span>        str_ = <span class="stringliteral">&quot;False&quot;</span>;</div>
-<div class="line"><span class="lineno">  295</span>    }</div>
-<div class="line"><span class="lineno">  296</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  288</span>{</div>
+<div class="line"><span class="lineno">  289</span>    <span class="keywordflow">if</span> (x.get_val()) {</div>
+<div class="line"><span class="lineno">  290</span>        str_ = <span class="stringliteral">&quot;True&quot;</span>;</div>
+<div class="line"><span class="lineno">  291</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  292</span>        str_ = <span class="stringliteral">&quot;False&quot;</span>;</div>
+<div class="line"><span class="lineno">  293</span>    }</div>
+<div class="line"><span class="lineno">  294</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -769,12 +769,12 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00152">152</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  431</span>{</div>
-<div class="line"><span class="lineno">  432</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  433</span>    s &lt;&lt; apply(*x.get_universe());</div>
-<div class="line"><span class="lineno">  434</span>    s &lt;&lt; <span class="stringliteral">&quot; \\ &quot;</span> &lt;&lt; apply(*x.get_container());</div>
-<div class="line"><span class="lineno">  435</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  436</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  429</span>{</div>
+<div class="line"><span class="lineno">  430</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  431</span>    s &lt;&lt; apply(*x.get_universe());</div>
+<div class="line"><span class="lineno">  432</span>    s &lt;&lt; <span class="stringliteral">&quot; \\ &quot;</span> &lt;&lt; apply(*x.get_container());</div>
+<div class="line"><span class="lineno">  433</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  434</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -795,37 +795,37 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00131">131</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  180</span>{</div>
-<div class="line"><span class="lineno">  181</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  182</span>    <span class="keywordflow">if</span> (x.real_ != 0) {</div>
-<div class="line"><span class="lineno">  183</span>        s &lt;&lt; x.real_;</div>
-<div class="line"><span class="lineno">  184</span>        <span class="comment">// Since Complex is in canonical form, imaginary_ is not 0.</span></div>
-<div class="line"><span class="lineno">  185</span>        <span class="keywordflow">if</span> (mp_sign(x.imaginary_) == 1) {</div>
-<div class="line"><span class="lineno">  186</span>            s &lt;&lt; <span class="stringliteral">&quot; + &quot;</span>;</div>
-<div class="line"><span class="lineno">  187</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  188</span>            s &lt;&lt; <span class="stringliteral">&quot; - &quot;</span>;</div>
-<div class="line"><span class="lineno">  189</span>        }</div>
-<div class="line"><span class="lineno">  190</span>        <span class="comment">// If imaginary_ is not 1 or -1, print the absolute value</span></div>
-<div class="line"><span class="lineno">  191</span>        <span class="keywordflow">if</span> (x.imaginary_ != mp_sign(x.imaginary_)) {</div>
-<div class="line"><span class="lineno">  192</span>            s &lt;&lt; mp_abs(x.imaginary_);</div>
-<div class="line"><span class="lineno">  193</span>            s &lt;&lt; print_mul() &lt;&lt; get_imag_symbol();</div>
-<div class="line"><span class="lineno">  194</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  195</span>            s &lt;&lt; <span class="stringliteral">&quot;I&quot;</span>;</div>
-<div class="line"><span class="lineno">  196</span>        }</div>
-<div class="line"><span class="lineno">  197</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  198</span>        <span class="keywordflow">if</span> (x.imaginary_ != mp_sign(x.imaginary_)) {</div>
-<div class="line"><span class="lineno">  199</span>            s &lt;&lt; x.imaginary_;</div>
-<div class="line"><span class="lineno">  200</span>            s &lt;&lt; print_mul() &lt;&lt; get_imag_symbol();</div>
-<div class="line"><span class="lineno">  201</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  202</span>            <span class="keywordflow">if</span> (mp_sign(x.imaginary_) == 1) {</div>
-<div class="line"><span class="lineno">  203</span>                s &lt;&lt; get_imag_symbol();</div>
-<div class="line"><span class="lineno">  204</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  205</span>                s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span> &lt;&lt; get_imag_symbol();</div>
-<div class="line"><span class="lineno">  206</span>            }</div>
-<div class="line"><span class="lineno">  207</span>        }</div>
-<div class="line"><span class="lineno">  208</span>    }</div>
-<div class="line"><span class="lineno">  209</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  210</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  178</span>{</div>
+<div class="line"><span class="lineno">  179</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  180</span>    <span class="keywordflow">if</span> (x.real_ != 0) {</div>
+<div class="line"><span class="lineno">  181</span>        s &lt;&lt; x.real_;</div>
+<div class="line"><span class="lineno">  182</span>        <span class="comment">// Since Complex is in canonical form, imaginary_ is not 0.</span></div>
+<div class="line"><span class="lineno">  183</span>        <span class="keywordflow">if</span> (mp_sign(x.imaginary_) == 1) {</div>
+<div class="line"><span class="lineno">  184</span>            s &lt;&lt; <span class="stringliteral">&quot; + &quot;</span>;</div>
+<div class="line"><span class="lineno">  185</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  186</span>            s &lt;&lt; <span class="stringliteral">&quot; - &quot;</span>;</div>
+<div class="line"><span class="lineno">  187</span>        }</div>
+<div class="line"><span class="lineno">  188</span>        <span class="comment">// If imaginary_ is not 1 or -1, print the absolute value</span></div>
+<div class="line"><span class="lineno">  189</span>        <span class="keywordflow">if</span> (x.imaginary_ != mp_sign(x.imaginary_)) {</div>
+<div class="line"><span class="lineno">  190</span>            s &lt;&lt; mp_abs(x.imaginary_);</div>
+<div class="line"><span class="lineno">  191</span>            s &lt;&lt; print_mul() &lt;&lt; get_imag_symbol();</div>
+<div class="line"><span class="lineno">  192</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  193</span>            s &lt;&lt; <span class="stringliteral">&quot;I&quot;</span>;</div>
+<div class="line"><span class="lineno">  194</span>        }</div>
+<div class="line"><span class="lineno">  195</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  196</span>        <span class="keywordflow">if</span> (x.imaginary_ != mp_sign(x.imaginary_)) {</div>
+<div class="line"><span class="lineno">  197</span>            s &lt;&lt; x.imaginary_;</div>
+<div class="line"><span class="lineno">  198</span>            s &lt;&lt; print_mul() &lt;&lt; get_imag_symbol();</div>
+<div class="line"><span class="lineno">  199</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  200</span>            <span class="keywordflow">if</span> (mp_sign(x.imaginary_) == 1) {</div>
+<div class="line"><span class="lineno">  201</span>                s &lt;&lt; get_imag_symbol();</div>
+<div class="line"><span class="lineno">  202</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  203</span>                s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span> &lt;&lt; get_imag_symbol();</div>
+<div class="line"><span class="lineno">  204</span>            }</div>
+<div class="line"><span class="lineno">  205</span>        }</div>
+<div class="line"><span class="lineno">  206</span>    }</div>
+<div class="line"><span class="lineno">  207</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  208</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -869,16 +869,16 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00182">182</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  235</span>{</div>
-<div class="line"><span class="lineno">  236</span>    str_ = print_double(x.i.real());</div>
-<div class="line"><span class="lineno">  237</span>    <span class="keywordflow">if</span> (x.i.imag() &lt; 0) {</div>
-<div class="line"><span class="lineno">  238</span>        str_ += <span class="stringliteral">&quot; - &quot;</span> + print_double(-x.i.imag()) + print_mul()</div>
-<div class="line"><span class="lineno">  239</span>                + get_imag_symbol();</div>
-<div class="line"><span class="lineno">  240</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  241</span>        str_ += <span class="stringliteral">&quot; + &quot;</span> + print_double(x.i.imag()) + print_mul()</div>
-<div class="line"><span class="lineno">  242</span>                + get_imag_symbol();</div>
-<div class="line"><span class="lineno">  243</span>    }</div>
-<div class="line"><span class="lineno">  244</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  233</span>{</div>
+<div class="line"><span class="lineno">  234</span>    str_ = print_double(x.i.real());</div>
+<div class="line"><span class="lineno">  235</span>    <span class="keywordflow">if</span> (x.i.imag() &lt; 0) {</div>
+<div class="line"><span class="lineno">  236</span>        str_ += <span class="stringliteral">&quot; - &quot;</span> + print_double(-x.i.imag()) + print_mul()</div>
+<div class="line"><span class="lineno">  237</span>                + get_imag_symbol();</div>
+<div class="line"><span class="lineno">  238</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  239</span>        str_ += <span class="stringliteral">&quot; + &quot;</span> + print_double(x.i.imag()) + print_mul()</div>
+<div class="line"><span class="lineno">  240</span>                + get_imag_symbol();</div>
+<div class="line"><span class="lineno">  241</span>    }</div>
+<div class="line"><span class="lineno">  242</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -899,9 +899,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00133">133</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  376</span>{</div>
-<div class="line"><span class="lineno">  377</span>    str_ = <span class="stringliteral">&quot;Complexes&quot;</span>;</div>
-<div class="line"><span class="lineno">  378</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  374</span>{</div>
+<div class="line"><span class="lineno">  375</span>    str_ = <span class="stringliteral">&quot;Complexes&quot;</span>;</div>
+<div class="line"><span class="lineno">  376</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -922,12 +922,12 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00143">143</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  460</span>{</div>
-<div class="line"><span class="lineno">  461</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  462</span>    s &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; apply(*x.get_symbol());</div>
-<div class="line"><span class="lineno">  463</span>    s &lt;&lt; <span class="stringliteral">&quot; | &quot;</span> &lt;&lt; apply(x.get_condition()) &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;</div>
-<div class="line"><span class="lineno">  464</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  465</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  458</span>{</div>
+<div class="line"><span class="lineno">  459</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  460</span>    s &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; apply(*x.get_symbol());</div>
+<div class="line"><span class="lineno">  461</span>    s &lt;&lt; <span class="stringliteral">&quot; | &quot;</span> &lt;&lt; apply(x.get_condition()) &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;</div>
+<div class="line"><span class="lineno">  462</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  463</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -948,9 +948,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00176">176</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  859</span>{</div>
-<div class="line"><span class="lineno">  860</span>    str_ = x.get_name();</div>
-<div class="line"><span class="lineno">  861</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  857</span>{</div>
+<div class="line"><span class="lineno">  858</span>    str_ = x.get_name();</div>
+<div class="line"><span class="lineno">  859</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1000,12 +1000,12 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00144">144</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  345</span>{</div>
-<div class="line"><span class="lineno">  346</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  347</span>    s &lt;&lt; <span class="stringliteral">&quot;Contains(&quot;</span> &lt;&lt; apply(x.get_expr()) &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(x.get_set())</div>
-<div class="line"><span class="lineno">  348</span>      &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  349</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  350</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  343</span>{</div>
+<div class="line"><span class="lineno">  344</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  345</span>    s &lt;&lt; <span class="stringliteral">&quot;Contains(&quot;</span> &lt;&lt; apply(x.get_expr()) &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(x.get_set())</div>
+<div class="line"><span class="lineno">  346</span>      &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  347</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  348</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1050,16 +1050,16 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00179">179</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  895</span>{</div>
-<div class="line"><span class="lineno">  896</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  897</span>    o &lt;&lt; <span class="stringliteral">&quot;Derivative(&quot;</span> &lt;&lt; this-&gt;apply(x.get_arg());</div>
-<div class="line"><span class="lineno">  898</span>    <span class="keyword">auto</span> m1 = x.get_symbols();</div>
-<div class="line"><span class="lineno">  899</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : m1) {</div>
-<div class="line"><span class="lineno">  900</span>        o &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; this-&gt;apply(elem);</div>
-<div class="line"><span class="lineno">  901</span>    }</div>
-<div class="line"><span class="lineno">  902</span>    o &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  903</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  904</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  893</span>{</div>
+<div class="line"><span class="lineno">  894</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  895</span>    o &lt;&lt; <span class="stringliteral">&quot;Derivative(&quot;</span> &lt;&lt; this-&gt;apply(x.get_arg());</div>
+<div class="line"><span class="lineno">  896</span>    <span class="keyword">auto</span> m1 = x.get_symbols();</div>
+<div class="line"><span class="lineno">  897</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : m1) {</div>
+<div class="line"><span class="lineno">  898</span>        o &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; this-&gt;apply(elem);</div>
+<div class="line"><span class="lineno">  899</span>    }</div>
+<div class="line"><span class="lineno">  900</span>    o &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  901</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  902</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1103,9 +1103,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00140">140</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  406</span>{</div>
-<div class="line"><span class="lineno">  407</span>    str_ = <span class="stringliteral">&quot;EmptySet&quot;</span>;</div>
-<div class="line"><span class="lineno">  408</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  404</span>{</div>
+<div class="line"><span class="lineno">  405</span>    str_ = <span class="stringliteral">&quot;EmptySet&quot;</span>;</div>
+<div class="line"><span class="lineno">  406</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1149,11 +1149,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00183">183</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  247</span>{</div>
-<div class="line"><span class="lineno">  248</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  249</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; == &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
-<div class="line"><span class="lineno">  250</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  251</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  245</span>{</div>
+<div class="line"><span class="lineno">  246</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  247</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; == &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
+<div class="line"><span class="lineno">  248</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  249</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1199,11 +1199,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00141">141</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  453</span>{</div>
-<div class="line"><span class="lineno">  454</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  455</span>    s &lt;&lt; x.get_container();</div>
-<div class="line"><span class="lineno">  456</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  457</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  451</span>{</div>
+<div class="line"><span class="lineno">  452</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  453</span>    s &lt;&lt; x.get_container();</div>
+<div class="line"><span class="lineno">  454</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  455</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1247,14 +1247,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00177">177</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  876</span>{</div>
-<div class="line"><span class="lineno">  877</span>    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names_ = init_str_printer_names();</div>
-<div class="line"><span class="lineno">  878</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  879</span>    o &lt;&lt; names_[x.get_type_code()];</div>
-<div class="line"><span class="lineno">  880</span>    vec_basic vec = x.get_args();</div>
-<div class="line"><span class="lineno">  881</span>    o &lt;&lt; parenthesize(apply(vec));</div>
-<div class="line"><span class="lineno">  882</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  883</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  874</span>{</div>
+<div class="line"><span class="lineno">  875</span>    <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names_ = init_str_printer_names();</div>
+<div class="line"><span class="lineno">  876</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  877</span>    o &lt;&lt; names_[x.get_type_code()];</div>
+<div class="line"><span class="lineno">  878</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><span class="lineno">  879</span>    o &lt;&lt; parenthesize(apply(vec));</div>
+<div class="line"><span class="lineno">  880</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  881</span>}</div>
 <div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -1276,13 +1276,13 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00178">178</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  886</span>{</div>
-<div class="line"><span class="lineno">  887</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  888</span>    o &lt;&lt; x.get_name();</div>
-<div class="line"><span class="lineno">  889</span>    vec_basic vec = x.get_args();</div>
-<div class="line"><span class="lineno">  890</span>    o &lt;&lt; parenthesize(apply(vec));</div>
-<div class="line"><span class="lineno">  891</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  892</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  884</span>{</div>
+<div class="line"><span class="lineno">  885</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  886</span>    o &lt;&lt; x.get_name();</div>
+<div class="line"><span class="lineno">  887</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><span class="lineno">  888</span>    o &lt;&lt; parenthesize(apply(vec));</div>
+<div class="line"><span class="lineno">  889</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  890</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1303,65 +1303,65 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00166">166</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  671</span>{</div>
-<div class="line"><span class="lineno">  672</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  673</span>    <span class="comment">// bool variable needed to take care of cases like -5, -x, -3*x etc.</span></div>
-<div class="line"><span class="lineno">  674</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  675</span>    <span class="comment">// we iterate over the map in reverse order so that highest degree gets</span></div>
-<div class="line"><span class="lineno">  676</span>    <span class="comment">// printed first</span></div>
-<div class="line"><span class="lineno">  677</span>    <span class="keyword">auto</span> dict = x.get_dict();</div>
-<div class="line"><span class="lineno">  678</span>    <span class="keywordflow">if</span> (x.get_dict().size() == 0)</div>
-<div class="line"><span class="lineno">  679</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
-<div class="line"><span class="lineno">  680</span>    <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  681</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = dict.size(); it-- != 0;) {</div>
-<div class="line"><span class="lineno">  682</span>            <span class="keywordflow">if</span> (dict[it] == 0)</div>
-<div class="line"><span class="lineno">  683</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">  684</span>            <span class="comment">// if exponent is 0, then print only coefficient</span></div>
-<div class="line"><span class="lineno">  685</span>            <span class="keywordflow">if</span> (it == 0) {</div>
-<div class="line"><span class="lineno">  686</span>                <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  687</span>                    s &lt;&lt; dict[it];</div>
-<div class="line"><span class="lineno">  688</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  689</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><span class="lineno">  690</span>                      &lt;&lt; mp_abs(dict[it]);</div>
-<div class="line"><span class="lineno">  691</span>                }</div>
-<div class="line"><span class="lineno">  692</span>                first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  693</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  694</span>            }</div>
-<div class="line"><span class="lineno">  695</span>            <span class="comment">// if the coefficient of a term is +1 or -1</span></div>
-<div class="line"><span class="lineno">  696</span>            <span class="keywordflow">if</span> (mp_abs(dict[it]) == 1) {</div>
-<div class="line"><span class="lineno">  697</span>                <span class="comment">// in cases of -x, print -x</span></div>
-<div class="line"><span class="lineno">  698</span>                <span class="comment">// in cases of x**2 - x, print - x</span></div>
-<div class="line"><span class="lineno">  699</span>                <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  700</span>                    <span class="keywordflow">if</span> (dict[it] == -1)</div>
-<div class="line"><span class="lineno">  701</span>                        s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
-<div class="line"><span class="lineno">  702</span>                    s &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  703</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  704</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
-<div class="line"><span class="lineno">  705</span>                      &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  706</span>                }</div>
-<div class="line"><span class="lineno">  707</span>            }</div>
-<div class="line"><span class="lineno">  708</span>            <span class="comment">// same logic is followed as above</span></div>
-<div class="line"><span class="lineno">  709</span>            <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  710</span>                <span class="comment">// in cases of -2*x, print -2*x</span></div>
-<div class="line"><span class="lineno">  711</span>                <span class="comment">// in cases of x**2 - 2*x, print - 2*x</span></div>
-<div class="line"><span class="lineno">  712</span>                <span class="keywordflow">if</span> (first) {</div>
-<div class="line"><span class="lineno">  713</span>                    s &lt;&lt; dict[it] &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  714</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  715</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(dict[it])</div>
-<div class="line"><span class="lineno">  716</span>                      &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
-<div class="line"><span class="lineno">  717</span>                }</div>
-<div class="line"><span class="lineno">  718</span>            }</div>
-<div class="line"><span class="lineno">  719</span>            <span class="comment">// if exponent is not 1, print the exponent;</span></div>
-<div class="line"><span class="lineno">  720</span>            <span class="keywordflow">if</span> (it != 1) {</div>
-<div class="line"><span class="lineno">  721</span>                s &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; it;</div>
-<div class="line"><span class="lineno">  722</span>            }</div>
-<div class="line"><span class="lineno">  723</span>            <span class="comment">// corner cases of only first term handled successfully, switch the</span></div>
-<div class="line"><span class="lineno">  724</span>            <span class="comment">// bool</span></div>
-<div class="line"><span class="lineno">  725</span>            first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  726</span>        }</div>
-<div class="line"><span class="lineno">  727</span>    }</div>
-<div class="line"><span class="lineno">  728</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  729</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  669</span>{</div>
+<div class="line"><span class="lineno">  670</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  671</span>    <span class="comment">// bool variable needed to take care of cases like -5, -x, -3*x etc.</span></div>
+<div class="line"><span class="lineno">  672</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  673</span>    <span class="comment">// we iterate over the map in reverse order so that highest degree gets</span></div>
+<div class="line"><span class="lineno">  674</span>    <span class="comment">// printed first</span></div>
+<div class="line"><span class="lineno">  675</span>    <span class="keyword">auto</span> dict = x.get_dict();</div>
+<div class="line"><span class="lineno">  676</span>    <span class="keywordflow">if</span> (x.get_dict().size() == 0)</div>
+<div class="line"><span class="lineno">  677</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><span class="lineno">  678</span>    <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  679</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = dict.size(); it-- != 0;) {</div>
+<div class="line"><span class="lineno">  680</span>            <span class="keywordflow">if</span> (dict[it] == 0)</div>
+<div class="line"><span class="lineno">  681</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">  682</span>            <span class="comment">// if exponent is 0, then print only coefficient</span></div>
+<div class="line"><span class="lineno">  683</span>            <span class="keywordflow">if</span> (it == 0) {</div>
+<div class="line"><span class="lineno">  684</span>                <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  685</span>                    s &lt;&lt; dict[it];</div>
+<div class="line"><span class="lineno">  686</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  687</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><span class="lineno">  688</span>                      &lt;&lt; mp_abs(dict[it]);</div>
+<div class="line"><span class="lineno">  689</span>                }</div>
+<div class="line"><span class="lineno">  690</span>                first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  691</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  692</span>            }</div>
+<div class="line"><span class="lineno">  693</span>            <span class="comment">// if the coefficient of a term is +1 or -1</span></div>
+<div class="line"><span class="lineno">  694</span>            <span class="keywordflow">if</span> (mp_abs(dict[it]) == 1) {</div>
+<div class="line"><span class="lineno">  695</span>                <span class="comment">// in cases of -x, print -x</span></div>
+<div class="line"><span class="lineno">  696</span>                <span class="comment">// in cases of x**2 - x, print - x</span></div>
+<div class="line"><span class="lineno">  697</span>                <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  698</span>                    <span class="keywordflow">if</span> (dict[it] == -1)</div>
+<div class="line"><span class="lineno">  699</span>                        s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
+<div class="line"><span class="lineno">  700</span>                    s &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  701</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  702</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
+<div class="line"><span class="lineno">  703</span>                      &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  704</span>                }</div>
+<div class="line"><span class="lineno">  705</span>            }</div>
+<div class="line"><span class="lineno">  706</span>            <span class="comment">// same logic is followed as above</span></div>
+<div class="line"><span class="lineno">  707</span>            <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  708</span>                <span class="comment">// in cases of -2*x, print -2*x</span></div>
+<div class="line"><span class="lineno">  709</span>                <span class="comment">// in cases of x**2 - 2*x, print - 2*x</span></div>
+<div class="line"><span class="lineno">  710</span>                <span class="keywordflow">if</span> (first) {</div>
+<div class="line"><span class="lineno">  711</span>                    s &lt;&lt; dict[it] &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  712</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  713</span>                    s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(dict[it]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; mp_abs(dict[it])</div>
+<div class="line"><span class="lineno">  714</span>                      &lt;&lt; <span class="stringliteral">&quot;*&quot;</span> &lt;&lt; detail::poly_print(x.get_var());</div>
+<div class="line"><span class="lineno">  715</span>                }</div>
+<div class="line"><span class="lineno">  716</span>            }</div>
+<div class="line"><span class="lineno">  717</span>            <span class="comment">// if exponent is not 1, print the exponent;</span></div>
+<div class="line"><span class="lineno">  718</span>            <span class="keywordflow">if</span> (it != 1) {</div>
+<div class="line"><span class="lineno">  719</span>                s &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; it;</div>
+<div class="line"><span class="lineno">  720</span>            }</div>
+<div class="line"><span class="lineno">  721</span>            <span class="comment">// corner cases of only first term handled successfully, switch the</span></div>
+<div class="line"><span class="lineno">  722</span>            <span class="comment">// bool</span></div>
+<div class="line"><span class="lineno">  723</span>            first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  724</span>        }</div>
+<div class="line"><span class="lineno">  725</span>    }</div>
+<div class="line"><span class="lineno">  726</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  727</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1405,13 +1405,13 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00153">153</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  439</span>{</div>
-<div class="line"><span class="lineno">  440</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  441</span>    s &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; apply(*x.get_expr()) &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
-<div class="line"><span class="lineno">  442</span>    s &lt;&lt; apply(*x.get_symbol());</div>
-<div class="line"><span class="lineno">  443</span>    s &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; apply(*x.get_baseset()) &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;</div>
-<div class="line"><span class="lineno">  444</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  445</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  437</span>{</div>
+<div class="line"><span class="lineno">  438</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  439</span>    s &lt;&lt; <span class="stringliteral">&quot;{&quot;</span> &lt;&lt; apply(*x.get_expr()) &lt;&lt; <span class="stringliteral">&quot; | &quot;</span>;</div>
+<div class="line"><span class="lineno">  440</span>    s &lt;&lt; apply(*x.get_symbol());</div>
+<div class="line"><span class="lineno">  441</span>    s &lt;&lt; <span class="stringliteral">&quot; in &quot;</span> &lt;&lt; apply(*x.get_baseset()) &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;</div>
+<div class="line"><span class="lineno">  442</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  443</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1462,11 +1462,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00129">129</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  166</span>{</div>
-<div class="line"><span class="lineno">  167</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  168</span>    s &lt;&lt; x.as_integer_class();</div>
-<div class="line"><span class="lineno">  169</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  170</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  164</span>{</div>
+<div class="line"><span class="lineno">  165</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  166</span>    s &lt;&lt; x.as_integer_class();</div>
+<div class="line"><span class="lineno">  167</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  168</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1487,9 +1487,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00136">136</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  391</span>{</div>
-<div class="line"><span class="lineno">  392</span>    str_ = <span class="stringliteral">&quot;Integers&quot;</span>;</div>
-<div class="line"><span class="lineno">  393</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  389</span>{</div>
+<div class="line"><span class="lineno">  390</span>    str_ = <span class="stringliteral">&quot;Integers&quot;</span>;</div>
+<div class="line"><span class="lineno">  391</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1533,13 +1533,13 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00151">151</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  422</span>{</div>
-<div class="line"><span class="lineno">  423</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  424</span>    vec_basic vec = x.get_args();</div>
-<div class="line"><span class="lineno">  425</span>    s &lt;&lt; <span class="stringliteral">&quot;Intersection&quot;</span>;</div>
-<div class="line"><span class="lineno">  426</span>    s &lt;&lt; parenthesize(apply(vec));</div>
-<div class="line"><span class="lineno">  427</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  428</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  420</span>{</div>
+<div class="line"><span class="lineno">  421</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  422</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><span class="lineno">  423</span>    s &lt;&lt; <span class="stringliteral">&quot;Intersection&quot;</span>;</div>
+<div class="line"><span class="lineno">  424</span>    s &lt;&lt; parenthesize(apply(vec));</div>
+<div class="line"><span class="lineno">  425</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  426</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1560,19 +1560,19 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00132">132</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  275</span>{</div>
-<div class="line"><span class="lineno">  276</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  277</span>    <span class="keywordflow">if</span> (x.get_left_open())</div>
-<div class="line"><span class="lineno">  278</span>        s &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
-<div class="line"><span class="lineno">  279</span>    <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  280</span>        s &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
-<div class="line"><span class="lineno">  281</span>    s &lt;&lt; *x.get_start() &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; *x.get_end();</div>
-<div class="line"><span class="lineno">  282</span>    <span class="keywordflow">if</span> (x.get_right_open())</div>
-<div class="line"><span class="lineno">  283</span>        s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  284</span>    <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  285</span>        s &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line"><span class="lineno">  286</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  287</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  273</span>{</div>
+<div class="line"><span class="lineno">  274</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  275</span>    <span class="keywordflow">if</span> (x.get_left_open())</div>
+<div class="line"><span class="lineno">  276</span>        s &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
+<div class="line"><span class="lineno">  277</span>    <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  278</span>        s &lt;&lt; <span class="stringliteral">&quot;[&quot;</span>;</div>
+<div class="line"><span class="lineno">  279</span>    s &lt;&lt; *x.get_start() &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; *x.get_end();</div>
+<div class="line"><span class="lineno">  280</span>    <span class="keywordflow">if</span> (x.get_right_open())</div>
+<div class="line"><span class="lineno">  281</span>        s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  282</span>    <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  283</span>        s &lt;&lt; <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line"><span class="lineno">  284</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  285</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1640,11 +1640,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00185">185</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  261</span>{</div>
-<div class="line"><span class="lineno">  262</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  263</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; &lt;= &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
-<div class="line"><span class="lineno">  264</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  265</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  259</span>{</div>
+<div class="line"><span class="lineno">  260</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  261</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; &lt;= &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
+<div class="line"><span class="lineno">  262</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  263</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1730,53 +1730,53 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00165">165</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  976</span>{</div>
-<div class="line"><span class="lineno">  977</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  978</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>; <span class="comment">// is this the first term being printed out?</span></div>
-<div class="line"><span class="lineno">  979</span>    <span class="comment">// To change the ordering in which the terms will print out, change</span></div>
-<div class="line"><span class="lineno">  980</span>    <span class="comment">// vec_uint_compare in dict.h</span></div>
-<div class="line"><span class="lineno">  981</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;vec_int&gt;</a> v = sorted_keys(x.get_poly().dict_);</div>
-<div class="line"><span class="lineno">  982</span> </div>
-<div class="line"><span class="lineno">  983</span>    <span class="keywordflow">for</span> (vec_int exps : v) {</div>
-<div class="line"><span class="lineno">  984</span>        Expression c = x.get_poly().dict_.find(exps)-&gt;second;</div>
-<div class="line"><span class="lineno">  985</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);</div>
-<div class="line"><span class="lineno">  986</span>        <span class="keywordflow">if</span> (<span class="charliteral">&#39;-&#39;</span> == t[0] &amp;&amp; !first) {</div>
-<div class="line"><span class="lineno">  987</span>            s &lt;&lt; <span class="stringliteral">&quot; - &quot;</span>;</div>
-<div class="line"><span class="lineno">  988</span>            t = t.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1);</div>
-<div class="line"><span class="lineno">  989</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!first) {</div>
-<div class="line"><span class="lineno">  990</span>            s &lt;&lt; <span class="stringliteral">&quot; + &quot;</span>;</div>
-<div class="line"><span class="lineno">  991</span>        }</div>
-<div class="line"><span class="lineno">  992</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0;</div>
-<div class="line"><span class="lineno">  993</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> expr;</div>
-<div class="line"><span class="lineno">  994</span>        <span class="keywordtype">bool</span> first_var = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  995</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : x.get_vars()) {</div>
-<div class="line"><span class="lineno">  996</span>            <span class="keywordflow">if</span> (exps[i] != 0) {</div>
-<div class="line"><span class="lineno">  997</span>                <span class="keywordflow">if</span> (!first_var) {</div>
-<div class="line"><span class="lineno">  998</span>                    expr &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
-<div class="line"><span class="lineno">  999</span>                }</div>
-<div class="line"><span class="lineno"> 1000</span>                expr &lt;&lt; it-&gt;__str__();</div>
-<div class="line"><span class="lineno"> 1001</span>                <span class="keywordflow">if</span> (exps[i] &gt; 1 or exps[i] &lt; 0)</div>
-<div class="line"><span class="lineno"> 1002</span>                    expr &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; exps[i];</div>
-<div class="line"><span class="lineno"> 1003</span>                first_var = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno"> 1004</span>            }</div>
-<div class="line"><span class="lineno"> 1005</span>            i++;</div>
-<div class="line"><span class="lineno"> 1006</span>        }</div>
-<div class="line"><span class="lineno"> 1007</span>        <span class="keywordflow">if</span> (c != 1 &amp;&amp; c != -1) {</div>
-<div class="line"><span class="lineno"> 1008</span>            s &lt;&lt; t;</div>
-<div class="line"><span class="lineno"> 1009</span>            <span class="keywordflow">if</span> (!expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
-<div class="line"><span class="lineno"> 1010</span>                s &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1011</span>            }</div>
-<div class="line"><span class="lineno"> 1012</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
-<div class="line"><span class="lineno"> 1013</span>            s &lt;&lt; <span class="stringliteral">&quot;1&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1014</span>        }</div>
-<div class="line"><span class="lineno"> 1015</span>        s &lt;&lt; expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno"> 1016</span>        first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno"> 1017</span>    }</div>
-<div class="line"><span class="lineno"> 1018</span> </div>
-<div class="line"><span class="lineno"> 1019</span>    <span class="keywordflow">if</span> (s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty())</div>
-<div class="line"><span class="lineno"> 1020</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
-<div class="line"><span class="lineno"> 1021</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno"> 1022</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  974</span>{</div>
+<div class="line"><span class="lineno">  975</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  976</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>; <span class="comment">// is this the first term being printed out?</span></div>
+<div class="line"><span class="lineno">  977</span>    <span class="comment">// To change the ordering in which the terms will print out, change</span></div>
+<div class="line"><span class="lineno">  978</span>    <span class="comment">// vec_uint_compare in dict.h</span></div>
+<div class="line"><span class="lineno">  979</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;vec_int&gt;</a> v = sorted_keys(x.get_poly().dict_);</div>
+<div class="line"><span class="lineno">  980</span> </div>
+<div class="line"><span class="lineno">  981</span>    <span class="keywordflow">for</span> (vec_int exps : v) {</div>
+<div class="line"><span class="lineno">  982</span>        Expression c = x.get_poly().dict_.find(exps)-&gt;second;</div>
+<div class="line"><span class="lineno">  983</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);</div>
+<div class="line"><span class="lineno">  984</span>        <span class="keywordflow">if</span> (<span class="charliteral">&#39;-&#39;</span> == t[0] &amp;&amp; !first) {</div>
+<div class="line"><span class="lineno">  985</span>            s &lt;&lt; <span class="stringliteral">&quot; - &quot;</span>;</div>
+<div class="line"><span class="lineno">  986</span>            t = t.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1);</div>
+<div class="line"><span class="lineno">  987</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!first) {</div>
+<div class="line"><span class="lineno">  988</span>            s &lt;&lt; <span class="stringliteral">&quot; + &quot;</span>;</div>
+<div class="line"><span class="lineno">  989</span>        }</div>
+<div class="line"><span class="lineno">  990</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0;</div>
+<div class="line"><span class="lineno">  991</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> expr;</div>
+<div class="line"><span class="lineno">  992</span>        <span class="keywordtype">bool</span> first_var = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  993</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : x.get_vars()) {</div>
+<div class="line"><span class="lineno">  994</span>            <span class="keywordflow">if</span> (exps[i] != 0) {</div>
+<div class="line"><span class="lineno">  995</span>                <span class="keywordflow">if</span> (!first_var) {</div>
+<div class="line"><span class="lineno">  996</span>                    expr &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
+<div class="line"><span class="lineno">  997</span>                }</div>
+<div class="line"><span class="lineno">  998</span>                expr &lt;&lt; it-&gt;__str__();</div>
+<div class="line"><span class="lineno">  999</span>                <span class="keywordflow">if</span> (exps[i] &gt; 1 or exps[i] &lt; 0)</div>
+<div class="line"><span class="lineno"> 1000</span>                    expr &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; exps[i];</div>
+<div class="line"><span class="lineno"> 1001</span>                first_var = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno"> 1002</span>            }</div>
+<div class="line"><span class="lineno"> 1003</span>            i++;</div>
+<div class="line"><span class="lineno"> 1004</span>        }</div>
+<div class="line"><span class="lineno"> 1005</span>        <span class="keywordflow">if</span> (c != 1 &amp;&amp; c != -1) {</div>
+<div class="line"><span class="lineno"> 1006</span>            s &lt;&lt; t;</div>
+<div class="line"><span class="lineno"> 1007</span>            <span class="keywordflow">if</span> (!expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
+<div class="line"><span class="lineno"> 1008</span>                s &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1009</span>            }</div>
+<div class="line"><span class="lineno"> 1010</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
+<div class="line"><span class="lineno"> 1011</span>            s &lt;&lt; <span class="stringliteral">&quot;1&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1012</span>        }</div>
+<div class="line"><span class="lineno"> 1013</span>        s &lt;&lt; expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno"> 1014</span>        first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno"> 1015</span>    }</div>
+<div class="line"><span class="lineno"> 1016</span> </div>
+<div class="line"><span class="lineno"> 1017</span>    <span class="keywordflow">if</span> (s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty())</div>
+<div class="line"><span class="lineno"> 1018</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><span class="lineno"> 1019</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno"> 1020</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1837,52 +1837,52 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00158">158</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  928</span>{</div>
-<div class="line"><span class="lineno">  929</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  930</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>; <span class="comment">// is this the first term being printed out?</span></div>
-<div class="line"><span class="lineno">  931</span>    <span class="comment">// To change the ordering in which the terms will print out, change</span></div>
-<div class="line"><span class="lineno">  932</span>    <span class="comment">// vec_uint_compare in dict.h</span></div>
-<div class="line"><span class="lineno">  933</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;vec_uint&gt;</a> v = sorted_keys(x.get_poly().dict_);</div>
-<div class="line"><span class="lineno">  934</span> </div>
-<div class="line"><span class="lineno">  935</span>    <span class="keywordflow">for</span> (vec_uint exps : v) {</div>
-<div class="line"><span class="lineno">  936</span>        integer_class c = x.get_poly().dict_.find(exps)-&gt;second;</div>
-<div class="line"><span class="lineno">  937</span>        <span class="keywordflow">if</span> (!first) {</div>
-<div class="line"><span class="lineno">  938</span>            s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(c) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><span class="lineno">  939</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c &lt; 0) {</div>
-<div class="line"><span class="lineno">  940</span>            s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
-<div class="line"><span class="lineno">  941</span>        }</div>
-<div class="line"><span class="lineno">  942</span> </div>
-<div class="line"><span class="lineno">  943</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0;</div>
-<div class="line"><span class="lineno">  944</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> expr;</div>
-<div class="line"><span class="lineno">  945</span>        <span class="keywordtype">bool</span> first_var = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  946</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : x.get_vars()) {</div>
-<div class="line"><span class="lineno">  947</span>            <span class="keywordflow">if</span> (exps[i] != 0) {</div>
-<div class="line"><span class="lineno">  948</span>                <span class="keywordflow">if</span> (!first_var) {</div>
-<div class="line"><span class="lineno">  949</span>                    expr &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
-<div class="line"><span class="lineno">  950</span>                }</div>
-<div class="line"><span class="lineno">  951</span>                expr &lt;&lt; it-&gt;__str__();</div>
-<div class="line"><span class="lineno">  952</span>                <span class="keywordflow">if</span> (exps[i] &gt; 1)</div>
-<div class="line"><span class="lineno">  953</span>                    expr &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; exps[i];</div>
-<div class="line"><span class="lineno">  954</span>                first_var = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  955</span>            }</div>
-<div class="line"><span class="lineno">  956</span>            i++;</div>
-<div class="line"><span class="lineno">  957</span>        }</div>
-<div class="line"><span class="lineno">  958</span>        <span class="keywordflow">if</span> (mp_abs(c) != 1) {</div>
-<div class="line"><span class="lineno">  959</span>            s &lt;&lt; mp_abs(c);</div>
-<div class="line"><span class="lineno">  960</span>            <span class="keywordflow">if</span> (!expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
-<div class="line"><span class="lineno">  961</span>                s &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
-<div class="line"><span class="lineno">  962</span>            }</div>
-<div class="line"><span class="lineno">  963</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
-<div class="line"><span class="lineno">  964</span>            s &lt;&lt; <span class="stringliteral">&quot;1&quot;</span>;</div>
-<div class="line"><span class="lineno">  965</span>        }</div>
-<div class="line"><span class="lineno">  966</span>        s &lt;&lt; expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  967</span>        first = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  968</span>    }</div>
-<div class="line"><span class="lineno">  969</span> </div>
-<div class="line"><span class="lineno">  970</span>    <span class="keywordflow">if</span> (s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty())</div>
-<div class="line"><span class="lineno">  971</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
-<div class="line"><span class="lineno">  972</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  973</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  926</span>{</div>
+<div class="line"><span class="lineno">  927</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  928</span>    <span class="keywordtype">bool</span> first = <span class="keyword">true</span>; <span class="comment">// is this the first term being printed out?</span></div>
+<div class="line"><span class="lineno">  929</span>    <span class="comment">// To change the ordering in which the terms will print out, change</span></div>
+<div class="line"><span class="lineno">  930</span>    <span class="comment">// vec_uint_compare in dict.h</span></div>
+<div class="line"><span class="lineno">  931</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;vec_uint&gt;</a> v = sorted_keys(x.get_poly().dict_);</div>
+<div class="line"><span class="lineno">  932</span> </div>
+<div class="line"><span class="lineno">  933</span>    <span class="keywordflow">for</span> (vec_uint exps : v) {</div>
+<div class="line"><span class="lineno">  934</span>        integer_class c = x.get_poly().dict_.find(exps)-&gt;second;</div>
+<div class="line"><span class="lineno">  935</span>        <span class="keywordflow">if</span> (!first) {</div>
+<div class="line"><span class="lineno">  936</span>            s &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; _print_sign(c) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><span class="lineno">  937</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c &lt; 0) {</div>
+<div class="line"><span class="lineno">  938</span>            s &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
+<div class="line"><span class="lineno">  939</span>        }</div>
+<div class="line"><span class="lineno">  940</span> </div>
+<div class="line"><span class="lineno">  941</span>        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0;</div>
+<div class="line"><span class="lineno">  942</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> expr;</div>
+<div class="line"><span class="lineno">  943</span>        <span class="keywordtype">bool</span> first_var = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  944</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : x.get_vars()) {</div>
+<div class="line"><span class="lineno">  945</span>            <span class="keywordflow">if</span> (exps[i] != 0) {</div>
+<div class="line"><span class="lineno">  946</span>                <span class="keywordflow">if</span> (!first_var) {</div>
+<div class="line"><span class="lineno">  947</span>                    expr &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
+<div class="line"><span class="lineno">  948</span>                }</div>
+<div class="line"><span class="lineno">  949</span>                expr &lt;&lt; it-&gt;__str__();</div>
+<div class="line"><span class="lineno">  950</span>                <span class="keywordflow">if</span> (exps[i] &gt; 1)</div>
+<div class="line"><span class="lineno">  951</span>                    expr &lt;&lt; <span class="stringliteral">&quot;**&quot;</span> &lt;&lt; exps[i];</div>
+<div class="line"><span class="lineno">  952</span>                first_var = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  953</span>            }</div>
+<div class="line"><span class="lineno">  954</span>            i++;</div>
+<div class="line"><span class="lineno">  955</span>        }</div>
+<div class="line"><span class="lineno">  956</span>        <span class="keywordflow">if</span> (mp_abs(c) != 1) {</div>
+<div class="line"><span class="lineno">  957</span>            s &lt;&lt; mp_abs(c);</div>
+<div class="line"><span class="lineno">  958</span>            <span class="keywordflow">if</span> (!expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
+<div class="line"><span class="lineno">  959</span>                s &lt;&lt; <span class="stringliteral">&quot;*&quot;</span>;</div>
+<div class="line"><span class="lineno">  960</span>            }</div>
+<div class="line"><span class="lineno">  961</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty()) {</div>
+<div class="line"><span class="lineno">  962</span>            s &lt;&lt; <span class="stringliteral">&quot;1&quot;</span>;</div>
+<div class="line"><span class="lineno">  963</span>        }</div>
+<div class="line"><span class="lineno">  964</span>        s &lt;&lt; expr.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  965</span>        first = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  966</span>    }</div>
+<div class="line"><span class="lineno">  967</span> </div>
+<div class="line"><span class="lineno">  968</span>    <span class="keywordflow">if</span> (s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>().empty())</div>
+<div class="line"><span class="lineno">  969</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><span class="lineno">  970</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  971</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1903,73 +1903,73 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00155">155</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  570</span>{</div>
-<div class="line"><span class="lineno">  571</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o, o2;</div>
-<div class="line"><span class="lineno">  572</span>    <span class="keywordtype">bool</span> num = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  573</span>    <span class="keywordtype">unsigned</span> den = 0;</div>
-<div class="line"><span class="lineno">  574</span> </div>
-<div class="line"><span class="lineno">  575</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(x.get_coef()), *minus_one)) {</div>
-<div class="line"><span class="lineno">  576</span>        o &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
-<div class="line"><span class="lineno">  577</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(x.get_coef()), *one)) {</div>
-<div class="line"><span class="lineno">  578</span>        <span class="keywordflow">if</span> (not split_mul_coef()) {</div>
-<div class="line"><span class="lineno">  579</span>            o &lt;&lt; parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul)</div>
-<div class="line"><span class="lineno">  580</span>              &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  581</span>            num = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  582</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  583</span>            RCP&lt;const Basic&gt; numer, denom;</div>
-<div class="line"><span class="lineno">  584</span>            as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));</div>
-<div class="line"><span class="lineno">  585</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*numer, *one)) {</div>
-<div class="line"><span class="lineno">  586</span>                num = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  587</span>                o &lt;&lt; parenthesizeLT(numer, PrecedenceEnum::Mul) &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  588</span>            }</div>
-<div class="line"><span class="lineno">  589</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*denom, *one)) {</div>
-<div class="line"><span class="lineno">  590</span>                den++;</div>
-<div class="line"><span class="lineno">  591</span>                o2 &lt;&lt; parenthesizeLT(denom, PrecedenceEnum::Mul) &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  592</span>            }</div>
-<div class="line"><span class="lineno">  593</span>        }</div>
-<div class="line"><span class="lineno">  594</span>    }</div>
-<div class="line"><span class="lineno">  595</span> </div>
-<div class="line"><span class="lineno">  596</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
-<div class="line"><span class="lineno">  597</span>        <span class="keywordflow">if</span> ((is_a&lt;Integer&gt;(*p.second) or is_a&lt;Rational&gt;(*p.second))</div>
-<div class="line"><span class="lineno">  598</span>            and down_cast&lt;const Number &amp;&gt;(*p.second).is_negative()</div>
-<div class="line"><span class="lineno">  599</span>            and <a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(p.first), *E)) {</div>
-<div class="line"><span class="lineno">  600</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *minus_one)) {</div>
-<div class="line"><span class="lineno">  601</span>                o2 &lt;&lt; parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
-<div class="line"><span class="lineno">  602</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  603</span>                _print_pow(o2, p.first, <a class="code hl_function" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">neg</a>(p.second));</div>
-<div class="line"><span class="lineno">  604</span>            }</div>
-<div class="line"><span class="lineno">  605</span>            o2 &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  606</span>            den++;</div>
-<div class="line"><span class="lineno">  607</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  608</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *one)) {</div>
-<div class="line"><span class="lineno">  609</span>                o &lt;&lt; parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
-<div class="line"><span class="lineno">  610</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  611</span>                _print_pow(o, p.first, p.second);</div>
-<div class="line"><span class="lineno">  612</span>            }</div>
-<div class="line"><span class="lineno">  613</span>            o &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  614</span>            num = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  615</span>        }</div>
-<div class="line"><span class="lineno">  616</span>    }</div>
-<div class="line"><span class="lineno">  617</span> </div>
-<div class="line"><span class="lineno">  618</span>    <span class="keywordflow">if</span> (not num) {</div>
-<div class="line"><span class="lineno">  619</span>        o &lt;&lt; <span class="stringliteral">&quot;1&quot;</span> &lt;&lt; print_mul();</div>
-<div class="line"><span class="lineno">  620</span>    }</div>
-<div class="line"><span class="lineno">  621</span> </div>
-<div class="line"><span class="lineno">  622</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> s = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  623</span>    s = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(0, s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">size</a>() - 1);</div>
-<div class="line"><span class="lineno">  624</span> </div>
-<div class="line"><span class="lineno">  625</span>    <span class="keywordflow">if</span> (den != 0) {</div>
-<div class="line"><span class="lineno">  626</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> s2 = o2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  627</span>        s2 = s2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(0, s2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">size</a>() - 1);</div>
-<div class="line"><span class="lineno">  628</span>        <span class="keywordflow">if</span> (den &gt; 1) {</div>
-<div class="line"><span class="lineno">  629</span>            str_ = print_div(s, s2, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">  630</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  631</span>            str_ = print_div(s, s2, <span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">  632</span>        }</div>
-<div class="line"><span class="lineno">  633</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  634</span>        str_ = s;</div>
-<div class="line"><span class="lineno">  635</span>    }</div>
-<div class="line"><span class="lineno">  636</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  568</span>{</div>
+<div class="line"><span class="lineno">  569</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o, o2;</div>
+<div class="line"><span class="lineno">  570</span>    <span class="keywordtype">bool</span> num = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  571</span>    <span class="keywordtype">unsigned</span> den = 0;</div>
+<div class="line"><span class="lineno">  572</span> </div>
+<div class="line"><span class="lineno">  573</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(x.get_coef()), *minus_one)) {</div>
+<div class="line"><span class="lineno">  574</span>        o &lt;&lt; <span class="stringliteral">&quot;-&quot;</span>;</div>
+<div class="line"><span class="lineno">  575</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(x.get_coef()), *one)) {</div>
+<div class="line"><span class="lineno">  576</span>        <span class="keywordflow">if</span> (not split_mul_coef()) {</div>
+<div class="line"><span class="lineno">  577</span>            o &lt;&lt; parenthesizeLT(x.get_coef(), PrecedenceEnum::Mul)</div>
+<div class="line"><span class="lineno">  578</span>              &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  579</span>            num = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  580</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  581</span>            RCP&lt;const Basic&gt; numer, denom;</div>
+<div class="line"><span class="lineno">  582</span>            as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));</div>
+<div class="line"><span class="lineno">  583</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*numer, *one)) {</div>
+<div class="line"><span class="lineno">  584</span>                num = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  585</span>                o &lt;&lt; parenthesizeLT(numer, PrecedenceEnum::Mul) &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  586</span>            }</div>
+<div class="line"><span class="lineno">  587</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*denom, *one)) {</div>
+<div class="line"><span class="lineno">  588</span>                den++;</div>
+<div class="line"><span class="lineno">  589</span>                o2 &lt;&lt; parenthesizeLT(denom, PrecedenceEnum::Mul) &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  590</span>            }</div>
+<div class="line"><span class="lineno">  591</span>        }</div>
+<div class="line"><span class="lineno">  592</span>    }</div>
+<div class="line"><span class="lineno">  593</span> </div>
+<div class="line"><span class="lineno">  594</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  595</span>        <span class="keywordflow">if</span> ((is_a&lt;Integer&gt;(*p.second) or is_a&lt;Rational&gt;(*p.second))</div>
+<div class="line"><span class="lineno">  596</span>            and down_cast&lt;const Number &amp;&gt;(*p.second).is_negative()</div>
+<div class="line"><span class="lineno">  597</span>            and <a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*(p.first), *E)) {</div>
+<div class="line"><span class="lineno">  598</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *minus_one)) {</div>
+<div class="line"><span class="lineno">  599</span>                o2 &lt;&lt; parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
+<div class="line"><span class="lineno">  600</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  601</span>                _print_pow(o2, p.first, <a class="code hl_function" href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">neg</a>(p.second));</div>
+<div class="line"><span class="lineno">  602</span>            }</div>
+<div class="line"><span class="lineno">  603</span>            o2 &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  604</span>            den++;</div>
+<div class="line"><span class="lineno">  605</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  606</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*(p.second), *one)) {</div>
+<div class="line"><span class="lineno">  607</span>                o &lt;&lt; parenthesizeLT(p.first, PrecedenceEnum::Mul);</div>
+<div class="line"><span class="lineno">  608</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  609</span>                _print_pow(o, p.first, p.second);</div>
+<div class="line"><span class="lineno">  610</span>            }</div>
+<div class="line"><span class="lineno">  611</span>            o &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  612</span>            num = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  613</span>        }</div>
+<div class="line"><span class="lineno">  614</span>    }</div>
+<div class="line"><span class="lineno">  615</span> </div>
+<div class="line"><span class="lineno">  616</span>    <span class="keywordflow">if</span> (not num) {</div>
+<div class="line"><span class="lineno">  617</span>        o &lt;&lt; <span class="stringliteral">&quot;1&quot;</span> &lt;&lt; print_mul();</div>
+<div class="line"><span class="lineno">  618</span>    }</div>
+<div class="line"><span class="lineno">  619</span> </div>
+<div class="line"><span class="lineno">  620</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> s = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  621</span>    s = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(0, s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">size</a>() - 1);</div>
+<div class="line"><span class="lineno">  622</span> </div>
+<div class="line"><span class="lineno">  623</span>    <span class="keywordflow">if</span> (den != 0) {</div>
+<div class="line"><span class="lineno">  624</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> s2 = o2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  625</span>        s2 = s2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(0, s2.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">size</a>() - 1);</div>
+<div class="line"><span class="lineno">  626</span>        <span class="keywordflow">if</span> (den &gt; 1) {</div>
+<div class="line"><span class="lineno">  627</span>            str_ = print_div(s, s2, <span class="keyword">true</span>);</div>
+<div class="line"><span class="lineno">  628</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  629</span>            str_ = print_div(s, s2, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  630</span>        }</div>
+<div class="line"><span class="lineno">  631</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  632</span>        str_ = s;</div>
+<div class="line"><span class="lineno">  633</span>    }</div>
+<div class="line"><span class="lineno">  634</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_aeb3fb08495ed47a074a19b8bbacb3db2"><div class="ttname"><a href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">SymEngine::neg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; neg(const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Negation.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00443">mul.cpp:443</a></div></div>
 <div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">std::string::size</a></div><div class="ttdeci">T size(T... args)</div></div>
 </div><!-- fragment -->
@@ -1993,10 +1993,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00168">168</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  159</span>{</div>
-<div class="line"><span class="lineno">  160</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  161</span>    s &lt;&lt; <span class="stringliteral">&quot;nan&quot;</span>;</div>
-<div class="line"><span class="lineno">  162</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  163</span>}</div>
+<div class="line"><span class="lineno">  160</span>    str_ = <span class="stringliteral">&quot;nan&quot;</span>;</div>
+<div class="line"><span class="lineno">  161</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2042,9 +2040,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00137">137</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  396</span>{</div>
-<div class="line"><span class="lineno">  397</span>    str_ = <span class="stringliteral">&quot;Naturals&quot;</span>;</div>
-<div class="line"><span class="lineno">  398</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  394</span>{</div>
+<div class="line"><span class="lineno">  395</span>    str_ = <span class="stringliteral">&quot;Naturals&quot;</span>;</div>
+<div class="line"><span class="lineno">  396</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2065,9 +2063,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00138">138</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  401</span>{</div>
-<div class="line"><span class="lineno">  402</span>    str_ = <span class="stringliteral">&quot;Naturals0&quot;</span>;</div>
-<div class="line"><span class="lineno">  403</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  399</span>{</div>
+<div class="line"><span class="lineno">  400</span>    str_ = <span class="stringliteral">&quot;Naturals0&quot;</span>;</div>
+<div class="line"><span class="lineno">  401</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2088,11 +2086,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00149">149</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  338</span>{</div>
-<div class="line"><span class="lineno">  339</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  340</span>    s &lt;&lt; <span class="stringliteral">&quot;Not(&quot;</span> &lt;&lt; *x.get_arg() &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  341</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  342</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  336</span>{</div>
+<div class="line"><span class="lineno">  337</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  338</span>    s &lt;&lt; <span class="stringliteral">&quot;Not(&quot;</span> &lt;&lt; *x.get_arg() &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  339</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  340</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2113,9 +2111,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00193">193</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  923</span>{</div>
-<div class="line"><span class="lineno">  924</span>    str_ = x.__str__();</div>
-<div class="line"><span class="lineno">  925</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  921</span>{</div>
+<div class="line"><span class="lineno">  922</span>    str_ = x.__str__();</div>
+<div class="line"><span class="lineno">  923</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2136,17 +2134,17 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00147">147</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  312</span>{</div>
-<div class="line"><span class="lineno">  313</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  314</span>    <span class="keyword">auto</span> container = x.get_container();</div>
-<div class="line"><span class="lineno">  315</span>    s &lt;&lt; <span class="stringliteral">&quot;Or(&quot;</span>;</div>
-<div class="line"><span class="lineno">  316</span>    s &lt;&lt; apply(*container.begin());</div>
-<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
-<div class="line"><span class="lineno">  318</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
-<div class="line"><span class="lineno">  319</span>    }</div>
-<div class="line"><span class="lineno">  320</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  321</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  322</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  310</span>{</div>
+<div class="line"><span class="lineno">  311</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  312</span>    <span class="keyword">auto</span> container = x.get_container();</div>
+<div class="line"><span class="lineno">  313</span>    s &lt;&lt; <span class="stringliteral">&quot;Or(&quot;</span>;</div>
+<div class="line"><span class="lineno">  314</span>    s &lt;&lt; apply(*container.begin());</div>
+<div class="line"><span class="lineno">  315</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
+<div class="line"><span class="lineno">  316</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
+<div class="line"><span class="lineno">  317</span>    }</div>
+<div class="line"><span class="lineno">  318</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  319</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  320</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2167,27 +2165,27 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00139">139</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  353</span>{</div>
-<div class="line"><span class="lineno">  354</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  355</span>    <span class="keyword">auto</span> vec = x.get_vec();</div>
-<div class="line"><span class="lineno">  356</span>    <span class="keyword">auto</span> it = vec.begin();</div>
-<div class="line"><span class="lineno">  357</span>    s &lt;&lt; <span class="stringliteral">&quot;Piecewise(&quot;</span>;</div>
-<div class="line"><span class="lineno">  358</span>    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line"><span class="lineno">  359</span>        s &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
-<div class="line"><span class="lineno">  360</span>        s &lt;&lt; apply((*it).first);</div>
-<div class="line"><span class="lineno">  361</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
-<div class="line"><span class="lineno">  362</span>        s &lt;&lt; apply((*it).second);</div>
-<div class="line"><span class="lineno">  363</span>        s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  364</span>        ++it;</div>
-<div class="line"><span class="lineno">  365</span>        <span class="keywordflow">if</span> (it != vec.end()) {</div>
-<div class="line"><span class="lineno">  366</span>            s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
-<div class="line"><span class="lineno">  367</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  368</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  369</span>        }</div>
-<div class="line"><span class="lineno">  370</span>    }</div>
-<div class="line"><span class="lineno">  371</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  372</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  373</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  351</span>{</div>
+<div class="line"><span class="lineno">  352</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  353</span>    <span class="keyword">auto</span> vec = x.get_vec();</div>
+<div class="line"><span class="lineno">  354</span>    <span class="keyword">auto</span> it = vec.begin();</div>
+<div class="line"><span class="lineno">  355</span>    s &lt;&lt; <span class="stringliteral">&quot;Piecewise(&quot;</span>;</div>
+<div class="line"><span class="lineno">  356</span>    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><span class="lineno">  357</span>        s &lt;&lt; <span class="stringliteral">&quot;(&quot;</span>;</div>
+<div class="line"><span class="lineno">  358</span>        s &lt;&lt; apply((*it).first);</div>
+<div class="line"><span class="lineno">  359</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
+<div class="line"><span class="lineno">  360</span>        s &lt;&lt; apply((*it).second);</div>
+<div class="line"><span class="lineno">  361</span>        s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  362</span>        ++it;</div>
+<div class="line"><span class="lineno">  363</span>        <span class="keywordflow">if</span> (it != vec.end()) {</div>
+<div class="line"><span class="lineno">  364</span>            s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
+<div class="line"><span class="lineno">  365</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  366</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  367</span>        }</div>
+<div class="line"><span class="lineno">  368</span>    }</div>
+<div class="line"><span class="lineno">  369</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  370</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  371</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2252,11 +2250,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00156">156</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  654</span>{</div>
-<div class="line"><span class="lineno">  655</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  656</span>    _print_pow(o, x.get_base(), x.get_exp());</div>
-<div class="line"><span class="lineno">  657</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  658</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  652</span>{</div>
+<div class="line"><span class="lineno">  653</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  654</span>    _print_pow(o, x.get_base(), x.get_exp());</div>
+<div class="line"><span class="lineno">  655</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  656</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2277,11 +2275,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00130">130</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>{</div>
-<div class="line"><span class="lineno">  174</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  175</span>    s &lt;&lt; x.as_rational_class();</div>
-<div class="line"><span class="lineno">  176</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  177</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  171</span>{</div>
+<div class="line"><span class="lineno">  172</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  173</span>    s &lt;&lt; x.as_rational_class();</div>
+<div class="line"><span class="lineno">  174</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  175</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2329,9 +2327,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00135">135</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  386</span>{</div>
-<div class="line"><span class="lineno">  387</span>    str_ = <span class="stringliteral">&quot;Rationals&quot;</span>;</div>
-<div class="line"><span class="lineno">  388</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  384</span>{</div>
+<div class="line"><span class="lineno">  385</span>    str_ = <span class="stringliteral">&quot;Rationals&quot;</span>;</div>
+<div class="line"><span class="lineno">  386</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2375,9 +2373,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00181">181</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  230</span>{</div>
-<div class="line"><span class="lineno">  231</span>    str_ = print_double(x.i);</div>
-<div class="line"><span class="lineno">  232</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  228</span>{</div>
+<div class="line"><span class="lineno">  229</span>    str_ = print_double(x.i);</div>
+<div class="line"><span class="lineno">  230</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2398,9 +2396,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00134">134</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  381</span>{</div>
-<div class="line"><span class="lineno">  382</span>    str_ = <span class="stringliteral">&quot;Reals&quot;</span>;</div>
-<div class="line"><span class="lineno">  383</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  379</span>{</div>
+<div class="line"><span class="lineno">  380</span>    str_ = <span class="stringliteral">&quot;Reals&quot;</span>;</div>
+<div class="line"><span class="lineno">  381</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2444,11 +2442,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00186">186</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  268</span>{</div>
-<div class="line"><span class="lineno">  269</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  270</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; &lt; &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
-<div class="line"><span class="lineno">  271</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  272</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  266</span>{</div>
+<div class="line"><span class="lineno">  267</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  268</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; &lt; &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
+<div class="line"><span class="lineno">  269</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  270</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2494,20 +2492,20 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00180">180</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  907</span>{</div>
-<div class="line"><span class="lineno">  908</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o, vars, point;</div>
-<div class="line"><span class="lineno">  909</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = x.get_dict().begin(); p != x.get_dict().end(); p++) {</div>
-<div class="line"><span class="lineno">  910</span>        <span class="keywordflow">if</span> (p != x.get_dict().begin()) {</div>
-<div class="line"><span class="lineno">  911</span>            vars &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
-<div class="line"><span class="lineno">  912</span>            point &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
-<div class="line"><span class="lineno">  913</span>        }</div>
-<div class="line"><span class="lineno">  914</span>        vars &lt;&lt; apply(p-&gt;first);</div>
-<div class="line"><span class="lineno">  915</span>        point &lt;&lt; apply(p-&gt;second);</div>
-<div class="line"><span class="lineno">  916</span>    }</div>
-<div class="line"><span class="lineno">  917</span>    o &lt;&lt; <span class="stringliteral">&quot;Subs(&quot;</span> &lt;&lt; apply(x.get_arg()) &lt;&lt; <span class="stringliteral">&quot;, (&quot;</span> &lt;&lt; vars.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>() &lt;&lt; <span class="stringliteral">&quot;), (&quot;</span></div>
-<div class="line"><span class="lineno">  918</span>      &lt;&lt; point.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>() &lt;&lt; <span class="stringliteral">&quot;))&quot;</span>;</div>
-<div class="line"><span class="lineno">  919</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  920</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  905</span>{</div>
+<div class="line"><span class="lineno">  906</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o, vars, point;</div>
+<div class="line"><span class="lineno">  907</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = x.get_dict().begin(); p != x.get_dict().end(); p++) {</div>
+<div class="line"><span class="lineno">  908</span>        <span class="keywordflow">if</span> (p != x.get_dict().begin()) {</div>
+<div class="line"><span class="lineno">  909</span>            vars &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
+<div class="line"><span class="lineno">  910</span>            point &lt;&lt; <span class="stringliteral">&quot;, &quot;</span>;</div>
+<div class="line"><span class="lineno">  911</span>        }</div>
+<div class="line"><span class="lineno">  912</span>        vars &lt;&lt; apply(p-&gt;first);</div>
+<div class="line"><span class="lineno">  913</span>        point &lt;&lt; apply(p-&gt;second);</div>
+<div class="line"><span class="lineno">  914</span>    }</div>
+<div class="line"><span class="lineno">  915</span>    o &lt;&lt; <span class="stringliteral">&quot;Subs(&quot;</span> &lt;&lt; apply(x.get_arg()) &lt;&lt; <span class="stringliteral">&quot;, (&quot;</span> &lt;&lt; vars.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>() &lt;&lt; <span class="stringliteral">&quot;), (&quot;</span></div>
+<div class="line"><span class="lineno">  916</span>      &lt;&lt; point.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>() &lt;&lt; <span class="stringliteral">&quot;))&quot;</span>;</div>
+<div class="line"><span class="lineno">  917</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  918</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2599,12 +2597,12 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00194">194</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno"> 1025</span>{</div>
-<div class="line"><span class="lineno"> 1026</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno"> 1027</span>    vec_basic vec = x.get_args();</div>
-<div class="line"><span class="lineno"> 1028</span>    o &lt;&lt; parenthesize(apply(vec));</div>
-<div class="line"><span class="lineno"> 1029</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno"> 1030</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno"> 1023</span>{</div>
+<div class="line"><span class="lineno"> 1024</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno"> 1025</span>    vec_basic vec = x.get_args();</div>
+<div class="line"><span class="lineno"> 1026</span>    o &lt;&lt; parenthesize(apply(vec));</div>
+<div class="line"><span class="lineno"> 1027</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno"> 1028</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2625,14 +2623,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00164">164</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  824</span>{</div>
-<div class="line"><span class="lineno">  825</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  826</span>    <span class="keywordflow">if</span> (x.get_dict().size() == 0)</div>
-<div class="line"><span class="lineno">  827</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
-<div class="line"><span class="lineno">  828</span>    <span class="keywordflow">else</span></div>
-<div class="line"><span class="lineno">  829</span>        s &lt;&lt; x.get_poly().__str__(detail::poly_print(x.get_var()));</div>
-<div class="line"><span class="lineno">  830</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  831</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  822</span>{</div>
+<div class="line"><span class="lineno">  823</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  824</span>    <span class="keywordflow">if</span> (x.get_dict().size() == 0)</div>
+<div class="line"><span class="lineno">  825</span>        s &lt;&lt; <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><span class="lineno">  826</span>    <span class="keywordflow">else</span></div>
+<div class="line"><span class="lineno">  827</span>        s &lt;&lt; x.get_poly().__str__(detail::poly_print(x.get_var()));</div>
+<div class="line"><span class="lineno">  828</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  829</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2653,9 +2651,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00157">157</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  790</span>{</div>
-<div class="line"><span class="lineno">  791</span>    str_ = upoly_print&lt;UIntPoly&gt;(x);</div>
-<div class="line"><span class="lineno">  792</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  788</span>{</div>
+<div class="line"><span class="lineno">  789</span>    str_ = upoly_print&lt;UIntPoly&gt;(x);</div>
+<div class="line"><span class="lineno">  790</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2676,11 +2674,11 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00184">184</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  254</span>{</div>
-<div class="line"><span class="lineno">  255</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  256</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
-<div class="line"><span class="lineno">  257</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  258</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  252</span>{</div>
+<div class="line"><span class="lineno">  253</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  254</span>    s &lt;&lt; apply(x.get_arg1()) &lt;&lt; <span class="stringliteral">&quot; != &quot;</span> &lt;&lt; apply(x.get_arg2());</div>
+<div class="line"><span class="lineno">  255</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  256</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2726,15 +2724,15 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00150">150</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  411</span>{</div>
-<div class="line"><span class="lineno">  412</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  413</span>    s &lt;&lt; apply(*x.get_container().begin());</div>
-<div class="line"><span class="lineno">  414</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(x.get_container().begin()); it != x.get_container().end();</div>
-<div class="line"><span class="lineno">  415</span>         ++it) {</div>
-<div class="line"><span class="lineno">  416</span>        s &lt;&lt; <span class="stringliteral">&quot; U &quot;</span> &lt;&lt; apply(*it);</div>
-<div class="line"><span class="lineno">  417</span>    }</div>
-<div class="line"><span class="lineno">  418</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  419</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  409</span>{</div>
+<div class="line"><span class="lineno">  410</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  411</span>    s &lt;&lt; apply(*x.get_container().begin());</div>
+<div class="line"><span class="lineno">  412</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(x.get_container().begin()); it != x.get_container().end();</div>
+<div class="line"><span class="lineno">  413</span>         ++it) {</div>
+<div class="line"><span class="lineno">  414</span>        s &lt;&lt; <span class="stringliteral">&quot; U &quot;</span> &lt;&lt; apply(*it);</div>
+<div class="line"><span class="lineno">  415</span>    }</div>
+<div class="line"><span class="lineno">  416</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  417</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2755,12 +2753,12 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00169">169</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  834</span>{</div>
-<div class="line"><span class="lineno">  835</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
-<div class="line"><span class="lineno">  836</span>    o &lt;&lt; x.get_poly().__str__(x.get_var()) &lt;&lt; <span class="stringliteral">&quot; + O(&quot;</span> &lt;&lt; x.get_var() &lt;&lt; <span class="stringliteral">&quot;**&quot;</span></div>
-<div class="line"><span class="lineno">  837</span>      &lt;&lt; x.get_degree() &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  838</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  839</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  832</span>{</div>
+<div class="line"><span class="lineno">  833</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> o;</div>
+<div class="line"><span class="lineno">  834</span>    o &lt;&lt; x.get_poly().__str__(x.get_var()) &lt;&lt; <span class="stringliteral">&quot; + O(&quot;</span> &lt;&lt; x.get_var() &lt;&lt; <span class="stringliteral">&quot;**&quot;</span></div>
+<div class="line"><span class="lineno">  835</span>      &lt;&lt; x.get_degree() &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  836</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  837</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2804,9 +2802,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00142">142</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  448</span>{</div>
-<div class="line"><span class="lineno">  449</span>    str_ = <span class="stringliteral">&quot;UniversalSet&quot;</span>;</div>
-<div class="line"><span class="lineno">  450</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  446</span>{</div>
+<div class="line"><span class="lineno">  447</span>    str_ = <span class="stringliteral">&quot;UniversalSet&quot;</span>;</div>
+<div class="line"><span class="lineno">  448</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2850,9 +2848,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00159">159</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  795</span>{</div>
-<div class="line"><span class="lineno">  796</span>    str_ = upoly_print&lt;URatPoly&gt;(x);</div>
-<div class="line"><span class="lineno">  797</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  793</span>{</div>
+<div class="line"><span class="lineno">  794</span>    str_ = upoly_print&lt;URatPoly&gt;(x);</div>
+<div class="line"><span class="lineno">  795</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2873,17 +2871,17 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="strprinter_8cpp_source.html#l00148">148</a> of file <a class="el" href="strprinter_8cpp_source.html">strprinter.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  325</span>{</div>
-<div class="line"><span class="lineno">  326</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><span class="lineno">  327</span>    <span class="keyword">auto</span> container = x.get_container();</div>
-<div class="line"><span class="lineno">  328</span>    s &lt;&lt; <span class="stringliteral">&quot;Xor(&quot;</span>;</div>
-<div class="line"><span class="lineno">  329</span>    s &lt;&lt; apply(*container.begin());</div>
-<div class="line"><span class="lineno">  330</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
-<div class="line"><span class="lineno">  331</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
-<div class="line"><span class="lineno">  332</span>    }</div>
-<div class="line"><span class="lineno">  333</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><span class="lineno">  334</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><span class="lineno">  335</span>}</div>
+<div class="fragment"><div class="line"><span class="lineno">  323</span>{</div>
+<div class="line"><span class="lineno">  324</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><span class="lineno">  325</span>    <span class="keyword">auto</span> container = x.get_container();</div>
+<div class="line"><span class="lineno">  326</span>    s &lt;&lt; <span class="stringliteral">&quot;Xor(&quot;</span>;</div>
+<div class="line"><span class="lineno">  327</span>    s &lt;&lt; apply(*container.begin());</div>
+<div class="line"><span class="lineno">  328</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++(container.begin()); it != container.end(); ++it) {</div>
+<div class="line"><span class="lineno">  329</span>        s &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; apply(*it);</div>
+<div class="line"><span class="lineno">  330</span>    }</div>
+<div class="line"><span class="lineno">  331</span>    s &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><span class="lineno">  332</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><span class="lineno">  333</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
