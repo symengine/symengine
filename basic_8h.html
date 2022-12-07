@@ -133,6 +133,7 @@ $(function() {
 <code>#include &quot;symengine/type_codes.inc&quot;</code><br />
 <code>#include &quot;basic-methods.inc&quot;</code><br />
 <code>#include &quot;basic-inl.h&quot;</code><br />
+<code>#include &lt;symengine/tribool.h&gt;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for basic.h:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -140,35 +141,36 @@ $(function() {
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="basic_8h__incl.png" border="0" usemap="#a_2home_2runner_2work_2symengine_2symengine_2symengine_2basic_8h" alt=""/></div>
 <map name="a_2home_2runner_2work_2symengine_2symengine_2symengine_2basic_8h" id="a_2home_2runner_2work_2symengine_2symengine_2symengine_2basic_8h">
-<area shape="rect" title="The base class for SymEngine." alt="" coords="635,5,859,45"/>
-<area shape="rect" title=" " alt="" coords="69,101,144,126"/>
-<area shape="rect" title=" " alt="" coords="169,101,245,126"/>
+<area shape="rect" title="The base class for SymEngine." alt="" coords="619,5,843,45"/>
+<area shape="rect" title=" " alt="" coords="17,101,92,126"/>
+<area shape="rect" title=" " alt="" coords="117,101,193,126"/>
 <area shape="rect" title=" " alt="" coords="5,181,56,207"/>
 <area shape="rect" title=" " alt="" coords="81,181,143,207"/>
 <area shape="rect" title=" " alt="" coords="168,181,211,207"/>
 <area shape="rect" title=" " alt="" coords="235,181,359,207"/>
 <area shape="rect" title=" " alt="" coords="669,181,784,207"/>
-<area shape="rect" title=" " alt="" coords="784,101,853,126"/>
-<area shape="rect" title=" " alt="" coords="878,101,941,126"/>
-<area shape="rect" title=" " alt="" coords="965,101,1043,126"/>
-<area shape="rect" title=" " alt="" coords="1067,101,1159,126"/>
-<area shape="rect" title=" " alt="" coords="1183,101,1270,126"/>
+<area shape="rect" title=" " alt="" coords="732,101,801,126"/>
+<area shape="rect" title=" " alt="" coords="826,101,889,126"/>
+<area shape="rect" title=" " alt="" coords="913,101,991,126"/>
+<area shape="rect" title=" " alt="" coords="1015,101,1107,126"/>
+<area shape="rect" title=" " alt="" coords="1131,101,1218,126"/>
 <area shape="rect" title=" " alt="" coords="808,181,893,207"/>
 <area shape="rect" title=" " alt="" coords="736,343,907,383"/>
-<area shape="rect" href="symengine__exception_8h_source.html" title=" " alt="" coords="1295,93,1465,133"/>
-<area shape="rect" href="dict_8h.html" title=" " alt="" coords="473,101,607,126"/>
-<area shape="rect" href="type__codes_8inc_source.html" title=" " alt="" coords="1489,101,1684,126"/>
-<area shape="rect" href="basic-methods_8inc_source.html" title=" " alt="" coords="1708,101,1849,126"/>
-<area shape="rect" href="basic-inl_8h_source.html" title=" " alt="" coords="1874,101,1963,126"/>
-<area shape="rect" href="mp__class_8h_source.html" title=" " alt="" coords="384,181,555,207"/>
-<area shape="rect" title=" " alt="" coords="579,181,645,207"/>
+<area shape="rect" href="symengine__exception_8h_source.html" title=" " alt="" coords="1243,93,1413,133"/>
+<area shape="rect" href="dict_8h.html" title=" " alt="" coords="421,101,555,126"/>
+<area shape="rect" href="type__codes_8inc_source.html" title=" " alt="" coords="1437,101,1632,126"/>
+<area shape="rect" href="basic-methods_8inc_source.html" title=" " alt="" coords="1656,101,1797,126"/>
+<area shape="rect" href="basic-inl_8h_source.html" title=" " alt="" coords="1822,101,1911,126"/>
+<area shape="rect" href="tribool_8h_source.html" title=" " alt="" coords="1936,101,2088,126"/>
+<area shape="rect" href="mp__class_8h_source.html" title=" " alt="" coords="475,181,645,207"/>
+<area shape="rect" title=" " alt="" coords="384,181,451,207"/>
 <area shape="rect" href="symengine__casts_8h_source.html" title=" " alt="" coords="968,255,1139,295"/>
-<area shape="rect" title=" " alt="" coords="565,262,632,287"/>
-<area shape="rect" title=" " alt="" coords="656,255,811,295"/>
-<area shape="rect" title=" " alt="" coords="52,255,233,295"/>
-<area shape="rect" title=" " alt="" coords="258,255,425,295"/>
+<area shape="rect" title=" " alt="" coords="185,262,252,287"/>
+<area shape="rect" title=" " alt="" coords="276,255,431,295"/>
+<area shape="rect" title=" " alt="" coords="455,255,636,295"/>
+<area shape="rect" title=" " alt="" coords="661,255,827,295"/>
 <area shape="rect" href="symengine__rcp_8h_source.html" title=" " alt="" coords="1301,255,1472,295"/>
-<area shape="rect" title=" " alt="" coords="449,262,490,287"/>
+<area shape="rect" title=" " alt="" coords="851,262,893,287"/>
 <area shape="rect" title=" " alt="" coords="1013,350,1093,375"/>
 <area shape="rect" title=" " alt="" coords="931,350,989,375"/>
 <area shape="rect" href="symengine__assert_8h_source.html" title=" " alt="" coords="1117,343,1288,383"/>
@@ -283,30 +285,11 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a976db42c9dfad76ad2c95a6038cbc093"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">SymEngine::TypeID</a> { <a class="el" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">SymEngine::TypeID_Count</a>
  }</td></tr>
 <tr class="separator:a976db42c9dfad76ad2c95a6038cbc093"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa859e1ef481111b06c165d334b1b2e5e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>tribool</b> { <b>indeterminate</b> = -1
-, <b>trifalse</b> = 0
-, <b>tritrue</b> = 1
- }</td></tr>
-<tr class="separator:aa859e1ef481111b06c165d334b1b2e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a922a1abdb111bf17aaad8557c340e8e9"><td class="memItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a922a1abdb111bf17aaad8557c340e8e9">SymEngine::type_code_name</a> (TypeID id)</td></tr>
 <tr class="separator:a922a1abdb111bf17aaad8557c340e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae87dcafe8240b524ff43fa6ad1556cc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#aae87dcafe8240b524ff43fa6ad1556cc">SymEngine::is_true</a> (tribool x)</td></tr>
-<tr class="separator:aae87dcafe8240b524ff43fa6ad1556cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc38edf819a572117d844ff8a33e1703"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#abc38edf819a572117d844ff8a33e1703">SymEngine::is_false</a> (tribool x)</td></tr>
-<tr class="separator:abc38edf819a572117d844ff8a33e1703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27eeef2d6d33a3c49ac516f416da02bf"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a27eeef2d6d33a3c49ac516f416da02bf">SymEngine::is_indeterminate</a> (tribool x)</td></tr>
-<tr class="separator:a27eeef2d6d33a3c49ac516f416da02bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ee1f3f997ef87adab73121c0a4459d1"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a3ee1f3f997ef87adab73121c0a4459d1">SymEngine::tribool_from_bool</a> (bool x)</td></tr>
-<tr class="separator:a3ee1f3f997ef87adab73121c0a4459d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b828f89c745c54df9d2c2a1e98d6118"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1b828f89c745c54df9d2c2a1e98d6118">SymEngine::and_tribool</a> (tribool a, tribool b)</td></tr>
-<tr class="separator:a1b828f89c745c54df9d2c2a1e98d6118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5a01f02dd7d9b30c779f91e8a3520e4"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#aa5a01f02dd7d9b30c779f91e8a3520e4">SymEngine::not_tribool</a> (tribool a)</td></tr>
-<tr class="separator:aa5a01f02dd7d9b30c779f91e8a3520e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ade42a761b4dc1abebe9ba6d94a583a"><td class="memItemLeft" align="right" valign="top">tribool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a2ade42a761b4dc1abebe9ba6d94a583a">SymEngine::andwk_tribool</a> (tribool a, tribool b)</td></tr>
-<tr class="separator:a2ade42a761b4dc1abebe9ba6d94a583a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2861dd1747fa1416cd6ef023ef08fca5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a> (const Basic &amp;a, const Basic &amp;b)</td></tr>
 <tr class="memdesc:a2861dd1747fa1416cd6ef023ef08fca5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks equality for <code>a</code> and <code>b</code>  <a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">More...</a><br /></td></tr>
 <tr class="separator:a2861dd1747fa1416cd6ef023ef08fca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -379,7 +362,7 @@ Functions</h2></td></tr>
 </div><!-- fragment -->
 <p>Inline members and functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00349">349</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00340">340</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
 
 </div>
 </div>
@@ -398,7 +381,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00358">358</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="basic_8h_source.html#l00349">349</a> of file <a class="el" href="basic_8h_source.html">basic.h</a>.</p>
 
 </div>
 </div>

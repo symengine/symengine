@@ -1144,7 +1144,7 @@ $(function() {
 <div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>{</div>
 <div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    <span class="comment">// transcendental if b is algebraic and nonzero</span></div>
 <div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    <span class="keywordflow">if</span> (is_true(is_algebraic_) and <a class="code hl_function" href="namespaceSymEngine.html#a9ffc26946356777955b29d4aaf210894">is_nonzero</a>(b)) {</div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>    <span class="keywordflow">if</span> (is_true(is_algebraic_) and is_true(<a class="code hl_function" href="namespaceSymEngine.html#a9ffc26946356777955b29d4aaf210894">is_nonzero</a>(b))) {</div>
 <div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>        is_algebraic_ = tribool::trifalse;</div>
 <div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>        is_algebraic_ = tribool::indeterminate;</div>
