@@ -225,18 +225,16 @@ Protected Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  250</span>        apply(*x.get_coef());</div>
 <div class="line"><span class="lineno">  251</span>    }</div>
 <div class="line"><span class="lineno">  252</span> </div>
-<div class="line"><span class="lineno">  253</span>    <span class="keywordtype">unsigned</span> i = 0;</div>
-<div class="line"><span class="lineno">  254</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
-<div class="line"><span class="lineno">  255</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*p.second, *one)) {</div>
-<div class="line"><span class="lineno">  256</span>            count++;</div>
-<div class="line"><span class="lineno">  257</span>            apply(*p.second);</div>
-<div class="line"><span class="lineno">  258</span>        }</div>
-<div class="line"><span class="lineno">  259</span>        apply(*p.first);</div>
-<div class="line"><span class="lineno">  260</span>        count++;</div>
-<div class="line"><span class="lineno">  261</span>        i++;</div>
-<div class="line"><span class="lineno">  262</span>    }</div>
-<div class="line"><span class="lineno">  263</span>    count--;</div>
-<div class="line"><span class="lineno">  264</span>}</div>
+<div class="line"><span class="lineno">  253</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  254</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*p.second, *one)) {</div>
+<div class="line"><span class="lineno">  255</span>            count++;</div>
+<div class="line"><span class="lineno">  256</span>            apply(*p.second);</div>
+<div class="line"><span class="lineno">  257</span>        }</div>
+<div class="line"><span class="lineno">  258</span>        apply(*p.first);</div>
+<div class="line"><span class="lineno">  259</span>        count++;</div>
+<div class="line"><span class="lineno">  260</span>    }</div>
+<div class="line"><span class="lineno">  261</span>    count--;</div>
+<div class="line"><span class="lineno">  262</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -257,13 +255,13 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00290">290</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  291</span>{</div>
-<div class="line"><span class="lineno">  292</span>    count++;</div>
-<div class="line"><span class="lineno">  293</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
-<div class="line"><span class="lineno">  294</span>        apply(*p);</div>
-<div class="line"><span class="lineno">  295</span>    }</div>
-<div class="line"><span class="lineno">  296</span>}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00288">288</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  289</span>{</div>
+<div class="line"><span class="lineno">  290</span>    count++;</div>
+<div class="line"><span class="lineno">  291</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
+<div class="line"><span class="lineno">  292</span>        apply(*p);</div>
+<div class="line"><span class="lineno">  293</span>    }</div>
+<div class="line"><span class="lineno">  294</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -283,16 +281,16 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00275">275</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  276</span>{</div>
-<div class="line"><span class="lineno">  277</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.real_part(), *zero)) {</div>
-<div class="line"><span class="lineno">  278</span>        count++;</div>
-<div class="line"><span class="lineno">  279</span>    }</div>
-<div class="line"><span class="lineno">  280</span> </div>
-<div class="line"><span class="lineno">  281</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.imaginary_part(), *one)) {</div>
-<div class="line"><span class="lineno">  282</span>        count++;</div>
-<div class="line"><span class="lineno">  283</span>    }</div>
-<div class="line"><span class="lineno">  284</span>}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00273">273</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  274</span>{</div>
+<div class="line"><span class="lineno">  275</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.real_part(), *zero)) {</div>
+<div class="line"><span class="lineno">  276</span>        count++;</div>
+<div class="line"><span class="lineno">  277</span>    }</div>
+<div class="line"><span class="lineno">  278</span> </div>
+<div class="line"><span class="lineno">  279</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.imaginary_part(), *one)) {</div>
+<div class="line"><span class="lineno">  280</span>        count++;</div>
+<div class="line"><span class="lineno">  281</span>    }</div>
+<div class="line"><span class="lineno">  282</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -312,8 +310,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00288">288</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  288</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00286">286</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  286</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -369,8 +367,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00273">273</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  273</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00271">271</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  271</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -390,12 +388,12 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00266">266</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  267</span>{</div>
-<div class="line"><span class="lineno">  268</span>    count++;</div>
-<div class="line"><span class="lineno">  269</span>    apply(*x.get_exp());</div>
-<div class="line"><span class="lineno">  270</span>    apply(*x.get_base());</div>
-<div class="line"><span class="lineno">  271</span>}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00264">264</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  265</span>{</div>
+<div class="line"><span class="lineno">  266</span>    count++;</div>
+<div class="line"><span class="lineno">  267</span>    apply(*x.get_exp());</div>
+<div class="line"><span class="lineno">  268</span>    apply(*x.get_base());</div>
+<div class="line"><span class="lineno">  269</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -415,8 +413,8 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00286">286</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  286</span>{}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00284">284</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  284</span>{}</div>
 </div><!-- fragment -->
 </div>
 </div>
