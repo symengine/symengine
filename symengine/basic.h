@@ -238,16 +238,6 @@ struct RCPBasicKeyLess {
     }
 };
 
-enum tribool { indeterminate = -1, trifalse = 0, tritrue = 1 };
-
-inline bool is_true(tribool x);
-inline bool is_false(tribool x);
-inline bool is_indeterminate(tribool x);
-inline tribool tribool_from_bool(bool x);
-inline tribool and_tribool(tribool a, tribool b);
-inline tribool not_tribool(tribool a);
-inline tribool andwk_tribool(tribool a, tribool b);
-
 // Convenience functions
 //! Checks equality for `a` and `b`
 bool eq(const Basic &a, const Basic &b);
@@ -333,6 +323,7 @@ struct hash<SymEngine::Basic>;
 
 //! Inline members and functions
 #include "basic-inl.h"
+#include <symengine/tribool.h>
 
 // Macro to define the type_code_id variable and its getter method
 #ifdef WITH_SYMENGINE_VIRTUAL_TYPEID
