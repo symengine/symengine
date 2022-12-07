@@ -250,7 +250,6 @@ void CountOpsVisitor::bvisit(const Add &x)
         apply(*x.get_coef());
     }
 
-    unsigned i = 0;
     for (const auto &p : x.get_dict()) {
         if (neq(*p.second, *one)) {
             count++;
@@ -258,7 +257,6 @@ void CountOpsVisitor::bvisit(const Add &x)
         }
         apply(*p.first);
         count++;
-        i++;
     }
     count--;
 }
