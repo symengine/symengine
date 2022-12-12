@@ -130,7 +130,12 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
     F->addParamAttr(0, llvm::Attribute::NoCapture);
     F->addParamAttr(1, llvm::Attribute::NoCapture);
     F->addFnAttr(llvm::Attribute::NoUnwind);
+#if (LLVM_VERSION_MAJOR < 15)
     F->addFnAttr(llvm::Attribute::UWTable);
+#else
+    F->addFnAttr(llvm::Attribute::getWithUWTableKind(
+        *context, llvm::UWTableKind::Default));
+#endif
 #endif
     return F;
 }

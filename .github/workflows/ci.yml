@@ -259,14 +259,14 @@ jobs:
       run: echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
 
     - name: Cache ccache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-${{ github.sha }}
         restore-keys: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-
 
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 2
 
